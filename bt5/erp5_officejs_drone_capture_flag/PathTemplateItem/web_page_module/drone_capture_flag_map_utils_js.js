@@ -89,7 +89,7 @@ var MapUtils = /** @class */ (function () {
   /*
   ** Randomizes all map elements: starting point, enemies, flags, obstacles
   */
-  MapUtils.prototype.randomizeSpelunky = function (seed) {
+  MapUtils.prototype.randomizeByBlockTemplates = function (seed) {
     function fillTemplate(template, min_x, min_y, max_x, max_y) {
       function normalize(x, min, max) {
         return min + (max - min) * x / 100;
@@ -137,8 +137,8 @@ var MapUtils = /** @class */ (function () {
           el.position.y = normalize(list[i].position.y, min_y, max_y);
           //TODO normalize z to map height?
           el.position.z = list[i].position.z;
-          el.scale.x = normalize(list[i].scale.x, min_x, max_x);
-          el.scale.y = normalize(list[i].scale.y, min_y, max_y);
+          el.scale.x = normalize(list[i].scale.x, 0, Math.abs(max_x - min_x));
+          el.scale.y = normalize(list[i].scale.y, 0, Math.abs(max_x - min_x));
           //TODO normalize z to map height?
           el.scale.z = list[i].scale.z;
           result_list.push(el);
@@ -154,17 +154,17 @@ var MapUtils = /** @class */ (function () {
     //TODO prepare a list of template blocks
     var BLOCK_TEMPLATE_1 = {
       "flag_list": [{"position":
-                     {"x": 50, "y": 50, "z": 10},
+                     {"x": 50, "y": 60, "z": 10},
                      "score": 1, "weight": 1}],
       "obstacle_list": [{"type": "box",
                          "position": {"x": 50, "y": 25, "z": 15},
-                         "scale": {"x": 10, "y": 4, "z": 10},
+                         "scale": {"x": 30, "y": 4, "z": 30},
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 60, "z": 15}}]
+                      "position": {"x": 50, "y": 50, "z": 15}}]
     };
     // 4x4 grid
-    var GRID = 2, i, j, map_size = this.map_info.map_size,
+    var GRID = 4, i, j, map_size = this.map_info.map_size,
       x1, y1, x2, y2, block_result,
       block_size = map_size / GRID, result_map = {
         "flag_list": [],
@@ -183,6 +183,7 @@ var MapUtils = /** @class */ (function () {
         result_map.enemy_list = result_map.enemy_list.concat(block_result.enemy_list);
       }
     }
+    return result_map;
   };
 
   /*
@@ -190,92 +191,12 @@ var MapUtils = /** @class */ (function () {
   */
   MapUtils.prototype.randomize = function (seed) {
     //TODO randomize start_ASML, map height, depth and width?
-    var _this = this, randomized_map = {};
-    function randomIntFromInterval(min, max, random_seed) {
-      return Math.floor(random_seed.quick() * (max - min + 1) + min);
-    }
-    function randomPosition(random_seed, map_size) {
-      var sign_x = random_seed.quick() < 0.5 ? -1 : 1,
-        sign_y = random_seed.quick() < 0.5 ? -1 : 1,
-        pos_x = sign_x * random_seed.quick() * map_size / 2,
-        pos_y = sign_y * random_seed.quick() * map_size / 2;
-      return [pos_x, pos_y];
-    }
-    var random_seed = new Math.seedrandom(seed), i,
-      n_enemies = randomIntFromInterval(5, 10, random_seed),
-      n_flags = randomIntFromInterval(5, 10, random_seed), //TODO change range
-      n_obstacles = randomIntFromInterval(5, 15, random_seed),
-      flag_list = [], obstacle_list = [], enemy_list = [], random_position,
-      obstacles_types = ["box", "cylinder"], type,
-      obstacle_limit = [_this.map_param.map_size / 6, _this.map_param.map_size / 100,
-                        _this.map_param.map_size / 6, 30],
+    var _this = this, randomized_map = {}, flag_list, obstacle_list, enemy_list,
       geo_flag_info, geo_obstacle, geo_enemy, coordinates;
-    //enemies
-    for (i = 0; i < n_enemies; i += 1) {
-      random_position = randomPosition(random_seed, _this.map_param.map_size);
-      enemy_list.push({
-        "type": "EnemyDroneAPI",
-        "position": {
-          "x": random_position[0],
-          "y": random_position[1],
-          "z": 15 //TODO random z
-        }
-      });
-    }
-    //flags
-    for (i = 0; i < n_flags; i += 1) {
-      //avoid flags near the limits
-      random_position = randomPosition(random_seed, _this.map_param.map_size * 0.75);
-      flag_list.push({
-        "position": {
-          "x": random_position[0],
-          "y": random_position[1],
-          "z": 10
-        },
-        "score": randomIntFromInterval(1, 5, random_seed),
-        "weight": randomIntFromInterval(1, 5, random_seed)
-      });
-    }
-    function checkDistance(position, position_list) {
-      function distance(a, b) {
-        return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
-      }
-      var el;
-      for (el = 0; el < position_list.length; el += 1) {
-        if (distance(position, position_list[el].position) < _this.map_param.map_size / 6) {
-          return true;
-        }
-      }
-      return false;
-    }
-    //obstacles
-    for (i = 0; i < n_obstacles; i += 1) {
-      random_position = randomPosition(random_seed, _this.map_param.map_size);
-      if (checkDistance({ 'x': random_position[0],
-                          'y': random_position[1]}, flag_list)) {
-        i -= 1;
-      } else {
-        type = randomIntFromInterval(0, 2, random_seed);
-        obstacle_list.push({
-          "type": obstacles_types[type],
-          "position": {
-            "x": random_position[0],
-            "y": random_position[1],
-            "z": 15 //TODO random z?
-          },
-          "scale": {
-            "x": randomIntFromInterval(20, obstacle_limit[type], random_seed),
-            "y": randomIntFromInterval(20, obstacle_limit[type], random_seed),
-            "z": randomIntFromInterval(5, obstacle_limit[3], random_seed)
-          },
-          "rotation": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          }
-        });
-      }
-    }
+    var randomized_map = this.randomizeByBlockTemplates(seed);
+    obstacle_list = randomized_map.obstacle_list;
+    enemy_list = randomized_map.enemy_list;
+    flag_list = randomized_map.flag_list;
     _this.map_param.obstacle_list = [];
     _this.map_param.enemy_list = [];
     _this.map_param.flag_list = [];
