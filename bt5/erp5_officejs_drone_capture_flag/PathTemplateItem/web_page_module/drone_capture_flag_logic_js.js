@@ -290,6 +290,9 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getInitialAltitude = function () {
     return this._API.getInitialAltitude();
   };
+  DroneManager.prototype.getCollisionSector = function () {
+    return this._API.getCollisionSector();
+  };
   DroneManager.prototype.getAltitudeAbs = function () {
     if (this._controlMesh) {
       var altitude = this._controlMesh.position.y;
@@ -601,7 +604,6 @@ var MapManager = /** @class */ (function () {
       flag = BABYLON.Mesh.MergeMeshes([flag_a, flag_b, mast]);
       flag.id = index;
       flag.location = flag_info.position;
-      //flag.drone_collider_list = [];
       flag.weight = flag_info.weight;
       flag.score = flag_info.score;
       flag.id = index;
@@ -611,14 +613,6 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
   };
-  //TODO refactor latLonOffset, should be the reverse of lat-lon distance
-  //then map_size can be used as parameter (get max lat-lon from map_size)
-  /*MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
-      lat_offset = offset_in_mt / R,
-      lon_offset = offset_in_mt / (R * Math.cos(Math.PI * lat / 180));
-    return [lat + lat_offset * 180 / Math.PI,
-            lon + lon_offset * 180 / Math.PI];
-  };*/
   MapManager.prototype.latLonDistance = function (c1, c2) {
     return this.mapUtils.latLonDistance(c1, c2);
   };
@@ -834,43 +828,41 @@ var GameManager = /** @class */ (function () {
           flag.weight -= 1;
           drone.score += flag.score; // move score to a global place? GM, MM?
         }
-        /*if (!flag.drone_collider_list.includes(drone.id)) {
-          //console.log("flag " + flag.id + " hit by drone " + drone.id);
-          drone._internal_crash(new Error('Drone ' + drone.id +
-                                          ' touched a flag.'));
-          if (flag.drone_collider_list.length === 0) {
-            drone.score++;
-            flag.drone_collider_list.push(drone.id);
-          }
-        }*/
       }
     }
   };
 
   GameManager.prototype._checkCollision = function (drone, other) {
+    if (drone.team == TEAM_ENEMY && other.team == TEAM_ENEMY) return;
+    function distance(a, b) {
+      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
+                       Math.pow((a.z - b.z), 2));
+    }
+    if (drone.team != other.team) {
+      var enemy, prey;
+      if (drone.team == TEAM_ENEMY) {
+        enemy = drone;
+        prey = other;
+      } else if (other.team == TEAM_ENEMY) {
+        enemy = other;
+        prey = drone;
+      }
+      if (drone.position && other.position) {
+        if (distance(drone.position, other.position) <
+            enemy.getCollisionSector()) {
+          drone._internal_crash(new Error('enemy drone ' + enemy.id +
+                               ' bumped drone ' + prey.id + '.'));
+          other._internal_crash(new Error('enemy drone ' + enemy.id +
+                               ' bumped drone ' + prey.id + '.'));
+        }
+      }
+    }
     if (drone.colliderMesh && other.colliderMesh &&
         drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
-      var angle = Math.acos(BABYLON.Vector3.Dot(drone.worldDirection,
-                                                other.worldDirection) /
-                            (drone.worldDirection.length() *
-                             other.worldDirection.length()));
-      //TODO is this parameter set? keep it or make 2 drones die when intersect?
-      if (angle < GAMEPARAMETERS.drone.collisionSector) {
-        if (drone.speed > other.speed) {
-          other._internal_crash(new Error('Drone ' + drone.id +
-                                ' bump drone ' + other.id + '.'));
-        }
-        else {
-          drone._internal_crash(new Error('Drone ' + other.id +
-                               ' bumped drone ' + drone.id + '.'));
-        }
-      }
-      else {
-        drone._internal_crash(new Error('Drone ' + drone.id +
-                             ' touched drone ' + other.id + '.'));
-        other._internal_crash(new Error('Drone ' + drone.id +
-                             ' touched drone ' + other.id + '.'));
-      }
+      drone._internal_crash(new Error('drone ' + drone.id +
+                           ' touched drone ' + other.id + '.'));
+      other._internal_crash(new Error('drone ' + drone.id +
+                           ' touched drone ' + other.id + '.'));
     }
   };
 
@@ -1039,19 +1031,6 @@ var GameManager = /** @class */ (function () {
     });
     return finish;
   };
-
-  //game ends due to timeout or all drones stopped/crashed
-  /*GameManager.prototype._allFlagsCaptured = function () {
-    var finish = true;
-    this._mapManager._flag_list.forEach(function (flag) {
-      //do not use flag weight for now, just 1 hit is enough
-      if (flag.drone_collider_list.length === 0) {
-      //if (flag.drone_collider_list.length < flag.weight) {
-        finish = false;
-      }
-    });
-    return finish;
-  };*/
 
   GameManager.prototype._calculateUserScore = function () {
     var score = 0;
