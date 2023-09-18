@@ -422,11 +422,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
         distance = calculateDistance(drone_position, other_position, context);
         if (distance <= VIEW_SCOPE) {
           result.drones.push({
-            position: drone.getCurrentPosition(),
-            direction: drone.direction,
-            rotation: drone.rotation,
-            speed: drone.speed,
-            team: drone.team
+            position: other.getCurrentPosition(),
+            direction: other.direction,
+            rotation: other.rotation,
+            speed: other.speed,
+            team: other.team
           });
         }
       }
