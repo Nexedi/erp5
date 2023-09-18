@@ -68,6 +68,10 @@ class CaucaseConnector(XMLObject):
 
   def _getAuthenticatedConnection(self):
     if self.getUserCertificate() is None:
+      if self.hasUserCertificateRequestReference():
+        self._bootstrapCaucaseConfiguration()
+
+    if self.getUserCertificate() is None:
       raise ValueError("You need to set the User Key and Certificate!")
 
     with tempfile.NamedTemporaryFile(prefix='caucase_user_') as user_key_file:
