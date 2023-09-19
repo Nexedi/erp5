@@ -90,10 +90,10 @@ var MapUtils = /** @class */ (function () {
   ** Randomizes all map elements: starting point, enemies, flags, obstacles
   */
   MapUtils.prototype.randomizeByBlockTemplates = function (seed) {
+    function normalize(x, min, max) {
+      return min + (max - min) * x / 100;
+    }
     function fillTemplate(template, min_x, min_y, max_x, max_y) {
-      function normalize(x, min, max) {
-        return min + (max - min) * x / 100;
-      }
       function fillFlagList(list, min_x, min_y, max_x, max_y) {
         var i, el, result_list = [];
         for (i = 0; i < list.length; i += 1) {
@@ -237,23 +237,23 @@ var MapUtils = /** @class */ (function () {
       "flag_list": [],
       "obstacle_list": [],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 20, "z": 30}},
+                      "position": {"x": 20, "y": 20, "z": 20}},
                      {"type": "EnemyDroneAPI",
                       "position": {"x": 20, "y": 50, "z": 100}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 80, "z": 30}},
+                      "position": {"x": 20, "y": 80, "z": 20}},
                      {"type": "EnemyDroneAPI",
                       "position": {"x": 50, "y": 20, "z": 100}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 50, "z": 30}},
+                      "position": {"x": 50, "y": 50, "z": 20}},
                      {"type": "EnemyDroneAPI",
                       "position": {"x": 50, "y": 80, "z": 100}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 20, "z": 30}},
+                      "position": {"x": 80, "y": 20, "z": 20}},
                      {"type": "EnemyDroneAPI",
                       "position": {"x": 80, "y": 50, "z": 100}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 80, "z": 30}}]
+                      "position": {"x": 80, "y": 80, "z": 20}}]
     }, {
       "flag_list": [{"position":
                      {"x": 50, "y": 50, "z": 10},
@@ -297,77 +297,76 @@ var MapUtils = /** @class */ (function () {
                         "scale": {"x": 4, "y": 50, "z": 30},
                         "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": []
-    }/*, {
-      "flag_list": [],
-      "obstacle_list": [{"type": "box",
-                         "position": {"x": 50, "y": 50, "z": 15},
-                         "scale": {"x": 90, "y": 90, "z": 30},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 45},
-                        "scale": {"x": 90, "y": 90, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 75},
-                        "scale": {"x": 90, "y": 90, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 105},
-                        "scale": {"x": 90, "y": 90, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 135},
-                        "scale": {"x": 90, "y": 90, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "enemy_list": []
-    }*/];
+    }];
     // 4x4 grid
-    var GRID = 4, i, j, map_size = this.map_info.map_size,
+    var GRID = 4, i, j, map_size = this.map_info.map_size, block = 0,
       x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
-      random_seed = new Math.seedrandom(seed), result_map = {
+      initial_position = {x: 50, y: 50, z: 15 },
+      initial_block = Math.floor(seed.quick() * GRID * GRID),
+      result_map = {
         "flag_list": [],
         "obstacle_list": [],
         "enemy_list": []
       };
-    //TODO set some rules and iterate to achieve them
-    // e.g starting point block empty, flags on the oposite side of the map,
-    // number of flags, etc
-    for (i = 0; i < GRID; i += 1) {
-      for (j = 0; j < GRID; j += 1) {
-        index = Math.floor(random_seed.quick() * BLOCK_TEMPLATE_LIST.length);
-        x1 = block_size * i - map_size / 2,
-        y1 = block_size * j - map_size / 2,
-        x2 = block_size * i + block_size - map_size / 2,
-        y2 = block_size * j + block_size - map_size / 2,
-        //randomly pick a template
-        block_result = fillTemplate(BLOCK_TEMPLATE_LIST[index], x1, y1, x2, y2);
-        result_map.flag_list = result_map.flag_list.concat(block_result.flag_list);
-        result_map.obstacle_list = result_map.obstacle_list.concat(block_result.obstacle_list);
-        result_map.enemy_list = result_map.enemy_list.concat(block_result.enemy_list);
+    function checkRules(json_map) {
+      if (!json_map) return false;
+      if (json_map.flag_list.length === 0) return false;
+      var f;
+      // at least one flag in the oposite side of drones initial position
+      for (f = 0; f < json_map.flag_list.length; f += 1) {
+        if ((json_map.flag_list[f].position.x * json_map.initial_position.x) < 0 ||
+            (json_map.flag_list[f].position.y * json_map.initial_position.y) < 0) {
+          return true;
+        }
       }
+      return false;
     }
+    do {
+      for (i = 0; i < GRID; i += 1) {
+        for (j = 0; j < GRID; j += 1) {
+          index = Math.floor(seed.quick() * BLOCK_TEMPLATE_LIST.length);
+          x1 = block_size * i - map_size / 2;
+          y1 = block_size * j - map_size / 2;
+          x2 = block_size * i + block_size - map_size / 2;
+          y2 = block_size * j + block_size - map_size / 2;
+          if (block === initial_block) {
+            result_map.initial_position = {x: normalize(50, x1, x2),
+                                           y: normalize(50, y1, y2),
+                                           z: 15 };
+          } else {
+            block_result = fillTemplate(BLOCK_TEMPLATE_LIST[index], x1, y1, x2, y2);
+            result_map.flag_list = result_map.flag_list.concat(block_result.flag_list);
+            result_map.obstacle_list = result_map.obstacle_list.concat(block_result.obstacle_list);
+            result_map.enemy_list = result_map.enemy_list.concat(block_result.enemy_list);
+          }
+          block += 1;
+        }
+      }
+    } while (!checkRules(result_map));
     return result_map;
   };
 
   /*
-  ** Randomizes all map elements: starting point, enemies, flags, obstacles
+  ** Generates a random map json
   */
   MapUtils.prototype.randomize = function (seed) {
     //TODO randomize start_ASML, map height, depth and width?
     var _this = this, flag_list, obstacle_list, enemy_list,
       geo_flag_info, geo_obstacle, geo_enemy, coordinates,
-      randomized_map = _this.randomizeByBlockTemplates(seed);
+      random_seed = new Math.seedrandom(seed),
+      randomized_map = _this.randomizeByBlockTemplates(random_seed);
     obstacle_list = randomized_map.obstacle_list;
     enemy_list = randomized_map.enemy_list;
     flag_list = randomized_map.flag_list;
     _this.map_param.obstacle_list = [];
     _this.map_param.enemy_list = [];
     _this.map_param.flag_list = [];
-    //TODO make it random
-    _this.map_info.initial_position = _this.convertToGeoCoordinates(
-      0, _this.map_param.map_size / 2 * -0.75, 15
-    );
     //convert all map elements positions to geo coordinates
+    _this.map_info.initial_position = _this.convertToGeoCoordinates(
+      randomized_map.initial_position.x,
+      randomized_map.initial_position.y,
+      randomized_map.initial_position.z
+    );
     Object.assign(_this.map_info, _this.map_param);
     flag_list.forEach(function (flag_info, index) {
       coordinates = _this.convertToGeoCoordinates(
