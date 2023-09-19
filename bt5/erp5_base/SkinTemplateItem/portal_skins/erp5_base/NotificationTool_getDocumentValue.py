@@ -5,6 +5,7 @@ notification_message_list = portal.portal_catalog.getDocumentValueList(
   reference=reference,
   language=language,
   strict_language=strict_language,
+  limit=limit,
   **kw
 )
 if notification_message_list:
