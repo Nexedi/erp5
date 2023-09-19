@@ -308,7 +308,7 @@ var MapUtils = /** @class */ (function () {
         "obstacle_list": [],
         "enemy_list": []
       };
-    function checkRules(json_map) {
+    function checkConditions(json_map) {
       if (!json_map) return false;
       if (json_map.flag_list.length === 0) return false;
       var f;
@@ -342,7 +342,7 @@ var MapUtils = /** @class */ (function () {
           block += 1;
         }
       }
-    } while (!checkRules(result_map));
+    } while (!checkConditions(result_map));
     return result_map;
   };
 
