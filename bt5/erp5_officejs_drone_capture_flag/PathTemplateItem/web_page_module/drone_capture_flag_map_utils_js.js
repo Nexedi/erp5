@@ -151,33 +151,196 @@ var MapUtils = /** @class */ (function () {
         "enemy_list": fillEnemyList(template.enemy_list, min_x, min_y, max_x, max_y)
       };
     }
-    //TODO prepare a list of template blocks
-    var BLOCK_TEMPLATE_1 = {
+    var BLOCK_TEMPLATE_LIST = [{
       "flag_list": [{"position":
-                     {"x": 50, "y": 60, "z": 10},
+                     {"x": 50, "y": 35, "z": 10},
+                     "score": 1, "weight": 1},
+                    {"position":
+                     {"x": 35, "y": 50, "z": 10},
                      "score": 1, "weight": 1}],
       "obstacle_list": [{"type": "box",
                          "position": {"x": 50, "y": 25, "z": 15},
                          "scale": {"x": 30, "y": 4, "z": 30},
-                         "rotation": {"x": 0, "y": 0, "z": 0}}],
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 25, "y": 50, "z": 15},
+                        "scale": {"x": 4, "y": 30, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 50, "z": 15}}]
-    };
+                      "position": {"x": 50, "y": 75, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 75, "y": 50, "z": 30}}
+                    ]
+    }, {
+      "flag_list": [],
+      "obstacle_list": [{"type": "box",
+                         "position": {"x": 20, "y": 20, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 20, "y": 50, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 20, "y": 80, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 50, "y": 20, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 50, "y": 50, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 50, "y": 80, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 80, "y": 20, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 80, "y": 50, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                         "position": {"x": 80, "y": 80, "z": 15},
+                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "enemy_list": []
+    }, {
+      "flag_list": [],
+      "obstacle_list": [{"type": "box",
+                         "position": {"x": 50, "y": 50, "z": 15},
+                         "scale": {"x": 90, "y": 90, "z": 30},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 45},
+                        "scale": {"x": 70, "y": 70, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 75},
+                        "scale": {"x": 50, "y": 50, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 105},
+                        "scale": {"x": 30, "y": 30, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 135},
+                        "scale": {"x": 10, "y": 10, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "enemy_list": []
+    }, {
+      "flag_list": [],
+      "obstacle_list": [],
+      "enemy_list": [{"type": "EnemyDroneAPI",
+                      "position": {"x": 20, "y": 20, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 20, "y": 50, "z": 100}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 20, "y": 80, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 50, "y": 20, "z": 100}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 50, "y": 50, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 50, "y": 80, "z": 100}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 80, "y": 20, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 80, "y": 50, "z": 100}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 80, "y": 80, "z": 30}}]
+    }, {
+      "flag_list": [{"position":
+                     {"x": 50, "y": 50, "z": 10},
+                     "score": 1, "weight": 1}],
+      "obstacle_list": [],
+      "enemy_list": []
+    }, {
+      "flag_list": [{"position":
+                     {"x": 50, "y": 50, "z": 10},
+                     "score": 1, "weight": 1}],
+      "obstacle_list": [],
+      "enemy_list": [{"type": "EnemyDroneAPI",
+                      "position": {"x": 35, "y": 35, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 65, "y": 65, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 65, "y": 35, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 35, "y": 65, "z": 30}},
+                     {"type": "EnemyDroneAPI",
+                      "position": {"x": 50, "y": 50, "z": 50}}
+                    ]
+    }, {
+      "flag_list": [{"position":
+                     {"x": 50, "y": 50, "z": 10},
+                     "score": 1, "weight": 1}],
+      "obstacle_list": [{"type": "box",
+                         "position": {"x": 50, "y": 25, "z": 15},
+                         "scale": {"x": 50, "y": 4, "z": 30},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 25, "y": 50, "z": 15},
+                        "scale": {"x": 4, "y": 50, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 75, "z": 15},
+                        "scale": {"x": 50, "y": 4, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 75, "y": 50, "z": 15},
+                        "scale": {"x": 4, "y": 50, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "enemy_list": []
+    }/*, {
+      "flag_list": [],
+      "obstacle_list": [{"type": "box",
+                         "position": {"x": 50, "y": 50, "z": 15},
+                         "scale": {"x": 90, "y": 90, "z": 30},
+                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 45},
+                        "scale": {"x": 90, "y": 90, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 75},
+                        "scale": {"x": 90, "y": 90, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 105},
+                        "scale": {"x": 90, "y": 90, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}},
+                       {"type": "box",
+                        "position": {"x": 50, "y": 50, "z": 135},
+                        "scale": {"x": 90, "y": 90, "z": 30},
+                        "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "enemy_list": []
+    }*/];
     // 4x4 grid
     var GRID = 4, i, j, map_size = this.map_info.map_size,
-      x1, y1, x2, y2, block_result,
-      block_size = map_size / GRID, result_map = {
+      x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
+      random_seed = new Math.seedrandom(seed), result_map = {
         "flag_list": [],
         "obstacle_list": [],
         "enemy_list": []
       };
+    //TODO set some rules and iterate to achieve them
+    // e.g starting point block empty, flags on the oposite side of the map,
+    // number of flags, etc
     for (i = 0; i < GRID; i += 1) {
       for (j = 0; j < GRID; j += 1) {
+        index = Math.floor(random_seed.quick() * BLOCK_TEMPLATE_LIST.length);
         x1 = block_size * i - map_size / 2,
         y1 = block_size * j - map_size / 2,
         x2 = block_size * i + block_size - map_size / 2,
         y2 = block_size * j + block_size - map_size / 2,
-        block_result = fillTemplate(BLOCK_TEMPLATE_1, x1, y1, x2, y2);
+        //randomly pick a template
+        block_result = fillTemplate(BLOCK_TEMPLATE_LIST[index], x1, y1, x2, y2);
         result_map.flag_list = result_map.flag_list.concat(block_result.flag_list);
         result_map.obstacle_list = result_map.obstacle_list.concat(block_result.obstacle_list);
         result_map.enemy_list = result_map.enemy_list.concat(block_result.enemy_list);
@@ -191,9 +354,9 @@ var MapUtils = /** @class */ (function () {
   */
   MapUtils.prototype.randomize = function (seed) {
     //TODO randomize start_ASML, map height, depth and width?
-    var _this = this, randomized_map = {}, flag_list, obstacle_list, enemy_list,
-      geo_flag_info, geo_obstacle, geo_enemy, coordinates;
-    var randomized_map = this.randomizeByBlockTemplates(seed);
+    var _this = this, flag_list, obstacle_list, enemy_list,
+      geo_flag_info, geo_obstacle, geo_enemy, coordinates,
+      randomized_map = _this.randomizeByBlockTemplates(seed);
     obstacle_list = randomized_map.obstacle_list;
     enemy_list = randomized_map.enemy_list;
     flag_list = randomized_map.flag_list;
