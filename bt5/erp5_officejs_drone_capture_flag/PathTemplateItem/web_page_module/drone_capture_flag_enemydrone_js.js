@@ -9,7 +9,8 @@ var EnemyDroneAPI = /** @class */ (function () {
     VIEW_SCOPE = 50,
     DEFAULT_SPEED = 16.5,
     MIN_SPEED = 12,
-    MAX_SPEED = 26;
+    MAX_SPEED = 26,
+    COLLISION_SECTOR = 5;
 
   //** CONSTRUCTOR
   function EnemyDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -21,6 +22,7 @@ var EnemyDroneAPI = /** @class */ (function () {
     this._drone_info = drone_info;
     this._drone_dict_list = [];
     this._acceleration = DEFAULT_ACCELERATION;
+    this._collision_sector = COLLISION_SECTOR;
   }
   /*
   ** Function called on start phase of the drone, just before onStart AI script
@@ -329,6 +331,9 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
+  };
+  EnemyDroneAPI.prototype.getCollisionSector = function () {
+    return this._collision_sector;
   };
   return EnemyDroneAPI;
 }());
