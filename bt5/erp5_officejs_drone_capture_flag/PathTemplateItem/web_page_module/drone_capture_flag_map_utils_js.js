@@ -319,11 +319,20 @@ var MapUtils = /** @class */ (function () {
                         "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": []
     }];
+    function getInitialBlock(GRID) {
+      var x, y;
+      do {
+        x = Math.floor(seed.quick() * GRID);
+        y = Math.floor(seed.quick() * GRID);
+        //ensure intial block is in the edge of map
+      } while (x !== 0 && x !== GRID-1 && y !== 0 && y !== GRID-1);
+      return {x: x, y: y};
+    }
     // 4x4 grid
-    var GRID = 4, i, j, map_size = this.map_info.map_size, block = 0,
+    var GRID = 4, i, j, map_size = this.map_info.map_size,
       x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
       initial_position = {x: 50, y: 50, z: 15 },
-      initial_block = Math.floor(seed.quick() * GRID * GRID),
+      initial_block = getInitialBlock(GRID),
       result_map = {
         "flag_list": [],
         "obstacle_list": [],
@@ -350,7 +359,7 @@ var MapUtils = /** @class */ (function () {
           y1 = block_size * j - map_size / 2;
           x2 = block_size * i + block_size - map_size / 2;
           y2 = block_size * j + block_size - map_size / 2;
-          if (block === initial_block) {
+          if (initial_block.x === i && initial_block.y === j) {
             result_map.initial_position = {x: normalize(50, x1, x2),
                                            y: normalize(50, y1, y2),
                                            z: 15 };
@@ -360,7 +369,6 @@ var MapUtils = /** @class */ (function () {
             result_map.obstacle_list = result_map.obstacle_list.concat(block_result.obstacle_list);
             result_map.enemy_list = result_map.enemy_list.concat(block_result.enemy_list);
           }
-          block += 1;
         }
       }
     } while (!checkConditions(result_map));
