@@ -167,9 +167,9 @@ var MapUtils = /** @class */ (function () {
                         "scale": {"x": 4, "y": 30, "z": 30},
                         "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 75, "z": 30}},
+                      "position": {"x": 50, "y": 75, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 75, "y": 50, "z": 30}}
+                      "position": {"x": 75, "y": 50, "z": 10}}
                     ]
     }, {
       "flag_list": [],
@@ -237,24 +237,13 @@ var MapUtils = /** @class */ (function () {
       "flag_list": [],
       "obstacle_list": [],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 20, "z": 20}},
+                      "position": {"x": 20, "y": 20, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 80, "z": 20}},
+                      "position": {"x": 20, "y": 80, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 20, "z": 20}},
+                      "position": {"x": 80, "y": 20, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 80, "z": 20}}]
-    }, {
-      "flag_list": [],
-      "obstacle_list": [],
-      "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 20, "z": 100}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 80, "z": 100}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 20, "z": 100}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 80, "z": 100}}]
+                      "position": {"x": 80, "y": 80, "z": 10}}]
     }, {
       "flag_list": [{"position":
                      {"x": 50, "y": 50, "z": 10},
@@ -267,15 +256,13 @@ var MapUtils = /** @class */ (function () {
                      "score": 1, "weight": 1}],
       "obstacle_list": [],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 35, "y": 35, "z": 30}},
+                      "position": {"x": 35, "y": 35, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 65, "y": 65, "z": 30}},
+                      "position": {"x": 65, "y": 65, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 65, "y": 35, "z": 30}},
+                      "position": {"x": 65, "y": 35, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 35, "y": 65, "z": 30}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 50, "z": 50}}
+                      "position": {"x": 35, "y": 65, "z": 10}}
                     ]
     }, {
       "flag_list": [{"position":
