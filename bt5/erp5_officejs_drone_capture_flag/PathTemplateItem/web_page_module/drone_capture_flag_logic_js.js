@@ -613,14 +613,6 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
   };
-  //TODO refactor latLonOffset, should be the reverse of lat-lon distance
-  //then map_size can be used as parameter (get max lat-lon from map_size)
-  /*MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
-      lat_offset = offset_in_mt / R,
-      lon_offset = offset_in_mt / (R * Math.cos(Math.PI * lat / 180));
-    return [lat + lat_offset * 180 / Math.PI,
-            lon + lon_offset * 180 / Math.PI];
-  };*/
   MapManager.prototype.latLonDistance = function (c1, c2) {
     return this.mapUtils.latLonDistance(c1, c2);
   };
