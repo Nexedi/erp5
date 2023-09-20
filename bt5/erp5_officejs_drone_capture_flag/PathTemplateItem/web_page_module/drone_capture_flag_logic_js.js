@@ -604,7 +604,6 @@ var MapManager = /** @class */ (function () {
       flag = BABYLON.Mesh.MergeMeshes([flag_a, flag_b, mast]);
       flag.id = index;
       flag.location = flag_info.position;
-      //flag.drone_collider_list = [];
       flag.weight = flag_info.weight;
       flag.score = flag_info.score;
       flag.id = index;
@@ -837,15 +836,6 @@ var GameManager = /** @class */ (function () {
           flag.weight -= 1;
           drone.score += flag.score; // move score to a global place? GM, MM?
         }
-        /*if (!flag.drone_collider_list.includes(drone.id)) {
-          //console.log("flag " + flag.id + " hit by drone " + drone.id);
-          drone._internal_crash(new Error('Drone ' + drone.id +
-                                          ' touched a flag.'));
-          if (flag.drone_collider_list.length === 0) {
-            drone.score++;
-            flag.drone_collider_list.push(drone.id);
-          }
-        }*/
       }
     }
   };
@@ -1048,19 +1038,6 @@ var GameManager = /** @class */ (function () {
     });
     return finish;
   };
-
-  //game ends due to timeout or all drones stopped/crashed
-  /*GameManager.prototype._allFlagsCaptured = function () {
-    var finish = true;
-    this._mapManager._flag_list.forEach(function (flag) {
-      //do not use flag weight for now, just 1 hit is enough
-      if (flag.drone_collider_list.length === 0) {
-      //if (flag.drone_collider_list.length < flag.weight) {
-        finish = false;
-      }
-    });
-    return finish;
-  };*/
 
   GameManager.prototype._calculateUserScore = function () {
     var score = 0;
