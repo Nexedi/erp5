@@ -290,6 +290,9 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getInitialAltitude = function () {
     return this._API.getInitialAltitude();
   };
+  DroneManager.prototype.getCollisionSector = function () {
+    return this._API.getCollisionSector();
+  };
   DroneManager.prototype.getAltitudeAbs = function () {
     if (this._controlMesh) {
       var altitude = this._controlMesh.position.y;
@@ -848,29 +851,35 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._checkCollision = function (drone, other) {
+    function distance(a, b) {
+      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
+                       Math.pow((a.z - b.z), 2));
+    }
+    var enemy, prey;
+    if (drone.team == TEAM_ENEMY) {
+      enemy = drone;
+      prey = other;
+    } else if (other.team == TEAM_ENEMY) {
+      enemy = other;
+      prey = drone;
+    }
+    if (enemy) {
+      if (drone.position && other.position) {
+        if (distance(drone.position, other.position) <
+            enemy.getCollisionSector()) {
+          drone._internal_crash(new Error('enemy drone ' + enemy.id +
+                               ' bumped drone ' + prey.id + '.'));
+          other._internal_crash(new Error('enemy drone ' + enemy.id +
+                               ' bumped drone ' + prey.id + '.'));
+        }
+      }
+    }
     if (drone.colliderMesh && other.colliderMesh &&
         drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
-      var angle = Math.acos(BABYLON.Vector3.Dot(drone.worldDirection,
-                                                other.worldDirection) /
-                            (drone.worldDirection.length() *
-                             other.worldDirection.length()));
-      //TODO is this parameter set? keep it or make 2 drones die when intersect?
-      if (angle < GAMEPARAMETERS.drone.collisionSector) {
-        if (drone.speed > other.speed) {
-          other._internal_crash(new Error('Drone ' + drone.id +
-                                ' bump drone ' + other.id + '.'));
-        }
-        else {
-          drone._internal_crash(new Error('Drone ' + other.id +
-                               ' bumped drone ' + drone.id + '.'));
-        }
-      }
-      else {
-        drone._internal_crash(new Error('Drone ' + drone.id +
-                             ' touched drone ' + other.id + '.'));
-        other._internal_crash(new Error('Drone ' + drone.id +
-                             ' touched drone ' + other.id + '.'));
-      }
+      drone._internal_crash(new Error('drone ' + drone.id +
+                           ' touched drone ' + other.id + '.'));
+      other._internal_crash(new Error('drone ' + drone.id +
+                           ' touched drone ' + other.id + '.'));
     }
   };
 
