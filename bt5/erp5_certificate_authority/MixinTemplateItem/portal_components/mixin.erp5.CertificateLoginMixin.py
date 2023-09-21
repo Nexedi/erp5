@@ -51,7 +51,6 @@ class CertificateLoginMixin:
 
     return csr.public_bytes(serialization.Encoding.PEM).decode()
 
-
   def _getCaucaseConnector(self):
     portal = self.getPortalObject()
     connector_list = portal.portal_catalog.unrestrictedSearchResults(
@@ -73,9 +72,9 @@ class CertificateLoginMixin:
     certificate_dict = {
       "common_name" : self.getReference()
     }
-    if self.getReference and self.getDestinationReference():
-      certificate_dict["id"] = self.getDestinationReference()
-      crt_pem = caucase_connector.getCertificate(self.getDestinationReference())
+    if self.getReference and self.getSourceReference():
+      certificate_dict["id"] = self.getSourceReference()
+      crt_pem = caucase_connector.getCertificate(self.getSourceReference())
       certificate_dict["certificate"] = crt_pem
       # We should assert that reference is the CN of crt_pem
       return certificate_dict
@@ -93,18 +92,18 @@ class CertificateLoginMixin:
 
     caucase_connector.createCertificate(csr_id, template_csr=template_csr)
     crt_pem = caucase_connector.getCertificate(csr_id)
-    self.setDestinationReference(csr_id)
+    self.setSourceReference(csr_id)
 
     return {
       "certificate" : crt_pem,
-      "id" : self.getDestinationReference(),
+      "id" : self.getSourceReference(),
       "common_name" : self.getReference()
     }
     
   security.declarePublic('getCertificate')
   def getCertificate(self, csr=None):
     """Returns new SSL certificate"""
-    if csr is None and self.getDestinationReference() is None:
+    if csr is None and self.getSourceReference() is None:
       key, csr = self._getCaucaseConnector()._createCertificateRequest()
       certificate_dict = self._getCertificate(csr=csr)
       certificate_dict["key"] = key
@@ -113,18 +112,14 @@ class CertificateLoginMixin:
       return self._getCertificate(csr=csr)
 
   def _revokeCertificate(self):
-    if self.getDestinationReference() is not None:
-      certificate_dict = self.getPortalObject().portal_certificate_authority\
-        .revokeCertificate(self.getDestinationReference())
-      self.setDestinationReference(None)
-      return certificate_dict
-    elif self.getReference() is not None:
-      # Backward compatibility whenever the serial wast set
-      certificate_dict = self.getPortalObject().portal_certificate_authority\
-        .revokeCertificateByCommonName(self.getReference())
-      # Ensure it is None
-      self.setDestinationReference(None)
-      return certificate_dict
+    if self.getDestinationReference() is not None or (
+      self.getReference() is not None and self.getSourceReference() is None
+    ):
+      raise ValueError("You cannot revoke certificates from prior implementation!")
+    
+    if self.getSourceReference() is not None:
+      raise NotImplementedError()
+    
     else:
       raise ValueError("No certificate found to revoke!")
 
