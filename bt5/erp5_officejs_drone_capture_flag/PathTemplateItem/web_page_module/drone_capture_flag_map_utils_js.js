@@ -285,6 +285,10 @@ var MapUtils = /** @class */ (function () {
                         "scale": {"x": 4, "y": 50, "z": 30},
                         "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": []
+    }, {
+      "flag_list": [],
+      "obstacle_list": [],
+      "enemy_list": []
     }];
     function getInitialBlock(GRID) {
       var x, y;
