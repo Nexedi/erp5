@@ -192,23 +192,27 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.getDroneViewInfo = function (drone) {
     var context = this, result = [], distance,
       drone_position = drone.position, other_position;
-    function calculateDistance(a, b) {
-      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2));
+    function calculateDistance(a, b, _3D) {
+      var z = (_3D ?  Math.pow((a.z - b.z), 2) : 0);
+      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) + z);
     }
     context._gameManager._droneList_user.forEach(function (other) {
       if (other.can_play) {
         other_position = other.position;
-        distance = calculateDistance(drone_position, other_position);
-        //the high the drone, more easy to detect
-        if (distance / (other_position.z * 0.05) <= VIEW_SCOPE) {
-          result.push({
-            position: other_position,
-            direction: other.direction,
-            rotation: other.rotation,
-            speed: other.speed,
-            target: other._targetCoordinates, //check
-            team: other.team
-          });
+        distance = calculateDistance(drone_position, other_position, true);
+        if (distance <= BASE_DISTANCE) {
+          distance = calculateDistance(drone_position, other_position);
+          //the higher the drone, the easier to detect
+          if (distance / (other_position.z * 0.05) <= VIEW_SCOPE) {
+            result.push({
+              position: other_position,
+              direction: other.direction,
+              rotation: other.rotation,
+              speed: other.speed,
+              target: other._targetCoordinates, //check
+              team: other.team
+            });
+          }
         }
       }
     });
