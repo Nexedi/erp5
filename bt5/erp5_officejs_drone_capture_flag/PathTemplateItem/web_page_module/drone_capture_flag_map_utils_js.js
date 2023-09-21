@@ -156,32 +156,8 @@ var MapUtils = /** @class */ (function () {
     // 4x4 grid
     var GRID = 4, i, j, map_size = this.map_info.map_size, initial_block,
       x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
-      result_map = {
-        "flag_list": [],
-        "obstacle_list": [],
-        "enemy_list": []
-      },
+      result_map,
       BLOCK_TEMPLATE_LIST = [{
-      "flag_list": [{"position":
-                     {"x": 50, "y": 35, "z": 10},
-                     "score": 1, "weight": 1},
-                    {"position":
-                     {"x": 35, "y": 50, "z": 10},
-                     "score": 1, "weight": 1}],
-      "obstacle_list": [{"type": "box",
-                         "position": {"x": 50, "y": 25, "z": 15},
-                         "scale": {"x": 30, "y": 4, "z": 30},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 25, "y": 50, "z": 15},
-                        "scale": {"x": 4, "y": 30, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 75, "z": 10}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 75, "y": 50, "z": 10}}
-                    ]
-    }, {
       "flag_list": [],
       "obstacle_list": [{"type": "box",
                          "position": {"x": 20, "y": 20, "z": 15},
@@ -290,9 +266,10 @@ var MapUtils = /** @class */ (function () {
       return {x: x, y: y};
     }
     initial_block = getInitialBlock(GRID);
-    function checkConditions(json_map) {
+    function checkConditions(json_map, GRID) {
       if (!json_map) return false;
-      if (json_map.flag_list.length === 0) return false;
+      // set ~20% of the blocks with flags
+      if (json_map.flag_list.length !== Math.round(GRID * GRID * 0.2)) return false;
       var f;
       // at least one flag in the oposite side of drones initial position
       for (f = 0; f < json_map.flag_list.length; f += 1) {
@@ -304,6 +281,11 @@ var MapUtils = /** @class */ (function () {
       return false;
     }
     do {
+      result_map = {
+        "flag_list": [],
+        "obstacle_list": [],
+        "enemy_list": []
+      };
       for (i = 0; i < GRID; i += 1) {
         for (j = 0; j < GRID; j += 1) {
           index = Math.floor(seed.quick() * BLOCK_TEMPLATE_LIST.length);
@@ -323,7 +305,7 @@ var MapUtils = /** @class */ (function () {
           }
         }
       }
-    } while (!checkConditions(result_map));
+    } while (!checkConditions(result_map, GRID));
     return result_map;
   };
 
