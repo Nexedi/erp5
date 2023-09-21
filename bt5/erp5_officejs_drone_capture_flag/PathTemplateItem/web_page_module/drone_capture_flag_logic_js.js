@@ -513,6 +513,12 @@ var MapManager = /** @class */ (function () {
         new_obstacle = BABYLON.MeshBuilder.CreateBox("obs_" + count,
                                                      { 'size': 1 }, scene);
         break;
+      case "mountain":
+        new_obstacle = BABYLON.MeshBuilder.CreateCylinder("obs_" + count, {
+          'diameterTop': 0.3,
+          'height': 1
+        }, scene);
+        break;
       case "cylinder":
         new_obstacle = BABYLON.MeshBuilder.CreateCylinder("obs_" + count, {
           'diameterBottom': obstacle.diameterBottom,
