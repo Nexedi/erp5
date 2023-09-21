@@ -158,42 +158,29 @@ var MapUtils = /** @class */ (function () {
       x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
       result_map,
       BLOCK_TEMPLATE_LIST = [{
+      "flag_list": [{"position":
+                     {"x": 50, "y": 50, "z": 10},
+                     "score": 1, "weight": 1}],
+      "obstacle_list": [{"type": "box",
+                         "position": {"x": 50, "y": 70, "z": 20},
+                         "scale": {"x": 80, "y": 4, "z": 40},
+                         "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "enemy_list": [{"type": "EnemyDroneAPI",
+                      "position": {"x": 50, "y": 30, "z": 10}}
+                    ]
+    }, {
       "flag_list": [],
       "obstacle_list": [{"type": "box",
-                         "position": {"x": 20, "y": 20, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "position": {"x": 20, "y": 65, "z": 20},
+                         "scale": {"x": 4, "y": 70, "z": 40},
                          "rotation": {"x": 0, "y": 0, "z": 0}},
                         {"type": "box",
-                         "position": {"x": 20, "y": 50, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "position": {"x": 50, "y": 35, "z": 20},
+                         "scale": {"x": 4, "y": 70, "z": 40},
                          "rotation": {"x": 0, "y": 0, "z": 0}},
                         {"type": "box",
-                         "position": {"x": 20, "y": 80, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                        {"type": "box",
-                         "position": {"x": 50, "y": 20, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                        {"type": "box",
-                         "position": {"x": 50, "y": 50, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                        {"type": "box",
-                         "position": {"x": 50, "y": 80, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                        {"type": "box",
-                         "position": {"x": 80, "y": 20, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                        {"type": "box",
-                         "position": {"x": 80, "y": 50, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                        {"type": "box",
-                         "position": {"x": 80, "y": 80, "z": 15},
-                         "scale": {"x": 6, "y": 6, "z": 40},
+                         "position": {"x": 80, "y": 65, "z": 20},
+                         "scale": {"x": 4, "y": 70, "z": 40},
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": []
     }, {
@@ -270,6 +257,18 @@ var MapUtils = /** @class */ (function () {
       if (!json_map) return false;
       // set ~20% of the blocks with flags
       if (json_map.flag_list.length !== Math.round(GRID * GRID * 0.2)) return false;
+      // limit n_mountains
+      if (json_map.obstacle_list.length > 3) {
+        var i, n_mountains = 0;
+        for (i = 0; i < json_map.obstacle_list.length; i += 1) {
+          if (json_map.obstacle_list[i].type === "mountain") {
+            n_mountains += 1;
+            if (n_mountains > 3) {
+              return false;
+            }
+          }
+        }
+      }
       var f;
       // at least one flag in the oposite side of drones initial position
       for (f = 0; f < json_map.flag_list.length; f += 1) {
