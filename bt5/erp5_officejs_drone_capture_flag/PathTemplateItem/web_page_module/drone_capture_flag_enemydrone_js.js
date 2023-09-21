@@ -10,7 +10,8 @@ var EnemyDroneAPI = /** @class */ (function () {
     DEFAULT_SPEED = 16.5,
     MIN_SPEED = 12,
     MAX_SPEED = 26,
-    COLLISION_SECTOR = 5;
+    BASE_DISTANCE = 500,
+    COLLISION_SECTOR = 10;
 
   //** CONSTRUCTOR
   function EnemyDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -215,7 +216,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     //interception math based on https://www.codeproject.com/Articles/990452/Interception-of-Two-Moving-Objects-in-D-Space
-    return 'var BASE_DISTANCE = 300;\n' +
+    return 'var BASE_DISTANCE = ' + BASE_DISTANCE + ';\n' +
       'function calculateInterception(hunter_position, prey_position, hunter_speed, prey_speed, prey_velocity_vector) {\n' +
       '  var vector_from_drone, distance_to_prey, distance_to_prey_vector, a, b, c, t1, t2, interception_time, interception_point;\n' +
       '  function dot(a, b) {\n' +
