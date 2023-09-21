@@ -6,7 +6,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   "use strict";
 
   var DEFAULT_ACCELERATION = 1,
-    VIEW_SCOPE = 50,
+    VIEW_SCOPE = 25,
     DEFAULT_SPEED = 16.5,
     MIN_SPEED = 12,
     MAX_SPEED = 26,
@@ -193,14 +193,14 @@ var EnemyDroneAPI = /** @class */ (function () {
     var context = this, result = [], distance,
       drone_position = drone.position, other_position;
     function calculateDistance(a, b) {
-      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
-                       Math.pow((a.z - b.z), 2));
+      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2));
     }
     context._gameManager._droneList_user.forEach(function (other) {
       if (other.can_play) {
         other_position = other.position;
         distance = calculateDistance(drone_position, other_position);
-        if (distance <= VIEW_SCOPE) {
+        //the high the drone, more easy to detect
+        if (distance / (other_position.z * 0.05) <= VIEW_SCOPE) {
           result.push({
             position: other_position,
             direction: other.direction,
