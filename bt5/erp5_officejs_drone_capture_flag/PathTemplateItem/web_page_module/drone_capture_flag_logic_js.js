@@ -833,19 +833,20 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._checkCollision = function (drone, other) {
+    if (drone.team == TEAM_ENEMY && other.team == TEAM_ENEMY) return;
     function distance(a, b) {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
     }
-    var enemy, prey;
-    if (drone.team == TEAM_ENEMY) {
-      enemy = drone;
-      prey = other;
-    } else if (other.team == TEAM_ENEMY) {
-      enemy = other;
-      prey = drone;
-    }
-    if (enemy) {
+    if (drone.team != other.team) {
+      var enemy, prey;
+      if (drone.team == TEAM_ENEMY) {
+        enemy = drone;
+        prey = other;
+      } else if (other.team == TEAM_ENEMY) {
+        enemy = other;
+        prey = drone;
+      }
       if (drone.position && other.position) {
         if (distance(drone.position, other.position) <
             enemy.getCollisionSector()) {
