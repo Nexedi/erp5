@@ -130,9 +130,11 @@ var MapUtils = /** @class */ (function () {
                 {"x": 0, "y": 0, "z": 0},
                 "scale":
                 {"x": 0, "y": 0, "z": 0},
-                "rotation":
-                {"x": list[i].rotation.x, "y": list[i].rotation.y, "z": list[i].rotation.z},
                 "type": list[i].type};
+          if (list[i].rotation) {
+            el.rotation = {"x": list[i].rotation.x, "y": list[i].rotation.y,
+                           "z": list[i].rotation.z};
+          }
           el.position.x = normalize(list[i].position.x, min_x, max_x);
           el.position.y = normalize(list[i].position.y, min_y, max_y);
           //TODO normalize z to map height?
@@ -151,7 +153,15 @@ var MapUtils = /** @class */ (function () {
         "enemy_list": fillEnemyList(template.enemy_list, min_x, min_y, max_x, max_y)
       };
     }
-    var BLOCK_TEMPLATE_LIST = [{
+    // 4x4 grid
+    var GRID = 4, i, j, map_size = this.map_info.map_size, initial_block,
+      x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
+      result_map = {
+        "flag_list": [],
+        "obstacle_list": [],
+        "enemy_list": []
+      },
+      BLOCK_TEMPLATE_LIST = [{
       "flag_list": [{"position":
                      {"x": 50, "y": 35, "z": 10},
                      "score": 1, "weight": 1},
@@ -212,26 +222,11 @@ var MapUtils = /** @class */ (function () {
       "enemy_list": []
     }, {
       "flag_list": [],
-      "obstacle_list": [{"type": "box",
-                         "position": {"x": 50, "y": 50, "z": 15},
-                         "scale": {"x": 90, "y": 90, "z": 30},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 45},
-                        "scale": {"x": 70, "y": 70, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 75},
-                        "scale": {"x": 50, "y": 50, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 105},
-                        "scale": {"x": 30, "y": 30, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 50, "z": 135},
-                        "scale": {"x": 10, "y": 10, "z": 30},
-                        "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "obstacle_list": [{"type": "mountain",
+                         "position": {"x": 50, "y": 50, "z": 200},
+                         "scale": {"x": 100, "y": 100,
+                                   "z": 400} //this.map_info.height?
+                        }],
       "enemy_list": []
     }, {
       "flag_list": [],
@@ -294,16 +289,7 @@ var MapUtils = /** @class */ (function () {
       } while (x !== 0 && x !== GRID-1 && y !== 0 && y !== GRID-1);
       return {x: x, y: y};
     }
-    // 4x4 grid
-    var GRID = 4, i, j, map_size = this.map_info.map_size,
-      x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
-      initial_position = {x: 50, y: 50, z: 15 },
-      initial_block = getInitialBlock(GRID),
-      result_map = {
-        "flag_list": [],
-        "obstacle_list": [],
-        "enemy_list": []
-      };
+    initial_block = getInitialBlock(GRID);
     function checkConditions(json_map) {
       if (!json_map) return false;
       if (json_map.flag_list.length === 0) return false;
