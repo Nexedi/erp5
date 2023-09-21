@@ -187,7 +187,7 @@ var MapUtils = /** @class */ (function () {
       "flag_list": [],
       "obstacle_list": [{"type": "mountain",
                          "position": {"x": 50, "y": 50, "z": 200},
-                         "scale": {"x": 100, "y": 100,
+                         "scale": {"x": 80, "y": 80,
                                    "z": 400} //this.map_info.height?
                         }],
       "enemy_list": []
@@ -266,6 +266,7 @@ var MapUtils = /** @class */ (function () {
             if (n_mountains > 3) {
               return false;
             }
+            json_map.obstacle_list[i].type = "box";
           }
         }
       }

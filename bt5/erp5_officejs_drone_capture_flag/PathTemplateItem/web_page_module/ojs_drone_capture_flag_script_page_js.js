@@ -39,7 +39,7 @@ var OperatorAPI = /** @class */ (function () {
     //seed
     //url_sp = new URLSearchParams(window.location.hash),
     //url_seed = url_sp.get("seed"),
-    SEED = '6!',//url_seed ? url_seed : '6!',
+    SEED = '123',//'6!',
     MAP = {
       "height": MAP_HEIGHT,
       "start_AMSL": START_AMSL,
