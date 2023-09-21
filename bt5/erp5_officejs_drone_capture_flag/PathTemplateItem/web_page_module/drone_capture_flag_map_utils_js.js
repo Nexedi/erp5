@@ -256,14 +256,9 @@ var MapUtils = /** @class */ (function () {
                      "score": 1, "weight": 1}],
       "obstacle_list": [],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 35, "y": 35, "z": 10}},
+                      "position": {"x": 50, "y": 20, "z": 10}},
                      {"type": "EnemyDroneAPI",
-                      "position": {"x": 65, "y": 65, "z": 10}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 65, "y": 35, "z": 10}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 35, "y": 65, "z": 10}}
-                    ]
+                      "position": {"x": 50, "y": 80, "z": 10}}]
     }, {
       "flag_list": [{"position":
                      {"x": 50, "y": 50, "z": 10},
