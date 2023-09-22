@@ -134,6 +134,9 @@ class CaucaseConnector(XMLObject):
   def getCertificate(self, csr_id):
     return self._getAuthenticatedConnection().getCertificate(csr_id)
 
-
+  def revokeCertificate(self, crt_pem, key_pem=None):
+    if key_pem is None:
+      return self._getAuthenticatedConnection().revokeCertificate(crt_pem)
+    return self._getConnection().revokeCertificate(crt_pem, key_pem)
 
 InitializeClass(CaucaseConnector)

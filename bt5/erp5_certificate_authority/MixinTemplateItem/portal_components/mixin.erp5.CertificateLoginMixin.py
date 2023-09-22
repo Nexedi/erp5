@@ -118,12 +118,13 @@ class CertificateLoginMixin:
       raise ValueError("You cannot revoke certificates from prior implementation!")
     
     if self.getSourceReference() is not None:
-      raise NotImplementedError()
-    
+      caucase_connector = self._getCaucaseConnector()
+      crt_pem = caucase_connector.getCertificate(self.getSourceReference())
+      caucase_connector.revokeCertificate(crt_pem)
     else:
       raise ValueError("No certificate found to revoke!")
 
-  security.declarePublic('revokeCertificate')
+  security.declarePrivate('revokeCertificate')
   def revokeCertificate(self):
     """Revokes existing certificate"""
     self._revokeCertificate()
