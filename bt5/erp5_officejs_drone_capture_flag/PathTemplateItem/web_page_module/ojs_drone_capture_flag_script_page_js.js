@@ -61,7 +61,7 @@ var OperatorAPI = /** @class */ (function () {
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"type": "EnemyDroneAPI",
                       "position": {"x": 45.6455531,
-                                   "y": 14.270231599999988,
+                                   "y": 14.270747186236491,
                                    "z": 15}}],
       "initial_position": {"x": 45.642813275, "y": 14.270231599999988, "z": 15}
     },
