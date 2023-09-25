@@ -55,7 +55,7 @@ class CertificateLoginMixin:
     portal = self.getPortalObject()
     connector_list = portal.portal_catalog.unrestrictedSearchResults(
       portal_type="Caucase Connector",
-      reference="default",
+      reference="erp5-certificate-login",
       validation_state="validated"
     )
     if len(connector_list) == 0:
