@@ -139,7 +139,7 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
       test_caucase_connector = portal_web_service.newContent(
         id="test_caucase_connector",
         portal_type="Caucase Connector",
-        reference="default",
+        reference="erp5-certificate-login",
         user_key=None,
         user_certificate=None
       )
