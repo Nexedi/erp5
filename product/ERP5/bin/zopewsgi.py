@@ -5,6 +5,7 @@ from io import BytesIO
 import logging
 import os
 import posixpath
+import resource
 import signal
 import socket
 import sys
@@ -184,6 +185,10 @@ def runwsgi():
       'instead of being read completely into memory.',
       type=type_registry.get('byte-size'),
       default=type_registry.get('byte-size')("10MB"))
+    parser.add_argument(
+      '--nofile',
+      help='Set soft limit of file descriptors erp5 can open to hard limit',
+      action="store_true")
     args = parser.parse_args()
 
     # Configure logging previously handled by ZConfig/ZServer
@@ -257,6 +262,11 @@ def runwsgi():
           module='Zope2',
           interval=args.timerserver_interval,
       )
+
+    if args.nofile:
+      cur_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
+      new_limit = (cur_limit[1], cur_limit[1])
+      resource.setrlimit(resource.RLIMIT_NOFILE, new_limit)
 
     ip, port = splitport(args.address)
     port = int(port)
