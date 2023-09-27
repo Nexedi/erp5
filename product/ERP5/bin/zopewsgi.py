@@ -184,6 +184,7 @@ def runwsgi():
       'instead of being read completely into memory.',
       type=type_registry.get('byte-size'),
       default=type_registry.get('byte-size')("10MB"))
+    parser.add_argument('--nofile', help='Soft limit of file descriptors erp5 can open')
     args = parser.parse_args()
 
     # Configure logging previously handled by ZConfig/ZServer
@@ -251,6 +252,18 @@ def runwsgi():
           module='Zope2',
           interval=args.timerserver_interval,
       )
+
+    if args.nofile:
+      import resource
+      cur_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
+      new_limit = (args.nofile, cur_limit[1])
+      try:
+        resource.setrlimit(resource.RLIMIT_NOFILE, new_limit)
+      except ValueError:  # current limit exceeds maximum limit
+        warnings.warn(
+          "can't set soft limit to %s because hard limit is %s" %
+          (args.nofile, cur_limit[1])
+        )
 
     ip, port = splitport(args.address)
     port = int(port)
