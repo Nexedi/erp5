@@ -57,7 +57,7 @@ class ERP5DumbHTTPExtractionPlugin(BasePlugin):
   def extractCredentials(self, request):
     # BBB Zope2
     # Fix possibly broken _auth for very long auth
-    if getattr(request, '_auth', '').lower().startswith('basic '):
+    if (getattr(request, '_auth', '') or '').lower().startswith('basic '):
       request._auth = request._auth.replace('\n', '')
     return DumbHTTPExtractor().extractCredentials(request);
 
