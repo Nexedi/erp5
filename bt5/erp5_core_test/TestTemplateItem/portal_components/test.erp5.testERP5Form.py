@@ -74,6 +74,11 @@ class TestERP5Form(ERP5TypeTestCase):
     self.assertTrue(self.form.formUnProxify())
     self.assertTrue(self.form.formShowRelatedProxyFields())
 
+  def test_zmi_form_order_disabled_fields(self):
+    self.assertIn('my_string_field', self.form.formOrder())
+    self.form.my_string_field.values['enabled'] = False
+    self.assertIn('my_string_field', self.form.formOrder())
+
   def test_publish_set_content_type(self):
     resp = self.publish(self.form.getPath())
     self.assertIn(b"test string field", resp.getBody())
