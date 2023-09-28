@@ -130,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.getTemplateField().get_value("renderjs_extra") + [(\'password\', context.getTypeBasedMethod(\'getContentPassword\')())]</string> </value>
+            <value> <string>python: dict(dict(field.getTemplateField().get_value(\'renderjs_extra\')), content_type=\'application/pdf\', editor=\'pdf\', password=context.getTypeBasedMethod(\'getContentPassword\')())</string> </value>
         </item>
       </dictionary>
     </pickle>
