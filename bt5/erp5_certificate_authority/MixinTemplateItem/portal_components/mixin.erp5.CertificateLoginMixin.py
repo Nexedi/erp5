@@ -72,9 +72,11 @@ class CertificateLoginMixin:
     certificate_dict = {
       "common_name" : self.getReference()
     }
-    if self.getReference and self.getSourceReference():
+    if self.getReference() and self.getSourceReference():
+      if csr is not None:
+        raise ValueError("This certificate already")
       certificate_dict["id"] = self.getSourceReference()
-      crt_pem = caucase_connector.getCertificate(self.getSourceReference())
+      crt_pem = caucase_connector.getCertificate(int(self.getSourceReference()))
       certificate_dict["certificate"] = crt_pem
       # We should assert that reference is the CN of crt_pem
       return certificate_dict
@@ -111,7 +113,7 @@ class CertificateLoginMixin:
     else:
       return self._getCertificate(csr=csr)
 
-  def _revokeCertificate(self):
+  def _revokeCertificate(self, key_pem=None):
     if self.getDestinationReference() is not None or (
       self.getReference() is not None and self.getSourceReference() is None
     ):
@@ -119,12 +121,14 @@ class CertificateLoginMixin:
     
     if self.getSourceReference() is not None:
       caucase_connector = self._getCaucaseConnector()
-      crt_pem = caucase_connector.getCertificate(self.getSourceReference())
-      caucase_connector.revokeCertificate(crt_pem)
+      crt_pem = caucase_connector.getCertificate(int(self.getSourceReference()))
+      if key_pem is None:
+        return caucase_connector.revokeCertificate(crt_pem, key_pem)
+      return caucase_connector.revokeCertificate(crt_pem)
     else:
       raise ValueError("No certificate found to revoke!")
 
   security.declarePrivate('revokeCertificate')
-  def revokeCertificate(self):
+  def revokeCertificate(self, key_pem=None):
     """Revokes existing certificate"""
-    self._revokeCertificate()
+    self._revokeCertificate(key_pem=key_pem)
