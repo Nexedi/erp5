@@ -225,7 +225,7 @@ table.balance td:last-child {
 table.registration_number {
   clear: both;
   float: right;
-  width: 14%;
+  width: 20%;
 }
 table.registration_number th {
   width: 70%;
@@ -810,7 +810,7 @@ footer {
               </span>
             </th>
             <td>
-              <span></span>
+              <span tal:content="python:context.getPortalType().startswith('Sale') and context.getSourceSectionValue().getVatCode() or ''"></span>
             </td>
           </tr>
         </tbody>
