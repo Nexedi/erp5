@@ -52,7 +52,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
             portal_type="Role Information")
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_certificate_authority')
+    return ('erp5_base', 'erp5_web_service', 'erp5_certificate_authority')
 
   def _createPerson(self):
     login = str(random.random())
