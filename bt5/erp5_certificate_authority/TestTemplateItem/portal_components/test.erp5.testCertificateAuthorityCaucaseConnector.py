@@ -38,12 +38,11 @@ from caucase.client import CaucaseHTTPError
 class TestCertificateAuthorityCaucaseConnector(ERP5TypeTestCase):
 
   def afterSetUp(self):
-    self.caucase_connector = self.portal.portal_web_services.caucase_connector
-    #self.setUpCaucase()
-    #self.caucase_connector = self.portal.portal_web_services.test_caucase_connector
+    self.setUpCaucase()
+    self.caucase_connector = self.portal.portal_web_services.test_caucase_connector
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_certificate_authority')
+    return ('erp5_base', 'erp5_web_service', 'erp5_certificate_authority')
 
   def test_getConnection_no_url(self):
     connector_no_url_string = self.portal.portal_web_services.newContent(
