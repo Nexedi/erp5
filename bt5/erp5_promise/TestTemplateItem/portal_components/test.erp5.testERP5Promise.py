@@ -37,7 +37,7 @@ class TestERP5Promise(ERP5TypeTestCase):
     """
         Return the list of business templates.
     """
-    return ("erp5_base", "erp5_certificate_authority", "erp5_promise")
+    return ("erp5_base", "erp5_promise")
 
   def _test_promise_alarm(self, alarm_id):
     alarm = self.portal.portal_alarms[alarm_id]
@@ -61,9 +61,6 @@ class TestERP5Promise(ERP5TypeTestCase):
   def test_promise_memcached_server(self):
     self.portal.portal_memcached.default_memcached_plugin.setUrlString(None)
     self._test_promise_alarm("promise_memcached_server")
-
-  def test_promise_certificate_autority_tool(self):
-    self._test_promise_alarm("promise_certificate_autority_tool")
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -420,12 +420,6 @@ class IntrospectionTool(LogMixin, BaseTool):
 
       collect_information_by_property(conn,'connection_string')
 
-    # collect information from certificate authority
-    certificate_authority = getattr(portal, 'portal_certificate_authority',
-      None)
-    if certificate_authority is not None:
-      collect_information_by_property(certificate_authority,
-        'certificate_authority_path')
     return connection_dict
 
   security.declareProtected(Permissions.ManagePortal,
