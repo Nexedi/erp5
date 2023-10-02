@@ -1043,7 +1043,7 @@ def convertToERP5Workflow(self, temp_object=False):
         sdef = workflow._getOb('state_'+sid)
         sdef.setDestinationValueList([
           workflow.getTransitionValueByReference(tid)
-          for tid in self.states.get(sid).transitions])
+          for tid in self.states.get(sid).transitions if workflow.getTransitionValueByReference(tid) is not None])
       # set transition's destination state:
       for tid in dc_workflow_transition_value_list:
         tdef = workflow.getTransitionValueByReference(tid)
