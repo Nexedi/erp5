@@ -48,22 +48,36 @@ var OperatorAPI = /** @class */ (function () {
       "min_lon": MIN_LON,
       "max_lon": MAX_LON,
       "flag_list": [{"position":
-                     {"x": 45.6464947316632,
+                     {"latitude": 45.6464947316632,
+                     "longitude": 14.270747186236491,
+                     "altitude": 10,
+                     "x": 45.6464947316632,
                      "y": 14.270747186236491,
                      "z": 10},
                      "score": 1,
                      "weight": 1}],
       "obstacle_list": [{"type": "box",
-                         "position": {"x": 45.6456815316444,
+                         "position": {"latitude": 45.6456815316444,
+                                      "longitude": 14.274667031215898,
+                                      "altitude": 15,
+                                      "x": 45.6456815316444,
                                       "y": 14.274667031215898,
                                       "z": 15},
                          "scale": {"x": 132, "y": 56, "z": 10},
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 45.6455531,
+                      "position": {"latitude": 45.6455531,
+                                   "longitude": 14.270747186236491,
+                                   "altitude": 15,
+                                   "x": 45.6455531,
                                    "y": 14.270747186236491,
                                    "z": 15}}],
-      "initial_position": {"x": 45.642813275, "y": 14.270231599999988, "z": 15}
+      "initial_position": {"latitude": 45.642813275,
+                           "longitude": 14.270231599999988,
+                           "altitude": 15,
+                           "x": 45.642813275,
+                           "y": 14.270231599999988,
+                           "z": 15}
     },
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
@@ -86,10 +100,10 @@ var OperatorAPI = /** @class */ (function () {
       '\n' +
       'function distance2D(a, b) {\n' +
       '  var R = 6371e3, // meters\n' +
-      '    la1 = a.x * Math.PI / 180, // lat, lon in radians\n' +
-      '    la2 = b.x * Math.PI / 180,\n' +
-      '    lo1 = a.y * Math.PI / 180,\n' +
-      '    lo2 = b.y * Math.PI / 180,\n' +
+      '    la1 = a.latitude * Math.PI / 180, // lat, lon in radians\n' +
+      '    la2 = b.latitude * Math.PI / 180,\n' +
+      '    lo1 = a.longitude * Math.PI / 180,\n' +
+      '    lo2 = b.longitude * Math.PI / 180,\n' +
       '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
       '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
       '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
@@ -98,7 +112,7 @@ var OperatorAPI = /** @class */ (function () {
       '\n' +
       'function distance(a, b) {\n' +
       '  return Math.sqrt(\n' +
-      '    Math.pow(a.z - b.z, 2) + Math.pow(distance2D(a, b), 2)\n' +
+      '    Math.pow(a.altitude - b.altitude, 2) + Math.pow(distance2D(a, b), 2)\n' +
       '  );\n' +
       '}\n' +
       '\n' +
@@ -132,9 +146,9 @@ var OperatorAPI = /** @class */ (function () {
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        me.flag_positions[me.next_checkpoint].position.x,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.y,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.z + me.id\n' +
+      '        me.flag_positions[me.next_checkpoint].position.latitude,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.longitude,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.altitude + me.id\n' +
       '      );\n' +
       //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -180,7 +194,7 @@ var OperatorAPI = /** @class */ (function () {
       '    } else {\n' +
       '      dodge_point.y = dodge_point.y * -1;\n' +
       '    }\n' +
-      '    me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition().z);\n' +
+      '    me.setTargetCoordinates(dodge_point.latitude, dodge_point.longitude, me.getCurrentPosition().altitude);\n' +
       '    return;\n' +
       '  }\n' +
       '};',
@@ -718,6 +732,28 @@ var OperatorAPI = /** @class */ (function () {
           }),
           sub_gadget.element
         ]);
+
+        //Backward compatibility sanitation
+        function sanitize(position) {
+          if (!position.latitude) {
+            position.latitude = position.x;
+            position.longitude = position.y;
+            position.altitude = position.z;
+          }
+          return position;
+        }
+        var map_json = JSON.parse(gadget.state.map_json);
+        map_json.initial_position = sanitize(map_json.initial_position);
+        map_json.flag_list.forEach(function (flag, index) {
+          flag.position = sanitize(flag.position);
+        });
+        map_json.obstacle_list.forEach(function (obstacle, index) {
+          obstacle.position = sanitize(obstacle.position);
+        });
+        map_json.enemy_list.forEach(function (enemy, index) {
+          enemy.position = sanitize(enemy.position);
+        });
+        gadget.state.map_json = JSON.stringify(map_json, undefined, 4);
 
         var operator_code = "let operator = function(operator){" +
           gadget.state.operator_script +

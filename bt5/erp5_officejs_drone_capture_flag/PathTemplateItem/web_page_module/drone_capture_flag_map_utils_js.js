@@ -3,7 +3,7 @@
 var MapUtils = /** @class */ (function () {
   "use strict";
 
-  var FLAG_EPSILON = 15, R = 6371e3;
+  var FLAG_EPSILON = 15, R = 6371e3, FLAG_WEIGHT = 5, FLAG_SCORE = 5;
 
   //** CONSTRUCTOR
   function MapUtils(map_param) {
@@ -80,6 +80,9 @@ var MapUtils = /** @class */ (function () {
       this.map_info.min_y;
     lat = 90 - lat / (this.map_info.map_size / 180.0);
     return {
+      latitude: lat,
+      longitude: lon,
+      altitude: z,
       x: lat,
       y: lon,
       z: z
@@ -99,8 +102,9 @@ var MapUtils = /** @class */ (function () {
         for (i = 0; i < list.length; i += 1) {
           el = {"position":
                 {"x": 0, "y": 0, "z": 0},
-                "score": list[i].score,
-                "weight": list[i].weight};
+                "score": Math.floor(seed.quick() * FLAG_SCORE) + 1,
+                "weight": Math.floor(seed.quick() * FLAG_WEIGHT) + 1
+               };
           el.position.x = normalize(list[i].position.x, min_x, max_x);
           el.position.y = normalize(list[i].position.y, min_y, max_y);
           //TODO normalize z to map height?
@@ -332,20 +336,15 @@ var MapUtils = /** @class */ (function () {
     );
     Object.assign(_this.map_info, _this.map_param);
     flag_list.forEach(function (flag_info, index) {
-      coordinates = _this.convertToGeoCoordinates(
-        flag_info.position.x,
-        flag_info.position.y,
-        flag_info.position.z
-      );
       geo_flag_info = {
         'id': flag_info.id,
         'score': flag_info.score,
         'weight': flag_info.weight,
-        'position': {
-          'x': coordinates.x,
-          'y': coordinates.y,
-          'z': coordinates.z
-        }
+        'position': _this.convertToGeoCoordinates(
+          flag_info.position.x,
+          flag_info.position.y,
+          flag_info.position.z
+        )
       };
       _this.map_info.flag_list.push(geo_flag_info);
     });
