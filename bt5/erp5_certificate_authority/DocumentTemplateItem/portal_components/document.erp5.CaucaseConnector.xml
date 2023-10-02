@@ -45,7 +45,9 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 78,  9: Unreachable code (unreachable)</string>
+              </tuple>
             </value>
         </item>
         <item>
