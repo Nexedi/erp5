@@ -74,11 +74,13 @@ class CaucaseConnector(XMLObject):
     if self.getUserCertificate() is None:
       raise ValueError("You need to set the User Key and Certificate!")
 
+    return self._getConnection(user_key="/srv/slapgrid/slappart19/tmp/couscous")
     with tempfile.NamedTemporaryFile(prefix='caucase_user_') as user_key_file:
       user_key_file.write(
         self.getUserKey() + self.getUserCertificate()
       )
       # XXX Ensure the file is fully writen
+      user_key_file.flush()
       user_key_file.seek(0)
       return self._getConnection(user_key=user_key_file.name)
 
@@ -106,6 +108,34 @@ class CaucaseConnector(XMLObject):
         else:
           self.setUserCertificate(crt_pem)
 
+
+  def _getSubjectNameAttributeList(self):
+    crt_pem = None #self.getUserCertificate()
+    if crt_pem is None:
+      name_attribute_list = []
+      for oid, value in [
+        (NameOID.ORGANIZATION_NAME, self.getCompanyName("ERP5")),
+        (NameOID.LOCALITY_NAME, self.getLocalityName()),
+        (NameOID.EMAIL_ADDRESS, self.getEmailAddress()),
+        (NameOID.STATE_OR_PROVINCE_NAME, self.getStateOrProvinceName()),
+        (NameOID.COUNTRY_NAME, self.getCountryName()),
+      ]:
+        if value:
+          name_attribute_list.append(x509.NameAttribute(oid, value.decode()))
+      return name_attribute_list
+    else:
+      # Extract name attributes from the existing crt
+      ssl_certificate = x509.load_pem_x509_certificate(crt_pem)
+      # Filtered to a set of relevant OID
+      name_oid_list = [
+        NameOID.ORGANIZATION_NAME, 
+        NameOID.LOCALITY_NAME, 
+        NameOID.EMAIL_ADDRESS, 
+        NameOID.STATE_OR_PROVINCE_NAME, 
+        NameOID.COUNTRY_NAME,
+      ]
+      return [i for i in ssl_certificate.subject if i.oid in name_oid_list ]
+
   def _createCertificateRequest(self):
     key = rsa.generate_private_key(
       public_exponent=65537, key_size=2048, backend=default_backend())
@@ -115,10 +145,11 @@ class CaucaseConnector(XMLObject):
       encryption_algorithm=serialization.NoEncryption()
     )
 
+    name_attribute_list = self._getSubjectNameAttributeList()
     # Probably we should extend a bit more the attributes.
-    csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
-       x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"ERP5"),
-    ])).sign(key, hashes.SHA256(), default_backend())
+    csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name(
+      name_attribute_list
+    )).sign(key, hashes.SHA256(), default_backend())
 
     return key_pem.decode(), csr.public_bytes(serialization.Encoding.PEM).decode()
 
