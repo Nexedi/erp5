@@ -36,7 +36,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   FixedWingDroneAPI.prototype.internal_start = function (drone) {
-    drone._targetCoordinates = drone.getCurrentPosition();
     drone._maxDeceleration = this.getMaxDeceleration();
     if (drone._maxDeceleration <= 0) {
       throw new Error('max deceleration must be superior to 0');
@@ -194,6 +193,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       distance,
       distanceCos,
       distanceSin,
+      distanceToTarget,
       currentSinLat,
       currentLonRad,
       groundSpeed,
@@ -205,11 +205,19 @@ var FixedWingDroneAPI = /** @class */ (function () {
       verticalSpeed,
       yawToDirection;
 
-    if (this._loiter_mode && Math.sqrt(
-      Math.pow(drone._targetCoordinates.x - drone.position.x, 2) +
-      Math.pow(drone._targetCoordinates.y - drone.position.y, 2)
-    ) <= this._loiter_radius) {
-      newYaw = bearing - 90;
+    if (this._loiter_mode) {
+      distanceToTarget = Math.sqrt(
+        Math.pow(drone._targetCoordinates.x - drone.position.x, 2)
+          + Math.pow(drone._targetCoordinates.y - drone.position.y, 2)
+      );
+
+      if (Math.abs(distanceToTarget - this._loiter_radius) <= 1) {
+        newYaw = bearing - 90;
+      } else if (distanceToTarget < this._loiter_radius) {
+        newYaw = bearing - 135;
+      } else {
+        newYaw = this._getNewYaw(drone, bearing, delta_time);
+      }
     } else {
       newYaw = this._getNewYaw(drone, bearing, delta_time);
     }
@@ -414,16 +422,16 @@ var FixedWingDroneAPI = /** @class */ (function () {
         distance = calculateDistance(drone_position, other_position, context);
         if (distance <= VIEW_SCOPE) {
           result.drones.push({
-            position: drone.getCurrentPosition(),
-            direction: drone.direction,
-            rotation: drone.rotation,
-            speed: drone.speed,
-            team: drone.team
+            position: other.getCurrentPosition(),
+            direction: other.direction,
+            rotation: other.rotation,
+            speed: other.speed,
+            team: other.team
           });
         }
       }
     });
-    context._map_dict.geo_obstacle_list.forEach(function (obstacle) {
+    context._map_dict.obstacle_list.forEach(function (obstacle) {
       distance = calculateDistance(drone_position, obstacle.position, context);
       if (distance <= VIEW_SCOPE) {
         result.obstacles.push(obstacle);
