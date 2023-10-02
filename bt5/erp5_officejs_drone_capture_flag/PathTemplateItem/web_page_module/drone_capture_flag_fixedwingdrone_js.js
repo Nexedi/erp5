@@ -17,7 +17,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    VIEW_SCOPE = 100;
+    VIEW_SCOPE = 100,
+    MAX_MESSAGE_SIZE = 1024;
 
   //** CONSTRUCTOR
   function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -356,6 +357,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     };
 
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
+    if (JSON.stringify(msg).length > MAX_MESSAGE_SIZE) {
+      //TODO what to do? truncate the msg? log a warning? crash the drone?
+      msg = {"error": "message too long (max 1024)"};
+    }
     var _this = this,
       droneList = _this._gameManager._droneList;
     _this._gameManager.delay(function () {
@@ -366,7 +371,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
             try {
               drone.onGetMsg(msg);
             } catch (error) {
-              console.warn('Drone crashed on sendMsg due to error:', error);
+              console.warn('Drone crashed on onGetMsg due to error:', error);
               drone._internal_crash();
             }
           }
@@ -377,7 +382,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
           try {
             droneList[to].onGetMsg(msg);
           } catch (error) {
-            console.warn('Drone crashed on sendMsg due to error:', error);
+            console.warn('Drone crashed on onGetMsg due to error:', error);
             droneList[to]._internal_crash();
           }
         }
