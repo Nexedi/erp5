@@ -28,6 +28,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   EnemyDroneAPI.prototype.internal_start = function (drone) {
+    //TODO check, _targetCoordinates is not used. obsolete?
     drone._targetCoordinates = drone.getCurrentPosition();
     drone._maxAcceleration = this.getMaxAcceleration();
     if (drone._maxAcceleration <= 0) {
@@ -99,10 +100,6 @@ var EnemyDroneAPI = /** @class */ (function () {
         }
       });
     }
-  };
-
-  EnemyDroneAPI.prototype.setAltitude = function (drone, altitude) {
-    drone._targetCoordinates.z = altitude;
   };
 
   EnemyDroneAPI.prototype.setStartingPosition = function (drone, x, y, z) {
@@ -288,11 +285,11 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(drone_pos.x, drone_pos.y, 5);
+    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
   };
   EnemyDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.z) < 10;
+    return Math.floor(drone_pos.altitude) < 10;
   };
   EnemyDroneAPI.prototype.exit = function () {
     return;
