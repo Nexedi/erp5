@@ -50,6 +50,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
             role_base_category_script_id="ERP5Type_getSecurityCategoryFromSelf",
             role_base_category="group",
             portal_type="Role Information")
+    self.tic()
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_web_service', 'erp5_certificate_authority')

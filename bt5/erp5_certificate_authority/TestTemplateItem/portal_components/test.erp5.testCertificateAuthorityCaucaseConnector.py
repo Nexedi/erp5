@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeCaucaseTestCase import ERP5TypeCaucaseTestCase
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -35,11 +35,12 @@ from cryptography.hazmat.primitives import serialization
 from caucase.client import CaucaseHTTPError
 
 
-class TestCertificateAuthorityCaucaseConnector(ERP5TypeTestCase):
+class TestCertificateAuthorityCaucaseConnector(ERP5TypeCaucaseTestCase):
 
   def afterSetUp(self):
     self.setUpCaucase()
     self.caucase_connector = self.portal.portal_web_services.test_caucase_connector
+    self.tic()
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_web_service', 'erp5_certificate_authority')
