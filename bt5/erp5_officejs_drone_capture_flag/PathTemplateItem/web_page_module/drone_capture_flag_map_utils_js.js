@@ -3,7 +3,7 @@
 var MapUtils = /** @class */ (function () {
   "use strict";
 
-  var FLAG_EPSILON = 15, R = 6371e3;
+  var FLAG_EPSILON = 15, R = 6371e3, FLAG_WEIGHT = 5, FLAG_SCORE = 5;
 
   //** CONSTRUCTOR
   function MapUtils(map_param) {
@@ -99,8 +99,9 @@ var MapUtils = /** @class */ (function () {
         for (i = 0; i < list.length; i += 1) {
           el = {"position":
                 {"x": 0, "y": 0, "z": 0},
-                "score": list[i].score,
-                "weight": list[i].weight};
+                "score": Math.floor(seed.quick() * FLAG_SCORE) + 1,
+                "weight": Math.floor(seed.quick() * FLAG_WEIGHT) + 1
+               };
           el.position.x = normalize(list[i].position.x, min_x, max_x);
           el.position.y = normalize(list[i].position.y, min_y, max_y);
           //TODO normalize z to map height?
