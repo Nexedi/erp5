@@ -366,7 +366,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
             try {
               drone.onGetMsg(msg);
             } catch (error) {
-              console.warn('Drone crashed on sendMsg due to error:', error);
+              console.warn('Drone crashed on onGetMsg due to error:', error);
               drone._internal_crash();
             }
           }
@@ -377,7 +377,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
           try {
             droneList[to].onGetMsg(msg);
           } catch (error) {
-            console.warn('Drone crashed on sendMsg due to error:', error);
+            console.warn('Drone crashed on onGetMsg due to error:', error);
             droneList[to]._internal_crash();
           }
         }
