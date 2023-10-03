@@ -74,14 +74,12 @@ class CaucaseConnector(XMLObject):
     if self.getUserCertificate() is None:
       raise ValueError("You need to set the User Key and Certificate!")
 
-    return self._getConnection(user_key="/srv/slapgrid/slappart19/tmp/couscous")
-    with tempfile.NamedTemporaryFile(prefix='caucase_user_') as user_key_file:
-      user_key_file.write(
-        self.getUserKey() + self.getUserCertificate()
-      )
-      # XXX Ensure the file is fully writen
+    with tempfile.NamedTemporaryFile(prefix='caucase_user_', bufsize=0) as user_key_file:
+      user_key_file.write(self.getUserKey())
+      user_key_file.write("\n")
+      user_key_file.write(self.getUserCertificate())
       user_key_file.flush()
-      user_key_file.seek(0)
+
       return self._getConnection(user_key=user_key_file.name)
 
   def _bootstrapCaucaseConfiguration(self):
