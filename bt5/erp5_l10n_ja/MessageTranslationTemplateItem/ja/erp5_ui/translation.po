@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-11-23 12:11+UTC\n"
-"PO-Revision-Date: 2016-11-23 12:11+UTC\n"
+"POT-Creation-Date: 2023-10-03 03:20+UTC\n"
+"PO-Revision-Date: 2023-10-03 03:20+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: ja <>\n"
 "MIME-Version: 1.0\n"
@@ -5393,6 +5393,9 @@ msgstr "通称"
 
 msgid "VAT Code"
 msgstr "VATコード"
+
+msgid "VAT ID"
+msgstr "登録番号"
 
 msgid "Valid From"
 msgstr "有効期間の開始日"
