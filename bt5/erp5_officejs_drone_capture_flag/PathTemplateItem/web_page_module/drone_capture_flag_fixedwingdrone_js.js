@@ -358,8 +358,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
 
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
     if (JSON.stringify(msg).length > MAX_MESSAGE_SIZE) {
-      console.log("MESSAGE TOO LONG");
       //TODO what to do? truncate the msg? log a warning? crash the drone?
+      msg = {"error": "message too long (max 1024)"};
     }
     var _this = this,
       droneList = _this._gameManager._droneList;
