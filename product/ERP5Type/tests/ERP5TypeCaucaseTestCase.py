@@ -167,7 +167,7 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
 
     self.addCleanup(self._stopCaucaseServer)
     test_caucase_connector.setUrlString(self.caucase_url)
-    test_caucase_connector._bootstrapCaucaseConfiguration()
+    test_caucase_connector.bootstrapCaucaseConfiguration()
     if not retry(
       lambda: (
         test_caucase_connector.hasUserCertificateRequestReference() or
