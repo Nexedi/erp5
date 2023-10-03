@@ -69,7 +69,7 @@ class CaucaseConnector(XMLObject):
   def _getAuthenticatedConnection(self):
     if self.getUserCertificate() is None:
       if self.hasUserCertificateRequestReference():
-        self._bootstrapCaucaseConfiguration()
+        self.bootstrapCaucaseConfiguration()
 
     if self.getUserCertificate() is None:
       raise ValueError("You need to set the User Key and Certificate!")
@@ -82,7 +82,8 @@ class CaucaseConnector(XMLObject):
 
       return self._getConnection(user_key=user_key_file.name)
 
-  def _bootstrapCaucaseConfiguration(self):
+  security.declarePublic('bootstrapCaucaseConfiguration')
+  def bootstrapCaucaseConfiguration(self):
     if self.getUserCertificate() is None:
       caucase_connection = self._getConnection(mode="user")
       if not self.hasUserCertificateRequestReference():
@@ -90,21 +91,21 @@ class CaucaseConnector(XMLObject):
         csr_id = caucase_connection.createCertificateSigningRequest(csr)
         self.setUserCertificateRequestReference(csr_id)
         self.setUserKey(key)
-      else:
-        csr_id = int(self.getUserCertificateRequestReference())
-        try:
-          crt_pem = caucase_connection.getCertificate(
+      
+      csr_id = int(self.getUserCertificateRequestReference())
+      try:
+        crt_pem = caucase_connection.getCertificate(
             csr_id=csr_id)
-        except CaucaseError as e:
-          if e.args[0] != http_client.NOT_FOUND:
-            raise
+      except CaucaseError as e:
+        if e.args[0] != http_client.NOT_FOUND:
+          raise
 
-          # If server does not know our CSR anymore, getCertificateSigningRequest will raise.
-          # If it does, we were likely rejected, so exit by letting exception
-          # through.
-          caucase_connection.getCertificateSigningRequest(csr_id)
-        else:
-          self.setUserCertificate(crt_pem)
+        # If server does not know our CSR anymore, getCertificateSigningRequest will raise.
+        # If it does, we were likely rejected, so exit by letting exception
+        # through.
+        caucase_connection.getCertificateSigningRequest(csr_id)
+      else:
+        self.setUserCertificate(crt_pem)
 
 
   def _getSubjectNameAttributeList(self):
