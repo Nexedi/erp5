@@ -1041,9 +1041,11 @@ var GameManager = /** @class */ (function () {
     var score = 0, base = this._mapManager.getMapInfo().initial_position, dist;
     this._droneList_user.forEach(function (drone) {
       score += drone.score;
-      dist = Math.sqrt(Math.pow((drone.last_position.x - base.x), 2)
-                       + Math.pow((drone.last_position.y - base.y), 2));
-      if (dist < BASE_DISTANCE) score += 1;
+      if (drone.last_position) {
+        dist = Math.sqrt(Math.pow((drone.last_position.x - base.x), 2)
+                         + Math.pow((drone.last_position.y - base.y), 2));
+        if (dist < BASE_DISTANCE) score += 1;
+      }
     });
     return score;
   };
