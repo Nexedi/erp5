@@ -934,7 +934,7 @@ var GameManager = /** @class */ (function () {
         if (_this._timeOut()) {
           console.log("TIMEOUT!");
           _this._droneList.forEach(function (drone) {
-            drone._internal_crash(new Error('Timeout.'));
+            if (drone.can_play) drone._internal_crash(new Error('Timeout.'));
           });
           _this._result_message += "TIMEOUT!";
           return _this._finish();
