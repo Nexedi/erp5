@@ -642,6 +642,7 @@ var MapManager = /** @class */ (function () {
 
 var GameManager = /** @class */ (function () {
   "use strict";
+  var BASE_DISTANCE = 15;
   // *** CONSTRUCTOR ***
   function GameManager(canvas, game_parameters_json) {
     var drone, header_list, drone_count, i;
@@ -1034,9 +1035,12 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._calculateUserScore = function () {
-    var score = 0;
+    var score = 0, base = this._mapManager.getMapInfo().initial_position, dist;
     this._droneList_user.forEach(function (drone) {
       score += drone.score;
+      dist = Math.sqrt(Math.pow((drone.last_position.x - base.x), 2)
+                       + Math.pow((drone.last_position.y - base.y), 2));
+      if (dist < BASE_DISTANCE) score += 1;
     });
     return score;
   };
