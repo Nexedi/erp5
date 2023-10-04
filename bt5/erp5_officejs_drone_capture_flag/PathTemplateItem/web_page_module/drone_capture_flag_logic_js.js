@@ -205,6 +205,7 @@ var DroneManager = /** @class */ (function () {
     return;
   };
   DroneManager.prototype._internal_crash = function (error) {
+    this.last_position = this.position;
     this._canCommunicate = false;
     this._controlMesh = null;
     this._mesh = null;
