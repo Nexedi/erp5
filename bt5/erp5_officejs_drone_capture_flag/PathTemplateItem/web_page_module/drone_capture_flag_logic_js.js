@@ -642,7 +642,7 @@ var MapManager = /** @class */ (function () {
 
 var GameManager = /** @class */ (function () {
   "use strict";
-  var BASE_DISTANCE = 15;
+  var BASE_DISTANCE = 30;
   // *** CONSTRUCTOR ***
   function GameManager(canvas, game_parameters_json) {
     var drone, header_list, drone_count, i;
