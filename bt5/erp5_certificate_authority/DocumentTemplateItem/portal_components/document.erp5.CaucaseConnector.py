@@ -78,7 +78,7 @@ class CaucaseConnector(XMLObject):
 
       return self._getConnection(user_key=user_key_file.name)
 
-  security.declarePublic('bootstrapCaucaseConfiguration')
+  security.declareProtected(Permissions.ManageUsers, 'bootstrapCaucaseConfiguration')
   def bootstrapCaucaseConfiguration(self):
     if self.getUserCertificate() is None:
       caucase_connection = self._getConnection(mode="user")
@@ -102,7 +102,6 @@ class CaucaseConnector(XMLObject):
         caucase_connection.getCertificateSigningRequest(csr_id)
       else:
         self.setUserCertificate(crt_pem)
-
 
   def _getSubjectNameAttributeList(self):
     crt_pem = None #self.getUserCertificate()
@@ -154,12 +153,15 @@ class CaucaseConnector(XMLObject):
   def createCertificateSigningRequest(self, csr):
     return self._getConnection().createCertificateSigningRequest(csr)
 
+  security.declareProtected(Permissions.ManageUsers, 'createCertificate')
   def createCertificate(self, csr_id, template_csr=""):
     return self._getAuthenticatedConnection().createCertificate(csr_id, template_csr)
 
+  security.declareProtected(Permissions.ManageUsers, 'getCertificate')
   def getCertificate(self, csr_id):
     return self._getAuthenticatedConnection().getCertificate(csr_id)
 
+  security.declareProtected(Permissions.ManageUsers, 'revokeCertificate')
   def revokeCertificate(self, crt_pem, key_pem=None):
     if key_pem is None:
       return self._getAuthenticatedConnection().revokeCertificate(crt_pem)
