@@ -24,6 +24,14 @@
             <key> <string>id</string> </key>
             <value> <string>user_certificate_property</string> </value>
         </item>
+        <item>
+            <key> <string>read_permission</string> </key>
+            <value> <string>Manage users</string> </value>
+        </item>
+        <item>
+            <key> <string>write_permission</string> </key>
+            <value> <string>Manage users</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
