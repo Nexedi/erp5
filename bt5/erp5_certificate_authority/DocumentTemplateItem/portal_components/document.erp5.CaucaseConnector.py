@@ -32,11 +32,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import InitializeClass
 from caucase.client import CaucaseClient, CaucaseError
 
-try:
-  import http.client as http_client
-except ImportError: # pragma: no cover
-  # BBB: py2.7
-  import httplib as http_client
+from six.moves import http_client
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
