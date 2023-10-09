@@ -1,0 +1,101 @@
+div.json-editor-container .je-object__container .level-1 {
+  display: none !important;
+}
+div.json-editor-container .container {
+  width: 100%;
+  padding-right: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.75rem);
+  margin-right: 0px;
+  margin-left: 0px;
+}
+div.json-editor-container p {
+  margin-bottom: 1rem;
+}
+div.json-editor-container label {
+  display: inline-block;
+}
+div.json-editor-container .alert-danger {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+div.json-editor-container .alert {
+  position: relative;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+div.json-editor-container .form-label {
+  margin-bottom: 0.5rem;
+}
+div.json-editor-container .bg-light {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+}
+div.json-editor-container .card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  padding: 1rem 1rem;
+  background-color: #fff;
+}
+div.json-editor-container .je-switcher {
+  background-color: transparent;
+  height: auto;
+  width: auto;
+  margin-bottom: 0px;
+  margin-left: 5px;
+  padding: 0px 0px 0px 3px;
+}
+div.json-editor-container .btn {
+  vertical-align: middle;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.5rem;
+  flex: 1 1 auto;
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+}
+div.json-editor-container .btn:hover {
+  color: #fff;
+  background-color: #5c636a;
+  border-color: #565e64;
+}
+div.json-editor-container .fas {
+  font-family: 'FontAwesome';
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+div.json-editor-container .row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+div.json-editor-container .row > * {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-top: var(--bs-gutter-y);
+}
+div.json-editor-container .my-3 {
+  margin-bottom: 1rem!important;
+}
+div.json-editor-container .form-control:disabled,
+div.json-editor-container .form-control[readonly] {
+  background-color: #e9ecef !important;
+  opacity: 1;
+}
