@@ -80,9 +80,9 @@ var MapUtils = /** @class */ (function () {
       this.map_info.min_y;
     lat = 90 - lat / (this.map_info.map_size / 180.0);
     return {
-      x: lat,
-      y: lon,
-      z: z
+      latitude: lat,
+      longitude: lon,
+      altitude: z
     };
   };
 
@@ -343,9 +343,9 @@ var MapUtils = /** @class */ (function () {
         'score': flag_info.score,
         'weight': flag_info.weight,
         'position': {
-          'x': coordinates.x,
-          'y': coordinates.y,
-          'z': coordinates.z
+          'latitude': coordinates.latitude,
+          'longitude': coordinates.longitude,
+          'altitude': coordinates.altitude
         }
       };
       _this.map_info.flag_list.push(geo_flag_info);
