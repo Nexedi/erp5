@@ -343,9 +343,9 @@ var MapUtils = /** @class */ (function () {
         'score': flag_info.score,
         'weight': flag_info.weight,
         'position': {
-          'x': coordinates.x,
-          'y': coordinates.y,
-          'z': coordinates.z
+          'latitude': coordinates.latitude,
+          'longitude': coordinates.longitude,
+          'altitude': coordinates.altitude
         }
       };
       _this.map_info.flag_list.push(geo_flag_info);
