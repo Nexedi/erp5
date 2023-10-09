@@ -149,16 +149,19 @@ var DroneManager = /** @class */ (function () {
   /**
    * Set a target point to move
    */
-  DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
-    this._internal_setTargetCoordinates(x, y, z);
+  DroneManager.prototype.setTargetCoordinates =
+    function (latitude, longitude, altitude) {
+    this._internal_setTargetCoordinates(latitude, longitude, altitude);
   };
   DroneManager.prototype._internal_setTargetCoordinates =
-    function (x, y, z, radius) {
+    function (latitude, longitude, altitude, radius) {
       if (!this._canPlay) {
         return;
       }
-      //convert real geo-coordinates to virtual x-y coordinates
-      this._targetCoordinates = this._API.processCoordinates(x, y, z);
+      //each drone API process coordinates on its needs
+      //e.g. fixedwing drone converts real geo-coordinates to virtual x-y
+      this._targetCoordinates =
+        this._API.processCoordinates(latitude, longitude, altitude);
       return this._API.internal_setTargetCoordinates(
         this,
         this._targetCoordinates,
@@ -325,8 +328,9 @@ var DroneManager = /** @class */ (function () {
   /**
    * Make the drone loiter (circle with a set radius)
    */
-  DroneManager.prototype.loiter = function (x, y, z, radius) {
-    this._internal_setTargetCoordinates(x, y, z, radius);
+  DroneManager.prototype.loiter =
+    function (latitude, longitude, altitude, radius) {
+    this._internal_setTargetCoordinates(latitude, longitude, altitude, radius);
   };
   DroneManager.prototype.getFlightParameters = function () {
     if (this._API.getFlightParameters) {
@@ -444,9 +448,9 @@ var MapManager = /** @class */ (function () {
     _this.map_info = map_param;
     Object.assign(_this.map_info, _this.mapUtils.map_info);
     _this.map_info.initial_position = _this.mapUtils.convertToLocalCoordinates(
-      _this.map_info.initial_position.x,
-      _this.map_info.initial_position.y,
-      _this.map_info.initial_position.z);
+      _this.map_info.initial_position.latitude,
+      _this.map_info.initial_position.longitude,
+      _this.map_info.initial_position.altitude);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -495,9 +499,9 @@ var MapManager = /** @class */ (function () {
       enemy = {};
       Object.assign(enemy, geo_enemy);
       enemy.position = _this.mapUtils.convertToLocalCoordinates(
-        geo_enemy.position.x,
-        geo_enemy.position.y,
-        geo_enemy.position.z);
+        geo_enemy.position.latitude,
+        geo_enemy.position.longitude,
+        geo_enemy.position.altitude);
       _this._enemy_list.push(enemy);
     });
     // Obstacles
@@ -506,9 +510,9 @@ var MapManager = /** @class */ (function () {
       obstacle = {};
       Object.assign(obstacle, geo_obstacle);
       obstacle.position = _this.mapUtils.convertToLocalCoordinates(
-        geo_obstacle.position.x,
-        geo_obstacle.position.y,
-        geo_obstacle.position.z);
+        geo_obstacle.position.latitude,
+        geo_obstacle.position.longitude,
+        geo_obstacle.position.altitude);
       switch (obstacle.type) {
       case "box":
         new_obstacle = BABYLON.MeshBuilder.CreateBox("obs_" + count,
@@ -564,9 +568,9 @@ var MapManager = /** @class */ (function () {
       flag_info = {};
       Object.assign(flag_info, geo_flag);
       flag_info.position = _this.mapUtils.convertToLocalCoordinates(
-        geo_flag.position.x,
-        geo_flag.position.y,
-        geo_flag.position.z);
+        geo_flag.position.latitude,
+        geo_flag.position.longitude,
+        geo_flag.position.altitude);
       flag_material = new BABYLON.StandardMaterial("flag_mat_" + index, scene);
       flag_material.alpha = 1;
       flag_material.diffuseColor = BABYLON.Color3.Green();
@@ -903,7 +907,7 @@ var GameManager = /** @class */ (function () {
         var msg = '';
         drone._tick += 1;
         if (drone.can_play) {
-          if (drone.getCurrentPosition().z <= 0) {
+          if (drone.getCurrentPosition().altitude <= 0) {
             drone._internal_crash(new Error('Drone ' + drone.id +
                                             ' touched the floor.'));
           }
@@ -976,8 +980,9 @@ var GameManager = /** @class */ (function () {
                   drone_position.z
                 );
                 game_manager._flight_log[index].push([
-                  game_manager._game_duration, geo_coordinates.x,
-                  geo_coordinates.y, map_info.start_AMSL + drone_position.z,
+                  game_manager._game_duration, geo_coordinates.latitude,
+                  geo_coordinates.longitude,
+                  map_info.start_AMSL + drone_position.z,
                   drone_position.z, drone.getYaw(), drone.getGroundSpeed(),
                   drone.getClimbRate()
                 ]);

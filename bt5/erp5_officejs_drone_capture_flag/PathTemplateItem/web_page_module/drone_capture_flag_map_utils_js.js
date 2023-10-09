@@ -80,9 +80,9 @@ var MapUtils = /** @class */ (function () {
       this.map_info.min_y;
     lat = 90 - lat / (this.map_info.map_size / 180.0);
     return {
-      x: lat,
-      y: lon,
-      z: z
+      latitude: lat,
+      longitude: lon,
+      altitude: z
     };
   };
 
