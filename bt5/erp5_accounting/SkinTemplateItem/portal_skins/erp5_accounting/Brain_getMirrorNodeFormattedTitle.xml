@@ -50,15 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\', add_related_payments=0, keep_grouping_reference=0, set_ledger=0, both_sections=0, internal_transactions=False</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_createAccountingTransactionList</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Brain_getMirrorNodeFormattedTitle</string> </value>
         </item>
       </dictionary>
     </pickle>

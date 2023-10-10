@@ -13,9 +13,9 @@ business_process = portal.portal_catalog.getResultValue(
   portal_type='Business Process').getRelativeUrl()
 
 # if the previous test didn't change input data, no need to recreate content
-current_script_data_id = '%s_month_count_%s_draft_%s_state_%s_payment_%s_leger_%s_both_sections_%s' % (
+current_script_data_id = '%s_month_count_%s_draft_%s_state_%s_payment_%s_leger_%s_both_sections_%s_internal_transactions_%s' % (
      month_count, add_draft_transactions, transaction_state,
-     add_related_payments, set_ledger, both_sections, script.getId())
+     add_related_payments, set_ledger, both_sections, internal_transactions, script.getId())
 
 if accounting_module.getProperty('current_content_script',
                                 '') == current_script_data_id:
@@ -273,6 +273,66 @@ for section in section_list:
       tr.newContent(portal_type='Sale Invoice Transaction Line',
                     source=getAccountByTitle('Goods Sales'),
                     quantity=random.randint(300, 400),)
+
+
+if internal_transactions:
+  allowed_accounting_type_list = portal.portal_types['Accounting Transaction Module'].getTypeAllowedContentTypeList()
+  if 'Internal Invoice Transaction' not in allowed_accounting_type_list:
+    portal.portal_types['Accounting Transaction Module'].setTypeAllowedContentTypeList(
+      tuple(allowed_accounting_type_list) + ('Internal Invoice Transaction',))
+
+  tr = accounting_module.newContent(
+    portal_type='Internal Invoice Transaction',
+    title='Internal Transaction 1',
+    source_section=getOrganisationByTitle('My Organisation'),
+    destination_section=getOrganisationByTitle('Client 1'),
+    created_by_builder=1,
+    start_date=DateTime(2005, 6, 1),
+    stop_date=DateTime(2005, 6, 1),
+    resource=euro_resource,
+  )
+  tr.newContent(
+    portal_type='Internal Invoice Transaction Line',
+    source=getAccountByTitle('Receivable'),
+    destination=getAccountByTitle('Payable'),
+    quantity=100,
+  )
+  tr.newContent(
+    portal_type='Internal Invoice Transaction Line',
+    source=getAccountByTitle('Goods Sales'),
+    destination=getAccountByTitle('Goods Purchase'),
+    quantity=-100,
+  )
+  tr.start()
+  tr.stop()
+  tr.deliver()
+
+  tr = accounting_module.newContent(
+    portal_type='Internal Invoice Transaction',
+    title='Internal Transaction 2',
+    source_section=getOrganisationByTitle('Client 1'),
+    destination_section=getOrganisationByTitle('My Organisation'),
+    created_by_builder=1,
+    start_date=DateTime(2005, 6, 2),
+    stop_date=DateTime(2005, 6, 2),
+    resource=euro_resource,
+  )
+  tr.newContent(
+    portal_type='Internal Invoice Transaction Line',
+    source=getAccountByTitle('Goods Sales'),
+    destination=getAccountByTitle('Receivable'),
+    quantity=100,
+  )
+  tr.newContent(
+    portal_type='Internal Invoice Transaction Line',
+    source=getAccountByTitle('Goods Sales'),
+    destination=getAccountByTitle('Goods Purchase'),
+    quantity=-100,
+  )
+  tr.start()
+  tr.stop()
+  tr.deliver()
+
 
 accounting_module.setProperty('current_content_script',
                               current_script_data_id)
