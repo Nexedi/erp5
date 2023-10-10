@@ -79,4 +79,4 @@ for repository, id_ in tuple_list:
 
 RESPONSE.redirect(
   '%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=BusinessTemplate_installationChoice'
-  % (context.absolute_url(), make_query({'bt_list' : bt_list})))
+  % (context.absolute_url(), make_query({'bt_list' : bt_list, 'detailed_install': detailed_install})))
