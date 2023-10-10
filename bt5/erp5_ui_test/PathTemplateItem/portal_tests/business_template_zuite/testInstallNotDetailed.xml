@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25,18 +25,6 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>name_container</string> </key>
-                                <value> <string>container</string> </value>
-                            </item>
-                            <item>
-                                <key> <string>name_context</string> </key>
-                                <value> <string>context</string> </value>
-                            </item>
-                            <item>
-                                <key> <string>name_m_self</string> </key>
-                                <value> <string>script</string> </value>
-                            </item>
-                            <item>
                                 <key> <string>name_subpath</string> </key>
                                 <value> <string>traverse_subpath</string> </value>
                             </item>
@@ -49,12 +37,24 @@
             </value>
         </item>
         <item>
-            <key> <string>_params</string> </key>
-            <value> <string>check_dependencies=None, **kw</string> </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_getModifiedObjectList</string> </value>
+            <value> <string>testInstallNotDetailed</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

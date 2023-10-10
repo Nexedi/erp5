@@ -3,6 +3,13 @@ update_catalog = update_translation = 0
 
 bt_id_list = getattr(context.REQUEST, 'bt_list', ())
 bt_dict = {}
+
+if not listbox:
+  listbox = [
+    {'choice': item.choice_item_list[0], 'listbox_key': item.object_id}
+    for item in context.TemplateTool_getModifiedObjectList(**dict(kw, check_dependencies=False))
+  ]
+
 for item in listbox:
   # backward compatibility
   if not same_type(item['choice'], []):

@@ -6,10 +6,8 @@ bt_id_list = getattr(REQUEST, 'bt_list', ())
 if len(bt_id_list) == 0:
   bt_id_list = kw.get('bt_list', ())
 
-if 'MultiInstallationDialog' in getattr(REQUEST, 'current_form_id', ''):
-  check_dependencies = 0
-else:
-  check_dependencies = 1
+if check_dependencies is None:
+  check_dependencies = 'MultiInstallationDialog' not in getattr(REQUEST, 'current_form_id', '')
 
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Cache import CachingMethod
