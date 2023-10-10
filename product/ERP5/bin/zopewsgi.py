@@ -196,7 +196,8 @@ def runwsgi():
     else:
       event_log_handler = logging.FileHandler(args.event_log_file)
     event_log_handler.setFormatter(logging.Formatter(
-      "------\n%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+      # XXX: why are msec treated separately from the rest of the timestamp ?
+      "------\n%(asctime)s,%(msecs)03d %(levelname)s %(name)s %(message)s",
       "%Y-%m-%d %H:%M:%S"))
     root_logger.addHandler(event_log_handler)
 
@@ -231,7 +232,8 @@ def runwsgi():
     if conf.debug_mode:
       console_handler = logging.StreamHandler(sys.stderr)
       console_handler.setFormatter(logging.Formatter(
-        "%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+        # XXX: why are msec treated separately from the rest of the timestamp ?
+        "%(asctime)s,%(msecs)03d %(levelname)s %(name)s %(message)s",
         "%Y-%m-%d %H:%M:%S"))
       console_handler.setLevel(logging.NOTSET)
       root_logger.addHandler(console_handler)
