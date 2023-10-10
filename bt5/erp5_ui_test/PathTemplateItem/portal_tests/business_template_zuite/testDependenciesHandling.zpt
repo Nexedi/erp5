@@ -68,6 +68,16 @@
 </tr>
 <tr>
   <td>open</td>
+  <td>${base_url}/portal_skins/erp5_test/test_file</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>test2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
   <td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>
   <td></td>
 </tr>
