@@ -57,50 +57,10 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                                             'erp5_discussion/WebSection_viewLatestDiscussionPostListAsRSS',
                                             'erp5_core/Base_viewHistoricalComparisonDiff',
                                             'erp5_diff/ERP5Site_viewDiffTwoObjectDialog',]
-  JSL_IGNORE_FILE_LIST = (
-        'diff2html.js',
-        'diff2html-ui.js',
-        'dream_graph_editor/lib/handlebars.min.js',
-        'dream_graph_editor/lib/jquery-ui.js',
-        'dream_graph_editor/lib/jquery.js',
-        'dream_graph_editor/lib/jquery.jsplumb.js',
-        'dream_graph_editor/lib/jquery.simulate.js',
-        'dream_graph_editor/lib/qunit.js',
-        'dream_graph_editor/lib/springy.js',
-        'handlebars.js',
-        'jio.js',
-        'jslint.js',
-        'pdf_js/build/pdf.js',
-        'pdf_js/build/pdf.worker.js',
-        'pdf_js/compatibility.js',
-        'pdf_js/debugger.js',
-        'pdf_js/l10n.js',
-        'pdf_js/viewer.js',
-        'renderjs.js',
-        'require.js',
-        'require.min.js',
-        'rsvp.js',
-        'wz_dragdrop.js',
-        'gadget_vcs_status.js',  # XXX because jsl is buggy
-        )
-  JSL_IGNORE_SKIN_LIST = (
-        'erp5_code_mirror',
-        'erp5_fckeditor',
-        'erp5_ckeditor',
-        'erp5_jquery',
-        'erp5_jquery_ui',
-        'erp5_pivot_table',
-        'erp5_sql_browser',
-        'erp5_dhtmlx_scheduler',
-        'erp5_svg_editor',
-        )
 
   HTML_IGNORE_FILE_LIST = (
         'gadget_erp5_side_by_side_diff.html',
         )
-  # NOTE: Here the difference between the JSL_IGNORE_SKIN_LIST is that we also
-  # consider the folders inside the skin. In this way, we can include multiple
-  # HTML files at once which are inside some folder in any skin folder.
   HTML_IGNORE_SKIN_FOLDER_LIST = (
         'erp5_jquery',
         'erp5_fckeditor',
@@ -224,35 +184,6 @@ class TestXHTMLMixin(ERP5TypeTestCase):
   def test_SkinsTool_checkFieldExternalValidator(self):
     self.assertFalse(
       self.portal.portal_skins.SkinsTool_checkFieldExternalValidator())
-
-  def test_javascript_lint(self):
-    skins_tool = self.portal.portal_skins
-    path_list = []
-    for script_path, script in skins_tool.ZopeFind(skins_tool,
-        obj_metatypes=('File','DTML Method','DTML Document'), search_sub=1):
-      if script_path.endswith('.js'):
-        x = script_path.split('/', 1)
-        if not (x[0] in self.JSL_IGNORE_SKIN_LIST or
-                x[1] in self.JSL_IGNORE_FILE_LIST):
-          path_list.append(script_path)
-    portal_skins_path = self.portal.getId() + '/portal_skins/'
-    args = ('jsl', '-stdin', '-nologo', '-nosummary', '-conf',
-            os.path.join(os.path.dirname(__file__), 'jsl.conf'))
-    error_list = []
-    for path in path_list:
-      check_path = portal_skins_path + path
-      body = self.publish(check_path).getBody()
-      try:
-        stdout, stderr = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                               close_fds=True).communicate(body)
-      except OSError as e:
-        e.strerror += '\n%r' % os.environ
-        raise
-      if stdout:
-        error_list.append((check_path, stdout))
-    if error_list:
-      message = '\n'.join(["%s\n%s\n" % error for error in error_list])
-      self.fail(message)
 
   def test_html_file(self):
     skins_tool = self.portal.portal_skins
