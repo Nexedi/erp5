@@ -196,7 +196,12 @@ def runwsgi():
     else:
       event_log_handler = logging.FileHandler(args.event_log_file)
     event_log_handler.setFormatter(logging.Formatter(
-      # XXX: why are msec treated separately from the rest of the timestamp ?
+      # Note about msec: strftime does not have a standard was of specifying
+      # how milliseconds are to be rendered, and especially what separator to
+      # use. So, treat milliseconds separately from the rest of the timestamp.
+      # See also:
+      #   https://docs.python.org/3/library/logging.html#logging.Formatter.formatTime
+      #   https://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/
       "------\n%(asctime)s,%(msecs)03d %(levelname)s %(name)s %(message)s",
       "%Y-%m-%d %H:%M:%S"))
     root_logger.addHandler(event_log_handler)
@@ -232,7 +237,6 @@ def runwsgi():
     if conf.debug_mode:
       console_handler = logging.StreamHandler(sys.stderr)
       console_handler.setFormatter(logging.Formatter(
-        # XXX: why are msec treated separately from the rest of the timestamp ?
         "%(asctime)s,%(msecs)03d %(levelname)s %(name)s %(message)s",
         "%Y-%m-%d %H:%M:%S"))
       console_handler.setLevel(logging.NOTSET)
