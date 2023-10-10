@@ -3,7 +3,11 @@ update_catalog = update_translation = 0
 
 bt_id_list = getattr(context.REQUEST, 'bt_list', ())
 bt_dict = {}
+
+# TODO: this should not be named force ??
+force = True
 for item in listbox:
+  force = False
   # backward compatibility
   if not same_type(item['choice'], []):
     item['choice'] = [item['choice']]
@@ -15,6 +19,14 @@ for item in listbox:
   bt_id, object_id = item['listbox_key'].split('|')
   bt_dict.setdefault(bt_id, {})[object_id] = choice
 
+if force:
+  for bt_id in bt_id_list:
+    for modified_obj in context[bt_id].BusinessTemplate_getModifiedObject():
+      object_id = modified_obj.object_id
+      choice = modified_obj.choice_item_list[0][1]
+      bt_dict.setdefault(bt_id, {})[object_id] = choice
+
+
 bt_title_list = []
 for bt_id in bt_id_list:
   try:
@@ -25,7 +37,8 @@ for bt_id in bt_id_list:
     update_catalog = kw.get('update_catalog')
     update_translation = kw.get('update_translation')
   bt = context.portal_templates[bt_id]
-  bt.install(force=0, object_to_update=object_list, update_catalog=update_catalog,
+  context.log("installing %s force=%s object_list=%s" % (bt.getTitle(), force, len(object_list)))
+  bt.install(force=force, object_to_update=object_list, update_catalog=update_catalog,
              update_translation=update_translation)
   bt_title_list.append(bt.getTitle())
 
