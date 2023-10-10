@@ -127,8 +127,6 @@ def test_suite():
       (CodingStyleTest,),
       {
           'tested_business_template': tested_business_template,
-          # currently, jsl based test_javascript_lint report too many false positives.
-          'test_javascript_lint': None,
       },
   )
 
