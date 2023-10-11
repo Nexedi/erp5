@@ -199,9 +199,9 @@ var DroneLogAPI = /** @class */ (function () {
 
   DroneLogAPI.prototype.getCurrentPosition = function (x, y, z) {
     return {
-      x: x,
-      y: y,
-      z: z
+      latitude: x,
+      longitude: y,
+      altitude: z
     };
   };
   DroneLogAPI.prototype.getFlightParameters = function () {

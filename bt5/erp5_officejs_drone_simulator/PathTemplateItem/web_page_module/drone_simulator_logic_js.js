@@ -135,16 +135,18 @@ var DroneManager = /** @class */ (function () {
   /**
    * Set a target point to move
    */
-  DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
-    this._internal_setTargetCoordinates(x, y, z);
-  };
+  DroneManager.prototype.setTargetCoordinates =
+    function (latitude, longitude, altitude) {
+      this._internal_setTargetCoordinates(latitude, longitude, altitude);
+    };
   DroneManager.prototype._internal_setTargetCoordinates =
-    function (x, y, z, radius) {
+    function (latitude, longitude, altitude, radius) {
       if (!this._canPlay) {
         return;
       }
       //convert real geo-coordinates to virtual x-y coordinates
-      this._targetCoordinates = this._API.processCoordinates(x, y, z);
+      this._targetCoordinates =
+        this._API.processCoordinates(latitude, longitude, altitude);
       return this._API.internal_setTargetCoordinates(
         this,
         this._targetCoordinates,
@@ -296,9 +298,15 @@ var DroneManager = /** @class */ (function () {
   /**
    * Make the drone loiter (circle with a set radius)
    */
-  DroneManager.prototype.loiter = function (x, y, z, radius) {
-    this._internal_setTargetCoordinates(x, y, z, radius);
-  };
+  DroneManager.prototype.loiter =
+    function (latitude, longitude, altitude, radius) {
+      this._internal_setTargetCoordinates(
+        latitude,
+        longitude,
+        altitude,
+        radius
+      );
+    };
   DroneManager.prototype.getFlightParameters = function () {
     if (this._API.getFlightParameters) {
       return this._API.getFlightParameters();
@@ -436,7 +444,7 @@ var MapManager = /** @class */ (function () {
     this.map_info.initial_position = this.convertToLocalCoordinates(
       initial_position.latitude,
       initial_position.longitude,
-      initial_position.z
+      initial_position.altitude
     );
   };
   MapManager.prototype.getMapInfo = function () {
@@ -485,9 +493,9 @@ var MapManager = /** @class */ (function () {
       this.map_info.min_y;
     lat = 90 - lat / (this.map_info.map_size / 180.0);
     return {
-      x: lat,
-      y: lon,
-      z: z
+      latitude: lat,
+      longitude: lon,
+      altitude: z
     };
   };
   return MapManager;
@@ -666,7 +674,7 @@ var GameManager = /** @class */ (function () {
       queue.push(function () {
         drone._tick += 1;
         if (drone._API.isCollidable && drone.can_play) {
-          if (drone.getCurrentPosition().z <= 0) {
+          if (drone.getCurrentPosition().altitude <= 0) {
             drone._internal_crash(new Error('Drone ' + drone.id +
                                             ' touched the floor.'));
           } else {
@@ -718,8 +726,9 @@ var GameManager = /** @class */ (function () {
                   drone_position.z
                 );
                 game_manager._flight_log[index].push([
-                  game_manager._game_duration, geo_coordinates.x,
-                  geo_coordinates.y, map_info.start_AMSL + drone_position.z,
+                  game_manager._game_duration, geo_coordinates.latitude,
+                  geo_coordinates.longitude,
+                  map_info.start_AMSL + drone_position.z,
                   drone_position.z, drone.getYaw(), drone.getGroundSpeed(),
                   drone.getClimbRate()
                 ]);
@@ -1013,6 +1022,7 @@ var GameManager = /** @class */ (function () {
       try {
         eval(code_eval);
       } catch (error) {
+        console.error(error);
         eval(base);
       }
       /*jslint evil: false*/

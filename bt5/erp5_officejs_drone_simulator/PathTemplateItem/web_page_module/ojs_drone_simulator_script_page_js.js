@@ -25,7 +25,7 @@
     INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.2658,
-      "z": 15
+      "altitude": 15
     },
     NUMBER_OF_DRONES = 2,
     // Non-inputs parameters
@@ -108,8 +108,8 @@
       '  if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
       '    me.current_position = me.getCurrentPosition();\n' +
       '    me.distance = distance(\n' +
-      '      me.current_position.x,\n' +
-      '      me.current_position.y,\n' +
+      '      me.current_position.latitude,\n' +
+      '      me.current_position.longitude,\n' +
       '      CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
       '      CHECKPOINT_LIST[me.next_checkpoint].longitude\n' +
       '    );\n' +
@@ -387,14 +387,14 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_init_pos_z": {
+                "my_init_pos_alt": {
                   "description": "",
-                  "title": "Initial drone position Z",
-                  "default": INITIAL_POSITION.z,
+                  "title": "Initial drone altitude",
+                  "default": INITIAL_POSITION.altitude,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "init_pos_z",
+                  "key": "init_pos_alt",
                   "hidden": 0,
                   "type": "FloatField"
                 },
@@ -434,7 +434,7 @@
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
                   ["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
-                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
+                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_alt"],
                   ["my_map_height"]]
               ], [
                 "right",
@@ -498,7 +498,7 @@
         "initialPosition": {
           "longitude": parseFloat(options.init_pos_lon),
           "latitude": parseFloat(options.init_pos_lat),
-          "z": parseFloat(options.init_pos_z)
+          "altitude": parseFloat(options.init_pos_alt)
         },
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
