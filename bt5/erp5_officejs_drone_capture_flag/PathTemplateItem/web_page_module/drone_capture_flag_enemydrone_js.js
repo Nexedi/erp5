@@ -102,10 +102,6 @@ var EnemyDroneAPI = /** @class */ (function () {
     }
   };
 
-  EnemyDroneAPI.prototype.setAltitude = function (drone, altitude) {
-    drone._targetCoordinates.altitude = altitude;
-  };
-
   EnemyDroneAPI.prototype.setStartingPosition = function (drone, x, y, z) {
     if (!drone._canPlay) {
       if (z <= 0.05) {
