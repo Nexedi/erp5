@@ -1,4 +1,6 @@
-(function (window, RSVP, rJS, domsugar, document, Blob) {
+/*jslint indent: 2, maxlen: 100*/
+/*global window, rJS, domsugar, document*/
+(function (window, rJS, domsugar, document) {
   "use strict";
 
   var SIMULATION_SPEED = 200,
@@ -12,9 +14,9 @@
     WIDTH = 680,
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
-     'gadget_erp5_page_drone_simulator_logic.js',
-     'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
-     'gadget_erp5_page_drone_simulator_dronelogfollower.js'
+      'gadget_erp5_page_drone_simulator_logic.js',
+      'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
+      'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 
   rJS(window)
@@ -40,7 +42,7 @@
     })
 
     .declareMethod('render', function render() {
-      var gadget = this, query;
+      var gadget = this;
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -90,7 +92,7 @@
               group_list: [[
                 "left",
                 [["my_log_1"], ["my_simulation_speed"]]
-              ],[
+              ], [
                 "right",
                 [["my_log_2"]]
               ]]
@@ -106,7 +108,9 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      var gadget = this, simulator, log_1_entry_list, log_2_entry_list;
+      var gadget = this, dist, fragment = gadget.element.querySelector('.simulator_div'),
+        game_parameters_json, log_1_entry_list, log_2_entry_list, map_info,
+        span = document.querySelector('#distance');
       function latLonDistance(c1, c2) {
         var R = 6371e3,
           q1 = c1[0] * Math.PI / 180,
@@ -123,19 +127,16 @@
         var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
           log_header_found;
         for (i = 0; i < line_list.length; i += 1) {
-          if (!log_header_found && !line_list[i].includes("timestamp (ms);")) {
-            continue;
-          } else {
+          if (log_header_found || line_list[i].includes("timestamp (ms);")) {
             log_header_found = true;
-          }
-          if (line_list[i].indexOf("AMSL") >= 0 ||
-              !line_list[i].includes(";")) {
-            continue;
-          }
-          log_entry = line_list[i].trim();
-          if (log_entry) {
-            log_entry = log_entry.split(';');
-            log_entry_list.push(log_entry);
+            if (line_list[i].indexOf("AMSL") < 0 &&
+                line_list[i].includes(";")) {
+              log_entry = line_list[i].trim();
+              if (log_entry) {
+                log_entry = log_entry.split(';');
+                log_entry_list.push(log_entry);
+              }
+            }
           }
         }
         return log_entry_list;
@@ -146,15 +147,15 @@
                            Math.pow(p1[1] - p2[1], 2) +
                            Math.pow(p1[2] - p2[2], 2));
         }
-        var i, sum = 0, point_a, point_b, penalization = 0, length;
-        for (i = 0; i < a.length; i++) {
+        var d, i, sum = 0, point_a, point_b, penalization = 0, length;
+        for (i = 0; i < a.length; i += 1) {
           if (b[i]) {
             point_a = [a[i][1], a[i][1]];
             point_b = [b[i][1], b[i][1]];
             if (z) {
               sum += distance3D(point_a, point_b);
             } else {
-              var d = latLonDistance(point_a, point_b);
+              d = latLonDistance(point_a, point_b);
               sum += d;
             }
           }
@@ -168,14 +169,12 @@
       }
       log_1_entry_list = getLogEntries(options.log_1);
       log_2_entry_list = getLogEntries(options.log_2);
-      var span = document.querySelector('#distance'),
-        dist = averageLogDistance(log_1_entry_list, log_2_entry_list, false);
+      dist = averageLogDistance(log_1_entry_list, log_2_entry_list, false);
       if (isNaN(dist)) {
         return gadget.notifySubmitted({message: 'Invalid log content', status: 'error'});
       }
       span.textContent = 'Average flights distance: ' +
         Math.round(dist * 100) / 100;
-      var fragment = gadget.element.querySelector('.simulator_div');
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       DRONE_LIST[0].log_content = options.log_1;
@@ -184,11 +183,19 @@
         var all = list_1.concat(list_2), i,
           min_lat = 999, min_lon = 999,
           max_lat = 0, max_lon = 0;
-        for (i = 0; i < all.length; i+=1) {
-          if (all[i][1] < min_lat) min_lat = all[i][1];
-          if (all[i][1] > max_lat) max_lat = all[i][1];
-          if (all[i][2] < min_lon) min_lon = all[i][2];
-          if (all[i][2] > max_lon) max_lon = all[i][2];
+        for (i = 0; i < all.length; i += 1) {
+          if (all[i][1] < min_lat) {
+            min_lat = all[i][1];
+          }
+          if (all[i][1] > max_lat) {
+            max_lat = all[i][1];
+          }
+          if (all[i][2] < min_lon) {
+            min_lon = all[i][2];
+          }
+          if (all[i][2] > max_lon) {
+            max_lon = all[i][2];
+          }
         }
         return {
           "min_lat": min_lat,
@@ -198,10 +205,10 @@
           "start_AMSL": all[0][3] - all[0][4],
           "init_pos_lat": all[0][1],
           "init_pos_lon": all[0][2],
-          "init_pos_z": all[0][4]
+          "init_pos_alt": all[0][4]
         };
       }
-      var map_info = generateMapInfo(log_1_entry_list, log_2_entry_list);
+      map_info = generateMapInfo(log_1_entry_list, log_2_entry_list);
       options.min_lat = map_info.min_lat;
       options.max_lat = map_info.max_lat;
       options.min_lon = map_info.min_lon;
@@ -210,8 +217,8 @@
       options.start_AMSL = map_info.start_AMSL;
       options.init_pos_lon = map_info.init_pos_lon;
       options.init_pos_lat = map_info.init_pos_lat;
-      options.init_pos_z = map_info.init_pos_z;
-      var game_parameters_json = {
+      options.init_pos_alt = map_info.init_pos_alt;
+      game_parameters_json = {
         "drone": {
           "maxAcceleration": 1,
           "maxSpeed": 1
@@ -233,7 +240,7 @@
         "initialPosition": {
           "longitude": parseFloat(options.init_pos_lon),
           "latitude": parseFloat(options.init_pos_lat),
-          "z": parseFloat(options.init_pos_z)
+          "altitude": parseFloat(options.init_pos_alt)
         },
         "draw_flight_path": DRAW,
         "log_drone_flight": LOG,
@@ -260,10 +267,10 @@
                   "url": "babylonjs.gadget.html",
                   "sandbox": "public",
                   "renderjs_extra": '{"autorun": false, "width": ' + WIDTH + ', ' +
-                  '"height": ' + HEIGHT + ', ' +
-                  '"logic_file_list": ' + JSON.stringify(LOGIC_FILE_LIST) + ', ' +
-                  '"game_parameters": ' + JSON.stringify(game_parameters_json) +
-                  '}'
+                    '"height": ' + HEIGHT + ', ' +
+                    '"logic_file_list": ' + JSON.stringify(LOGIC_FILE_LIST) + ', ' +
+                    '"game_parameters": ' + JSON.stringify(game_parameters_json) +
+                    '}'
                 }
               }},
               "_links": {
@@ -288,4 +295,4 @@
         });
     });
 
-}(window, RSVP, rJS, domsugar, document, Blob));
+}(window, rJS, domsugar, document));
