@@ -48,7 +48,7 @@ from zLOG import LOG
 class EditorWidget(Widget.TextAreaWidget):
   """
     A widget that displays a GUI HTML editor widget (based
-    on FCK editor). This widget is intended to be used in
+    on CKEditor). This widget is intended to be used in
     conjunction with WebSite.
     This Widget does not escape values.
 
@@ -70,7 +70,7 @@ class EditorWidget(Widget.TextAreaWidget):
                                    required=1,
                                    size=1,
                                    items=[('Standard Text Area', 'text_area'),
-                                          ('FCK Editor', 'fck_editor'),
+                                          ('CKEditor', 'fck_editor'),
                                           ('SVG Editor', 'svg_editor'),
                                           ('Spreadsheet Editor', 'spreadsheet_editor'),
                                           ('CodeMirror', 'codemirror')])

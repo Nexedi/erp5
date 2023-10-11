@@ -222,7 +222,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>FCK Editor</string>
+                          <string>CKEditor</string>
                           <string>fck_editor</string>
                         </tuple>
                         <tuple>
