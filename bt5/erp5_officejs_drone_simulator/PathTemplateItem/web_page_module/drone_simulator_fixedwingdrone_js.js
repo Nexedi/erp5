@@ -142,11 +142,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }*/
     if (drone_position) {
       drone_info = {
-        'altitudeRel' : drone_position.z,
+        'altitudeRel' : drone_position.altitude,
         'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
-          drone_position.z,
-        'latitude' : drone_position.x,
-        'longitude' : drone_position.y,
+          drone_position.altitude,
+        'latitude' : drone_position.latitude,
+        'longitude' : drone_position.longitude,
         'yaw': drone.getYaw(),
         'speed': drone.getAirSpeed(),
         'climbRate': drone.getClimbRate()
@@ -188,10 +188,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
         drone._targetCoordinates.z
       ),
       bearing = this._computeBearing(
-        currentGeoCoordinates.x,
-        currentGeoCoordinates.y,
-        targetCoordinates.x,
-        targetCoordinates.y
+        currentGeoCoordinates.latitude,
+        currentGeoCoordinates.longitude,
+        targetCoordinates.latitude,
+        targetCoordinates.longitude
       ),
       currentCosLat,
       currentLatRad,
@@ -228,10 +228,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
     newYawRad = this._toRad(newYaw);
 
-    currentLatRad = this._toRad(currentGeoCoordinates.x);
+    currentLatRad = this._toRad(currentGeoCoordinates.latitude);
     currentCosLat = Math.cos(currentLatRad);
     currentSinLat = Math.sin(currentLatRad);
-    currentLonRad = this._toRad(currentGeoCoordinates.y);
+    currentLonRad = this._toRad(currentGeoCoordinates.longitude);
 
     verticalSpeed = this._getVerticalSpeed(drone);
     groundSpeed = Math.sqrt(
@@ -502,11 +502,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(drone_pos.x, drone_pos.y, 5);
+    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
   };
   FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.z) < 10;
+    return Math.floor(drone_pos.altitude) < 10;
   };
   FixedWingDroneAPI.prototype.exit = function () {
     return;
