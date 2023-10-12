@@ -82,7 +82,10 @@ var MapUtils = /** @class */ (function () {
     return {
       latitude: lat,
       longitude: lon,
-      altitude: z
+      altitude: z,
+      x: lat,
+      y: lon,
+      z: z
     };
   };
 
@@ -333,20 +336,15 @@ var MapUtils = /** @class */ (function () {
     );
     Object.assign(_this.map_info, _this.map_param);
     flag_list.forEach(function (flag_info, index) {
-      coordinates = _this.convertToGeoCoordinates(
-        flag_info.position.x,
-        flag_info.position.y,
-        flag_info.position.z
-      );
       geo_flag_info = {
         'id': flag_info.id,
         'score': flag_info.score,
         'weight': flag_info.weight,
-        'position': {
-          'latitude': coordinates.latitude,
-          'longitude': coordinates.longitude,
-          'altitude': coordinates.altitude
-        }
+        'position': _this.convertToGeoCoordinates(
+          flag_info.position.x,
+          flag_info.position.y,
+          flag_info.position.z
+        )
       };
       _this.map_info.flag_list.push(geo_flag_info);
     });
