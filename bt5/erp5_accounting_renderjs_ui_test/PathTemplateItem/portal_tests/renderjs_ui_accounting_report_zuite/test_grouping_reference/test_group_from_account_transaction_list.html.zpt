@@ -87,7 +87,7 @@ Grouping from account transaction view
 <!-- Not possible to group for now -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'success',
+<tal:block tal:define="notification_configuration python: {'class': 'error',
                                                            'text': 'Nothing matches.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
