@@ -4,7 +4,8 @@ Used as a fast input dialog action.
 from Products.CMFCore.WorkflowCore import WorkflowException
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
-psm = Base_translateString('Nothing matches.')
+portal_status_message = Base_translateString('Nothing matches.')
+portal_status_level = 'error'
 request = container.REQUEST
 
 # update selected uids
@@ -54,8 +55,9 @@ if grouping == 'grouping':
   grouped_line_list = context.AccountingTransaction_guessGroupedLines(
                         accounting_transaction_line_uid_list=uids)
   if grouped_line_list:
-    psm = Base_translateString('${grouped_line_count} lines grouped.',
+    portal_status_message = Base_translateString('${grouped_line_count} lines grouped.',
                                mapping=dict(grouped_line_count=len(grouped_line_list)))
+    portal_status_level = 'success'
 
     # make sure nothing will be checked next time
     portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
@@ -121,14 +123,14 @@ else:
       # to know the number of ungrouped lines.
       ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference(async=False))
 
-  psm = Base_translateString('${ungrouped_line_count} lines ungrouped.',
+  portal_status_message = Base_translateString('${ungrouped_line_count} lines ungrouped.',
                              mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))
-
+  portal_status_level = 'success'
   # make sure nothing will be checked next time
   portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
 
 return context.Base_renderForm(
   'AccountingTransactionModule_viewGroupingFastInputDialog',
   REQUEST=request,
-  keep_items={'portal_status_message': psm}
+  keep_items={'portal_status_message': portal_status_message, 'portal_status_level': portal_status_level}
 )
