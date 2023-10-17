@@ -190,9 +190,9 @@ var OperatorAPI = /** @class */ (function () {
       '    var random = Math.random() < 0.5, dodge_point = {};\n' +
       '    Object.assign(dodge_point, me.flag_positions[me.next_checkpoint].position);\n' +
       '    if (random) {\n' +
-      '      dodge_point.x = dodge_point.x * -1;\n' +
+      '      dodge_point.latitude = dodge_point.latitude * -1;\n' +
       '    } else {\n' +
-      '      dodge_point.y = dodge_point.y * -1;\n' +
+      '      dodge_point.longitude = dodge_point.longitude * -1;\n' +
       '    }\n' +
       '    me.setTargetCoordinates(dodge_point.latitude, dodge_point.longitude, me.getCurrentPosition().altitude);\n' +
       '    return;\n' +
