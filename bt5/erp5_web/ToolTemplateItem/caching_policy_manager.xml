@@ -1517,7 +1517,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None and (lambda x: x is not None and x.getCachingPolicy() == \'no-cache\')(object.getWebSectionValue())</string> </value>
+            <value> <string>python: (lambda x: x is not None and x.getCachingPolicy() == \'no-cache\')(object.getWebSectionValue())</string> </value>
         </item>
       </dictionary>
     </pickle>
