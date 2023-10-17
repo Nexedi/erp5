@@ -55,9 +55,9 @@
         <p class="item-param-2">Drones starting point coordinates</p>
         <p class="item-param-2">
           {<br>
-          &nbsp;&nbsp;x: number, //latitude (in degrees)<br>
-          &nbsp;&nbsp;y: number, //longitude (in degrees)<br>
-          &nbsp;&nbsp;z: number  //altitude (in meters)<br>
+          &nbsp;&nbsp;latitude: number, //in degrees<br>
+          &nbsp;&nbsp;longitude: number, //in degrees<br>
+          &nbsp;&nbsp;altitude: number  //in meters<br>
           }<br>
         </p>
       </div>
@@ -67,7 +67,7 @@
         <p class="item-param-2">List of flags, each element:</p>
         <p class="item-param-2">
           {<br>
-          &nbsp;&nbsp;position {x,y,z}:<br>&nbsp;&nbsp;latitude, longitude and altitude<br>
+          &nbsp;&nbsp;position {latitude, longitude, altitude}: dict of floats<br>
           &nbsp;&nbsp;score: number<br>
           &nbsp;&nbsp;weight: number<br>
           }<br>
@@ -79,7 +79,7 @@
         <p class="item-param-2">List of obstacles, each element:</p>
         <p class="item-param-2">
           {<br>
-          &nbsp;&nbsp;position {x,y,z}:<br>&nbsp;&nbsp;latitude, longitude and altitude<br>
+          &nbsp;&nbsp;position {latitude, longitude, altitude}: dict of floats<br>
           &nbsp;&nbsp;type: [box, cilinder, sphere]<br>
           &nbsp;&nbsp;scale: {x,y,z}<br>
           &nbsp;&nbsp;rotation: {x,y,z}<br>
@@ -92,7 +92,7 @@
         <p class="item-param-2">List of enemies, each element:</p>
         <p class="item-param-2">
           {<br>
-          &nbsp;&nbsp;position {x,y,z}:<br>&nbsp;&nbsp;latitude, longitude and altitude<br>
+          &nbsp;&nbsp;position {latitude, longitude, altitude}: dict of floats<br>
           &nbsp;&nbsp;type: drone-type<br>
           &nbsp;&nbsp;id: number<br>
           }<br>
@@ -136,7 +136,8 @@
       <h4 class="item-name" id="scoring"><span>Score</span></h4>
       <p class="item-descr">Every flag has a score, every drone hit on the flag will give it that score value.</p>
       <p class="item-descr">The number of hits on a flag is determined by its weight.</p>
-      <p class="item-descr">Once the number of hits is equal to the flag weight, no more score will be given on following hits.</p>
+      <p class="item-descr">Once the number of hits is equal to the flag weight, no more score will be given on following hits (the flag is consider captured).</p>
+      <p class="item-descr">When the game ends (whatever the reason), if a drone has returned to its initial position, it gets an extra point.</p>
       <p class="item-descr">Total score is the sum of all drones score when the game finishes.</p>
 
       <h5 class="item-param-1">Example</h5>
@@ -305,9 +306,9 @@
       <p class="item-descr">
         Get drone current position geo-coordinates.<br>
         {<br>
-        &nbsp;&nbsp;x: number, //latitude (in degrees)<br>
-        &nbsp;&nbsp;y: number, //longitude (in degrees)<br>
-        &nbsp;&nbsp;z: number  //altitude (in meters)<br>
+          &nbsp;&nbsp;latitude: number, //in degrees<br>
+          &nbsp;&nbsp;longitude: number, //in degrees<br>
+          &nbsp;&nbsp;altitude: number  //in meters<br>
         }<br>
       </p>
 
@@ -351,16 +352,16 @@
       </div>
 
       <div>
-        <p class="item-param-1">X: Float</p>
-        <p class="item-param-2">X value - latitude (in degrees).</p>
+        <p class="item-param-1">latitude: Float</p>
+        <p class="item-param-2">latitude value (in degrees).</p>
       </div>
       <div>
-        <p class="item-param-1">Y: Float</p>
-        <p class="item-param-2">Y value - longitude (in degrees).</p>
+        <p class="item-param-1">longitude: Float</p>
+        <p class="item-param-2">longitude value (in degrees).</p>
       </div>
       <div>
-        <p class="item-param-1">Z: Float</p>
-        <p class="item-param-2">Z value - altitude (in meters).</p>
+        <p class="item-param-1">altitude: Float</p>
+        <p class="item-param-2">altitude value (in meters).</p>
       </div>
 
       <div>
@@ -408,16 +409,16 @@
       </div>
 
       <div>
-        <p class="item-param-1">X: Float</p>
-        <p class="item-param-2">X value - latitude (in degrees).</p>
+        <p class="item-param-1">latitude: Float</p>
+        <p class="item-param-2">latitude value (in degrees).</p>
       </div>
       <div>
-        <p class="item-param-1">Y: Float</p>
-        <p class="item-param-2">Y value - longitude (in degrees).</p>
+        <p class="item-param-1">longitude: Float</p>
+        <p class="item-param-2">longitude value (in degrees).</p>
       </div>
       <div>
-        <p class="item-param-1">Z: Float</p>
-        <p class="item-param-2">Z value - altitude (in meters).</p>
+        <p class="item-param-1">altitude: Float</p>
+        <p class="item-param-2">altitude value (in meters).</p>
       </div>
 
       <div>

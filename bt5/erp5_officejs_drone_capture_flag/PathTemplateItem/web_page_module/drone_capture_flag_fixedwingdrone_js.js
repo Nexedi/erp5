@@ -17,7 +17,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    VIEW_SCOPE = 100;
+    VIEW_SCOPE = 100,
+    MAX_MESSAGE_SIZE = 1024;
 
   //** CONSTRUCTOR
   function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -137,11 +138,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }*/
     if (drone_position) {
       drone_info = {
-        'altitudeRel' : drone_position.z,
+        'altitudeRel' : drone_position.altitude,
         'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
-          drone_position.z,
-        'latitude' : drone_position.x,
-        'longitude' : drone_position.y,
+          drone_position.altitude,
+        'latitude' : drone_position.latitude,
+        'longitude' : drone_position.longitude,
         'yaw': drone.getYaw(),
         'speed': drone.getAirSpeed(),
         'climbRate': drone.getClimbRate()
@@ -183,10 +184,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
         drone._targetCoordinates.z
       ),
       bearing = this._computeBearing(
-        currentGeoCoordinates.x,
-        currentGeoCoordinates.y,
-        targetCoordinates.x,
-        targetCoordinates.y
+        currentGeoCoordinates.latitude,
+        currentGeoCoordinates.longitude,
+        targetCoordinates.latitude,
+        targetCoordinates.longitude
       ),
       currentCosLat,
       currentLatRad,
@@ -223,10 +224,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
     newYawRad = this._toRad(newYaw);
 
-    currentLatRad = this._toRad(currentGeoCoordinates.x);
+    currentLatRad = this._toRad(currentGeoCoordinates.latitude);
     currentCosLat = Math.cos(currentLatRad);
     currentSinLat = Math.sin(currentLatRad);
-    currentLonRad = this._toRad(currentGeoCoordinates.y);
+    currentLonRad = this._toRad(currentGeoCoordinates.longitude);
 
     verticalSpeed = this._getVerticalSpeed(drone);
     groundSpeed = Math.sqrt(
@@ -356,6 +357,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     };
 
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
+    if (JSON.stringify(msg).length > MAX_MESSAGE_SIZE) {
+      //TODO what to do? truncate the msg? log a warning? crash the drone?
+      msg = {"error": "message too long (max 1024)"};
+    }
     var _this = this,
       droneList = _this._gameManager._droneList;
     _this._gameManager.delay(function () {
@@ -366,7 +371,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
             try {
               drone.onGetMsg(msg);
             } catch (error) {
-              console.warn('Drone crashed on sendMsg due to error:', error);
+              console.warn('Drone crashed on onGetMsg due to error:', error);
               drone._internal_crash();
             }
           }
@@ -377,7 +382,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
           try {
             droneList[to].onGetMsg(msg);
           } catch (error) {
-            console.warn('Drone crashed on sendMsg due to error:', error);
+            console.warn('Drone crashed on onGetMsg due to error:', error);
             droneList[to]._internal_crash();
           }
         }
@@ -414,7 +419,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     var context = this, result = { "obstacles": [], "drones": [] }, distance,
       other_position, drone_position = drone.getCurrentPosition();
     function calculateDistance(a, b, _this) {
-      return _this._mapManager.latLonDistance([a.x, a.y], [b.x, b.y]);
+      return _this._mapManager.latLonDistance([a.latitude, a.longitude],
+                                              [b.latitude, b.longitude]);
     }
     context._gameManager._droneList.forEach(function (other) {
       if (other.can_play && drone.id !== other.id) {
@@ -537,11 +543,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(drone_pos.x, drone_pos.y, 5);
+    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
   };
   FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.z) < 10;
+    return Math.floor(drone_pos.altitude) < 10;
   };
   FixedWingDroneAPI.prototype.exit = function () {
     return;
