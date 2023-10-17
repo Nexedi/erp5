@@ -82,10 +82,7 @@ var MapUtils = /** @class */ (function () {
     return {
       latitude: lat,
       longitude: lon,
-      altitude: z,
-      x: lat,
-      y: lon,
-      z: z
+      altitude: z
     };
   };
 
