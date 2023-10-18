@@ -76,6 +76,7 @@ def retry(callback, try_count=10, try_delay=0.1):
 class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
   """ Helpfull code to start/stop/control a caucased service for the tests
   """
+  caucase_certificate_kw = {}
   def _startCaucaseServer(self, argv=(), timeout=10):
     """
     Start caucased server
@@ -141,7 +142,8 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
         portal_type="Caucase Connector",
         reference="erp5-certificate-login",
         user_key=None,
-        user_certificate=None
+        user_certificate=None,
+        **self.caucase_certificate_kw
       )
       test_caucase_connector.validate()
 
@@ -158,3 +160,4 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
       try_delay=1
     ):
       raise ValueError("Unable to configure")
+

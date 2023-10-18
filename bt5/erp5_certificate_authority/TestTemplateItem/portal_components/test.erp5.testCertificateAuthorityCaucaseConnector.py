@@ -33,9 +33,18 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from caucase.client import CaucaseHTTPError
+from cryptography.x509.oid import NameOID
 
 
 class TestCertificateAuthorityCaucaseConnector(ERP5TypeCaucaseTestCase):
+
+  caucase_certificate_kw = {
+    "company_name": "ERP5 Company",
+    "country_name": "FR",
+    "email_address": "noreply@erp5.net",
+    "locality_name": "Lille",
+    "state_or_province_name": "Nord-Pas-de-Calais"
+  }
 
   def afterSetUp(self):
     self.setUpCaucase()
@@ -84,6 +93,21 @@ class TestCertificateAuthorityCaucaseConnector(ERP5TypeCaucaseTestCase):
 
     cert = x509.load_pem_x509_certificate(cert_data, default_backend())
     privkey = serialization.load_pem_private_key(key.encode(), None, default_backend())
+
+    self.assertEqual(["ERP5 Company"],
+      [i.value for i in cert.subject if i.oid == NameOID.ORGANIZATION_NAME])
+
+    self.assertEqual(["FR"],
+      [i.value for i in cert.subject if i.oid == NameOID.COUNTRY_NAME])
+
+    self.assertEqual(["noreply@erp5.net"],
+      [i.value for i in cert.subject if i.oid == NameOID.EMAIL_ADDRESS])
+
+    self.assertEqual(["Lille"],
+      [i.value for i in cert.subject if i.oid == NameOID.LOCALITY_NAME])
+
+    self.assertEqual(["Nord-Pas-de-Calais"],
+      [i.value for i in cert.subject if i.oid == NameOID.STATE_OR_PROVINCE_NAME])
 
     cerfificate_pub = cert.public_key().public_bytes(
       serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo)
