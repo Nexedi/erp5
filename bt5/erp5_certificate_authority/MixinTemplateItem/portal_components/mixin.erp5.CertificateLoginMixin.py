@@ -43,11 +43,16 @@ class CertificateLoginMixin:
     key = rsa.generate_private_key(
       public_exponent=65537, key_size=2048, backend=default_backend())
 
-    # Probably we should extend a bit more the attributes.
-    csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
-       # The cryptography library only accept Unicode.
-       x509.NameAttribute(NameOID.COMMON_NAME, self.getReference().decode('UTF-8')),
-    ])).sign(key, hashes.SHA256(), default_backend())
+    name_attribute_list = self._getCaucaseConnector()._getSubjectNameAttributeList()
+
+    name_attribute_list.append(
+      x509.NameAttribute(NameOID.COMMON_NAME,
+                         # The cryptography library only accept Unicode.
+                         self.getReference().decode('UTF-8')))
+
+    csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name(
+       name_attribute_list
+    )).sign(key, hashes.SHA256(), default_backend())
 
     return csr.public_bytes(serialization.Encoding.PEM).decode()
 
