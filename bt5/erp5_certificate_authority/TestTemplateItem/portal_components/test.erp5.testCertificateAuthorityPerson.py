@@ -39,6 +39,14 @@ from cryptography.x509.oid import NameOID
 
 class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
 
+  caucase_certificate_kw = {
+    "company_name": "ERP5 Company",
+    "country_name": "FR",
+    "email_address": "noreply@erp5.net",
+    "locality_name": "Lille",
+    "state_or_province_name": "Nord-Pas-de-Calais"
+  }
+
   def afterSetUp(self):
     self.setUpCaucase()
     if getattr(self.portal.portal_types.Person,
@@ -80,9 +88,25 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
 
     ssl_certificate = x509.load_pem_x509_certificate(certificate['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn)
+
+    self.assertEqual(["ERP5 Company"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.ORGANIZATION_NAME])
+
+    self.assertEqual(["FR"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.COUNTRY_NAME])
+
+    self.assertEqual(["noreply@erp5.net"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.EMAIL_ADDRESS])
+
+    self.assertEqual(["Lille"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.LOCALITY_NAME])
+
+    self.assertEqual(["Nord-Pas-de-Calais"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.STATE_OR_PROVINCE_NAME])
+
 
   def test_person_duplicated_login(self):
     user_id, login = self._createPerson()
@@ -103,7 +127,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
 
     ssl_certificate = x509.load_pem_x509_certificate(certificate['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn)
 
@@ -127,7 +151,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
 
     ssl_certificate = x509.load_pem_x509_certificate(certificate['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn)
 
@@ -151,7 +175,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(new_certificate_login.getReference().startswith("CERT"))
 
     ssl_certificate = x509.load_pem_x509_certificate(new_certificate['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
     self.assertEqual(new_certificate_login.getReference().decode("UTF-8"), cn)
 
@@ -204,7 +228,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
 
     ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
     self.assertEqual(len(cn_list), 1)
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
@@ -213,6 +237,21 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
 
     certificate_login.validate()
     self.assertEqual(certificate_login.getValidationState(), "validated")
+
+    self.assertEqual(["ERP5 Company"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.ORGANIZATION_NAME])
+
+    self.assertEqual(["FR"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.COUNTRY_NAME])
+
+    self.assertEqual(["noreply@erp5.net"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.EMAIL_ADDRESS])
+
+    self.assertEqual(["Lille"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.LOCALITY_NAME])
+
+    self.assertEqual(["Nord-Pas-de-Calais"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.STATE_OR_PROVINCE_NAME])
 
   def test_certificate_login_get_certificate_set_reference(self):
     person = self.portal.person_module.newContent(portal_type='Person')
@@ -229,7 +268,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
 
     ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
     self.assertEqual(len(cn_list), 1)
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
@@ -254,7 +293,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertIn("key", certificate_dict.keys())
 
     ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
     self.assertEqual(len(cn_list), 1)
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
@@ -280,7 +319,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(reference.startswith("CERT"))
     
     ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
     self.assertEqual(len(cn_list), 1)
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
@@ -306,7 +345,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(reference.startswith("CERT"))
     
     ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
     self.assertEqual(len(cn_list), 1)
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
@@ -332,7 +371,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertTrue(reference.startswith("CERT"))
 
     ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
-    self.assertEqual(len(ssl_certificate.subject), 1)
+    self.assertEqual(len(ssl_certificate.subject), 6)
     cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
     self.assertEqual(len(cn_list), 1)
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])

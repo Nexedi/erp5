@@ -104,7 +104,7 @@ class CaucaseConnector(XMLObject):
         self.setUserCertificate(crt_pem)
 
   def _getSubjectNameAttributeList(self):
-    crt_pem = None #self.getUserCertificate()
+    crt_pem = self.getUserCertificate()
     if crt_pem is None:
       name_attribute_list = []
       for oid, value in [
