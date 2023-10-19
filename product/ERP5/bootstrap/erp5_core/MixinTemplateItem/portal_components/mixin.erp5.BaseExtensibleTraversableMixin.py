@@ -90,13 +90,19 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixin):
             else:
               has_published = True
             try:
+              auth = request._auth
+            except AttributeError:
+              # This kind of error happens with unrestrictedTraverse,
+              # because the request object is a fake, and it is just
+              # a dict object.
+              user = None
+            else:
               name = None
               acl_users = self.getPortalObject().acl_users
               user_list = acl_users._extractUserIds(request, acl_users.plugins)
               if len(user_list) > 0:
                 name = user_list[0][0]
               else:
-                auth = request._auth
                 # this logic is copied from identify() in
                 # AccessControl.User.BasicUserFolder.
                 if auth and auth.lower().startswith('basic '):
@@ -105,11 +111,6 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixin):
                 user = portal_membership._huntUser(name, self)
               else:
                 user = None
-            except AttributeError:
-              # This kind of error happens with unrestrictedTraverse,
-              # because the request object is a fake, and it is just
-              # a dict object.
-              user = None
             if not has_published:
               try:
                 del request.other['PUBLISHED']
