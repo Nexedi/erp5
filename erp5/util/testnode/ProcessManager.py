@@ -24,13 +24,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import getpass
 import os
 import psutil
 import re
-import subprocess
-import threading
 import signal
+import subprocess
 import sys
+import threading
 import time
 from . import logger
 
@@ -204,15 +205,18 @@ class ProcessManager(object):
         re.findall(br'^  (--\w+)', self.spawn(program_path, '--help')['stdout'], re.M))
 
   def killall(self, path):
-    """
-    Kill processes of given name, only if they're orphan or subprocesses of
-    the testnode.
+    """Kill all process from the user running in a given path
+
+    Processes from a given path are either executables contained in path or
+    executables running with current directory contained in path.
     """
     to_kill_list = []
-    pid = os.getpid()
-    for process in psutil.process_iter():
+    current_username = getpass.getuser()
+    for process in psutil.process_iter(['username']):
+      if process.info['username'] != current_username:
+        continue
       try:
-        if not(path in str(process.cmdline())):
+        if path not in str(process.cmdline()) and path not in process.cwd():
           continue
       except (psutil.AccessDenied, psutil.NoSuchProcess):
         continue

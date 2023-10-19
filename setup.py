@@ -60,6 +60,7 @@ setup(name=name,
         'test': [
           'mock; python_version < "3"',
           'psutil >= 0.5.0',
+          'setproctitle',
           'slapos.core',
           'xml_marshaller',
         ]
