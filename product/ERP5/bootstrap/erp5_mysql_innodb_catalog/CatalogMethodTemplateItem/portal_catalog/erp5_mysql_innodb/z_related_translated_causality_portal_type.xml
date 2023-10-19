@@ -8,15 +8,14 @@
       <dictionary>
         <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>table_0\n
 table_1\n
-table_2</string> </value>
+table_2\n
+RELATED_QUERY_SEPARATOR=" AND "</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -24,11 +23,15 @@ table_2</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -58,7 +61,7 @@ table_2</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_related_translated_causality_portal_type</string> </value>
         </item>
       </dictionary>
     </pickle>
