@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import parseListeningAddress
 
 from six import BytesIO
 import socket
@@ -81,21 +82,26 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
     """
     Start caucased server
     """
-    ip, port = os.environ.get('SLAPOS_TEST_IPV6', "::1"),\
-       findFreeTCPPort(os.environ.get('SLAPOS_TEST_IPV6', "::1"))
+    zserver = os.environ.get("zserver")
+    ip = "127.0.0.1"
+    for _ip, _ in parseListeningAddress(zserver):
+      if _ip is not None:
+        ip = _ip
+        break
+    port = findFreeTCPPort(ip)
     self.caucase_runtime = caucase_runtime = multiprocessing.Process(
       target=caucase.http.main,
       kwargs=dict(
         argv=[
           '--db', self.caucase_db,
           '--server-key', os.path.join(self.caucased, 'server.key.pem'),
-          '--netloc', '[%s]:%s' % (ip, port),
+          '--netloc', '%s:%s' % (ip, port),
           '--service-auto-approve-count', '0'
         ]
       )
     )
     self.caucase_runtime.start()
-    self.caucase_url = 'http://[%s]:%s' % (ip, port)
+    self.caucase_url = 'http://%s:%s' % (ip, port)
 
     if not retry(
       lambda: (
