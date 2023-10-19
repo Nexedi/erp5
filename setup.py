@@ -57,6 +57,12 @@ setup(name=name,
         'benchmark': benchmark_install_require_list,
         'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],
         'zodbanalyse': ['ZODB'],
+        'test': [
+          'mock; python_version < "3"',
+          'psutil >= 0.5.0',
+          'slapos.core',
+          'xml_marshaller',
+        ]
       },
       zip_safe=True,
       packages=package_list,
@@ -75,13 +81,6 @@ setup(name=name,
           'web_checker_utility = erp5.util.webchecker:web_checker_utility'
         ],
       },
-      test_suite='erp5.tests',
-      tests_require=[
-        'slapos.core',
-        'xml_marshaller',
-        'psutil >= 0.5.0',
-        'mock; python_version < "3"',
-      ],
     )
 
 # cleanup garbage
