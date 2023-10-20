@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -67,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>classification/collaborative/public</string>
               </tuple>
             </value>
         </item>
@@ -79,11 +77,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>text/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ojsm_graph_field.html</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_gadget_display.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,15 +91,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ojsm_graph_field_html</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_gadget_display_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -111,7 +111,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Officejs Graph</string> </value>
+            <value> <string>OfficeJS Monitoring Custom Gadget Display JS</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -201,7 +207,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1514308505.48</float>
+                              <float>1670427783.78</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -250,7 +256,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1005.8558.21408.14438</string> </value>
+                      <value> <string>1004.56929.7100.42939</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -270,7 +276,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1671547158.99</float>
+                              <float>1670517463.79</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -333,7 +339,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1514307956.78</float>
+                              <float>1670427609.93</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

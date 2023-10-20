@@ -3,6 +3,25 @@
 (function (window, rJS, RSVP, Handlebars, atob) {
   "use strict";
 
+  function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+
+  function formatDate(date) {
+    return (
+      [
+        date.getFullYear(),
+        padTo2Digits(date.getMonth() + 1),
+        padTo2Digits(date.getDate())
+      ].join('-') +
+      ' ' +
+        [
+          padTo2Digits(date.getHours()),
+          padTo2Digits(date.getMinutes())
+        ].join(':')
+    );
+  }
+
   var gadget_klass = rJS(window),
     source = gadget_klass.__template_element
       .querySelector(".render-link-template")
@@ -219,58 +238,49 @@
               ],
               data = element_dict.data || promise_data,
               data_list = [],
+              data_dict = {date_list: [], success_list: [], error_list: []},
               line_list,
               i;
 
-            data_list.push({
-              value_dict: {"0": [], "1": []},
-              type: "scatter",
-              axis_mapping_id_dict: {"1": "1_1"},
-              title: "promises success"
-            });
-            data_list.push({
-              value_dict: {"0": [], "1": []},
-              type: "scatter",
-              axis_mapping_id_dict: {"1": "1_2"},
-              title: "promises error"
-            });
             for (i = 1; i < data.length; i += 1) {
               line_list = data[i].split(',');
-              data_list[0].value_dict["0"].push(line_list[0]);
-              data_list[0].value_dict["1"].push(line_list[1]);
-
-              // XXX repeating date entry
-              data_list[1].value_dict["0"].push(line_list[0]);
-              data_list[1].value_dict["1"].push(line_list[2]);
+              data_dict.date_list.push(formatDate(new Date(line_list[0])));
+              data_dict.success_list.push(line_list[1]);
+              data_dict.error_list.push(line_list[2]);
             }
+            data_list.push({
+              value_dict: {
+                0: data_dict.date_list,
+                1: data_dict.success_list
+              },
+              colors: ['#61a0a8'],
+              type: "line",
+              title: "promises success"
+            }, {
+              value_dict: {
+                0: data_dict.date_list,
+                1: data_dict.error_list
+              },
+              colors: ['#c23531'],
+              type: "line",
+              title: "promises error"
+            });
             return data_list;
           };
           graph_options.data_dict = {
-            data: {},
+            data: [],
             layout: {
               axis_dict : {
-                "0": {
-                  "title": "Promises Failure Progression",
-                  "scale_type": "linear",
-                  "value_type": "date"
-                },
-                "1_1": {
-                  "title": "Promises success",
-                  "position": "right"
-                },
-                "1_2": {
-                  "title": "Promises error",
-                  "position": "right"
-                }
+                0: {"title": "date"},
+                1: {"title": "value",  "value_type": "number"}
               },
-              title: "Promises Failure Progression"
+              title: "Promises Success/Failure Progression"
             }
           };
           return graph_options;
         })
         .push(function (g) {
           graph_data = g;
-          //gadget.element.querySelector('.template-view').innerHTML = html;
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
@@ -542,6 +552,11 @@
             gadget.getUrlFor({command: 'push_history', options: {
               page: 'ojsm_processes_view',
               key: gadget.state.opml_outline.reference
+            }}),
+            gadget.getUrlFor({command: 'push_history', options: {
+              page: 'ojsm_gadget_display',
+              key: gadget.state.instance.reference,
+              opml_url: gadget.state.opml_outline.parent_url
             }})
           ]);
         })
@@ -556,6 +571,7 @@
           if (gadget.state.instance._links !== undefined) {
             options.resources_url = url_list[3];
             options.processes_url = url_list[4];
+            options.gadget_url = url_list[5];
           }
           return gadget.updateHeader(options);
         });
