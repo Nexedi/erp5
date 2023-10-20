@@ -311,7 +311,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com data: * localhost:5378 *.vifib.erp5.net *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com data: * localhost:5378 *.vifib.erp5.net *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' * data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
@@ -576,7 +576,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.64257.46798.35242</string> </value>
+                      <value> <string>1011.60641.7001.46387</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -596,7 +596,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1625247788.8</float>
+                              <float>1697748086.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
