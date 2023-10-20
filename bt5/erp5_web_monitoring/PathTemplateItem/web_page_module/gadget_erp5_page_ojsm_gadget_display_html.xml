@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -67,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>classification/collaborative/public</string>
               </tuple>
             </value>
         </item>
@@ -83,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ojsm_graph_field.html</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_gadget_display.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,11 +91,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ojsm_graph_field_html</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_gadget_display_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -111,7 +111,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Officejs Graph</string> </value>
+            <value> <string>OfficeJS Monitoring Display Custom Gadget</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -201,7 +207,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1514308505.48</float>
+                              <float>1670427794.84</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -250,7 +256,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1005.8558.21408.14438</string> </value>
+                      <value> <string>1004.56797.28175.62498</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -270,7 +276,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1671547158.99</float>
+                              <float>1670516932.22</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -333,7 +339,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1514307956.78</float>
+                              <float>1670427290.57</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

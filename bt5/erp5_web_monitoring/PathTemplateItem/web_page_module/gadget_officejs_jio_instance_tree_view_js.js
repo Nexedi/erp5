@@ -1,9 +1,13 @@
 /*global window, rJS, document, RSVP, escape */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, document, RSVP, escape) {
+(function (window, rJS, document, Handlebars, RSVP, jIO, escape) {
   "use strict";
 
-  var gadget_klass = rJS(window);
+  var gadget_klass = rJS(window),
+      source = gadget_klass.__template_element
+        .querySelector(".render-link-template")
+        .innerHTML,
+      link_template = Handlebars.compile(source);
 
   gadget_klass
     .setState({
@@ -31,11 +35,7 @@
       param_list[0].select_list.push('parameters');
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          return gadget.changeState({instance_dict: result});
-        })
-        .push(function () {
-          var result = gadget.state.instance_dict,
-            i,
+          var i,
             value,
             len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
@@ -171,62 +171,8 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this;
-      if (!modification_dict.hasOwnProperty('ouline_list') &&
-          !modification_dict.hasOwnProperty('instance_dict')) {
+      if (!modification_dict.hasOwnProperty('ouline_list')) {
         return;
-      }
-      if (modification_dict.hasOwnProperty('instance_dict')) {
-        // render parameter form
-        return new RSVP.Queue()
-          .push(function () {
-            var promise_list = [],
-              i,
-              element = gadget.element.querySelector('.parameters-box'),
-              gadget_element;
-
-            //cleanup
-            while (element.hasChildNodes()) {
-              element.removeChild(element.lastChild);
-            }
-
-            for (i = 0; i < gadget.state.instance_dict.data.total_rows; i += 1) {
-              if (gadget.state.instance_dict.data.rows[i]
-                  .value.aggregate_reference === undefined) {
-                // Instance is not Synchronized!
-                promise_list.push(false);
-                continue;
-              }
-              gadget_element = document.createElement("div");
-              element.appendChild(gadget_element);
-              promise_list.push(
-                gadget.declareGadget("gadget_officejs_monitoring_parameter_view.html",
-                  {element: gadget_element,
-                    scope: 'p_' + gadget.state.instance_dict.data.rows[i].id,
-                    sandbox: "public"}
-                  )
-              );
-            }
-            return RSVP.all(promise_list);
-          })
-          .push(function (parameter_gadget_list) {
-            var i,
-              promise_list = [];
-            gadget.props.parameter_form_list = parameter_gadget_list;
-            for (i = 0; i < parameter_gadget_list.length; i += 1) {
-              if (parameter_gadget_list[i]) {
-                promise_list.push(
-                  parameter_gadget_list[i].render({
-                    url: gadget.state.instance_dict.data.rows[i].value._links.private_url.href
-                      .replace('jio_private', 'private') + '/config',
-                    basic_login: gadget.state.opml.basic_login,
-                    title: "Parameters " + gadget.state.instance_dict.data.rows[i].value.title,
-                    parameters: gadget.state.instance_dict.data.rows[i].value.parameters
-                  })
-                );
-              }
-            }
-            return RSVP.all(promise_list);
-          });
       }
       return new RSVP.Queue()
         .push(function () {
@@ -253,6 +199,92 @@
           return form_list.render({
             erp5_document: {
               "_embedded": {"_view": {
+                "your_title": {
+                  "description": "",
+                  "title": "Instance Tree",
+                  "default": gadget.state.instance_tree.title,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 0,
+                  "key": "instance_tree_title",
+                  "hidden": 0,
+                  "type": "EditorField"
+                },
+                "your_status": {
+                  "description": "",
+                  "title": "Status",
+                  "default": gadget.state.instance_tree.status,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 0,
+                  "key": "status",
+                  "hidden": 0,
+                  "url": "gadget_erp5_field_status.html",
+                  "type": "GadgetField"
+                },
+                "your_status_date": {
+                  "description": "",
+                  "title": "Status Date",
+                  "default": gadget.state.instance_tree.status_date,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 0,
+                  "key": "status_date",
+                  "hidden": 0,
+                  "timezone_style": 1,
+                  "date_only": 0,
+                  "type": "DateTimeField"
+                },
+                "your_instance_amount": {
+                  "description": "",
+                  "title": "Instance Amount",
+                  "default": gadget.state.instance_tree.instance_amount,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 0,
+                  "key": "instance_amount",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
+                "your_portal_type": {
+                  "description": "",
+                  "title": "Portal Type",
+                  "default": gadget.state.instance_tree.portal_type,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 0,
+                  "key": "portal_type",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
+                "your_opml_url": {
+                  "description": "",
+                  "title": "OMPL Url",
+                  "default": link_template({
+                    url: gadget.state.instance_tree.opml_url || "",
+                    title: gadget.state.instance_tree.opml_url || "",
+                    target: "_blank"
+                  }),
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 0,
+                  "key": "opml_url",
+                  "type": "EditorField"
+                },
+                "your_software_release_url": {
+                  "description": "",
+                  "title": "Software Release",
+                  "default": link_template({
+                    url: gadget.state.instance_tree.software_release || "",
+                    title: gadget.state.instance_tree.software_release || "",
+                    target: "_blank"
+                  }),
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 0,
+                  "key": "software_release_url",
+                  "type": "EditorField"
+                },
                 "listbox": {
                   "column_list": column_list,
                   "show_anchor": 0,
@@ -280,10 +312,29 @@
               }
             },
             form_definition: {
-              group_list: [[
-                "bottom",
-                [["listbox"]]
-              ]]
+              group_list: [
+                [
+                  "left",
+                  [
+                    ["your_title"], ["your_status"], ["your_status_date"]
+                  ]
+                ],
+                [
+                  "right",
+                  [
+                    ["your_instance_amount"], ["your_portal_type"],
+                    ["your_opml_url"]
+                  ]
+                ],
+                [
+                  "center",
+                  [["your_software_release_url"]]
+                ],
+                [
+                  "bottom",
+                  [["listbox"]]
+                ]
+              ]
             }
           });
         })
@@ -301,23 +352,19 @@
         })
         .push(function (url_list) {
           if (gadget.state.instance_tree.instance_amount === 0) {
-            gadget.element.querySelector('.hosting-title').textContent =
-              gadget.state.instance_tree.title + " -  Not synchronized!";
+            gadget.state.instance_tree.title += " - Not synchronized!";
             return gadget.updateHeader({
               page_title: "Instance Tree: " + gadget.state.instance_tree.title,
               selection_url: url_list[0],
               jump_url: url_list[1]
             });
           }
-          gadget.element.querySelector('.hosting-title').textContent =
-            gadget.state.instance_tree.title;
           return gadget.updateHeader({
             page_title: "Instance Tree: " + gadget.state.instance_tree.title,
             selection_url: url_list[0],
-            jump_url: url_list[1],
-            save_action: true
+            jump_url: url_list[1]
           });
         });
     });
 
-}(window, rJS, document, RSVP, escape));
+}(window, rJS, document, Handlebars, RSVP, jIO, escape));
