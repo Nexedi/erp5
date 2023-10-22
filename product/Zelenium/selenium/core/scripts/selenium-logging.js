@@ -117,18 +117,23 @@ Logger.prototype = {
     },
 
     debug: function(message) {
+       // debug is too verbose
+       // console.debug(new Date().toISOString(), message);
        this.log("debug", message);
     },
 
     info: function(message) {
+       console.info(new Date().toISOString(), message.toString().replace(/password.*/, '***password redacted***'));
        this.log("info", message);
     },
 
     warn: function(message) {
+       console.warn(new Date().toISOString(), message);
        this.log("warn", message);
     },
 
     error: function(message) {
+       console.error(new Date().toISOString(), message);
        this.log("error", message);
     },
 
