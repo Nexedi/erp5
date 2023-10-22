@@ -78,7 +78,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_start_date']//div[@data-gadget-scope='field']//p[@data-date='2015-12-21T11:00:00']</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//div[@data-gadget-scope='field']//p[@data-date='2015-12-21T11:00']</td>
   <td></td>
 </tr>
 
@@ -90,7 +90,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_stop_date']//div[@data-gadget-scope='field']//p[@data-date='2016-12-21T12:00:00']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//div[@data-gadget-scope='field']//p[@data-date='2016-12-21T12:00']</td>
   <td></td>
 </tr>
 
@@ -145,7 +145,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_stop_date']//div[@data-gadget-scope='field']//p[@data-date='2016-12-21T12:00:00']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//div[@data-gadget-scope='field']//p[@data-date='2016-12-21T12:00']</td>
   <td></td>
 </tr>
 

@@ -123,9 +123,9 @@
 </tal:block>
 
 <tr>
-  <td>assertElementPresent</td>
-  <td>//input[@value='2017-02-22T22:22:00']</td>
-  <td></td>
+  <td>assertValue</td>
+  <td>//input[@name='field_my_start_date']</td>
+  <td>2017-02-22T22:22</td>
 </tr>
 
 <tr>
