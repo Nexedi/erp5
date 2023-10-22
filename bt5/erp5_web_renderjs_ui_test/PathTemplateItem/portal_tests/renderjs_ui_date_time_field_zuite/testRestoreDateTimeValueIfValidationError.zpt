@@ -124,7 +124,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//input[@value='2017-02-22T22:22:00']</td>
+  <td>//input[@value='2017-02-22T22:22']</td>
   <td></td>
 </tr>
 
