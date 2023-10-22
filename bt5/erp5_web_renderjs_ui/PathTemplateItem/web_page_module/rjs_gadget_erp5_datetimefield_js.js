@@ -223,7 +223,7 @@
 
         if (!gadget.state.date_only) {
           time = "T" + Math.floor(tmp_hour / 10) + tmp_hour % 10 + ":" +
-                 Math.floor(tmp_minute / 10) +  (tmp_minute % 10) + ":00";
+                 Math.floor(tmp_minute / 10) + (tmp_minute % 10);
         }
         date = tmp_year + "-" + Math.floor(tmp_month / 10) +
           (tmp_month % 10) + "-" +
