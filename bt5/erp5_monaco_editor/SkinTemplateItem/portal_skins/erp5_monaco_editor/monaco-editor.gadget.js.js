@@ -177,7 +177,7 @@
           });
 
           monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-            target: monaco.languages.typescript.ScriptTarget.ES6,
+            target: monaco.languages.typescript.ScriptTarget.Latest,
             allowNonTsExtensions: true,
             checkJs: true,
             allowJs: true,
