@@ -94,7 +94,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@id='pageContainer1']</td>
+  <td>//div[@id='viewerContainer']//div[@data-page-number="1"]</td>
   <td></td>
 </tr>
 <tr>
