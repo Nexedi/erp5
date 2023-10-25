@@ -91,6 +91,7 @@ Selenium.prototype.doSetFile = function(locator, url_filename_mimetype) {
           new DataTransfer();
         dT.items.add(new File([blob], fileName, {type: mimeType}));
         fileField.files = dT.files;
+        fileField.dispatchEvent(new Event('change', { bubbles: true }));
       }));
 };
 
