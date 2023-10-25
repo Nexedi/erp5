@@ -226,6 +226,16 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
   locator,
   misMatchTolerance
 ) => {
+  if (window['ignoreSnapshotTest'].checked){
+    // calling getReferenceImageCounter has the side effect
+    // of increasing the counter, so if we enable / disable
+    // snapshot mid test the counter stays in sync.
+    var snapshotCounter = getReferenceImageCounter(
+      testFrame.getCurrentTestCase().pathname);
+    console.log("ignoring snapshot test " + snapshotCounter);
+    return;
+  }
+
   var misMatchToleranceFloat = parseFloat(misMatchTolerance);
   if (isNaN(misMatchToleranceFloat)) {
     misMatchToleranceFloat = 0;
@@ -263,7 +273,7 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
             if (response.status === 200) {
               return response.blob();
             }
-            throw new Error('Feching reference failed ' + response.statusText);
+            throw new Error('Fetching reference failed ' + response.statusText);
           })
           .then(
             blob => {
