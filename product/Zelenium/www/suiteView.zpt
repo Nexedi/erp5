@@ -107,6 +107,9 @@ to work-around a bug in IE on Win2K whereby the HTA application doesn't function
                     <div class="executionOptions">
                         <input id="highlightOption" type="checkbox" name="highlightOption" value="0"/>
                         <label for="highlightOption">Highlight elements</label>
+                        <br/>
+                        <input id="ignoreSnapshotTest" type="checkbox" name="ignoreSnapshotTest" value="0"/>
+                        <label for="ignoreSnapshotTest">Ignore snapshot tests</label>
                     </div>
 
                 </fieldset>
