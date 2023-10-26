@@ -54,17 +54,15 @@ class TestCertificateAuthorityCaucaseConnector(ERP5TypeCaucaseTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_web_service', 'erp5_certificate_authority')
 
-  def test_getConnection_no_url(self):
+  def test_getServiceConnection_no_url(self):
     connector_no_url_string = self.portal.portal_web_services.newContent(
       portal_type="Caucase Connector"
     )
-    self.assertRaises(ValueError, connector_no_url_string._getConnection)
+    self.assertRaises(ValueError, connector_no_url_string._getServiceConnection)
 
   def test_getConnection(self):
-    self.assertNotEqual(None, self.caucase_connector._getConnection())
-    self.assertNotEqual(None, self.caucase_connector._getConnection(mode="service"))
-    self.assertNotEqual(None, self.caucase_connector._getConnection(mode="user"))
-    self.assertRaises(ValueError, self.caucase_connector._getConnection, "unknownmode")
+    self.assertNotEqual(None, self.caucase_connector._getServiceConnection())
+    self.assertNotEqual(None, self.caucase_connector._getUserConnection())
 
   def test_getAuthenticatedConnection_no_url(self):
     connector_no_url_string = self.portal.portal_web_services.newContent(

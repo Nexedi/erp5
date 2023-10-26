@@ -29,32 +29,8 @@
 
 from AccessControl import ClassSecurityInfo
 
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.x509.oid import NameOID
-
 class CertificateLoginMixin:
   security = ClassSecurityInfo()
-
-  def _getCertificateSigningRequestTemplate(self):
-    key = rsa.generate_private_key(
-      public_exponent=65537, key_size=2048, backend=default_backend())
-
-    name_attribute_list = self._getCaucaseConnector()._getSubjectNameAttributeList()
-
-    name_attribute_list.append(
-      x509.NameAttribute(NameOID.COMMON_NAME,
-                         # The cryptography library only accept Unicode.
-                         self.getReference().decode('UTF-8')))
-
-    csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name(
-       name_attribute_list
-    )).sign(key, hashes.SHA256(), default_backend())
-
-    return csr.public_bytes(serialization.Encoding.PEM).decode()
 
   def _getCaucaseConnector(self):
     portal = self.getPortalObject()
@@ -94,7 +70,7 @@ class CertificateLoginMixin:
       ), _id
     )
     self.setReference(reference)
-    template_csr = self._getCertificateSigningRequestTemplate()
+    template_csr = caucase_connector.getCertificateSigningRequestTemplate(reference)
     csr_id = caucase_connector.createCertificateSigningRequest(csr)
 
     caucase_connector.createCertificate(csr_id, template_csr=template_csr)
@@ -104,7 +80,7 @@ class CertificateLoginMixin:
     return {
       "certificate" : crt_pem,
       "id" : self.getSourceReference(),
-      "common_name" : self.getReference()
+      "common_name" : reference
     }
     
   security.declarePublic('getCertificate')
