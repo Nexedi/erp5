@@ -376,6 +376,7 @@
           tmp_uid = result.data.rows[i].value.uid;
           if (uid_dict.hasOwnProperty(tmp_uid)) {
             tmp_parameter = readMonitoringParameter(result.data.rows[i].value.connection_xml);
+            console.log("readMonitoringParameter tmp_parameter result:", tmp_parameter);
             if (tmp_parameter === undefined) {
               tmp_parameter = {username: "", password: "", opml_url: undefined};
             }
@@ -610,6 +611,7 @@
                 return [];
               })
               .push(function (opml_list) {
+                console.log("getInstanceOPMLListFromMaster opml_list result:", opml_list);
                 var i,
                   push_queue = new RSVP.Queue();
 

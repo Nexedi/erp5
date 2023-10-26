@@ -110,6 +110,7 @@
             });
           })
           .push(function () {
+            console.log("syncAllStorage. jio_repair");
             // call repair on storage
             function repair() {
               return new RSVP.Queue()
@@ -162,27 +163,33 @@
       }
 
       function syncAllStorageWithCheck() {
+        console.log("syncAllStorageWithCheck. ");
         gadget.props.offline = false;
         return gadget.getSetting('sync_check_offline', 'true')
           .push(function (check_offline) {
             var parser;
+            console.log("check_offline:", check_offline);
             if (check_offline === 'true') {
               parser = document.createElement("a");
               parser.href = document.URL;
               return new RSVP.Queue()
                 .push(function () {
+                  console.log("testOnline. parser.origin:", parser.origin);
                   return testOnline(parser.origin);
                 })
                 .push(undefined, function () {
                   return {status: "ERROR"};
                 })
                 .push(function (online_result) {
+                  console.log("testonline online_result:", online_result);
                   if (online_result.status === "OK") {
+                    console.log("online_result OK, call syncAllStorage");
                     return syncAllStorage();
                   }
                   gadget.props.offline = true;
                 });
             }
+            console.log("check_offline false, call syncAllStorage");
             return syncAllStorage();
           });
       }
@@ -211,6 +218,7 @@
           .push(function (timer_interval) {
             if (gadget.props.offline === true) {
               // Offline mode detected. Next run in 1 minute
+              console.log("Offline mode detected or sync locked. Next run in 1 minute");
               timer_interval = 60000;
             } else if (timer_interval === undefined) {
               timer_interval = gadget.props.default_sync_interval;
@@ -232,11 +240,13 @@
 
       if (options.now) {
         if (gadget.props.started) {
+          console.log("sync is running...");
           // sync is running...
           return;
         }
         return syncAllStorageWithCheck();
       }
+      console.log("Default sync interval to 5 minutes");
       // Default sync interval to 5 minutes
       gadget.props.default_sync_interval = 300000;
       gadget.props.has_sync_interval = false;
@@ -246,6 +256,7 @@
         })
         .push(function (timer_interval) {
           if (timer_interval === undefined) {
+            console.log("quickly sync because this is the first run!");
             // quickly sync because this is the first run!
             gadget.props.timer_interval = 10000;
           } else {
@@ -272,6 +283,7 @@
           }
         })
         .push(function () {
+          console.log("call syncDataTimer, last step of register method");
           return syncDataTimer();
         });
     });
