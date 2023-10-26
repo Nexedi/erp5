@@ -5,23 +5,19 @@
 
   var gadget_klass = rJS(window);
 
-  function padTo2Digits(num) {
-    return num.toString().padStart(2, '0');
-  }
-
-  function formatDate(date) {
-    return (
-      [
-        date.getFullYear(),
-        padTo2Digits(date.getMonth() + 1),
-        padTo2Digits(date.getDate())
-      ].join('-') +
-      ' ' +
-        [
-          padTo2Digits(date.getHours()),
-          padTo2Digits(date.getMinutes())
-        ].join(':')
-    );
+  function getDateWindow(data) {
+    var max_date,
+      begin_date,
+      end_date,
+      date_window = [];
+    if (data.length > 0) {
+      max_date = data[data.length - 1].split(',')[0];
+      begin_date = new Date(max_date);
+      end_date = new Date(max_date);
+      begin_date.setHours(begin_date.getHours() - 8);
+      date_window = [Date.parse(begin_date), Date.parse(end_date)];
+    }
+    return date_window;
   }
 
   function loadGraphData(gadget, key) {
@@ -38,6 +34,7 @@
           });
       })
       .push(function (jio_element) {
+        gadget.property_dict.date_window = getDateWindow(gadget.property_dict.mem_data.data);
         if (!jio_element.hasOwnProperty('data')) {
           return {data: []};
         }
@@ -56,13 +53,14 @@
       });
   }
 
-  function updateIOData(gadget) {
+  function updateIOData(gadget, date_window) {
     var i,
       element,
       prev_element,
       date_diff,
-      date,
-      data_list = [];
+      line_list = [],
+      data_list = [],
+      axis_list = [];
 
     function convertElement(element) {
       var element_list = element.split(',');
@@ -73,36 +71,48 @@
         element_list[3].trim()
       ];
     }
-    //"disk used" is not in the graph for now
-    data_list.push({
-        value_dict: {
-          0: [],
-          1: []
-        },
-        colors: ['#AA069F'],
-        type: "line",
-        title: "IO read/write counter"
+    //"date, io rw counter, io cycles counter, disk used"
+    line_list = ["io rw count (Kb/s)", "io cycles count (/1000)"]; //, "disk used"];
+    axis_list.push({
+        "0": {
+          "title": "IO read/write counter",
+          "scale_type": "linear",
+          "value_type": "date",
+          "zoom_range": date_window
+        }
       });
-    data_list.push({
-        value_dict: {
-          0: [],
-          1: []
-        },
-        colors: ['#FC7D02'],
-        type: "line",
-        title: "IO cycles counter"
+    axis_list.push({
+        "0": {
+          "title": "IO cycles counter",
+          "scale_type": "linear",
+          "value_type": "date",
+          "zoom_range": date_window
+        }
       });
+    for (i = 0; i < line_list.length; i += 1) {
+      line_list[i] = line_list[i].trim();
+      data_list.push({
+        value_dict: {"0": [], "1": []},
+        type: "surface",
+        axis_mapping_id_dict: {"1": "1_1"},
+        title: line_list[i]
+      });
+      axis_list[i]["1_1"] = {"title": line_list[i], "position": "right"};
+    }
     if (gadget.property_dict.io_data.data.length > 2) {
       prev_element = convertElement(gadget.property_dict.io_data.data[1]);
       for (i = 2; i < gadget.property_dict.io_data.data.length; i += 1) {
         element = convertElement(gadget.property_dict.io_data.data[i]);
         date_diff = (new Date(element[0]).getTime() - new Date(prev_element[0]).getTime()) / 1000;
-        date = formatDate(new Date(element[0]));
-        data_list[0].value_dict["0"].push(date);
+        // XXX - repeating date everytime
+        data_list[0].value_dict["0"].push(element[0]);
         data_list[0].value_dict["1"].push((element[1] - prev_element[1]) / (1024 * date_diff));
         // XXX - repeating date everytime
-        data_list[1].value_dict["0"].push(date);
+        data_list[1].value_dict["0"].push(element[0]);
         data_list[1].value_dict["1"].push((element[2] - prev_element[2]) / 1000);
+        // XXX - repeating date everytime
+        /*data_list[2].value_dict["0"].push(element[0]);
+        data_list[2].value_dict["1"].push(element[3]);*/
         prev_element = element;
       }
     }
@@ -111,15 +121,7 @@
         value: {
           data: [data_list[0]],
           layout: {
-            axis_dict : {
-              0: {"title": "Date"},
-              1: {"title": "io rw count (Kb/s)",  "value_type": "Kb/s"}
-            },
-            datazoom: {
-              type: 'inside',
-              start: 80,
-              end: 100
-            },
+            axis_dict : axis_list[0],
             title: "IO write counter"
           }
         }
@@ -128,15 +130,7 @@
         value: {
           data: [data_list[1]],
           layout: {
-            axis_dict : {
-              0: {"title": "Date"},
-              1: {"title": "io cycles count (x1000)",  "value_type": "number"}
-            },
-            datazoom: {
-              type: 'inside',
-              start: 80,
-              end: 100
-            },
+            axis_dict : axis_list[1],
             title: "IO cycles counter"
           }
         }
@@ -162,7 +156,7 @@
             return RSVP.all(promise_list);
           })
           .push(function () {
-            var data = updateIOData(gadget);
+            var data = updateIOData(gadget, gadget.property_dict.date_window);
             return RSVP.all([
               gadget.property_dict.graph_io_read.render(data[0]),
               gadget.property_dict.graph_io_write.render(data[1])
@@ -171,44 +165,55 @@
       })
       .push(function () {
         var data_list = [],
+          axis_dict = {},
           line_list,
           i;
 
+        axis_dict = {
+          "0": {
+            "title": "Memory resources usage (Mo)",
+            "scale_type": "linear",
+            "value_type": "date",
+            "zoom_range": gadget.property_dict.date_window
+          },
+          "1_2": {
+            "title": "Memory used percent",
+            "position": "right"
+          },
+          "1_1": {
+            "title": "Memory used",
+            "position": "right"
+          }
+        };
+        /*data_list.push({
+          value_dict: {"0": [], "1": []},
+          type: "surface",
+          axis_mapping_id_dict: {"1": "1_1"},
+          title: "Memory used percent"
+        });*/
         data_list.push({
-            value_dict: {
-              0: [],
-              1: []
-            },
-            colors: ['#61a0a8'],
-            type: "line",
-            fillarea: true,
-            title: "Memory used"
-          });
-
+          value_dict: {"0": [], "1": []},
+          type: "surface",
+          axis_mapping_id_dict: {"1": "1_2"},
+          title: "Memory used"
+        });
         for (i = 1; i < gadget.property_dict.mem_data.data.length; i += 1) {
           line_list = gadget.property_dict.mem_data.data[i].split(',');
-          data_list[0].value_dict["0"].push(formatDate(new Date(line_list[0])));
+          data_list[0].value_dict["0"].push(line_list[0]);
           data_list[0].value_dict["1"].push(line_list[2]);
         }
         return gadget.property_dict.graph_mem_used.render({
           value: {
             data: data_list,
             layout: {
-              axis_dict : {
-                0: {"title": "Date"},
-                1: {"title": "Memory usage (Mb)",  "value_type": "Mb"}
-              },
-              datazoom: {
-                type: 'inside',
-                start: 80,
-                end: 100
-              },
+              axis_dict : axis_dict,
               title: "Memory resources usage"
             }
           }
         });
       })
       .push(function () {
+        //return gadget.element.querySelector('form button[type="submit"]').click();
         return  gadget.getDeclaredGadget('form_cpu_graph')
           .push(function (form_gadget) {
             return form_gadget.getContent();
@@ -219,6 +224,7 @@
       })
       .push(function (cpu_graph_key) {
         var data_list = [],
+          axis_dict = {},
           previous_time = 0,
           line_list,
           graph_index = 1,
@@ -229,7 +235,6 @@
             cpu_threads: "CPU threads",
             cpu_process: "total process"
           },
-          label,
           i,
           j;
 
@@ -261,22 +266,25 @@
             break;
           }
         }
+        axis_dict["0"] = {
+          "title": line_list[graph_index],
+          "scale_type": "linear",
+          "value_type": "date",
+          "zoom_range": gadget.property_dict.date_window
+        };
+        axis_dict["1_1"] = {"title": line_list[graph_index], "position": "right"};
         data_list.push({
-            value_dict: {
-              0: [],
-              1: []
-            },
-            colors: ['#61a0a8'],
-            type: "line",
-            title: line_list[graph_index]
-          });
-        label = line_list[graph_index];
+          value_dict: {"0": [], "1": []},
+          type: "line",
+          axis_mapping_id_dict: {"1": "1_1"},
+          title: line_list[graph_index]
+        });
         for (i = 1; i < gadget.property_dict.process_data.data.length; i += 1) {
           line_list = gadget.property_dict.process_data.data[i].split(',');
           for (j = 1; j < line_list.length; j += 1) {
             // Date
             if (j === graph_index) {
-              data_list[0].value_dict["0"].push(formatDate(new Date(line_list[0])));
+              data_list[0].value_dict["0"].push(line_list[0]);
               if (j === cpu_time_index) {
                 data_list[0].value_dict["1"].push(getCPUTime(line_list[j]));
               } else {
@@ -289,15 +297,7 @@
           value: {
             data: data_list,
             layout: {
-              axis_dict : {
-                0: {"title": "Date"},
-                1: {"title": label,  "value_type": "number"}
-              },
-              datazoom: {
-                type: 'inside',
-                start: 80,
-                end: 100
-              },
+              axis_dict : axis_dict,
               title: "Process resources usage"
             }
           }
@@ -465,6 +465,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("redirect", "redirect")
+    //.declareAcquiredMethod("notifySubmitting", 'notifySubmitting')
 
     .onLoop(function () {
       if (!this.property_dict.disable_update) {

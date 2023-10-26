@@ -63,8 +63,7 @@
       ['edit_properties', 'Properties', 'info'],
       ['change_password', 'Change Password', 'pencil-square-o'],
       ['resources_url', 'Resources', 'picture-o'],
-      ['processes_url', 'Processes', 'list-alt'],
-      ['gadget_url', 'Script', 'puzzle-piece']
+      ['processes_url', 'Processes', 'list-alt']
     ];
 
   gadget_klass

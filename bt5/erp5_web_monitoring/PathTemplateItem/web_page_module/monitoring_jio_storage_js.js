@@ -601,8 +601,7 @@
         var i,
           j,
           start,
-          extra_dict,
-          software_release_url;
+          extra_dict;
 
         function applyItemToTree(item, item_result, extra_dict) {
           var id_hash,
@@ -658,13 +657,6 @@
             reference: id_hash,
             active: true
           });
-          if (!software_release_url &&
-              element.portal_type == "Software Instance" &&
-              element.software_release) {
-            // OPML has no software release URL, we get it from the first
-            // which has it.
-            software_release_url = element.software_release;
-          }
           opml_document_list.push({
             id: id_hash,
             doc: element
@@ -734,7 +726,6 @@
             }
           }
         }
-        instance_tree.software_release = software_release_url || '';
         opml_document_list.push({
           id: id,
           doc: instance_tree
