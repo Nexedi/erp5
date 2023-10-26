@@ -49,18 +49,18 @@ class CaucaseConnector(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def _getConnection(self, mode="service", **kw):
+
+  def _getServiceConnection(self, **kw):
+    # XXX Call checkConsistency
     if self.getUrlString() is None:
       raise ValueError("Caucase url must be defined")
+    return CaucaseClient(ca_url="%s/cas" % self.getUrlString(), **kw)
 
-    if mode == "service":
-      ca_url = self.getUrlString() + '/cas'
-    elif mode == "user":
-      ca_url = self.getUrlString() + '/cau'
-    else:
-      raise ValueError("Unknown mode, please use service or user only")
-
-    return CaucaseClient(ca_url=ca_url, **kw)
+  def _getUserConnection(self, **kw):
+    # XXX Call checkConsistency
+    if self.getUrlString() is None:
+      raise ValueError("Caucase url must be defined")
+    return CaucaseClient(ca_url="%s/cau" % self.getUrlString(), **kw)
 
   def _getAuthenticatedConnection(self):
     if self.getUserCertificate() is None:
@@ -75,13 +75,28 @@ class CaucaseConnector(XMLObject):
       user_key_file.write("\n")
       user_key_file.write(self.getUserCertificate())
       user_key_file.flush()
+      return self._getServiceConnection(user_key=user_key_file.name)
 
-      return self._getConnection(user_key=user_key_file.name)
+  def getCertificateSigningRequestTemplate(self, common_name):
+    key = rsa.generate_private_key(
+      public_exponent=65537, key_size=2048, backend=default_backend())
+
+    name_attribute_list = self._getSubjectNameAttributeList()
+    name_attribute_list.append(
+      x509.NameAttribute(NameOID.COMMON_NAME,
+                         # The cryptography library only accept Unicode.
+                         common_name.decode('UTF-8')))
+
+    csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name(
+       name_attribute_list
+    )).sign(key, hashes.SHA256(), default_backend())
+
+    return csr.public_bytes(serialization.Encoding.PEM).decode()
 
   security.declareProtected(Permissions.ManageUsers, 'bootstrapCaucaseConfiguration')
   def bootstrapCaucaseConfiguration(self):
     if self.getUserCertificate() is None:
-      caucase_connection = self._getConnection(mode="user")
+      caucase_connection = self._getUserConnection()
       if not self.hasUserCertificateRequestReference():
         key, csr = self._createCertificateRequest()
         csr_id = caucase_connection.createCertificateSigningRequest(csr)
@@ -135,7 +150,7 @@ class CaucaseConnector(XMLObject):
       public_exponent=65537, key_size=2048, backend=default_backend())
     key_pem = key.private_bytes(
       encoding=serialization.Encoding.PEM,
-      format=serialization.PrivateFormat.TraditionalOpenSSL,
+      format=serialization.PrivateFormat.PKCS8,
       encryption_algorithm=serialization.NoEncryption()
     )
 
@@ -148,10 +163,10 @@ class CaucaseConnector(XMLObject):
     return key_pem.decode(), csr.public_bytes(serialization.Encoding.PEM).decode()
 
   def getCACertificate(self):
-    return self._getConnection().getCACertificate()
+    return self._getServiceConnection().getCACertificate()
 
   def createCertificateSigningRequest(self, csr):
-    return self._getConnection().createCertificateSigningRequest(csr)
+    return self._getServiceConnection().createCertificateSigningRequest(csr)
 
   security.declareProtected(Permissions.ManageUsers, 'createCertificate')
   def createCertificate(self, csr_id, template_csr=""):
@@ -165,6 +180,6 @@ class CaucaseConnector(XMLObject):
   def revokeCertificate(self, crt_pem, key_pem=None):
     if key_pem is None:
       return self._getAuthenticatedConnection().revokeCertificate(crt_pem)
-    return self._getConnection().revokeCertificate(crt_pem, key_pem)
+    return self._getServiceConnection().revokeCertificate(crt_pem, key_pem)
 
 InitializeClass(CaucaseConnector)
