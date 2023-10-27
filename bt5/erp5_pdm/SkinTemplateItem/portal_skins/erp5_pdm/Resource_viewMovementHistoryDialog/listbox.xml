@@ -561,7 +561,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Resource_getReversedMovementHistoryList</string> </value>
+            <value> <string>getMovementHistoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
