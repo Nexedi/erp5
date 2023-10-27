@@ -501,8 +501,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>date</string>
-                          <string>Date</string>
+                          <string>stock.date</string>
+                          <string>DESC</string>
+                        </tuple>
+                        <tuple>
+                          <string>stock.uid</string>
+                          <string>DESC</string>
                         </tuple>
                       </list>
                     </value>
