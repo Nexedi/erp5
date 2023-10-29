@@ -124,12 +124,8 @@
 
     .onStateChange(function (modification_dict) {
       var queue = new RSVP.Queue();
-      if (modification_dict.hasOwnProperty('value')) {
-        // Do not notify the UI when initializing the value
-        this.state.ignoredChangeDuringInitialization = true;
-        this.editor.setValue(this.state.value);
-        this.state.ignoredChangeDuringInitialization = false;
-      }
+      // make the editor readonly until fully initialized
+      this.editor.updateOptions({ readOnly: true });
       if (modification_dict.hasOwnProperty('model_language')) {
         monaco.editor.setModelLanguage(
           this.editor.getModel(),
@@ -308,6 +304,48 @@
             'python',
             yapfDocumentFormattingProvider
           );
+
+          queue.push(
+            () => {
+              // https://raw.githubusercontent.com/charliermarsh/ruff/main/ruff.schema.json
+              const ruffConfig = {
+                "preview": true,
+                "builtins": [],
+                "target-version": "py39",
+                "line-length": 88,
+                "indent-width": 2,
+                "lint": {
+                  "allowed-confusables": [],
+                  "dummy-variable-rgx": "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?)|__traceback_info__|__traceback_supplement__)$",
+                  "extend-select": [],
+                  "extend-fixable": [],
+                  "external": [],
+                  "ignore": [
+                    // indentation is not a multiple of 4
+                    "E111", "E114",
+                    // line too long
+                    "E501",
+                  ],
+                  // https://docs.astral.sh/ruff/rules/
+                  "select": [
+                    "E",
+                    "F",
+                    "A",
+                  ]
+                },
+                "format": {
+                  "indent-style": "space",
+                  "quote-style": "double"
+                }
+              };
+              return window['registerRuffDiagnosticProvider'](
+                this.editor,
+                ruffConfig
+              ).then(disposable => {
+                // TODO: register disposable.dispose() to be called when gadget is destroyed (how to do this ?)
+                ;
+              });
+            });
         }
 
         if (this.state.model_language === 'json') {
@@ -327,10 +365,16 @@
             enableSchemaRequest: true,
           });
         }
-        if (modification_dict.hasOwnProperty('editable')) {
-          this.editor.updateOptions({ readOnly: !this.state.editable });
-        }
       }
+      queue.push(() => {
+        if (modification_dict.hasOwnProperty('value')) {
+          // Do not notify the UI when initializing the value
+          this.state.ignoredChangeDuringInitialization = true;
+          this.editor.setValue(this.state.value);
+          this.state.ignoredChangeDuringInitialization = false;
+        }
+        this.editor.updateOptions({ readOnly: !this.state.editable });
+      })
       return queue;
     })
 
