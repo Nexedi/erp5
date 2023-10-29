@@ -1,0 +1,119 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_and_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_and_id"></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/ERP5Site_setUpBusinessTemplateUpdateFromRepositoryTest</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>OK</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog?dialog_category=object_exchange</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Business templates updated successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_dialog</td>
+  <td>Upgrade Business Templates from Repositories</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//button[@name="Base_callDialogMethod:method"]/span</td>
+  <td>Upgrade Business Templates from Repositories</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>css=.listbox-current-page-total-number</td>
+  <td> 1 records </td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>test_core</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//input[@type='checkbox']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertChecked</td>
+  <td>field_your_detailed_install</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//*[contains(@class, "listbox")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td</td>
+  <td>portal_skins/erp5_test</td>
+</tr>
+<tr>
+  <td>assertChecked</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Business Template test_core installed</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_test/test_file</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>test2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/BTZuite_reset?end=1"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+</body>
+</html>
