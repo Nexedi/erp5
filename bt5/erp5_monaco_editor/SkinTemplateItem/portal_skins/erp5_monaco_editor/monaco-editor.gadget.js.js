@@ -327,8 +327,6 @@
                     "E501",
                     // all pylint refactoring
                     "PLR",
-                    // contextlib.supress
-                    "SIM105",
                   ],
                   // https://docs.astral.sh/ruff/rules/
                   "select": [
@@ -338,14 +336,10 @@
                     "F",
                     // flake8-bugbear
                     "B",
-                    // flake8-simplify
-                    "SIM",
                     // isort
-                    "I",
+                    // "I",
                     // pylint
                     "PL",
-                    // flake8-simplify
-                    "SIM"
                   ]
                 },
                 "format": {
