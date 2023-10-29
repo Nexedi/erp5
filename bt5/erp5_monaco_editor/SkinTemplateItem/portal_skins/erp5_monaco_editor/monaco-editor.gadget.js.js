@@ -304,6 +304,63 @@
             'python',
             yapfDocumentFormattingProvider
           );
+
+          queue.push(
+            () => {
+              // https://raw.githubusercontent.com/charliermarsh/ruff/main/ruff.schema.json
+              const config = {
+                "preview": true,
+                "builtins": [],
+                "target-version": "py39",
+                "line-length": 88,
+                "indent-width": 4,
+                "lint": {
+                  "allowed-confusables": [],
+                  "dummy-variable-rgx": "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$",
+                  "extend-select": [],
+                  "extend-fixable": [],
+                  "external": [],
+                  "ignore": [
+                    // indentation is not a multiple of 4
+                    "E111", "E114",
+                    // line too long
+                    "E501",
+                    // all pylint refactoring
+                    "PLR",
+                    // contextlib.supress
+                    "SIM105",
+                  ],
+                  // https://docs.astral.sh/ruff/rules/
+                  "select": [
+                    // pycodestyle
+                    "E",
+                    // Pyflakes
+                    "F",
+                    // flake8-bugbear
+                    "B",
+                    // flake8-simplify
+                    "SIM",
+                    // isort
+                    "I",
+                    // pylint
+                    "PL",
+                    // flake8-simplify
+                    "SIM"
+                  ]
+                },
+                "format": {
+                  "indent-style": "space",
+                  "quote-style": "double"
+                }
+              };
+              return window['registerRuffDiagnosticProvider'](
+                this.editor,
+                config
+              ).then(disposable => {
+                // TODO: register disposable.dispose() to be called when gadget is destroyed (how to do this ?)
+                ;
+              });
+            });
         }
 
         if (this.state.model_language === 'json') {
