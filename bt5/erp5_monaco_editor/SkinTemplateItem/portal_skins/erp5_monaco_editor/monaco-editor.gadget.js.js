@@ -124,12 +124,8 @@
 
     .onStateChange(function (modification_dict) {
       var queue = new RSVP.Queue();
-      if (modification_dict.hasOwnProperty('value')) {
-        // Do not notify the UI when initializing the value
-        this.state.ignoredChangeDuringInitialization = true;
-        this.editor.setValue(this.state.value);
-        this.state.ignoredChangeDuringInitialization = false;
-      }
+      // make the editor readonly until fully initialized
+      this.editor.updateOptions({ readOnly: true });
       if (modification_dict.hasOwnProperty('model_language')) {
         monaco.editor.setModelLanguage(
           this.editor.getModel(),
@@ -327,10 +323,18 @@
             enableSchemaRequest: true,
           });
         }
+      }
+      queue.push(() => {
+        if (modification_dict.hasOwnProperty('value')) {
+          // Do not notify the UI when initializing the value
+          this.state.ignoredChangeDuringInitialization = true;
+          this.editor.setValue(this.state.value);
+          this.state.ignoredChangeDuringInitialization = false;
+        }
         if (modification_dict.hasOwnProperty('editable')) {
           this.editor.updateOptions({ readOnly: !this.state.editable });
         }
-      }
+      })
       return queue;
     })
 
