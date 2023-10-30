@@ -62,11 +62,62 @@
       return storage.removeAttachment.apply(storage, arguments);
     })
     .declareMethod('repair', function () {
+
+      function promiseLock(name, options, callback) {
+        var callback_promise = null,
+          controller = new AbortController();
+
+        function canceller(msg) {
+          controller.abort();
+          if (callback_promise !== null) {
+            callback_promise.cancel(msg);
+          }
+        }
+
+        function resolver(resolve, reject) {
+          if (callback === undefined) {
+            callback = options;
+            options = {};
+          }
+          options.signal = controller.signal;
+
+          function handleCallback(lock) {
+            if (!lock) {
+              // The lock was not granted - get out fast.
+              return reject('Lock not granted');
+            }
+            try {
+              callback_promise = callback();
+            } catch (e) {
+              return reject(e);
+            }
+
+            callback_promise = new RSVP.Queue(callback_promise)
+              .push(resolve, function handleCallbackError(error) {
+                // Prevent rejecting the lock, if the result cancelled itself
+                if (!(error instanceof RSVP.CancellationError)) {
+                  canceller(error.toString());
+                  reject(error);
+                }
+              });
+            return callback_promise;
+          }
+
+          return navigator.locks.request(name, options, handleCallback)
+            .then(undefined, reject);
+        }
+
+        return new RSVP.Promise(resolver, canceller);
+      }
+
       var storage = this.props.jio_storage;
-      return storage.repair.apply(storage, arguments)
-        .push(undefined, function (error) {
-          throw error;
-        });
+      function repair() {
+        return new RSVP.Queue()
+          .push(function () {
+            return storage.repair.apply(storage, arguments);
+          });
+      }
+      return promiseLock("name", {}, repair);
     });
 
 }(window, rJS, jIO));
