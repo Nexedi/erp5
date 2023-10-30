@@ -49,53 +49,6 @@
         var has_error = false,
           last_sync_time;
         gadget.props.started = true;
-
-        function promiseLock(name, options, callback) {
-          var callback_promise = null,
-            controller = new AbortController();
-
-          function canceller(msg) {
-            controller.abort();
-            if (callback_promise !== null) {
-              callback_promise.cancel(msg);
-            }
-          }
-
-          function resolver(resolve, reject) {
-            if (callback === undefined) {
-              callback = options;
-              options = {};
-            }
-            options.signal = controller.signal;
-
-            function handleCallback(lock) {
-              if (!lock) {
-                // The lock was not granted - get out fast.
-                return reject('Lock not granted');
-              }
-              try {
-                callback_promise = callback();
-              } catch (e) {
-                return reject(e);
-              }
-
-              callback_promise = new RSVP.Queue(callback_promise)
-                .push(resolve, function handleCallbackError(error) {
-                  // Prevent rejecting the lock, if the result cancelled itself
-                  if (!(error instanceof RSVP.CancellationError)) {
-                    canceller(error.toString());
-                    reject(error);
-                  }
-                });
-              return callback_promise;
-            }
-
-            return navigator.locks.request(name, options, handleCallback)
-              .then(undefined, reject);
-          }
-
-          return new RSVP.Promise(resolver, canceller);
-        }
         return new RSVP.Queue()
           .push(function () {
             return gadget.setSetting('sync_start_time', new Date().getTime());
@@ -111,13 +64,7 @@
           })
           .push(function () {
             // call repair on storage
-            function repair() {
-              return new RSVP.Queue()
-                .push(function () {
-                  return gadget.jio_repair();
-                });
-            }
-            return promiseLock("name", {}, repair);
+            return gadget.jio_repair();
           })
           .push(undefined, function (error) {
             // should include error message in error
