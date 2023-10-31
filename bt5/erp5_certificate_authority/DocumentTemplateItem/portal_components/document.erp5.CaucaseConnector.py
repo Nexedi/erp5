@@ -48,8 +48,6 @@ _DEFAULTBACKEND = default_backend()
 class CaucaseConnector(XMLObject):
   meta_type = 'Caucase Connector'
 
-  __private_template_key = None
-
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
@@ -80,14 +78,24 @@ class CaucaseConnector(XMLObject):
       user_key_file.flush()
       return self._getServiceConnection(user_key=user_key_file.name)
 
-  def __getPrivateTemplateKey(self):
-    if not self.__private_template_key:
-      self.__private_template_key = rsa.generate_private_key(
-        public_exponent=65537, key_size=2048, backend=_DEFAULTBACKEND)
-    return self.__private_template_key
-
   def getCertificateSigningRequestTemplate(self, common_name):
-    key = self.__getPrivateTemplateKey()
+    key_pem = self.getPrivateTemplateKey()
+    if not key_pem:
+      key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048,
+        backend=_DEFAULTBACKEND)
+      self.setPrivateTemplateKey(
+        key.private_bytes(
+          encoding=serialization.Encoding.PEM,
+          format=serialization.PrivateFormat.PKCS8,
+          encryption_algorithm=serialization.NoEncryption()).decode())
+    else:
+      key = serialization.load_pem_private_key(
+        key_pem,
+        password=None,
+        backend=_DEFAULTBACKEND
+      )
 
     name_attribute_list = self._getSubjectNameAttributeList()
     name_attribute_list.append(
