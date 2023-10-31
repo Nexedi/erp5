@@ -28,6 +28,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeCaucaseTestCase import ERP5TypeCaucaseTestCase
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -58,24 +59,24 @@ class TestCertificateAuthorityCaucaseConnector(ERP5TypeCaucaseTestCase):
     connector_no_url_string = self.portal.portal_web_services.newContent(
       portal_type="Caucase Connector"
     )
-    self.assertRaises(ValueError, connector_no_url_string._getServiceConnection)
+    self.assertRaises(ValidationFailed, connector_no_url_string._getServiceConnection)
 
   def test_getConnection(self):
     self.assertNotEqual(None, self.caucase_connector._getServiceConnection())
     self.assertNotEqual(None, self.caucase_connector._getUserConnection())
 
-  def test_getAuthenticatedConnection_no_url(self):
+  def test_getAuthenticatedServiceConnection_no_url(self):
     connector_no_url_string = self.portal.portal_web_services.newContent(
       portal_type="Caucase Connector"
     )
-    self.assertRaises(ValueError, connector_no_url_string._getAuthenticatedConnection)
+    self.assertRaises(ValueError, connector_no_url_string._getAuthenticatedServiceConnection)
 
-  def test_getAuthenticatedConnection_with_url(self):
+  def test_getAuthenticatedServiceConnection_with_url(self):
     connector_no_url_string = self.portal.portal_web_services.newContent(
       portal_type="Caucase Connector",
       url_string="https://hasurl.but.no.user_certificate"
     )
-    self.assertRaises(ValueError, connector_no_url_string._getAuthenticatedConnection)
+    self.assertRaises(ValueError, connector_no_url_string._getAuthenticatedServiceConnection)
 
   def test(self):
     # Simply test
