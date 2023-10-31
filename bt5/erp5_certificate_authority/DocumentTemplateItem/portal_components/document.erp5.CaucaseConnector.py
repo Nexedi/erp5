@@ -30,7 +30,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import InitializeClass
-from caucase.client import CaucaseClient, CaucaseError
+from caucase.client import CaucaseClient, CaucaseHTTPError
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 from six.moves import http_client
 
@@ -42,27 +43,25 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
 import tempfile
 
-
 class CaucaseConnector(XMLObject):
   meta_type = 'Caucase Connector'
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _getConnection(self, **kw):
+    message_list = self.checkConsistency()
+    if message_list:
+      raise ValidationFailed(message_list)
+    return CaucaseClient(**kw)
 
   def _getServiceConnection(self, **kw):
-    # XXX Call checkConsistency
-    if self.getUrlString() is None:
-      raise ValueError("Caucase url must be defined")
-    return CaucaseClient(ca_url="%s/cas" % self.getUrlString(), **kw)
+    return self._getConnection(ca_url="%s/cas" % self.getUrlString(""), **kw)
 
   def _getUserConnection(self, **kw):
-    # XXX Call checkConsistency
-    if self.getUrlString() is None:
-      raise ValueError("Caucase url must be defined")
-    return CaucaseClient(ca_url="%s/cau" % self.getUrlString(), **kw)
+    return self._getConnection(ca_url="%s/cau" % self.getUrlString(""), **kw)
 
-  def _getAuthenticatedConnection(self):
+  def _getAuthenticatedServiceConnection(self):
     if self.getUserCertificate() is None:
       if self.hasUserCertificateRequestReference():
         self.bootstrapCaucaseConfiguration()
@@ -103,11 +102,11 @@ class CaucaseConnector(XMLObject):
         self.setUserCertificateRequestReference(csr_id)
         self.setUserKey(key)
       
-      csr_id = int(self.getUserCertificateRequestReference())
+      csr_id = self.getUserCertificateRequestReference()
       try:
         crt_pem = caucase_connection.getCertificate(
             csr_id=csr_id)
-      except CaucaseError as e:
+      except CaucaseHTTPError as e:
         if e.args[0] != http_client.NOT_FOUND:
           raise
 
@@ -155,6 +154,11 @@ class CaucaseConnector(XMLObject):
     )
 
     name_attribute_list = self._getSubjectNameAttributeList()
+    name_attribute_list.append(
+      x509.NameAttribute(NameOID.COMMON_NAME,
+                         # The cryptography library only accept Unicode.
+                         "erp5-user".decode('UTF-8')))
+
     # Probably we should extend a bit more the attributes.
     csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name(
       name_attribute_list
@@ -170,16 +174,16 @@ class CaucaseConnector(XMLObject):
 
   security.declareProtected(Permissions.ManageUsers, 'createCertificate')
   def createCertificate(self, csr_id, template_csr=""):
-    return self._getAuthenticatedConnection().createCertificate(csr_id, template_csr)
+    return self._getAuthenticatedServiceConnection().createCertificate(csr_id, template_csr)
 
   security.declareProtected(Permissions.ManageUsers, 'getCertificate')
   def getCertificate(self, csr_id):
-    return self._getAuthenticatedConnection().getCertificate(csr_id)
+    return self._getAuthenticatedServiceConnection().getCertificate(csr_id)
 
   security.declareProtected(Permissions.ManageUsers, 'revokeCertificate')
   def revokeCertificate(self, crt_pem, key_pem=None):
     if key_pem is None:
-      return self._getAuthenticatedConnection().revokeCertificate(crt_pem)
+      return self._getAuthenticatedServiceConnection().revokeCertificate(crt_pem)
     return self._getServiceConnection().revokeCertificate(crt_pem, key_pem)
 
 InitializeClass(CaucaseConnector)
