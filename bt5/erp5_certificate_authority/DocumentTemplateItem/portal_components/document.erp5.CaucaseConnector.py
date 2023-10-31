@@ -43,8 +43,12 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
 import tempfile
 
+_DEFAULTBACKEND = default_backend()
+
 class CaucaseConnector(XMLObject):
   meta_type = 'Caucase Connector'
+
+  __private_template_key = None
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -76,9 +80,14 @@ class CaucaseConnector(XMLObject):
       user_key_file.flush()
       return self._getServiceConnection(user_key=user_key_file.name)
 
+  def __getPrivateTemplateKey(self):
+    if not self.__private_template_key:
+      self.__private_template_key = rsa.generate_private_key(
+        public_exponent=65537, key_size=2048, backend=_DEFAULTBACKEND)
+    return self.__private_template_key
+
   def getCertificateSigningRequestTemplate(self, common_name):
-    key = rsa.generate_private_key(
-      public_exponent=65537, key_size=2048, backend=default_backend())
+    key = self.__getPrivateTemplateKey()
 
     name_attribute_list = self._getSubjectNameAttributeList()
     name_attribute_list.append(
@@ -88,7 +97,7 @@ class CaucaseConnector(XMLObject):
 
     csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name(
        name_attribute_list
-    )).sign(key, hashes.SHA256(), default_backend())
+    )).sign(key, hashes.SHA256(), _DEFAULTBACKEND)
 
     return csr.public_bytes(serialization.Encoding.PEM).decode()
 
@@ -146,7 +155,7 @@ class CaucaseConnector(XMLObject):
 
   def _createCertificateRequest(self):
     key = rsa.generate_private_key(
-      public_exponent=65537, key_size=2048, backend=default_backend())
+      public_exponent=65537, key_size=2048, backend=_DEFAULTBACKEND)
     key_pem = key.private_bytes(
       encoding=serialization.Encoding.PEM,
       format=serialization.PrivateFormat.PKCS8,
@@ -162,7 +171,7 @@ class CaucaseConnector(XMLObject):
     # Probably we should extend a bit more the attributes.
     csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name(
       name_attribute_list
-    )).sign(key, hashes.SHA256(), default_backend())
+    )).sign(key, hashes.SHA256(), _DEFAULTBACKEND)
 
     return key_pem.decode(), csr.public_bytes(serialization.Encoding.PEM).decode()
 
