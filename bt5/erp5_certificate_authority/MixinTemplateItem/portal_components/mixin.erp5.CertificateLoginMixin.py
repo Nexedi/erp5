@@ -55,7 +55,7 @@ class CertificateLoginMixin:
     }
     if self.getReference() and self.getSourceReference():
       if csr is not None:
-        raise ValueError("This certificate already")
+        raise ValueError("The certificate was already requsted without the certificate sign request.")
       certificate_dict["id"] = self.getSourceReference()
       crt_pem = caucase_connector.getCertificate(int(self.getSourceReference()))
       certificate_dict["certificate"] = crt_pem
