@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-#import os
 import random
 from Products.ERP5Type.tests.ERP5TypeCaucaseTestCase import ERP5TypeCaucaseTestCase
 from Products.ERP5Type.Core.Workflow import ValidationFailed
@@ -325,7 +324,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
 
     self.assertEqual(certificate_login.getDestinationReference(), None)
-    self.assertNotEqual(certificate_login.getSourceReference(), None)
+    self.assertNotEqual(certificate_login.getCsrId(), None)
 
     self.assertEqual(None, certificate_login.revokeCertificate())
     self.assertEqual(certificate_login.getDestinationReference(), None)
@@ -351,7 +350,7 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
 
     self.assertEqual(certificate_login.getDestinationReference(), None)
-    self.assertNotEqual(certificate_login.getSourceReference(), None)
+    self.assertNotEqual(certificate_login.getCsrId(), None)
 
     self.assertEqual(None, certificate_login.revokeCertificate(certificate_dict['key']))
     self.assertEqual(certificate_login.getDestinationReference(), None)
@@ -377,11 +376,11 @@ class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
     self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
 
     self.assertEqual(certificate_login.getDestinationReference(), None)
-    self.assertNotEqual(certificate_login.getSourceReference(), None)
+    self.assertNotEqual(certificate_login.getCsrId(), None)
 
     # Older implementation wont set it on the Certificate login
     certificate_login.setDestinationReference(None)
-    certificate_login.setSourceReference(None)
+    certificate_login.setCsrId(None)
 
     # Still raise since it has no valid certificate anymore
     self.assertRaises(ValueError, certificate_login.revokeCertificate)
