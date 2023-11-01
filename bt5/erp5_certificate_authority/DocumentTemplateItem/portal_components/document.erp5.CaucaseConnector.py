@@ -186,6 +186,21 @@ class CaucaseConnector(XMLObject):
   def getCACertificate(self):
     return self._getServiceConnection().getCACertificate()
 
+  def updateCACertificateChain(self):
+    with tempfile.NamedTemporaryFile(prefix='caucase_ca_certificate_chain_', bufsize=0) as ca_crt_file:
+      if self.getCaCertificateChain():
+        ca_crt_file.write(self.getCaCertificateChain())
+        ca_crt_file.write("\n")
+        ca_crt_file.flush()
+        ca_crt_file.seek(0)
+
+      updated = self._getServiceConnection().updateCAFile(
+        url="%s/cas" % self.getUrlString(""),
+        ca_crt_path=ca_crt_file.name)
+      if updated:
+        ca_crt_file.seek(0)
+        self.setCaCertificateChain(ca_crt_file.read())
+
   def createCertificateSigningRequest(self, csr):
     return self._getServiceConnection().createCertificateSigningRequest(csr)
 
