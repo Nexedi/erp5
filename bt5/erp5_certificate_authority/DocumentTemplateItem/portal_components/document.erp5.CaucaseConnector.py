@@ -32,6 +32,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import InitializeClass
 from caucase.client import CaucaseClient, CaucaseHTTPError
 from Products.ERP5Type.Core.Workflow import ValidationFailed
+from caucase.utils import load_ca_certificate, load_certificate
 
 from six.moves import http_client
 
@@ -201,6 +202,17 @@ class CaucaseConnector(XMLObject):
         ca_crt_file.seek(0)
         self.setCaCertificateChain(ca_crt_file.read())
 
+  security.declareProtected(Permissions.ManageUsers, 'verifyCertificate')
+  def verifyCertificate(self, crt_pem):
+    if not self.getCaCertificateChain():
+      self.updateCACertificateChain()
+
+    # Here we are just checking if the certificate is valid, and if the
+    # certificate was issued from a ca we expect, otherwise it will just fail.
+    load_certificate(
+      crt_pem, [load_ca_certificate(self.getCaCertificateChain())], [])
+    return crt_pem
+
   def createCertificateSigningRequest(self, csr):
     return self._getServiceConnection().createCertificateSigningRequest(csr)
 
@@ -210,7 +222,8 @@ class CaucaseConnector(XMLObject):
 
   security.declareProtected(Permissions.ManageUsers, 'getCertificate')
   def getCertificate(self, csr_id):
-    return self._getAuthenticatedServiceConnection().getCertificate(csr_id)
+    return self.verifyCertificate(
+      self._getAuthenticatedServiceConnection().getCertificate(csr_id))
 
   security.declareProtected(Permissions.ManageUsers, 'revokeCertificate')
   def revokeCertificate(self, crt_pem, key_pem=None):
