@@ -93,6 +93,7 @@
                         <string>my_user_certificate_request_reference</string>
                         <string>my_user_certificate</string>
                         <string>my_user_key</string>
+                        <string>my_ca_certificate_chain</string>
                       </list>
                     </value>
                 </item>
