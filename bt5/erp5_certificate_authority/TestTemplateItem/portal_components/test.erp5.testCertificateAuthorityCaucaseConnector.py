@@ -214,3 +214,56 @@ PB8=
     csr_id = self.caucase_connector.createCertificateSigningRequest(csr)
     self.caucase_connector.createCertificate(csr_id)
     self.assertRaises(CertificateVerificationError, self.caucase_connector.getCertificate, csr_id)
+
+
+
+  def test_updateCACertificateChain_from_alarm(self):
+    self.caucase_connector.setCaCertificateChain(None)
+    self.portal.portal_alarms.update_caucase_connector_ca_certificate_chain.activeSense()
+
+    self.tic()
+    self.assertNotEqual(
+      self.caucase_connector.getCaCertificateChain(), None)
+    ca_cert = self.caucase_connector.getCaCertificateChain()
+
+    # Repeat to ensure nothing is updated
+    self.assertEqual(
+      self.caucase_connector.getCaCertificateChain(), ca_cert)
+
+    # Ensure you get the same thing if you repeat
+    self.caucase_connector.setCaCertificateChain(None)
+    self.portal.portal_alarms.update_caucase_connector_ca_certificate_chain.activeSense()
+
+    self.tic()
+    self.assertEqual(
+      self.caucase_connector.getCaCertificateChain(), ca_cert)
+
+  def test_updateCACertificateChain_untrust_from_alarm(self):
+    self.caucase_connector.setCaCertificateChain("""-----BEGIN CERTIFICATE-----
+MIIDXjCCAkagAwIBAgIUWur7vpjLtzdWTuaBVQtzgEnDNegwDQYJKoZIhvcNAQEL
+BQAwNTEzMDEGA1UEAwwqQ2F1Y2FzZSBDQVMgYXQgaHR0cDovLzEwLjAuNzcuMjI3
+Ojg4OTAvY2FzMB4XDTIzMTAwMzE5MTM0NloXDTI0MTAwOTE5MTM0NlowNTEzMDEG
+A1UEAwwqQ2F1Y2FzZSBDQVMgYXQgaHR0cDovLzEwLjAuNzcuMjI3Ojg4OTAvY2Fz
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoUPOUx/glzpxe1lmD2vq
+ZS5UlOR7oeBoNsdmFpuikZ6ksQvVlnQehsRwvCa8plOWC01ob/NqcVbTqhUCEcnf
+LL7y8wqD4qg1wTBOEQ9T2BjNSfY+y5UxGDiTqKSYCre+OY5jWipwNUGXZ7rsQPvU
+ExUP/itu1E8vDe9c6uCVq5IR+SJvwwwgB4LwCl14xRpKmkoRcduJFI51mjQmG1/u
+q9dbBffZXddEQGZwrjvHXgCMfEccfyPU67PVuyCX6q/1pX3HCxaFR1Z2QVHa2MqV
+wjPxqbxOVBK/3oXAVYUS9ksGWxzFdzyDZwPi714sUjUhI/0UholZslQniWhNWp+P
+xwIDAQABo2YwZDAdBgNVHQ4EFgQU6xc8HvOdfmnhZ85cxFlfecnVBNAwHwYDVR0j
+BBgwFoAU6xc8HvOdfmnhZ85cxFlfecnVBNAwEgYDVR0TAQH/BAgwBgEB/wIBADAO
+BgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQELBQADggEBAGLjwIByLsnohRAx7qVX
+2o8d8UvzUXEDTmx2NStYTX53nPu+ajngPV+qr7n7e6PD6xLyNp585aH7P1jt9ZDE
+i4JrbtUSl8toB1hizBJeWG4BTRfJ/70ojOEhn/BodhoCIo/Qzn9cuLCjfMXbDhlK
+ySrBjKOrG9nl16sT5iao5lJJw2KqzDB7e1SKvBwwILtO74VwdkdUO9itUkP7d6Do
+LSnalc7gqVsf8BAlymRktQuDUXZzP3AbWNH6c7ihhNqsP8npKdA/Z4rWCTtIHj+P
+YvI3c9Ftc8ACdjv7cMHEdtRmxCYLxIitkfr2wG2sWbGmHoUVjGQdvAjBq8iyMY4q
+PB8=
+-----END CERTIFICATE-----
+""")
+    # Dont call activeSense, since it will create one activity failure
+    # so call the script directly
+    alarm = self.portal.portal_alarms.update_caucase_connector_ca_certificate_chain
+    self.assertRaises(CaucaseError,
+      alarm.Alarm_updateCACertificateChain)
+
