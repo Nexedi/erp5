@@ -53,11 +53,11 @@ class CertificateLoginMixin:
     certificate_dict = {
       "common_name" : self.getReference()
     }
-    if self.getReference() and self.getSourceReference():
+    if self.getReference() and self.getCsrId():
       if csr is not None:
         raise ValueError("The certificate was already requsted without the certificate sign request.")
-      certificate_dict["id"] = self.getSourceReference()
-      crt_pem = caucase_connector.getCertificate(int(self.getSourceReference()))
+      certificate_dict["id"] = self.getCsrId()
+      crt_pem = caucase_connector.getCertificate(self.getCsrId())
       certificate_dict["certificate"] = crt_pem
       # We should assert that reference is the CN of crt_pem
       return certificate_dict
@@ -75,18 +75,18 @@ class CertificateLoginMixin:
 
     caucase_connector.createCertificate(csr_id, template_csr=template_csr)
     crt_pem = caucase_connector.getCertificate(csr_id)
-    self.setSourceReference(csr_id)
+    self.setCsrId(csr_id)
 
     return {
       "certificate" : crt_pem,
-      "id" : self.getSourceReference(),
+      "id" : self.getCsrId(),
       "common_name" : reference
     }
     
   security.declarePublic('getCertificate')
   def getCertificate(self, csr=None):
     """Returns new SSL certificate"""
-    if csr is None and self.getSourceReference() is None:
+    if csr is None and self.getCsrId() is None:
       key, csr = self._getCaucaseConnector()._createCertificateRequest()
       certificate_dict = self._getCertificate(csr=csr)
       certificate_dict["key"] = key
@@ -96,13 +96,13 @@ class CertificateLoginMixin:
 
   def _revokeCertificate(self, key_pem=None):
     if self.getDestinationReference() is not None or (
-      self.getReference() is not None and self.getSourceReference() is None
+      self.getReference() is not None and self.getCsrId() is None
     ):
       raise ValueError("You cannot revoke certificates from prior implementation!")
     
-    if self.getSourceReference() is not None:
+    if self.getCsrId() is not None:
       caucase_connector = self._getCaucaseConnector()
-      crt_pem = caucase_connector.getCertificate(int(self.getSourceReference()))
+      crt_pem = caucase_connector.getCertificate(self.getCsrId())
       if key_pem is None:
         return caucase_connector.revokeCertificate(crt_pem, key_pem)
       return caucase_connector.revokeCertificate(crt_pem)
