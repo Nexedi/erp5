@@ -1,4 +1,4 @@
-/*global window, rJS, jIO, FormData, XMLHttpRequestProgressEvent */
+/*global window, rJS, jIO, FormData, AbortController, RSVP, navigator */
 /*jslint indent: 2, maxerr: 3 */
 (function (window, rJS, jIO) {
   "use strict";
