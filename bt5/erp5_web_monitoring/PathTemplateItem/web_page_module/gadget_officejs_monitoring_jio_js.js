@@ -63,7 +63,7 @@
     })
     .declareMethod('repair', function () {
 
-      function promiseLock(name, options, callback) {
+      function promiseLock(name, options, callback, storage, args) {
         var callback_promise = null,
           controller = new AbortController();
 
@@ -87,7 +87,7 @@
               return reject('Lock not granted');
             }
             try {
-              callback_promise = callback();
+              callback_promise = callback.apply(storage, args);
             } catch (e) {
               return reject(e);
             }
@@ -111,13 +111,7 @@
       }
 
       var storage = this.props.jio_storage;
-      function repair() {
-        return new RSVP.Queue()
-          .push(function () {
-            return storage.repair.apply(storage, arguments);
-          });
-      }
-      return promiseLock("name", {}, repair);
+      return promiseLock("sync_lock", {}, storage.repair, storage, arguments);
     });
 
 }(window, rJS, jIO));
