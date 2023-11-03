@@ -3,6 +3,8 @@
 (function (window, rJS, jIO) {
   "use strict";
 
+  var LOCK_NAME = "sync_lock";
+
   function promiseLock(name, options, callback) {
     var callback_promise = null,
       controller = new AbortController();
@@ -93,25 +95,34 @@
       return storage.get.apply(storage, arguments);
     })
     .declareMethod('put', function () {
-      var storage = this.props.jio_storage;
-      return storage.put.apply(storage, arguments);
+      var storage = this.props.jio_storage,
+        argument_list = arguments;
+      return promiseLock(LOCK_NAME, {}, function () {
+        return storage.put.apply(storage, argument_list);
+      });
     })
     .declareMethod('remove', function () {
-      var storage = this.props.jio_storage;
-      return storage.remove.apply(storage, arguments);
+      var storage = this.props.jio_storage,
+        argument_list = arguments;
+      return promiseLock(LOCK_NAME, {}, function () {
+        return storage.remove.apply(storage, argument_list);
+      });
     })
     .declareMethod('getAttachment', function () {
       var storage = this.props.jio_storage;
       return storage.getAttachment.apply(storage, arguments);
     })
     .declareMethod('removeAttachment', function () {
-      var storage = this.props.jio_storage;
-      return storage.removeAttachment.apply(storage, arguments);
+      var storage = this.props.jio_storage,
+        argument_list = arguments;
+      return promiseLock(LOCK_NAME, {}, function () {
+        return storage.removeAttachment.apply(storage, argument_list);
+      });
     })
     .declareMethod('repair', function () {
       var storage = this.props.jio_storage,
         argument_list = arguments;
-      return promiseLock("sync_lock", {}, function () {
+      return promiseLock(LOCK_NAME, {}, function () {
         return storage.repair.apply(storage, argument_list);
       });
     });
