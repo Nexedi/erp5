@@ -27,7 +27,7 @@
           return reject('Lock not granted');
         }
         try {
-          callback_promise = callback.apply(options.storage, options.args);
+          callback_promise = callback();
         } catch (e) {
           return reject(e);
         }
@@ -109,11 +109,10 @@
       return storage.removeAttachment.apply(storage, arguments);
     })
     .declareMethod('repair', function () {
-
-      var storage = this.props.jio_storage,
-        options = {"storage" : storage,
-                   "args" : arguments};
-      return promiseLock("sync_lock", options, storage.repair);
+      var storage = this.props.jio_storage;
+      return promiseLock("sync_lock", {}, function () {
+        return storage.repair.apply(storage, arguments);
+      });
     });
 
 }(window, rJS, jIO));
