@@ -109,9 +109,10 @@
       return storage.removeAttachment.apply(storage, arguments);
     })
     .declareMethod('repair', function () {
-      var storage = this.props.jio_storage;
+      var storage = this.props.jio_storage,
+        argument_list = arguments;
       return promiseLock("sync_lock", {}, function () {
-        return storage.repair.apply(storage, arguments);
+        return storage.repair.apply(storage, argument_list);
       });
     });
 
