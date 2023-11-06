@@ -233,6 +233,17 @@ class FunctionalTestRunner:
     options.set_preference('dom.serviceWorkers.enabled', True)
     # output javascript console and errors on stdout to help diagnosing failures
     options.set_preference('devtools.console.stdout.content', True)
+    # Always download attachments and do not open PDF inline, otherwise the
+    # browser's active would tab lose the focus
+    download_dir = os.path.join(log_directory, 'downloads')
+    if not os.path.exists(download_dir):
+      os.mkdir(download_dir)
+    options.set_preference("browser.download.dir", download_dir)
+    options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf")
+    options.set_preference("browser.download.folderList", 2)
+    options.set_preference("browser.download.manager.showWhenStarting", False)
+    options.set_preference("dom.block_download_insecure", False)
+    options.set_preference("pdfjs.disabled", True)
 
     selenium_test_runner_configuration = {}
     test_runner_configuration_file = os.environ.get('ERP5_TEST_RUNNER_CONFIGURATION')
