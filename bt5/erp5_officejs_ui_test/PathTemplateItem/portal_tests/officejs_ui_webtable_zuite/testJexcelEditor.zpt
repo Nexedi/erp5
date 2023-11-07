@@ -78,7 +78,7 @@
 <!-- Wait for spreadsheet to be rendered by the gadget -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='spreadsheet']</td>
+  <td>css=.spreadsheet</td>
   <td></td>
 </tr>
 <!-- Verify maximize button is present -->

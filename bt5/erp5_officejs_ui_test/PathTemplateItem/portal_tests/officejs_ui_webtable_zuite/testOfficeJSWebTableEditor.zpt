@@ -116,7 +116,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='spreadsheet']</td>
+  <td>css=.spreadsheet</td>
   <td></td>
 </tr>
 <!-- Wait for editor completly loaded, this is workaround, wait for lock in renderjs -->
