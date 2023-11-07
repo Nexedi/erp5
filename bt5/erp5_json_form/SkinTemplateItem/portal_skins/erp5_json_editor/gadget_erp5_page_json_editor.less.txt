@@ -1,0 +1,67 @@
+div[data-gadget-url$="gadget_erp5_page_json_editor.html"] {
+  & .je-object__title {
+    display: none !important;
+  }
+  & .container {
+    width: 100%;
+    padding-right: var(--bs-gutter-x,.75rem);
+    padding-left: var(--bs-gutter-x,.75rem);
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+
+  & p {
+    margin-bottom: 1rem;
+  }
+
+  & .alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+  }
+
+  & .alert {
+    position: relative;
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+  }
+  & .form-label {
+    margin-bottom: 0.5rem;  
+  }
+
+  & .bg-light {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-light-rgb),var(--bs-bg-opacity))!important;
+  }
+  & .card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+    padding: 1rem 1rem;
+    background-color: #fff
+  }
+
+  & .je-switcher {
+    background-color: transparent;
+    height: auto;
+    width: auto;
+    margin-bottom: 0px;
+    margin-left: 5px;
+    padding: 0px 0px 0px 3px;
+  }
+
+  & .btn-group-vertical>.btn, .btn-group>.btn {
+    /* position: relative; */
+    flex: 1 1 auto;
+}
+
+  & .btn-secondary:hover {
+    color: #fff;
+    background-color: #5c636a;
+    border-color: #565e64;
+  
+  } 
+}
