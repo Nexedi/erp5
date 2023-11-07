@@ -80,6 +80,7 @@
                         <string>my_source_title</string>
                         <string>my_creation_date</string>
                         <string>your_simulation_state</string>
+                        <string>your_modification_date</string>
                       </list>
                     </value>
                 </item>
