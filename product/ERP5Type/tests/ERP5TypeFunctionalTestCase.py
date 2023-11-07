@@ -244,6 +244,8 @@ class FunctionalTestRunner:
     options.set_preference("browser.download.manager.showWhenStarting", False)
     options.set_preference("dom.block_download_insecure", False)
     options.set_preference("pdfjs.disabled", True)
+    # always grant location
+    options.set_preference("permissions.default.geo", 1)
 
     selenium_test_runner_configuration = {}
     test_runner_configuration_file = os.environ.get('ERP5_TEST_RUNNER_CONFIGURATION')
