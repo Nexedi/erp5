@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, JSONEditor, domsugar*/
-(function (window, rJS, RSVP, document, JSONEditor, domsugar) {
+/*global window, rJS, RSVP, JSONEditor, domsugar */
+(function (window, rJS, RSVP, JSONEditor, domsugar) {
   'use strict';
 
   rJS(window)
@@ -36,6 +36,15 @@
           this.schema.enum.unshift("");
         }
         this.original_preBuild()
+        if (this.schema.type === 'boolean') {
+          /* the original code on preBuild include an empty first value if the value
+           is not required, but we always want the empty value */
+          if (this.isRequired()) {
+            this.enum_display.unshift(' ')
+            this.enum_options.unshift('undefined')
+            this.enum_values.unshift(undefined)
+          }
+        }
       }
 
       JSONEditor.defaults.editors.select.prototype.getValue = function () {
@@ -89,7 +98,27 @@
         this.layoutEditors()
         this.onChange()
       }
+
+      JSONEditor.defaults.editors.string.prototype.setValueToInputField = function (value) {
+        this.input.value = value === undefined ? '' : value
+        // ERP5: Once you set the value to the input, you also 
+        // updates the field value, otherwise the getValue behave badly
+        this.value = this.input.value 
+      }
+
+      /* Backward compatibility with the usage of textarea property 
+        if converts into json-editor proper property */
+      JSONEditor.defaults.editors.string.prototype.preBuild = function () {
+        if ((this.schema.textarea === true) || (this.schema.textarea === 1)) {
+          this.schema.format = 'textarea';
+        }
+      }
+
       /* End of patches related to ERP5 features */
+
+      if (Object.keys(gadget.state.json_field).length === 0) {
+        return domsugar(jsonEditorContainer);
+      }
 
       return new RSVP.Queue()
         .push(function () {
@@ -100,15 +129,15 @@
             show_errors: 'always',
             iconlib: 'fontawesome5',
             object_layout: 'normal',
-            disable_collapse: true,
+            disable_collapse: false,
             disable_edit_json: true,
-            disable_properties: true,
+            disable_properties: false,
             keep_only_existing_values: false,
             use_default_values: false,		// important
             disable_array_reorder: true,
             disable_array_delete_all_rows: true,
             disable_array_delete_last_row: true,
-            no_additional_properties: true,     // important
+            no_additional_properties: false,     // important
             remove_empty_properties: true,
             keep_oneof_values: false,		// important
             startval: gadget.state.default_dict
@@ -137,4 +166,4 @@
       }
       return true;
     });
-})(window, rJS, RSVP, document, JSONEditor, domsugar);
+})(window, rJS, RSVP, JSONEditor, domsugar);
