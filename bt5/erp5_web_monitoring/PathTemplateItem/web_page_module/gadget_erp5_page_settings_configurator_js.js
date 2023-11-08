@@ -125,11 +125,13 @@
             })
               .push(function (result) {
                 return RSVP.all([
+                  gadget.setSetting('sync_lock', true),
                   removeAllOPML(result)
                 ]);
               })
               .push(function () {
                 return RSVP.all([
+                  gadget.setSetting('sync_lock', false),
                   gadget.notifySubmitted({
                     message: 'All OPML removed',
                     status: 'success'
@@ -137,6 +139,7 @@
                 ]);
               }, function () {
                 success = false;
+                return gadget.setSetting('sync_lock', false);
               });
           })
           .push(function () {
