@@ -150,27 +150,14 @@
               // There was another recent sync don't start a new sync before the time_interval!
               return;
             }
-            return gadget.getSetting('sync_lock')
-              .push(function (sync_lock) {
-                if (!sync_lock) {
-                  gadget.props.sync_locked = false;
-                  return syncAllStorageWithCheck();
-                }
-                gadget.props.sync_locked = true;
-                return gadget.notifySubmitted({
-                  message: "Auto sync is currently locked by another task " +
-                    "and will be restarted later...",
-                  status: "error"
-                });
-              });
+            return syncAllStorageWithCheck();
           })
           .push(function () {
             return gadget.getSetting('sync_data_interval');
           })
           .push(function (timer_interval) {
-            if (gadget.props.offline === true ||
-                gadget.props.sync_locked === true) {
-              // Offline mode detected or sync locked. Next run in 1 minute
+            if (gadget.props.offline === true) {
+              // Offline mode detected. Next run in 1 minute
               timer_interval = 60000;
             } else if (timer_interval === undefined) {
               timer_interval = gadget.props.default_sync_interval;

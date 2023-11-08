@@ -62,7 +62,6 @@
 
     .onEvent('click', function (event) {
       var gadget = this,
-        sync_start_time,
         success = true,
         element = gadget.element.querySelector("#destroyOPML");
 
@@ -100,24 +99,6 @@
 
         return gadget.notifySubmitting()
           .push(function () {
-            return gadget.getSetting('sync_start_time');
-          })
-          .push(function (start_time) {
-            sync_start_time = start_time;
-            return gadget.getSetting('latest_sync_time');
-          })
-          .push(function (finish_time) {
-            if (finish_time - sync_start_time < 0) {
-              // sync is running, cannot remove OPML now
-              success = false;
-              return RSVP.all([
-                gadget.notifySubmitted({
-                  message: 'Cannot destroy now, please wait until background ' +
-                    'sync is finished',
-                  status: 'error'
-                })
-              ]);
-            }
             element.setAttribute("disabled", "disabled");
             return gadget.jio_allDocs({
               query: 'portal_type: "opml"',
@@ -125,13 +106,11 @@
             })
               .push(function (result) {
                 return RSVP.all([
-                  gadget.setSetting('sync_lock', true),
                   removeAllOPML(result)
                 ]);
               })
               .push(function () {
                 return RSVP.all([
-                  gadget.setSetting('sync_lock', false),
                   gadget.notifySubmitted({
                     message: 'All OPML removed',
                     status: 'success'
@@ -139,7 +118,6 @@
                 ]);
               }, function () {
                 success = false;
-                return gadget.setSetting('sync_lock', false);
               });
           })
           .push(function () {
