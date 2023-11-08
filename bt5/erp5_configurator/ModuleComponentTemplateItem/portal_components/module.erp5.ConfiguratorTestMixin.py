@@ -71,6 +71,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                          'erp5_dms',
                          'erp5_accounting',
                          'erp5_crm',
+                         'erp5_graph_editor',
                          'erp5_simplified_invoicing',
                          'erp5_trade_knowledge_pad',
                          'erp5_crm_knowledge_pad',
