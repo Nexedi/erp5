@@ -96,6 +96,6 @@ div[data-gadget-url$="gadget_erp5_page_json_editor.html"] .my-3 {
 }
 div[data-gadget-url$="gadget_erp5_page_json_editor.html"] .form-control:disabled,
 div[data-gadget-url$="gadget_erp5_page_json_editor.html"] .form-control[readonly] {
-  background-color: #e9ecef;
+  background-color: #e9ecef !important;
   opacity: 1;
 }

@@ -27,11 +27,18 @@
         }
         return undefined;
       }
-      
+      JSONEditor.AbstractEditor.prototype.preBuild = function () {
+        if (this.jsoneditor.options.readonly) {
+          this.schema.readOnly = this.jsoneditor.options.readonly;
+        }
+      }
+
       if (JSONEditor.defaults.editors.select.prototype.original_preBuild === undefined) {
         JSONEditor.defaults.editors.select.prototype.original_preBuild = JSONEditor.defaults.editors.select.prototype.preBuild
       }
       JSONEditor.defaults.editors.select.prototype.preBuild = function () {
+        // @ts-ignore
+        super.preBuild()
         if (typeof this.schema.enum !== 'undefined') {
           this.schema.enum.unshift("");
         }
@@ -112,6 +119,9 @@
         if ((this.schema.textarea === true) || (this.schema.textarea === 1)) {
           this.schema.format = 'textarea';
         }
+        if (this.jsoneditor.options.readonly) {
+          this.schema.readOnly = this.jsoneditor.options.readonly;
+        }        
       }
 
       /* End of patches related to ERP5 features */
@@ -140,7 +150,8 @@
             no_additional_properties: false,     // important
             remove_empty_properties: true,
             keep_oneof_values: false,		// important
-            startval: gadget.state.default_dict
+            startval: gadget.state.default_dict,
+            readonly: gadget.state.editable ? false: true
           });
         })
         .push(function (editor) {
