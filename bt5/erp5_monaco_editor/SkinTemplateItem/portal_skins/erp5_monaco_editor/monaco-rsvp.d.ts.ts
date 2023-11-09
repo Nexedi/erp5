@@ -612,7 +612,7 @@
         
         // nexedi additions begin
         class Queue<R> extends Promise<R> {
-            constructor();
+            constructor(q?: Queue<R> | PromiseLike<R>);
             push<TResult1 = R, TResult2 = never>(
                 onFulfilled?: ((value: R) => TResult1 | PromiseLike<TResult1>) | undefined | null,
                 onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null,
