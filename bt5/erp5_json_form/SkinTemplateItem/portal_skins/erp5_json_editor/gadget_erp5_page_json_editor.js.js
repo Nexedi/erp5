@@ -37,8 +37,9 @@
         JSONEditor.defaults.editors.select.prototype.original_preBuild = JSONEditor.defaults.editors.select.prototype.preBuild
       }
       JSONEditor.defaults.editors.select.prototype.preBuild = function () {
-        // @ts-ignore
-        super.preBuild()
+        if (this.jsoneditor.options.readonly) {
+          this.schema.readOnly = this.jsoneditor.options.readonly;
+        }
         if (typeof this.schema.enum !== 'undefined') {
           this.schema.enum.unshift("");
         }
@@ -89,6 +90,10 @@
             this.addObjectProperty(i)
             editor.setValue(value[i], initial)
             editor.activate()
+            /* Otherwise if it is read only remove the field */
+          } else if (editor.schema.readOnly) {
+            this.removeObjectProperty(i);
+            /* Otherwise, set the value to the default */
           } else {
             editor.setValue(editor.getDefault(), initial)
           }
