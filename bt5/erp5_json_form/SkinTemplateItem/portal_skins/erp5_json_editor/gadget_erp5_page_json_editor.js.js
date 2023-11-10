@@ -27,6 +27,31 @@
         }
         return undefined;
       }
+
+      JSONEditor.defaults.editors.object.prototype.getValue = function () {
+        if (!this.dependenciesFulfilled) {
+          return undefined
+        }
+        /* original code uses super.getValue() but we cannot use super here */
+        const result = this.value
+
+        /* Also check if constructor is an array */
+        const isEmpty = obj => typeof obj === 'undefined' || obj === '' ||
+        (
+          obj === Object(obj) &&
+          Object.keys(obj).length === 0 &&
+          (obj.constructor === Object || obj.constructor === Array)
+        )
+        if (result && (this.jsoneditor.options.remove_empty_properties || this.options.remove_empty_properties)) {
+          Object.keys(result).forEach(key => {
+            if (isEmpty(result[key])) {
+              delete result[key]
+            }
+          })
+        }
+        return result
+      }
+
       JSONEditor.AbstractEditor.prototype.preBuild = function () {
         if (this.jsoneditor.options.readonly) {
           this.schema.readOnly = this.jsoneditor.options.readonly;
