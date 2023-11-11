@@ -387,20 +387,20 @@ class FunctionalTestRunner:
       if tr_count:
         # First td is the main title
         test_name = tr[0][0].text
-        error = False
         if len(tr) == 1:
           # Test was not executed
-          detail += 'Test ' + test_name + ' not executed'
+          detail += '<code>' + test_name + '</code> not executed<br/>'
           error_title_list.append(test_name)
         else:
           test_table = tr[1].xpath('.//table')[0]
-          status = tr.attrib.get('class')
-          if 'status_failed' in status:
+          is_expected_failure = etree.tostring(test_table).find("expected failure") != -1
+          if 'status_failed' in tr.attrib['class']:
             # XXX replace status_failed classes by an inline style supported by gadget_html_viewer
             for test_tr in test_table.xpath('.//tr[contains(@class, "status_failed")]'):
               test_tr.set('style', 'background-color: red;')
             details_attribute_dict = {}
-            if etree.tostring(test_table).find("expected failure") != -1:
+            if is_expected_failure:
+              test_name = test_name + ' (expected failure)'
               expected_failure_amount += 1
             else:
               failure_amount += 1
@@ -409,6 +409,10 @@ class FunctionalTestRunner:
             detail_element = E.div()
             detail_element.append(E.details(E.summary(test_name), test_table, **details_attribute_dict))
             detail += etree.tostring(detail_element)
+          elif is_expected_failure:
+            detail += '<code>' + test_name + '</code> had unexpected success<br/>'
+            error_title_list.append(test_name)
+            failure_amount += 1
       tr_count += 1
     success_amount = tr_count - 1 - failure_amount - expected_failure_amount
     if detail:
