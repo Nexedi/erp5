@@ -101,6 +101,7 @@ def _getConnectionStringDict():
   connection_string_dict = {}
   default = os.environ.get('erp5_sql_connection_string')
   for connection in ('erp5_sql_connection_string',
+                     'erp5_sql_isolated_connection_string',
                      'erp5_sql_deferred_connection_string',
                      # default value for transactionless is derived from value
                      # for cmf_activity, so process it last
@@ -110,8 +111,9 @@ def _getConnectionStringDict():
       connection_string_dict[connection] = connection_string
   connection = 'erp5_sql_transactionless_connection_string'
   if os.environ.get(connection, connection_string):
+    index = [i for i, x in enumerate(connection_string.split()) if not x[0] in ('%', '*', '!')][0]
     connection_string_dict[connection] = \
-      os.environ.get(connection, '-' + connection_string)
+      connection_string = ' '.join('-' + x if i == index else x for i, x in enumerate(connection_string.split()))
   return connection_string_dict
 
 def _getConversionServerUrlList():
