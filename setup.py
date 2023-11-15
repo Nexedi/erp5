@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import glob
 import os
 
-version = '0.4.74'
+version = '0.4.75'
 name = 'erp5.util'
 long_description = open("README.erp5.util.txt").read() + "\n"
 
@@ -41,7 +41,7 @@ setup(name=name,
           "Programming Language :: Python",
           "Topic :: Utilities",
         ],
-      url='http://www.erp5.com',
+      url='https://www.erp5.com',
       author='The ERP5 Development Team',
       keywords='erp5 utilities',
       license='GPLv3',

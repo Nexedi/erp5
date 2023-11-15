@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.4.75 (2023-11-15)
+-------------------
+
+  * testnode:
+    - make ``killall`` support processes with changed title
+
 0.4.74 (2022-05-13)
 -------------------
 
