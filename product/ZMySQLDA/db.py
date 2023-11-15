@@ -406,6 +406,7 @@ class DB(TM):
              overridden by passing allow_reconnect with True value.
         """
         try:
+            LOG('ZMySQLDA.db._query', WARNING, '(%s) %s' % (self._connection, query))
             self.db.query(query)
         except OperationalError as m:
             if m[0] in query_syntax_error:
