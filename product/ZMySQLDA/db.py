@@ -437,7 +437,7 @@ class DB(TM):
           else:
             raise
 
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, isolation_level=None):
         """Execute 'query_string' and return at most 'max_rows'."""
         desc = None
         if isinstance(query_string, six.text_type):
@@ -448,7 +448,9 @@ class DB(TM):
         if query_string[-1:] == b';':
           query_string = query_string[:-1]
         if self._use_TM and not self._registered:
-            if self._isolation_level:
+            if isolation_level:
+                self._current_isolation_level = isolation_level
+            elif self._isolation_level:
                 self._current_isolation_level = self._isolation_level
             else:
                 for qs in query_string.split(b'\0'):
@@ -677,7 +679,7 @@ class DeferredDB(DB):
         assert self._use_TM
         self._sql_string_list = []
 
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, isolation_level=None):
         self._register()
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
