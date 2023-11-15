@@ -439,7 +439,6 @@ class DB(TM):
 
     def query(self, query_string, max_rows=1000):
         """Execute 'query_string' and return at most 'max_rows'."""
-        self._use_TM and self._register()
         desc = None
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
@@ -448,6 +447,15 @@ class DB(TM):
         # Unfortunately, MySQLdb does not want to be graceful.
         if query_string[-1:] == b';':
           query_string = query_string[:-1]
+        if self._use_TM and not self._registered:
+            if not self._isolation_level:
+                for qs in query_string.split(b'\0'):
+                    if match_select(qs.strip()):
+                        self._isolation_level = 'REPEATABLE-READ'
+                        break
+                else:
+                    self._isolation_level = 'READ-COMMITTED'
+            self._register()
         for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:

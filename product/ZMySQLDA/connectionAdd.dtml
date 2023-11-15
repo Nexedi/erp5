@@ -107,7 +107,9 @@
       !<em>isolation_level</em> at the begining of the connection string
       will set the transaction isolation level in each transaction. The
       value should be one of REPEATABLE-READ, READ-COMMITTED,
-      READ-UNCOMMITTED or SERIALIZABLE.
+      READ-UNCOMMITTED or SERIALIZABLE. If not specified, REPEATABLE-READ
+      is used for if the first query in a Zope transaction is SELECT query,
+      otherwise READ-COMMITTED is used.
     </dd>
     <dd>
       Transactions are highly recommended. Using a named lock in
