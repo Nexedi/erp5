@@ -80,7 +80,7 @@ class BaseConvertableFileMixin:
   security.declareProtected(Permissions.AccessContentsInformation,
                                                                  'getBaseData')
   def getBaseData(self, default=_MARKER):
-    """Serialise Pdata into string
+    """Serialise Pdata into bytes
     """
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
@@ -90,7 +90,7 @@ class BaseConvertableFileMixin:
     if base_data is None:
       return None
     else:
-      return str(base_data)
+      return bytes(base_data)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
   def _setBaseData(self, data):

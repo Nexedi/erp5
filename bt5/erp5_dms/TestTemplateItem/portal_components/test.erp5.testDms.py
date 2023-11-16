@@ -72,6 +72,7 @@ from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
 import PyPDF2
+from OFS.Image import Pdata
 
 QUIET = 0
 
@@ -2559,6 +2560,24 @@ return 1
       subject_result = portal.portal_catalog(subject=subject_list)
       self.assertEqual(len(subject_result), 1)
       self.assertEqual(subject_result[0].getPath(), document.getPath())
+
+  def test_base_convertable_uses_pdata_for_base_data(self):
+    document = self.portal.document_module.newContent(
+      portal_type='Spreadsheet',
+      file=makeFileUpload('import_big_spreadsheet.ods'))
+    self.tic()
+    # for large documents base_data is stored as Pdata
+    self.assertIsInstance(document.base_data, Pdata)
+    # the accessor unpacks to bytes
+    self.assertIsInstance(document.getBaseData(), bytes)
+
+    # for small documents, it's bytes directly
+    document = self.portal.document_module.newContent(
+      portal_type='Text',
+      file=makeFileUpload('TEST-en-002.odt'))
+    self.tic()
+    self.assertIsInstance(document.base_data, bytes)
+    self.assertIsInstance(document.getBaseData(), bytes)
 
   def test_base_convertable_behaviour_with_successive_updates(self):
     """Check that update content's document (with setData and setFile)
