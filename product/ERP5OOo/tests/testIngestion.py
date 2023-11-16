@@ -29,22 +29,25 @@
 #
 ##############################################################################
 
+import io
 import unittest
 import os
-import StringIO
 from cgi import FieldStorage
 from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl import Unauthorized
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload, removeZODBPythonScript, \
   createZODBPythonScript
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
+from zExceptions import Redirect
 import ZPublisher.HTTPRequest
 from unittest import expectedFailure
 import urllib
@@ -77,6 +80,15 @@ class IngestionTestCase(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy', 'erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web', 'erp5_crm', 'erp5_dms')
+
+  def afterSetUp(self):
+    self.setSystemPreference()
+
+  def setSystemPreference(self):
+    default_pref = self.getDefaultSystemPreference()
+    default_pref.setPreferredRedirectToDocument(False)
+    default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
+    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
 
   def beforeTearDown(self):
     # cleanup modules
@@ -136,13 +148,8 @@ class TestIngestion(IngestionTestCase):
     self.portal_categories = self.getCategoryTool()
     self.portal_catalog = self.getCatalogTool()
     self.createDefaultCategoryList()
-    self.setSystemPreference()
     self.setSimulatedNotificationScript()
-
-  def setSystemPreference(self):
-    default_pref = self.getDefaultSystemPreference()
-    default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
-    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
+    super(TestIngestion, self).afterSetUp()
 
   def setSimulatedNotificationScript(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2108,7 +2115,7 @@ class Base_contributeMixin:
     """
     person = self.portal.person_module.newContent(portal_type='Person')
     empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=StringIO.StringIO(),
+                            fp=io.BytesIO(),
                             environ=dict(REQUEST_METHOD='PUT'),
                             headers={"content-disposition":
                               "attachment; filename=empty;"}))
@@ -2266,3 +2273,120 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
     uf._doAddUser(self.id(), self.newPassword(), ['Associate', 'Assignor', 'Author'], [])
     user = uf.getUserById(self.id()).__of__(uf)
     newSecurityManager(None, user)
+
+  def test_Base_contribute_mergeRevision(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    ret = person.Base_contribute(
+      redirect_to_context=True,
+      synchronous_metadata_discovery=True,
+      file=makeFileUpload('TEST-en-002.pdf'))
+    self.assertIn(
+      ('portal_status_message', 'PDF created successfully.'),
+      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+
+    document, = self.portal.document_module.contentValues()
+    self.assertEqual(
+      (document.getReference(), document.getLanguage(), document.getVersion()),
+      ('TEST', 'en', '002'))
+    self.assertEqual(document.getValidationState(), 'draft')
+
+    document.setData(b'')
+    self.tic()
+
+    # when updating, the message is different
+    ret = person.Base_contribute(
+      redirect_to_context=True,
+      synchronous_metadata_discovery=True,
+      file=makeFileUpload('TEST-en-002.pdf'))
+    self.assertIn(
+      ('portal_status_message', 'PDF updated successfully.'),
+      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+
+    document, = self.portal.document_module.contentValues()
+    self.assertEqual(
+      (document.getReference(), document.getLanguage(), document.getVersion()),
+      ('TEST', 'en', '002'))
+    self.assertEqual(document.getValidationState(), 'draft')
+
+    self.assertIn(b'%PDF', document.getData())
+
+    # change to a state where user can not edit the document
+    document.setData(b'')
+    document.share()
+    self.tic()
+
+    for synchronous_metadata_discovery in True, False:
+      with self.assertRaises(Redirect) as ctx:
+        person.Base_contribute(
+          redirect_to_context=True,
+          synchronous_metadata_discovery=synchronous_metadata_discovery,
+          file=makeFileUpload('TEST-en-002.pdf'))
+      self.assertIn(
+        ('portal_status_message',
+        'You are not allowed to update the existing document which has the same coordinates.'),
+        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+      self.assertIn(
+        ('portal_status_level', 'error'),
+        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+
+      # document is not updated
+      self.assertEqual(document.getData(), b'')
+
+      # when using the script directly it's an error
+      with self.assertRaisesRegex(
+          Unauthorized,
+          "You are not allowed to update the existing document which has the same coordinates"):
+        person.Base_contribute(
+          synchronous_metadata_discovery=synchronous_metadata_discovery,
+          file=makeFileUpload('TEST-en-002.pdf'))
+      self.assertEqual(document.getData(), b'')
+
+  def test_Base_contribute_publication_state_unauthorized(self):
+    # When user is not allowed to publish a document, they can not use publication_state="published"
+    # option of Base_contribute
+    user_id = self.id() + '-author'
+    uf = self.portal.acl_users
+    uf._doAddUser(user_id, self.newPassword(), ['Author'], [])
+    user = uf.getUserById(user_id).__of__(uf)
+    newSecurityManager(None, user)
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    # with redirect_to_context option (like in the UI Dialog), we have a nice
+    # status message
+    with self.assertRaises(Redirect) as ctx:
+      person.Base_contribute(
+        publication_state='published',
+        redirect_to_context=True,
+        synchronous_metadata_discovery=True,
+        file=makeFileUpload('TEST-en-002.pdf'))
+    self.assertIn(
+      ('portal_status_message', 'You are not allowed to contribute document in that state.'),
+      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+    self.assertIn(
+      ('portal_status_level', 'error'),
+      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+
+    # when using the script directly it's an error
+    with self.assertRaisesRegex(
+        WorkflowException,
+        "Transition document_publication_workflow/publish unsupported"):
+      person.Base_contribute(
+        publication_state='published',
+        synchronous_metadata_discovery=True,
+        file=makeFileUpload('TEST-en-002.pdf'))
+
+    # when using asynchronous metadata discovery, an error occurs in activity,
+    # but not document is published
+    person.Base_contribute(
+      publication_state='published',
+      redirect_to_context=True,
+      synchronous_metadata_discovery=False,
+      file=makeFileUpload('TEST-en-002.pdf'))
+    with self.assertRaisesRegex(
+        Exception,
+        "Transition document_publication_workflow/publish unsupported"):
+      self.tic()
+
+    self.assertEqual(
+      {doc.getValidationState() for doc in self.portal.document_module.contentValues()},
+      set(['draft']))
