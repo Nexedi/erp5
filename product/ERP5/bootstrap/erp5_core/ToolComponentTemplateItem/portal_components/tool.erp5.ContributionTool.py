@@ -226,10 +226,10 @@ class ContributionTool(BaseTool):
     #
     # Check if same file is already exists. if it exists, then update it.
     #
-    property_dict = self.getMatchedFilenamePatternDict(filename)
+    property_dict = self.getPropertyDictFromFilename(filename)
     reference = property_dict.get('reference', None)
-    version  = property_dict.get('version', None)
-    language  = property_dict.get('language', None)
+    version = property_dict.get('version', None)
+    language = property_dict.get('language', None)
     if portal_type and reference and version and language:
       portal_catalog = portal.portal_catalog
       document = portal_catalog.getResultValue(portal_type=portal_type,
