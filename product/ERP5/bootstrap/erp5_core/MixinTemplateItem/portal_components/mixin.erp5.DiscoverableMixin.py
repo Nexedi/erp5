@@ -120,24 +120,10 @@ class DiscoverableMixin(CachedConvertableMixin):
     return {}
 
   ### Metadata disovery and ingestion methods
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'discoverMetadata')
   @UnrestrictedMethod
-  def discoverMetadata(self, filename=None, user_login=None,
-                       input_parameter_dict=None):
-    """
-    This is the main metadata discovery function - controls the process
-    of discovering data from various sources. The discovery itself is
-    delegated to scripts or uses preference-configurable regexps. The
-    method returns either self or the document which has been
-    merged in the discovery process.
-
-    filename - this parameter is a file name of the form "AA-BBB-CCC-223-en"
-
-    user_login - this is a login string of a person; can be None if the user is
-                 currently logged in, then we'll get him from session
-    input_parameter_dict - arguments provided to Create this content by user.
-    """
+  def _unrestrictedDiscoverMetadata(
+      self, filename=None, user_login=None, input_parameter_dict=None):
+    """Unrestricted part of metadata discovery"""
     if input_parameter_dict is None:
       input_parameter_dict = {}
     # Preference is made of a sequence of 'user_login', 'content', 'filename', 'input'
@@ -188,6 +174,31 @@ class DiscoverableMixin(CachedConvertableMixin):
       portal_type = registry.findPortalTypeName(context=self)
       if portal_type != self.getPortalType():
         return self.migratePortalType(portal_type)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'discoverMetadata')
+  def discoverMetadata(self, filename=None, user_login=None,
+                       input_parameter_dict=None):
+    """
+    This is the main metadata discovery function - controls the process
+    of discovering data from various sources. The discovery itself is
+    delegated to scripts or uses preference-configurable regexps. The
+    method returns either self or the document which has been
+    merged in the discovery process.
+
+    filename - this parameter is a file name of the form "AA-BBB-CCC-223-en"
+
+    user_login - this is a login string of a person; can be None if the user is
+                 currently logged in, then we'll get him from session
+    input_parameter_dict - arguments provided to Create this content by user.
+    """
+    discovered_document = self._unrestrictedDiscoverMetadata(
+      filename=filename, user_login=user_login, input_parameter_dict=input_parameter_dict)
+    if discovered_document is not None:
+      return discovered_document
+
+    if input_parameter_dict is None:
+      input_parameter_dict = {}
 
     def maybeChangeState(document):
       publication_state = input_parameter_dict.get('publication_state')

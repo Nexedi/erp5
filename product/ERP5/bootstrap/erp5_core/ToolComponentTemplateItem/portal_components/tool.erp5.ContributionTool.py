@@ -223,26 +223,27 @@ class ContributionTool(BaseTool):
         return response.redirect(self.absolute_url())
       return document
 
-    #
     # Check if same file is already exists. if it exists, then update it.
-    #
-    property_dict = self.getMatchedFilenamePatternDict(filename)
-    reference = property_dict.get('reference', None)
-    version  = property_dict.get('version', None)
-    language  = property_dict.get('language', None)
-    if portal_type and reference and version and language:
-      portal_catalog = portal.portal_catalog
-      document = portal_catalog.getResultValue(portal_type=portal_type,
-                                               reference=reference,
-                                               version=version,
-                                               language=language)
+    # If we use discover metadata API, this will be during discoverMetadata and
+    # mergeRevision.
+    if discover_metadata:
+      property_dict = self.getPropertyDictFromFilename(filename)
+      reference = property_dict.get('reference', None)
+      version = property_dict.get('version', None)
+      language = property_dict.get('language', None)
+      if portal_type and reference and version and language:
+        document = portal.portal_catalog.unrestrictedGetResultValue(
+          portal_type=portal_type,
+          reference=reference,
+          version=version,
+          language=language)
 
-      if document is not None:
-        # document is already uploaded. So overrides file.
-        if not _checkPermission(Permissions.ModifyPortalContent, document):
-          raise Unauthorized("[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId())
-        document.edit(file=kw['file'])
-        return document
+        if document is not None:
+          # document is already uploaded. So overrides file.
+          if not _checkPermission(Permissions.ModifyPortalContent, document):
+            raise Unauthorized("[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId())
+          document.edit(file=kw['file'])
+          return document
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
