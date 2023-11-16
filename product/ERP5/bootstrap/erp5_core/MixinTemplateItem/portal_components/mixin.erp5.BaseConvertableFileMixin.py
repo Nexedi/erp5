@@ -29,6 +29,7 @@
 from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
 from io import BytesIO
@@ -62,7 +63,7 @@ class BaseConvertableFileMixin:
       return
     message = self._convertToBaseFormat() # Call implemetation method
     if message is None:
-      message = self.Base_translateString('Converted to ${mime_type}.',
+      message = translateString('Converted to ${mime_type}.',
                             mapping={'mime_type': self.getBaseContentType()})
     # if processing_status_workflow is associated
     workflow_tool = getToolByName(self.getPortalObject(), 'portal_workflow')
