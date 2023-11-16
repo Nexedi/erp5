@@ -3016,6 +3016,16 @@ class TestDocumentWithSecurity(TestDocumentMixin):
         "You are not allowed to update the existing document"):
       self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
 
+    # this also works with another user which can not see the document
+    another_user_id = self.id()
+    uf = self.portal.acl_users
+    uf._doAddUser(another_user_id, '', ['Author'], [])
+    newSecurityManager(None, uf.getUserById(another_user_id).__of__(uf))
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
+
   def test_mergeRevision_with_node_reference_local_reference_filename_regular_expression(self):
     # this filename regular expression comes from configurator
     self.getDefaultSystemPreference().setPreferredDocumentFilenameRegularExpression(
@@ -3046,6 +3056,17 @@ class TestDocumentWithSecurity(TestDocumentMixin):
 
     # once the document is shared, the user can no longer edit it and trying to upload
     # the same reference causes an error.
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(
+        file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+
+    # this also works with another user which can not see the document
+    another_user_id = self.id()
+    uf = self.portal.acl_users
+    uf._doAddUser(another_user_id, '', ['Author'], [])
+    newSecurityManager(None, uf.getUserById(another_user_id).__of__(uf))
     with self.assertRaisesRegex(
         Unauthorized,
         "You are not allowed to update the existing document"):
