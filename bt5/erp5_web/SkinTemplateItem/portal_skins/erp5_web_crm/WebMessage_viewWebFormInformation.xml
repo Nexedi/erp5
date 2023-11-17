@@ -101,6 +101,7 @@
                         <string>my_source_person_first_name</string>
                         <string>my_source_person_last_name</string>
                         <string>my_source_person_default_email_text</string>
+                        <string>my_source_person_default_telephone_telephone_country</string>
                         <string>my_source_person_default_telephone_text</string>
                       </list>
                     </value>
