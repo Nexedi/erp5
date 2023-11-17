@@ -68,44 +68,42 @@ if url is not None:
       redirect_url= '%s?%s' %(cancel_url,
                             make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))
       return context.REQUEST.RESPONSE.redirect(redirect_url)
-else:
-  # contribute file
+
+# contribute file
+try:
+  batch_mode = batch_mode or not (redirect_to_context or redirect_to_document or redirect_url is not None)
   document_kw.update({'file': file})
   document = portal_contributions.newContent(**document_kw)
-
-batch_mode = batch_mode or not (redirect_to_context or redirect_to_document or redirect_url is not None)
-
-is_existing_document_updated = False
-if synchronous_metadata_discovery:
-  # we need to do all synchronously, in other case portal_contributions will do
-  # this in an activity
-  if document.isSupportBaseDataConversion():
-    document.processFile()
-  filename = document.getFilename()
-  try:
+  is_existing_document_updated = False
+  if synchronous_metadata_discovery:
+    # we need to do all synchronously, in other case portal_contributions will do
+    # this in an activity
+    if document.isSupportBaseDataConversion():
+      document.processFile()
+    filename = document.getFilename()
     merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(
-                                 filename=filename,
-                                 user_login=user_login,
-                                 input_parameter_dict=document_kw)
+                                  filename=filename,
+                                  user_login=user_login,
+                                  input_parameter_dict=document_kw)
     is_existing_document_updated = (merged_document!=document)
     document = merged_document
-  except (Unauthorized, WorkflowException) as e:
-    if batch_mode:
+except (Unauthorized, WorkflowException) as e:
+  if batch_mode:
+    raise
+  if isinstance(e, WorkflowException):
+    message = translateString('You are not allowed to contribute document in that state.')
+  else:
+    if 'You are not allowed to update the existing document' not in str(e):
       raise
-    if isinstance(e, WorkflowException):
-      message = translateString('You are not allowed to contribute document in that state.')
-    else:
-      if 'You are not allowed to update the existing document' not in str(e):
-        raise
-      message = translateString(
-        'You are not allowed to update the existing document which has the same coordinates.')
-    return context.Base_redirect(
-      'view',
-      abort_transaction=True,
-      keep_items={
-        'portal_status_message': message,
-        'portal_status_level': 'error',
-      })
+    message = translateString(
+      'You are not allowed to update the existing document which has the same coordinates.')
+  return context.Base_redirect(
+    'view',
+    abort_transaction=True,
+    keep_items={
+      'portal_status_message': message,
+      'portal_status_level': 'error',
+    })
 
 document_portal_type = document.getTranslatedPortalType()
 if not is_existing_document_updated:

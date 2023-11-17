@@ -2278,6 +2278,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
     person = self.portal.person_module.newContent(portal_type='Person')
     ret = person.Base_contribute(
       redirect_to_context=True,
+      synchronous_metadata_discovery=True,
       file=makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF created successfully.'),
@@ -2288,13 +2289,14 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       (document.getReference(), document.getLanguage(), document.getVersion()),
       ('TEST', 'en', '002'))
     self.assertEqual(document.getValidationState(), 'draft')
-    self.tic()
 
     document.setData(b'')
+    self.tic()
 
     # when updating, the message is different
     ret = person.Base_contribute(
       redirect_to_context=True,
+      synchronous_metadata_discovery=True,
       file=makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF updated successfully.'),
@@ -2313,27 +2315,31 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
     document.share()
     self.tic()
 
-    with self.assertRaises(Redirect) as ctx:
-      person.Base_contribute(
-        redirect_to_context=True,
-        file=makeFileUpload('TEST-en-002.pdf'))
-    self.assertIn(
-      ('portal_status_message',
-       'You are not allowed to update the existing document which has the same coordinates.'),
-      urlparse.parse_qsl(urlparse.urlparse(ctx.exception.headers['Location']).query))
-    self.assertIn(
-      ('portal_status_level', 'error'),
-      urlparse.parse_qsl(urlparse.urlparse(ctx.exception.headers['Location']).query))
+    for synchronous_metadata_discovery in True, False:
+      with self.assertRaises(Redirect) as ctx:
+        person.Base_contribute(
+          redirect_to_context=True,
+          synchronous_metadata_discovery=synchronous_metadata_discovery,
+          file=makeFileUpload('TEST-en-002.pdf'))
+      self.assertIn(
+        ('portal_status_message',
+        'You are not allowed to update the existing document which has the same coordinates.'),
+        urlparse.parse_qsl(urlparse.urlparse(ctx.exception.headers['Location']).query))
+      self.assertIn(
+        ('portal_status_level', 'error'),
+        urlparse.parse_qsl(urlparse.urlparse(ctx.exception.headers['Location']).query))
 
-    # document is not updated
-    self.assertEqual(document.getData(), b'')
+      # document is not updated
+      self.assertEqual(document.getData(), b'')
 
-    # when using the script directly it's an error
-    with self.assertRaisesRegex(
-        Unauthorized,
-        "You are not allowed to update the existing document which has the same coordinates"):
-      person.Base_contribute(
-        file=makeFileUpload('TEST-en-002.pdf'))
+      # when using the script directly it's an error
+      with self.assertRaisesRegex(
+          Unauthorized,
+          "You are not allowed to update the existing document which has the same coordinates"):
+        person.Base_contribute(
+          synchronous_metadata_discovery=synchronous_metadata_discovery,
+          file=makeFileUpload('TEST-en-002.pdf'))
+      self.assertEqual(document.getData(), b'')
 
   def test_Base_contribute_publication_state_unauthorized(self):
     # When user is not allowed to publish a document, they can not use publication_state="published"
@@ -2351,6 +2357,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       person.Base_contribute(
         publication_state='published',
         redirect_to_context=True,
+        synchronous_metadata_discovery=True,
         file=makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'You are not allowed to contribute document in that state.'),
@@ -2361,8 +2368,25 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
 
     # when using the script directly it's an error
     with self.assertRaisesRegex(
-        WorkflowException,
-        "Transition document_publication_workflow/publish unsupported"):
+          WorkflowException,
+          "Transition document_publication_workflow/publish unsupported"):
       person.Base_contribute(
         publication_state='published',
+        synchronous_metadata_discovery=True,
         file=makeFileUpload('TEST-en-002.pdf'))
+
+    # when using asynchronous metadata discovery, an error occurs in activity,
+    # but not document is published
+    person.Base_contribute(
+        publication_state='published',
+        redirect_to_context=True,
+        synchronous_metadata_discovery=False,
+        file=makeFileUpload('TEST-en-002.pdf'))
+    with self.assertRaisesRegex(
+        Exception,
+        "Transition document_publication_workflow/publish unsupported"):
+      self.tic()
+
+    self.assertEqual(
+      {doc.getValidationState() for doc in self.portal.document_module.contentValues()},
+      set(['draft']))
