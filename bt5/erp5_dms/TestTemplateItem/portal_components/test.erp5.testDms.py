@@ -178,7 +178,6 @@ class TestDocumentMixin(ERP5TypeTestCase):
     self.abort()
     doc_module = self.getDocumentModule()
     doc_module.manage_delObjects(list(doc_module.objectIds()))
-    doc_module.setLastId('')
     self.tic()
 
 class TestDocument(TestDocumentMixin):

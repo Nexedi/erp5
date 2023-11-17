@@ -73,7 +73,7 @@ else:
   document_kw.update({'file': file})
   document = portal_contributions.newContent(**document_kw)
 
-batch_mode = not (redirect_to_context or redirect_to_document or redirect_url is not None)
+batch_mode = batch_mode or not (redirect_to_context or redirect_to_document or redirect_url is not None)
 
 is_existing_document_updated = False
 if synchronous_metadata_discovery:
