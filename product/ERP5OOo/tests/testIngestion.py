@@ -2368,8 +2368,8 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
 
     # when using the script directly it's an error
     with self.assertRaisesRegex(
-          WorkflowException,
-          "Transition document_publication_workflow/publish unsupported"):
+        WorkflowException,
+        "Transition document_publication_workflow/publish unsupported"):
       person.Base_contribute(
         publication_state='published',
         synchronous_metadata_discovery=True,
@@ -2378,10 +2378,10 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
     # when using asynchronous metadata discovery, an error occurs in activity,
     # but not document is published
     person.Base_contribute(
-        publication_state='published',
-        redirect_to_context=True,
-        synchronous_metadata_discovery=False,
-        file=makeFileUpload('TEST-en-002.pdf'))
+      publication_state='published',
+      redirect_to_context=True,
+      synchronous_metadata_discovery=False,
+      file=makeFileUpload('TEST-en-002.pdf'))
     with self.assertRaisesRegex(
         Exception,
         "Transition document_publication_workflow/publish unsupported"):
