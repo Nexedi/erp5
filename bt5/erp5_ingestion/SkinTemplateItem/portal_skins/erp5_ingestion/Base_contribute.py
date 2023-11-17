@@ -4,6 +4,8 @@
   Use to contribute file to ERP5.
 """
 from ZTUtils import make_query
+from zExceptions import Unauthorized
+from Products.CMFCore.WorkflowCore import WorkflowException
 
 portal = context.getPortalObject()
 translateString = portal.Base_translateString
@@ -71,6 +73,7 @@ else:
   document_kw.update({'file': file})
   document = portal_contributions.newContent(**document_kw)
 
+batch_mode = not (redirect_to_context or redirect_to_document or redirect_url is not None)
 
 is_existing_document_updated = False
 if synchronous_metadata_discovery:
@@ -79,12 +82,30 @@ if synchronous_metadata_discovery:
   if document.isSupportBaseDataConversion():
     document.processFile()
   filename = document.getFilename()
-  merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(
-                               filename=filename,
-                               user_login=user_login,
-                               input_parameter_dict=document_kw)
-  is_existing_document_updated = (merged_document!=document)
-  document = merged_document
+  try:
+    merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(
+                                 filename=filename,
+                                 user_login=user_login,
+                                 input_parameter_dict=document_kw)
+    is_existing_document_updated = (merged_document!=document)
+    document = merged_document
+  except (Unauthorized, WorkflowException) as e:
+    if batch_mode:
+      raise
+    if isinstance(e, WorkflowException):
+      message = translateString('You are not allowed to contribute document in that state.')
+    else:
+      if 'You are not allowed to update the existing document' not in str(e):
+        raise
+      message = translateString(
+        'You are not allowed to update the existing document which has the same coordinates.')
+    return context.Base_redirect(
+      'view',
+      abort_transaction=True,
+      keep_items={
+        'portal_status_message': message,
+        'portal_status_level': 'error',
+      })
 
 document_portal_type = document.getTranslatedPortalType()
 if not is_existing_document_updated:
@@ -94,7 +115,7 @@ else:
   message = translateString('${portal_type} updated successfully.',
               mapping=dict(portal_type=document_portal_type))
 
-if redirect_to_context or redirect_to_document or redirect_url is not None:
+if not batch_mode:
   # this is an UI mode where script should handle HTTP redirects and is likely used
   # by ERP5 form
   if redirect_to_document and document is not None:
