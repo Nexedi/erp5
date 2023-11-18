@@ -55,25 +55,26 @@ if attach_document_to_context:
   document_kw['follow_up_list'] = follow_up_list
 
 document_kw.update({'discover_metadata': not synchronous_metadata_discovery})
-if url is not None:
-  # we contribute and URL, this happens entirely asynchronous
-  document = portal_contributions.newContentFromURL(url = url, \
-                                                    repeat = max_repeat, \
-                                                    batch_mode = batch_mode, \
-                                                    **document_kw)
-  if document is None:
-    # portal contributions could not upload it
-    if cancel_url is not None:
-      # we can assume we can redirect
-      redirect_url= '%s?%s' %(cancel_url,
-                            make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))
-      return context.REQUEST.RESPONSE.redirect(redirect_url)
-
-# contribute file
 try:
-  batch_mode = batch_mode or not (redirect_to_context or redirect_to_document or redirect_url is not None)
-  document_kw.update({'file': file})
-  document = portal_contributions.newContent(**document_kw)
+  if url is not None:
+    # we contribute and URL, this happens entirely asynchronous
+    document = portal_contributions.newContentFromURL(url = url, \
+                                                      repeat = max_repeat, \
+                                                      batch_mode = batch_mode, \
+                                                      **document_kw)
+    if document is None:
+      # portal contributions could not upload it
+      if cancel_url is not None:
+        # we can assume we can redirect
+        redirect_url= '%s?%s' %(cancel_url,
+                              make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))
+        return context.REQUEST.RESPONSE.redirect(redirect_url)
+
+  # contribute file
+  else:
+    batch_mode = batch_mode or not (redirect_to_context or redirect_to_document or redirect_url is not None)
+    document_kw.update({'file': file})
+    document = portal_contributions.newContent(**document_kw)
   is_existing_document_updated = False
   if synchronous_metadata_discovery:
     # we need to do all synchronously, in other case portal_contributions will do
