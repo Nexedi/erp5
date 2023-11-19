@@ -301,7 +301,7 @@ class DB(TM):
         FIELD_TYPE.TINY: "i", FIELD_TYPE.YEAR: "i",
         }
 
-    _p_oid=_p_changed=_registered=None
+    _p_oid=_p_changed=_registered=_current_isolation_level=None
 
     def __del__(self):
       if self.db is not None:
@@ -450,14 +450,16 @@ class DB(TM):
           query_string = query_string[:-1]
         if self._use_TM and not self._registered:
             if isolation_level:
-                self._isolation_level = isolation_level
-            elif not self._isolation_level:
+                self._current_isolation_level = isolation_level
+            elif self._isolation_level:
+                self._current_isolation_level = self._isolation_level
+            else:
                 for qs in query_string.split(b'\0'):
                     if match_select(qs.strip()):
-                        self._isolation_level = 'REPEATABLE-READ'
+                        self._current_isolation_level = 'REPEATABLE-READ'
                         break
                 else:
-                    self._isolation_level = 'READ-COMMITTED'
+                    self._current_isolation_level = 'READ-COMMITTED'
             self._register()
         for qs in query_string.split(b'\0'):
             qs = qs.strip()
@@ -502,8 +504,8 @@ class DB(TM):
         try:
             self._transaction_begun = True
             if self._transactions:
-                if self._isolation_level:
-                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self._isolation_level.replace('-', ' '))
+                if self._current_isolation_level:
+                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self._current_isolation_level.replace('-', ' '))
                 self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
