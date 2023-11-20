@@ -55,6 +55,7 @@ import urllib2
 import httplib
 import urlparse
 import base64
+import mock
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
@@ -110,7 +111,8 @@ class IngestionTestCase(ERP5TypeTestCase):
       assert not activity_status
     self.portal.portal_caches.clearAllCache()
     # Cleanup portal_skins
-    script_id_list = ('Document_getPropertyDictFromContent',
+    script_id_list = ('ContributionTool_isURLIngestionPermitted',
+                      'Document_getPropertyDictFromContent',
                       'Document_getPropertyDictFromInput',
                       'Document_getPropertyDictFromFilename',
                       'Document_getPropertyDictFromUserLogin',
@@ -149,6 +151,12 @@ class TestIngestion(IngestionTestCase):
     self.portal_catalog = self.getCatalogTool()
     self.createDefaultCategoryList()
     self.setSimulatedNotificationScript()
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      "ContributionTool_isURLIngestionPermitted",
+      "url",
+      "return True",
+    )
     super(TestIngestion, self).afterSetUp()
 
   def setSimulatedNotificationScript(self, sequence=None, sequence_list=None, **kw):
@@ -1956,6 +1964,34 @@ return result
     self.assertEqual(new_doc.asURL(), url)
     self.assertEqual(new_doc.getData(), 'Hello World!')
     self.assertEqual(new_doc.getValidationState(), 'submitted')
+
+  def test_ContributionTool_isURLIngestionPermitted(self):
+    # default behavior when no type based method is to refuse ingestion
+    with mock.patch.object(
+        self.portal.portal_contributions.__class__,
+        '_getTypeBasedMethod',
+        return_value=None,
+      ):
+      with self.assertRaisesRegex(Unauthorized, "URL ingestion not allowed"):
+        self.portal.portal_contributions.newContent(url='https://www.erp5.com')
+
+    # and it can be customized by script
+    self.portal.portal_skins.custom.ContributionTool_isURLIngestionPermitted.ZPythonScript_edit(
+      'url', 'return url == "https://www.erp5.com"',
+    )
+    self.portal.portal_contributions.newContent(url="https://www.erp5.com")
+    self.tic()
+    for url in (
+        "https://www.erp5.com/", # with trailing slash
+        "https://www.erp5.com/path",
+        "https://www.erp5.com/?query",
+        "https://www.nexedi.com/",
+        "file:///tmp",
+        "/tmp",
+      ):
+      with self.assertRaisesRegex(Unauthorized, "URL ingestion not allowed"):
+        self.portal.portal_contributions.newContent(url=url)
+    self.tic()
 
   def test_User_Portal_Type_parameter_is_honoured(self):
     """Check that given portal_type is always honoured
