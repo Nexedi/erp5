@@ -29,6 +29,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
 import urlnorm # pylint: disable=unused-import
                # This library is imported to detect lack of
                # urlnorm availibility in python environment
@@ -71,10 +72,20 @@ class TestWebCrawler(ERP5TypeTestCase):
     self.portal = self.getPortal()
     self.setSystemPreference()
     self.bootstrapWebSite()
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      "ContributionTool_isURLIngestionPermitted",
+      "url",
+      "return True",
+    )
     self.tic()
 
   def beforeTearDown(self):
     portal = self.portal
+    removeZODBPythonScript(
+      portal.portal_skins.custom,
+      'ContributionTool_isURLIngestionPermitted',
+    )
     module_id_list = [
       'web_page_module',
       'web_site_module',

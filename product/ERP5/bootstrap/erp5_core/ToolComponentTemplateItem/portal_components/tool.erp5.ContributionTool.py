@@ -632,6 +632,9 @@ class ContributionTool(BaseTool):
     read filename and content_type
     return file_object, filename, content_type tuple
     """
+    isURLIngestionPermitted = self._getTypeBasedMethod('isURLIngestionPermitted')
+    if isURLIngestionPermitted is None or not isURLIngestionPermitted(url):
+      raise Unauthorized("URL ingestion not allowed")
     # Quote path part of url
     url = reencodeUrlEscapes(url)
     # build a new file from the url
