@@ -1,4 +1,4 @@
-div[data-gadget-url$="gadget_erp5_page_json_editor.html"] {
+div[data-gadget-url$="json-editor.gadget.html"] {
   & .je-object__container .level-1 {
     display: none !important;
   }

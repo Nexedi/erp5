@@ -135,9 +135,9 @@
 
         /* First, set the values for all of the defined properties */
         // @ts-ignore
-        Object.entries(this.cached_editors).forEach(function (i, editor) {
+        Object.entries(this.cached_editors).forEach(function ([i, editor]) {
           /* Value explicitly set */
-          if (value[i] === undefined) {
+          if (value[i] !== undefined) {
             this.addObjectProperty(i);
             editor.setValue(value[i], initial);
             editor.activate();
@@ -151,7 +151,7 @@
         });
 
         // @ts-ignore
-        Object.entries(value).forEach(function (i, val) {
+        Object.entries(value).forEach(function ([i, val]) {
           if (!this.cached_editors[i]) {
             this.addObjectProperty(i);
             if (this.editors[i]) {
