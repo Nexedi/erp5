@@ -127,6 +127,7 @@
 
       /* The original code would remove the field if value is undefined */
       JSONEditor.defaults.editors.object.prototype.setValue = function (value, initial) {
+        var object_editor = this;
         value = value || {};
 
         if (typeof value !== 'object' || Array.isArray(value)) {
@@ -138,12 +139,12 @@
         Object.entries(this.cached_editors).forEach(function ([i, editor]) {
           /* Value explicitly set */
           if (value[i] !== undefined) {
-            this.addObjectProperty(i);
+            object_editor.addObjectProperty(i);
             editor.setValue(value[i], initial);
             editor.activate();
             /* Otherwise if it is read only remove the field */
           } else if (editor.schema.readOnly) {
-            this.removeObjectProperty(i);
+            object_editor.removeObjectProperty(i);
             /* Otherwise, set the value to the default */
           } else {
             editor.setValue(editor.getDefault(), initial);
@@ -152,17 +153,17 @@
 
         // @ts-ignore
         Object.entries(value).forEach(function ([i, val]) {
-          if (!this.cached_editors[i]) {
-            this.addObjectProperty(i);
-            if (this.editors[i]) {
-              this.editors[i].setValue(val, initial, !!this.editors[i].template);
+          if (!object_editor.cached_editors[i]) {
+            object_editor.addObjectProperty(i);
+            if (object_editor.editors[i]) {
+              object_editor.editors[i].setValue(val, initial, !!object_editor.editors[i].template);
             }
           }
         });
 
-        this.refreshValue();
-        this.layoutEditors();
-        this.onChange();
+        object_editor.refreshValue();
+        object_editor.layoutEditors();
+        object_editor.onChange();
       };
 
       JSONEditor.defaults.editors.string.prototype.setValueToInputField = function (value) {
