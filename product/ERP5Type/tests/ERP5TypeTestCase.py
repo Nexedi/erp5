@@ -111,9 +111,8 @@ def _getConnectionStringDict():
       connection_string_dict[connection] = connection_string
   connection = 'erp5_sql_transactionless_connection_string'
   if os.environ.get(connection, connection_string):
-    index = [i for i, x in enumerate(connection_string.split()) if not x[0] in ('%', '*', '!')][0]
     connection_string_dict[connection] = \
-      connection_string = ' '.join('-' + x if i == index else x for i, x in enumerate(connection_string.split()))
+      os.environ.get(connection, '-' + re.sub(r'^([%*!][^ ]+ )*[+-]?', '', connection_string)
   return connection_string_dict
 
 def _getConversionServerUrlList():
