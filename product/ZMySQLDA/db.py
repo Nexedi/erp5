@@ -676,7 +676,6 @@ class DeferredDB(DB):
     """
     def __init__(self, *args, **kw):
         DB.__init__(self, *args, **kw)
-        assert self._use_TM
         self._sql_string_list = []
 
     def query(self, query_string, max_rows=1000, isolation_level=None):

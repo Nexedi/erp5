@@ -2139,7 +2139,8 @@ class ERP5Generator(PortalGenerator):
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
 
-    erp5_sql_deferred_connection_string = erp5_sql_connection_string
+    # deferred connection is used for non-transactional engines.
+    erp5_sql_deferred_connection_string = '-' + re.sub(r'^([%*!][^ ]+ )*[+-]?', '', erp5_sql_connection_string)
     p._setProperty('erp5_catalog_storage',
                    erp5_catalog_storage, 'string')
     p._setProperty('erp5_sql_connection_string',
