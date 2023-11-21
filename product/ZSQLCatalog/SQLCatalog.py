@@ -965,7 +965,7 @@ class Catalog(Folder,
         return {}
       for table in self.getCatalogSearchTableIds():
         try:
-          result[table] = [c.Field for c in method(table=table)]
+          result[table] = [c.Field for c in method(table=table, isolation_level__='READ-COMMITTED')]
         except (ConflictError, DatabaseError):
           raise
         except Exception:
@@ -976,7 +976,7 @@ class Catalog(Folder,
             error=True,
           )
       return result
-    for row in method():
+    for row in method(isolation_level__='READ-COMMITTED'):
       result.setdefault(row.TABLE_NAME, []).append(row.COLUMN_NAME)
     return result
 
