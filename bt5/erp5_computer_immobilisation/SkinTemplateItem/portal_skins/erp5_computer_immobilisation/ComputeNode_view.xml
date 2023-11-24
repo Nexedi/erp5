@@ -124,6 +124,7 @@
                         <string>my_default_network_address_host_name</string>
                         <string>my_default_network_address_ip_address</string>
                         <string>my_default_network_address_netmask</string>
+                        <string>my_subject_list</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
