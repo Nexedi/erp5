@@ -1,9 +1,11 @@
 import ast
 import enum
 import json
+import logging
 import tempfile
 import textwrap
-import logging
+
+import six
 
 logger = logging.getLogger(__name__)
 
@@ -112,7 +114,7 @@ def ERP5Site_getPythonCodeSymbolList(self, data, REQUEST=None):
 
 def ERP5Site_formatPythonSourceCode(self, data, REQUEST=None):
   from yapf.yapflib import yapf_api
-  if isinstance(data, basestring):
+  if isinstance(data, six.string_types):
     data = json.loads(data)
   try:
     extra = {}
@@ -130,6 +132,7 @@ def ERP5Site_formatPythonSourceCode(self, data, REQUEST=None):
           split_before_expression_after_opening_paren = true
           split_before_first_argument = true
           split_before_arithmetic_operator = true
+          allow_split_before_dict_value = false
           '''))
       f.flush()
       formatted_code, changed = yapf_api.FormatCode(
