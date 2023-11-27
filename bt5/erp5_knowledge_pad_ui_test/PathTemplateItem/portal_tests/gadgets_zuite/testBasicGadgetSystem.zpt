@@ -175,6 +175,11 @@
   <td>//button[@id="rename_tab_dialog_rename_button"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 
 <!-- Test removing pad -->
@@ -191,6 +196,11 @@
 <tr>
   <td>assertConfirmation</td>
   <td>Are you sure you want to remove this pad from your home?</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
   <td></td>
 </tr>
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
