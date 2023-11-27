@@ -28,7 +28,7 @@
     start_AMSL = 595,
     INIT_LON = 14.2658,
     INIT_LAT = 45.6412,
-    INIT_Z = 15,
+    INIT_ALT = 15,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'function assert(a, b, msg) {\n' +
@@ -51,9 +51,9 @@
       '}\n' +
       '\n' +
       'function compare(coord1, coord2) {\n' +
-      '  assert(coord1.x, coord2.x, "Latitude")\n' +
-      '  assert(coord1.y, coord2.y, "Longitude")\n' +
-      '  assert(coord1.z, coord2.z, "Altitude")\n' +
+      '  assert(coord1.latitude, coord2.latitude, "Latitude")\n' +
+      '  assert(coord1.longitude, coord2.longitude, "Longitude")\n' +
+      '  assert(coord1.altitude, coord2.altitude, "Altitude")\n' +
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
@@ -61,8 +61,8 @@
       '  assert(me.getYaw(), 0, "Yaw angle")\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
       '  me.setTargetCoordinates(\n' +
-      '    me.initialPosition.x + 0.01,\n' +
-      '    me.initialPosition.y,\n' +
+      '    me.initialPosition.latitude + 0.01,\n' +
+      '    me.initialPosition.longitude,\n' +
       '    me.getAltitudeAbs()\n' +
       '  );\n' +
       '};\n' +
@@ -70,19 +70,19 @@
       'me.onUpdate = function (timestamp) {\n' +
       '  var current_position = me.getCurrentPosition(),\n' +
       '    realDistance = distance(\n' +
-      '    me.initialPosition.x,\n' +
-      '    me.initialPosition.y,\n' +
-      '    me.getCurrentPosition().x,\n' +
-      '    me.getCurrentPosition().y\n' +
+      '    me.initialPosition.latitude,\n' +
+      '    me.initialPosition.longitude,\n' +
+      '    me.getCurrentPosition().latitude,\n' +
+      '    me.getCurrentPosition().longitude\n' +
       '  ).toFixed(8),\n' +
       '    expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
       '    assert(timestamp, 1000 / 60, "Timestamp");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
-      '  current_position.x = current_position.x.toFixed(7);\n' +
+      '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
       '  compare(current_position, {\n' +
-      '    x: (me.initialPosition.x + 2.3992831666911723e-06).toFixed(7),\n' +
-      '    y: me.initialPosition.y,\n' +
-      '    z: me.initialPosition.z\n' +
+      '    latitude: (me.initialPosition.latitude + 2.3992831666911723e-06).toFixed(7),\n' +
+      '    longitude: me.initialPosition.longitude,\n' +
+      '    altitude: me.initialPosition.altitude\n' +
       '  });\n' +
       '  me.exit(me.triggerParachute());\n' +
       '};',
@@ -199,7 +199,7 @@
         "initialPosition": {
           "longitude": parseFloat(INIT_LON),
           "latitude": parseFloat(INIT_LAT),
-          "z": parseFloat(INIT_Z)
+          "altitude": parseFloat(INIT_ALT)
         },
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
