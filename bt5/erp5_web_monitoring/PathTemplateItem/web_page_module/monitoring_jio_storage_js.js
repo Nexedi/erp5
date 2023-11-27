@@ -654,7 +654,7 @@
             portal_type: element.portal_type || element.type ||
               item_result.type,
             status: status,
-            reference: id_hash,
+            reference: element.reference || id_hash,
             active: true
           });
           opml_document_list.push({
