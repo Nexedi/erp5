@@ -123,6 +123,71 @@ Grouping Dialog show mirror account
   <td>7 - Goods Sales</td>
 </tr>
 
+<!-- This also works when using "Account Reference" for account number method -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/PreferenceTool_setAccountingTestAccountReferencePreference</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Preference Set</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <!-- title -->
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifySelected</td>
+  <td>field_your_node</td>
+  <td>label=A-REC - Receivable</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
+  <td>A-PAY - Payable</td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
