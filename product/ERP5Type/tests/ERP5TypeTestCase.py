@@ -101,7 +101,7 @@ def _getConnectionStringDict():
   connection_string_dict = {}
   default = os.environ.get('erp5_sql_connection_string')
   for connection in ('erp5_sql_connection_string',
-                     'erp5_sql_isolated_connection_string',
+                     'erp5_sql_read_committed_connection_string',
                      'erp5_sql_deferred_connection_string',
                      # default value for transactionless is derived from value
                      # for cmf_activity, so process it last
