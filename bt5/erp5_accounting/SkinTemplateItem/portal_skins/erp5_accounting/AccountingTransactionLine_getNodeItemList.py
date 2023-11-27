@@ -54,7 +54,7 @@ def sort(x,y):
   return cmp(display(x), display(y))
 
 def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,
-                user_name=None, simulation_state=None):
+                simulation_state=None):
   """Returns a list of Account path items. """
   if category is not None:
     cat = portal.portal_categories.resolveCategory(category)
@@ -78,9 +78,13 @@ def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,
 # wrap the previous method in a cache, including the cache cookie that
 # we reset everytime and account is validated or invalidated.
 cache_cookie = portal.account_module.getCacheCookie('account_list')
-getItemList = CachingMethod(getItemList,
-                            id='AccountingTransactionLine_getNodeItemList-%s' % cache_cookie,
-                            cache_factory='erp5_content_long')
+getItemList = CachingMethod(
+  getItemList,
+  id='AccountingTransactionLine_getNodeItemList-%s-%s-%s' % (
+    cache_cookie,
+    getSecurityManager().getUser().getIdOrUserName(),
+    portal.portal_preferences.getPreferredAccountNumberMethod()),
+  cache_factory='erp5_content_long')
 
 # the cache vary with the simulation state of the current transaction,
 # to display all accounts when the transaction is already delivered.
@@ -91,7 +95,6 @@ item_list = getItemList( category=category,
                     portal_path=context.getPortalObject().getPhysicalPath(),
                     mirror=mirror,
                     omit_filter=omit_filter, # XXX possible optim: only one cache if omit_filter
-                    user_name=getSecurityManager().getUser().getIdOrUserName(),
                     simulation_state=simulation_state)
 
 # make sure that the current value is included in this list, this is
