@@ -17,6 +17,7 @@
  * @property {string} password a password to decrypt the content
  * @property {boolean} run a hack for jsmd editor
  * @property {string} key Key for ERP5 form
+ * @property {string} schema_url Schema's URL for json editor
  */
 
 (function (window, rJS, RSVP, document, FileReader, Blob) {
@@ -34,7 +35,8 @@
     "pdf": {"url": "pdf_js/pdfjs.gadget.html"},
     "notebook_editor": {"url": "gadget_notebook.html"},
     "jsmd_editor": {"url": "gadget_jsmd_viewer.html"},
-    "jexcel" : {"url": "jexcel.gadget.html"}
+    "jexcel" : {"url": "jexcel.gadget.html"},
+    "jsoneditor" : {"url": "json-editor.gadget.html"}
   };
 
 
@@ -93,6 +95,7 @@
           run: options.run || false,
           key: options.key,
           password: options.password,
+          schema_url: options.schema_url,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
@@ -161,6 +164,7 @@
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'monaco') ||
+            (!gadget.state.editable && gadget.state.editor === 'jsoneditor') ||
             (gadget.state.editor === 'pdf')) {
           queue
             .push(function () {
@@ -206,6 +210,7 @@
             (gadget.state.editor === 'html_viewer') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'monaco') ||
+            (!gadget.state.editable && gadget.state.editor === 'jsoneditor') ||
             (gadget.state.editor === 'pdf')) {
         queue
           .push(function () {
@@ -214,7 +219,6 @@
           .push(function (editor_gadget) {
             return editor_gadget.render(gadget.state);
           });
-
         if (modification_dict.maximize === "auto") {
           queue
             .push(function () {
