@@ -3,6 +3,7 @@
  <key>full_text | SQLCatalog_makeFullTextQuery</key>
  <key>quick_search_text | SQLCatalog_makeQuickSearchQuery</key>
  <key>search_text | SQLCatalog_makeSearchTextQuery</key>
+ <key>subject_set | SQLCatalog_makeSubjectSetQuery</key>
  <key>translated_causality_state | SQLCatalog_makeTranslatedCausalityStateQuery</key>
  <key>translated_causality_state_title | SQLCatalog_makeTranslatedCausalityStateTitleQuery</key>
  <key>translated_opportunity_state | SQLCatalog_makeTranslatedOpportunityStateQuery</key>
