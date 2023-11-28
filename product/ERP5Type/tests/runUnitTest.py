@@ -60,7 +60,7 @@ Options:
                              default, it will use "test test"
   --erp5_sql_read_committed_connection_string=STRING
                              ZSQL Connection string for erp5_sql_read_committed_connection
-                             (if unset, defaults to erp5_sql_connection_string)
+                             (if unset, defaults to erp5_sql_connection_string with "!READ-COMMITTED")
   --cmf_activity_sql_connection_string=STRING
                              ZSQL Connection string for
                              cmf_activity_sql_connection (if unset, defaults to
@@ -905,7 +905,8 @@ def main(argument_list=None):
       os.environ["with_wendelin_core"] = "1"
 
   if "erp5_sql_read_committed_connection_string" not in os.environ and "erp5_sql_connection_string" in os.environ:
-    os.environ["erp5_sql_read_committed_connection_string"] = os.environ["erp5_sql_connection_string"]
+    os.environ["erp5_sql_read_committed_connection_string"] = re.sub(
+      r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', os.environ["erp5_sql_connection_string"])
   if "cmf_activity_sql_connection_string" not in os.environ and "erp5_sql_read_committed_connection_string" in os.environ:
     os.environ["cmf_activity_sql_connection_string"] = os.environ["erp5_sql_read_committed_connection_string"]
 
