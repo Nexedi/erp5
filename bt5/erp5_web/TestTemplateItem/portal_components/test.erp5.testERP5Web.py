@@ -252,8 +252,6 @@ class TestERP5Web(ERP5TypeTestCase):
     except Exception:
       self.fail('Cataloging of the Web Site failed.')
 
-
-
   def test_02_EditSimpleWebPage(self):
     """
       Simple Case of creating a web page.
@@ -1257,9 +1255,8 @@ Hé Hé Hé!""", page.asText().strip())
   def test_15_Check_LastModified_Header(self):
     """Checks that Last-Modified header set by caching policy manager
     is correctly filled with getModificationDate of content.
-    This test check 2 Policy installed by erp5_web:
+    This test check 1 Policy installed by erp5_web:
     Policy ID - unauthenticated web pages
-                authenticated
     """
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
@@ -1285,15 +1282,52 @@ Hé Hé Hé!""", page.asText().strip())
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
 
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+      'max-age=600, stale-while-revalidate=360000, public')
+  
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header,
+      'Cookie, Authorization')
+
+  def test_15a_Check_LastModified_Header_authenticated(self):
+    """Checks that Last-Modified header is NOT set by caching policy manager
+    This test check 1 Policy installed by erp5_web:
+    Policy ID - authenticated
+    """
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    website.newContent(portal_type=web_section_portal_type)
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
     # authenticated
     user = self.createUser('webmaster')
     self.createUserAssignement(user, {})
+
+    self.tic()
     response = self.publish(path, 'webmaster:webmaster')
     last_modified_header = response.getHeader('Last-Modified')
-    self.assertTrue(last_modified_header)
-    # Convert the Date into string according RFC 1123 Time Format
-    modification_date = rfc1123_date(document.getModificationDate())
-    self.assertEqual(modification_date, last_modified_header)
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header, 'max-age=0, no-store')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
 
   def test_15a_CheckCachingPolicyManager(self):
     """
@@ -1645,6 +1679,364 @@ Hé Hé Hé!""", page.asText().strip())
     preference.setPreferredEventUseList(['test_use_category_2'])
     self.tic()
     self.assertEqual(web_site.WebSection_getEventResourceItemList(), [('', '')])
+
+  def test_caching_policy_no_store(self):
+    """Even as anonnymous we expect that no Last-Modified 
+    is provided, and no-store on cache control.
+     This test check 1 Policy installed by erp5_web:
+    Policy ID - no store
+    """
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    website.newContent(portal_type=web_section_portal_type)
+
+    # It expected 
+    website.setCachingPolicy('no-store')
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
+    # unauthenticated web pages
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+      'max-age=0, no-store')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
+
+    # retry after login
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+
+    self.tic()
+    response = self.publish(path, 'webmaster:webmaster')
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header, 'max-age=0, no-store')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
+
+  def test_caching_policy_no_cache(self):
+    """This test check 1 Policy installed by erp5_web:
+    Policy ID - no cache
+    """
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    website.newContent(portal_type=web_section_portal_type)
+
+    # It expected 
+    website.setCachingPolicy('no-cache')
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
+    # unauthenticated web pages
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+      'max-age=0, no-cache')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
+
+    # retry after login
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+
+    self.tic()
+    response = self.publish(path, 'webmaster:webmaster')
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header, 'max-age=0, no-cache')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
+
+
+  def test_caching_policy_one_year_cache(self):
+    """ Only works as unauthenticated user
+     This test check 1 Policy installed by erp5_web:
+    Policy ID - one-year-cache
+
+    """
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    website.newContent(portal_type=web_section_portal_type)
+
+    # It expected 
+    website.setCachingPolicy('one-year-cache')
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
+    # unauthenticated web pages
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+      'max-age=31536000, stale-while-revalidate=31536000, stale-if-error=31536000, public')
+  
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header,
+      'Cookie, Authorization, Accept-Encoding')
+
+    # retry after login
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+
+    self.tic()
+    response = self.publish(path, 'webmaster:webmaster')
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header, 'max-age=0, no-store')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
+
+
+  def test_caching_policy_one_day_max_modification_date_cache(self):
+    """ Only works as unauthenticated user
+     This test check 1 Policy installed by erp5_web:
+    Policy ID - one-day-max-modification-date
+    """
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    website.newContent(portal_type=web_section_portal_type)
+
+    # It expected 
+    website.setCachingPolicy('one-day-max-modification-date')
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
+    # unauthenticated web pages
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+      'max-age=600, stale-while-revalidate=360000, stale-if-error=31536000, public')
+  
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header,
+      'Cookie, Authorization, Accept-Encoding')
+
+    # retry after login
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+
+    self.tic()
+    response = self.publish(path, 'webmaster:webmaster')
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header, 'max-age=0, no-store')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
+
+
+  def test_caching_policy_one_hour_max_modification_date_cache(self):
+    """ Only works as unauthenticated user
+     This test check 1 Policy installed by erp5_web:
+    Policy ID - one-hour-max-modification-date
+    """
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    website.newContent(portal_type=web_section_portal_type)
+
+    # It expected 
+    website.setCachingPolicy('one-hour-max-modification-date')
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
+    # unauthenticated web pages
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+      'max-age=600, stale-while-revalidate=360000, stale-if-error=31536000, public')
+  
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header,
+      'Cookie, Authorization, Accept-Encoding')
+
+    # retry after login
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+
+    self.tic()
+    response = self.publish(path, 'webmaster:webmaster')
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertFalse(last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header, 'max-age=0, no-store')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header, None)
+
+
+  def test_caching_policy_must_revalidate_cache(self):
+    """ 
+     This test check 1 Policy installed by erp5_web:
+    Policy ID - must-revalidate
+    """
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    website.newContent(portal_type=web_section_portal_type)
+
+    # It expected 
+    website.setCachingPolicy('must-revalidate')
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
+    # unauthenticated web pages
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+      'max-age=0, public, must-revalidate')
+  
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header,
+      'Accept-Language, Cookie, Authorization, Accept-Encoding')
+
+    # retry after login
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+
+    self.tic()
+    response = self.publish(path, 'webmaster:webmaster')
+    last_modified_header = response.getHeader('Last-Modified')
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # Check cache control
+    cache_control_header = response.getHeader('Cache-Control')
+    self.assertEqual(cache_control_header,
+     'max-age=0, public, must-revalidate')
+
+    # Check Vary
+    cache_control_header = response.getHeader('Vary')
+    self.assertEqual(cache_control_header,
+      "Accept-Language, Cookie, Authorization, Accept-Encoding")
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
