@@ -3,6 +3,7 @@
 import transaction
 from zExceptions import Unauthorized
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type import IS_ZOPE2
 from unittest import skip
 from functools import wraps
 
@@ -3180,7 +3181,10 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     )
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
-    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    if IS_ZOPE2:
+      self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv')
+    else:
+      self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv; charset=utf-8')
     expected_csv = 'Title,Creation Date\nfoook2,XX/XX/XXXX XX:XX:XX\nfoook1,XX/XX/XXXX XX:XX:XX\n'
     self.assertEqual(len(result), len(expected_csv), result)
     prefix_length = len('Title,Creation Date\nfoook2,')
@@ -3241,7 +3245,10 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     )
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
-    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    if IS_ZOPE2:
+      self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv')
+    else:
+      self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv; charset=utf-8')
     self.assertTrue('foook1' in result, result)
     self.assertTrue('foook2' in result, result)
     self.assertTrue('foonotok' not in result, result)
