@@ -1271,10 +1271,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         token_dict[JWT_PAYLOAD_KEY] = decodeAccessTokenPayload(
           token_dict[JWT_PAYLOAD_KEY].encode('ascii'),
         )
@@ -1296,10 +1296,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         return token_dict
     raise
 
@@ -1356,10 +1356,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         return token_dict['iss']
     raise
 
@@ -1382,10 +1382,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         return token_dict['iss']
     raise
 
