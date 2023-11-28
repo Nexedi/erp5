@@ -2297,7 +2297,7 @@ class ERP5Generator(PortalGenerator):
       # The only difference compared to activity connection is the
       # minus prepended to the connection string.
       if id == 'erp5_sql_transactionless_connection':
-        connection_string = '-' + re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', p.cmf_activity_sql_connection_string)
+        connection_string = re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', p.cmf_activity_sql_connection_string)
       else:
         connection_string = getattr(p, id + '_string')
       manage_add(id, title, connection_string, **kw)
