@@ -1,4 +1,4 @@
-div[data-gadget-url$="json-editor.gadget.html"] {
+div.json-editor-container {
   & .je-object__container .level-1 {
     display: none !important;
   }
