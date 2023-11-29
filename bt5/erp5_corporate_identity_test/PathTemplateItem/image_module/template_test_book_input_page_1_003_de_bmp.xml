@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>682a2ce3fdc073375ed7cfef3ad9f2aa</string> </value>
+            <value> <string>331404662bd0474f92c86952fb5d86b0</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>595</int> </value>
+            <value> <int>842</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -125,7 +125,7 @@
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>842</int> </value>
+            <value> <int>595</int> </value>
         </item>
       </dictionary>
     </pickle>
