@@ -1,5 +1,5 @@
 url_list = [
-  "font-awesome.5.1/font-awesome.5.1.css",
+  "ref-parser.min.js",
   "json-editor.gadget.css",
   "json-editor.gadget.html",
   "json-editor.gadget.js",
