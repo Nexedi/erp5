@@ -25,7 +25,9 @@ def getEditableField(alias):
     field = field.getTemplateField().aq_inner
 
 for column, _ in editable_columns:
-  field = getEditableField(column)
+  # replace '.' with '_' since for column like 'delivery.start_date'
+  # the field would be like 'listbox_delivery_start_date'
+  field = getEditableField(column.replace('.', '_'))
   if field is not None:
     editable_fields[column] = field
 
