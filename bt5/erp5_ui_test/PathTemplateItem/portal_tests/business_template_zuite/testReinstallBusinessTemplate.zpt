@@ -1,0 +1,123 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_and_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_and_id"></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/ERP5Site_setUpBusinessTemplateReinstallTest</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Setup OK</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Re-install Business Template</td>
+</tr>
+<tr>
+<tr>
+  <td>assertText</td>
+  <td>//button[@name="Base_callDialogMethod:method"]/span</td>
+  <td>Re-install Business Template</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>css=.listbox-current-page-total-number</td>
+  <td> 1 records </td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]</td>
+  <td>portal_skins/erp5_test/test_file</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>Skin</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>Modified</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[4]/label</td>
+  <td>Backup And Upgrade</td>
+</tr>
+<tr>
+  <td>assertChecked</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[4]/label/input</td>
+  <td></td>
+</tr>
+
+<!-- preview diff -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>modified !</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>test1\n</td>
+  <td></td>
+</tr>
+<tr>
+  <td>goBack</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//button[@name="Base_callDialogMethod:method"]/span</td>
+  <td>Re-install Business Template</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Status changed.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_test/test_file</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>test2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/BTZuite_reset?end=1"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+</body>
+</html>

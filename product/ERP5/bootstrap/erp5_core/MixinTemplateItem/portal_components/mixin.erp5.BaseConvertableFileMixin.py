@@ -29,6 +29,7 @@
 from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
 from io import BytesIO
@@ -38,11 +39,11 @@ class BaseConvertableFileMixin:
   """
   This class provides a generic implementation of IBaseConvertable.
   This Mixin combine BaseConvertable  and Files documents.
-    getBaseData is overrided to serialise Pdata into string
-    _setBaseData is overrided to wrapp data into Pdata
+    getBaseData is overridden to serialise Pdata into string
+    _setBaseData is overridden to wrap data into Pdata
 
   - updateBaseMetadata is not implemented in this mixin and must be
-  explicitely overrided if needed.
+  explicitly overridden if needed.
 
   """
 
@@ -60,9 +61,9 @@ class BaseConvertableFileMixin:
     if not self.hasData():
       # Empty document cannot be converted
       return
-    message = self._convertToBaseFormat() # Call implemetation method
+    message = self._convertToBaseFormat() # Call implementation method
     if message is None:
-      message = self.Base_translateString('Converted to ${mime_type}.',
+      message = translateString('Converted to ${mime_type}.',
                             mapping={'mime_type': self.getBaseContentType()})
     # if processing_status_workflow is associated
     workflow_tool = getToolByName(self.getPortalObject(), 'portal_workflow')
@@ -72,14 +73,14 @@ class BaseConvertableFileMixin:
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
   def updateBaseMetadata(self, **kw):
-    """This Method must be defined explicitely.
+    """This Method must be defined explicitly.
     """
     raise NotImplementedError
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                                  'getBaseData')
   def getBaseData(self, default=_MARKER):
-    """Serialise Pdata into string
+    """Serialise Pdata into bytes
     """
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
@@ -89,7 +90,7 @@ class BaseConvertableFileMixin:
     if base_data is None:
       return None
     else:
-      return str(base_data)
+      return bytes(base_data)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
   def _setBaseData(self, data):

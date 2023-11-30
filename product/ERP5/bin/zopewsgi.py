@@ -5,6 +5,7 @@ from io import BytesIO
 import logging
 import os
 import posixpath
+import resource
 import signal
 import socket
 import sys
@@ -184,6 +185,10 @@ def runwsgi():
       'instead of being read completely into memory.',
       type=type_registry.get('byte-size'),
       default=type_registry.get('byte-size')("10MB"))
+    parser.add_argument(
+      '--nofile',
+      help='Set soft limit of file descriptors erp5 can open to hard limit',
+      action="store_true")
     args = parser.parse_args()
 
     # Configure logging previously handled by ZConfig/ZServer
@@ -196,7 +201,13 @@ def runwsgi():
     else:
       event_log_handler = logging.FileHandler(args.event_log_file)
     event_log_handler.setFormatter(logging.Formatter(
-      "------\n%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+      # Note about msec: strftime does not have a standard was of specifying
+      # how milliseconds are to be rendered, and especially what separator to
+      # use. So, treat milliseconds separately from the rest of the timestamp.
+      # See also:
+      #   https://docs.python.org/3/library/logging.html#logging.Formatter.formatTime
+      #   https://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/
+      "------\n%(asctime)s,%(msecs)03d %(levelname)s %(name)s %(message)s",
       "%Y-%m-%d %H:%M:%S"))
     root_logger.addHandler(event_log_handler)
 
@@ -231,7 +242,7 @@ def runwsgi():
     if conf.debug_mode:
       console_handler = logging.StreamHandler(sys.stderr)
       console_handler.setFormatter(logging.Formatter(
-        "%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+        "%(asctime)s,%(msecs)03d %(levelname)s %(name)s %(message)s",
         "%Y-%m-%d %H:%M:%S"))
       console_handler.setLevel(logging.NOTSET)
       root_logger.addHandler(console_handler)
@@ -251,6 +262,11 @@ def runwsgi():
           module='Zope2',
           interval=args.timerserver_interval,
       )
+
+    if args.nofile:
+      cur_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
+      new_limit = (cur_limit[1], cur_limit[1])
+      resource.setrlimit(resource.RLIMIT_NOFILE, new_limit)
 
     ip, port = splitport(args.address)
     port = int(port)

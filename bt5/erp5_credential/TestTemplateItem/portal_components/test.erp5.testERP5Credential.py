@@ -1535,6 +1535,19 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual(cr.getDefaultAddressCity(), None)
     self.assertEqual(cr.getDefaultAddressRegion(), None)
 
+  def test_Ticket_getWorkflowStateTranslatedTitle(self):
+    self.assertEqual(
+      self.portal.credential_recovery_module.newContent(
+        portal_type='Credential Recovery').Ticket_getWorkflowStateTranslatedTitle(),
+     'Draft')
+    self.assertEqual(
+      self.portal.credential_request_module.newContent(
+        portal_type='Credential Request').Ticket_getWorkflowStateTranslatedTitle(),
+     'Draft')
+    self.assertEqual(
+      self.portal.credential_update_module.newContent(
+        portal_type='Credential Update').Ticket_getWorkflowStateTranslatedTitle(),
+     'Draft')
 
 
 def test_suite():

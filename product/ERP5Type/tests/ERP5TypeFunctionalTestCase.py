@@ -44,7 +44,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.runUnitTest import log_directory
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
 from lxml import etree
-from lxml.html import builder as E
+from lxml.html.builder import E
 import certifi
 import urllib3
 from selenium import webdriver
@@ -233,6 +233,19 @@ class FunctionalTestRunner:
     options.set_preference('dom.serviceWorkers.enabled', True)
     # output javascript console and errors on stdout to help diagnosing failures
     options.set_preference('devtools.console.stdout.content', True)
+    # Always download attachments and do not open PDF inline, otherwise the
+    # browser's active would tab lose the focus
+    download_dir = os.path.join(log_directory, 'downloads')
+    if not os.path.exists(download_dir):
+      os.mkdir(download_dir)
+    options.set_preference("browser.download.dir", download_dir)
+    options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf")
+    options.set_preference("browser.download.folderList", 2)
+    options.set_preference("browser.download.manager.showWhenStarting", False)
+    options.set_preference("dom.block_download_insecure", False)
+    options.set_preference("pdfjs.disabled", True)
+    # always grant location
+    options.set_preference("permissions.default.geo", 1)
 
     selenium_test_runner_configuration = {}
     test_runner_configuration_file = os.environ.get('ERP5_TEST_RUNNER_CONFIGURATION')
@@ -360,8 +373,8 @@ class FunctionalTestRunner:
     iframe = etree.fromstring(
       browser.execute_script(
         "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"
-      ).encode('UTF-8'),
-        html_parser
+      ),
+      html_parser
     )
     return iframe
 
@@ -383,26 +396,31 @@ class FunctionalTestRunner:
           test_table = tr[1].xpath('.//table')[0]
           status = tr.attrib.get('class')
           if 'status_failed' in status:
+            # XXX replace status_failed classes by an inline style supported by gadget_html_viewer
+            for test_tr in test_table.xpath('.//tr[contains(@class, "status_failed")]'):
+              test_tr.set('style', 'background-color: red;')
+            details_attribute_dict = {}
             if etree.tostring(test_table).find("expected failure") != -1:
               expected_failure_amount += 1
             else:
               failure_amount += 1
               error_title_list.append(test_name)
-            detail_element = E.DIV()
-            detail_element.append(E.DIV(E.P(test_name), E.BR, test_table))
+              details_attribute_dict['open'] = 'true'
+            detail_element = E.div()
+            detail_element.append(E.details(E.summary(test_name), test_table, **details_attribute_dict))
             detail += etree.tostring(detail_element)
       tr_count += 1
-    sucess_amount = tr_count - 1 - failure_amount - expected_failure_amount
+    success_amount = tr_count - 1 - failure_amount - expected_failure_amount
     if detail:
       detail = '''<html>
-<head>
- <style type="text/css">tr.status_failed { background-color:red };</style>
-</head>
-<body>%s</body>
+<body>
+<h3>Failed Zelenium Test Details</h3>
+%s
+</body>
 </html>''' % detail
 
     # When return fix output for handle unicode issues.
-    return detail, sucess_amount, failure_amount, expected_failure_amount, \
+    return detail, success_amount, failure_amount, expected_failure_amount, \
         error_title_list
 
 

@@ -91,6 +91,7 @@ Selenium.prototype.doSetFile = function(locator, url_filename_mimetype) {
           new DataTransfer();
         dT.items.add(new File([blob], fileName, {type: mimeType}));
         fileField.files = dT.files;
+        fileField.dispatchEvent(new Event('change', { bubbles: true }));
       }));
 };
 
@@ -219,12 +220,24 @@ function generateElement(tagName, childList, attributeDict, textContent) {
  * @param {string} locator - an element locator
  * @param {string} misMatchTolerance - the percentage of mismatch allowed. If this is 0, the
  *      images must be exactly same. If more than 0, image will also be resized.
+ * @param {boolean} haltOnFailure - define the behavior on failure: stop (assert*) or continue (verify*)
  * @returns {() => boolean}
  */
 Selenium.prototype.doVerifyImageMatchSnapshot = (
   locator,
-  misMatchTolerance
+  misMatchTolerance,
+  haltOnFailure
 ) => {
+  if (window['ignoreSnapshotTest'].checked){
+    // calling getReferenceImageCounter has the side effect
+    // of increasing the counter, so if we enable / disable
+    // snapshot mid test the counter stays in sync.
+    var snapshotCounter = getReferenceImageCounter(
+      testFrame.getCurrentTestCase().pathname);
+    console.log("ignoring snapshot test " + snapshotCounter);
+    return;
+  }
+
   var misMatchToleranceFloat = parseFloat(misMatchTolerance);
   if (isNaN(misMatchToleranceFloat)) {
     misMatchToleranceFloat = 0;
@@ -262,7 +275,7 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
             if (response.status === 200) {
               return response.blob();
             }
-            throw new Error('Feching reference failed ' + response.statusText);
+            throw new Error('Fetching reference failed ' + response.statusText);
           })
           .then(
             blob => {
@@ -298,12 +311,18 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
                 .querySelector('td')
                 .appendChild(
                   generateElement('div', [
+                    generateElement('b',
+                      [document.createTextNode('Images are ' + diff.misMatchPercentage + '% different.')]
+                    ),
+                    generateElement('br'),
                     document.createTextNode('Image differences:'),
                     generateElement('br'),
                     generateElement('img', [], {
                       src: diff.getImageDataUrl(),
                       alt: 'Image differences'
                     }),
+                    generateElement('br'),
+                    document.createTextNode('Size differences: ' + JSON.stringify(diff.dimensionDifference)),
                     generateElement('br'),
                     document.createTextNode('Click '),
                     generateElement('a', [document.createTextNode('here')], {
@@ -320,12 +339,25 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
                     ])
                   ])
                 );
-              throw new Error('Images are ' + diff.misMatchPercentage + '% different');
+              htmlTestRunner.currentTest.result.failed = true;
+              htmlTestRunner.currentTest.result.failureMessage = 'Snapshots do not match';
+              if (haltOnFailure) {
+                throw new Error('Snapshots do not match');
+              }
             }
           });
       }));
-
 };
+
+/**
+ * Assert that the rendering of the element `locator` matches the previously saved reference.
+ */
+Selenium.prototype.doAssertImageMatchSnapshot = (
+  locator,
+  misMatchTolerance,
+) => {
+  return Selenium.prototype.doVerifyImageMatchSnapshot.bind(this)(locator, misMatchTolerance, true);
+}
 
 /**
  * Wait for fonts to be loaded.

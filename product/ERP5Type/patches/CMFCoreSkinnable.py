@@ -93,8 +93,9 @@ def skinResolve(self, selection, name):
       if selection in skin_selection_mapping or \
          isinstance(selection, basestring):
         return
-      skin_list = portal_skins._getSelections()[selection[0]].split(',') \
-                  + ['portal_callables']
+      skin_list = portal_skins._getSelections()[selection[0]].split(',')
+      if portal_callables is not None:
+        skin_list.append('portal_callables')
       skin_selection_mapping[selection] = skin_list = _initializeCache(portal_callables,
         portal_skins, skin_list[1+skin_list.index(selection[1]):])
       try:

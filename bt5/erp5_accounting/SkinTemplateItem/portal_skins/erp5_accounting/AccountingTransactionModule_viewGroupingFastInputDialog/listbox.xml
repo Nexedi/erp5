@@ -184,6 +184,10 @@
                           <string>Movement_getMirrorSectionTitle</string>
                           <string>Third Party</string>
                         </tuple>
+                        <tuple>
+                          <string>mirror_node_title</string>
+                          <string>Third Party Account</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -1,0 +1,13 @@
+html {
+  height: 300px;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.graph-content {
+  height: 95%;
+  width: 95%;
+}

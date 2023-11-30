@@ -71,9 +71,13 @@ if IS_ZOPE2: # BBB Zope2
                     ('.%06u' % (v.micros() % 1000000))[:1+n] if n else '')
             except Exception:
                 t = 'datetime'
+        elif t=='nb' and v is None:
+            return 'null'
         elif t=='nb' and not v:
             t = 'empty string'
         else:
+            if v is None:
+                return 'null'
             v = md.getitem('sql_quote__',0)(
                 v if isinstance(v, basestring) else str(v))
             #if find(v,"\'") >= 0: v=join(split(v,"\'"),"''")
@@ -153,14 +157,10 @@ else: # For easy diff with original (ZSQLMethods 3.14)
                     ('.%06u' % (v.micros() % 1000000))[:1+n] if n else '')
             except Exception:
                 t = 'datetime'
-
-        elif t=='nb' and not v:
-            t = 'empty string'
-
         else:
             if not isinstance(v, (str, StringTypes)):
                 v = str(v)
-            if t == 'nb':
+            if not v and t == 'nb':
                 if 'optional' in args and args['optional']:
                     return 'null'
                 else:

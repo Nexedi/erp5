@@ -18,7 +18,7 @@ web_page_by_reference = {}
 if web_page_reference_list:
   web_page_list = [
     b.getObject() for b in
-    portal.portal_catalog.getDocumentValueList(reference=web_page_reference_list)]
+    portal.portal_catalog.getDocumentValueList(reference=web_page_reference_list, all_languages=True)]
   web_page_by_reference = {wp.getReference(): wp.getTextContent() for wp in web_page_list}
 
 for web_page_reference in web_page_reference_list:

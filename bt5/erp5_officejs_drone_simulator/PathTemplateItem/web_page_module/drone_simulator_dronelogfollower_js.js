@@ -13,6 +13,11 @@ var DroneLogAPI = /** @class */ (function () {
     this._drone_info = drone_info;
     this._flight_parameters = flight_parameters;
   }
+  Object.defineProperty(DroneLogAPI.prototype, "isCollidable", {
+    get: function () { return false; },
+    enumerable: true,
+    configurable: true
+  });
   /*
   ** Function called at start phase of the drone, just before onStart AI script
   */
@@ -43,9 +48,8 @@ var DroneLogAPI = /** @class */ (function () {
       return log_entry_list;
     }
     var log = this._drone_info.log_content, entry_1, entry_2, interval,
-      map_dict = this._mapManager.getMapInfo(),
       min_height = 15, converted_log_point_list = [],
-      i, splitted_log_entry, x, y, position, lat, lon, height, timestamp,
+      i, splitted_log_entry, position, lat, lon, height, timestamp,
       time_offset = 1, log_entry_list = getLogEntries(log);
     //XXX: Patch to determine log time format (if this is standarized, drop it)
     if (log_entry_list[0] && log_entry_list[1]) {
@@ -62,16 +66,14 @@ var DroneLogAPI = /** @class */ (function () {
       timestamp = parseInt(splitted_log_entry[0], 10);
       lat = parseFloat(splitted_log_entry[1]);
       lon = parseFloat(splitted_log_entry[2]);
-      x = this._mapManager.longitudToX(lon, map_dict.map_size);
-      y = this._mapManager.latitudeToY(lat, map_dict.map_size);
-      position = this._mapManager.normalize(x, y, map_dict);
       height = parseFloat(splitted_log_entry[4]);
       if (height < min_height) {
         height = min_height;
       }
-      converted_log_point_list.push([position[0],
-                                    position[1],
-                                    height, timestamp / time_offset]);
+      position = this._mapManager.convertToLocalCoordinates(lat, lon, height);
+      converted_log_point_list.push([position.x,
+                                    position.y,
+                                    position.z, timestamp / time_offset]);
     }
     this._flight_parameters.converted_log_point_list = converted_log_point_list;
   };
@@ -197,15 +199,18 @@ var DroneLogAPI = /** @class */ (function () {
 
   DroneLogAPI.prototype.getCurrentPosition = function (x, y, z) {
     return {
-      x: x,
-      y: y,
-      z: z
+      latitude: x,
+      longitude: y,
+      altitude: z
     };
   };
   DroneLogAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
   };
   DroneLogAPI.prototype.exit = function (drone) {
+    return;
+  };
+  DroneLogAPI.prototype.set_loiter_mode = function (loiter) {
     return;
   };
 

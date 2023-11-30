@@ -96,6 +96,7 @@
                         <string>listbox_title</string>
                         <string>listbox_credit</string>
                         <string>listbox_debit</string>
+                        <string>listbox_mirror_node_title</string>
                       </list>
                     </value>
                 </item>

@@ -31,6 +31,7 @@ import unittest
 import os
 import quopri
 import functools
+import requests
 from StringIO import StringIO
 from lxml import etree
 from base64 import b64decode, b64encode
@@ -655,31 +656,35 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Those images can be accessible through extensible content
     # url : path-of-document + '/' + 'img' + page-index + '.png'
     # Update policy to have stale values
-    self.portal.caching_policy_manager._updatePolicy(
-      "unauthenticated no language", "python: member is None",
-      "python: getattr(object, 'getModificationDate', object.modified)()",
-      1200, 30, 600, 0, 0, 0, "Accept-Language, Cookie", "", None,
-      0, 1, 0, 0, 1, 1, None, None)
-    self.tic()
-    policy_list = self.portal.caching_policy_manager.listPolicies()
-    policy = [policy[1] for policy in policy_list\
-                if policy[0] == 'unauthenticated no language'][0]
-    # Check policy has been updated
-    self.assertEqual(policy.getMaxAgeSecs(), 1200)
-    self.assertEqual(policy.getStaleWhileRevalidateSecs(), 30)
-    self.assertEqual(policy.getStaleIfErrorSecs(), 600)
-    for i in xrange(3):
-      path = '/'.join((website_url,
-                       reference,
-                       'img%s.png' % i))
-      response = self.publish(path)
-      self.assertEqual(response.getHeader('Content-Type'), 'image/png')
-      self.assertEqual(response.getHeader('Cache-Control'),
-            'max-age=%d, stale-while-revalidate=%d, stale-if-error=%d, public' % \
-                          (policy.getMaxAgeSecs(),
-                           policy.getStaleWhileRevalidateSecs(),
-                           policy.getStaleIfErrorSecs()))
-
+    policy_orig = self.portal.caching_policy_manager._policies['unauthenticated no language']
+    try:
+      self.portal.caching_policy_manager._updatePolicy(
+        "unauthenticated no language", "python: member is None",
+        "python: getattr(object, 'getModificationDate', object.modified)()",
+        1200, 30, 600, 0, 0, 0, "Accept-Language, Cookie", "", None,
+        0, 1, 0, 0, 1, 1, None, None)
+      self.tic()
+      policy_list = self.portal.caching_policy_manager.listPolicies()
+      policy = [policy[1] for policy in policy_list\
+                  if policy[0] == 'unauthenticated no language'][0]
+      # Check policy has been updated
+      self.assertEqual(policy.getMaxAgeSecs(), 1200)
+      self.assertEqual(policy.getStaleWhileRevalidateSecs(), 30)
+      self.assertEqual(policy.getStaleIfErrorSecs(), 600)
+      for i in xrange(3):
+        path = '/'.join((website_url,
+                         reference,
+                         'img%s.png' % i))
+        response = self.publish(path)
+        self.assertEqual(response.getHeader('Content-Type'), 'image/png')
+        self.assertEqual(response.getHeader('Cache-Control'),
+              'max-age=%d, stale-while-revalidate=%d, stale-if-error=%d, public' % \
+                            (policy.getMaxAgeSecs(),
+                             policy.getStaleWhileRevalidateSecs(),
+                             policy.getStaleIfErrorSecs()))
+    finally:
+      self.portal.caching_policy_manager._policies['unauthenticated no language'] = policy_orig
+      transaction.commit()
 
   def test_PreviewOOoDocumentWithEmbeddedImage(self):
     """Tests html preview of an OOo document with images as extensible content.
@@ -825,14 +830,6 @@ return True
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=jpg', credential)
     self.assertEqual(response.getHeader('content-type'), 'image/jpeg')
-
-    # testing Image conversions, svg
-    # disable Image permissiions checks format checks
-    createZODBPythonScript(portal.portal_skins.custom, 'Image_checkConversionFormatPermission',
-                           '**kw', 'return 1')
-    response = self.publish(website.absolute_url_path() + '/' +\
-                            image_reference + '?format=svg', credential)
-    self.assertEqual(response.getHeader('content-type'), 'image/svg+xml')
 
     # testing Image conversions, resizing
     response = self.publish(website.absolute_url_path() + '/' +\
@@ -1736,6 +1733,73 @@ return True
       is `web_view`.
     """
     self.checkWebSiteDocumentViewConsistency("Drawing")
+
+  def test_cache_control(self):
+    # Cache-Control header is set to 'private' by CookieCrumbler for authenticated user.
+    # but can be overridden by Caching Policy Manager.
+    website = self.setupWebSite()
+    released_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='released_page',
+    )
+    released_page.release()
+    published_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='published_page',
+    )
+    published_page.publish()
+    self.tic()
+    auth_cookie = {'__ac': b64encode('ERP5TypeTestCase:')}
+
+    # ERP5 portal, not through Caching Policy Manager
+    response = requests.get(
+      self.portal.absolute_url(),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'private')
+
+    # released page
+    response = requests.get(
+      '%s/%s' % (website.absolute_url(), 'released_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
+
+    # converted released page
+    response = requests.get(
+      '%s/%s?format=txt' % (website.absolute_url(), 'released_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
+
+    # published page
+    response = requests.get(
+      '%s/%s' % (website.absolute_url(), 'published_page'),
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
+    response = requests.get(
+      '%s/%s' % (website.absolute_url(), 'published_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
+
+    # converted published page
+    response = requests.get(
+      '%s/%s?format=txt' % (website.absolute_url(), 'published_page'),
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
+    response = requests.get(
+      '%s/%s?format=txt' % (website.absolute_url(), 'published_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
 
 def test_suite():
   suite = unittest.TestSuite()

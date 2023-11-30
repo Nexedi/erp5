@@ -25,7 +25,6 @@
 #
 ##############################################################################
 
-import base64
 import contextlib
 from functools import wraps
 from io import BytesIO
@@ -884,18 +883,21 @@ def _handleOAuth2Error(RESPONSE, exc):
   RESPONSE.setHeader('Content-Type', 'application/json')
   RESPONSE.setBody(exc.json, lock=True)
 
+# A minimal set of headers which must not be set on an HTTPResponse using addHeader,
+# but must be set using setHeader instead because HTTPResponse treat them specially
+# (ex: modifies them while rendering the final response form).
+_SPECIAL_HEADER_NAME_SET = (
+  'content-type',
+  'content-length',
+)
 def _setupZopeResponse(RESPONSE, status, header_item_list, body):
   RESPONSE.setStatus(status, lock=True)
   for key, value in header_item_list:
-    if key.lower().replace('_', '-') == 'content-type':
-      # If RESPONSE is an HTTPResponse, it will not intercept this
-      # RESPONSE.addHeader, and will set its own default value,
-      # so the response ends up with multiple content-types, like:
-      #   text/plain; charset=utf-8, application/json
-      # So, intercept this header, and set it separately.
-      RESPONSE.setHeader(key, value)
-    else:
-      RESPONSE.addHeader(key, value)
+    (
+      RESPONSE.setHeader
+      if key.lower() in _SPECIAL_HEADER_NAME_SET else
+      RESPONSE.addHeader
+    )(key, value)
   return body
 
 def _wrapOAuth2Endpoint(func):
@@ -1023,10 +1025,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     Only Zope-based request authentication is supported
     (ex: "Authorization: Basic ..." request header).
     """
+    multi_fernet = self.__getLoginRetryURLMultiFernet()
+    # Retrieve posted field, validate signature and extract the url.
     try:
-      login_retry_url = self.__getLoginRetryURLMultiFernet().decrypt(
-        base64.urlsafe_b64decode(REQUEST.form['login_retry_url']),
-      )
+      login_retry_url = multi_fernet.decrypt(REQUEST.form['login_retry_url'])
     except (fernet.InvalidToken, TypeError, KeyError):
       # No login_retry_url provided or its value is unusable: if this is a GET
       # request (trying to display a login form), use the current URL.
@@ -1040,9 +1042,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     def getSignedLoginRetryUrl():
       if login_retry_url is None:
         return None
-      return base64.urlsafe_b64encode(
-        self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
-      )
+      return multi_fernet.encrypt(login_retry_url)
     return _ERP5AuthorisationEndpoint(
       server_connector_path=self.getPath(),
       zope_request=REQUEST,
@@ -1075,9 +1075,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       method=method,
       query_list=query_list + [(
         'login_retry_url',
-        base64.urlsafe_b64encode(
-          self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
-        ),
+        self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
       )],
     ) as inner_request:
       # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
@@ -1273,10 +1271,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         token_dict[JWT_PAYLOAD_KEY] = decodeAccessTokenPayload(
           token_dict[JWT_PAYLOAD_KEY].encode('ascii'),
         )
@@ -1298,10 +1296,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         return token_dict
     raise
 
@@ -1358,10 +1356,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         return token_dict['iss']
     raise
 
@@ -1384,10 +1382,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
             'verify_signature': True,
           },
         )
+        self._checkCustomTokenPolicy(token_dict, request)
       except jwt.InvalidTokenError:
         continue
       else:
-        self._checkCustomTokenPolicy(token_dict, request)
         return token_dict['iss']
     raise
 
