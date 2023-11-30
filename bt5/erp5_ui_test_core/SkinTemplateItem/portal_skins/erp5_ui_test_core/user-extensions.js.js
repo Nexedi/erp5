@@ -258,7 +258,13 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
     var destinationCanvas = element.ownerDocument.createElement("canvas");
     destinationCanvas.width = element.scrollWidth;
     destinationCanvas.height = element.scrollHeight;
-    canvasPromise = html2canvas(element, { canvas: destinationCanvas });
+    canvasPromise = html2canvas(element, {
+      canvas: destinationCanvas,
+      // XXX These are supposed to be the default values for width and height,
+      // but html2canvas sometimes calculate them wrongly.
+      width: element.scrollWidth,
+      height: element.scrollHeight,
+    });
   }
 
   return wrapPromise(
