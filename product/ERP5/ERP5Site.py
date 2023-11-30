@@ -50,6 +50,7 @@ from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGene
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
 import os
+import re
 import warnings
 import transaction
 from App.config import getConfiguration
@@ -84,6 +85,7 @@ def manage_addERP5Site(self,
                        validate_email=0,
                        erp5_catalog_storage='erp5_mysql_innodb_catalog',
                        erp5_sql_connection_string=default_sql_connection_string,
+                       erp5_sql_read_committed_connection_string=default_sql_connection_string,
                        cmf_activity_sql_connection_string=default_sql_connection_string,
                        bt5_repository_url='',
                        bt5='',
@@ -103,6 +105,7 @@ def manage_addERP5Site(self,
                  create_userfolder,
                  erp5_catalog_storage,
                  erp5_sql_connection_string,
+                 erp5_sql_read_committed_connection_string,
                  cmf_activity_sql_connection_string,
                  bt5_repository_url,
                  bt5,
@@ -2114,6 +2117,7 @@ class ERP5Generator(PortalGenerator):
              create_userfolder,
              erp5_catalog_storage,
              erp5_sql_connection_string,
+             erp5_sql_read_committed_connection_string,
              cmf_activity_sql_connection_string,
              bt5_repository_url,
              bt5,
@@ -2138,11 +2142,13 @@ class ERP5Generator(PortalGenerator):
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
 
-    erp5_sql_deferred_connection_string = erp5_sql_connection_string
+    erp5_sql_deferred_connection_string = erp5_sql_read_committed_connection_string
     p._setProperty('erp5_catalog_storage',
                    erp5_catalog_storage, 'string')
     p._setProperty('erp5_sql_connection_string',
                    erp5_sql_connection_string, 'string')
+    p._setProperty('erp5_sql_read_committed_connection_string',
+                   erp5_sql_read_committed_connection_string, 'string')
     p._setProperty('erp5_sql_deferred_connection_string',
                    erp5_sql_deferred_connection_string, 'string')
     p._setProperty('cmf_activity_sql_connection_string',
@@ -2291,7 +2297,7 @@ class ERP5Generator(PortalGenerator):
       # The only difference compared to activity connection is the
       # minus prepended to the connection string.
       if id == 'erp5_sql_transactionless_connection':
-        connection_string = '-' + p.cmf_activity_sql_connection_string
+        connection_string = re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', p.cmf_activity_sql_connection_string)
       else:
         connection_string = getattr(p, id + '_string')
       manage_add(id, title, connection_string, **kw)
@@ -2302,6 +2308,8 @@ class ERP5Generator(PortalGenerator):
     manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
+    addSQLConnection('erp5_sql_read_committed_connection',
+                     'ERP5 SQL Server Isolated Connection')
     addSQLConnection('erp5_sql_deferred_connection',
                      'ERP5 SQL Server Deferred Connection',
                      deferred=True)
@@ -2603,8 +2611,8 @@ def initialize(self):
   from Products.ZMySQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
-    db = (kw.get('erp5_sql_connection_string') or
-      default_kw['erp5_sql_connection_string'])
+    db = (kw.get('erp5_sql_read_committed_connection_string') or
+      default_kw['erp5_sql_read_committed_connection_string'])
     # The lock is to avoid that multiple zopes try to create a site when
     # they're started at the same time, because this is a quite long operation
     # (-> high probably of conflict with a lot of wasted CPU).
