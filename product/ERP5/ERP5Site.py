@@ -50,6 +50,7 @@ from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGene
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
 import os
+import re
 import warnings
 import transaction
 from App.config import getConfiguration
@@ -84,7 +85,7 @@ def manage_addERP5Site(self,
                        validate_email=0,
                        erp5_catalog_storage='erp5_mysql_innodb_catalog',
                        erp5_sql_connection_string=default_sql_connection_string,
-                       cmf_activity_sql_connection_string=default_sql_connection_string,
+                       cmf_activity_sql_connection_string='!READ-COMMITTED %s' % default_sql_connection_string,
                        bt5_repository_url='',
                        bt5='',
                        id_store_interval='',
@@ -2281,7 +2282,9 @@ class ERP5Generator(PortalGenerator):
       # The only difference compared to activity connection is the
       # minus prepended to the connection string.
       if id == 'erp5_sql_transactionless_connection':
-        connection_string = '-' + p.cmf_activity_sql_connection_string
+        connection_string = re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', p.cmf_activity_sql_connection_string)
+      elif id == 'erp5_sql_read_committed_connection':
+        connection_string = re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', p.erp5_sql_connection_string)
       else:
         connection_string = getattr(p, id + '_string')
       manage_add(id, title, connection_string, **kw)
@@ -2292,6 +2295,8 @@ class ERP5Generator(PortalGenerator):
     manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
+    addSQLConnection('erp5_sql_read_committed_connection',
+                     'ERP5 SQL Server Isolated Connection')
     addSQLConnection('erp5_sql_deferred_connection',
                      'ERP5 SQL Server Deferred Connection',
                      deferred=True)
