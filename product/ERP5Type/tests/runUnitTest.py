@@ -58,13 +58,10 @@ Options:
   --erp5_sql_connection_string=STRING
                              ZSQL Connection string for erp5_sql_connection, by
                              default, it will use "test test"
-  --erp5_sql_read_committed_connection_string=STRING
-                             ZSQL Connection string for erp5_sql_read_committed_connection
-                             (if unset, defaults to erp5_sql_connection_string with "!READ-COMMITTED")
   --cmf_activity_sql_connection_string=STRING
                              ZSQL Connection string for
                              cmf_activity_sql_connection (if unset, defaults to
-                             erp5_sql_read_committed_connection_string)
+                             erp5_sql_connection_string)
   --extra_sql_connection_string_list=STRING
                              Used when 2 or more ZSQL connection strings are
                              needed. By defaut, it will take the last four
@@ -747,7 +744,6 @@ def main(argument_list=None):
         "firefox_bin=",
         "xvfb_bin=",
         "recreate_catalog=", "erp5_sql_connection_string=",
-        "erp5_sql_read_committed_connection_string=",
         "cmf_activity_sql_connection_string=",
         "extra_sql_connection_string_list=",
         "conversion_server_url=",
@@ -828,8 +824,6 @@ def main(argument_list=None):
       os.environ["erp5_tests_recreate_catalog"] = arg
     elif opt == "--erp5_sql_connection_string":
       os.environ["erp5_sql_connection_string"] = arg
-    elif opt == "--erp5_sql_read_committed_connection_string":
-      os.environ["erp5_sql_read_committed_connection_string"] = arg
     elif opt == "--cmf_activity_sql_connection_string":
       os.environ["cmf_activity_sql_connection_string"] = arg
     elif opt == "--extra_sql_connection_string_list":
@@ -903,12 +897,6 @@ def main(argument_list=None):
       _log_directory = os.path.abspath(arg)
     elif opt == "--with_wendelin_core":
       os.environ["with_wendelin_core"] = "1"
-
-  if "erp5_sql_read_committed_connection_string" not in os.environ and "erp5_sql_connection_string" in os.environ:
-    os.environ["erp5_sql_read_committed_connection_string"] = re.sub(
-      r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', os.environ["erp5_sql_connection_string"])
-  if "cmf_activity_sql_connection_string" not in os.environ and "erp5_sql_read_committed_connection_string" in os.environ:
-    os.environ["cmf_activity_sql_connection_string"] = os.environ["erp5_sql_read_committed_connection_string"]
 
   bt5_path_list += filter(None,
     os.environ.get("erp5_tests_bt5_path", "").split(','))
