@@ -1,15 +1,9 @@
-/*global window, rJS, Handlebars */
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, Handlebars) {
+(function (window, rJS) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-                         .getElementById("landing-template")
-                         .innerHTML,
-    landing_template = Handlebars.compile(source);
-
-  gadget_klass
+  rJS(window)
 
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -35,8 +29,6 @@
                                             "password": options.password}
                                });
       }
-      gadget.element.querySelector('.search-result')
-        .innerHTML = landing_template({});
     });
 
-}(window, rJS, Handlebars));
+}(window, rJS));
