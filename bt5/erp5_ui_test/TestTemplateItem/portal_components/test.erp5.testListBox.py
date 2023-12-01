@@ -61,6 +61,10 @@ class TestListBox(ERP5TypeTestCase):
   quiet = 1
   run_all_test = 1
 
+  def beforeTearDown(self):
+    super(TestListBox, self).beforeTearDown()
+    self.tic()
+
   def getBusinessTemplateList(self):
     # Use the same framework as the functional testing for convenience.
     # This adds some specific portal types and skins.
