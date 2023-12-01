@@ -21,16 +21,22 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
       var gadget = this;
-      if (options.url === undefined && options.query === undefined) {
-        gadget.element.querySelector('.search-result')
-          .innerHTML = landing_template({});
-      }
       if (options.query) {
         return gadget.redirect({"command": "display",
                                 "options": {"page": "ojsm_dispatch",
                                             "query": options.query}
                                });
       }
+      if (options.url && options.username && options.password) {
+        return gadget.redirect({"command": "display",
+                                "options": {"page": "settings_configurator",
+                                            "url": options.url,
+                                            "username": options.username,
+                                            "password": options.password}
+                               });
+      }
+      gadget.element.querySelector('.search-result')
+        .innerHTML = landing_template({});
     });
 
 }(window, rJS, Handlebars));
