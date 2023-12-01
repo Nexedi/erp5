@@ -1,0 +1,157 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Web Page Editor Gadget RenderJS Style</title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3">Web Page Editor Gadget RenderJS Style</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Reset Successfully.</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td colspan="3"><b>Switch to renderjs UI and edit a web page</b></td>
+      </tr>
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+      <tal:block tal:define="click_configuration python: {'text': 'Add'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+      </tal:block>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+      <tr>
+        <td>select</td>
+        <td>//select[@name='field_your_select_action']</td>
+        <td>label=Foo</td>
+      </tr>
+
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+      <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Object created.'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+      </tal:block>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+      <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+      </tal:block>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+      <tal:block tal:define="click_configuration python: {'text': 'View JSON Editor'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+      </tal:block>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+
+      <tr>
+        <td colspan="3"><b>Wait for editor to be loaded</b></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope="editor"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>selectFrame</td>
+        <td>//div[@data-gadget-scope="editor"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=div.json-editor-container</td>
+        <td></td>
+      </tr>
+      <tr>
+          <td colspan="3"><b>Edit Json Form Property</b></td>
+      </tr>
+      <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@data-schemapath="root.foo"]//input</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>assertElementPresent</td>
+          <td>//div[@data-schemapath="root.foo"]//input</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>type</td>
+          <td>//div[@data-schemapath="root.foo"]//input</td>
+          <td>bar</td>
+      </tr>
+      <tr>
+        <td>selectFrame</td>
+        <td>relative=top</td>
+        <td></td>
+      </tr>
+
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+      <tr>
+        <td colspan="3"><b>Check that our edition is reflected on preview.</b></td>
+      </tr>
+
+      <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+      </tal:block>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+      <tal:block tal:define="click_configuration python: {'text': 'View JSON Editor'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+      </tal:block>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope="editor"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>selectFrame</td>
+        <td>//div[@data-gadget-scope="editor"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@data-schemapath="root.foo"]//input</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>assertElementPresent</td>
+          <td>//div[@data-schemapath="root.foo"]//input</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>assertValue</td>
+          <td>//div[@data-schemapath="root.foo"]//input</td>
+          <td>bar</td>
+      </tr>
+
+
+    </tbody>
+  </table>
+</body>
+
+</html>

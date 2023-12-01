@@ -83,50 +83,32 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_int_index</string>
-                        <string>listbox_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_group</string>
-                        <string>my_specialise_title</string>
-                        <string>my_subordination_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_quantity</string>
-                        <string>my_default_network_address_host_name</string>
-                        <string>my_default_network_address_ip_address</string>
-                        <string>my_default_network_address_netmask</string>
-                        <string>my_subject_list</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -134,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ComputeNode_view</string> </value>
+            <value> <string>Foo_viewJsonEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -142,7 +124,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ComputeNode_view</string> </value>
+            <value> <string>Foo_viewJsonEditor</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -158,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Compute Node</string> </value>
+            <value> <string>Json Editor</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
