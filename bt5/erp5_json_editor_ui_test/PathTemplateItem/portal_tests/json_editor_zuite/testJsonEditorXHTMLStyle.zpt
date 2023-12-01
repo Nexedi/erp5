@@ -1,0 +1,154 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Json Editor Gadget XHTML Style</title>
+</head>
+
+<body>
+    <table cellpadding="1" cellspacing="1" border="1">
+        <thead>
+            <tr>
+                <td rowspan="1" colspan="3">Web Page Editor Gadget XHTML Style</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+            <tr>
+                <td>open</td>
+                <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertTextPresent</td>
+                <td>Reset Successfully.</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertTextPresent</td>
+                <td>Created Successfully.</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertTextPresent</td>
+                <td>Done.</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Edit a web page</b></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/foo_module/0/Foo_viewJsonEditor</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Wait for editor to be loaded</b></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//div[@data-gadget-editable="field_my_text_content"]//iframe</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>selectFrame</td>
+                <td>//div[@data-gadget-editable="field_my_text_content"]//iframe</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>css=div.json-editor-container</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Edit Json Form Property</b></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//div[@data-schemapath="root.foo"]//input</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertElementPresent</td>
+                <td>//div[@data-schemapath="root.foo"]//input</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>type</td>
+                <td>//div[@data-schemapath="root.foo"]//input</td>
+                <td>bar</td>
+            </tr>
+            <tr>
+                <td>selectFrame</td>
+                <td>relative=top</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//button[@name='Base_edit:method']</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>clickAndWait</td>
+                <td>//button[@name='Base_edit:method']</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Check that our edition is reflected on preview</b></td>
+            </tr>
+
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//div[@class="actions"]//span[text() = "View JSON Editor"]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertElementPresent</td>
+                <td>//div[@class="actions"]//span[text() = "View JSON Editor"]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>click</td>
+                <td>//div[@class="actions"]//span[text() = "View JSON Editor"]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//div[@data-gadget-editable="field_my_text_content"]//iframe</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>selectFrame</td>
+                <td>//div[@data-gadget-editable="field_my_text_content"]//iframe</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//div[@data-schemapath="root.foo"]//input</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertElementPresent</td>
+                <td>//div[@data-schemapath="root.foo"]//input</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertValue</td>
+                <td>//div[@data-schemapath="root.foo"]//input</td>
+                <td>bar</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
