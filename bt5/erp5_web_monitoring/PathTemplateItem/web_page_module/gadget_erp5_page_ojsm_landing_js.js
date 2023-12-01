@@ -29,6 +29,9 @@
                                             "password": options.password}
                                });
       }
+      return gadget.redirect({"command": "display",
+                              "options": {"page": "ojsm_status_list"}
+                             });
     });
 
 }(window, rJS));
