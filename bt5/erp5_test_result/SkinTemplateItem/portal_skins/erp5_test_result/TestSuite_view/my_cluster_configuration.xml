@@ -138,7 +138,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'content_type\', \'application/json\'), (\'json_schema_url\', context.getSlapOSInstanceParameterSchemaURL())]</string> </value>
+            <value> <string>python: [(\'content_type\', \'application/json\'), (\'schema_url\', context.getSlapOSInstanceParameterSchemaURL())]</string> </value>
         </item>
       </dictionary>
     </pickle>

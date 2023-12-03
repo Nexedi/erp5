@@ -133,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'content_type\', context.getContentType()), (\'json_schema_url\', "%s/OpenAPIType_viewOpenAPIJSONSchema" % context.absolute_url())]</string> </value>
+            <value> <string>python: [(\'content_type\', context.getContentType()), (\'schema_url\', "%s/OpenAPIType_viewOpenAPIJSONSchema" % context.absolute_url())]</string> </value>
         </item>
       </dictionary>
     </pickle>
