@@ -112,10 +112,10 @@
         model_language = 'python';
       } else if (options.content_type === 'application/json') {
         model_language = 'json';
-        state_dict.json_schema_url = options.json_schema_url;
+        state_dict.schema_url = options.schema_url;
       } else if (options.content_type === 'application/x-yaml') {
         model_language = 'yaml';
-        state_dict.json_schema_url = options.json_schema_url;
+        state_dict.schema_url = options.schema_url;
       }
       state_dict.model_language = model_language;
       state_dict.value = options.value || '';
@@ -350,10 +350,10 @@
 
         if (this.state.model_language === 'json') {
           let schemas = []
-          if (this.state.json_schema_url) {
+          if (this.state.schema_url) {
             schemas.push(
               {
-                uri: this.state.json_schema_url,
+                uri: this.state.schema_url,
                 fileMatch: "*"
               }
             )
