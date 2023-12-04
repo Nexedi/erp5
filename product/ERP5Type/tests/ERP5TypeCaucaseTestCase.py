@@ -38,6 +38,7 @@ import contextlib
 import multiprocessing
 import requests
 import tarfile
+from random import randint
 
 import caucase.cli
 import caucase.http
@@ -103,6 +104,10 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
     self.caucase_runtime.start()
     self.caucase_url = 'http://%s:%s' % (ip, port)
 
+    if not caucase_runtime.is_alive():
+      self._stopCaucaseServer()
+      raise AssertionError('Something wrong happens because caucase didnt started')
+
     if not retry(
       lambda: (
         self.assertTrue(caucase_runtime.is_alive()) or
@@ -153,7 +158,15 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
       )
       test_caucase_connector.validate()
 
-    self._startCaucaseServer()
+    try:
+      self._startCaucaseServer()
+    except AssertionError:
+       # The server fail to start, probably another process 
+       # running in parallel picked the port, so sleep a random
+       # moment to increase the chance of success
+       time.sleep(randint(1,3))
+       self._startCaucaseServer()
+
     self.addCleanup(self._stopCaucaseServer)
     test_caucase_connector.setUrlString(self.caucase_url)
     test_caucase_connector.bootstrapCaucaseConfiguration()
