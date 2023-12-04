@@ -92,6 +92,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       preference.enable()
     if self.portal.portal_preferences.default_site_preference.getPreferenceState() != "global":
       self.portal.portal_preferences.default_site_preference.enable()
+    print("using cloudooo", self.portal.portal_preferences.getPreferredDocumentConversionServerUrlList())
     self.tic()
 
   def createTestEvent(self, target_language, source_relative_url, destination_relative_url):
@@ -253,6 +254,11 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
     self.login()
     image_source_pdf_doc.setData(pdf_data)
+
+    from Products.ERP5Type.tests.runUnitTest import log_directory
+    if log_directory:
+      with open(os.path.join(log_directory, '%s.pdf' % self.id()), 'wb') as f:
+        f.write(pdf_data)
     _, png = image_source_pdf_doc.convert("png", frame=kw.get("page_number"), quality=100)
 
     # update reference files
