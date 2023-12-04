@@ -255,7 +255,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     image_source_pdf_doc.setData(pdf_data)
     _, png = image_source_pdf_doc.convert("png", frame=kw.get("page_number"), quality=100)
 
-    expected_image = self.portal.image_module[expected_document_id]
+    expected_image = self.portal.image_module['template_test_image_' + self._testMethodName]
     # update reference files
     if dump:
       expected_image.setData(png)
