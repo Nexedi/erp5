@@ -31,7 +31,15 @@
       })
       .push(function (result) {
         if (result === undefined || result.data.total_rows === 0) {
-          // no result from the query
+          if (gadget.state.url && gadget.state.username && gadget.state.password) {
+            return gadget.redirect({"command": "display",
+                                    "options": {"page": "ojsm_opml_add",
+                                                "url": gadget.state.url,
+                                                "username": gadget.state.username,
+                                                "password": gadget.state.password,
+                                                "query": gadget.state.original_query}
+                                   });
+          }
           return;
         }
         if (result.data.total_rows === 1) {
@@ -123,6 +131,9 @@
           return gadget.changeState({
             original_query: original_query,
             query: options.query,
+            url: options.url,
+            username: options.username,
+            password: options.password,
             portal_type: portal_type || "promise",
             import_opml: portal_type === undefined ? false : options.import_opml || true
           });
