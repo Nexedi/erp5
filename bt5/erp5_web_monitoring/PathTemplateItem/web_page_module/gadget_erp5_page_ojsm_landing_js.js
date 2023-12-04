@@ -14,19 +14,23 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-      var gadget = this;
+      var gadget = this,
+        redirect_options = {
+          "page": "ojsm_dispatch",
+          "url": options.url,
+          "username": options.username,
+          "password": options.password,
+          "query": options.query
+        };
       if (options.query) {
         return gadget.redirect({"command": "display",
-                                "options": {"page": "ojsm_dispatch",
-                                            "query": options.query}
+                                "options": redirect_options
                                });
       }
       if (options.url && options.username && options.password) {
+        redirect_options.page = "ojsm_opml_add";
         return gadget.redirect({"command": "display",
-                                "options": {"page": "settings_configurator",
-                                            "url": options.url,
-                                            "username": options.username,
-                                            "password": options.password}
+                                "options": redirect_options
                                });
       }
       return gadget.redirect({"command": "display",
