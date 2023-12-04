@@ -123,9 +123,10 @@ class ArchiveTool(BaseTool):
     source_catalog_id = source_catalog.getId()
 
     source_connection_id = source_catalog.getConnectionId()
+    source_read_committed_connection_id = source_catalog.getConnectionId(read_committed=True)
     source_deferred_connection_id = source_catalog.getConnectionId(deferred=True)
 
-    if source_connection_id is None or source_deferred_connection_id is None:
+    if source_connection_id is None or source_read_committed_connection_id is None or source_deferred_connection_id is None:
       raise ValueError("Unable to determine connection id for the current catalog")
 
     # Get destination property from archive
@@ -133,6 +134,7 @@ class ArchiveTool(BaseTool):
     destination_archive = self._getOb(destination_archive_id)
     destination_sql_catalog_id = destination_archive.getCatalogId()
     destination_connection_id = destination_archive.getConnectionId()
+    destination_read_committed_connection_id = destination_archive.getReadCommittedConnectionId()
     destination_deferred_connection_id = destination_archive.getDeferredConnectionId()
 
     # Get archive property from archive
@@ -140,6 +142,7 @@ class ArchiveTool(BaseTool):
     archive = self._getOb(archive_id)
     archive_sql_catalog_id = archive.getCatalogId()
     archive_connection_id = archive.getConnectionId()
+    archive_read_committed_connection_id = archive.getReadCommittedConnectionId()
     archive_deferred_connection_id = archive.getDeferredConnectionId()
 
     # Check we don't use same connection id for source and destination
@@ -147,6 +150,8 @@ class ArchiveTool(BaseTool):
       raise ValueError("Destination and source catalog can't be the same")
     if destination_connection_id == source_connection_id:
       raise ValueError("Destination and source connection can't be the same")
+    if destination_read_committed_connection_id == source_read_committed_connection_id:
+      raise ValueError("Destination and source READ-COMMITTED connection can't be the same")
     if destination_deferred_connection_id == source_deferred_connection_id:
       raise ValueError("Destination and source deferred connection can't be the same")
     # Same for source and archive
@@ -154,6 +159,8 @@ class ArchiveTool(BaseTool):
       raise ValueError("Archive and source catalog can't be the same")
     if archive_connection_id == source_connection_id:
       raise ValueError("Archive and source connection can't be the same")
+    if archive_read_committed_connection_id == source_read_committed_connection_id:
+      raise ValueError("Archive and source READ-COMMITTED connection can't be the same")
     if archive_deferred_connection_id == source_deferred_connection_id:
       raise ValueError("Archive and source deferred connection can't be the same")
     # Same for destination and archive
@@ -161,6 +168,8 @@ class ArchiveTool(BaseTool):
       raise ValueError("Archive and destination catalog can't be the same")
     if archive_connection_id == destination_connection_id:
       raise ValueError("Archive and destination connection can't be the same")
+    if archive_read_committed_connection_id == destination_read_committed_connection_id:
+      raise ValueError("Archive and destination READ-COMMITED connection can't be the same")
     if archive_deferred_connection_id == destination_deferred_connection_id:
       raise ValueError("Archive and destination deferred connection can't be the same")
 
@@ -168,6 +177,7 @@ class ArchiveTool(BaseTool):
     destination_sql_catalog = getattr(portal_catalog, destination_sql_catalog_id)
     if update_destination_sql_catalog:
       sql_connection_id_dict = {source_connection_id : destination_connection_id,
+                                source_read_committed_connection_id : destination_read_committed_connection_id,
                                 source_deferred_connection_id : destination_deferred_connection_id}
       portal_catalog.changeSQLConnectionIds(destination_sql_catalog,
                                   sql_connection_id_dict)
@@ -175,6 +185,7 @@ class ArchiveTool(BaseTool):
     archive_sql_catalog = getattr(portal_catalog, archive_sql_catalog_id)
     if update_archive_sql_catalog:
       sql_connection_id_dict = {source_connection_id : archive_connection_id,
+                                source_read_committed_connection_id : archive_read_committed_connection_id,
                                 source_deferred_connection_id : archive_deferred_connection_id}
       portal_catalog.changeSQLConnectionIds(archive_sql_catalog,
                                   sql_connection_id_dict)
@@ -194,8 +205,10 @@ class ArchiveTool(BaseTool):
                                              destination_sql_catalog_id=destination_sql_catalog_id,
                                              archive_path=archive.getPath(),
                                              source_sql_connection_id_list=[source_connection_id, \
+                                                                            source_read_committed_connection_id,
                                                                             source_deferred_connection_id],
                                              destination_sql_connection_id_list=[destination_connection_id, \
+                                                                                 destination_read_committed_connection_id,
                                                                                  destination_deferred_connection_id],
                                              REQUEST=REQUEST, RESPONSE=RESPONSE)
 
