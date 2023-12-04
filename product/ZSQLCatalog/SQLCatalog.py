@@ -2440,15 +2440,19 @@ class Catalog(Folder,
     return method(catalog=catalog)
 
   security.declarePublic('getConnectionId')
-  def getConnectionId(self, deferred=False):
+  def getConnectionId(self, deferred=False, read_committed=False):
     """
     Returns the 'normal' connection being used by the SQL Method(s) in this
     catalog.
     If 'deferred' is True, then returns the deferred connection
     """
+    assert not (deferred and read_committed), 'No connection should have deferred AND read_committed.'
     for method in self.objectValues():
-      if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method') and ('deferred' in method.connection_id) == deferred:
-        return method.connection_id
+      if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method'):
+        connection_id = method.connection_id
+        if ('deferred' in connection_id) == deferred and \
+            ('read_committed' in connection_id) == read_committed:
+          return connection_id
 
   def getSqlCatalogObjectList(self):
     try:
