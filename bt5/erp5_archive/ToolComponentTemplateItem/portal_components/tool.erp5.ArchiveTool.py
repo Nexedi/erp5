@@ -98,8 +98,6 @@ class ArchiveTool(BaseTool):
 
   def manage_archive(self, destination_archive_id,
                      archive_id,
-                     source_connection_id=None,
-                     source_deferred_connection_id=None,
                      update_destination_sql_catalog=None,
                      update_archive_sql_catalog=None,
                      clear_destination_sql_catalog=None,
