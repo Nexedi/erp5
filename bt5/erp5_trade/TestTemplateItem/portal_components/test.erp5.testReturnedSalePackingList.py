@@ -180,6 +180,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     # delete a delivery
     self.portal.returned_sale_packing_list_module.manage_delObjects(
         [returned_packing_list.getId(),])
+    self.commit()
 
     found_rpl =  portal_catalog(uid=returned_packing_list_uid)
     self.assertEqual(0, len(found_rpl))
