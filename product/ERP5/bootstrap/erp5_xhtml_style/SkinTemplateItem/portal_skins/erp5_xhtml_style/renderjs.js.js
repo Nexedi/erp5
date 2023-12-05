@@ -300,25 +300,29 @@
                         postMessage({ id: id, callback: cbName, params: v});
                     },
                     error: function(error, message) {
-                        completed = true;
                         // verify in table
                         if (!inTbl[id]) throw "error called for nonexistent message: " + id;
 
-                        // remove transaction from table
-                        delete inTbl[id];
-
                         // send error
                         postMessage({ id: id, error: error, message: message });
-                    },
-                    complete: function(v) {
+
                         completed = true;
-                        // verify in table
-                        if (!inTbl[id]) throw "complete called for nonexistent message: " + id;
+
                         // remove transaction from table
                         delete inTbl[id];
+                    },
+                    complete: function(v) {
+                        // verify in table
+                        if (!inTbl[id]) throw "complete called for nonexistent message: " + id;
+
                         // send complete
                         postMessage({ id: id, result: v });
-                    },
+
+                        completed = true;
+
+                        // remove transaction from table
+                        delete inTbl[id];
+                      },
                     delayReturn: function(delay) {
                         if (typeof delay === 'boolean') {
                             shouldDelayReturn = (delay === true);
@@ -2785,10 +2789,11 @@ if (typeof document.contains !== 'function') {
         local_transaction_dict[transaction_id] =
           root_gadget[v[0]].apply(root_gadget, v[1])
             .push(function handleMethodCallSuccess() {
+            trans.complete.apply(trans, arguments);
             // drop the promise reference, to allow garbage collection
             delete local_transaction_dict[transaction_id];
-            trans.complete.apply(trans, arguments);
-          }, function handleMethodCallError(e) {
+          })
+          .push(undefined, function handleMethodCallError(e) {
             var error_type = convertObjectToErrorType(e),
               message;
             if (e instanceof Error) {
@@ -2800,12 +2805,19 @@ if (typeof document.contains !== 'function') {
             } else {
               message = e;
             }
+            try {
+              trans.error({
+                type: error_type,
+                msg: message
+              });
+            } catch (new_error) {
+              trans.error({
+                type: convertObjectToErrorType(new_error),
+                msg: new_error.toString()
+              });
+            }
             // drop the promise reference, to allow garbage collection
             delete local_transaction_dict[transaction_id];
-            trans.error({
-              type: error_type,
-              msg: message
-            });
           });
         trans.delayReturn(true);
       });
