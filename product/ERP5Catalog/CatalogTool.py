@@ -1376,14 +1376,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         group_method_cost = group_kw.get('group_method_cost', .034) # 30 objects
         if limit == 0:
           limit = 100 * int(ceil(1 / group_method_cost))
-      if min_uid:
-        catalog_kw['min_uid'] = SimpleQuery(uid=min_uid,
-                                            comparison_operator='>')
+
       if catalog_kw.pop('restricted', False):
         search = self
       else:
         search = self.unrestrictedSearchResults
-      r = search(sort_on=(('uid','ascending'),), limit=limit, **catalog_kw)
+      if limit is None:
+        r = search(**catalog_kw)
+      else:
+        if min_uid:
+          catalog_kw['min_uid'] = SimpleQuery(uid=min_uid,
+                                              comparison_operator='>')
+        r = search(sort_on=(('uid','ascending'),), limit=limit, **catalog_kw)
       result_count = len(r)
       if result_count:
         if result_count == limit:
