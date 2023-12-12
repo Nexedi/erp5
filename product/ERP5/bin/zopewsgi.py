@@ -186,7 +186,7 @@ def runwsgi():
       type=type_registry.get('byte-size'),
       default=type_registry.get('byte-size')("10MB"))
     parser.add_argument(
-      '--nofile',
+      '--with-max-rlimit-nofile',
       help='Set soft limit of file descriptors erp5 can open to hard limit',
       action="store_true")
     args = parser.parse_args()
@@ -263,7 +263,7 @@ def runwsgi():
           interval=args.timerserver_interval,
       )
 
-    if args.nofile:
+    if args.with_max_rlimit_nofile:
       cur_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
       new_limit = (cur_limit[1], cur_limit[1])
       resource.setrlimit(resource.RLIMIT_NOFILE, new_limit)
