@@ -1255,7 +1255,8 @@ class TemplateTool (BaseTool):
             continue
         bt_url = '%s/%s' % (repository, bt_id)
         param_dict = dict(download_url=bt_url, only_different=only_different)
-        param_dict["update_catalog"] = update_catalog
+        if bt_id in template_list:
+          param_dict["update_catalog"] = update_catalog
 
         if activate:
           self.activate(**activate_kw).\
