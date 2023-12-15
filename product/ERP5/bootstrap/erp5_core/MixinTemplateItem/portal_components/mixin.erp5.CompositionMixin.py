@@ -54,7 +54,7 @@ def _getEffectiveModel(self, start_date, stop_date):
     return self
 
   query_list = [
-    Query(reference=reference),
+    Query(reference={'query': reference, 'key': 'ExactMatch'}),
     Query(portal_type=self.getPortalType()),
     Query(validation_state=(
       'validated',
