@@ -3,8 +3,10 @@
 from json import dumps
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from httplib import HTTPSConnection
 import mock
 
+timeout = 1
 expected_body_dict = {
   u'input_tokens': 18,
   u'translations': [{
@@ -44,7 +46,7 @@ class TestTextSynthClientConnector(ERP5TypeTestCase):
       reference=textsynth_web_service_id,
       base_url='http://www.textsynth.rapid.space/',
       client_secret='APIKEY',
-      timeout=1,
+      timeout=timeout,
     )
     text_synth_connection.validate()
     self.text_synth_connection = text_synth_connection
@@ -55,21 +57,22 @@ class TestTextSynthClientConnector(ERP5TypeTestCase):
     ), mock.patch(
       'httplib.HTTPSConnection.getresponse',
       return_value=HTTPResponse_translate()
-    ):
+    ), mock.patch('httplib.HTTPSConnection', return_value=HTTPSConnection) as mock_https_connection:
       header_dict, body_dict, status = self.text_synth_connection.translate(
         text='The quick brown fox jumps over the lazy dog.',
         target_lang='fr',
         source_lang='en',
       )
-    self.assertEqual(
-      header_dict['content-type'],
-      'application/json'
-    )
-    self.assertEqual(
-      body_dict,
-      expected_body_dict
-    )
-    self.assertEqual(
-      status,
-      200
-    )
+      self.assertEqual(
+        header_dict['content-type'],
+        'application/json'
+      )
+      self.assertEqual(
+        body_dict,
+        expected_body_dict
+      )
+      self.assertEqual(
+        status,
+        200
+      )
+      self.assertTrue(mock_https_connection.call_args.kwargs['timeout'] <= timeout)
