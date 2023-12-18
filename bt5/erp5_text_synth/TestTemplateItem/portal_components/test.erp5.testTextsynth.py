@@ -61,15 +61,15 @@ class TestTextSynthClientConnector(ERP5TypeTestCase):
         target_lang='fr',
         source_lang='en',
       )
-      self.assertEqual(
-        header_dict['content-type'],
-        'application/json'
-      )
-      self.assertEqual(
-        body_dict,
-        expected_body_dict
-      )
-      self.assertEqual(
-        status,
-        200
-      )
+    self.assertEqual(
+      header_dict['content-type'],
+      'application/json'
+    )
+    self.assertEqual(
+      body_dict,
+      expected_body_dict
+    )
+    self.assertEqual(
+      status,
+      200
+    )
