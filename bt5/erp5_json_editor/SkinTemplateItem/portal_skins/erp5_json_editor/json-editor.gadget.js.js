@@ -152,12 +152,12 @@
 
   JSONEditor.defaults.editors.string.prototype.setValueToInputField = function (value) {
     this.input.value = value === undefined ? '' : value;
-    /* ERP5: Once you set the value to the input, you also 
+    /* ERP5: Once you set the value to the input, you also
        updates the field value, otherwise the getValue will miss the value */
     this.value = this.input.value;
   };
 
-  /* Backward compatibility with the usage of textarea property 
+  /* Backward compatibility with the usage of textarea property
     if converts into json-editor proper property */
   JSONEditor.defaults.editors.string.prototype.preBuild = function () {
     if ((this.schema.textarea === true) || (this.schema.textarea === 1)) {
@@ -188,7 +188,7 @@
         }
         // Ignore the first attempt since editor trigger change on the after the
         // end of the rendering, so ignore the first attempt is reaquired.
-        // Later calls that trigger change 
+        // Later calls that trigger change
         gadget.state.ignoredChangeDuringInitialization = false;
       }
 
@@ -221,7 +221,7 @@
         .push(function (schema) {
           return new JSONEditor(domsugar(json_editor_container), {
             schema: schema,
-            ajax: true,
+            ajax: false,
             theme: 'bootstrap5',
             show_errors: 'always',
             //iconlib: 'fontawesome5',
@@ -249,6 +249,14 @@
           // it seems to crash rjs somewhere. To check...
           // https://lab.nexedi.com/nexedi/renderjs/blob/master/renderjs.js#L2070
           //return editor;
+
+          // editor relies on async load function, so we need to await the promise
+          // to finish before continue, otherwise rendering errors wont throw Errors 
+          // in the same stack as expected.
+          return editor.promise.catch();
+        })
+        .push(undefined, function (err) {
+          throw new Error(err);
         });
     })
     .declareMethod('getContent', function () {
