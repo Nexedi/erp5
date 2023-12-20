@@ -147,13 +147,6 @@
       PDFViewerApplicationOptions.set("workerSrc", "./pdf_js/build/pdf.worker.js");
 
       return PDFViewerApplication.initialize(config).then(function() {
-        // hide some buttons that do not make sense for us 
-        gadget.props.element.querySelector('#viewBookmark').hidden = true;
-        gadget.props.element.querySelector('#documentProperties').hidden = true;
-        gadget.props.element.querySelector('#download').hidden = true;
-        gadget.props.element.querySelector('#openFile').hidden = true;
-        gadget.props.element.querySelector('#editorStamp').hidden = true;
-        
         if (options.password) {
           PDFViewerApplication.passwordPrompt._original_open = PDFViewerApplication.passwordPrompt.open;
           var retries = 0;
