@@ -185,7 +185,9 @@ class RESTAPIClientConnectorMixin(XMLObject):
         # but the token is not usable.
         for _ in xrange(2):
           with time_tracker('token'):
-            header_dict['Authorization'] = 'Bearer ' + self._getAccessToken()
+            access_token = self._getAccessToken()
+            if access_token is not None:
+              header_dict['Authorization'] = 'Bearer ' + self._getAccessToken()
           with time_tracker('_call'):
             (
               response_header_dict,
