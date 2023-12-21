@@ -46,7 +46,7 @@ class TextSynthError(Exception):
 class TextSynthClientConnector(RESTAPIClientConnectorMixin):
   meta_type = 'TextSynth Client Connector'
   security = RESTAPIClientConnectorMixin.security
-  TextSynthError = TextSynthError
+  ClientConnectorError = TextSynthError
 
   def _getAccessToken(self):
     return self.getClientSecret()
