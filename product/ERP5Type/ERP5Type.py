@@ -45,6 +45,7 @@ from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList,
 import six
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
+ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2 = 'ERP5Type_asSecurityGroupIdSet'
 
 from .TranslationProviderBase import TranslationProviderBase
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
