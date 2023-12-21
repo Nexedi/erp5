@@ -189,23 +189,22 @@ class UserManagementTestCase(ERP5TypeTestCase):
     return dummy_document
 
 
-class RoleManagementTestCase(UserManagementTestCase):
+class RoleManagementTestCaseBase(UserManagementTestCase):
   """Test case with required configuration to test role definitions.
   """
   def afterSetUp(self):
     """Initialize requirements of security configuration.
     """
-    super(RoleManagementTestCase, self).afterSetUp()
+    super(RoleManagementTestCaseBase, self).afterSetUp()
     # create a security configuration script
     skin_folder = self.portal.portal_skins.custom
-    if 'ERP5Type_getSecurityCategoryMapping' not in skin_folder.objectIds():
+    if self._security_configuration_script_id not in skin_folder.objectIds():
       createZODBPythonScript(
-        skin_folder, 'ERP5Type_getSecurityCategoryMapping', '',
-        """return ((
-          'ERP5Type_getSecurityCategoryFromAssignment',
-          context.getPortalObject().getPortalAssignmentBaseCategoryList()
-          ),)
-        """)
+        skin_folder,
+        self._security_configuration_script_id,
+        '',
+        self._security_configuration_script_body,
+      )
     # configure group, site, function categories
     category_tool = self.getCategoryTool()
     for bc in ['group', 'site', 'function']:
@@ -239,6 +238,29 @@ class RoleManagementTestCase(UserManagementTestCase):
         module.manage_delObjects(list(module.objectIds()))
     # commit this
     self.tic()
+
+
+class RoleManagementTestCaseOld(RoleManagementTestCaseBase):
+  """
+  RoleManagementTestCaseBase variant using the deprecated security declaration API.
+  """
+  _security_configuration_script_id = 'ERP5Type_getSecurityCategoryMapping'
+  _security_configuration_script_body = """return ((
+  'ERP5Type_getSecurityCategoryFromAssignment',
+  context.getPortalObject().getPortalAssignmentBaseCategoryList()
+),)"""
+
+
+class RoleManagementTestCase(RoleManagementTestCaseBase):
+  """
+  RoleManagementTestCaseBase variant using the current security declaration API.
+  """
+  _security_configuration_script_id = 'ERP5User_getUserSecurityCategoryValueList'
+  _security_configuration_script_body = """return context.ERP5User_getSecurityCategoryValueFromAssignment(
+  rule_dict={
+    tuple(context.getPortalObject().getPortalAssignmentBaseCategoryList()): ((), )
+  },
+)"""
 
 
 class TestUserManagement(UserManagementTestCase):
@@ -1184,7 +1206,7 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     self.assertIn(login, response.getBody())
 
 
-class TestLocalRoleManagement(RoleManagementTestCase):
+class _TestLocalRoleManagementMixIn(object):
   """Tests Local Role Management with ERP5Security.
 
   """
@@ -1194,24 +1216,29 @@ class TestLocalRoleManagement(RoleManagementTestCase):
   def afterSetUp(self):
     """Called after setup completed.
     """
-    super(TestLocalRoleManagement, self).afterSetUp()
+    super(_TestLocalRoleManagementMixIn, self).afterSetUp()
 
     # any member can add organisations
     self.portal.organisation_module.manage_permission(
             'Add portal content', roles=['Member', 'Manager'], acquire=1)
 
     self.username = 'usérn@me'
-    # create a user and open an assignement
-    pers = self.getPersonModule().newContent(portal_type='Person',
-                                             user_id=self.username)
-    assignment = pers.newContent( portal_type='Assignment',
-                                  group='subcat',
-                                  site='subcat',
-                                  function='subcat' )
-    assignment.open()
-    pers.newContent(portal_type='ERP5 Login',
-                    reference=self.username,
-                    password=self.username).validate()
+    user_list = self.portal.acl_users.getUserById(self.username)
+    if not user_list:
+      # create a user and open an assignement
+      pers = self.getPersonModule().newContent(portal_type='Person',
+                                               user_id=self.username)
+      assignment = pers.newContent( portal_type='Assignment',
+                                    group='subcat',
+                                    site='subcat',
+                                    function='subcat' )
+      assignment.open()
+      pers.newContent(portal_type='ERP5 Login',
+                      reference=self.username,
+                      password=self.username).validate()
+    else:
+      user, = user_list
+      pers = user.getUserValue()
     self.person = pers
     self.tic()
 
@@ -1228,6 +1255,15 @@ class TestLocalRoleManagement(RoleManagementTestCase):
 
   def _makeOne(self):
     return self.getOrganisationModule().newContent(portal_type='Organisation')
+
+  def _createOrGetObject(self, container, content_id, new_content_kw):
+    try:
+      return container[content_id]
+    except KeyError:
+      return container.newContent(
+        id=content_id,
+        **new_content_kw
+      )
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
@@ -1251,11 +1287,6 @@ class TestLocalRoleManagement(RoleManagementTestCase):
   def testSimpleLocalRole(self):
     """Test simple case of setting a role.
     """
-    def viewSecurity():
-      return self.publish(
-        self.portal.absolute_url_path() + '/Base_viewSecurity',
-        basic='%s:%s' % (self.username, self.username),
-      )
     self._getTypeInfo().newContent(portal_type='Role Information',
       role_name='Assignor',
       description='desc.',
@@ -1269,35 +1300,37 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     self.assertIn('Assignor', user.getRolesInContext(obj))
     self.assertNotIn('Assignee', user.getRolesInContext(obj))
 
+    person_value = self.person
+    user_id = person_value.getUserId()
+    getUserById = self.portal.acl_users.getUserById
+    def assertRoleItemsEqual(expected_role_set):
+      self.assertItemsEqual(getUserById(user_id).getGroups(), expected_role_set)
     # check if assignment change is effective immediately
+    assertRoleItemsEqual(['F1_G1_S1'])
     self.login()
-    res = viewSecurity()
-    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
-                     ["--> ['F1_G1_S1']"], res.body)
     assignment = self.person.newContent( portal_type='Assignment',
                                   group='subcat',
                                   site='subcat',
                                   function='another_subcat' )
     assignment.open()
-    res = viewSecurity()
-    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
-                     ["--> ['F1_G1_S1']", "--> ['F2_G1_S1']"], res.body)
+    assertRoleItemsEqual(['F1_G1_S1', 'F2_G1_S1'])
     assignment.setGroup('another_subcat')
-    res = viewSecurity()
-    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
-                     ["--> ['F1_G1_S1']", "--> ['F2_G2_S1']"], res.body)
+    assertRoleItemsEqual(['F1_G1_S1', 'F2_G1_S1'])
     self.abort()
 
   def testLocalRolesGroupId(self):
     """Assigning a role with local roles group id.
     """
-    self.portal.portal_categories.local_role_group.newContent(
-      portal_type='Category',
-      reference = 'Alternate',
-      id = 'Alternate')
     self._getTypeInfo().newContent(portal_type='Role Information',
       role_name='Assignor',
-      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate,
+      local_role_group_value=self._createOrGetObject(
+        container=self.portal.portal_categories.local_role_group,
+        content_id='Alternate',
+        new_content_kw={
+          'portal_type': 'Category',
+          'reference': 'Alternate',
+        },
+      ),
       role_category=self.defined_category)
 
     self.loginAsUser(self.username)
@@ -1433,11 +1466,19 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     self.assertEqual(response.getStatus(), 401)
 
 
-class TestKeyAuthentication(RoleManagementTestCase):
+class TestLocalRoleManagementOld(_TestLocalRoleManagementMixIn, RoleManagementTestCaseOld):
+  pass
+
+
+class TestLocalRoleManagement(_TestLocalRoleManagementMixIn, RoleManagementTestCase):
+  pass
+
+
+class _TestKeyAuthenticationMixIn(object):
   def getBusinessTemplateList(self):
     """This test also uses web and dms
     """
-    return super(TestKeyAuthentication, self).getBusinessTemplateList() + (
+    return super(_TestKeyAuthenticationMixIn, self).getBusinessTemplateList() + (
         'erp5_core_proxy_field_legacy', # for erp5_web
         'erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms', 'erp5_administration')
 
@@ -1449,14 +1490,16 @@ class TestKeyAuthentication(RoleManagementTestCase):
     # add key authentication PAS plugin
     portal = self.portal
     uf = portal.acl_users
-    uf.manage_addProduct['ERP5Security'].addERP5KeyAuthPlugin(
+    try:
+      erp5_auth_key_plugin = getattr(uf, "erp5_auth_key")
+    except AttributeError:
+      uf.manage_addProduct['ERP5Security'].addERP5KeyAuthPlugin(
          id="erp5_auth_key", \
          title="ERP5 Auth key",\
          encryption_key='fdgfhkfjhltylutyu',
          cookie_name='__key',\
          default_cookie_name='__ac')
-
-    erp5_auth_key_plugin = getattr(uf, "erp5_auth_key")
+      erp5_auth_key_plugin = getattr(uf, "erp5_auth_key")
     erp5_auth_key_plugin.manage_activateInterfaces(
        interfaces=['IExtractionPlugin',
                    'IAuthenticationPlugin',
@@ -1544,6 +1587,14 @@ class TestKeyAuthentication(RoleManagementTestCase):
       basic='ERP5TypeTestCase:',
     )
     self.assertEqual(response.getStatus(), 200)
+
+
+class TestKeyAuthenticationOld(_TestKeyAuthenticationMixIn, RoleManagementTestCaseOld):
+  pass
+
+
+class TestKeyAuthentication(_TestKeyAuthenticationMixIn, RoleManagementTestCase):
+  pass
 
 
 class TestOwnerRole(UserManagementTestCase):

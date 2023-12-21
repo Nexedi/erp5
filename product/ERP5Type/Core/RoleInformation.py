@@ -28,6 +28,7 @@
 """ Information about customizable roles.
 """
 
+from collections import defaultdict
 from six import string_types as basestring
 import zope.interface
 from AccessControl import ClassSecurityInfo
@@ -37,12 +38,28 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFCore.Expression import Expression
 
 from Products.ERP5Type import interfaces, Permissions, PropertySheet
-from Products.ERP5Type.ERP5Type \
-  import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+from Products.ERP5Type.ERP5Type import (
+  ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT,
+  ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2,
+)
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLObject import XMLObject
 import six
 
+def _toSecurityGroupIdGenerationScriptV2(
+  getCategoryValue,
+  category_definition_dict,
+):
+  result = {}
+  for base_category, relative_url_list in six.iteritems(category_definition_dict):
+    result[base_category] = result_value_list = []
+    if isinstance(relative_url_list, str):
+      relative_url_list = (relative_url_list, )
+    for relative_url in relative_url_list:
+      category_value = getCategoryValue(base_category + '/' + relative_url.rstrip('*'))
+      assert category_value is not None, (base_category, relative_url, category_definition_dict)
+      result_value_list.append((category_value, relative_url.endswith('*')))
+  return result
 
 @zope.interface.implementer(interfaces.ILocalRoleGenerator)
 class RoleInformation(XMLObject):
@@ -143,7 +160,7 @@ class RoleInformation(XMLObject):
       # defined categories)
       category_result = [{}]
 
-    group_id_role_dict = {}
+    group_id_role_dict = defaultdict(set)
     role_list = self.getRoleNameList()
 
     if isinstance(category_result, dict):
@@ -153,26 +170,44 @@ class RoleInformation(XMLObject):
       for role, group_id_list in six.iteritems(category_result):
         if role in role_list:
           for group_id in group_id_list:
-            group_id_role_dict.setdefault(group_id, set()).add(role)
+            group_id_role_dict[group_id].add(role)
     else:
       group_id_generator = getattr(ob,
-        ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
-
+        ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
       # Prepare definition dict once only
-      category_definition_dict = {}
+      category_definition_dict = defaultdict(list)
       for c in self.getRoleCategoryList():
         bc, value = c.split('/', 1)
-        category_definition_dict.setdefault(bc, []).append(value)
+        category_definition_dict[bc].append(value)
+      if group_id_generator is None:
+        group_id_generator = getattr(ob,
+          ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2)
+        getCategoryValue = self.getPortalObject().portal_categories.getCategoryValue
+        category_definition_dict = _toSecurityGroupIdGenerationScriptV2(
+          getCategoryValue=getCategoryValue,
+          category_definition_dict=category_definition_dict,
+        )
+        category_result = [
+          _toSecurityGroupIdGenerationScriptV2(
+            getCategoryValue=getCategoryValue,
+            category_definition_dict=category_dict,
+          )
+          for category_dict in category_result
+        ]
+      else: # BBB
+        for category_dict in category_result:
+          category_dict.setdefault('category_order', category_order_list)
+        group_id_generator_ = group_id_generator
+        group_id_generator = lambda category_dict: group_id_generator_(**category_dict)
 
       # category_result is a list of dicts that represents the resolved
       # categories we create a category_value_dict from each of these
       # dicts aggregated with category_order and statically defined
       # categories
       for category_dict in category_result:
-        category_value_dict = {'category_order':category_order_list}
-        category_value_dict.update(category_dict)
+        category_value_dict = category_dict.copy()
         category_value_dict.update(category_definition_dict)
-        group_id_list = group_id_generator(**category_value_dict)
+        group_id_list = group_id_generator(category_dict=category_value_dict)
         if group_id_list:
           if isinstance(group_id_list, str):
             # Single group is defined (this is usually for group membership)

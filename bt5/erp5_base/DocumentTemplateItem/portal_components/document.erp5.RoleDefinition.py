@@ -29,8 +29,10 @@ import zope.interface
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.ERP5Type \
-  import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+from Products.ERP5Type.ERP5Type import (
+  ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT,
+  ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2,
+)
 
 @zope.interface.implementer(interfaces.ILocalRoleGenerator)
 class RoleDefinition(XMLObject):
@@ -60,8 +62,21 @@ class RoleDefinition(XMLObject):
   security.declarePrivate("getLocalRolesFor")
   def getLocalRolesFor(self, ob, user_name=None):
     group_id_generator = getattr(ob,
-      ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
+      ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
+    if group_id_generator is None:
+      group_id_list = getattr(
+        ob,
+        ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2,
+      )(
+        category_dict={
+          'agent': [(x, False) for x in self.getAgentValueList()],
+        },
+      )
+    else: # BBB
+      group_id_list = group_id_generator(
+        category_order=('agent',),
+        agent=self.getAgentList(),
+      )
     role_list = self.getRoleName(),
     return {group_id: role_list
-      for group_id in group_id_generator(category_order=('agent',),
-                                         agent=self.getAgentList())}
+      for group_id in group_id_list}
