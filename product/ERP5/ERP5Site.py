@@ -1614,27 +1614,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
 
   def getPortalSecurityCategoryMapping(self):
     """
-      Returns a list of pairs composed of a script id and a list of base
-      category ids to use for computing security groups.
-
-      This is used during indexation, so involved scripts must not rely on
-      catalog at any point in their execution.
-
-      Example:
-        (
-          ('script_1', ['base_category_1', 'base_category_2', ...]),
-          ('script_2', ['base_category_1', 'base_category_3', ...])
-        )
+    DEPRECATED: implement ERP5User_getUserSecurityCategoryValueList instead.
     """
     return getattr(
       self,
       'ERP5Type_getSecurityCategoryMapping',
-      lambda: ( # BBB
-        (
-          'ERP5Type_getSecurityCategoryFromAssignment',
-          self.getPortalAssignmentBaseCategoryList(),
-        ),
-      ),
+      lambda: (),
     )()
 
   security.declareProtected(Permissions.AccessContentsInformation,
