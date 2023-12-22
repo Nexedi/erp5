@@ -1881,7 +1881,7 @@ class TestCRMMailSend(BaseTestCRM):
       portal_type_object.newContent(id='manager_role',
                                     portal_type='Role Information',
                                     role_name_list=('Manager',),
-                                    role_category_list='function/crm_agent')
+                                    role_category_list=('function/crm_agent', ))
       portal_type_object.updateRoleMapping()
     user = self.createSimpleUser('Agent', 'crm_agent', 'crm_agent')
     self.tic()
