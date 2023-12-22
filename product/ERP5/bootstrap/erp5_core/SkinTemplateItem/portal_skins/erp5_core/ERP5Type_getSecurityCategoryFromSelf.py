@@ -20,12 +20,11 @@ The parameters are
 NOTE: for now, this script requires proxy manager
 """
 
-category_list = []
-
 if ob is None:
   return []
 
-for base_category in base_category_list:
-  category_list.append({base_category: ob.getRelativeUrl()})
-
-return category_list
+value = ob.getRelativeUrl()
+return [
+  {base_category: value}
+  for base_category in base_category_list
+]
