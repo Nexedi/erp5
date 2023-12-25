@@ -691,6 +691,19 @@ class TestDocument(TestDocumentMixin):
       'attachment; filename="PDF.pdf"; filename*=UTF-8\'\'PDF%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.pdf',
     )
 
+  def test_csv(self):
+    doc = self.portal.document_module.newContent(
+      portal_type='Spreadsheet',
+      file=makeFileUpload('simple.csv'),
+    )
+    self.assertEqual(doc.getContentType(), 'text/csv')
+    doc.publish()
+    self.tic()
+    response = self.publish('%s?format=' % doc.getPath())
+    self.assertEqual(response.getBody(), makeFileUpload('simple.csv').read())
+    self.assertEqual(response.getHeader('Content-Type'), 'text/csv; charset=utf-8')
+    self.assertEqual(response.getHeader('Content-Disposition'), 'attachment; filename="simple.csv"')
+
   def test_05_getCreationDate(self):
     """
     Check getCreationDate on all document types.
