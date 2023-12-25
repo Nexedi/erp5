@@ -140,7 +140,7 @@ class DownloadableMixin:
             output_format = mimetype_object.extensions[0]
             break
           elif mimetype_object.globs:
-            output_format = mimetype_object.globs.strip('*.')
+            output_format = mimetype_object.globs[0].strip('*.')
             break
     if output_format is None:
       output_format = format

@@ -691,6 +691,43 @@ class TestDocument(TestDocumentMixin):
       'attachment; filename="PDF.pdf"; filename*=UTF-8\'\'PDF%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.pdf',
     )
 
+  def test_download_content_type_by_mimetype_registry_extension(self):
+    content_type = 'application/andrew-inset'
+    data = b"data"
+    mime_type_entry, = self.portal.mimetypes_registry.lookup(content_type)
+    self.assertTrue(mime_type_entry.extensions)
+
+    doc = self.portal.document_module.newContent(
+      portal_type='File',
+      content_type=content_type,
+      data=data,
+    )
+    doc.publish()
+    self.tic()
+    response = self.publish('%s?format=' % doc.getPath())
+    self.assertEqual(response.getBody(), data)
+    self.assertEqual(response.getHeader('Content-Type'), content_type)
+
+  def test_download_content_type_by_mimetype_registry_glob(self):
+    content_type = 'application/x-compressed-tar'
+    data = (
+      b"\x1f\x8b\x08\x08e\x8a\x89e\x00\x03empty.tar\x00\xed\xc1\x01\r\x00\x00\x00\xc2\xa0"
+      b"\xf7Om\x0e7\xa0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x807\x03\x9a\xde\x1d'\x00(\x00\x00")
+    mime_type_entry, = self.portal.mimetypes_registry.lookup(content_type)
+    self.assertFalse(mime_type_entry.extensions)
+    self.assertTrue(mime_type_entry.globs)
+
+    doc = self.portal.document_module.newContent(
+      portal_type='File',
+      content_type=content_type,
+      data=data,
+    )
+    doc.publish()
+    self.tic()
+    response = self.publish('%s?format=' % doc.getPath())
+    self.assertEqual(response.getBody(), data)
+    self.assertEqual(response.getHeader('Content-Type'), content_type)
+
   def test_csv(self):
     doc = self.portal.document_module.newContent(
       portal_type='Spreadsheet',

@@ -549,7 +549,7 @@ class OOoTemplate(ZopePageTemplate):
         extension = mimetype_object.extensions[0]
         break
       elif mimetype_object.globs:
-        extension = mimetype_object.globs.strip('*.')
+        extension = mimetype_object.globs[0].strip('*.')
         break
     if extension:
       filename = '%s.%s' % (self._getFileName(), extension)
