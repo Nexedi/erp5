@@ -433,6 +433,70 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
+  def test_float_field(self):
+    foo = self.portal.foo_module.newContent(
+      portal_type='Foo',
+      delivery_ratio=1.234,
+      quantity=4.56,
+    )
+    foo.newContent(
+      portal_type='Foo Line',
+      delivery_ratio=4.321,
+      quantity=6.54,
+    )
+    response = self.publish(
+       '%s/Foo_viewFloatField' % foo.getPath(), basic=self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEqual('attachment', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+    def get_figure_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath(
+          'normalize-space(//tr/td/*[normalize-space(.)="Quantity"]/../following-sibling::td)')
+      elif self.skin == 'ODS':
+        return tree.xpath(
+          'normalize-space(//tr/td/*/*[normalize-space(.)="Quantity"]/../../following-sibling::td)')
+
+    def get_percentage_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath(
+          'normalize-space(//tr/td/*[normalize-space(.)="Delivery Ratio"]/../following-sibling::td)')
+      elif self.skin == 'ODS':
+        return tree.xpath(
+          'normalize-space(//tr/td/*/*[normalize-space(.)="Delivery Ratio"]/../../following-sibling::td)')
+
+    def get_figure_listbox_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space(//table[3]/tbody/tr[1]/td[1])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[13]/td[1])')
+
+    def get_percentage_listbox_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space(//table[3]/tbody/tr[1]/td[2])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[13]/td[2])')
+
+    response = self.publish(
+       '%s/Foo_viewFloatField?format=html&precision:int=2' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_percentage_field_value(tree), '123.40%')
+    self.assertEqual(get_figure_field_value(tree), '4.56')
+    self.assertEqual(get_percentage_listbox_field_value(tree), '432.10%')
+    self.assertEqual(get_figure_listbox_field_value(tree), '6.54')
+
+    response = self.publish(
+       '%s/Foo_viewFloatField?format=html&precision:int=3' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_percentage_field_value(tree), '123.400%')
+    self.assertEqual(get_figure_field_value(tree), '4.560')
+    self.assertEqual(get_percentage_listbox_field_value(tree), '432.100%')
+    self.assertEqual(get_figure_listbox_field_value(tree), '6.540')
+
   def test_textarea_center_group(self):
     self._assertFieldInGroup('TextAreaField', 'Person_view', 'center')
     self.assertIn('my_description', [f.getId() for f in
