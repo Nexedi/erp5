@@ -27,7 +27,6 @@
 ##############################################################################
 from functools import partial
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from AccessControl import ClassSecurityInfo
 from AccessControl.AuthEncoding import pw_validate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -301,7 +300,7 @@ class ERP5LoginUserManager(BasePlugin):
         if l.getValidationState() == 'validated' and l.getPassword() is not None]
 
       if (login is not None and login in [(i.getReference(),) for i in login_value_list]) or \
-           (id is not None and user_value.getUserId() == id[0] and login_value_list):
+           (id and user_value.getUserId() == id[0] and login_value_list):
         result.append({
           'id': user_value.getUserId(),
           # Note: PAS forbids us from returning more than one entry per given id,
