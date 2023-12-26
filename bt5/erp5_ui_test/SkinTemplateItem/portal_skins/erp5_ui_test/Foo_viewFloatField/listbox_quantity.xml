@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quantity</string> </value>
+            <value> <string>listbox_quantity</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -231,15 +231,11 @@
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
-                    <value> <string>-1.234,5</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_type</string> </key>
-                    <value> <string>text</string> </value>
+                    <value> <string>-1 234.5</string> </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <int>2</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
