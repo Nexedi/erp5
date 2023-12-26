@@ -245,19 +245,11 @@
           gadget.editor = editor;
           gadget.editor.on('change', gadget.deferNotifyChangeBinded.bind(gadget));
 
-          // return complex object is not possible throught iframe
-          // it seems to crash rjs somewhere. To check...
-          // https://lab.nexedi.com/nexedi/renderjs/blob/master/renderjs.js#L2070
-          //return editor;
-
-          // editor relies on async load function, so we need to await the promise
+          // editor relies on async load function, so we must return the promise
           // to finish before continue, otherwise rendering errors wont throw Errors 
           // in the same stack as expected.
-          return editor.promise.catch();
+          return editor.promise
         })
-        .push(undefined, function (err) {
-          throw new Error(err);
-        });
     })
     .declareMethod('getContent', function () {
       var form_data = {};
