@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
+from DateTime import DateTime
 from Products.ERP5OOo.tests.utils import Validator
 import httplib
 import lxml.html
@@ -496,6 +497,86 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(get_figure_field_value(tree), '4.560')
     self.assertEqual(get_percentage_listbox_field_value(tree), '432.100%')
     self.assertEqual(get_figure_listbox_field_value(tree), '6.540')
+
+  def test_date_time_field(self):
+    foo = self.portal.foo_module.newContent(
+      portal_type='Foo',
+      start_date=DateTime("2001/02/03 04:05"),
+    )
+    foo.newContent(
+      portal_type='Foo Line',
+      start_date=DateTime("2005/04/03 02:01"),
+    )
+    response = self.publish(
+       '%s/Foo_viewDateTimeField' % foo.getPath(), basic=self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEqual('attachment', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+    def get_date_time_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath(
+          'normalize-space(//tr/td/*[normalize-space(.)="Start Date"]/../following-sibling::td)')
+      elif self.skin == 'ODS':
+        return tree.xpath(
+          'normalize-space(//tr/td/*/*[normalize-space(.)="Start Date"]/../../following-sibling::td)')
+
+    def get_date_time_listbox_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space((//table[2]//tr//td)[3])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[7]/td)')
+
+    def get_date_time_listbox_stat_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space((//table[2]//tr//td)[4])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[8]/td)')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=ymd&date_only:int=1' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '2001/02/03')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '2005/04/03')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '2009/08/07')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=dmy&date_only:int=1' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '03/02/2001')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '03/04/2005')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '07/08/2009')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=mdy&date_only:int=1' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '02/03/2001')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '04/03/2005')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '08/07/2009')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=ymd' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '2001/02/03 04:05')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '2005/04/03 02:01')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '2009/08/07 06:05')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=dmy' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '03/02/2001 04:05')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '03/04/2005 02:01')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '07/08/2009 06:05')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=mdy' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '02/03/2001 04:05')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '04/03/2005 02:01')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '08/07/2009 06:05')
 
   def test_textarea_center_group(self):
     self._assertFieldInGroup('TextAreaField', 'Person_view', 'center')
