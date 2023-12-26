@@ -101,10 +101,12 @@
               <tal:block tal:condition="python: field is not None">
                 <tal:block tal:condition="python:field.meta_type in ['FloatField','IntegerField'] or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type in ['FloatField','IntegerField'])">
                   <tal:block tal:define="precision python: (field.meta_type == 'FloatField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'FloatField')) and field.get_value('precision') or 0;
-                  figure_style_name string:${style_prefix}figure_${precision};
-                  input_style python: (field.meta_type == 'FloatField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'FloatField')) and field.get_value('input_style') or ''">
+                    input_style python: (field.meta_type == 'FloatField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'FloatField')) and field.get_value('input_style') or '';
+                    percentage_or_figure python: ('%' in input_style) and 'percentage' or 'figure';
+                    style_name string:${style_prefix}${percentage_or_figure}_${precision};
+                    ">
                     <table:table-cell tal:attributes="office:value value;
-                                      table:style-name figure_style_name;
+                                      table:style-name style_name;
                                       office:value-type python: ('%' in input_style) and 'percentage' or 'float'"
                                       table:style-name="figure">
                       <text:p tal:content="python: field.render_pdf(value)" />
