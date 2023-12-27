@@ -18,7 +18,7 @@
             table:style-name='report-column-title'
             table:number-columns-spanned='1'
             office:value-type='string'>
-            <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value('title')).encode('utf-8')">
+            <text:p tal:content="python: field.get_value('title')" i18n:translate="">
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -51,7 +51,7 @@
             table:style-name='report-column-title'
             table:number-columns-spanned='1'
             office:value-type='string'>
-            <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value('title')).encode('utf-8')">
+            <text:p tal:content="python: field.get_value('title')" i18n:translate="">
             </text:p>
           </table:table-cell>
          </tal:block>
