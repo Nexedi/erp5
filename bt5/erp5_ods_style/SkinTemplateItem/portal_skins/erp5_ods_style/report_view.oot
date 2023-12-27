@@ -20,7 +20,7 @@
         </tal:block>
         <tal:block tal:define="portal_object here/getPortalObject">
           <tal:block tal:condition="not: sheet_per_report_section">
-            <table:table tal:attributes="table:name python:unicode(form.getProperty('title'), 'utf8')" i18n:attributes="table:name">
+            <table:table tal:attributes="table:name python: form.getProperty('title')" i18n:attributes="table:name">
               <!-- at least one table-column element is required for ODF to validate -->
               <table:table-column
                     table:style-name='co2'
@@ -32,7 +32,7 @@
                                   office:value-type='string'
                                   table:number-columns-spanned='5'
                                   table:number-rows-spanned='1'>
-                  <text:p i18n:translate="" tal:content="python: unicode(form.getProperty('title'), 'utf8')" ></text:p>
+                  <text:p i18n:translate="" tal:content="python: form.getProperty('title')" ></text:p>
                 </table:table-cell>
               </table:table-row>
 
@@ -95,7 +95,7 @@
             <tal:block tal:condition="rendered_report_item_list">
               <tal:block tal:repeat="report_item report_item_list">
                 <!-- FIXME: in deferred mode + sheet_per_report_section we do not have title -->
-                <table:table tal:attributes="table:name python: unicode('Sheet%s' % repeat['report_item'].index, 'utf-8')">
+                <table:table tal:attributes="table:name python:'Sheet%s' % repeat['report_item'].index">
                   <table:table-column table:style-name="co4" table:default-cell-style-name="text"/>
                   <tal:block tal:replace="structure report_item"/>
                 </table:table>
@@ -105,7 +105,7 @@
             <tal:block tal:condition="not: rendered_report_item_list">
               <tal:block tal:repeat="report_item python: report_item_list">
                 <tal:block tal:condition="python: report_item.getFormId()">
-                  <table:table tal:attributes="table:name python: unicode(report_item.getTitle() or 'Sheet%s' % repeat['report_item'].index, 'utf-8')">
+                  <table:table tal:attributes="table:name python: report_item.getTitle() or 'Sheet%s' % repeat['report_item'].index">
                     <table:table-column table:style-name="co4" table:default-cell-style-name="text"/>
                     <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>
                   </table:table>
@@ -116,7 +116,7 @@
             <!-- include the report header as last page -->
             <table:table tal:condition="python: [field for field in form.get_fields()
                                                  if field.getRecursiveTemplateField().meta_type != 'ReportBox']"
-                         tal:attributes="table:name python:unicode(form.getProperty('title'), 'utf8')" i18n:attributes="table:name">
+                         tal:attributes="table:name python:form.getProperty('title')" i18n:attributes="table:name">
               <table:table-column
                     table:style-name='co2'
                     table:number-columns-repeated='100'
@@ -126,7 +126,7 @@
                                   office:value-type='string'
                                   table:number-columns-spanned='5'
                                   table:number-rows-spanned='1'>
-                  <text:p i18n:translate="" tal:content="python: unicode(form.getProperty('title'), 'utf8')" ></text:p>
+                  <text:p i18n:translate="" tal:content="python:form.getProperty('title')" ></text:p>
                 </table:table-cell>
               </table:table-row>
               <!-- fields from the report form itself -->

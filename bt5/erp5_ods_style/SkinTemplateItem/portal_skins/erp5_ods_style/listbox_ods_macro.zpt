@@ -42,7 +42,7 @@
                     <tal:block tal:condition="python: is_report_tree_mode">
                       <table:table-cell table:style-name='report-column-title' table:number-columns-spanned='1' office:value-type='string' >
                         <tal:block tal:condition="listboxline/getSectionName">
-                          <text:p tal:content="python: here.Localizer.erp5_ui.gettext(listboxline.getSectionName()).encode('utf-8')"/>
+                          <text:p tal:content="listboxline/getSectionName" i18n:translate=""/>
                         </tal:block>
                       </table:table-cell>
                     </tal:block>

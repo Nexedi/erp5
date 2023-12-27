@@ -2,7 +2,7 @@
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>
 <office:body>
   <office:spreadsheet>
-    <table:table table:style-name='ta1' table:print='false' tal:attributes="table:name python: unicode(here.getTitle(), 'utf-8')" i18n:attributes="table:name">
+    <table:table table:style-name='ta1' table:print='false' tal:attributes="table:name here/getTitle" i18n:attributes="table:name">
       
       <!-- at least one table-column element is required for ODF to validate -->
       <table:table-column
@@ -22,7 +22,7 @@
                   <table:table-row table:style-name='ro2'>
                     <table:table-cell table:style-name='report-column-title'
                                       office:value-type='string'>
-                      <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value ('title')).encode('utf-8')">
+                      <text:p tal:content="python: field.get_value('title')" i18n:translate="">
                       </text:p>
                     </table:table-cell>
                     <tal:block tal:define="display python: field.get_value('image_display') "
