@@ -30,13 +30,13 @@
 import io
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.ERP5OOo.tests.utils import Validator
 import httplib
 import lxml.html
+import mock
 import PyPDF2
 
 HTTP_OK = httplib.OK
@@ -645,20 +645,33 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_untranslatable_columns(self):
     self.portal.ListBoxZuite_reset()
-    self.portal.Localizer = DummyLocalizer()
-    message_catalog = self.portal.Localizer.erp5_ui
     # XXX odt style does not seem to display a listbox if it is empty ???
     self.portal.foo_module.newContent(portal_type='Foo')
-    message = self.id()
     self.portal.FooModule_viewFooList.listbox.ListBox_setPropertyList(
-      field_columns = ['do_not_translate | %s' % message,],
-      field_untranslatablecolumns = ['do_not_translate | %s' % message,],
+      field_columns=[
+        'translate | COLUMN_TRANSLATED',
+        'do_not_translate | COLUMN_NOT_TRANSLATED',
+      ],
+      field_untranslatable_columns = [
+        'do_not_translate | COLUMN_NOT_TRANSLATED',
+      ],
     )
     self.tic()
     self.portal.changeSkin(self.skin)
-    response = self.publish(
-                   '/%s/foo_module/FooModule_viewFooList?portal_skin='
-                   % self.portal.getId(), self.auth)
+
+    def gettext(message, **kw):
+      if message == 'COLUMN_TRANSLATED':
+        return u'**àèüîó**'
+      return kw.get('default', message)
+
+    with mock.patch.object(
+      self.portal.Localizer.erp5_ui.__class__,
+      'gettext',
+      side_effect=gettext,
+    ) as gettext_mock:
+      response = self.publish(
+        '/%s/foo_module/FooModule_viewFooList'
+        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
@@ -671,10 +684,12 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     parser = OOoParser()
     parser.openFromString(body)
     content_xml = parser.oo_files['content.xml']
-    self.assertIn(message, content_xml)
+    self.assertIn(u'**àèüîó**', content_xml.decode('utf-8'))
 
-    # This untranslatable column have not been translated
-    self.assertNotIn(message, message_catalog._translated)
+    translated_message_list = [
+      x[1][0] for x in gettext_mock.mock_calls if x[1][0]]
+    self.assertIn('COLUMN_TRANSLATED', translated_message_list)
+    self.assertNotIn('COLUMN_NOT_TRANSLATED', translated_message_list)
 
   def test_form_view_ZMI(self):
     """We can edit form_view in the ZMI."""
