@@ -60,7 +60,6 @@ from .interfaces import IMessageCatalog
 from .LanguageManager import LanguageManager
 from .LocalFiles import LocalDTMLFile
 from .utils import charsets, lang_negotiator, _
-from Products.ERP5Type.Utils import ensure_list
 
 
 ###########################################################################
@@ -312,7 +311,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             if lang is None:
                 # Builds the list of available languages
                 # should the empty translations be filtered?
-                available_languages = ensure_list(self._languages)
+                available_languages = list(self._languages)
 
                 # Imagine that the default language is 'en'. There is no
                 # translation from 'en' to 'en' in the message catalog
