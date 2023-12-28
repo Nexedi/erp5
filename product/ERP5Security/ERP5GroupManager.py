@@ -18,6 +18,7 @@
 from collections import defaultdict
 from contextlib import contextmanager
 from threading import local
+import warnings
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -119,6 +120,12 @@ class ERP5GroupManager(BasePlugin):
         return ()
       category_mapping = self.getPortalSecurityCategoryMapping()
       if category_mapping: # BBB
+        warnings.warn(
+          'Consider migrating ERP5Type_getSecurityCategoryMapping to '
+          'ERP5User_getUserSecurityCategoryValueList to get better '
+          'performance',
+          DeprecationWarning,
+        )
         has_relative_urls = True
         security_category_dict = defaultdict(list)
         for method_name, base_category_list in category_mapping:
@@ -207,6 +214,13 @@ class ERP5GroupManager(BasePlugin):
             ),
           )
       else: # BBB
+        warnings.warn(
+          'Consider migrating %s to %s to get better performance' % (
+            generator_name,
+            ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2,
+          ),
+          DeprecationWarning,
+        )
         if not has_relative_urls:
           # Convert security_category_value_dict_list to security_category_dict
           # Differences with direct security_category_dict generation:
