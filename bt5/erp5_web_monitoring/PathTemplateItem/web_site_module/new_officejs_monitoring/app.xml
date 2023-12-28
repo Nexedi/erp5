@@ -321,7 +321,7 @@
         <item>
             <key> <string>configuration_precache_manifest_script_list</string> </key>
             <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
-WebSection_getMonitoringAppPrecacheManifestList</string> </value>
+WebSection_getMonitorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -590,7 +590,7 @@ WebSection_getMonitoringAppPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1013.31723.26940.14421</string> </value>
+                      <value> <string>1013.31725.106.7731</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -610,7 +610,7 @@ WebSection_getMonitoringAppPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1703789580.09</float>
+                              <float>1703789780.55</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
