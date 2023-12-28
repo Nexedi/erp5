@@ -80,7 +80,12 @@ if IS_ZOPE2: # BBB
       medusa_headers['authorization'] = 'Basic %s' % encodebytes(('%s:' % username).encode()).decode().rstrip()
   else:
     REQUEST._orig_env['REMOTE_USER'] = username
-
+else: # zope4
+  def _setUserNameForAccessLog(username, REQUEST):
+    """
+    Nothing to do for this on Zope4.
+    """
+    pass
 
 def initialize(context):
   from . import (
