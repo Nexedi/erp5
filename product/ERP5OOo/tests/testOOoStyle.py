@@ -602,6 +602,47 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       content_xml = parser.oo_files['content.xml']
       self.assertIn('&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
 
+  def test_translation(self):
+    def gettext(message, **kw):
+      if message == 'First Name':
+        return u'**àèüîó**'
+      return kw.get('default', message)
+
+    with mock.patch.object(
+      self.portal.Localizer.erp5_ui.__class__,
+      'gettext',
+      side_effect=gettext,
+    ) as gettext_mock:
+      for url in (
+        # form_list
+        '/%s/person_module/PersonModule_viewPersonList' % self.portal.getId(),
+        # form_report
+        '/%s/person_module/pers/Base_viewHistory' % self.portal.getId(),
+        # form_view (last because we'll assert the content)
+        '/%s/person_module/pers/Person_view' % self.portal.getId(),
+      ):
+        response = self.publish(url, self.auth)
+        self.assertEqual(HTTP_OK, response.getStatus())
+        content_type = response.getHeader('content-type')
+        self.assertTrue(content_type.startswith(self.content_type), content_type)
+        content_disposition = response.getHeader('content-disposition')
+        self.assertEqual('attachment', content_disposition.split(';')[0])
+        body = response.getBody()
+        self._validate(body)
+
+    from Products.ERP5OOo.OOoUtils import OOoParser
+    parser = OOoParser()
+    parser.openFromString(body)
+    content_xml = parser.oo_files['content.xml']
+    self.assertIn(u'**àèüîó**', content_xml.decode('utf-8'))
+
+    translated_message_list = [
+      x[1][0] for x in gettext_mock.mock_calls if x[1][0]]
+    self.assertIn('First Name', translated_message_list)
+    self.assertIn(self.portal.PersonModule_viewPersonList.title, translated_message_list)
+    self.assertIn(self.portal.Person_view.title, translated_message_list)
+    self.assertIn(self.portal.Base_viewHistory.title, translated_message_list)
+
   def test_untranslatable_columns(self):
     self.portal.ListBoxZuite_reset()
     self.portal.Localizer = DummyLocalizer()
