@@ -441,6 +441,7 @@
           return form_gadget.getContent();
         })
         .push(function (form_doc) {
+          //TODO if this feature is restored, update latest_import_date
           return importMonitorConfiguration(gadget, form_doc.config);
         });
     })
