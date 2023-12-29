@@ -1,0 +1,9 @@
+portal_types/Instance Tree Module/monitoring_view
+portal_types/Instance Tree/monitoring_view
+portal_types/Promise Module/monitoring_view
+portal_types/Promise/monitoring_view
+portal_types/Software Instance Module/monitoring_view
+portal_types/Software Instance/monitoring_processes_view
+portal_types/Software Instance/monitoring_resources_view
+portal_types/Software Instance/monitoring_view
+portal_types/opml/monitoring_view
