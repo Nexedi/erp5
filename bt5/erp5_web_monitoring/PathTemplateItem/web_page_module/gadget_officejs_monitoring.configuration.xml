@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,7 +23,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,8 +41,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -62,14 +59,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -77,7 +66,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_landing.js</string> </value>
+            <value> <string>gadget_officejs_monitoring.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,29 +76,41 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_landing_js</string> </value>
+            <value> <string>gadget_officejs_monitoring.configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Officejs Monitoring Landing JS</string> </value>
-        </item>
-        <item>
-            <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <key> <string>text_content</string> </key>
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Mon Mar  4 18:27:04 2024\n
+CACHE:\n
+\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNl\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNlL21vbml0b3Jpbmdfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvU29mdHdhcmVJbnN0YW5jZV92aWV3Rm9yTW9uaXRvcmluZw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0luc3RhbmNlIFRyZWU=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0luc3RhbmNlIFRyZWUvbW9uaXRvcmluZ192aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvSW5zdGFuY2VUcmVlX3ZpZXdGb3JNb25pdG9yaW5n\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Byb21pc2UgTW9kdWxl\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Byb21pc2UgTW9kdWxlL21vbml0b3Jpbmdfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvUHJvbWlzZU1vZHVsZV92aWV3Rm9yTW9uaXRvcmluZw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Byb21pc2U=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Byb21pc2UvbW9uaXRvcmluZ192aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvUHJvbWlzZV92aWV3Rm9yTW9uaXRvcmluZw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0luc3RhbmNlIFRyZWUgTW9kdWxl\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0luc3RhbmNlIFRyZWUgTW9kdWxlL21vbml0b3Jpbmdfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvSW5zdGFuY2VUcmVlTW9kdWxlX3ZpZXdGb3JNb25pdG9yaW5n\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNlIE1vZHVsZS9tb25pdG9yaW5nX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvU29mdHdhcmVJbnN0YW5jZU1vZHVsZV92aWV3Rm9yTW9uaXRvcmluZw==\n
+\n
+NETWORK:\n
+*</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -167,7 +168,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish_alive</string> </value>
+                      <value> <string>publish</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -195,7 +196,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1701370167.02</float>
+                              <float>1706027216.26</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -204,7 +205,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
+                      <value> <string>published</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -244,7 +245,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1012.62723.14122.57258</string> </value>
+                      <value> <string>1014.12296.22288.38843</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,7 +265,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1701717573.46</float>
+                              <float>1709576768.94</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -291,7 +292,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -307,7 +310,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -327,7 +330,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1701369695.71</float>
+                              <float>1706027216.24</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
