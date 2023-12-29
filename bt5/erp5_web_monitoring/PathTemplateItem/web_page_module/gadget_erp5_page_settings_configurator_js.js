@@ -173,7 +173,19 @@
     .declareMethod("triggerSubmit", function (event) {
       return this.element.querySelector('form button[type="submit"]').click();
     })
+
     .declareMethod("render", function (options) {
+      if (options.url && options.username && options.password) {
+        var redirect_options = {
+            "url": options.url,
+            "username": options.username,
+            "password": options.password,
+            "page": "ojsm_opml_add"
+          };
+        return this.redirect({"command": "display",
+                              "options": redirect_options
+                             });
+      }
       var gadget = this,
         last_sync_time,
         sync_data_interval,
@@ -181,12 +193,6 @@
         listbox_lines_limit,
         opml_import_limit,
         opml_add_auto_sync;
-
-      if (options.url) {
-        // backward compatibility redirect to add opml
-        options.page = "ojsm_opml_add";
-        return gadget.redirect({"command": "change", "options": options});
-      }
 
       return new RSVP.Queue()
         .push(function () {
