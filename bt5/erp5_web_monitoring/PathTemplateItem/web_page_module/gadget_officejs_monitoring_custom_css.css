@@ -129,13 +129,13 @@
 .label-false {
   background-color: #9ba0a5;
 }
-.label-ok, .label-OK {
+.label-ok p, .label-OK p, .label-ok a, .label-OK a {
   background-color: green;
 }
 .label-info, .label-INFO, .label-true {
   background-color: #79c1d9;
 }
-.label {
+.label a, .label p {
   display: inline;
   padding: .4em .8em;
   font-weight: 700;
