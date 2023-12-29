@@ -67,6 +67,11 @@
               })
               .push(function (result_list) {
                 if (result_list[1].status) {
+                  var redirect_options = {
+                    "command": "display",
+                    "options": {page: "ojs_local_controller",
+                                portal_type: "Promise Module"}
+                  };
                   if (gadget.state.auto_sync) {
                     return gadget.getDeclaredGadget('sync_gadget')
                       .push(function (sync_gadget) {
@@ -74,16 +79,10 @@
                         return sync_gadget.register({now: true});
                       })
                       .push(function () {
-                        return gadget.redirect({
-                          "command": "display",
-                          "options": {"page": "ojsm_status_list"}
-                        });
+                        return gadget.redirect(redirect_options);
                       });
                   }
-                  return gadget.redirect({
-                    "command": "display",
-                    "options": {"page": "settings_configurator"}
-                  });
+                  return gadget.redirect(redirect_options);
                 }
                 if (result_list[1].can_force) {
                   gadget.element.getElementsByClassName("btn-nopasswd")[0]
@@ -231,14 +230,6 @@
             save_action: true,
             change_password: chg_pwd_url
           });
-        })
-        .push(function () {
-          return gadget.checkSynchronize();
         });
-    })
-    .declareJob("checkSynchronize", function () {
-      if (this.state.auto_sync) {
-        return this.element.querySelector('button[type="submit"]').click();
-      }
     });
 }(window, rJS, RSVP));
