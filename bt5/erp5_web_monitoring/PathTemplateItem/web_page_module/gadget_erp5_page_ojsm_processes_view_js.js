@@ -29,7 +29,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
 
-      return gadget.jio_get(options.key)
+      return gadget.jio_get(options.parent_id)
         .push(function (outline) {
           return gadget.changeState({opml_outline: outline});
         })
@@ -114,6 +114,13 @@
             });
           }
           return result;
+        }, function (error) {
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            return result;
+          } else {
+            throw error;
+          }
         });
     })
 
@@ -149,12 +156,7 @@
           title: "Memory Used",
           icon_name: "pie-chart",
           value: change_dict.average_state.memory_percent + " %"
-        }/*,
-        {
-          title: "Disk Used",
-          icon_name: "hdd-o",
-          value: change_dict.average_state.disk_used + " Mo"
-        }*/
+        }
       ];
       resource_state_content = infobox_widget_template({
         resource_list: monitor_resource_list
