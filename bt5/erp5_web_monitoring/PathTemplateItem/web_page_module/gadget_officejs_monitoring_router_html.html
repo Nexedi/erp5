@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no" />
-    <title>OfficeJS Router Gadget</title>
+    <title>OfficeJS Monitoring app Router Gadget</title>
 
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
@@ -14,12 +14,26 @@
 
   </head>
   <body>
-    <script data-renderjs-configuration="portal_type" type="text/x-renderjs-configuration">opml</script>
-    <script data-renderjs-configuration="parent_relative_url" type="text/x-renderjs-configuration">opml_module</script>
+    <script data-renderjs-configuration="configuration_manifest" type="text/x-renderjs-configuration">gadget_officejs_monitoring.configuration</script>
+    <script data-renderjs-configuration="portal_type" type="text/x-renderjs-configuration">Promise</script>
+    <script data-renderjs-configuration="parent_portal_type" type="text/x-renderjs-configuration">Promise Module</script>
+    <script data-renderjs-configuration="parent_relative_url" type="text/x-renderjs-configuration">promise_module</script>
     <script data-renderjs-configuration="document_title" type="text/x-renderjs-configuration">Monitoring Tool</script>
     <script data-renderjs-configuration="document_title_plural" type="text/x-renderjs-configuration">Monitoring Apps</script>
     <script data-renderjs-configuration="erp5_attachment_synchro" type="text/x-renderjs-configuration"></script>
-    <script data-renderjs-configuration="global_setting_gadget_url" type="text/x-renderjs-configuration">../officejs_setting_gadget/app/</script>
     <div data-gadget-url="gadget_erp5_router.html" data-gadget-scope="erp5_router"></div>
+    <!-- new router -->
+    <script data-renderjs-configuration="portal_skin_folder" type="text/x-renderjs-configuration">erp5_web_monitoring</script>
+    <script data-renderjs-configuration="app_view_reference" type="text/x-renderjs-configuration">monitoring_view</script>
+    <script data-renderjs-configuration="app_actions" type="text/x-renderjs-configuration">('Software Instance | monitoring_view', 'Software Instance | monitoring_resources_view', 'Software Instance | monitoring_processes_view', 'Software Instance Module | monitoring_view', 'Instance Tree | monitoring_view', 'Instance Tree Module | monitoring_view', 'Promise Module | monitoring_view', 'Promise | monitoring_view', 'opml | monitoring_view')</script>
+    <script data-renderjs-configuration="app_allowed_sub_types" type="text/x-renderjs-configuration">('Software Instance Module | Software Instance', 'Instance Tree Module | Instance Tree', 'Software Instance | Promise')</script>
+    <script data-renderjs-configuration="app_configurator" type="text/x-renderjs-configuration">ojsm_import_export</script>
+    <script data-renderjs-configuration="software_instance_module_dict" type="text/x-renderjs-configuration">{"front_page": 1, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 1, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 1, "panel_action": 1, "previous_next_button": 0, "history_previous_link": 0, "title": "Software Instances Status", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0}</script>
+    <script data-renderjs-configuration="software_instance_dict" type="text/x-renderjs-configuration"> {"front_page": 0, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 1, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 0, "panel_action": 1, "previous_next_button": 1, "history_previous_link": 1, "title": "Instance: ", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0, "custom_header": "gadget_officejs_monitoring_options_header.html", "view": "software_instance", "custom_submit": "gadget_officejs_monitoring_submit.html" }</script>
+    <script data-renderjs-configuration="instance_tree_module_dict" type="text/x-renderjs-configuration">{"front_page": 1, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 1, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 1, "panel_action": 1, "previous_next_button": 0, "history_previous_link": 0, "title": "Instance Trees Status", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0}</script>
+    <script data-renderjs-configuration="instance_tree_dict" type="text/x-renderjs-configuration"> {"front_page": 0, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 1, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 0, "panel_action": 1, "previous_next_button": 1, "history_previous_link": 1, "title": "Instance Tree: ", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0, "custom_header": "gadget_officejs_monitoring_options_header.html", "view": "instance_tree", "custom_submit": "gadget_officejs_monitoring_submit.html" }</script>
+    <script data-renderjs-configuration="promise_module_dict" type="text/x-renderjs-configuration">{"front_page": 1, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 1, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 1, "panel_action": 1, "previous_next_button": 0, "history_previous_link": 0, "title": "Monitoring Promises Status", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0}</script>
+    <script data-renderjs-configuration="promise_dict" type="text/x-renderjs-configuration"> {"front_page": 0, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 1, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 0, "panel_action": 1, "previous_next_button": 1, "history_previous_link": 1, "title": "Promise: ", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0, "custom_header": "gadget_officejs_monitoring_options_header.html", "view": "promise", "custom_submit": "gadget_officejs_monitoring_submit.html" }</script>
+    <script data-renderjs-configuration="opml_dict" type="text/x-renderjs-configuration"> {"front_page": 0, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 1, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 0, "panel_action": 1, "previous_next_button": 1, "history_previous_link": 1, "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0, "custom_header": "gadget_officejs_monitoring_options_header.html", "view": "opml" }</script>
   </body>
 </html>
