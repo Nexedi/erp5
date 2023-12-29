@@ -124,9 +124,10 @@
   };
 
   ReplicatedOPMLStorage.prototype.put = function (id, doc) {
-    if (!doc.hasOwnProperty('portal_type') || doc.portal_type !== 'opml') {
+    //allow app configuration types (forms, views, actions, etc)
+    /*if (!doc.hasOwnProperty('portal_type') || doc.portal_type !== 'opml') {
       throw new TypeError("Cannot put object which portal_type is not 'opml'");
-    }
+    }*/
     if (doc.active === undefined) {
       doc.active = true;
     }
