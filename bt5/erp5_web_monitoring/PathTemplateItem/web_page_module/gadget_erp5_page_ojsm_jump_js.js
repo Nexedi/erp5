@@ -30,8 +30,9 @@
       promise_list.push(gadget.getUrlFor({command: "display", options: options}));
       if (options.title !== undefined &&
           options.search_page !== undefined) {
-        promise_list.push(gadget.getUrlFor({command: "change", options: {
+        promise_list.push(gadget.getUrlFor({command: "display", options: {
           page: options.search_page,
+          portal_type: options.portal_type,
           extended_search: options.title
         }}));
       }
