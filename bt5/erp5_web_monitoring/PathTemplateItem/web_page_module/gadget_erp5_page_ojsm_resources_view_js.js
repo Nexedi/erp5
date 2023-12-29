@@ -185,12 +185,6 @@
             "position": "right"
           }
         };
-        /*data_list.push({
-          value_dict: {"0": [], "1": []},
-          type: "surface",
-          axis_mapping_id_dict: {"1": "1_1"},
-          title: "Memory used percent"
-        });*/
         data_list.push({
           value_dict: {"0": [], "1": []},
           type: "surface",
@@ -352,8 +346,8 @@
     .declareMethod("render", function (options) {
       var gadget = this;
 
-      gadget.property_dict.document_key = options.key;
-      return gadget.jio_get(options.key)
+      gadget.property_dict.document_key = options.parent_id;
+      return gadget.jio_get(options.parent_id)
         .push(function (outline) {
           return gadget.changeState({opml_outline: outline});
         })
@@ -449,8 +443,7 @@
             type: "webhttp",
             // XXX Fix URL
             url: (gadget.state.opml_outline.url
-              .replace("jio_private", "private") +
-              'documents/'),
+              .replace("jio_private", "private") + 'documents/'),
             basic_login: gadget.state.opml.basic_login
           });
           gadget.property_dict.mem_data = {data: []};
@@ -465,7 +458,6 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("redirect", "redirect")
-    //.declareAcquiredMethod("notifySubmitting", 'notifySubmitting')
 
     .onLoop(function () {
       if (!this.property_dict.disable_update) {

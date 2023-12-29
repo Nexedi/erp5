@@ -315,7 +315,7 @@
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
-            <value> <string>ojs_controller</string> </value>
+            <value> <string>ojs_local_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -323,11 +323,13 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>ojsm_status_list</string> </value>
+            <value> <string>ojsm_dispatch</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas/</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
@@ -349,7 +351,8 @@
         </item>
         <item>
             <key> <string>configuration_precache_manifest_script_list</string> </key>
-            <value> <string>WebSection_getMonitorPrecacheManifestList</string> </value>
+            <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
+WebSection_getMonitorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -409,7 +412,7 @@
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -503,7 +506,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -527,7 +530,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1507825544.87</float>
+                              <float>1706018001.94</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -562,7 +565,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -576,7 +579,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.64257.46798.35242</string> </value>
+                      <value> <string>1015.45943.10991.6587</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -596,7 +599,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1625247788.8</float>
+                              <float>1712334250.63</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

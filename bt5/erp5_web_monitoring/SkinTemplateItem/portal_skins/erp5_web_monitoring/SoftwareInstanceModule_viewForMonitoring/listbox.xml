@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>all_columns</string>
+                <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>editable_columns</string>
+                <string>lines</string>
+                <string>portal_types</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>style_columns</string>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>Validation State</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_slap_state_title</string>
+                          <string>Slap State</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Software Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_reference</string>
+                          <string>Authorisation Identity</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>status</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Instance Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Instance Tree</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_reference</string>
+                          <string>Computer</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Status Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_list_mode_listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Software Instance</string>
+                          <string>Software Instance</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Software Instance</string>
+                          <string>Software Instance</string>
+                        </tuple>
+                        <tuple>
+                          <string>Slave Instance</string>
+                          <string>Slave Instance</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>status</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Instance Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Instance Tree</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_reference</string>
+                          <string>Computer</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Status Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>software_instance_module_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>status</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>status</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Instance Tree</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_reference</string>
+                          <string>Computer</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Status Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string encoding="cdata"><![CDATA[
+
+var status_key_array = [\'status\', \'category\'], status; status_key_array.forEach((status_key) => { if (result.data.rows[i].value.hasOwnProperty(status_key)) { status = result.data.rows[i].value[status_key]; result.data.rows[i].value[status_key] = { field_gadget_param: { css_class: "", description: "", hidden: 0, "default": status, key: status_key, url: "gadget_erp5_field_status.html", title: "Status", type: "GadgetField" } }; result.data.rows[i].value["listbox_uid:list"] = { key: "listbox_uid:list", value: 2713 }; } });
+
+]]></string>
+                          <string encoding="cdata"><![CDATA[
+
+var status_key_array = [\'status\', \'category\'], status; status_key_array.forEach((status_key) => { if (result.data.rows[i].value.hasOwnProperty(status_key)) { status = result.data.rows[i].value[status_key]; result.data.rows[i].value[status_key] = { field_gadget_param: { css_class: "", description: "", hidden: 0, "default": status, key: status_key, url: "gadget_erp5_field_status.html", title: "Status", type: "GadgetField" } }; result.data.rows[i].value["listbox_uid:list"] = { key: "listbox_uid:list", value: 2713 }; } });
+
+]]></string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Software Instances</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -79,7 +79,9 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/javascript</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -244,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -258,7 +260,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>971.18960.44200.52138</string> </value>
+                      <value> <string>1014.27855.54097.10478</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -278,7 +280,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1540897197.53</float>
+                              <float>1707263598.02</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

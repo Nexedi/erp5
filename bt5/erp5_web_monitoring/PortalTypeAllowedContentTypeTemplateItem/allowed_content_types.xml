@@ -1,0 +1,11 @@
+<allowed_content_type_list>
+ <portal_type id="Instance Tree Module">
+  <item>Instance Tree</item>
+ </portal_type>
+ <portal_type id="Promise Module">
+  <item>Promise</item>
+ </portal_type>
+ <portal_type id="Software Instance Module">
+  <item>Software Instance</item>
+ </portal_type>
+</allowed_content_type_list>
