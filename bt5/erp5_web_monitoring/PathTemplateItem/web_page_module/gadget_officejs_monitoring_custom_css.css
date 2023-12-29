@@ -120,22 +120,22 @@
   color: #f0ad4e;
 }
 
-.label-warning, .label-WARNING {
+.label-warning p, .label-WARNING p, .label-warning a, .label-WARNING a {
   background-color: #f0ad4e;
 }
-.label-error, .label-ERROR {
+.label-error p, .label-ERROR p, .label-error a, .label-ERROR a {
   background-color: #DC4343;
 }
 .label-false {
   background-color: #9ba0a5;
 }
-.label-ok, .label-OK {
+.label-ok p, .label-OK p, .label-ok a, .label-OK a {
   background-color: green;
 }
 .label-info, .label-INFO, .label-true {
   background-color: #79c1d9;
 }
-.label {
+.label a, .label p {
   display: inline;
   padding: .4em .8em;
   font-weight: 700;
