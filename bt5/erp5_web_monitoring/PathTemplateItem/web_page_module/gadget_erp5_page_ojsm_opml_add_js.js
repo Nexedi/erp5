@@ -68,7 +68,10 @@
               .push(function (result_list) {
                 if (result_list[1].status) {
                   if (gadget.state.auto_sync) {
-                    return gadget.getDeclaredGadget('sync_gadget')
+                    return gadget.setSetting("latest_import_date", new Date().getTime())
+                      .push(function () {
+                        return gadget.getDeclaredGadget('sync_gadget');
+                      })
                       .push(function (sync_gadget) {
                         // start synchronization now
                         return sync_gadget.register({now: true});
@@ -76,7 +79,7 @@
                       .push(function () {
                         return gadget.redirect({
                           "command": "display",
-                          "options": {"page": "ojsm_status_list"}
+                          "options": {"page": "ojsm_landing"}
                         });
                       });
                   }
