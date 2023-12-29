@@ -16,6 +16,10 @@ url_list = [
   "erp5_launcher_nojqm.js",
   "monitoring_jio_storage.js",
   "monitoring_jio_web_storage.js",
+  "jio_ojs_storage.js",
+  "jio_configuration_storage.js",
+  "jio_appcachestorage.js",
+  "gadget_officejs_monitoring.configuration",
   "jsen.min.js",
   "renderjs.js",
   "rsvp.js",
@@ -132,7 +136,9 @@ url_list = [
   "gadget_officejs_monitor.json",
   "NXD-Logo.Rapid.Space.png",
   "gadget_erp5_editor_panel.html",
-  "gadget_erp5_editor_panel.js"
+  "gadget_erp5_editor_panel.js",
+  "gadget_erp5_page_ojsm_landing.html",
+  "gadget_erp5_page_ojsm_landing.js"
 ]
 
 return url_list
