@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -24,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -56,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -64,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/public</string>
+                <string>classification/collaborative/team</string>
               </tuple>
             </value>
         </item>
@@ -75,14 +76,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>monitoring_jio_storage.js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_landing.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -92,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>monitoring_jio_storage_js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_landing_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -110,11 +105,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Monitoring Jio Storage</string> </value>
+            <value> <string>Gadget ERP5 Officejs Monitoring Landing JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>002</string> </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -172,11 +167,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -200,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1456160046.44</float>
+                              <float>1701370167.02</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -209,7 +204,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -249,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1012.51177.40041.21742</string> </value>
+                      <value> <string>1012.62723.14122.57258</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -269,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1701111013.97</float>
+                              <float>1701717573.46</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -300,7 +295,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -332,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1456157682.63</float>
+                              <float>1701369695.71</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
