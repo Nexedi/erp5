@@ -48,7 +48,7 @@ recurse(o, callback, seldict)
 
 for selection_name in seldict.keys():
   if len(seldict[selection_name]) != 1 or all_selections:
-    print "'%s' [%s]"%(selection_name,len(seldict[selection_name]))
+    print("'%s' [%s]"%(selection_name,len(seldict[selection_name])))
     for form_name in seldict[selection_name]:
-      print "\t%s"%(form_name,)
+      print("\t%s"%(form_name,))
 return printed
