@@ -43,3 +43,13 @@ if kw.get('setup_data_sample'):
     update_catalog=False,
     install_dependency=True,
   )
+
+# mqtt
+if kw.get('setup_mqtt'):
+  configuration_save.addConfigurationItem(
+    "Standard BT5 Configurator Item",
+    title='erp5_mqtt', 
+    bt5_id='erp5_mqtt',
+    update_catalog=False,
+    install_dependency=True,
+  )
