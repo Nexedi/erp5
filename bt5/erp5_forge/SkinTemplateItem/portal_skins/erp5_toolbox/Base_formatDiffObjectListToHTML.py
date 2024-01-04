@@ -22,28 +22,28 @@ for diff_object in sortDiffObjectList(diff_object_list):
   if getattr(diff_object, "error", None) is not None:
     print("<p>")
     print("Error")
-    print("(%s) -" % html_quote(diff_object.object_class))
+    print(("(%s) -" % html_quote(diff_object.object_class)))
     if diff_object.object_class in link_configuration:
-      print(link_configuration[diff_object.object_class] % {"object_id": html_quote(diff_object.object_id)})
+      print((link_configuration[diff_object.object_class] % {"object_id": html_quote(diff_object.object_id)}))
     else:
-      print(html_quote(diff_object.object_id))
+      print((html_quote(diff_object.object_id)))
     print("</p>")
     if detailed:
       print("<p>")
-      print(html_quote(diff_object.error))
+      print((html_quote(diff_object.error)))
       print("</p>")
   else:
     print("<p>")
-    print(html_quote(diff_object.object_state))
-    print("(%s) -" % html_quote(diff_object.object_class))
+    print((html_quote(diff_object.object_state)))
+    print(("(%s) -" % html_quote(diff_object.object_class)))
     if diff_object.object_class in link_configuration:
-      print(link_configuration[diff_object.object_class] % {"object_id": html_quote(diff_object.object_id)})
+      print((link_configuration[diff_object.object_class] % {"object_id": html_quote(diff_object.object_id)}))
     else:
-      print(html_quote(diff_object.object_id))
+      print((html_quote(diff_object.object_id)))
     print("</p>")
     if detailed and getattr(diff_object, "data", None) is not None:
       print("<div>")
-      print(DiffFile(diff_object.data).toHTML())
+      print((DiffFile(diff_object.data).toHTML()))
       print("</div>")
 print("</div>")
 return printed
