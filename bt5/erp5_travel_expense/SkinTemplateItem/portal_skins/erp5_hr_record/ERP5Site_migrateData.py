@@ -19,9 +19,9 @@ for record in portal.expense_record_module.objectValues(portal_type="Expense Rec
         )
         image.share()
       else:
-        print ticket.getRelativeUrl()
+        print(ticket.getRelativeUrl())
 
-print DateTime()
+print(DateTime())
 #return printed
 
 
@@ -31,6 +31,6 @@ for i in context.portal_catalog(portal_type='Expense Validation Request'):
     if i.getReference() != sourceReference:
       if migrate:
         i.setReference(sourceReference)
-      print i.getRelativeUrl()
+      print(i.getRelativeUrl())
 
 return printed

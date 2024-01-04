@@ -8,8 +8,8 @@ line_dict_list = context.PaySheetTransaction_getLineListAsDict()
 title_list = ['Designation\t\t', 'Base', 'Employer Rate', 'Employer Share',
     'Employee Rate', 'Employee Share']
 
-print '\t\t'.join(title_list)
-print ''
+print('\t\t'.join(title_list))
+print('')
 
 def rightPad(string, length):
   string=str(string)
@@ -36,6 +36,6 @@ for line in line_dict_list:
     string_to_display.append(rightPad(' ', 24))
     string_to_display.append(rightPad(' ', 24))
 
-  print ''.join(string_to_display)
+  print(''.join(string_to_display))
 
 return printed

@@ -6,7 +6,7 @@ container.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
 # make sure context is the skins tool
 stool = context.portal_skins
 
-print '<html><body>'
+print('<html><body>')
 skins_by_name = {}
 
 for skin_key, skin_path_list in stool.getSkinPaths():
@@ -24,9 +24,9 @@ for skin_key, skin_path_list in stool.getSkinPaths():
 
 for skin_name, location_list in skins_by_name.items():
   if len(location_list) > 1:
-    print skin_name, '<br/>'
+    print(skin_name, '<br/>')
     for location in location_list:
-      print "&nbsp;" * 3, '<a href="%s/%s/%s/manage_main">%s</a><br/>' % (stool.absolute_url(), location, skin_name, location)
+      print("&nbsp;" * 3, '<a href="%s/%s/%s/manage_main">%s</a><br/>' % (stool.absolute_url(), location, skin_name, location))
 
-print '</body></html>'
+print('</body></html>')
 return printed

@@ -68,11 +68,11 @@ for business_application_category_id, module_ids in module_business_application_
     if module is not None:
       module.edit(business_application = business_application_category_id)
 
-print "Indexing translations"
+print("Indexing translations")
 portal.ERP5Site_updateTranslationTable()
 
 # clear cache so user security is recalculated
 portal.portal_caches.clearAllCache()
-print "Clear cache."
+print("Clear cache.")
 
 log("%s" % printed)

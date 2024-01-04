@@ -6,6 +6,6 @@ object_list =  list(context.portal_catalog(parent_uid=uids, portal_type = "Email
 for o in object_list:
   o_value = o.getObject()
   if o is not None:
-    print o_value.getUrlString()
+    print(o_value.getUrlString())
 
 return printed

@@ -13,5 +13,5 @@ for name, layers in skin_tool.getSkinPaths():
     if ignore_skin_folder_list is not None and\
         layer in ignore_skin_folder_list:
       continue
-    print '%s,%s' % (name, layer)
+    print('%s,%s' % (name, layer))
 return printed

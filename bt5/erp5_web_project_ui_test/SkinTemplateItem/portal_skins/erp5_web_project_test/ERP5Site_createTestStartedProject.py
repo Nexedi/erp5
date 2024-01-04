@@ -227,5 +227,5 @@ if create_project_documents:
                                     portal_type = 'Project',
                                     reference = draft_project)
 
-print "Project Created"
+print("Project Created")
 return printed

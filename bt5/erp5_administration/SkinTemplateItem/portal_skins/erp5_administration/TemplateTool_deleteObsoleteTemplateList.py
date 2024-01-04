@@ -16,6 +16,6 @@ for bt in bt_list:
         delete_list.append(bt_id)
         break
 
-print 'Deleted id list:%r' % delete_list
+print('Deleted id list:%r' % delete_list)
 portal_templates.manage_delObjects(delete_list)
 return printed

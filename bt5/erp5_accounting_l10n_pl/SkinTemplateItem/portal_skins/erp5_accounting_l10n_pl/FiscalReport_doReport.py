@@ -48,7 +48,7 @@ dane.p59=dane.p55-dane.p56
 if debug:
   for f in range(20,60):
     n='p'+str(f)
-    print n,getattr(dane,n)
+    print(n,getattr(dane,n))
   return printed
 
 return container[report].index_html(REQUEST=context.REQUEST, RESPONSE=context.REQUEST.RESPONSE,dane=dane)

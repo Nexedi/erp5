@@ -6,5 +6,5 @@ portal.event_module.recurseCallMethod(
                    group_method_cost=1),
   min_depth=1,
   max_depth=1)
-print "Migration started with process id: %s" %active_process.getPath()
+print("Migration started with process id: %s" %active_process.getPath())
 return printed
