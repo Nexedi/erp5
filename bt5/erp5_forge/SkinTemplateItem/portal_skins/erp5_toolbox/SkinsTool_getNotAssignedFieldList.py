@@ -7,9 +7,9 @@ for form_path, form in context.ZopeFind(
   try:
     groups = form.get_groups()
   except AttributeError as e:
-    print "%s is broken: %s" % (form_path, e)
+    print("%s is broken: %s" % (form_path, e))
   if 'not_assigned' in groups:
-    print 'Not assigned fields in %s: %s' % (form_path,
-      [f.getId() for f in form.get_fields_in_group('not_assigned')])
+    print('Not assigned fields in %s: %s' % (form_path,
+      [f.getId() for f in form.get_fields_in_group('not_assigned')]))
 
 return printed

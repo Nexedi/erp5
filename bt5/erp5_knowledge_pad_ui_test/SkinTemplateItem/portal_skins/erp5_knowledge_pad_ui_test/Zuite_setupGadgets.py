@@ -17,5 +17,5 @@ if remove_existing_pads:
   user_knowledge_pad_list = context.ERP5Site_getKnowledgePadListForUser(mode = mode)
   context.knowledge_pad_module.manage_delObjects([x.getId() for x in user_knowledge_pad_list])
 
-print "Done"
+print("Done")
 return printed

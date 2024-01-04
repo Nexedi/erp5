@@ -172,10 +172,10 @@ def formatString(string):
   else:
     return '\n'.join(['""']+[formatString(i) for i in line_list])
 
-print '''msgid ""
+print('''msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-'''
+''')
 
 MESSAGE_TEMPLATE = '''\
 %s
@@ -188,7 +188,7 @@ for message in message_list:
   comment_list = message_dict[message]
   comment_list.sort()
   comment = '\n'.join([('#: %s' % i) for i in comment_list])
-  print MESSAGE_TEMPLATE % (comment, formatString(message))
+  print(MESSAGE_TEMPLATE % (comment, formatString(message)))
 
 RESPONSE = context.REQUEST.RESPONSE
 RESPONSE.setHeader('Content-disposition', 'attachment;filename=translation.pot')

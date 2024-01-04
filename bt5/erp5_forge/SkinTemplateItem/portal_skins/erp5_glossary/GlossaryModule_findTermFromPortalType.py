@@ -2,10 +2,10 @@ result = context.GlossaryModule_getTermDictListFromPortalType(portal_type_list)
 
 if export_tsv:
   for i in result:
-    print '\t'.join(['"%s"' % x for x in (i['reference'], i['language'],
+    print('\t'.join(['"%s"' % x for x in (i['reference'], i['language'],
                                             i['business_field'],
                                             i['title'], i['description'],
-                                            i['field_path'])])
+                                            i['field_path'])]))
   return printed
 else:
   portal_catalog = context.portal_catalog

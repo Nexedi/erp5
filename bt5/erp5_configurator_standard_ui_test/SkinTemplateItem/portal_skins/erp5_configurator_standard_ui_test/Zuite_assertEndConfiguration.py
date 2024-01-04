@@ -8,10 +8,10 @@ message_list = ["Configuration is over. Enjoy your new ERP5 system!",
 portal.REQUEST.RESPONSE.setHeader('content-type', 'text/plain')
 for message in message_list:
   if not message in html_status_report:
-    print "Error: {message} not found in status report".format(message=message)
+    print("Error: {message} not found in status report".format(message=message))
 
 for log in portal.error_log.getLogEntries():
-  print "Error: {type} {value} {tb_text}".format(**log)
+  print("Error: {type} {value} {tb_text}".format(**log))
 
 if str(printed):
   return printed

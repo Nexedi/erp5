@@ -24,7 +24,7 @@ def formatString(string):
 
 # po header
 now = DateTime().toZone('UTC').strftime("%Y-%m-%d %H:%M+0000")
-print MESSAGE_TEMPLATE % (dict(english='""',
+print(MESSAGE_TEMPLATE % (dict(english='""',
                                translation=
 r'''"Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: %s\n"
@@ -34,7 +34,7 @@ r'''"Project-Id-Version: ERP5 Localized Interface\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-''' % (now, now, language)))
+''' % (now, now, language))))
 catalog = context.portal_catalog
 
 for i in catalog(portal_type='Glossary Term',
@@ -63,18 +63,18 @@ for i in catalog(portal_type='Glossary Term',
     if not english_title:
       raise ValueError('Title of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_title))
     if translated_title!=english_title:
-      print formatMessage(english=formatString(english_title),
+      print(formatMessage(english=formatString(english_title),
                           translation=formatString(translated_title),
-                          term=term)
+                          term=term))
 
   if translated_description:
     if not english_description:
       raise ValueError('Description of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_description))
 
     if translated_description!=english_description:
-      print formatMessage(english=formatString(english_description),
+      print(formatMessage(english=formatString(english_description),
                           translation=formatString(translated_description),
-                          term=term)
+                          term=term))
 
 RESPONSE = context.REQUEST.RESPONSE
 RESPONSE.setHeader('Content-disposition', 'attachment;filename=translation.po')

@@ -26,9 +26,9 @@ informations = { 'processing': processing,
 
 if informations['processing'] in ['converted', 'conversion_failed','empty']:
   informations['permanent_url'] = document.Document_getPermanentUrl()
-  print dumps(informations) #print info before del object
+  print(dumps(informations)) #print info before del object
   portal.portal_sessions.manage_delObjects(reference)
 else:
-  print dumps(informations)
+  print(dumps(informations))
 
 return printed
