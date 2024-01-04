@@ -25,7 +25,8 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
     signature = ", ".join(signature_parts)
 
     function_name = "function_name"
-    body = "def %s(%s):\n%s" % (function_name,
+    body = "from __future__ import print_function\n"\
+           "def %s(%s):\n%s" % (function_name,
                                 signature,
                                 indent(data['code']) or "  pass")
   else:
@@ -34,7 +35,7 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
   for message_dict in message_list:
     if is_script:
-      message_dict['row'] = message_dict['row'] - 2
+      message_dict['row'] = message_dict['row'] - 3
     else:
       message_dict['row'] = message_dict['row'] - 1
 
