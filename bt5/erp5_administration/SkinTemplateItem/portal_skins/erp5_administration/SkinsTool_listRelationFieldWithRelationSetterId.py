@@ -13,6 +13,6 @@ for field_path, field in context.ZopeFind(
 
   relation_setter_id = field.get_value('relation_setter_id')
   if relation_setter_id:
-    print field_path, relation_setter_id
+    print(field_path, relation_setter_id)
 
 return printed

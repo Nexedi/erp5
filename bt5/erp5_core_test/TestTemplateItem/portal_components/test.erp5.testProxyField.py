@@ -289,7 +289,7 @@ class TestProxyField(ERP5TypeTestCase):
     python_script_id = "ERP5Site_testAccessProxyFieldProperty"
     python_script_parameter = "proxy_field"
     python_script_body = """
-print proxy_field.getRecursiveTemplateField().meta_type
+print (proxy_field.getRecursiveTemplateField().meta_type)
 return printed
 """
     skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(

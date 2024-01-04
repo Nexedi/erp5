@@ -12,7 +12,7 @@ if business_template is not None:
                     filter=dict(portal_type=portal_type))
     for module in module_list:
       module.updateLocalRolesOnSecurityGroups()
-      print "Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType())
+      print("Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType()))
 
   # validate and open all objects
   for path in business_template.getTemplatePathList():
@@ -22,16 +22,16 @@ if business_template is not None:
 
       if obj.getPortalType() not in ('Category', 'Base Category',):
         obj.updateLocalRolesOnSecurityGroups()
-        print "Updated Role Mappings for: ", path, obj.getPortalType()
+        print("Updated Role Mappings for: ", path, obj.getPortalType())
 
       if obj.getPortalType() in ('Person', 'Organisation'):
         for period in obj.contentValues(filter={'portal_type':'Accounting Period'}):
           period.updateLocalRolesOnSecurityGroups()
-          print "\tOpen (Accounting Period): ", period.getRelativeUrl()
+          print("\tOpen (Accounting Period): ", period.getRelativeUrl())
 
         for assignment in obj.contentValues(filter={'portal_type':'Assignment'}):
           assignment.updateLocalRolesOnSecurityGroups()
-          print "\tOpen (assignment): ", assignment.getRelativeUrl()
+          print("\tOpen (assignment): ", assignment.getRelativeUrl())
 
   for solver_type in context.portal_solvers.objectValues():
     solver_type.updateLocalRolesOnSecurityGroups()
@@ -96,11 +96,11 @@ if osoe_runner_website is not None:
   available_language_list = list(portal.Localizer.get_supported_languages())
   osoe_runner_website.edit(available_language_set = available_language_list)
 
-print "Indexing translations"
+print("Indexing translations")
 portal.ERP5Site_updateTranslationTable()
 
 # clear cache so user security is recalculated
 portal.portal_caches.clearAllCache()
-print "Clear cache."
+print("Clear cache.")
 
 log("%s" % printed)

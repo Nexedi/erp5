@@ -37,6 +37,7 @@ except AttributeError:
 print('')
 print('Local roles on document:\n%s' % pformat(context.get_local_roles()))
 
+
 print('''
 ----------------
 Security mapping
