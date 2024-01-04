@@ -84,6 +84,7 @@
                       <list>
                         <string>your_setup_data_lake</string>
                         <string>your_setup_data_lake_default_security_model</string>
+                        <string>your_setup_mqtt</string>
                         <string>your_setup_data_sample</string>
                       </list>
                     </value>
