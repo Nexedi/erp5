@@ -24,17 +24,29 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
       signature_parts += [data['params']]
     signature = ", ".join(signature_parts)
 
-    function_name = "function_name"
-    body = "def %s(%s):\n%s" % (function_name,
-                                signature,
-                                indent(data['code']) or "  pass")
+    # keep the PEP263 magic comment lines first
+    first_line = second_line = '#'
+    lines = data['code'].splitlines() + ['', '']
+    if lines[0].startswith('#'):
+      first_line = lines[0]
+    if lines[1].startswith('#'):
+      second_line = lines[1]
+
+    body = "%s\n"\
+           "%s\n"\
+           "from __future__ import print_function\n"\
+           "def function_name(%s):\n%s" % (
+              first_line,
+              second_line,
+              signature,
+              indent(data['code']) or "  pass")
   else:
     body = data['code']
 
   message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
   for message_dict in message_list:
     if is_script:
-      message_dict['row'] = message_dict['row'] - 2
+      message_dict['row'] = message_dict['row'] - 5
     else:
       message_dict['row'] = message_dict['row'] - 1
 
