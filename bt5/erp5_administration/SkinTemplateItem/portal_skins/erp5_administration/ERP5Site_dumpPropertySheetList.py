@@ -6,7 +6,7 @@ for ps in sorted(context.getPortalObject().portal_property_sheets.contentValues(
     ps_id = ps.getId()
     if ps_id in ignore_property_sheet_list:
       continue
-    print ps.getId()
+    print(ps.getId())
     info_list = ['id', 'portal_type', 'reference']
     std_prop_list = ['elementary_type', 'property_default', 'storage_id', 'multivaluated', 'range', 'preference', 'read_permission', 'write_permission', 'translatable', 'translation_domain']
     if pd.getPortalType() == 'Standard Property':
@@ -29,10 +29,10 @@ for ps in sorted(context.getPortalObject().portal_property_sheets.contentValues(
     elif pd.getPortalType().endswith('Constraint'):
       info_list += [] + [p for p in pd.propertyIds() if p.startswith('message')]
     else:
-      print "(not supported)",pd.getRelativeUrl(), pd.getPortalType()
+      print("(not supported)",pd.getRelativeUrl(), pd.getPortalType())
 
 
-    print " ", "\n  ".join(['%s: %s' % (prop, pd.getProperty(prop)) for prop in sorted(info_list)])
-    print
+    print(" ", "\n  ".join(['%s: %s' % (prop, pd.getProperty(prop)) for prop in sorted(info_list)]))
+    print()
 
 return printed
