@@ -560,7 +560,7 @@ prepareData()\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1012.46657.35863.5717</string> </value>
+                      <value> <string>1013.42930.28344.22254</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -580,7 +580,7 @@ prepareData()\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1700840040.49</float>
+                              <float>1704461947.15</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
