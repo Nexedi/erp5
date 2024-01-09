@@ -3,6 +3,7 @@ from DateTime import DateTime
 line_dict_list = context.PaySheetTransaction_getLineListAsDict()
 non_subject_amount = 'base_amount/payroll/report_section/l10n/fr/amount_non_subject_to_contribution'
 gross_category = 'base_amount/payroll/report/salary/gross'
+net_social = 'base_amount/payroll/report/salary/net_social'
 contribution_relief = 'base_amount/payroll/report_section/l10n/fr/contribution_relief'
 income_tax = 'base_amount/payroll/report_section/l10n/fr/income_tax'
 csg_crds_taxable_to_income_tax = 'base_amount/payroll/report_section/l10n/fr/csg_crds_taxable_to_income_tax'
@@ -191,6 +192,8 @@ if len(non_contribution_dict_list):
 
 gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/%s"%gross_category)
 
+net_social = context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/%s"%net_social)
+
 # Set contribution_share to 'True' so it will return all movement with 0 contribution share
 
 total_pay_by_employer = context.PaySheetTransaction_getMovementTotalPriceFromCategory(
@@ -219,12 +222,14 @@ if DateTime('2018/01/01') <= start_date <= DateTime('2018/09/30'):
 elif start_date >= DateTime('2018/10/01'):
   amount_of_remuneration_evolution = gross_salary * 0.0315 - csg_base * 0.017
 
+net_social = net_social + gross_salary + contribution_employee_total_price
 return {
   "contribution_dict_list": contribution_dict_list,
   "non_contribution_dict_list": non_contribution_dict_list,
   "gross_salary": gross_salary,
   "net_salary_before_income_tax": net_salary_before_income_tax,
   "net_salary": net_salary,
+  "net_social": net_social,
   "currency": currency,
   "amount_of_remuneration_evolution": amount_of_remuneration_evolution,
   "income_tax_dict": income_tax_dict,
