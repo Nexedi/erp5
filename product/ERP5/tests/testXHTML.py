@@ -30,6 +30,8 @@
 import cgi
 import unittest
 import os
+import logging
+import time
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
@@ -40,7 +42,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole, findContentChain
 from Products.CMFCore.utils import getToolByName
-from zLOG import LOG
 # You can invoke same tests in your favourite collection of business templates
 # by using TestXHTMLMixin like the following :
 #
@@ -461,6 +462,7 @@ class NuValidator(object):
     self.name = 'nu'
     self.validator_url = validator_url
     self.validator_session = requests.Session()
+    self.logger = logging.getLogger('NuValidator')
     # retries HTTP 502 errors which sometimes happen with validator.erp5.net
     self.validator_session.mount(
         self.validator_url,
@@ -507,14 +509,23 @@ class NuValidator(object):
 
   def getErrorAndWarningList(self, page_source):
     '''
-      retrun two list : a list of errors and an other for warnings
+      returns two list : a list of errors and an other for warnings
     '''
-    response = self.validator_session.post(self.validator_url,
+    for retry in range(3):
+      try:
+        response = self.validator_session.post(self.validator_url,
                              data=page_source.encode('UTF-8'),
                              params={'out': 'json'},
                              headers={
                                'Content-Type': 'text/html; charset=UTF-8'
                              })
+      except requests.exceptions.ConnectionError:
+        if retry == 2:
+          raise
+        self.logger.exception('Got ConnectionError, retrying')
+        time.sleep(1)
+      else:
+        break
     return self._parse_validation_results(response)
 
 
