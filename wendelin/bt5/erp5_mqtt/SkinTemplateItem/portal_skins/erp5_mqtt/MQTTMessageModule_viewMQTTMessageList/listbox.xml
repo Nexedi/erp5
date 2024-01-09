@@ -10,8 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>portal_type</string>
-                <string>selection_name</string>
+                <string>columns</string>
                 <string>title</string>
               </list>
             </value>
@@ -66,6 +65,25 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
@@ -83,10 +101,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>mqtt_message_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
