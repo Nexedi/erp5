@@ -30,6 +30,7 @@ Data Supply | Data Supply Line
 Data Transformation Module | Data Transformation
 Data Transformation | Data Transformation Operation Line
 Data Transformation | Data Transformation Resource Line
+Device Configuration Module | Device Configuration
 Device Configuration Type | Action Information
 Device Configuration Type | Role Information
 Ingestion Policy Tool | Ingestion Policy

@@ -22,6 +22,8 @@ Data Transformation Operation Line | Aggregated
 Data Transformation Resource Line | Aggregated
 Device Configuration Type | TextDocument
 Device Configuration Type | Url
+Device Configuration | TextDocument
+Device Configuration | Url
 Ingestion Policy | IngestionPolicy
 Ingestion Policy | Reference
 Ingestion Policy | Version

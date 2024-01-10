@@ -72,6 +72,7 @@ Device Configuration Type | role_view
 Device Configuration Type | translation_view
 Device Configuration Type | update_local_roles
 Device Configuration Type | view
+Device Configuration | view
 Ingestion Policy Tool | add_ingestion_policy
 Ingestion Policy Tool | view
 Ingestion Policy | view
