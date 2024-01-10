@@ -57,6 +57,10 @@
  <portal_type id="Data Transformation Resource Line">
   <item>Aggregated</item>
  </portal_type>
+ <portal_type id="Device Configuration">
+  <item>TextDocument</item>
+  <item>Url</item>
+ </portal_type>
  <portal_type id="Device Configuration Type">
   <item>TextDocument</item>
   <item>Url</item>
