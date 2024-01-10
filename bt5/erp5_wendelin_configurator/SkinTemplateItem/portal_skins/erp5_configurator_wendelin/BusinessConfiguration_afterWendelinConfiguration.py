@@ -9,7 +9,10 @@ portal = context.getPortalObject()
 default_site_preference = getattr(portal.portal_preferences,
                         'default_site_preference', None)
 if default_site_preference is not None:
+  # enable default gadget UI
   default_site_preference.setPreferredHtmlStyleAccessTab(True)
+  # set code mirror as default source code editor
+  default_site_preference.setPreferredSourceCodeEditor("codemirror")
   if default_site_preference.getPreferenceState() == "disabled":
     default_site_preference.enable()
 
