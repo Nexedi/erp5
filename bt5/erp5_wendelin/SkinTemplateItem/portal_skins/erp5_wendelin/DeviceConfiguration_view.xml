@@ -17,6 +17,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -104,7 +108,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>MedaEventDataDescriptor_view</string> </value>
+            <value> <string>DeviceConfiguration_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -120,7 +124,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Meda Event Data Descriptor</string> </value>
+            <value> <string>Device Configuration</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
