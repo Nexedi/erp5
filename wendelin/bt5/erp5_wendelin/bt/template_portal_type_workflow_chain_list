@@ -44,6 +44,8 @@ Data Supply | data_supply_validation_workflow
 Data Supply | edit_workflow
 Data Transformation | edit_workflow
 Data Transformation | validation_workflow
+Device Configuration | edit_workflow
+Device Configuration | validation_workflow
 Ingestion Policy | edit_workflow
 Ingestion Policy | validation_workflow
 Progress Indicator | edit_workflow

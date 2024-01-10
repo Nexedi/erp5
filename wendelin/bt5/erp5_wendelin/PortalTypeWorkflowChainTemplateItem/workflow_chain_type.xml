@@ -96,6 +96,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Device Configuration</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Ingestion Policy</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

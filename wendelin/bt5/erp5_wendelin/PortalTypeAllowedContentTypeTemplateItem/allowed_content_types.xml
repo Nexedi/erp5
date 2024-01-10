@@ -83,6 +83,9 @@
  <portal_type id="Data Transformation Module">
   <item>Data Transformation</item>
  </portal_type>
+ <portal_type id="Device Configuration Module">
+  <item>Device Configuration</item>
+ </portal_type>
  <portal_type id="Device Configuration Type">
   <item>Action Information</item>
   <item>Role Information</item>
