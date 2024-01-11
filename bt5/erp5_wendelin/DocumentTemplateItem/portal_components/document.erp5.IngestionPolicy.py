@@ -28,25 +28,25 @@ from zExceptions import BadRequest, NotFound
 class IngestionPolicy(Folder):
   """
   A policy for ingesting raw (usually) data inside ERP5.
-  Every Sensor, Data Acquisition Unit or Data Aggregation Unit will be 
+  Every Sensor, Data Acquisition Unit or Data Aggregation Unit will be
   configured to access a different policy.
-  Each policy will have a python script which based on input data will find 
-  respective Data Supply which itself contains all required information for 
+  Each policy will have a python script which based on input data will find
+  respective Data Supply which itself contains all required information for
   later ingestion and analytics.
   """
-  
+
   meta_type = 'ERP5 Ingestion Policy'
   portal_type = 'Ingestion Policy'
-  
+
   # Declarative security
   security = ClassSecurityInfo()
-  
+
   def unpack(self, data):
     """
-      Unpack data coming from fluentd. Handly alias.
+      Unpack data coming from fluentd. Handy alias.
     """
     return self.portal_ingestion_policies.unpack(data)
-  
+
   security.declarePublic('ingest')
   def ingest(self, **kw):
     """
@@ -65,23 +65,23 @@ class IngestionPolicy(Folder):
         self.REQUEST.form['data_chunk'] = self.REQUEST._file.read()
     finally:
       environ['REQUEST_METHOD'] = method
-      
+
     tag_parsing_script_id = self.getScriptId()
-    
+
     if tag_parsing_script_id is None:
       raise NotFound('No tag parsing script found.')
 
     tag_parsing_script = getattr(self, tag_parsing_script_id, None)
     if tag_parsing_script is None:
       raise NotFound('No tag parsing script found.')
-      
+
     # XXX Compatibility with old ingestion. Must be dropped before merging
     # with wendelin master
     if tag_parsing_script_id == "ERP5Site_handleDefaultFluentdIngestion":
       return tag_parsing_script(**kw)
-    
+
     reference = self.REQUEST.get('reference')
-    data_chunk = self.REQUEST.get('data_chunk')  
+    data_chunk = self.REQUEST.get('data_chunk')
 
     # the script parses the fluentd tag (reference) and returns a dictionary
     # which describes the ingestion movement. Then we use this dictionary to
@@ -104,7 +104,7 @@ class IngestionPolicy(Folder):
     data_operation_script = getattr(self, data_operation_script_id, None)
     if data_operation_script is None:
       raise NotFound('No data operation script found.')
-    
+
     ingestion_operation, parameter_dict = data_operation_script(movement_dict,\
                                                                 reference)
 
@@ -114,9 +114,9 @@ class IngestionPolicy(Folder):
     ingestion_script_id = ingestion_operation.getScriptId()
     if ingestion_script_id is None:
       raise NotFound('No ingestion operation script id defined.')
-    
+
     ingestion_script = getattr(self, ingestion_script_id, None)
     if ingestion_script is None:
       raise NotFound('No such ingestion script found: %s' %ingestion_script_id)
-    
+
     ingestion_script(data_chunk=data_chunk, **parameter_dict)
