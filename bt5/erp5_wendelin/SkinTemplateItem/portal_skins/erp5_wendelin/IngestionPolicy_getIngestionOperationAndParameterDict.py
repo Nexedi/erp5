@@ -84,7 +84,7 @@ def init_input_line(input_line, operation_line):
         if data_sink is None:
           data_sink = portal.getDefaultModule(data_sink_type).newContent(
             portal_type = data_sink_type,
-            reference = "%s-%s" %(data_ingestion_reference, resource_reference))
+            reference = "%s.%s" %(data_ingestion_reference, resource_reference))
           data_sink.validate()
         data_sink_list.append(data_sink)
 
