@@ -1356,7 +1356,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         try:
           portal_activities = self.portal.portal_activities
           message_list = portal_activities.getMessageList()
-        except StandardError: # AttributeError, TransactionFailedError ...
+        except Exception: # AttributeError, TransactionFailedError ...
           pass
         else:
           for m in message_list:

@@ -80,6 +80,9 @@ add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
              dict=dict, list=list)
 if "set" not in safe_builtins: # BBB
     add_builtins(set=set, frozenset=frozenset, slice=slice)
+if "bytes" not in safe_builtins: # BBB Zope2
+    assert six.PY2
+    add_builtins(bytes=str)
 
 add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              property=property, staticmethod=staticmethod,

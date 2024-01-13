@@ -33,6 +33,7 @@ from random import randint
 import sys
 import threading
 import traceback
+import unittest
 import six
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
@@ -47,6 +48,9 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
+
+if six.PY3:
+  long = int  # pylint:disable=redefined-builtin
 
 def format_stack(thread=None):
   frame_dict = sys._current_frames()
@@ -588,7 +592,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uid_dict = {}
     for _ in xrange(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
-      self.assertTrue(isinstance(uid, long))
+      self.assertIsInstance(uid, long)
       self.assertNotIn(uid, uid_dict)
       uid_dict[uid] = None
 
@@ -1647,6 +1651,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',**catalog_kw)])
 
   def test_54_FixIntUid(self):
+    if six.PY3:
+      return unittest.skipTest(
+        "Python3 does not have different types for int and long")
     portal = self.getPortal()
 
     module = portal.getDefaultModule('Organisation')
