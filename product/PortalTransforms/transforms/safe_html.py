@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from six import unichr
 from zLOG import ERROR
-from six.moves.html_parser import HTMLParser, HTMLParseError
+from six.moves.html_parser import HTMLParser
 import re
 from Products.PythonScripts.standard import html_quote
 import codecs
@@ -16,6 +16,11 @@ from lxml import etree
 from lxml.etree import HTMLParser as LHTMLParser
 from lxml.html import tostring
 import six
+
+if six.PY2:
+  from six.moves.html_parser import HTMLParseError
+else:
+  HTMLParseError = AssertionError
 
 try:
   from lxml.html.soupparser import fromstring as soupfromstring
@@ -365,7 +370,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
     # As suggested by python developpers:
     # "Python 3.0 implicitly rejects non-unicode strings"
     # We try to decode strings against provided codec first
-    if isinstance(html, str):
+    if isinstance(html, bytes):
       try:
         html = html.decode(default_encoding)
       except UnicodeDecodeError:
