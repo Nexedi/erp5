@@ -475,6 +475,7 @@ class DebugTestResult:
 
   def _start_debugger(self, tb):
     try:
+      raise ImportError()
       # try ipython if available
       import IPython
       try:
