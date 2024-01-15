@@ -162,7 +162,7 @@ class Test(ERP5TypeTestCase):
     real_data = '\n'.join(number_string_list)
 
     data_stream = portal.data_stream_module.newContent(
-                    portal_type = 'Data Stream',f
+                    portal_type = 'Data Stream',
                     reference = reference)
     data_stream.appendData(real_data)
     data_stream.validate()
