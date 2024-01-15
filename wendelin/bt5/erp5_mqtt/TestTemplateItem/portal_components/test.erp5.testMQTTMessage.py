@@ -106,8 +106,18 @@ class TestDataIngestion(ERP5TypeTestCase):
     self.assertEqual(mqtt_message.getTitle(), topic)
     self.assertEqual(mqtt_message.getPayload(), str(payload))
 
+  def test_01_DefaultWendelinConfigurationExistency(self):
+    """
+      Test that nobody accidently removes needed by HowTo's default configurations.
+    """
+    # the default json ingestion is used in HowTo / Docs
+    self.assertNotEqual(None,
+           getattr(self.portal.portal_ingestion_policies, "default_mqtt", None))
 
-  def test_IngestionFromMQTT(self):
+    self.assertNotEqual(None,
+           getattr(self.portal.data_supply_module, "default_mqtt", None))
+
+  def test_02_IngestionFromMQTT(self):
     """
     Test ingestion using a POST Request containing a
     msgpack encoded message simulating input from MQTT.
@@ -123,7 +133,7 @@ class TestDataIngestion(ERP5TypeTestCase):
     self._assertIngestion(topic, payload)
 
 
-  def test_IngestionFromMQTTWithMultipleMessages(self):
+  def test_03_IngestionFromMQTTWithMultipleMessages(self):
     """
     Test ingestion using a POST Request containing a
     msgpack encoded messages simulating input from MQTT.
@@ -141,7 +151,7 @@ class TestDataIngestion(ERP5TypeTestCase):
     self._assertIngestion(topic, payload)
 
 
-  def test_IngestionWithInvalidPolicy(self):
+  def test_04_IngestionWithInvalidPolicy(self):
     """
     Test ingestion using an invalid ingestion policy.
     """
@@ -165,7 +175,7 @@ class TestDataIngestion(ERP5TypeTestCase):
     self.tic()
 
 
-  def test_IngestionWithInvalidDataSupply(self):
+  def test_05_IngestionWithInvalidDataSupply(self):
     """
     Test ingestion using an invalid data supply.
     """
@@ -189,7 +199,7 @@ class TestDataIngestion(ERP5TypeTestCase):
     self.tic()
 
 
-  def test_IngestionWithInvalidDataProduct(self):
+  def test_06_IngestionWithInvalidDataProduct(self):
     """
     Test ingestion using an invalid data product.
     """
@@ -212,7 +222,7 @@ class TestDataIngestion(ERP5TypeTestCase):
     self.assertEqual(500, response.getStatus())
     self.tic()
 
-  def test_MultipleIngestions(self):
+  def test_07_MultipleIngestions(self):
     """
     Test multiple data ingestion requests in succession.
     """
