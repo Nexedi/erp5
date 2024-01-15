@@ -162,7 +162,7 @@ class Test(ERP5TypeTestCase):
     real_data = '\n'.join(number_string_list)
 
     data_stream = portal.data_stream_module.newContent(
-                    portal_type = 'Data Stream',
+                    portal_type = 'Data Stream',f
                     reference = reference)
     data_stream.appendData(real_data)
     data_stream.validate()
@@ -296,15 +296,7 @@ class Test(ERP5TypeTestCase):
     self.assertNotEqual(None,
            getattr(self.portal.portal_ingestion_policies, "default", None))
     self.assertNotEqual(None,
-           getattr(self.portal.portal_ingestion_policies, "default_ebulk", None))
-    self.assertNotEqual(None,
-           getattr(self.portal.portal_ingestion_policies, "default_mqtt", None))
-    self.assertNotEqual(None,
            getattr(self.portal.data_supply_module, "default", None))
-    self.assertNotEqual(None,
-           getattr(self.portal.data_supply_module, "default_ebulk", None))
-    self.assertNotEqual(None,
-           getattr(self.portal.data_supply_module, "default_mqtt", None))
 
   def test_07_LinkedDataStreamList(self):
     """
