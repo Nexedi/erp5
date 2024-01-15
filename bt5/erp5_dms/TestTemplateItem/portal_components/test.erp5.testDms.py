@@ -3055,6 +3055,94 @@ class TestDocumentWithSecurity(TestDocumentMixin):
                     user_pref.getPreferredThumbnailImageHeight()),
                      image.getSizeFromImageDisplay('thumbnail'))
 
+  def test_mergeRevision(self):
+    document1 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002.doc'))
+    self.tic()
+    self.assertEqual(
+      (document1.getReference(), document1.getLanguage(), document1.getVersion()),
+      ('TEST', 'en', '002'))
+    self.assertNotIn('This document is modified', document1.asText())
+    document2 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002-modified.doc'))
+    self.tic()
+    self.assertIn('This document is modified', document2.asText())
+    self.assertEqual(
+      (document2.getReference(), document2.getLanguage(), document2.getVersion()),
+      ('TEST', 'en', '002'))
+
+    # document was updated in-place
+    self.assertEqual(document1.getRelativeUrl(), document2.getRelativeUrl())
+
+    document2.manage_addLocalRoles(self.username, ['Assignor'])
+    document2.share()
+    self.tic()
+
+    # once the document is shared, the user can no longer edit it and trying to upload
+    # the same reference causes an error.
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
+
+    # this also works with another user which can not see the document
+    another_user_id = self.id()
+    uf = self.portal.acl_users
+    uf._doAddUser(another_user_id, '', ['Author'], [])
+    newSecurityManager(None, uf.getUserById(another_user_id).__of__(uf))
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
+
+  def test_mergeRevision_with_node_reference_local_reference_filename_regular_expression(self):
+    # this filename regular expression comes from configurator
+    self.getDefaultSystemPreference().setPreferredDocumentFilenameRegularExpression(
+      "(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?"
+    )
+    self.tic()
+    document1 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+    self.tic()
+    self.assertEqual(
+      (document1.getReference(), document1.getLanguage(), document1.getVersion()),
+      ('P-PROJ-TEST', 'en', '002'))
+    self.assertNotIn('This document is modified', document1.asText())
+    document2 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002-modified.doc', as_name='P-PROJ-TEST-002-en.doc'))
+    self.tic()
+    self.assertIn('This document is modified', document2.asText())
+    self.assertEqual(
+      (document2.getReference(), document2.getLanguage(), document2.getVersion()),
+      ('P-PROJ-TEST', 'en', '002'))
+
+    # document was updated in-place
+    self.assertEqual(document1.getRelativeUrl(), document2.getRelativeUrl())
+
+    document2.manage_addLocalRoles(self.username, ['Assignor'])
+    document2.share()
+    self.tic()
+
+    # once the document is shared, the user can no longer edit it and trying to upload
+    # the same reference causes an error.
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(
+        file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+
+    # this also works with another user which can not see the document
+    another_user_id = self.id()
+    uf = self.portal.acl_users
+    uf._doAddUser(another_user_id, '', ['Author'], [])
+    newSecurityManager(None, uf.getUserById(another_user_id).__of__(uf))
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(
+        file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+
+
 class TestDocumentPerformance(TestDocumentMixin):
 
   def test_01_LargeOOoDocumentToImageConversion(self):
