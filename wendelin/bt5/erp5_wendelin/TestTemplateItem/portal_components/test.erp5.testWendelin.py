@@ -292,11 +292,19 @@ class Test(ERP5TypeTestCase):
     """
       Test that nobody accidently removes needed by HowTo's default configurations.
     """
-    # the default json ingestion is usde in HowTo / Docs
+    # the default json ingestion is used in HowTo / Docs
     self.assertNotEqual(None,
            getattr(self.portal.portal_ingestion_policies, "default", None))
     self.assertNotEqual(None,
+           getattr(self.portal.portal_ingestion_policies, "default_ebulk", None))
+    self.assertNotEqual(None,
+           getattr(self.portal.portal_ingestion_policies, "default_mqtt", None))
+    self.assertNotEqual(None,
            getattr(self.portal.data_supply_module, "default", None))
+    self.assertNotEqual(None,
+           getattr(self.portal.data_supply_module, "default_ebulk", None))
+    self.assertNotEqual(None,
+           getattr(self.portal.data_supply_module, "default_mqtt", None))
 
   def test_07_LinkedDataStreamList(self):
     """
