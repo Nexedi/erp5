@@ -1,3 +1,7 @@
+"""
+  Create Data Analyses objects based on Data Transformations.
+  Usually called periodically from respective ERP5 Alarm.
+"""
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import AndQuery, OrQuery, Query
 from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
@@ -36,6 +40,7 @@ for movement in portal_catalog(query = query):
   data_supply_list = delivery.getSpecialiseValueList(portal_type="Data Supply")
 
   composed_data_supply = data_supply.asComposedDocument()
+
   # Get applicable transformation
   transformation_list = []
   for transformation in composed_data_supply.getSpecialiseValueList(portal_type="Data Transformation"):
@@ -52,9 +57,7 @@ for movement in portal_catalog(query = query):
       transformation_list.append(transformation)
 
   for transformation in transformation_list:
-
     is_shared_data_analysis = False
-
     data_analysis_id= "%s-%s-%s" % (today, delivery.getId(), transformation.getId())
 
     # Check if analysis already exists
@@ -62,7 +65,7 @@ for movement in portal_catalog(query = query):
       portal_type="Data Analysis",
       specialise_relative_url = transformation.getRelativeUrl(),
       causality_relative_url = delivery.getRelativeUrl())
-    
+
     # search again with ID in case data_analysis is not indexed yet
     if data_analysis is None:
       try:
@@ -132,15 +135,15 @@ for movement in portal_catalog(query = query):
             portal_type="Data Ingestion Line",
             aggregate_relative_url=batch_relative_url,
             resource_relative_url = resource.getRelativeUrl())
-            
+
           for related_movement in related_movement_list:
             if "big_data/ingestion/batch" in related_movement.getUseList():
               related_movement.getParentValue().deliver()
-      
+
       # create new item based on item_type if it is not already aggregated
       aggregate_type_set = set(
         [portal.restrictedTraverse(a).getPortalType() for a in aggregate_set])
-      
+
       for item_type in transformation_line.getAggregatedPortalTypeList():
         # if item is not yet aggregated to this line, search it by related project
         # and source If the item is a data configuration or a device configuration
@@ -170,8 +173,8 @@ for movement in portal_catalog(query = query):
                 #validation_state="validated",
                 item_project_relative_url=delivery.getDestinationProject(),
                 item_source_relative_url=delivery.getSource())
-  
-          elif item_type != "Data Array Line":  
+
+          elif item_type != "Data Array Line":
             item_query_dict = dict(
               portal_type=item_type,
               validation_state="validated",
@@ -179,7 +182,6 @@ for movement in portal_catalog(query = query):
               item_device_relative_url=movement.getAggregateDevice(),
               item_resource_uid=resource.getUid(),
               item_source_relative_url=data_analysis.getSource())
-
 
             if data_analysis.getDestinationProjectValue() is not None:
               item_query_dict["item_project_relative_url"] = data_analysis.getDestinationProject()
@@ -217,7 +219,7 @@ for movement in portal_catalog(query = query):
         data_analysis_line.edit(
           causality_value = delivery,
           specialise_value_list = data_supply_list)
-    
+
     # fix consistency of line and all affected items. Do it after reindexing
     # activities of newly created Data Analysis Line finished, because check
     # consistency script might need to find the newly created Data Analysis
