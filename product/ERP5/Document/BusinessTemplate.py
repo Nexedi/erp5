@@ -5674,14 +5674,45 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return super(BusinessTemplate, self)._edit(*args, **edit_kw)
 
     def _isInKeepList(self, keep_list, path):
+      path_components = path.split('/')
+      path_components_len = len(path_components)
+
       for keep_path in keep_list:
-        if keep_path.endswith('**') and path.startswith(keep_path[:-2]):
+        include_all_subobjects = False
+
+        if keep_path.endswith('**'):
+          include_all_subobjects = True
+          keep_path = keep_path[:-2]
+
+        keep_path_components = keep_path.split('/')
+        keep_path_components_len = len(keep_path_components)
+
+        # Preliminary check: path should have the same number of components
+        # except when a wildcard is given
+        if keep_path_components_len != path_components_len:
+          if not include_all_subobjects:
+            continue
+          # In any case, matcher should not have more components than path
+          elif keep_path_components_len > path_components_len:
+            continue
+
+        path_equal = True
+        for (i, keep_path_component) in enumerate(keep_path_components):
+          # Should accept `test_abc` when component is `test_*` (component wildcard)
+          # but also `test_**` (global wildcard)
+          if keep_path_component.endswith('*') or (include_all_subobjects and i == keep_path_components_len - 1):
+            if not path_components[i].startswith(keep_path_component[:-1]):
+              path_equal = False
+              break
+          else:
+            # Strict equality check when no wildcard is given
+            if path_components[i] != keep_path_component:
+              path_equal = False
+              break
+
+        if path_equal:
           return True
-        elif keep_path.endswith('*') and path.startswith(keep_path[:-1])\
-            and len(keep_path.split('/')) == len(path.split('/')):
-          return True
-        elif path == keep_path:
-          return True
+
       return False
 
     security.declarePrivate('isKeepObject')
