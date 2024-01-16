@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_delivery_ratio</string> </value>
+            <value> <string>listbox_delivery_ratio</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

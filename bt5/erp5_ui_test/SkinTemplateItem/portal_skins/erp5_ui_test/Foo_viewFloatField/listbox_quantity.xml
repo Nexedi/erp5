@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_delivery_ratio</string> </value>
+            <value> <string>listbox_quantity</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -190,10 +190,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>autocomplete</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -235,15 +231,11 @@
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
-                    <value> <string>-12.3%</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_type</string> </key>
-                    <value> <string>text</string> </value>
+                    <value> <string>-1 234.5</string> </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -251,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Delivery Ratio</string> </value>
+                    <value> <string>Quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -271,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/precision | python: 1</string> </value>
+            <value> <string>request/precision | python: 2</string> </value>
         </item>
       </dictionary>
     </pickle>
