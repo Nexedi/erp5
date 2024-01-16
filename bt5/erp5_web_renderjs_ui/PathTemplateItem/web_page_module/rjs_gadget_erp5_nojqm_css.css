@@ -1631,6 +1631,9 @@ div.invisible_footer .document_table nav {
 /**********************************************
 * Radio field
 **********************************************/
+div[data-gadget-url$="gadget_erp5_field_radio.html"] {
+  display: inline-grid;
+}
 div[data-gadget-url$="gadget_erp5_field_radio.html"] label {
   display: inline;
 }
