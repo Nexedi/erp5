@@ -571,7 +571,7 @@
     </tr>
     <tr>
       <td>click</td>
-      <td tal:content="python: '//div[contains(@data-gadget-scope, \'m\')]//a[text()=\'%s\' and contains(@href, \'#!\')]' % click_configuration['text']"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-scope, \'m\')]//a[contains(text(), \'%s\') and contains(@href, \'#!\')]' % click_configuration['text']"></td>
       <td></td>
     </tr>
     <tr>
