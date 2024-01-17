@@ -1,6 +1,6 @@
 """
   This script creates a Business Configuration as if user selected it during configuration process.
-  In case of Wendelin 
+  In case of Wendelin:
   configuration_save_url = business_configuration_module/default_wendelin_configuration/1
 """
 configuration_save = context.restrictedTraverse(configuration_save_url)
@@ -39,7 +39,9 @@ bt5_installation_list = ('erp5_full_text_mroonga_catalog',
                          # data lake
                          'erp5_wendelin_data_lake_ingestion',
                          'erp5_wendelin_data_lake_ingestion_default_security_model',
-                         'erp5_wendelin_data_lake_ui'
+                         'erp5_wendelin_data_lake_ui',
+                         'erp5_wendelin_category',
+                         'erp5_mqtt'
                         )
 
 bt5_update_catalog = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_wendelin',)
