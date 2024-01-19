@@ -19,4 +19,3 @@ for line in context.objectValues(portal_type="Data Analysis Line"):
 if context.getRefreshState() != "refresh_started":
   context.startRefresh()
 context.activate(serialization_tag=str(context.getUid())).DataAnalysis_executeDataOperation()
-
