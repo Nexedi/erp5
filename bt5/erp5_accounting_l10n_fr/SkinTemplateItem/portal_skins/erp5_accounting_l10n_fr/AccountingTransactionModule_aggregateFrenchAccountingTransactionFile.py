@@ -21,7 +21,9 @@ if test_compta_demat_compatibility:
   # https://github.com/DGFiP/Test-Compta-Demat/issues/39
   fec_file = unicodedata.normalize(
     'NFKD', fec_file.replace(u"€", "EUR")
-  ).encode('ascii', 'ignore')
+  ).encode(
+    'ascii', 'ignore'
+  ).decode('ascii')
 
 zipbuffer = BytesIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')
