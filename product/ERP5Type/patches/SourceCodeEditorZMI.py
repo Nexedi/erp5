@@ -2,6 +2,7 @@ from App.Management import Navigation
 from ZODB.POSException import ConflictError
 from Acquisition import aq_parent
 import json
+import six
 
 def manage_page_footer(self):
   default = '</body></html>'
@@ -102,13 +103,16 @@ def manage_page_footer(self):
                                                      keymap=keymap,
                                                      portal_type=portal_type))
   elif editor == 'monaco' and getattr(portal, 'monaco_editor_support', None) is not None:
+    monaco_editor_support = portal.monaco_editor_support(
+      textarea_selector=textarea_selector,
+      portal_url=portal_url,
+      bound_names=bound_names,
+      mode=mode)
+    if six.PY2:
+      monaco_editor_support = monaco_editor_support.encode('utf-8')
     return '''%s
               </body>
-            </html>''' % (portal.monaco_editor_support(
-                              textarea_selector=textarea_selector,
-                              portal_url=portal_url,
-                              bound_names=bound_names,
-                              mode=mode).encode('utf-8'))
+            </html>''' % monaco_editor_support
   elif editor in (None, 'text_area') and mode == 'python':
     # Set Zope4's default ace editor indent size to 2.
     return '''<script type="text/javascript">$(function(){if(typeof ace == "object"){ace.config.$defaultOptions.session.tabSize.initialValue = 2;} if(typeof editor == "object"){editor.getSession().setTabSize(2);}})</script>'''
