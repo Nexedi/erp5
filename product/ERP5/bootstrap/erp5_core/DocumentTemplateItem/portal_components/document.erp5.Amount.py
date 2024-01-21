@@ -334,19 +334,6 @@ class Amount(Base, VariatedMixin):
                     (property_id, property_value, self.getRelativeUrl()))
           raise
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                 'getQuantityUnitRangeItemList')
-  def getQuantityUnitRangeItemList(self, base_category_list=()):
-    resource = self.getDefaultResourceValue()
-    if resource is not None:
-      result = resource.getQuantityUnitList()
-    else:
-      result = ()
-    if result is ():
-      return self.portal_categories.quantity_unit.getFormItemList()
-    else:
-      return result
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getResourceDefaultQuantityUnit')
   def getResourceDefaultQuantityUnit(self):
     """
