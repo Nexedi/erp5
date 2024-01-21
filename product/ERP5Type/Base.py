@@ -2605,7 +2605,10 @@ class Base(
       This returns the translated portal_type
     """
     localizer = self.getPortalObject().Localizer
-    return localizer.erp5_ui.gettext(self.portal_type).encode('utf8')
+    translated_portal_type = localizer.erp5_ui.gettext(self.portal_type)
+    if six.PY2:
+      translated_portal_type = translated_portal_type.encode('utf8')
+    return translated_portal_type
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMetaType')
   def getMetaType(self):
