@@ -320,7 +320,7 @@ class Matrix(object):
       cell_range = aq_base(self).index[base_id]
     except (AttributeError, KeyError):
       return []
-    return [x.keys() for _, x in sorted(six.iteritems(cell_range))]
+    return [ensure_list(x.keys()) for _, x in sorted(six.iteritems(cell_range))]
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
   def newCell(self, *kw, **kwd):
@@ -449,7 +449,7 @@ class Matrix(object):
     """
     if getattr(aq_base(self), 'index', None) is None:
       return ()
-    return self.index.keys()
+    return ensure_list(self.index.keys())
 
   security.declareProtected( Permissions.ModifyPortalContent, 'delMatrix' )
   def delMatrix(self, base_id = 'cell'):
