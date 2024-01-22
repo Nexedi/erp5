@@ -33,6 +33,7 @@ MAIN FILE: generate book in different output formats
 # display_svg                           format for svg images (svg, png*)
 
 import re
+import six
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
@@ -83,8 +84,7 @@ book_version = html_quote(override_document_version) if override_document_versio
 book_description = html_quote(override_document_description) if override_document_description else book.getDescription()
 book_title = html_quote(override_document_title) if override_document_title else book.getTitle()
 
-# unicode
-if isinstance(book_content, unicode):
+if six.PY2 and isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
 
 # backcompat
@@ -197,7 +197,9 @@ if book_include_reference_table:
   #else:
   #  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
   book_references = book.Base_unescape(book_references)
-  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
+  if six.PY2:
+    book_references = book_references.encode('utf-8')
+  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.strip())
 else:
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
 
@@ -209,7 +211,7 @@ if book_include_content_table:
     book_table_of_content = book.WebPage_createBookXslTableOfContent(
       book_toc_title=book_translated_toc_title,
       margin_15mm = margin_15mm
-    ).encode('UTF-8').strip()
+    ).strip()
   elif book_format == "html":
     book_content, book_table_of_content = book.WebPage_createTableOfContent(
       doc_content=book_content,
@@ -357,22 +359,22 @@ elif book_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  header_embedded_html_data = book.Base_convertHtmlToSingleFile(book_head, allow_script=True)
+  header_embedded_html_data = book.Base_convertHtmlToSingleFile(book_head, allow_script=True).encode('utf-8')
   before_toc_data_list = [
-    b64encode(book.Base_convertHtmlToSingleFile(book_cover, allow_script=True)),
+    b64encode(book.Base_convertHtmlToSingleFile(book_cover, allow_script=True).encode('utf-8')).decode(),
   ]
   after_toc_data_list = []
   if book_include_history_table:
     before_toc_data_list.append(
-      b64encode(book.Base_convertHtmlToSingleFile(book_history, allow_script=True))
+      b64encode(book.Base_convertHtmlToSingleFile(book_history, allow_script=True).encode('utf-8')).decode()
     )
   #if book_include_reference_table:
   #  after_toc_data_list.append(
-  #    b64encode(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))
+  #    b64encode(book.Base_convertHtmlToSingleFile(book_references, allow_script=True).encode('utf-8')).decode()
   #  )
-  xsl_style_sheet_data = book_table_of_content
-  embedded_html_data = book.Base_convertHtmlToSingleFile(book_content, allow_script=True)
-  footer_embedded_html_data = book.Base_convertHtmlToSingleFile(book_foot, allow_script=True)
+  xsl_style_sheet_data = book_table_of_content.encode('utf-8')
+  embedded_html_data = book.Base_convertHtmlToSingleFile(book_content, allow_script=True).encode('utf-8')
+  footer_embedded_html_data = book.Base_convertHtmlToSingleFile(book_foot, allow_script=True).encode('utf-8')
   if margin_15mm:
     margin_top = 50
     margin_bottom = 25
@@ -385,11 +387,11 @@ elif book_format == "pdf":
     margin_bottom=margin_bottom,
     toc=True if book_include_content_table else False,
     before_toc_data_list=before_toc_data_list,
-    xsl_style_sheet_data=b64encode(xsl_style_sheet_data),
+    xsl_style_sheet_data=b64encode(xsl_style_sheet_data).decode(),
     after_toc_data_list=after_toc_data_list,
-    header_html_data=b64encode(header_embedded_html_data),
+    header_html_data=b64encode(header_embedded_html_data).decode(),
     header_spacing=10,
-    footer_html_data=b64encode(footer_embedded_html_data),
+    footer_html_data=b64encode(footer_embedded_html_data).decode(),
     footer_spacing=3,
     )
   )
