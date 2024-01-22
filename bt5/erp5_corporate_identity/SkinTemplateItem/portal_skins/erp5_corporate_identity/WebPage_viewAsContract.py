@@ -1,8 +1,9 @@
 import re
+import six
 
 from base64 import b64encode
 
-blank = ''
+blank = b''
 pref = context.getPortalObject().portal_preferences
 
 contract_format = kw.get('format') or 'html'
@@ -35,7 +36,7 @@ contract_version = context.getVersion() or "001"
 contract_description = context.getDescription()
 contract_title = context.getTitle()
 
-if isinstance(contract_content, unicode):
+if six.PY2 and isinstance(contract_content, unicode):
   contract_content = contract_content.encode("UTF-8")
 
 contract_history_section_list = re.findall('<section.+?>.+?</section>', contract_content, re.S)
@@ -289,22 +290,22 @@ elif contract_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  header_embedded_html_data = context.Base_convertHtmlToSingleFile(contract_head, allow_script=True)
+  header_embedded_html_data = context.Base_convertHtmlToSingleFile(contract_head, allow_script=True).encode('utf-8')
   before_toc_data_list = [
-    b64encode(context.Base_convertHtmlToSingleFile(contract_cover, allow_script=True)),
+    b64encode(context.Base_convertHtmlToSingleFile(contract_cover, allow_script=True).encode('utf-8')).decode(),
   ]
   after_toc_data_list = []
   if contract_include_history_table:
     before_toc_data_list.append(
-      b64encode(context.Base_convertHtmlToSingleFile(contract_history, allow_script=True))
+      b64encode(context.Base_convertHtmlToSingleFile(contract_history, allow_script=True).encode('utf-8')).decode()
     )
   #if contract_include_reference_table:
   #  after_toc_data_list.append(
-  #    b64encode(context.Base_convertHtmlToSingleFile(contract_references, allow_script=True))
+  #    b64encode(context.Base_convertHtmlToSingleFile(contract_references, allow_script=True)).decode()
   #  )
   xsl_style_sheet_data = contract_table_of_content
-  embedded_html_data = context.Base_convertHtmlToSingleFile(contract_content, allow_script=True)
-  footer_embedded_html_data = context.Base_convertHtmlToSingleFile(contract_foot, allow_script=True)
+  embedded_html_data = context.Base_convertHtmlToSingleFile(contract_content, allow_script=True).encode('utf-8')
+  footer_embedded_html_data = context.Base_convertHtmlToSingleFile(contract_foot, allow_script=True).encode('utf-8')
   margin_top = 40
   margin_bottom = 20
   pdf_file = context.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
@@ -313,11 +314,11 @@ elif contract_format == "pdf":
     margin_bottom=margin_bottom,
     toc=True if contract_include_content_table else False,
     before_toc_data_list=before_toc_data_list,
-    xsl_style_sheet_data=b64encode(xsl_style_sheet_data),
+    xsl_style_sheet_data=b64encode(xsl_style_sheet_data).decode(),
     after_toc_data_list=after_toc_data_list,
-    header_html_data=b64encode(header_embedded_html_data),
+    header_html_data=b64encode(header_embedded_html_data).decode(),
     header_spacing=10,
-    footer_html_data=b64encode(footer_embedded_html_data),
+    footer_html_data=b64encode(footer_embedded_html_data).decode(),
     footer_spacing=3,
     )
   )

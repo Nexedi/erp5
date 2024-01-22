@@ -11,6 +11,8 @@ Try to convert old OpenOffice presentations into slideshows
 # ------------------------------------------------------------------------------
 
 import re
+from io import BytesIO
+from zipfile import ZipFile
 
 blank = ''
 flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
@@ -18,8 +20,21 @@ flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
 def getHeaderSlideTitle(my_doc):
   return '<h1>' + my_doc.getTitle() + '</h1>'
 
-def getSlideList(content):
-  return re.findall(r'<html>(.*?)</html>', content, flags=flags)
+def getSlideList(zip_content):
+  slide_list = []
+  with ZipFile(BytesIO(zip_content)) as zf:
+    for name in sorted(
+        zf.namelist(),
+        # iterate in order: 'tmpczlzod7e.impr.html', 'img1.html', 'text1.html', 'img2.html', 'text2.html'
+        key=lambda name: (
+          not name.endswith('impr.html'),
+          'img' not in name,
+          name.replace('img', '').replace('text', ''))):
+      if name.endswith('.html'):
+        slide_list.extend(
+          re.findall(r'<html>(.*?)</html>', zf.read(name).decode('utf-8'), flags=flags)
+        )
+  return slide_list
 
 def getKey(item):
   return int(item[0])
@@ -42,6 +57,8 @@ if context.getPortalType() in ["Presentation"]:
   # get a list of slides
   content = getSlideList(raw_data)
 
+  # ( comment below might be obsolete, this was before fixing a bug that we iterated
+  #   directly in the binary data from .zip raw content, which was somehow OK on python2 )
   # every slide is in the raw_data twice, once with the title and image as text,
   # once with the slidecontent without title. All slides are mixed randomly, so
   # we need to find out which slide contains what and then put them in their

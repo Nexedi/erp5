@@ -420,25 +420,25 @@ if doc_format == "pdf" or doc_format == "mhtml":
   )
 
   # ================ encode and build cloudoo elements =========================
-  footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True)
-  #embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
+  footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True).encode('utf-8')
+  #embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True).encode('utf-8')
+  cover = doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True).encode('utf-8')
   before_body_data_list = [
-    b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)),
+    b64encode(cover).decode(),
   ]
   if doc_format == "mhtml":
     context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
     return doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
   if doc_display_notes:
     #after_body_data_list = [
-    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)),
+    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True).encode('utf-8')).decode(),
     #]
-    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)
+    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True).encode('utf-8')
     after_body_data_list = []
   else:
-    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
+    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True).encode('utf-8')
     after_body_data_list = []
     #after_body_data_list = []
-
   pdf_file = doc.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
       orientation= "portrait" if doc_display_notes else "landscape",
@@ -447,7 +447,7 @@ if doc_format == "pdf" or doc_format == "mhtml":
       before_body_data_list=before_body_data_list,
       after_body_data_list=after_body_data_list,
       header_spacing=10,
-      footer_html_data=b64encode(footer_embedded_html_data),
+      footer_html_data=b64encode(footer_embedded_html_data).decode(),
       footer_spacing=3
     )
   )
