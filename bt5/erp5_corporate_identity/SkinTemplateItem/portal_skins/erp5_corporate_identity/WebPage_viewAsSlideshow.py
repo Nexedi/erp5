@@ -24,11 +24,12 @@ MAIN FILE: generate presentation in different output formats
 # remote_content:           convert legacy odp, sxi formats (not active)
 
 import re
+import six
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
-blank = ''
+blank = b''
 flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
 details_separator = '</section><section class="ci-notes-continue"><section><h1>cont.</h1></section>'
 pref = context.getPortalObject().portal_preferences
@@ -422,15 +423,16 @@ if doc_format == "pdf" or doc_format == "mhtml":
   # ================ encode and build cloudoo elements =========================
   footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True)
   #embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
+  cover = doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
   before_body_data_list = [
-    b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)),
+    b64encode(cover).decode(),
   ]
   if doc_format == "mhtml":
     context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
     return doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
   if doc_display_notes:
     #after_body_data_list = [
-    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)),
+    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)).decode(),
     #]
     embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)
     after_body_data_list = []
@@ -438,7 +440,6 @@ if doc_format == "pdf" or doc_format == "mhtml":
     embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
     after_body_data_list = []
     #after_body_data_list = []
-
   pdf_file = doc.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
       orientation= "portrait" if doc_display_notes else "landscape",
@@ -447,7 +448,7 @@ if doc_format == "pdf" or doc_format == "mhtml":
       before_body_data_list=before_body_data_list,
       after_body_data_list=after_body_data_list,
       header_spacing=10,
-      footer_html_data=b64encode(footer_embedded_html_data),
+      footer_html_data=b64encode(footer_embedded_html_data).decode(),
       footer_spacing=3
     )
   )
