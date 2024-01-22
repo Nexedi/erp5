@@ -832,16 +832,19 @@ class ObjectTemplateItem(BaseTemplateItem):
             obj = obj._getCopy(context)
             data = getattr(aq_base(obj), record_id, None)
             if unicode_data:
-              if not (six.PY2 and isinstance(data, six.text_type)):
+              if not isinstance(data, six.text_type):
                 break
               try:
                 data = data.encode(aq_base(obj).output_encoding)
               except (AttributeError, UnicodeEncodeError):
                 break
             elif type(data) is not bytes:
-              if not isinstance(data, Pdata):
+              if isinstance(data, str):
+                data = data.encode()
+              elif not isinstance(data, Pdata):
                 break
-              data = bytes(data)
+              else:
+                data = bytes(data)
             try:
               # Delete this attribute from the object.
               # in case the related Portal Type does not exist, the object may be broken.
