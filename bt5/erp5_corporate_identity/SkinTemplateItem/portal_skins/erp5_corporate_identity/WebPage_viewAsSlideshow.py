@@ -422,15 +422,18 @@ if doc_format == "pdf" or doc_format == "mhtml":
   # ================ encode and build cloudoo elements =========================
   footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True)
   #embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
+  cover = doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
+  if six.PY3:
+    cover = cover.encode()
   before_body_data_list = [
-    b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)),
+    b64encode(cover).decode(),
   ]
   if doc_format == "mhtml":
     context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
     return doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
   if doc_display_notes:
     #after_body_data_list = [
-    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)),
+    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)).decode(),
     #]
     embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)
     after_body_data_list = []
@@ -447,7 +450,7 @@ if doc_format == "pdf" or doc_format == "mhtml":
       before_body_data_list=before_body_data_list,
       after_body_data_list=after_body_data_list,
       header_spacing=10,
-      footer_html_data=b64encode(footer_embedded_html_data),
+      footer_html_data=b64encode(footer_embedded_html_data).decode(),
       footer_spacing=3
     )
   )

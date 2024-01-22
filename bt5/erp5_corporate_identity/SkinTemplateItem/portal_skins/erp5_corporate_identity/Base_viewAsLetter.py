@@ -266,8 +266,8 @@ if letter_format == "pdf":
       margin_left=0,
       margin_right=0,
       header_spacing=1,
-      header_html_data=b64encode(header_embedded_html_data),
-      footer_html_data=b64encode(footer_embedded_html_data),
+      header_html_data=b64encode(header_embedded_html_data).decode(),
+      footer_html_data=b64encode(footer_embedded_html_data).decode(),
     )
   )
 
