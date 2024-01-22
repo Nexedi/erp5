@@ -269,10 +269,10 @@ if doc_format == "pdf":
     margin_bottom=20,
     toc=False,
     before_toc_data_list=before_toc_data_list,
-    xsl_style_sheet_data=b64encode(xsl_style_sheet_data),
-    header_html_data=b64encode(header_embedded_html_data),
+    xsl_style_sheet_data=b64encode(xsl_style_sheet_data).decode(),
+    header_html_data=b64encode(header_embedded_html_data).decode(),
     header_spacing=10,
-    footer_html_data=b64encode(footer_embedded_html_data),
+    footer_html_data=b64encode(footer_embedded_html_data).decode(),
     footer_spacing=3,
   )
   default_conversion_kw.update(conversion_dict)
