@@ -456,7 +456,7 @@ class Field:
           return obj.method_name
         elif obj_type is TALESField.TALESMethod:
           return obj._text
-        elif obj_type is six.text_type:
+        elif six.PY2 and obj_type is six.text_type:
           return obj.encode('utf-8')
         return str(obj)
       return ' '.join(map(getSearchSource,
