@@ -211,7 +211,7 @@ class Git(WorkingCopy):
     diff_dict = {}
     if out:
       out = iter(out.split('\ndiff --git '))
-      for stat in out.next().splitlines():
+      for stat in next(out).splitlines():
         stat, path = stat.split()[4:]
         stat_dict[path] = stat
       # Emulate svn output for compatibility with erp5.component.module.DiffUtils
@@ -230,7 +230,7 @@ class Git(WorkingCopy):
     path_dict = dict.fromkeys(self.git('ls-files').splitlines(), '')
     path_dict.update(self._patch_with_raw()[0])
     node_dict = {}
-    path_list = path_dict.keys()
+    path_list = list(path_dict.keys())
     for path in path_list:
       status = path_dict[path]
       parent = os.path.dirname(path)
