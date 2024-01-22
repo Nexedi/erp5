@@ -228,11 +228,11 @@ class OOOdCommandTransform(commandtransform):
 
       response_code, response_dict, message = server_proxy.run_generate(
                                                                 '',
-                                                                enc(self.data),
+                                                                enc(self.data).decode(),
                                                                 None,
                                                                 format,
                                                                 self.mimetype)
-      data = dec(response_dict['data'])
+      data = dec(response_dict['data'].encode())
       if self.mimetype == 'text/html':
         data = self.includeImageList(data)
       return data
