@@ -1750,7 +1750,7 @@ return True
     )
     published_page.publish()
     self.tic()
-    auth_cookie = {'__ac': b64encode('ERP5TypeTestCase:')}
+    auth_cookie = {'__ac': b64encode(b'ERP5TypeTestCase:').decode()}
 
     # ERP5 portal, not through Caching Policy Manager
     response = requests.get(
