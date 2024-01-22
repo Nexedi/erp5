@@ -1,4 +1,4 @@
-from six import string_types as basestring
+import six
 import json
 from Products.ERP5Type.Utils import checkPythonSourceCode
 
@@ -8,7 +8,7 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   """
 
   # XXX data is encoded as json, because jQuery serialize lists as []
-  if isinstance(data, basestring):
+  if isinstance(data, six.string_types):
     data = json.loads(data)
 
   # data contains the code, the bound names and the script params. From this
@@ -31,7 +31,9 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   else:
     body = data['code']
 
-  message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
+  if six.PY2:
+    body = body.encode('utf8')
+  message_list = checkPythonSourceCode(body, data.get('portal_type'))
   for message_dict in message_list:
     if is_script:
       message_dict['row'] = message_dict['row'] - 2
