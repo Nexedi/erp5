@@ -48,7 +48,7 @@ def convertDocumentByConversionServer(
   proxy = DocumentConversionServerProxy(self)
   return b64decode(
     proxy.convertFile(
-      b64encode(data),
+      b64encode(data).decode(),
       source_mimetype,
       destination_mimetype,
       zip,
