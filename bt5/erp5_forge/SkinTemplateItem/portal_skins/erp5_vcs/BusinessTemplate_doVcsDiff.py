@@ -8,11 +8,11 @@ else:
 print('<div style="color: black">')
 
 # XXX: ERP5VCS_doCreateJavaScriptStatus should send lists
-if isinstance(added, basestring):
+if isinstance(added, str):
   added = added != 'none' and filter(None, added.split(',')) or ()
-if isinstance(modified, basestring):
+if isinstance(modified, str):
   modified = modified != 'none' and filter(None, modified.split(',')) or ''
-if isinstance(removed, basestring):
+if isinstance(removed, str):
   removed = removed != 'none' and filter(None, removed.split(',')) or ()
 
 for f in modified:
