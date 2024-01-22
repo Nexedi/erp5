@@ -10,6 +10,7 @@ Insert reports linked to in a document (including backcompat handling)
 # doc_format                 output format being generated
 
 import re
+import six
 
 document = context
 
@@ -28,10 +29,14 @@ def getReportViaFancyName(my_report_name, follow_up):
   if method_call is not None:
     # extra curl: Coverage report requires parameter details (1|0)
     if coverage_name:
-      return method_call(display_comment=True)[0].encode(encoding='UTF-8')
-    if detail_name:
-      return method_call(format='detailed',display_detail = 1)[0].encode(encoding='UTF-8')
-    return method_call(display_comment=True)[0].encode(encoding='UTF-8')
+      result = method_call(display_comment=True)[0]
+    elif detail_name:
+      result = method_call(format='detailed',display_detail = 1)[0]
+    else:
+      result = method_call(display_comment=True)[0]
+    if six.PY2:
+      result = result.encode(encoding='UTF-8')
+    return result
 
 if doc_content.find('${WebPage_') != -1:
   document_required_follow_up_list = [x.getObject() for x in document.portal_catalog(
@@ -82,8 +87,10 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
           if target_context is not None:
             target_caller = getattr(target_context, report_name, None)
             if target_caller is not None:
-              substitution_content = target_caller(**link_param_dict)
+              substitution_content = target_caller(**link_param_dict)[0]
+              if six.PY2:
+                substitution_content = substitution_content.encode("utf-8")
               # Note: switched to report returning a tuple with (content, header-title, header-subtitle)
-              doc_content = doc_content.replace(link, substitution_content[0].encode("utf-8").strip())
+              doc_content = doc_content.replace(link, substitution_content.strip())
 
 return doc_content
