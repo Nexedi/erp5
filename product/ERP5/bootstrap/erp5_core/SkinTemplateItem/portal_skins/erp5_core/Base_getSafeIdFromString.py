@@ -2,27 +2,32 @@
   This function transform a string to a safe id.
   It is used here to create a safe category id from a string.
 """
-
-translation_map = { "a": ['\xe0']
-                  , "e": ['\xe9', '\xe8']
-                  }
-
-clean_id = ''
 if s is None:
   return None
+clean_id = ''
+translation_map = { 'a'  : [u'\xe0', u'\xe3']
+                  , 'e'  : [u'\xe9', u'\xe8']
+                  , 'i'  : [u'\xed']
+                  , 'u'  : [u'\xf9']
+                  , '_'  : [' ', '+']
+                  , '-'  : ['-', u'\u2013']
+                  , 'and': ['&']
+                  }
+# Replace odd chars by safe ascii
 s = s.lower()
 s = s.strip()
-# oocalc inserts some strange chars when you press - key in a text cell.
-# Following line is a workaround for this, because \u2013 does not exist in latin1
-s = s.replace(u'\u2013', '-')
-for char in s.encode('iso8859_1'):
-  if char == '_' or char.isalnum():
+for (safe_char, char_list) in translation_map.items():
+  for char in char_list:
+    s = s.replace(char, safe_char)
+# Exclude all non alphanumeric chars
+for char in s:
+  if char.isalnum() or char in translation_map.keys():
     clean_id += char
-  elif char.isspace() or char in ('+', '-'):
-    clean_id += '_'
-  else:
-    for (safe_char, char_list) in translation_map.items():
-      if char in char_list:
-        clean_id += safe_char
-        break
+# Delete leading and trailing char which are not alpha-numerics
+# This prevent having IDs with starting underscores
+while len(clean_id) > 0 and not clean_id[0].isalnum():
+  clean_id = clean_id[1:]
+while len(clean_id) > 0 and not clean_id[-1].isalnum():
+  clean_id = clean_id[:-1]
+
 return clean_id
