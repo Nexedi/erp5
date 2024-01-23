@@ -22,6 +22,7 @@
                                   .getElementById("panel-template-body-desktop")
                                   .innerHTML);
 
+  //TODO this is the same in action_officejs page, move to common
   function getElementList(gadget, element_list) {
     var i = 0,
       element_info_list = [],
