@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
+from AccessControl import getSecurityManager
 from ZODB.POSException import ConflictError
-from zExceptions import ExceptionFormatter
+from zExceptions import ExceptionFormatter, Unauthorized
 
 from Products.CMFActivity.ActiveResult import ActiveResult
 from zLOG import LOG, INFO
@@ -20,6 +21,8 @@ def dumpWorkflowChain(self, ignore_default=False,
   # - keep_order : set to True if you would like to keep original order,
   #                default is to sort alphabetically
   # - batch_mode : used to directly return the sctructure instead of return string
+  if not getSecurityManager().getUser().has_role('Manager'):
+    raise Unauthorized
   if ignore_id_set is None:
     ignore_id_set = set()
   workflow_tool = self.getPortalObject().portal_workflow
