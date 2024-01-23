@@ -1,11 +1,12 @@
-/*global document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console */
+/*global document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console) {
+(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape) {
   "use strict";
 
   function renderField(field_id, field_definition,
                        context_document, data, blob_type, content_editable) {
-    var key, raw_value, override, final_value, item_list, result = {};
+    var key, raw_value, override, final_value, item_list, result = {}, i,
+        extra_query, param_name, doc_key;
     for (key in field_definition.values) {
       if (field_definition.values.hasOwnProperty(key)) {
         // order to get the final value (based on Field.py get_value)
@@ -48,6 +49,18 @@
       result.editable = content_editable;
       if (!content_editable) {
         result.type = "EditorField";
+      }
+    }
+    if (field_definition.type == "ListBox") {
+      if (field_definition.values.default_params) {
+        for (i = 0; i < field_definition.values.default_params.length; i += 1) {
+          param_name = field_definition.values.default_params[i][0];
+          doc_key = field_definition.values.default_params[i][1];
+          if (context_document.hasOwnProperty(doc_key) && context_document[doc_key]) {
+            extra_query = ` AND ${param_name}:"${context_document[doc_key]}"`;
+            result.query += escape(extra_query);
+          }
+        }
       }
     }
     return result;
@@ -357,4 +370,4 @@
         });
     });
 
-}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console));
+}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape));
