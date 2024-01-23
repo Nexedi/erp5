@@ -124,6 +124,39 @@
     return graph_data_and_parameter;
   };
 
+  var formatGraphDict = function (input_dict) {
+    var i, j, key, series = [], label_list = ['x'], point_list = [], serie_length, point;
+    for (i = 0; i < input_dict.data.length; i = i + 1) {
+      for (key of Object.keys(input_dict.data[i].value_dict)) {
+        serie_length = input_dict.data[i].value_dict[key].length;
+        if (key == 0) {
+          if (series.length === 0) {
+            series.push(input_dict.data[i].value_dict[key]); //x
+          }
+        } else {
+          series.push(input_dict.data[i].value_dict[key]); //yi
+        }
+      }
+      label_list.push(input_dict.data[i].title);
+    }
+    for (i = 0; i < serie_length; i = i + 1) {
+      point = [];
+      for (j = 0; j < series.length; j = j + 1) {
+        point.push(series[j][i]);
+      }
+      point_list.push(point);
+    }
+    var dygraph_dict = {
+      dygraph_data: point_list,
+      dygraph_parameter_dict: {
+        labels: label_list,
+        drawPoints : true,
+        pointSize : 1,
+      }
+    };
+    return dygraph_dict;
+  };
+
   /////////////////////////////////////////////////////////////////
   // some methods
   /////////////////////////////////////////////////////////////////
@@ -162,7 +195,7 @@
           graph_data_and_parameter;
 
       container = gadget.element.querySelector(".graph-content");
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(modification_dict.value);
+      graph_data_and_parameter = formatGraphDict(modification_dict.value);
       gadget.property_dict.graph = new Dygraph(container,
                                                graph_data_and_parameter.dygraph_data,
                                                graph_data_and_parameter.dygraph_parameter_dict);

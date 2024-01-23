@@ -165,9 +165,7 @@
                   parent_portal_type: portal_type
                 };
                 if (view_categorie_list.includes(action_settings.action_type)) {
-                  if (app_view === action_settings.action) {
-                    action_settings.page = "ojs_local_controller";
-                  }
+                  action_settings.page = "ojs_local_controller";
                   action_info_dict.view_list[action_settings.action] =
                     action_settings;
                 } else {

@@ -36,6 +36,7 @@
     );
   }
 
+  //TODO this is the same in ojs_panel, move to common
   function getHTMLElementList(gadget, element_list) {
     var i = 0,
       element_info_list = [],
