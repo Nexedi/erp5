@@ -59,28 +59,43 @@
       gadget.props = {};
     })
 
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
+
     .declareMethod('createJio', function (options) {
-      if (options !== undefined) {
-        this.props.jio_storage = jIO.createJIO(options);
-      } else {
-        this.props.jio_storage = jIO.createJIO({
-          type: "replicatedopml",
-          remote_storage_unreachable_status: "WARNING",
-          remote_opml_check_time_interval: 86400000,
-          request_timeout: 25000, // timeout is to 25 second
-          local_sub_storage: {
-            type: "query",
-            sub_storage: {
-              type: "uuid",
-              sub_storage: {
-                type: "indexeddb",
-                database: "monitoring_local.db"
-              }
-            }
+      var current_version, index, gadget = this;
+      return gadget.getSetting('migration_version')
+        .push(function (migration_version) {
+          current_version = window.location.href.replace(window.location.hash, "");
+          index = current_version.indexOf(window.location.host) + window.location.host.length;
+          current_version = current_version.substr(index);
+          if (migration_version !== current_version) {
+            return gadget.setSetting("migration_version", current_version);
           }
+        })
+        .push(function () {
+          if (options !== undefined) {
+            gadget.props.jio_storage = jIO.createJIO(options);
+          } else {
+            gadget.props.jio_storage = jIO.createJIO({
+              type: "replicatedopml",
+              remote_storage_unreachable_status: "WARNING",
+              remote_opml_check_time_interval: 86400000,
+              request_timeout: 25000, // timeout is to 25 second
+              local_sub_storage: {
+                type: "query",
+                sub_storage: {
+                  type: "uuid",
+                  sub_storage: {
+                    type: "indexeddb",
+                    database: "monitoring_local.db"
+                  }
+                }
+              }
+            });
+          }
+          return gadget.props.jio_storage;
         });
-      }
-      return this.props.jio_storage;
     })
     .declareMethod('allDocs', function () {
       var storage = this.props.jio_storage;
