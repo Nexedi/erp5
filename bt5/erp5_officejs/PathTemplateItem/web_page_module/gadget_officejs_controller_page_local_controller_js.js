@@ -31,6 +31,7 @@
         app_action_list,
         form_definition,
         current_version,
+        configurator,
         index;
       current_version = window.location.href.replace(window.location.hash, "");
       index = current_version.indexOf(window.location.host) +
@@ -40,18 +41,20 @@
                                     "app_view_reference",
                                     "parent_portal_type",
                                     'default_view_reference',
-                                    'app_actions'])
+                                    'app_actions',
+                                    'app_configurator'])
         .push(function (setting_list) {
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
           default_view = setting_list[3];
           app_action_list = setting_list[4];
+          configurator = setting_list[5] || 'ojs_configurator';
           if (setting_list[0] !== current_version) {
             //if app version has changed, force storage selection
             return gadget.redirect({
               'command': 'display',
               'options': {
-                'page': 'ojs_configurator',
+                'page': configurator,
                 'auto_repair': true
               }
             });
@@ -121,6 +124,7 @@
       var fragment = document.createElement('div'),
         gadget = this,
         view_gadget_url = "gadget_officejs_form_view.html",
+        //TODO: this should be a list, not only one custom view
         custom_gadget_url = gadget.state.form_definition.portal_type_dict
           .custom_view_gadget;
       while (this.element.firstChild) {
