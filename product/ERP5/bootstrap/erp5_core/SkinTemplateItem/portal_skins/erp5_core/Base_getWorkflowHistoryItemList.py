@@ -1,9 +1,13 @@
+from AccessControl import getSecurityManager
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Utils import getTranslationStringWithContext
+from zExceptions import Unauthorized
 
-from AccessControl import getSecurityManager
-
-can_view_history = getSecurityManager().getUser().has_permission('View History', context)
+user = getSecurityManager().getUser()
+is_manager = user.has_role('Manager')
+allowed_zope_actor_set = ('System Processes', 'Anonymous User')
+placeholder_actor = 'Unknown'
+can_view_history = user.has_permission('View History', context)
 
 marker = []
 result = []
@@ -20,11 +24,25 @@ def getActorName(actor):
   try:
     return actor_name_cache[actor]
   except KeyError:
-    actor_name_cache[actor] = actor
+    # Show only actor names:
+    # - for existing ERP5 users: ...that the current security context can see
+    # - for non-ERP5 users (which includes deleted users, but this should be rare):
+    #   ...that are a few special users (which cannot be used to log in),
+    #   unless the current security context has the Manager role in which case show all these users
     person = portal_object.Base_getUserValueByUserId(actor)
-    if person is not None:
-      actor_name_cache[actor] = person.getTitle()
-    return actor_name_cache[actor]
+    if person is None:
+      actor_name = (
+        actor
+        if is_manager or actor in allowed_zope_actor_set else
+        placeholder_actor
+      )
+    else:
+      try:
+        actor_name = person.getTitle()
+      except Unauthorized:
+        actor_name = placeholder_actor
+    actor_name_cache[actor] = actor_name
+    return actor_name
 
 
 

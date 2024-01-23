@@ -1287,6 +1287,125 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                       person, 'invalidated', wf_id='edit_workflow')
     self.assertEqual(person.getValidationState(), 'draft')
 
+  def test_getWorkflowHistoryItemList(self):
+    """Base_getWorkflowHistoryItemList obeys user document security.
+    """
+    # Note: the tested code belongs to erp5_core, but test it as part of
+    # erp5_base in order to have the most relevant user type: one based
+    # on an ERP5 document (here, a Person).
+    test_user = getSecurityManager().getUser()
+    portal = self.portal
+    newPerson = portal.person_module.newContent
+
+    # Non-ERP5 users which will be actor in the workflow history
+    existing_non_erp5_user_id = self.username
+
+    # ERP5 users which will be actors in the workflow history
+    user_1_value = newPerson(
+      portal_type='Person',
+      first_name='Foo',
+      last_name='Foo'
+    )
+    user_1_title = user_1_value.getTitle()
+    user_1_user_id = user_1_value.getUserId()
+    user_2_value = newPerson(
+      portal_type='Person',
+      first_name='Bar',
+      last_name='Bar'
+    )
+    user_2_title = user_2_value.getTitle()
+    user_2_user_id = user_2_value.getUserId()
+    user_3_value = newPerson(
+      portal_type='Person',
+      first_name='Baz',
+      last_name='Baz'
+    )
+    user_3_user_id = user_3_value.getUserId()
+
+    # ERP5 users which will look at workflow history
+    user_4_value = newPerson(
+      portal_type='Person',
+    )
+    user_4_user_id = user_4_value.getUserId()
+    user_5_value = newPerson(
+      portal_type='Person',
+    )
+    user_5_user_id = user_5_value.getUserId()
+    user_1_value.manage_addLocalRoles(user_5_user_id, ['Assignee'])
+
+    # Document tests will be run on
+    document_value = newPerson(
+      portal_type='Person',
+    )
+    # Let all see it, otherwise the user cannot call
+    # Base_getWorkflowHistoryItemList on it to begin with (more accurately,
+    # access to the "context" binding raises).
+    document_value.manage_addLocalRoles(user_4_user_id, ['Assignee'])
+    document_value.manage_addLocalRoles(user_5_user_id, ['Assignee'])
+    self.tic()
+
+    getUserById = portal.acl_users.getUserById
+    user_1 = getUserById(user_1_user_id)
+    user_2 = getUserById(user_2_user_id)
+    user_3 = getUserById(user_3_user_id)
+    user_4 = getUserById(user_4_user_id)
+    user_5 = getUserById(user_5_user_id)
+    existing_non_erp5_user = getUserById(existing_non_erp5_user_id)
+    for user_id in (user_1_user_id, user_2_user_id, user_3_user_id, existing_non_erp5_user_id):
+      document_value.manage_addLocalRoles(user_id, ['Assignee'])
+    for user in (user_1, user_2, user_3, existing_non_erp5_user):
+      newSecurityManager(None, user)
+      document_value.edit()
+    newSecurityManager(None, test_user)
+    self.tic()
+    user_3_value.getParentValue().manage_delObjects(ids=[user_3_value.getId()])
+    del user_3_value, user_3
+    self.tic()
+
+    # Sanity checks
+    self.assertEqual(user_1.getUserValue(), user_1_value)
+    self.assertEqual(user_2.getUserValue(), user_2_value)
+    self.assertEqual(existing_non_erp5_user.getUserValue(), None)
+    self.assertEqual(getUserById(user_3_user_id), None)
+    for user, can_see_1, can_see_2, is_manager in (
+      # user_4 cannot see any of the users which acted on the test document
+      (user_4,    False, False, False),
+      # user_5 can see the first actor, but not the second
+      (user_5,    True,  False, False),
+      # test_user is a Manager, and hence can see all
+      (test_user, True,  True,  True),
+    ):
+      has_permission = user.has_permission
+      self.assertEqual(bool(has_permission('Access contents information', user_1_value)), can_see_1)
+      self.assertEqual(bool(has_permission('View', user_1_value)), can_see_1)
+      self.assertEqual(bool(has_permission('Access contents information', user_2_value)), can_see_2)
+      self.assertEqual(bool(has_permission('View', user_2_value)), can_see_2)
+      self.assertEqual(bool(user.has_role('Manager')), is_manager)
+    def assertActorHistoryEqual(expected):
+      self.assertEqual(
+        [
+          x.actor
+          for x in document_value.Base_getWorkflowHistoryItemList('edit_workflow')[1:]
+        ],
+        expected,
+      )
+
+    # The actual test starts here
+    placeholder_actor = 'Unknown'
+
+    # user_4 cannot see any actor, and only sees placeholder actor captions
+    newSecurityManager(None, user_4)
+    assertActorHistoryEqual([placeholder_actor, placeholder_actor, placeholder_actor, placeholder_actor])
+
+    # user_5 can only see user_1's caption
+    newSecurityManager(None, user_5)
+    assertActorHistoryEqual([user_1_title, placeholder_actor, placeholder_actor, placeholder_actor])
+
+    # test_user can see all actors: existing ERP5 users with their title,
+    # non-ERP5 users - including deleted ones - by their user id.
+    newSecurityManager(None, test_user)
+    assertActorHistoryEqual([user_1_title, user_2_title, user_3_user_id, existing_non_erp5_user_id])
+
 
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
