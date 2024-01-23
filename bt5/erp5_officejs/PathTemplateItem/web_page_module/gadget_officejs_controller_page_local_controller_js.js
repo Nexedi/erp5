@@ -31,7 +31,9 @@
         app_action_list,
         form_definition,
         current_version,
-        index;
+        configurator,
+        index,
+        link = document.createElement("link");
       current_version = window.location.href.replace(window.location.hash, "");
       index = current_version.indexOf(window.location.host) +
         window.location.host.length;
@@ -40,18 +42,27 @@
                                     "app_view_reference",
                                     "parent_portal_type",
                                     'default_view_reference',
-                                    'app_actions'])
+                                    'app_actions',
+                                    'app_configurator',
+                                    'css_file'])
         .push(function (setting_list) {
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
           default_view = setting_list[3];
           app_action_list = setting_list[4];
+          configurator = setting_list[5] || 'ojs_configurator';
+          if (setting_list[6]) {
+            link.type = "text/css";
+            link.rel = "stylesheet";
+            link.href = setting_list[6];
+            document.head.appendChild(link);
+          }
           if (setting_list[0] !== current_version) {
             //if app version has changed, force storage selection
             return gadget.redirect({
               'command': 'display',
               'options': {
-                'page': 'ojs_configurator',
+                'page': configurator,
                 'auto_repair': true
               }
             });
