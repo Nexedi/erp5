@@ -4,7 +4,6 @@
                    the new UI supports "portal_status_level" with values "success" or "error"
 """
 from zExceptions import Redirect
-from ZTUtils import make_query
 import json
 
 if keep_items is None:
