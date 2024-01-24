@@ -16,19 +16,6 @@ request_form.update(kw)
 request_form = context.ERP5Site_filterParameterList(request_form)
 request_form.update(keep_items)
 
-if form_id == 'view':
-  redirect_url = "%s/ERP5Document_getHateoas" % context.absolute_url()
-else:
-  redirect_url = '%s/%s' % (context.absolute_url(), form_id)
-
-parameters = make_query(dict([(k, v) for k, v in request_form.items() if k and v is not None]))
-if len(parameters):
-  if '?' in redirect_url:
-    separator = '&'
-  else:
-    separator = '?'
-  redirect_url = '%s%s%s' % (redirect_url, separator, parameters)
-
 
 # XXX Allow CORS
 response = context.REQUEST.RESPONSE
