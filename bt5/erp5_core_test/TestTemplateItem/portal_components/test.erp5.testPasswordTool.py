@@ -28,7 +28,7 @@
 ##############################################################################
 
 import six
-from six.moves.urllib_parse import urlparse, parse_qsl
+from six.moves.urllib.parse import urlparse, parse_qsl
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
