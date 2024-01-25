@@ -89,7 +89,7 @@ class SynchronizationTool(BaseTool):
     new synchronization new data is compared with the one stored in signature
     to detect changes.
   """
-  meta_type = 'ERP5 Synchronizations'
+  meta_type = 'ERP5 Synchronization Tool'
   portal_type = 'Synchronization Tool'
   title = 'Synchronizations'
 

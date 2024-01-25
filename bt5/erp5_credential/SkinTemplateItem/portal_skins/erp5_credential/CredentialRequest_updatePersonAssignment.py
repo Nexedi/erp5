@@ -46,6 +46,7 @@ for role in context.getRoleList():
       assignment.edit(site = context.getSite(),
                       activity = context.getActivityList(),
                       function = context.getFunctionList(),
+                      destination_project = context.getDestinationProject(),
                       destination = organisation_url,
                       stop_date=delay)
       assignment.open()
@@ -60,6 +61,7 @@ for role in context.getRoleList():
         function = context.getFunctionList(),
         group = context.getGroupList(),
         destination = organisation_url,
+        destination_project = context.getDestinationProject(),
         start_date = start_date,
         stop_date = delay)
 

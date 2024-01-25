@@ -4,7 +4,6 @@
  </portal_type>
  <portal_type id="Credential Request">
   <item>activity</item>
-  <item>destination_decision</item>
   <item>function</item>
   <item>gender</item>
   <item>group</item>
