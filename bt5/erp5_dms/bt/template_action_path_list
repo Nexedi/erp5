@@ -136,7 +136,6 @@ URL Crawler | view
 Web Illustration | list
 Web Illustration | local_permission
 Web Illustration | related
-Web Illustration | send_email
 Web Illustration | view
 Web Illustration | view_editor
 Web Illustration | web_view
@@ -145,7 +144,6 @@ Web Page | version_view
 Web Table | list
 Web Table | local_permission
 Web Table | related
-Web Table | send_email
 Web Table | view
 Web Table | view_editor
 Web Table | web_view
