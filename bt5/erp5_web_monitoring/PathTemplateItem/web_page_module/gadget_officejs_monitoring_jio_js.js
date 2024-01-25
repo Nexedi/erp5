@@ -59,17 +59,19 @@
       gadget.props = {};
     })
 
-    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
 
     .declareMethod('createJio', function (options) {
-      var current_version, index, gadget = this;
-      return gadget.getSetting('migration_version')
-        .push(function (migration_version) {
+      var gadget = this, current_version, index, manifest;
+      return gadget.getSettingList(['configuration_manifest', 'migration_version'])
+        .push(function (result_list) {
+          manifest = result_list[0];
+          console.log("manifest:", manifest);
           current_version = window.location.href.replace(window.location.hash, "");
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
-          if (migration_version !== current_version) {
+          if (result_list[1] !== current_version) {
             return gadget.setSetting("migration_version", current_version);
           }
         })
@@ -91,7 +93,28 @@
                     database: "monitoring_local.db"
                   }
                 }
-              }
+              }/*,
+              signature_sub_storage: {
+                type: "query",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "monitoring-configuration-hash"
+                }
+              },
+              remote_sub_storage: {
+                type: "saferepair",
+                sub_storage: {
+                  type: "configuration",
+                  origin_url: window.location.href,
+                  hateoas_appcache: "hateoas_appcache",
+                  manifest: manifest,
+                  sub_storage: {
+                    type: "appcache",
+                    origin_url: window.location.href,
+                    manifest: manifest
+                  }
+                }
+              }*/
             });
           }
           return gadget.props.jio_storage;
