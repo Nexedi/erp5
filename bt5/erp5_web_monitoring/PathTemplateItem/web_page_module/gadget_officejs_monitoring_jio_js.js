@@ -59,23 +59,13 @@
       gadget.props = {};
     })
 
-    .declareAcquiredMethod("getSettingList", "getSettingList")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
 
     .declareMethod('createJio', function (options) {
-      var gadget = this, current_version, index, manifest;
-      return gadget.getSettingList(['configuration_manifest', 'migration_version'])
-        .push(function (result_list) {
-          manifest = result_list[0];
-          console.log("manifest:", manifest);
-          current_version = window.location.href.replace(window.location.hash, "");
-          index = current_version.indexOf(window.location.host) + window.location.host.length;
-          current_version = current_version.substr(index);
-          if (result_list[1] !== current_version) {
-            return gadget.setSetting("migration_version", current_version);
-          }
-        })
-        .push(function () {
+      var gadget = this, current_version, index;
+      return gadget.getSetting('configuration_manifest')
+        .push(function (manifest) {
           if (options !== undefined) {
             gadget.props.jio_storage = jIO.createJIO(options);
           } else {
