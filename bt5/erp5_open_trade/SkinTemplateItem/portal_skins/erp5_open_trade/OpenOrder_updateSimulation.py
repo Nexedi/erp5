@@ -17,10 +17,12 @@ for open_order_line in context.objectValues():
         # no new simulation movement to create
         # (expand always reindex the full simulation tree,
         # which can be cpu costly when we have many hosting subscription)
-        simulation_movement = portal.portal_catalog.getResultValue(
-          portal_type="Simulation Movement",
+        simulation_movement_list = portal.portal_simulation.getMovementHistoryList(
+          portal_type='Simulation Movement',
           aggregate__uid=item.getUid(),
-          **{'movement.stop_date': stop_date}
+          from_date=stop_date,
+          at_date=stop_date,
+          only_accountable=False,
         )
-        if simulation_movement is None:
+        if len(simulation_movement_list) == 0:
           item.updateSimulation(expand_root=1)
