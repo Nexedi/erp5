@@ -105,16 +105,6 @@
                 autoHideDelay: 30000
               }
             );*/
-            var current_version, index, manifest;
-            return gadget.getSetting('migration_version')
-              .push(function (migration_version) {
-                current_version = window.location.href.replace(window.location.hash, "");
-                index = current_version.indexOf(window.location.host) + window.location.host.length;
-                current_version = current_version.substr(index);
-                if (migration_version !== current_version) {
-                  return gadget.setSetting("migration_version", current_version);
-                }
-              });
           });
       }
 
