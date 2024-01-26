@@ -149,6 +149,7 @@ class DownloadableMixin:
     RESPONSE.setHeader('Content-Length', len(data))
     if output_format in VALID_TEXT_FORMAT_LIST:
       RESPONSE.setHeader('Content-Type', '%s; charset=utf-8' % mime)
+      data = data.encode('utf-8')
     else:
       RESPONSE.setHeader('Content-Type', mime)
     if inline is _MARKER:
