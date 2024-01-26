@@ -1,4 +1,6 @@
 # pylint: disable=redefined-builtin
+import bz2
+import zlib
 
 request = container.REQUEST
 request.form.update(report_request)
@@ -21,9 +23,9 @@ with portal.Localizer.translationContext(localizer_language):
   def decodeReportSection(data):
     # BBB We use to encode in zlib
     try:
-      return data.decode('bz2')
+      return bz2.decompress(data)
     except IOError:
-      return data.decode('zlib')
+      return zlib.decompress(data)
   if portal.portal_preferences.getPreferredDeferredReportStoredAsDocument():
     pt_render_format = None
   else:
