@@ -208,6 +208,15 @@ class Unicode(String):
 class Bytes(String):
     pass
 
+    # XXX Zope4py3 Jérome: this method should be remove, we keep it for now
+    # not to use <bytes> in XML export because that's just too many diffs
+    # and it makes exporting business templates and committing changes to git
+    # too hard
+    def tag_name(self):
+        return "string"
+
+
+
 
 class Wrapper:
     def __init__(self, v, mapping):
