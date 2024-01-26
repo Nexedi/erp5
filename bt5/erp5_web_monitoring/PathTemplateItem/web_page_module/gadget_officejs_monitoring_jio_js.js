@@ -59,17 +59,37 @@
       gadget.props = {};
     })
 
-    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
 
+    .declareMethod('updateConfiguration', function (appcache_storage, migration_version, current_version) {
+      var gadget = this;
+      if (!appcache_storage) { return; }
+      return RSVP.Queue()
+        .push(function () {
+          return appcache_storage.repair(current_version);
+        })
+        .push(function () {
+          return gadget.setSetting("migration_version", current_version);
+        });
+    })
+
     .declareMethod('createJio', function (options) {
-      var gadget = this, current_version, index;
-      return gadget.getSetting('configuration_manifest')
-        .push(function (manifest) {
+      var gadget = this, current_version, index, appcache_storage,
+        monitoring_jio, appcache_jio, migration_version, manifest,
+        origin_url = window.location.href;
+      return gadget.getSettingList(['configuration_manifest',
+                                    'migration_version'])
+        .push(function (result_list) {
+          //TODO fix missing router setting (it's set but get returns undefined)
+          console.log("configuration_manifest setting:", result_list[0]);
+          console.log("migration_version setting:", result_list[1]);
+          migration_version = result_list[1];
+          manifest = "gadget_officejs_monitoring.configuration";
           if (options !== undefined) {
             gadget.props.jio_storage = jIO.createJIO(options);
           } else {
-            gadget.props.jio_storage = jIO.createJIO({
+            monitoring_jio = {
               type: "replicatedopml",
               remote_storage_unreachable_status: "WARNING",
               remote_opml_check_time_interval: 86400000,
@@ -83,7 +103,21 @@
                     database: "monitoring_local.db"
                   }
                 }
-              }/*,
+              }
+            };
+            appcache_jio = {
+              type: "replicate",
+              parallel_operation_attachment_amount: 10,
+              parallel_operation_amount: 1,
+              conflict_handling: 2, //keep remote
+              signature_hash_key: 'hash',
+              check_remote_attachment_modification: true,
+              check_remote_attachment_creation: true,
+              check_remote_attachment_deletion: true,
+              check_remote_deletion: true,
+              check_local_creation: false,
+              check_local_deletion: false,
+              check_local_modification: false,
               signature_sub_storage: {
                 type: "query",
                 sub_storage: {
@@ -91,22 +125,33 @@
                   database: "monitoring-configuration-hash"
                 }
               },
+              local_sub_storage: JSON.parse(JSON.stringify(monitoring_jio)),
               remote_sub_storage: {
                 type: "saferepair",
                 sub_storage: {
                   type: "configuration",
-                  origin_url: window.location.href,
+                  origin_url: origin_url,
                   hateoas_appcache: "hateoas_appcache",
                   manifest: manifest,
                   sub_storage: {
                     type: "appcache",
-                    origin_url: window.location.href,
+                    origin_url: origin_url,
                     manifest: manifest
                   }
                 }
-              }*/
-            });
+              }
+            };
+            gadget.props.jio_storage = jIO.createJIO(monitoring_jio);
           }
+          appcache_storage = jIO.createJIO(appcache_jio);
+          current_version = window.location.href.replace(window.location.hash, "");
+          index = current_version.indexOf(window.location.host) + window.location.host.length;
+          current_version = current_version.substr(index);
+          if (migration_version !== current_version) {
+            return gadget.updateConfiguration(appcache_storage, migration_version, current_version);
+          }
+        })
+        .push(function () {
           return gadget.props.jio_storage;
         });
     })
