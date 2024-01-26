@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import guessEncodingFromText
+from Products.ERP5Type.Utils import guessEncodingFromText # TODO: guessEncodingFromBytes
 from zLOG import LOG, INFO
 
 from email.header import decode_header, HeaderParseError
@@ -42,7 +42,7 @@ filename_regexp = 'name="([^"]*)"'
 def testCharsetAndConvert(text_content, content_type, encoding):
   try:
     if encoding is not None:
-      text_content = text_content.decode(encoding).encode('utf-8')
+      text_content = text_content.decode(encoding)
     else:
       if six.PY2:
         text_content = text_content.decode().encode('utf-8')
@@ -50,8 +50,9 @@ def testCharsetAndConvert(text_content, content_type, encoding):
     encoding = guessEncodingFromText(text_content, content_type)
     if encoding is not None:
       try:
-        text_content = text_content.decode(encoding).encode('utf-8')
+        text_content = text_content.decode(encoding)
       except (UnicodeDecodeError, LookupError):
+        # TODO: errors= repr ?
         text_content = repr(text_content)[1:-1]
     else:
       text_content = repr(text_content)[1:-1]
@@ -113,9 +114,6 @@ class MailMessageMixin:
     """
     Returns the content information from the header information.
     This is used by the metadata discovery system.
-
-    Header information is converted in UTF-8 since this is the standard
-    way of representing strings in ERP5.
     """
     result = {}
     for (name, value) in self._getMessage().items():
