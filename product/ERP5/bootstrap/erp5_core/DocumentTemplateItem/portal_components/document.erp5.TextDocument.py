@@ -115,7 +115,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         text = Template(text).substitute(unicode_mapping)
 
       # If the original was a str, convert it back to str.
-      if is_str:
+      if six.PY2 and is_str:
         text = text.encode('utf-8')
 
     return text
@@ -188,12 +188,15 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         self.setConversion(result, original_mime_type, **kw)
       else:
         mime_type, result = self.getConversion(**kw)
-      if substitute and format in VALID_TEXT_FORMAT_LIST:
-        # only textual content can be sustituted
-        if substitution_method_parameter_dict is None:
-          substitution_method_parameter_dict = {}
-        result = self._substituteTextContent(result, safe_substitute=safe_substitute,
-                                             **substitution_method_parameter_dict)
+      if format in VALID_TEXT_FORMAT_LIST:
+        if six.PY3 and isinstance(result, bytes):
+          result = result.decode()
+        if substitute:
+          # only textual content can be sustituted
+          if substitution_method_parameter_dict is None:
+            substitution_method_parameter_dict = {}
+          result = self._substituteTextContent(result, safe_substitute=safe_substitute,
+                                               **substitution_method_parameter_dict)
       return original_mime_type, result
     else:
       # text_content is not set, return empty string instead of None
@@ -375,21 +378,27 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     return message
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
-  def getTextContent(self, default=_MARKER):
+  def getTextContent(self, default=_MARKER, encoding=None):
     """Overriden method to check
-    permission to access content in raw format
+    permission to access content in raw format and manage encoding.
     """
-    # XXX Zope4py3: should this return str ??
-    # We probably have "legacy" documents where `text_content` is a python2
-    # str encoded as something else than utf-8.
-    # Maybe we should introduce a new text_content_encoding property and
-    # expose API to getRawTextContent (as bytes) and getTextContent would return
-    # the decoded string.
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
-      return self._baseGetTextContent()
-    else:
-      return self._baseGetTextContent(default)
+      text_content = self._baseGetTextContent()
+    text_content = self._baseGetTextContent(default)
+    if isinstance(text_content, bytes):
+      # XXX Zope4py3: should this return str ??
+      # We probably have "legacy" documents where `text_content` is a python2
+      # str encoded as something else than utf-8.
+      # Maybe we should introduce a new text_content_encoding property and
+      # expose API to getRawTextContent (as bytes) and getTextContent would return
+      # the decoded string.
+      # XXX what about _convertToBaseFormat/guessCharsetAndConvert ???
+      try:
+        text_content = text_content.decode('utf-8')
+      except UnicodeDecodeError:
+        text_content = text_content.decode('latin1')
+    return text_content
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
@@ -424,9 +433,11 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     """
     if not self.hasData():
       if default is _MARKER:
-        return self.getTextContent()
+        data = self._baseGetTextContent()
       else:
-        return self.getTextContent(default)
+        data = self._baseGetTextContent(default)
+      if not isinstance(data, bytes):
+        return data.encode('utf-8')
     else:
       if default is _MARKER:
         return File.getData(self)
