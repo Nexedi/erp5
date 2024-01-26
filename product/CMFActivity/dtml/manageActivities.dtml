@@ -69,17 +69,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td><code><a href="<dtml-var expr="REQUEST.physicalPathToURL(path)">"><dtml-var path></a></code></td>
         <td><code><dtml-var method_id></code></td>
         <td>
-          <dtml-if activity_kw><small><pre><dtml-var expr="_.repr(activity_kw)[1:-1]" html_quote></pre></small>
+          <dtml-if activity_kw><small><pre><dtml-var expr="pformat(activity_kw)" html_quote></pre></small>
           <dtml-else>&nbsp;
           </dtml-if>
         </td>
         <td>
-          <dtml-if args><small><pre><dtml-var expr="_.repr(_.list(args))[1:-1]" html_quote></pre></small>
+          <dtml-if args><small><pre><dtml-var expr="pformat(_.list(args))" html_quote></pre></small>
           <dtml-else>&nbsp;
           </dtml-if>
         </td>
         <td>
-          <dtml-if kw><small><pre><dtml-var expr="_.repr(kw)[1:-1]" html_quote></pre></small>
+          <dtml-if kw><small><pre><dtml-var expr="pformat(kw)" html_quote></pre></small>
           <dtml-else>&nbsp;
           </dtml-if>
         </td>
