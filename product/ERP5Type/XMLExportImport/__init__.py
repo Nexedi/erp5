@@ -125,7 +125,7 @@ def Base_asXML(object, root=None):
         # Create blocks to represent data
         # <data><block>ZERD</block><block>OEJJM</block></data>
         size_block = 60
-        if isinstance(value, str):
+        if isinstance(value, bytes):
           for index in xrange(0, len(value), size_block):
             content = value[index:index + size_block]
             data_encoded = standard_b64encode(content)
@@ -138,7 +138,10 @@ def Base_asXML(object, root=None):
             for word in value]
         sub_object.append(marshaller(value))
       elif prop_type in ('text', 'string',):
-        sub_object.text = six.text_type(escape(value), 'utf-8')
+        value = escape(value)
+        if six.PY2:
+          value = six.text_type(value, 'utf-8')
+        sub_object.text = value
       elif prop_type != 'None':
         sub_object.text = str(value)
 
@@ -162,15 +165,22 @@ def Base_asXML(object, root=None):
           variable_node = SubElement(workflow_node, workflow_variable,
                                      attrib=dict(type=variable_type))
           if variable_type != 'None':
-            variable_node.text = six.text_type(str(variable_node_text), 'utf-8')
+            variable_node_text = str(variable_node_text)
+            if six.PY2:
+              variable_node_text = six.text_type(str(variable_node_text), 'utf-8')
+            variable_node.text = variable_node_text
 
             if workflow_variable == 'time':
               time = variable_node.text
             elif workflow_variable == 'actor':
               actor = variable_node.text
 
-        workflow_node.attrib['id'] = sha1(workflow_id + time +
-                                             str(actor.encode('utf-8'))).hexdigest()
+        if six.PY2 and isinstance(actor, six.text_type):
+          actor = actor.encode('utf-8')
+        workflow_transition_id = workflow_id + time + actor
+        if six.PY3:
+          workflow_transition_id = workflow_transition_id.encode()
+        workflow_node.attrib['id'] = sha1(workflow_transition_id).hexdigest()
 
   # We should now describe security settings
   for user_role in self.get_local_roles():
@@ -179,7 +189,7 @@ def Base_asXML(object, root=None):
     #convert local_roles in string because marshaller can't do it
     role_list = []
     for role in user_role[1]:
-      if isinstance(role, six.text_type):
+      if six.PY2 and isinstance(role, six.text_type):
         role = role.encode('utf-8')
       role_list.append(role)
     local_role_node.append(marshaller(tuple(role_list)))

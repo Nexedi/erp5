@@ -1097,7 +1097,7 @@ return [context[%r]]
     publication = portal_sync[self.pub_id]
     self.assertEqual(len(publication.getDocumentList()), nb_person)
     gid = self.first_name1 +  ' ' + self.last_name1 # ie the title 'Sebastien Robin'
-    gid = b16encode(gid)
+    gid = b16encode(gid.encode()).decode()
     person_c1 = subscription1.getDocumentFromGid(gid)
     person_s = publication.getSubscriber(self.subscription_url1).getDocumentFromGid(gid)
     id_s = person_s.getId()
@@ -1689,31 +1689,26 @@ return [context[%r]]
 
     self.test_08_FirstSynchronization()
     #define some strings :
-    python = 'www.python.org'
-    awaited_result_python = "d3d3LnB5dGhvbi5vcmc="
-    long_string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNO\
-PQRSTUVWXYZéèçà@^~µ&²0123456789!@#0^&*();:<>,. []{}\xc3\xa7sdf__\
-sdf\xc3\xa7\xc3\xa7\xc3\xa7_df___&&\xc3\xa9]]]\xc2\xb0\xc2\xb0\xc2\
-\xb0\xc2\xb0\xc2\xb0\xc2\xb0"
-    #= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZéèçà@^~µ&²012345
-    #6789!@#0^&*();:<>,. []{}çsdf__sdfççç_df___&&é]]]°°°°°°'"
-
-    awaited_result_long_string = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZH\
-SElKS0xNTk9QUVJTVFVWV1hZWsOpw6jDp8OgQF5+wrUmwrIwMTIzNDU2Nzg5IUAjMF4mKigpOzo8Pi\
-wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
+    python = b'www.python.org'
+    awaited_result_python = b"d3d3LnB5dGhvbi5vcmc="
+    long_string = u"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZéèçà@^~µ&²0123456789"\
+                  u"!@#0^&*();:<>,. []{}çsdf__sdfççç_df___&&é]]]°°°°°°'".encode('utf-8')
+    awaited_result_long_string = b'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZH'\
+      b'SElKS0xNTk9QUVJTVFVWV1hZWsOpw6jDp8OgQF5+wrUmwrIwMTIzNDU2Nzg5IUAjMF4mKigpO'\
+      b'zo8PiwuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsCc='
     #test just b64encode
     self.assertEqual(b64encode(python), awaited_result_python)
-    self.assertEqual(b64encode(""), "")
+    self.assertEqual(b64encode(b""), b"")
     self.assertEqual(b64encode(long_string), awaited_result_long_string)
 
     self.assertEqual(b64decode(awaited_result_python), python)
-    self.assertEqual(b64decode(""), "")
+    self.assertEqual(b64decode(b""), b"")
     self.assertEqual(b64decode(awaited_result_long_string), long_string)
 
     # test with the ERP5 functions
     string_encoded = encode('b64', python)
     self.assertEqual(string_encoded, awaited_result_python)
-    string_decoded = decode('b64', awaited_result_python)
+    string_decoded = decode('b64', awaited_result_python.decode())
     self.assertEqual(string_decoded, python)
     self.assertTrue(isDecodeEncodeTheSame(string_encoded,
                     python, 'b64'))
@@ -1722,17 +1717,17 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
 
     string_encoded = encode('b64', long_string)
     self.assertEqual(string_encoded, awaited_result_long_string)
-    string_decoded = decode('b64', awaited_result_long_string)
+    string_decoded = decode('b64', awaited_result_long_string.decode())
     self.assertEqual(string_decoded, long_string)
     self.assertTrue(isDecodeEncodeTheSame(string_encoded,
                     long_string, 'b64'))
     self.assertTrue(isDecodeEncodeTheSame(string_encoded,
                     string_decoded, 'b64'))
 
-    self.assertEqual(encode('b64', ''), '')
-    self.assertEqual(decode('b64', ''), '')
+    self.assertEqual(encode('b64', b''), b'')
+    self.assertEqual(decode('b64', ''), b'')
     self.assertTrue(isDecodeEncodeTheSame(
-                    encode('b64', ''), '', 'b64'))
+                    encode('b64', ''), b'', 'b64'))
 
   def test_35_authentication(self):
     """

@@ -38,7 +38,7 @@ from hashlib import md5
 
 from ZPublisher.HTTPRequest import FileUpload
 from OFS.Image import Pdata
-from six.moves import cStringIO as StringIO
+from io import BytesIO
 import transaction
 
 class PdataHelper(persistent.Persistent):
@@ -68,14 +68,14 @@ class PdataHelper(persistent.Persistent):
 
     n = self._max_len
 
-    if isinstance(value, (str, unicode)):
-      if isinstance(value, unicode):
+    if isinstance(value, six.string_types + (six.binary_type, )):
+      if not isinstance(value, six.binary_type):
         value = value.encode('utf-8')
-      size=len(value)
+      size = len(value)
       if size < n:
         return Pdata(value), size
-      # Big string: cut it into smaller chunks
-      value = StringIO(value)
+      # Big data: cut it into smaller chunks
+      value = BytesIO(value)
 
     if isinstance(value, FileUpload) and not value:
       raise ValueError('File not specified')
@@ -161,11 +161,13 @@ class PdataHelper(persistent.Persistent):
     """
     return self.size
 
-  def __str__(self):
+  def __bytes__(self):
     """Return string concatenation
     of all Pdata parts
     """
-    return str(self._data)
+    return bytes(self._data)
+  if six.PY2:
+    __str__ = __bytes__
 
   def getContentMd5(self):
     """
@@ -176,26 +178,20 @@ class PdataHelper(persistent.Persistent):
     self.md5sum = md5sum
     return md5sum
 
-  def __getslice__(self, i, j):
+  def __getitem__(self, i):
     """XXX Could be improved to avoid loading
     into memory all Pdata objects
     """
-    return self.__str__()[i:j]
+    return self.__bytes__()[i]
 
   def getLastPdata(self):
     """return the last Pdata element
     of a Pdata chains
     """
     pdata = self._data
-    if six.PY2:
-      next_ = pdata.next
-    else:
-      next_ = pdata.__next__
+    next_ = pdata.next
 
     while next_ is not None:
       pdata = next_
-      if six.PY2:
-        next_ = pdata.next
-      else:
-        next_ = pdata.__next__
+      next_ = pdata.next
     return pdata

@@ -114,7 +114,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
                               (subscription.getPath(),
                                'applySyncCommand'),
                                after_tag=tag,).sendMessage(
-                                 xml=str(syncml_response))
+                                 xml=bytes(syncml_response))
         # Synchronization process is now finished
         syncml_logger.info("\tClient finished processing messages from server")
         subscription.finish()
@@ -138,7 +138,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       # transport failure
       syncml_logger.info("....client sending message....")
       subscription.activate(activity="SQLQueue").sendMessage(
-        xml=str(syncml_response))
+        xml=bytes(syncml_response))
 
 
   def processServerSynchronization(self, subscriber, syncml_request):
@@ -242,7 +242,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       subscriber.activate(activity="SQLQueue",
                           after_method_id=after_method_id,
                           after_tag=tag).sendMessage(
-                            xml=str(syncml_response))
+                            xml=bytes(syncml_response))
 
   def runGetAndActivate(self, subscription, tag, after_method_id=None):
     """
@@ -295,7 +295,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
         subscription.activate(
           activity="SQLQueue",
           priority=ACTIVITY_PRIORITY,
-          tag=subscription.getRelativeUrl()).sendMessage(xml=str(syncml_response))
+          tag=subscription.getRelativeUrl()).sendMessage(xml=bytes(syncml_response))
     else:
       # XXX For now always split by one
       activate = subscription.activate

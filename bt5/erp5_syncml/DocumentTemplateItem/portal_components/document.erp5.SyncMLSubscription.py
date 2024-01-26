@@ -32,7 +32,7 @@ from logging import getLogger
 from six.moves.urllib.parse import urlparse
 from lxml import etree
 from copy import deepcopy
-from six import string_types as basestring
+import six
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager
@@ -207,7 +207,7 @@ class SyncMLSubscription(XMLObject):
     Return the path of the subscription that will be used in sql table
     _ char must be escaped because of the LIKE behaviour
     """
-    return "%s/%%" % (self.getSourceValue().getPath().replace("_","\_"),) # pylint: disable=anomalous-backslash-in-string
+    return "%s/%%" % (self.getSourceValue().getPath().replace("_", r"\_"),)
 
   security.declarePrivate('sendSyncCommand')
   def sendSyncCommand(self, min_gid, max_gid, message_id, activate_kw):
@@ -227,7 +227,7 @@ class SyncMLSubscription(XMLObject):
     # transport failure
     # activate_kw["group_method_id"] = None
     # activate_kw["group_method_cost"] = .05
-    self.activate(**activate_kw).sendMessage(xml=str(syncml_response))
+    self.activate(**activate_kw).sendMessage(xml=bytes(syncml_response))
 
   security.declarePrivate('applySyncCommand')
   def applySyncCommand(self, response_message_id, activate_kw, **kw):
@@ -252,7 +252,7 @@ class SyncMLSubscription(XMLObject):
       self.activate(activity="SQLQueue",
                     # group_method_id=None,
                     # group_method_cost=.05,
-                    tag=activate_kw).sendMessage(xml=str(syncml_response))
+                    tag=activate_kw).sendMessage(xml=bytes(syncml_response))
 
 
   security.declarePrivate('getAndActivate')
@@ -533,7 +533,7 @@ class SyncMLSubscription(XMLObject):
                                       domain=self))
 
         xml_document = incoming_data
-        if not isinstance(xml_document, basestring):
+        if not isinstance(xml_document, bytes):
           # XXX using deepcopy to remove parent link - must be done elsewhere
           xml_document = deepcopy(xml_document)
           # Remove useless namespace
@@ -541,7 +541,7 @@ class SyncMLSubscription(XMLObject):
           xml_document = etree.tostring(xml_document, encoding='utf-8',
                                         pretty_print=True)
 
-        if isinstance(xml_document, unicode):
+        if six.PY2 and isinstance(xml_document, unicode):
           xml_document = xml_document.encode('utf-8')
         # Link the signature to the document
         if signature:
@@ -605,12 +605,12 @@ class SyncMLSubscription(XMLObject):
           signature.changeToConflict()
           # Register the data received which generated the diff
           # XXX Why ?
-          if not isinstance(incoming_data, basestring):
+          if not isinstance(incoming_data, bytes):
             incoming_data = etree.tostring(incoming_data,
                                            encoding='utf-8')
           signature.setPartialData(incoming_data)
         else:
-          signature.setData(str(xml_document))
+          signature.setData(bytes(xml_document))
           signature.synchronize()
         syncml_logger.info("change state of signature to %s with %s",
                            signature.getValidationState(), signature.getData())
@@ -669,7 +669,7 @@ class SyncMLSubscription(XMLObject):
       }
     syncml_logger.info("Sending final message for modificationson on %s",
                        self.getRelativeUrl())
-    self.activate(**final_activate_kw).sendMessage(xml=str(syncml_response))
+    self.activate(**final_activate_kw).sendMessage(xml=bytes(syncml_response))
 
 
   security.declarePrivate('getDeletedSyncMLData')
@@ -702,11 +702,10 @@ class SyncMLSubscription(XMLObject):
       }
     syncml_logger.info("Sending final message for modificationson on %s",
                        self.getRelativeUrl())
-    self.activate(**final_activate_kw).sendMessage(xml=str(syncml_response))
+    self.activate(**final_activate_kw).sendMessage(xml=bytes(syncml_response))
 
   def getSearchablePath(self):
-    return "%s%%" %(self.getPath().replace('_', '\_'),) # pylint: disable=anomalous-backslash-in-string
-
+    return "%s%%" %(self.getPath().replace('_', r'\_'),)
 
   def _generateSyncCommand(self, action, signature, data_diff ,document_data, gid,
                            conduit, syncml_response):
@@ -975,10 +974,12 @@ class SyncMLSubscription(XMLObject):
       # old way using the conduit
       conduit = self.getConduit()
       raw_gid = conduit.getGidFromObject(object)
-    if isinstance(raw_gid, unicode):
+    if isinstance(raw_gid, six.text_type):
       raw_gid = raw_gid.encode('ascii', 'ignore')
     if encoded:
       gid = b16encode(raw_gid)
+      if six.PY3:
+        gid = gid.decode()
     else:
       gid = raw_gid
     return gid
