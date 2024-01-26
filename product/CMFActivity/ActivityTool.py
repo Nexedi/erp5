@@ -69,6 +69,7 @@ from Products.MailHost.MailHost import MailHostError
 from zLOG import LOG, INFO, WARNING, ERROR
 import warnings
 from time import time
+from pprint import pformat
 
 try:
   from Products.TimerService import getTimerService
@@ -665,7 +666,7 @@ class ActivityTool (BaseTool):
                      ] + list(BaseTool.manage_options))
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivities' )
-    manageActivities = DTMLFile( 'dtml/manageActivities', globals() )
+    manageActivities = DTMLFile( 'dtml/manageActivities', globals(), pformat=pformat )
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivitiesAdvanced' )
     manageActivitiesAdvanced = DTMLFile( 'dtml/manageActivitiesAdvanced', globals() )
