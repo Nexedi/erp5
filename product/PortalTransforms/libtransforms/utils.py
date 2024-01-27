@@ -230,9 +230,4 @@ class IllegalHTML( ValueError ):
 #                 j = i + len(toHandle)
 #         return j
 
-# def scrubHTML( html ):
-#     """ Strip illegal HTML tags from string text.  """
-#     parser = StrippingParser()
-#     parser.feed( html )
-#     parser.close()
-#     return parser.result
+from Products.PortalTransforms.transforms.safe_html import scrubHTML

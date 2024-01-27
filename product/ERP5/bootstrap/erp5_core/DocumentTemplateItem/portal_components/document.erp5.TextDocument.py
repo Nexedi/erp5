@@ -163,7 +163,11 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         if mime_type == 'text/html':
           mime_type = 'text/x-html-safe'
         if src_mimetype != "image/svg+xml":
-          result = portal_transforms.convertToData(mime_type, text_content,
+          if six.PY2:
+            data = text_content
+          else:
+            data = text_content.encode()
+          result = portal_transforms.convertToData(mime_type, data,
                                                    object=self, context=self,
                                                    filename=filename,
                                                    mimetype=src_mimetype,
@@ -373,6 +377,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                                                   text_content, content_type)
       else:
         message = 'Conversion to base format succeeds'
+    # TODO(zope4py3): rethink this, shouldn't we store bytes in base data ?
     self._setBaseData(text_content)
     self._setBaseContentType(content_type)
     return message
@@ -385,15 +390,17 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
       text_content = self._baseGetTextContent()
-    text_content = self._baseGetTextContent(default)
+    else:
+      text_content = self._baseGetTextContent(default)
     if isinstance(text_content, bytes):
-      # XXX Zope4py3: should this return str ??
+      # TODO(Zope4py3): should this return str ??
       # We probably have "legacy" documents where `text_content` is a python2
       # str encoded as something else than utf-8.
       # Maybe we should introduce a new text_content_encoding property and
       # expose API to getRawTextContent (as bytes) and getTextContent would return
       # the decoded string.
       # XXX what about _convertToBaseFormat/guessCharsetAndConvert ???
+      LOG('TextDocument', WARNING, "getTextContent with bytes %s" % text_content)
       try:
         text_content = text_content.decode('utf-8')
       except UnicodeDecodeError:
