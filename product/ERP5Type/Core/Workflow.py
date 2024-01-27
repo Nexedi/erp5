@@ -696,7 +696,7 @@ class Workflow(XMLObject):
     return {}
 
   def _getStatusOf(self, ob):
-    tool = self.getParent()
+    tool = self.getParentValue()
     status = tool.getStatusOf(self.getId(), ob)
     if status is None:
       return {}
