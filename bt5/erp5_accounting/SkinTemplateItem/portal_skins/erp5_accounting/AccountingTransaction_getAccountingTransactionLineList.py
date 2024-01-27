@@ -9,6 +9,6 @@ sort_dict = { 'income': 0,
               'refundable_vat': -1 }
 
 def getAccountingTransactionLineSortKey(line):
-  return sort_dict.get(line.getId(), line.getIntIndex() or line.getIntId())
+  return sort_dict.get(line.getId(), (line.getIntIndex() or line.getIntId() or 0))
 
 return sorted(context.contentValues(portal_type=portal_type, checked_permission="View"), key=getAccountingTransactionLineSortKey)
