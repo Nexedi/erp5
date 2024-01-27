@@ -795,7 +795,10 @@ class ObjectTemplateItem(BaseTemplateItem):
         return mime.extensions[0]
       for ext in mime.globs:
         if ext[0] == "*" and ext.count(".") == 1:
-          return ext[2:].encode("utf-8")
+          ext = ext[2:]
+          if six.PY2:
+            return ext.encode("utf-8")
+          return ext
 
     # in case we could not read binary flag from mimetypes_registry then return
     # '.bin' for all the Portal Types where exported_property_type is data
