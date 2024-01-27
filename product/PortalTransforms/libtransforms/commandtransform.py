@@ -154,7 +154,7 @@ class subprocesstransform:
         try:
             if not self.useStdin:
               stdin_file = tempfile.NamedTemporaryFile()
-              stdin_file.write( data)
+              stdin_file.write(data)
               stdin_file.seek(0)
               command = command % {'infile': stdin_file.name} # apply tmp name to command
               data = None
