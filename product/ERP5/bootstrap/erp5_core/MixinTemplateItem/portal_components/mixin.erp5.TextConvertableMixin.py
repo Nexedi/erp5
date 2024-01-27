@@ -32,6 +32,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from warnings import warn
 
+
 class TextConvertableMixin:
   """
   This class provides a generic implementation of ITextConvertable.
@@ -46,9 +47,9 @@ class TextConvertableMixin:
     """
     Converts the current document to plain text
     """
-    kw.pop('format', None)
-    _, data = self.convert(format='txt', **kw)
-    return str(data)
+    kw['format'] = 'txt'
+    _, data = self.convert(**kw)
+    return data
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asRawText')
@@ -56,9 +57,9 @@ class TextConvertableMixin:
     """
     Converts the current document to plain text without substitution
     """
-    kw.pop('format', None)
-    _, data = self.convert(format='txt', substitute=False, **kw)
-    return str(data)
+    kw['format'] = 'txt'
+    kw['substitute'] = False
+    return self.asText(**kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asTextContent')

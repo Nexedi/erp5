@@ -20,8 +20,15 @@ from Products.PortalTransforms.transforms.broken import BrokenTransform
 
 
 def import_from_name(module_name):
-    """ import and return a module by its name """
-    return __import__(module_name, {}, {}, module_name)
+    """import and return a module by its name"""
+    __traceback_info__ = (module_name,)
+    m = __import__(module_name)
+    try:
+        for sub in module_name.split(".")[1:]:
+            m = getattr(m, sub)
+    except AttributeError as e:
+        raise ImportError(str(e))
+    return m
 
 def make_config_persistent(kwargs):
     """ iterates on the given dictionnary and replace list by persistent list,
