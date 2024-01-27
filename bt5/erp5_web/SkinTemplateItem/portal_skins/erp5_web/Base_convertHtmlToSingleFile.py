@@ -14,7 +14,8 @@ TODO: export same components into one mhtml attachment if possible.
 """
 # ERP5 web uses format= argument, which is also a python builtin
 # pylint: disable=redefined-builtin
-
+import six
+from Products.PythonScripts.standard import html_quote
 from zExceptions import Unauthorized
 from base64 import b64encode, b64decode
 portal = context.getPortalObject()
@@ -27,10 +28,11 @@ mhtml_message = {
 }
 
 def main(data):
-  if isinstance(data, str):
+  if isinstance(data, bytes):
     data = data.decode("utf-8")
   data = u"".join([fn(p) for fn, p in handleHtmlPartList(parseHtml(data))])
-  data = data.encode("utf-8")
+  if six.PY2:
+    data = data.encode("utf-8")
   if format == "mhtml":
     mhtml_message["attachment_list"].insert(0, {
       "mime_type": "text/html",
@@ -75,7 +77,7 @@ def strHtmlPart(part):
   part_type = part[0]
   if part_type in ("starttag", "startendtag"):
     tag, attrs = handleHtmlTag(part[1], part[2])
-    attrs_str = " ".join(["%s=\"%s\"" % (escapeHtml(k), escapeHtml(v or "")) for k, v in attrs])
+    attrs_str = " ".join(["%s=\"%s\"" % (html_quote(k), html_quote(v or "")) for k, v in attrs])
     return "<%s%s%s>" % (tag, " " + attrs_str if attrs_str else "", " /" if part_type == "startendtag" else "")
   if part_type == "endtag":
     return "</%s>" % part[1]
@@ -191,7 +193,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
         data = str(obj.data or "")
       else:
         data = getattr(obj, "getData", lambda: str(obj))() or ""
-      if isinstance(data, unicode):
+      if six.PY2 and isinstance(data, unicode):
         data = data.encode("utf-8")
       return handleLinkedData(mime, data, src)
     return handleLinkedData(default_mimetype, default_data, src)
@@ -201,7 +203,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
   # use the same behavior as when we call a script from browser URL bar.
   if not hasattr(obj, "getPortalType") and callable(obj):
     mime, data = "text/html", obj()
-    if isinstance(data, unicode):
+    if six.PY2 and isinstance(data, unicode):
       data = data.encode("utf-8")
     return handleLinkedData(mime, data, src)
 
@@ -270,7 +272,7 @@ def handleLinkedData(mime, data, href):
     })
     return url
   else:
-    return "data:%s;base64,%s" % (mime, b64encode(data))
+    return "data:%s;base64,%s" % (mime, b64encode(data.encode()).decode())
 
 def makeHrefAbsolute(href):
   if isHrefAnAbsoluteUrl(href) or not isHrefAUrl(href):
@@ -325,7 +327,8 @@ def replaceFromDataUri(data_uri, replacer):
   if ";base64" in header:
     is_base64 = True
     data = b64decode(data)
-  data = replacer(data)
+  if not is_base64:
+    data = replacer(data)
   return "%s,%s" % (header, b64encode(data) if is_base64 else data)
 
 def extractUrlSearch(url):
@@ -345,9 +348,6 @@ def parseUrlSearch(search):
 
 def parseHtml(text):
   return context.Base_parseHtml(text)
-
-def escapeHtml(text):
-  return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
 
 def anny(iterable, key=None):
   for i in iterable:
