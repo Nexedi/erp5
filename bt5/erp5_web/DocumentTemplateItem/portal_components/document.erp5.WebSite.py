@@ -174,11 +174,7 @@ class WebSite(WebSection):
           if sub_path in section_dict:
             del section_dict[sub_path]
 
-      section_list = section_dict.values()
-
       # Sort by Index
-      section_list.sort(key=lambda x: x.getIntIndex())
-
-      return section_list
+      return sorted(section_dict.values(), key=lambda x: x.getIntIndex())
     else:
       return []
