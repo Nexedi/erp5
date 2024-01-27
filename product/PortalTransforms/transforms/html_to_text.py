@@ -21,14 +21,14 @@ def register():
             return unichr(result).encode('utf-8')
 
     return html_to_text("html_to_text",
-                       ('<script [^>]>.*</script>(?im)', ' '),
-                       ('<style [^>]>.*</style>(?im)', ' '),
-                       ('<head [^>]>.*</head>(?im)', ' '),
+                       ('(?im)<script [^>]>.*</script>', ' '),
+                       ('(?im)<style [^>]>.*</style>', ' '),
+                       ('(?im)<head [^>]>.*</head>', ' '),
 
                        # added for ERP5, we want to transform <br/> in newlines
-                       ('<br\s*/?>(?im)', '\n'),
+                       ('(?im)<br\s*/?>', '\n'),
 
                        ('(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
-                       ('<[^>]*>(?i)(?m)', ' '),
+                       ('(?i)(?m)<[^>]*>', ' '),
                        (r'&([a-zA-Z0-9#]*?);', sub_func),
                        )
