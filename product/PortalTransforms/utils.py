@@ -2,12 +2,13 @@
 """some common utilities
 """
 
+import io
 import six
 if six.PY2:
-    from email import message_from_file as message_from_bytes
+    from email import message_from_string as message_from_bytes
 else:
     from email import message_from_bytes
-from six.moves import cStringIO as StringIO
+
 
 class TransformException(Exception):
     pass
@@ -35,4 +36,6 @@ def safeToInt(value):
 
 def parseContentType(content_type):
   """Parses `text/plain;charset="utf-8"` to a email.Message object"""
-  return message_from_bytes(StringIO("Content-Type:" + content_type.replace("\r\n", "\r\n\t")))
+  return message_from_bytes(
+    b"Content-Type:"
+    + content_type.replace("\r\n", "\r\n\t").encode('utf-8'))
