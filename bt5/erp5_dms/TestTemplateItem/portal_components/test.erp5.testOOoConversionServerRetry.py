@@ -25,12 +25,11 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from erp5.component.test.testDms import makeFileUpload
+from erp5.component.test.testDms import DocumentUploadTestCase
 from Products.ERP5Form.PreferenceTool import Priority
 
 
-class TestOOoConversionServerRetry(ERP5TypeTestCase):
+class TestOOoConversionServerRetry(DocumentUploadTestCase):
   def getBusinessTemplateList(self):
     business_template_list = ['erp5_core_proxy_field_legacy',
                             'erp5_jquery',
@@ -80,7 +79,7 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     self.tic()
 
     filename = 'monochrome_sample.tiff'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.document_module.newContent(portal_type='Text')
     document.edit(file = file_)
     message = document.Document_tryToConvertToBaseFormat()
@@ -95,7 +94,7 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     system_pref.setPreferredDocumentConversionServerUrlList(['https://broken.url'])
     self.tic()
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
     message = document.Document_tryToConvertToBaseFormat()
@@ -110,7 +109,7 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     system_pref.setPreferredOoodocServerTimeout(1)
     self.tic()
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
     message = document.Document_tryToConvertToBaseFormat()
