@@ -39,7 +39,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class OpenAPITestCase(ERP5TypeTestCase):
   _type_id = NotImplemented  # type: str
-  _open_api_schema = NotImplemented  # type: bytes
+  _open_api_schema = NotImplemented  # type: str
   _open_api_schema_content_type = 'application/json'
   _public_api = True
 
@@ -375,7 +375,7 @@ class TestOpenAPIServicePetController(OpenAPIPetStoreTestCase):
 class TestOpenAPIServiceYaml(OpenAPITestCase):
   _type_id = 'Test Open API YAML'
   _open_api_schema_content_type = 'application/x-yaml'
-  _open_api_schema = b'''
+  _open_api_schema = '''
 openapi: 3.0.3
 info:
   title: TestOpenAPIServiceYaml
@@ -456,7 +456,7 @@ class TestPathParameterSerialization(OpenAPITestCase):
             }
           }
         }
-      }).encode()
+      })
 
   def test_primitive_parameter_serialization(self):
     self.addPythonScript(
@@ -532,7 +532,7 @@ class TestQueryParameterSerialization(OpenAPITestCase):
             }
           }
         }
-      }).encode()
+      })
 
   def test_array_parameter_serialization(self):
     self.addPythonScript(
@@ -707,7 +707,7 @@ class TestOpenAPINonAsciiParameters(OpenAPIPetStoreTestCase):
 class TestOpenAPICommonParameters(OpenAPIPetStoreTestCase):
   _type_id = 'Test Open API Common Parameters'
   _open_api_schema = (
-    b'''
+    '''
 {
  "openapi": "3.0.3",
  "info": {
@@ -718,7 +718,7 @@ class TestOpenAPICommonParameters(OpenAPIPetStoreTestCase):
   '''
 
     # https://swagger.io/docs/specification/describing-parameters/#common-for-path
-    b'''
+    '''
   "/common-for-path": {
    "parameters": [
     {
@@ -749,7 +749,7 @@ class TestOpenAPICommonParameters(OpenAPIPetStoreTestCase):
   },'''
 
     # https://swagger.io/docs/specification/describing-parameters/#common-for-various-paths
-    b'''
+    '''
   "/common-for-various-paths": {
    "get": {
     "operationId": "testGET2",
@@ -761,7 +761,7 @@ class TestOpenAPICommonParameters(OpenAPIPetStoreTestCase):
     '''
 
     # here we also excercice $refs in parameter schemas
-    b'''
+    '''
        "$ref": "#/components/schemas/custom-number"
       }
      },
@@ -781,7 +781,7 @@ class TestOpenAPICommonParameters(OpenAPIPetStoreTestCase):
     # https://spec.openapis.org/oas/v3.1.0#fixed-fields-6
     # $refs: Allows for a referenced definition of this path item.
     # The referenced structure MUST be in the form of a Path Item Object.
-    b'''
+    '''
   "/alias": {
    "$ref": "#/paths/~1common-for-path"
   }
@@ -895,7 +895,7 @@ class TestOpenAPIMissingParameters(OpenAPIPetStoreTestCase):
           }
         }
       }
-    }).encode()
+    })
 
   def test_required_query(self):
     self.addPythonScript(
@@ -980,7 +980,7 @@ class TestOpenAPIErrorHandling(OpenAPIPetStoreTestCase):
     self.addPythonScript(
       'TestPetStoreOpenAPI_findPetsByStatus',
       'status',
-      '1/0',
+      '1//0',
     )
     response = self.publish(
       self.connector.getPath() + '/pet/findByStatus?status=available')
@@ -1097,7 +1097,7 @@ class TestPathParameterAndAcquisition(OpenAPIPetStoreTestCase):
   """
   def afterSetUp(self):
     super(TestPathParameterAndAcquisition, self).afterSetUp()
-    if not '789' in self.portal.portal_web_services.objectIds():
+    if '789' not in self.portal.portal_web_services.objectIds():
       self.portal.portal_web_services.newContent(
         id='789',
         portal_type=self.portal.portal_web_services.allowedContentTypes()
