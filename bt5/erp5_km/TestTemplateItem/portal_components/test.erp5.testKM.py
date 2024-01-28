@@ -31,13 +31,14 @@ import unittest
 from unittest import expectedFailure
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Base import TempBase
-from erp5.component.test.testDms import makeFileUpload, TestDocumentMixin
+from erp5.component.test.testDms import TestDocumentMixin
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""
   return knowledge_pad.searchFolder(
                 portal_type = 'Knowledge Box',
                 specialise_uid = gadget.getUid())[0].getObject().getRelativeUrl()
+
 
 class TestKMMixIn(TestDocumentMixin):
   """
@@ -1008,38 +1009,38 @@ class TestKMSearch(TestKMMixIn):
     # create docs to be referenced:
     # (1) TEST, 002, en
     filename = 'TEST-en-002.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     self.portal.portal_contributions.newContent(file=file_)
 
     # (2) TEST, 002, fr
     as_name = 'TEST-fr-002.odt'
-    file_ = makeFileUpload(filename, as_name)
+    file_ = self.makeFileUpload(filename, as_name)
     document2 = self.portal.portal_contributions.newContent(file=file_)
 
     # (3) TEST, 003, en
     as_name = 'TEST-en-003.odt'
-    file_ = makeFileUpload(filename, as_name)
+    file_ = self.makeFileUpload(filename, as_name)
     document3 = self.portal.portal_contributions.newContent(file=file_)
 
     # create docs to contain references in text_content:
     # REF, 002, en; "I use reference to look up TEST"
     filename = 'REF-en-002.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document5 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFLANG, 001, en: "I use reference and language to look up TEST-fr"
     #filename = 'REFLANG-en-001.odt'
-    #file = makeFileUpload(filename)
+    #file = self.makeFileUpload(filename)
     #document6 = self.portal.portal_contributions.newContent(file=file)
 
     # REFVER, 001, en: "I use reference and version to look up TEST-002"
     #filename = 'REFVER-en-001.odt'
-    #file = makeFileUpload(filename)
+    #file = self.makeFileUpload(filename)
     #document7 = self.portal.portal_contributions.newContent(file=file)
 
     # REFVERLANG, 001, en: "I use reference, version and language to look up TEST-002-en"
     #filename = 'REFVERLANG-en-001.odt'
-    #file = makeFileUpload(filename)
+    #file = self.makeFileUpload(filename)
     #document8 = self.portal.portal_contributions.newContent(file=file)
 
     self.tic()
