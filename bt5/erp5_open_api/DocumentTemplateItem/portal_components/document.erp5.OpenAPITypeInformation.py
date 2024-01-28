@@ -340,7 +340,10 @@ class OpenAPITypeInformation(ERP5TypeInformation):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def getSchema(self):
-    stream = io.BytesIO(self.getTextContent() or b'{}')
+    text_content = self.getTextContent() or '{}'
+    if six.PY3:
+      text_content = text_content.encode()
+    stream = io.BytesIO(text_content)
     if self.getContentType() == 'application/x-yaml':
       try:
         import yaml  # pylint:disable=import-error

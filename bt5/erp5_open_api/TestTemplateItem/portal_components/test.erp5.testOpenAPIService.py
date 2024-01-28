@@ -980,7 +980,7 @@ class TestOpenAPIErrorHandling(OpenAPIPetStoreTestCase):
     self.addPythonScript(
       'TestPetStoreOpenAPI_findPetsByStatus',
       'status',
-      '1/0',
+      '1//0',
     )
     response = self.publish(
       self.connector.getPath() + '/pet/findByStatus?status=available')
