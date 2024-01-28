@@ -31,7 +31,7 @@
 import unittest
 from DateTime import DateTime
 
-from erp5.component.test.testDms import TestDocumentMixin, makeFileUpload
+from erp5.component.test.testDms import TestDocumentMixin
 
 try:
   import magic
@@ -59,7 +59,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
 
   def test_image_conversion(self):
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     format_ = 'png'
@@ -96,7 +96,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       Test Conversion Cache mechanism
     """
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
@@ -129,7 +129,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
 
   def test_02_VolatileCacheConversionOfTempObject(self):
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_, temp_object=1)
     document.uploadFile()
     document.processFile()
@@ -163,8 +163,8 @@ class TestDocumentConversionCache(TestDocumentMixin):
   def test_03_CacheConversionOfTempObjectIsNotMixed(self):
     filename1 = 'TEST-en-002.doc'
     filename2 = 'TEST-en-002.odt'
-    file1 = makeFileUpload(filename1)
-    file2 = makeFileUpload(filename2)
+    file1 = self.makeFileUpload(filename1)
+    file2 = self.makeFileUpload(filename2)
     document1 = self.portal.portal_contributions.newContent(file=file1, temp_object=1)
     document1.uploadFile()
     document1.processFile()
@@ -187,7 +187,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.portal.portal_caches.clearAllCache()
     self.tic()
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
@@ -223,7 +223,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       Test Conversion Cache return expected value with checksum
     """
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
@@ -252,7 +252,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     Check that md5 checksum is well updated when upload a file
     """
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
@@ -260,7 +260,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     md5sum = document.getContentMd5()
     self.assertTrue(md5sum)
     filename2 = 'TEST-en-002.odt'
-    file2 = makeFileUpload(filename2)
+    file2 = self.makeFileUpload(filename2)
     document.edit(file=file2)
     self.assertNotEqual(md5sum, document.getContentMd5())
     self.tic()
@@ -275,7 +275,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.portal.portal_caches.clearAllCache()
     self.tic()
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document_id = 'an id with spaces'
     portal_type = 'Text'
     module = self.portal.getDefaultModule(portal_type)
@@ -314,7 +314,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.assertEqual(len(portal_type_list), len([pt for pt in portal_type_list if pt in data_mapping]))
     for portal_type in portal_type_list:
       module = self.portal.getDefaultModule(portal_type=portal_type)
-      upload_file = makeFileUpload(data_mapping[portal_type])
+      upload_file = self.makeFileUpload(data_mapping[portal_type])
       document = module.newContent(portal_type=portal_type)
       document.edit(file=upload_file)
       self.tic()
