@@ -90,7 +90,7 @@ ModuleSecurityInfo(__name__).declarePublic(
 )
 
 # On python2, make sure we use UTF-8 strings for the json schemas, so that we don't
-# have  ugly u' prefixs in the reprs. This also transforms the collections.OrderedDict
+# have ugly u' prefixes in the reprs. This also transforms the collections.OrderedDict
 # to simple dicts, because the former also have an ugly representation.
 # http://stackoverflow.com/a/13105359
 if six.PY2:
@@ -340,7 +340,10 @@ class OpenAPITypeInformation(ERP5TypeInformation):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def getSchema(self):
-    stream = io.BytesIO(self.getTextContent() or b'{}')
+    text_content = self.getTextContent() or '{}'
+    if six.PY3:
+      text_content = text_content.encode()
+    stream = io.BytesIO(text_content)
     if self.getContentType() == 'application/x-yaml':
       try:
         import yaml  # pylint:disable=import-error
