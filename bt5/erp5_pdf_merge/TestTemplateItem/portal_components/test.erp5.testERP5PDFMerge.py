@@ -26,11 +26,11 @@
 ##############################################################################
 
 import warnings
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from erp5.component.test.testDms import makeFileUpload
+from erp5.component.test.testDms import DocumentUploadTestCase
 from Products.ERP5Type import Utils
 
-class TestERP5PDFMerge(ERP5TypeTestCase):
+
+class TestERP5PDFMerge(DocumentUploadTestCase):
 
   def test_showwarning_issue(self):
     """
@@ -39,7 +39,7 @@ class TestERP5PDFMerge(ERP5TypeTestCase):
     """
     self.assertEqual(Utils._showwarning, warnings.showwarning)
     document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('REF-en-001.pdf'))
+      file=self.makeFileUpload('REF-en-001.pdf'))
     merged_pdf_data = self.portal.ERP5Site_mergePDFList(
       [document.getData(), document.getData()])
     self.portal.document_module.newContent(
@@ -50,7 +50,7 @@ class TestERP5PDFMerge(ERP5TypeTestCase):
 
   def test_erp5_merge_pdf(self):
     document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('REF-en-001.pdf'))
+      file=self.makeFileUpload('REF-en-001.pdf'))
     merged_pdf_data = self.portal.ERP5Site_mergePDFList(
       [document.getData(), document.getData()])
     merged_document = self.portal.document_module.newContent(
@@ -60,7 +60,7 @@ class TestERP5PDFMerge(ERP5TypeTestCase):
 
   def test_erp5_merge_pdf_start_on_recto(self):
     document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('REF-en-001.pdf'))
+      file=self.makeFileUpload('REF-en-001.pdf'))
     merged_pdf_data = self.portal.ERP5Site_mergePDFList(
       [document.getData(), document.getData()], start_on_recto=True)
     merged_document = self.portal.document_module.newContent(
