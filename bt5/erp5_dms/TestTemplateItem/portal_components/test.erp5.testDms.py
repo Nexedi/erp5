@@ -46,9 +46,9 @@
 """
 
 from __future__ import print_function
+import io
 import unittest
 import time
-from six.moves import cStringIO as StringIO
 from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
@@ -1467,7 +1467,7 @@ class TestDocument(TestDocumentMixin):
       repeat_watermark=False)
 
     # this looks like a pdf
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
 
     # and ERP5 can make a PDF Document out of it
     watermarked_document = self.portal.document_module.newContent(
@@ -1487,7 +1487,7 @@ class TestDocument(TestDocumentMixin):
       watermark_data=watermark_document.getData(),
       repeat_watermark=True)
 
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
     watermarked_document = self.portal.document_module.newContent(
       portal_type='PDF',
       data=watermarked_data)
@@ -1506,7 +1506,7 @@ class TestDocument(TestDocumentMixin):
       repeat_watermark=False,
       watermark_start_page=1) # This is 0 based.
 
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
     watermarked_document = self.portal.document_module.newContent(
       portal_type='PDF',
       data=watermarked_data)
@@ -1566,7 +1566,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('Image', document.getPortalType())
     resized_image = document.convert(format='png', display='small')[1]
     identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
-    self.assertNotIn('1-bit', identify_output)
+    self.assertNotIn(b'1-bit', identify_output)
     self.assertEqual('ERP5 is a free software.', document.asText())
 
   def test_Base_showFoundText(self):
@@ -1740,7 +1740,7 @@ class TestDocument(TestDocumentMixin):
     module = self.portal.getDefaultModule(web_page_portal_type)
     web_page = module.newContent(portal_type=web_page_portal_type)
 
-    html_content = """<html>
+    html_content = u"""<html>
       <head>
         <meta http-equiv="refresh" content="5;url=http://example.com/"/>
         <meta http-equiv="Set-Cookie" content=""/>
@@ -1766,9 +1766,7 @@ class TestDocument(TestDocumentMixin):
       </body>
     </html>
     """
-    if six.PY2:
-      html_content = html_content.decode('utf-8').encode('iso-8859-1')
-    
+    html_content = html_content.encode('iso-8859-1')
     # content encoded into another codec
     # than utf-8 comes from necessarily an external file
     # (Ingestion, or FileField), not from user interface
@@ -1777,12 +1775,8 @@ class TestDocument(TestDocumentMixin):
     # as it is done in reality
 
     # Mimic the behaviour of a FileUpload from WebPage_view
-    file_like = StringIO()
-    file_like.write(html_content)
-    setattr(file_like, 'filename', 'something.htm')
-    if six.PY3:
-      from io import BytesIO
-      file_like = BytesIO(file_like.getvalue().encode())
+    file_like = io.BytesIO(html_content)
+    file_like.filename = 'something.htm'
     web_page.edit(file=file_like)
     # run conversion to base format
     self.tic()
@@ -2074,11 +2068,11 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertEqual(document.asText(), 'ERP5 is a free software.')
 
   def test_broken_pdf_asText(self):
-    class StringIOWithFilename(StringIO):
+    class BytesIOWithFilename(io.BytesIO):
       filename = 'broken.pdf'
     document = self.portal.document_module.newContent(
         portal_type='PDF',
-        file=StringIOWithFilename('broken'))
+        file=BytesIOWithFilename(b'broken'))
     self.assertEqual(document.asText(), '')
     self.tic() # no activity failure
 
@@ -2087,7 +2081,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     pdf_writer = PyPDF2.PdfFileWriter()
     pdf_writer.addPage(pdf_reader.getPage(0))
     pdf_writer.encrypt('secret')
-    encrypted_pdf_stream = StringIO()
+    encrypted_pdf_stream = io.BytesIO()
     pdf_writer.write(encrypted_pdf_stream)
     document = self.portal.document_module.newContent(
         portal_type='PDF',
@@ -2169,12 +2163,12 @@ return 1
       for credential in ['ERP5TypeTestCase:', 'zope_user:']:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
-        self.assertIn('200 OK', response.getOutput())
+        self.assertIn(b'200 OK', response.getOutput())
         # OOod produced HTML navigation, test it
-        self.assertIn('First page', response.getBody())
-        self.assertIn('Back', response.getBody())
-        self.assertIn('Continue', response.getBody())
-        self.assertIn('Last page', response.getBody())
+        self.assertIn(b'First page', response.getBody())
+        self.assertIn(b'Back', response.getBody())
+        self.assertIn(b'Continue', response.getBody())
+        self.assertIn(b'Last page', response.getBody())
 
   def test_getTargetFormatItemList(self):
     """
