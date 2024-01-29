@@ -84,15 +84,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_url_string</string>
-                        <string>my_description</string>
-                        <string>my_text_content</string>
-                        <string>my_connection_xml</string>
-                        <string>my_ssl_key</string>
-                        <string>my_ssl_certificate</string>
-                        <string>my_sla_xml</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -105,10 +97,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_status</string>
                         <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_source_reference</string>
-                        <string>my_successor_related_title</string>
+                        <string>my_aggregate_reference</string>
+                        <string>todo</string>
                       </list>
                     </value>
                 </item>
@@ -116,13 +108,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_portal_type</string>
                         <string>my_specialise_title</string>
-                        <string>my_aggregate_parent_reference</string>
-                        <string>my_aggregate_title</string>
-                        <string>my_successor_title_list</string>
-                        <string>my_translated_slap_state_title</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>my_partition_id</string>
                       </list>
                     </value>
                 </item>

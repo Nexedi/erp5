@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_specialise_title</string> </value>
+            <value> <string>my_status</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -249,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Instance Tree</string> </value>
+                    <value> <string>Slap State</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
