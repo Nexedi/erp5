@@ -1,5 +1,5 @@
 <journal xmlns:tal="http://xml.zope.org/namespaces/tal">
   <JournalCode tal:content="options/journal_code"></JournalCode>
   <JournalLib tal:content="options/journal_lib"></JournalLib>
-  <tal:block tal:repeat="result options/result_list"><tal:block tal:replace="structure python: result.detail.decode('zlib')"/></tal:block>
+  <tal:block tal:repeat="result options/result_list"><tal:block tal:replace="structure python: modules['zlib'].decompress(result.detail)"/></tal:block>
 </journal>
