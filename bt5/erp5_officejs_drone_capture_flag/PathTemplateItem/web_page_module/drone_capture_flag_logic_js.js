@@ -362,12 +362,6 @@ var DroneManager = /** @class */ (function () {
     }
     return;
   };
-  DroneManager.prototype.getSinkRate = function () {
-    if (typeof this._API.getSinkRate !== "undefined") {
-      return this._API.getSinkRate(this);
-    }
-    return;
-  };
   DroneManager.prototype.land = function () {
     return this._API.triggerParachute(this);
   };
