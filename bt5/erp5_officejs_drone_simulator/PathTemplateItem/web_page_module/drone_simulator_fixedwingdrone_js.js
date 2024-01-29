@@ -349,7 +349,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
 
   FixedWingDroneAPI.prototype.internal_setTargetCoordinates =
-    function (drone, coordinates, radius) {
+    function (drone, coordinates, speed, radius) {
       if (radius) {
         this._loiter_mode = true;
         if (radius >= LOITER_LIMIT) {
@@ -358,6 +358,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       } else {
         this._loiter_mode = false;
       }
+      this.setSpeed(drone, speed);
     };
 
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
@@ -502,7 +503,12 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
+    drone.setTargetCoordinates(
+      drone_pos.latitude,
+      drone_pos.longitude,
+      5,
+      drone.getAirSpeed()
+    );
   };
   FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
