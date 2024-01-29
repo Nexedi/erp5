@@ -283,7 +283,7 @@ var EnemyDroneAPI = /** @class */ (function () {
     //TODO should be a game parameter (but how to force value to PI quarters?)
     return Math.PI / 4;
   };
-  EnemyDroneAPI.prototype.triggerParachute = function (drone) {
+  EnemyDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
   };

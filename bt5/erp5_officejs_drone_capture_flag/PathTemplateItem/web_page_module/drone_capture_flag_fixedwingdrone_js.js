@@ -144,7 +144,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
         'latitude' : drone_position.latitude,
         'longitude' : drone_position.longitude,
         'yaw': drone.getYaw(),
-        'speed': drone.get3DSpeed(),
+        'speed': drone.getSpeed(),
         'climbRate': drone.getClimbRate()
       };
       _this._drone_dict_list[_this._id] = drone_info;
@@ -535,14 +535,14 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getClimbRate = function (drone) {
     return drone.worldDirection.y * drone.get3DSpeed();
   };
-  FixedWingDroneAPI.prototype.getGroundSpeed = function (drone) {
+  FixedWingDroneAPI.prototype.getSpeed = function (drone) {
     var direction = drone.worldDirection;
     return Math.sqrt(
       Math.pow(direction.x * drone.get3DSpeed(), 2) +
-      Math.pow(direction.z * drone.get3DSpeed(), 2)
+        Math.pow(direction.z * drone.get3DSpeed(), 2)
     );
   };
-  FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
+  FixedWingDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     drone.setTargetCoordinates(
       drone_pos.latitude,

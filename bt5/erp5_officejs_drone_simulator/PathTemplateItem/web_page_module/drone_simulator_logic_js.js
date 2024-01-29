@@ -312,8 +312,8 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.get3DSpeed = function () {
     return this._speed;
   };
-  DroneManager.prototype.getGroundSpeed = function () {
-    return this._API.getGroundSpeed(this);
+  DroneManager.prototype.getSpeed = function () {
+    return this._API.getSpeed(this);
   };
   DroneManager.prototype.getClimbRate = function () {
     return this._API.getClimbRate(this);
@@ -322,7 +322,7 @@ var DroneManager = /** @class */ (function () {
     return this._API.getSinkRate();
   };
   DroneManager.prototype.land = function () {
-    return this._API.triggerParachute(this);
+    return this._API.land(this);
   };
   DroneManager.prototype.exit = function () {
     this._internal_crash();
@@ -722,7 +722,7 @@ var GameManager = /** @class */ (function () {
                   game_manager._game_duration, geo_coordinates.latitude,
                   geo_coordinates.longitude,
                   map_info.start_AMSL + drone_position.z,
-                  drone_position.z, drone.getYaw(), drone.getGroundSpeed(),
+                  drone_position.z, drone.getYaw(), drone.getSpeed(),
                   drone.getClimbRate()
                 ]);
               }
