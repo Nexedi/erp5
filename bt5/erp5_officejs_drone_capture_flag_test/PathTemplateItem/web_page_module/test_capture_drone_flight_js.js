@@ -59,7 +59,8 @@
       '  me.setTargetCoordinates(\n' +
       '    me.initialPosition.latitude + 0.01,\n' +
       '    me.initialPosition.longitude,\n' +
-      '    me.getAltitudeAbs()\n' +
+      '    me.getAltitudeAbs(),\n' +
+      '    16\n' +
       '  );\n' +
       '};\n' +
       '\n' +
