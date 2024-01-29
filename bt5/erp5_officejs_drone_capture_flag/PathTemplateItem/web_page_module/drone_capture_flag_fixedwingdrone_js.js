@@ -515,9 +515,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.isLanding = function () {
     return this._is_landing;
   };
-  FixedWingDroneAPI.prototype.exit = function () {
-    return;
-  };
   FixedWingDroneAPI.prototype.getInitialAltitude = function () {
     return this._map_dict.start_AMSL;
   };

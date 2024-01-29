@@ -287,9 +287,6 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.isLanding = function () {
     return this._is_landing;
   };
-  EnemyDroneAPI.prototype.exit = function () {
-    return;
-  };
   EnemyDroneAPI.prototype.getInitialAltitude = function () {
     return 0;
   };
