@@ -306,8 +306,7 @@ var DroneManager = /** @class */ (function () {
     return this._API.land(this);
   };
   DroneManager.prototype.exit = function () {
-    this._internal_crash();
-    return this._API.exit();
+    return this._internal_crash();
   };
   DroneManager.prototype.isReadyToFly = function () {
     return this._API.isReadyToFly();
