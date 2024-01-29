@@ -78,9 +78,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -114,6 +112,7 @@
                         <string>my_short_title</string>
                         <string>my_reference</string>
                         <string>my_source_reference</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>

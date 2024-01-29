@@ -200,6 +200,10 @@
                           <string>Software Instance</string>
                           <string>Software Instance</string>
                         </tuple>
+                        <tuple>
+                          <string>Slave Instance</string>
+                          <string>Slave Instance</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

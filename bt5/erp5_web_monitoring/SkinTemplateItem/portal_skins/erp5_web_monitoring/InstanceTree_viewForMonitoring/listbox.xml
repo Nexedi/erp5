@@ -10,15 +10,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
-                <string>count_method</string>
-                <string>default_params</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
                 <string>editable_columns</string>
-                <string>hide_rows_on_no_search_criterion</string>
-                <string>list_method</string>
+                <string>lines</string>
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
               </list>
@@ -67,10 +69,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,14 +78,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -119,6 +109,25 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
@@ -167,14 +176,14 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
+                    <key> <string>domain_root_list</string> </key>
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
@@ -191,14 +200,8 @@
                     <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <key> <string>lines</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -218,12 +221,39 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>software_instance_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>descending</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -271,19 +301,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: \'instance_tree_%s_winstance_list\' % here.getUid()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>getSpecialiseRelatedValueList</string> </value>
         </item>
       </dictionary>
     </pickle>
