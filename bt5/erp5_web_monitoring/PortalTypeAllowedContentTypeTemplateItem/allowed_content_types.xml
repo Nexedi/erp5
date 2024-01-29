@@ -1,0 +1,5 @@
+<allowed_content_type_list>
+ <portal_type id="Promise Module">
+  <item>Promise</item>
+ </portal_type>
+</allowed_content_type_list>
