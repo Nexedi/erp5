@@ -82,7 +82,7 @@
       '    longitude: me.initialPosition.longitude,\n' +
       '    altitude: me.initialPosition.altitude\n' +
       '  });\n' +
-      '  me.exit(me.triggerParachute());\n' +
+      '  me.exit(me.land());\n' +
       '};',
     DRAW = true,
     LOG = true,
