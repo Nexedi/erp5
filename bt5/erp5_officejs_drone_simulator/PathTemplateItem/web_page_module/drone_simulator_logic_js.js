@@ -309,7 +309,7 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getYaw = function () {
     return this._API.getYaw(this);
   };
-  DroneManager.prototype.getAirSpeed = function () {
+  DroneManager.prototype.get3DSpeed = function () {
     return this._speed;
   };
   DroneManager.prototype.getGroundSpeed = function () {
