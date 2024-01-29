@@ -30,11 +30,11 @@
 """Test suite for erp5_accounting_l10n_fr
 """
 
+import email
+import io
+import os.path
 import unittest
 import zipfile
-import email
-import os.path
-from six.moves import cStringIO as StringIO
 from DateTime import DateTime
 
 from lxml import etree
@@ -109,7 +109,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         os.path.dirname(Products.ERP5.tests.__file__),
         'test_data',
         noNamespaceSchemaLocation,
-    )) as f:
+    ), 'rb') as f:
       xmlschema_doc = etree.parse(f)
       xmlschema = etree.XMLSchema(xmlschema_doc)
 
@@ -121,14 +121,14 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertNotEqual((), last_message)
     _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = email.message_from_string(message_text.decode())
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
       if file_name == 'FEC-20141231.zip':
         self.assertEqual('application/zip', content_type)
         data = part.get_payload(decode=True)
-        zf = zipfile.ZipFile(StringIO(data))
+        zf = zipfile.ZipFile(io.BytesIO(data))
         self.assertIn("12345689FEC20141231.xml", zf.namelist())
         return zf.open("12345689FEC20141231.xml").read()
     self.fail("Attachment not found")
@@ -253,7 +253,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Premiere Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -269,7 +269,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Seconde Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -289,7 +289,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Premiere Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -305,7 +305,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Seconde Ecriture', 'Troisieme Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -324,7 +324,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Premiere Ecriture', 'Seconde Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -340,7 +340,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Troisieme Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -359,7 +359,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Premiere Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -375,7 +375,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Seconde Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
@@ -391,7 +391,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(1, len(journal_list))
     journal = journal_list[0]
 
-    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    ecriture_list = sorted([x.text for x in journal.xpath(".//EcritureLib")])
     self.assertEqual(['Troisieme Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
