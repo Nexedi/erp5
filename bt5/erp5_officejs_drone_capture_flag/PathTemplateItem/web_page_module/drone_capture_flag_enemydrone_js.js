@@ -49,7 +49,6 @@ var EnemyDroneAPI = /** @class */ (function () {
     if (drone._maxSinkRate > drone._maxSpeed) {
       throw new Error('max sink rate cannot be superior to max speed');
     }
-    drone._maxOrientation = this.getMaxOrientation();
     return;
   };
   /*
@@ -70,11 +69,6 @@ var EnemyDroneAPI = /** @class */ (function () {
                             context._direction.y * updateSpeed,
                             context._direction.z * updateSpeed));
     }
-    var orientationValue = context._maxOrientation *
-        (context._speed / context._maxSpeed);
-    context._mesh.rotation = new BABYLON.Vector3(
-      orientationValue * context._direction.z, 0,
-      -orientationValue * context._direction.x);
     context._controlMesh.computeWorldMatrix(true);
     context._mesh.computeWorldMatrix(true);
     return;
@@ -278,10 +272,6 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getMaxAcceleration = function () {
     return this._flight_parameters.drone.maxAcceleration;
-  };
-  EnemyDroneAPI.prototype.getMaxOrientation = function () {
-    //TODO should be a game parameter (but how to force value to PI quarters?)
-    return Math.PI / 4;
   };
   EnemyDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
