@@ -10,7 +10,7 @@
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
     MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
+    MIN_SPEED = 0,
     MAX_SPEED = 26,
     MAX_ROLL = 35,
     MIN_PITCH = -20,
@@ -95,6 +95,7 @@
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_simulator_logic.js',
       'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
+      'gadget_erp5_page_drone_simulator_multicopterdrone.js',
       'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 
@@ -167,7 +168,7 @@
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < NUMBER_OF_DRONES; i += 1) {
-        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
+        DRONE_LIST[i] = {"id": i, "type": "MulticopterDroneAPI",
                          "script_content": options.script};
       }
       game_parameters_json = {

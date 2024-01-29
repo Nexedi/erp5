@@ -16,6 +16,7 @@
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_simulator_logic.js',
       'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
+      'gadget_erp5_page_drone_simulator_multicopterdrone.js',
       'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 

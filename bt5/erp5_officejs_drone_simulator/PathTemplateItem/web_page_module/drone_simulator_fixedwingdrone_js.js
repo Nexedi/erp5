@@ -464,7 +464,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
         + Math.pow(direction.z * drone.get3DSpeed(), 2)
     );
   };
-  FixedWingDroneAPI.prototype.takeOff = function () {
+  FixedWingDroneAPI.prototype.takeOff = function (drone) {
     return console.log("Fixed-wing drones can only be taken off manually.");
   };
   FixedWingDroneAPI.prototype.land = function (drone) {
