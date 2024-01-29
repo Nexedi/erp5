@@ -426,7 +426,7 @@ var DroneManager = /** @class */ (function () {
     return;
   };
   DroneManager.prototype.takeOff = function () {
-    return this._API.takeOff();
+    return this._API.takeOff(this);
   };
   DroneManager.prototype.land = function () {
     if (!this.isLanding()) {
@@ -773,6 +773,7 @@ var GameManager = /** @class */ (function () {
     }
     this.APIs_dict = {
       FixedWingDroneAPI: FixedWingDroneAPI,
+      MulticopterDroneAPI: MulticopterDroneAPI,
       EnemyDroneAPI: EnemyDroneAPI
     };
     if (this._game_parameters_json.debug_test_mode) {
@@ -895,21 +896,13 @@ var GameManager = /** @class */ (function () {
     if (drone.team === TEAM_ENEMY) {
       return;
     }
-    function distance(a, b) {
-      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
-                       Math.pow((a.z - b.z), 2));
-    }
-    if (drone.position) {
-      //TODO epsilon distance is 15 because of fixed wing loiter flights
-      //there is not a proper collision
-      if (distance(drone.position, flag.location) <=
-          this._mapManager.getMapInfo().flag_distance_epsilon) {
-        drone._internal_crash(new Error('Drone ' + drone.id +
-                                        ' touched flag ' + flag.id), false);
-        if (flag.weight > 0) {
-          flag.weight -= 1;
-          drone.score += flag.score; // move score to a global place? GM, MM?
-        }
+    if (drone.colliderMesh &&
+        drone.colliderMesh.intersectsMesh(flag, true)) {
+      drone._internal_crash(new Error('Drone ' + drone.id +
+                                      ' touched flag ' + flag.id), false);
+      if (flag.weight > 0) {
+        flag.weight -= 1;
+        drone.score += flag.score; // move score to a global place? GM, MM?
       }
     }
   };

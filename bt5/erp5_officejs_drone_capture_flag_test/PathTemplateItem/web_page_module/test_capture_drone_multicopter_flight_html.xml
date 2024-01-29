@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -69,13 +69,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drone_capture_flag_test_page.js</string> </value>
+            <value> <string>gadget_erp5_page_drone_capture_flag_multicopter_test_page.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_capture_drone_flight_js</string> </value>
+            <value> <string>test_capture_drone_multicopter_flight_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -95,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone Capture Flag Test Page JS</string> </value>
+            <value> <string>Drone Capture Flag Multicopter Test Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -197,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1689188262.88</float>
+                              <float>1730804860.17</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1015.64187.34381.50346</string> </value>
+                      <value> <string>1020.30427.43889.21077</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1713428877.4</float>
+                              <float>1730823425.6</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -329,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1689182795.12</float>
+                              <float>1730804628.76</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
