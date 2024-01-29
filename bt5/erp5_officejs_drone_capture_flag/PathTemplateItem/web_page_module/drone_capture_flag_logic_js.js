@@ -347,7 +347,7 @@ var DroneManager = /** @class */ (function () {
     }
     return;
   };
-  DroneManager.prototype.getAirSpeed = function () {
+  DroneManager.prototype.get3DSpeed = function () {
     return this._speed;
   };
   DroneManager.prototype.getGroundSpeed = function () {

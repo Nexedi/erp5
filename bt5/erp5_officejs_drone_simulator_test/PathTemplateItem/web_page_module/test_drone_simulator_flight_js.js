@@ -57,7 +57,7 @@
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
-      '  assert(me.getAirSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
+      '  assert(me.get3DSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
       '  assert(me.getYaw(), 0, "Yaw angle")\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
       '  me.setTargetCoordinates(\n' +
@@ -76,7 +76,7 @@
       '    me.getCurrentPosition().latitude,\n' +
       '    me.getCurrentPosition().longitude\n' +
       '  ).toFixed(8),\n' +
-      '    expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
+      '    expectedDistance = (me.get3DSpeed() * timestamp / 1000).toFixed(8);\n' +
       '    assert(timestamp, 1000 / 60, "Timestamp");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
