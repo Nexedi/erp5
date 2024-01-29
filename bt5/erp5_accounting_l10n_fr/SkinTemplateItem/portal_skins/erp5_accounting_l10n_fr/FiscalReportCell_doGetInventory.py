@@ -29,7 +29,7 @@ if ledger is not None:
   if isinstance(ledger, list) or isinstance(ledger, tuple):
     ledger_uid = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
   else:
-    ledger_uid = portal_categories.ledger.restrictedTraverse(item).getUid()
+    ledger_uid = portal_categories.ledger.restrictedTraverse(ledger).getUid()
 else:
   ledger_uid = None
 
