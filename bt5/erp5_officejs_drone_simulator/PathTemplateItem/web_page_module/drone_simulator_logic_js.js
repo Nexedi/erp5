@@ -333,7 +333,7 @@ var DroneManager = /** @class */ (function () {
    * Function called on game update
    * @param timestamp The tic value
    */
-  DroneManager.prototype.onUpdate = function () { return; };
+  DroneManager.prototype.onUpdate = function (timestamp) { return; };
   /**
    * Function called when drone crashes
    */
