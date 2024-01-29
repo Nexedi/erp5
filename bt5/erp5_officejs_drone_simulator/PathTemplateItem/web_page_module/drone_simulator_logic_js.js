@@ -376,7 +376,7 @@ var DroneManager = /** @class */ (function () {
     return this._API.getClimbRate(this);
   };
   DroneManager.prototype.takeOff = function () {
-    return this._API.takeOff();
+    return this._API.takeOff(this);
   };
   DroneManager.prototype.land = function () {
     if (!this.isLanding()) {
@@ -671,6 +671,7 @@ var GameManager = /** @class */ (function () {
     }
     this.APIs_dict = {
       FixedWingDroneAPI: FixedWingDroneAPI,
+      MulticopterDroneAPI: MulticopterDroneAPI,
       DroneLogAPI: DroneLogAPI
     };
     if (this._game_parameters_json.debug_test_mode) {

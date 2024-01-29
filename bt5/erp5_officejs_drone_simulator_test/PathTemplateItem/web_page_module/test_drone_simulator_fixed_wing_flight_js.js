@@ -10,7 +10,7 @@
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
     MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
+    MIN_SPEED = 0,
     MAX_SPEED = 26,
     MAX_ROLL = 35,
     MIN_PITCH = -20,
@@ -56,7 +56,7 @@
       '\n' +
       'me.onStart = function (timestamp) {\n' +
       '  assert(me.getSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
-      '  assert(me.getYaw(), 0, "Yaw angle")\n' +
+      '  assert(me.getYaw(), 0, "Yaw angle");\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
       '  me.start_time = timestamp;\n' +
       '  me.setTargetCoordinates(\n' +
@@ -95,6 +95,7 @@
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_simulator_logic.js',
       'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
+      'gadget_erp5_page_drone_simulator_multicopterdrone.js',
       'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 

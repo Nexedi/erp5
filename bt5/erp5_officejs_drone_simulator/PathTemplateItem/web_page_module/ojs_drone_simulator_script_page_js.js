@@ -12,12 +12,12 @@
     max_lon = 14.2766,
     map_height = 100,
     start_AMSL = 595,
-    DEFAULT_SPEED = 16,
-    MAX_ACCELERATION = 6,
+    DEFAULT_SPEED = 5,
+    MAX_ACCELERATION = 1,
     MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
-    MAX_SPEED = 26,
-    MAX_ROLL = 35,
+    MIN_SPEED = 0,
+    MAX_SPEED = 7,
+    MAX_ROLL = 13,
     MIN_PITCH = -20,
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
@@ -26,7 +26,7 @@
     INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.2658,
-      "altitude": 15
+      "altitude": 0
     },
     NUMBER_OF_DRONES = 2,
     // Non-inputs parameters
@@ -188,6 +188,7 @@
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_simulator_logic.js',
       'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
+      'gadget_erp5_page_drone_simulator_multicopterdrone.js',
       'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 
@@ -545,7 +546,7 @@
                               [domsugar('div')]).firstElementChild;
       DRONE_LIST = [];
       for (i = 0; i < options.number_of_drones; i += 1) {
-        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
+        DRONE_LIST[i] = {"id": i, "type": "MulticopterDroneAPI",
                          "script_content": options.script};
       }
       game_parameters_json = {
