@@ -33,7 +33,7 @@ from six import string_types as basestring
 from six.moves import xrange
 import six
 if six.PY3:
-  from functools import cmp_to_key
+  from functools import cmp_to_key, total_ordering
 import os
 import re
 import string
@@ -146,12 +146,20 @@ else:
 if six.PY2:
   OrderableKey = lambda x: x
 else:
+  @total_ordering
   class OrderableKey(object):
     def __init__(self, value):
       self.value = value
 
     def __lt__(self, other):
+      if not isinstance(other, OrderableKey):
+        raise TypeError
       return cmp(self.value, other.value) != 1
+
+    def __eq__(self, other):
+      if not isinstance(other, OrderableKey):
+        raise TypeError
+      return self.value == other.value
 
     def __repr__(self):
       return 'OrderableKey(%r)' % self.value
