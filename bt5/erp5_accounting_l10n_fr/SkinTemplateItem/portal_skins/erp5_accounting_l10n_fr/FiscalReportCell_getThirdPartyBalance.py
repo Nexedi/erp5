@@ -47,7 +47,7 @@ accounts_to_expand_by_tp = rec_cat.getAccountTypeRelatedValueList(**params) + \
 
 total_balance = 0.0
 for account_gap_number in accounts:
-  # We get all acounts strict member of this GAP category
+  # We get all accounts strict member of this GAP category
   gap = context.restrictedTraverse('portal_categories/' + getURL(account_gap_number))
 
   for account in gap.getGapRelatedValueList(portal_type='Account'):
