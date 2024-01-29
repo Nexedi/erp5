@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document*/
-(function (window, rJS, domsugar, document) {
+/*global window, rJS, domsugar, document, DroneLogAPI, FixedWingDroneAPI, MulticopterDroneAPI*/
+(function (window, rJS, domsugar, document, API_LIST) {
   "use strict";
 
   var SIMULATION_SPEED = 200,
@@ -8,16 +8,16 @@
     DRAW = true,
     LOG = false,
     DRONE_LIST = [
-      {"id": 0, "type": "DroneLogAPI", "log_content": ""},
-      {"id": 1, "type": "DroneLogAPI", "log_content": ""}
+      {"id": 0, "type": API_LIST[0].name, "log_content": ""},
+      {"id": 1, "type": API_LIST[0].name, "log_content": ""}
     ],
     WIDTH = 680,
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
-      'gadget_erp5_page_drone_simulator_logic.js',
-      'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
-      'gadget_erp5_page_drone_simulator_dronelogfollower.js'
-    ];
+      'gadget_erp5_page_drone_simulator_logic.js'
+    ].concat(API_LIST.map(function (api) {
+      return api.SCRIPT_NAME;
+    }));
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -221,7 +221,8 @@
       game_parameters_json = {
         "drone": {
           "maxAcceleration": 1,
-          "maxSpeed": 1
+          "maxSpeed": 1,
+          "list": DRONE_LIST
         },
         "gameTime": SIMULATION_TIME,
         "simulation_speed": parseFloat(options.simulation_speed),
@@ -244,8 +245,7 @@
         },
         "draw_flight_path": DRAW,
         "log_drone_flight": LOG,
-        "temp_flight_path": false,
-        "droneList": DRONE_LIST
+        "temp_flight_path": false
       };
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
@@ -295,4 +295,4 @@
         });
     });
 
-}(window, rJS, domsugar, document));
+}(window, rJS, domsugar, document, [DroneLogAPI, FixedWingDroneAPI, MulticopterDroneAPI]));

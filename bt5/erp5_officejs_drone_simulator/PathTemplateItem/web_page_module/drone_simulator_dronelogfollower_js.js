@@ -6,6 +6,8 @@
 var DroneLogAPI = /** @class */ (function () {
   "use strict";
   var TOP_SPEED = 250; //so fast that it virtually "teleports" to target
+  DroneLogAPI.SCRIPT_NAME =
+    "gadget_erp5_page_drone_simulator_dronelogfollower.js";
   //** CONSTRUCTOR
   function DroneLogAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
