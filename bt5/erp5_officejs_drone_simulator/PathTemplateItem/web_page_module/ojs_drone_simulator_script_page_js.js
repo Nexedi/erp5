@@ -98,7 +98,8 @@
       '      me.setTargetCoordinates(\n' +
       '        CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
       '        CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].altitude + ALTITUDE + ALTITUDE * me.id\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].altitude + ALTITUDE + ALTITUDE * me.id,\n' +
+      '        ' + DEFAULT_SPEED + '\n' +
       '      );\n' +
       '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +

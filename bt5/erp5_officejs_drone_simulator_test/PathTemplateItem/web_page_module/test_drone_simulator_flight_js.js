@@ -57,13 +57,14 @@
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
-      '  assert(me.getAirSpeed(), 16, "Initial speed");\n' +
+      '  assert(me.getAirSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
       '  assert(me.getYaw(), 0, "Yaw angle")\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
       '  me.setTargetCoordinates(\n' +
       '    me.initialPosition.latitude + 0.01,\n' +
       '    me.initialPosition.longitude,\n' +
-      '    me.getAltitudeAbs()\n' +
+      '    me.getAltitudeAbs(),\n' +
+      '    '+ DEFAULT_SPEED + '\n' +
       '  );\n' +
       '};\n' +
       '\n' +

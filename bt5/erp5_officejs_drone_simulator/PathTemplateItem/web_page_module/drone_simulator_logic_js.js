@@ -136,11 +136,11 @@ var DroneManager = /** @class */ (function () {
    * Set a target point to move
    */
   DroneManager.prototype.setTargetCoordinates =
-    function (latitude, longitude, altitude) {
-      this._internal_setTargetCoordinates(latitude, longitude, altitude);
+    function (latitude, longitude, altitude, speed) {
+      this._internal_setTargetCoordinates(latitude, longitude, altitude, speed);
     };
   DroneManager.prototype._internal_setTargetCoordinates =
-    function (latitude, longitude, altitude, radius) {
+    function (latitude, longitude, altitude, speed, radius) {
       if (!this._canPlay) {
         return;
       }
@@ -150,6 +150,7 @@ var DroneManager = /** @class */ (function () {
       return this._API.internal_setTargetCoordinates(
         this,
         this._targetCoordinates,
+        speed,
         radius
       );
     };
@@ -196,15 +197,6 @@ var DroneManager = /** @class */ (function () {
       throw new Error('Position coordinates must be numbers');
     }
     return this._API.setStartingPosition(this, x, y, z);
-  };
-  DroneManager.prototype.setAirSpeed = function (speed) {
-    if (!this._canPlay) {
-      return;
-    }
-    if (isNaN(speed)) {
-      throw new Error('Speed must be a number');
-    }
-    return this._API.setSpeed(this, speed);
   };
   DroneManager.prototype.setDirection = function (x, y, z) {
     if (!this._canPlay) {
@@ -299,11 +291,12 @@ var DroneManager = /** @class */ (function () {
    * Make the drone loiter (circle with a set radius)
    */
   DroneManager.prototype.loiter =
-    function (latitude, longitude, altitude, radius) {
+    function (latitude, longitude, altitude, radius, speed) {
       this._internal_setTargetCoordinates(
         latitude,
         longitude,
         altitude,
+        speed,
         radius
       );
     };
