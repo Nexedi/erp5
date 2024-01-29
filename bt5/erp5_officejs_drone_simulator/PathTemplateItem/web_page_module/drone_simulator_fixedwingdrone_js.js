@@ -90,45 +90,15 @@ var FixedWingDroneAPI = /** @class */ (function () {
     if (drone._maxClimbRate > drone._maxSpeed) {
       throw new Error('max climb rate cannot be superior to max speed');
     }
-    drone._maxOrientation = this.getMaxOrientation();
     return;
   };
   /*
   ** Function called on every drone update, right before onUpdate AI script
   */
   FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
-    var diff, newrot, orientationValue, rotStep;
-
-    //TODO rotation
-    if (context._rotationTarget) {
-      rotStep = BABYLON.Vector3.Zero();
-      diff = context._rotationTarget.subtract(context._controlMesh.rotation);
-      rotStep.x = (diff.x >= 1) ? 1 : diff.x;
-      rotStep.y = (diff.y >= 1) ? 1 : diff.y;
-      rotStep.z = (diff.z >= 1) ? 1 : diff.z;
-      if (rotStep === BABYLON.Vector3.Zero()) {
-        context._rotationTarget = null;
-        return;
-      }
-      newrot = new BABYLON.Vector3(context._controlMesh.rotation.x +
-                                    (rotStep.x * context._rotationSpeed),
-                                    context._controlMesh.rotation.y +
-                                    (rotStep.y * context._rotationSpeed),
-                                    context._controlMesh.rotation.z +
-                                    (rotStep.z * context._rotationSpeed)
-                                  );
-      context._controlMesh.rotation = newrot;
-    }
-
     this._updateSpeed(context, delta_time);
     this._updatePosition(context, delta_time);
 
-    //TODO rotation
-    orientationValue = context._maxOrientation *
-      (context._speed / context._maxSpeed);
-    context._mesh.rotation =
-      new BABYLON.Vector3(orientationValue * context._direction.z, 0,
-                          -orientationValue * context._direction.x);
     context._controlMesh.computeWorldMatrix(true);
     context._mesh.computeWorldMatrix(true);
   };
@@ -311,18 +281,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return verticalSpeed;
   };
 
-  FixedWingDroneAPI.prototype.setRotation = function (drone, x, y, z) {
-    //TODO rotation
-    drone._rotationTarget = new BABYLON.Vector3(x, z, y);
-  };
-
-  FixedWingDroneAPI.prototype.setRotationBy = function (drone, x, y, z) {
-    //TODO rotation
-    drone._rotationTarget = new BABYLON.Vector3(drone.rotation.x + x,
-                                                drone.rotation.y + z,
-                                                drone.rotation.z + y);
-  };
-
   FixedWingDroneAPI.prototype.setSpeed = function (drone, speed) {
     this._targetSpeed = Math.max(
       Math.min(speed, this.getMaxSpeed()),
@@ -447,10 +405,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getMaxClimbRate = function () {
     return this._flight_parameters.drone.maxClimbRate;
-  };
-  FixedWingDroneAPI.prototype.getMaxOrientation = function () {
-    //TODO should be a game parameter (but how to force value to PI quarters?)
-    return Math.PI / 4;
   };
   FixedWingDroneAPI.prototype.getYawVelocity = function (drone) {
     return 360 * EARTH_GRAVITY

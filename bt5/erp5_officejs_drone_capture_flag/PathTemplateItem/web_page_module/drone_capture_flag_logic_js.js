@@ -25,11 +25,9 @@ var DroneManager = /** @class */ (function () {
     this._maxRollAngle = 0;
     this._maxSinkRate = 0;
     this._maxClimbRate = 0;
-    this._maxOrientation = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = new BABYLON.Vector3(0, 0, 1); // North
-    this._rotationSpeed = 0.4;
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
@@ -234,20 +232,6 @@ var DroneManager = /** @class */ (function () {
     }
     // swap y and z axis so z axis represents altitude
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
-  };
-
-  //TODO rotation
-  DroneManager.prototype.setRotation = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setRotation(this, x, y, z);
-  };
-  DroneManager.prototype.setRotationBy = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setRotation(this, x, y, z);
   };
 
   /**
