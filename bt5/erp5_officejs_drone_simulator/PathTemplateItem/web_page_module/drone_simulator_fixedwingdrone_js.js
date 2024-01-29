@@ -148,7 +148,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
         'latitude' : drone_position.latitude,
         'longitude' : drone_position.longitude,
         'yaw': drone.getYaw(),
-        'speed': drone.get3DSpeed(),
+        'speed': drone.getSpeed(),
         'climbRate': drone.getClimbRate()
       };
       _this._drone_dict_list[_this._id] = drone_info;

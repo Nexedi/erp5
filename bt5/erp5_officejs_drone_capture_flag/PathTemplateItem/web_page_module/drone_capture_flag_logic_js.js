@@ -350,7 +350,7 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.get3DSpeed = function () {
     return this._speed;
   };
-  DroneManager.prototype.getGroundSpeed = function () {
+  DroneManager.prototype.getSpeed = function () {
     if (typeof this._API.getGroundSpeed !== "undefined") {
       return this._API.getGroundSpeed(this);
     }
@@ -986,7 +986,7 @@ var GameManager = /** @class */ (function () {
                   game_manager._game_duration, geo_coordinates.latitude,
                   geo_coordinates.longitude,
                   map_info.start_AMSL + drone_position.z,
-                  drone_position.z, drone.getYaw(), drone.getGroundSpeed(),
+                  drone_position.z, drone.getYaw(), drone.getSpeed(),
                   drone.getClimbRate()
                 ]);
               }
