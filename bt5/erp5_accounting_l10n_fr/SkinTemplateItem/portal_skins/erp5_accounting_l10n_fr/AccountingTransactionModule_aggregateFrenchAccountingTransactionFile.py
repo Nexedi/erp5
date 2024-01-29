@@ -45,11 +45,8 @@ attachment_list = (
      'content': zipbuffer.getvalue(),
      'name': zipfilename, }, )
 
-subject = translateString('French Accounting Transaction File')
-if six.PY2:
-  subject = unicode(subject)
-else:
-  subject = str(subject)
+subject = six.text_type(
+  translateString('French Accounting Transaction File'))
 
 portal.ERP5Site_notifyReportComplete(
     user_name=user_name,
