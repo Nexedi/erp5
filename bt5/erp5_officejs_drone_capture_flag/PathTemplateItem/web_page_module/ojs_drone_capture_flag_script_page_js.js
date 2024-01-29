@@ -136,7 +136,8 @@ var OperatorAPI = /** @class */ (function () {
       '      me.setTargetCoordinates(\n' +
       '        me.flag_positions[me.next_checkpoint].position.latitude,\n' +
       '        me.flag_positions[me.next_checkpoint].position.longitude,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.altitude + me.id\n' +
+      '        me.flag_positions[me.next_checkpoint].position.altitude + me.id,\n' +
+      '        16\n' +
       '      );\n' +
       //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -182,7 +183,7 @@ var OperatorAPI = /** @class */ (function () {
       '    } else {\n' +
       '      dodge_point.longitude = dodge_point.longitude * -1;\n' +
       '    }\n' +
-      '    me.setTargetCoordinates(dodge_point.latitude, dodge_point.longitude, me.getCurrentPosition().altitude);\n' +
+      '    me.setTargetCoordinates(dodge_point.latitude, dodge_point.longitude, me.getCurrentPosition().altitude, 16);\n' +
       '    return;\n' +
       '  }\n' +
       '};',
