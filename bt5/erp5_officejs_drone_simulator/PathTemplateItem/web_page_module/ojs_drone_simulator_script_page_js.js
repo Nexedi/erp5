@@ -6,18 +6,19 @@
   //Default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 200,
     SIMULATION_TIME = 1500,
+    drone_type = "MULTICOPTER",
     min_lat = 45.6364,
     max_lat = 45.65,
     min_lon = 14.2521,
     max_lon = 14.2766,
     map_height = 100,
     start_AMSL = 595,
-    DEFAULT_SPEED = 16,
-    MAX_ACCELERATION = 6,
+    DEFAULT_SPEED = 5,
+    MAX_ACCELERATION = 1,
     MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
-    MAX_SPEED = 26,
-    MAX_ROLL = 35,
+    MIN_SPEED = 0,
+    MAX_SPEED = 7,
+    MAX_ROLL = 13,
     MIN_PITCH = -20,
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
@@ -26,7 +27,7 @@
     INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.2658,
-      "altitude": 15
+      "altitude": 0
     },
     NUMBER_OF_DRONES = 2,
     // Non-inputs parameters
@@ -188,6 +189,7 @@
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_simulator_logic.js',
       'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
+      'gadget_erp5_page_drone_simulator_multicopterdrone.js',
       'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 
@@ -200,6 +202,10 @@
 
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
+    })
+
+    .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
+      return this.triggerAPIChange(scope);
     })
 
     .declareMethod("triggerSubmit", function () {
@@ -217,6 +223,26 @@
         });
     })
 
+    .declareMethod("triggerAPIChange", function (scope) {
+      var gadget = this,
+        sub_gadget;
+
+      return gadget.getDeclaredGadget(scope)
+        .push(function () {
+          return gadget.getDeclaredGadget(scope);
+        })
+        .push(function (result) {
+          sub_gadget = result;
+          return sub_gadget.getContent();
+        })
+        .push(function (result) {
+          if (drone_type !== result.drone_type) {
+            drone_type = result.drone_type;
+            console.log(drone_type);
+          }
+        });
+    })
+
     .declareMethod('render', function render() {
       var gadget = this;
       return gadget.getDeclaredGadget('form_view')
@@ -224,6 +250,17 @@
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
+                "my_drone_type": {
+                  "description": "Type of drone to simulate",
+                  "title": "Drone Type",
+                  "items": ["Multicopter", "FixedWing"],
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "drone_type",
+                  "hidden": 0,
+                  "type": "ListField"
+                },
                 "my_simulation_speed": {
                   "description": "",
                   "title": "Simulation Speed",
@@ -510,7 +547,7 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_simulation_speed"], ["my_simulation_time"], ["my_onupdate_interval"],
+                [["my_drone_type"], ["my_simulation_speed"], ["my_simulation_time"], ["my_onupdate_interval"],
                   ["my_number_of_drones"], ["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
                   ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_alt"],
@@ -545,7 +582,7 @@
                               [domsugar('div')]).firstElementChild;
       DRONE_LIST = [];
       for (i = 0; i < options.number_of_drones; i += 1) {
-        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
+        DRONE_LIST[i] = {"id": i, "type": drone_type + "DroneAPI",
                          "script_content": options.script};
       }
       game_parameters_json = {
