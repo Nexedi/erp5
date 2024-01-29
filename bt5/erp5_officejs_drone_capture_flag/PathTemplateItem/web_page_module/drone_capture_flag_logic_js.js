@@ -346,6 +346,9 @@ var DroneManager = /** @class */ (function () {
     }
     return;
   };
+  DroneManager.prototype.takeOff = function () {
+    return this._API.takeOff();
+  };
   DroneManager.prototype.land = function () {
     return this._API.land(this);
   };
