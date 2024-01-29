@@ -1,5 +1,6 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, Blob, MapUtils, RSVP*/
+/*global window, rJS, domsugar, document, Blob, MapUtils, RSVP, FixedWingDroneAPI,
+  MulticopterDroneAPI*/
 
 /******************************* OPERATOR API ********************************/
 var OperatorAPI = /** @class */ (function () {
@@ -23,10 +24,9 @@ var OperatorAPI = /** @class */ (function () {
   return OperatorAPI;
 }());
 
-(function (window, rJS, domsugar, document, Blob, MapUtils, RSVP) {
+(function (window, rJS, domsugar, document, Blob, MapUtils, RSVP, API_LIST) {
   "use strict";
 
-  //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 60,
     SIMULATION_TIME = 270,
     //default square map
@@ -65,21 +65,10 @@ var OperatorAPI = /** @class */ (function () {
                                    "altitude": 15}}],
       "initial_position": {"latitude": 45.642813275,
                            "longitude": 14.270231599999988,
-                           "altitude": 15}
+                           "altitude": 0}
     },
-    DEFAULT_SPEED = 16,
-    MAX_ACCELERATION = 6,
-    MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
-    MAX_SPEED = 26,
-    MAX_ROLL = 35,
-    MIN_PITCH = -20,
-    MAX_PITCH = 25,
-    MAX_CLIMB_RATE = 8,
-    MAX_SINK_RATE = 3,
-    MAX_COMMAND_FREQUENCY = 2,
+    DEFAULT_SPEED = 5,
     NUMBER_OF_DRONES = 5,
-    // Non-inputs parameters
     EPSILON = "15",
     DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
       'operator.sendMsg({flag_positions: map.flag_list});\n',
@@ -109,6 +98,7 @@ var OperatorAPI = /** @class */ (function () {
       '  me.direction_set = false;\n' +
       '  me.dodging = false;\n' +
       '  me.ongoing_detection = false;\n' +
+      '  me.takeOff();\n' +
       '};\n' +
       '\n' +
       'me.onGetMsg = function (msg) {\n' +
@@ -119,6 +109,9 @@ var OperatorAPI = /** @class */ (function () {
       '};\n' +
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
+      '  if (!me.isReadyToFly()) {\n' +
+      '    return;\n' +
+      '  }\n' +
       '  if (!me.flag_positions) return;\n' +
       '  if (me.dodging) {\n' +
       '    me.current_position = me.getCurrentPosition();\n' +
@@ -189,15 +182,22 @@ var OperatorAPI = /** @class */ (function () {
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
       'gadget_erp5_page_drone_capture_map_utils.js',
-      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
       'gadget_erp5_page_drone_capture_flag_enemydrone.js'
-    ],
+    ].concat(API_LIST.map(function (api) {
+      return api.SCRIPT_NAME;
+    })),
     DISPLAY_MAP_PARAMETER = 'display_map_parameter',
     DISPLAY_RANDOMIZE = 'display_randomize',
     DISPLAY_OPERATOR_PARAMETER = 'display_operator_parameter',
     DISPLAY_DRONE_PARAMETER = 'display_drone_parameter',
     DISPLAY_GAME_PARAMETER = 'display_game_parameter',
     DISPLAY_PLAY = "display_play";
+
+  function getAPI(droneType) {
+    return API_LIST.find(function (api) {
+      return api.DRONE_TYPE === droneType;
+    });
+  }
 
   function renderGadgetHeader(gadget, loading) {
     var element_list = [],
@@ -534,7 +534,7 @@ var OperatorAPI = /** @class */ (function () {
   // Game parameters
   //////////////////////////////////////////////////
   function renderGameParameterView(gadget) {
-    var form_gadget;
+    var api = getAPI(gadget.state.drone_type), erp5_view, form_gadget;
     renderGadgetHeader(gadget, true);
     return gadget.declareGadget("gadget_erp5_form.html", {
       scope: "parameter_form"
@@ -542,175 +542,74 @@ var OperatorAPI = /** @class */ (function () {
       .push(function (sub_gadget) {
         form_gadget = sub_gadget;
 
+        erp5_view = {
+          "my_drone_type": {
+            "description": "Type of drone to simulate",
+            "title": "Drone Type",
+            "items": API_LIST.map(function (api) {
+              return api.DRONE_TYPE;
+            }),
+            "value": gadget.state.drone_type,
+            "css_class": "",
+            "required": 1,
+            "editable": 1,
+            "key": "drone_type",
+            "hidden": 0,
+            "type": "ListField"
+          },
+          "my_simulation_speed": {
+            "description": "",
+            "title": "Simulation Speed",
+            "default": gadget.state.simulation_speed,
+            "css_class": "",
+            "required": 1,
+            "editable": 1,
+            "key": "simulation_speed",
+            "hidden": 0,
+            "type": "IntegerField"
+          },
+          "my_simulation_time": {
+            "description": "Duration of the simulation (in seconds)",
+            "title": "Simulation Time",
+            "default": gadget.state.simulation_time,
+            "css_class": "",
+            "required": 1,
+            "editable": 1,
+            "key": "simulation_time",
+            "hidden": 0,
+            "type": "IntegerField"
+          },
+          "my_onupdate_interval": {
+            "description": "Minimum interval (in milliseconds) between 2 executions of onUpdate function as well as periodicity to send telemetry to the swarm",
+            "title": "OnUpdate interval",
+            "default": gadget.state.onupdate_interval,
+            "css_class": "",
+            "required": 1,
+            "editable": 1,
+            "key": "onupdate_interval",
+            "hidden": 0,
+            "type": "IntegerField"
+          },
+          "my_number_of_drones": {
+            "description": "",
+            "title": "Number of drones",
+            "default": gadget.state.number_of_drones,
+            "css_class": "",
+            "required": 1,
+            "editable": 1,
+            "key": "number_of_drones",
+            "hidden": 0,
+            "type": "IntegerField"
+          }
+        };
+        Object.keys(api.FORM_VIEW).forEach(function (parameter) {
+          erp5_view[parameter] = api.FORM_VIEW[parameter];
+          erp5_view[parameter].default = gadget.state[erp5_view[parameter].key];
+        });
+
         return form_gadget.render({
           erp5_document: {
-            "_embedded": {"_view": {
-              "my_simulation_speed": {
-                "description": "",
-                "title": "Simulation Speed",
-                "default": gadget.state.simulation_speed,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "simulation_speed",
-                "hidden": 0,
-                "type": "IntegerField"
-              },
-              "my_simulation_time": {
-                "description": "Duration of the simulation (in seconds)",
-                "title": "Simulation Time",
-                "default": gadget.state.simulation_time,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "simulation_time",
-                "hidden": 0,
-                "type": "IntegerField"
-              },
-              "my_onupdate_interval": {
-                "description": "Minimum interval (in milliseconds) between 2 executions of onUpdate function as well as periodicity to send telemetry to the swarm",
-                "title": "OnUpdate interval",
-                "default": gadget.state.onupdate_interval,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "onupdate_interval",
-                "hidden": 0,
-                "type": "IntegerField"
-              },
-              "my_drone_min_speed": {
-                "description": "",
-                "title": "Drone min speed",
-                "default": gadget.state.drone_min_speed,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_min_speed",
-                "hidden": 0,
-                "type": "IntegerField"
-              },
-              "my_drone_speed": {
-                "description": "",
-                "title": "Drone speed",
-                "default": gadget.state.drone_speed,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_speed",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_drone_max_speed": {
-                "description": "",
-                "title": "Drone max speed",
-                "default": gadget.state.drone_max_speed,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_speed",
-                "hidden": 0,
-                "type": "IntegerField"
-              },
-              "my_drone_max_acceleration": {
-                "description": "",
-                "title": "Drone max Acceleration",
-                "default": gadget.state.drone_max_acceleration,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_acceleration",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_drone_max_deceleration": {
-                "description": "",
-                "title": "Drone max Deceleration",
-                "default": gadget.state.drone_max_deceleration,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_deceleration",
-                "hidden": 0,
-                "type": "IntegerField"
-              },
-              "my_drone_max_roll": {
-                "description": "",
-                "title": "Drone max roll",
-                "default": gadget.state.drone_max_roll,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_roll",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_drone_min_pitch": {
-                "description": "",
-                "title": "Drone min pitch",
-                "default": gadget.state.drone_min_pitch,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_min_pitch",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_drone_max_pitch": {
-                "description": "",
-                "title": "Drone max pitch",
-                "default": gadget.state.drone_max_pitch,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_pitch",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_drone_max_sink_rate": {
-                "description": "",
-                "title": "Drone max sink rate",
-                "default": gadget.state.drone_max_sink_rate,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_sink_rate",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_drone_max_climb_rate": {
-                "description": "",
-                "title": "Drone max climb rate",
-                "default": gadget.state.drone_max_climb_rate,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_climb_rate",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_drone_max_command_frequency": {
-                "description": "",
-                "title": "Drone max command frequency",
-                "default": gadget.state.drone_max_command_frequency,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "drone_max_command_frequency",
-                "hidden": 0,
-                "type": "FloatField"
-              },
-              "my_number_of_drones": {
-                "description": "",
-                "title": "Number of drones",
-                "default": gadget.state.number_of_drones,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "number_of_drones",
-                "hidden": 0,
-                "type": "IntegerField"
-              }
-            }},
+            "_embedded": {"_view": erp5_view},
             "_links": {
               "type": {
                 name: ""
@@ -720,15 +619,13 @@ var OperatorAPI = /** @class */ (function () {
           form_definition: {
             group_list: [[
               "left",
-              [["my_simulation_speed"], ["my_simulation_time"], ["my_onupdate_interval"],
-                ["my_number_of_drones"], ["my_map_seed"]]
+              [["my_drone_type"], ["my_simulation_speed"], ["my_simulation_time"],
+                ["my_onupdate_interval"], ["my_number_of_drones"]]
             ], [
               "right",
-              [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
-                ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
-                ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
-                ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"],
-                ["my_drone_max_command_frequency"]]
+              Object.keys(api.FORM_VIEW).map(function (property_name) {
+                return [property_name];
+              })
             ]]
           }
         });
@@ -806,6 +703,13 @@ var OperatorAPI = /** @class */ (function () {
       });
   }
 
+  function formToFilename(form, drone) {
+    return Object.keys(form).map(function (field_name) {
+      var key = form[field_name].key;
+      return key + "_" + drone[key];
+    });
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -817,8 +721,31 @@ var OperatorAPI = /** @class */ (function () {
       return this.triggerSubmit();
     })
 
+    .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
+      return this.triggerAPIChange(scope);
+    })
+
     .declareMethod("triggerSubmit", function () {
       return;
+    })
+
+    .declareMethod("triggerAPIChange", function (scope) {
+      var gadget = this,
+        sub_gadget;
+
+      return gadget.getDeclaredGadget(scope)
+        .push(function (result) {
+          sub_gadget = result;
+          return sub_gadget.getContent();
+        })
+        .push(function (result) {
+          if (result.hasOwnProperty("drone_type")
+              && gadget.state.drone_type !== result.drone_type) {
+            return gadget.changeState({
+              drone_type: result.drone_type
+            });
+          }
+        });
     })
 
     .declareJob('runGame', function runGame(do_nothing) {
@@ -829,13 +756,14 @@ var OperatorAPI = /** @class */ (function () {
       var gadget = this,
         i,
         parsed_map,
-        fragment = gadget.element.querySelector('.simulator_div'),
+        fragment = domsugar(gadget.element.querySelector('.simulator_div'),
+                            [domsugar('div')]).firstElementChild,
         game_parameters_json,
-        drone_list = [];
-      fragment = domsugar(gadget.element.querySelector('.simulator_div'),
-                              [domsugar('div')]).firstElementChild;
+        drone_list = [],
+        api = getAPI(gadget.state.drone_type),
+        drone_parameter_list = Object.keys(api.FORM_VIEW);
       for (i = 0; i < gadget.state.number_of_drones; i += 1) {
-        drone_list[i] = {"id": i, "type": "FixedWingDroneAPI",
+        drone_list[i] = {"id": i, "type": api.name,
                          "script_content": gadget.state.drone_script};
       }
       try {
@@ -846,17 +774,6 @@ var OperatorAPI = /** @class */ (function () {
       }
       game_parameters_json = {
         "drone": {
-          "maxAcceleration": parseFloat(gadget.state.drone_max_acceleration),
-          "maxDeceleration": parseInt(gadget.state.drone_max_deceleration, 10),
-          "minSpeed": parseInt(gadget.state.drone_min_speed, 10),
-          "speed": parseFloat(gadget.state.drone_speed),
-          "maxSpeed": parseInt(gadget.state.drone_max_speed, 10),
-          "maxRoll": parseFloat(gadget.state.drone_max_roll),
-          "minPitchAngle": parseFloat(gadget.state.drone_min_pitch),
-          "maxPitchAngle": parseFloat(gadget.state.drone_max_pitch),
-          "maxSinkRate": parseFloat(gadget.state.drone_max_sink_rate),
-          "maxClimbRate": parseFloat(gadget.state.drone_max_climb_rate),
-          "maxCommandFrequency": parseFloat(gadget.state.drone_max_command_frequency),
           "onUpdateInterval": parseInt(gadget.state.onupdate_interval, 10),
           "list": drone_list
         },
@@ -873,6 +790,19 @@ var OperatorAPI = /** @class */ (function () {
         "log_drone_flight": LOG,
         "log_interval_time": LOG_TIME
       };
+      drone_parameter_list.forEach(function (parameter) {
+        var field = api.FORM_VIEW[parameter];
+        switch (field.type) {
+        case 'IntegerField':
+          game_parameters_json.drone[field.key] = parseInt(gadget.state[field.key], 10);
+          break;
+        case 'FloatField':
+          game_parameters_json.drone[field.key] = parseFloat(gadget.state[field.key]);
+          break;
+        default:
+          throw new Error("Unhandled field type");
+        }
+      });
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
         .push(function () {
@@ -932,18 +862,9 @@ var OperatorAPI = /** @class */ (function () {
               blob = new Blob([log_content], {type: 'text/plain'});
               a = domsugar('a', {
                 text: 'Download Simulation LOG ' + i,
-                download: 'simulation_log_' + i +
-                  '_speed_' + game_parameters_json.drone.speed +
-                  '_min-speed_' + game_parameters_json.drone.minSpeed +
-                  '_max-speed_' + game_parameters_json.drone.maxSpeed +
-                  '_max-accel_' + game_parameters_json.drone.maxAcceleration +
-                  '_max-decel_' + game_parameters_json.drone.maxDeceleration +
-                  '_max-roll_' + game_parameters_json.drone.maxRoll +
-                  '_min-pitch_' + game_parameters_json.drone.minPitchAngle +
-                  '_max-pitch_' + game_parameters_json.drone.maxPitchAngle +
-                  '_max-sink_' + game_parameters_json.drone.maxSinkRate +
-                  '_max-climb_' + game_parameters_json.drone.maxClimbRate +
-                  '.txt',
+                download: ['simulation_log_' + i].concat(
+                  formToFilename(api.FORM_VIEW, game_parameters_json.drone)
+                ).join("_") + ".txt",
                 href: window.URL.createObjectURL(blob)
               });
               log = domsugar('textarea',
@@ -969,20 +890,10 @@ var OperatorAPI = /** @class */ (function () {
     })
 
     .setState({
+      drone_type: API_LIST[0].DRONE_TYPE,
       operator_script: DEFAULT_OPERATOR_SCRIPT,
       drone_script: DEFAULT_SCRIPT_CONTENT,
       number_of_drones: NUMBER_OF_DRONES,
-      drone_max_command_frequency: MAX_COMMAND_FREQUENCY,
-      drone_max_climb_rate: MAX_CLIMB_RATE,
-      drone_max_sink_rate: MAX_SINK_RATE,
-      drone_max_pitch: MAX_PITCH,
-      drone_min_pitch: MIN_PITCH,
-      drone_max_roll: MAX_ROLL,
-      drone_max_deceleration: MAX_DECELERATION,
-      drone_max_acceleration: MAX_ACCELERATION,
-      drone_max_speed: MAX_SPEED,
-      drone_speed: DEFAULT_SPEED,
-      drone_min_speed: MIN_SPEED,
       onupdate_interval: ONUPDATE_INTERVAL,
       simulation_time: SIMULATION_TIME,
       simulation_speed: SIMULATION_SPEED,
@@ -994,10 +905,14 @@ var OperatorAPI = /** @class */ (function () {
     })
 
     .declareMethod('render', function render() {
-      var gadget = this;
-      return gadget.changeState({
-        display_step: DISPLAY_PLAY
-      })
+      var gadget = this,
+        api = getAPI(gadget.state.drone_type),
+        new_state = { display_step: DISPLAY_PLAY };
+      Object.keys(api.FORM_VIEW).forEach(function (parameter) {
+        var field = api.FORM_VIEW[parameter];
+        new_state[field.key] = field.default;
+      });
+      return gadget.changeState(new_state)
         .push(function () {
           return gadget.updateHeader({
             page_title: 'Drone Capture Flag',
@@ -1007,7 +922,16 @@ var OperatorAPI = /** @class */ (function () {
     })
 
     .onStateChange(function (modification_dict) {
-      var gadget = this;
+      var gadget = this, api;
+
+      if (modification_dict.hasOwnProperty('drone_type')) {
+        api = getAPI(gadget.state.drone_type);
+        Object.keys(api.FORM_VIEW).forEach(function (parameter) {
+          var field = api.FORM_VIEW[parameter];
+          gadget.state[field.key] = field.default;
+        });
+        return renderGameParameterView(gadget);
+      }
 
       if (gadget.state.display_step === DISPLAY_MAP_PARAMETER) {
         if (modification_dict.hasOwnProperty('display_step')) {
@@ -1170,4 +1094,4 @@ var OperatorAPI = /** @class */ (function () {
 
 
 
-}(window, rJS, domsugar, document, Blob, MapUtils, RSVP));
+}(window, rJS, domsugar, document, Blob, MapUtils, RSVP, [MulticopterDroneAPI, FixedWingDroneAPI]));

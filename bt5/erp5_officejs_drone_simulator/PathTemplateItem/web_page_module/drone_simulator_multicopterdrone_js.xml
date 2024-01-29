@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drone_simulator_script_page.js</string> </value>
+            <value> <string>gadget_erp5_page_drone_simulator_multicopterdrone.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_drone_simulator_script_page_js</string> </value>
+            <value> <string>drone_simulator_multicopterdrone_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone Simulator Script Page JS</string> </value>
+            <value> <string>Multicopter Drone (API)</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -173,7 +173,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -197,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1664980875.32</float>
+                              <float>1700754908.42</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1020.29310.11473.53384</string> </value>
+                      <value> <string>1020.29232.10500.39287</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +266,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1730816743.72</float>
+                              <float>1730733234.51</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -297,7 +297,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -329,7 +329,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1664980860.44</float>
+                              <float>1700754774.95</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
