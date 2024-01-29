@@ -30,6 +30,9 @@
 from Products.CMFCategory.Filter import Filter
 from ZODB.POSException import ConflictError
 from zLOG import LOG, PROBLEM
+import six
+if six.PY3:
+  from functools import cmp_to_key
 
 class Renderer(Filter):
   """
@@ -42,7 +45,7 @@ class Renderer(Filter):
 
   def __init__(self, spec = None, filter = None, portal_type = None,
                      display_id = None, sort_id = None,
-                     display_method = None, sort_method = None, filter_method = None,
+                     display_method = None, sort_key = None, sort_method = None, filter_method = None,
                      filter_node=0, disable_node=0,
                      filter_leave=0, disable_leave=0,
                      is_right_display = 0, translate_display = 0,
@@ -74,7 +77,10 @@ class Renderer(Filter):
                     foo2      5
           display order will be (foo1, foo, foo2)
 
-    - *sort_method*: a callable method which provides a sort function (?la cmp)
+    - *sort_key*: a callable method used to sort the values, as in sort(key=sort_key)
+
+    - *sort_method*: a callable method used to sort the values, as in python2 cmp.
+            DEPRECATED, use sort_key.
 
     - *is_right_display*: use the right value in the couple as the display value.
 
@@ -109,6 +115,7 @@ class Renderer(Filter):
     self.display_id = display_id
     self.sort_id = sort_id
     self.display_method = display_method
+    self.sort_key = sort_key
     self.sort_method = sort_method
     self.is_right_display = is_right_display
     self.translate_display = translate_display
@@ -135,7 +142,12 @@ class Renderer(Filter):
     value_list = self.getObjectList(value_list)
     value_list = self.filter(value_list)
     if self.sort_method is not None:
-      value_list.sort(self.sort_method)
+      if six.PY2:
+        value_list.sort(self.sort_method)
+      else:
+        value_list.sort(key=cmp_to_key(self.sort_method))
+    elif self.sort_key is not None:
+      value_list.sort(key=self.sort_key)
     elif self.sort_id is not None:
       value_list.sort(key=lambda x: x.getProperty(self.sort_id))
 
