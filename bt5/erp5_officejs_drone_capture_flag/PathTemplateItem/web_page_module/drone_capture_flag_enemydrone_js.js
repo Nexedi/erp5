@@ -23,6 +23,8 @@ var EnemyDroneAPI = /** @class */ (function () {
     this._drone_dict_list = [];
     this._acceleration = DEFAULT_ACCELERATION;
     this._collision_sector = COLLISION_SECTOR;
+    this._is_landing = false;
+    this._is_ready_to_fly = true;
   }
   /*
   ** Function called on start phase of the drone, just before onStart AI script
@@ -275,11 +277,15 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
+    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 0);
+    this._is_ready_to_fly = false;
+    this._is_landing = true;
   };
-  EnemyDroneAPI.prototype.landed = function (drone) {
-    var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.altitude) < 10;
+  EnemyDroneAPI.prototype.isReadyToFly = function () {
+    return this._is_ready_to_fly;
+  };
+  EnemyDroneAPI.prototype.isLanding = function () {
+    return this._is_landing;
   };
   EnemyDroneAPI.prototype.exit = function () {
     return;

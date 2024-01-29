@@ -30,6 +30,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     this._loiter_radius = 100;
     //this._start_altitude = 0;
     this._loiter_mode = false;
+    this._is_landing = false;
+    this._is_ready_to_fly = true;
     this._drone_dict_list = [];
   }
   Object.defineProperty(FixedWingDroneAPI.prototype, "isCollidable", {
@@ -460,13 +462,17 @@ var FixedWingDroneAPI = /** @class */ (function () {
     drone.setTargetCoordinates(
       drone_pos.latitude,
       drone_pos.longitude,
-      5,
+      0,
       drone.get3DSpeed()
     );
+    this._is_ready_to_fly = false;
+    this._is_landing = true;
   };
-  FixedWingDroneAPI.prototype.landed = function (drone) {
-    var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.altitude) < 10;
+  FixedWingDroneAPI.prototype.isReadyToFly = function () {
+    return this._is_ready_to_fly;
+  };
+  FixedWingDroneAPI.prototype.isLanding = function () {
+    return this._is_landing;
   };
   FixedWingDroneAPI.prototype.exit = function () {
     return;
