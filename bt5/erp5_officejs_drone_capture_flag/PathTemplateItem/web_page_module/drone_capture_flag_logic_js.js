@@ -153,7 +153,7 @@ var DroneManager = /** @class */ (function () {
     };
   DroneManager.prototype._internal_setTargetCoordinates =
     function (latitude, longitude, altitude, speed, radius) {
-      if (!this._canPlay) {
+      if (!this._canPlay || !this.isReadyToFly()) {
         return;
       }
       //each drone API process coordinates on its needs
@@ -353,8 +353,11 @@ var DroneManager = /** @class */ (function () {
     this._internal_crash();
     return this._API.exit();
   };
-  DroneManager.prototype.landed = function () {
-    return this._API.landed(this);
+  DroneManager.prototype.isReadyToFly = function () {
+    return this._API.isReadyToFly();
+  };
+  DroneManager.prototype.isLanding = function () {
+    return this._API.isLanding();
   };
   /**
    * Set the drone last checkpoint reached
@@ -889,8 +892,12 @@ var GameManager = /** @class */ (function () {
         drone._tick += 1;
         if (drone.can_play) {
           if (drone.getCurrentPosition().altitude <= 0) {
-            drone._internal_crash(new Error('Drone ' + drone.id +
-                                            ' touched the floor.'));
+            if (!drone.isLanding()) {
+              drone._internal_crash(new Error('Drone ' + drone.id +
+                                              ' touched the floor.'));
+            } else {
+              drone._internal_crash();
+            }
           }
           else if (_this._checkDroneOut(drone)) {
             drone._internal_crash(new Error('Drone ' + drone.id +
