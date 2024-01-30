@@ -32,8 +32,7 @@ class FileTransport:
   def send(self, to_url, data, sync_id, content_type):
     filename = to_url[len('file:/'):]
     try:
-      stream = open(filename, 'w')
-      stream.write(data)
-      stream.close()
+      with open(filename, 'wb') as stream:
+        stream.write(data)
     except IOError:
       raise ConnectionError

@@ -28,6 +28,7 @@
 from lxml.builder import ElementMaker
 from lxml.etree import Element
 from lxml import etree
+import six
 
 from erp5.component.module.XMLSyncUtils import resolveSyncmlStatusCode, \
      encode, resolveSyncmlAlertCode
@@ -60,13 +61,13 @@ class SyncMLResponse(object):
 
   def __len__(self):
     # To check if it has to be done on whole message or only the body
-    return len(etree.tostring(self.body, encoding='utf-8',
-                              xml_declaration=True,
-                              pretty_print=True))
+    return len(bytes(self))
 
-  def __str__(self):
+  def __bytes__(self):
     return etree.tostring(self.data, encoding='utf-8', xml_declaration=True,
                           pretty_print=True)
+  if six.PY2:
+    __str__ = __bytes__
 
   def _getNextCommandId(self):
     """
@@ -117,7 +118,7 @@ class SyncMLResponse(object):
       if authentication_type == 'syncml:auth-basic':
         # base64 formating of "userid:password"
         credential = "%s:%s" % (user_id, password)
-        credential = encode(authentication_format, credential)
+        credential = encode(authentication_format, credential).decode()
       elif authentication_type == "syncml:auth-md5":
         # base64 coded md5 for user "XXX", password "XXX", nonce "XXX"
         raise NotImplementedError("MD5 authentication not supported")
@@ -345,7 +346,7 @@ class SyncMLResponse(object):
     data_node = E.Data()
     # XXX to be remove later to use only CDATA
     if media_type == 'text/xml':
-      if isinstance(data, basestring):
+      if isinstance(data, bytes):
         data_node.append(etree.XML(data, parser=parser))
       elif isinstance(data, etree.CDATA):
         # data could be Data element if partial XML
@@ -421,7 +422,7 @@ class SyncMLRequest(object):
   """ SyncMLRequest represent a message received by the client or server"""
 
   def __init__(self, xml):
-    if isinstance(xml, basestring):
+    if isinstance(xml, bytes):
       self.data = etree.XML(xml, parser=parser)
     else:
       raise ValueError("Do not know how to initialize message with data %r"
@@ -435,9 +436,11 @@ class SyncMLRequest(object):
     self.isFinal = False
     self.parse()
 
-  def __str__(self):
+  def __bytes__(self):
     return etree.tostring(self.data, encoding='utf-8', xml_declaration=True,
                           pretty_print=True)
+  if six.PY2:
+    __str__ = __bytes__
 
   def parse(self):
     """
@@ -590,7 +593,8 @@ class SyncMLRequest(object):
           parser_ = etree.XMLParser(strip_cdata=False)
           cdata = etree.XML(data, parser_)
           data = cdata.text
-        # XXX this is unicode and can be a problem for activity
+        if six.PY3:
+          data = data.encode()
         sync_command_kw["raw_data"] = data
 
       append(sync_command_kw)

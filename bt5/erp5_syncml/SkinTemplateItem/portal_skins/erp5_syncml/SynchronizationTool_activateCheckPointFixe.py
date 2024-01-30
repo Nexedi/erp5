@@ -1,3 +1,4 @@
+from six.moves import range
 sub_path = method_kw.get("subscription_path")
 sub = context.getPortalObject().restrictedTraverse(sub_path)
 search_kw = dict(kw)
@@ -17,7 +18,7 @@ if result_count:
 
   r = [x.getId() for x in r]
   callback_method = getattr(sub.activate(**activate_kw), callback)
-  for i in xrange(0, result_count, packet_size):
+  for i in range(0, result_count, packet_size):
     callback_method(id_list=r[i:i+packet_size],
                     **method_kw)
 
