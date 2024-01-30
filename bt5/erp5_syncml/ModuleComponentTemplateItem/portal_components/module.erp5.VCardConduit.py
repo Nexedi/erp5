@@ -31,6 +31,7 @@ from erp5.component.module.ERP5Conduit import ERP5Conduit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 import difflib
+import six
 
 from zLOG import LOG
 
@@ -56,7 +57,7 @@ class VCardConduit(ERP5Conduit):
     """
     #LOG('VCardConduit',0,'addNode, object=%s, object_id=%s, sub_object:%s, \
         #xml:\n%s' % (str(object), str(object_id), str(sub_object), xml))
-    if not isinstance(xml, str):
+    if not isinstance(xml, bytes):
       xml = self.nodeToString(xml)
     portal_type = 'Person' #the VCard can just use Person
     if sub_object is None:
@@ -161,7 +162,9 @@ class VCardConduit(ERP5Conduit):
     convert_dict['N'] = 'last_name'
     convert_dict['TEL'] = 'default_telephone_text'
     edit_dict = {}
-    vcard_list = vcard.split('\n')
+    if isinstance(vcard, bytes):
+      vcard = vcard.decode('utf-8')
+    vcard_list = vcard.splitlines()
     for vcard_line in vcard_list:
       if ':' in vcard_line:
         property_, property_value = vcard_line.split(':')
@@ -192,12 +195,12 @@ class VCardConduit(ERP5Conduit):
 
         else:
           property_name=property_
-        if isinstance(property_name, unicode):
+        if six.PY2 and isinstance(property_name, six.text_type):
           property_name = property_name.encode('utf-8')
 
         tmp = []
         for property_value in property_value_list:
-          if isinstance(property_value, unicode):
+          if six.PY2 and isinstance(property_value, six.text_type):
             property_value = property_value.encode('utf-8')
           tmp.append(property_value)
         property_value_list = tmp
@@ -226,6 +229,10 @@ class VCardConduit(ERP5Conduit):
   def generateDiff(self, new_data, former_data):
     """return unified diff for plain-text documents
     """
+    if isinstance(new_data, bytes):
+      new_data = new_data.decode('utf-8')
+    if isinstance(former_data, bytes):
+      former_data = former_data.decode('utf-8')
     diff = '\n'.join(difflib.unified_diff(new_data.splitlines(),
                                           former_data.splitlines()))
     return diff

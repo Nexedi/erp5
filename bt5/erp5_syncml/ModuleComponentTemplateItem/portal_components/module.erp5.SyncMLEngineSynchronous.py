@@ -123,8 +123,9 @@ class SyncMLSynchronousEngine(SyncMLEngineMixin):
       subscription._edit(authenticated_user=None)
 
     # Send the message
-    subscription.sendMessage(xml=str(syncml_response))
-    return str(syncml_response)
+    subscription.sendMessage(xml=bytes(syncml_response))
+
+    return bytes(syncml_response)
 
 
   def processServerSynchronization(self, subscriber, syncml_request):
@@ -222,10 +223,10 @@ class SyncMLSynchronousEngine(SyncMLEngineMixin):
           subscriber.logout()
         subscriber._edit(authenticated_user=None,
                          remaining_object_path_list=None)
-        syncml_response = ""  # XXX This is expected by unit test only
+        syncml_response = b""  # XXX This is expected by unit test only
         # Body must be sent even when there is no data to notify client
 
-    subscriber.sendMessage(xml=str(syncml_response))
+    subscriber.sendMessage(xml=bytes(syncml_response))
 
     # Return message for unit test purpose
-    return str(syncml_response)
+    return bytes(syncml_response)
