@@ -29,6 +29,7 @@
 ##############################################################################
 
 from six.moves import UserDict
+import functools
 import random
 import unittest
 from unittest import expectedFailure
@@ -815,7 +816,7 @@ return getBaseAmountQuantity""")
            reference='tax3'),
       ))
     def createCells(line, matrix, base_application=(), base_contribution=()):
-      range_list = [set() for x in iter(matrix).next()]
+      range_list = [set() for x in next(iter(matrix))]
       for index in matrix:
         for x, y in zip(range_list, index):
           x.add(y)
@@ -884,7 +885,7 @@ return context""" % (base_amount, base_amount))
       ))
 
     total_price = order.getTotalPrice()
-    total_ratio = reduce(lambda x, y: x*(1-y), discount_list, 1.2)
+    total_ratio = functools.reduce(lambda x, y: x*(1-y), discount_list, 1.2)
     amount_list = order.getAggregatedAmountList()
     self.assertAlmostEqual(total_price * total_ratio,
       sum((x.getTotalPrice() for x in amount_list), total_price))
@@ -902,7 +903,7 @@ return context""" % (base_amount, base_amount))
       } for index, application, contribution in lines]
     def check():
       resolver(delivery_amount, property_dict_list)
-      self.assertEqual(range(len(property_dict_list)),
+      self.assertEqual(list(range(len(property_dict_list))),
                        [x['index'] for x in property_dict_list])
 
     # Case 1: calculation of some base_amount depends on others.
@@ -1232,6 +1233,7 @@ return lambda *args, **kw: 1""")
     self.assertEqual(sorted(expected_tax),
                      sorted(x.getTotalPrice() for x in amount_list))
 
+  @expectedFailure
   def test_tradeModelLineWithRounding(self):
     """
       Test if trade model line works with rounding.
@@ -1291,9 +1293,10 @@ return lambda *args, **kw: 1""")
     self.assertEqual(3333*0.05+171*0.05, amount.getTotalPrice()) # 175.2
     # check the result with rounding
     amount_list = order.getAggregatedAmountList(rounding=True)
-    # XXX Mark it as expectedFailure until we have clear specification
-    # of what we wish with rounding
-    expectedFailure(self.assertEqual)(2, len(amount_list)) # XXX 1 or 2 ???
+    # XXX Here, the assertion will fail with the current implementation.
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
+    # XXX and here, the result is 175, because round is applied against
+    # already aggregated single amount.
     self.assertEqual(174, getTotalAmount(amount_list))
 
     # check getAggregatedAmountList result of each movement
