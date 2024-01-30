@@ -819,11 +819,11 @@ class TestIngestion(IngestionTestCase):
     f = self.makeFileUpload('TEST-en-002.pdf')
     document.edit(file=f)
     mime, text = document.convert('text')
-    self.assertIn(b'magic', text)
-    self.assertTrue(mime == 'text/plain')
+    self.assertIn('magic', text)
+    self.assertEqual(mime, 'text/plain')
     mime, html = document.convert('html')
-    self.assertIn(b'magic', html)
-    self.assertTrue(mime == 'text/html')
+    self.assertIn('magic', html)
+    self.assertEqual(mime, 'text/html')
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2071,15 +2071,16 @@ return result
                     hostname=url_split[1])
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
+    # TODO: this can not be supported on python3, switch to multipart content type
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
     request = six.moves.urllib.request.Request(push_url, str2bytes(six.moves.urllib.parse.urlencode(
-                                        {'data': data,
+                                        {'data:bytes': data,
                                         'filename': filename,
                                         'reference': reference,
                                         'disable_cookie_login__': 1,
                                         })), headers={
        'Authorization': 'Basic %s' %
-         base64.b64encode(b'ERP5TypeTestCase:')
+         base64.b64encode(b'ERP5TypeTestCase:').decode()
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
@@ -2172,11 +2173,10 @@ class Base_contributeMixin:
       Test contributing an empty file and attaching it to context.
     """
     person = self.portal.person_module.newContent(portal_type='Person')
-    empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=io.BytesIO(),
-                            environ=dict(REQUEST_METHOD='PUT'),
-                            headers={"content-disposition":
-                              "attachment; filename=empty;"}))
+    class FileUpload(io.BytesIO):
+      filename = "empty"
+      headers = {}
+    empty_file_upload = FileUpload(b"")
 
     contributed_document = person.Base_contribute(
                                     portal_type=None,
@@ -2340,7 +2340,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF created successfully.'),
-      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(ret).query))
 
     document, = self.portal.document_module.contentValues()
     self.assertEqual(
@@ -2358,7 +2358,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF updated successfully.'),
-      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(ret).query))
 
     document, = self.portal.document_module.contentValues()
     self.assertEqual(
@@ -2382,10 +2382,10 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       self.assertIn(
         ('portal_status_message',
         'You are not allowed to update the existing document which has the same coordinates.'),
-        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+        six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
       self.assertIn(
         ('portal_status_level', 'error'),
-        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+        six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
 
       # document is not updated
       self.assertEqual(document.getData(), b'')
@@ -2419,10 +2419,10 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
         file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'You are not allowed to contribute document in that state.'),
-      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
     self.assertIn(
       ('portal_status_level', 'error'),
-      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
 
     # when using the script directly it's an error
     with self.assertRaisesRegex(
