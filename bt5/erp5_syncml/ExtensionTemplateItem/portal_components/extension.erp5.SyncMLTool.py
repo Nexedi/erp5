@@ -25,12 +25,13 @@
 #
 ##############################################################################
 import base64
+import six
 from lxml import etree
 from difflib import unified_diff
 from erp5.component.module.DiffUtils import DiffFile
 
 def diffXML(xml_plugin="", xml_erp5="", gid="", html=True):
-  if isinstance(xml_erp5, unicode):
+  if isinstance(xml_erp5, six.text_type):
     xml_erp5 = xml_erp5.encode('utf-8')
   if xml_plugin == "":
     xml_plugin="<object>Not found</object>"
@@ -39,15 +40,15 @@ def diffXML(xml_plugin="", xml_erp5="", gid="", html=True):
   try:
     xml = etree.fromstring(xml_erp5)
     xml_erp5 = etree.tostring(xml, pretty_print=True, encoding="utf-8")
-  except etree.XMLSyntaxError:
+  except etree.XMLSyntaxError:  # pylint:disable=catching-non-exception
     pass
 
-  if isinstance(xml_plugin, unicode):
+  if isinstance(xml_plugin, six.text_type):
     xml_plugin = xml_plugin.encode('utf-8')
   try:
     xml = etree.fromstring(xml_plugin)
     xml_plugin = etree.tostring(xml, pretty_print=True, encoding="utf-8")
-  except etree.XMLSyntaxError:
+  except etree.XMLSyntaxError:  # pylint:disable=catching-non-exception
     pass
 
   diff_list = list(unified_diff(xml_plugin.split('\n'), xml_erp5.split('\n'), tofile="erp5 xml", fromfile="plugin xml", lineterm=''))

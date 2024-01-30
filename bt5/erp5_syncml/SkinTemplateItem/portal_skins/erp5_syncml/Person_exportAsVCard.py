@@ -8,12 +8,12 @@ parameters_N = ''
 
 try:
   first_name.encode('utf-8')
-except:
+except UnicodeEncodeError:
   parameters_FN = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8'
 
 try:
   last_name.encode('utf-8')
-except:
+except UnicodeEncodeError:
   parameters_N = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8'
 
 append = vcard_string_list.append

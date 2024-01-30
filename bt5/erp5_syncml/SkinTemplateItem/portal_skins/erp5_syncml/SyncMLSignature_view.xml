@@ -74,9 +74,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_validatation_state</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -98,6 +96,7 @@
                     <value>
                       <list>
                         <string>my_data</string>
+                        <string>my_translated_validatation_state_title</string>
                       </list>
                     </value>
                 </item>

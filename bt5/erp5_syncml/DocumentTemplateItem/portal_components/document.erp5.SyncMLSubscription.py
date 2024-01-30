@@ -651,7 +651,7 @@ class SyncMLSubscription(XMLObject):
             next_anchor=self.getNextAnchor())
     # Index signature with their new value
     if len(path_list):
-      self.SQLCatalog_indexSyncMLDocumentList(path_list)
+      self.ERP5Site_indexSyncMLDocumentList(path_list)
 
   def _sendFinalMessage(self):
     """
@@ -1199,7 +1199,7 @@ class SyncMLSubscription(XMLObject):
         else:
           kw = {}
         self.getAndIndex(
-          callback="SQLCatalog_indexSyncMLDocumentList",
+          callback="ERP5Site_indexSyncMLDocumentList",
           method_kw={'subscription_path' : self.getRelativeUrl()},
           activate_kw=activate_kw,
           **kw
@@ -1207,7 +1207,7 @@ class SyncMLSubscription(XMLObject):
       else:
         r = [x.getPath() for x in self.getDocumentList()]
         syncml_logger.info("indexing data from %s : %r", self.getPath(), r)
-        portal.SQLCatalog_indexSyncMLDocumentList(
+        portal.ERP5Site_indexSyncMLDocumentList(
           path_list=r[:],
           subscription_path=self.getRelativeUrl())
 

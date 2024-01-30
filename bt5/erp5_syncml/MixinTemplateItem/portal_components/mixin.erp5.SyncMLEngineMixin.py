@@ -156,7 +156,7 @@ class SyncMLEngineMixin(object):
       else:
         raise ValueError("Unknown status command : %r" % (status['command'],))
     if len(path_list):
-      domain.SQLCatalog_indexSyncMLDocumentList(path_list)
+      domain.ERP5Site_indexSyncMLDocumentList(path_list)
     return sync_status_counter
 
   #

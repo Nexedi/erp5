@@ -626,7 +626,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if xml is a string, convert it to a node
     """
     if xml is None:
-        return None
+      return None
     if isinstance(xml, six.string_types + (bytes, )):
       if six.PY2 and isinstance(xml, six.text_type):
         xml = xml.encode('utf-8')

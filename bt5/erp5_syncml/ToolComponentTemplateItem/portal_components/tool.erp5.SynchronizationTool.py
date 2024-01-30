@@ -363,7 +363,7 @@ class SynchronizationTool(BaseTool):
         activity="SQLQueue",
         after_method_id=('processServerSynchronization',
                          'getAndIndex',
-                         'SQLCatalog_indexSyncMLDocumentList'),
+                         'ERP5Site_indexSyncMLDocumentList'),
         priority=ACTIVITY_PRIORITY,
         tag=subscription.getRelativeUrl()).sendMessage(bytes(syncml_response))
     else:

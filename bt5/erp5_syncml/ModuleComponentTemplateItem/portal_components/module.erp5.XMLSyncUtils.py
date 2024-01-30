@@ -60,7 +60,7 @@ def encode(format, string_to_encode): # pylint: disable=redefined-builtin
     return string_to_encode
   if format == 'b64':
     if not isinstance(string_to_encode, six.binary_type):
-       string_to_encode = string_to_encode.encode()
+      string_to_encode = string_to_encode.encode()
     encoded = b64encode(string_to_encode)
     return encoded
   #elif format is .... put here the other formats
