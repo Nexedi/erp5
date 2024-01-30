@@ -3,7 +3,6 @@
                                      set_precision python: request.set('precision', here.getQuantityPrecisionFromResource(here.getPriceCurrency()));
                                      quantity_renderer nocall:here/Base_viewMRPFieldLibrary/my_quantity/render_pdf;
                                      price_renderer nocall:here/Base_viewMRPFieldLibrary/my_price/render_pdf;
-                                     unicode python: unicode if bytes==str else lambda t, encoding: t;
                                      default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language())">
   <office:scripts/>
   <office:font-face-decls>
