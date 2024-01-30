@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+import six
 from logging import getLogger
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -337,8 +338,11 @@ class SyncMLEngineMixin(object):
       if syncml_request.credentials['type'] == publication.getAuthenticationType():
         decoded = decode(syncml_request.credentials['format'],
                          syncml_request.credentials['data'])
-        if decoded and ':' in decoded:
-          login, password = decoded.split(':')
+        if decoded and b':' in decoded:
+          login, password = decoded.split(b':')
+          if six.PY3:
+            login = login.decode()
+            password = password.decode()
           # TODO: make it work for users existing anywhere
           user_folder = publication.getPortalObject().acl_users
           for _, plugin in user_folder._getOb('plugins')\
@@ -463,8 +467,8 @@ class SyncMLEngineMixin(object):
         # Wait for all reset to be done
         # before starting sync
         priority=ACTIVITY_PRIORITY,
-        tag=publication.getRelativeUrl()).sendMessage(xml=str(syncml_response))
+        tag=publication.getRelativeUrl()).sendMessage(xml=bytes(syncml_response))
     else:
-      subscriber.sendMessage(xml=str(syncml_response))
+      subscriber.sendMessage(xml=bytes(syncml_response))
 
     return syncml_response
