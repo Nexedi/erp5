@@ -3,7 +3,6 @@
                                      set_precision python: request.set('precision', here.getQuantityPrecisionFromResource(here.getPriceCurrency()));
                                      quantity_renderer nocall:here/TradeModelLine_view/my_quantity/render_pdf;
                                      price_renderer nocall:here/OrderLine_view/my_total_price/render_pdf;
-                                     unicode python: unicode if bytes==str else lambda t, encoding: t;
                                      default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language())">
   <office:scripts/>
   <office:font-face-decls>
@@ -264,7 +263,7 @@
                     </table:table-cell>
                     <table:table-cell table:style-name='Tableau2.A1'
                                       office:value-type='string'
-                                      tal:define='orig_string string:Client; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                                      tal:define='orig_string string:Client; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                       <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                       <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                     </table:table-cell>
@@ -281,7 +280,7 @@
                         <table:table-column table:style-name='Tableau2.E1.1'/>
                         <table:table-column table:style-name='Tableau2.E1.2'/>
                         <table:table-row table:style-name='Tableau2.E1.1'>
-                          <table:table-cell table:style-name='Tableau2.A1' office:value-type='string' tal:define='orig_string string:Reference; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                          <table:table-cell table:style-name='Tableau2.A1' office:value-type='string' tal:define='orig_string string:Reference; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                             <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                             <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                           </table:table-cell>
@@ -292,7 +291,7 @@
                         <table:table-row table:style-name='Tableau2.E1.1'>
                           <table:table-cell table:style-name='Tableau2.E1.1.2'
                                             office:value-type='string'
-                                            tal:define='orig_string string:Document Date; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                                            tal:define='orig_string string:Document Date; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                             <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                             <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                           </table:table-cell>
@@ -302,7 +301,7 @@
                           </table:table-cell>
                         </table:table-row>
                         <table:table-row table:style-name='Tableau2.E1.1'>
-                          <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Currency; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                          <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Currency; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                             <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                             <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                           </table:table-cell>
@@ -315,7 +314,7 @@
                   </table:table-row>
                 </table:table-header-rows>
                 <table:table-row table:style-name='Tableau2.1'>
-                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Ship From; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Ship From; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                     <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                     <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                   </table:table-cell>
@@ -327,7 +326,7 @@
                             tal:condition="data_dict/source_vatid"
                             tal:content='python:data_dict["source_vatid"]'>vat id</text:p>
                   </table:table-cell>
-                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Ship To; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Ship To; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                     <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                     <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                   </table:table-cell>
@@ -344,7 +343,7 @@
                       <table:table-column table:style-name='Tableau2.E1.1'/>
                       <table:table-column table:style-name='Tableau2.E1.2'/>
                       <table:table-row table:style-name='Tableau2.E1.1'>
-                        <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Payment; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                        <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Payment; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                           <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                           <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                         </table:table-cell>
@@ -353,7 +352,7 @@
                         </table:table-cell>
                       </table:table-row>
                       <table:table-row table:style-name='Tableau2.E1.1'>
-                        <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Delivery Mode; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                        <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Delivery Mode; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                           <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                           <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                         </table:table-cell>
@@ -362,7 +361,7 @@
                         </table:table-cell>
                       </table:table-row>
                       <table:table-row table:style-name='Tableau2.E1.1'>
-                        <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Incoterm; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                        <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Incoterm; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                           <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                           <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                         </table:table-cell>
@@ -386,39 +385,39 @@
             <table:covered-table-cell/>
           </table:table-row>
           <table:table-row>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Line; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Line; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Your Item No.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Your Item No.; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Our Item No.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Our Item No.; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Description; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Description; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Quantity; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Quantity; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Unit; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Unit; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Delivery Date; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Delivery Date; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Unit Price; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Unit Price; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Total Price; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Total Price; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
@@ -532,7 +531,7 @@
                 <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
                   <text:p text:style-name='Table_20_Contents'/>
                 </table:table-cell>
-                <table:table-cell table:style-name='Tableau3.D2' office:value-type='string' tal:define='orig_string string:Total Excluding VAT; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                <table:table-cell table:style-name='Tableau3.D2' office:value-type='string' tal:define='orig_string string:Total Excluding VAT; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                   <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                   <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                 </table:table-cell>
@@ -560,7 +559,7 @@
                           tal:replace='vat/getResourceTitle'/>:</text:p>
                     </tal:block>
                     <text:p text:style-name='Table_20_Heading'
-                            tal:define='orig_string string:TAX; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'><span tal:replace="python: 'Total %s' % (translated_message)"/>:</text:p>
+                            tal:define='orig_string string:TAX; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'><span tal:replace="python: 'Total %s' % (translated_message)"/>:</text:p>
                   </table:table-cell>
                   <table:table-cell table:style-name='Tableau3.E3'
                                     office:value-type='float'
@@ -586,7 +585,7 @@
                 <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
                   <text:p text:style-name='Table_20_Contents'/>
                 </table:table-cell>
-                <table:table-cell table:style-name='Tableau3.D3' office:value-type='string' tal:define='orig_string string:Total Including VAT; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                <table:table-cell table:style-name='Tableau3.D3' office:value-type='string' tal:define='orig_string string:Total Including VAT; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                   <text:p text:style-name='Table_20_Heading'><span tal:replace='orig_message'/>:</text:p>
                   <text:p text:style-name='Table_20_Heading' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
                 </table:table-cell>
@@ -614,7 +613,7 @@
                 </table:table-cell>
               </table:table-row>
               <table:table-row table:style-name='Tableau3.6'>
-                <table:table-cell table:style-name='Tableau3.A6' office:value-type='string' tal:define='orig_string string:Notes; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                <table:table-cell table:style-name='Tableau3.A6' office:value-type='string' tal:define='orig_string string:Notes; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                   <text:p text:style-name='P2'><span tal:replace='orig_message'/><span tal:omit-tag='' tal:condition='python:translated_message != orig_message'> / <span tal:replace='translated_message'/></span>:</text:p>
                 </table:table-cell>
                 <table:table-cell table:style-name='Tableau3.B6' office:value-type='string'>
