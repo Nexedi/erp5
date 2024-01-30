@@ -33,8 +33,9 @@
                                 "options": redirect_options
                                });
       }
-      return gadget.redirect({"command": "display",
-                              "options": {"page": "ojsm_status_list"}
+      return gadget.redirect({command: 'display',
+                              options: {page: "ojs_local_controller",
+                                        portal_type: "Promise Module"}
                              });
     });
 
