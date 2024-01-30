@@ -63,15 +63,6 @@ FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 
-def makeFilePath(name):
-  return os.path.join(TEST_FILES_HOME, name)
-
-def makeFileUpload(name, as_name=None):
-  if as_name is None:
-    as_name = name
-  path = makeFilePath(name)
-  return FileUpload(path, as_name)
-
 
 class IngestionTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
@@ -131,6 +122,16 @@ class IngestionTestCase(ERP5TypeTestCase):
         skin_tool.custom._delObject(script_id)
     self.commit()
 
+  def makeFilePath(self, name):
+    return os.path.join(TEST_FILES_HOME, name)
+
+  def makeFileUpload(self, name, as_name=None):
+    if as_name is None:
+      as_name = name
+    path = self.makeFilePath(name)
+    fu = FileUpload(path, as_name)
+    self.addCleanup(fu.close)
+    return fu
 
 class TestIngestion(IngestionTestCase):
   """
@@ -278,7 +279,7 @@ class TestIngestion(IngestionTestCase):
     """
     for revision, format in enumerate(format_list):
       filename = 'TEST-en-002.%s' %format
-      f = makeFileUpload(filename)
+      f = self.makeFileUpload(filename)
       document.edit(file=f)
       self.tic()
       self.assertTrue(document.hasFile())
@@ -298,7 +299,7 @@ class TestIngestion(IngestionTestCase):
       can be converted to any of the formats in asserted_target_list
     """
     filename = 'TEST-en-002.' + format
-    f = makeFileUpload(filename)
+    f = self.makeFileUpload(filename)
     document.edit(file=f)
     self.tic()
     # We call clear cache to be sure that the target list is updated
@@ -328,7 +329,7 @@ class TestIngestion(IngestionTestCase):
     old_portal_type = ''
     for extension, portal_type in extension_to_type:
       filename = 'TEST-en-002.%s' %extension
-      file = makeFileUpload(filename)
+      file = self.makeFileUpload(filename)
       # if we change portal type we must change version because
       # mergeRevision would fail
       if portal_type != old_portal_type:
@@ -525,7 +526,7 @@ class TestIngestion(IngestionTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     # First revision is 1 (like web pages)
     self.assertEqual(document.getRevision(), '1')
-    f = makeFileUpload(filename)
+    f = self.makeFileUpload(filename)
     document.edit(file=f)
     self.assertTrue(document.hasFile())
     self.assertEqual(document.getFilename(), filename)
@@ -539,7 +540,7 @@ class TestIngestion(IngestionTestCase):
       Upload a file from view form and make sure this increases the revision
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    f = makeFileUpload('TEST-en-002.doc')
+    f = self.makeFileUpload('TEST-en-002.doc')
     revision = document.getRevision()
     document.edit(file=f)
     self.assertEqual(document.getRevision(), str(int(revision) + 1))
@@ -550,7 +551,7 @@ class TestIngestion(IngestionTestCase):
     """
       Upload a file from contribution.
     """
-    f = makeFileUpload('TEST-en-002.doc')
+    f = self.makeFileUpload('TEST-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
     sequence.edit(document_path=document.getPath())
     self.commit()
@@ -565,7 +566,7 @@ class TestIngestion(IngestionTestCase):
     number_of_document = len(self.portal.document_module.objectIds())
     self.assertNotIn('This document is modified.', document.asText())
 
-    f = makeFileUpload('TEST-en-002-modified.doc')
+    f = self.makeFileUpload('TEST-en-002-modified.doc')
     f.filename = 'TEST-en-002.doc'
 
     self.portal.portal_contributions.newContent(file=f)
@@ -581,7 +582,7 @@ class TestIngestion(IngestionTestCase):
     """
       Upload another file from contribution.
     """
-    f = makeFileUpload('ANOTHE-en-001.doc')
+    f = self.makeFileUpload('ANOTHE-en-001.doc')
     document = self.portal.portal_contributions.newContent(id='two', file=f)
     sequence.edit(document_path=document.getPath())
     self.tic()
@@ -610,7 +611,7 @@ class TestIngestion(IngestionTestCase):
     self.assertEqual(property_dict['description'], 'comments')
     self.assertEqual(property_dict['subject_list'], ['keywords'])
     # Then make sure metadata discovery works
-    f = makeFileUpload(filename)
+    f = self.makeFileUpload(filename)
     document.edit(file=f)
     self.assertEqual(document.getReference(), 'TEST')
     self.assertEqual(document.getLanguage(), 'en')
@@ -644,7 +645,7 @@ class TestIngestion(IngestionTestCase):
       Upload with custom getPropertyDict methods
       check that all metadata are correct
     """
-    f = makeFileUpload('TEST-en-002.doc')
+    f = self.makeFileUpload('TEST-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
     self.tic()
     # Then make sure content discover works
@@ -815,7 +816,7 @@ class TestIngestion(IngestionTestCase):
       Try to export PDF to text and HTML
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    f = makeFileUpload('TEST-en-002.pdf')
+    f = self.makeFileUpload('TEST-en-002.pdf')
     document.edit(file=f)
     mime, text = document.convert('text')
     self.assertIn(b'magic', text)
@@ -829,7 +830,7 @@ class TestIngestion(IngestionTestCase):
       Check we are able to resize images
     """
     image = self.portal.restrictedTraverse(sequence.get('document_path'))
-    f = makeFileUpload('TEST-en-002.jpg')
+    f = self.makeFileUpload('TEST-en-002.jpg')
     image.edit(file=f)
     self.tic()
     mime, data = image.convert(None)
@@ -958,8 +959,8 @@ class TestIngestion(IngestionTestCase):
     """
       Email was sent in by someone to ERP5.
     """
-    f = open(makeFilePath('email_from.txt'), "rb")
-    document = self.receiveEmail(f.read())
+    with open(self.makeFilePath('email_from.txt'), "rb") as f:
+      self.receiveEmail(f.read())
     self.tic()
 
   def stepReceiveMultipleAttachmentsEmail(self, sequence=None,
@@ -967,8 +968,8 @@ class TestIngestion(IngestionTestCase):
     """
       Email was sent in by someone to ERP5.
     """
-    f = open(makeFilePath('email_multiple_attachments.eml'), "rb")
-    document = self.receiveEmail(f.read())
+    with open(self.makeFilePath('email_multiple_attachments.eml'), "rb") as f:
+      self.receiveEmail(f.read())
     self.tic()
 
   def stepVerifyEmailedMultipleDocumentsInitialContribution(self, sequence=None, sequence_list=None, **kw):
@@ -1395,7 +1396,7 @@ class TestIngestion(IngestionTestCase):
     """
       Upload a file from contribution.
     """
-    f = makeFileUpload('TEST-en-002.doc', 'T&é@{T-en-002.doc')
+    f = self.makeFileUpload('TEST-en-002.doc', 'T&é@{T-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
     sequence.edit(document_path=document.getPath())
     self.commit()
@@ -1467,7 +1468,7 @@ class TestIngestion(IngestionTestCase):
     """
     portal = self.portal
     contribution_tool = getToolByName(portal, 'portal_contributions')
-    file_object = makeFileUpload('TEST-en-002.doc')
+    file_object = self.makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
     self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
     my_filename = 'Something.doc'
@@ -1490,7 +1491,7 @@ class TestIngestion(IngestionTestCase):
                                                 site='arctic/spitsbergen'))
     portal.document_module.manage_setLocalRoles(user.Person_getUserId(), ['Assignor',])
     self.tic()
-    file_object = makeFileUpload('TEST-en-002.doc')
+    file_object = self.makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
     document.discoverMetadata(document.getFilename(), user.Person_getUserId())
     self.tic()
@@ -1514,7 +1515,7 @@ class TestIngestion(IngestionTestCase):
 
     portal.document_module.manage_setLocalRoles(other_user.Person_getUserId(), ['Assignor',])
     self.tic()
-    file_object = makeFileUpload('TEST-en-002.doc')
+    file_object = self.makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
 
     # We only consider the higher group of assignments
@@ -1936,8 +1937,8 @@ return result
     as a application/octet-stream without explicit extension, become
     a Spreadsheet ?
     """
-    path = makeFilePath('import_region_category.ods')
-    data = open(path, 'rb').read()
+    with open(self.makeFilePath('import_region_category.ods'), 'rb') as f:
+      data = f.read()
 
     document = self.portal.portal_contributions.newContent(filename='toto',
                                                   data=data,
@@ -2017,8 +2018,8 @@ return result
   def test_User_Portal_Type_parameter_is_honoured(self):
     """Check that given portal_type is always honoured
     """
-    path = makeFilePath('import_region_category.xls')
-    data = open(path, 'rb').read()
+    with open(self.makeFilePath('import_region_category.xls'), 'rb') as f:
+      data = f.read()
 
     document = self.portal.portal_contributions.newContent(
                                       filename='import_region_category.xls',
@@ -2035,8 +2036,8 @@ return result
   def test_User_ID_parameter_is_honoured(self):
     """Check that given id is always honoured
     """
-    path = makeFilePath('import_region_category.xls')
-    data = open(path, 'rb').read()
+    with open(self.makeFilePath('import_region_category.xls'), 'rb') as f:
+      data = f.read()
 
     document = self.portal.portal_contributions.newContent(
                                       id='this_id',
@@ -2060,8 +2061,8 @@ return result
 
   def test_newContent_trough_http(self):
     filename = 'import_region_category.xls'
-    path = makeFilePath(filename)
-    data = open(path, 'rb').read()
+    with open(self.makeFilePath(filename), 'rb') as f:
+      data = f.read()
     reference = 'ITISAREFERENCE'
 
     portal_url = self.portal.absolute_url()
@@ -2155,7 +2156,7 @@ class Base_contributeMixin:
                                      version=None,
                                      description=None,
                                      attach_document_to_context=True,
-                                     file=makeFileUpload('TEST-en-002.odt'))
+                                     file=self.makeFileUpload('TEST-en-002.odt'))
     self.assertEqual('Text', contributed_document.getPortalType())
     self.tic()
     document_list = person.getFollowUpRelatedValueList()
@@ -2200,7 +2201,7 @@ class Base_contributeMixin:
     person = self.portal.person_module.newContent(portal_type='Person')
     contributed_document = person.Base_contribute(
                                      portal_type='PDF',
-                                     file=makeFileUpload('TEST-en-002.odt'))
+                                     file=self.makeFileUpload('TEST-en-002.odt'))
     self.assertEqual('PDF', contributed_document.getPortalType())
 
   def test_Base_contribute_input_parameter_dict(self):
@@ -2209,7 +2210,7 @@ class Base_contributeMixin:
     person = self.portal.person_module.newContent(portal_type='Person')
     contributed_document = person.Base_contribute(
                                      title='user supplied title',
-                                     file=makeFileUpload('TEST-en-002.pdf'))
+                                     file=self.makeFileUpload('TEST-en-002.pdf'))
     self.tic()
     self.assertEqual('user supplied title', contributed_document.getTitle())
 
@@ -2222,7 +2223,7 @@ class Base_contributeMixin:
           # we use as_name, to prevent regular expression from detecting a
           # reference during ingestion, so that we can upload multiple documents
           # in one test.
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'draft')
     contributed_document.setReference(None)
@@ -2231,7 +2232,7 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
           publication_state='shared',
           synchronous_metadata_discovery=False,
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'shared')
     contributed_document.setReference(None)
@@ -2240,7 +2241,7 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
           publication_state='shared',
           synchronous_metadata_discovery=True,
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'shared')
     contributed_document.setReference(None)
@@ -2249,7 +2250,7 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
           publication_state='released',
           synchronous_metadata_discovery=False,
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'released')
     contributed_document.setReference(None)
@@ -2258,7 +2259,7 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
           publication_state='released',
           synchronous_metadata_discovery=True,
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'released')
     contributed_document.setReference(None)
@@ -2267,7 +2268,7 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
       synchronous_metadata_discovery=False,
       publication_state='published',
-      file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'published')
     contributed_document.setReference(None)
@@ -2276,7 +2277,7 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
       synchronous_metadata_discovery=True,
       publication_state='published',
-      file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'published')
 
@@ -2296,7 +2297,7 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
           publication_state='shared',
           synchronous_metadata_discovery=True,
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'shared')
     contributed_document.setReference(None)
@@ -2305,14 +2306,14 @@ class Base_contributeMixin:
     contributed_document = person.Base_contribute(
           publication_state='shared',
           synchronous_metadata_discovery=False,
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'shared')
     contributed_document.setReference(None)
 
     contributed_document = person.Base_contribute(
           publication_state=None,
-          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'published')
 
@@ -2336,7 +2337,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
     ret = person.Base_contribute(
       redirect_to_context=True,
       synchronous_metadata_discovery=True,
-      file=makeFileUpload('TEST-en-002.pdf'))
+      file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF created successfully.'),
       urlparse.parse_qsl(urlparse.urlparse(ret).query))
@@ -2354,7 +2355,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
     ret = person.Base_contribute(
       redirect_to_context=True,
       synchronous_metadata_discovery=True,
-      file=makeFileUpload('TEST-en-002.pdf'))
+      file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF updated successfully.'),
       urlparse.parse_qsl(urlparse.urlparse(ret).query))
@@ -2377,7 +2378,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
         person.Base_contribute(
           redirect_to_context=True,
           synchronous_metadata_discovery=synchronous_metadata_discovery,
-          file=makeFileUpload('TEST-en-002.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf'))
       self.assertIn(
         ('portal_status_message',
         'You are not allowed to update the existing document which has the same coordinates.'),
@@ -2395,7 +2396,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
           "You are not allowed to update the existing document which has the same coordinates"):
         person.Base_contribute(
           synchronous_metadata_discovery=synchronous_metadata_discovery,
-          file=makeFileUpload('TEST-en-002.pdf'))
+          file=self.makeFileUpload('TEST-en-002.pdf'))
       self.assertEqual(document.getData(), b'')
 
   def test_Base_contribute_publication_state_unauthorized(self):
@@ -2415,7 +2416,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
         publication_state='published',
         redirect_to_context=True,
         synchronous_metadata_discovery=True,
-        file=makeFileUpload('TEST-en-002.pdf'))
+        file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'You are not allowed to contribute document in that state.'),
       urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
@@ -2430,7 +2431,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       person.Base_contribute(
         publication_state='published',
         synchronous_metadata_discovery=True,
-        file=makeFileUpload('TEST-en-002.pdf'))
+        file=self.makeFileUpload('TEST-en-002.pdf'))
 
     # when using asynchronous metadata discovery, an error occurs in activity,
     # but not document is published
@@ -2438,7 +2439,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       publication_state='published',
       redirect_to_context=True,
       synchronous_metadata_discovery=False,
-      file=makeFileUpload('TEST-en-002.pdf'))
+      file=self.makeFileUpload('TEST-en-002.pdf'))
     with self.assertRaisesRegex(
         Exception,
         "Transition document_publication_workflow/publish unsupported"):
