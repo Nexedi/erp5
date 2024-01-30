@@ -27,7 +27,7 @@
 ##############################################################################
 
 from erp5.component.module.XMLSyncUtils import XMLSyncUtilsMixin
-from xml.dom.ext.reader.Sax2 import FromXml
+from xml.dom.ext.reader.Sax2 import FromXml  # pylint:disable=no-name-in-module,import-error
 
 class XupdateUtils(XMLSyncUtilsMixin):
   """

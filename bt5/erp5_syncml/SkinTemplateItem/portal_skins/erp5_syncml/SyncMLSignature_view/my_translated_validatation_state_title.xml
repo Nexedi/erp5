@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_validatation_state</string> </value>
+            <value> <string>my_translated_validatation_state_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

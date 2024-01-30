@@ -82,7 +82,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
         # Make sure it is launched after indexation step
         self.runGetAndActivate(subscription=subscription, tag=tag,
                                after_method_id=("getAndIndex",
-                                                "SQLCatalog_indexSyncMLDocumentList"))
+                                                "ERP5Site_indexSyncMLDocumentList"))
         syncml_logger.info("X-> Client is sendind modification in activities")
         # As we generated all activities to send data at once, process must not
         # go back here, go into processing state thus status will be applied and
@@ -211,7 +211,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
           # Start to send modification only once we have processed
           # all message from client
           after_method_id=('processServerSynchronization',
-                           'SQLCatalog_indexSyncMLDocumentList')
+                           'ERP5Site_indexSyncMLDocumentList')
           # XXX after tag might also be required to make sure all data are indexed
           tag = (tag, "%s_reset" % subscriber.getPath(),)
       # Do not continue in elif, as sending modifications is done in the same

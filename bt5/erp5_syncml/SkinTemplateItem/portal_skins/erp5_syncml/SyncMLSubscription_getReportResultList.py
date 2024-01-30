@@ -10,7 +10,7 @@ if active_process is None:
     sort_on=(('creation_date', 'DESC'),
              # XXX Work around poor resolution of MySQL dates.
              ('CONVERT(`catalog`.`id`, UNSIGNED)', 'DESC')),
-    causality_uid=sub.getUid())
+    causality_uid=context.getUid())
 
 else:
   active_process = context.getPortalObject().restrictedTraverse(active_process)

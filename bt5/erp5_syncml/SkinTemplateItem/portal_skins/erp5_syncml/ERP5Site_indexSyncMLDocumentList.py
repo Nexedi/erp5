@@ -15,16 +15,16 @@ def generateParameterList():
   parameter_append_list = []
   append = parameter_append_list.append
   parameter_dict = {}
-  for property in method.arguments_src.split():
-    parameter_dict[property] = parameter_value_list = []
-    if property == 'getData':
+  for prop in method.arguments_src.split():
+    parameter_dict[prop] = parameter_value_list = []
+    if prop == 'getData':
       getter = getData
-    elif property == 'getId':
+    elif prop == 'getId':
       getter = getId
     else:
       getter = None
     if getter is None:
-      getter = lambda obj, property=property: getattr(obj, property)()
+      getter = lambda obj, prop=prop: getattr(obj, prop)()
     append((parameter_value_list, getter))
   return parameter_dict, parameter_append_list
 
