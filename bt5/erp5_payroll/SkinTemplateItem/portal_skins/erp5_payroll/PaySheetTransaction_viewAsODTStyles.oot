@@ -260,15 +260,15 @@
       <style:header tal:define="default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
                     date_renderer nocall:here/Base_viewFieldLibrary/my_date_time_field/render_pdf;
                     orig_title python: 'Payslip';
-                    en_title python: unicode(here.Base_translateString(orig_title, lang=default_language), 'utf-8');
-                    my_title python: unicode(here.Base_translateString(orig_title), 'utf-8');
+                    en_title python: here.Base_translateString(orig_title, lang=default_language);
+                    my_title python: here.Base_translateString(orig_title);
                     orig_period python: 'From ${start_date} to ${stop_date}';
-                    en_period python: unicode(here.Base_translateString(orig_period, lang=default_language,
+                    en_period python: here.Base_translateString(orig_period, lang=default_language,
                                                                 mapping = {'start_date': date_renderer(here.getStartDate()),
-                                                                           'stop_date': date_renderer(here.getStopDate())}), 'utf-8');
-                    my_period  python: unicode(here.Base_translateString(orig_period,
+                                                                           'stop_date': date_renderer(here.getStopDate())});
+                    my_period  python: here.Base_translateString(orig_period,
                                                                 mapping = {'start_date': date_renderer(here.getStartDate()),
-                                                                           'stop_date': date_renderer(here.getStopDate())}), 'utf-8');
+                                                                           'stop_date': date_renderer(here.getStopDate())});
                     image_path python: here.getPortalType().startswith('Pay Sheet Transaction') and data_dict['destination_section_image_path'] or data_dict['destination_section_image_path'];
                     image_width python: here.getPortalType().startswith('Pay Sheet Transaction') and data_dict['destination_section_image_width'] or data_dict['destination_section_image_width'];
                     image_height python: here.getPortalType().startswith('Pay Sheet Transaction') and data_dict['destination_section_image_height'] or data_dict['destination_section_image_height']">
