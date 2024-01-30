@@ -126,24 +126,28 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>category</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Promise</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
+                          <string>channel_item</string>
+                          <string>Software Instance</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
+                          <string>channel</string>
+                          <string>Instance Tree</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>Validation State</string>
+                          <string>pubDate</string>
+                          <string>Promise Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_slap_state_title</string>
-                          <string>Slap State</string>
+                          <string>description</string>
+                          <string>Message</string>
                         </tuple>
                       </list>
                     </value>
