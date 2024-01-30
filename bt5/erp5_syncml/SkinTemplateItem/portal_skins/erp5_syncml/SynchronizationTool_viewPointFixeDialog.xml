@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SynchronizationTool_viewPointFixe</string> </value>
+            <value> <string>SynchronizationTool_viewPointFixeDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -120,7 +120,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SynchronizationTool_viewPointFixe</string> </value>
+            <value> <string>SynchronizationTool_viewPointFixeDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>id_only=False, min_id=None, id_list=None, limit=None, **kw</string> </value>
+            <value> <string>path_list, subscription_path=None, activate_kw=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SyncML_searchFolder</string> </value>
+            <value> <string>ERP5Site_indexSyncMLDocumentList</string> </value>
         </item>
       </dictionary>
     </pickle>
