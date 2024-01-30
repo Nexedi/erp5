@@ -477,8 +477,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     tmp = {}
     for match in rx_search.finditer(text):
       group = match.group()
-      group_item_list = match.groupdict().items()
-      group_item_list.sort()
+      group_item_list = sorted(match.groupdict().items())
       key = (group, tuple(group_item_list))
       tmp[key] = None
     for group, group_item_tuple in tmp.keys():
