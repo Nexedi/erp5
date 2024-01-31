@@ -1981,11 +1981,8 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
   def uploadFile(self, file_id):
     file_obj = getattr(self.portal, file_id)
     file_path = tests_home + '/%s' % file_id
-    temp_file = open(file_path, 'w+b')
-    try:
-      temp_file.write(str(file_obj))
-    finally:
-      temp_file.close()
+    with open(file_path, 'w+b') as temp_file:
+      temp_file.write(bytes(file_obj))
 
     return (file_path, FileUpload(file_path, file_id))
 
