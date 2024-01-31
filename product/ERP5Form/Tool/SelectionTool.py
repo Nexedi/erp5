@@ -457,7 +457,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             if int(uid) in selection_uid_dict: del selection_uid_dict[int(uid)]
           except (ValueError, TypeError):
             if uid in selection_uid_dict: del selection_uid_dict[uid]
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, ensure_list(selection_uid_dict.keys()), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -1539,7 +1539,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def _getSelectionNameListFromContainer(self):
       user_id = self._getUserId()
       return list(set(self._getContainer().getSelectionNameList(user_id) +
-                      list(self.getTemporarySelectionDict().keys())))
+                      ensure_list(self.getTemporarySelectionDict().keys())))
 
     def isAnonymous(self):
       return self._getUserId() == 'Anonymous User'
@@ -1604,7 +1604,7 @@ class TransactionalCacheContainer(MemcachedContainer):
 class PersistentMappingContainer(BaseContainer):
   def getSelectionNameList(self, user_id):
     try:
-      return self._container[user_id].keys()
+      return ensure_list(self._container[user_id].keys())
     except KeyError:
       return []
 
