@@ -1148,7 +1148,7 @@ class Catalog(Folder,
         uid_buffer.extend(
           self.getPortalObject().portal_ids.generateNewIdList(
             id_generator='uid',
-            id_group='catalog_uid',
+            id_group=b'catalog_uid',
             id_count=UID_BUFFER_SIZE,
             default=getattr(self, '_max_uid', lambda: 1)(),
           ),

@@ -71,8 +71,10 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       mapping to be persistent
     """
     # Check the arguments
-    if id_group in (None, 'None'):
+    if id_group in (None, b'None'):
       raise ValueError('%r is not a valid group Id.' % id_group)
+    if not isinstance(id_group, bytes):
+      raise TypeError('id_group must be bytes')
     if default is None:
       default = 0
 
@@ -134,6 +136,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     # the last id stored in the sql table
     for line in self._getValueListFromTable():
       id_group = line['id_group']
+      assert isinstance(id_group, bytes)
       last_id = line['last_id']
       if id_group in self.last_max_id_dict and \
         self.last_max_id_dict[id_group].value > last_id:
@@ -197,6 +200,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
             getattr(portal_ids, 'dict_length_ids', None) is None):
       dump_dict = portal_ids.dict_length_ids
       for id_group, last_id in dump_dict.items():
+        assert isinstance(id_group, bytes)
         last_insert_id = get_last_id_method(id_group=id_group)
         last_id = int(last_id.value)
         if len(last_insert_id) != 0:
