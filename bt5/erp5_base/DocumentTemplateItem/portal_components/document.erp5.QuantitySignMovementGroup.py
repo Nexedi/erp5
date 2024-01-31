@@ -48,6 +48,13 @@ whether this is really required.
 
 from erp5.component.document.MovementGroup import MovementGroup
 
+
+def _getSign(quantity):
+  if quantity == 0:
+    return 0
+  return 1 if quantity > 0 else -1
+
+
 class QuantitySignMovementGroup(MovementGroup):
   """
   The purpose of MovementGroup is to define how movements are grouped,
@@ -59,7 +66,7 @@ class QuantitySignMovementGroup(MovementGroup):
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
     quantity = movement.getQuantity()
-    property_dict['quantity_sign'] = cmp(quantity, 0)
+    property_dict['quantity_sign'] = _getSign(quantity)
     return property_dict
 
   def _separate(self, movement_list, **kw):
@@ -68,7 +75,7 @@ class QuantitySignMovementGroup(MovementGroup):
 
     tmp_list = [[], [], []] # -1:minus, 0:zero, 1:plus
     for movement in movement_list:
-      tmp_list[cmp(movement.getQuantity(), 0)].append(movement)
+      tmp_list[_getSign(movement.getQuantity())].append(movement)
     if len(tmp_list[1]):
       if len(tmp_list[-1]):
         return[
