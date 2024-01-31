@@ -88,11 +88,7 @@ for portal_type in portal_type_list:
   obj['total'] = line_counter
   append(obj)
 
-# sort lines
-def cmpType(a, b):
-  return cmp(a['document_type'], b['document_type'])
-
-line_list.sort(cmpType)
+line_list.sort(key=lambda a:a['document_type'])
 
 # build stat line
 obj = Object(uid="new_")
