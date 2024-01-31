@@ -403,7 +403,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # check the style is keept after the odg generation
     self.assertEqual(final_document_style_dict, style_dict)
 
-    self.assertTrue(content_xml.find("Foo title!") > 0)
+    self.assertIn(b"Foo title!", content_xml)
     self.assertEqual(request.RESPONSE.getHeader('content-type'),
                      'application/vnd.oasis.opendocument.graphics')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
@@ -417,7 +417,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Changed Title!") > 0)
+    self.assertIn(b"Changed title!", content_xml)
     self._validate(odf_document)
 
     # 3. False case: change the field name
@@ -429,7 +429,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("you cannot find") > 0)
+    self.assertNotIn(b"you cannot find", content_xml)
     self._validate(odf_document)
     # put back
     foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
@@ -449,7 +449,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("call!") > 0)
+    self.assertIn(b"call!", content_xml)
     self.assertEqual(request.RESPONSE.getHeader('content-type'),
                      'application/vnd.oasis.opendocument.graphics')
     self._validate(odf_document)
@@ -460,7 +460,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Français") > 0)
+    self.assertIn("Français".encode('utf-8'), content_xml)
     self._validate(odf_document)
 
     # 6. Normal case: unicode string
@@ -469,7 +469,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Français test2") > 0)
+    self.assertIn("Français test2".encode('utf-8'), content_xml)
     self._validate(odf_document)
 
 def test_suite():
