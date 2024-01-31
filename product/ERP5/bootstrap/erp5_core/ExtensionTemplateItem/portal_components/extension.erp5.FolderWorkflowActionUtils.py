@@ -148,14 +148,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
                 workflow_state=current_workflow_state,
                 ))
 
-  # Let us sort this list by translated title of workflow state and workflow
-  def compareState(a, b):
-    return cmp((a.workflow_title, a.translated_workflow_state_title),
-               (b.workflow_title, b.translated_workflow_state_title))
-  document_list.sort(compareState)
-
-  # Return result
-  return document_list
+  return sorted(document_list, key=lambda b: (b.workflow_title, b.translated_workflow_state_title))
 
 
 
