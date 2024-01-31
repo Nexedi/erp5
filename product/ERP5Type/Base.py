@@ -3655,7 +3655,7 @@ class Base(
       next_id = default
     new_next_id = None if poison else next_id + count
     id_generator_state[group].value = new_next_id
-    return range(next_id, new_next_id)
+    return ensure_list(range(next_id, new_next_id))
 
 InitializeClass(Base)
 
