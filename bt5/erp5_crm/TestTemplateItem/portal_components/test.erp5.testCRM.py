@@ -885,7 +885,7 @@ class TestCRMMailIngestion(BaseTestCRM):
       return object_list[-1]
 
     portal = self.portal
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'Visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -893,7 +893,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'Fax:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -901,7 +901,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Fax Message')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'TEST:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -909,7 +909,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Mail Message')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -925,7 +925,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = portal.event_module[portal.event_module.objectIds()[-1]]
     self.assertEqual(document.getPortalType(), 'Phone Call')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'LETTER:Company C')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -933,7 +933,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Letter')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     body = message.get_payload()
     message.set_payload('Visit:%s' % body)
     data = message.as_string()
@@ -942,7 +942,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     body = message.get_payload()
     message.set_payload('PHONE CALL:%s' % body)
     data = message.as_string()
@@ -1153,7 +1153,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
     self.assertEqual(event.getTextContent(), text_content)
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
 
     self.assertEqual('A Mail', decode_header(message['Subject'])[0][0])
     part = None
@@ -1237,7 +1237,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
 
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/html':
@@ -1260,7 +1260,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('=?utf-8?q?Me=2C_=F0=9F=90=88_fan?= <me@erp5.org>', mfrom)
     self.assertEqual(['=?utf-8?q?Recipient=2C_=F0=9F=90=88_fan?= <recipient@example.com>'], mto)
 
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
 
     self.assertEqual('Héhé', decode_header(message['Subject'])[0][0])
     self.assertEqual('Me, 🐈 fan', decode_header(message['From'])[0][0])
@@ -2036,8 +2036,8 @@ class TestCRMMailSend(BaseTestCRM):
 
     self.assertEqual(5, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
-      self.assertIn(mail_text_content, message_info[-1])
-      message = message_from_string(message_info[-1])
+      self.assertIn(mail_text_content, message_info[-1].decode())
+      message = message_from_string(message_info[-1].decode())
       self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
 
   def test_MailMessage_send_simple_case(self):
@@ -2069,7 +2069,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_message.send(extra_header_dict={"X-test-header": "test"})
     self.tic()
     (_, _, last_message,), = self.portal.MailHost._message_list
-    message = message_from_string(last_message)
+    message = message_from_string(last_message.decode())
     self.assertEqual("test", message.get("X-test-header"))
 
 
