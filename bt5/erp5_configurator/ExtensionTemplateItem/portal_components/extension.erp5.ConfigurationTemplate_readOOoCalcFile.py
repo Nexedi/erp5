@@ -30,6 +30,8 @@
 # This extension should be replaced by a clever parser provided by
 # ERP5OOo or probably by CloudOOo itself.
 
+import six
+
 from io import BytesIO
 
 def read(self, filename, data):
@@ -38,7 +40,7 @@ def read(self, filename, data):
   """
   if data is None:
     oo_template_file = getattr(self, filename)
-    fp = BytesIO(oo_template_file)
+    fp = BytesIO(bytes(oo_template_file))
   else:
     fp = BytesIO(data)
   fp.filename = filename
@@ -61,7 +63,9 @@ def getIdFromString(string):
   # Following line is a workaround for this,
   # because \u2013 does not exist in latin1
   string = string.replace(u'\u2013', '-')
-  for char in string.encode('utf-8'):#('iso8859_1'):
+  if six.PY2:
+    string = string.encode('utf-8')
+  for char in string:
     if char == '_' or char.isalnum():
       clean_id += char
     elif char.isspace() or char in ('+', '-'):
@@ -119,12 +123,16 @@ def convert(self, filename, data=None):
           # Get the property corresponding to the cell data
           property_id = property_map[cell_index]
           # Convert the value to something like '\xc3\xa9' not '\xc3\xa9'
-          object_property_dict[property_id] = cell.encode('UTF-8')
+          if six.PY2:
+            cell = cell.encode('UTF-8')
+          object_property_dict[property_id] = cell
         cell_index += 1
 
       if len(object_property_dict) > 0:
         object_list.append(object_property_dict)
-    table_dict[table_name.encode('UTF-8')] = object_list
+    if six.PY2:
+      table_name = table_name.encode('UTF-8')
+    table_dict[table_name] = object_list
 
   if len(table_dict.keys()) == 1:
     return object_list
