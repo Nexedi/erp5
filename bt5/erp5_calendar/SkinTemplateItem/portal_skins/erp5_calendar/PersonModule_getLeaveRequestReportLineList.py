@@ -68,10 +68,7 @@ for person in person_value_list:
         total=person_total,
         **result_dict))
 
-result_list.sort(lambda a,b: cmp(
-        a.person_career_reference or a.person_title,
-        b.person_career_reference or b.person_title))
-
+result_list.sort(key=lambda r: (r.person_career_reference or '', r.person_title or ''))
 request.set('total_time', total_time)
 request.set('total_time_per_resource', total_time_per_resource)
 
