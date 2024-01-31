@@ -38,17 +38,17 @@ class TestSQLVar(ERP5TypeTestCase):
                                        connection_id='erp5_sql_connection',
                                        arguments_src='value',
                                        src='<dtml-sqlvar value type="string">')
-    self.assertEqual(sqlmethod(value='', src__=1), "''")
-    self.assertEqual(sqlmethod(value=None, src__=1), 'null')
+    self.assertEqual(sqlmethod(value='', src__=1), b"''")
+    self.assertEqual(sqlmethod(value=None, src__=1), b'null')
 
     sqlmethod.edit(src='<dtml-sqlvar value type="string" optional>')
-    self.assertEqual(sqlmethod(value='', src__=1), "''")
-    self.assertEqual(sqlmethod(value=None, src__=1), 'null')
+    self.assertEqual(sqlmethod(value='', src__=1), b"''")
+    self.assertEqual(sqlmethod(value=None, src__=1), b'null')
 
     sqlmethod.edit(src='<dtml-sqlvar value type="nb">')
     self.assertRaises(ValueError, sqlmethod, value='', src__=1)
-    self.assertEqual(sqlmethod(value=None, src__=1), 'null')
+    self.assertEqual(sqlmethod(value=None, src__=1), b'null')
 
     sqlmethod.edit(src='<dtml-sqlvar value type="nb" optional>')
-    self.assertEqual(sqlmethod(value='', src__=1), 'null')
-    self.assertEqual(sqlmethod(value=None, src__=1), 'null')
+    self.assertEqual(sqlmethod(value='', src__=1), b'null')
+    self.assertEqual(sqlmethod(value=None, src__=1), b'null')
