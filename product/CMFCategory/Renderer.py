@@ -149,7 +149,10 @@ class Renderer(Filter):
     elif self.sort_key is not None:
       value_list.sort(key=self.sort_key)
     elif self.sort_id is not None:
-      value_list.sort(key=lambda x: x.getProperty(self.sort_id))
+      def sort_key(x):
+        k = x.getProperty(self.sort_id)
+        return (k is not None, k)
+      value_list.sort(key=sort_key)
 
     # If base=1 but base_category is None, it is necessary to guess the base category
     # by heuristic.
