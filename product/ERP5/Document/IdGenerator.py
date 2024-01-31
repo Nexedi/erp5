@@ -91,9 +91,10 @@ class IdGenerator(Base):
       by BTrees.Length to manage conflict in the zodb, use also a persistant
       mapping to be persistent
     """
-    # For compatibilty with sql data, must not use id_group as a list
-    if not isinstance(id_group, str):
-      raise TypeError('id_group is not a string')
+    # Type of id groups must be consistent, because we use them as BTree keys
+    # https://btrees.readthedocs.io/en/latest/overview.html#total-ordering-and-persistence
+    if not isinstance(id_group, bytes):
+      raise TypeError('id_group must be bytes')
     return self._getLatestSpecialiseValue().generateNewIdList(id_group=id_group,
                                                               id_count=id_count,
                                                               default=default,

@@ -3413,13 +3413,13 @@ class TestTransactions(AccountingTestCase):
     # ...except uid generator
     new_uid, = portal_ids.generateNewIdList(
       id_generator='uid',
-      id_group='catalog_uid',
+      id_group=b'catalog_uid',
       id_count=1,
     )
     portal_ids.clearGenerator(all=True)
     portal_ids.generateNewIdList(
       id_generator='uid',
-      id_group='catalog_uid',
+      id_group=b'catalog_uid',
       id_count=1,
       default=new_uid,
     )

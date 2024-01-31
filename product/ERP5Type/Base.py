@@ -3591,7 +3591,7 @@ class Base(
     sequence and for <self> instance, and is monotonously increasing by 1 for
     each generated id.
 
-    group (string):
+    group (bytes):
       Identifies the sequence to use.
     count (int):
       How many identifiers to generate.
@@ -3623,8 +3623,8 @@ class Base(
       It is expected that group creation is a rare event, very unlikely to
       happen concurrently in multiple transactions on the same object.
     """
-    if not isinstance(group, basestring):
-      raise TypeError('group must be a string')
+    if not isinstance(group, bytes):
+      raise TypeError('group must be bytes')
     if not isinstance(default, six.integer_types):
       raise TypeError('default must be an integer')
     if not isinstance(count, six.integer_types):
@@ -3649,7 +3649,7 @@ class Base(
       next_id = default
     new_next_id = None if poison else next_id + count
     id_generator_state[group].value = new_next_id
-    return range(next_id, new_next_id)
+    return ensure_list(range(next_id, new_next_id))
 
 InitializeClass(Base)
 
