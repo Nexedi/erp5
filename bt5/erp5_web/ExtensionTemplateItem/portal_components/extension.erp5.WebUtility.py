@@ -25,7 +25,10 @@
 #
 ##############################################################################
 
+import six
 from six.moves.html_parser import HTMLParser
+
+
 class HtmlParseHelper(HTMLParser):
   """
   Listens to all the HTMLParser methods and push results in a list of tuple.
@@ -131,5 +134,10 @@ def parseCssForUrl(text):
       result.append(("data", data))
   return result
 
-def unescape(self, html):
-  return HTMLParser().unescape(html)
+if six.PY2:
+  def unescape(self, html):
+    return HTMLParser().unescape(html)
+else:
+  from html import unescape as html_unescape
+  def unescape(self, html):
+    return html_unescape(self, html)
