@@ -335,7 +335,11 @@ class Category(Folder):
         if not isinstance(local_sort_id, (tuple, list)):
           local_sort_id = (local_sort_id, )
         def sort_key(c):
-          return [c.getProperty(sort_id, 0) for sort_id in local_sort_id]
+          k = []
+          for sort_id in local_sort_id:
+            v = c.getProperty(sort_id)
+            k.extend([v is not None, v])
+          return k
         local_sort_key = sort_key
       if local_sort_method:
         warnings.warn(
@@ -894,7 +898,11 @@ class BaseCategory(Category):
         if not isinstance(local_sort_id, (tuple, list)):
           local_sort_id = (local_sort_id, )
         def sort_key(c):
-          return [c.getProperty(sort_id, 0) for sort_id in local_sort_id]
+          k = []
+          for sort_id in local_sort_id:
+            v = c.getProperty(sort_id)
+            k.extend([v is not None, v])
+          return k
         local_sort_key = sort_key
       if local_sort_method:
         warnings.warn(
