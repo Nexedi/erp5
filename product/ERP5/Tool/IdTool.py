@@ -115,12 +115,13 @@ class IdTool(BaseTool):
     """
       Generate the next id in the sequence of ids of a particular group
     """
-    if id_group in (None, 'None'):
+    if id_group in (None, b'None'):
       raise ValueError('%r is not a valid id_group' % id_group)
     # for compatibilty with sql data, must not use id_group as a list
-    if not isinstance(id_group, str):
-      id_group = repr(id_group)
-      warnings.warn('id_group must be a string, other types '
+    if not isinstance(id_group, bytes):
+      # TODO: check that this repr same as python2 !
+      id_group = repr(id_group).encode()
+      warnings.warn('id_group must be bytes, other types '
                     'are deprecated.', DeprecationWarning)
     if id_generator is None:
       id_generator = 'document'
@@ -175,11 +176,11 @@ class IdTool(BaseTool):
     """
       Generate a list of next ids in the sequence of ids of a particular group
     """
-    if id_group in (None, 'None'):
+    if id_group in (None, b'None'):
       raise ValueError('%r is not a valid id_group' % id_group)
     # for compatibilty with sql data, must not use id_group as a list
-    if not isinstance(id_group, str):
-      id_group = repr(id_group)
+    if not isinstance(id_group, bytes):
+      id_group = repr(id_group).encode()
       warnings.warn('id_group must be a string, other types '
                     'are deprecated.', DeprecationWarning)
     if id_generator is None:
