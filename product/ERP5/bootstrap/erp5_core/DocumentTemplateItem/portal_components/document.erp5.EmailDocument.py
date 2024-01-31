@@ -49,9 +49,10 @@ except ImportError:
     """
 
 if six.PY2:
-  from email import message_from_string as message_from_x
+  from email import message_from_string as message_from_bytes
 else:
-  from email import message_from_bytes as message_from_x
+  from email import message_from_bytes
+
 from email.utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
@@ -162,7 +163,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
     # store it in 'data' property.
     result = getattr(self, '_v_message', None)
     if result is None:
-      data = self.getData()
+      data = bytes(self.getData() or b'')
       if not data:
         # Generated a mail message temporarily to provide backward compatibility.
         document_type_list = list(self.getPortalEmbeddedDocumentTypeList()) + list(self.getPortalDocumentTypeList())
@@ -174,7 +175,9 @@ class EmailDocument(TextDocument, MailMessageMixin):
           content_type=self.getContentType(),
           embedded_file_list=self.getAggregateValueList(portal_type=document_type_list),
         )
-      result = message_from_x(data)
+        if six.PY3:
+          data = data.encode()
+      result = message_from_bytes(data)
       self._v_message = result
     return result
 
