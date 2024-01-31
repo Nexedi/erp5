@@ -24,12 +24,6 @@ task_line_list = []
 for task in task_list:
   task_line_list.extend(task.contentValues(portal_type='Task Line'))
 
-def sortTaskLine(a, b):
-  result = cmp(a.getStartDate(), b.getStartDate())
-  if result == 0:
-    result = cmp(a.getTitle(), b.getTitle())
-  return result
-
-task_line_list.sort(sortTaskLine)
-
-return task_line_list
+return sorted(
+  task_line_list,
+  key=lambda tl: (tl.hasStartDate(), tl.getStartDate(), tl.getTitle()))

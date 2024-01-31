@@ -553,12 +553,12 @@ class BusinessConfiguration(Item):
                                "immediateReindexObject"])
     # build
     configuration_save_list = self.contentValues(portal_type='Configuration Save')
-    configuration_save_list.sort(lambda x, y: cmp(x.getIntIndex(x.getIntId()),
-                                                  y.getIntIndex(y.getIntId())))
+    configuration_save_list.sort(key=lambda x: (x.getIntIndex(x.getIntId()) or 0))
     for configuration_save in configuration_save_list:
       # XXX: check which items are configure-able
       configuration_item_list = configuration_save.contentValues()
-      configuration_item_list.sort(lambda x, y: cmp(x.getIntId(), y.getIntId()))
+      configuration_item_list.sort(key=lambda x: (x.getIntId() or 0))
+
       for configurator_item in configuration_item_list:
         configurator_item.activate(**kw).fixConsistency(
             filter={"constraint_type":"configuration"})

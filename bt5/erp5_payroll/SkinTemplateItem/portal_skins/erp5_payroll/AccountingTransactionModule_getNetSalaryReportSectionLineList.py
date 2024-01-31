@@ -58,13 +58,7 @@ for inventory in portal.portal_simulation.getInventoryList(
 
 request.set('total_price', total_price)
 
-def sort_method(a, b):
-  employee_career_reference_diff = cmp(a.employee_career_reference,
-                                       b.employee_career_reference)
-  if employee_career_reference_diff:
-    return employee_career_reference_diff
-  return cmp(a.employee_title, b.employee_title)
-
-object_list.sort(sort_method)
-
-return object_list
+return sorted(
+  object_list,
+  key=lambda o: (o.employee_career_reference or '', o.employee_title)
+)
