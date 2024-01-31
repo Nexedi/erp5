@@ -1,5 +1,6 @@
 from Products.ERP5OOo.OOoUtils import OOoParser
 import string
+import six
 
 request  = container.REQUEST
 
@@ -32,7 +33,7 @@ def getSpreadsheet(file):
 def cleanUid(uid):
   """method which clean an Uid"""
   clean = uid.strip(string.ascii_letters+'_')
-  return long(clean)
+  return int(clean) if six.PY3 else long(clean)
 
 # if listbox is empty, then we are in the first step
 if listbox is None:
