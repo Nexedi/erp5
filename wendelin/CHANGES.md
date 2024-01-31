@@ -1,5 +1,11 @@
 Releases
 ===
+1.0.351, 31.01.2024
+---
+  - switch to Zope4
+  - MQTT support
+  - Fixup: coding styles
+  
 1.0.307, 10.02.2023
 ---
   - various small improvements 
