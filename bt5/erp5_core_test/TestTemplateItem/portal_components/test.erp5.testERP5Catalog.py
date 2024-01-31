@@ -572,7 +572,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # otherwise it returns the object
     self.assertEqual(obj, portal_catalog.getObject(obj.getUid()).getObject())
     # but raises KeyError if object is not in catalog
-    self.assertRaises(KeyError, portal_catalog.getObject, sys.maxint)
+    self.assertRaises(KeyError, portal_catalog.getObject, -1)
 
   def test_getRecordForUid(self):
     portal_catalog = self.getCatalogTool()
@@ -584,7 +584,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     obj = self._makeOrganisation()
     self.assertEqual(obj.getPath(), portal_catalog.getpath(obj.getUid()))
-    self.assertRaises(KeyError, portal_catalog.getpath, sys.maxint)
+    self.assertRaises(KeyError, portal_catalog.getpath, -1)
 
   def test_16_newUid(self):
     # newUid should not assign the same uid
@@ -1653,7 +1653,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def test_54_FixIntUid(self):
     if six.PY3:
-      return unittest.skipTest(
+      return unittest.SkipTest(
         "Python3 does not have different types for int and long")
     portal = self.getPortal()
 
@@ -1836,14 +1836,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     obj.manage_permission(perm, [], 0)
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
-    self.assertSameSet([''], [x.owner for x in result])
+    self.assertSameSet([b''], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the object
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
-    self.assertSameSet(['super_owner'], [x.owner for x in result])
+    self.assertSameSet([b'super_owner'], [x.owner for x in result])
 
     # Check that Owner is not catalogued when he can view the
     # object because he has another role
@@ -1851,7 +1851,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     obj.manage_permission(perm, ['Assignee'], 0)
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
-    self.assertSameSet([''], [x.owner for x in result])
+    self.assertSameSet([b''], [x.owner for x in result])
 
     # Check that Owner is not catalogued when he can't view the
     # object and when the portal type does not acquire the local roles.
@@ -1867,7 +1867,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_obj.manage_permission(perm, [], 0)
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet([''], [x.owner for x in result])
+    self.assertSameSet([b''], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the
     # object and when the portal type does not acquire the local roles.
@@ -1883,7 +1883,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_obj.manage_permission(perm, ['Owner'], 0)
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet(['little_owner'], [x.owner for x in result])
+    self.assertSameSet([b'little_owner'], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the
     # object because permissions are acquired and when the portal type does not
@@ -1900,7 +1900,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_obj.manage_permission(perm, [], 1)
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet(['little_owner'], [x.owner for x in result])
+    self.assertSameSet([b'little_owner'], [x.owner for x in result])
 
     # Check that Owner is not catalogued when he can't view the
     # object and when the portal type acquires the local roles.
@@ -1916,7 +1916,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_obj.manage_permission(perm, [], 0)
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet([''], [x.owner for x in result])
+    self.assertSameSet([b''], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the
     # object and when the portal type acquires the local roles.
@@ -1932,7 +1932,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_obj.manage_permission(perm, ['Owner'], 0)
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet(['little_owner'], [x.owner for x in result])
+    self.assertSameSet([b'little_owner'], [x.owner for x in result])
 
     # Check that Owner is catalogued when he can view the
     # object because permissions are acquired and when the portal type
@@ -1949,7 +1949,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_obj.manage_permission(perm, [], 1)
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
-    self.assertSameSet(['little_owner'], [x.owner for x in result])
+    self.assertSameSet([b'little_owner'], [x.owner for x in result])
 
   def test_ExactMatchSearch(self):
     # test exact match search with queries
@@ -3328,7 +3328,7 @@ VALUES
   def test_reindexWithGroupId(self):
     CatalogTool = type(self.getCatalogTool().aq_base)
     counts = []
-    orig_catalogObjectList = CatalogTool.catalogObjectList.__func__
+    orig_catalogObjectList = CatalogTool.catalogObjectList
     def catalogObjectList(self, object_list, *args, **kw):
       counts.append(len(object_list))
       return orig_catalogObjectList(self, object_list, *args, **kw)
@@ -4132,7 +4132,7 @@ VALUES
     self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     # check if we did not just publish the result of `str(portal_catalog.__call__())`,
     # but a proper page
-    self.assertIn('<title>Catalog Tool - portal_catalog', ret.getBody())
+    self.assertIn(b'<title>Catalog Tool - portal_catalog', ret.getBody())
 
   def testSearchNonAsciiWithTheInitUser(self):
     """
