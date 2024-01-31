@@ -150,7 +150,6 @@ class StateError(Exception):
   """
   Must call only an available transition
   """
-  pass
 def executeTransition(state, transition, document, form_kw=None):
   """
   Execute transition on the object.
@@ -347,9 +346,9 @@ class BusinessConfiguration(Item):
       ## we have already created configuration save for this state
       ## so remove from it already existing configuration items
       if configuration_save != self:  # don't delete ourselves
-        existing_conf_items = configuration_save.objectIds()
-        existing_conf_items = map(None, existing_conf_items)
-        configuration_save.manage_delObjects(existing_conf_items)
+        existing_conf_items = list(configuration_save.objectIds())
+        if existing_conf_items:
+          configuration_save.manage_delObjects(existing_conf_items)
 
     modified_form_kw = {}
     for k in form_kw.keys():
