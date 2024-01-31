@@ -16,6 +16,4 @@ for (x,y) in selection_param_list:
 
 active_process_list = [(y,x) for (x,y) in active_process_dict.items()]
 
-active_process_list.sort(lambda x, y: cmp(x[1],y[1]), reverse=True )
-
-return active_process_list
+return sorted(active_process_list, key=lambda item: item[1], reverse=True)

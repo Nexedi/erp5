@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import functools
 from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -243,7 +244,10 @@ class DomainTool(BaseTool):
       if sort_key_method is not None:
         result_list.sort(key=sort_key_method)
       elif sort_method is not None:
-        result_list.sort(cmp=sort_method)
+        if six.PY3:
+          result_list.sort(key=functools.cmp_to_key(sort_method))
+        else:
+          result_list.sort(cmp=sort_method)
     return result_list
 
   # XXX FIXME method should not be public

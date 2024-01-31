@@ -120,38 +120,12 @@ for paysheet_line in paysheet_line_list:
   if 'no_slice' in object_dict:
     line_list.append(paysheet_line.asContext(**object_dict['no_slice']))
 
-
-
-# sort results
-def sortByTitleAscending(x, y):
-  return cmp(x.getTitle(), y.getTitle())
-
-def sortByTitleDescending(x, y):
-  return cmp(y.getTitle(), x.getTitle())
-
-def sortByIntIndexAscending(x, y):
-  return cmp(x.getIntIndex(), y.getIntIndex())
-
-def sortByIntIndexDescending(x, y):
-  return cmp(y.getIntIndex(), x.getIntIndex())
-
-sortByDefaultSortMethod = sortByIntIndexAscending
-
+reverse = False
+sort_key = lambda l: (l.getIntIndex() or 0)
 if 'sort_on' in kw:
   sort_on = kw['sort_on']
-  if sort_on[0][0] == 'title' and sort_on[0][1]=='ascending':
-    line_list.sort(sortByTitleAscending)
-  elif sort_on[0][0] == 'title' and sort_on[0][1]=='descending':
-    line_list.sort(sortByTitleDescending)
-  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='ascending':
-    line_list.sort(sortByIntIndexAscending)
-  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='descending':
-    line_list.sort(sortByIntIndexDescending)
-  else:
-    line_list.sort(sortByDefaultSortMethod)
-else:
-  line_list.sort(sortByDefaultSortMethod)
+  reverse = sort_on[0][1]=='descending'
+  if sort_on[0][0] == 'title':
+    sort_key = lambda l: (l.getTitle() or '')
 
-
-
-return line_list
+return sorted(line_list, key=sort_key, reverse=reverse)
