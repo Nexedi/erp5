@@ -27,7 +27,7 @@
 ##############################################################################
 
 import zope.interface
-from six.moves import cStringIO as StringIO
+import io
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -35,10 +35,6 @@ from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 import six
-
-
-class UnrestrictedStringIO(StringIO):
-  __allow_access_to_unprotected_subobjects__ = 1
 
 
 @zope.interface.implementer(IConfiguratorItem)
@@ -117,7 +113,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       # TODO use a invalid_spreadsheet_error_handler to report invalid
       # spreadsheet messages (see http://svn.erp5.org?rev=24908&view=rev )
       aq_self._category_cache = self.Base_getCategoriesSpreadSheetMapping(
-                    UnrestrictedStringIO(self.getDefaultConfigurationSpreadsheetData()))
+                    io.BytesIO(self.getDefaultConfigurationSpreadsheetData()))
 
   security.declareProtected(Permissions.ModifyPortalContent,
                            'setDefaultConfigurationSpreadsheetFile')
