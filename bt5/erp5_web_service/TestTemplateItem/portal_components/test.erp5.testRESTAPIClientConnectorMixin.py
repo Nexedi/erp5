@@ -4,6 +4,8 @@ from json import dumps
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from httplib import HTTPSConnection
 from erp5.component.mixin.RESTAPIClientConnectorMixin import RESTAPIClientConnectorMixin
+from ssl import SSLError
+from Products.ERP5Type.Timeout import TimeoutReachedError
 import mock
 
 expected_output_body_dict = {
@@ -168,3 +170,21 @@ class TestRESTAPIClientConnector(ERP5TypeTestCase):
           error.body,
           expected_output_body_dict
         )
+
+  def test_api_call_timeout(self):
+    with mock.patch(
+      'ssl.create_default_context',
+    ), mock.patch(
+      'httplib.HTTPSConnection.request',
+    ), mock.patch(
+      'httplib.HTTPSConnection.getresponse',
+    ) as mock_https_connection_getresponse:
+      mock_https_connection_getresponse.side_effect = SSLError('The read operation timed out')
+      self.assertRaises(
+        TimeoutReachedError,
+        self.rest_api_client_connection.call,
+        archive_resource=None,
+        method='POST',
+        path='/path',
+        body=input_body_dict
+      )
