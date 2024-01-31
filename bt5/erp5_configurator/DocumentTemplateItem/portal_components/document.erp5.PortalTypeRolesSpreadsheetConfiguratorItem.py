@@ -93,7 +93,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
       business_configuration = self.getBusinessConfigurationValue()
       bt5_obj = business_configuration.getSpecialiseValue()
       if bt5_obj is not None:
-        bt5_obj.edit(template_portal_type_role_list=portal_type_role_dict.keys())
+        bt5_obj.edit(template_portal_type_role_list=list(portal_type_role_dict.keys()))
 
     return error_list
 
