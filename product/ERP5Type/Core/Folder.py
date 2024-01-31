@@ -879,7 +879,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     HBTreeFolder2Base.__init__(self, self.id)
     # launch activity per bundle to copy/paste to hbtree
     BUNDLE_COUNT = 100
-    for x in xrange(len(id_list) / BUNDLE_COUNT):
+    for x in xrange(len(id_list) // BUNDLE_COUNT):
       self.activate(activity="SQLQueue", tag=tag)._copyObjectToHBTree(
         id_list=id_list[x*BUNDLE_COUNT:(x+1)*BUNDLE_COUNT],)
 
