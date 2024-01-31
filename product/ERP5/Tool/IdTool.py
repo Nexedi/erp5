@@ -118,6 +118,9 @@ class IdTool(BaseTool):
     if id_group in (None, 'None'):
       raise ValueError('%r is not a valid id_group' % id_group)
     # for compatibilty with sql data, must not use id_group as a list
+    if six.PY3 and isinstance(id_group, bytes):
+      warnings.warn('id_group must be a string, not bytes.', BytesWarning)
+      id_group = id_group.decode('utf-8')
     if not isinstance(id_group, str):
       id_group = repr(id_group)
       warnings.warn('id_group must be a string, other types '
@@ -177,6 +180,9 @@ class IdTool(BaseTool):
     """
     if id_group in (None, 'None'):
       raise ValueError('%r is not a valid id_group' % id_group)
+    if six.PY3 and isinstance(id_group, bytes):
+      warnings.warn('id_group must be a string, not bytes.', BytesWarning)
+      id_group = id_group.decode('utf-8')
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
