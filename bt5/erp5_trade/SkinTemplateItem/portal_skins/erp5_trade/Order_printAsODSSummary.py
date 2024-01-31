@@ -23,13 +23,10 @@ full_total_price = 0
 worker_column_list = []
 source_trade_dict = {}
 
-def sortMovement(a, b):
-  return cmp(a.getRelativeUrl(), b.getRelativeUrl())
-
 movement_type_list = context.getPortalMovementTypeList()
 line_list = [x for x in context.getIndexableChildValueList() if x.getPortalType() in \
               movement_type_list]
-line_list.sort(sortMovement)
+line_list.sort(key=lambda line: line.getRelativeUrl())
 
 order_type_list = context.getPortalOrderTypeList()
 def getMovementTitle(movement):
