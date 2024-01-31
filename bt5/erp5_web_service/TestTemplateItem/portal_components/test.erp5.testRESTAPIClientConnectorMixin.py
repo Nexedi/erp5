@@ -9,6 +9,9 @@ import mock
 expected_output_body_dict = {
   u'output': 'output',
 }
+input_body_dict = {
+  'input': 'input',
+}
 
 class HTTPResponse_getresponse():
   def __init__(self, status=200):
@@ -43,6 +46,9 @@ class RESTAPIClientConnector(RESTAPIClientConnectorMixin):
   def _getAccessToken(self):
     return 'access_token'
   
+  def getTimeout(self, timeout):
+    return 5
+
   def getBaseUrl(self):
     return 'https://example.com/'
   
@@ -58,9 +64,6 @@ class TestRESTAPIClientConnector(ERP5TypeTestCase):
     self.rest_api_client_connection = RESTAPIClientConnector(id='rest_api_client_connection')
 
   def test_api_call(self):
-    input_body_dict = {
-      'input': 'input',
-    }
     timeout = 1
 
     with mock.patch(
@@ -134,3 +137,34 @@ class TestRESTAPIClientConnector(ERP5TypeTestCase):
         status,
         200
       )
+
+
+  def test_api_call_error(self):
+    with mock.patch(
+      'ssl.create_default_context',
+    ), mock.patch(
+      'httplib.HTTPSConnection.request',
+    ), mock.patch(
+      'httplib.HTTPSConnection.getresponse',
+      return_value=HTTPResponse_getresponse(498)
+    ):
+      with self.assertRaises(RESTAPIError) as error:
+        self.rest_api_client_connection.call(
+          archive_resource=None,
+          method='POST',
+          path='/path',
+          body=input_body_dict
+        )
+        
+        self.assertEqual(
+          error.status,
+          498
+        )
+        self.assertEqual(
+          error.header_dict['content-type'],
+          'application/json'
+        )
+        self.assertEqual(
+          error.body,
+          expected_output_body_dict
+        )
