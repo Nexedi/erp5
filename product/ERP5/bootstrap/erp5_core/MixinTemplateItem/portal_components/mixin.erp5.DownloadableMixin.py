@@ -146,10 +146,8 @@ class DownloadableMixin:
     if output_format is None:
       output_format = format
 
-    RESPONSE.setHeader('Content-Length', len(data))
     if output_format in VALID_TEXT_FORMAT_LIST:
       RESPONSE.setHeader('Content-Type', '%s; charset=utf-8' % mime)
-      data = data.encode('utf-8')
     else:
       RESPONSE.setHeader('Content-Type', mime)
     if inline is _MARKER:
@@ -169,7 +167,12 @@ class DownloadableMixin:
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
     else:
       RESPONSE.setHeader('Content-Disposition', 'inline')
-    return bytes(data)
+    if isinstance(data, six.text_type):
+      data = data.encode('utf-8')
+    else:
+      data = bytes(data)
+    RESPONSE.setHeader('Content-Length', len(data))
+    return data
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStandardFilename')
