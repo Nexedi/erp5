@@ -46,13 +46,6 @@ from DateTime import DateTime
 
 import Products.ERP5.tests
 
-def makeFilePath(name):
-  return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-                      'test_data', 'crm_emails', name)
-
-def makeFileUpload(name):
-  path = makeFilePath(name)
-  return FileUpload(path, name)
 
 clear_module_name_list = """
 campaign_module
@@ -79,6 +72,14 @@ class BaseTestCRM(ERP5TypeTestCase):
       module.manage_delObjects(list(module.objectIds()))
     self.tic()
     super(BaseTestCRM, self).beforeTearDown()
+
+  def makeFileUpload(self, name):
+    path = os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+                      'test_data', 'crm_emails', name)
+    fu = FileUpload(path, name)
+    self.addCleanup(fu.close)
+    return fu
+
 
 class TestCRM(BaseTestCRM):
   def getTitle(self):
@@ -885,7 +886,7 @@ class TestCRMMailIngestion(BaseTestCRM):
       return object_list[-1]
 
     portal = self.portal
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'Visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -893,7 +894,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'Fax:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -901,7 +902,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Fax Message')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'TEST:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -909,7 +910,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Mail Message')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -925,7 +926,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = portal.event_module[portal.event_module.objectIds()[-1]]
     self.assertEqual(document.getPortalType(), 'Phone Call')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     message.replace_header('subject', 'LETTER:Company C')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -933,7 +934,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Letter')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     body = message.get_payload()
     message.set_payload('Visit:%s' % body)
     data = message.as_string()
@@ -942,7 +943,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple').decode())
     body = message.get_payload()
     message.set_payload('PHONE CALL:%s' % body)
     data = message.as_string()
@@ -1153,14 +1154,14 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
     self.assertEqual(event.getTextContent(), text_content)
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
 
     self.assertEqual('A Mail', decode_header(message['Subject'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(text_content, part.get_payload(decode=True))
+    self.assertEqual(text_content, part.get_payload(decode=True).decode())
 
     #
     # Test multiple recipients.
@@ -1237,13 +1238,13 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
 
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/html':
         part = i
     self.assertNotEqual(part, None)
-    self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True))
+    self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True).decode())
 
   def test_MailMessageEncoding(self):
     # test sending a mail message with non ascii characters
@@ -1260,7 +1261,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('=?utf-8?q?Me=2C_=F0=9F=90=88_fan?= <me@erp5.org>', mfrom)
     self.assertEqual(['=?utf-8?q?Recipient=2C_=F0=9F=90=88_fan?= <recipient@example.com>'], mto)
 
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
 
     self.assertEqual('Héhé', decode_header(message['Subject'])[0][0])
     self.assertEqual('Me, 🐈 fan', decode_header(message['From'])[0][0])
@@ -1269,7 +1270,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual('Hàhà', part.get_payload(decode=True))
+    self.assertEqual(u'Hàhà', part.get_payload(decode=True).decode('utf-8'))
 
   def test_MailAttachmentPdf(self):
     """
@@ -1278,7 +1279,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
     # pdf
     filename = 'sample_attachment.pdf'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
     self.tic()
@@ -1325,7 +1326,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.odt'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
     self.tic()
@@ -1372,7 +1373,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.zip'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
     self.tic()
 
@@ -1417,7 +1418,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.gif'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
     self.tic()
@@ -1514,7 +1515,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
     # pdf
     filename = 'sample_attachment.pdf'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
@@ -1562,7 +1563,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.zip'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
@@ -1611,7 +1612,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.zip'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
@@ -1688,7 +1689,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document on a person which will be attached.
 
     def add_document(filename, container, portal_type):
-      f = makeFileUpload(filename)
+      f = self.makeFileUpload(filename)
       document = container.newContent(portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -1745,7 +1746,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document on a person which will be attached.
 
     def add_document(filename, container, portal_type):
-      f = makeFileUpload(filename)
+      f = self.makeFileUpload(filename)
       document = container.newContent(portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -1821,7 +1822,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
     new_event = event.Base_createCloneDocument(batch_mode=1)
     self.assertFalse(new_event.hasFile(), '%r has a file' % (new_event,))
-    self.assertEqual(new_event.getData(), '')
+    self.assertEqual(new_event.getData(), b'')
     self.assertEqual(new_event.getTitle(), real_title)
     self.assertEqual(new_event.getTextContent(), real_content)
     self.assertNotEqual(new_event.getReference(), event.getReference())
@@ -2036,8 +2037,8 @@ class TestCRMMailSend(BaseTestCRM):
 
     self.assertEqual(5, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
-      self.assertIn(mail_text_content, message_info[-1])
-      message = message_from_string(message_info[-1])
+      self.assertIn(mail_text_content, message_info[-1].decode())
+      message = message_from_string(message_info[-1].decode())
       self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
 
   def test_MailMessage_send_simple_case(self):
@@ -2069,7 +2070,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_message.send(extra_header_dict={"X-test-header": "test"})
     self.tic()
     (_, _, last_message,), = self.portal.MailHost._message_list
-    message = message_from_string(last_message)
+    message = message_from_string(last_message.decode())
     self.assertEqual("test", message.get("X-test-header"))
 
 
