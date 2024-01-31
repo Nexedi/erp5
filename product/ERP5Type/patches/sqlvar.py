@@ -110,13 +110,13 @@ else: # For easy diff with original (ZSQLMethods 3.14)
                 v = expr(md)
         except Exception:
             if 'optional' in args and args['optional']:
-                return 'null'
+                return b'null'
             if not isinstance(expr, StringTypes):
                 raise
             raise ValueError('Missing input variable, <em>%s</em>' % name)
 
         if v is None:
-            return 'null'
+            return b'null'
 
         if t == 'int':
             try:
@@ -162,7 +162,7 @@ else: # For easy diff with original (ZSQLMethods 3.14)
                 v = str(v)
             if not v and t == 'nb':
                 if 'optional' in args and args['optional']:
-                    return 'null'
+                    return b'null'
                 else:
                     err = 'Invalid empty string value for <em>%s</em>' % name
                     raise ValueError(err)
