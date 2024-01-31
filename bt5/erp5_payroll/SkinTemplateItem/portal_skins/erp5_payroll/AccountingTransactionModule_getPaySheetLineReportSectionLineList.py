@@ -38,10 +38,10 @@ inventory_param_dict = {
 }
 
 employee_param_dict = inventory_param_dict.copy()
-employee_param_dict['contribution_share_uid'] = context.portal_categories.contribution_share.employee.getUid()
+employee_param_dict['contribution_share_uid'] = portal.portal_categories.contribution_share.employee.getUid()
 
 employer_param_dict = inventory_param_dict.copy()
-employer_param_dict['contribution_share_uid'] = context.portal_categories.contribution_share.employer.getUid()
+employer_param_dict['contribution_share_uid'] = portal.portal_categories.contribution_share.employer.getUid()
 
 if request.get('mirror_section'):
   mirror_section = request['mirror_section']
@@ -112,21 +112,14 @@ request.set('base_total', base_total)
 request.set('total', total)
 
 
-sorted_inventory_list = []
-sorted_inventory_list = inventory_list.values()
-
 # sort by salary range, and add intermediate sums if needed
-def sort_method(a, b):
-  salary_range_diff = cmp(a.salary_range, b.salary_range)
-  if salary_range_diff:
-    return salary_range_diff
-  employee_career_reference_diff = cmp(a.employee_career_reference,
-                                       b.employee_career_reference)
-  if employee_career_reference_diff:
-    return employee_career_reference_diff
-  return cmp(a.employee_title, b.employee_title)
-
-sorted_inventory_list.sort(sort_method)
+sorted_inventory_list = sorted(
+  inventory_list.values(),
+  key=lambda i: (
+    i.salary_range or '',
+    i.employee_career_reference or '',
+    i.employee_title or '',
+  ))
 
 i = 0
 intermediate_base_total = 0
