@@ -85,7 +85,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/data_aggregation_unit_module/woelfel_dpu0007322d5e3f</string>
                 <string>destination/data_stream_module/test_woelfel_91</string>
                 <string>resource/data_product_module/test_wendelin_data_product_information</string>
               </tuple>
