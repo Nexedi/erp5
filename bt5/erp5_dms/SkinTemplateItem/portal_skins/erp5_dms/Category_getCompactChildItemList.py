@@ -12,12 +12,9 @@ def getCompactTitle(category):
     title_list.reverse()
   return '/'.join(title_list)
 
-def compareTitle(a, b):
-  return cmp(a[1], b[1])
-
 def getCompactChildItemList(context):
   result = context.getCategoryChildItemList(display_method=getCompactTitle)
-  result.sort(compareTitle)
+  result.sort(key=lambda x: x[1])
   return result
 
 from Products.ERP5Type.Cache import CachingMethod
