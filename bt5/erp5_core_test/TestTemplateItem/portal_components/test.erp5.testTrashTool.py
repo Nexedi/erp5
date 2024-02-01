@@ -267,7 +267,7 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_path = base_category.getPath().split('/')[2:-1]
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=1)
-    self.assertTrue(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
+    self.assertEqual(sorted(backup_subobjects_ids.keys()), sorted(subobjects_ids))
 
   def stepBackupFolderObjectsWithSave(self, sequence=None, sequence_list=None, **kw):
     """
@@ -297,7 +297,7 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_path = base_category.getPath().split('/')[1:-1]
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=0)
-    self.assertTrue(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
+    self.assertEqual(sorted(backup_subobjects_ids.keys()), sorted(subobjects_ids))
 
   def stepBackupObjectsWithKeepingSubobjects(self, sequence=None, sequence_list=None, **kw):
     """
@@ -359,8 +359,8 @@ class TestTrashTool(ERP5TypeTestCase):
   def stepCheckRestore(self, sequence=None, sequence_list=None, **kw):
     bc_id = sequence.get('bc_id')
     bc = self.portal.portal_categories[bc_id]
-    self.assertTrue(
-      sorted(bc.objectIds()) == sorted(sequence.get('category_id_list'))
+    self.assertEqual(
+      sorted(bc.objectIds()), sorted(sequence.get('category_id_list'))
     )
     self.assertEqual(
       len(
