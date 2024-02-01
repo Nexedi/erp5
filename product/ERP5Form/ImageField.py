@@ -169,7 +169,7 @@ class ImageFieldWidget(Widget.TextWidget):
 
       # Big images are cut into smaller chunks, so it's required to cast to
       # str. See OFS/Image -> _read_data method for more information
-      image_data = str(image_data)
+      image_data = bytes(image_data)
 
       format = content_type.split('/')[-1]
       # add the image to the odg document
