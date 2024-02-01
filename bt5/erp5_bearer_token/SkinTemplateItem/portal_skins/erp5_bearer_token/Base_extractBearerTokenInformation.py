@@ -7,7 +7,7 @@ except KeyError:
 
 key = context.getPortalObject().portal_preferences.getPreferredBearerTokenKey()
 
-if context.Base_getHMAC(key, str(token_dict)) != token:
+if context.Base_getHMAC(key, str(token_dict).encode('utf-8')) != token:
   # bizzare, not valid
   return None
 

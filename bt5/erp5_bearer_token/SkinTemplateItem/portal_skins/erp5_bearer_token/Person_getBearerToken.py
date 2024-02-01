@@ -14,7 +14,7 @@ token = {
   'remote-addr': context.REQUEST.get('REMOTE_ADDR')
 }
 
-hmac = context.Base_getHMAC(key, str(token))
+hmac = context.Base_getHMAC(key, str(token).encode('utf-8'))
 
 context.Base_setBearerToken(hmac, token)
 
