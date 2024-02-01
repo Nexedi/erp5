@@ -43,7 +43,7 @@ class TestSafeImage(ERP5TypeTestCase):
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
     path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
-    os.write(fd,str(image.data))
+    os.write(fd, bytes(image.data))
     os.close(fd)
     _image = makeFileUpload(path_image)
     image = self.image_module.newContent(portal_type='Image',title='testImage',
@@ -55,7 +55,7 @@ class TestSafeImage(ERP5TypeTestCase):
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
     path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
-    os.write(fd,str(image.data))
+    os.write(fd, bytes(image.data))
     os.close(fd)
     tile_image = makeFileUpload(path_image)
     tile = self.image_module.newContent(portal_type='Image Tile',title='testTile',
@@ -67,7 +67,7 @@ class TestSafeImage(ERP5TypeTestCase):
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
     path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
-    os.write(fd,str(image.data))
+    os.write(fd, bytes(image.data))
     os.close(fd)
     tile_image_transformed = makeFileUpload(path_image)
     tile_transformed = self.image_module.newContent(portal_type='Image Tile Transformed',
