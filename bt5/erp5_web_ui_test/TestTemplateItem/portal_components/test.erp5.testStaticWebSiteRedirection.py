@@ -73,7 +73,7 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
     self.tic()
     return website
 
-  def runTestRedirect(self, source_path, expected_failure=None,
+  def runTestRedirect(self, source_path,
                       use_moved_temporarily=None,
                       configuration_service_worker_url=None, **kw):
     """
