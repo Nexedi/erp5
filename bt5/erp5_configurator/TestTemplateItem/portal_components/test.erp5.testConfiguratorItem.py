@@ -352,12 +352,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
     test_folder_path = '/'.join(test_folder.__file__.split('/')[:-1])
 
-    f = open("%s/test_data/test_standard_portal_type_roles.ods" \
-               % test_folder_path, "r")
-    try:
+    with open(
+      "%s/test_data/test_standard_portal_type_roles.ods" % test_folder_path, "rb") as f:
       data = f.read()
-    finally:
-      f.close()
 
     if getattr(category_tool.group, "my_group", None) is None:
       category_tool.group.newContent(id="my_group")
@@ -428,7 +425,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     test_folder_path = '/'.join(test_folder.__file__.split('/')[:-1])
 
     with open("%s/test_data/test_standard_categories.ods" \
-               % test_folder_path, "r") as f:
+               % test_folder_path, "rb") as f:
       data = f.read()
 
     item = configuration_save.addConfigurationItem(
@@ -511,7 +508,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     test_folder_path = '/'.join(test_folder.__file__.split('/')[:-1])
 
     with open("%s/test_data/test_standard_business_process.ods" \
-               % test_folder_path, "r") as f:
+               % test_folder_path, "rb") as f:
       data = f.read()
 
     reference = "testing_business_process_%s" % self.newUniqueUID()
