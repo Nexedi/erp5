@@ -69,7 +69,7 @@ for to_url in to_url_list:
     multipart.add_file(data=attachment_dict['content'],
                        content_type=attachment_dict['mime_type'],
                        filename=attachment_dict['name'])
-  mail_message = str(multipart)
+  mail_message = bytes(multipart)
   # Bug Message not send email it self.
   #context.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
 
