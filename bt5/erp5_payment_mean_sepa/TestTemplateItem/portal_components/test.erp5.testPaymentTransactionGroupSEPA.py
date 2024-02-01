@@ -140,7 +140,7 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
 
     # this XML validates against the schema
     xmlschema = lxml.etree.XMLSchema(
-        lxml.etree.fromstring(str(getattr(self.portal, 'pain.001.001.02.xsd').data)))
+        lxml.etree.fromstring(bytes(getattr(self.portal, 'pain.001.001.02.xsd').data)))
     xmlschema.assertValid(pain)
 
     self.assertEqual(
@@ -234,7 +234,7 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
     pain = lxml.etree.fromstring(
         getattr(ptg, 'PaymentTransactionGroup_viewAsSEPACreditTransferPain.001.001.02')().encode('utf-8'))
     xmlschema = lxml.etree.XMLSchema(
-        lxml.etree.fromstring(str(getattr(self.portal, 'pain.001.001.02.xsd').data)))
+        lxml.etree.fromstring(bytes(getattr(self.portal, 'pain.001.001.02.xsd').data)))
     xmlschema.assertValid(pain)
 
     self.assertEqual(
