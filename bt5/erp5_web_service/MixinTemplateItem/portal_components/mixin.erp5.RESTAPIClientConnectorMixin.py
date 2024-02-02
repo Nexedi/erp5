@@ -1,6 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2021 Nexedi SA and Contributors. All Rights Reserved.
+#                    Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
