@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_global.js</string> </value>
+            <value> <string>gadget_thread_reader.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,15 +83,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_global_js</string> </value>
+            <value> <string>rjs_gadget_thread_reader_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>gadget_erp5_global.js</string> </value>
+            <value> <string>Gadget Thread Reader</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +163,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -187,7 +187,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1460378213.06</float>
+                              <float>1693917605.16</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -222,7 +222,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -236,7 +236,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1003.51428.45312.41796</string> </value>
+                      <value> <string>1010.60920.5655.26692</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -256,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1666341502.97</float>
+                              <float>1693917613.92</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -283,11 +283,13 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -299,7 +301,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -319,7 +321,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1460378084.72</float>
+                              <float>1693917561.24</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

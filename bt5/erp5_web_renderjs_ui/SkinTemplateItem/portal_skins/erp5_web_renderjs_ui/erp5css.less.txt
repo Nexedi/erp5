@@ -1911,6 +1911,7 @@ div[data-gadget-scope='erp5_searchfield'] {
 * Radio field
 **********************************************/
 div[data-gadget-url$="gadget_erp5_field_radio.html"] {
+  display: inline-grid;
   label {
     // Ensure the label width do not use 100%
     // in case of display block
