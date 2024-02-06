@@ -149,7 +149,7 @@ class TestOOoChart(TestOOoChartMixin):
 
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(body)
+    parser.openFromBytes(body)
     content_xml_view = parser.oo_files['content.xml']
 
     doc_view = etree.fromstring(content_xml_view)
@@ -243,7 +243,7 @@ class TestOOoChart(TestOOoChartMixin):
 
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(body)
+    parser.openFromBytes(body)
     content_xml_view = parser.oo_files['content.xml']
 
     doc_view = etree.fromstring(content_xml_view)
