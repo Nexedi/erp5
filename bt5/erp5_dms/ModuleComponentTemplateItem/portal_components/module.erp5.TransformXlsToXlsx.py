@@ -23,7 +23,7 @@ class XlsToXlsx:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     xls = OOOdCommandTransform(context, filename, data, self.inputs[0])
     xlsx = xls.convertTo('xlsx')
     if cache is not None:
