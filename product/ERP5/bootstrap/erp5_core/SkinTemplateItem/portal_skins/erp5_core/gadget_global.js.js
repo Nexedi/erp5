@@ -47,18 +47,17 @@
   }
   window.getFirstNonEmpty = getFirstNonEmpty;
 
-  /** Convert anything to boolean value correctly (even "false" will be false)*/
+  /**
+   * Convert anything to boolean value with rules similar to python.
+   */
   function asBoolean(obj) {
     if (typeof obj === "boolean") {
       return obj;
     }
-    if (typeof obj === "string") {
-      return obj.toLowerCase() === "true" || obj === "1";
-    }
     if (typeof obj === "number") {
-      return obj !== 0;
+      return Boolean(obj)
     }
-    return Boolean(obj);
+    return !isEmpty(obj);
   }
   window.asBoolean = asBoolean;
 
