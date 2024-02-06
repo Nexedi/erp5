@@ -215,7 +215,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>descending</string>
+                          <string>asscending</string>
                         </tuple>
                       </list>
                     </value>
@@ -226,7 +226,19 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Instance Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Status Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_reference</string>
+                          <string>Computer</string>
+                        </tuple>
+                        <tuple>
+                          <string>status</string>
+                          <string>Status</string>
                         </tuple>
                       </list>
                     </value>
