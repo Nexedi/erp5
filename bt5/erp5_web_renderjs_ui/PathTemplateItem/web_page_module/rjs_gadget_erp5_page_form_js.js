@@ -182,8 +182,8 @@ and handling data send&receive.
           is_refresh: options.is_refresh || false
         };
 
-      // options.editable differs when it comes from the erp5_launcher of FormBox - try to unify it here
-      if (asBoolean(options.editable)) {
+      // options.editable differs when it comes from an option in URL param, from erp5_launcher of FormBox - try to unify it here
+      if (options.editable !== "false" && asBoolean(options.editable)) {
         options.editable = 1;
       } else {
         options.editable = 0;
