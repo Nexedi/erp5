@@ -24,7 +24,7 @@ class SxiToOdp:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     sxi = OOOdCommandTransform(context, filename, data, self.inputs[0])
     odp = sxi.convertTo('odp')
     if cache is not None:

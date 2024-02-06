@@ -23,7 +23,7 @@ class XlsToOds:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     xls = OOOdCommandTransform(context, filename, data, self.inputs[0])
     ods = xls.convertTo('ods')
     if cache is not None:
