@@ -12,7 +12,6 @@ There are runtime values hidden in every dialog form (injected by getHateoas Scr
   extra_param_json - JSON serialized extra parameters for the dialog script
 """
 
-from erp5.component.module.Log import log, WARNING
 from Products.Formulator.Errors import FormValidationError
 import json
 import six
@@ -137,7 +136,7 @@ try:
     return context.Base_renderForm(dialog_id,
       message=translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
                         'in Preferences - User Interface - Report Style'),
-      level=WARNING,
+      level='warning',
       form_data=form_data)
 
 except FormValidationError as validation_errors:
@@ -180,10 +179,6 @@ for field in form.get_fields():
 
 
 if len(listbox_id_list):
-  # Warn if there are more than one listbox in form ...
-  if len(listbox_id_list) > 1:
-    log('Base_callDialogMethod', 'There are %s listboxes in form %s.' % (len(listbox_id_list), form.id))
-  # ... but handle them anyway.
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]
