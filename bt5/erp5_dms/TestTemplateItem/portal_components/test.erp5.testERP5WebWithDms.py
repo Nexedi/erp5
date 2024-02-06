@@ -31,8 +31,8 @@ import unittest
 import os
 import quopri
 import functools
+import io
 import requests
-from six.moves import cStringIO as StringIO
 from lxml import etree
 from base64 import b64decode, b64encode
 from email.parser import Parser as EmailParser
@@ -51,7 +51,7 @@ from six.moves import range
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 IMAGE_COMPARE_TOLERANCE = 850
 
-XSMALL_SVG_IMAGE_ICON_DATA = '''<svg width="30" height="35" xmlns="http://www.w3.org/2000/svg">
+XSMALL_SVG_IMAGE_ICON_DATA = b'''<svg width="30" height="35" xmlns="http://www.w3.org/2000/svg">
   <path d="m5,5l15,0l0,5l5,0l0,20l-20,0z" stroke-width="1.5" stroke="gray" fill="skyblue"/>
   <path d="m6,29l8,-8l5,5l2,-2l3,3l0,2z" stroke-width="0" fill="green"/>
   <path d="m25,10l0,-1l-4,-4l-1,0l0,5z" stroke-width="1.5" stroke="gray" fill="white"/>
@@ -73,11 +73,6 @@ def makeFilePath(name):
   from Products.ERP5 import tests
   return os.path.join(tests.__path__[0], 'test_data', name)
 
-def makeFileUpload(name, as_name=None):
-  if as_name is None:
-    as_name = name
-  path = makeFilePath(name)
-  return FileUpload(path, as_name)
 
 def process_image(image, size=(40, 40)):
   # open the images to compare, resize them, and convert to grayscale
@@ -85,12 +80,14 @@ def process_image(image, size=(40, 40)):
   image = Image.open(image)
   return list(image.resize(size).convert("L").getdata())
 
+
 def compare_image(image_data_1, image_data_2):
   """ Find the total difference in RGB value for all pixels in the images
       and return the "amount" of differences that the 2 images contains. """
   data1 = process_image(image_data_1)
   data2 = process_image(image_data_2)
   return abs(sum([data1[x] - data2[x] for x in range(len(data1))]))
+
 
 def customScript(script_id, script_param, script_code):
   def wrapper(func):
@@ -113,11 +110,10 @@ def customScript(script_id, script_param, script_code):
     return wrapped
   return wrapper
 
+
 class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Test for erp5_web business template.
   """
-  run_all_test = 1
-  quiet = 0
   manager_username = 'zope'
   manager_password = 'zope'
   website_id = 'test'
@@ -125,7 +121,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getTitle(self):
     return "ERP5WebWithDms"
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     user = uf.getUserById(self.manager_username).__of__(uf)
@@ -157,8 +153,17 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
 
   def beforeTearDown(self):
+    return
     self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.web_page_module)
+
+  def makeFileUpload(self, name, as_name=None):
+    if as_name is None:
+      as_name = name
+    path = makeFilePath(name)
+    fu = FileUpload(path, as_name)
+    self.addCleanup(fu.close)
+    return fu
 
   def setupWebSite(self, **kw):
     """
@@ -229,28 +234,24 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     return webpage_list
 
-  def test_01_WebPageVersioning(self, quiet=quiet, run=run_all_test):
+  def test_01_WebPageVersioning(self):
     """
       Simple Case of showing the proper most recent public Web Page based on
       (language, version)
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_01_WebPageVersioning'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     self.setupWebSite()
     websection = self.setupWebSection()
     page_reference = 'default-webpage-versionning'
-    self.setupWebSitePages(prefix = page_reference)
+    self.setupWebSitePages(prefix=page_reference)
 
     # set default web page for section
-    found_by_reference = portal.portal_catalog(reference = page_reference,
-                                               language = 'en',
-                                               portal_type = 'Web Page')
-    en_01 =  found_by_reference[0].getObject()
+    found_by_reference = portal.portal_catalog(reference=page_reference,
+                                               language='en',
+                                               portal_type='Web Page')
+    en_01 = found_by_reference[0].getObject()
     # set it as default web page for section
-    websection.edit(categories_list = ['aggregate/%s' %en_01.getRelativeUrl(),])
+    websection.edit(categories_list=['aggregate/%s' % en_01.getRelativeUrl(),])
     self.assertEqual([en_01.getReference(),],
                       websection.getAggregateReferenceList())
 
@@ -275,15 +276,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('0.2', default_document.getVersion())
     self.assertEqual('published', default_document.getValidationState())
 
-  def test_02_WebSectionAuthorizationForced(self, quiet=quiet, run=run_all_test):
+  def test_02_WebSectionAuthorizationForced(self):
     """ Check that when a document is requested within a Web Section we have a chance to
         require user to login.
         Whether or not an user will login is controlled by a property on Web Section (authorization_forced).
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_02_WebSectionAuthorizationForced'
-      ZopeTestCase._print(message)
     request = self.app.REQUEST
     website = self.setupWebSite()
     websection = self.setupWebSection()
@@ -300,12 +297,12 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # make sure that _getExtensibleContent will return the same document
     # there's not other way to test otherwise URL traversal
     self.assertEqual(document.getUid(),
-                           websection._getExtensibleContent(request,  document_reference).getUid())
+                           websection._getExtensibleContent(request, document_reference).getUid())
 
     # Anonymous User should have in the request header for not found when
     # viewing non available document in Web Section (with no authorization_forced)
     self.logout()
-    self.assertEqual(None,  websection._getExtensibleContent(request,  document_reference))
+    self.assertEqual(None, websection._getExtensibleContent(request, document_reference))
     path = websection.absolute_url_path() + '/' + document_reference
     response = self.publish(path)
     self.assertEqual(404, response.getStatus())
@@ -317,38 +314,32 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # check Unauthorized exception is raised for anonymous
     # this exception is usually caught and user is redirecetd to login form
     self.logout()
-    self.assertRaises(Unauthorized,  websection._getExtensibleContent,  request,  document_reference)
+    self.assertRaises(Unauthorized, websection._getExtensibleContent, request, document_reference)
 
-  def test_03_LatestContent(self, quiet=quiet, run=run_all_test):
+  def test_03_LatestContent(self):
     """ Test latest content for a Web Section. Test different use case like languaeg, workflow state.
    """
-    if not run: return
-    if not quiet:
-      message = '\ntest_03_LatestContent'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     self.setupWebSite()
     websection = self.setupWebSection()
     portal_categories = portal.portal_categories
-    publication_section_category_id_list = ['documentation',  'administration']
+    publication_section_category_id_list = ['documentation', 'administration']
     for category_id in publication_section_category_id_list:
-      portal_categories.publication_section.newContent(portal_type = 'Category',
-                                                                             id = category_id)
-    #set predicate on web section using 'publication_section'
-    websection.edit(membership_criterion_base_category = ['publication_section'],
-                            membership_criterion_category=['publication_section/%s'
-                                                                              %publication_section_category_id_list[0]])
+      portal_categories.publication_section.newContent(portal_type='Category', id=category_id)
+    # set predicate on web section using 'publication_section'
+    websection.edit(membership_criterion_base_category=['publication_section'],
+                    membership_criterion_category=['publication_section/%s' % publication_section_category_id_list[0]])
     self.tic()
 
-    self.assertEqual(0,  len(websection.getDocumentValueList()))
+    self.assertEqual(0, len(websection.getDocumentValueList()))
     # create pages belonging to this publication_section 'documentation'
     web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page',
                                                  language = 'en',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_en.publish()
     self.tic()
-    self.assertEqual(1,  len(websection.getDocumentValueList(language='en')))
-    self.assertEqual(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
+    self.assertEqual(1, len(websection.getDocumentValueList(language='en')))
+    self.assertEqual(web_page_en, websection.getDocumentValueList(language='en')[0].getObject())
 
     # create pages belonging to this publication_section 'documentation' but for 'bg' language
     web_page_bg = portal.web_page_module.newContent(portal_type = 'Web Page',
@@ -356,29 +347,25 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_bg.publish()
     self.tic()
-    self.assertEqual(1,  len(websection.getDocumentValueList(language='bg')))
-    self.assertEqual(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
+    self.assertEqual(1, len(websection.getDocumentValueList(language='bg')))
+    self.assertEqual(web_page_bg, websection.getDocumentValueList(language='bg')[0].getObject())
 
     # reject page
     web_page_bg.reject()
     self.tic()
-    self.assertEqual(0,  len(websection.getDocumentValueList(language='bg')))
+    self.assertEqual(0, len(websection.getDocumentValueList(language='bg')))
 
     # publish page and search without a language (by default system should return 'en' docs only)
     web_page_bg.publish()
     self.tic()
-    self.assertEqual(1,  len(websection.getDocumentValueList()))
-    self.assertEqual(web_page_en,  websection.getDocumentValueList()[0].getObject())
+    self.assertEqual(1, len(websection.getDocumentValueList()))
+    self.assertEqual(web_page_en, websection.getDocumentValueList()[0].getObject())
 
-  def test_04_WebSectionAuthorizationForcedForDefaultDocument(self, quiet=quiet, run=run_all_test):
+  def test_04_WebSectionAuthorizationForcedForDefaultDocument(self):
     """ Check that when a Web Section contains a default document not accessible by user we have a chance to
         require user to login.
         Whether or not an user will login is controlled by a property on Web Section (authorization_forced).
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_04_WebSectionAuthorizationForcedForDefaultDocument'
-      ZopeTestCase._print(message)
     self.setupWebSite()
     websection = self.setupWebSection()
     web_page_reference = 'default-document-reference'
@@ -429,15 +416,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.commit()
     self.assertEqual(5, len(websection.getDocumentValueList(limit=5)))
 
-  def test_05_deadProxyFields(self, quiet=quiet, run=run_all_test):
+  def test_05_deadProxyFields(self):
     """
     check that all proxy fields defined in business templates have a valid
      target
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_05_deadProxyFields'
-      ZopeTestCase._print(message)
     skins_tool = self.portal.portal_skins
     for field_path, field in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ProxyField'], search_sub=1):
@@ -481,7 +464,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(modification_date, last_modified_header)
 
     # Upload a presentation with 3 pages.
-    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    upload_file = self.makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
     document = document_module.newContent(portal_type='Presentation',
                                           file=upload_file)
     reference = 'P-DMS-Presentation.3.Pages'
@@ -538,7 +521,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     document_reference = 'NXD-Presentation'
     document_module = portal.getDefaultModule(portal_type='Presentation')
-    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    upload_file = self.makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
     document = document_module.newContent(portal_type='Presentation',
                                           reference=document_reference,
                                           file=upload_file)
@@ -546,7 +529,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     image_reference = 'NXD-IMAGE'
     image_module = portal.getDefaultModule(portal_type='Image')
-    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
+    upload_file = self.makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
     image = image_module.newContent(portal_type='Image',
                                     file=upload_file,
                                     reference=image_reference)
@@ -558,15 +541,14 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertIn('<form', response.getBody()) # means the web_page
-                                      # is rendered in web_site context
+    # means the web_page is rendered in web_site context
+    self.assertIn(b'<form', response.getBody())
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertIn('<form', response.getBody()) # means the web_page
-                                      # is rendered in web_site context
+    self.assertIn(b'<form', response.getBody())
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference + '?format=pdf', credential)
@@ -645,7 +627,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(modification_date, last_modified_header)
 
     # Upload a presentation with 3 pages.
-    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    upload_file = self.makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
     document = document_module.newContent(portal_type='Presentation',
                                           file=upload_file)
     reference = 'P-DMS-Presentation-001-.3.Pages'
@@ -713,7 +695,7 @@ return True
     website.newContent(portal_type=web_section_portal_type)
 
     document_reference = 'tiolive-ERP5.Freedom.TioLive'
-    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive-001-en.odp')
+    upload_file = self.makeFileUpload('tiolive-ERP5.Freedom.TioLive-001-en.odp')
     document = self.portal.document_module.newContent(
                                           portal_type='Presentation',
                                           reference=document_reference,
@@ -727,7 +709,7 @@ return True
                               credential)
       self.assertTrue(response.getHeader('content-type').startswith('text/html'))
       html = response.getBody()
-      self.assertTrue('<img' in html, html)
+      self.assertIn(b'<img', html)
 
       # find the img src
       img_list = etree.HTML(html).findall('.//img')
@@ -739,7 +721,7 @@ return True
                               credential)
       self.assertEqual(response.getHeader('content-type'), 'image/png')
       png = response.getBody()
-      self.assertTrue(png.startswith('\x89PNG'))
+      self.assertTrue(png.startswith(b'\x89PNG'))
 
     # then publish the document and access it anonymously by reference through
     # the web site
@@ -751,7 +733,7 @@ return True
               website.absolute_url_path(), document_reference))
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
-    self.assertTrue('<img' in html, html)
+    self.assertIn(b'<img', html)
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
@@ -763,7 +745,7 @@ return True
            website.absolute_url_path(), document_reference, src))
     self.assertEqual(response.getHeader('content-type'), 'image/png')
     png = response.getBody()
-    self.assertTrue(png.startswith('\x89PNG'))
+    self.assertTrue(png.startswith(b'\x89PNG'))
 
     # Now purge cache and let Anonymous user converting the document.
     self.login()
@@ -773,7 +755,7 @@ return True
                             website.absolute_url_path(), document_reference))
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
-    self.assertTrue('<img' in html, html)
+    self.assertIn(b'<img', html)
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
@@ -805,10 +787,9 @@ return True
                                           text_content=content)
     web_page.publish()
 
-
     image_reference = 'NXD-IMAGE'
     module = portal.getDefaultModule(portal_type=image_portal_type)
-    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
+    upload_file = self.makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
     image = module.newContent(portal_type=image_portal_type,
                                     file=upload_file,
                                     reference=image_reference)
@@ -878,7 +859,7 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('%s.svg' % filename)
+    upload_file = self.makeFileUpload('%s.svg' % filename)
     image = module.newContent(portal_type=portal_type,
                                     file=upload_file,
                                     reference="NXD-DOCUMENT")
@@ -887,10 +868,10 @@ return True
     self.assertEqual(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
     self.assertEqual(mime, 'image/png')
-    expected_image = makeFileUpload('%s.png' % filename)
+    expected_image = self.makeFileUpload('%s.png' % filename)
 
     # Compare images and accept some minimal difference,
-    difference_value = compare_image(StringIO(converted_data), expected_image)
+    difference_value = compare_image(io.BytesIO(converted_data), expected_image)
     self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
       "so it failed to download the image. (%s >= %s)" % (difference_value,
@@ -902,8 +883,8 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
-    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE", image_url)
+    upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    svg_content = upload_file.read().replace(b"REPLACE_THE_URL_HERE", image_url.encode())
 
     # Add image using data instead file this time as it is not the goal of
     # This test assert this topic.
@@ -917,10 +898,10 @@ return True
     self.assertEqual(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
     self.assertEqual(mime, 'image/png')
-    expected_image = makeFileUpload('user-TESTSVG-CASE-URL.png')
+    expected_image = self.makeFileUpload('user-TESTSVG-CASE-URL.png')
 
     # Compare images and accept some minimal difference,
-    difference_value = compare_image(StringIO(converted_data), expected_image)
+    difference_value = compare_image(io.BytesIO(converted_data), expected_image)
     self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
       "so it failed to download the image. (%s >= %s)" % (difference_value,
@@ -944,7 +925,7 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
+    upload_file = self.makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
     background_image = module.newContent(portal_type=portal_type,
                                     file=upload_file,
                                     reference="NXD-BACKGROUND")
@@ -965,14 +946,13 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
-    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
-                           "http://soidjsoidjqsoijdqsoidjqsdoijsqd.idjsijds/../user-XXX-XXX")
+    upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    svg_content = upload_file.read().replace(b"REPLACE_THE_URL_HERE",
+                           b"http://soidjsoidjqsoijdqsoidjqsdoijsqd.idjsijds/../user-XXX-XXX")
 
-    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
-    svg2_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
-                           "https://www.erp5.com/usXXX-XXX")
-
+    upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    svg2_content = upload_file.read().replace(b"REPLACE_THE_URL_HERE",
+                           b"https://www.erp5.com/usXXX-XXX")
 
     # Add image using data instead file this time as it is not the goal of
     # This test assert this topic.
@@ -1677,7 +1657,7 @@ return True
         break
     else:
       raise LookupError("No action with reference 'web_view' found")
-    assert action.getVisible() is 1
+    self.assertTrue(action.getVisible())
 
     # check when the file is empty
     document_object = portal[module_id].newContent(portal_type=portal_type)
@@ -1689,6 +1669,10 @@ return True
       document_object.getId())
     response_a = self.publish(path)
     action.setVisible(0)
+    def cleanup():
+      action.setVisible(1)
+      self.tic()
+    self.addCleanup(cleanup)
     self.tic()
     response_b = self.publish(path)
     self.assertNotEqual(response_a.getBody(), response_b.getBody())
