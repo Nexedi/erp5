@@ -528,13 +528,13 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       if self.skin == 'ODT':
         return tree.xpath('normalize-space((//table[2]//tr//td)[3])')
       elif self.skin == 'ODS':
-        return tree.xpath('normalize-space(//table//tr[7]/td)')
+        return tree.xpath('normalize-space(//table//tr[8]/td)')
 
     def get_date_time_listbox_stat_value(tree):
       if self.skin == 'ODT':
         return tree.xpath('normalize-space((//table[2]//tr//td)[4])')
       elif self.skin == 'ODS':
-        return tree.xpath('normalize-space(//table//tr[8]/td)')
+        return tree.xpath('normalize-space(//table//tr[9]/td)')
 
     response = self.publish(
        '%s/Foo_viewDateTimeField?format=html&input_order=ymd&date_only:int=1' % foo.getPath(), basic=self.auth)

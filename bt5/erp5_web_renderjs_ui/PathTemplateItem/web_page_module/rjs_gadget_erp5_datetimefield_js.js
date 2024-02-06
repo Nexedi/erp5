@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP*/
+/*global window, rJS, RSVP, asBoolean*/
 /*jslint indent: 2, maxlen: 80 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, asBoolean) {
   "use strict";
 
   var ZONE_LIST = [
@@ -322,26 +322,26 @@
 
             if (options === undefined || options.format === "erp5") {
               if (value !== "") {
-                if (gadget.state.date_only === 0) {
+                if (!asBoolean(gadget.state.date_only)) {
                   value += "+0000";
                 }
                 value = new Date(value);
                 year = value.getUTCFullYear();
                 month = value.getUTCMonth() + 1;
                 date = value.getUTCDate();
-                if (gadget.state.hide_day === 1) {
+                if (asBoolean(gadget.state.hide_day)) {
                   date = 1;
                 }
                 //get time
-                if (gadget.state.date_only === 0) {
-                  if (gadget.state.allow_empty_time === 1) {
+                if (!asBoolean(gadget.state.date_only)) {
+                  if (asBoolean(gadget.state.allow_empty_time)) {
                     hour = 0;
                     minute = 0;
                   } else {
                     hour = value.getUTCHours();
                     minute = value.getUTCMinutes();
                   }
-                  if (gadget.state.ampm_time_style === 1) {
+                  if (asBoolean(gadget.state.ampm_time_style)) {
                     if (hour > 12) {
                       result[gadget.state.subfield_ampm_key] = "pm";
                       hour -= 12;
@@ -353,7 +353,7 @@
                   result[gadget.state.subfield_minute_key] = minute;
                 }
 
-                if (gadget.state.hidden_day_is_last_day === 1) {
+                if (asBoolean(gadget.state.hidden_day_is_last_day)) {
                   if (month === 12) {
                     year += 1;
                     month = 1;
@@ -375,7 +375,7 @@
                 }
               } else {
                 //if no value, return empty data
-                if (gadget.state.date_only === 0) {
+                if (!asBoolean(gadget.state.date_only)) {
                   result[gadget.state.subfield_hour_key] = "";
                   result[gadget.state.subfield_minute_key] = "";
                 }
@@ -406,4 +406,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, asBoolean));
