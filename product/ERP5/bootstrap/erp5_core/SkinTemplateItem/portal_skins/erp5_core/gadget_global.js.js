@@ -27,7 +27,7 @@
 
   /** Return first non-empty variable or the last one.
 
-  Calling getNonEmpy(a, b, "") is more robust way of writing a || b || "".
+  Calling getFirstNonEmpty(a, b, "") is more robust way of writing a || b || "".
   Variables coercing to false (e.g 0) do not get skipped anymore.
   */
   function getFirstNonEmpty(first_argument) {
