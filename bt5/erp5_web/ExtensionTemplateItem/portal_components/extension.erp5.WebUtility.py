@@ -140,4 +140,4 @@ if six.PY2:
 else:
   from html import unescape as html_unescape
   def unescape(self, html):
-    return html_unescape(self, html)
+    return html_unescape(html)
