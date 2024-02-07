@@ -5,5 +5,8 @@
 # spawned with parameters :
 #     conflict_retry=False,
 #     max_retry=0,
+if REQUEST is not None:
+  from zExceptions import Unauthorized
+  raise Unauthorized
 
 context.getPortalObject().MailHost.send(context.getData())

@@ -32,8 +32,10 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Utils import non_publishable
 from erp5.component.document.Movement import Movement
 from erp5.component.document.EmailDocument import EmailDocument
+
 
 class AcknowledgeableMixin:
   """
@@ -154,6 +156,7 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
     return self
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
+  @non_publishable
   def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
            body=None, attachment_format=None, attachment_list=None,
            download=False, **kw):

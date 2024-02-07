@@ -20,6 +20,7 @@ In ERP5, we have Activity Tool to postpone mail delivery.
 
 from inspect import getargspec, isfunction
 from Products.MailHost.MailHost import MailBase
+from Products.ERP5Type.Utils import non_publishable
 import six
 
 for f in six.itervalues(MailBase.__dict__):
@@ -44,3 +45,5 @@ def _makeMailer(self):
   return smtp_mailer
 
 MailBase._makeMailer = _makeMailer
+
+MailBase.send = non_publishable(MailBase.send)

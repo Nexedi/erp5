@@ -2069,6 +2069,28 @@ class TestCRMMailSend(BaseTestCRM):
     message = message_from_string(last_message)
     self.assertEqual("test", message.get("X-test-header"))
 
+  def test_MailMessage_send_security(self):
+    mail_message = self.portal.event_module.newContent(
+        portal_type="Mail Message",
+        source='person_module/me',
+        destination='person_module/recipient')
+    self.assertGreater(
+      self.publish(
+        mail_message.getPath() + '/send',
+        user='ERP5TypeTestCase').getStatus(),
+        300)
+    self.assertGreater(
+      self.publish(
+        mail_message.getPath() + '/MailMessage_send',
+        user='ERP5TypeTestCase').getStatus(),
+        300)
+    self.assertGreater(
+      self.publish(
+        self.portal.MailHost.getPath() + '/send',
+        user='ERP5TypeTestCase').getStatus(),
+        300)
+    self.assertFalse(self.portal.MailHost.getMessageList())
+
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -32,6 +32,7 @@ from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import non_publishable
 from erp5.component.document.TextDocument import TextDocument
 from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
@@ -359,6 +360,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
     return content_information.get('Return-Path', content_information.get('From'))
 
   security.declareProtected(Permissions.UseMailhostServices, 'sendMailHostMessage')
+  @non_publishable
   def sendMailHostMessage(self, message):
     """
       Send one by one

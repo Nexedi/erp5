@@ -1,3 +1,7 @@
+if REQUEST is not None:
+  from zExceptions import Unauthorized
+  raise Unauthorized
+
 from email.utils import formataddr
 portal = context.getPortalObject()
 event = portal.restrictedTraverse(event_relative_url)

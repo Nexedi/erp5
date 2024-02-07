@@ -2,6 +2,9 @@
 
 This script is also used by notification tool, that's why it is in erp5_base.
 """
+if REQUEST is not None:
+  from zExceptions import Unauthorized
+  raise Unauthorized
 
 from email.utils import formataddr
 portal = context.getPortalObject()

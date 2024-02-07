@@ -1,3 +1,7 @@
+if REQUEST is not None:
+  from zExceptions import Unauthorized
+  raise Unauthorized
+
 if body is None:
   body = context.getTextContent() #XXX This does not support structured text format.
 
