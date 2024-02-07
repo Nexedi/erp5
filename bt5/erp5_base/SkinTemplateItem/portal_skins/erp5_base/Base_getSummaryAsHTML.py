@@ -2,6 +2,7 @@
   Generate a HTML Summary of an object.
   Use "No ZODB" approach if possible.
 """
+import six
 request = context.REQUEST
 portal = context.getPortalObject()
 is_temp_object = context.isTempObject()
@@ -40,7 +41,7 @@ else:
   modification_date = context.modification_date
   document_web_section_list = web_site.getWebSectionValueList(context)
   inline_popup = context.Document_getPopupInfo(web_site, document_web_section_list)
-  if isinstance(inline_popup, unicode):
+  if six.PY2 and not isinstance(inline_popup, str):
     inline_popup = inline_popup.encode('utf-8')
   found = context.Base_showFoundText()
   portal_type = context.getTranslatedPortalType()
