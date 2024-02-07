@@ -41,6 +41,7 @@ def main(data):
       "data": data,
     })
     data = context.Base_formatAttachmentListToMIMEMultipartString(**mhtml_message)
+
   return data
 
 def handleHtmlTag(tag, attrs):
@@ -179,22 +180,23 @@ def handleImageSourceObject(obj, src):
         format_kw["display"] = str(value)
     if format_kw:
       mime, data = obj.convert(**format_kw)
-      return handleLinkedData(mime, str(data), src)
+      return handleLinkedData(mime, data, src)
 
   return handleHrefObject(obj, src, default_mimetype=bad_image_mime_type, default_data=bad_image_data)
 
-def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Linked page not found</p>"):
+def handleHrefObject(obj, src, default_mimetype="text/html", default_data=b"<p>Linked page not found</p>"):
   # handle File portal_skins/folder/file.png
   # XXX handle "?portal_skin=" parameter ?
   if hasattr(obj, "getContentType"):
     mime = obj.getContentType()
     if mime:
       if hasattr(obj, "data"):
-        data = str(obj.data or "")
+        data = bytes(obj.data or b"")
       else:
-        data = getattr(obj, "getData", lambda: str(obj))() or ""
+        data = getattr(obj, "getData", lambda: bytes(obj))() or b""
       if six.PY2 and isinstance(data, unicode):
         data = data.encode("utf-8")
+      assert isinstance(data, bytes)
       return handleLinkedData(mime, data, src)
     return handleLinkedData(default_mimetype, default_data, src)
 
@@ -272,7 +274,11 @@ def handleLinkedData(mime, data, href):
     })
     return url
   else:
-    return "data:%s;base64,%s" % (mime, b64encode(data.encode()).decode())
+    if isinstance(data, six.text_type):
+      data = data.encode('utf-8')
+    else:
+      data = bytes(data)
+    return "data:%s;base64,%s" % (mime, b64encode(data).decode())
 
 def makeHrefAbsolute(href):
   if isHrefAnAbsoluteUrl(href) or not isHrefAUrl(href):
