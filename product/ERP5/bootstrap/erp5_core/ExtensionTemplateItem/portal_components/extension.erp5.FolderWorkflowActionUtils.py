@@ -37,7 +37,7 @@ from hashlib import md5
 skipped_workflow_id_list = ['delivery_causality_workflow',]
 
 def generateUid(portal_type, workflow_id, workflow_state):
-  return 'new_' + md5('%s/%s/%s' % (portal_type, workflow_id, workflow_state)).hexdigest()
+  return 'new_' + md5(('%s/%s/%s' % (portal_type, workflow_id, workflow_state)).encode()).hexdigest()
 
 def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same
