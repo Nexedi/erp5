@@ -1257,8 +1257,8 @@ return True
     ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
     self.assertTrue(ehtml_data.startswith("".join([
       "<p>Hello</p>",
-      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA),
-      '<img src="data:image/png;base64,%s" />' % b64encode(XSMALL_PNG_IMAGE_ICON_DATA),
+      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA).decode(),
+      '<img src="data:image/png;base64,%s" />' % b64encode(XSMALL_PNG_IMAGE_ICON_DATA).decode(),
       '<img src="data:image/png;base64,'
     ])))
 
@@ -1359,7 +1359,7 @@ return True
     self.assertEqual(ehtml_data, "".join([
       "<p>Hello</p>",
     ] + ([
-      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA),
+      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA).decode(),
     ] * 6) + [
       '<img src="%s//example.com/%s?format=" />' % (protocol, svg.getRelativeUrl()),
       '<img src="http://example.com/%s?format=" />' % svg.getRelativeUrl(),
@@ -1524,7 +1524,7 @@ return True
       ehtml_data,
       "<style>%s</style><p>Hello</p>" % (
         'body { background-image: url(data:image/svg+xml;base64,%s); }' % (
-          b64encode(XSMALL_SVG_IMAGE_ICON_DATA))),
+          b64encode(XSMALL_SVG_IMAGE_ICON_DATA).decode())),
     )
 
   def test_WebPageAsMhtml_pageWithStyle(self):
