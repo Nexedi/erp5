@@ -54,6 +54,10 @@
     if (typeof obj === "boolean") {
       return obj;
     }
+    if (obj === "false") {
+      console.error("oh no asBoolean - false");
+      throw new Error("asBoolean - false")
+    }
     if (typeof obj === "number") {
       return Boolean(obj)
     }
