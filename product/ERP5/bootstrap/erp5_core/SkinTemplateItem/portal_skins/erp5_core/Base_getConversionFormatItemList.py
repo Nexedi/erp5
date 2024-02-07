@@ -4,5 +4,5 @@ td = context.newContent(
     portal_type='OOo Document',
     temp_object=True,
     base_content_type=base_content_type,
-    base_data='not empty')
+    base_data=b'not empty')
 return  [('', '')] + td.getTargetFormatItemList()
