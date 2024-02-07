@@ -410,7 +410,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   body_parser = re.compile(r'<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
   title_parser = re.compile(r'<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
   base_parser = re.compile(r'<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
-  charset_parser = re.compile(r'(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
+  charset_parser = re.compile(br'(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
 
   # Declarative security
   security = ClassSecurityInfo()
