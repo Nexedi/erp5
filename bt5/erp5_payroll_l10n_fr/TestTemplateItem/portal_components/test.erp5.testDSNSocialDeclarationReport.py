@@ -60,7 +60,7 @@ class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
     """
     test_dsn = self.dsn_module['test_model']
     test_dsn.DSNMonthlyReport_makeReport()
-    reference_DSN = getattr(self.portal.portal_skins.erp5_payroll_l10n_fr_test, "test_model.dsn").data
+    reference_DSN = bytes(getattr(self.portal.portal_skins.erp5_payroll_l10n_fr_test, "test_model.dsn").data).decode()
     diff_list = []
     for unit_diff in difflib.unified_diff(reference_DSN.split('\n'), test_dsn.getTextContent().split('\n')):
       diff_list.append(unit_diff)
