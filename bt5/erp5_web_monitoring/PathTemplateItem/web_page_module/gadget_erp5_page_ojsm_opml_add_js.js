@@ -79,7 +79,7 @@
                       .push(function () {
                         return gadget.redirect({
                           "command": "display",
-                          "options": {"page": "ojsm_landing"}
+                          "options": {"page": "ojsm_dispatch"}
                         });
                       });
                   }
