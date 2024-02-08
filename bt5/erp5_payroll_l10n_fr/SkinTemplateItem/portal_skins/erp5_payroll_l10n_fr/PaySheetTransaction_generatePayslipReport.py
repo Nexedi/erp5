@@ -1,5 +1,6 @@
 import six
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
+import six
 
 kw["report_data"] = context.PaySheetTransaction_getPayslipData()
 kw["report_data"]["amount_of_remuneration_evolution"] = context.REQUEST.get('field_your_evoluation_remuneration', 0)
