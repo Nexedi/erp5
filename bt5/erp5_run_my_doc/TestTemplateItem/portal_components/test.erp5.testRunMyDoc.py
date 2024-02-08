@@ -135,7 +135,7 @@ class TestRunMyDoc(DocumentUploadTestCase):
     image_upload.seek(0)
     self.assertEqual(image_page_2.getData(), base64.b64decode(image_upload.read()))
     self.assertEqual(image_page_2.getFilename(), image_reference + '.png')
-    self.assertEqual(image_page.getData(), '')
+    self.assertEqual(image_page.getData(), b'')
 
   def test_viewSeleniumTest(self):
     """
