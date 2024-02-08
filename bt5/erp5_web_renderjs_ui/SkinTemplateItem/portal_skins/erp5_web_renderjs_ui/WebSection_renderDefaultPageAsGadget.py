@@ -1,6 +1,6 @@
 import json
 import re
-from six.moves.urllib.parse import urljoin
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -39,6 +39,12 @@ if selected_language == default_language:
   base_prefix = ""
 else:
   base_prefix = '../'
+
+def urljoin(base, url):
+  # concemtually similar to urllib.parse.urljoin, but without trying to eliminate
+  # .. path elements, because we want to produce relative URLs that may be parent
+  # of the base.
+  return base_prefix + url
 
 mapping_dict = {
   "base_prefix": base_prefix,
