@@ -115,7 +115,7 @@ class NumericCaptchaProvider(object):
 
   def generate(self, field):
     # First step : generate the calculus. It is really simple.
-    terms = [str(random.randint(1, 20)), random.choice(self.operator_set.keys())]
+    terms = [str(random.randint(1, 20)), random.choice(list(self.operator_set.keys()))]
     #XXX: Find a way to prevent too complex captchas (for instance 11*7*19...)
     #terms += [str(random.randint(1, 20)), random.choice(operator_set.keys())]
     terms.append(str(random.randint(1, 20)))
