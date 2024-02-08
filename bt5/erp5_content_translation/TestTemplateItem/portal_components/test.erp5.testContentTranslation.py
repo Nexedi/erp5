@@ -234,9 +234,9 @@ class TestContentTranslation(ERP5TypeTestCase):
 
     self.tic()
 
-    x = person.Base_viewContentTranslation().encode('utf-8')
-    self.assertIn('タハラ', x)
-    self.assertIn('ユウセイ', x)
+    x = person.Base_viewContentTranslation()
+    self.assertIn(u'タハラ', x)
+    self.assertIn(u'ユウセイ', x)
 
     self.assertEqual(person.getJaKanaTranslatedFirstName(), 'タハラ')
     self.assertEqual(person.getJaKanaTranslatedLastName(), 'ユウセイ')
