@@ -32,7 +32,7 @@
   publication date is entirely up to you.
 """
 
-from Products.CMFCore.utils import getToolByName
+import six
 from Products.PythonScripts.standard import html_quote
 
 items = []
@@ -72,7 +72,7 @@ for line in line_list:
     rss_item_dict[header] = value
   # build xml from dict (we have to do it here because we need to manipulate tag names
   rss_item_string = ''
-  for key, value in rss_item_dict.items():
+  for key, value in six.iteritems(rss_item_dict):
     if key == 'pubdate':
       # pubDate should be returned unconditionally as 'pubDate'
       key = 'pubDate'
@@ -85,19 +85,25 @@ for line in line_list:
   # if required fields not present in listbox columns as label we
   # added theirs appropriate xml dynamically
   for required_field in required_field_list:
-    if required_field not in rss_item_dict.keys():
+    if required_field not in rss_item_dict:
       field_data = ''
       if required_field == 'title':
         if hasattr(line.getBrain(), 'Title'):
-          field_data = html_quote(unicode(line.getBrain().Title(), 'utf-8') or '')
+          title = line.getBrain().Title()
+          if six.PY2:
+            title = title.decode('utf-8')
+          field_data = html_quote(title or '')
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data, required_field))
       elif required_field == 'link':
         if hasattr(line.getBrain(), 'absolute_url'):
-          field_data = unicode(line.getBrain().absolute_url(), 'utf-8' ) or ''
+          field_data = line.getBrain().absolute_url() or ''
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data, required_field))
       elif required_field == 'description':
         if hasattr(line.getBrain(), 'getDescription'):
-          field_data = html_quote(unicode(line.getBrain().getDescription(), 'utf-8' ) or '')
+          description = line.getBrain().getDescription()
+          if six.PY2:
+            description = description.decode('utf-8')
+          field_data = html_quote(description or '')
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data,required_field))
   items.append(rss_item_string)
 
