@@ -24,7 +24,7 @@ if not isinstance(deny_tag_list, (list, tuple)):
   deny_tag_list = []
 
 def main(data):
-  if isinstance(data, str):
+  if isinstance(data, bytes):
     data = data.decode("utf-8")
   for part in context.Base_parseHtml(data):
     handleHtmlPart(part)
