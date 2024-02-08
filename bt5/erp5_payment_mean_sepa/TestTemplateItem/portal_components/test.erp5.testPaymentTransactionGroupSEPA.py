@@ -263,7 +263,7 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
     pain = lxml.etree.fromstring(f.getData())
 
     xmlschema = lxml.etree.XMLSchema(
-        lxml.etree.fromstring(str(getattr(self.portal, 'pain.001.001.02.xsd').data)))
+        lxml.etree.fromstring(bytes(getattr(self.portal, 'pain.001.001.02.xsd').data)))
     xmlschema.assertValid(pain)
 
     self.assertEqual(
