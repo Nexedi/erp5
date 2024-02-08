@@ -12,7 +12,7 @@ def ERP5Site_extractTranslationMessageListFromHTML(self, text_content):
   """
   if not text_content:
     return
-  if isinstance(text_content, str):
+  if isinstance(text_content, bytes):
     text_content = text_content.decode('utf-8')
 
   parser = lxml.etree.HTMLParser()

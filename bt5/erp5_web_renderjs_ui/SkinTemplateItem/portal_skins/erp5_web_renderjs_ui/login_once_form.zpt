@@ -74,7 +74,7 @@
                   </div>
                   <div class="dialog_button_container">
                     <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
-                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%sWebSite_viewRecoverAccount?%s' % (absolute_url, modules['urllib'].urlencode([('came_from', absolute_url)]))">I forgot my password!</a>
+                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%sWebSite_viewRecoverAccount?%s' % (absolute_url, modules['six.moves.urllib.parse'].urlencode([('came_from', absolute_url)]))">I forgot my password!</a>
                   </div>
                   <div class="dialog_button_container" tal:condition="enable_google_login">
                     <a tal:attributes="href python: root_absolute_url + 'ERP5Site_redirectToGoogleLoginPage'"
