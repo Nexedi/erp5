@@ -264,7 +264,7 @@ class Matrix(object):
       else:
         if i >= current_len:
           self.index[base_id][i] = PersistentMapping()
-        for place in self.index[base_id][i].keys():
+        for place in list(self.index[base_id][i].keys()):
           if place not in kw[i]:
             del self.index[base_id][i][place]
 
