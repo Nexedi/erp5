@@ -170,7 +170,8 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
     promise_config.set('portal_certificate_authority', 'certificate_authority_path',
                                            os.environ['TEST_CA_PATH'])
 
-  promise_config.write(open(promise_path, 'w'))
+  with open(promise_path, 'w') as f:
+    promise_config.write(f)
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
