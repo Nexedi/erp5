@@ -57,7 +57,7 @@ def getColumnUrl(brain=None, column_id=None, **kw):
 absolute_url = portal.absolute_url()
 
 if len(summary_dict):
-  for person in portal.portal_catalog(portal_type=("Person", "Organisation"), uid=summary_dict.keys(), select_list=["title"]):
+  for person in portal.portal_catalog(portal_type=("Person", "Organisation"), uid=list(summary_dict.keys()), select_list=["title"]):
     person_title_dict[person.uid] = person.title
   for person_uid in summary_dict.keys():
     person_kw = summary_dict[person_uid]
