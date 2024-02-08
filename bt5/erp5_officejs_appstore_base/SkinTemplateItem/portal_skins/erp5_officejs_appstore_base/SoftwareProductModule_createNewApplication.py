@@ -6,7 +6,7 @@ software_product = portal.software_product_module.newContent(
   product_line="software/application",
   title=title,
   description=description,
-  source_value=portal.ERP5Site_getAuthenticatedMemberPersonValue()
+  source_value=portal.portal_membership.getAuthenticatedMember().getUserValue()
 )
 
 return software_product.SoftwareProduct_updateApplication(file, changelog=description)
