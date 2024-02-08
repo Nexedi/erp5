@@ -25,7 +25,7 @@
             });
         })
         .push(function () {
-          var redirect_options = {"page": "ojsm_landing"};
+          var redirect_options = {"page": "ojsm_dispatch"};
           if (options.reset === "1") {
             // reset redirections
             return gadget.setSetting("sync_redirect_options", undefined)
