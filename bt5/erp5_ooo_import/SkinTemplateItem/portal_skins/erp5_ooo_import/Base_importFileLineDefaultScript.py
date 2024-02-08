@@ -16,6 +16,7 @@
 
 from ZODB.POSException import ConflictError
 from Products.ERP5Type.Message import Message
+import six
 
 #Create new ERP5 objects In Activity from OOo document
 imported_line = object_url = None
@@ -46,7 +47,7 @@ else:
 
   # Separate categories from properties
   imported_line_category_dict = {}
-  for prop_key in imported_line_property_dict.keys():
+  for prop_key in list(six.iterkeys(imported_line_property_dict)):
     if prop_key in base_category_list:
       imported_line_category_dict[prop_key] = imported_line_property_dict.pop(prop_key)
 
@@ -67,7 +68,7 @@ else:
     success = 0
 
   # Save the categories
-  for category, value in imported_line_category_dict.items():
+  for category, value in list(six.iteritems(imported_line_category_dict)):
     category_dict = context.ERP5Site_getCategoriesFullPath(
                                        category_dict={category: value})
     if category_dict not in (None, {}):
