@@ -22,44 +22,6 @@ from . import persistent_migration
 from ZODB.POSException import ConflictError
 import six
 
-if six.PY2:
-  class ERP5BaseBroken_(Broken, ERP5Base, PersistentBroken):
-    pass
-else:
-  class ERP5BaseBroken_(ERP5Base, PersistentBroken):
-    pass
-
-class ERP5BaseBroken(ERP5BaseBroken_):
-  # PersistentBroken can't be reused directly
-  # because its « layout differs from 'GhostPortalType' »
-
-  # This prevents serialize (ZODB) from reloading the class during commit
-  # (which would look for __Broken_newargs__ which is not present)
-  __getnewargs__ = None
-
-  def __metaclass__(name, base, d):
-    d = dict(PersistentBroken.__dict__, **d)
-    for x in '__dict__', '__metaclass__', '__weakref__':
-      del d[x]
-    def get(x):
-      def get(self):
-        d = self.__dict__
-        try:
-          return d.get('__Broken_state__', d)[x]
-        except KeyError:
-          return getattr(self.__class__, x)
-      return property(get)
-    for x in 'id', 'title':
-      d[x] = get(x)
-    return type(name, base, d)
-
-  def __getattr__(self, name):
-    try:
-      return self.__dict__['__Broken_state__'][name]
-    # TypeError: SynchronizationTool => SynchronisationTool
-    except (KeyError, TypeError):
-      raise AttributeError("state of broken %r object has no %r key"
-                           % (self.__class__.__name__, name))
 
 # the meta class of a derived class must be a subclass of all of its bases:
 # since a portal type derives from both Zope Extension classes and
@@ -399,3 +361,38 @@ def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name,
                              (InitGhostBase,),
                              dict(portal_type=portal_type_name))
+
+
+class ERP5BaseBrokenMetaClass(PortalTypeMetaClass):
+  def __new__(cls, name, bases, d):
+    d = dict(PersistentBroken.__dict__, **d)
+    for x in '__dict__', '__weakref__':
+      del d[x]
+    if six.PY2:
+      del d['__metaclass__']
+    def get(x):
+      def get(self):
+        d = self.__dict__
+        try:
+          return d.get('__Broken_state__', d)[x]
+        except KeyError:
+          return getattr(self.__class__, x)
+      return property(get)
+    for x in 'id', 'title':
+      d[x] = get(x)
+    return super(ERP5BaseBrokenMetaClass, cls).__new__(cls, name, bases, d)
+
+
+class ERP5BaseBroken(six.with_metaclass(ERP5BaseBrokenMetaClass, Broken, ERP5Base, PersistentBroken)):
+
+  # This prevents serialize (ZODB) from reloading the class during commit
+  # (which would look for __Broken_newargs__ which is not present)
+  __getnewargs__ = None
+
+  def __getattr__(self, name):
+    try:
+      return self.__dict__['__Broken_state__'][name]
+    # TypeError: SynchronizationTool => SynchronisationTool
+    except (KeyError, TypeError):
+      raise AttributeError("state of broken %r object has no %r key"
+                           % (self.__class__.__name__, name))
