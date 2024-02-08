@@ -4,8 +4,8 @@ support_request = context.getFollowUpValue()
 web_site_value = portal.restrictedTraverse(web_site_relative_url)
 
 # XXX what to do with PData ?
-# As a first step just use a string.
-data = str(context.getData())
+# As a first step just use bytes.
+data = bytes(context.getData())
 
 is_html = context.getPortalType() == 'HTML Post'
 if is_html:
@@ -34,7 +34,7 @@ web_message = portal.event_module.newContent(
     portal_type='Web Message',
     title=context.getTitle() if context.hasTitle() else None,
     content_type='text/html' if is_html else 'text/plain',
-    text_content=data,
+    text_content=data.decode('utf-8'),
     follow_up_value=support_request,
     aggregate_value_list=[context] + context.getSuccessorValueList(
       portal_type=portal.getPortalDocumentTypeList()),
