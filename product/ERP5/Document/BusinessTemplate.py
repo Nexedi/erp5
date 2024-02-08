@@ -1528,6 +1528,12 @@ class ObjectTemplateItem(BaseTemplateItem):
           container.getParentValue().updateCache()
         elif obj.__class__.__name__ in ('File', 'Image'):
           if "data" in obj.__dict__:
+            # XXX when installing very old business templates without the data stored
+            # in a separate file (such as the one from
+            # testTemplateTool.TestTemplateTool.test_updateBusinessTemplateFromUrl_keep_list)
+            # data might be loaded as a string, fix this here.
+            if not isinstance(obj.data, (bytes, Pdata)):
+              obj.data = obj.data.encode()
             # XXX Calling obj._setData() would call Interaction Workflow such
             # as document_conversion_interaction_workflow which would update
             # mime_type too...
