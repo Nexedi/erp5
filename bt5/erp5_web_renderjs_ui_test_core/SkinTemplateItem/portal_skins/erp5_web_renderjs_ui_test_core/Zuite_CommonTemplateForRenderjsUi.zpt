@@ -569,14 +569,14 @@
     <tr>
       <td colspan="3"><b tal:content="python: 'Click on page link \'%(text)s\'' % click_configuration"></b></td>
     </tr>
-    <tal:block tal:condition="python: click_configuration.get('partial_text_match', True)">
+    <tal:block tal:condition="python: click_configuration.get('partial_text_match', False)">
       <tr>
         <td>click</td>
         <td tal:content="python: '//div[contains(@data-gadget-scope, \'m\')]//a[contains(text(), \'%s\') and contains(@href, \'#!\')]' % click_configuration['text']"></td>
         <td></td>
       </tr>
     </tal:block>
-    <tal:block tal:condition="python: not click_configuration.get('partial_text_match', True)">
+    <tal:block tal:condition="python: not click_configuration.get('partial_text_match', False)">
       <tr>
         <td>click</td>
         <td tal:content="python: '//div[contains(@data-gadget-scope, \'m\')]//a[text()=\'%s\' and contains(@href, \'#!\')]' % click_configuration['text']"></td>
