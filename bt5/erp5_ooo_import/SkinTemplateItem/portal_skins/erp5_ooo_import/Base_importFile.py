@@ -153,7 +153,9 @@ else:
           if property_value:
             # Create a new property value
             property_id = column_mapping[line_property_index]
-            imported_line_property_dict[property_id] = property_value.encode('UTF-8')
+            if six.PY2:
+              property_value = property_value.encode('UTF-8')
+            imported_line_property_dict[property_id] = property_value
 
 
       # If the line is not empty, activate an activity for it
