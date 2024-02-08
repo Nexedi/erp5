@@ -16,17 +16,16 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-      var gadget = this, portal_type, extended_search, query_parts_list,
+      var gadget = this, portal_type, extended_search,
+        query_parts_list, redirect_options;
+      // add opml (old setting configurator)
+      if (!options.query && options.url && options.username && options.password) {
         redirect_options = {
-          "page": "ojsm_erp5_configurator",
           "url": options.url,
           "username": options.username,
           "password": options.password,
-          "query": options.query
+          "page": "ojsm_opml_add"
         };
-      // add opml (old setting configurator)
-      if (!options.query && options.url && options.username && options.password) {
-        redirect_options.page = "ojsm_opml_add";
         return gadget.redirect({"command": "display",
                                 "options": redirect_options
                                });
@@ -57,8 +56,8 @@
           if (options.query) {
             // URL queries from slapos master / panel rapid space:
             // 'portal_type: "Instance Tree" AND title:"my-title"'
-            // 'portal_type: "Software Instance" AND title:"my-title"'
-            //           AND specialise_title:"my-parent-title"
+            // 'portal_type: "Software Instance" AND title:"my-title"
+            //           AND specialise_title:"my-parent-title"'
             if (options.query.includes("portal_type")) {
               query_parts_list = options.query.split('AND');
               portal_type = query_parts_list[0].replace('portal_type:', '').replaceAll('"', '').trim();
