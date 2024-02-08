@@ -441,7 +441,7 @@ class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
     return HTTPRequest(StringIO(), env, HTTPResponse())
 
   def test_working_authentication(self):
-    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": b"Basic " + base64.b64encode(b"login:password")})
+    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode(b"login:password").decode()})
     ret = ERP5DumbHTTPExtractionPlugin("default_extraction").extractCredentials(request)
     self.assertEqual(ret, {'login': 'login', 'password': 'password', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
 
