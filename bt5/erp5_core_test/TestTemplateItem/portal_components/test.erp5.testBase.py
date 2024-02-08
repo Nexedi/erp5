@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import io
 import unittest
 import os
 from unittest import skip
@@ -1050,14 +1051,12 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     import Products.ERP5Type
 
     # tests that members can download files
-    class DummyFile(file):
-      def __init__(self, filename):
-        self.filename = os.path.basename(filename)
-        file.__init__(self, filename)
-    portal = self.getPortal()
+    class DummyFile(io.BytesIO):
+      filename = 'dummy.txt'
+    portal = self.portal
     organisation = portal.organisation_module.newContent(portal_type='Organisation')
     file_document = organisation.newContent(portal_type='Embedded File',
-                                            file=DummyFile(Products.ERP5Type.__file__),
+                                            file=DummyFile(b"data"),
                                             content_type='text/plain')
 
     # login as a member
@@ -1073,7 +1072,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(file_document.getData(), response.body)
     self.assertEqual('text/plain',
                       response.getHeader('content-type').split(';')[0])
-    self.assertEqual('attachment; filename="%s"' % os.path.basename(Products.ERP5Type.__file__),
+    self.assertEqual('attachment; filename="dummy.txt"',
                       response.getHeader('content-disposition'))
 
   def test_getTypeBasedMethod(self):
