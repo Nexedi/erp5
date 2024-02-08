@@ -644,7 +644,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
           self.portal.absolute_url(),
       headers={
        'Authorization': 'Basic %s' % \
-         base64.b64encode(self.auth)
+         base64.b64encode(self.auth.encode()).decode()
       }
     )
     response = connection.getresponse()
@@ -725,7 +725,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual("""Path,Id,Title,Short Title,Reference,Codification,Int Index,Description
 *,bar,Bar,SBar,,,3,desc
 *,foo,Foo,,Rfoo,CFoo,,
-""", csv_data)
+""", csv_data.decode())
 
   def test_ERP5Site_reindexLatestIndexedObjects(self):
     module = self.portal.newContent(portal_type='Folder', id='test_folder')
