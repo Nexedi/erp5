@@ -34,6 +34,7 @@ of Portal Type as Classes and ZODB Components
 import pickle
 import unittest
 import warnings
+import six
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
@@ -190,7 +191,10 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
       not_ok = NotOk().__of__(doc)
       self.assertRaises(ValueError, getattr, not_ok, 'attr')
-      self.assertFalse(hasattr(not_ok, 'attr'))
+      if six.PY3:
+        self.assertRaises(ValueError, hasattr, not_ok, 'attr')
+      else:
+        self.assertFalse(hasattr(not_ok, 'attr'))
 
     def test_renameObjectsReindexSubobjects(self):
       """Test that renaming an object with subobjects causes them to be
