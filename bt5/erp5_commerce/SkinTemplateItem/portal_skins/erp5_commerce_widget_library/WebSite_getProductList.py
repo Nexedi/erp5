@@ -16,13 +16,13 @@ for web_section in web_site.WebSite_getMainSectionList():
 
 if len(product_dict) > limit:
   random_uid_list = []
-  key_list = product_dict.keys()
+  key_list = list(product_dict.keys())
   while len(random_uid_list) < limit:
     random_uid = choice(key_list)
     key_list.remove(random_uid)
     random_uid_list.append(random_uid)
   product_list = [product_dict.get(uid) for uid in random_uid_list]
 else:
-  product_list = product_dict.values()
+  product_list = list(product_dict.values())
 
 return product_list
