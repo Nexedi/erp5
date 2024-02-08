@@ -29,7 +29,7 @@
 ##############################################################################
 
 from functools import partial
-from six.moves import cStringIO as StringIO
+import io
 import unittest
 from six.moves.urllib.parse import urlencode
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -85,8 +85,8 @@ class TestAuoLogout(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       request_method='POST',
     )
-    response = publish(stdin=StringIO(stdin))
-    self.assertIn('Welcome to ERP5', response.getBody())
+    response = publish(stdin=io.BytesIO(stdin.encode()))
+    self.assertIn(b'Welcome to ERP5', response.getBody())
 
     # check '__ac' cookie has set an expire timeout
     ac_cookie = response.getCookie('__ac')
@@ -100,8 +100,8 @@ class TestAuoLogout(ERP5TypeTestCase):
     self.tic()
     portal.portal_caches.clearAllCache()
 
-    response = publish(stdin=StringIO(stdin))
-    self.assertIn('Welcome to ERP5', response.getBody())
+    response = publish(stdin=io.BytesIO(stdin.encode()))
+    self.assertIn(b'Welcome to ERP5', response.getBody())
     ac_cookie = response.getCookie('__ac')
     self.assertNotEqual(ac_cookie, None)
     self.assertEqual(ac_cookie.get(normalizeCookieParameterName('expires'), None), None)
