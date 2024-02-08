@@ -24,11 +24,11 @@ for social_contract in context.getDestinationRelatedValueList(portal_type='Socia
     if getattr(social_contract, 'stop_date', None) is None or social_contract.stop_date >= at_date:
       social_contract_list.append(social_contract)
 
-partner_uid_dict = {}
+partner_uid_set = set()
 # find all partners from those social contracts
 for social_contract in social_contract_list:
   for partner_uid in social_contract.getDestinationUidList( portal_type = 'Person' ):
     if partner_uid != context.getUid():
-      partner_uid_dict[partner_uid] = 1
+      partner_uid_set.add(partner_uid)
 
-return len( partner_uid_dict.keys() )
+return len(partner_uid_set)
