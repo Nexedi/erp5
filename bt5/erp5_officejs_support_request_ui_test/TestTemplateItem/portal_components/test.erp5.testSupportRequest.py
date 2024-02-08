@@ -24,8 +24,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+import io
 import json
-from six.moves import cStringIO as StringIO
 import six.moves.urllib.parse
 import six.moves.http_client
 
@@ -33,7 +33,7 @@ import feedparser
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-class FileUpload(StringIO):
+class FileUpload(io.BytesIO):
   filename = 'attached_file.txt'
 
 
@@ -183,7 +183,7 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
     post, = web_message.getAggregateValueList(
         portal_type='HTML Post'
     )
-    self.assertEqual('<b>Help !!!</b>', str(post.getData()))
+    self.assertEqual(b'<b>Help !!!</b>', bytes(post.getData()))
     # post have been archived once ingested
     self.assertEqual('archived', post.getValidationState())
 
@@ -201,7 +201,7 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
   def test_submit_support_request_with_attachment(self):
     self.getWebSite().SupportRequestModule_createSupportRequest(
         description='<b>Look at this file !</b>',
-        file=FileUpload("the text content"),
+        file=FileUpload(b"the text content"),
         resource=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001.getRelativeUrl(),
         title=self.id(),
         project='erp5_officejs_support_request_ui_test_project_001',
@@ -234,16 +234,16 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
     post, = web_message.getAggregateValueList(
         portal_type='HTML Post'
     )
-    self.assertEqual('<b>Look at this file !</b>', str(post.getData()))
+    self.assertEqual(b'<b>Look at this file !</b>', bytes(post.getData()))
     file_post, = post.getSuccessorValueList()
-    self.assertEqual('the text content', str(file_post.getData()))
+    self.assertEqual(b'the text content', bytes(file_post.getData()))
 
     # a text was ingested from the file post
     file_document, = web_message.getAggregateValueList(
         portal_type='Text'
     )
     self.assertEqual('attached_file.txt', file_document.getFilename())
-    self.assertEqual('the text content', str(file_document.getData()))
+    self.assertEqual(b'the text content', bytes(file_document.getData()))
 
     self.assertEqual(
       [dict(
@@ -262,7 +262,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     self.portal.PostModule_createHTMLPostForSupportRequest(
         follow_up=support_request.getRelativeUrl(),
         predecessor=None,
-        data="<p>Hello !</p>",
+        data=b"<p>Hello !</p>",
         file=None,
         source_reference="xxx-message-id",
         web_site_relative_url=self.getWebSite().getRelativeUrl(),
@@ -300,8 +300,8 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     self.portal.PostModule_createHTMLPostForSupportRequest(
         follow_up=support_request.getRelativeUrl(),
         predecessor=None,
-        data="<p>Please look at the <b>attached file</b></p>",
-        file=FileUpload("the text content"),
+        data=b"<p>Please look at the <b>attached file</b></p>",
+        file=FileUpload(b"the text content"),
         source_reference="xxx-message-id",
         web_site_relative_url=self.getWebSite().getRelativeUrl(),
     )
@@ -327,7 +327,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
         portal_type='Text'
     )
     self.assertEqual('attached_file.txt', file_document.getFilename())
-    self.assertEqual('the text content', str(file_document.getData()))
+    self.assertEqual(b'the text content', bytes(file_document.getData()))
     self.assertEqual('shared', file_document.getValidationState())
     # this document is also attached to the context of the support request
     # and is visible from the document tab.
@@ -352,7 +352,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
         follow_up=support_request.getRelativeUrl(),
         predecessor=None,
         data="<p>look <script>alert('haha')</script></p>",
-        file=FileUpload("the text content"),
+        file=FileUpload(b"the text content"),
         source_reference="xxx-message-id",
         web_site_relative_url=self.getWebSite().getRelativeUrl(),
     )
@@ -367,8 +367,8 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     # but the post follow the "store what user entered as-is" rule.
     # (so looking at posts can be dangerous)
     self.assertEqual(
-        "<p>look <script>alert('haha')</script></p>",
-        str(post.getData()))
+        b"<p>look <script>alert('haha')</script></p>",
+        bytes(post.getData()))
 
   def test_support_request_comment_include_other_event_type(self):
     support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
@@ -626,7 +626,7 @@ class TestIngestPostAsWebMessage(SupportRequestTestCase):
     post = self.portal.post_module.newContent(
         portal_type='HTML Post',
         follow_up_value=support_request,
-        data="Hello"
+        data=b"Hello"
     )
     post.publish()
     self.tic()
