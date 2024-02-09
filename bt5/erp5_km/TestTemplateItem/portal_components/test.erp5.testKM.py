@@ -711,7 +711,7 @@ class TestKM(TestKMMixIn):
                                      gadget_view_form_id)
 
     # no related docs should exist
-    self.assertIn(b'No result.', relation_form_renderer())
+    self.assertIn('No result.', relation_form_renderer())
 
     # set related docs
     similar_doc = portal.web_page_module.newContent(
