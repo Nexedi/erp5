@@ -74,8 +74,8 @@ class TestERP5PythonScript(ERP5TypeTestCase):
       basic='ERP5TypeTestCase:',
       handle_errors=False,
     )
-    self.assertIn('ERP5 Python Scripts', resp.getBody())
-    self.assertIn('addPythonScriptThroughZMI', resp.getBody())
+    self.assertIn(b'ERP5 Python Scripts', resp.getBody())
+    self.assertIn(b'addPythonScriptThroughZMI', resp.getBody())
 
   def test_call(self):
     self.script.setBody('return "Hello"')
