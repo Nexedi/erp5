@@ -3187,7 +3187,7 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    )
+    ).decode()
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
@@ -3251,17 +3251,17 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    )
+    ).decode()
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
       self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv')
     else:
       self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv; charset=utf-8')
-    self.assertTrue('foook1' in result, result)
-    self.assertTrue('foook2' in result, result)
-    self.assertTrue('foonotok' not in result, result)
+    self.assertIn('foook1', result)
+    self.assertIn('foook2', result)
+    self.assertNotIn('foonotok', result)
     # Check one of the field name
-    self.assertTrue('Read-Only Quantity' in result, result)
+    self.assertIn('Read-Only Quantity', result)
     # Ensure it is not the list mode rendering
     self.assertTrue(len(result.split('\n')) > 50, result)
