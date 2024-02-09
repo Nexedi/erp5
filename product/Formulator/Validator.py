@@ -863,9 +863,7 @@ class DateTimeValidator(Validator):
                             int(day),
                             hour,
                             minute, timezone))
-      # ugh, a host of string based exceptions (not since Zope 2.7)
-    except ('DateTimeError', 'Invalid Date Components', 'TimeError',
-            DateError, TimeError) :
+    except (DateError, TimeError):
       self.raise_error('not_datetime', field)
     # pass value through request in order to be restored in case if validation fail
     if getattr(REQUEST, 'form', None):
