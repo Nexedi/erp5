@@ -41,4 +41,4 @@ def setupDummyMailHost(self):
     cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
     pmc_init_of(cls)
   mailhost.reset()
-  return True
+  return "True"  # TODO: zope4py3 Zope does not seem to publish `True` correctly
