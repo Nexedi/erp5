@@ -43,7 +43,7 @@ class InternetMessagePost(Item, MailMessageMixin):
 
 
   def _getMessage(self):
-    return email.message_from_string(self.getData())
+    return email.message_from_string(self.getData().decode())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'stripMessageId')
   def stripMessageId(self, message_id):
