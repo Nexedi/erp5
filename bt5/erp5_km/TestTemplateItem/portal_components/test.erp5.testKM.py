@@ -717,7 +717,7 @@ class TestKM(TestKMMixIn):
                                      gadget_view_form_id)
 
     # no related docs should exist
-    self.assertIn(b'No result.', relation_form_renderer())
+    self.assertIn('No result.', relation_form_renderer())
 
     # set related docs
     similar_doc = portal.web_page_module.newContent(
@@ -751,9 +751,9 @@ class TestKM(TestKMMixIn):
     portal = self.getPortal()
     portal_gadgets = portal.portal_gadgets
 
-    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
+    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' % self.web_site_url
     response = self.publish(url, self.auth)
-    self.assertIn(self.web_front_knowledge_pad.getTitle(), response.getBody())
+    self.assertIn(self.web_front_knowledge_pad.getTitle().encode(), response.getBody())
 
     gadget = portal_gadgets.km_latest_documents
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
@@ -761,7 +761,7 @@ class TestKM(TestKMMixIn):
 
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
-    self.assertIn(gadget.getTitle(), response.getBody())
+    self.assertIn(gadget.getTitle().encode(), response.getBody())
 
     # set non existent view_form
     old_gadget_view_form_id =  gadget.view_form_id
@@ -773,7 +773,7 @@ class TestKM(TestKMMixIn):
     self.assertNotIn(b'Server side error', response.getBody())
 
     # set non existent edit_form
-    old_gadget_edit_form_id =  gadget.edit_form_id
+    old_gadget_edit_form_id = gadget.edit_form_id
     gadget.edit_form_id = 'NO_SUCH_FORM_EXISTS'
     response = self.publish(url, self.auth)
     self.assertIn(b'Server side error', response.getBody())
@@ -794,7 +794,7 @@ class TestKM(TestKMMixIn):
 
     self.changeSkin('KM')
     # "Subsections" gadget
-    gadget_view_form_id  = web_site_browser_gadget.view_form_id
+    gadget_view_form_id = web_site_browser_gadget.view_form_id
     box_url = _getGadgetInstanceUrlFromKnowledgePad( \
                                      self.web_front_knowledge_pad,  \
                                      web_site_browser_gadget)
@@ -806,7 +806,7 @@ class TestKM(TestKMMixIn):
                                   gadget_view_form_id,
                                   self.website.getRelativeUrl(),
                                   box_url)
-    self.assertNotIn(subsection.getTitle(),
+    self.assertNotIn(subsection.getTitle().encode(),
                     self.publish(url, self.auth).getBody())
 
     # make section visible
