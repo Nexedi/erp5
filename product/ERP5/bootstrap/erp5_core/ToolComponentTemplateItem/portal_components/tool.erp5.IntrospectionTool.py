@@ -311,24 +311,6 @@ class IntrospectionTool(LogMixin, BaseTool):
   #
   #   Instance variable definition access
   #
-  security.declareProtected(Permissions.ManagePortal, '_loadExternalConfig')
-  def _loadExternalConfig(self):
-    """
-      Load configuration from one external file, this configuration
-      should be set for security reasons to prevent people access
-      forbidden areas in the system.
-    """
-    def cached_loadExternalConfig():
-      from six.moves import configparser
-      config = configparser.ConfigParser()
-      config.readfp(open('/etc/erp5.cfg'))
-      return config
-
-    cached_loadExternalConfig = CachingMethod(cached_loadExternalConfig,
-                                id='IntrospectionTool__loadExternalConfig',
-                                cache_factory='erp5_content_long')
-    return  cached_loadExternalConfig()
-
   security.declareProtected(Permissions.ManagePortal, '_getSoftwareHome')
   def _getSoftwareHome(self):
     """
