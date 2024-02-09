@@ -1,3 +1,4 @@
+from six.moves import range
 if not len(path_list):
   return
 restrictedTraverse = context.getPortalObject().restrictedTraverse
@@ -14,16 +15,16 @@ def generateParameterList():
   parameter_append_list = []
   append = parameter_append_list.append
   parameter_dict = {}
-  for property in method.arguments_src.split():
-    parameter_dict[property] = parameter_value_list = []
-    if property == 'getData':
+  for prop in method.arguments_src.split():
+    parameter_dict[prop] = parameter_value_list = []
+    if prop == 'getData':
       getter = getData
-    elif property == 'getId':
+    elif prop == 'getId':
       getter = getId
     else:
       getter = None
     if getter is None:
-      getter = lambda obj, property=property: getattr(obj, property)()
+      getter = lambda obj, prop=prop: getattr(obj, prop)()
     append((parameter_value_list, getter))
   return parameter_dict, parameter_append_list
 
@@ -35,7 +36,7 @@ for path in path_list:
     object_list = obj()
   else:
     object_list = [obj,]
-  for x in xrange(0, len(object_list), MAX_PER_QUERY):
+  for x in range(0, len(object_list), MAX_PER_QUERY):
     parameter_dict, parameter_append_list = generateParameterList()
     for obj in object_list[x:x+MAX_PER_QUERY]:
       for value_list, getter in parameter_append_list:

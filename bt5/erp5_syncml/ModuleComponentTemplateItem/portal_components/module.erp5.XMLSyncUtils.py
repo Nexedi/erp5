@@ -29,6 +29,7 @@
 
 import smtplib
 import os
+import six
 from base64 import b64encode, b64decode
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -58,7 +59,10 @@ def encode(format, string_to_encode): # pylint: disable=redefined-builtin
   if not format:
     return string_to_encode
   if format == 'b64':
-    return b64encode(string_to_encode)
+    if not isinstance(string_to_encode, six.binary_type):
+      string_to_encode = string_to_encode.encode()
+    encoded = b64encode(string_to_encode)
+    return encoded
   #elif format is .... put here the other formats
   else:#if there is no format corresponding with format, raise an error
     LOG('encode : unknown or not implemented format : ', INFO, format)
@@ -180,11 +184,10 @@ def getXupdateObject(object_xml=None, old_xml=None):
   """
   erp5diff = ERP5Diff()
   erp5diff.compare(old_xml, object_xml)
-  #Upper version of ERP5Diff produce valid XML.
   if erp5diff._getResultRoot():
-    xupdate = erp5diff.outputString()
-    #omit xml declaration
-    xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
+    xupdate = erp5diff.outputBytes(encoding="utf-8")
+    # omit xml declaration
+    xupdate = xupdate[xupdate.find(b'<xupdate:modifications'):]
     return xupdate
 
 def cutXML(xml_string, length=None):
