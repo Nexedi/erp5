@@ -5,7 +5,12 @@ import json
 from DateTime import DateTime
 import six
 
-response = container.REQUEST.RESPONSE
+request = container.REQUEST
+if request['REQUEST_METHOD'] != 'POST':
+  from zExceptions import BadRequest
+  raise BadRequest
+
+response = request.RESPONSE
 start = time.time()
 try:
   results = context.manage_test(query)
