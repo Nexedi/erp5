@@ -29,9 +29,9 @@
 ##############################################################################
 
 from functools import partial
+import io
 import unittest
 import six.moves.urllib.parse
-from six.moves import cStringIO as StringIO
 import time
 import six.moves.http_client
 import mock
@@ -237,13 +237,13 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
 
     # password change date should be saved as well hashed old password value
-    old_password = login.getPassword()
+    old_password = login.getPassword().decode()
     self.assertSameSet([old_password], [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # .. test one more time to check history of password is saved in a list
     login.setPassword('123456789')
     self.tic()
-    old_password1 = login.getPassword()
+    old_password1 = login.getPassword().decode()
 
     # password change date should be saved as well hashed old password value
     self.assertSameSet([old_password1, old_password], [x.getPassword() for x in self._getPasswordEventList(login)])
@@ -251,29 +251,29 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # other methods (_setPassword)...
     login._setPassword('123456789-1')
     self.tic()
-    old_password2 = login.getPassword()
+    old_password2 = login.getPassword().decode()
     self.assertSameSet([old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (_forceSetPassword)...
     login._forceSetPassword('123456789-2')
     self.tic()
-    old_password3 = login.getPassword()
+    old_password3 = login.getPassword().decode()
     self.assertSameSet([old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
 
     # other methods (setEncodedPassword)...
-    login.setEncodedPassword('123456789-3')
+    login.setEncodedPassword(b'123456789-3')
     self.tic()
-    old_password4 = login.getPassword()
+    old_password4 = login.getPassword().decode()
     self.assertSameSet([old_password4, old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (edit)...
     login.edit(password = '123456789-4')
     self.tic()
-    old_password5 = login.getPassword()
+    old_password5 = login.getPassword().decode()
     self.assertSameSet([old_password5, old_password4, old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
@@ -653,7 +653,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     _, (to,), message = self.portal.MailHost._last_message
     self.assertEqual(to, 'user@example.com')
-    self.assertIn('Password Recovery', message)
+    self.assertIn(b'Password Recovery', message)
 
   def test_HttpRequest(self):
     """
@@ -678,7 +678,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       basic='test-05:used_ALREADY_1234',
     )
-    self.assertIn('Welcome to ERP5', response.getBody())
+    self.assertIn(b'Welcome to ERP5', response.getBody())
     self.assertFalse(login.isLoginBlocked())
 
     publish = partial(
@@ -749,13 +749,13 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       basic='test-05:used_ALREADY_1234',
     )
-    self.assertIn('Welcome to ERP5', response.getBody())
+    self.assertIn(b'Welcome to ERP5', response.getBody())
 
     # test external redirection prevention
     response = self.publish(
       portal.absolute_url_path() + '/logged_in',
       basic='test-05:used_ALREADY_1234',
-      stdin=StringIO(six.moves.urllib.parse.urlencode({'came_from': 'https://www.erp5.com'})),
+      stdin=io.BytesIO(six.moves.urllib.parse.urlencode({'came_from': 'https://www.erp5.com'}).encode()),
       request_method='POST',
     )
     redirect_url = six.moves.urllib.parse.urlparse(response.getHeader("Location"))
@@ -818,7 +818,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     def submit_reset_password_dialog(new_password):
       return self.publish(
         '%s/portal_password' % self.portal.getPath(),
-        stdin=StringIO(six.moves.urllib.parse.urlencode({
+        stdin=io.BytesIO(six.moves.urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PasswordTool_viewResetPassword',
           'dialog_method': 'PasswordTool_changeUserPassword',
@@ -826,15 +826,15 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
           'field_your_password': new_password,
           'field_password_confirm': new_password,
           'field_your_password_key': reset_key,
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
 
     ret = submit_reset_password_dialog('alice')
     self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     self.assertIn(
-      '<span class="error">You can not use any parts of your '
-      'first and last name in password.</span>',
+      b'<span class="error">You can not use any parts of your '
+      b'first and last name in password.</span>',
       ret.getBody())
 
     # the messages are translated
@@ -849,21 +849,21 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_reset_password_dialog('alice')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        '<span class="error">Yöü can not ... translated</span>',
+        u'<span class="error">Yöü can not ... translated</span>'.encode('utf-8'),
         ret.getBody())
 
     # now with a password complying to the policy
     ret = submit_reset_password_dialog('ok')
     self.assertEqual(six.moves.http_client.FOUND, ret.getStatus())
-    redirect_url = urlparse.urlparse(ret.getHeader("Location"))
+    redirect_url = six.moves.urllib.parse.urlparse(ret.getHeader("Location"))
     self.assertEqual(redirect_url.path, '{}/login_form'.format(self.portal.absolute_url_path()))
-    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    redirect_url_params = six.moves.urllib.parse.parse_qsl(redirect_url.query)
     self.assertIn(('portal_status_message', 'Password changed.'), redirect_url_params)
     self.assertIn(('portal_status_level', 'success'), redirect_url_params)
 
   def test_PreferenceTool_changePassword_checks_policy(self):
     person = self.createUser(self.id(), password='current')
-    person.newContent(portal_type = 'Assignment').open()
+    person.newContent(portal_type='Assignment').open()
     login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = self.portal.portal_catalog.getResultValue(
       portal_type='System Preference',
@@ -876,14 +876,14 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       return self.publish(
         '%s/portal_preferences' % self.portal.getPath(),
         basic='%s:current' % self.id(),
-        stdin=StringIO(six.moves.urllib.parse.urlencode({
+        stdin=io.BytesIO(six.moves.urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
           'dialog_method': 'PreferenceTool_setNewPassword',
           'field_your_current_password': 'current',
           'field_your_new_password': new_password,
           'field_password_confirm': new_password,
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
 
@@ -891,7 +891,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     ret = submit_change_password_dialog('short')
     self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     self.assertIn(
-      '<span class="error">Too short.</span>',
+      b'<span class="error">Too short.</span>',
       ret.getBody())
 
     # the messages are translated
@@ -906,7 +906,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_change_password_dialog('short')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        '<span class="error">Töü short ... translated</span>',
+        u'<span class="error">Töü short ... translated</span>'.encode('utf-8'),
         ret.getBody())
 
     # if for some reason, PreferenceTool_setNewPassword is called directly,
