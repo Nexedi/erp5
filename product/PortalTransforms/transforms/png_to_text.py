@@ -39,7 +39,7 @@ class png_to_text(popentransform):
         else:
             popen = Popen([command, tmpname], env=environment, stdin=PIPE,
                                                                    stdout=PIPE)
-            out = popen.communicate(str(data))[0]
+            out = popen.communicate(bytes(data))[0]
 
         if not self.useStdin:
             # remove tmp file
