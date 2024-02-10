@@ -839,7 +839,7 @@ def generateNestedQuery(getQuery, priority_list, criterion_dict,
         criterion_worklist_id_dict = worklist_id_dict.copy()
         # Do not use iterkeys since the dictionary will be modified in the
         # loop
-        for worklist_id in criterion_worklist_id_dict.keys():
+        for worklist_id in list(criterion_worklist_id_dict):
           if worklist_id not in possible_worklist_id_dict:
             del criterion_worklist_id_dict[worklist_id]
       else:
