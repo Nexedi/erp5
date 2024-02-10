@@ -40,6 +40,7 @@ from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from ZPublisher.HTTPRequest import FileUpload
 from six.moves import cStringIO as StringIO
+import six
 from Products.ERP5Form.Selection import Selection
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Form.ListBox import ListBoxHTMLRenderer
@@ -252,12 +253,16 @@ class TestListBox(ERP5TypeTestCase):
 
     # We create a script to use as a list method
     list_method_id = 'ListBox_ParametersListMethod'
+    if six.PY2:
+      list_method_code = """return [context.asContext(alternate_title = u'\xe9lisa'.encode('utf8'))]"""
+    else:
+      list_method_code = """return [context.asContext(alternate_title = '\xe9lisa')]"""
     createZODBPythonScript(
         portal.portal_skins.custom,
         list_method_id,
         'selection=None, **kw',
-        """return [context.asContext(alternate_title = u'\xe9lisa'.encode('utf8'))]""")
-
+        list_method_code,
+    )
     # set the listbox to use this as list method
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
@@ -771,7 +776,8 @@ class TestListBox(ERP5TypeTestCase):
     self.assertEqual(result.getStatus(), 500)
     body = result.getBody()
     self.assertIn(b'Error Type: TimeoutReachedError', body)
-    self.assertIn(b'Error Value: 1969: Query execution was interrupted (max_statement_time exceeded): SET STATEMENT', body)
+    self.assertIn(b'Error Value: 1969: Query execution was interrupted (max_statement_time exceeded):', body)
+    self.assertIn(b'SET STATEMENT max_statement_time=', body)
 
   def test_zodb_timeout(self):
     portal = self.getPortal()
