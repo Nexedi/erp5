@@ -143,7 +143,7 @@ class OOOdCommandTransform(commandtransform):
             image = OFSImage(image.getId(), image.getTitle(), image_data)
 
           # image should be OFSImage
-          data = str(image.data)
+          data = bytes(image.data)
           width = image.width
           height = image.height
           if height:
