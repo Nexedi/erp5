@@ -228,7 +228,7 @@ class CachedConvertableMixin:
     if isinstance(data, OFSImage):
       data = data.data
     if isinstance(data, Pdata):
-      data = str(data)
+      data = bytes(data)
     return mime, data
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversionSize')
