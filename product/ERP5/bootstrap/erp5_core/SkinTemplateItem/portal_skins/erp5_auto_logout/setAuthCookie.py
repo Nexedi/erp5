@@ -10,13 +10,15 @@ else:
   now = DateTime()
   kw['expires'] = (now + expire_interval).toZone('GMT').rfc822()
   ac_renew = (now + expire_interval / 2).millis()
-portal.portal_sessions[
-  portal.Base_getAutoLogoutSessionKey(
-    username=portal.Base_getUsernameFromAuthenticationCookie(
-      cookie_value,
+
+cookie_authentication = getattr(portal, 'cookie_authentication', None)
+if cookie_authentication is not None \
+    and cookie_authentication.getProperty('auth_cookie') == cookie_name:
+  portal.portal_sessions[
+    portal.Base_getAutoLogoutSessionKey(
+      username=portal.Base_getUsernameFromAuthenticationCookie(cookie_value)
     )
-  )
-]['ac_renew'] = ac_renew
+  ]['ac_renew'] = ac_renew
 
 REQUEST = portal.REQUEST
 parse_dict = urlparse(REQUEST.other.get('ACTUAL_URL'))
