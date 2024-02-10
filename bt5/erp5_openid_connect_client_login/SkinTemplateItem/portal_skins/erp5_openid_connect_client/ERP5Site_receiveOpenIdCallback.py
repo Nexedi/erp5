@@ -1,3 +1,4 @@
+import six
 import time
 
 request = container.REQUEST
@@ -48,8 +49,10 @@ elif code is not None:
     """
     if "error" in response_dict:
       return handleError(response_dict.get('error'), response_dict.get('error_description'), state)
-    access_token = response_dict['access_token'].encode('utf-8')
-    hash_str = context.Base_getHMAC(access_token, access_token)
+    access_token = response_dict['access_token']
+    if six.PY2:
+      access_token = access_token.encode('utf-8')
+    hash_str = context.Base_getHMAC(access_token.encode('utf-8'), access_token.encode('utf-8'))
     context.setAuthCookie(response, '__ac_openidconnect_hash', hash_str)
     # store timestamp in second since the epoch in UTC is enough
     response_dict["response_timestamp"] = time.time()
@@ -57,7 +60,9 @@ elif code is not None:
                                 response_dict,
                                 "openid_connect_server_auth_token_cache_factory")
     user_dict = context.ERP5Site_getOpenIdUserEntry(token=access_token)
-    user_reference = user_dict["sub"].encode('utf-8')
+    user_reference = user_dict["sub"]
+    if six.PY2:
+      user_reference = user_reference.encode('utf-8')
     context.Base_setBearerToken(access_token,
                                 {"reference": user_reference},
                                 "openid_connect_server_auth_token_cache_factory")
