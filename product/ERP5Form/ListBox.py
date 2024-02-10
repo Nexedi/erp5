@@ -1257,7 +1257,7 @@ class ListBoxRenderer:
         params.setdefault('meta_type', meta_type_list)
 
       # Remove FileUpload parameters
-      for k, v in params.items():
+      for k, v in list(params.items()):
         if k == "listbox":
           # listbox can also contain useless parameters
           new_list = []
