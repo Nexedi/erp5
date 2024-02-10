@@ -86,4 +86,4 @@ class Sound(File):
       RESPONSE.setHeader('Content-Range',
                          'bytes %s-%s/%s' % (start, end-1, total_length))
       RESPONSE.setStatus(206)
-    return str(data)
+    return bytes(data)
