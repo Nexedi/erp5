@@ -82,6 +82,8 @@ class EncryptedPasswordMixin(object):
       value,
       format='default',  # pylint: disable=redefined-builtin
   ):
+    if value is not None and not isinstance(value, bytes):
+      value = value.encode()
     password = getattr(aq_base(self), 'password', None)
     if password is None or isinstance(password, basestring):
       password = self.password = PersistentMapping()
@@ -111,8 +113,6 @@ class EncryptedPasswordMixin(object):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPassword')
   def getPassword(self, *args, **kw):
-    """
-    """
     marker = []
     if len(args):
       default_password = args[0]
