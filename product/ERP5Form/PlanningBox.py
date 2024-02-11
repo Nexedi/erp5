@@ -1390,7 +1390,7 @@ class BasicStructure:
 
     portal_domains = getattr(self.form,'portal_domains',None)
     if (portal_domains is None or \
-          portal_domains._getOb(default_selection_lane_path, None) is None):
+          portal_domains._getOb(str(default_selection_lane_path), None) is None):
       default_selection_lane_path = self.lane_root_list[0][0]
 
     if default_selection_lane_path in (None, ()):
@@ -1430,9 +1430,9 @@ class BasicStructure:
     portal_domains = getattr(self.form,'portal_domains',None)
     default_selection_report_path = self.report_root_list[0][0].split('/', 1)[0]
     if (portal_categories is None or \
-        portal_categories._getOb(default_selection_report_path, None) is None) \
+        portal_categories._getOb(str(default_selection_report_path), None) is None) \
        and (portal_domains is None or \
-          portal_domains._getOb(default_selection_report_path, None) is None):
+          portal_domains._getOb(str(default_selection_report_path), None) is None):
       default_selection_report_path = self.report_root_list[0][0]
 
     self.selection_report_path = self.selection.getReportPath(
