@@ -20,7 +20,7 @@ zipfile (bool)
   When true, the result is a zip file containing profiling result along with the python code (and, when not possible, the disassembled bytecode) of all files which appear in the profiling result.
   When false, the result is a bare profiling result (cachegrind file format).
 """
-from six.moves import cStringIO as StringIO
+import io
 portal = context.getPortalObject()
 if statistic:
   profiler, retriever = portal.ERP5Site_getStatisticalProfilerAndThread(single=True)
@@ -39,7 +39,7 @@ if zipfile:
   data, content_type = profiler.asZip()
   filename = 'statistical_' + filename + '.zip'
 else:
-  out = StringIO()
+  out = io.BytesIO()
   profiler.callgrind(out, relative_path=True)
   data = out.getvalue()
   content_type = 'application/x-kcachegrind'
