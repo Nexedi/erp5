@@ -1563,7 +1563,7 @@ class DateTimeWidget(Widget):
     format_dict = self.format_to_sql_format_dict
     input_order = format_dict.get(self.getInputOrder(field),
                                   self.sql_format_default)
-    if isinstance(value, six.text_type):
+    if six.PY2 and isinstance(value, six.text_type):
       value = value.encode(field.get_form_encoding())
     return {'query': value,
             'format': field.get_value('date_separator').join(input_order),
@@ -2126,7 +2126,7 @@ class FloatWidget(TextWidget):
       # field.
       for x in xrange(0, precision):
         format += '0'
-    if isinstance(value, six.text_type):
+    if six.PY2 and isinstance(value, six.text_type):
       value = value.encode(field.get_form_encoding())
     return {'query': value,
             'format': format,
