@@ -17,9 +17,9 @@ try:
 except Exception as e:
   response.setStatus(500)
   try:
-    response.write(str(e[1]))
+    response.write(str(e[1]).encode())
   except Exception:
-    response.write(str(e))
+    response.write(str(e).encode())
   return
 
 # https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger
