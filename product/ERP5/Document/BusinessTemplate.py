@@ -1532,7 +1532,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             # in a separate file (such as the one from
             # testTemplateTool.TestTemplateTool.test_updateBusinessTemplateFromUrl_keep_list)
             # data might be loaded as a string, fix this here.
-            if not isinstance(obj.data, (bytes, Pdata)):
+            if obj.data is not None and not isinstance(obj.data, (bytes, Pdata)):
               obj.data = obj.data.encode()
             # XXX Calling obj._setData() would call Interaction Workflow such
             # as document_conversion_interaction_workflow which would update
@@ -6114,8 +6114,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_test_item', '_message_translation_item',]
 
       if item_name in item_list_1:
-        f1 = BytesIO() # for XML export of New Object
-        f2 = BytesIO() # For XML export of Installed Object
+        f1 = StringIO() # for XML export of New Object
+        f2 = StringIO() # For XML export of Installed Object
         # Remove unneeded properties
         new_object = new_item.removeProperties(new_object, 1)
         installed_object = installed_item.removeProperties(installed_object, 1)
@@ -6759,7 +6759,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       from base64 import b64encode
       def __newTempComponent(portal_type, reference, source_reference, migrate=False):
-        uid = b64encode("%s|%s|%s" % (portal_type, reference, source_reference))
+        uid = b64encode(("%s|%s|%s" % (portal_type, reference, source_reference)).encode())
+        if six.PY3:
+          uid = uid.decode()
         if migrate:
           bt_migratable_uid_list.append(uid)
 
