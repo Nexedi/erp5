@@ -33,7 +33,7 @@
 <!-- XXX bug compatibility; all columns must be set explicitly -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=id%7CID%0Atitle%7CTitle%0Adelivery.quantity%7CQuantity;field_stat_method=portal_catalog</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=id%7CID%0Atitle%7CTitle%0Adelivery.quantity%7CQuantity&amp;field_stat_method=portal_catalog</td>
   <td></td>
 </tr>
 <tr>
