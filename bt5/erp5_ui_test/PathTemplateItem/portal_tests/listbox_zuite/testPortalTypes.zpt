@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=;field_portal_types=Foo</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=&amp;field_portal_types=Foo</td>
   <td></td>
 </tr>
 <tr>
@@ -154,7 +154,7 @@
 </tal:block>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=;field_portal_types=Toto</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_meta_types=&amp;field_portal_types=Toto</td>
   <td></td>
 </tr>
 <tr>
