@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked;field_domain_root_list=foo_category%7CFoo%20Category</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked&amp;field_domain_root_list=foo_category%7CFoo%20Category</td>
   <td></td>
 </tr>
 <tr>
