@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=id%7CFooModule_statId%0Atitle%7CFooModule_statTitle;field_stat_method=portal_catalog</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=id%7CFooModule_statId%0Atitle%7CFooModule_statTitle&amp;field_stat_method=portal_catalog</td>
   <td></td>
 </tr>
 <tr>
