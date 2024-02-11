@@ -76,8 +76,8 @@ def DeepDiff__diff(self, level, parents_ids=frozenset({})):
         # by deepdiff. Thus, sorting tuples before diffing will atleast give us
         # diff in the format where we would be able to see the more asthetic
         # diff for tuples.
-        level.t1 = sorted(level.t1)
-        level.t2 = sorted(level.t2)
+        level.t1 = sorted(level.t1, key=str)
+        level.t2 = sorted(level.t2, key=str)
         self._DeepDiff__diff_tuple(level, parents_ids)
 
     elif isinstance(level.t1, (set, frozenset)):
