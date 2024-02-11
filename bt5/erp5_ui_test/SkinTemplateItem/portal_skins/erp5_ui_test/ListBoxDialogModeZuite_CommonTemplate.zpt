@@ -35,7 +35,7 @@
   </tr>
   <tr>
     <td>open</td>
-    <td>${base_url}/bar_module/FooModule_createObjects?num:int=3;portal_type=Bar</td>
+    <td>${base_url}/bar_module/FooModule_createObjects?num:int=3&amp;portal_type=Bar</td>
     <td></td>
   </tr>
   <tr>
