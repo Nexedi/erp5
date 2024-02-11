@@ -48,7 +48,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=modification_date%7CModification%20Date;field_editable=checked</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=modification_date%7CModification%20Date&amp;field_editable=checked</td>
   <td></td>
 </tr>
 
