@@ -332,12 +332,16 @@ class TestjIOApiStyle(ERP5TypeTestCase):
     """
     # Send bad JSON
     json_payload = '{'
+    invalid_json_error_message = "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+    if six.PY2:
+      invalid_json_error_message = u"Expecting object: line 1 column 1 (char 0)"
     result = json.loads(api_method(json_payload))
     self.assertEqual(400, result[u"status"])
-    self.assertEqual(u"Expecting object: line 1 column 1 (char 0)", result[u"message"])
+    self.assertEqual(result[u"message"], invalid_json_error_message)
     self.assertEqual(u"API-JSON-INVALID-JSON", result[u"name"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
-    self.assertEqual(error_record.getDescription(), "Expecting object: line 1 column 1 (char 0)")
+    error_record = self.portal.restrictedTraverse("error_record_module/" + (result['debug_id'] if six.PY3 else result['debug_id'].encode()))
+    self.assertEqual(error_record.getDescription(), invalid_json_error_message)
+
     self.assertEqual(error_record.getTitle(), "API-JSON-INVALID-JSON")
     self.assertEqual(error_record.getTextContent(), json_payload)
     # Do not send a JSON object
@@ -346,7 +350,7 @@ class TestjIOApiStyle(ERP5TypeTestCase):
     self.assertEqual(400, result[u"status"])
     self.assertEqual(u"API-JSON-NOT-JSON-OBJECT", result[u"name"])
     self.assertEqual(u"Did not received a JSON Object", result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + (result['debug_id'] if six.PY3 else result['debug_id'].encode()))
     self.assertEqual(error_record.getDescription(), "Did not received a JSON Object")
     self.assertEqual(error_record.getTitle(), "API-JSON-NOT-JSON-OBJECT")
     self.assertEqual(error_record.getTextContent(), json_payload)
@@ -788,12 +792,14 @@ return [{
     ))
     if not "result_list" in response:
       raise ValueError("Unexcpected Answer %s" % response)
-    self.assertEqual(1, len(response["result_list"]))
-    self.assertEqual({
-      u"id": person.getRelativeUrl().decode(),
-      u"portal_type": person.getPortalType().decode(),
-      u"title": person.getTitle().decode(),
-    }, response["result_list"][0])
+    self.assertEqual(
+      response["result_list"],
+      [{
+        "id": person.getRelativeUrl(),
+        "portal_type": person.getPortalType(),
+        "title": person.getTitle(),
+      }],
+    )
 
   def test_action_all_docs_success_one_action_no_result(self):
     """
@@ -882,12 +888,14 @@ return [{
     ))
     if not "result_list" in response:
       raise ValueError("Unexcpected Answer %s" % response)
-    self.assertEqual(1, len(response["result_list"]))
-    self.assertEqual({
-      u"id": organisation.getRelativeUrl().decode(),
-      u"portal_type": organisation.getPortalType().decode(),
-      u"title": organisation.getTitle().decode(),
-    }, response["result_list"][0])
+    self.assertEqual(
+      response["result_list"],
+      [{
+        "id": organisation.getRelativeUrl(),
+        "portal_type": organisation.getPortalType(),
+        "title": organisation.getTitle(),
+      }],
+    )
     # Check Second action
     response = json.loads(self.allDocsToApi(
       """{
@@ -897,12 +905,14 @@ return [{
     ))
     if not "result_list" in response:
       raise ValueError("Unexcpected Answer %s" % response)
-    self.assertEqual(1, len(response["result_list"]))
-    self.assertEqual({
-      u"id": person.getRelativeUrl().decode(),
-      u"portal_type": person.getPortalType().decode(),
-      u"title": person.getTitle().decode(),
-    }, response["result_list"][0])
+    self.assertEqual(
+      response["result_list"],
+      [{
+        "id": person.getRelativeUrl(),
+        "portal_type": person.getPortalType(),
+        "title": person.getTitle(),
+      }],
+    )
 
   def test_action_all_docs_success_two_actions_with_no_result(self):
     """
