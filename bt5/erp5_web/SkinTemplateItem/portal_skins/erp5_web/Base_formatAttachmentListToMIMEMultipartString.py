@@ -80,7 +80,7 @@ def encode_quopri(msg):
   when necessary.
   """
   orig = msg.get_payload()
-  encdata = quopri.encodestring(orig.encode()).replace("=\n", "=\r\n")
+  encdata = quopri.encodestring(orig.encode()).replace(b"=\n", b"=\r\n")
   msg.set_payload(encdata)
   msg.add_header("Content-Transfer-Encoding", "quoted-printable")
 
