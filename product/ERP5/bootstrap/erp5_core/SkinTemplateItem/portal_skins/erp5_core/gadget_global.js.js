@@ -9,10 +9,14 @@
   Calling isEmpty(x) is more robust than expression !x.
   */
   function isEmpty(value) {
-    return (value === undefined ||
-            value === null ||
-            value.length === 0 ||
-            (typeof value === "number" && isNaN(value)));
+    return (
+      (value === undefined) ||
+      (value === null) ||
+      ((typeof value === "number") ?
+        isNaN(value) :
+        (Object.keys(value).length === 0)
+      )
+    );
   }
   window.isEmpty = isEmpty;
 
@@ -27,7 +31,7 @@
 
   /** Return first non-empty variable or the last one.
 
-  Calling getNonEmpy(a, b, "") is more robust way of writing a || b || "".
+  Calling getFirstNonEmpty(a, b, "") is more robust way of writing a || b || "".
   Variables coercing to false (e.g 0) do not get skipped anymore.
   */
   function getFirstNonEmpty(first_argument) {
@@ -47,18 +51,17 @@
   }
   window.getFirstNonEmpty = getFirstNonEmpty;
 
-  /** Convert anything to boolean value correctly (even "false" will be false)*/
+  /**
+   * Convert anything to boolean value with rules similar to python.
+   */
   function asBoolean(obj) {
     if (typeof obj === "boolean") {
       return obj;
     }
-    if (typeof obj === "string") {
-      return obj.toLowerCase() === "true" || obj === "1";
-    }
     if (typeof obj === "number") {
-      return obj !== 0;
+      return Boolean(obj)
     }
-    return Boolean(obj);
+    return !isEmpty(obj);
   }
   window.asBoolean = asBoolean;
 
