@@ -270,7 +270,7 @@ def handleLinkedData(mime, data, href):
       "mime_type": mime,
       "encode": "quoted-printable" if mime.startswith("text/") else None,
       "add_header_list": [("Content-Location", url)],
-      "data": str(data),
+      "data": bytes(data),
     })
     return url
   else:
