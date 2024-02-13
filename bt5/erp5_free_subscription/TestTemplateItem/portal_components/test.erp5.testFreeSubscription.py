@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import requests
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
@@ -308,12 +309,12 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepClickUnsubscriptionLinkInEvent(self, sequence=None, sequence_list=None,
       **kw):
-    from six.moves.urllib.request import urlopen
     link = sequence['unsubscription_link']
     self.logout()
-    data = urlopen(link)
-    self.assertNotIn("Site Error", data)
-    self.assertNotIn("You do not have enough permissions to access this page", data.read())
+    resp = requests.get(link)
+    self.assertEqual(resp.status_code, 200, (resp.status_code, resp.content))
+    self.assertNotIn(b"Site Error", resp.content)
+    self.assertNotIn(b"You do not have enough permissions to access this page", resp.content)
     self.login()
 
   def stepCheckFreeSubscriptionRequestCreated(self, sequence=None, sequence_list=None,
