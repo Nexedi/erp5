@@ -270,7 +270,7 @@ def handleLinkedData(mime, data, href):
       "mime_type": mime,
       "encode": "quoted-printable" if mime.startswith("text/") else None,
       "add_header_list": [("Content-Location", url)],
-      "data": str(data),
+      "data": bytes(data),
     })
     return url
   else:
@@ -335,7 +335,7 @@ def replaceFromDataUri(data_uri, replacer):
     data = b64decode(data)
   if not is_base64:
     data = replacer(data)
-  return "%s,%s" % (header, b64encode(data) if is_base64 else data)
+  return "%s,%s" % (header, b64encode(data).decode() if is_base64 else data)
 
 def extractUrlSearch(url):
   url = url.split("#", 1)[0].split("?", 1)

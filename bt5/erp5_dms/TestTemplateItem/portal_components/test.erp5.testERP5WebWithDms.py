@@ -1130,7 +1130,7 @@ return True
       "quoted-printable",
     )
     self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), html_data)
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), html_data)
 
   def test_WebPageAsEmbeddedHtml_pageWithLink(self):
     """Test convert one html page with links to embedded html file"""
@@ -1184,7 +1184,7 @@ return True
       "quoted-printable",
     )
     self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "".join([
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), "".join([
       "<p>Hello</p>",
       '<a href="%s//a.a/">aa</a>' % self.portal.absolute_url().split("/", 1)[0],
       '<a href="%s/b">bb</a>' % self.portal.absolute_url(),
@@ -1194,7 +1194,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, = message.get_payload()
     self.assertEqual(htmlmessage.get("Content-Location"), "https://hel.lo/world")
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "".join([
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), "".join([
       "<p>Hello</p>",
       '<a href="https://a.a/">aa</a>',
       '<a href="https://hel.lo/b">bb</a>',
@@ -1233,7 +1233,7 @@ return True
       "quoted-printable",
     )
     self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "<p>World</p>")
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), "<p>World</p>")
 
   def test_WebPageAsEmbeddedHtml_pageWithMoreThanOneImage(self):
     """Test convert one html page with images to embedded html file"""
@@ -1285,7 +1285,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, svgmessage, pngmessage, svgtopngmessage = message.get_payload()
     self.assertEqual(
-      quopri.decodestring(htmlmessage.get_payload()),
+      quopri.decodestring(htmlmessage.get_payload()).decode(),
       "".join([
         "<p>Hello</p>",
         '<img src="%s?format=" />' % svg.absolute_url(),
@@ -1402,7 +1402,7 @@ return True
     self.assertEqual(len(message.get_payload()), 7)
     htmlmessage = message.get_payload()[0]
     self.assertEqual(
-      quopri.decodestring(htmlmessage.get_payload()),
+      quopri.decodestring(htmlmessage.get_payload()).decode(),
       "".join([
         "<p>Hello</p>",
         '<img src="%s/%s?format=" />' % (page.absolute_url(), svg.getRelativeUrl()),
@@ -1546,7 +1546,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, imagemessage = message.get_payload()
     self.assertEqual(
-      quopri.decodestring(htmlmessage.get_payload()),
+      quopri.decodestring(htmlmessage.get_payload()).decode(),
       "<style>%s</style><p>Hello</p>" % (
         "body { background-image: url(%s?format=); }" % (
           img.absolute_url())),
