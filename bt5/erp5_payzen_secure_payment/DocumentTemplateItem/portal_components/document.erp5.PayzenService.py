@@ -141,7 +141,7 @@ class PayzenService(XMLObject, PayzenREST):
         v = str(v)
       signature += v + '+'
     signature += self.getServicePassword()
-    return hashlib.sha1(signature).hexdigest()
+    return hashlib.sha1(signature.encode('utf-8')).hexdigest()
 
   def _getFieldList(self, payzen_dict):
     payzen_dict.update(
