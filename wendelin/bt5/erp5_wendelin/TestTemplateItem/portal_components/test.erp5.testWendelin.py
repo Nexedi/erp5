@@ -590,7 +590,6 @@ class Test(ERP5TypeTestCase):
 
     self.assertNotEqual(ingestion_policy, None)
 
-    self.commit()
     self.tic()
 
     self.addCleanup(self._removeDocument, ingestion_policy)
@@ -750,7 +749,6 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
     for data_analysis_title in data_analysis_title_list:
       self.assertEqual(getDataAnalysisByTitle(data_analysis_title), None)
 
-    self.commit()
     self.tic()
 
     self.portal.portal_alarms.wendelin_handle_analysis.activeSense()
