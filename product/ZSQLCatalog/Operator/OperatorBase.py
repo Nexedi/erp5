@@ -33,6 +33,7 @@ from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from Products.ZSQLCatalog.Utils import sqlquote as escapeString
+from AccessControl.ZopeGuards import SafeIter
 from zope.interface.verify import verifyClass
 from zope.interface import implementer
 
@@ -51,6 +52,9 @@ def valueDefaultRenderer(value):
 def valueNoneRenderer(value):
   return 'NULL'
 
+def valueUnsupportedRenderer(value):
+  raise TypeError("ZSQCatalog does not support %s (%s)" % (type(value), value))
+
 value_renderer = {
   int: str,
   float: valueFloatRenderer,
@@ -58,6 +62,10 @@ value_renderer = {
   None.__class__: valueNoneRenderer,
   bool: int,
   str: escapeString,
+  SafeIter: valueUnsupportedRenderer,
+  type(six.iterkeys({})): valueUnsupportedRenderer,
+  type(six.iteritems({})): valueUnsupportedRenderer,
+  type(six.itervalues({})): valueUnsupportedRenderer,
 }
 if six.PY2:
   value_renderer[long] = str
