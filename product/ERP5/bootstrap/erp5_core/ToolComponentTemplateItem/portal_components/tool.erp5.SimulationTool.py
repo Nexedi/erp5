@@ -1613,7 +1613,7 @@ class SimulationTool(BaseTool):
         line_key = getInventoryListKey(line)
         line_a = inventory_list_dict.get(line_key)
         inventory_list_dict[line_key] = addLineValues(line_a, line)
-    sorted_inventory_list = inventory_list_dict.values()
+    sorted_inventory_list = list(inventory_list_dict.values())
     # Sort results manually when required
     sort_on = new_kw.get('sort_on')
     if sort_on:

@@ -464,12 +464,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       return row.title
     modified_title = getTitleFromCatalog() + '_not_reindexed'
     catalog_connection = self.getSQLConnection()()
-    catalog_connection.query(bytes(
-      'UPDATE catalog SET title=%s WHERE uid=%i' % (
+    catalog_connection.query(
+      b'UPDATE catalog SET title=%s WHERE uid=%i' % (
         catalog_connection.string_literal(modified_title),
         person_object.getUid(),
-      ),
-    ))
+      ))
     self.commit()
     # sanity check
     self.assertEqual(getTitleFromCatalog(), modified_title)
@@ -2381,7 +2380,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                       foo.getRegionList())
     # using relations to non existant objects will issue a warning in
     # event.log
-    self._catch_log_errors(ignored_level=sys.maxint)
+    self._catch_log_errors(ignored_level=2**32)
     self.assertEqual([beta],
                       foo.getRegionValueList())
     self.assertEqual([beta_title],

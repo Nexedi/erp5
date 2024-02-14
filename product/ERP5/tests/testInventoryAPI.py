@@ -31,7 +31,7 @@
 TODO: test variation
       test selection_report
 """
-
+from __future__ import division
 import os
 import random
 import unittest
@@ -2974,7 +2974,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
   def afterSetUp(self):
     InventoryAPITestCase.afterSetUp(self)
     self.CACHE_LAG = cache_lag = self.getSimulationTool().getInventoryCacheLag()
-    min_lag = cache_lag / 2
+    min_lag = cache_lag // 2
     self.NOW = now = DateTime(DateTime().strftime("%Y-%m-%d %H:%M:%S UTC"))
     self.CACHE_DATE = cache_date = now - min_lag
     from erp5.component.tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
