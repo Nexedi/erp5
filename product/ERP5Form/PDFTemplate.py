@@ -46,7 +46,7 @@ from Products.ERP5Type.Utils import UpperCase
 from zLOG import LOG
 
 try:
-    from webdav.Lockable import ResourceLockedError
+    from zExceptions import ResourceLockedError
     from webdav.WriteLockInterface import WriteLockInterface
     SUPPORTS_WEBDAV_LOCKS = 1
 except ImportError:

@@ -478,7 +478,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       # one. Including setting up ZTK style utilities and adapters. We
       # can even call setSite(self), as long as we roll back that later,
       # since we are actually in the middle of a setSite() call.
-      from zope.site.hooks import getSite, setSite
+      from zope.component.hooks import getSite, setSite
       old_site = getSite()
       try:
         setSite(self)

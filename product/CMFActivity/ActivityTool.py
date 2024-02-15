@@ -58,7 +58,7 @@ from BTrees.OIBTree import OIBTree
 from BTrees.OOBTree import OOBTree
 from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
-from zope.site.hooks import setSite
+from zope.component.hooks import setSite
 import transaction
 from App.config import getConfiguration
 from Shared.DC.ZRDB.Results import Results
