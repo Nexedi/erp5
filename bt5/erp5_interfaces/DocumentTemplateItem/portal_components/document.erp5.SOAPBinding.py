@@ -103,7 +103,7 @@ class SOAPBinding(Base):
     server.get_in_object(ctx)
     server.get_out_object(ctx)
     server.get_out_string(ctx)
-    return ''.join(ctx.out_string)
+    return b''.join(ctx.out_string)
 
 try:
   from spyne.service import ServiceBase
