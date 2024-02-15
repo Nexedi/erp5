@@ -19,7 +19,7 @@ from Products.ERP5Type.Utils import ensure_list
 
 from App.special_dtml import DTMLFile
 from App.Dialogs import MessageDialog
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from OFS.Folder import Folder
 from DateTime import DateTime

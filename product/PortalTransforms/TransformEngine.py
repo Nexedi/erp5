@@ -6,7 +6,7 @@ from zope.interface import implementer
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 from Persistence import PersistentMapping
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
