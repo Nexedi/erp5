@@ -117,11 +117,47 @@ from zLOG import LOG, BLATHER, PROBLEM, WARNING, INFO, TRACE
 from Products.ERP5Type.Globals import get_request
 
 #####################################################
-# Compatibility - XXX - BAD
+# ROUND_HALF_UP round()
 #####################################################
+
+from ctypes import cdll, c_float
+from decimal import localcontext, Decimal, ROUND_HALF_UP
+
+round_orig = __builtins__['round']
+libm = cdll.LoadLibrary('libm.so.6')
+libm.roundf.restype = c_float
+
+def round(number, ndigits=None):
+  if ndigits is not None and not isinstance(ndigits, int):
+    raise TypeError('optional arg must be an integer')
+  if ndigits:
+    if isinstance(number, Decimal):
+      scale = Decimal(10) ** ndigits
+    else:
+      scale = 10 ** ndigits
+  else:
+    scale = 1
+  number *= scale
+  if isinstance(number, (int, Decimal)):
+    with localcontext() as round_context:
+      round_context.rounding = ROUND_HALF_UP
+      if isinstance(number, int):
+        result = int(round_orig(Decimal(number), 0))
+      else:
+        result = round_orig(number, 0)
+  else:
+    result = libm.roundf(c_float(number))
+  result /= scale
+  return result
+
+__builtins__['round'] = round
 
 from .Accessor.TypeDefinition import type_definition
 from .Accessor.TypeDefinition import list_types
+
+#####################################################
+# Compatibility - XXX - BAD
+#####################################################
 
 #####################################################
 # Generic sort method
