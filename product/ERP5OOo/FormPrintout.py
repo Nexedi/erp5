@@ -53,7 +53,7 @@ import re
 import six
 
 try:
-  from webdav.Lockable import ResourceLockedError
+  from zExceptions import ResourceLockedError
   SUPPORTS_WEBDAV_LOCKS = 1
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0

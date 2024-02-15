@@ -17,7 +17,6 @@ import six
 from six import string_types as basestring
 
 from OFS.PropertyManager import PropertyManager, type_converters
-from OFS.PropertyManager import escape
 from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type.Utils import createExpressionContext
 from Products.CMFCore.Expression import Expression
@@ -27,6 +26,12 @@ from zExceptions import BadRequest
 from DateTime import DateTime
 
 ERP5PropertyManager = PropertyManager # BBB
+
+
+if six.PY3:
+  from html import escape
+else:
+  from cgi import escape
 
 PropertyManager_manage_propertiesForm=DTMLFile('properties',
                                                _dtmldir,
