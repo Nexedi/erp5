@@ -31,6 +31,7 @@ import tempfile
 import textwrap
 import unittest
 import uuid
+import six
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -967,8 +968,12 @@ def test_suite():
     self.assertUnauth('subprocess', ())
   AccessControl.tests.testModuleSecurity.ModuleSecurityTests.test_unprotected_module = test_unprotected_module
   add_tests(suite, AccessControl.tests.testModuleSecurity)
-  import AccessControl.tests.testOwned
-  add_tests(suite, AccessControl.tests.testOwned)
+  if six.PY2:
+    import AccessControl.tests.testOwned  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.testOwned)
+  else:
+    import AccessControl.tests.test_owner  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.test_owner)
   import AccessControl.tests.testPermissionMapping
   add_tests(suite, AccessControl.tests.testPermissionMapping)
   import AccessControl.tests.testPermissionRole
