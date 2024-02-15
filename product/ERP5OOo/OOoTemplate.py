@@ -50,7 +50,7 @@ import itertools
 import six
 
 try:
-  from webdav.Lockable import ResourceLockedError
+  from zExceptions import ResourceLockedError
   from webdav.WriteLockInterface import WriteLockInterface
   SUPPORTS_WEBDAV_LOCKS = 1
 except ImportError:
