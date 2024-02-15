@@ -10,7 +10,7 @@ from __future__ import absolute_import
 import string
 
 from AccessControl import ClassSecurityInfo
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 import FormValidationError, BasicForm
 from . import StandardFields
 
