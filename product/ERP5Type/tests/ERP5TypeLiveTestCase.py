@@ -33,7 +33,7 @@ import imp
 import re
 import warnings
 
-from zope.site.hooks import setSite
+from zope.component.hooks import setSite
 from zope.globalrequest import getRequest
 from Acquisition import aq_base
 from Testing import ZopeTestCase
