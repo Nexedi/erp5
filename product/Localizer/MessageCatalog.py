@@ -42,7 +42,7 @@ import polib
 # Import from Zope
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.Dialogs import MessageDialog
 from OFS.ObjectManager import ObjectManager
 from OFS.SimpleItem import SimpleItem

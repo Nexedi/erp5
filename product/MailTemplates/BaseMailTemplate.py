@@ -16,7 +16,7 @@ from six.moves.email_mime_multipart import MIMEMultipart
 from six.moves.email_mime_text import MIMEText
 from email.utils import make_msgid, formataddr, getaddresses
 
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.Common import package_home
 from .MTMultipart import MTMultipart
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate

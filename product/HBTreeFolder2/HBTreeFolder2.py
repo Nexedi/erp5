@@ -24,7 +24,7 @@ from six.moves.urllib.parse import quote
 from random import randint
 from six.moves import xrange
 
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.special_dtml import DTMLFile
 from Persistence import Persistent, PersistentMapping
 from Acquisition import aq_base
