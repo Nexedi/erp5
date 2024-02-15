@@ -29,7 +29,7 @@ from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
-from Products.DCWorkflow.permissions import ManagePortal
+from Products.CMFCore.permissions import ManagePortal
 from AccessControl import getSecurityManager, ModuleSecurityInfo
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass

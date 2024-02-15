@@ -13,7 +13,7 @@ from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal, View
 from Products.CMFCore.utils import registerToolInterface, UniqueObject
 from Products.CMFCore.utils import getToolByName
-from Products.MimetypesRegistry.common import MimeTypeException
+from Products.MimetypesRegistry.interfaces import MimeTypeException
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.PortalTransforms.data import datastream

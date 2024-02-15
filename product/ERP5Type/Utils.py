@@ -62,7 +62,7 @@ from Products.CMFCore.DirectoryView import registerDirectory
 from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
-from Products.ZCatalog.Lazy import LazyMap
+from ZTUtils.Lazy import LazyMap
 
 try:
   import chardet

@@ -37,7 +37,7 @@ from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
 
-from zope.site.hooks import setSite
+from zope.component.hooks import setSite
 
 from Testing import ZopeTestCase
 from Testing.makerequest import makerequest

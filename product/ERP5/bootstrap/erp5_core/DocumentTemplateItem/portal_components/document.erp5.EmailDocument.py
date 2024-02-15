@@ -39,7 +39,7 @@ from erp5.component.mixin.DocumentProxyMixin import DocumentProxyMixin, Document
 from MethodObject import Method
 
 try:
-  from Products.MimetypesRegistry.common import MimeTypeException # pylint: disable=unused-import
+  from Products.MimetypesRegistry.interfaces import MimeTypeException # pylint: disable=unused-import
 except ImportError:
   class MimeTypeException(Exception):
     """

@@ -576,7 +576,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
          0 != i.getUid() != i.getProperty('uid')])
 
   def test_04_site_manager_and_translation_migration(self):
-    from zope.site.hooks import setSite
+    from zope.component.hooks import setSite
     from zope.component import queryUtility
     # check translation is working normaly
     erp5_ui_catalog = self.portal.Localizer.erp5_ui

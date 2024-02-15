@@ -111,7 +111,7 @@ try:
 except TypeError:
   pass
 cache_database = threading.local()
-from Products.MimetypesRegistry.common import MimeTypeException
+from Products.MimetypesRegistry.interfaces import MimeTypeException
 import imghdr
 
 # those attributes from CatalogMethodTemplateItem are kept for
