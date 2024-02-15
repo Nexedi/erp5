@@ -14,7 +14,6 @@
 #
 ##############################################################################
 
-from six.moves import cStringIO as StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import removeIContentishInterface
@@ -23,14 +22,17 @@ from erp5.component.module.BTreeData import BTreeData
 from ZPublisher.HTTPRequest import FileUpload
 from ZPublisher import HTTPRangeSupport
 from zope.datetime import rfc1123_date
-from mimetools import choose_boundary
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from DateTime import DateTime
 import re
+import io
 import six
 
 if six.PY3:
   long = int  # pylint:disable=redefined-builtin
+  from email.generator import _make_boundary as choose_boundary
+else:
+  from mimetools import choose_boundary  # pylint:disable=import-error
 
 class BigFile(File):
   """
@@ -43,10 +45,10 @@ class BigFile(File):
     data property is either
 
       - BTreeData instance,  or
-      - str(*),  or
+      - bytes(*),  or
       - None.
 
-    (*) str has to be supported because '' is a default value for `data` field
+    (*) bytes has to be supported because b'' is a default value for `data` field
         from Data property sheet.
 
         Even more - for
@@ -55,7 +57,7 @@ class BigFile(File):
             b) desire to support automatic migration of File-based documents
                from document_module to BigFiles
 
-        non-empty str for data also have to be supported.
+        non-empty bytes for data also have to be supported.
 
         XXX(kirr) I'm not sure supporting non-empty str is a good idea (it
             would be simpler if .data could be either BTreeData or "empty"),
@@ -64,6 +66,8 @@ class BigFile(File):
 
             We discussed with Romain and settled on "None or str or BTreeData"
             invariant for now.
+        notes: for python3 port "str" becomes "bytes", but kirr message was not modified.
+
   """
 
   meta_type = 'ERP5 Big File'
@@ -115,9 +119,9 @@ class BigFile(File):
     # of memory.
     n=1 << 16
 
-    if isinstance(file, str):
+    if isinstance(file, bytes):
       # Big string: cut it into smaller chunks
-      file = StringIO(file)
+      file = io.BytesIO(file)
 
     if isinstance(file, FileUpload) and not file:
       raise ValueError('File not specified')
@@ -130,9 +134,9 @@ class BigFile(File):
 
     if data is None:
       btree = BTreeData()
-    elif isinstance(data, str):
+    elif isinstance(data, bytes):
       # we'll want to append content to this file -
-      # - automatically convert str (empty or not) to BTreeData
+      # - automatically convert bytes (empty or not) to BTreeData
       btree = BTreeData()
       btree.write(data, 0)
     else:
@@ -236,7 +240,7 @@ class BigFile(File):
           RESPONSE.setStatus(206) # Partial content
 
           # NOTE data cannot be None here (if it is - ranges are not satisfiable)
-          if isinstance(data, str):
+          if isinstance(data, bytes):
             RESPONSE.write(data[start:end])
             return True
           for chunk in data.iterate(start, end-start):
@@ -271,22 +275,22 @@ class BigFile(File):
           RESPONSE.setStatus(206) # Partial content
 
           for start, end in ranges:
-            RESPONSE.write('\r\n--%s\r\n' % boundary)
-            RESPONSE.write('Content-Type: %s\r\n' %
-                self.content_type)
+            RESPONSE.write(('\r\n--%s\r\n' % boundary).encode())
+            RESPONSE.write(('Content-Type: %s\r\n' %
+                self.content_type).encode())
             RESPONSE.write(
-                'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
-                    start, end - 1, self.getSize()))
+                ('Content-Range: bytes %d-%d/%d\r\n\r\n' % (
+                    start, end - 1, self.getSize())).encode())
 
             # NOTE data cannot be None here (if it is - ranges are not satisfiable)
-            if isinstance(data, str):
+            if isinstance(data, bytes):
               RESPONSE.write(data[start:end])
 
             else:
               for chunk in data.iterate(start, end-start):
                 RESPONSE.write(chunk)
 
-          RESPONSE.write('\r\n--%s--\r\n' % boundary)
+          RESPONSE.write(('\r\n--%s--\r\n' % boundary).encode())
           return True
 
   security.declareProtected(Permissions.View, 'index_html')
@@ -296,7 +300,7 @@ class BigFile(File):
     """
     if self._range_request_handler(REQUEST, RESPONSE):
       # we served a chunk of content in response to a range request.
-      return ''
+      return b''
 
     web_cache_kw = kw.copy()
     if format is not _MARKER:
@@ -327,13 +331,13 @@ class BigFile(File):
 
 
     if data is None:
-      return ''
-    if isinstance(data, str):
+      return b''
+    if isinstance(data, bytes):
       RESPONSE.setBase(None)
       return data
     for chunk in data.iterate():
       RESPONSE.write(chunk)
-    return ''
+    return b''
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
   def PUT(self, REQUEST, RESPONSE):
