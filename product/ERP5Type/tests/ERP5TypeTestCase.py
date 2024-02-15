@@ -1028,6 +1028,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if os.environ.get('erp5_debug_mode'):
         try:
           self.portal.portal_activities.manage_enableActivityTracking()
+          self.commit()
         except AttributeError:
           pass
 
