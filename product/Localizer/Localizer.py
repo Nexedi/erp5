@@ -22,7 +22,7 @@ from contextlib import contextmanager
 # Import from Zope
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_parent
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 from zLOG import LOG, ERROR, INFO, PROBLEM
 from zope.interface import implementer

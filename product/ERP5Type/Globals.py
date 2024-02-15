@@ -31,12 +31,9 @@
     from ERP5Type.Globals instead of Globals
 """
 
-# Globals.InitializeClass a.k.a. default__class_init__. This import location
-# has not changed since 2.8 and still works on 2.12
-from App.class_init import default__class_init__, ApplicationDefaultPermissions
 
-# Nicer alias for class initializer.
-InitializeClass = default__class_init__
+# This is a re-export, some custom classes import from here
+from AccessControl.class_init import InitializeClass
 
 from zope.globalrequest import getRequest as get_request
 
