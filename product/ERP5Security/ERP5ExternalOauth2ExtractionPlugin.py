@@ -218,11 +218,14 @@ def getFacebookUserEntry(token):
   if facebook_entry is not None:
     # sanitise value
     for k in ('name', 'id'):
+      v = facebook_entry[k]
+      if six.PY2:
+        v = v.encode('utf-8')
       try:
         if k == 'id':
-          user_entry['reference'] = facebook_entry[k].encode('utf-8')
+          user_entry['reference'] = v
         else:
-          user_entry[k] = facebook_entry[k].encode('utf-8')
+          user_entry[k] = v
       except KeyError:
         raise ValueError(facebook_entry)
   return user_entry
