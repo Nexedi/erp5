@@ -497,6 +497,9 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       iframe = self.runner.test(debug=debug)
     except TimeoutError as e:
       error.append(repr(e))
+    except:
+      self._verboseErrorLog()
+      raise
     try:
       self.tic()
     except RuntimeError as e:
@@ -529,4 +532,5 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 def _unauthorized(self):
   raise RuntimeError('Unauthorized exception happens.')
 
+print("before patch", getattr(HTTPResponse, '_unauthorized', "no _unauthorized !!!"))
 HTTPResponse._unauthorized = _unauthorized
