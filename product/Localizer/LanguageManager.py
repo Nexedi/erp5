@@ -22,7 +22,7 @@ from six.moves.urllib.parse import urlparse
 from .itools.i18n import get_language_name, get_languages
 
 # Import from Zope
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.Management import Tabs
 from AccessControl import ClassSecurityInfo
 

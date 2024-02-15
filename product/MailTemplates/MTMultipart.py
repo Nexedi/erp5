@@ -11,7 +11,7 @@ except ImportError: # six.PY3
   from email.encoders import encode_base64
 from six.moves.email_mime_base import MIMEBase
 from six.moves.email_mime_multipart import MIMEMultipart
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 try:
     from OFS.content_types import guess_content_type
 except ImportError:

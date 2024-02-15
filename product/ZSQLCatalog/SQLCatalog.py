@@ -21,7 +21,7 @@ from Persistence import Persistent, PersistentMapping
 import Acquisition
 import ExtensionClass
 import OFS.History
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.special_dtml import DTMLFile
 from _thread import allocate_lock, get_ident
 from OFS.Folder import Folder

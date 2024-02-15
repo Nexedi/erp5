@@ -10,7 +10,7 @@ import six
 
 from AccessControl import ClassSecurityInfo
 from AccessControl import getSecurityManager
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.Common import package_home
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplate import PageTemplate

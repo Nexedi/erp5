@@ -26,7 +26,7 @@ when ERP5 runs in "require_referer" mode.
 """
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.CookieCrumbler import CookieCrumblerDisabled
 from six.moves.urllib.parse import quote, unquote

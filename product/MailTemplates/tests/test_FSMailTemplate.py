@@ -24,7 +24,7 @@ else:
     from Products.CMFCore.DirectoryView import addDirectoryViews
     from Products.CMFCore.tests.base.testcase import FSDVTest
     from AccessControl import ClassSecurityInfo
-    from App.class_init import default__class_init__ as InitializeClass
+    from AccessControl.class_init import InitializeClass
 
     class DummyMember:
 

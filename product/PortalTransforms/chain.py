@@ -2,7 +2,7 @@ from zope.interface import implementer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Persistence import Persistent
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from OFS.role import RoleManager

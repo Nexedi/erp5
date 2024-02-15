@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import six
 import AccessControl
 import OFS
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
 from App.special_dtml import DTMLFile
 from Persistence import Persistent

@@ -5,7 +5,7 @@ from six.moves import UserDict
 from zope.interface import implementer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 from Persistence import PersistentMapping
 from persistent.list import PersistentList
 from OFS.SimpleItem import SimpleItem
