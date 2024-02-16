@@ -10,6 +10,7 @@ from zope.globalrequest import setRequest
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+import App.config
 from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
   addUserToDeveloperRole, createZServer, DummyMailHostMixin, parseListeningAddress
@@ -214,6 +215,10 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         if ActivityTool.currentNode == ActivityTool._server_address:
           ActivityTool.currentNode = None
         ActivityTool._server_address = None
+      cfg = App.config.getConfiguration()
+      cfg.product_config['cmfactivity'] = {
+        'node-id': '%s:%s' % ProcessingNodeTestCase._server_address
+      }
     return ProcessingNodeTestCase._server_address
   startZServer = startHTTPServer # BBB
 

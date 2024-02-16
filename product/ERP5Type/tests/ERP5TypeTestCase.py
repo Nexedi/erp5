@@ -64,6 +64,9 @@ instancehome = config.instancehome
 if getattr(config, 'product_config', None) is None:
   config.product_config = {}
 config.product_config['deadlockdebugger'] = {'dump_url':'/manage_debug_threads'}
+# initialize a placeholder node identifier for CMFActivity, this will be replaced
+# once the HTTP server has started.
+config.product_config['cmfactivity'] = { 'node-id': ':' }
 
 from Testing.ZopeTestCase.layer import onsetup
 
