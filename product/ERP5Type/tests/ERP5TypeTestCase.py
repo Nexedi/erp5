@@ -52,6 +52,7 @@ from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
 from Products.ERP5Type.tests.utils import timeZoneContext
+from Products.CMFActivity.ActivityTool import getServerAddress
 
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
@@ -64,6 +65,7 @@ instancehome = config.instancehome
 if getattr(config, 'product_config', None) is None:
   config.product_config = {}
 config.product_config['deadlockdebugger'] = {'dump_url':'/manage_debug_threads'}
+config.product_config['cmfactivity'] = {'node-id': getServerAddress()}
 
 from Testing.ZopeTestCase.layer import onsetup
 
