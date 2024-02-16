@@ -11,6 +11,7 @@ import socket
 import sys
 from tempfile import TemporaryFile
 import time
+import warnings
 from six.moves.urllib.parse import quote, urlsplit
 
 from waitress.server import create_server
@@ -186,6 +187,9 @@ def runwsgi():
       help='Set soft limit of file descriptors erp5 can open to hard limit',
       action="store_true")
     args = parser.parse_args()
+
+    if not sys.warnoptions:
+      warnings.simplefilter('default')
 
     # Configure logging previously handled by ZConfig/ZServer
     logging.captureWarnings(True)

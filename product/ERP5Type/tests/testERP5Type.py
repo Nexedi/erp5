@@ -273,16 +273,6 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       temp_object = Products.ERP5Type.Document.newTempBase(self.portal, 'id')
       self._test_temp_object_persistent(temp_object)
 
-    def test_warnings_redirected_to_event_log(self):
-      self._catch_log_errors()
-      self.addCleanup(self._ignore_log_errors)
-      warnings.warn('user warning')
-      self.assertEqual(self.logged[-1].name, 'UserWarning')
-      self.assertIn('Products/ERP5Type/tests/testERP5Type.py', self.logged[-1].message)
-      self.assertIn('user warning', self.logged[-1].message)
-      warnings.warn('user warning', DeprecationWarning)
-      self.assertEqual(self.logged[-1].name, 'DeprecationWarning')
-
     def test_objectValues(self):
       person = self.portal.person_module.newContent(portal_type='Person')
       createZODBPythonScript(person, 'test_script', '', '')
