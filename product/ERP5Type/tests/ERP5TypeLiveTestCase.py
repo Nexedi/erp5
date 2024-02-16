@@ -31,6 +31,7 @@ import os
 import sys
 import imp
 import re
+import warnings
 
 from zope.site.hooks import setSite
 from zope.globalrequest import getRequest
@@ -297,11 +298,14 @@ def runLiveTest(test_list, verbosity=1, stream=None, request_server_url=None, **
   output.write("**Running Live Test:\n")
   ZopeTestCase._print = output.write
 
-  # Test may login/logout with different users, so ensure that at the end the
-  # original SecurityManager is restored
-  from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
-  sm = getSecurityManager()
-  try:
-    result = TestRunner(stream=output, verbosity=verbosity).run(suite)
-  finally:
-    setSecurityManager(sm)
+  with warnings.catch_warnings():
+    warnings.simplefilter(kw['warnings'])
+
+    # Test may login/logout with different users, so ensure that at the end the
+    # original SecurityManager is restored
+    from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
+    sm = getSecurityManager()
+    try:
+      result = TestRunner(stream=output, verbosity=verbosity).run(suite)
+    finally:
+      setSecurityManager(sm)
