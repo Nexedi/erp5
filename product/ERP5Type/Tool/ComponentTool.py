@@ -275,7 +275,7 @@ class Test(ERP5TypeTestCase):
 
   security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
   def runLiveTest(self, test_list=None, run_only=None, debug=False,
-                  verbose=False):
+                  verbose=False, warnings=None):
     """
     Launch live tests
 
@@ -315,7 +315,8 @@ class Test(ERP5TypeTestCase):
                              debug=debug,
                              stream=global_stream,
                              request_server_url=request_server_url,
-                             verbosity=verbosity)
+                             verbosity=verbosity,
+                             warnings=warnings)
       except ImportError:
         import traceback
         traceback.print_exc(file=global_stream)

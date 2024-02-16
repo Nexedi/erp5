@@ -11,6 +11,7 @@ import shutil
 import errno
 import random
 import transaction
+import warnings
 from glob import glob
 
 
@@ -897,6 +898,10 @@ def main(argument_list=None):
       _log_directory = os.path.abspath(arg)
     elif opt == "--with_wendelin_core":
       os.environ["with_wendelin_core"] = "1"
+
+  if not sys.warnoptions:
+    warnings.simplefilter("default")
+    os.environ["PYTHONWARNINGS"] = "default"
 
   bt5_path_list += filter(None,
     os.environ.get("erp5_tests_bt5_path", "").split(','))
