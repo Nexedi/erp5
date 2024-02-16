@@ -110,6 +110,7 @@
                       <list>
                         <string>your_debug</string>
                         <string>your_verbose</string>
+                        <string>your_warnings</string>
                       </list>
                     </value>
                 </item>
