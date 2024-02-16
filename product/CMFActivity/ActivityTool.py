@@ -327,7 +327,9 @@ class Message(BaseMessage):
       user = user.__of__(user_folder)
       newSecurityManager(None, user)
       if annotate_transaction:
-        transaction.get().setUser(user_name, '/'.join(user_folder.getPhysicalPath()))
+        if six.PY2:
+          user_name = user_name.decode('utf-8')
+        transaction.get().setUser(user_name, u'/'.join(user_folder.getPhysicalPath()))
     else :
       LOG("CMFActivity", WARNING,
           "Unable to find user %r in the portal" % user_name)

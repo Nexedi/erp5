@@ -2634,7 +2634,7 @@ def initialize(self):
           manage_addERP5Site(app.__of__(RequestContainer(REQUEST=REQUEST)),
             **{k: kw.get(k, v) for k, v in six.iteritems(default_kw)
                                if isinstance(v, str)})
-          transaction.get().note('Created ' + meta_type)
+          transaction.get().note(u'Created ' + meta_type)
           transaction.commit()
           break
       except OperationalError as e:
