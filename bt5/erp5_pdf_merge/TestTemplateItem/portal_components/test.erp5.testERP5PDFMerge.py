@@ -28,7 +28,10 @@
 import warnings
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.testDms import makeFileUpload
-from Products.ERP5Type import Utils
+
+
+original_warnings_showwarnings = warnings.showwarning
+
 
 class TestERP5PDFMerge(ERP5TypeTestCase):
 
@@ -37,7 +40,7 @@ class TestERP5PDFMerge(ERP5TypeTestCase):
     We should not let PdfFileReader overwrite warnings.showwarning method because we already do it in ERP5
     https://github.com/mstamy2/PyPDF2/blob/18a2627adac13124d4122c8b92aaa863ccfb8c29/PyPDF2/pdf.py#L1129
     """
-    self.assertEqual(Utils._showwarning, warnings.showwarning)
+    self.assertEqual(warnings.showwarning, original_warnings_showwarnings)
     document = self.portal.portal_contributions.newContent(
       file=makeFileUpload('REF-en-001.pdf'))
     merged_pdf_data = self.portal.ERP5Site_mergePDFList(
@@ -46,7 +49,7 @@ class TestERP5PDFMerge(ERP5TypeTestCase):
       portal_type='PDF',
       data=merged_pdf_data)
     self.tic()
-    self.assertEqual(Utils._showwarning, warnings.showwarning)
+    self.assertEqual(warnings.showwarning, original_warnings_showwarnings)
 
   def test_erp5_merge_pdf(self):
     document = self.portal.portal_contributions.newContent(
