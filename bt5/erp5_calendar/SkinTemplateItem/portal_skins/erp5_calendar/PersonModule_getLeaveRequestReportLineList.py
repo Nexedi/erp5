@@ -39,7 +39,7 @@ for person in person_value_list:
                           portal_type='Leave Request Period',
                           group_by_resource=1):
 
-    resource = inventory.resource_relative_url
+    resource = inventory.resource_relative_url or ''
 
     if inventory.resource_uid in presence_resource_uid_list:
       raise ValueError("This report does not work when same resource are"
