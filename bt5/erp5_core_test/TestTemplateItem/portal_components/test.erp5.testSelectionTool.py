@@ -248,7 +248,7 @@ class TestSelectionPersistence(unittest.TestCase):
     t = Thread(target=thread_func, args=(self.db.open,))
     t.start()
     t.join(60)
-    self.assertFalse(t.isAlive())
+    self.assertFalse(t.is_alive())
 
   def testSelectionParamConflictResolution(self):
     # same user edits the same selection with two different parameters
