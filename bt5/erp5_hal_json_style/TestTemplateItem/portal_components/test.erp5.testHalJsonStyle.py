@@ -16,6 +16,7 @@ from six.moves import cStringIO as StringIO
 import json
 import re
 from six.moves.urllib.parse import quote, quote_plus
+import six
 
 import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
@@ -677,7 +678,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['list_method_template'],
-                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJwb3J0YWxfdHlwZSI6IFsiRm9vIExpbmUiXSwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZSwgInBvcnRhbF90eXBlIjogWyJGb28gTGluZSJdfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_root_list'], [['foo_category', 'FooCat'], ['foo_domain', 'FooDomain'], ['not_existing_domain', 'NotExisting']])
     NBSP_prefix = u'\xA0' * 4
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_dict'], {'foo_domain': [['a', 'a'], ['%sa1' % NBSP_prefix, 'a/a1'], ['%sa2' % NBSP_prefix, 'a/a2'], ['b', 'b']], 'foo_category': [['a', 'a'], ['a/a1', 'a/a1'], ['a/a2', 'a/a2'], ['b', 'b']]})
@@ -1327,7 +1328,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasDocument_property_corrupted_encoding(self):
     document = self._makeDocument()
     # this sequence of bytes does not encode to UTF-8
-    document.setTitle('\xe9\xcf\xf3\xaf')
+    document.setTitle(b'\xe9\xcf\xf3\xaf')
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
     self.assertEqual(fake_request.RESPONSE.status, 200)
@@ -1685,10 +1686,12 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_default_param_json_param(self):
     fake_request = do_fake_request("GET")
 
+    unknown_columns_re = re.escape("Unknown columns ['ê']")
+    if six.PY2:
+      unknown_columns_re = "Unknown columns.*\\\\xc3\\\\xaa.*"
     self.assertRaisesRegex(
       TypeError,
-      # "Unknown columns.*'\\xc3\\xaa'.",
-      "Unknown columns.*\\\\xc3\\\\xaa.*",
+      unknown_columns_re,
       self.portal.web_site_module.hateoas.ERP5Document_getHateoas,
       REQUEST=fake_request,
       mode="search",
@@ -1728,7 +1731,7 @@ return context.getPortalObject().foo_module.contentValues()
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
     )
     result_dict = json.loads(result)
-    #editalble creation date is defined at proxy form
+    # editable creation date is defined at proxy form
     # Test the listbox_uid parameter
     self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
     self.assertEqual(result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'], 'StringField')
@@ -2425,7 +2428,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
   @changeSkin('Hal')
   def test_getHateoas_property_corrupted_encoding(self, document):
     # this sequence of bytes does not encode to UTF-8
-    document.setTitle('\xe9\xcf\xf3\xaf')
+    document.setTitle(b'\xe9\xcf\xf3\xaf')
     # self.tic()
 
     fake_request = do_fake_request("GET")
