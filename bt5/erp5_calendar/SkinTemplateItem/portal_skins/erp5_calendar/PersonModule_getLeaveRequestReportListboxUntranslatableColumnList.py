@@ -15,6 +15,6 @@ for inventory in stool.getInventoryList(
   resource_list.append(
           (inventory.resource_relative_url,
            portal.portal_categories.restrictedTraverse(
-                inventory.resource_relative_url).getTitle()))
+                inventory.resource_relative_url).getTranslatedTitle()))
 
 return resource_list
