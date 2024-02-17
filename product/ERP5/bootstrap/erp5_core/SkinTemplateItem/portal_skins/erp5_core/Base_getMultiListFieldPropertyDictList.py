@@ -1,8 +1,9 @@
+from collections import OrderedDict
 if default_sub_field_property_dict is None:
   default_sub_field_property_dict = {}
 
 # Define a dictionary where we store the subfields to display.
-sub_field_dict = {}
+sub_field_dict = OrderedDict()
 split_depth = 1
 # Maximum size of the MultiListField
 maximum_list_size = 5
