@@ -174,3 +174,41 @@ def patch_linecache():
   linecache.getlines = getlines
 
 patch_linecache()
+
+import decimal as _decimal
+
+
+def round2(number, ndigits=None):
+	"""
+	See Python 2 documentation.
+	Rounds a number to a given precision in decimal digits (default
+	0 digits). The result is a floating point number. Values are rounded
+	to the closest multiple of 10 to the power minus ndigits; if two
+	multiples are equally close, rounding is done away from 0.
+	ndigits may be negative.
+	"""
+	if ndigits is None:
+		ndigits = 0
+	elif hasattr(ndigits, '__index__'):
+		# any type with an __index__ method should be permitted as
+		# a second argument
+		ndigits = ndigits.__index__()
+
+	if ndigits < 0:
+		exponent = 10 ** (-ndigits)
+		quotient, remainder = divmod(number, exponent)
+		if remainder >= exponent//2 and number >= 0:
+			quotient += 1
+		return float(quotient * exponent)
+	else:
+		exponent = _decimal.Decimal('10') ** (-ndigits)
+
+		d = _decimal.Decimal.from_float(number).quantize(
+			exponent, rounding=_decimal.ROUND_HALF_UP)
+
+		return float(d)
+
+if sys.version_info > (2, ):
+  __builtins__['round'] = round2
+  from AccessControl.ZopeGuards import safe_builtins
+  safe_builtins['round'] = round2
