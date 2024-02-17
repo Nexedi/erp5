@@ -69,7 +69,7 @@ for inventory in node_inventory_list:
     inv_line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
     # create cell
     cell_range_key_list = inv_line.getCellRangeKeyList(base_id=base_id)
-    if cell_range_key_list <> [[None, None]] :
+    if cell_range_key_list != [[None, None]] :
       for k in cell_range_key_list:
         category_list = filter(lambda k_item: k_item is not None, k)
         cell = inv_line.newCell(*k, **line_kwd)
