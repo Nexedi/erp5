@@ -461,8 +461,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=BytesIO(urllib.parse.urlencode({
-          "BODY": json.dumps({
+        stdin=BytesIO(
+          json.dumps({
             "url": "https://stripe.url",
             "id": "evt_%s" % "abc321_expired",
             "object": "event",
@@ -474,8 +474,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
                 "object": "checkout.session"
               }
             }
-          })
-        }).encode()),
+          }).encode()
+        ),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
@@ -658,8 +658,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=BytesIO(urllib.parse.urlencode({
-          "BODY": json.dumps({
+        stdin=BytesIO(
+          json.dumps({
             "id": "evt_%s" % session_id,
             "object": "event",
             "data": {
@@ -670,8 +670,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
                 "object": "checkout.session"
               }
             }
-          })
-        }).encode()),
+          }).encode(),
+        ),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
