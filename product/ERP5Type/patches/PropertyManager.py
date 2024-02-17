@@ -46,7 +46,7 @@ def PropertyManager_updateProperty(self, id, value, local_properties=False):
     if not hasattr(self, 'isRADContent'):
       if not self.hasProperty(id):
           raise BadRequest('The property %s does not exist' % escape(id))
-    if isinstance(value, str):
+    if isinstance(value, (str, bytes)):
         proptype=self.getPropertyType(id, local_properties=local_properties) \
            or 'string'
         if proptype in type_converters:
