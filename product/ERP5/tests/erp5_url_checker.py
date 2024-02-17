@@ -55,7 +55,7 @@ def main():
       print("thread: %i request: %i url: %s" % (i,request_number,url))
     else:
       for t in range(0,max_thread):
-        if threads[t].isAlive() == 0:
+        if threads[t].is_alive() == 0:
           url = '//user%i:user%i@localhost:9673%s?__ac_name=user%s&__ac_password=user%s' % \
                (t,t,list_url[i][:-1],t,t)
           threads[t] = Thread(target=checker[t].CheckUrl,kwargs={'url':url})
@@ -142,7 +142,7 @@ class Checker(URLOpener):
     try:
       thread = Thread(target=self.SearchUrl,args=(url,))
       thread.start()
-      while thread.isAlive():
+      while thread.is_alive():
         sleep(0.5)
       print("Connection to %s went fine" % url)
     except IOError as err:
