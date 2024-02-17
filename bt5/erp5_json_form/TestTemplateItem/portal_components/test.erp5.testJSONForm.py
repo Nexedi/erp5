@@ -27,6 +27,7 @@
 
 import json
 from DateTime import DateTime
+import six
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -149,7 +150,9 @@ return json.dumps({
     self.fixJSONForm(method, schema, after_method)
     self.tic()
     self.assertRaises(ValueError, getattr(self.portal, method), json_data, list_error=True)
-    error = {"my-schema.json": [[u"Validation Error", u"'2' is not of type u'integer'"], [u"Validation Error", u"2 is not of type u'string'"]]}
+    error = {"my-schema.json": [["Validation Error", "'2' is not of type 'integer'"], ["Validation Error", "2 is not of type 'string'"]]}
+    if six.PY2:
+      error = {"my-schema.json": [[u"Validation Error", u"'2' is not of type u'integer'"], [u"Validation Error", u"2 is not of type u'string'"]]}
     try:
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
@@ -205,9 +208,15 @@ return json.dumps({
     self.assertRaises(ValueError, getattr(self.portal, method), json_data, list_error=True)
     error = {
       "my-schema.json": [[
-        "Validation Error",  u"'2018-11-13T20:20:67' is not a u'date-time'"
+        "Validation Error",  u"'2018-11-13T20:20:67' is not a 'date-time'"
       ]]
     }
+    if six.PY2:
+      error = {
+        "my-schema.json": [[
+          "Validation Error",  u"'2018-11-13T20:20:67' is not a u'date-time'"
+        ]]
+      }
     try:
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
