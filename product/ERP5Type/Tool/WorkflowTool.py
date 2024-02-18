@@ -28,6 +28,8 @@
 """
 Most of the code in this file has been taken from patches/WorkflowTool.py
 """
+import re
+import warnings
 from six import string_types as basestring
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import aq_base
@@ -257,9 +259,17 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return workflow_list
 
   # WITH_LEGACY_WORKFLOW
-  getWorkflowsFor = deprecated(
-    "getWorkflowsFor() is deprecated; use getWorkflowValueListFor() instead")(
-      getWorkflowValueListFor)
+  __getWorkflowsFor_warning = \
+    "getWorkflowsFor() is deprecated; use getWorkflowValueListFor() instead"
+  getWorkflowsFor = deprecated(__getWorkflowsFor_warning)(getWorkflowValueListFor)
+  # ignore the warning when called from Products.CMFCore, getWorkflowsFor is a
+  # CMFCore API that is used internally in CMFCore, we only want to warn when
+  # using it from ERP5.
+  warnings.filterwarnings(
+    'ignore',
+    message=re.escape(__getWorkflowsFor_warning),
+    module='Products.CMFCore.WorkflowTool')
+
   @deprecated("getChainFor() is deprecated; use getWorkflowValueListFor() instead")
   def getChainFor(self, ob):
     return [wf.getId() for wf in self.getWorkflowValueListFor(ob)]
