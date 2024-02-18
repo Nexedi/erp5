@@ -36,6 +36,7 @@ import os
 import random
 import unittest
 from unittest import expectedFailure
+import warnings
 
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
@@ -4189,7 +4190,14 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
     delivery.confirm()
     delivery.start()
     delivery.stop()
-    self.tic()
+    with warnings.catch_warnings(record=True) as catched_warnings:
+      self.tic()
+    self.assertIn(
+      'quantity field of quantity_unit categories is deprecated. '
+      'Please use Quantity Unit Conversion Definitions instead and'
+      ' reset the value of this field.',
+      [str(w.message) for w in catched_warnings],
+    )
 
     # inventories of that resource are indexed in grams
     self.assertEqual(3010,
