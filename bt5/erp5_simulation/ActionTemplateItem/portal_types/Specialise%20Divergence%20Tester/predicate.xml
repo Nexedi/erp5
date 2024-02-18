@@ -17,8 +17,6 @@
             <value>
               <tuple>
                 <string>action_type/object_view</string>
-                <string>portal_types/Trade Quantity Divergence Tester/1</string>
-                <string>portal_types/Float Divergence Tester/3</string>
               </tuple>
             </value>
         </item>
