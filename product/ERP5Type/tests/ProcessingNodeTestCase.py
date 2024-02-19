@@ -14,6 +14,7 @@ from zope.globalrequest import setRequest
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+import App.config
 from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
   addUserToDeveloperRole, DummyMailHostMixin, parseListeningAddress
