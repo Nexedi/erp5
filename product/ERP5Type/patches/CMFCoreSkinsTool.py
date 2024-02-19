@@ -57,7 +57,7 @@ def CMFCoreSkinsTool__updateCacheEntry(self, container_id, object_id):
   skin_location_list = getattr(self, '_v_skin_location_list', None)
   if skin_location_list is not None:
     self._p_changed = 1
-    for selection_name in skin_location_list.keys():
+    for selection_name in list(skin_location_list.keys()):
       if not isinstance(selection_name, basestring):
         del skin_location_list[selection_name]
     for selection_name, skin_folder_id_string in six.iteritems(self._getSelections()):
