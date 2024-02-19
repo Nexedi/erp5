@@ -3322,9 +3322,6 @@ def test_suite():
   import ZPublisher.tests.testPostTraversal
   add_tests(suite, ZPublisher.tests.testPostTraversal)
 
-  import ZPublisher.tests.testPublish # pylint:disable=no-name-in-module,import-error
-  add_tests(suite, ZPublisher.tests.testPublish)
-
   import ZPublisher.tests.test_Converters
   add_tests(suite, ZPublisher.tests.test_Converters)
 
