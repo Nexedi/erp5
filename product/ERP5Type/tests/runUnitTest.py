@@ -496,6 +496,14 @@ class DebugTestResult:
 
 _print = sys.stderr.write
 
+
+def setupWarningsFilter():
+  warnings.filterwarnings(
+    'ignore',
+    message='(?s)Node name auto-generation is deprecated.*product-config CMFActivity.*'
+  )
+
+
 def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
     _print("conflicting options: --zeo_client and --zeo_server\n")
@@ -922,6 +930,8 @@ def main(argument_list=None):
                          instance_home)
   global log_directory
   log_directory = _log_directory or tests_home
+
+  setupWarningsFilter()
 
   result = runUnitTestList(test_list=args,
                            verbosity=verbosity,
