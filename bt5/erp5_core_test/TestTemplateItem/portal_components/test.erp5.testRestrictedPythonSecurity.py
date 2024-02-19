@@ -31,6 +31,7 @@ import tempfile
 import textwrap
 import unittest
 import uuid
+import six
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -121,41 +122,41 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         return decimal.Decimal.from_float(3.3)
         ''')
 
-  def test_urlparse(self):
+  def test_six_moves_urlparse(self):
     self.createAndRunScript('''
-        import urlparse
-        return urlparse.urlparse("http://example.com/pa/th/?q=s").path
+        import six.moves.urllib.parse
+        return six.moves.urllib.parse.urlparse("http://example.com/pa/th/?q=s").path
         ''',
         expected='/pa/th/'
     )
     # access computed attributes (property) is also OK
     self.createAndRunScript('''
-        import urlparse
-        return urlparse.urlparse("http://example.com/pa/th/?q=s").hostname
+        import six.moves.urllib.parse
+        return six.moves.urllib.parse.urlparse("http://example.com/pa/th/?q=s").hostname
         ''',
         expected='example.com'
     )
     self.createAndRunScript('''
-        import urlparse
-        return urlparse.urlsplit("http://example.com/pa/th/?q=s").path
+        import six.moves.urllib.parse
+        return six.moves.urllib.parse.urlsplit("http://example.com/pa/th/?q=s").path
         ''',
         expected='/pa/th/'
     )
     self.createAndRunScript('''
-        import urlparse
-        return urlparse.urldefrag("http://example.com/#frag")[1]
+        import six.moves.urllib.parse
+        return six.moves.urllib.parse.urldefrag("http://example.com/#frag")[1]
         ''',
         expected='frag'
     )
     self.createAndRunScript('''
-        import urlparse
-        return urlparse.parse_qs("q=s")
+        import six.moves.urllib.parse
+        return six.moves.urllib.parse.parse_qs("q=s")
         ''',
         expected={'q': ['s']}
     )
     self.createAndRunScript('''
-        import urlparse
-        return urlparse.parse_qsl("q=s")
+        import six.moves.urllib.parse
+        return six.moves.urllib.parse.parse_qsl("q=s")
         ''',
         expected=[('q', 's')]
     )
@@ -342,11 +343,11 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           except StopIteration:
             break
           except Exception as e:
-            result.append(repr(e))
+            result.append(str(type(e)))
         return result
         ''',
         kwargs={'generator': generator_with_not_allowed_objects()},
-        expected=["one", "Unauthorized()", 2],
+        expected=["one", str(Unauthorized), 2],
     )
 
   def test_json(self):
@@ -967,14 +968,22 @@ def test_suite():
     self.assertUnauth('subprocess', ())
   AccessControl.tests.testModuleSecurity.ModuleSecurityTests.test_unprotected_module = test_unprotected_module
   add_tests(suite, AccessControl.tests.testModuleSecurity)
-  import AccessControl.tests.testOwned
-  add_tests(suite, AccessControl.tests.testOwned)
+  if six.PY2:
+    import AccessControl.tests.testOwned  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.testOwned)
+  else:
+    import AccessControl.tests.test_owner  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.test_owner)
   import AccessControl.tests.testPermissionMapping
   add_tests(suite, AccessControl.tests.testPermissionMapping)
   import AccessControl.tests.testPermissionRole
   add_tests(suite, AccessControl.tests.testPermissionRole)
-  import AccessControl.tests.testRole
-  add_tests(suite, AccessControl.tests.testRole)
+  if six.PY2:
+    import AccessControl.tests.testRole  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.testRole)
+  else:
+    import AccessControl.tests.test_rolemanager  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.test_rolemanager)
   import AccessControl.tests.testSecurityManager
   add_tests(suite, AccessControl.tests.testSecurityManager)
   import AccessControl.tests.testZCML
