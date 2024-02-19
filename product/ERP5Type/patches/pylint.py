@@ -20,6 +20,8 @@
 
 from __future__ import absolute_import
 import sys
+import warnings
+import six
 from Products.ERP5Type import IS_ZOPE2
 
 # TODO: make sure that trying to use it does not import isort, because the
@@ -495,12 +497,23 @@ register_xpkg('xlte')
 #   File "develop-eggs/astroid-1.3.8+slapospatched001-py2.7.egg/astroid/raw_building.py", line 360, in _set_proxied
 #      return _CONST_PROXY[const.value.__class__]
 #  KeyError: <type 'CompiledFFI'>
+if six.PY2:
+  warnings.filterwarnings(
+    'ignore',
+    message='Python 2 is no longer supported by the Python core team. '
+    'Support for it is now deprecated in cryptography.*')
 import cryptography.hazmat.bindings._openssl
 _register_module_extender_from_live_module(
   'cryptography.hazmat.bindings._openssl',
   cryptography.hazmat.bindings._openssl)
 
 
+if six.PY2:
+  # xmlsec has a module with .pyi files which python2 does not understand
+  warnings.filterwarnings(
+    'ignore',
+    category=ImportWarning,
+    message='Not importing directory .*/xmlsec\': missing __init__.py')
 try:
   import xmlsec
 except ImportError:
