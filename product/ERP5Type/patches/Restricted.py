@@ -385,6 +385,8 @@ import six.moves.urllib.parse
 allow_module('six.moves.urllib.parse')
 allow_type(six.moves.urllib.parse.ParseResult)
 allow_type(six.moves.urllib.parse.SplitResult)
+# BBB this is different type on python3
+allow_type(type(six.moves.urllib.parse.urldefrag('')))
 ModuleSecurityInfo('six.moves.urllib.parse').declarePublic(
   'urlencode',
   'quote', 'unquote',
