@@ -29,11 +29,25 @@ Restricted collections module.
 
 From restricted python, use "import collections" (see patches/Restricted.py).
 """
+import six
+
 from collections import (
     Counter, defaultdict, deque, OrderedDict, namedtuple as _namedtuple)
 
+if six.PY2:
+  def namedtuple(typename, field_names, verbose=False, rename=False):
+    ret = _namedtuple(typename, field_names, verbose, rename)
+    ret.__allow_access_to_unprotected_subobjects__ = 1
+    return ret
+else:
+  def namedtuple(typename, field_names, rename=False, defaults=None, module=None):
+    ret = _namedtuple(
+      typename,
+      field_names,
+      rename=rename,
+      defaults=defaults,
+      module=module
+    )
+    ret.__allow_access_to_unprotected_subobjects__ = 1
+    return ret
 
-def namedtuple(typename, field_names, verbose=False, rename=False):
-  ret = _namedtuple(typename, field_names, verbose, rename)
-  ret.__allow_access_to_unprotected_subobjects__ = 1
-  return ret
