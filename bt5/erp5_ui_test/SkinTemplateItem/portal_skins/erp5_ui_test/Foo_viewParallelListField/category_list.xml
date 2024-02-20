@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \' \'.join(here.getCategoryList())</string> </value>
+            <value> <string>python: \' \'.join(sorted(here.getCategoryList()))</string> </value>
         </item>
       </dictionary>
     </pickle>
