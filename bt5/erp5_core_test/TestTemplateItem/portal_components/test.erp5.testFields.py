@@ -45,7 +45,7 @@ from Products.ERP5Form.CaptchaField import CaptchaField
 from Products.ERP5Form.EditorField import EditorField
 from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
-from Products.ERP5Type.tests.utils imort canonical_html
+from Products.ERP5Type.tests.utils import canonical_html
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
