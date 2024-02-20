@@ -1507,7 +1507,7 @@ class TestIngestion(IngestionTestCase):
     self.assertEqual(['anybody'], document.getGroupList())
 
     document.discoverMetadata(document.getFilename(), other_user.Person_getUserId())
-    self.assertEqual(['anybody/a1', 'anybody/a2'], document.getGroupList())
+    self.assertEqual(sorted(document.getGroupList()), ['anybody/a1', 'anybody/a2'])
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase1(self):
     """How to configure meta data discovery so that each time a file

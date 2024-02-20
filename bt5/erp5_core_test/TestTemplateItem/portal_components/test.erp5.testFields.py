@@ -1180,8 +1180,11 @@ class TestCaptchaField(ERP5TypeTestCase):
 
   def test_numeric_good_captcha(self):
     self.field.values['captcha_type'] = 'numeric'
+    def random_choice(seq):
+      self.assertIn('+', seq)
+      return '+'
     with mock.patch('Products.ERP5Form.CaptchaField.random.randint', return_value=1), \
-          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=lambda seq: seq[0]):
+          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=random_choice):
       field_html = self.field.render(REQUEST=self.portal.REQUEST)
     self.assertIn('1 plus 1', field_html)
     self.assertIn(hashlib.md5(b'1 + 1').hexdigest(), field_html)
@@ -1197,8 +1200,11 @@ class TestCaptchaField(ERP5TypeTestCase):
 
   def test_numeric_bad_captcha(self):
     self.field.values['captcha_type'] = 'numeric'
+    def random_choice(seq):
+      self.assertIn('+', seq)
+      return '+'
     with mock.patch('Products.ERP5Form.CaptchaField.random.randint', return_value=1), \
-          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=lambda seq: seq[0]):
+          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=random_choice):
       self.field.render(REQUEST=self.portal.REQUEST)
     self.assertRaises(
         ValidationError, self.validator.validate, self.field, 'field_test', {

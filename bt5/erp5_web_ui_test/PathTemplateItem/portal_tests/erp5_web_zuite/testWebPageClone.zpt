@@ -85,7 +85,12 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>regexp:${base_url}/web_site_module/test_web_site/web_page_module/[^/]+(/view)+\?portal_status_message=Created%20Clone%20Web%20Page.&amp;editable_mode:int=1</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site/web_page_module/[^/]+(/view)+\?.*portal_status_message=Created%20Clone%20Web%20Page.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertLocation</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site/web_page_module/[^/]+(/view)+\?.*editable_mode:int=1</td>
   <td></td>
 </tr>
 </tbody></table>
