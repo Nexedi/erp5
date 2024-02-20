@@ -197,8 +197,15 @@ class CaptchaWidget(Widget.TextWidget):
     provider = CaptchaProviderFactory.getProvider(captcha_type)
     (captcha_key, captcha_answer) = provider.generate(field)
     portal_sessions = field.getPortalObject().portal_sessions
-    while not self.add_captcha(portal_sessions, md5(captcha_key).hexdigest(), captcha_answer):
-      (captcha_key, captcha_answer) = provider.generate(field)
+    retries = 10
+    while retries:
+      if self.add_captcha(portal_sessions, md5(captcha_key).hexdigest(), captcha_answer):
+        (captcha_key, captcha_answer) = provider.generate(field)
+        break
+      retries = retries - 1
+    else:
+      raise RuntimeError("Error adding captcha")
+
     captcha_field = provider.getHTML(field, captcha_key)
 
     key_field = Widget.render_element("input",
