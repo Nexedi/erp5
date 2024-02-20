@@ -379,22 +379,24 @@
             if (tmp_parameter === undefined) {
               tmp_parameter = {username: "", password: "", opml_url: undefined};
             }
-            opml_list.push({
-              portal_type: "opml",
-              title: instance_tree_list[uid_dict[tmp_uid]]
-                .title,
-              relative_url: instance_tree_list[uid_dict[tmp_uid]]
-                .relative_url,
-              url: tmp_parameter.opml_url || String(tmp_uid) + " NO MONITOR",
-              has_monitor: tmp_parameter.opml_url !== undefined,
-              username: tmp_parameter.username,
-              password: tmp_parameter.password,
-              basic_login: btoa(tmp_parameter.username + ':' +
-                                tmp_parameter.password),
-              active: tmp_parameter.opml_url !== undefined &&
-                instance_tree_list[uid_dict[tmp_uid]].active,
-              state: instance_tree_list[uid_dict[tmp_uid]].state
-            });
+            if (instance_tree_list[uid_dict[tmp_uid]]) {
+              opml_list.push({
+                portal_type: "opml",
+                title: instance_tree_list[uid_dict[tmp_uid]]
+                  .title,
+                relative_url: instance_tree_list[uid_dict[tmp_uid]]
+                  .relative_url,
+                url: tmp_parameter.opml_url || String(tmp_uid) + " NO MONITOR",
+                has_monitor: tmp_parameter.opml_url !== undefined,
+                username: tmp_parameter.username,
+                password: tmp_parameter.password,
+                basic_login: btoa(tmp_parameter.username + ':' +
+                                  tmp_parameter.password),
+                active: tmp_parameter.opml_url !== undefined &&
+                  instance_tree_list[uid_dict[tmp_uid]].active,
+                state: instance_tree_list[uid_dict[tmp_uid]].state
+              });
+            }
           }
         }
         return opml_list;
