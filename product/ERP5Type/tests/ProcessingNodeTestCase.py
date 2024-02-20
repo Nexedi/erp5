@@ -17,7 +17,7 @@ from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
-  addUserToDeveloperRole, createZServer, DummyMailHostMixin, parseListeningAddress
+  addUserToDeveloperRole, DummyMailHostMixin, parseListeningAddress
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
