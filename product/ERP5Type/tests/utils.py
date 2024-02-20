@@ -55,6 +55,18 @@ from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
 import pytz
 import six
+import lxml.html
+
+
+def canonical_html(html):
+  # type: (str) -> str
+  """returns canonical form of html text.
+  """
+  return lxml.html.tostring(
+    lxml.html.fromstring(html),
+    method="c14n",
+    encoding='unicode')
+
 
 class FileUpload(file):
   """Act as an uploaded file.
