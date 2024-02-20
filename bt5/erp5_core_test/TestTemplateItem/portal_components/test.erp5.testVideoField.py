@@ -28,6 +28,8 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.VideoField import VideoField
+from Products.ERP5Type.tests.utils import canonical_html
+
 
 class TestVideoField(ERP5TypeTestCase):
   """Tests Video field
@@ -43,8 +45,11 @@ class TestVideoField(ERP5TypeTestCase):
   def test_render_view(self):
     self.field.values['default'] = 'Video content'
 
-    self.assertEqual('<video preload="auto" src="Video content" controls="controls" height="85" width="160" >Your browser does not support video tag.</video>', \
-                      self.field.render_view(value='Video content'))
+    self.assertEqual(
+      canonical_html(self.field.render_view(value='Video content')),
+      '<video controls="controls" height="85" preload="auto" src="Video content"'
+      + ' width="160">Your browser does not support video tag.</video>',
+    )
 
     self.field.values['video_preload'] = False
     self.field.values['video_loop'] = True
@@ -54,14 +59,9 @@ class TestVideoField(ERP5TypeTestCase):
     self.field.values['video_height'] = 800
     self.field.values['video_width'] = 1280
 
-    self.assertEqual('<video src="Another Video content" ' +
-        'height="800" width="1280" loop="loop" autoplay="autoplay" ' +
-        '>Another error message</video>', \
-            self.field.render_view(value='Another Video content'))
 
-import unittest
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestVideoField))
-  return suite
-
+    self.assertEqual(
+      canonical_html(self.field.render_view(value='Another Video content')),
+      '<video autoplay="autoplay" height="800" loop="loop"'
+      + ' src="Another Video content" width="1280">Another error message</video>'
+    )

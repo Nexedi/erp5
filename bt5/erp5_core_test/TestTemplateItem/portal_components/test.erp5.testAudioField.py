@@ -28,6 +28,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.AudioField import AudioField
+from Products.ERP5Type.tests.utils import canonical_html
 
 
 class TestAudioField(ERP5TypeTestCase):
@@ -44,9 +45,10 @@ class TestAudioField(ERP5TypeTestCase):
   def test_render_view(self):
     self.field.values['default'] = 'Audio content'
 
-    self.assertEqual('<audio preload="preload" src="Audio content" ' +
-        'controls="controls" >Your browser does not ' +
-        'support audio tag.</audio>', self.field.render_view(value='Audio content'))
+    self.assertEqual(
+      canonical_html(self.field.render_view(value='Audio content')),
+      '<audio controls="controls" preload="preload" src="Audio content"'
+      + '>Your browser does not support audio tag.</audio>',)
 
     self.field.values['audio_preload'] = False
     self.field.values['audio_loop'] = True
@@ -54,13 +56,7 @@ class TestAudioField(ERP5TypeTestCase):
     self.field.values['audio_autoplay'] = True
     self.field.values['audio_error_message'] = 'Another error message'
 
-    self.assertEqual('<audio src="Another Audio content" ' +
-        'loop="loop" autoplay="autoplay" >Another error ' +
-        'message</audio>', self.field.render_view(value='Another Audio content'))
-
-import unittest
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAudioField))
-  return suite
-
+    self.assertEqual(
+      canonical_html(self.field.render_view(value='Another Audio content')),
+     '<audio autoplay="autoplay" loop="loop" src="Another Audio content"'
+     + '>Another error message</audio>')
