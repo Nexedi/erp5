@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+import six.moves.urllib.parse
 import uuid
 import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -92,11 +93,15 @@ class TestFacebookLogin(ERP5TypeTestCase):
     self.logout()
     self.portal.ERP5Site_redirectToFacebookLoginPage()
     location = self.portal.REQUEST.RESPONSE.getHeader("Location")
-    self.assertIn("https://www.facebook.com/v2.10/dialog/oauth?", location)
-    self.assertIn("scope=email&redirect_uri=", location)
-    self.assertIn("client_id=%s" % CLIENT_ID, location)
-    self.assertNotIn("secret_key=", location)
     self.assertIn("ERP5Site_callbackFacebookLogin", location)
+    parsed_location = six.moves.urllib.parse.urlparse(location)
+    self.assertEqual(parsed_location.host, 'www.facebook.com')
+    self.assertEqual(parsed_location.path, '/v2.10/dialog/oauth')
+    params = dict(six.moves.urllib.parse.parse_qsl(parsed_location))
+    self.assertEqual(params['scope'], 'email')
+    self.assertEqual(params['client_id'], CLIENT_ID)
+    self.assertIn("redirect_uri", params)
+    self.assertNotIn("secret_key", params)
 
   def test_existing_user(self):
     self.login()
