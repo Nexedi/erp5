@@ -501,6 +501,10 @@ def setupWarnings():
   if not sys.warnoptions:
     warnings.simplefilter("default")
     os.environ["PYTHONWARNINGS"] = "default"
+  warnings.filterwarnings(
+    'ignore',
+    message='(?s)Node name auto-generation is deprecated.*product-config CMFActivity.*'
+  )
 
 
 def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
