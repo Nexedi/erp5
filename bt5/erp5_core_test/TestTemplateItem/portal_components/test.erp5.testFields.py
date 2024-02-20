@@ -45,7 +45,7 @@ from Products.ERP5Form.CaptchaField import CaptchaField
 from Products.ERP5Form.EditorField import EditorField
 from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
-
+from Products.ERP5Type.tests.utils import canonical_html
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
@@ -1275,8 +1275,8 @@ class TestEditorField(ERP5TypeTestCase):
   def test_render_editable_textarea(self):
     self.field.values['default'] = 'value'
     self.assertEqual(
-      self.field.render(REQUEST=self.portal.REQUEST),
-      '<textarea rows="5" cols="40" name="field_test_field" >\nvalue</textarea>')
+      canonical_html(self.field.render(REQUEST=self.portal.REQUEST)),
+      '<textarea cols="40" name="field_test_field" rows="5">\nvalue</textarea>')
 
   def test_render_editable_textarea_REQUEST(self):
     self.field.values['default'] = 'default value'
@@ -1285,8 +1285,8 @@ class TestEditorField(ERP5TypeTestCase):
       self.field.generate_field_key(key=self.field.id)
     ] = 'user <value>'
     self.assertEqual(
-      self.field.render(REQUEST=self.portal.REQUEST),
-      '<textarea rows="5" cols="40" name="field_test_field" >\nuser &lt;value&gt;</textarea>')
+      canonical_html(self.field.render(REQUEST=self.portal.REQUEST)),
+      '<textarea cols="40" name="field_test_field" rows="5">\nuser &lt;value&gt;</textarea>')
 
   def test_render_non_editable_textarea(self):
     self.field.values['default'] = '<not &scaped'
