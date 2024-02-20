@@ -215,6 +215,26 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>status</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Instance Tree</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_reference</string>
+                          <string>Computer</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Status Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -227,7 +247,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
+                          <string>status</string>
                           <string>descending</string>
                         </tuple>
                       </list>
@@ -240,6 +260,26 @@
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>status</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Instance Tree</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_reference</string>
+                          <string>Computer</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Status Date</string>
                         </tuple>
                       </list>
                     </value>
