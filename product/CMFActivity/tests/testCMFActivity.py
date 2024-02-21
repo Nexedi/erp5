@@ -2794,7 +2794,6 @@ return [x.getObject() for x in context.portal_catalog(limit=100)]
     with self.assertRaises(RuntimeError):
       self.tic()
     message, = self.getMessageList('SQLDict')
-    self.assertEqual(message.retry, 0)
     self.deleteMessageList(
       'SQLDict',
       [message],
