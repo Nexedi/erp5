@@ -89,4 +89,7 @@ class_definition = {
   }
 }
 
-return json.dumps(dict(graph=getDCWorkflowGraph(context), class_definition=class_definition), indent=2)
+return json.dumps(
+  dict(graph=getDCWorkflowGraph(context), class_definition=class_definition),
+  sort_keys=True,
+  indent=2)
