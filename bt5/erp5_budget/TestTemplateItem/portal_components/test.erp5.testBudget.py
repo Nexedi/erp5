@@ -1723,7 +1723,7 @@ class TestBudget(ERP5TypeTestCase):
 
     self.assertEqual({
       'from_date': None,
-      'simulation_state': ('delivered', 'stopped', 'started'),
+      'simulation_state': ('delivered', 'started', 'stopped'),
       'transit_simulation_state': ('started', ),
       'omit_transit': False,
       # XXX order is reversed for some reason ...
