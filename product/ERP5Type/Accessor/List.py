@@ -145,8 +145,8 @@ class SetSetter(Base.Setter):
         if self._item_cast is not identity:
           value = [self._item_cast(v) for v in value]
         if value:
+          list_value = getattr(instance, self._storage_id, value)
           value = set(value)
-          list_value = getattr(instance, self._storage_id, None)
           if list_value:
             default_value = list_value[0]
             if default_value in value:
