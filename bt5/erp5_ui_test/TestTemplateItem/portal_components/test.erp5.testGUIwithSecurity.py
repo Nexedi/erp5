@@ -27,10 +27,11 @@
 #
 ##############################################################################
 
-
+import lxml.html
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
+
 
 
 class TestGUISecurity(ERP5TypeTestCase):
@@ -82,9 +83,10 @@ class TestGUISecurity(ERP5TypeTestCase):
       Try to view the Foo_view form, make sure our category name is displayed
     """
     self.loginAs()
-    self.assertIn(
-        self.category_field_markup,
-        self.portal.foo_module.foo.Foo_view())
+    self.assertTrue(
+      lxml.html.fromstring(
+        self.portal.foo_module.foo.Foo_view()
+      ).xpath(self.category_field_xpath))
     self.login()
 
   def stepAccessFooDoesNotDisplayCategoryName(self, sequence = None, sequence_list = None, **kw):
@@ -92,9 +94,10 @@ class TestGUISecurity(ERP5TypeTestCase):
       Try to view the Foo_view form, make sure our category name is not displayed
     """
     self.loginAs()
-    self.assertNotIn(
-        self.category_field_markup,
-        self.portal.foo_module.foo.Foo_view())
+    self.assertFalse(
+      lxml.html.fromstring(
+        self.portal.foo_module.foo.Foo_view()
+      ).xpath(self.category_field_xpath))
     self.login()
 
   def stepChangeCategorySecurity(self, sequence = None, sequence_list = None, **kw):
@@ -127,7 +130,7 @@ class TestGUISecurity(ERP5TypeTestCase):
       An attempt to view the document form would raise Unauthorized.
     """
     # this really depends on the generated markup
-    self.category_field_markup = '<input name="field_my_foo_category_title" value="a" type="text"'
+    self.category_field_xpath = '//input[@name="field_my_foo_category_title" and @type="text" and @value="a"]'
 
     sequence_list = SequenceList()
     sequence_string = '\
@@ -156,11 +159,18 @@ class TestGUISecurity(ERP5TypeTestCase):
     self.stepCreateObjects()
     self.stepCreateTestFoo()
 
-    protected_property_markup = '<input name="field_my_protected_property" value="Protected Property" type="text"'
-    self.assertIn(protected_property_markup, self.portal.foo_module.foo.Foo_viewSecurity())
+    protected_property_xpath = '//input[@name="field_my_protected_property" and @type="text" and @value="Protected Property"]'
+
+    self.assertTrue(
+      lxml.html.fromstring(
+        self.portal.foo_module.foo.Foo_viewSecurity()
+      ).xpath(protected_property_xpath))
 
     self.loginAs() # user without permission to access protected property
-    self.assertNotIn(protected_property_markup, self.portal.foo_module.foo.Foo_viewSecurity())
+    self.assertFalse(
+      lxml.html.fromstring(
+        self.portal.foo_module.foo.Foo_viewSecurity()
+      ).xpath(protected_property_xpath))
 
   def test_translated_state_title_lookup(self):
     """
