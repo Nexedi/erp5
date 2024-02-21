@@ -50,7 +50,7 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import (
 from .Queue import Queue, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ERP5Type import Timeout
-from Products.ERP5Type.Timeout import TimeoutReachedError, Deadline
+from Products.ERP5Type.Timeout import Deadline
 import six
 
 # Stop validating more messages when this limit is reached
@@ -1094,8 +1094,7 @@ CREATE TABLE %s (
         else:
           max_retry = m.max_retry
           retry = m.line.retry
-          if (max_retry is not None and retry >= max_retry) or \
-              m.exc_type == TimeoutReachedError:
+          if (max_retry is not None and retry >= max_retry):
             # Always notify when we stop retrying.
             notify_user_list.append((m, False))
             final_error_uid_list.append(uid)
