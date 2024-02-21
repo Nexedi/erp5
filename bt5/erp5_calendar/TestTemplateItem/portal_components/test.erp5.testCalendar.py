@@ -85,6 +85,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.category_tool = self.getCategoryTool()
     self.createCategories()
     self.createService()
+
     # activate constraints
     self._addPropertySheet('Group Calendar', 'CalendarConstraint')
     self._addPropertySheet('Presence Request', 'CalendarConstraint')
@@ -94,6 +95,7 @@ class TestCalendar(ERP5ReportTestCase):
     self._addPropertySheet('Leave Request', 'IndividualCalendarConstraint')
 
     self._addPropertySheet('Leave Request Period', 'CalendarPeriodConstraint')
+    self._addPropertySheet('Leave Request Period', 'LeaveRequestPeriodConstraint')
     self._addPropertySheet('Presence Request Period', 'CalendarPeriodConstraint')
     self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
 
