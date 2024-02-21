@@ -909,7 +909,7 @@ class TemplateTool (BaseTool):
       repository_dict = {}
       undependent_list = []
 
-      for repository, bt_id in bt_list:
+      for repository, bt_id in sorted(bt_list):
         bt = [x for x in self.repository_dict[repository] \
               if x['id'] == bt_id][0]
         bt_title = bt['title']
@@ -924,7 +924,7 @@ class TemplateTool (BaseTool):
 
       # Calculate the reverse dependency graph
       reverse_dependency_dict = {}
-      for bt_id, dependency_id_list in dependency_dict.items():
+      for bt_id, dependency_id_list in sorted(dependency_dict.items()):
         update_dependency_id_list = []
         for dependency_id in dependency_id_list:
 
@@ -934,10 +934,7 @@ class TemplateTool (BaseTool):
           update_dependency_id_list.append(dependency_id)
 
           # Fill incoming edge dict
-          if dependency_id in reverse_dependency_dict:
-            reverse_dependency_dict[dependency_id].append(bt_id)
-          else:
-            reverse_dependency_dict[dependency_id] = [bt_id]
+          reverse_dependency_dict.setdefault(dependency_id, []).append(bt_id)
 
           # Remove from free node list
           try:
