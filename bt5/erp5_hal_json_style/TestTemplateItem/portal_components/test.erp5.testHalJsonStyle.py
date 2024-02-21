@@ -674,7 +674,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['list_method_template'],
-                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJwb3J0YWxfdHlwZSI6IFsiRm9vIExpbmUiXSwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZSwgInBvcnRhbF90eXBlIjogWyJGb28gTGluZSJdfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_root_list'], [['foo_category', 'FooCat'], ['foo_domain', 'FooDomain'], ['not_existing_domain', 'NotExisting']])
     NBSP_prefix = u'\xA0' * 4
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_dict'], {'foo_domain': [['a', 'a'], ['%sa1' % NBSP_prefix, 'a/a1'], ['%sa2' % NBSP_prefix, 'a/a2'], ['b', 'b']], 'foo_category': [['a', 'a'], ['a/a1', 'a/a1'], ['a/a2', 'a/a2'], ['b', 'b']]})
@@ -1232,7 +1232,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['editable_column_list'], [['time', 'Time'], ['comment', 'Comment'], ['error_message', 'Error Message']])
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['sort_column_list'], [])
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['list_method_template'],
-                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_core/Base_viewWorkflowHistory/listbox&list_method=Base_getWorkflowHistoryItemList&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld1dvcmtmbG93SGlzdG9yeSJ9&default_param_json=eyJ3b3JrZmxvd19pZCI6ICJmb29fd29ya2Zsb3ciLCAiY2hlY2tlZF9wZXJtaXNzaW9uIjogIlZpZXciLCAid29ya2Zsb3dfdGl0bGUiOiAiRm9vIFdvcmtmbG93IiwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_core/Base_viewWorkflowHistory/listbox&list_method=Base_getWorkflowHistoryItemList&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld1dvcmtmbG93SGlzdG9yeSJ9&default_param_json=eyJjaGVja2VkX3Blcm1pc3Npb24iOiAiVmlldyIsICJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZSwgIndvcmtmbG93X2lkIjogImZvb193b3JrZmxvdyIsICJ3b3JrZmxvd190aXRsZSI6ICJGb28gV29ya2Zsb3cifQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
 
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -2794,7 +2794,7 @@ class TestERP5Document_getHateoas_mode_url_generator(ERP5HALJSONStyleSkinsMixin)
       result,
       '%s/web_site_module/hateoas/ERP5Document_getHateoas?'
       'mode=traverse&relative_url=foo%%2Fbar&view=Foo_viewBar'
-      '&extra_param_json=eyJmb28iOiAiYSIsICJiYXIiOiAiYiJ9' % self.portal.absolute_url()
+      '&extra_param_json=eyJiYXIiOiAiYiIsICJmb28iOiAiYSJ9' % self.portal.absolute_url()
     )
 
   @simulate('Base_checkOnContextDocument', '*args, **kwargs',
