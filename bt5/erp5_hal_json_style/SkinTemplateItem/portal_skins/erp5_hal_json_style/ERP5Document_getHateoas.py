@@ -186,7 +186,9 @@ def ensureDeserialized(obj):
       return datetime.time(*tuple(map(int, match_obj.groups())))
   return obj
 
-NBSP_UTF8 = u'\xA0'.encode('utf-8')
+NBSP_UTF8 = u'\xA0'
+if six.PY2:
+  NBSP_UTF8 = NBSP_UTF8.encode('utf-8')
 def generateDomainTreeList(url_tool, domain_tool, domain, depth, domain_list):
   if depth:
     domain_list.append((
