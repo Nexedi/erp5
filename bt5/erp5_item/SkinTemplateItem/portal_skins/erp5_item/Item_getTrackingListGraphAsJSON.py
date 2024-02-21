@@ -37,4 +37,7 @@ for i, tracking in enumerate(reversed(portal.portal_simulation.getTrackingList(a
     link=movement.absolute_url(),
     source=movement.getSourceUid() or "null",
     destination=movement.getDestinationUid() or "null")
-return json.dumps(dict(graph=graph, class_definition=class_definition), indent=2)
+return json.dumps(
+  dict(graph=graph, class_definition=class_definition),
+  sort_keys=True,
+  indent=2)
