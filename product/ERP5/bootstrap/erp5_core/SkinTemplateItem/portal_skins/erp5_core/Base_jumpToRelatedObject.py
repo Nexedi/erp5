@@ -49,10 +49,15 @@ related_list = search_method(portal_type = portal_type)
 
 relation_found = 0
 if len(related_list) == 0:
+  if portal_type:
+    # Use the first one for the message
+    document_caption = portal_type[0]
+  else:
+    document_caption = 'Document'
   message = Base_translateString(
-    'No %s Related' % portal_type[0],
+    'No %s Related' % document_caption,
     default=Base_translateString('No ${portal_type} related.',
-                                 mapping={'portal_type': Base_translateString(portal_type[0])}))
+                                 mapping={'portal_type': Base_translateString(document_caption)}))
 
 elif len(related_list) == 1:
   relation_found = 1
