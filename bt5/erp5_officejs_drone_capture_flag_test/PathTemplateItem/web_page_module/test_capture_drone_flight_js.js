@@ -54,7 +54,8 @@
       '  me.setTargetCoordinates(\n' +
       '    me.initialPosition.x + 0.01,\n' +
       '    me.initialPosition.y,\n' +
-      '    me.initialPosition.z\n' +
+      '    me.initialPosition.z,\n' +
+      '    16\n' +
       '  );\n' +
       '};\n' +
       'me.onUpdate = function (timestamp) {\n' +
