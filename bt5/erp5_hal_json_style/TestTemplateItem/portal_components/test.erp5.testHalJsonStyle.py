@@ -1186,46 +1186,52 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['form_id']['required'], 1)
     self.assertEqual(result_dict['_embedded']['_view']['form_id']['type'], 'StringField')
 
+    # this report has 3 report sections, sorted by workflow title
+    self.assertEqual([
+      section['listbox']['default_params']['workflow_id']
+      for section in result_dict['_embedded']['_view']['report_section_list']],
+      ['edit_workflow', 'foo_validation_workflow', 'foo_workflow'])
+
     # Check embedded report section rendering
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['default'], 'Base_viewWorkflowHistory')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['editable'], 0)
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['hidden'], 1)
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['key'], 'form_id')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['required'], 1)
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['type'], 'StringField')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['form_id']['default'], 'Base_viewWorkflowHistory')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['form_id']['editable'], 0)
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['form_id']['hidden'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['form_id']['key'], 'form_id')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['form_id']['required'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['form_id']['type'], 'StringField')
 
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['traversed_document']['name'], document.getRelativeUrl())
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['traversed_document']['title'], str2unicode(document.getTitle()))
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['_links']['traversed_document']['title'], str2unicode(document.getTitle()))
 
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_core/Base_viewWorkflowHistory')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['form_definition']['name'], 'Base_viewWorkflowHistory')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_core/Base_viewWorkflowHistory')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['_links']['form_definition']['name'], 'Base_viewWorkflowHistory')
     self.assertEqual(
       result_dict['_embedded']['_view']['_embedded']['form_definition']['pt'],
       'report_view'
     )
 
-    self.assertSameSet(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['default_params'].keys(), ['checked_permission', 'ignore_unknown_columns', 'workflow_id', 'workflow_title'])
-    self.assertTrue(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['default_params']['ignore_unknown_columns'])
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['default_params']['checked_permission'], 'View')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['default_params']['workflow_id'], 'foo_workflow')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['default_params']['workflow_title'], 'Foo Workflow')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['type'], 'ListBox')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['key'], 'x1_listbox')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['title'], 'Workflow History')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['selection_name'], 'base_workflow_history_selection')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['checked_uid_list'], [])
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['lines'], 15)
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['editable'], 1)
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['show_anchor'], 0)
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['list_method'], 'Base_getWorkflowHistoryItemList')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['query'], 'urn:jio:allDocs?query=')
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['portal_type'], [])
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['column_list'], [['action', 'Action'], ['state', 'State'], ['actor', 'Actor'], ['time', 'Time'], ['comment', 'Comment'], ['error_message', 'Error Message']])
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['search_column_list'], [])
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['editable_column_list'], [['time', 'Time'], ['comment', 'Comment'], ['error_message', 'Error Message']])
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['sort_column_list'], [])
-    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['list_method_template'],
+    self.assertSameSet(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['default_params'].keys(), ['checked_permission', 'ignore_unknown_columns', 'workflow_id', 'workflow_title'])
+    self.assertTrue(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['default_params']['ignore_unknown_columns'])
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['default_params']['checked_permission'], 'View')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['default_params']['workflow_id'], 'foo_workflow')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['default_params']['workflow_title'], 'Foo Workflow')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['type'], 'ListBox')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['key'], 'x2_listbox')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['title'], 'Workflow History')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['selection_name'], 'base_workflow_history_selection')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['checked_uid_list'], [])
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['lines'], 15)
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['editable'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['show_anchor'], 0)
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['list_method'], 'Base_getWorkflowHistoryItemList')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['query'], 'urn:jio:allDocs?query=')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['portal_type'], [])
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['column_list'], [['action', 'Action'], ['state', 'State'], ['actor', 'Actor'], ['time', 'Time'], ['comment', 'Comment'], ['error_message', 'Error Message']])
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['search_column_list'], [])
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['editable_column_list'], [['time', 'Time'], ['comment', 'Comment'], ['error_message', 'Error Message']])
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['sort_column_list'], [])
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][2]['listbox']['list_method_template'],
                      '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_core/Base_viewWorkflowHistory/listbox&list_method=Base_getWorkflowHistoryItemList&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld1dvcmtmbG93SGlzdG9yeSJ9&default_param_json=eyJ3b3JrZmxvd19pZCI6ICJmb29fd29ya2Zsb3ciLCAiY2hlY2tlZF9wZXJtaXNzaW9uIjogIlZpZXciLCAid29ya2Zsb3dfdGl0bGUiOiAiRm9vIFdvcmtmbG93IiwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
 
 
