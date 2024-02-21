@@ -677,7 +677,8 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
           json.dumps(ensureSerializable({
             'original_form_id': form.id,
             'field_id': field.id
-        })))))
+          }),
+          sort_keys=True))))
       }
     })
 
@@ -799,9 +800,9 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         "form_relative_url": "%s/%s" % (form_relative_url, field.id),
         "list_method": list_method_name,
         "default_param_json": bytes2str(urlsafe_b64encode(str2bytes(
-          json.dumps(ensureSerializable(list_method_query_dict))))),
+          json.dumps(ensureSerializable(list_method_query_dict), sort_keys=True)))),
         "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(
-          json.dumps(ensureSerializable(extra_param_dict)))))
+          json.dumps(ensureSerializable(extra_param_dict), sort_keys=True))))
       }
       # once we imprint `default_params` into query string of 'list method' we
       # don't want them to propagate to the query as well
@@ -820,7 +821,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         "script_id": script.id,
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "list_method": list_method_name,
-        "default_param_json": bytes2str(urlsafe_b64encode(str2bytes(json.dumps(ensureSerializable(list_method_query_dict)))))
+        "default_param_json": bytes2str(urlsafe_b64encode(str2bytes(json.dumps(ensureSerializable(list_method_query_dict), sort_keys=True))))
       }
       list_method_query_dict = {}
     """
@@ -1069,7 +1070,9 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
             'proxy_listbox_id': x,
             'original_form_id': extra_param_json['original_form_id'],
             'field_id': extra_param_json['field_id']
-          })))))
+            }),
+            sort_keys=True,
+          ))))
       }) for x, y in proxy_form_id_list],
       "first_item": 1,
       "required": 0,
@@ -1092,7 +1095,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
             'proxy_listbox_id': REQUEST.get('proxy_listbox_id', None),
             'original_form_id': extra_param_json['original_form_id'],
             'field_id': extra_param_json['field_id']
-          })))))
+          }),
+          sort_keys=True))))
       }
 
   # Go through all groups ("left", "bottom", "hidden" etc.) and add fields from
@@ -1591,7 +1595,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
                 "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
                 "view": erp5_action_list[-1]['name'],
-                "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(json.dumps(ensureSerializable(extra_param_json)))))
+                "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(json.dumps(ensureSerializable(extra_param_json), sort_keys=True))))
               }
 
       if erp5_action_list:
@@ -1758,7 +1762,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'relative_url': relative_url,
       'group_by': group_by,
       'sort_on': sort_on
-    })))))
+    }),
+    sort_keys=True,
+    ))))
 
     # set 'here' for field rendering which contain TALES expressions
     REQUEST.set('here', traversed_document)
@@ -2205,7 +2211,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
                 "view": url_parameter_dict['view_kw']['view'],
                 "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(
-                  json.dumps(ensureSerializable(extra_url_param_dict)))))
+                  json.dumps(ensureSerializable(extra_url_param_dict), sort_keys=True))))
                 }
 
       # endfor select
@@ -2423,7 +2429,7 @@ if mode == 'url_generator':
   else:
     generator_key = 'traverse_generator_action'
     keep_items_json = bytes2str(urlsafe_b64encode(str2bytes(
-      json.dumps(ensureSerializable(keep_items)))))
+      json.dumps(ensureSerializable(keep_items), sort_keys=True))))
   return url_template_dict[generator_key] % {
     "root_url": site_root.absolute_url(),
     "script_id": 'ERP5Document_getHateoas',
