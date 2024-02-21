@@ -90,12 +90,12 @@ class TestCalendar(ERP5ReportTestCase):
     self._addPropertySheet('Group Calendar', 'CalendarConstraint')
     self._addPropertySheet('Presence Request', 'CalendarConstraint')
     self._addPropertySheet('Leave Request', 'CalendarConstraint')
-    self._addPropertySheet('Leave Request', 'LeaveRequestPeriodConstraint')
 
     self._addPropertySheet('Presence Request', 'IndividualCalendarConstraint')
     self._addPropertySheet('Leave Request', 'IndividualCalendarConstraint')
 
     self._addPropertySheet('Leave Request Period', 'CalendarPeriodConstraint')
+    self._addPropertySheet('Leave Request Period', 'LeaveRequestPeriodConstraint')
     self._addPropertySheet('Presence Request Period', 'CalendarPeriodConstraint')
     self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
 
