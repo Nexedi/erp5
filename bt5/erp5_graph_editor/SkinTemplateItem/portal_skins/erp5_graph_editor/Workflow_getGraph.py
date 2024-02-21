@@ -64,4 +64,7 @@ def getWorkflowGraph(workflow):
       graph['node'][state_id]['coordinate'] = position_graph['node'][state_id]['coordinate']
   return graph
 
-return json.dumps(dict(graph=getWorkflowGraph(context), class_definition={}), indent=2)
+return json.dumps(
+  dict(graph=getWorkflowGraph(context), class_definition={}),
+  sort_keys=True,
+  indent=2)
