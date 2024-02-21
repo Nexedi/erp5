@@ -30,7 +30,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from erp5.component.interface.IRoundingTool import IRoundingTool
-from decimal import (ROUND_DOWN, ROUND_UP, ROUND_CEILING, ROUND_FLOOR,
+from decimal import (Decimal, ROUND_DOWN, ROUND_UP, ROUND_CEILING, ROUND_FLOOR,
                      ROUND_HALF_DOWN, ROUND_HALF_EVEN, ROUND_HALF_UP)
 
 ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
@@ -40,6 +40,24 @@ ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
                         'ROUND_HALF_DOWN':ROUND_HALF_DOWN,
                         'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
                         'ROUND_HALF_UP':ROUND_HALF_UP}
+
+def round(value, ndigits=None, decimal_rounding_option='ROUND_HALF_UP'):
+  if ndigits is None:
+    precision = 1
+  else:
+    assert isinstance(ndigits, int), 'ndigits should be int.'
+    precision = 10 ** -ndigits
+  if precision >= 1:
+    value = Decimal(str(value))
+    value /= precision
+    value = value.quantize(precision, rounding=decimal_rounding_option)
+    value *= precision
+    result = float(value.quantize(precision))
+  else:
+    result = float(
+      Decimal(str(value)).quantize(Decimal(str(precision)),
+                                   rounding=decimal_rounding_option))
+  return result
 
 @zope.interface.implementer(IRoundingTool)
 class RoundingTool(BaseTool):
@@ -113,3 +131,7 @@ class RoundingTool(BaseTool):
     by python standard decimal module.
     """
     return ROUNDING_OPTION_DICT.items()
+
+  security.declarePublic('round')
+  def round(self, value, ndigits=None, decimal_rounding_option='ROUND_HALF_UP'):
+    return round(value, ndigits, decimal_rounding_option)
