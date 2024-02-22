@@ -66,6 +66,28 @@ class Amount(Base, VariatedMixin):
                     , PropertySheet.Reference
                     )
 
+  _default_edit_order = (
+      'resource',
+      'resource_value',
+
+    # If variations and resources are set at the same time, resource must be
+    # set before any variation.
+      'variation_base_category_list',
+      'variation_category_list',
+
+    # If (quantity unit, base_contribution, or use) and resource are set at the same time,
+    # resource must be set first, because of an interaction that copies quantity unit
+    # base contribution and use from resource if not set.
+      'quantity_unit_value',
+      'quantity_unit',
+      'use_value',
+      'use',
+      'base_contribution_list',
+      'base_contribution_value_list',
+      'base_contribution_value',
+      'base_contribution',
+  )
+
   # A few more mix-in methods which should be relocated
   # THIS MUST BE UPDATE WITH CATEGORY ACQUISITION
   security.declareProtected(Permissions.AccessContentsInformation,
