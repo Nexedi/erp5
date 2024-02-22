@@ -222,6 +222,8 @@ class WorkflowMethod(Method):
     # Otherwise, an exception is raised if the workflow transition does not
     # exist from the current state, or if the guard rejects it.
     valid_transition_item_list = []
+# XXX sort ?
+#    for wf_id, transition_list in sorted(candidate_transition_item_list):
     for wf_id, transition_list in candidate_transition_item_list:
       candidate_workflow = wf[wf_id]
       valid_list = []
@@ -778,6 +780,8 @@ class Base(
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base, )
+
+  _default_edit_order = ()
 
   # We want to use a default property view
   manage_main = manage_propertiesForm = DTMLFile( 'properties', _dtmldir )
@@ -1478,7 +1482,7 @@ class Base(
 
   # Object attributes update method
   def _edit(self, REQUEST=None, force_update=0, reindex_object=0,
-            keep_existing=0, activate_kw=None, edit_order=[], restricted=0, **kw):
+            keep_existing=0, activate_kw=None, edit_order=(), restricted=0, **kw):
     """
       Generic edit Method for all ERP5 object
       The purpose of this method is to update attributed, eventually do
@@ -1496,6 +1500,7 @@ class Base(
     """
     if not kw:
       return
+    edit_order = edit_order or self._default_edit_order
     key_list = kw.keys()
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
@@ -1556,6 +1561,8 @@ class Base(
           self.setId(kw['id'], reindex=reindex_object)
       return not_modified_list
 
+    # XXX sort ??
+    #unmodified_key_list = setChangedPropertyList(sorted(unordered_key_list))
     unmodified_key_list = setChangedPropertyList(unordered_key_list)
     setChangedPropertyList(unmodified_key_list)
     # edit_order MUST be enforced, and done at the complete end
