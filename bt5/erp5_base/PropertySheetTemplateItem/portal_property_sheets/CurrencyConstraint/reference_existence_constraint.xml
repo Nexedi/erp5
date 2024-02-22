@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>message_no_such_property</string> </key>
-            <value> <string>Reference must be defined</string> </value>
+            <value> <string>Currency Code must be defined</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
