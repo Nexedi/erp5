@@ -1231,6 +1231,25 @@ class TestERP5Base(ERP5TypeTestCase):
         currency_module.CurrencyModule_getCurrencyItemList(),
         [('', ''), ('VA', 'currency_module/validated')])
 
+  def test_CurrencyConstraint(self):
+    self._addPropertySheet('Currency', 'CurrencyConstraint')
+    currency_module = self.portal.currency_module
+    currency_module.newContent(
+      portal_type='Currency',
+      reference='CODE',
+    ).validate()
+    self.tic()
+    currency = currency_module.newContent(
+      portal_type='Currency',
+    )
+    self.assertIn(
+      'Currency Code must be defined',
+      [str(m.getMessage()) for m in currency.checkConsistency()])
+    currency.setReference('CODE')
+    self.assertIn(
+      'Another currency with Currency Code CODE already exists',
+      [str(m.getMessage()) for m in currency.checkConsistency()])
+
   def getWorkflowHistory(self, document, workflow_id):
     return self.portal.portal_workflow.getInfoFor(ob=document, name='history',
         wf_id=workflow_id)
