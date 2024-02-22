@@ -50,6 +50,8 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
   property_sheets = (PropertySheet.DublinCore,
                      PropertySheet.AmountGeneratorLine)
 
+  _default_edit_order = Amount._default_edit_order
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCellAggregateKey')
   def getCellAggregateKey(self):

@@ -80,6 +80,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                     , PropertySheet.Price
                     )
 
+  _default_edit_order = XMLObject._default_edit_order + (
+    'stop_date',
+    'start_date',
+  )
+
   security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
   def isAccountable(self):
     """
