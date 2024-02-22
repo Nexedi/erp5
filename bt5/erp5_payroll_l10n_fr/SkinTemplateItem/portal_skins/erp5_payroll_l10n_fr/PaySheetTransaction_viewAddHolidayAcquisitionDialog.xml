@@ -39,7 +39,21 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>PaySheetTransaction_addHolidayAcquisition</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -47,7 +61,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -55,9 +69,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -68,53 +80,21 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox_start_date</string>
-                        <string>listbox_stop_date</string>
-                        <string>listbox_quantity</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_default_leave_request_period_quantity</string>
-                        <string>my_default_leave_request_period_resource</string>
-                        <string>my_resource_title</string>
-                        <string>your_warning</string>
+                        <string>your_resource</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_effective_date</string>
-                        <string>my_default_leave_request_period_start_date</string>
-                        <string>my_default_leave_request_period_stop_date</string>
-                        <string>my_translated_simulation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -122,7 +102,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>LeaveRequest_view</string> </value>
+            <value> <string>PaySheetTransaction_viewAddHolidayAcquisitionDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,11 +110,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>LeaveRequest_view</string> </value>
+            <value> <string>PaySheetTransaction_viewAddHolidayAcquisitionDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -146,7 +126,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Leave Request</string> </value>
+            <value> <string>Add Holiday Acquisition</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -154,6 +134,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
