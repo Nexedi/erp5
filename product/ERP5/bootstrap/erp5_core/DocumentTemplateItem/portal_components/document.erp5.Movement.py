@@ -73,7 +73,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       to define quantities in orders
 
     - Deliveries: movements track the actual transfer of resources
-      in the past (accounting) or in the future (planning / budgetting)
+      in the past (accounting) or in the future (planning / budgeting)
 
     For example, the following objects are Orders:
 
@@ -217,8 +217,13 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
                     , PropertySheet.Movement
                     , PropertySheet.Price
                     , PropertySheet.Simulation  # XXX-JPS property should be moved to GeneratedMovement class
-
                     )
+
+  _default_edit_order = Amount._default_edit_order + (
+    'stop_date',
+    'start_date',
+  )
+
   def isPropertyRecorded(self, k): # XXX-JPS method should be moved to GeneratedMovement class
     return False
 
@@ -726,9 +731,6 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   def _edit(self, edit_order=(), **kw):
     """Overloaded _edit to support setting debit and credit at the same time,
     which is required for the GUI.
-    Also sets the variation category list and property dict at the end, because
-    _setVariationCategoryList and _setVariationPropertyDict needs the resource
-    to be set.
     """
     quantity = 0
     if 'source_debit' in kw and 'source_credit' in kw:
@@ -757,9 +759,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       if kw.get('destination_asset_credit') in (None, ''):
         kw.pop('destination_asset_credit', None)
 
-    if not edit_order:
-      edit_order = ('variation_category_list', 'variation_property_dict', 'quantity_unit',)
-    return XMLObject._edit(self, edit_order=edit_order, **kw)
+    return super(Movement, self)._edit(edit_order=edit_order, **kw)
 
   # Debit and credit methods for asset
   security.declareProtected( Permissions.AccessContentsInformation,
