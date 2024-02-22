@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>after_script/portal_workflow/movement_resource_interaction_workflow/script_Movement_copyUseFromResource</string>
+                <string>after_script/portal_workflow/movement_resource_interaction_workflow/script_Movement_copyCategoryListFromResource</string>
               </tuple>
             </value>
         </item>
@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>interaction_setUse</string> </value>
+            <value> <string>interaction_setResource</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>trigger_once_per_transaction</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
