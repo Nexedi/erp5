@@ -758,7 +758,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         kw.pop('destination_asset_credit', None)
 
     if not edit_order:
-      edit_order = ('variation_category_list', 'variation_property_dict',)
+      edit_order = ('variation_category_list', 'variation_property_dict', 'quantity_unit',)
     return XMLObject._edit(self, edit_order=edit_order, **kw)
 
   # Debit and credit methods for asset
