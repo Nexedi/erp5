@@ -70,6 +70,8 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                       , PropertySheet.Aggregated
                       )
 
+    _default_edit_order = XMLObject._default_edit_order + VariatedMixin._default_edit_order
+
     # Is it OK now ?
     # The same method is at about 3 different places
     # Some genericity is needed

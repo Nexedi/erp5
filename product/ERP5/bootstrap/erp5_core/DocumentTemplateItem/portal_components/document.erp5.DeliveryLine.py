@@ -36,9 +36,6 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from erp5.component.document.Movement import Movement
 from erp5.component.document.ImmobilisationMovement import ImmobilisationMovement
 
-from inspect import getargspec
-from Products.ERP5Type.Base import Base
-edit_args_list = getargspec(Base._edit).args
 
 from erp5.component.interface.IDivergenceController import IDivergenceController
 
@@ -75,29 +72,6 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
   # Multiple inheritance definition
   updateRelatedContent = XMLMatrix.updateRelatedContent
 
-  # Force in _edit to modify variation_base_category_list first
-  def _edit(self, edit_order=(), **kw):
-    # XXX FIXME For now, special cases are handled in _edit methods in many
-    # documents : DeliveryLine, DeliveryCell ... Ideally, to prevent code
-    # duplication, it should be handled in a _edit method present only in
-    # Amount.py
-
-    # If variations and resources are set at the same time, resource must be
-    # set before any variation.
-    before_order = ('resource', 'resource_value',
-                    'variation_base_category_list',
-                    'variation_category_list')
-    before_kw = {k: kw.pop(k) for k in before_order if k in kw}
-    if before_kw:
-      before_kw.update((k, kw[k]) for k in edit_args_list if k in kw)
-      Base._edit(self, edit_order=before_order, **before_kw)
-    if kw:
-      Movement._edit(self, edit_order=edit_order, **kw)
-
-  # We must check if the user has changed the resource of particular line
-  security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-  def edit(self, REQUEST=None, force_update = 0, reindex_object=1, **kw):
-    return self._edit(REQUEST=REQUEST, force_update=force_update, reindex_object=reindex_object, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isAccountable')

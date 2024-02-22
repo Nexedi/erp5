@@ -59,6 +59,11 @@ class VariatedMixin:
   isRADContent = 1 # for 'property_sheets'
   property_sheets = (PropertySheet.VariationRange, )
 
+  _default_edit_order = (
+    'variation_base_category_list',
+    'variation_category_list',
+  )
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self, omit_optional_variation=0,
