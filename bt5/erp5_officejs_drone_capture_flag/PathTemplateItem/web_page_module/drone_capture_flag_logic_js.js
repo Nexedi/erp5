@@ -206,14 +206,14 @@ var DroneManager = /** @class */ (function () {
     }
     return;
   };
-  DroneManager.prototype._internal_crash = function (error) {
+  DroneManager.prototype._internal_crash = function (error, print_stack=true) {
     this.last_position = this.position;
     this._canCommunicate = false;
     this._controlMesh = null;
     this._mesh = null;
     this._canPlay = false;
     if (error) {
-      this._API._gameManager.logError(this, error);
+      this._API._gameManager.logError(this, error, print_stack);
     }
     this.onTouched();
   };
@@ -758,9 +758,12 @@ var GameManager = /** @class */ (function () {
     this._delayed_defer_list.push([callback, millisecond]);
   };
 
-  GameManager.prototype.logError = function (drone, error) {
+  GameManager.prototype.logError = function (drone, error, print_stack) {
     if (drone._id < this._flight_log.length) { // don't log enemies
-      this._flight_log[drone._id].push(error.stack);
+        this._flight_log[drone._id].push(error.message);
+        if (print_stack) {
+          this._flight_log[drone._id].push(error.stack);
+        }
     }
   };
 
@@ -780,7 +783,7 @@ var GameManager = /** @class */ (function () {
     if (drone.colliderMesh &&
       drone.colliderMesh.intersectsMesh(obstacle, true)) {
       drone._internal_crash(new Error('Drone ' + drone.id +
-                                      ' touched an obstacle.'));
+                                      ' touched an obstacle.'), false);
       //Following workaround seems not needed with new babylonjs versions
       /**
        * Closest facet check is needed for sphere and cylinder,
@@ -815,7 +818,7 @@ var GameManager = /** @class */ (function () {
       if (distance(drone.position, flag.location) <=
         this._mapManager.getMapInfo().flag_distance_epsilon) {
         drone._internal_crash(new Error('Drone ' + drone.id +
-                                        ' touched flag ' + flag.id));
+                                        ' touched flag ' + flag.id), false);
         if (flag.weight > 0) {
           flag.weight -= 1;
           drone.score += flag.score; // move score to a global place? GM, MM?
@@ -843,18 +846,18 @@ var GameManager = /** @class */ (function () {
         if (distance(drone.position, other.position) <
             enemy.getCollisionSector()) {
           drone._internal_crash(new Error('enemy drone ' + enemy.id +
-                               ' bumped drone ' + prey.id + '.'));
+                               ' bumped drone ' + prey.id + '.'), false);
           other._internal_crash(new Error('enemy drone ' + enemy.id +
-                               ' bumped drone ' + prey.id + '.'));
+                               ' bumped drone ' + prey.id + '.'), false);
         }
       }
     }
     if (drone.colliderMesh && other.colliderMesh &&
         drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
       drone._internal_crash(new Error('drone ' + drone.id +
-                           ' touched drone ' + other.id + '.'));
+                           ' touched drone ' + other.id + '.'), false);
       other._internal_crash(new Error('drone ' + drone.id +
-                           ' touched drone ' + other.id + '.'));
+                           ' touched drone ' + other.id + '.'), false);
     }
   };
 
@@ -896,14 +899,14 @@ var GameManager = /** @class */ (function () {
           if (drone.getCurrentPosition().altitude <= 0) {
             if (!drone.isLanding()) {
               drone._internal_crash(new Error('Drone ' + drone.id +
-                                              ' touched the floor.'));
+                                              ' touched the floor.'), false);
             } else {
               drone._internal_crash();
             }
           }
           else if (_this._checkDroneOut(drone)) {
             drone._internal_crash(new Error('Drone ' + drone.id +
-                                            ' out of limits.'));
+                                            ' out of limits.'), false);
           }
           else {
             _this._droneList.forEach(function (other) {
@@ -928,7 +931,7 @@ var GameManager = /** @class */ (function () {
         if (_this._timeOut()) {
           console.log("TIMEOUT!");
           _this._droneList.forEach(function (drone) {
-            if (drone.can_play) drone._internal_crash(new Error('Timeout.'));
+            if (drone.can_play) drone._internal_crash(new Error('Timeout.'), false);
           });
           _this._result_message += "TIMEOUT!";
           return _this._finish();
