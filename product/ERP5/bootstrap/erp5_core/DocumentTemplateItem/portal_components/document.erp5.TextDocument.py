@@ -315,7 +315,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       try:
         tree = etree.fromstring(text_content)
         text_content = etree.tostring(tree, encoding='utf-8', xml_declaration=True)
-        content_type = 'application/xml'
         message = 'Conversion to base format succeeds'
       except etree.XMLSyntaxError: # pylint: disable=catching-non-exception
         message = 'Conversion to base format without codec fails'
