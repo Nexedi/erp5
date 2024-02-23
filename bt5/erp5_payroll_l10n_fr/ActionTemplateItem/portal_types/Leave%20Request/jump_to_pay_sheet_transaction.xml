@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_view</string>
+                <string>action_type/object_jio_jump</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>object_jio_jump</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>leaves</string> </value>
+            <value> <string>jump_to_pay_sheet_transaction</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -53,12 +53,16 @@
             </value>
         </item>
         <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Action Information</string> </value>
+        </item>
+        <item>
             <key> <string>priority</string> </key>
-            <value> <float>8.5</float> </value>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Leaves</string> </value>
+            <value> <string>Pay Sheet Transaction</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -75,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Entity_viewLeaveRequestPeriodList</string> </value>
+            <value> <string>string:${object_url}/LeaveRequest_jumpToRelatedPaySheetTransaction</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -88,7 +92,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:portal.Base_checkPermission(\'leave_request_module\', \'View\')</string> </value>
+            <value> <string>python:portal.Base_checkPermission(\'accounting_module\', \'View\') and here.LeaveRequest_getRelatedPaySheetTransaction()</string> </value>
         </item>
       </dictionary>
     </pickle>

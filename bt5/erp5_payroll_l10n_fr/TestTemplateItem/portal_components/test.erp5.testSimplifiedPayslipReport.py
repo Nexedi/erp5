@@ -181,3 +181,80 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     self.tic()
     _, png = image_source_pdf_doc.convert("png", frame=0, quality=100)
     self.assertImageRenderingEquals(str(png), str(expected_image.getData()))
+
+  def test_03_payslip_holiday(self):
+    for i in self.portal.portal_catalog(
+      portal_type= ('Leave Request', 'Holiday Acquisition'),
+      destination_uid= self.portal.person_module.test_pay_sheet_transaction_user.getUid(),
+      simulation_state = 'confirmed'
+    ):
+      i.cancel()
+    self.tic()
+    service = self.portal.service_module.newContent(portal_type='Service')
+    leave_request = self.portal.leave_request_module.newContent(
+      portal_type='Leave Request',
+      destination = 'person_module/test_pay_sheet_transaction_user',
+      resource_value = service
+    )
+    leave_request.newContent(
+      portal_type='Leave Request Period',
+      start_date = DateTime('2018/01/02'),
+      stop_date = DateTime('2018/01/03'),
+      resource_value = service,
+      quantity=2)
+    leave_request.edit(
+      effective_date = DateTime('2018/01/31')
+    )
+    leave_request.plan()
+    leave_request.confirm()
+    self.tic()
+    payslip_data = self.portal.accounting_module.test_pay_sheet_transaction.PaySheetTransaction_generatePayslipReport(batch=1)
+    self.assertEqual(payslip_data["report_data"]["total_holiday_this_year"], -2)
+    self.assertEqual(payslip_data["report_data"]["taken_holiday"], 2)
+    leave_request.edit(
+      effective_date = DateTime('2018/02/01')
+    )
+    self.tic()
+    payslip_data = self.portal.accounting_module.test_pay_sheet_transaction.PaySheetTransaction_generatePayslipReport(batch=1)
+    self.assertEqual(payslip_data["report_data"]["total_holiday_this_year"], 0)
+    self.assertEqual(payslip_data["report_data"]["taken_holiday"], 0)
+
+    holiday_acquisition = self.portal.holiday_acquisition_module.newContent(
+      portal_type='Holiday Acquisition',
+      quantity=3,
+      start_date= DateTime('2018/01/31'),
+      stop_date = DateTime('2018/01/31'),
+      resource_value = service,
+      destination = 'person_module/test_pay_sheet_transaction_user'
+    )
+    holiday_acquisition.plan()
+    holiday_acquisition.confirm()
+    leave_request.edit(
+      effective_date = DateTime('2018/01/31')
+    )
+    self.tic()
+    payslip_data = self.portal.accounting_module.test_pay_sheet_transaction.PaySheetTransaction_generatePayslipReport(batch=1)
+    self.assertEqual(payslip_data["report_data"]["total_holiday_this_year"], 1)
+    self.assertEqual(payslip_data["report_data"]["taken_holiday"], 2)
+    holiday_acquisition = self.portal.holiday_acquisition_module.newContent(
+      portal_type='Holiday Acquisition',
+      quantity=3,
+      start_date= DateTime('2017/12/31'),
+      stop_date = DateTime('2017/12/31'),
+      resource_value = service,
+      destination = 'person_module/test_pay_sheet_transaction_user')
+    holiday_acquisition.plan()
+    holiday_acquisition.confirm()
+    self.tic()
+    payslip_data = self.portal.accounting_module.test_pay_sheet_transaction.PaySheetTransaction_generatePayslipReport(batch=1)
+    self.assertEqual(payslip_data["report_data"]["total_holiday_this_year"], 3)
+    self.assertEqual(payslip_data["report_data"]["taken_holiday"], 2)
+    self.assertEqual(payslip_data["report_data"]["total_holiday_year_before"], 1)
+    holiday_acquisition.edit(quantity = 1)
+    self.tic()
+    payslip_data = self.portal.accounting_module.test_pay_sheet_transaction.PaySheetTransaction_generatePayslipReport(batch=1)
+    self.assertEqual(payslip_data["report_data"]["total_holiday_this_year"], 2)
+    self.assertEqual(payslip_data["report_data"]["taken_holiday"], 2)
+    self.assertEqual(payslip_data["report_data"]["total_holiday_year_before"], 0)
+
+

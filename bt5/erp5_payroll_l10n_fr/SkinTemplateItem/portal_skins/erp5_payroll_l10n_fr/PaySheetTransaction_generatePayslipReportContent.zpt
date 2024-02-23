@@ -100,13 +100,19 @@
                 <td></td>
               </tr-->
               <tr>
-                <td i18n:translate="" i18n:domain="erp5_ui">Taken on this period</td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Taken on this month</td>
                 <td tal:content="python: quantity_renderer(payslip_data['taken_holiday'])"></td>
               </tr>
               <tr>
-                <td i18n:translate="" i18n:domain="erp5_ui">Remaining</td>
-                <td tal:content="python: quantity_renderer(payslip_data['total_holiday'])"></td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Remaining this year</td>
+                <td tal:content="python: quantity_renderer(payslip_data['total_holiday_this_year'])"></td>
               </tr>
+              <tal:block tal:condition="python: payslip_data['total_holiday_year_before']">
+                <tr>
+                  <td i18n:translate="" i18n:domain="erp5_ui">Remaining year before</td>
+                  <td tal:content="python: quantity_renderer(payslip_data['total_holiday_year_before'])"></td>
+                </tr>
+              </tal:block>
             </tbody>
           </table>
         <!-- tax -->
