@@ -241,7 +241,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
       '}\n' +
       '\n' +
-      'me.onStart = function () {\n' +
+      'me.onStart = function (timestamp) {\n' +
       '  me.setDirection(0,0,0);\n' +
       '  return;\n' +
       '\n' +
@@ -279,6 +279,9 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getMaxAcceleration = function () {
     return this._flight_parameters.drone.maxAcceleration;
+  };
+  EnemyDroneAPI.prototype.getMaxCommandFrequency = function () {
+    return Infinity;
   };
   EnemyDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
