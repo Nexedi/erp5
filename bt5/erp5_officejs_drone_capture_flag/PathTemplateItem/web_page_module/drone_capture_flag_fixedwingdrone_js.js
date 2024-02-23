@@ -88,6 +88,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     if (drone._maxClimbRate > drone._maxSpeed) {
       throw new Error('max climb rate cannot be superior to max speed');
     }
+    drone._maxCommandFrequence = this.getMaxCommandFrequence();
+    if (drone._maxCommandFrequence <= 0) {
+      throw new Error('max command frequence must be superior to 0');
+    }
     return;
   };
   /*
@@ -449,6 +453,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getMaxClimbRate = function () {
     return this._flight_parameters.drone.maxClimbRate;
+  };
+  FixedWingDroneAPI.prototype.getMaxCommandFrequence = function () {
+    return this._flight_parameters.drone.maxCommandFrequence;
   };
   FixedWingDroneAPI.prototype.getYawVelocity = function (drone) {
     return 360 * EARTH_GRAVITY *

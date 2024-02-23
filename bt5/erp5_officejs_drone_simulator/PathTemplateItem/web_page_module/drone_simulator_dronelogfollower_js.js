@@ -210,6 +210,9 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.isReadyToFly = function () {
     return true;
   };
+  DroneLogAPI.prototype.getMaxCommandFrequence = function () {
+    return Infinity;
+  };
 
   return DroneLogAPI;
 }());

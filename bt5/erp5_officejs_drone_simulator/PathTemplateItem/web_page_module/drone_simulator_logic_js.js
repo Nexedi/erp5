@@ -25,6 +25,8 @@ var DroneManager = /** @class */ (function () {
     this._maxRollAngle = 0;
     this._maxSinkRate = 0;
     this._maxClimbRate = 0;
+    this._maxCommandFrequence = 0;
+    this._last_command_timestamp = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = new BABYLON.Vector3(0, 0, 1); // North
@@ -124,7 +126,7 @@ var DroneManager = /** @class */ (function () {
     this._canCommunicate = true;
     this._targetCoordinates = initial_position;
     try {
-      return this.onStart();
+      return this.onStart(this._API._gameManager._game_duration);
     } catch (error) {
       console.warn('Drone crashed on start due to error:', error);
       this._internal_crash(error);
@@ -142,15 +144,21 @@ var DroneManager = /** @class */ (function () {
       if (!this._canPlay || !this.isReadyToFly()) {
         return;
       }
+      if (this._API._gameManager._game_duration - this._last_command_timestamp
+            < 1000 / this._API.getMaxCommandFrequence()) {
+        this._internal_crash(new Error('Minimum interval between commands is ' +
+            1000 / this._API.getMaxCommandFrequence() + 'milliseconds'));
+      }
       //convert real geo-coordinates to virtual x-y coordinates
       this._targetCoordinates =
         this._API.processCoordinates(latitude, longitude, altitude);
-      return this._API.internal_setTargetCoordinates(
+      this._API.internal_setTargetCoordinates(
         this,
         this._targetCoordinates,
         speed,
         radius
       );
+      this._last_command_timestamp = this._API._gameManager._game_duration;
     };
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this;
@@ -328,7 +336,7 @@ var DroneManager = /** @class */ (function () {
   /**
    * Function called on game start
    */
-  DroneManager.prototype.onStart = function () { return; };
+  DroneManager.prototype.onStart = function (timestamp) { return; };
   /**
    * Function called on game update
    * @param timestamp The tic value
@@ -895,8 +903,8 @@ var GameManager = /** @class */ (function () {
     _this.ongoing_update_promise = null;
     _this.finish_deferred = RSVP.defer();
     console.log("Simulation started.");
-    this._game_duration = 0;
-    this._totalTime = GAMEPARAMETERS.gameTime;
+    this._game_duration = Date.now();
+    this._totalTime = GAMEPARAMETERS.gameTime + this._game_duration;
 
     return new RSVP.Queue()
       .push(function () {
