@@ -5,6 +5,9 @@
  <portal_type id="Group Calendar Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Holiday Acquisition Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Leave Request Module">
   <item>business_application</item>
  </portal_type>
