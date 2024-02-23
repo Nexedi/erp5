@@ -97,7 +97,7 @@ def Base_asXML(object, root=None):
                       portal_type=self.getPortalType()))
 
   # We have to find every property
-  for prop_id in set(self.propertyIds()):
+  for prop_id in sorted(set(self.propertyIds())):
     # In most case, we should not synchronize acquired properties
     if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type') and (prop_id != 'user_id' or 'ERP5User' not in getattr(
       getattr(
