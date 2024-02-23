@@ -192,13 +192,15 @@ def getXupdateObject(object_xml=None, old_xml=None):
 
 def cutXML(xml_string, length=None):
   """
-  Sliced a xml tree a return two fragment
+  Sliced a xml tree and return two fragments
   """
   if length is None:
     length = MAX_LEN
+  if not isinstance(xml_string, six.text_type):
+    xml_string = xml_string.decode('utf-8')
   short_string = xml_string[:length]
   rest_string = xml_string[length:]
-  xml_string = etree.CDATA(short_string.decode('utf-8'))
+  xml_string = etree.CDATA(short_string)
   return xml_string, rest_string
 
 class XMLSyncUtilsMixin(object):
