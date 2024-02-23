@@ -188,6 +188,10 @@
                           <string>channel_item</string>
                           <string>channel_item</string>
                         </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
