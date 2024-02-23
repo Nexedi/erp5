@@ -3335,6 +3335,13 @@ def test_suite():
     pass
   else:
     import ZPublisher.tests.test_WSGIPublisher
+    # TestLoadApp tests are confused because running as a live test interfere with
+    # transaction system. Aborting the transaction at beginning of test seems OK.
+    TestLoadApp_setUp = ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp
+    def setUp(self):
+      TestLoadApp_setUp(self)
+      transaction.abort()
+    ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp = TestLoadApp_setUp
     add_tests(suite, ZPublisher.tests.test_WSGIPublisher)
 
   import ZPublisher.tests.test_mapply
