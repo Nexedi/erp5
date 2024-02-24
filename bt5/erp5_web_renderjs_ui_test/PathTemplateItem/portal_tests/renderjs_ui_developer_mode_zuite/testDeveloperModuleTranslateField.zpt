@@ -35,7 +35,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>clickAndWait</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/a[contains(@href, "<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EAccounting+Transactions%24&lang=en'></span>")]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/a[contains(@href, 'Localizer/erp5_ui/manage_messages') and contains(@href, 'regex=%5EAccounting+Transactions%24') and contains(@href, 'lang=en')]</td>
   <td></td>
 </tr>
 <tr>
