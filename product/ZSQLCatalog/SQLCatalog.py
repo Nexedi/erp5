@@ -14,6 +14,7 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from collections import OrderedDict
 import six
 from six import string_types as basestring
 from six.moves import xrange
@@ -1928,7 +1929,7 @@ class Catalog(Folder,
       )
     else:
       query_list = []
-      value_dict = {}
+      value_dict = OrderedDict()
       append = query_list.append
       for subnode in node.getNodeList():
         if subnode.isLeaf():
