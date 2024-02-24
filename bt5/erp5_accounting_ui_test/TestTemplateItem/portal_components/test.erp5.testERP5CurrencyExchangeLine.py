@@ -581,12 +581,24 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
     euro_to_usd.setPriceCurrencyValue(usd)
     self.assertEqual(2, len(euro_to_usd.contentValues()))
 
-    # cell range is like this:
-    self.assertEqual([
-      ['currency_exchange_type/type_a', 'currency_exchange_type/type_b'],
-      ['resource/%s' % euro.getRelativeUrl()],
-      ['price_currency/%s' % usd.getRelativeUrl()],
-      ], euro_to_usd.getCellRange(base_id='path'))
+    # cell range is like this, matrix cell range does not have ordering
+    # of the keys, only asCellRange script has.
+    self.assertEqual(
+      euro_to_usd.asCellRange(base_id='path'),
+      [
+        ['currency_exchange_type/type_a', 'currency_exchange_type/type_b'],
+        ['resource/%s' % euro.getRelativeUrl()],
+        ['price_currency/%s' % usd.getRelativeUrl()],
+      ]
+    )
+     self.assertEqual(
+      [sorted(r) for r in euro_to_usd.getCellRange(base_id='path')],
+      [
+        ['currency_exchange_type/type_a', 'currency_exchange_type/type_b'],
+        ['resource/%s' % euro.getRelativeUrl()],
+        ['price_currency/%s' % usd.getRelativeUrl()],
+      ]
+    )
 
     type_a_cell = euro_to_usd.getCell(
       'currency_exchange_type/type_a',
