@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+import collections
 from six.moves import xrange
 from six import string_types as basestring
 import sys
@@ -1412,7 +1413,7 @@ class ListBoxRenderer:
     if len(domain_list) > 0:
       category_tool = self.getCategoryTool()
       domain_tool = self.getDomainTool()
-      root_dict = {}
+      root_dict = collections.OrderedDict()
 
       for domain in domain_list:
         # XXX workaround for a past bug in Selection
