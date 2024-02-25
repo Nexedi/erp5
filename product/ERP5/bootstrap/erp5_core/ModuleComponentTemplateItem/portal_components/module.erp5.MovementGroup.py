@@ -28,11 +28,10 @@
 #
 ##############################################################################
 
+from collections import OrderedDict
 from warnings import warn
 from Products.PythonScripts.Utility import allow_class
 
-class FakeMovementError(Exception) : pass
-class MovementGroupError(Exception) : pass
 
 class MovementGroupNode:
   # XXX last_line_movement_group is a wrong name. Actually, it is
@@ -60,7 +59,7 @@ class MovementGroupNode:
       last_line_movement_group=self._last_line_movement_group,
       separate_method_name_list=self._separate_method_name_list,
       merge_delivery=self._merge_delivery)
-    nested_instance.setGroupEdit(**property_dict)
+    nested_instance.setGroupEdit(property_dict)
     split_movement_list = nested_instance.append(movement_list)
     self._group_list.append(nested_instance)
     return split_movement_list
@@ -93,27 +92,20 @@ class MovementGroupNode:
   def getGroupList(self):
     return self._group_list
 
-  def setGroupEdit(self, **kw):
+  def setGroupEdit(self, kw):
     """
-      Store properties for the futur created object
+      Store properties for the future created object
     """
     self._property_dict = kw
 
-  def updateGroupEdit(self, **kw):
-    """
-      Update properties for the futur created object
-    """
-    self._property_dict.update(kw)
-
   def getGroupEditDict(self):
     """
-      Get property dict for the futur created object
+      Get property dict for the future created object
     """
-    property_dict = getattr(self, '_property_dict', {}).copy()
-    for key in property_dict.keys():
-      if key.startswith('_'):
-        del(property_dict[key])
-    return property_dict
+    return OrderedDict([
+      (k, v)
+      for (k, v) in getattr(self, '_property_dict', {}).items()
+      if not k.startswith('_')])
 
   def getCurrentMovementGroup(self):
     return self._movement_group
