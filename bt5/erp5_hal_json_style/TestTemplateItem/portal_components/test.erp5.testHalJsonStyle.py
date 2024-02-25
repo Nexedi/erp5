@@ -2361,7 +2361,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       query='id:"foo"',
       list_method='Test_listCatalog',
       select_list=['title', 'uid'],
-      selection_domain=json.dumps({'foo_domain': 'a/a1', 'foo_category': 'a/a2'}),
+      selection_domain=json.dumps({'foo_domain': 'a/a1', 'foo_category': 'a/a2'}, sort_keys=True),
       relative_url='foo_module',
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox',
       default_param_json='eyJwb3J0YWxfdHlwZSI6IFsiRm9vIl0sICJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZX0=',
@@ -2384,8 +2384,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       })
     self.assertEqual(selection.getSortOrder(), [('title', 'DESC')])
     self.assertEqual(selection.columns, [('title', 'Title')])
-    self.assertEqual(selection.getDomainPath(), ['foo_domain', 'foo_category'])
-    self.assertEqual(selection.getDomainList(), ['foo_domain/a', 'foo_domain/a/a1', 'foo_category/a', 'foo_category/a/a2'])
+    self.assertEqual(selection.getDomainPath(), ['foo_category', 'foo_domain'])
+    self.assertEqual(selection.getDomainList(), ['foo_category/a', 'foo_category/a/a2', 'foo_domain/a', 'foo_domain/a/a1',])
     self.assertEqual(selection.flat_list_mode, 0)
     self.assertEqual(selection.domain_tree_mode, 1)
     self.assertEqual(selection.report_tree_mode, 0)
