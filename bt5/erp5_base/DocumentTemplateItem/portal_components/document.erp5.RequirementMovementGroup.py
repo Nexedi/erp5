@@ -36,7 +36,7 @@ class RequirementMovementGroup(MovementGroup):
   portal_type = 'Requirement Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    return {'requirement':self._getRequirementList(movement)}
+    return {'requirement': self._getRequirementList(movement)}
 
   def test(self, movement, property_dict, **kw):
     # We can always update
