@@ -1044,9 +1044,12 @@ class ListBoxRenderer:
         sort_dict[c] = ':' + cast
       else:
         if cast:
-          warn('Each line of the "Sortable Columns" field property must be'
-                ' in the form "<column_id> | <cast_type>", where <cast_type>'
-                " is one of ('', 'float').", DeprecationWarning)
+          warn(
+            '{form}/{field}:'.format(
+              form=self.getForm().getId(), field=self.field.getId())
+            + ' Each line of the "Sortable Columns" field property must be'
+            + ' in the form "<column_id> | <cast_type>", where <cast_type>'
+            + " is one of ('', 'float').", DeprecationWarning)
         sort_dict[c] = ''
     return sort_dict
 
