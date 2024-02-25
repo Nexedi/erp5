@@ -38,10 +38,7 @@ class CausalityMovementGroup(MovementGroup):
 
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
-    explanation_relative_url = self._getExplanationRelativeUrl(movement)
-    property_dict['_explanation'] = explanation_relative_url
-    return property_dict
+    return {'_explanation': self._getExplanationRelativeUrl(movement)}
 
   def test(self, movement, property_dict, **kw):
     # we don't care the difference of explanation url when updating

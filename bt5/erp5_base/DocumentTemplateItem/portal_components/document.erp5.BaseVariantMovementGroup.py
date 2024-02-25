@@ -37,13 +37,7 @@ class BaseVariantMovementGroup(MovementGroup):
   portal_type = 'Base Variant Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
-    category_list = movement.getVariationBaseCategoryList()
-    if category_list is None:
-      category_list = []
-    category_list.sort()
-    property_dict['_base_category_list'] = category_list
-    return property_dict
+    return {'_base_category_list': sorted(movement.getVariationBaseCategoryList() or [])}
 
   def test(self, document, property_dict, **kw):
     # This movement group does not affect updating.

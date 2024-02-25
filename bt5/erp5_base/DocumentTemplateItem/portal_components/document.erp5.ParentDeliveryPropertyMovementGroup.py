@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from collections import OrderedDict
 from erp5.component.document.PropertyMovementGroup import PropertyMovementGroup
 from Products.ERP5Type.Utils import UpperCase
 
@@ -41,7 +42,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
   portal_type = 'Parent Delivery Property Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
+    property_dict = OrderedDict()
     parent_delivery = self._getParentDelivery(movement)
     if parent_delivery is not None:
       for prop in self.getTestedPropertyList():

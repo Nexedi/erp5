@@ -26,7 +26,9 @@
 #
 ##############################################################################
 
+from collections import OrderedDict
 from erp5.component.document.MovementGroup import MovementGroup
+
 
 class PropertyMovementGroup(MovementGroup):
   """
@@ -40,7 +42,7 @@ class PropertyMovementGroup(MovementGroup):
   portal_type = 'Property Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
+    property_dict = OrderedDict()
     getProperty = movement.getProperty
     for prop in self.getTestedPropertyList():
       property_dict[prop] = getProperty(prop)

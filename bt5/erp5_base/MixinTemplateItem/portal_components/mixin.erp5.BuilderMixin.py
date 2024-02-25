@@ -331,8 +331,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # 'variation_category' or 'variation_property' pseudo properties,
     # which rely on the resource being set to discover which
     # categories/properties to set
-    # XXX-Leo: in the future: using an ordered_dict would be nice,
-    # but this would have to be respected on Base._edit()
     edit_order = []
     property_dict = {'edit_order': edit_order}
     for d in property_dict_list:
