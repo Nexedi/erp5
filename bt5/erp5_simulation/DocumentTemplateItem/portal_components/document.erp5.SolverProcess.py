@@ -83,7 +83,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     """
       Builds target solvers from solver decisions
     """
-    movement_dict = {}
+    import collections
+    movement_dict = collections.OrderedDict()
     message_list = []
 
     # First create a mapping between simulation movements and solvers
