@@ -396,7 +396,7 @@ import sys
     self.assertTrue(self.image_module is not None)
     # Create a new ERP5 image object
     reference = 'testBase_displayImageReference5'
-    data_template = '<img src="data:application/unknown;base64,%s" /><br />'
+    data_template = '<img src="data:image/png;base64,%s" /><br />'
     data = 'qwertyuiopasdfghjklzxcvbnm<somerandomcharacterstosaveasimagedata>'
     if getattr(self.image_module, 'testBase_displayImageID5', None) is not None:
       self.image_module.manage_delObjects(ids=['testBase_displayImageID5'])
