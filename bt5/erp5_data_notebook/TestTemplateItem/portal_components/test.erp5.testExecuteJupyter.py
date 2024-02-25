@@ -392,39 +392,37 @@ import sys
     Test the fucntioning of the ERP5ImageProcessor and the custom system
     display hook too.
     """
-    self.image_module = self.portal.getDefaultModule('Image')
-    self.assertTrue(self.image_module is not None)
     # Create a new ERP5 image object
     reference = 'testBase_displayImageReference5'
-    data_template = '<img src="data:application/unknown;base64,%s" /><br />'
-    data = 'qwertyuiopasdfghjklzxcvbnm<somerandomcharacterstosaveasimagedata>'
-    if getattr(self.image_module, 'testBase_displayImageID5', None) is not None:
-      self.image_module.manage_delObjects(ids=['testBase_displayImageID5'])
-    self.image_module.newContent(
+    data_template = '<img src="data:image/png;base64,%s"'
+    data = bytes(self.portal.restrictedTraverse('images/erp5_logo.png').data)
+    img = self.portal.image_module.newContent(
       portal_type='Image',
-      id='testBase_displayImageID5',
+      id=self.id(),
       reference=reference,
       data=data,
       filename='test.png'
-      )
+    )
+    def cleanup():
+      self.portal.image_module.manage_delObjects(ids=[img.getId()])
+      self.tic()
+    self.addCleanup(cleanup)
     self.tic()
 
     # Call Base_displayImage from inside of Base_runJupyter
     jupyter_code = """
 image = context.portal_catalog.getResultValue(portal_type='Image',reference='%s')
 context.Base_renderAsHtml(image)
-"""%reference
+""" % reference
 
-    notebook_context = {'setup' : {}, 'variables' : {}}
+    notebook_context = {'setup': {}, 'variables': {}}
     result = self.portal.Base_runJupyter(
       jupyter_code=jupyter_code,
       old_notebook_context=notebook_context
-      )
-
-    self.assertIn((data_template % base64.b64encode(data)), result['result_string'])
-    # Mime_type shouldn't be  image/png just because of filename, instead it is
-    # dependent on file and file data
-    self.assertNotEqual(result['mime_type'], 'image/png')
+    )
+    self.assertIn((data_template % base64.b64encode(data).decode()), result['result_string'])
+    self.assertEqual(result['mime_type'], 'text/html')
+    self.assertEqual(result['status'], 'ok')
 
   def testImportSameModuleDifferentNamespace(self):
     """
@@ -436,7 +434,7 @@ context.Base_renderAsHtml(image)
 
     # First we execute a jupyter_code which imports sys module as 'ss' namespace
     jupyter_code = "import sys as ss"
-    reference = 'Test.Notebook.MutlipleImports %s' %time.time()
+    reference = 'Test.Notebook.MutlipleImports %s' % time.time()
     portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code
