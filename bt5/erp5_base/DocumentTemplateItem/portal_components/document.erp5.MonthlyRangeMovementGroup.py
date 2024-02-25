@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import OrderedDict
 from erp5.component.document.MovementGroup import MovementGroup
 from DateTime import DateTime
 from erp5.component.module.DateUtils import atTheEndOfPeriod
@@ -45,7 +46,7 @@ class MonthlyRangeMovementGroup(MovementGroup):
   def _getPropertyDict(self, movement, **kw):
     """Gather start_date and stop_date, converge them to the end of month.
     """
-    property_dict = {}
+    property_dict = OrderedDict()
     for property_name in self.getTestedPropertyList() or ('start_date', 'stop_date'):
       date = movement.getProperty(property_name, None)
       if date is not None:
