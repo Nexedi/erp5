@@ -78,7 +78,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -90,7 +92,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_start_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -99,6 +103,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
+                        <string>my_date_time_field_with_tales</string>
                       </list>
                     </value>
                 </item>

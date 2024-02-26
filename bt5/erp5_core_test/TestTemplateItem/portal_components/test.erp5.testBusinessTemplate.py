@@ -7602,6 +7602,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       business_template.setProperty(property_id, ["aa/**"])
       self.assertEqual(True, method("aa/bb"))
       self.assertEqual(True, method("aa/bb/cc"))
+      business_template.setProperty(property_id, ["aa/b*/**"])
+      self.assertEqual(False, method("aa/bb"))
+      self.assertEqual(True, method("aa/bb/cc"))
 
   def stepCreateDocumentComponentWhichTriggersAnOperationWhenSubDocumentIsAdded(
         self, sequence=None, **kw):

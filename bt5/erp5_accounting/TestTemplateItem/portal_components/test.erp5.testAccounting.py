@@ -3387,7 +3387,7 @@ class TestAccountingExport(AccountingTestCase):
                     form_id='AccountingTransaction_view')
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(ods_data)
+    parser.openFromBytes(ods_data)
     content_xml = parser.oo_files['content.xml']
     # just make sure that we have the correct account name
     self.assertEqual(
@@ -3907,7 +3907,7 @@ class TestTransactions(AccountingTestCase):
 
     # reset from the payment line, the invoice line from the same group will be
     # ungrouped
-    payment_line.AccountingTransactionLine_resetGroupingReference(async=False)
+    payment_line.AccountingTransactionLine_resetGroupingReference(asynchronous=False)
     self.assertFalse(payment_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingDate())
     self.assertFalse(invoice_line.getGroupingReference())

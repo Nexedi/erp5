@@ -4,9 +4,8 @@ from six import unichr
 from six.moves import xrange
 import string
 from .DummyField import fields
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate.html_quote import html_quote
 from DateTime import DateTime, Timezones
-from Products.PythonScripts.standard import html_quote
 import types
 from DocumentTemplate.ustr import ustr
 from six.moves.urllib.parse import urljoin
@@ -73,7 +72,7 @@ class OOoEscaper:
     self.parent_node = parent_node
   def __call__(self, match_object):
     match_value = match_object.group(1)
-    if match_value is None:
+    if match_value is None and match_object.group(2):
       self.parent_node.text = convert_to_xml_compatible_string(match_object.group(2))
     elif match_value == '\n':
       line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'line-break'))

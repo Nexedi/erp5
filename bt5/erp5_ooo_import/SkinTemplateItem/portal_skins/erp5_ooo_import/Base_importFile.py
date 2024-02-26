@@ -20,11 +20,11 @@ def getSpreadsheet(file):
       tmp_ooo.edit(data=file.read(), content_type=content_type)
       tmp_ooo.convertToBaseFormat()
       ignored, import_file_content = tmp_ooo.convert('ods')
-      ooo_parser.openFromString(str(import_file_content))
+      ooo_parser.openFromBytes(bytes(import_file_content))
     else:
       ooo_parser.openFile(file)
   else:
-    ooo_parser.openFromString(file)
+    ooo_parser.openFromBytes(file)
 
 
   return ooo_parser.getSpreadsheetsMapping()

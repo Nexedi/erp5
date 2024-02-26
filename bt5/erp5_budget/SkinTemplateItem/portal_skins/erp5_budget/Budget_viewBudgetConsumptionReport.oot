@@ -86,6 +86,22 @@
    <number:number number:decimal-places="2" number:min-integer-digits="1"/>
    <number:text>%</number:text>
   </number:percentage-style>
+  <style:style style:name="Level1Percent" style:family="table-cell" style:parent-style-name="Level1" style:data-style-name="N11"/>
+  <style:style style:name="Level2Percent" style:family="table-cell" style:parent-style-name="Level2" style:data-style-name="N11"/>
+  <style:style style:name="Level3Percent" style:family="table-cell" style:parent-style-name="Level3" style:data-style-name="N11"/>
+  <style:style style:name="Level4Percent" style:family="table-cell" style:parent-style-name="Level4" style:data-style-name="N11"/>
+
+  <style:style style:name="Level1Cell1Percent" style:family="table-cell" style:parent-style-name="Level1Cell1" style:data-style-name="N11"/>
+  <style:style style:name="Level2Cell1Percent" style:family="table-cell" style:parent-style-name="Level2Cell1" style:data-style-name="N11"/>
+  <style:style style:name="Level3Cell1Percent" style:family="table-cell" style:parent-style-name="Level3Cell1" style:data-style-name="N11"/>
+  <style:style style:name="Level4Cell1Percent" style:family="table-cell" style:parent-style-name="Level4Cell1" style:data-style-name="N11"/>
+
+  <style:style style:name="Level2.1Percent" style:family="table-cell" style:parent-style-name="Level2.1" style:data-style-name="N11"/>
+  <style:style style:name="Level2.2Percent" style:family="table-cell" style:parent-style-name="Level2.2" style:data-style-name="N11"/>
+  <style:style style:name="Level2.3Percent" style:family="table-cell" style:parent-style-name="Level2.3" style:data-style-name="N11"/>
+  <style:style style:name="Level2.4Percent" style:family="table-cell" style:parent-style-name="Level2.4" style:data-style-name="N11"/>
+  <style:style style:name="Level2.5Percent" style:family="table-cell" style:parent-style-name="Level2.5" style:data-style-name="N11"/>
+
   <style:style style:name="ce1" style:family="table-cell" style:parent-style-name="Default">
    <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" style:vertical-align="middle"/>
    <style:paragraph-properties fo:text-align="center"/>
@@ -285,7 +301,7 @@
      <table:table-cell table:style-name="Level1" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget">
       <text:p>5</text:p>
      </table:table-cell>
-     <table:table-cell table:style-name="Level1" office:value-type="percentage" office:value="0.06" tal:attributes="office:value line/consumed_ratio">
+     <table:table-cell table:style-name="Level1Percent" office:value-type="percentage" office:value="0.06" tal:attributes="office:value line/consumed_ratio">
       <text:p>6,00%</text:p>
      </table:table-cell>
      <table:table-cell table:number-columns-repeated="768"/>
@@ -313,7 +329,7 @@
          <table:table-cell table:style-name="ce18" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget; table:style-name style">
           <text:p>5</text:p>
          </table:table-cell>
-         <table:table-cell table:style-name="ce23" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value line/consumed_ratio; table:style-name style">
+         <table:table-cell table:style-name="ce23" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value line/consumed_ratio; table:style-name string:${style}Percent">
            <text:p>6,00%</text:p>
          </table:table-cell>
        <table:table-cell table:number-columns-repeated="768"/>
@@ -345,7 +361,7 @@
            <table:table-cell table:style-name="Level3" office:value-type="float" office:value="5" tal:attributes="office:value subline/available_budget">
             <text:p>5</text:p>
            </table:table-cell>
-           <table:table-cell table:style-name="Level3" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value subline/consumed_ratio">
+           <table:table-cell table:style-name="Level3Percent" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value subline/consumed_ratio">
             <text:p>6,00%</text:p>
            </table:table-cell>
            <table:table-cell table:number-columns-repeated="1016"/>
@@ -380,7 +396,7 @@
            office:value="5" tal:attributes="office:value subsubline/available_budget">
           <text:p>5</text:p>
          </table:table-cell>
-         <table:table-cell table:style-name="Level4"
+         <table:table-cell table:style-name="Level4Percent"
            office:value-type="percentage" office:value="0.06"
            tal:attributes="office:value subsubline/consumed_ratio">
           <text:p>6,00%</text:p>

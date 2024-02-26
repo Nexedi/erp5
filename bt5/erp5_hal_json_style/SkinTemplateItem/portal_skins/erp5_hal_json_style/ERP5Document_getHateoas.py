@@ -49,7 +49,7 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 
 from ZTUtils import make_query
 import json
-import urllib
+from six.moves.urllib.parse import urlencode
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
@@ -63,6 +63,8 @@ from Products.ERP5Type.Message import Message
 from collections import OrderedDict
 from Products.ERP5Form.Selection import Selection
 from Products.PythonScripts.standard import Object
+from Products.ERP5Type.Utils import bytes2str, str2bytes
+import six
 
 
 MARKER = Object()
@@ -83,7 +85,7 @@ def toBasicTypes(obj):
   """Ensure that  obj contains only basic types."""
   if obj is None:
     return obj
-  if isinstance(obj, (bool, int, float, long, str, unicode)):
+  if isinstance(obj, (bool, float, str) + six.integer_types + (six.text_type, )):
     return obj
   if isinstance(obj, list):
     return [toBasicTypes(x) for x in obj]
@@ -91,6 +93,8 @@ def toBasicTypes(obj):
     return tuple(toBasicTypes(x) for x in obj)
   if isinstance(obj, Message):
     return obj.translate()
+  if isinstance(obj, DateTime):
+    return obj.rfc822()
   try:
     return {toBasicTypes(key): toBasicTypes(obj[key]) for key in obj}
   except Exception:
@@ -124,12 +128,12 @@ def renderHiddenField(form, name, value):
 # http://stackoverflow.com/a/13105359
 def byteify(string):
   if isinstance(string, dict):
-    return {byteify(key): byteify(value) for key, value in string.iteritems()}
+    return {byteify(key): byteify(value) for key, value in six.iteritems(string)}
   elif isinstance(string, list):
     return [byteify(element) for element in string]
   elif isinstance(string, tuple):
     return tuple(byteify(element) for element in string)
-  elif isinstance(string, unicode):
+  elif six.PY2 and isinstance(string, six.text_type):
     return string.encode('utf-8')
   else:
     return string
@@ -139,10 +143,11 @@ def ensureUTF8(obj):
   """Make sure string is UTF-8, by replacing characters that
   cannot be decoded.
   """
-  if isinstance(obj, str):
-    return obj.decode('utf-8', 'replace').encode('utf-8')
-  elif isinstance(obj, unicode):
-    return obj.encode('utf-8', 'replace')
+  if six.PY2:
+    if isinstance(obj, str):
+      return obj.decode('utf-8', 'replace').encode('utf-8')
+    elif isinstance(obj, six.text_type):
+      return obj.encode('utf-8', 'replace')
   return obj
 
 def ensureSerializable(obj):
@@ -181,7 +186,9 @@ def ensureDeserialized(obj):
       return datetime.time(*tuple(map(int, match_obj.groups())))
   return obj
 
-NBSP_UTF8 = u'\xA0'.encode('utf-8')
+NBSP_UTF8 = u'\xA0'
+if six.PY2:
+  NBSP_UTF8 = NBSP_UTF8.encode('utf-8')
 def generateDomainTreeList(url_tool, domain_tool, domain, depth, domain_list):
   if depth:
     domain_list.append((
@@ -421,8 +428,8 @@ def getFieldDefault(form, field, key, value=MARKER):
   if value is MARKER:
     # use marker because default value can be intentionally empty string
     value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
-    if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, unicode):
-      value = unicode(value, form.get_form_encoding())
+    if six.PY2 and field.has_value("unicode") and field.get_value("unicode") and isinstance(value, six.text_type):
+      value = value.decode(form.get_form_encoding())
   if getattr(value, 'translate', None) is not None:
     return "%s" % value
   return value
@@ -476,7 +483,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     selected_language = erp5_ui.get_selected_language()
     result["translate_title_href"] = '%s/manage_messages?%s' % (
       '/'.join(erp5_ui.getPhysicalPath()[2:]),
-      urllib.urlencode({"regex": "^%s$" % field.title(),
+      urlencode({"regex": "^%s$" % field.title(),
                         "lang": selected_language})
     )
 
@@ -484,7 +491,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     if field_description:
       result["translate_description_href"] = '%s/manage_messages?%s' % (
         '/'.join(erp5_ui.getPhysicalPath()[2:]),
-        urllib.urlencode({"regex": "^%s$" % field_description,
+        urlencode({"regex": "^%s$" % field_description,
                           "lang": selected_language})
       )
 
@@ -666,11 +673,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
-        "extra_param_json": urlsafe_b64encode(
+        "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(
           json.dumps(ensureSerializable({
             'original_form_id': form.id,
             'field_id': field.id
-        })))
+        })))))
       }
     })
 
@@ -697,7 +704,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       "sandbox": field.get_value("js_sandbox")
     })
     try:
-      result["renderjs_extra"] = json.dumps(dict(field.get_value("renderjs_extra")))
+      result["renderjs_extra"] = json.dumps(toBasicTypes(dict(field.get_value("renderjs_extra"))))
     except KeyError:
       # Ensure compatibility if the products are not yet up to date
       result["renderjs_extra"] = json.dumps({})
@@ -719,7 +726,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
                                                                           or field.get_value("editable_columns"))]
     all_column_list = [(name, title) for name, title in field.get_value("all_columns")]
     catalog_column_list = [(name, title)
-                           for name, title in OrderedDict(column_list + all_column_list).items()
+                           for name, title in six.iteritems(OrderedDict(column_list + all_column_list))
                            if sql_catalog.isValidColumn(name)]
 
     # try to get specified searchable columns and fail back to all searchable columns
@@ -791,10 +798,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "form_relative_url": "%s/%s" % (form_relative_url, field.id),
         "list_method": list_method_name,
-        "default_param_json": urlsafe_b64encode(
-          json.dumps(ensureSerializable(list_method_query_dict))),
-        "extra_param_json": urlsafe_b64encode(
-          json.dumps(ensureSerializable(extra_param_dict)))
+        "default_param_json": bytes2str(urlsafe_b64encode(str2bytes(
+          json.dumps(ensureSerializable(list_method_query_dict))))),
+        "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(
+          json.dumps(ensureSerializable(extra_param_dict)))))
       }
       # once we imprint `default_params` into query string of 'list method' we
       # don't want them to propagate to the query as well
@@ -813,7 +820,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         "script_id": script.id,
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "list_method": list_method_name,
-        "default_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(list_method_query_dict)))
+        "default_param_json": bytes2str(urlsafe_b64encode(str2bytes(json.dumps(ensureSerializable(list_method_query_dict)))))
       }
       list_method_query_dict = {}
     """
@@ -1057,12 +1064,12 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
-        "extra_param_json": urlsafe_b64encode(
+        "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(
           json.dumps(ensureSerializable({
             'proxy_listbox_id': x,
             'original_form_id': extra_param_json['original_form_id'],
             'field_id': extra_param_json['field_id']
-          })))
+          })))))
       }) for x, y in proxy_form_id_list],
       "first_item": 1,
       "required": 0,
@@ -1080,12 +1087,12 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
-        "extra_param_json": urlsafe_b64encode(
+        "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(
           json.dumps(ensureSerializable({
             'proxy_listbox_id': REQUEST.get('proxy_listbox_id', None),
             'original_form_id': extra_param_json['original_form_id'],
             'field_id': extra_param_json['field_id']
-          })))
+          })))))
       }
 
   # Go through all groups ("left", "bottom", "hidden" etc.) and add fields from
@@ -1283,7 +1290,7 @@ def renderFormDefinition(form, response_dict):
 
 def statusLevelToString(level):
   """Transform any level format to lowercase string representation"""
-  if isinstance(level, (str, unicode)):
+  if isinstance(level, (str, six.text_type)):
     if level.lower() == "error":
       return "error"
     elif level.lower().startswith("warn"):
@@ -1561,14 +1568,14 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         global_action_type = ("view", "workflow", "object_new_content_action",
                               "object_clone_action", "object_delete_action",
-                              "object_list_action", "object_jio_jump")
+                              "object_list_action", "object_jio_jump", "object_list")
         if (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
             "_jio" in erp5_action_key) and not erp5_action_key.endswith("_raw"):
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
-          if erp5_action_key not in ("view", "object_view", "object_jio_view", "object_jio_jump"):
+          if erp5_action_key not in ("view", "object_list", "object_view", "object_jio_view", "object_jio_jump"):
             url_template_key = "traverse_generator_action"
           # but when we do not have the last form id we do not pass is of course
           if not (current_action.get('view_id', '') or last_form_id):
@@ -1584,7 +1591,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
                 "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
                 "view": erp5_action_list[-1]['name'],
-                "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
+                "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(json.dumps(ensureSerializable(extra_param_json)))))
               }
 
       if erp5_action_list:
@@ -1738,7 +1745,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     # Those parameter will be send back during the listbox submission
     # to ensure fetching the same lines
-    listbox_query_param_json = urlsafe_b64encode(json.dumps(ensureSerializable({
+    listbox_query_param_json = bytes2str(urlsafe_b64encode(str2bytes(json.dumps(ensureSerializable({
       'form_relative_url': form_relative_url,
       'list_method': list_method,
       'default_param_json': default_param_json,
@@ -1751,7 +1758,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'relative_url': relative_url,
       'group_by': group_by,
       'sort_on': sort_on
-    })))
+    })))))
 
     # set 'here' for field rendering which contain TALES expressions
     REQUEST.set('here', traversed_document)
@@ -1925,7 +1932,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
           all_column_list = [(name, title) for name, title in source_field.get_value("all_columns") if name in select_list]
           selection_kw['columns'] = [(name, title)
-                                     for name, title in OrderedDict(column_list + all_column_list).items()]
+                                     for name, title in six.iteritems(OrderedDict(column_list + all_column_list))]
         else:
           selection_kw['columns'] = []
 
@@ -2197,8 +2204,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "script_id": script.id,
                 "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
                 "view": url_parameter_dict['view_kw']['view'],
-                "extra_param_json": urlsafe_b64encode(
-                  json.dumps(ensureSerializable(extra_url_param_dict)))
+                "extra_param_json": bytes2str(urlsafe_b64encode(str2bytes(
+                  json.dumps(ensureSerializable(extra_url_param_dict)))))
                 }
 
       # endfor select
@@ -2415,8 +2422,8 @@ if mode == 'url_generator':
     keep_items_json = None
   else:
     generator_key = 'traverse_generator_action'
-    keep_items_json = urlsafe_b64encode(
-      json.dumps(ensureSerializable(keep_items)))
+    keep_items_json = bytes2str(urlsafe_b64encode(str2bytes(
+      json.dumps(ensureSerializable(keep_items)))))
   return url_template_dict[generator_key] % {
     "root_url": site_root.absolute_url(),
     "script_id": 'ERP5Document_getHateoas',

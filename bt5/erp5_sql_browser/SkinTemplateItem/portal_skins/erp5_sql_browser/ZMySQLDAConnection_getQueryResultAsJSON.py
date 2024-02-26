@@ -3,8 +3,14 @@ import datetime
 import time
 import json
 from DateTime import DateTime
+import six
 
-response = container.REQUEST.RESPONSE
+request = container.REQUEST
+if request['REQUEST_METHOD'] != 'POST':
+  from zExceptions import BadRequest
+  raise BadRequest
+
+response = request.RESPONSE
 start = time.time()
 try:
   results = context.manage_test(query)
@@ -32,7 +38,7 @@ for line in results.tuples():
       v = v.isoformat()
     elif isinstance(v, Decimal):
       v = float(v)
-    elif isinstance(v, (long, int, float)) and not isSafeInteger(v):
+    elif isinstance(v, six.integer_types + (float,)) and not isSafeInteger(v):
       # if numbers are too large to be handled by javascript, we simply return them
       # as string, this will still not work for pivot table, but at least the spreadsheet
       # will not display truncated values.

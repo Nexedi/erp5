@@ -30,6 +30,7 @@ from logging import getLogger
 from erp5.component.mixin.SyncMLEngineMixin import SyncMLEngineMixin
 from erp5.component.module.SyncMLConstant import ACTIVITY_PRIORITY
 from Products.ERP5.ERP5Site import getSite
+from six.moves import range
 
 syncml_logger = getLogger('ERP5SyncML')
 
@@ -81,7 +82,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
         # Make sure it is launched after indexation step
         self.runGetAndActivate(subscription=subscription, tag=tag,
                                after_method_id=("getAndIndex",
-                                                "SQLCatalog_indexSyncMLDocumentList"))
+                                                "ERP5Site_indexSyncMLDocumentList"))
         syncml_logger.info("X-> Client is sendind modification in activities")
         # As we generated all activities to send data at once, process must not
         # go back here, go into processing state thus status will be applied and
@@ -113,7 +114,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
                               (subscription.getPath(),
                                'applySyncCommand'),
                                after_tag=tag,).sendMessage(
-                                 xml=str(syncml_response))
+                                 xml=bytes(syncml_response))
         # Synchronization process is now finished
         syncml_logger.info("\tClient finished processing messages from server")
         subscription.finish()
@@ -137,7 +138,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       # transport failure
       syncml_logger.info("....client sending message....")
       subscription.activate(activity="SQLQueue").sendMessage(
-        xml=str(syncml_response))
+        xml=bytes(syncml_response))
 
 
   def processServerSynchronization(self, subscriber, syncml_request):
@@ -210,7 +211,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
           # Start to send modification only once we have processed
           # all message from client
           after_method_id=('processServerSynchronization',
-                           'SQLCatalog_indexSyncMLDocumentList')
+                           'ERP5Site_indexSyncMLDocumentList')
           # XXX after tag might also be required to make sure all data are indexed
           tag = (tag, "%s_reset" % subscriber.getPath(),)
       # Do not continue in elif, as sending modifications is done in the same
@@ -241,7 +242,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       subscriber.activate(activity="SQLQueue",
                           after_method_id=after_method_id,
                           after_tag=tag).sendMessage(
-                            xml=str(syncml_response))
+                            xml=bytes(syncml_response))
 
   def runGetAndActivate(self, subscription, tag, after_method_id=None):
     """
@@ -282,7 +283,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       response_id_list.reverse()
     else:
       response_id_list = [None for _ in
-                          xrange(len(syncml_request.sync_command_list))]
+                          range(len(syncml_request.sync_command_list))]
     split = getSite().portal_preferences.getPreferredSyncActionPerActivityCount()
     if not split:  # We do not use activities
       if send_response:
@@ -294,7 +295,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
         subscription.activate(
           activity="SQLQueue",
           priority=ACTIVITY_PRIORITY,
-          tag=subscription.getRelativeUrl()).sendMessage(xml=str(syncml_response))
+          tag=subscription.getRelativeUrl()).sendMessage(xml=bytes(syncml_response))
     else:
       # XXX For now always split by one
       activate = subscription.activate

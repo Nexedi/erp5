@@ -61,8 +61,7 @@ ACQUIRE_LOCAL_ROLE_GETTER_DICT = {
   for acquire_local_role in (False, True)
 }
 
-if six.PY3:
-  StandardError = Exception
+
 def _importFilesystemClass(classpath):
   try:
     module_path, class_name = classpath.rsplit('.', 1)
@@ -74,7 +73,7 @@ def _importFilesystemClass(classpath):
     InitializeClass(klass)
 
     return klass
-  except StandardError:
+  except Exception as e:
     raise ImportError('Could not import document class ' + classpath)
 
 def _importComponentClass(component_package, name):

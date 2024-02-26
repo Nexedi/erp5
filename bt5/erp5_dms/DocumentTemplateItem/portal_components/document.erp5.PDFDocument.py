@@ -395,4 +395,11 @@ class PDFDocument(Image):
       del self._content_information
     except (AttributeError, KeyError):
       pass
-    Image._setFile(self, *args, **kw)
+    super(PDFDocument, self)._setFile(*args, **kw)
+
+  def _setData(self, *args, **kw):
+    try:
+      del self._content_information
+    except (AttributeError, KeyError):
+      pass
+    super(PDFDocument, self)._setData(*args, **kw)

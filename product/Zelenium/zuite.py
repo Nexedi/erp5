@@ -69,7 +69,9 @@ def _makeFile(filename, prefix=None, id=None):
     if id is None:
         id = os.path.split( path )[ 1 ]
 
-    return File( id=id, title='', file=open(path).read() )
+    with open(path, 'rb') as f:
+        data = f.read()
+    return File( id=id, title='', file=data )
 
 
 def registerFiles(directory, prefix):

@@ -49,6 +49,7 @@
               <tuple>
                 <string>product</string>
                 <string>resource</string>
+                <string>service</string>
               </tuple>
             </value>
         </item>

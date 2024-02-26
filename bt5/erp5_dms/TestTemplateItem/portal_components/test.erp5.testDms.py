@@ -691,6 +691,56 @@ class TestDocument(TestDocumentMixin):
       'attachment; filename="PDF.pdf"; filename*=UTF-8\'\'PDF%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.pdf',
     )
 
+  def test_download_content_type_by_mimetype_registry_extension(self):
+    content_type = 'application/andrew-inset'
+    data = b"data"
+    mime_type_entry, = self.portal.mimetypes_registry.lookup(content_type)
+    self.assertTrue(mime_type_entry.extensions)
+
+    doc = self.portal.document_module.newContent(
+      portal_type='File',
+      content_type=content_type,
+      data=data,
+    )
+    doc.publish()
+    self.tic()
+    response = self.publish('%s?format=' % doc.getPath())
+    self.assertEqual(response.getBody(), data)
+    self.assertEqual(response.getHeader('Content-Type'), content_type)
+
+  def test_download_content_type_by_mimetype_registry_glob(self):
+    content_type = 'application/x-compressed-tar'
+    data = (
+      b"\x1f\x8b\x08\x08e\x8a\x89e\x00\x03empty.tar\x00\xed\xc1\x01\r\x00\x00\x00\xc2\xa0"
+      b"\xf7Om\x0e7\xa0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x807\x03\x9a\xde\x1d'\x00(\x00\x00")
+    mime_type_entry, = self.portal.mimetypes_registry.lookup(content_type)
+    self.assertFalse(mime_type_entry.extensions)
+    self.assertTrue(mime_type_entry.globs)
+
+    doc = self.portal.document_module.newContent(
+      portal_type='File',
+      content_type=content_type,
+      data=data,
+    )
+    doc.publish()
+    self.tic()
+    response = self.publish('%s?format=' % doc.getPath())
+    self.assertEqual(response.getBody(), data)
+    self.assertEqual(response.getHeader('Content-Type'), content_type)
+
+  def test_csv(self):
+    doc = self.portal.document_module.newContent(
+      portal_type='Spreadsheet',
+      file=makeFileUpload('simple.csv'),
+    )
+    self.assertEqual(doc.getContentType(), 'text/csv')
+    doc.publish()
+    self.tic()
+    response = self.publish('%s?format=' % doc.getPath())
+    self.assertEqual(response.getBody(), makeFileUpload('simple.csv').read())
+    self.assertEqual(response.getHeader('Content-Type'), 'text/csv; charset=utf-8')
+    self.assertEqual(response.getHeader('Content-Disposition'), 'attachment; filename="simple.csv"')
+
   def test_05_getCreationDate(self):
     """
     Check getCreationDate on all document types.
@@ -3004,6 +3054,94 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
                     user_pref.getPreferredThumbnailImageHeight()),
                      image.getSizeFromImageDisplay('thumbnail'))
+
+  def test_mergeRevision(self):
+    document1 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002.doc'))
+    self.tic()
+    self.assertEqual(
+      (document1.getReference(), document1.getLanguage(), document1.getVersion()),
+      ('TEST', 'en', '002'))
+    self.assertNotIn('This document is modified', document1.asText())
+    document2 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002-modified.doc'))
+    self.tic()
+    self.assertIn('This document is modified', document2.asText())
+    self.assertEqual(
+      (document2.getReference(), document2.getLanguage(), document2.getVersion()),
+      ('TEST', 'en', '002'))
+
+    # document was updated in-place
+    self.assertEqual(document1.getRelativeUrl(), document2.getRelativeUrl())
+
+    document2.manage_addLocalRoles(self.username, ['Assignor'])
+    document2.share()
+    self.tic()
+
+    # once the document is shared, the user can no longer edit it and trying to upload
+    # the same reference causes an error.
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
+
+    # this also works with another user which can not see the document
+    another_user_id = self.id()
+    uf = self.portal.acl_users
+    uf._doAddUser(another_user_id, '', ['Author'], [])
+    newSecurityManager(None, uf.getUserById(another_user_id).__of__(uf))
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
+
+  def test_mergeRevision_with_node_reference_local_reference_filename_regular_expression(self):
+    # this filename regular expression comes from configurator
+    self.getDefaultSystemPreference().setPreferredDocumentFilenameRegularExpression(
+      "(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?"
+    )
+    self.tic()
+    document1 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+    self.tic()
+    self.assertEqual(
+      (document1.getReference(), document1.getLanguage(), document1.getVersion()),
+      ('P-PROJ-TEST', 'en', '002'))
+    self.assertNotIn('This document is modified', document1.asText())
+    document2 = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('TEST-en-002-modified.doc', as_name='P-PROJ-TEST-002-en.doc'))
+    self.tic()
+    self.assertIn('This document is modified', document2.asText())
+    self.assertEqual(
+      (document2.getReference(), document2.getLanguage(), document2.getVersion()),
+      ('P-PROJ-TEST', 'en', '002'))
+
+    # document was updated in-place
+    self.assertEqual(document1.getRelativeUrl(), document2.getRelativeUrl())
+
+    document2.manage_addLocalRoles(self.username, ['Assignor'])
+    document2.share()
+    self.tic()
+
+    # once the document is shared, the user can no longer edit it and trying to upload
+    # the same reference causes an error.
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(
+        file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+
+    # this also works with another user which can not see the document
+    another_user_id = self.id()
+    uf = self.portal.acl_users
+    uf._doAddUser(another_user_id, '', ['Author'], [])
+    newSecurityManager(None, uf.getUserById(another_user_id).__of__(uf))
+    with self.assertRaisesRegex(
+        Unauthorized,
+        "You are not allowed to update the existing document"):
+      self.portal.portal_contributions.newContent(
+        file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+
 
 class TestDocumentPerformance(TestDocumentMixin):
 

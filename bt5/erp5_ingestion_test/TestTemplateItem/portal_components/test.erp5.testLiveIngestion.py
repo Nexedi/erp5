@@ -29,6 +29,7 @@
 
 
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
 from Products.CMFCore.utils import getToolByName
 import random
 import string
@@ -57,9 +58,19 @@ class TestIngestion(ERP5TypeLiveTestCase):
     self.login()
     self.portal = self.getPortal()
     self.setSystemPreference()
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      "ContributionTool_isURLIngestionPermitted",
+      "url",
+      "return True",
+    )
 
   def beforeTearDown(self):
     portal = self.portal
+    removeZODBPythonScript(
+      portal.portal_skins.custom,
+      'ContributionTool_isURLIngestionPermitted',
+    )
     # delete created documents by test
     for path in self._path_to_delete_list:
       document = portal.unrestrictedTraverse(path, None)

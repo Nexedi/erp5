@@ -94,7 +94,59 @@
       <style:table-cell-properties style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border='none'/>
       <style:paragraph-properties fo:text-align='center' fo:margin-left='0cm'/>
     </style:style>
-    <number:date-style style:name="date_style" number:automatic-order="true">
+
+    <style:style style:name="with_border_text" style:family="table-cell" style:parent-style-name="Default">
+      <style:table-cell-properties fo:border-left='none' fo:border-bottom='0.002cm solid #000000' fo:border-right='0.002cm solid #000000' fo:border-top='0.002cm solid #000000'/>
+    </style:style>
+    <style:style style:name="with_border_figure" style:family="table-cell" style:parent-style-name="figure">
+      <style:table-cell-properties fo:border-left='none' fo:border-bottom='0.002cm solid #000000' fo:border-right='0.002cm solid #000000' fo:border-top='0.002cm solid #000000'/>
+    </style:style>
+
+    <number:date-style style:name="date_style_ymd">
+      <number:year number:style="long"/>
+      <number:text>/</number:text>
+      <number:month number:style="long"/>
+      <number:text>/</number:text>
+      <number:day number:style="long"/>
+    </number:date-style>
+    <number:date-style style:name="date_style_dmy">
+      <number:day number:style="long"/>
+      <number:text>/</number:text>
+      <number:month number:style="long"/>
+      <number:text>/</number:text>
+      <number:year number:style="long"/>
+    </number:date-style>
+    <number:date-style style:name="date_style_mdy">
+      <number:month number:style="long"/>
+      <number:text>/</number:text>
+      <number:day number:style="long"/>
+      <number:text>/</number:text>
+      <number:year number:style="long"/>
+    </number:date-style>
+
+    <number:date-style style:name="date_with_time_style_ymd">
+      <number:year number:style="long"/>
+      <number:text>/</number:text>
+      <number:month number:style="long"/>
+      <number:text>/</number:text>
+      <number:day number:style="long"/>
+      <number:text> </number:text>
+      <number:hours number:style="long"/>
+      <number:text>:</number:text>
+      <number:minutes number:style="long"/>
+    </number:date-style>
+    <number:date-style style:name="date_with_time_style_mdy">
+      <number:month number:style="long"/>
+      <number:text>/</number:text>
+      <number:day number:style="long"/>
+      <number:text>/</number:text>
+      <number:year number:style="long"/>
+      <number:text> </number:text>
+      <number:hours number:style="long"/>
+      <number:text>:</number:text>
+      <number:minutes number:style="long"/>
+    </number:date-style>
+    <number:date-style style:name="date_with_time_style_dmy">
       <number:day number:style="long"/>
       <number:text>/</number:text>
       <number:month number:style="long"/>
@@ -104,13 +156,34 @@
       <number:hours number:style="long"/>
       <number:text>:</number:text>
       <number:minutes number:style="long"/>
-      <number:text>:</number:text>
-      <number:seconds number:style="long"/>
     </number:date-style>
-    <style:style style:name="date_with_time" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="date_style">
-      <style:table-cell-properties style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border-right='0.002cm solid #000000' />
+    <style:style style:name="stat-date_with_time" style:family="table-cell" style:parent-style-name="stat-date">
+      <style:table-cell-properties fo:border="0.002cm solid #000000"/>
     </style:style>
-    <tal:block tal:repeat="precision python: xrange(0,here.Base_getODSMaximumSupportedPrecision())">
+    <style:style style:name="date_with_time" style:family="table-cell" style:parent-style-name="date">
+      <style:table-cell-properties style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border-left='0.002cm solid #000000' fo:border-right='0.002cm solid #000000'/>
+    </style:style>
+
+    <tal:block tal:repeat="with_time_suffix python: ('', '_with_time')">
+      <tal:block tal:repeat="style_prefix_name python: here.Base_getODSSupportedStylePrefixList() + ('with_border_', )">
+        <tal:block tal:repeat="input_order python: ('ymd', 'dmy', 'mdy')">
+          <style:style 
+            tal:attributes="style:name string:${style_prefix_name}date${with_time_suffix}_${input_order};
+                            style:data-style-name string:date${with_time_suffix}_style_${input_order};
+                            style:parent-style-name string:${style_prefix_name}date${with_time_suffix}"
+            style:name="date_with_time"
+            style:family="table-cell"
+            style:parent-style-name="date_with_time"
+            style:data-style-name="date_with_time_style_ymd">
+            <style:table-cell-properties tal:condition="python: style_prefix_name == ''" style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border-left='0.002cm solid #000000' fo:border-right='0.002cm solid #000000' />
+            <style:table-cell-properties tal:condition="python: style_prefix_name == 'stat-'" fo:border='0.002cm solid #000000' />
+            <style:table-cell-properties tal:condition="python: style_prefix_name == 'with_border_'" fo:border-left='none' fo:border-bottom='0.002cm solid #000000' fo:border-right='0.002cm solid #000000' fo:border-top='0.002cm solid #000000'/>
+          </style:style>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+
+    <tal:block tal:repeat="precision python: range(0,here.Base_getODSMaximumSupportedPrecision())">
       <tal:block tal:define="figure_data_precision_style_name string:figure_data_precision_${precision}">
         <number:number-style style:name="figure_data_precision_X" tal:attributes="style:name figure_data_precision_style_name">
           <number:number number:decimal-places="X" number:min-integer-digits="1" number:grouping="true" tal:attributes="number:decimal-places precision"/>
@@ -118,6 +191,43 @@
         <tal:block tal:repeat="style_prefix_name python: here.Base_getODSSupportedStylePrefixList()">
           <style:style style:name="figure_X" style:family="table-cell" style:parent-style-name="figure" style:data-style-name="figure_data_precision_X" tal:attributes="style:name string:${style_prefix_name}figure_${precision}; style:data-style-name figure_data_precision_style_name ; style:parent-style-name string:${style_prefix_name}figure"/>
         </tal:block>
+        <style:style
+          style:name="with_border_figure_X"
+          style:family="table-cell"
+          style:parent-style-name="figure_X"
+          style:data-style-name="figure_data_precision_style_name"
+          tal:attributes="style:name string:with_border_figure_${precision};
+                          style:data-style-name figure_data_precision_style_name;
+                          style:parent-style-name string:figure_${precision}">
+          <style:table-cell-properties fo:border-left='none' fo:border-bottom='0.002cm solid #000000' fo:border-right='0.002cm solid #000000' fo:border-top='0.002cm solid #000000'/>
+        </style:style>
+      </tal:block>
+
+      <tal:block tal:define="percentage_data_precision_style_name string:percentage_data_precision_${precision}">
+        <number:percentage-style style:name="percentage_data_precision_X" tal:attributes="style:name percentage_data_precision_style_name">
+          <number:number number:decimal-places="X" number:min-integer-digits="1" tal:attributes="number:decimal-places precision"/>
+          <number:text>%</number:text>
+        </number:percentage-style>
+        <tal:block tal:repeat="style_prefix_name python: here.Base_getODSSupportedStylePrefixList()">
+          <style:style
+            style:name="percentage_X"
+            style:family="table-cell"
+            style:parent-style-name="figure"
+            style:data-style-name="percentage_data_precision_X"
+            tal:attributes="style:name string:${style_prefix_name}percentage_${precision};
+                            style:data-style-name percentage_data_precision_style_name;
+                            style:parent-style-name string:${style_prefix_name}figure"/>
+        </tal:block>
+        <style:style
+          style:name="with_border_percentage_X"
+          style:family="table-cell"
+          style:parent-style-name="percentage_X"
+          style:data-style-name="percentage_data_precision_style_name"
+          tal:attributes="style:name string:with_border_percentage_${precision};
+                          style:data-style-name percentage_data_precision_style_name;
+                          style:parent-style-name string:percentage_${precision}">
+          <style:table-cell-properties fo:border-left='none' fo:border-bottom='0.002cm solid #000000' fo:border-right='0.002cm solid #000000' fo:border-top='0.002cm solid #000000'/>
+        </style:style>
       </tal:block>
     </tal:block>
   </office:automatic-styles>

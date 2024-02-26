@@ -27,6 +27,10 @@ from mimetools import choose_boundary
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from DateTime import DateTime
 import re
+import six
+
+if six.PY3:
+  long = int  # pylint:disable=redefined-builtin
 
 class BigFile(File):
   """

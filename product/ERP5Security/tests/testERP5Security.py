@@ -166,8 +166,9 @@ class UserManagementTestCase(ERP5TypeTestCase):
       )
       dummy_type.newContent(
         portal_type='Role Information',
-        role_category_list=self.portal.portal_categories.\
-          group.dummy_group.getRelativeUrl(),
+        role_category_list=(
+          self.portal.portal_categories.group.dummy_group.getRelativeUrl(),
+        ),
         role_name_list=('Assignee', )
       )
     if 'Dummy Module' not in types_tool.objectIds():

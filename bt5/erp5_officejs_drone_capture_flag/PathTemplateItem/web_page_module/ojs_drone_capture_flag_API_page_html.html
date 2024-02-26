@@ -341,7 +341,7 @@
       <div class="line"></div>
 
       <!-- setTargetCoordinates -->
-      <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: dictionary</span></h4>
+      <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: void</span></h4>
       <p class="item-descr">
         Set a target point expressed in geo coordinates. The drone will move straight to this point.
       </p>
@@ -376,8 +376,8 @@
 
       <div class="line"></div>
 
-      <!-- setSpeed -->
-      <h4 class="item-name" id="setSpeed"><span>setSpeed</span><span>: void</span></h4>
+      <!-- setAirSpeed -->
+      <h4 class="item-name" id="setAirSpeed"><span>setAirSpeed</span><span>: void</span></h4>
       <p class="item-descr">Set the drone speed in meters/second. The drone will move at the given value.</p>
 
       <div>
@@ -386,7 +386,7 @@
       </div>
 
       <div>
-        <p class="item-param-1">altitude: Float</p>
+        <p class="item-param-1">speed: Float</p>
         <p class="item-param-2">Speed value</p>
       </div>
 
@@ -394,14 +394,14 @@
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.setSpeed(16);<br>
+      <p class="item-param-1">me.setAirSpeed(16);<br>
       </p>
 
       <div class="line"></div>
 
       <!-- loiter -->
       <h4 class="item-name" id="loiter"><span>loiter</span><span>: void</span></h4>
-      <p class="item-descr">Set the drone to loiter mode, it will loiter around the target coordinates.</p>
+      <p class="item-descr">Set the drone to loiter mode, it will loiter around the target coordinates. If the given radius is inferior to LOITER_LIMIT (30), then the chosen radius will be the last accepted value when calling loiter function (100 by default).</p>
 
       <div>
         <h5 class="item-param-1">Param</h5>
@@ -471,7 +471,7 @@
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.doParachute();<br>
+      <p class="item-param-1">me.triggerParachute();<br>
       </p>
 
       <div class="line"></div>
@@ -520,15 +520,28 @@
 
       <div class="line"></div>
 
-      <!-- getSpeed -->
-      <h4 class="item-name" id="getSpeed"><span>getSpeed</span><span>: Float</span></h4>
+      <!-- getAirSpeed -->
+      <h4 class="item-name" id="getAirSpeed"><span>getAirSpeed</span><span>: Float</span></h4>
       <p class="item-descr">Get drone air speed in meters/second.</p>
 
       <div>
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.getSpeed();<br>
+      <p class="item-param-1">me.getAirSpeed();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getAltitudeAbs -->
+      <h4 class="item-name" id="getAltitudeAbs"><span>getAltitudeAbs</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone absolute altitude.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getAltitudeAbs();<br>
       </p>
 
       <div class="line"></div>

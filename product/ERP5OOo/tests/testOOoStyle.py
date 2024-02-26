@@ -30,12 +30,13 @@
 import io
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
+from DateTime import DateTime
 from Products.ERP5OOo.tests.utils import Validator
 import httplib
 import lxml.html
+import mock
 import PyPDF2
 
 HTTP_OK = httplib.OK
@@ -433,6 +434,150 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
+  def test_float_field(self):
+    foo = self.portal.foo_module.newContent(
+      portal_type='Foo',
+      delivery_ratio=1.234,
+      quantity=4.56,
+    )
+    foo.newContent(
+      portal_type='Foo Line',
+      delivery_ratio=4.321,
+      quantity=6.54,
+    )
+    response = self.publish(
+       '%s/Foo_viewFloatField' % foo.getPath(), basic=self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEqual('attachment', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+    def get_figure_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath(
+          'normalize-space(//tr/td/*[normalize-space(.)="Quantity"]/../following-sibling::td)')
+      elif self.skin == 'ODS':
+        return tree.xpath(
+          'normalize-space(//tr/td/*/*[normalize-space(.)="Quantity"]/../../following-sibling::td)')
+
+    def get_percentage_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath(
+          'normalize-space(//tr/td/*[normalize-space(.)="Delivery Ratio"]/../following-sibling::td)')
+      elif self.skin == 'ODS':
+        return tree.xpath(
+          'normalize-space(//tr/td/*/*[normalize-space(.)="Delivery Ratio"]/../../following-sibling::td)')
+
+    def get_figure_listbox_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space(//table[3]/tbody/tr[1]/td[1])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[13]/td[1])')
+
+    def get_percentage_listbox_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space(//table[3]/tbody/tr[1]/td[2])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[13]/td[2])')
+
+    response = self.publish(
+       '%s/Foo_viewFloatField?format=html&precision:int=2' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_percentage_field_value(tree), '123.40%')
+    self.assertEqual(get_figure_field_value(tree), '4.56')
+    self.assertEqual(get_percentage_listbox_field_value(tree), '432.10%')
+    self.assertEqual(get_figure_listbox_field_value(tree), '6.54')
+
+    response = self.publish(
+       '%s/Foo_viewFloatField?format=html&precision:int=3' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_percentage_field_value(tree), '123.400%')
+    self.assertEqual(get_figure_field_value(tree), '4.560')
+    self.assertEqual(get_percentage_listbox_field_value(tree), '432.100%')
+    self.assertEqual(get_figure_listbox_field_value(tree), '6.540')
+
+  def test_date_time_field(self):
+    foo = self.portal.foo_module.newContent(
+      portal_type='Foo',
+      start_date=DateTime("2001/02/03 04:05"),
+    )
+    foo.newContent(
+      portal_type='Foo Line',
+      start_date=DateTime("2005/04/03 02:01"),
+    )
+    response = self.publish(
+       '%s/Foo_viewDateTimeField' % foo.getPath(), basic=self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEqual('attachment', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+    def get_date_time_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath(
+          'normalize-space(//tr/td/*[normalize-space(.)="Start Date"]/../following-sibling::td)')
+      elif self.skin == 'ODS':
+        return tree.xpath(
+          'normalize-space(//tr/td/*/*[normalize-space(.)="Start Date"]/../../following-sibling::td)')
+
+    def get_date_time_listbox_field_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space((//table[2]//tr//td)[3])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[8]/td)')
+
+    def get_date_time_listbox_stat_value(tree):
+      if self.skin == 'ODT':
+        return tree.xpath('normalize-space((//table[2]//tr//td)[4])')
+      elif self.skin == 'ODS':
+        return tree.xpath('normalize-space(//table//tr[9]/td)')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=ymd&date_only:int=1' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '2001/02/03')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '2005/04/03')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '2009/08/07')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=dmy&date_only:int=1' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '03/02/2001')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '03/04/2005')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '07/08/2009')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=mdy&date_only:int=1' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '02/03/2001')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '04/03/2005')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '08/07/2009')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=ymd' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '2001/02/03 04:05')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '2005/04/03 02:01')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '2009/08/07 06:05')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=dmy' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '03/02/2001 04:05')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '03/04/2005 02:01')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '07/08/2009 06:05')
+
+    response = self.publish(
+       '%s/Foo_viewDateTimeField?format=html&input_order=mdy' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    self.assertEqual(get_date_time_field_value(tree), '02/03/2001 04:05')
+    self.assertEqual(get_date_time_listbox_field_value(tree), '04/03/2005 02:01')
+    self.assertEqual(get_date_time_listbox_stat_value(tree), '08/07/2009 06:05')
+
   def test_textarea_center_group(self):
     self._assertFieldInGroup('TextAreaField', 'Person_view', 'center')
     self.assertIn('my_description', [f.getId() for f in
@@ -453,26 +598,80 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       # Is it good to do this only for ODT ?
       from Products.ERP5OOo.OOoUtils import OOoParser
       parser = OOoParser()
-      parser.openFromString(body)
+      parser.openFromBytes(body)
       content_xml = parser.oo_files['content.xml']
-      self.assertIn('&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
+      self.assertIn(b'&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
+
+  def test_translation(self):
+    def gettext(message, **kw):
+      if message == 'First Name':
+        return u'**àèüîó**'
+      return kw.get('default', message)
+
+    with mock.patch.object(
+      self.portal.Localizer.erp5_ui.__class__,
+      'gettext',
+      side_effect=gettext,
+    ) as gettext_mock:
+      for url in (
+        # form_list
+        '/%s/person_module/PersonModule_viewPersonList' % self.portal.getId(),
+        # form_report
+        '/%s/person_module/pers/Base_viewHistory' % self.portal.getId(),
+        # form_view (last because we'll assert the content)
+        '/%s/person_module/pers/Person_view' % self.portal.getId(),
+      ):
+        response = self.publish(url, self.auth)
+        self.assertEqual(HTTP_OK, response.getStatus())
+        content_type = response.getHeader('content-type')
+        self.assertTrue(content_type.startswith(self.content_type), content_type)
+        content_disposition = response.getHeader('content-disposition')
+        self.assertEqual('attachment', content_disposition.split(';')[0])
+        body = response.getBody()
+        self._validate(body)
+
+    from Products.ERP5OOo.OOoUtils import OOoParser
+    parser = OOoParser()
+    parser.openFromBytes(body)
+    content_xml = parser.oo_files['content.xml']
+    self.assertIn(u'**àèüîó**', content_xml.decode('utf-8'))
+
+    translated_message_list = [
+      x[1][0] for x in gettext_mock.mock_calls if x[1][0]]
+    self.assertIn('First Name', translated_message_list)
+    self.assertIn(self.portal.PersonModule_viewPersonList.title, translated_message_list)
+    self.assertIn(self.portal.Person_view.title, translated_message_list)
+    self.assertIn(self.portal.Base_viewHistory.title, translated_message_list)
 
   def test_untranslatable_columns(self):
     self.portal.ListBoxZuite_reset()
-    self.portal.Localizer = DummyLocalizer()
-    message_catalog = self.portal.Localizer.erp5_ui
     # XXX odt style does not seem to display a listbox if it is empty ???
     self.portal.foo_module.newContent(portal_type='Foo')
-    message = self.id()
     self.portal.FooModule_viewFooList.listbox.ListBox_setPropertyList(
-      field_columns = ['do_not_translate | %s' % message,],
-      field_untranslatablecolumns = ['do_not_translate | %s' % message,],
+      field_columns=[
+        'translate | COLUMN_TRANSLATED',
+        'do_not_translate | COLUMN_NOT_TRANSLATED',
+      ],
+      field_untranslatable_columns = [
+        'do_not_translate | COLUMN_NOT_TRANSLATED',
+      ],
     )
     self.tic()
     self.portal.changeSkin(self.skin)
-    response = self.publish(
-                   '/%s/foo_module/FooModule_viewFooList?portal_skin='
-                   % self.portal.getId(), self.auth)
+
+    def gettext(message, **kw):
+      if message == 'COLUMN_TRANSLATED':
+        return u'**àèüîó**'
+      return kw.get('default', message)
+
+    with mock.patch.object(
+      self.portal.Localizer.erp5_ui.__class__,
+      'gettext',
+      side_effect=gettext,
+    ) as gettext_mock:
+      response = self.publish(
+        '/%s/foo_module/FooModule_viewFooList'
+        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
@@ -483,12 +682,14 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(body)
+    parser.openFromBytes(body)
     content_xml = parser.oo_files['content.xml']
-    self.assertIn(message, content_xml)
+    self.assertIn(u'**àèüîó**', content_xml.decode('utf-8'))
 
-    # This untranslatable column have not been translated
-    self.assertNotIn(message, message_catalog._translated)
+    translated_message_list = [
+      x[1][0] for x in gettext_mock.mock_calls if x[1][0]]
+    self.assertIn('COLUMN_TRANSLATED', translated_message_list)
+    self.assertNotIn('COLUMN_NOT_TRANSLATED', translated_message_list)
 
   def test_form_view_ZMI(self):
     """We can edit form_view in the ZMI."""

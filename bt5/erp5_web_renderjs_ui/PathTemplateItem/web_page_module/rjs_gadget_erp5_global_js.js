@@ -167,7 +167,8 @@
   function mergeGlobalActionWithRawActionList(jio_key, view, jump_view,
                                               link_list, group_id_list,
                                               command_mapping,
-                                              editable_mapping) {
+                                              editable_mapping,
+                                              filterMethod) {
     var i, j, group,
       action_type,
       current_href,
@@ -230,10 +231,19 @@
           }
         }
       } else {
+        action_type = group;
         group_mapping[group] = ensureArray(
           link_list[group]
         );
         addRawUrlToGroupMapping(group, group + "_raw");
+      }
+      // Filter action to only keep action related to web site context
+      if (filterMethod !== undefined) {
+        for (j = group_mapping[action_type].length - 1; 0 <= j; j -= 1) {
+          if (!filterMethod(group_mapping[action_type][j])) {
+            group_mapping[action_type].splice(j, 1);
+          }
+        }
       }
     }
 

@@ -115,7 +115,7 @@ CREATE TABLE alternate_roles_and_users (
     self.portal.portal_types.Person.newContent(
       portal_type='Role Information',
       role_name='Unknown',
-      role_category_list=('group/g1'),
+      role_category_list=('group/g1', ),
       role_base_category='group',
       local_role_group_value=self.portal.portal_categories.local_role_group.Alternate)
 

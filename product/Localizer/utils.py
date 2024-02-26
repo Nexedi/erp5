@@ -26,7 +26,8 @@ from App.Common import package_home
 ph = package_home(globals())
 
 # Initializes a list with the charsets
-charsets = [ x.strip() for x in open(ph + '/charsets.txt').readlines() ]
+with open(ph + '/charsets.txt') as f:
+  charsets = [ x.strip() for x in f.readlines() ]
 
 
 

@@ -156,7 +156,9 @@
                 </item>
                 <item>
                     <key> <string>date_only</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>date_separator</string> </key>
@@ -168,6 +170,10 @@
                 </item>
                 <item>
                     <key> <string>default_now</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_timezone</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -204,7 +210,9 @@
                 </item>
                 <item>
                     <key> <string>input_order</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>input_style</string> </key>
@@ -220,6 +228,10 @@
                 </item>
                 <item>
                     <key> <string>time_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>timezone_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -364,37 +376,37 @@
                 <item>
                     <key> <string>ampm</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>day</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>hour</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>minute</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>month</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>year</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -467,6 +479,32 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>request/date_only | python: 0</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>request/input_order | string:ymd</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
         <tuple>
@@ -729,7 +767,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <tuple>
@@ -984,7 +1022,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <tuple>
@@ -1239,7 +1277,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <tuple>
         <tuple>
@@ -1494,7 +1532,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <tuple>
         <tuple>
@@ -1749,7 +1787,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <tuple>
         <tuple>

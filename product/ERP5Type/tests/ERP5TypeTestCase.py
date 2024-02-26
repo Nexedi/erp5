@@ -1028,6 +1028,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if os.environ.get('erp5_debug_mode'):
         try:
           self.portal.portal_activities.manage_enableActivityTracking()
+          self.commit()
         except AttributeError:
           pass
 
@@ -1356,7 +1357,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         try:
           portal_activities = self.portal.portal_activities
           message_list = portal_activities.getMessageList()
-        except StandardError: # AttributeError, TransactionFailedError ...
+        except Exception: # AttributeError, TransactionFailedError ...
           pass
         else:
           for m in message_list:

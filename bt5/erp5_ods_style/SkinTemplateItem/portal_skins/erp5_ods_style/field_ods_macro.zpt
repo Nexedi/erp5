@@ -18,7 +18,7 @@
             table:style-name='report-column-title'
             table:number-columns-spanned='1'
             office:value-type='string'>
-            <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value('title')).encode('utf-8')">
+            <text:p tal:content="python: field.get_value('title')" i18n:translate="">
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -51,61 +51,30 @@
             table:style-name='report-column-title'
             table:number-columns-spanned='1'
             office:value-type='string'>
-            <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value('title')).encode('utf-8')">
+            <text:p tal:content="python: field.get_value('title')" i18n:translate="">
             </text:p>
           </table:table-cell>
          </tal:block>
 
         <!-- field value -->
-        <tal:block  tal:define="item_list python:field.has_value('items') and field.get_value('items') or None"
-            tal:condition="python: field.get_value('title')">
-          <!-- if the group bottom there isn't a title -->
-          <table:table-cell table:number-rows-spanned='1'
-            table:style-name='report-content-heading2-with-lines'
-            tal:attributes="table:number-columns-spanned python:group == 'bottom' and column_len or max(column_len-1, 1)"
-            office:value-type='string'
-            tal:define="value python: field.get_value('default')">
-            <tal:block tal:condition="python: same_type(value, []) or same_type(value, ())">
-              <tal:block tal:repeat="item value">
-                <text:p tal:condition="not:item_list" tal:content="item"></text:p>
-                <text:p tal:condition="item_list" tal:on-error="item" tal:content="python: [i[0] for i in item_list if i[1] == item][0]"></text:p>
-              </tal:block>
-            </tal:block>
-            <tal:block tal:condition="python: (not (same_type(value, []) or same_type(value, ()))) and value is not None">
-              <tal:block tal:condition="python:field_meta_type == 'DateTimeField'">
-                <text:p tal:content="python: field.render_pdf(value)"/>
-              </tal:block>
-              <tal:block tal:condition="python: field_meta_type != 'DateTimeField'">
-                <text:p tal:condition="not: item_list" tal:content="value"></text:p>
-                <tal:block tal:condition="python: value != ''">
-                  <tal:block tal:condition="item_list">
-                    <tal:block tal:define="displayed_value_list python: [str(i[0]).replace('&amp;', '') for i in item_list if i[1] == value]">
-                      <text:p tal:condition="displayed_value_list" tal:content="python: displayed_value_list[0]" />
-                      <text:p tal:condition="not: displayed_value_list" tal:content="python: value" />
-                    </tal:block>
-                  </tal:block>
-                </tal:block>
-                <tal:block tal:condition="python: value is None">
-                  <text:p table:style="Default" tal:content="python: ' '" />
-                </tal:block>
-              </tal:block>
-            </tal:block>
-          </table:table-cell>
+        <tal:block tal:define="value python: field.get_value('default'); style_prefix string:with_border_">
+          <tal:block metal:use-macro="here/field_ods_macro/macros/cell_value" />
         </tal:block>
+
       </table:table-row>
     </tal:block>
   
-    <!-- Render a value for a field in a Listbox / MatrixBox. `value` must be defined,
-  `field` is optional and is only defined when we have an editable field for this column or cell.
+    <!--
+      Render a value for a field in a Listbox / MatrixBox. 
+      `value` must be defined
+      `style_prefix` must be defined 
+      `field` is optional and is only defined when we have an editable field for this column or cell.
     -->
     <tal:block metal:define-macro="cell_value">
       <tal:block  tal:define="is_list python:same_type(value, []) or same_type(value, ());
-                              is_float python: isinstance(value, (int, long, float));">
-
-
+                              is_float python: isinstance(value, modules['six'].integer_types + (float, ));">
         <tal:block tal:condition="python: is_list">
-          <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"
-                            tal:attributes="table:style-name python:is_float and 'figure' or 'text'">
+          <table:table-cell tal:attributes="table:style-name string:${style_prefix}text">
             <tal:block tal:condition="python: field is None" tal:repeat="item value">
               <text:p tal:content="item"/>
             </tal:block>
@@ -116,9 +85,8 @@
         </tal:block>
         <tal:block tal:condition="python: value is not None and not is_list">
           <tal:block tal:condition="is_float">
-            <tal:block tal:condition="python: isinstance(value, (int, long))">
-              <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"
-                                tal:attributes="office:value value;
+            <tal:block tal:condition="python: isinstance(value, modules['six'].integer_types)">
+              <table:table-cell tal:attributes="office:value value;
                                 table:style-name string:${style_prefix}figure"
                                 office:value-type="float"
                                 table:style-name="figure">
@@ -130,86 +98,83 @@
               </table:table-cell>
             </tal:block>
             <tal:block tal:condition="python: isinstance(value, float)">
-              <tal:block tal:define="field python: editable_fields.get(column_id, None)">
-                <tal:block tal:condition="python: field is not None">
-                  <tal:block tal:condition="python:field.meta_type in ['FloatField','IntegerField'] or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type in ['FloatField','IntegerField'])">
-                    <tal:block tal:define="precision python: (field.meta_type == 'FloatField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'FloatField')) and field.get_value('precision') or 0;
-                    figure_style_name string:${style_prefix}figure_${precision};
-                    input_style python: (field.meta_type == 'FloatField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'FloatField')) and field.get_value('input_style') or ''">
-                      <table:table-cell tal:attributes="office:value value;
-                                        table:style-name figure_style_name;
-                                        office:value-type python: ('%' in input_style) and 'percentage' or 'float'"
-                                        table:style-name="figure">
-                        <text:p tal:content="python: field.render_pdf(value)" />
-                      </table:table-cell>
-                    </tal:block>
-                    <tal:block tal:condition="python:field.meta_type not in ['FloatField','IntegerField'] and field.meta_type!='ProxyField'">
-                      <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"
-                                        table:style-name="string"
-                                        office:value-type="string">
-                        <text:p>Error: field is not a FloatField nor an IntegerField</text:p>
-                      </table:table-cell>
-                    </tal:block>
+              <tal:block tal:condition="python: field is not None">
+                <tal:block tal:condition="python:field.meta_type in ['FloatField','IntegerField'] or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type in ['FloatField','IntegerField'])">
+                  <tal:block tal:define="precision python: (field.meta_type == 'FloatField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'FloatField')) and field.get_value('precision') or 0;
+                    input_style python: (field.meta_type == 'FloatField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'FloatField')) and field.get_value('input_style') or '';
+                    percentage_or_figure python: ('%' in input_style) and 'percentage' or 'figure';
+                    style_name string:${style_prefix}${percentage_or_figure}_${precision};
+                    ">
+                    <table:table-cell tal:attributes="office:value value;
+                                      table:style-name style_name;
+                                      office:value-type python: ('%' in input_style) and 'percentage' or 'float'"
+                                      table:style-name="figure">
+                      <text:p tal:content="python: field.render_pdf(value)" />
+                    </table:table-cell>
+                  </tal:block>
+                  <tal:block tal:condition="python:field.meta_type not in ['FloatField','IntegerField'] and field.meta_type!='ProxyField'">
+                    <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"
+                                      table:style-name="string"
+                                      office:value-type="string">
+                      <text:p>Error: field is not a FloatField nor an IntegerField</text:p>
+                    </table:table-cell>
                   </tal:block>
                 </tal:block>
-                <tal:block tal:condition="python: field is None">
-                  <table:table-cell tal:attributes="office:value value;
-                                    table:style-name string:${style_prefix}figure"
-                                    office:value-type="float"
-                                    table:style-name="figure">
-                    <text:p tal:condition="python: field is None"
-                            tal:content="python: value"/>
-                    <text:p tal:condition="python: field is not None"
-                            tal:content="python: field.render_pdf(value)">
-                    </text:p>
-                  </table:table-cell>
-                </tal:block>
+              </tal:block>
+              <tal:block tal:condition="python: field is None">
+                <table:table-cell tal:attributes="office:value value;
+                                  table:style-name string:${style_prefix}figure"
+                                  office:value-type="float"
+                                  table:style-name="figure">
+                  <text:p tal:condition="python: field is None"
+                          tal:content="python: value"/>
+                  <text:p tal:condition="python: field is not None"
+                          tal:content="python: field.render_pdf(value)">
+                  </text:p>
+                </table:table-cell>
               </tal:block>
             </tal:block>
           </tal:block>
           <tal:block tal:condition="not: is_float">
             <tal:block tal:condition="python: isinstance(value, DateTime)">
-              <tal:block tal:define="field python: editable_fields.get(column_id, None);">
-                <tal:block tal:condition="python: field is None">
-                  <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
-                                                    table:style-name string:${style_prefix}date;"
+              <tal:block tal:condition="python: field is None">
+                <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
+                                                  table:style-name string:${style_prefix}date;"
+                                  table:style-name="date"
+                                  office:value-type="date">
+                  <text:p tal:content="python: value"/>
+                </table:table-cell>
+              </tal:block>
+              <tal:block tal:condition="python: field is not None">
+                <tal:block tal:condition="python:field.meta_type=='DateTimeField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'DateTimeField')">
+                  <tal:block tal:condition="python:field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order')">
+                    <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
+                                    table:style-name string:${style_prefix}date_${input_order};"
                                     table:style-name="date"
                                     office:value-type="date">
-                    <text:p tal:content="python: value"/>
-                  </table:table-cell>
-                </tal:block>
-                <tal:block tal:condition="python: field is not None">
-                  <tal:block tal:condition="python:field.meta_type=='DateTimeField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'DateTimeField')">
-                    <tal:block tal:condition="python:field.get_value('date_only')">
-                      <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
-                                      table:style-name string:${style_prefix}date;"
-                                      table:style-name="date"
-                                      office:value-type="date">
-                        <text:p tal:content="python: field.render_pdf(value)"/>
-                      </table:table-cell>
-                    </tal:block>
-                    <tal:block tal:condition="python:not field.get_value('date_only')">
-                      <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
-                                      table:style-name string:${style_prefix}date_with_time;"
-                                      table:style-name="date_with_time"
-                                      office:value-type="date">
-                        <text:p tal:content="python: field.render_pdf(value)"/>
-                      </table:table-cell>
-                    </tal:block>
-                  </tal:block>
-                  <tal:block tal:condition="python:field.meta_type!='DateTimeField' and field.meta_type!='ProxyField'">
-                    <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"
-                                      table:style-name="string"
-                                      office:value-type="string">
-                      <text:p>Error: field is not a DateTimeField</text:p>
+                      <text:p tal:content="python: field.render_pdf(value)"/>
                     </table:table-cell>
                   </tal:block>
+                  <tal:block tal:condition="python:not field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order')">
+                    <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
+                                    table:style-name string:${style_prefix}date_with_time_${input_order};"
+                                    table:style-name="date_with_time"
+                                    office:value-type="date">
+                      <text:p tal:content="python: field.render_pdf(value)"/>
+                    </table:table-cell>
+                  </tal:block>
+                </tal:block>
+                <tal:block tal:condition="python:field.meta_type!='DateTimeField' and field.meta_type!='ProxyField'">
+                  <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"
+                                    table:style-name="string"
+                                    office:value-type="string">
+                    <text:p>Error: field is not a DateTimeField</text:p>
+                  </table:table-cell>
                 </tal:block>
               </tal:block>
             </tal:block>
             <tal:block tal:condition="python:not isinstance(value, DateTime)">
-             <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"
-                               tal:attributes="table:style-name string:${style_prefix}text"
+             <table:table-cell tal:attributes="table:style-name string:${style_prefix}text"
                                table:style-name="text">
               <text:p tal:condition="python: field is None"
                       tal:content="python: value"/>

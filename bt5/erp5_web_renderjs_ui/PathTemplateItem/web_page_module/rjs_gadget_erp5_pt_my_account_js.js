@@ -50,6 +50,8 @@
                 // Calculate user name
                 if (result === undefined) {
                   user = null;
+                } else if (result.data.rows.length === 0) {
+                  user = null;
                 } else {
                   user = result.data.rows[0].value.title;
                 }
