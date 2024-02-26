@@ -27,10 +27,11 @@
 #
 ##############################################################################
 
+from six.moves.urllib.parse import urlparse
+import itertools
 import os
 from base64 import b16encode
 from unittest import expectedFailure
-import unittest
 
 from AccessControl.SecurityManagement import newSecurityManager
 
@@ -99,9 +100,9 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
   xml_mapping = 'asXML'
   pub_conduit = 'ERP5DocumentConduit'
   sub_conduit1 = 'ERP5DocumentConduit'
-  publication_url = 'file:/%s/sync_server' % tests_home
-  subscription_url = {'two_way': 'file:/%s/sync_client1' % tests_home,
-      'from_server': 'file:/%s/sync_client_from_server' % tests_home}
+  publication_url = 'file://%s/sync_server' % tests_home
+  subscription_url = {'two_way': 'file://%s/sync_client1' % tests_home,
+      'from_server': 'file://%s/sync_client_from_server' % tests_home}
   #for this tests
   nb_message_first_synchronization = 6
   nb_message_multi_first_synchronization = 12
@@ -142,14 +143,10 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
 
   def clearFiles(self):
     # reset files, because we do sync by files
-    for filename in self.subscription_url.values():
-      file_ = open(filename[len('file:/'):], 'w')
-      file_.write('')
-      file_.close()
-    file_ = open(self.publication_url[len('file:/'):], 'w')
-    file_.write('')
-    file_.close()
-
+    for filename in itertools.chain(
+        self.subscription_url.values(), [self.publication_url]):
+      with open(urlparse(filename).path, 'w') as f:
+        f.write('')
 
   def setSystemPreferences(self):
     default_pref = self.portal.portal_preferences.default_site_preference
@@ -858,7 +855,3 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c, force=True,
                               ignore_processing_status_workflow=True)
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5DocumentSyncML))
-  return suite
