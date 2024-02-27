@@ -1,0 +1,1 @@
+DELETE FROM shadir WHERE <dtml-sqltest uid op=eq type=int>

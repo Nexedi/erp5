@@ -1,0 +1,5 @@
+<catalog_method>
+ <item key="sql_catalog_object_list" type="int">
+  <value>1</value>
+ </item>
+</catalog_method>
