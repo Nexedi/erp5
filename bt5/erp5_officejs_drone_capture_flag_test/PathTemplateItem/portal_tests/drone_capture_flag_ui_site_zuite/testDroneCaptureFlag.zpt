@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Test Drone Capture Flag OJS app (expected failure)</title>
 <!-- This test is expected to fail as the drone simulator runs on a web worker canvas, which relies on a very new feature: offscreen canvas
----- This feature is not supported yet by the latest Firefox ESR used in the test nodes -->
+ ---- This feature is not supported yet by the latest Firefox ESR used in the test nodes (error: webgl not supported) -->
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -30,36 +30,16 @@
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_capture_flag_script_page.html')]</td>
   <td></td>
 <tr>
+<!-- Check game -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//label[text()='Simulation Speed']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'codemirror.gadget.html')]</td>
+  <td>//span[@id="loading"]</td>
   <td></td>
 <tr>
 <!-- Check panel -->
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_capture_flag.html')]//a[contains(@class, 'ui-icon-puzzle-piece') and text()='Run Game']</td>
-  <td></td>
-<tr>
-<!-- Run game -->
-<tr>
-  <td>pause</td>
-  <td>3000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_capture_flag_script_page.html')]//input[@type="submit" and @name="action_run"]</td>
-  <td></td>
-<tr>
-<tr>
   <td>waitForElementPresent</td>
-  <td>//span[@id="loading"]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_capture_flag.html')]//a[contains(@class, 'ui-icon-puzzle-piece') and text()='Run Game']</td>
   <td></td>
 <tr>
 <!-- Check simulator gadget and babylon lib -->

@@ -72,10 +72,6 @@
       '    me.getCurrentPosition().longitude\n' +
       '  ).toFixed(8),\n' +
       '    expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
-      '    console.log("timestamp", timestamp);\n' +
-      '    console.log("1000 / 60", 1000/60);\n' +
-      '    console.log("expectedDistance", expectedDistance);\n' +
-      '    console.log("realDistance", realDistance);\n' +
       '    assert(timestamp, 1000 / 60, "Timestamp");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
