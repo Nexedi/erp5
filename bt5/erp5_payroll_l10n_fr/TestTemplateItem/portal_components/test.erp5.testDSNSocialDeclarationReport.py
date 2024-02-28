@@ -24,12 +24,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
-import difflib
 import os
 import time
-
+import six
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
 
 class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
   """
@@ -60,8 +60,13 @@ class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
     """
     test_dsn = self.dsn_module['test_model']
     test_dsn.DSNMonthlyReport_makeReport()
-    reference_DSN = getattr(self.portal.portal_skins.erp5_payroll_l10n_fr_test, "test_model.dsn").data
-    diff_list = []
-    for unit_diff in difflib.unified_diff(reference_DSN.split('\n'), test_dsn.getTextContent().split('\n')):
-      diff_list.append(unit_diff)
-    self.assertEqual(reference_DSN, test_dsn.getTextContent(), msg='\n'.join(diff_list))
+    reference_DSN = bytes(
+      getattr(self.portal.portal_skins.erp5_payroll_l10n_fr_test, "test_model.dsn").data
+    )
+    if six.PY3:
+      reference_DSN = reference_DSN.decode('utf-8')
+    self.maxDiff = None
+    self.assertEqual(
+      test_dsn.getTextContent().splitlines(),
+      reference_DSN.splitlines(),
+    )
