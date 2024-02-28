@@ -95,9 +95,9 @@ employee_result_list = [
 ]
 
 if len(employee_result_list):
-  employee_data_list, paysheet_data_list = zip(*employee_result_list)
+  _, paysheet_data_list = zip(*employee_result_list)
 else:
-  employee_data_list, paysheet_data_list = [], []
+  _, paysheet_data_list = [], []
 
 insurance_contract_id_list = set()
 for employee_data_dict, paysheet_data_dict in employee_result_list:
@@ -408,11 +408,10 @@ if len(leave_period_dict):
 
 
 # Print DSN Record
-last_block = ''
 rubric_counter = 0
 
 # DEBUG MODE
-#
+# last_block = ''
 # for block in dsn_file:
 #   for rubric in sorted(block.keys()):
 #     if block[rubric]:
