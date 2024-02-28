@@ -50,7 +50,7 @@ leave_period_type_set = set(portal_categories.use.social_declaration.l10n.fr.lea
 
 # Create dict containing a DSN leave blocs, grouped by employee
 leave_dict = {}
-for period in leave_period_list:
+for period in sorted(leave_period_list, key=lambda lp: lp.getCreationDate()):
   # some leave periods don't have to be reported in DSN
   period_resource = period.getResourceValue()
   assert period_resource is not None, 'No type set on Leave Request %s' % period.absolute_url()
