@@ -244,8 +244,6 @@ for paysheet_id in paysheet_id_list:
                                     social_entity=transport_individual_fee[1],
                                     insee_code=transport_individual_fee[3]))
 
-errors = []
-
 # Add leave event DSN if needed
 if len(leave_period_dict):
   for employee in leave_period_dict:
@@ -268,11 +266,11 @@ if len(leave_period_dict):
         dsn_file.append(period)
 
 # Print DSN Record
-last_block = ''
 rubric_counter = 0
 
 # DEBUG MODE
-#
+# errors = []
+# last_block = ''
 # def checkformat(rubric, value):
 #   rubric_desc = rubric_dict[rubric]
 #   if len(str(value)) < rubric_desc.min_length:
