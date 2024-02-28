@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DSNReport_printAsFile</string> </value>
+            <value> <string>DSNMonthlyReport_printAsFile</string> </value>
         </item>
       </dictionary>
     </pickle>
