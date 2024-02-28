@@ -148,7 +148,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: {\'run_test_url\': here.absolute_url() + \'/runLiveTest\', \'read_test_url\': here.absolute_url() + \'/readTestOutput\', \'test_list\': here.REQUEST.get(\'field_your_test\', \'\'), \'run_only\': here.REQUEST.get(\'field_your_run_only\', \'\'), \'debug\': int(here.REQUEST.get(\'field_your_debug\', \'\') == \'on\'), \'verbose\': int(here.REQUEST.get(\'field_your_verbose\', \'\') == \'on\')}</string> </value>
+            <value> <string>python: {\'run_test_url\': here.absolute_url() + \'/runLiveTest\', \'read_test_url\': here.absolute_url() + \'/readTestOutput\', \'test_list\': here.REQUEST.get(\'field_your_test\', \'\'), \'run_only\': here.REQUEST.get(\'field_your_run_only\', \'\'), \'debug\': int(here.REQUEST.get(\'field_your_debug\', \'\') == \'on\'), \'verbose\': int(here.REQUEST.get(\'field_your_verbose\', \'\') == \'on\'), \'warnings\': request.get(\'field_your_warnings\')}</string> </value>
         </item>
       </dictionary>
     </pickle>

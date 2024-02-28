@@ -94,9 +94,11 @@ from MySQLdb import OperationalError, NotSupportedError, ProgrammingError, _mysq
 import warnings
 from contextlib import contextmanager
 if six.PY2:
-  from contextlib import nested
+    @contextmanager
+    def nullcontext():
+        yield
 else:
-  from contextlib import ExitStack as nested
+  from contextlib import nullcontext
 from Products.ERP5Type.Timeout import TimeoutReachedError, getTimeLeft
 MySQLdb_version_required = (0,9,2)
 
@@ -582,7 +584,7 @@ class DB(TM):
         name = m.group(2)
         # Lock automatically unless src__ is True, because the caller may have
         # already done it (in case that it plans to execute the returned query).
-        with (nested if src__ else self.lock)():
+        with (nullcontext if src__ else self.lock)():
             try:
                 old_list, old_set, old_default = self._getTableSchema("`%s`" % name)
             except ProgrammingError as e:

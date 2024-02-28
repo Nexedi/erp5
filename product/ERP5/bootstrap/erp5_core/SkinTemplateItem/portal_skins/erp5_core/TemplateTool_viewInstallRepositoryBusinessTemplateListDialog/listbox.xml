@@ -530,8 +530,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>none</string>
-                          <string>none</string>
+                          <string>None</string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

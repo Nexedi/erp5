@@ -18,7 +18,7 @@ import six
 from zope.interface import implementer
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.Common import package_home
 from App.config import getConfiguration
 from App.ImageFile import ImageFile

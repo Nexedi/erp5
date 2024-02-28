@@ -33,7 +33,8 @@ import six
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Persistence import PersistentMapping
-from zope.site.hooks import setSite
+from zope.component.hooks import setSite
+
 
 class TestLocalizer(ERP5TypeTestCase):
   def afterSetUp(self):

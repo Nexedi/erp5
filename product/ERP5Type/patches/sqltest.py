@@ -15,6 +15,8 @@ from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime
 from Products.ERP5Type import IS_ZOPE2
 
+import six
+
 list_type_list = list, tuple, set, frozenset, dict
 
 if IS_ZOPE2: # BBB Zope2

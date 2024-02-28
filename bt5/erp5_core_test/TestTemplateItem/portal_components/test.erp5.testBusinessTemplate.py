@@ -50,7 +50,7 @@ from OFS.Image import Pdata
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
-from Products.MimetypesRegistry.common import MimeTypeException
+from Products.MimetypesRegistry.interfaces import MimeTypeException
 from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete

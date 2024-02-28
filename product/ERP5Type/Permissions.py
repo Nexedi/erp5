@@ -38,8 +38,7 @@ http://dev.zope.org/Wikis/DevSite/Projects/DeclarativeSecurity/ZopeSecurityForDe
 
 from Products.CMFCore import permissions
 from AccessControl import Permissions as ac_permissions
-
-setDefaultRoles = permissions.setDefaultRoles
+from AccessControl.Permission import addPermission
 
 # Default Zope Permissions
 View = permissions.View
@@ -89,14 +88,14 @@ DeletePortalContent = permissions.ModifyPortalContent
 # ERP5 addition: default content translation permissions
 # this comes from Base18
 TranslateContent = 'Translate Content'
-setDefaultRoles(TranslateContent, ('Manager', 'Owner', 'Member'))
+addPermission(TranslateContent, ('Manager', 'Owner', 'Member'))
 
 # ERP5 additions: we define some content creations
 # securities here. Each ERP5 Document will
 # point to one of these securities through the
 # add_permission attribute
 #
-# we define here the "setDefaultRoles" although
+# we define here the "addPermission" although
 # it does not apply to most roles since roles are defines
 # on a ERP5 per ERP5 user basis. Most ERP5 users will
 # subclass ERP5 basic types and define their own roles
@@ -140,7 +139,7 @@ setDefaultRoles(TranslateContent, ('Manager', 'Owner', 'Member'))
 # - using technical types / interfaces (ie. Entity, Coordinate, Predicate, etc.)
 
 #AddERP5Content = 'Add ERP5 content'
-#setDefaultRoles(AddERP5Content, ('Manager', ))
+#addPermission(AddERP5Content, ('Manager', ))
 AddERP5Content = AddPortalContent # Since we put come CPS content in ERP5 documents, there is no rationale in having 2 permissions
 
 # Source Code Management - this is the highest possible permission
