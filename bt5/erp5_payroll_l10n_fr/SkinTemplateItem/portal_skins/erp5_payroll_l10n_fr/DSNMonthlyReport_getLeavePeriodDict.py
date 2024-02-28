@@ -4,9 +4,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query
 portal = context.getPortalObject()
 portal_categories = portal.portal_categories
 
-now = DateTime()
 effective_date = context.getEffectiveDate()
-previous_pay_day = addToDate(effective_date, month=-1)
 
 # Get period dates
 result = portal.portal_catalog(portal_type="DSN Monthly Report",

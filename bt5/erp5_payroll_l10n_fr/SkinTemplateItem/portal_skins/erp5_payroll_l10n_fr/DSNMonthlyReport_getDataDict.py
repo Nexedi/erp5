@@ -1,4 +1,4 @@
-from erp5.component.module.DateUtils import addToDate, getIntervalBetweenDates, getNumberOfDayInMonth
+from erp5.component.module.DateUtils import getIntervalBetweenDates, getNumberOfDayInMonth
 import six
 
 portal = context.getPortalObject()
@@ -164,7 +164,7 @@ elif block_id == 'S21.G00.11':
 
 if block_id == 'S21.G00.15':
   # XXX: Hack as some organisations may have several contracts
-    return [
+  return [
     {
       'S21.G00.15.001': 'REF_CONTRACT1',
       'S21.G00.15.002': 'ORGANISATION1',
