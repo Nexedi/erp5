@@ -2,14 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Drone Capture Flag OJS app (expected failure)</title>
-<!-- This test is expected to fail as the drone simulator runs on a web worker canvas, which relies on a very new feature: offscreen canvas
- ---- This feature is not supported yet by the latest Firefox ESR used in the test nodes (error: webgl not supported) -->
+<title>Test Drone Capture Flag OJS app</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test Drone Capture Flag OJS app (expected failure)</td></tr>
+<tr><td rowspan="1" colspan="3">Test Drone Capture Flag OJS app</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
@@ -19,11 +17,9 @@
   <td>${base_url}/web_site_module/officejs_drone_capture_flag/</td>
   <td></td>
 </tr>
-<!-- error on /Zuite_waitForActivities
 <tal:block tal:define="web_site_name python: 'officejs_drone_capture_flag'">
    <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
  </tal:block>
--->
 <!-- Check form -->
 <tr>
   <td>waitForElementPresent</td>
