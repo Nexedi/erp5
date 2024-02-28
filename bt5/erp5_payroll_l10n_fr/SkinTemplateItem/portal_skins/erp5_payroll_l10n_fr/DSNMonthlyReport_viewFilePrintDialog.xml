@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>DSNReport_printAsFile</string> </value>
+            <value> <string>DSNMonthlyReport_printAsFile</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DSNReport_viewFilePrintDialog</string> </value>
+            <value> <string>DSNMonthlyReport_viewFilePrintDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DSNReport_viewFilePrintDialog</string> </value>
+            <value> <string>DSNMonthlyReport_viewFilePrintDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
