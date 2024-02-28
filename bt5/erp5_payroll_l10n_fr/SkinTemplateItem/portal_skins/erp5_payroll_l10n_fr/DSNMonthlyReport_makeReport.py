@@ -173,7 +173,7 @@ if len(payment_transaction_list):
                                       start_date=social_contribution_start_date,
                                       stop_date=social_contribution_stop_date,
                                       amount=amount))
-      for ctp_code in aggregated_social_contribution_dict:
+      for ctp_code in sorted(aggregated_social_contribution_dict):
         dsn_file.append(getDSNBlockDict(block_id='S21.G00.23',
                                         target=aggregated_social_contribution_dict[ctp_code]))
     else:
@@ -206,7 +206,7 @@ elif len(paysheet_list):
                                   start_date=first_date_of_month,
                                   stop_date=last_date_of_month,
                                   amount=amount))
-  for ctp_code in aggregated_social_contribution_dict:
+  for ctp_code in sorted(aggregated_social_contribution_dict):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.23',
                                     target=aggregated_social_contribution_dict[ctp_code]))
 
@@ -228,12 +228,12 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
 
   contract_change_block_list = []
   if employee in change_block_dict:
-    for rubric_root, change_date_block in six.iteritems(change_block_dict[employee]):
+    for rubric_root, change_date_block in sorted(six.iteritems(change_block_dict[employee])):
       if rubric_root == 'S21.G00.31':
-        for date, change_block in six.iteritems(change_date_block):
+        for date, change_block in sorted(six.iteritems(change_date_block)):
           dsn_file.append(getDSNBlockDict(block_id=rubric_root, change_block=change_block, change_date=date))
       elif rubric_root == 'S21.G00.41':
-        for date, change_block in six.iteritems(change_date_block):
+        for date, change_block in sorted(six.iteritems(change_date_block)):
           contract_change_block_list.append(getDSNBlockDict(block_id=rubric_root, change_block=change_block, change_date=date))
 
   employee_data_dict['contract']['S21.G00.40.019'] = establishment_registration_code
@@ -241,7 +241,7 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   dsn_file.extend(contract_change_block_list)
 
   if employee in leave_period_dict:
-    for leave_period in leave_period_dict[employee]:
+    for leave_period in sorted(leave_period_dict[employee]):
       leave_block = {rubric: leave_period.get(rubric, None)
                       for rubric in ('S21.G00.60.001',
                                      'S21.G00.60.002',
@@ -257,7 +257,7 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
       leaving_employee_list.append(employee)
       disenrollment_record = portal.restrictedTraverse(employee).Person_getCareerRecord('DSN Disenrollment Record')
       dsn_file.append({rubric: value
-                       for rubric, value in getDSNBlockDict("S21.G00.62", enrollment_record=enrollment_record, disenrollment_record=disenrollment_record).items()
+                       for rubric, value in sorted(getDSNBlockDict("S21.G00.62", enrollment_record=enrollment_record, disenrollment_record=disenrollment_record).items())
                        if rubric in ('S21.G00.62.001',
                                      'S21.G00.62.002',
                                      'S21.G00.62.006',
@@ -270,7 +270,7 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   # which are of the form : (contribution_category, contract_id)
   insurance_contract_id_list = set([x[1] for x in paysheet_data_dict['taxable_base']])
 
-  for insurance_contract_id in insurance_contract_id_list:
+  for insurance_contract_id in sorted(insurance_contract_id_list):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.70',
                                     enrollment_record=enrollment_record,
                                     contract_id=insurance_contract_id))
@@ -284,13 +284,13 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   for remuneration_block in paysheet_data_dict['remuneration']:
     dsn_file.append(remuneration_block)
 
-  for bonus_category in six.itervalues(paysheet_data_dict['other_bonus']):
+  for bonus_category in sorted(six.itervalues(paysheet_data_dict['other_bonus'])):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.52', target=bonus_category))
 
-  for bonus_category in six.itervalues(paysheet_data_dict['other_income']):
+  for bonus_category in sorted(six.itervalues(paysheet_data_dict['other_income'])):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.54', target=bonus_category))
 
-  for taxable_base_category in six.itervalues(paysheet_data_dict['taxable_base']):
+  for taxable_base_category in sorted(six.itervalues(paysheet_data_dict['taxable_base'])):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.78', target=taxable_base_category))
     if taxable_base_category['code'] == '02': # Assiette Brute plafonnee
       if ('063', '') in paysheet_data_dict['individual_contribution']:
@@ -324,21 +324,21 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
         dsn_file.append(getDSNBlockDict(block_id='S21.G00.81', target=paysheet_data_dict['individual_contribution'][('059', taxable_base_category['contract_id'])]))
         del paysheet_data_dict['individual_contribution'][('059', taxable_base_category['contract_id'])]
 
-  for taxable_base_component_category in six.itervalues(paysheet_data_dict['taxable_base_component']):
+  for taxable_base_component_category in sorted(six.itervalues(paysheet_data_dict['taxable_base_component'])):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.79', target=taxable_base_component_category))
     if ('03', '') in taxable_base_component_category:
       dsn_file.append(getDSNBlockDict(block_id='S21.G00.81', target=paysheet_data_dict['individual_contribution'][('064', '')]))
       del paysheet_data_dict['individual_contribution'][('064', '')]
 
-  for individual_contribution_category in six.itervalues(paysheet_data_dict['individual_contribution']):
+  for individual_contribution_category in sorted(six.itervalues(paysheet_data_dict['individual_contribution'])):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.81', target=individual_contribution_category))
 
   dsn_file.append(employee_data_dict['seniority'])
 
 # Add leave event DSN if needed
 if len(leave_period_dict):
-  for employee in leave_period_dict:
-    for period in leave_period_dict[employee]:
+  for employee in sorted(leave_period_dict):
+    for period in sorted(leave_period_dict[employee]):
       #leave_date_as_string = period['S21.G00.60.002']
       #year = int(leave_date_as_string[4:])
       #month = int(leave_date_as_string[2:4])
