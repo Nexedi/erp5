@@ -71,8 +71,9 @@
       '    me.getCurrentPosition().latitude,\n' +
       '    me.getCurrentPosition().longitude\n' +
       '  ).toFixed(8),\n' +
-      '    expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
-      '    assert(timestamp, 1000 / 60, "Timestamp");\n' +
+      '    time_interval = 1000 / 60,\n' +
+      '    expectedDistance = (me.getAirSpeed() * time_interval / 1000).toFixed(8);\n' +
+      '    assert(timestamp, Math.floor(time_interval), "Timestamp");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
       '  compare(current_position, {\n' +
