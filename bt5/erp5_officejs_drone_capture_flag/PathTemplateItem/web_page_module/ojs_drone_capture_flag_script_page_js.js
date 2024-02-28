@@ -77,6 +77,7 @@ var OperatorAPI = /** @class */ (function () {
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
+    MAX_COMMAND_FREQUENCY = 2,
     NUMBER_OF_DRONES = 5,
     // Non-inputs parameters
     EPSILON = "15",
@@ -104,7 +105,7 @@ var OperatorAPI = /** @class */ (function () {
       '  );\n' +
       '}\n' +
       '\n' +
-      'me.onStart = function () {\n' +
+      'me.onStart = function (timestamp) {\n' +
       '  me.direction_set = false;\n' +
       '  me.dodging = false;\n' +
       '  me.ongoing_detection = false;\n' +
@@ -136,7 +137,8 @@ var OperatorAPI = /** @class */ (function () {
       '      me.setTargetCoordinates(\n' +
       '        me.flag_positions[me.next_checkpoint].position.latitude,\n' +
       '        me.flag_positions[me.next_checkpoint].position.longitude,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.altitude + me.id\n' +
+      '        me.flag_positions[me.next_checkpoint].position.altitude + me.id,\n' +
+      '        ' + DEFAULT_SPEED + '\n' +
       '      );\n' +
       //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -162,12 +164,6 @@ var OperatorAPI = /** @class */ (function () {
       '    }\n' +
       '    return;\n' +
       '  }\n' +
-      '  if (me.next_checkpoint == me.flag_positions.length) {\n' +
-      '    me.triggerParachute();\n' +
-      '  }\n' +
-      '  if (me.landed()) {\n' +
-      '    me.exit();\n' +
-      '  }\n' +
       '};\n' +
       '\n' +
       'me.onDroneViewInfo = function (drone_view) {\n' +
@@ -182,7 +178,7 @@ var OperatorAPI = /** @class */ (function () {
       '    } else {\n' +
       '      dodge_point.longitude = dodge_point.longitude * -1;\n' +
       '    }\n' +
-      '    me.setTargetCoordinates(dodge_point.latitude, dodge_point.longitude, me.getCurrentPosition().altitude);\n' +
+      '    me.setTargetCoordinates(dodge_point.latitude, dodge_point.longitude, me.getCurrentPosition().altitude, ' + DEFAULT_SPEED + ');\n' +
       '    return;\n' +
       '  }\n' +
       '};',
@@ -680,6 +676,17 @@ var OperatorAPI = /** @class */ (function () {
                 "hidden": 0,
                 "type": "FloatField"
               },
+              "my_drone_max_command_frequency": {
+                "description": "",
+                "title": "Drone max command frequency",
+                "default": gadget.state.drone_max_command_frequency,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_command_frequency",
+                "hidden": 0,
+                "type": "FloatField"
+              },
               "my_number_of_drones": {
                 "description": "",
                 "title": "Number of drones",
@@ -708,7 +715,8 @@ var OperatorAPI = /** @class */ (function () {
               [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
                 ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
                 ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
-                ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
+                ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"],
+                ["my_drone_max_command_frequency"]]
             ]]
           }
         });
@@ -836,6 +844,7 @@ var OperatorAPI = /** @class */ (function () {
           "maxPitchAngle": parseFloat(gadget.state.drone_max_pitch),
           "maxSinkRate": parseFloat(gadget.state.drone_max_sink_rate),
           "maxClimbRate": parseFloat(gadget.state.drone_max_climb_rate),
+          "maxCommandFrequency": parseFloat(gadget.state.drone_max_command_frequency),
           "list": drone_list
         },
         "gameTime": parseInt(gadget.state.simulation_time, 10),
@@ -950,6 +959,7 @@ var OperatorAPI = /** @class */ (function () {
       operator_script: DEFAULT_OPERATOR_SCRIPT,
       drone_script: DEFAULT_SCRIPT_CONTENT,
       number_of_drones: NUMBER_OF_DRONES,
+      drone_max_command_frequency: MAX_COMMAND_FREQUENCY,
       drone_max_climb_rate: MAX_CLIMB_RATE,
       drone_max_sink_rate: MAX_SINK_RATE,
       drone_max_pitch: MAX_PITCH,
