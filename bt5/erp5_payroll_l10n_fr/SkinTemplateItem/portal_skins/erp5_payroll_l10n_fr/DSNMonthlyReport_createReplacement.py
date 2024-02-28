@@ -1,18 +1,12 @@
-portal = context.getPortalObject()
-
 def formatDate(datetime):
   return "%02d%02d%04d" % (datetime.day(), datetime.month(), datetime.year())
 
-def formatFloat(number):
-  return "{:.02f}".format(float(number))
 
 # Get the DSN Header and make modifications
 is_monthly_dsn = False
 header_bloc = [] # list of 2-item tuples
 header_line_number = 0
 header_length = 0
-previous_date = None
-previous_order = 0
 
 data = context.getTextContent()
 dsn_file_as_list = data.split('\n')
@@ -28,10 +22,8 @@ for line_number, line in enumerate(dsn_file_as_list):
     if is_monthly_dsn and rubric == 'S20.G00.05.002':
       value = "03"
     elif is_monthly_dsn and rubric == 'S20.G00.05.004':
-      previous_order = value
       value = "%d" % (int(value) + 1)
     elif is_monthly_dsn and rubric == 'S20.G00.05.007':
-      previous_date = value
       value = "%s" % formatDate(DateTime())
 
     header_bloc.append((rubric, "'%s'" % value))
