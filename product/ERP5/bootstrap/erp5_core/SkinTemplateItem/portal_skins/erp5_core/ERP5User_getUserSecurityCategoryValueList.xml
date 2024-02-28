@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category_order, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_asSecurityGroupId</string> </value>
+            <value> <string>ERP5User_getUserSecurityCategoryValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

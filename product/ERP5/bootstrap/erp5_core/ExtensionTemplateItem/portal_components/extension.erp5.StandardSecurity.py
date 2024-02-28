@@ -24,7 +24,176 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from collections import defaultdict
+from itertools import product
+import six
 from DateTime import DateTime
+
+_STOP_RECURSION_PORTAL_TYPE_SET = ('Base Category', 'ERP5 Site')
+
+def getSecurityCategoryValueFromAssignment(self, rule_dict):
+  """
+  This function returns a list of dictionaries which represent
+  the security groups the user represented by self is member of,
+  based on the applicable Assignment objects it contains.
+
+  rule_dict (dict)
+    Keys: tuples listings base category names set on the Assignment
+      and which represent security groups assigned to the user.
+    Values: tuples describing which combinations of the base categories
+      whose parent categories the user is also member of.
+
+  Example call to illustrate argument and return value structures:
+  getSecurityCategoryValueFromAssignment(
+    rule_dict={
+      ('function', ): ((), ('function', )),
+      ('group', ): ((), ),
+      ('function', 'group'): ((), ('function', )),
+    }
+  )
+  [
+    {
+      'function': (
+        (<Category function/accountant/chief>, False),
+        (<Category function/accountant/chief>, True),
+        (<Category function/accountant>, True),
+      ),
+    }
+    {
+      'group': ((<Category group/nexedi>, False), ),
+    },
+    {
+      'function': (
+        (<Category function/accountant/chief>, False),
+        (<Category function/accountant/chief>, True),
+        (<Category function/accountant>, True),
+      ),
+      'group': ((<Category group/nexedi>, False), ),
+    },
+  ]
+  """
+  base_category_set = set(sum((tuple(x) for x in rule_dict), ()))
+  recursive_base_category_set = set(sum((sum((tuple(y) for y in x), ()) for x in six.itervalues(rule_dict)), ()))
+  category_value_set_dict = defaultdict(set)
+  parent_category_value_dict = {}
+  assignment_membership_dict_list = []
+  now = DateTime()
+  for assignment_value in self.objectValues(portal_type='Assignment'):
+    if assignment_value.getValidationState() == 'open' and (
+      not assignment_value.hasStartDate() or assignment_value.getStartDate() <= now
+    ) and (
+      not assignment_value.hasStopDate() or assignment_value.getStopDate() >= now
+    ):
+      assignment_membership_dict = {}
+      for base_category in base_category_set:
+        category_value_list = assignment_value.getAcquiredValueList(base_category)
+        if category_value_list:
+          assignment_membership_dict[base_category] = tuple(set(category_value_list))
+          category_value_set_dict[base_category].update(category_value_list)
+          if base_category in recursive_base_category_set:
+            for category_value in category_value_list:
+              while True:
+                parent_category_value = category_value.getParentValue()
+                if (
+                  parent_category_value in parent_category_value_dict or
+                  parent_category_value.getPortalType() in _STOP_RECURSION_PORTAL_TYPE_SET
+                ):
+                  break
+                parent_category_value_dict[category_value] = parent_category_value
+                category_value = parent_category_value
+      if assignment_membership_dict:
+        assignment_membership_dict_list.append(assignment_membership_dict)
+  result = []
+  for base_category_list, recursion_list in six.iteritems(rule_dict):
+    result_entry = set()
+    for assignment_membership_dict in assignment_membership_dict_list:
+      assignment_category_list = []
+      for base_category in base_category_list:
+        category_set = set()
+        for category_value in assignment_membership_dict.get(base_category, ()):
+          for recursion_base_category_set in recursion_list:
+            if base_category in recursion_base_category_set:
+              while True:
+                category_set.add((category_value, True))
+                try:
+                  category_value = parent_category_value_dict[category_value]
+                except KeyError:
+                  break
+            else:
+              category_set.add((category_value, False))
+        assignment_category_list.append((base_category, tuple(category_set)))
+      if assignment_category_list:
+        result_entry.add(tuple(assignment_category_list))
+    for result_item in result_entry:
+      result.append(dict(result_item))
+  return result
+
+def asSecurityGroupIdSet(category_dict, key_sort=sorted):
+  """
+  The script takes the following parameters:
+
+  category_dict (dict)
+    keys: base category names.
+    values: list of categories composing the security groups the document is member of.
+  key_sort ((dict) -> key vector)
+    Function receiving the value of category_dict and returning the list of keys to
+    use to construct security group names, in the order in which these group names
+    will be used.
+    May return keys which are not part of category_dict.
+    Defaults to a lexicographic sort of all keys.
+    The External Method pointing at this implementation should be overridden (and
+    called using skinSuper) in order to provide this argument with a custom value.
+
+  Example call:
+    context.ERP5Type_asSecurityGroupIdSet(
+      category_dict={
+        'site': [(<Category france/lille>, False)],
+        'group': [(<Category nexedi>, False)],
+        'function': [(<Category accounting/accountant>, True)],
+      }
+    )
+
+  This will generate a string like 'ACT*_NXD_LIL' where "LIL", "NXD" and "ACT" are
+  the codification of respecively "france/lille", "nexedi" and "accounting/accountant"
+  categories.
+
+  If the category points to a document portal type (ex. trade condition, project, etc.),
+  and if no codification property is defined for this type of object,
+  the security ID group is generated by considering the object reference or
+  the object ID.
+
+  ERP5Type_asSecurityGroupIdSet can also return a list of users whenever a
+  category points to a Person instance. This is useful to implement user based local
+  role assignments instead of abstract security based local roles.
+  """
+  list_of_list = []
+  user_list = []
+  associative_list = []
+  for base_category_id in key_sort(category_dict):
+    try:
+      category_list = category_dict[base_category_id]
+    except KeyError:
+      continue
+    for category_value, is_child_category in category_list:
+      if category_value.getPortalType() == 'Person':
+        user_name = category_value.Person_getUserId()
+        if user_name is not None:
+          user_list.append(user_name)
+          associative_list = []
+      elif not user_list:
+        associative_list.append(
+          (
+            category_value.getProperty('codification') or
+            category_value.getProperty('reference') or
+            category_value.getId()
+          ) + ('*' if is_child_category else ''),
+        )
+    if associative_list:
+      list_of_list.append(associative_list)
+      associative_list = []
+  if user_list:
+    return user_list
+  return ['_'.join(x) for x in product(*list_of_list) if x]
 
 def getSecurityCategoryFromAssignment(
   self,
@@ -35,6 +204,8 @@ def getSecurityCategoryFromAssignment(
   child_category_list=None
 ):
   """
+  DEPRECATED: use getSecurityCategoryValueFromAssignment for better performance.
+
   This script returns a list of dictionaries which represent
   the security groups which a person is member of. It extracts
   the categories from the current user assignment.
