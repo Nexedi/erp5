@@ -1,5 +1,3 @@
-from erp5.component.module.DateUtils import addToDate
-
 portal = context.getPortalObject()
 
 # record base and rate for each ctp for an Establishment
@@ -17,8 +15,6 @@ fillon_relative_min_salary = {}
 fillon_individual_reduction = {}
 # Social Entity corporate registration code
 SOCIAL_ENTITY = ''
-# establishment paysheets belong to
-current_establishement_code = portal.accounting_module[paysheet_list[0]].getDestinationSectionValue().getCorporateRegistrationCode()[-5:]
 
 # Rate to apply to bases to calculate the final amount of fees
 standard_rate_mapping = {'012D': 0.28, '027D': 0.00016, '100D': 0.1954, '100P': 0.1545,
@@ -137,32 +133,6 @@ for paysheet_id in paysheet_list:
     current_ctp_set.add('400D')
   updateIndividualFeeDict(paysheet_id, temp_individual_fee_dict)
   done_ctp_set.update(current_ctp_set)
-
-
-def getFeeFromDate(ctp_code, date):
-  '''
-  Return a list of the previous contributions for
-  a specific CTP code in the older DSN
-  '''
-  amount_list = []
-  aggregated_fee_list = context.DSNReport_getGroupedOlderValues(searched_bloc='S21.G00.23',
-                                                                grouping_rubric='S21.G00.11.001',
-                                                                from_date=date)
-  for dsn_record in aggregated_fee_list:
-    for establishment in aggregated_fee_list[dsn_record].keys():
-      if establishment != current_establishement_code:
-        continue
-      for bloc in aggregated_fee_list[dsn_record][establishment]:
-        bloc_found = 0
-        for rubric, value in bloc:
-          value = value.strip('\'')
-          if rubric == 'S21.G00.23.001' and value == ctp_code:
-            bloc_found = 1
-          if rubric == 'S21.G00.23.001' and value != ctp_code:
-            bloc_found = 0
-          if bloc_found and rubric == 'S21.G00.23.004':
-            amount_list.append(float(value))
-  return (amount_list if len(amount_list) > 0 else [0])
 
 
 def getFeeBlocAsDict(ctp, ctp_dict):

@@ -1,24 +1,9 @@
-portal = context.getPortalObject()
-portal_categories = context.portal_categories
-
 rubric_value_dict = {}
 
-france_territory_code = ('FR' ,'GP', 'BL', 'MF', 'MQ', 'GF', 'RE', 'PM', 'YT', 'WF', 'PF', 'NC', 'MC')
-
-def getCountryCode(target):
-  region = portal_categories.getCategoryValue(target.getDefaultAddressRegion(), base_category="region")
-  if region is None:
-    raise ValueError("Country should be defined in address field of %s" % target.getRelativeUrl())
-  codification = region.getCodification()
-  if codification is None:
-    raise ValueError("Region %s doesn't have codification" % region.getRelativeUrl())
-  return codification
 
 def formatDate(datetime):
   return "%02d%02d%04d" % (datetime.day(), datetime.month(), datetime.year())
 
-def formatFloat(number):
-  return "{:.2f}".format(float(number))
 
 # Declaration
 if block_id == 'S20.G00.05':

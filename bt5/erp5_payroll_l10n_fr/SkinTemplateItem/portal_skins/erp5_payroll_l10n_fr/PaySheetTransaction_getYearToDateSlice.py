@@ -31,11 +31,11 @@ for paysheet in paysheet_list:
       start_date=paysheet.getStartDate(),
       stop_date=paysheet.getStopDate())
   if model is not None:
-    slice = model.getCell(slice_path)
-    if slice is None:
+    slice_cell = model.getCell(slice_path)
+    if slice_cell is None:
       return 0.0
-    plafond_max = slice.getQuantityRangeMax()
-    plafond_min = slice.getQuantityRangeMin()
+    plafond_max = slice_cell.getQuantityRangeMax()
+    plafond_min = slice_cell.getQuantityRangeMin()
     yearly_slice_amount += min(salary, plafond_max) - plafond_min
 
 return yearly_slice_amount

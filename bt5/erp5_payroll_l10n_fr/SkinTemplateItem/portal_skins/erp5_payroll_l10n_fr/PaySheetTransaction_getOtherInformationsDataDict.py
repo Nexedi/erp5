@@ -1,11 +1,7 @@
 portal = context.getPortalObject()
 translateString = portal.Base_translateString
-request = context.REQUEST
 quantity_renderer = portal.Base_viewFieldLibrary.my_view_mode_money_quantity.render_pdf
 paysheet = context
-
-def getFieldAsString(field):
-  return ', '.join(getFieldAsLineList(field))
 
 def getFieldAsLineList(field):
   """Returns the text as a list of lines."""

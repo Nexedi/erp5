@@ -1,4 +1,3 @@
-from erp5.component.module.DateUtils import addToDate
 from Products.ERP5Type.Message import translateString
 
 if context.getSourceAdministration() is None \

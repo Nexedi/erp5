@@ -266,7 +266,7 @@ if block_id == 'S21.G00.70':
   start_date = enrollment_record.getCareerStartDate()
   if start_date.year() == context.getEffectiveDate().year() \
       and start_date.month() == context.getEffectiveDate().month():
-        just_hired = True
+    just_hired = True
   else:
     just_hired = False
   rubric_value_dict['S21.G00.70.001'] = 'ReferenceAdhesionPSC'

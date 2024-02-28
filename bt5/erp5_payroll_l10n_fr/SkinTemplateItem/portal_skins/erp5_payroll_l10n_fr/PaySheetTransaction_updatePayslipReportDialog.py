@@ -1,3 +1,4 @@
+# pylint:disable=redefined-builtin
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
   request = container.REQUEST
