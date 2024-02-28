@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DSNReport_viewEditor</string> </value>
+            <value> <string>DSNMonhtlyReport_viewEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
