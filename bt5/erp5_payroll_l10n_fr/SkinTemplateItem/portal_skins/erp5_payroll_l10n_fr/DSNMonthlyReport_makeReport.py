@@ -1,9 +1,13 @@
+from Products.ERP5Type.Message import translateString
 from erp5.component.module.DateUtils import addToDate, getNumberOfDayInMonth
 
 if context.getSourceAdministration() is None \
    or context.getEffectiveDate() is None \
    or context.getQuantity() is None:
-  return context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "DSN can't be built if some fields are empty"))
+  return context.Base_redirect(form_id, keep_items={
+    'portal_status_message': translateString("DSN can't be built if some fields are empty"),
+    'portal_status_level': 'error',
+  })
 
 portal = context.getPortalObject()
 accounting_module = portal.getDefaultModuleValue("Pay Sheet Transaction")
@@ -39,7 +43,7 @@ else:
   establishment = context.getSourceTradeValue()
 establishment_registration_code = ''.join(establishment.getCorporateRegistrationCode().split(' '))
 
-# Finds the head office of the comany
+# Finds the head office of the company
 if len(payment_transaction_list):
   organisation = payment_transaction_list[0].getSourceSectionValue()
 elif len(paysheet_list):
@@ -438,4 +442,7 @@ if batch_mode:
   context.REQUEST.response.setHeader("Content-Type", "text/plain; charset=iso-8859-1")
   return
 
-context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "Monthly DSN Record Created."))
+return context.Base_redirect(form_id, keep_items={
+  'portal_status_message': translateString("Monthly DSN Record Created."),
+  'portal_status_level': 'success',
+})
