@@ -1,4 +1,5 @@
 from erp5.component.module.DateUtils import getNumberOfDayInMonth
+import six
 
 def getLastDateOfMonth(date):
   return DateTime(date.year(), date.month(), getNumberOfDayInMonth(date))
@@ -80,10 +81,10 @@ for remuneration_block in paysheet_data_dict['remuneration']:
     continue
   dsn_file.append(remuneration_block)
 
-for bonus_category in paysheet_data_dict['other_bonus'].itervalues():
+for bonus_category in six.itervalues(paysheet_data_dict['other_bonus']):
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.52', target=bonus_category))
 
-for bonus_category in paysheet_data_dict['other_income'].itervalues():
+for bonus_category in six.itervalues(paysheet_data_dict['other_income']):
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.54', target=bonus_category))
 
 # Print DSN Record
