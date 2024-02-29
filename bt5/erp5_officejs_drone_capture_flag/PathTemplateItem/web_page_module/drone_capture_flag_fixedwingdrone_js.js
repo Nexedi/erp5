@@ -212,7 +212,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
 
     newLatRad = Math.asin(
       currentSinLat * distanceCos +
-      currentCosLat * distanceSin * Math.cos(newYawRad)
+        currentCosLat * distanceSin * Math.cos(newYawRad)
     );
     newLonRad = currentLonRad + Math.atan2(
       Math.sin(newYawRad) * distanceSin * currentCosLat,
@@ -228,10 +228,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     // swap y and z axis so z axis represents altitude
     drone._controlMesh.position.addInPlace(new BABYLON.Vector3(
       Math.abs(newCoordinates.x - drone.position.x) *
-      (newCoordinates.x < drone.position.x ? -1 : 1),
+        (newCoordinates.x < drone.position.x ? -1 : 1),
       verticalSpeed * delta_time / 1000,
       Math.abs(newCoordinates.y - drone.position.y) *
-      (newCoordinates.y < drone.position.y ? -1 : 1)
+        (newCoordinates.y < drone.position.y ? -1 : 1)
     ));
     yawToDirection = this._toRad(-newYaw + 90);
     drone.setDirection(
@@ -286,7 +286,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     );
 
     drone._acceleration = (this._targetSpeed > drone.get3DSpeed()) ?
-      this.getMaxAcceleration() : -this.getMaxDeceleration();
+        this.getMaxAcceleration() : -this.getMaxDeceleration();
   };
 
   FixedWingDroneAPI.prototype.setStartingPosition = function (drone, x, y, z) {
@@ -479,7 +479,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       var maxVerticalSpeed =
           Math.min(altitude_diff, Math.min(max_climb_rate, speed));
       return (this._toDeg(Math.asin(maxVerticalSpeed / speed)) > max_pitch) ?
-        speed * Math.sin(this._toRad(max_pitch))
+            speed * Math.sin(this._toRad(max_pitch))
         : maxVerticalSpeed;
     };
   FixedWingDroneAPI.prototype._toRad = function (angle) {
