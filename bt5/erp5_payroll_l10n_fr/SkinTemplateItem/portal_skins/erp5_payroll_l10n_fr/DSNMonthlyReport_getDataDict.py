@@ -1,4 +1,5 @@
-from erp5.component.module.DateUtils import addToDate, getIntervalBetweenDates, getNumberOfDayInMonth
+from erp5.component.module.DateUtils import getIntervalBetweenDates, getNumberOfDayInMonth
+import six
 
 portal = context.getPortalObject()
 portal_categories = context.portal_categories
@@ -43,7 +44,7 @@ if block_id in ('S21.G00.31', 'S21.G00.41', 'S21.G00.72'):
   change_block = kw['change_block']
   change_date = kw['change_date']
   rubric_value_dict[block_id + ".001"] = change_date
-  for rubric, value in change_block.iteritems():
+  for rubric, value in six.iteritems(change_block):
     rubric_value_dict[rubric] = value
 
 # Envoi
@@ -127,7 +128,7 @@ if block_id == 'S21.G00.06':
     total_manpower = 0
     for _, employee_quantity in manpower_dict.items():
       total_manpower += sum(employee_quantity)
-    return total_manpower / len(manpower_dict.keys()) # Divide by number of months
+    return total_manpower // len(list(manpower_dict.keys())) # Divide by number of months.
 
   average_manpower = ''
   if context.getEffectiveDate().month() == 12 and target.getRelativeUrl() == getDSNOrganisation(context):
@@ -163,7 +164,7 @@ elif block_id == 'S21.G00.11':
 
 if block_id == 'S21.G00.15':
   # XXX: Hack as some organisations may have several contracts
-    return [
+  return [
     {
       'S21.G00.15.001': 'REF_CONTRACT1',
       'S21.G00.15.002': 'ORGANISATION1',

@@ -1,4 +1,5 @@
 from erp5.component.module.DateUtils import getNumberOfDayInMonth
+import six
 
 portal = context.getPortalObject()
 portal_categories = context.portal_categories
@@ -30,7 +31,7 @@ if block_id in ('S21.G00.31', 'S21.G00.41', 'S21.G00.72'):
   change_bloc = kw['change_bloc']
   change_date = kw['change_date']
   rubric_value_dict[block_id + ".001"] = change_date
-  for rubric, value in change_bloc.iteritems():
+  for rubric, value in six.iteritems(change_bloc):
     rubric_value_dict[rubric] = value
 
 # Envoi
@@ -265,7 +266,7 @@ if block_id == 'S21.G00.70':
   start_date = enrollment_record.getCareerStartDate()
   if start_date.year() == context.getEffectiveDate().year() \
       and start_date.month() == context.getEffectiveDate().month():
-        just_hired = True
+    just_hired = True
   else:
     just_hired = False
   rubric_value_dict['S21.G00.70.001'] = 'ReferenceAdhesionPSC'

@@ -1,4 +1,5 @@
 from DateTime import DateTime
+import six
 
 line_dict_list = context.PaySheetTransaction_getLineListAsDict()
 non_subject_amount = 'base_amount/payroll/report_section/l10n/fr/amount_non_subject_to_contribution'
@@ -59,7 +60,7 @@ def groupSameReportSectionLine(line_to_group_list):
     tmp_base_dict[base]['employee_price'] = tmp_base_dict[base]['employee_price'] + (line_dict['employee_price'] or 0)
     tmp_base_dict[base]['employee_total_price'] = tmp_base_dict[base]['employee_total_price'] + (line_dict['employee_total_price'] or 0)
  # Check if can group by same rate
-  for _, value in tmp_base_dict.iteritems():
+  for value in six.itervalues(tmp_base_dict):
     new_key = (value['employer_price'], value['employee_price'])
     if new_key not in tmp2_base_dict:
       tmp2_base_dict[new_key] = value

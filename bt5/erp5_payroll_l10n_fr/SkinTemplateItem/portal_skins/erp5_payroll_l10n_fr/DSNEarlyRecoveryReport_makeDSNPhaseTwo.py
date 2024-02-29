@@ -1,10 +1,13 @@
-from erp5.component.module.DateUtils import addToDate
+from Products.ERP5Type.Message import translateString
 
 if context.getSourceAdministration() is None \
    or context.getEffectiveDate() is None \
    or context.getFormat() is None \
    or len(context.getAggregateRelatedIdList()) <= 0:
-  return context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "DSN can't be built if some fields are empty"))
+  return context.Base_redirect(form_id, keep_items={
+    'portal_status_message': translateString("DSN can't be built if some fields are empty"),
+    'portal_status_level': 'error',
+  })
 
 getDSNblockDict = context.DSNMonthlyReport_getDataDictPhaseTwo
 getEventDSNblockDict = context.DSNEarlyRecoveryReport_getDataDictPhaseTwo
@@ -56,7 +59,10 @@ if leave_period.getExpirationDate() <= leave_period.getStopDate():
 else:
   if batch_mode:
     return
-  context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "No need to create this DSN event report : return date is not previous to last leaved date."))
+  return context.Base_redirect(form_id, keep_items={
+    'portal_status_message': translateString("No need to create this DSN event report : return date is not previous to last leaved date."),
+    'portal_status_level': 'error',
+  })
 
 # Print DSN
 dsn_report_string = ""
@@ -76,4 +82,7 @@ context.setTextContent(dsn_report_string.strip())
 if batch_mode:
   return
 
-context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "Event DSN Record Created."))
+return context.Base_redirect(form_id, keep_items={
+  'portal_status_message': translateString( "Event DSN Record Created."),
+  'portal_status_level': 'success',
+})
