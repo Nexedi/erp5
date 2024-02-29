@@ -1,3 +1,4 @@
+import six
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 
 kw["report_data"] = context.PaySheetTransaction_getPayslipData()
@@ -59,7 +60,7 @@ if batch:
 
 rep_content = context.PaySheetTransaction_generatePayslipReportContent(**kw)
 
-if isinstance(rep_content, unicode):
+if six.PY2 and isinstance(rep_content, six.text_type):
   rep_content = rep_content.encode("utf8")
 
 return rep_content,"",""

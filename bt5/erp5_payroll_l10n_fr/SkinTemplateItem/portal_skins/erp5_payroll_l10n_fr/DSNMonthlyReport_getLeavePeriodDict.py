@@ -59,7 +59,7 @@ for period in leave_period_list:
     continue
   # Let's make a DSN Bloc for this leave period
   leave_category = leave_category.pop()
-  if period.getDestinationValue() in leave_dict.keys():
+  if period.getDestinationValue() in leave_dict:
     leave_dict[period.getDestination()].append(getLeaveBlocAsDict(period, leave_category))
   else:
     leave_dict[period.getDestination()] = [getLeaveBlocAsDict(period, leave_category),]
