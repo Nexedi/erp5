@@ -3,8 +3,8 @@ if context.getValidationState() in ('invalidated', 'deleted'):
   return context.generatePredicate(criterion_property_list=('uid',))
 
 category_list = [
-  'source', 'source_section',
-  'destination', 'destination_section',
+  'source', 'source_section', 'source_project',
+  'destination', 'destination_section', 'destination_project'
 ]
 criterion_list = []
 
