@@ -29,8 +29,10 @@ if (portal.portal_membership.isAnonymousUser()):
 
   query_dict = {
     'portal_status_message': message,
-    'came_from' : came_from
   }
+  if came_from:
+    query_dict['came_from'] = came_from
+
   url = '%s/login_form?%s' % (context.absolute_url(), make_query(query_dict))
   RESPONSE.redirect(url)
 else:
