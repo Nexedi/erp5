@@ -58,10 +58,12 @@ var EnemyDroneAPI = /** @class */ (function () {
   */
   EnemyDroneAPI.prototype.internal_update = function (context, delta_time) {
     context._speed += context._acceleration * delta_time / 1000;
-    if (context._speed > context._maxSpeed)
+    if (context._speed > context._maxSpeed) {
       context._speed = context._maxSpeed;
-    if (context._speed < -context._maxSpeed)
+    }
+    if (context._speed < -context._maxSpeed) {
       context._speed = -context._maxSpeed;
+    }
     var updateSpeed = context._speed * delta_time / 1000;
     if (context._direction.x !== 0 ||
         context._direction.y !== 0 ||
@@ -69,7 +71,8 @@ var EnemyDroneAPI = /** @class */ (function () {
       context._controlMesh.position.addInPlace(
         new BABYLON.Vector3(context._direction.x * updateSpeed,
                             context._direction.y * updateSpeed,
-                            context._direction.z * updateSpeed));
+                            context._direction.z * updateSpeed)
+      );
     }
     context._controlMesh.computeWorldMatrix(true);
     context._mesh.computeWorldMatrix(true);
@@ -115,7 +118,9 @@ var EnemyDroneAPI = /** @class */ (function () {
 
   EnemyDroneAPI.prototype.internal_setTargetCoordinates =
     function (drone, coordinates) {
-      if (!drone._canPlay) return;
+      if (!drone._canPlay) {
+        return;
+      }
       var x = coordinates.x, y = coordinates.y, z = coordinates.z;
       if (isNaN(x) || isNaN(y) || isNaN(z)) {
         throw new Error('Target coordinates must be numbers');
