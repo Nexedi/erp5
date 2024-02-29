@@ -740,7 +740,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # the list.
     self.assertEqual(person.getDefaultRegion(), 'beta')
     person.setRegionSet(['alpha', 'beta', 'alpha'])
-    self.assertEqual(person.getRegionList(), ['beta', 'alpha'])
+    self.assertEqual(sorted(person.getRegionList()), ['alpha', 'beta'])
     # calling a set setter did not change the default region
     self.assertEqual(person.getDefaultRegion(), 'beta')
 
@@ -2185,6 +2185,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                   checked_permission=checked_permission)
     self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
+    foo.setRegionList([beta_path])
+    foo.setRegionSet([gamma_path, beta_path])
+    self.assertEqual(foo.getRegionList(), [beta_path, gamma_path])
+
     foo.setRegionValue(None)
     self.assertEqual(None, foo.getRegion())
     # Check setCategoryValueSet accessor
@@ -2198,6 +2202,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     foo.setRegionValueSet([gamma],
                   checked_permission=checked_permission)
     self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
+
+    foo.setRegionValueList([beta])
+    foo.setRegionValueSet([gamma, beta])
+    self.assertEqual(foo.getRegionValueList(), [beta, gamma])
 
     # check hasCategory accessors
     foo.setRegionValue(None)
@@ -2406,12 +2414,23 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDummyList(['a', 'b'])
     self.assertEqual(person.getDummy(), 'a')
     self.assertEqual(person.getDummyList(), ['a', 'b'])
-    self.assertEqual(person.getDummySet(), ['a', 'b'])
+    self.assertEqual(sorted(person.getDummySet()), ['a', 'b'])
+
+    person.setDummySet(['b', 'a', 'c'])
+    self.assertEqual(person.getDummy(), 'a')
+    self.assertEqual(sorted(person.getDummyList()), ['a', 'b', 'c'])
+    person.setDummySet(['b', 'c'])
+    self.assertEqual(sorted(person.getDummyList()), ['b', 'c'])
+
+    person.setDummyList(['a', 'b', 'b'])
+    self.assertEqual(person.getDummy(), 'a')
+    self.assertEqual(person.getDummyList(), ['a', 'b', 'b'])
+    self.assertEqual(sorted(person.getDummySet()), ['a', 'b'])
 
     person.setDummy('value')
     self.assertEqual(person.getDummy(), 'value')
     self.assertEqual(person.getDummyList(), ['value'])
-    self.assertEqual(person.getDummySet(), ['value'])
+    self.assertEqual(sorted(person.getDummySet()), ['value'])
 
   def test_translated_accessors(self):
     self._addProperty('Person',
