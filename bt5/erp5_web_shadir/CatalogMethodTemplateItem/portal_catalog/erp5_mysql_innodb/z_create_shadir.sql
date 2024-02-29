@@ -1,0 +1,6 @@
+CREATE TABLE `shadir` (
+  `uid` BIGINT UNSIGNED PRIMARY KEY,
+  `sha512` BINARY(64) NOT NULL,
+  `url` TEXT,
+  KEY(`sha512`)
+) ENGINE=InnoDB;

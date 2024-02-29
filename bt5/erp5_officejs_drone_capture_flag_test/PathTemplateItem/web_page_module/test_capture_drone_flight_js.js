@@ -5,13 +5,15 @@
 
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
-    MAP_SIZE = 1905,
-    min_lat = 45.6364,
-    max_lat = 45.65,
-    min_lon = 14.2521,
-    max_lon = 14.2766,
+    MIN_LAT = 45.6364,
+    MAX_LAT = 45.65,
+    MIN_LON = 14.2521,
+    MAX_LON = 14.2766,
     map_height = 700,
     start_AMSL = 595,
+    INIT_LON = 14.2658,
+    INIT_LAT = 45.6412,
+    INIT_ALT = 15,
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
     MAX_DECELERATION = 1,
@@ -31,6 +33,7 @@
       '  else\n' +
       '    console.log(msg + ": FAIL");\n' +
       '}\n' +
+      '\n' +
       'function distance(lat1, lon1, lat2, lon2) {\n' +
       '  var R = 6371e3, // meters\n' +
       '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
@@ -42,39 +45,44 @@
       '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
       '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
       '}\n' +
+      '\n' +
       'function compare(coord1, coord2) {\n' +
-      '  assert(coord1.x, coord2.x, "Latitude")\n' +
-      '  assert(coord1.y, coord2.y, "Longitude")\n' +
-      '  assert(coord1.z, coord2.z, "Altitude")\n' +
+      '  assert(coord1.latitude, coord2.latitude, "Latitude")\n' +
+      '  assert(coord1.longitude, coord2.longitude, "Longitude")\n' +
+      '  assert(coord1.altitude, coord2.altitude, "Altitude")\n' +
       '}\n' +
+      '\n' +
       'me.onStart = function () {\n' +
-      '  assert(me.getAirSpeed(), 16, "Initial speed");\n' +
+      '  assert(me.getAirSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
       '  assert(me.getYaw(), 0, "Yaw angle")\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
       '  me.setTargetCoordinates(\n' +
-      '    me.initialPosition.x + 0.01,\n' +
-      '    me.initialPosition.y,\n' +
-      '    me.initialPosition.z\n' +
+      '    me.initialPosition.latitude + 0.01,\n' +
+      '    me.initialPosition.longitude,\n' +
+      '    me.getAltitudeAbs(),\n' +
+      '    ' + DEFAULT_SPEED + '\n' +
       '  );\n' +
       '};\n' +
+      '\n' +
       'me.onUpdate = function (timestamp) {\n' +
       '  var current_position = me.getCurrentPosition(),\n' +
-      '  realDistance = distance(\n' +
-      '  me.initialPosition.x,\n' +
-      '  me.initialPosition.y,\n' +
-      '  me.getCurrentPosition().x,\n' +
-      '  me.getCurrentPosition().y\n' +
-      ').toFixed(8),\n' +
-      '  expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
-      '  assert(timestamp, 1000 / 60, "Timestamp");\n' +
-      '  assert(realDistance, expectedDistance, "Distance");\n' +
-      '  current_position.x = current_position.x.toFixed(7);\n' +
+      '    realDistance = distance(\n' +
+      '    me.initialPosition.latitude,\n' +
+      '    me.initialPosition.longitude,\n' +
+      '    me.getCurrentPosition().latitude,\n' +
+      '    me.getCurrentPosition().longitude\n' +
+      '  ).toFixed(8),\n' +
+      '    time_interval = 1000 / 60,\n' +
+      '    expectedDistance = (me.getAirSpeed() * time_interval / 1000).toFixed(8);\n' +
+      '    assert(timestamp, Math.floor(time_interval), "Timestamp");\n' +
+      '    assert(realDistance, expectedDistance, "Distance");\n' +
+      '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
       '  compare(current_position, {\n' +
-      '    x: (me.initialPosition.x + 2.3992831666911723e-06).toFixed(7),\n' +
-      '    y: me.initialPosition.y,\n' +
-      '    z: me.initialPosition.z\n' +
-      '});\n' +
-      'me.exit(me.triggerParachute());\n' +
+      '    latitude: (me.initialPosition.latitude + 2.3992831666911723e-06).toFixed(7),\n' +
+      '    longitude: me.initialPosition.longitude,\n' +
+      '    altitude: me.initialPosition.altitude\n' +
+      '  });\n' +
+      '  me.exit(me.triggerParachute());\n' +
       '};',
     DRAW = true,
     LOG = true,
@@ -82,6 +90,7 @@
     DRONE_LIST = [],
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
+      'gadget_erp5_page_drone_capture_map_utils.js',
       'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
       'gadget_erp5_page_drone_capture_flag_enemydrone.js'
     ];
@@ -100,7 +109,7 @@
     .declareJob('runGame', function runGame() {
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
-        game_parameters_json, map_json;
+        game_parameters_json, map_json, operator_init_msg;
       DRONE_LIST = [];
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
@@ -109,26 +118,25 @@
                          "script_content": DEFAULT_SCRIPT_CONTENT};
       }
       map_json = {
-        "map_size": parseFloat(MAP_SIZE),
         "height": parseInt(map_height, 10),
         "start_AMSL": parseFloat(start_AMSL),
-        "min_lat": parseFloat(min_lat),
-        "max_lat": parseFloat(max_lat),
-        "min_lon": parseFloat(min_lon),
-        "max_lon": parseFloat(max_lon),
-        "flag_list": [{
-          "position": {
-            "x": -27,
-            "y": 72,
-            "z": 10
-          }
-        }],
+        "min_lat": parseFloat(MIN_LAT),
+        "max_lat": parseFloat(MAX_LAT),
+        "min_lon": parseFloat(MIN_LON),
+        "max_lon": parseFloat(MAX_LON),
+        "flag_list": [],
         "obstacle_list" : [],
-        "drones": {
-          "user": DRONE_LIST,
-          "enemy": []
+        "enemy_list" : [],
+        "initial_position": {
+          "longitude": parseFloat(INIT_LON),
+          "latitude": parseFloat(INIT_LAT),
+          "altitude": parseFloat(INIT_ALT)
         }
       };
+      operator_init_msg = {
+        "flag_positions": []
+      };
+      /*jslint evil: false*/
       game_parameters_json = {
         "debug_test_mode": true,
         "drone": {
@@ -141,7 +149,8 @@
           "minPitchAngle": parseFloat(MIN_PITCH),
           "maxPitchAngle": parseFloat(MAX_PITCH),
           "maxSinkRate": parseFloat(MAX_SINK_RATE),
-          "maxClimbRate": parseFloat(MAX_CLIMB_RATE)
+          "maxClimbRate": parseFloat(MAX_CLIMB_RATE),
+          "list": DRONE_LIST
         },
         "gameTime": parseInt(SIMULATION_TIME, 10),
         "simulation_speed": parseInt(SIMULATION_SPEED, 10),
@@ -150,6 +159,7 @@
           "communication": 0
         },
         "map": map_json,
+        "operator_init_msg": operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,

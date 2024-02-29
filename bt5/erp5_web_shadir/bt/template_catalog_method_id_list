@@ -1,0 +1,4 @@
+erp5_mysql_innodb/z0_drop_shadir
+erp5_mysql_innodb/z0_uncatalog_shadir
+erp5_mysql_innodb/z_catalog_shadir_list
+erp5_mysql_innodb/z_create_shadir
