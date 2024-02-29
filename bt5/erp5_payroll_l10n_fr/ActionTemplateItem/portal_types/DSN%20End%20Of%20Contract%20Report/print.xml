@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DSNReport_printAsFile</string> </value>
+            <value> <string>string:${object_url}/DSNMonthlyReport_viewFilePrintDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
