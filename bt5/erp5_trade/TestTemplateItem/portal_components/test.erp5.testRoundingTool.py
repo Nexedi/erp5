@@ -60,17 +60,17 @@ class TestRoundingTool(ERP5TypeTestCase):
     Test round utility method
     """
     rounding_tool = self.portal.portal_roundings
-    round = rounding_tool.round
-    self.assertEqual(round(500 * 655.957, 0), 327979.0)
-    self.assertEqual(round(-0.5), -1)
-    self.assertEqual(round(0.15, 1), 0.2)
-    self.assertEqual(round(-0.15, 1), -0.2)
-    self.assertEqual(round(1.25, 1), 1.3)
-    self.assertEqual(round(500 * 655.957, 0, 'ROUND_HALF_EVEN'), 327978.0)
-    self.assertEqual(round(-0.5, 0, 'ROUND_HALF_EVEN'), -0.0)
-    self.assertEqual(round(0.15, 1, 'ROUND_HALF_EVEN'), 0.2)
-    self.assertEqual(round(-0.15, 1, 'ROUND_HALF_EVEN'), -0.2)
-    self.assertEqual(round(1.25, 1, 'ROUND_HALF_EVEN'), 1.2)
+    round_ = rounding_tool.round
+    self.assertEqual(round_(500 * 655.957, 0), 327979.0)
+    self.assertEqual(round_(-0.5), -1)
+    self.assertEqual(round_(0.15, 1), 0.2)
+    self.assertEqual(round_(-0.15, 1), -0.2)
+    self.assertEqual(round_(1.25, 1), 1.3)
+    self.assertEqual(round_(500 * 655.957, 0, 'ROUND_HALF_EVEN'), 327978.0)
+    self.assertEqual(round_(-0.5, 0, 'ROUND_HALF_EVEN'), -0.0)
+    self.assertEqual(round_(0.15, 1, 'ROUND_HALF_EVEN'), 0.2)
+    self.assertEqual(round_(-0.15, 1, 'ROUND_HALF_EVEN'), -0.2)
+    self.assertEqual(round_(1.25, 1, 'ROUND_HALF_EVEN'), 1.2)
 
   def testRoundValueMethod(self):
     """

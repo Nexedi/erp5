@@ -41,7 +41,7 @@ ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
                         'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
                         'ROUND_HALF_UP':ROUND_HALF_UP}
 
-def round(value, ndigits=None, decimal_rounding_option='ROUND_HALF_UP'):
+def round(value, ndigits=None, decimal_rounding_option='ROUND_HALF_UP'): # pylint:disable=redefined-builtin
   if ndigits is None:
     precision = 1
   else:
