@@ -273,6 +273,6 @@ class SetGetter(ListGetter):
     def __call__(self, instance, *args, **kw):
       result_list = ListGetter.__call__(self, instance, *args, **kw)
       if result_list is not None:
-        return list(set(result_list))
+        return list(OrderedDict.fromkeys(result_list))
 
 Tester = Base.Tester
