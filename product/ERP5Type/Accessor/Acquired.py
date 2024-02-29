@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from collections import OrderedDict
 from .Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter
 from Products.ERP5Type.PsycoWrapper import psyco
 
@@ -208,4 +209,4 @@ class SetGetter(ListGetter):
     Gets a category value set
     """
     def __call__(self, instance, *args, **kw):
-      return list(set(ListGetter.__call__(self, instance, *args, **kw)))
+      return list(OrderedDict.fromkeys(ListGetter.__call__(self, instance, *args, **kw)))
