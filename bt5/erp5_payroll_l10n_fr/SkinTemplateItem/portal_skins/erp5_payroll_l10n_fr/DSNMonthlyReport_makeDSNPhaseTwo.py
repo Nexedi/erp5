@@ -1,3 +1,4 @@
+from Products.ERP5Type.Message import translateString
 from erp5.component.module.DateUtils import getNumberOfDayInMonth
 
 if context.getSourceAdministration() is None \
@@ -5,7 +6,10 @@ if context.getSourceAdministration() is None \
    or context.getFormat() is None \
    or context.getQuantity() is None \
    or len(context.getAggregateRelatedIdList()) <= 0:
-  return context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "DSN can't be built if some fields are empty"))
+  return context.Base_redirect(form_id, keep_items={
+    'portal_status_message': translateString("DSN can't be built if some fields are empty"),
+    'portal_status_level': 'error',
+  })
 
 portal = context.getPortalObject()
 accounting_module = portal.getDefaultModuleValue("Pay Sheet Transaction")
@@ -240,8 +244,6 @@ for paysheet_id in paysheet_id_list:
                                     social_entity=transport_individual_fee[1],
                                     insee_code=transport_individual_fee[3]))
 
-errors = []
-
 # Add leave event DSN if needed
 if len(leave_period_dict):
   for employee in leave_period_dict:
@@ -264,11 +266,11 @@ if len(leave_period_dict):
         dsn_file.append(period)
 
 # Print DSN Record
-last_block = ''
 rubric_counter = 0
 
 # DEBUG MODE
-#
+# errors = []
+# last_block = ''
 # def checkformat(rubric, value):
 #   rubric_desc = rubric_dict[rubric]
 #   if len(str(value)) < rubric_desc.min_length:
@@ -317,4 +319,7 @@ if batch_mode:
   context.REQUEST.response.setHeader("Content-Type", "text/plain; charset=iso-8859-1")
   return
 
-context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "Monthly DSN Record Created."))
+return context.Base_redirect(form_id, keep_items={
+  'portal_status_message': translateString("Monthly DSN Record Created."),
+  'portal_status_level': 'error',
+})
