@@ -1640,7 +1640,7 @@ class TestInventoryList(InventoryAPITestCase):
     for month, value in six.iteritems(data):
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
-        self._makeMovement(start_date=d, resource_uid=resource_uid, **mov)
+        self._makeMovement(start_date=d, resource_value=resource, **mov)
 
     # and check
     for cur in sorted(data)[1:]:
@@ -1665,7 +1665,7 @@ class TestInventoryList(InventoryAPITestCase):
     for month, value in six.iteritems(internal_data):
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
-        self._makeMovement(is_internal=1, start_date=d, resource_uid=resource_uid, **mov)
+        self._makeMovement(is_internal=1, start_date=d, resource_value=resource, **mov)
     for cur in sorted(internal_data):
       to_date = DateTime("%s/1" % cur) + 31
       # check by section
