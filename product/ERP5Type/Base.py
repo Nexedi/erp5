@@ -1751,11 +1751,11 @@ class Base(
     """Returns the parent of the current object (whereas it should return the
     relative_url of the parent for consistency with CMFCategory.
 
-    This method still uses this behaviour, because some part of the code still
+    This method still uses this behavior, because some part of the code still
     uses getParent instead of getParentValue. This may change in the future.
     """
     warnings.warn("getParent implementation still returns the parent object, "\
-                  "which is inconsistant with CMFCategory API. "\
+                  "which is inconsistent with CMFCategory API. "\
                   "Use getParentValue instead", FutureWarning)
     return self.getParentValue() # Compatibility
 
