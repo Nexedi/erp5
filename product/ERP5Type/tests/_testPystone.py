@@ -33,4 +33,4 @@ class TestPystone(unittest.TestCase):
   """Tests to get pystone value
   """
   def test_pystone(self):
-    print "PYSTONE RESULT (time,score) : %r" % (pystone.pystones(),)
+    print("PYSTONE RESULT (time,score) : %r" % (pystone.pystones(),))

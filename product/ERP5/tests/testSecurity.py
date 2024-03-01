@@ -103,7 +103,7 @@ class TestSecurityMixin(ERP5TypeTestCase):
       if os.environ.get('erp5_debug_mode') or '/erp5/' in filename or '<portal_components' in filename:
         error_list.append('%s:%s %s' % (filename, lineno, method_id))
       else:
-        print('Ignoring missing security definition for %s in %s:%s ' % (method_id, filename, lineno))
+        print(('Ignoring missing security definition for %s in %s:%s ' % (method_id, filename, lineno)))
     if error_list:
       message = '\nThe following %s methods have a docstring but have no security assertions.\n\t%s' \
                     % (len(error_list), '\n\t'.join(error_list))
