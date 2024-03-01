@@ -298,4 +298,4 @@ class PropertySetGetter(PropertyListGetter):
     """
     def __call__(self, instance, *args, **kw):
       r = PropertyListGetter.__call__(self, instance, **kw)
-      return list(set(r)) if r or not args else args[0]
+      return list(OrderedDict.fromkeys(r)) if r or not args else args[0]
