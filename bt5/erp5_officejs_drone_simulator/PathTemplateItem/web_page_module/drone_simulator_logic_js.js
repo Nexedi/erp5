@@ -25,11 +25,9 @@ var DroneManager = /** @class */ (function () {
     this._maxRollAngle = 0;
     this._maxSinkRate = 0;
     this._maxClimbRate = 0;
-    this._maxOrientation = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = new BABYLON.Vector3(0, 0, 1); // North
-    this._rotationSpeed = 0.4;
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
@@ -141,7 +139,7 @@ var DroneManager = /** @class */ (function () {
     };
   DroneManager.prototype._internal_setTargetCoordinates =
     function (latitude, longitude, altitude, speed, radius) {
-      if (!this._canPlay) {
+      if (!this._canPlay || !this.isReadyToFly()) {
         return;
       }
       //convert real geo-coordinates to virtual x-y coordinates
@@ -207,20 +205,6 @@ var DroneManager = /** @class */ (function () {
     }
     // swap y and z axis so z axis represents altitude
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
-  };
-
-  //TODO rotation
-  DroneManager.prototype.setRotation = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setRotation(this, x, y, z);
-  };
-  DroneManager.prototype.setRotationBy = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setRotation(this, x, y, z);
   };
 
   /**
@@ -309,27 +293,29 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getYaw = function () {
     return this._API.getYaw(this);
   };
-  DroneManager.prototype.getAirSpeed = function () {
+  DroneManager.prototype.get3DSpeed = function () {
     return this._speed;
   };
-  DroneManager.prototype.getGroundSpeed = function () {
-    return this._API.getGroundSpeed(this);
+  DroneManager.prototype.getSpeed = function () {
+    return this._API.getSpeed(this);
   };
   DroneManager.prototype.getClimbRate = function () {
     return this._API.getClimbRate(this);
   };
-  DroneManager.prototype.getSinkRate = function () {
-    return this._API.getSinkRate();
+  DroneManager.prototype.takeOff = function () {
+    return this._API.takeOff();
   };
-  DroneManager.prototype.triggerParachute = function () {
-    return this._API.triggerParachute(this);
+  DroneManager.prototype.land = function () {
+    return this._API.land(this);
   };
   DroneManager.prototype.exit = function () {
-    this._internal_crash();
-    return this._API.exit();
+    return this._internal_crash();
   };
-  DroneManager.prototype.landed = function () {
-    return this._API.landed(this);
+  DroneManager.prototype.isReadyToFly = function () {
+    return this._API.isReadyToFly();
+  };
+  DroneManager.prototype.isLanding = function () {
+    return this._API.isLanding();
   };
   /**
    * Set the drone last checkpoint reached
@@ -347,7 +333,7 @@ var DroneManager = /** @class */ (function () {
    * Function called on game update
    * @param timestamp The tic value
    */
-  DroneManager.prototype.onUpdate = function () { return; };
+  DroneManager.prototype.onUpdate = function (timestamp) { return; };
   /**
    * Function called when drone crashes
    */
@@ -668,8 +654,12 @@ var GameManager = /** @class */ (function () {
         drone._tick += 1;
         if (drone._API.isCollidable && drone.can_play) {
           if (drone.getCurrentPosition().altitude <= 0) {
-            drone._internal_crash(new Error('Drone ' + drone.id +
-                                            ' touched the floor.'));
+            if (!drone.isLanding()) {
+              drone._internal_crash(new Error('Drone ' + drone.id +
+                                              ' touched the floor.'));
+            } else {
+              drone._internal_crash();
+            }
           } else {
             _this._droneList.forEach(function (other) {
               if (other.can_play && drone.id !== other.id) {
@@ -722,7 +712,7 @@ var GameManager = /** @class */ (function () {
                   game_manager._game_duration, geo_coordinates.latitude,
                   geo_coordinates.longitude,
                   map_info.start_AMSL + drone_position.z,
-                  drone_position.z, drone.getYaw(), drone.getGroundSpeed(),
+                  drone_position.z, drone.getYaw(), drone.getSpeed(),
                   drone.getClimbRate()
                 ]);
               }

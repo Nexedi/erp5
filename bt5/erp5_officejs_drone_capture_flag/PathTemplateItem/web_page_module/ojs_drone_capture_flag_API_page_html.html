@@ -340,6 +340,24 @@
 
       <div class="line"></div>
 
+      <!-- takeOff -->
+      <h4 class="item-name" id="takeOff"><span>takeOff</span><span>: void</span></h4>
+      <p class="item-descr">Trigger drone's takeoff (has only effect on multicopters as fixed wings drones need to take off manually).</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.takeOff();<br>
+      </p>
+
+      <div class="line"></div>
+
       <!-- setTargetCoordinates -->
       <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: void</span></h4>
       <p class="item-descr">
@@ -439,9 +457,9 @@
 
       <div class="line"></div>
 
-      <!-- triggerParachute -->
-      <h4 class="item-name" id="triggerParachute"><span>triggerParachute</span><span>: void</span></h4>
-      <p class="item-descr">Indicates the drone to deploy the parachute to finish the landing.</p>
+      <!-- land -->
+      <h4 class="item-name" id="land"><span>land</span><span>: void</span></h4>
+      <p class="item-descr">Indicates the drone to trigger landing.</p>
 
       <div>
         <h5 class="item-param-1">Param</h5>
@@ -452,23 +470,33 @@
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.triggerParachute();<br>
+      <p class="item-param-1">me.land();<br>
       </p>
 
       <div class="line"></div>
 
-      <!-- landed -->
-      <h4 class="item-name" id="landed"><span>landed</span><span>: boolean</span></h4>
-      <p class="item-descr">Indicates if the drone has landed (reached the floor altitude).</p>
+      <!-- isReadyToFly -->
+      <h4 class="item-name" id="isReadyToFly"><span>isReadyToFly</span><span>: void</span></h4>
+      <p class="item-descr">Check if drone takeoff is finished.</p>
 
       <div>
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-example">
-        if (me.landed()) {<br>
-        &nbsp;&nbsp;//do something<br>
-        }<br>
+      <p class="item-param-1">me.isReadyToFly();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- isLanding -->
+      <h4 class="item-name" id="isLanding"><span>isLanding</span><span>: void</span></h4>
+      <p class="item-descr">Check if drone landing has been triggered.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.isLanding();<br>
       </p>
 
       <div class="line"></div>
@@ -501,15 +529,15 @@
 
       <div class="line"></div>
 
-      <!-- getAirSpeed -->
-      <h4 class="item-name" id="getAirSpeed"><span>getAirSpeed</span><span>: Float</span></h4>
-      <p class="item-descr">Get drone air speed in meters/second.</p>
+      <!-- getSpeed -->
+      <h4 class="item-name" id="getSpeed"><span>getSpeed</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone ground speed in meters/second as wind is neglected in simulation. In real flights with fixed wings drones the returned value is the airspeed.</p>
 
       <div>
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.getAirSpeed();<br>
+      <p class="item-param-1">me.getSpeed();<br>
       </p>
 
       <div class="line"></div>
@@ -549,19 +577,6 @@
       </div>
 
       <p class="item-param-1">me.getClimbRate();<br>
-      </p>
-
-      <div class="line"></div>
-
-      <!-- getSinkRate -->
-      <h4 class="item-name" id="getSinkRate"><span>getSinkRate</span><span>: Float</span></h4>
-      <p class="item-descr">Get drone sink rate in meters/second.</p>
-
-      <div>
-        <h5 class="item-param-1">Example</h5>
-      </div>
-
-      <p class="item-param-1">me.getSinkRate();<br>
       </p>
 
       <div class="line"></div>
