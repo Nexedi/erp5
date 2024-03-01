@@ -232,7 +232,7 @@ class UidSetSetter(BaseSetter):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      instance._setValueUidList(self._key, set(args[0]),
+      instance._setValueUidList(self._key, list(OrderedDict.fromkeys(args[0])),
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
