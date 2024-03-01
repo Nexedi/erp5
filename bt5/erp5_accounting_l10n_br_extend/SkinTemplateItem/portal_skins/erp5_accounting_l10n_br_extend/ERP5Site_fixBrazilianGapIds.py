@@ -7,7 +7,7 @@ for cat in category_list:
     cat.getObject().setId(newid)
   except:
     pass
-  print newid
+  print(newid)
 
-print 'Categories Renamed'
+print('Categories Renamed')
 return printed
