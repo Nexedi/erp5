@@ -1,5 +1,6 @@
 REQUEST = context.REQUEST
 RESPONSE = REQUEST.RESPONSE
+from ZTUtils import make_query
 
 portal = context.getPortalObject()
 
@@ -26,8 +27,13 @@ if (portal.portal_membership.isAnonymousUser()):
   else:
     message = context.Base_translateString('Login and/or password is incorrect.')
 
-  url = '%s/login_form?portal_status_message=%s' % (context.absolute_url(), message)
-  url = came_from and '%s&came_from=%s' % (url, came_from) or url
+  query_dict = {
+    'portal_status_message': message,
+  }
+  if came_from:
+    query_dict['came_from'] = came_from
+
+  url = '%s/login_form?%s' % (context.absolute_url(), make_query(query_dict))
   RESPONSE.redirect(url)
 else:
   # XXX How to warn user that password will expire?
