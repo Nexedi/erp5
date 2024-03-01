@@ -33,10 +33,6 @@ class SplitMovementGroup(MovementGroup):
   This movement group is used to split all the movements that are aggregated
   by the Simulation Select Method.
 
-  XXX-Tatuya: However this test() method returns True, so the aggregated
-  movements can be inserted into existing Delivery/Line/Cell that are aggregated
-  by the Delivery Select Method. What use case this is applied for?
-
   * Reference:
   http://www.erp5.org/HowToConfigureMovementGroup
 
@@ -56,7 +52,7 @@ class SplitMovementGroup(MovementGroup):
     return {}
 
   def test(self, document, property_dict, **kw):
-    return True, property_dict
+    return False, property_dict
 
   def _separate(self, movement_list, **kw):
     return [[[movement], {}] for movement in movement_list]
