@@ -1501,7 +1501,7 @@ class Base(
     if not kw:
       return
     edit_order = edit_order or self._default_edit_order
-    key_list = kw.keys()
+    key_list = sorted(kw.keys())
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
 
@@ -1561,8 +1561,6 @@ class Base(
           self.setId(kw['id'], reindex=reindex_object)
       return not_modified_list
 
-    # XXX sort ??
-    #unmodified_key_list = setChangedPropertyList(sorted(unordered_key_list))
     unmodified_key_list = setChangedPropertyList(unordered_key_list)
     setChangedPropertyList(unmodified_key_list)
     # edit_order MUST be enforced, and done at the complete end
