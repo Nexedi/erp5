@@ -2072,7 +2072,7 @@ return url
 
     # Test the URL value
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['command'], 'raw')
-    self.assertEqual(sorted(result_dict['_embedded']['contents'][0]['title']['url_value']['options'].keys()), ['url', 'reset'])
+    self.assertEqual(sorted(result_dict['_embedded']['contents'][0]['title']['url_value']['options'].keys()), ['reset', 'url'])
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['options']['url'], 'https://officejs.com')
 
     # Test if the value of the column is with right key
