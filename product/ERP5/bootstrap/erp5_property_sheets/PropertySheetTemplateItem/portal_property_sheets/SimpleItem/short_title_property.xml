@@ -50,6 +50,10 @@
             <value> <string>Standard Property</string> </value>
         </item>
         <item>
+          <key> <string>property_default</string> </key>
+          <value> <string>python: \'\'</string> </value>
+        </item>
+        <item>
             <key> <string>translatable</string> </key>
             <value> <int>1</int> </value>
         </item>
