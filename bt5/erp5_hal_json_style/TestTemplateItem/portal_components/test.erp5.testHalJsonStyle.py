@@ -174,12 +174,9 @@ class ERP5HALJSONStyleSkinsMixin(ERP5TypeTestCase):
 
   def _makeDocument(self):
     new_id = self.generateNewId()
-    foo = self.portal.foo_module.newContent(portal_type="Foo")
-    foo.edit(
-      title="live_test_%s" % new_id,
-      reference="live_test_%s" % new_id
-    )
-    return foo
+    return self.portal.foo_module.newContent(
+      portal_type="Foo",
+      reference="live_test_%s" % new_id)
 
 
 #####################################################
