@@ -21,7 +21,7 @@ import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
 from Acquisition import aq_base
 from Products.ERP5Form.Selection import Selection, DomainSelection
-from Products.ERP5Type.Utils import ensure_list, str2unicode, unicode2str
+from Products.ERP5Type.Utils import str2unicode, unicode2str
 
 
 def changeSkin(skin_name):
@@ -2075,7 +2075,7 @@ return url
 
     # Test the URL value
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['command'], 'raw')
-    self.assertEqual(ensure_list(result_dict['_embedded']['contents'][0]['title']['url_value']['options'].keys()), [u'url', u'reset'])
+    self.assertEqual(sorted(result_dict['_embedded']['contents'][0]['title']['url_value']['options'].keys()), ['url', 'reset'])
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['options']['url'], 'https://officejs.com')
 
     # Test if the value of the column is with right key
@@ -2384,8 +2384,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       })
     self.assertEqual(selection.getSortOrder(), [('title', 'DESC')])
     self.assertEqual(selection.columns, [('title', 'Title')])
-    self.assertEqual(selection.getDomainPath(), ['foo_domain', 'foo_category'])
-    self.assertEqual(selection.getDomainList(), ['foo_domain/a', 'foo_domain/a/a1', 'foo_category/a', 'foo_category/a/a2'])
+    self.assertEqual(sorted(selection.getDomainPath()), ['foo_category', 'foo_domain'])
+    self.assertEqual(sorted(selection.getDomainList()), ['foo_category/a', 'foo_category/a/a2', 'foo_domain/a', 'foo_domain/a/a1',])
     self.assertEqual(selection.flat_list_mode, 0)
     self.assertEqual(selection.domain_tree_mode, 1)
     self.assertEqual(selection.report_tree_mode, 0)
