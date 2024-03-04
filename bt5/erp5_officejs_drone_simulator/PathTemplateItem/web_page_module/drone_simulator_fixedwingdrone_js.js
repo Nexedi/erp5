@@ -125,7 +125,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
         'longitude' : drone_position.longitude,
         'yaw': drone.getYaw(),
         'speed': drone.getSpeed(),
-        'climbRate': drone.getClimbRate()
+        'climbRate': drone.getClimbRate(),
+        'timestamp': drone_position.timestamp
       };
       _this._drone_dict_list[_this._id] = drone_info;
       //broadcast drone info using internal msg
