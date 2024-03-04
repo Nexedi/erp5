@@ -253,7 +253,6 @@ def runwsgi():
       from Signals.SignalHandler import SignalHandler
       SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
     else:
-      import warnings
       warnings.warn("zope4py3: SignalHandling not implemented!")
 
     if args.timerserver_interval:
