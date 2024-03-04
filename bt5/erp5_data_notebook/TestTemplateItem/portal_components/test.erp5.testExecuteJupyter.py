@@ -102,7 +102,7 @@ class TestExecuteJupyter(ERP5TypeTestCase):
     python_script = """
 portal = context.getPortalObject()
 portal.setTitle('%s')
-print an_undefined_variable
+print(an_undefined_variable)
 """%new_test_title
 
     # Create python_script object with the above given code and containers
@@ -254,7 +254,7 @@ portal.%s()
     """
     portal = self.portal
     self.login('dev_user')
-    python_expression = "print 52"
+    python_expression = "print(52)"
     reference = 'Test.Notebook.AddNewNotebookLine %s' % time.time()
     title = 'Test NB Title %s' % time.time()
 
@@ -313,7 +313,7 @@ portal.%s()
     """
     portal = self.portal
     self.login('dev_user')
-    python_expression = 'a=2; b=3; print a+b'
+    python_expression = 'a=2; b=3; print(a+b)'
     reference = 'Test.Notebook.ExecutePythonExpressionWithVariables %s' % time.time()
     title = 'Test NB Title %s' % time.time()
 
@@ -340,7 +340,7 @@ portal.%s()
     """
     portal = self.portal
     self.login('dev_user')
-    python_expression = 'a=2; b=3; print a+b'
+    python_expression = 'a=2; b=3; print(a+b)'
     reference = 'Test.Notebook.ExecutePythonExpressionWithVariables %s' % time.time()
     title = 'Test NB Title %s' % time.time()
 
@@ -351,7 +351,7 @@ portal.%s()
                               )
     self.tic()
 
-    python_expression = 'x=5; b=4; print a+b+x'
+    python_expression = 'x=5; b=4; print(a+b+x)'
     result = portal.Base_executeJupyter(
                                         reference=reference,
                                         python_expression=python_expression
@@ -379,7 +379,7 @@ import sys
       )
     self.tic()
 
-    jupyter_code =  "print imh.__name__"
+    jupyter_code = "print(imh.__name__)"
     result = portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code)
@@ -392,39 +392,37 @@ import sys
     Test the fucntioning of the ERP5ImageProcessor and the custom system
     display hook too.
     """
-    self.image_module = self.portal.getDefaultModule('Image')
-    self.assertTrue(self.image_module is not None)
     # Create a new ERP5 image object
     reference = 'testBase_displayImageReference5'
-    data_template = '<img src="data:image/png;base64,%s" /><br />'
-    data = 'qwertyuiopasdfghjklzxcvbnm<somerandomcharacterstosaveasimagedata>'
-    if getattr(self.image_module, 'testBase_displayImageID5', None) is not None:
-      self.image_module.manage_delObjects(ids=['testBase_displayImageID5'])
-    self.image_module.newContent(
+    data_template = '<img src="data:image/png;base64,%s"'
+    data = bytes(self.portal.restrictedTraverse('images/erp5_logo.png').data)
+    img = self.portal.image_module.newContent(
       portal_type='Image',
-      id='testBase_displayImageID5',
+      id=self.id(),
       reference=reference,
       data=data,
       filename='test.png'
-      )
+    )
+    def cleanup():
+      self.portal.image_module.manage_delObjects(ids=[img.getId()])
+      self.tic()
+    self.addCleanup(cleanup)
     self.tic()
 
     # Call Base_displayImage from inside of Base_runJupyter
     jupyter_code = """
 image = context.portal_catalog.getResultValue(portal_type='Image',reference='%s')
 context.Base_renderAsHtml(image)
-"""%reference
+""" % reference
 
-    notebook_context = {'setup' : {}, 'variables' : {}}
+    notebook_context = {'setup': {}, 'variables': {}}
     result = self.portal.Base_runJupyter(
       jupyter_code=jupyter_code,
       old_notebook_context=notebook_context
-      )
-
-    self.assertIn((data_template % base64.b64encode(data)), result['result_string'])
-    # Mime_type shouldn't be  image/png just because of filename, instead it is
-    # dependent on file and file data
-    self.assertNotEqual(result['mime_type'], 'image/png')
+    )
+    self.assertIn((data_template % base64.b64encode(data).decode()), result['result_string'])
+    self.assertEqual(result['mime_type'], 'text/html')
+    self.assertEqual(result['status'], 'ok')
 
   def testImportSameModuleDifferentNamespace(self):
     """
@@ -436,7 +434,7 @@ context.Base_renderAsHtml(image)
 
     # First we execute a jupyter_code which imports sys module as 'ss' namespace
     jupyter_code = "import sys as ss"
-    reference = 'Test.Notebook.MutlipleImports %s' %time.time()
+    reference = 'Test.Notebook.MutlipleImports %s' % time.time()
     portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code
@@ -454,7 +452,7 @@ context.Base_renderAsHtml(image)
 
     # Call Base_executeJupyter to check for the name of module and match it with
     # namespace 'ss1'
-    jupyter_code2 = "print ss1.__name__"
+    jupyter_code2 = "print(ss1.__name__)"
     result = portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code2
@@ -488,8 +486,8 @@ environment.define(create_sum_machines, 'creates sum function and class')
     self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
-print sum_function(1, 1)
-print Calculator().sum(2, 2)
+print(sum_function(1, 1))
+print(Calculator().sum(2, 2))
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -517,7 +515,7 @@ environment.define(x='couscous')
     self.tic()
     self.assertEqual(json.loads(result)['status'], 'ok')
 
-    jupyter_code = 'print x'
+    jupyter_code = 'print(x)'
     result = self.portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code
@@ -566,8 +564,8 @@ environment.undefine('creates sum function and class')
     self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
-print 'sum_function' in locals()
-print 'Calculator' in locals()
+print('sum_function' in locals())
+print('Calculator' in locals())
 '''
 
     result = self.portal.Base_executeJupyter(
@@ -603,7 +601,7 @@ environment.define(x='couscous')
     self.tic()
     self.assertEqual(json.loads(result)['status'], 'ok')
 
-    jupyter_code = "print 'x' in locals()"
+    jupyter_code = "print('x' in locals())"
     result = self.portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code
@@ -630,7 +628,7 @@ import random
     self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
-print random.randint(1,1)
+print(random.randint(1,1))
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -721,7 +719,7 @@ import random as rand
     self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
-print rand.randint(1,1)
+print(rand.randint(1,1))
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -750,7 +748,7 @@ iframe = context.Base_erp5PivotTableUI(my_df)
 context.Base_renderAsHtml(iframe)
 '''
     reference = 'Test.Notebook.PivotTableJsIntegration %s' % time.time()
-    notebook = self._newNotebook(reference=reference)
+    self._newNotebook(reference=reference)
     result = portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code
@@ -783,7 +781,7 @@ from string import ascii_lowercase, ascii_uppercase, digits
     self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
-print ascii_lowercase
+print(ascii_lowercase)
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -796,7 +794,7 @@ print ascii_lowercase
     self.assertEqual(result['code_result'].strip(), 'abcdefghijklmnopqrstuvwxyz')
 
     jupyter_code = '''
-print ascii_uppercase
+print(ascii_uppercase)
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -809,7 +807,7 @@ print ascii_uppercase
     self.assertEqual(result['code_result'].strip(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
     jupyter_code = '''
-print digits
+print(digits)
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -840,7 +838,7 @@ from string import *
     self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
-print ascii_lowercase
+print(ascii_lowercase)
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -871,7 +869,7 @@ from string import digits as dig
     self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
-print dig
+print(dig)
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -893,7 +891,7 @@ print dig
     notebook_title = u''.join(random.choice(string.ascii_lowercase) for _ in range(30))
 
     notebook_module = self.portal.getDefaultModule(portal_type='Data Notebook')
-    data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
+    notebook_module.DataNotebookModule_addDataNotebook(
                                       title=notebook_title,
                                       reference=notebook_reference,
                                       batch_mode=True)
@@ -921,7 +919,7 @@ import numpy as np
     result = json.loads(result)
     self.assertEqual(result['status'], 'ok')
     jupyter_code = '''
-print np.random.rand(256, 256, 256)
+print(np.random.rand(256, 256, 256))
 '''
 
     result = self.portal.Base_executeJupyter(
@@ -934,7 +932,7 @@ print np.random.rand(256, 256, 256)
     self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
-print np.random.randint(low = 2 ** 63 - 1, size = (256, 256, 256), dtype = 'int64')
+print(np.random.randint(low = 2 ** 63 - 1, size = (256, 256, 256), dtype = 'int64'))
 '''
 
     result = self.portal.Base_executeJupyter(
@@ -974,7 +972,7 @@ import datetime
     self.assertEqual(result['code_result'].strip(), expected_result)
 
     jupyter_code = '''
-print np.array([1, 2, 3])
+print(np.array([1, 2, 3]))
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
@@ -1005,7 +1003,7 @@ import os.path
     self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
-print os.path
+print(os.path)
 '''
     result = self.portal.Base_executeJupyter(
       reference=reference,
