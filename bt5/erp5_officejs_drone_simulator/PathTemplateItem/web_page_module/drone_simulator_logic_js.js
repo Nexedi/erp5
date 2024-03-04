@@ -62,11 +62,6 @@ var DroneManager = /** @class */ (function () {
     // swap y and z axis so z axis represents altitude
     return new BABYLON.Vector3(vector.x, vector.z, vector.y);
   };
-  Object.defineProperty(DroneManager.prototype, "drone_dict", {
-    get: function () { return this._API._drone_dict_list; },
-    enumerable: true,
-    configurable: true
-  });
   Object.defineProperty(DroneManager.prototype, "can_play", {
     get: function () { return this._canPlay; },
     enumerable: true,
@@ -120,6 +115,9 @@ var DroneManager = /** @class */ (function () {
     enumerable: true,
     configurable: true
   });
+  DroneManager.prototype.getDroneDict = function () {
+    return this._API._drone_dict_list;
+  };
   DroneManager.prototype.internal_start = function (initial_position) {
     this._API.internal_start(this);
     this._canPlay = true;

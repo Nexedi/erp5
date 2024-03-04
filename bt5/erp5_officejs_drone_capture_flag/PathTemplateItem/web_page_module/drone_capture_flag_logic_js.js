@@ -64,11 +64,6 @@ var DroneManager = /** @class */ (function () {
     // swap y and z axis so z axis represents altitude
     return new BABYLON.Vector3(vector.x, vector.z, vector.y);
   };
-  Object.defineProperty(DroneManager.prototype, "drone_dict", {
-    get: function () { return this._API._drone_dict_list; },
-    enumerable: true,
-    configurable: true
-  });
   Object.defineProperty(DroneManager.prototype, "can_play", {
     get: function () { return this._canPlay; },
     set: function (value) { this._canPlay = value; },
@@ -175,6 +170,9 @@ var DroneManager = /** @class */ (function () {
       );
       this._last_command_timestamp = this._API._gameManager._game_duration;
     };
+  DroneManager.prototype.getDroneDict = function () {
+    return this._API._drone_dict_list;
+  };
   /**
    * Returns the list of things a drone "sees"
    */
