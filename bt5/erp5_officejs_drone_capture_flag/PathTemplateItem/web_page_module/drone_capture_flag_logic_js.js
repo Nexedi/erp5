@@ -305,6 +305,7 @@ var DroneManager = /** @class */ (function () {
         this._controlMesh.position.z,
         this._controlMesh.position.y
       );
+      position.timestamp = this._API._gameManager._game_duration;
       //Backward compatibility sanitation
       position.x = position.latitude;
       position.y = position.longitude;

@@ -269,11 +269,13 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getCurrentPosition = function () {
     if (this._controlMesh) {
       // swap y and z axis so z axis represents altitude
-      return this._API.getCurrentPosition(
+      var position = this._API.getCurrentPosition(
         this._controlMesh.position.x,
         this._controlMesh.position.z,
         this._controlMesh.position.y
       );
+      position.timestamp = this._API._gameManager._game_duration;
+      return position;
     }
     return null;
   };
