@@ -102,7 +102,6 @@
                         <string>my_status</string>
                         <string>my_title</string>
                         <string>my_aggregate_reference</string>
-                        <string>my_state</string>
                       </list>
                     </value>
                 </item>
