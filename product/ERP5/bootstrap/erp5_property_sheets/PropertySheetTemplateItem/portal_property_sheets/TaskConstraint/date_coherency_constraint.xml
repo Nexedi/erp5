@@ -14,7 +14,7 @@
             <key> <string>expression</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: object.getStopDate() >= object.getStartDate()
+python: object.getStopDate() >= object.getStartDate() if object.hasStartDate() else True
 
 ]]></string> </value>
         </item>
