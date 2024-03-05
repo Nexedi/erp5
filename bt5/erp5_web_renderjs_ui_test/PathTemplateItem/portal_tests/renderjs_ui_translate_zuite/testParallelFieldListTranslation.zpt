@@ -51,7 +51,7 @@
 <!-- Check that Category titles in parallel_list_field are well translated -->
 <tr>
   <td>assertText</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div//label</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div//label</td>
   <td>Foo leibie</td>
 </tr>
 
