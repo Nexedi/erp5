@@ -2359,7 +2359,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     checkPermission = portal.Base_checkPermission
     work_list = []
     for action in action_list:
-      query = sql_catalog.buildQuery(action['query'])\
+      # sort the query for easier testing
+      query = sql_catalog.buildQuery(OrderedDict(sorted(action['query'].items())))\
                          .asSearchTextExpression(sql_catalog)
 
       if (action['local_roles']):
