@@ -25,18 +25,27 @@
 #
 ##############################################################################
 
-from zLOG import LOG, INFO, WARNING
+import logging
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityRuntimeEnvironment import \
   getActivityRuntimeEnvironment
+import six
 
+logger = logging.getLogger(__name__)
 try:
-  from sklearn.externals.joblib import register_parallel_backend
-  from sklearn.externals.joblib.parallel import ParallelBackendBase, parallel_backend
-  from sklearn.externals.joblib.parallel import FallbackToBackend, SequentialBackend
-  from sklearn.externals.joblib.hashing import hash as joblib_hash
+  if six.PY2:
+    from sklearn.externals.joblib import register_parallel_backend
+    from sklearn.externals.joblib.parallel import ParallelBackendBase, parallel_backend
+    from sklearn.externals.joblib.parallel import FallbackToBackend, SequentialBackend
+    from sklearn.externals.joblib.hashing import hash as joblib_hash
+  else:
+    from joblib import register_parallel_backend
+    from joblib.parallel import ParallelBackendBase, parallel_backend
+    from joblib.parallel import FallbackToBackend, SequentialBackend
+    from joblib.hashing import hash as joblib_hash
+
 except ImportError:
-  LOG(__name__, WARNING, "Joblib cannot be imported, support disabled")
+  logger.warn("Joblib cannot be imported, support disabled")
 else:
   class JoblibResult(object):
 
