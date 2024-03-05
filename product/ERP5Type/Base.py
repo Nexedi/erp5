@@ -222,7 +222,7 @@ class WorkflowMethod(Method):
     # Otherwise, an exception is raised if the workflow transition does not
     # exist from the current state, or if the guard rejects it.
     valid_transition_item_list = []
-    for wf_id, transition_list in candidate_transition_item_list:
+    for wf_id, transition_list in sorted(candidate_transition_item_list):
       candidate_workflow = wf[wf_id]
       valid_list = []
       state = candidate_workflow._getWorkflowStateOf(instance, id_only=0)
