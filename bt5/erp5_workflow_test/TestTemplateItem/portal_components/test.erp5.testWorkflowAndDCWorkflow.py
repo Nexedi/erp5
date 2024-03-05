@@ -238,6 +238,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     self.workflow = portal_workflow._getOb(self.workflow_id)
     self.resetComponentTool()
     self.login()
+    self.tic()
 
   def test_13_permission(self):
     """
