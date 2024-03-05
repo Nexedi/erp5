@@ -2393,6 +2393,18 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     self.assertEqual('Could not get object region/gamma',
                       logged_errors[0].getMessage())
 
+  def test_portal_type_property_sheet_have_priority_over_class_property_sheet(self):
+    self._addProperty(
+      'Person',
+      self.id(),
+      'first_name',
+      elementary_type='string',
+      property_default='string:property sheet default',
+      portal_type='Standard Property',
+    )
+    obj = self.getPersonModule().newContent(portal_type='Person')
+    self.assertEqual(obj.getFirstName(), 'property sheet default')
+
   def test_list_accessors(self):
     self._addProperty('Person', 'test_list_accessors', 'dummy',
         elementary_type='lines',
