@@ -23,7 +23,7 @@ result = []
 binary_data_explanation = Base_translateString("Binary data can't be displayed")
 base_error_message = Base_translateString('(value retrieval failed)')
 
-for prop_dict in context.getPropertyMap():
+for prop_dict in sorted(context.getPropertyMap(), key=lambda prop: prop['id']):
   prop = prop_dict['id']
   error = False
   try:
