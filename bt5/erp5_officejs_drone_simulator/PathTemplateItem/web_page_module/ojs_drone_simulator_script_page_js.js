@@ -22,6 +22,7 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
+    MAX_COMMAND_FREQUENCY = 2,
     INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.2658,
@@ -87,18 +88,19 @@
       '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
       '}\n' +
       '\n' +
-      'me.onStart = function () {\n' +
+      'me.onStart = function (timestamp) {\n' +
       '  me.direction_set = false;\n' +
       '  me.next_checkpoint = 0;\n' +
       '};\n' +
       '\n' +
-      'me.onUpdate = function (timestamp) {' +
+      'me.onUpdate = function (timestamp) {\n' +
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
       '      me.setTargetCoordinates(\n' +
       '        CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
       '        CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].altitude + ALTITUDE + ALTITUDE * me.id\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].altitude + ALTITUDE + ALTITUDE * me.id,\n' +
+      '        ' + DEFAULT_SPEED + '\n' +
       '      );\n' +
       '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -299,6 +301,17 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
+                "my_drone_max_command_frequency": {
+                  "description": "",
+                  "title": "Drone max command frequency",
+                  "default": MAX_COMMAND_FREQUENCY,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "drone_max_command_frequency",
+                  "hidden": 0,
+                  "type": "FloatField"
+                },
                 "my_minimum_latitud": {
                   "description": "",
                   "title": "Minimum latitude",
@@ -441,7 +454,8 @@
                 [["my_start_AMSL"], ["my_drone_min_speed"], ["my_drone_speed"],
                   ["my_drone_max_speed"], ["my_drone_max_acceleration"],
                   ["my_drone_max_deceleration"], ["my_drone_max_roll"], ["my_drone_min_pitch"],
-                  ["my_drone_max_pitch"], ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
+                  ["my_drone_max_pitch"], ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"],
+                  ["my_drone_max_command_frequency"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -479,7 +493,8 @@
           "minPitchAngle": parseFloat(options.drone_min_pitch),
           "maxPitchAngle": parseFloat(options.drone_max_pitch),
           "maxSinkRate": parseFloat(options.drone_max_sink_rate),
-          "maxClimbRate": parseFloat(options.drone_max_climb_rate)
+          "maxClimbRate": parseFloat(options.drone_max_climb_rate),
+          "maxCommandFrequency": parseFloat(options.drone_max_command_frequency)
         },
         "gameTime": parseInt(options.simulation_time, 10),
         "simulation_speed": parseInt(options.simulation_speed, 10),

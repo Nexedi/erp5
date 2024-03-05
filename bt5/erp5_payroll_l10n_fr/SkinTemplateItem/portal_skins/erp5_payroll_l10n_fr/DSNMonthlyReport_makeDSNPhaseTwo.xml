@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_mode=False</string> </value>
+            <value> <string>form_id=\'\', batch_mode=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

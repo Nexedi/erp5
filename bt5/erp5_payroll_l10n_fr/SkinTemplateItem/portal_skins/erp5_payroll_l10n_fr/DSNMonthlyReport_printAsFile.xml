@@ -50,23 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>sending_mode=\'01\', RESPONSE=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestResult_getSummary</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Return short test summary</string> </value>
+            <value> <string>DSNMonthlyReport_printAsFile</string> </value>
         </item>
       </dictionary>
     </pickle>

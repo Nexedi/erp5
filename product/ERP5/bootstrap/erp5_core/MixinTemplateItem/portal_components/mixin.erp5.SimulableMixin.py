@@ -35,7 +35,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Errors import SimulationError
 
-
+SIMULATION_PRIORITY = 3
 
 class SimulableMixin(Base):
   security = ClassSecurityInfo()
@@ -71,7 +71,7 @@ class SimulableMixin(Base):
               activity='SQLQueue',
               group_method_id='portal_rules/updateSimulation',
               tag='build:' + path,
-              priority=3,
+              priority=SIMULATION_PRIORITY,
               )._updateSimulation(**kw)
         del tv[key]
         ignore.update(kw)
@@ -100,7 +100,8 @@ class SimulableMixin(Base):
         applied_rule = self._createRootAppliedRule()
         expand_root = applied_rule is not None
     activate_kw = {'tag': 'build:'+self.getPath(),
-     'priority': 2}
+     'priority': SIMULATION_PRIORITY
+    }
     if expand_root:
       applied_rule.expand(activate_kw=activate_kw)
     else:

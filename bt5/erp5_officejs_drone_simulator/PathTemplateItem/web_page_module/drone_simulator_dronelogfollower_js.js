@@ -207,11 +207,11 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
   };
-  DroneLogAPI.prototype.exit = function (drone) {
-    return;
+  DroneLogAPI.prototype.isReadyToFly = function () {
+    return true;
   };
-  DroneLogAPI.prototype.set_loiter_mode = function (loiter) {
-    return;
+  DroneLogAPI.prototype.getMaxCommandFrequency = function () {
+    return Infinity;
   };
 
   return DroneLogAPI;

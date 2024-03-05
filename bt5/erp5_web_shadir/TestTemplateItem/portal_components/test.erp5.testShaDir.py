@@ -256,3 +256,20 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(obj, vf1._getOb(obj_id))
     self.assertIsNone(vf2._getOb(obj_id, default=None))
 
+  def test_post_information_with_other_documents(self):
+    """
+      Check if code works when there are unrelated
+      shacache documents.
+    """
+    person = self.portal.person_module.newContent(portal_type="Person")
+    doc = self.portal.document_module.newContent(
+            portal_type="File",
+            reference="F-TESTSHADIR",
+            version="001",
+            language="en",
+            follow_up_value=person,
+            data="FILEDATA")
+    doc.publish()
+
+    self.tic()
+    self.test_post_information_more_than_once()

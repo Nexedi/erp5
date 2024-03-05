@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import six
-from App.class_init import default__class_init__ as InitializeClass
+from AccessControl.class_init import InitializeClass
 import Acquisition
 from Persistence import Persistent
 from App.special_dtml import DTMLFile

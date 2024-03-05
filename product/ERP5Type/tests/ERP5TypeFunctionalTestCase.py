@@ -276,9 +276,7 @@ class FunctionalTestRunner:
         kw.update(
             firefox_binary=firefox_bin,
             executable_path=geckodriver,
-            # BBB in selenium 3.8.0 this option was named log_path
-            log_path=os.path.join(log_directory, 'geckodriver.log'),
-            # service_log_path=os.path.join(log_directory, 'geckodriver.log'),
+            service_log_path=os.path.join(log_directory, 'geckodriver.log'),
         )
       browser = webdriver.Firefox(**kw)
     else:
@@ -363,11 +361,11 @@ class FunctionalTestRunner:
     # need to wait a bit more, because at the end of test ( testComplete ),
     # updateSuiteWithResultOfPreviousTest is called by setTimeout. We want to
     # wait for the last test (which is the last td) result table to be present
-    browser.switch_to_frame('testSuiteFrame')
+    browser.switch_to.frame('testSuiteFrame')
     WebDriverWait(browser, 10).until(EC.presence_of_element_located((
       By.XPATH, '//table/tbody/tr/td[last()]//table'
     )))
-    browser.switch_to_default_content()
+    browser.switch_to.default_content()
     self.execution_duration = round(time.time() - start_time, 2)
     html_parser = etree.HTMLParser(recover=True)
     iframe = etree.fromstring(
@@ -456,10 +454,10 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
   def _verboseErrorLog(self, size=10):
     for entry in self.portal.error_log.getLogEntries()[:size]:
-      print "="*20
-      print "ERROR ID : %s" % entry["id"]
-      print "TRACEBACK :"
-      print entry["tb_text"]
+      print("="*20)
+      print("ERROR ID : %s" % entry["id"])
+      print("TRACEBACK :")
+      print(entry["tb_text"])
 
   def testFunctionalTestRunner(self):
     # Check the zuite page templates can be rendered, because selenium test

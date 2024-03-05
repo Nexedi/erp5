@@ -26,10 +26,12 @@
 ##############################################################################
 
 import hashlib
-import json
 from base64 import b64decode
 from binascii import a2b_hex
+from collections import defaultdict
+from json import dumps, loads
 from zExceptions import BadRequest
+from DateTime import DateTime
 from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
@@ -59,13 +61,13 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
 
   # Return the SIGNATURE file, if the document exists.
   if data_set is not None:
-    document_list = [json.loads(document.getData()) \
+    document_list = [loads(document.getData())
                        for document in portal.portal_catalog(
                          follow_up_uid=data_set.getUid(),
                          validation_state='published')]
 
     temp_file = self.newContent(temp_object=True, portal_type='File', id='%s.txt' % key)
-    temp_file.setData(json.dumps(document_list))
+    temp_file.setData(dumps(document_list))
     temp_file.setContentType('application/json')
     return temp_file.getObject()
 
@@ -78,8 +80,8 @@ def WebSection_setObject(self, id, ob, **kw):
   portal = self.getPortalObject()
   data = self.REQUEST.get('BODY')
   try:
-    metadata, signature = json.loads(data)
-    metadata = json.loads(metadata)
+    metadata, signature = loads(data)
+    metadata = loads(metadata)
     # a few basic checks
     b64decode(signature)
     if len(a2b_hex(metadata['sha512'])) != 64:
@@ -125,3 +127,100 @@ def WebSection_putFactory(self, name, typ, body):
                                                     filename=name,
                                                     discover_metadata=False)
   return document
+
+# The following scripts are helpers to search & clean up shadir entries.
+# XXX: Due to lack of View skin for shadir, external methods are currently
+#      created manually in custom skin after installation, if needed.
+
+def _delete(portal, data_set_id_list, document_id_list):
+  r = "%s\n%s %r\n%s %r" % (DateTime(),
+    len(data_set_id_list), data_set_id_list,
+    len(document_id_list), document_id_list)
+  if document_id_list:
+    portal.document_module.manage_delObjects(document_id_list)
+  if data_set_id_list:
+    portal.data_set_module.manage_delObjects(data_set_id_list)
+  return r
+
+def _deletableDataSetList(data_set_dict):
+  return [data_set.getId()
+    for data_set, document_set in data_set_dict.iteritems()
+    if document_set.issuperset(data_set.getFollowUpRelatedList())]
+
+def ERP5Site_deleteOrphanShadir(self):
+  assert self.getPortalType() == "ERP5 Site", self
+  data_set_dict = defaultdict(set)
+  document_id_list = []
+  query = self.erp5_sql_connection().query
+  for relative_url, in query("select catalog.relative_url"
+      " from catalog join shadir using (uid)"
+        " left join catalog as t on (lower(hex(sha512))=t.reference)"
+      " where t.uid is null", 0)[1]:
+    document = self.unrestrictedTraverse(relative_url)
+    data_set = document.getFollowUpValue(portal_type='Data Set')
+    if data_set is not None:
+      data_set_dict[data_set].add(relative_url)
+    document_id_list.append(document.getId())
+
+  data_set_id_list = _deletableDataSetList(data_set_dict)
+
+  x = zip(*query("select catalog.id from catalog"
+      " join category on (base_category_uid=%s and category_uid=catalog.uid)"
+      " left join catalog as t on (catalog.uid=t.uid)"
+    " where catalog.parent_uid=%s and t.uid is null" % (
+      self.portal_categories.follow_up.getUid(),
+      self.data_set_module.getUid(),
+    ), 0)[1])
+  if x:
+    data_set_id_list += x[0]
+
+  return _delete(self, data_set_id_list, document_id_list)
+
+def _deleteDocumentList(portal, document_list):
+  data_set_dict = defaultdict(set)
+  document_id_list = []
+  sha512_set = set()
+  for document in document_list:
+    sha512_set.add(loads(loads(document.getData())[0])[u"sha512"])
+    data_set = document.getFollowUpValue(portal_type='Data Set')
+    if data_set is not None:
+      data_set_dict[data_set].add(document.getRelativeUrl())
+    document_id_list.append(document.getId())
+  sha512_set.difference_update(sha512
+    for relative_url, sha512 in portal.erp5_sql_connection().query(
+      "select relative_url, lower(hex(sha512))"
+      " from catalog join shadir using (uid) where sha512 in (%s)"
+      % ','.join(map("x'%s'".__mod__, sha512_set)), 0)[1]
+    if not (relative_url.startswith("document_module/") and
+            relative_url[16:] in document_id_list))
+  if sha512_set:
+    for document in portal.document_module.searchFolder(reference=sha512_set):
+      document_id_list.append(document.getId())
+  return _delete(portal, _deletableDataSetList(data_set_dict), document_id_list)
+
+def ShaDir_delete(self):
+  portal_type = self.getPortalType()
+  if portal_type == 'Data Set':
+    document_list = self.getFollowUpRelatedValueList(portal_type='File')
+  else:
+    assert portal_type == 'File', self
+    document_list = self,
+  return _deleteDocumentList(self.getPortalObject(), document_list)
+
+def ShaDir_search(self, filename, summary, delete=False):
+  assert self.getPortalType() == "ERP5 Site", self
+  document_list = []
+  x = defaultdict(list)
+  for document in self.portal_catalog.unrestrictedSearchResults(
+      filename=filename, summary=summary):
+    document = document.getObject()
+    document_list.append(document)
+    metadata = loads(loads(document.getData())[0])
+    del metadata[u"sha512"]
+    x[';'.join('%s=%r' % (k, v.encode('utf-8') if type(v) is unicode else v)
+               for k, v in sorted(metadata.iteritems()))].append(
+      document.getId())
+  r = '\n'.join('%s %s' % (k, sorted(v)) for k, v in sorted(x.iteritems()))
+  if delete:
+    r += '\n' + _deleteDocumentList(self, document_list)
+  return r

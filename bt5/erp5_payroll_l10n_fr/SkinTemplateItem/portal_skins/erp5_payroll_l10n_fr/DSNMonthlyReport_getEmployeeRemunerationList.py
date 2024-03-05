@@ -1,10 +1,7 @@
-from erp5.component.module.DateUtils import getNumberOfDayInMonth
-
 portal = context.getPortalObject()
 
 paysheet = portal.accounting_module[paysheet_id]
 
-remuneration_bloc = {}
 bonus_result = []
 result = []
 is_trainee = (True if enrollment_record.getContractType() == '29' else False)

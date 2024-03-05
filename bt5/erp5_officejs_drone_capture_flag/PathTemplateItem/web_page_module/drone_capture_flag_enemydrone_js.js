@@ -23,6 +23,8 @@ var EnemyDroneAPI = /** @class */ (function () {
     this._drone_dict_list = [];
     this._acceleration = DEFAULT_ACCELERATION;
     this._collision_sector = COLLISION_SECTOR;
+    this._is_landing = false;
+    this._is_ready_to_fly = true;
   }
   /*
   ** Function called on start phase of the drone, just before onStart AI script
@@ -49,7 +51,6 @@ var EnemyDroneAPI = /** @class */ (function () {
     if (drone._maxSinkRate > drone._maxSpeed) {
       throw new Error('max sink rate cannot be superior to max speed');
     }
-    drone._maxOrientation = this.getMaxOrientation();
     return;
   };
   /*
@@ -57,10 +58,12 @@ var EnemyDroneAPI = /** @class */ (function () {
   */
   EnemyDroneAPI.prototype.internal_update = function (context, delta_time) {
     context._speed += context._acceleration * delta_time / 1000;
-    if (context._speed > context._maxSpeed)
+    if (context._speed > context._maxSpeed) {
       context._speed = context._maxSpeed;
-    if (context._speed < -context._maxSpeed)
+    }
+    if (context._speed < -context._maxSpeed) {
       context._speed = -context._maxSpeed;
+    }
     var updateSpeed = context._speed * delta_time / 1000;
     if (context._direction.x !== 0 ||
         context._direction.y !== 0 ||
@@ -68,13 +71,9 @@ var EnemyDroneAPI = /** @class */ (function () {
       context._controlMesh.position.addInPlace(
         new BABYLON.Vector3(context._direction.x * updateSpeed,
                             context._direction.y * updateSpeed,
-                            context._direction.z * updateSpeed));
+                            context._direction.z * updateSpeed)
+      );
     }
-    var orientationValue = context._maxOrientation *
-        (context._speed / context._maxSpeed);
-    context._mesh.rotation = new BABYLON.Vector3(
-      orientationValue * context._direction.z, 0,
-      -orientationValue * context._direction.x);
     context._controlMesh.computeWorldMatrix(true);
     context._mesh.computeWorldMatrix(true);
     return;
@@ -119,7 +118,9 @@ var EnemyDroneAPI = /** @class */ (function () {
 
   EnemyDroneAPI.prototype.internal_setTargetCoordinates =
     function (drone, coordinates) {
-      if (!drone._canPlay) return;
+      if (!drone._canPlay) {
+        return;
+      }
       var x = coordinates.x, y = coordinates.y, z = coordinates.z;
       if (isNaN(x) || isNaN(y) || isNaN(z)) {
         throw new Error('Target coordinates must be numbers');
@@ -240,7 +241,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
       '}\n' +
       '\n' +
-      'me.onStart = function () {\n' +
+      'me.onStart = function (timestamp) {\n' +
       '  me.setDirection(0,0,0);\n' +
       '  return;\n' +
       '\n' +
@@ -279,20 +280,20 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.getMaxAcceleration = function () {
     return this._flight_parameters.drone.maxAcceleration;
   };
-  EnemyDroneAPI.prototype.getMaxOrientation = function () {
-    //TODO should be a game parameter (but how to force value to PI quarters?)
-    return Math.PI / 4;
+  EnemyDroneAPI.prototype.getMaxCommandFrequency = function () {
+    return Infinity;
   };
-  EnemyDroneAPI.prototype.triggerParachute = function (drone) {
+  EnemyDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
+    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 0);
+    this._is_ready_to_fly = false;
+    this._is_landing = true;
   };
-  EnemyDroneAPI.prototype.landed = function (drone) {
-    var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.altitude) < 10;
+  EnemyDroneAPI.prototype.isReadyToFly = function () {
+    return this._is_ready_to_fly;
   };
-  EnemyDroneAPI.prototype.exit = function () {
-    return;
+  EnemyDroneAPI.prototype.isLanding = function () {
+    return this._is_landing;
   };
   EnemyDroneAPI.prototype.getInitialAltitude = function () {
     return 0;

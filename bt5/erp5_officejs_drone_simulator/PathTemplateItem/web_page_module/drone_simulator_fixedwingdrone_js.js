@@ -30,6 +30,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     this._loiter_radius = 100;
     //this._start_altitude = 0;
     this._loiter_mode = false;
+    this._is_landing = false;
+    this._is_ready_to_fly = true;
     this._drone_dict_list = [];
   }
   Object.defineProperty(FixedWingDroneAPI.prototype, "isCollidable", {
@@ -90,45 +92,19 @@ var FixedWingDroneAPI = /** @class */ (function () {
     if (drone._maxClimbRate > drone._maxSpeed) {
       throw new Error('max climb rate cannot be superior to max speed');
     }
-    drone._maxOrientation = this.getMaxOrientation();
+    drone._maxCommandFrequency = this.getMaxCommandFrequency();
+    if (drone._maxCommandFrequency <= 0) {
+      throw new Error('max command frequence must be superior to 0');
+    }
     return;
   };
   /*
   ** Function called on every drone update, right before onUpdate AI script
   */
   FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
-    var diff, newrot, orientationValue, rotStep;
-
-    //TODO rotation
-    if (context._rotationTarget) {
-      rotStep = BABYLON.Vector3.Zero();
-      diff = context._rotationTarget.subtract(context._controlMesh.rotation);
-      rotStep.x = (diff.x >= 1) ? 1 : diff.x;
-      rotStep.y = (diff.y >= 1) ? 1 : diff.y;
-      rotStep.z = (diff.z >= 1) ? 1 : diff.z;
-      if (rotStep === BABYLON.Vector3.Zero()) {
-        context._rotationTarget = null;
-        return;
-      }
-      newrot = new BABYLON.Vector3(context._controlMesh.rotation.x +
-                                    (rotStep.x * context._rotationSpeed),
-                                    context._controlMesh.rotation.y +
-                                    (rotStep.y * context._rotationSpeed),
-                                    context._controlMesh.rotation.z +
-                                    (rotStep.z * context._rotationSpeed)
-                                  );
-      context._controlMesh.rotation = newrot;
-    }
-
     this._updateSpeed(context, delta_time);
     this._updatePosition(context, delta_time);
 
-    //TODO rotation
-    orientationValue = context._maxOrientation *
-      (context._speed / context._maxSpeed);
-    context._mesh.rotation =
-      new BABYLON.Vector3(orientationValue * context._direction.z, 0,
-                          -orientationValue * context._direction.x);
     context._controlMesh.computeWorldMatrix(true);
     context._mesh.computeWorldMatrix(true);
   };
@@ -148,7 +124,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
         'latitude' : drone_position.latitude,
         'longitude' : drone_position.longitude,
         'yaw': drone.getYaw(),
-        'speed': drone.getAirSpeed(),
+        'speed': drone.getSpeed(),
         'climbRate': drone.getClimbRate()
       };
       _this._drone_dict_list[_this._id] = drone_info;
@@ -162,7 +138,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
 
   FixedWingDroneAPI.prototype._updateSpeed = function (drone, delta_time) {
-    var speed = drone.getAirSpeed(), speedDiff, speedUpdate;
+    var speed = drone.get3DSpeed(), speedDiff, speedUpdate;
     if (speed !== this._targetSpeed) {
       speedDiff = this._targetSpeed - speed;
       speedUpdate = drone._acceleration * delta_time / 1000;
@@ -235,7 +211,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
 
     verticalSpeed = this._getVerticalSpeed(drone);
     groundSpeed = Math.sqrt(
-      Math.pow(drone.getAirSpeed(), 2) - Math.pow(verticalSpeed, 2)
+      Math.pow(drone.get3DSpeed(), 2) - Math.pow(verticalSpeed, 2)
     );
 
     distance = (groundSpeed * delta_time / 1000) / R;
@@ -297,30 +273,18 @@ var FixedWingDroneAPI = /** @class */ (function () {
       verticalSpeed = this._computeVerticalSpeed(
         altitudeDiff,
         this.getMaxClimbRate(),
-        drone.getAirSpeed(),
+        drone.get3DSpeed(),
         this.getMaxPitchAngle()
       );
     } else {
       verticalSpeed = -this._computeVerticalSpeed(
         Math.abs(altitudeDiff),
         this.getMaxSinkRate(),
-        drone.getAirSpeed(),
+        drone.get3DSpeed(),
         -this.getMinPitchAngle()
       );
     }
     return verticalSpeed;
-  };
-
-  FixedWingDroneAPI.prototype.setRotation = function (drone, x, y, z) {
-    //TODO rotation
-    drone._rotationTarget = new BABYLON.Vector3(x, z, y);
-  };
-
-  FixedWingDroneAPI.prototype.setRotationBy = function (drone, x, y, z) {
-    //TODO rotation
-    drone._rotationTarget = new BABYLON.Vector3(drone.rotation.x + x,
-                                                drone.rotation.y + z,
-                                                drone.rotation.z + y);
   };
 
   FixedWingDroneAPI.prototype.setSpeed = function (drone, speed) {
@@ -329,7 +293,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       this.getMinSpeed()
     );
 
-    drone._acceleration = (this._targetSpeed > drone.getAirSpeed())
+    drone._acceleration = (this._targetSpeed > drone.get3DSpeed())
       ? this.getMaxAcceleration() : -this.getMaxDeceleration();
   };
 
@@ -349,7 +313,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
 
   FixedWingDroneAPI.prototype.internal_setTargetCoordinates =
-    function (drone, coordinates, radius) {
+    function (drone, coordinates, speed, radius) {
       if (radius) {
         this._loiter_mode = true;
         if (radius >= LOITER_LIMIT) {
@@ -358,6 +322,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       } else {
         this._loiter_mode = false;
       }
+      this.setSpeed(drone, speed);
     };
 
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
@@ -447,14 +412,13 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getMaxClimbRate = function () {
     return this._flight_parameters.drone.maxClimbRate;
   };
-  FixedWingDroneAPI.prototype.getMaxOrientation = function () {
-    //TODO should be a game parameter (but how to force value to PI quarters?)
-    return Math.PI / 4;
+  FixedWingDroneAPI.prototype.getMaxCommandFrequency = function () {
+    return this._flight_parameters.drone.maxCommandFrequency;
   };
   FixedWingDroneAPI.prototype.getYawVelocity = function (drone) {
     return 360 * EARTH_GRAVITY
       * Math.tan(this._toRad(this.getMaxRollAngle()))
-      / (2 * Math.PI * drone.getAirSpeed());
+      / (2 * Math.PI * drone.get3DSpeed());
   };
   FixedWingDroneAPI.prototype.getYaw = function (drone) {
     var direction = drone.worldDirection;
@@ -491,25 +455,34 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return angle * 180 / Math.PI;
   };
   FixedWingDroneAPI.prototype.getClimbRate = function (drone) {
-    return drone.worldDirection.y * drone.getAirSpeed();
+    return drone.worldDirection.y * drone.get3DSpeed();
   };
-  FixedWingDroneAPI.prototype.getGroundSpeed = function (drone) {
+  FixedWingDroneAPI.prototype.getSpeed = function (drone) {
     var direction = drone.worldDirection;
     return Math.sqrt(
-      Math.pow(direction.x * drone.getAirSpeed(), 2)
-        + Math.pow(direction.z * drone.getAirSpeed(), 2)
+      Math.pow(direction.x * drone.get3DSpeed(), 2)
+        + Math.pow(direction.z * drone.get3DSpeed(), 2)
     );
   };
-  FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
-    var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(drone_pos.latitude, drone_pos.longitude, 5);
+  FixedWingDroneAPI.prototype.takeOff = function () {
+    return console.log("Fixed-wing drones can only be taken off manually.");
   };
-  FixedWingDroneAPI.prototype.landed = function (drone) {
+  FixedWingDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.altitude) < 10;
+    drone.setTargetCoordinates(
+      drone_pos.latitude,
+      drone_pos.longitude,
+      0,
+      drone.get3DSpeed()
+    );
+    this._is_ready_to_fly = false;
+    this._is_landing = true;
   };
-  FixedWingDroneAPI.prototype.exit = function () {
-    return;
+  FixedWingDroneAPI.prototype.isReadyToFly = function () {
+    return this._is_ready_to_fly;
+  };
+  FixedWingDroneAPI.prototype.isLanding = function () {
+    return this._is_landing;
   };
   FixedWingDroneAPI.prototype.getInitialAltitude = function () {
     return this._map_dict.start_AMSL;

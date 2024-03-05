@@ -62,7 +62,7 @@ from Products.CMFCore.DirectoryView import registerDirectory
 from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
-from Products.ZCatalog.Lazy import LazyMap
+from ZTUtils.Lazy import LazyMap
 
 try:
   import chardet
@@ -218,18 +218,8 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
   return value_list
 
 #####################################################
-# Logging
+# Decorators
 #####################################################
-
-warnings.simplefilter("default")
-
-def _showwarning(message, category, filename, lineno, file=None, line=None):
-  if file is None:
-    LOG(category.__name__, WARNING, "%s:%u %s" % (filename, lineno, message))
-  else:
-    file.write(warnings.formatwarning(message, category, filename, lineno, line))
-warnings.showwarning = _showwarning
-
 def deprecated(message=''):
   @simple_decorator
   def _deprecated(wrapped):

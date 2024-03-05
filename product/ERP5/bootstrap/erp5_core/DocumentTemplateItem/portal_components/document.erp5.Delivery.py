@@ -41,7 +41,8 @@ from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.document.ImmobilisationDelivery import ImmobilisationDelivery
 from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
 from erp5.component.mixin.CompositionMixin import CompositionMixin
-from erp5.component.mixin.SimulableMixin import SimulableMixin
+from erp5.component.mixin.SimulableMixin import SimulableMixin, \
+    SIMULATION_PRIORITY
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, \
     unrestricted_apply
 from erp5.component.interface.IMovementCollection import IMovementCollection
@@ -685,7 +686,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     # XXX: Previous implementation waited for expand activities of related
     #      documents and even suggested to look at explanation tree,
     #      instead of causalities. Is it required ?
-    kw = {'priority': 3}
+    kw = {'priority': SIMULATION_PRIORITY}
     kw.update(activity_kw)
     after_tag = kw.pop('after_tag', None)
     if isinstance(after_tag, basestring):
