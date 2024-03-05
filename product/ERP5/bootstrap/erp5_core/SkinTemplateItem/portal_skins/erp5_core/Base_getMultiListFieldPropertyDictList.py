@@ -42,4 +42,6 @@ for item in item_list:
 
 # Return the list of subfield configuration.
 
-return sub_field_dict.values()
+return sorted(
+  sub_field_dict.values(),
+  key=lambda v: v['title'])

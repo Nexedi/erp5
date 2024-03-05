@@ -50,6 +50,19 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr>
+  <td colspan="3"><b>Listfields are displayed in alphabetic order</b></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']/div/label</td>
+  <td>Foo Category</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']/div/label</td>
+  <td>foo_big_category</td>
+</tr>
+<tr>
   <td colspan="3"><b>Empty value by default</b></td>
 </tr>
 <tr>
@@ -89,12 +102,12 @@
 <tr>
   <td>select</td>
   <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//select</td>
-  <td>label=c1</td>
+  <td>label=a/a1</td>
 </tr>
 <tr>
   <td>select</td>
   <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//select</td>
-  <td>label=a/a1</td>
+  <td>label=c1</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
@@ -106,12 +119,12 @@
 <tr>
   <td>assertSelected</td>
   <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//select</td>
-  <td>label=c1</td>
+  <td>label=a/a1</td>
 </tr>
 <tr>
   <td>assertSelected</td>
   <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//select</td>
-  <td>label=a/a1</td>
+  <td>label=c1</td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
