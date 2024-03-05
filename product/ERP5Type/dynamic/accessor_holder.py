@@ -33,6 +33,7 @@ Accessor Holders, that is, generation of methods for ERP5
 * Utils, Property Sheet Tool can be probably be cleaned up as well by
 moving specialized code here.
 """
+import collections
 from six import string_types as basestring
 from types import ModuleType
 
@@ -342,7 +343,7 @@ def applyCategoryAsRelatedValueAccessor(accessor_holder,
       accessor = accessor_class(accessor_name % uppercase_category_id, category_id)
       accessor_holder.registerAccessor(accessor, read_permission)
 
-def getPropertySheetValueList(site, property_sheet_name_set):
+def getPropertySheetValueList(site, property_sheet_name_list):
   try:
     property_sheet_tool = site.portal_property_sheets
 
@@ -356,7 +357,7 @@ def getPropertySheetValueList(site, property_sheet_name_set):
 
   property_sheet_value_list = []
 
-  for property_sheet_name in property_sheet_name_set:
+  for property_sheet_name in property_sheet_name_list:
     try:
       property_sheet = property_sheet_tool._getOb(property_sheet_name)
     except (AttributeError, KeyError):
@@ -420,7 +421,10 @@ def createAllAccessorHolderList(site,
   """
   from erp5 import accessor_holder as accessor_holder_module
 
-  property_sheet_name_set = set()
+  # Use an ordered dict as a set keeping the order, to generate the list
+  # of accessor holders that will be the bases of the portal type class
+  # in the same order as the property sheets defined in the class hierarchy.
+  property_sheet_name_set = collections.OrderedDict()
   accessor_holder_list = []
 
   # Get the accessor holders of the Portal Type
@@ -456,7 +460,7 @@ def createAllAccessorHolderList(site,
       else:
         for property_sheet in zodb_property_sheet_name_set:
           if property_sheet.endswith('Preference'):
-            property_sheet_name_set.add(property_sheet)
+            property_sheet_name_set[property_sheet] = None
 
       # XXX a hook to add per-portal type accessor holders maybe?
       if portal_type_name == "Preference Tool":
@@ -479,15 +483,15 @@ def createAllAccessorHolderList(site,
     if not isinstance(property_sheet, basestring):
       property_sheet = property_sheet.__name__
 
-    property_sheet_name_set.add(property_sheet)
+    property_sheet_name_set[property_sheet] = None
 
-  property_sheet_name_set = property_sheet_name_set - \
-      portal_type_property_sheet_name_set
+  property_sheet_value_list = getPropertySheetValueList(
+    site,
+    [ps for ps in property_sheet_name_set
+     if ps not in portal_type_property_sheet_name_set])
 
   document_accessor_holder_list = \
-      getAccessorHolderList(site, portal_type_name,
-                            getPropertySheetValueList(site,
-                                                      property_sheet_name_set))
+      getAccessorHolderList(site, portal_type_name, property_sheet_value_list)
 
   accessor_holder_list.extend(document_accessor_holder_list)
 
