@@ -27,8 +27,12 @@
 #
 ##############################################################################
 
+import six
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
 
-import base64
 import six.moves.http_client
 from unittest import expectedFailure
 from DateTime import DateTime
@@ -60,7 +64,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # Define POST headers with Authentication
     self.content_type =  'application/json'
     authentication_string = b'lucas:lucas'
-    base64string = base64.encodebytes(authentication_string).decode().strip()
+    base64string = base64_encodebytes(authentication_string).decode().strip()
     self.header_dict = {'Authorization': 'Basic %s' % base64string,
                         'Content-Type': self.content_type}
 
