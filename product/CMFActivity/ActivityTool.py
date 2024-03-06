@@ -686,7 +686,7 @@ class ActivityTool (BaseTool):
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
-    activity_failure_mail_notification = True
+    activity_failure_mail_notification = False
     cancel_and_invoke_links_hidden = False
 
     # Filter content (ZMI))
