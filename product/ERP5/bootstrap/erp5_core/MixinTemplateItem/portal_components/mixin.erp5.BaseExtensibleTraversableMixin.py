@@ -28,7 +28,11 @@
 ##############################################################################
 
 from warnings import warn
-from base64 import decodebytes
+import six
+if six.PY2:
+  from base64 import decodestring as decodebytes
+else:
+  from base64 import decodebytes
 
 from zLOG import LOG
 from AccessControl import ClassSecurityInfo, getSecurityManager
