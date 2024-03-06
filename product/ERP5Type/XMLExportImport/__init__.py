@@ -48,12 +48,15 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
-from base64 import standard_b64encode, encodebytes
+import six
+if six.PY2:
+  from base64 import standard_b64encode, encodestring as encodebytes
+else:
+  from base64 import standard_b64encode, encodebytes
+
 from hashlib import sha1
 from Products.ERP5Type.Utils import ensure_list
 #from zLOG import LOG
-
-import six
 
 try:
   long_ = long
