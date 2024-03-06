@@ -83,9 +83,15 @@ class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
+import six
 import base64
-enc = base64.encodebytes
-dec = base64.decodebytes
+if six.PY2:
+  enc = base64.encodestring
+  dec = base64.decodestring
+else:
+  enc = base64.encodebytes
+  dec = base64.decodebytes
+
 DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT = 360
 DOCUMENT_CONVERSION_SERVER_RETRY = 0
 # store time (as int) where we had last failure in order
