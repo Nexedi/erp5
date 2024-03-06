@@ -116,7 +116,7 @@ social_contribution_stop_date = None
 for employee_result in paysheet_data_list:
   employee_ctp = employee_result['ctp']
   for ctp_code in employee_ctp:
-    if social_contribution_organisation is None:
+    if social_contribution_organisation is None and 'corporate_registration_code' in employee_ctp[ctp_code]:
       social_contribution_organisation = employee_ctp[ctp_code]['corporate_registration_code']
       social_contribution_start_date = employee_ctp[ctp_code]['start_date']
       social_contribution_stop_date = employee_ctp[ctp_code]['stop_date']
@@ -284,13 +284,13 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   for remuneration_block in paysheet_data_dict['remuneration']:
     dsn_file.append(remuneration_block)
 
-  for bonus_category in sorted(six.itervalues(paysheet_data_dict['other_bonus'])):
+  for bonus_category in sorted(six.itervalues(paysheet_data_dict['other_bonus']), key=lambda v: (v['code'],)):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.52', target=bonus_category))
 
-  for bonus_category in sorted(six.itervalues(paysheet_data_dict['other_income'])):
+  for bonus_category in sorted(six.itervalues(paysheet_data_dict['other_income']), key=lambda v: (v['code'],)):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.54', target=bonus_category))
 
-  for taxable_base_category in sorted(six.itervalues(paysheet_data_dict['taxable_base'])):
+  for taxable_base_category in sorted(six.itervalues(paysheet_data_dict['taxable_base']), key=lambda v: (v['code'], v['contract_id'],)):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.78', target=taxable_base_category))
     if taxable_base_category['code'] == '02': # Assiette Brute plafonnee
       if ('063', '') in paysheet_data_dict['individual_contribution']:
