@@ -26,6 +26,13 @@
 ##############################################################################
 from __future__ import print_function
 import base64
+import six
+# pylint:disable=no-name-in-module
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
+# pylint:enable=no-name-in-module
 from collections import defaultdict
 from functools import partial, wraps
 import hashlib
@@ -37,7 +44,6 @@ import pprint
 from time import time
 import unittest
 from six.moves.urllib.parse import parse_qsl, quote, unquote, urlencode, urlsplit, urlunsplit
-import six
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -782,7 +788,7 @@ class TestOAuth2(ERP5TypeTestCase):
     """
     Get a token, renew it, terminate session.
     """
-    basic_auth = 'Basic ' + bytes2str(base64.encodebytes(
+    basic_auth = 'Basic ' + bytes2str(base64_encodebytes(
       str2bytes(_TEST_USER_LOGIN + ':' + self.__password),
     )).rstrip()
     oauth2_server_connector = self.__oauth2_server_connector_value.getPath()

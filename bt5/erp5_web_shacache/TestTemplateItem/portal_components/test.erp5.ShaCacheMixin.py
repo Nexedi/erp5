@@ -28,9 +28,14 @@
 ##############################################################################
 
 
-import base64
+import six
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
 import hashlib
 import random
+
 
 class ShaCacheMixin(object):
   """
@@ -48,7 +53,7 @@ class ShaCacheMixin(object):
     self.shacache.publish()
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic %s' % (base64.encodebytes(b'ERP5TypeTestCase:').decode().strip())
+      'Authorization': 'Basic %s' % (base64_encodebytes(b'ERP5TypeTestCase:').decode().strip())
     }
     self.shacache_url = self.shacache.absolute_url()
     self.tic()
