@@ -64,7 +64,6 @@ import struct
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
-from base64 import decodebytes
 import subprocess
 import time
 from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
@@ -405,16 +404,6 @@ class TemplateTool (BaseTool):
       bt.build(no_action=True)
       bt.setPublicationUrl(url)
       return bt
-
-    security.declareProtected('Import/Export objects', 'importBase64EncodedText')
-    def importBase64EncodedText(self, file_data=None, id=None, REQUEST=None,
-                                batch_mode=False, **kw):
-      """
-        Import Business Template from passed base64 encoded text.
-      """
-      import_file = StringIO(decodebytes(file_data))
-      return self.importFile(import_file = import_file, id = id, REQUEST = REQUEST,
-                             batch_mode = batch_mode, **kw)
 
     security.declareProtected('Import/Export objects', 'importFile')
     def importFile(self, import_file=None, id=None, REQUEST=None,
