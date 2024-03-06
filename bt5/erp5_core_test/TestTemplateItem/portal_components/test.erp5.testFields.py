@@ -68,10 +68,10 @@ class TestRenderViewAPI(ERP5TypeTestCase):
   def test_signature(self):
     for field in six.itervalues(FieldRegistry.get_field_classes()): # pylint: disable=no-value-for-parameter
       self.assertEqual(('self', 'value', 'REQUEST', 'render_prefix'),
-                        field.render_view.__func__.__code__.co_varnames)
+                        field.render_view.__code__.co_varnames)
       if field is not ProxyField:
         self.assertEqual(('self', 'field', 'value', 'REQUEST'),
-          field.widget.render_view.__func__.__code__.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.__func__.__code__.co_varnames[:4]))
+          field.widget.render_view.__code__.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.__code__.co_varnames[:4]))
 
 
 class TestFloatField(ERP5TypeTestCase):
