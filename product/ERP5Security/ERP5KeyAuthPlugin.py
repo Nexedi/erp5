@@ -27,7 +27,11 @@
 #
 ##############################################################################
 
-from base64 import encodebytes, decodebytes
+import six
+if six.PY2:
+  from base64 import encodestring as encodebytes, decodestring as decodebytes
+else:
+  from base64 import encodebytes, decodebytes
 from six.moves.urllib.parse import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
@@ -54,7 +58,6 @@ from Products import ERP5Security
 # TODO pycrypto is obsolete and should be replaced by cryptography or pycryptodome
 from Crypto.Cipher import AES
 from Crypto import Random
-import six
 if six.PY3:
   import time
   time.clock = time.process_time

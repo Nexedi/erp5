@@ -11,7 +11,11 @@
 #
 ##############################################################################
 
-import base64
+import six
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
 from six.moves import cStringIO as StringIO
 import unittest
 from six.moves.urllib.parse import quote
@@ -73,7 +77,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.req = makerequest(root, self.responseOut)
 
     self.credentials = quote(
-        base64.encodebytes(b'abraham:pass-w').decode().replace('\012', ''))
+        base64_encodebytes(b'abraham:pass-w').decode().replace('\012', ''))
 
   def testCookieLongLogin(self):
     # verify the user and auth cookie get set
@@ -88,7 +92,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
                          'abrahammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
     resp = self.req.response
     self.assertIn('__ac', resp.cookies)
-    self.credentials = base64.encodebytes(('%s:%s' % (long_name, long_pass)).encode()).decode().replace('\012', '')
+    self.credentials = base64_encodebytes(('%s:%s' % (long_name, long_pass)).encode()).decode().replace('\012', '')
     self.assertEqual(resp.cookies['__ac']['value'],
                          self.credentials)
     self.assertEqual(resp.cookies['__ac'][normalizeCookieParameterName('path')], '/')
