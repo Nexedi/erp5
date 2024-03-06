@@ -7,16 +7,12 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
-            <value> <string>2fa644521b73c4857f3d.wasm</string> </value>
+            <value> <string>custom_perspective_style.css</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/wasm</string> </value>
+            <value> <string>text/css</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>

@@ -11,37 +11,9 @@
     <script src="perspective@2.3.0/perspective_with_viewer.js" type="text/javascript"></script>
     <script src="perspective_base_gadget.js" type="text/javascript"></script>
 
-    <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/@finos/perspective-viewer/dist/css/themes.css" />
+    <link rel="stylesheet" href="perspective-viewer.css">
+    <link rel="stylesheet" href="custom_perspective_style.css">
 
-    <style>
-        regular-table {
-            scrollbar-color: #000000f7 transparent;
-            scrollbar-width: auto;
-            outline: none;
-          }
-    
-          perspective-viewer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-          }
-    
-          td.psp-align-left {
-            text-align: right;
-          }
-          /*
-          td.psp-align-left {
-                    box-shadow: 5px -4px 0px -4px var(--inactive--border-color,#8b868045);
-                }*/
-          perspective-viewer regular-table tbody td:hover {
-            text-decoration: underline;
-            cursor: pointer;
-            /* Optional, changes the cursor to a pointer to indicate interactivity */
-            overflow-x: visible;
-          }
-    </style>
 </head>
 
 <body>

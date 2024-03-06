@@ -7,8 +7,7 @@
       var gadget = this,
         child_html = options.child_html,
         el = document.getElementsByTagName("perspective-viewer")[0];
-
-      gadget.getChildData(options.child_html)
+      return gadget.getChildData(options.child_html)
         .push(function (data) {
           return gadget.getTable(data);
         })
@@ -16,12 +15,11 @@
           return el.load(table);
         })
         .push(function () {
-          gadget.getDeclaredGadget(child_html)
-            .push(function (child) {
-              return child.postprocessing(el);
-            });
+          return gadget.getDeclaredGadget(child_html);
+        })
+        .push(function (child) {
+          return child.postprocessing(el);
         });
-
     })
     .declareMethod("getTable", function (data) {
       return window.Worker.table(data);
