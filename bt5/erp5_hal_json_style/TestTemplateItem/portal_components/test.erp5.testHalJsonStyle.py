@@ -1333,9 +1333,10 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       "application/hal+json"
     )
     result_dict = json.loads(result)
-    self.assertEqual(result_dict['_embedded']['_view']['my_title']['default'], u'\ufffd\ufffd\ufffd')
-    self.assertEqual(result_dict['title'], u'\ufffd\ufffd\ufffd')
-    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], u'\ufffd\ufffd\ufffd')
+    expected = u'\ufffd\ufffd\ufffd' if six.PY2 else u'\udce9\udccf\udcf3\udcaf'
+    self.assertEqual(result_dict['_embedded']['_view']['my_title']['default'], expected)
+    self.assertEqual(result_dict['title'], expected)
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], expected)
 
 
 class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -2442,7 +2443,9 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     result_dict = json.loads(result)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
-    self.assertEqual(result_dict['_embedded']['contents'][0]["title"], u'\ufffd\ufffd\ufffd')
+    self.assertEqual(
+      result_dict['_embedded']['contents'][0]["title"],
+      u'\ufffd\ufffd\ufffd' if six.PY2 else u'\udce9\udccf\udcf3\udcaf')
 
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
