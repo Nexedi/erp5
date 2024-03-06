@@ -20,14 +20,18 @@
 from zodbpickle.slowpickle import *
 
 import struct
-import base64
+
+import six
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes, decodestring as base64_decodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes, decodebytes as base64_decodebytes
 import re
 from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
 from Products.ERP5Type.Utils import str2bytes
 
-import six
 from marshal import dumps as mdumps
 #from zLOG import LOG
 
@@ -42,7 +46,7 @@ else:
 
 def escape(s, encoding='repr'):
     if binary(s) and isinstance(s, str):
-        s = base64.encodebytes(s)[:-1]
+        s = base64_encodebytes(s)[:-1]
         encoding = 'base64'
     elif '>' in s or '<' in s or '&' in s:
         if not ']]>' in s:
@@ -56,7 +60,7 @@ def escape(s, encoding='repr'):
 
 def unescape(s, encoding):
     if encoding == 'base64':
-        return base64.decodebytes(s)
+        return base64_decodebytes(s)
     else:
         s = s.replace(b'&lt;', b'<')
         s = s.replace(b'&gt;', b'>')
@@ -92,7 +96,7 @@ def convert(S):
         if not isinstance(S, six.text_type):
             S = S.decode('utf8')
     except UnicodeDecodeError:
-        return 'base64', base64.encodebytes(S)[:-1]
+        return 'base64', base64_encodebytes(S)[:-1]
     else:
         new = reprs_re.sub(sub_reprs, S)
     ### patch end
@@ -100,7 +104,7 @@ def convert(S):
         if not isinstance(S, six.binary_type):
             # TODO zope4py3: is this the right place ? this supports Unicode('\n')
             S = S.encode('ascii')
-        return 'base64', base64.encodebytes(S)[:-1]
+        return 'base64', base64_encodebytes(S)[:-1]
     elif '>' in new or '<' in S or '&' in S:
         if not ']]>' in S:
             return 'cdata', '<![CDATA[\n\n' + new + '\n\n]]>'
@@ -111,7 +115,7 @@ def convert(S):
 # For optimization.
 def unconvert(encoding,S):
     if encoding == 'base64':
-        return base64.decodebytes(S)
+        return base64_decodebytes(S)
     else:
         return str2bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"))
 
@@ -180,7 +184,7 @@ class String(Scalar):
                 # This is used when strings represent references which need to
                 # be converted.
                 encoding = 'base64'
-                v = base64.encodebytes(self._v)[:-1]
+                v = base64_encodebytes(self._v)[:-1]
                 self._v = self.mapping.convertBase64(v).decode()
             else:
                 encoding, self._v = convert(self._v)
