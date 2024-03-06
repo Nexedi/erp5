@@ -4,13 +4,17 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 import hashlib
 from zLOG import LOG, WARNING
-import base64
 import datetime
 import os
 import time
 import requests
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 import six
+import six
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
 
 present = False
 tz = None
@@ -54,7 +58,7 @@ class PayzenREST:
   """
 
   def callPayzenApi(self, URL, payzen_dict):
-    base64string = base64.encodebytes(
+    base64string = base64_encodebytes(
       ('%s:%s' % (
         self.getServiceUsername(),
         self.getServiceApiKey())).encode()).decode().replace('\n', '')
