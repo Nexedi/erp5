@@ -28,6 +28,7 @@
 
 import unittest
 from DateTime import DateTime
+from Products.ERP5Type.Utils import OrderableKey
 from erp5.component.test.testBPMCore import TestBPMMixin
 from six.moves import range
 import six
@@ -341,18 +342,18 @@ class TestMRPImplementation(TestMRPMixin):
         reference = None
       movement_list.append((sm.getTradePhase(), sm.getQuantity(),
                             reference, sm.getIndustrialPhaseList()))
-    movement_list.sort()
-    self.assertEqual(movement_list, sorted((
-      ('mrp/manufacturing_step_0', -10.0, None, []),
+    movement_list.sort(key=lambda x: [OrderableKey(e) for e in x])
+    self.assertEqual(movement_list, [
       ('mrp/manufacturing_step_0', -30.0, None, []),
+      ('mrp/manufacturing_step_0', -10.0, None, []),
       ('mrp/manufacturing_step_0', 10.0,
        'pr/mrp/manufacturing_step_0', ['trade_phase/mrp/manufacturing_step_0']),
+      ('mrp/manufacturing_step_1', -40.0, None, []),
+      ('mrp/manufacturing_step_1', -10.0, None, []),
       ('mrp/manufacturing_step_1', -10.0,
        'cr/mrp/manufacturing_step_1', ['trade_phase/mrp/manufacturing_step_0']),
-      ('mrp/manufacturing_step_1', -10.0, None, []),
-      ('mrp/manufacturing_step_1', -40.0, None, []),
       ('mrp/manufacturing_step_1', 10.0, 'pr', []),
-      )))
+    ])
 
     order.confirm()
     # Build Manufacturing Order
