@@ -925,7 +925,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
             for data in i['field_list']:
                 tmp = []
                 matched_rate = match(data)
-                if matched_rate>0:
+                if matched_rate is not None and matched_rate > 0:
                     form_path = i['form_path']
                     form_id = i['form_id']
                     field_type = data['field_type']
@@ -994,8 +994,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         # for skin_folder_id in self.getSimilarSkinFolderIdList():
         for skin_folder_id in self.getPortalObject().portal_skins.objectIds():
           iterate(getattr(skins_tool, skin_folder_id))
-        proxy_dict_list = proxy_dict.values()
-        proxy_dict_list.sort(key=lambda x: x['short_path'])
+        proxy_dict_list = sorted(proxy_dict.values(), key=lambda x: x['short_path'])
         for item in proxy_dict_list:
           item['related_proxy_list'].sort(key=lambda x: x['short_path'])
 
