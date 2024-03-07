@@ -15,7 +15,7 @@
 
 from threading import local
 from Acquisition import aq_inner, aq_parent
-from AccessControl.User import SimpleUser
+from AccessControl.users import SimpleUser
 from App.config import getConfiguration
 from ..TransactionalVariable import TransactionalVariable
 

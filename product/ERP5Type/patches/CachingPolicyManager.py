@@ -2,7 +2,7 @@ from Products.CMFCore.CachingPolicyManager import CachingPolicy, \
     CachingPolicyManager, createCPContext
 from App.special_dtml import DTMLFile
 from Products.CMFCore.Expression import Expression
-from App.Common import rfc1123_date
+from zope.datetime import rfc1123_date
 from DateTime.DateTime import DateTime
 from Products.ERP5Type import _dtmldir
 
