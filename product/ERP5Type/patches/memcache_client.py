@@ -2,7 +2,6 @@
 # Code based on python-memcached-1.53
 try:
     from memcache import _Host, Client, _Error
-    raise ImportError()
 except ImportError:
     pass
 else:
