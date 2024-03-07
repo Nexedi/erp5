@@ -5,7 +5,7 @@ for k, v in ensure_list(kw.items()):
       kw["path"] = v
     elif k == "uid_activity":
       kw["uid"] = v
-    elif k in ('method_id', 'processing_node', 'retry'):
+    elif k in ('method_id', 'processing_node', 'retry', 'date'):
       continue
   del kw[k]
 
