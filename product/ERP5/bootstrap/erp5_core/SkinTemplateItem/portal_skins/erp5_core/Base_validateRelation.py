@@ -77,7 +77,7 @@ try:
     if checkFieldType(my_field, 'MultiRelationStringField'):
       # The checkProperty sometimes does not provide an
       # acceptable value - XXXX - see vetement_id in Modele View
-      if old_value is '' or old_value is None:
+      if old_value == '' or old_value is None:
         old_value = []
       try:
         old_value = list(old_value)
