@@ -45,6 +45,7 @@ def valueDateTimeRenderer(value):
   return '"%s"' % (value.toZone('UTC').ISO(), )
 
 def valueDefaultRenderer(value):
+  raise TypeError('Unhandled value class: %s (%r). Converted to string and escaped.' % (value.__class__.__name__, value))
   LOG('OperatorBase', 0, 'Unhandled value class: %s (%r). Converted to string and escaped.' % (value.__class__.__name__, value))
   return escapeString(str(value))
 
