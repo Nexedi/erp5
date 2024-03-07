@@ -29,7 +29,6 @@
 ##############################################################################
 import six
 from six import string_types as basestring
-from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from Products.ZSQLCatalog.Utils import sqlquote as escapeString
@@ -45,8 +44,7 @@ def valueDateTimeRenderer(value):
   return '"%s"' % (value.toZone('UTC').ISO(), )
 
 def valueDefaultRenderer(value):
-  LOG('OperatorBase', 0, 'Unhandled value class: %s (%r). Converted to string and escaped.' % (value.__class__.__name__, value))
-  return escapeString(str(value))
+  raise TypeError('Unhandled value class: %s (%r)' % (value.__class__.__name__, value))
 
 def valueNoneRenderer(value):
   return 'NULL'
