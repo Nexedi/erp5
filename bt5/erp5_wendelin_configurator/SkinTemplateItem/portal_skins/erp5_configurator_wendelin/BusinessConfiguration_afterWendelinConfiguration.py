@@ -43,7 +43,7 @@ default_security_model_business_template = portal.portal_templates.getInstalledB
 if default_security_model_business_template is not None:
   for portal_type in default_security_model_business_template.getTemplatePortalTypeRoleList():
     portal_type_instance = getattr(portal.portal_types, portal_type)
-    print "Updated Role Mappings for %s" %portal_type
+    print("Updated Role Mappings for %s" %portal_type)
     portal_type_instance.updateRoleMapping()
 
 # updata local roles (if any)
@@ -56,6 +56,6 @@ if business_template is not None:
                     filter=dict(portal_type=portal_type))
     for module in module_list:
       module.updateLocalRolesOnSecurityGroups()
-      print "Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType())
+      print("Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType()))
 
 log("%s" % printed)
