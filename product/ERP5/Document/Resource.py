@@ -196,7 +196,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
           for base_category in variation.getVariationBaseCategoryList():
             # backwards compatbility: if individual_bc_list is empty, allow
             # all individual variation base categories.
-            if (base_category_list is ()
+            if (base_category_list == ()
                 or base_category in base_category_list)\
                and (not len(individual_bc_list)
                     or base_category in individual_bc_list):
