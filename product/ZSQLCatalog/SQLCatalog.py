@@ -132,6 +132,9 @@ else:
     return wrapper
 
 list_type_list = list, tuple, set, frozenset
+if six.PY3:
+  import collections.abc
+  list_type_list = list_type_list + (collections.abc.MappingView,)
 try:
   from ZPublisher.HTTPRequest import record
 except ImportError:
