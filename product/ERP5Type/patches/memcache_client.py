@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Code based on python-memcached-1.53
+# Code based on python-memcached-1.58
 try:
     from memcache import _Host, Client, _Error
 except ImportError:
@@ -15,9 +15,11 @@ else:
             pass
     Client.MemcachedConnectionError = _ConnectionDeadError
 
+    import six
     import socket
     def _get(self, cmd, key):
-        if getattr(self, 'do_check_key', True):
+        key = self._encode_key(key)
+        if self.do_check_key:
             self.check_key(key)
         server, key = self._get_server(key)
         if not server:
@@ -29,25 +31,22 @@ else:
             self._statlog(cmd)
 
             try:
-                server.send_cmd("%s %s" % (cmd, key))
+                cmd_bytes = cmd.encode('utf-8') if six.PY3 else cmd
+                fullcmd = b''.join((cmd_bytes, b' ', key))
+                server.send_cmd(fullcmd)
                 rkey = flags = rlen = cas_id = None
 
                 if cmd == 'gets':
-                    try:
-                        rkey, flags, rlen, cas_id, = self._expect_cas_value(server,
-                                raise_exception=True)
-                    except TypeError:
-                        # BBB
-                        rkey, flags, rlen, cas_id, = self._expect_cas_value(server)
+                    rkey, flags, rlen, cas_id, = self._expect_cas_value(
+                        server, raise_exception=True
+                    )
                     if rkey and self.cache_cas:
                         self.cas_ids[rkey] = cas_id
                 else:
-                    try:
-                        rkey, flags, rlen, = self._expectvalue(server,
-                                raise_exception=True)
-                    except TypeError:
-                        # BBB
-                        rkey, flags, rlen, = self._expectvalue(server)
+                    rkey, flags, rlen, = self._expectvalue(
+                        server, raise_exception=True
+                    )
+
                 if not rkey:
                     # (patch)
                     # return None
@@ -55,13 +54,10 @@ else:
                 try:
                     value = self._recv_value(server, flags, rlen)
                 finally:
-                    try:
-                        server.expect("END", raise_exception=True)
-                    except TypeError:
-                        # BBB
-                        server.expect("END")
+                    server.expect(b"END", raise_exception=True)
             except (_Error, socket.error) as msg:
-                if isinstance(msg, tuple): msg = msg[1]
+                if isinstance(msg, tuple):
+                    msg = msg[1]
                 server.mark_dead(msg)
                 # (patch)
                 # return None
