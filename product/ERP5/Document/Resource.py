@@ -111,7 +111,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                     |  morphology/2        | (colour/blue, colour/red, size/Man, size/Woman, morphology/2)
         """
         result = []
-        if base_category_list is ():
+        if base_category_list == ():
           base_category_list = self.getVariationBaseCategoryList(
               omit_individual_variation=omit_individual_variation)
         elif isinstance(base_category_list, str):
@@ -127,7 +127,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         if not omit_individual_variation:
           for variation in individual_variation_list:
             for base_category in variation.getVariationBaseCategoryList():
-              if base_category_list is ()\
+              if base_category_list == ()\
                   or base_category in base_category_list:
                 other_base_category_set.discard(base_category)
                 # XXX now, call Renderer a lot of time.
@@ -196,7 +196,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
           for base_category in variation.getVariationBaseCategoryList():
             # backwards compatbility: if individual_bc_list is empty, allow
             # all individual variation base categories.
-            if (base_category_list is ()
+            if (base_category_list == ()
                 or base_category in base_category_list)\
                and (not len(individual_bc_list)
                     or base_category in individual_bc_list):
