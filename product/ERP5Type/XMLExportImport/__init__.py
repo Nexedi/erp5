@@ -209,7 +209,7 @@ def Base_asXML(object, root=None):
       local_group_node.append(marshaller(group_role[1]))
   if return_as_object:
     return root
-  return etree.tostring(root, encoding='utf-8',
+  return etree.tostring(root, encoding='unicode' if six.PY3 else 'utf-8',
                         xml_declaration=True, pretty_print=True)
 
 def Folder_asXML(object, omit_xml_declaration=True, root=None):
@@ -231,7 +231,7 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
     if issubclass(o.__class__, Base):
       o.asXML(root=root_node)
 
-  return etree.tostring(root, encoding='utf-8',
+  return etree.tostring(root, encoding='unicode' if six.PY3 else 'utf-8',
                         xml_declaration=xml_declaration, pretty_print=True)
 
 ## The code below was initially from OFS.XMLExportImport
