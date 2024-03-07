@@ -898,7 +898,7 @@ def save_bytes(self, tag, data):
     v = b''.join(data[2:])
     encoding = a.get('encoding', 'repr')
     assert encoding == 'base64'
-    if encoding is not '':
+    if encoding != '':
         v = unconvert(encoding, v)
     if self.binary:
         l = len(v)
@@ -922,7 +922,7 @@ def save_unicode(self, tag, data):
         for x in data[2:]:
             v=v+x
     encoding=a.get('encoding','repr') # JPS: repr is default encoding
-    if encoding is not '':
+    if encoding != '':
         v=unconvert(encoding,v)
     if binary:
         l=len(v)
