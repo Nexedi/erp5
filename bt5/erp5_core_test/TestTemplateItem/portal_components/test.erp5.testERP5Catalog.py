@@ -1238,6 +1238,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         [x.getObject() for x in self.getCatalogTool()(
                parent_title=person_module.getTitle())])
 
+  def test_unhandled_search_value(self):
+    class UnhandledClass:
+      pass
+    self.getCatalogTool()(title=UnhandledClass())
+
   def test_45_QueryAndComplexQuery(self):
     """
     """
