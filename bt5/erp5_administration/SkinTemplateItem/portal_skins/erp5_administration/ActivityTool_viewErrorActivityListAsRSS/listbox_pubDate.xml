@@ -125,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.ActivityTool_getDateForActivityMessage(cell)</string> </value>
+            <value> <string>python: cell.date</string> </value>
         </item>
       </dictionary>
     </pickle>
