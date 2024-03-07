@@ -210,7 +210,7 @@ def Base_asXML(object, root=None):
   if return_as_object:
     return root
   return etree.tostring(root, encoding='utf-8',
-                        xml_declaration=True, pretty_print=True)
+                        xml_declaration=True, pretty_print=True).decode('utf-8')
 
 def Folder_asXML(object, omit_xml_declaration=True, root=None):
   """
@@ -232,7 +232,7 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
       o.asXML(root=root_node)
 
   return etree.tostring(root, encoding='utf-8',
-                        xml_declaration=xml_declaration, pretty_print=True)
+                        xml_declaration=xml_declaration, pretty_print=True).decode('utf-8')
 
 ## The code below was initially from OFS.XMLExportImport
 from six import string_types as basestring
