@@ -30,7 +30,7 @@ import six
 if six.PY2:
   from base64 import encodestring as base64_encodebytes
 else:
-  from base64 import base64_encodebytes
+  from base64 import encodebytes as base64_encodebytes
 from collections import defaultdict
 from functools import partial, wraps
 import hashlib
