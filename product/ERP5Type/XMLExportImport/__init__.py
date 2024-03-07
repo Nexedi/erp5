@@ -55,7 +55,7 @@ else:
   from base64 import standard_b64encode, encodebytes
 
 from hashlib import sha1
-from Products.ERP5Type.Utils import ensure_list
+from Products.ERP5Type.Utils import bytes2str
 #from zLOG import LOG
 
 try:
@@ -209,8 +209,8 @@ def Base_asXML(object, root=None):
       local_group_node.append(marshaller(group_role[1]))
   if return_as_object:
     return root
-  return etree.tostring(root, encoding='utf-8',
-                        xml_declaration=True, pretty_print=True)
+  return bytes2str(etree.tostring(root, encoding='utf-8',
+                        xml_declaration=True, pretty_print=True))
 
 def Folder_asXML(object, omit_xml_declaration=True, root=None):
   """
@@ -231,8 +231,8 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
     if issubclass(o.__class__, Base):
       o.asXML(root=root_node)
 
-  return etree.tostring(root, encoding='utf-8',
-                        xml_declaration=xml_declaration, pretty_print=True)
+  return bytes2str(etree.tostring(root, encoding='utf-8',
+                        xml_declaration=xml_declaration, pretty_print=True))
 
 ## The code below was initially from OFS.XMLExportImport
 from six import string_types as basestring
