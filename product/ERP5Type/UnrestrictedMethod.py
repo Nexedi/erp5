@@ -27,7 +27,7 @@
 ##############################################################################
 
 from contextlib import contextmanager
-from AccessControl.User import UnrestrictedUser
+from AccessControl.users import UnrestrictedUser
 from AccessControl.SpecialUsers import system
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager

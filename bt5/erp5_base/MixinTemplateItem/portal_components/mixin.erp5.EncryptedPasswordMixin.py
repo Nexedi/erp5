@@ -30,7 +30,7 @@
 ##############################################################################
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from AccessControl.AuthEncoding import pw_encrypt, pw_validate
+from AuthEncoding.AuthEncoding import pw_encrypt, pw_validate
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions

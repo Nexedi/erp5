@@ -40,7 +40,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager, \
   newSecurityManager, setSecurityManager
-from AccessControl.User import nobody
+from AccessControl.users import nobody
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ZSQLMethods.SQL import SQL

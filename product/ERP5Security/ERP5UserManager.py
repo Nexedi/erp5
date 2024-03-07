@@ -19,7 +19,7 @@ from six import string_types as basestring
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
-from AccessControl.AuthEncoding import pw_validate
+from AuthEncoding.AuthEncoding import pw_validate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.PluggableAuthService import \
     _SWALLOWABLE_PLUGIN_EXCEPTIONS

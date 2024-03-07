@@ -37,7 +37,7 @@ def getRolesInContext(self, object):
     o Include *both* local roles assigned directly to us *and* those
       assigned to our groups.
 
-    o Ripped off from AccessControl.User.BasicUser, which provides
+    o Ripped off from AccessControl.users.BasicUser, which provides
       no other extension mechanism. :(
     """
     principal_id_list = [self.getId()]
@@ -74,7 +74,7 @@ def allowed(self, object, object_roles=None):
     o Include *both* local roles assigned directly to us *and* those
       assigned to our groups.
 
-    o Ripped off from AccessControl.User.BasicUser, which provides
+    o Ripped off from AccessControl.users.BasicUser, which provides
       no other extension mechanism. :(
     """
     if object_roles is _what_not_even_god_should_do:

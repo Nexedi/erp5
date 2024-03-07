@@ -13,7 +13,7 @@ except ImportError:
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from AccessControl.User import system as SystemUser, SimpleUser
+from AccessControl.users import system as SystemUser, SimpleUser
 from six.moves import cStringIO as StringIO
 from difflib import unified_diff
 from Products.MailHost.MailHost import MailHost
