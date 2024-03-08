@@ -14,7 +14,10 @@
       (value === null) ||
       ((typeof value === "number") ?
         isNaN(value) :
-        (Object.keys(value).length === 0)
+        ((typeof value === "boolean") ?
+          false :
+          (Object.keys(value).length === 0)
+        )
       )
     );
   }
