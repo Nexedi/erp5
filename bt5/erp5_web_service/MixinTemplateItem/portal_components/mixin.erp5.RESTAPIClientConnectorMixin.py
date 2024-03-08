@@ -136,7 +136,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       http_response = http_connection.getresponse()
       request_stop_time = time.time()
     except ssl.SSLError as exc:
-      if 'The read operation timed out' == exc.message:
+      if "SSLError('The read operation timed out')" == repr(exc):
         LOG(__name__, ERROR, "Call to %s %s raised Timeout (%ss)" %(
           method, path, round(time_left_before_timeout, 6)
         ), error=True)
