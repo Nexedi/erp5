@@ -923,12 +923,10 @@ return True
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    portal = self.portal
-    module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = self.makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
-    background_image = module.newContent(portal_type=portal_type,
-                                    file=upload_file,
-                                    reference="NXD-BACKGROUND")
+    background_image = self.portal.image_module.newContent(
+      portal_type='Image',
+      file=self.makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png'),
+      reference="NXD-BACKGROUND")
     background_image.publish()
     self.tic()
 
