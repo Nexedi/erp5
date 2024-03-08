@@ -119,7 +119,6 @@ class RESTAPIClientConnectorMixin(XMLObject):
     http_connection = HTTPSConnection(
       host=parsed_url.hostname,
       port=parsed_url.port,
-      strict=True,
       timeout=time_left_before_timeout,
       source_address=bind_address,
       context=ssl_context,
