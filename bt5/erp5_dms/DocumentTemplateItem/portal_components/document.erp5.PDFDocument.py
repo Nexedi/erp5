@@ -198,7 +198,7 @@ class PDFDocument(Image):
       process = None
       command = [
           'gs', '-q', '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
-          '-dNOPROMPT', '-sDEVICE=ocr', '-r300x300', '-o', '-', '-f', '-'
+          '-dNOPROMPT', '-sDEVICE=ocr', '-r350x350', '-o', '-', '-f', '-'
       ]
       try:
         process = Popen(
