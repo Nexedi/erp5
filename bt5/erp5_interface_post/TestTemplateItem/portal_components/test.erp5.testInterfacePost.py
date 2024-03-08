@@ -247,7 +247,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     last_message, = self.portal.MailHost._message_list
     self.assertNotEqual((), last_message)
     _, _, message_text = last_message
-    self.assertIn(message_text, sequence['internet_message_post'].getData())
+    self.assertIn(message_text.replace(b'Message-ID: \n ', b'Message-ID: '), sequence['internet_message_post'].getData())
 
   def _getMailHostMessageForRecipient(self, recipient_email_address):
     message_list = self.portal.MailHost._message_list
@@ -268,7 +268,7 @@ class TestInterfacePost(ERP5TypeTestCase):
       self.assertEqual(len(message_list), 1)
       message = message_list[0]
       _, _, message_text = message
-      self.assertIn(message_text, post.getData())
+      self.assertIn(message_text.replace(b'Message-ID: \n ', b'Message-ID: '), post.getData())
 
   def stepCheckMailMessagePreviewDisplaysLatestInternetMessagePostData(self, sequence=None, sequence_list=None):
     mail_message = sequence['mail_message']
