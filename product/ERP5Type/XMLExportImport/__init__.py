@@ -393,30 +393,32 @@ def save_record(parser, tag, data):
 
 import xml.parsers.expat
 def importXML(jar, file, clue=''):
-    if type(file) is str:
-        file=open(file, 'rb')
-    outfile=TemporaryFile()
-    data=file.read()
-    F=ppml.xmlPickler()
-    F.end_handlers['record'] = save_record
-    F.end_handlers['ZopeData'] = save_zopedata
-    F.start_handlers['ZopeData'] = start_zopedata
-    F.binary=1
-    F.file=outfile
-    # <patch>
-    # Our BTs XML files don't declare encoding but have accented chars in them
-    # So we have to declare an encoding but not use unicode, so the unpickler
-    # can deal with the utf-8 strings directly
-    p=xml.parsers.expat.ParserCreate('utf-8')
-    if six.PY2:
-      p.returns_unicode = False
-    # </patch>
-    p.CharacterDataHandler=F.handle_data
-    p.StartElementHandler=F.unknown_starttag
-    p.EndElementHandler=F.unknown_endtag
-    r=p.Parse(data)
-    outfile.seek(0)
-    return jar.importFile(outfile,clue)
+    if isinstance(file, str):
+        with open(file, 'rb') as f:
+          data = f.read()
+    else:
+        data = file.read()
+    with TemporaryFile() as outfile:
+        F=ppml.xmlPickler()
+        F.end_handlers['record'] = save_record
+        F.end_handlers['ZopeData'] = save_zopedata
+        F.start_handlers['ZopeData'] = start_zopedata
+        F.binary=1
+        F.file=outfile
+        # <patch>
+        # Our BTs XML files don't declare encoding but have accented chars in them
+        # So we have to declare an encoding but not use unicode, so the unpickler
+        # can deal with the utf-8 strings directly
+        p=xml.parsers.expat.ParserCreate('utf-8')
+        if six.PY2:
+          p.returns_unicode = False
+        # </patch>
+        p.CharacterDataHandler=F.handle_data
+        p.StartElementHandler=F.unknown_starttag
+        p.EndElementHandler=F.unknown_endtag
+        r=p.Parse(data)
+        outfile.seek(0)
+        return jar.importFile(outfile, clue)
 
 customImporters = {
   magic: importXML
