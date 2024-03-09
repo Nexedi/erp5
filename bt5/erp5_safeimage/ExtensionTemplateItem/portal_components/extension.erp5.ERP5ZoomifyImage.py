@@ -180,7 +180,9 @@ class ZoomifyBase:
       if imageRow.mode != 'RGB':
         imageRow = imageRow.convert('RGB')
       imageRow.save(os.path.join(tempfile.gettempdir(), saveFilename),
-                                                        'JPEG', quality=100.)
+        # see https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#jpeg-saving
+        # for quality, Values above 95 should be avoided;
+                                                        'JPEG', quality=95)
       if os.path.exists(os.path.join(tempfile.gettempdir(), saveFilename)):
         self.processRowImage(tier=tier, row=row)
       row += 1
