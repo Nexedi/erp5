@@ -42,7 +42,8 @@ OptionsManagerMixIn.read_config_file = lambda *args, **kw: None
 ## Pylint transforms and plugin to generate AST for ZODB Components
 from astroid.builder import AstroidBuilder
 from astroid.exceptions import AstroidBuildingException
-from astroid import MANAGER, node_classes
+from astroid import AstroidManager, node_classes
+MANAGER = AstroidManager()
 
 try:
   from astroid.builder import _guess_encoding

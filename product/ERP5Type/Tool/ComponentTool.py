@@ -161,7 +161,8 @@ class ComponentTool(BaseTool):
 
       # Clear pylint cache
       try:
-        from astroid.builder import MANAGER
+        from astroid.builder import AstroidManager
+        MANAGER = AstroidManager()
       except ImportError:
         pass
       else:
