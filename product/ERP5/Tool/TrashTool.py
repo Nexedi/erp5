@@ -132,6 +132,8 @@ class TrashTool(BaseTool):
           LOG("Trash Tool backupObject", WARNING,
               "Can't backup object %s" % object_path)
           return {}
+        finally:
+          copy.close()
 
     subobjects_dict = {}
 
