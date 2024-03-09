@@ -2224,7 +2224,11 @@ def function_foo(*args, **kwargs):
   def _assertAstroidCacheContent(self,
                                  must_be_in_cache_set,
                                  must_not_be_in_cache_set):
-    from astroid.builder import MANAGER
+    if six.PY2:
+      from astroid.builder import MANAGER
+    else:
+      from astroid.builder import AstroidManager
+      MANAGER = AstroidManager()
     should_not_be_in_cache_list = []
     for modname in MANAGER.astroid_cache:
       if (modname.startswith('checkPythonSourceCode') or
@@ -2497,7 +2501,11 @@ from %(namespace)s.erp5_version import %(reference)s
            reference=imported_reference))
 
       component.checkSourceCode()
-      from astroid.builder import MANAGER
+      if six.PY2:
+        from astroid.builder import MANAGER
+      else:
+        from astroid.builder import AstroidManager
+        MANAGER = AstroidManager()
       imported_module = self._getComponentFullModuleName(imported_reference)
       self.assertEqual(
         MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='bar')],
