@@ -248,7 +248,7 @@
                       <list>
                         <tuple>
                           <string>status</string>
-                          <string>descending</string>
+                          <string>ascending</string>
                         </tuple>
                       </list>
                     </value>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_pubDate</string> </value>
+            <value> <string>my_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -343,7 +343,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Status Since</string> </value>
+                    <value> <string>Report Date</string> </value>
                 </item>
               </dictionary>
             </value>

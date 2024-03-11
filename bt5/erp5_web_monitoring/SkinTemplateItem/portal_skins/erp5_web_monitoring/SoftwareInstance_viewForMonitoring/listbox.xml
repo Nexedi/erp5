@@ -134,44 +134,20 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>category</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Promise</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
-                          <string>Software Type</string>
+                          <string>pubDate</string>
+                          <string>Promise Date</string>
                         </tuple>
                         <tuple>
-                          <string>aggregate_parent_subordination_title</string>
-                          <string>Computer Network</string>
-                        </tuple>
-                        <tuple>
-                          <string>aggregate_parent_title</string>
-                          <string>Compute Node</string>
-                        </tuple>
-                        <tuple>
-                          <string>aggregate_parent_reference</string>
-                          <string>Compute Node Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>aggregate_title</string>
-                          <string>Compute Partition</string>
-                        </tuple>
-                        <tuple>
-                          <string>SoftwareInstance_getComputePartitionIPv6</string>
-                          <string>IPv6</string>
-                        </tuple>
-                        <tuple>
-                          <string>is_slave</string>
-                          <string>Slave</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>Validation State</string>
-                        </tuple>
-                        <tuple>
-                          <string>slap_state_title</string>
-                          <string>Request State</string>
+                          <string>description</string>
+                          <string>Message</string>
                         </tuple>
                       </list>
                     </value>
@@ -250,8 +226,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>descending</string>
+                          <string>category</string>
+                          <string>ascending</string>
                         </tuple>
                       </list>
                     </value>
@@ -261,8 +237,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>category</string>
+                          <string>Status</string>
                         </tuple>
                       </list>
                     </value>

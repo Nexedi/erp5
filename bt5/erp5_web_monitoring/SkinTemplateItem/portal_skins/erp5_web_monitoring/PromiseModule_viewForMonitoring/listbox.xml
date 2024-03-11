@@ -227,8 +227,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>descending</string>
+                          <string>category</string>
+                          <string>ascending</string>
                         </tuple>
                       </list>
                     </value>
@@ -238,8 +238,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>category</string>
+                          <string>Status</string>
                         </tuple>
                       </list>
                     </value>
