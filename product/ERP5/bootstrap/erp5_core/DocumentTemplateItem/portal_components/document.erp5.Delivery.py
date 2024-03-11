@@ -124,7 +124,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       elif base_contribution is not None:
         base_contribution_list = (base_contribution,)
       else:
-          base_contribution_list = []
+        base_contribution_list = []
       if isinstance(use, (tuple, list)):
         use_list = use
       elif use is not None:
@@ -148,7 +148,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         result = 0
       else:
         matched_movement_list = [
-           movement
+          movement
             for movement in self.getMovementList()
             if set(movement.getBaseContributionValueList()).intersection(base_contribution_value_list)
               or set(movement.getUseValueList()).intersection(use_value_list)]
