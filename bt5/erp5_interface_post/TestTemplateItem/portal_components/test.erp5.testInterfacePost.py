@@ -25,8 +25,6 @@
 #
 ##############################################################################
 import email
-import email.policy
-email.policy.Policy.max_line_length = 0
 import mock
 import time
 
