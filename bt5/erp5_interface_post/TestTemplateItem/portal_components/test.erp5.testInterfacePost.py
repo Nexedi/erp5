@@ -27,7 +27,11 @@
 import email
 import mock
 import time
-
+import six
+if six.PY3:
+  from email import message_from_bytes
+else:
+  from email import message_from_string as message_from_bytes
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
@@ -247,7 +251,10 @@ class TestInterfacePost(ERP5TypeTestCase):
     last_message, = self.portal.MailHost._message_list
     self.assertNotEqual((), last_message)
     _, _, message_text = last_message
-    self.assertIn(message_text, sequence['internet_message_post'].getData())
+    self.assertEqual(
+      bytes(message_from_bytes(message_text)),
+      bytes(message_from_bytes(sequence['internet_message_post'].getData())),
+    )
 
   def _getMailHostMessageForRecipient(self, recipient_email_address):
     message_list = self.portal.MailHost._message_list
@@ -268,7 +275,10 @@ class TestInterfacePost(ERP5TypeTestCase):
       self.assertEqual(len(message_list), 1)
       message = message_list[0]
       _, _, message_text = message
-      self.assertIn(message_text, post.getData())
+      self.assertEqual(
+        bytes(message_from_bytes(message_text)),
+        bytes(message_from_bytes(post.getData())),
+      )
 
   def stepCheckMailMessagePreviewDisplaysLatestInternetMessagePostData(self, sequence=None, sequence_list=None):
     mail_message = sequence['mail_message']
