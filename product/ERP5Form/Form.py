@@ -1119,7 +1119,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
               else:
                 target_form_id = target_list[1]
             else:
-              raise NotImplementedError, "Not supported path: %s" % target
+              raise NotImplementedError("Not supported path: %s" % target)
 
             # keep current group and position.
             group, position = get_group_and_position(field_id)
