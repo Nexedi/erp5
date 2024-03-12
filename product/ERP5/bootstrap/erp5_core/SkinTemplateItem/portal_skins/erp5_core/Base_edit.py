@@ -184,9 +184,9 @@ def editMatrixBox(matrixbox_field, matrixbox):
                 cleaned_v[key] = None
             cell.edit(edit_order=edit_order, **cleaned_v) # and update the cell specific values
           else:
-            return "Could not create cell %s" % str(cell_index_tuple)
+            raise ValueError("Could not create cell %s" % str(cell_index_tuple))
         else:
-          return "Cell %s does not exist" % str(cell_index_tuple)
+          raise ValueError("Cell %s does not exist %s" % str(cell_index_tuple))
 
 field_prefix_len = len(field_prefix)
 
