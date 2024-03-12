@@ -99,9 +99,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_status</string>
                         <string>my_title</string>
-                        <string>my_aggregate_reference</string>
+                        <string>my_date</string>
+                        <string>my_status</string>
                       </list>
                     </value>
                 </item>
@@ -110,6 +110,7 @@
                     <value>
                       <list>
                         <string>my_specialise_title</string>
+                        <string>my_aggregate_reference</string>
                         <string>my_partition_id</string>
                       </list>
                     </value>
