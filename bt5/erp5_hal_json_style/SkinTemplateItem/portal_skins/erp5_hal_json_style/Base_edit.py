@@ -172,11 +172,11 @@ def editMatrixBox(matrixbox_field, matrixbox):
   for cell_index_tuple, cell_value_dict in matrixbox.items():
     # Only update cells which still exist
     if not matrix_context.hasInRange(*cell_index_tuple, **kd):
-      return "Cell %s does not exist" % str(cell_index_tuple)
+      raise ValueError("Cell %s does not exist" % str(cell_index_tuple))
 
     cell = matrix_context.newCell(*cell_index_tuple, **kd)
     if cell is None:
-      return "Could not create cell %s" % str(cell_index_tuple)
+      raise ValueError("Could not create cell %s" % str(cell_index_tuple))
 
     cell.edit(edit_order=edit_order, **gv)  # First update globals which include the def. of property_list
     if 'variated_property' in cell_value_dict:
