@@ -368,13 +368,9 @@ return result
     py_script_obj = getattr(portal, python_script_id)
     py_script_params = "value=10000, long_parameter=''"
     py_script_body = """
+import time
 def veryExpensiveMethod(value):
-  # do something expensive for some time
-  # no 'time.sleep()' available in Zope
-  # so concatenate strings
-  s = ''
-  for i in range(0, value):
-    s = str(value * value * value) + s
+  time.sleep(1)
   return value
 
 veryExpensiveMethod(value)
