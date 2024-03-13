@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS alternate_roles_and_users

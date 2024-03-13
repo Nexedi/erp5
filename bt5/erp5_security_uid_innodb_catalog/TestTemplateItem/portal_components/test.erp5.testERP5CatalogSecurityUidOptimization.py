@@ -27,81 +27,59 @@
 #
 ##############################################################################
 
-import unittest
+from six.moves import urllib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
-
-class TestERP5CatalogSecurityUidOptimization(ERP5TypeTestCase):
-  """
-    TestERP5CatalogSecurityUidOptimization tests security_uid optmization.
-    It is in a different test than TestERP5Catalog as it requires erp5_security_uid_innodb_catalog
-    bt5 to be installed in advance.
-    XXX: Inherit from TestERP5Catalog so we test default and security_uid optmization with same tests.
-  """
-  business_template_list = ['erp5_security_uid_innodb_catalog',
-                            'erp5_full_text_mroonga_catalog','erp5_base']
-
-  def getBusinessTemplateList(self):
-    return self.business_template_list
+class SecurityUidOptimizationTestCase(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.login()
-    portal = self.getPortal()
-    group = portal.portal_categories.group
+    # this test is expected to run on an empty site
+    self.assertFalse(self.portal.person_module.contentValues())
+
+    group = self.portal.portal_categories.group
     if 'g1' not in group.objectIds():
       group.newContent(portal_type='Category', id='g1', codification='GROUP1')
+    if 'g2' not in group.objectIds():
+      group.newContent(portal_type='Category', id='g2', codification='GROUP2')
+    local_role_group = self.portal.portal_categories.local_role_group
+    if 'Alternate' not in local_role_group.objectIds():
+      local_role_group.newContent(
+        portal_type='Category',
+        reference='Alternate',
+        id='Alternate')
+    if 'Other' not in local_role_group.objectIds():
+      local_role_group.newContent(
+        portal_type='Category',
+        reference='Other',
+        id='Other')
 
-  def test_local_roles_group_id_on_role_information(self):
+  def beforeTearDown(self):
+    self.abort()
+    for portal_type in (
+      self.portal.portal_types.Organisation,
+      self.portal.portal_types.Person,
+    ):
+      portal_type.manage_delObjects(ids=[
+        ri.getId() for ri in portal_type.contentValues(
+          portal_type='Role Information')])
+    for module in (
+      self.portal.organisation_module,
+      self.portal.person_module,
+    ):
+      if list(module.objectIds()):
+        module.manage_delObjects(ids=list(module.objectIds()))
+    self.tic()
+
+
+class TestSecurityUidOptimizationCatalog(SecurityUidOptimizationTestCase):
+
+  def test_search_catalog(self):
     """Test usage of local_roles_group_id when searching catalog.
     """
     sql_connection = self.getSQLConnection()
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()
-
-    # Add a catalog table (uid, alternate_security_uid)
-    sql_connection.manage_test(
-      """DROP TABLE IF EXISTS alternate_roles_and_users""")
-
-    sql_connection.manage_test("""
-CREATE TABLE alternate_roles_and_users (
-  `uid` BIGINT UNSIGNED NOT NULL,
-  `alternate_security_uid` INT UNSIGNED) """)
-
-    # make it a search table
-    current_sql_search_tables = sql_catalog.sql_search_tables
-    sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + [
-      'alternate_roles_and_users']
-
-    # Configure sql method to insert this table
-    sql_catalog.newContent(portal_type='SQL Method',
-          id='z_catalog_alternate_roles_and_users_list',
-          title='',
-          connection_id='erp5_sql_connection',
-          arguments_src="\n".join(['uid', 'alternate_security_uid']),
-          src="""REPLACE INTO alternate_roles_and_users VALUES
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">
-( <dtml-sqlvar expr="uid[loop_item]" type="int">,
-  <dtml-sqlvar expr="alternate_security_uid[loop_item]" type="int" optional>
-)<dtml-unless sequence-end>,</dtml-unless>
-</dtml-in>""")
-
-    current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
-    sql_catalog.sql_catalog_object_list = \
-      current_sql_catalog_object_list + \
-         ('z_catalog_alternate_roles_and_users_list',)
-
-    # configure Alternate local roles group id to go in alternate_security_uid
-    current_sql_catalog_security_uid_columns =\
-      sql_catalog.sql_catalog_security_uid_columns
-    sql_catalog.sql_catalog_security_uid_columns = (
-      ' | security_uid',
-      'Alternate | alternate_security_uid', )
-
-    # add category
-    self.portal.portal_categories.local_role_group.newContent(
-      portal_type='Category',
-      reference = 'Alternate',
-      id = 'Alternate')
 
     # configure security on person, each user will be able to see his own
     # person thanks to an Auditor role on "Alternate" local roles group id.
@@ -118,113 +96,199 @@ CREATE TABLE alternate_roles_and_users (
       role_category_list=('group/g1', ),
       role_base_category='group',
       local_role_group_value=self.portal.portal_categories.local_role_group.Alternate)
-
-    self.portal.portal_caches.clearAllCache()
     self.tic()
 
-    try:
-      # create two persons and users
-      user1 = self.portal.person_module.newContent(portal_type='Person',
-        reference='user1')
-      user1_id = user1.Person_getUserId()
-      user1.newContent(portal_type='Assignment', group='g1').open()
-      user1.newContent(portal_type='ERP5 Login', reference='user1').validate()
-      user1.updateLocalRolesOnSecurityGroups()
-      self.assertEqual(user1.__ac_local_roles__.get(user1_id), ['Auditor'])
-      self.assertEqual(user1.__ac_local_roles__.get('GROUP1'), ['Unknown'])
+    # create persons and users
+    user1 = self.portal.person_module.newContent(portal_type='Person',
+      reference='user1')
+    user1_id = user1.Person_getUserId()
+    user1.newContent(portal_type='Assignment', group='g1').open()
+    user1.newContent(portal_type='ERP5 Login', reference='user1').validate()
+    user1.updateLocalRolesOnSecurityGroups()
+    self.assertEqual(user1.__ac_local_roles__.get(user1_id), ['Auditor'])
+    self.assertEqual(user1.__ac_local_roles__.get('GROUP1'), ['Unknown'])
 
-      user2 = self.portal.person_module.newContent(portal_type='Person',
-        reference='user2')
-      user2_id = user2.Person_getUserId()
-      user2.newContent(portal_type='Assignment', group='g1').open()
-      user2.newContent(portal_type='ERP5 Login', reference='user2').validate()
-      user2.updateLocalRolesOnSecurityGroups()
-      self.assertEqual(user2.__ac_local_roles__.get(user2_id), ['Auditor'])
-      self.assertEqual(user2.__ac_local_roles__.get('GROUP1'), ['Unknown'])
-      self.tic()
+    user2 = self.portal.person_module.newContent(portal_type='Person',
+      reference='user2')
+    user2_id = user2.Person_getUserId()
+    user2.newContent(portal_type='Assignment', group='g1').open()
+    user2.newContent(portal_type='ERP5 Login', reference='user2').validate()
+    user2.updateLocalRolesOnSecurityGroups()
+    self.assertEqual(user2.__ac_local_roles__.get(user2_id), ['Auditor'])
+    self.assertEqual(user2.__ac_local_roles__.get('GROUP1'), ['Unknown'])
+    self.tic()
 
-      # security_uid_dict in catalog contains entries for user1 and user2:
-      user1_alternate_security_uid = sql_catalog.security_uid_dict[
-        ('Alternate', ('user:' + user1_id, 'user:' + user1_id + ':Auditor'))]
-      user2_alternate_security_uid = sql_catalog.security_uid_dict[
-        ('Alternate', ('user:' + user2_id, 'user:' + user2_id + ':Auditor'))]
+    # security_uid_dict in catalog contains entries for user1 and user2:
+    user1_alternate_security_uid = sql_catalog.security_uid_dict[
+      ('Alternate', ('user:' + user1_id, 'user:' + user1_id + ':Auditor'))]
+    user2_alternate_security_uid = sql_catalog.security_uid_dict[
+      ('Alternate', ('user:' + user2_id, 'user:' + user2_id + ':Auditor'))]
 
-      # those entries are in alternate security table
-      alternate_roles_and_users = sql_connection.manage_test(
-        "SELECT * from alternate_roles_and_users").dictionaries()
-      self.assertIn(dict(uid=user1.getUid(),
-                           alternate_security_uid=user1_alternate_security_uid),
-                      alternate_roles_and_users)
-      self.assertIn(dict(uid=user2.getUid(),
-                           alternate_security_uid=user2_alternate_security_uid),
-                      alternate_roles_and_users)
+    # those entries are in alternate security table
+    alternate_roles_and_users = sql_connection.manage_test(
+      "SELECT uid, alternate_security_uid from alternate_roles_and_users "
+      "WHERE alternate_security_uid is not null"
+    ).dictionaries()
+    self.assertIn(dict(uid=user1.getUid(),
+                          alternate_security_uid=user1_alternate_security_uid),
+                    alternate_roles_and_users)
+    self.assertIn(dict(uid=user2.getUid(),
+                          alternate_security_uid=user2_alternate_security_uid),
+                    alternate_roles_and_users)
 
-      # low level check of the security query of a logged in user
-      self.loginByUserName('user1')
-      security_query = self.portal.portal_catalog.getSecurityQuery()
-      # XXX: this test is introspecting too much, but there is currently no
-      # obvious better way.
-      # security_query can be:
-      # - None if caller is superuser (must not be the case here)
-      # - a SimpleQuery if caller has no view permissions at all (must not be
-      #   the case here)
-      # - a ComplexQuery containing SimpleQueries detailing security conditions
-      #   (this is what is expected here)
-      alternate_security_query, = [
-        q for q in security_query.query_list
-        if q.column == 'alternate_security_uid'
-      ]
-      self.assertEqual(user1_alternate_security_uid,
-        alternate_security_query.value)
+    # low level check of the security query of a logged in user
+    self.loginByUserName('user1')
+    security_query = self.portal.portal_catalog.getSecurityQuery()
+    # XXX: this test is introspecting too much, but there is currently no
+    # obvious better way.
+    # security_query can be:
+    # - None if caller is superuser (must not be the case here)
+    # - a SimpleQuery if caller has no view permissions at all (must not be
+    #   the case here)
+    # - a ComplexQuery containing SimpleQueries detailing security conditions
+    #   (this is what is expected here)
+    alternate_security_query, = [
+      q for q in security_query.query_list
+      if q.column == 'alternate_security_uid'
+    ]
+    self.assertEqual(user1_alternate_security_uid,
+      alternate_security_query.value)
 
-      # high level check that that logged in user can see document
-      self.assertEqual([user1],
-        [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
-      # also with local_roles= argument which is used in worklists
-      self.assertEqual([user1],
-        [o.getObject() for o in self.portal.portal_catalog(portal_type='Person',
-          local_roles='Auditor')])
+    # high level check that that logged in user can see document
+    self.assertEqual([user1],
+      [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
+    # also with local_roles= argument which is used in worklists
+    self.assertEqual([user1],
+      [o.getObject() for o in self.portal.portal_catalog(portal_type='Person',
+        local_roles='Auditor')])
 
-      # searches still work for other users
-      self.loginByUserName('user2')
-      self.assertEqual([user2],
-        [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
+    # searches still work for other users
+    self.loginByUserName('user2')
+    self.assertEqual([user2],
+      [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
 
-      self.login()
-      self.assertSameSet([user1, user2],
-        [o.getObject() for o in
-          self.portal.portal_catalog(portal_type='Person')])
+    self.login()
+    self.assertSameSet([user1, user2],
+      [o.getObject() for o in
+        self.portal.portal_catalog(portal_type='Person')])
 
-      # portal types that acquire roles properly acquire the local role group
-      # id mapping
-      self.assertTrue(self.portal.portal_types.Career.getTypeAcquireLocalRole())
-      career = user1.newContent(portal_type='Career')
-      self.tic()
+    # portal types that acquire roles properly acquire the local role group
+    # id mapping
+    self.assertTrue(self.portal.portal_types.Career.getTypeAcquireLocalRole())
+    career = user1.newContent(portal_type='Career')
+    self.tic()
 
-      alternate_roles_and_users = sql_connection.manage_test(
-        "SELECT * from alternate_roles_and_users").dictionaries()
-      self.assertIn(dict(uid=career.getUid(),
-                           alternate_security_uid=user1_alternate_security_uid),
-                      alternate_roles_and_users)
-      self.loginByUserName('user1')
-      self.assertEqual([career],
-        [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
-      self.loginByUserName('user2')
-      self.assertEqual([],
-        [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
+    alternate_roles_and_users = sql_connection.manage_test(
+      "SELECT uid, alternate_security_uid from alternate_roles_and_users "
+      "WHERE alternate_security_uid is not null"
+    ).dictionaries()
+    self.assertIn(dict(uid=career.getUid(),
+                          alternate_security_uid=user1_alternate_security_uid),
+                    alternate_roles_and_users)
+    self.loginByUserName('user1')
+    self.assertEqual([career],
+      [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
+    self.loginByUserName('user2')
+    self.assertEqual([],
+      [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
 
-    finally:
-      # restore catalog configuration
-      sql_catalog.sql_search_tables = current_sql_search_tables
-      sql_catalog.sql_catalog_object_list = current_sql_catalog_object_list
-      sql_catalog.sql_catalog_security_uid_columns =\
-        current_sql_catalog_security_uid_columns
-      self.portal.portal_types.Person.manage_delObjects(
-        [role.getId() for role in
-        self.portal.portal_types.Person.contentValues(
-          portal_type='Role Information')])
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5CatalogSecurityUidOptimization))
-  return suite
+class TestSecurityUidOptimizationWorklist(SecurityUidOptimizationTestCase):
+
+  def assertWorklistCount(self, username, expected_count_by_worklist_id):
+    self.loginByUserName(username)
+    self.portal.portal_workflow.refreshWorklistCache()
+    self.portal.portal_caches.clearAllCache()
+    worklist_info_by_worklist_id = {
+      r['worklist_id']: r
+      for r in self.portal.portal_workflow.listActions(object=self.portal)
+      if r['category'] == 'global'
+      and r['workflow_id'] == 'security_uid_test_simulation_workflow'}
+    self.assertEqual(
+      {
+        worklist_id: worklist_info['count']
+        for (worklist_id, worklist_info)
+        in worklist_info_by_worklist_id.items()},
+      expected_count_by_worklist_id,
+    )
+    for worklist_info in worklist_info_by_worklist_id.values():
+      search_kw = {
+        k.replace(':list', ''): v
+        for (k, v)
+        in dict(urllib.parse.parse_qs(urllib.parse.urlparse(worklist_info['url']).query)).items()}
+      search_kw.pop('reset', None)
+      self.assertEqual(
+        len(self.portal.portal_catalog(**search_kw)),
+        worklist_info['count'])
+
+  def test_worklists(self):
+    # Persons
+    # g1 Assignee uses default security_uid
+    #   => security_uid_invalidated, security_uid_or_alternate_security_uid_draft
+    # g2 Assignor uses alternate_security_uid
+    #   => alternate_security_uid_validated, security_uid_or_alternate_security_uid_draft
+    self.portal.portal_types.Person.newContent(
+      portal_type='Role Information',
+      role_name='Assignee',
+      role_category_list=('group/g1', ),
+      role_base_category='group',
+    )
+    self.portal.portal_types.Person.newContent(
+      portal_type='Role Information',
+      role_name='Assignor',
+      role_category_list=('group/g2', ),
+      role_base_category='group',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate,
+    )
+    user_g1 = self.portal.person_module.newContent(
+      portal_type='Person',
+      user_id='user_g1')
+    user_g1.newContent(portal_type='Assignment', group='g1').open()
+    user_g1.newContent(portal_type='ERP5 Login', reference='user_g1').validate()
+    user_g2 = self.portal.person_module.newContent(
+      portal_type='Person',
+      user_id='user_g2')
+    user_g2.newContent(portal_type='Assignment', group='g2').open()
+    user_g2.newContent(portal_type='ERP5 Login', reference='user_g2').validate()
+    user_g1_g2 = self.portal.person_module.newContent(
+      portal_type='Person',
+      user_id='user_g1_g2')
+    user_g1_g2.newContent(portal_type='Assignment', group='g1').open()
+    user_g1_g2.newContent(portal_type='Assignment', group='g2').open()
+    user_g1_g2.newContent(portal_type='ERP5 Login', reference='user_g1_g2').validate()
+    self.tic()
+
+    self.portal.person_module.newContent(portal_type='Person', first_name='validated').validate()
+    invalidated = self.portal.person_module.newContent(portal_type='Person', first_name='invalidated')
+    invalidated.validate()
+    invalidated.invalidate()
+    # create documents owned by users, for Owner worklists
+    self.portal.person_module.manage_permission(
+      'Add portal content', ['Authenticated'])
+    self.loginByUserName('user_g2')
+    self.portal.person_module.newContent(portal_type='Person', first_name='draft')
+    self.tic()
+
+    self.assertWorklistCount(
+       'user_g1',
+       {
+         'security_uid_invalidated': 1,
+         'security_uid_or_alternate_security_uid_draft': 4,  # 3 users + 1 draft
+       }
+     )
+    self.assertWorklistCount(
+      'user_g2',
+      {
+        'viewable_owner': 1,
+        'alternate_security_uid_validated': 1,
+        'security_uid_or_alternate_security_uid_draft': 4,
+      }
+    )
+    self.assertWorklistCount(
+      'user_g1_g2',
+      {
+        'alternate_security_uid_validated': 1,
+        'security_uid_invalidated': 1,
+        'security_uid_or_alternate_security_uid_draft': 4,
+      }
+    )

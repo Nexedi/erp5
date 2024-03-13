@@ -1,2 +1,4 @@
 erp5_full_text_mroonga_catalog
 erp5_base
+erp5_worklist_sql
+erp5_security_uid_innodb_catalog_test
