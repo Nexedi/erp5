@@ -14,6 +14,9 @@ div.json-editor-container p {
 div.json-editor-container label {
   display: inline-block;
 }
+div.json-editor-container label.visually-hidden {
+  display: none;
+}
 div.json-editor-container .alert-danger {
   color: #842029;
   background-color: #f8d7da;
@@ -45,9 +48,9 @@ div.json-editor-container .je-switcher {
   background-color: transparent;
   height: auto;
   width: auto;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
   margin-left: 5px;
-  padding: 0px 0px 0px 3px;
+  padding: 0px 24pt 0px 3px;
 }
 div.json-editor-container .btn {
   vertical-align: middle;
