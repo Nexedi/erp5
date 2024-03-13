@@ -225,11 +225,11 @@ class CachingMethod:
     ## generate cache id out of arguments passed.
     ## depending on arguments we may have different
     ## cache_id for same method_id
-    return str((method_id, args, kw))
+    return str((method_id, args, sorted(kw.items())))
 
   @staticmethod
   def erasable_cache_id_generator(method_id, obj, *args, **kw):
-    return str((method_id, obj.getCacheCookie(method_id), args, kw))
+    return str((method_id, obj.getCacheCookie(method_id), args, sorted(kw.items())))
 
   def __init__(self, callable_object, id, cache_duration=180,
                cache_factory=DEFAULT_CACHE_FACTORY,
