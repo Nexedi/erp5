@@ -43,6 +43,39 @@
     }
   };
 
+  JSONEditor.defaults.editors.select.prototype.setValue = function (value, initial) {
+    /* Sanitize value before setting it */
+    let sanitized = this.typecast(value)
+    const inEnum = (this.enum_options.length > 0 && this.enum_values.includes(sanitized))
+
+    const haveToUseDefaultValue = !!this.jsoneditor.options.use_default_values || typeof this.schema.default !== 'undefined'
+
+    if (!this.hasPlaceholderOption && (!inEnum || (initial && !this.isRequired() && !haveToUseDefaultValue))) {
+      /* NXD: We forcefuly include the value even  */
+      this.theme.setSelectOptions(this.input, this.enum_options.concat([value]), this.enum_display.concat([value]), this.hasPlaceholderOption, this.placeholderOptionText)
+    }
+
+    if (this.value === sanitized) return
+
+    if (inEnum && this.hasPlaceholderOption) {
+      this.input.value = this.enum_options[this.enum_values.indexOf(sanitized)]
+    } else if (!inEnum && !this.hasPlaceholderOption) {
+      this.input.value = sanitized 
+    } else {
+      this.input.value = '_placeholder_'
+    }
+
+    this.value = sanitized
+
+    if (!initial) {
+      this.is_dirty = true
+    }
+
+    this.onChange()
+    this.change()
+  }
+
+
   if (JSONEditor.defaults.editors.select.prototype.original_preBuild === undefined) {
     JSONEditor.defaults.editors.select.prototype.original_preBuild = JSONEditor.defaults.editors.select.prototype.preBuild;
   }
@@ -80,8 +113,19 @@
   };
 
   JSONEditor.defaults.editors.select.prototype.typecast = function (value) {
-    if (this.schema.type === 'boolean') {
-      return value === 'undefined' || value === undefined ? undefined : !!value;
+    /* The value should be modified but it must be preserve its integrity,
+        it must not be modified even if the type is not the good one */
+    if (this.schema.type === 'boolean' && (value === 'undefined' || value === undefined)) {
+      return undefined; 
+    }
+    if (this.schema.type === 'boolean' && (typeof value == "boolean")) {
+      return value; 
+    }
+    if (this.schema.type === 'boolean' && (value == "true")) {
+      return true; 
+    }
+    if (this.schema.type === 'boolean' && (value == "false")) {
+      return false; 
     }
     if (this.schema.type === 'number' && value === "") {
       return undefined;
@@ -90,10 +134,12 @@
       return undefined;
     }
     if (this.schema.type === 'number') {
-      return parseFloat(value) || 0;
+      return parseFloat(value) || value;
     }
     if (this.schema.type === 'integer') {
-      return Math.floor(parseFloat(value) || 0);
+      if (parseFloat(value)) {
+        return Math.floor(parseFloat(value))
+      }
     }
     if (this.schema.enum && value === undefined) {
       return undefined;
@@ -101,7 +147,6 @@
     if (value === undefined) {
       return undefined;
     }
-
     return value.toString();
   };
 
