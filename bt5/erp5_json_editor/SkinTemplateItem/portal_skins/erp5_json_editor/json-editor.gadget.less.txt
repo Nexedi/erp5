@@ -18,6 +18,10 @@ div.json-editor-container {
     display: inline-block;
   }
 
+  & label.visually-hidden {
+    display: none;
+  }
+
   & .alert-danger {
     color: #842029;
     background-color: #f8d7da;
@@ -52,9 +56,9 @@ div.json-editor-container {
     background-color: transparent;
     height: auto;
     width: auto;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     margin-left: 5px;
-    padding: 0px 0px 0px 3px;
+    padding: 0px 24pt 0px 3px;
   }
 
   & .btn {
