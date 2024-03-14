@@ -1,0 +1,13 @@
+Cxml Connector | view
+Cxml Document Module | view
+Cxml Document | view
+Cxml Multipart Document Module | view
+Cxml Multipart Document | view
+Cxml Order Request | view
+Network Id | view
+Organisation | cxml
+Sale Order | fix_cxml_constraint_list
+Sale Order | jump_related_cxml_document_list
+Sale Order | jump_related_cxml_order_request
+Sale Packing List | fix_cxml_constraint_list
+Sale Packing List | jump_related_cxml_document_list

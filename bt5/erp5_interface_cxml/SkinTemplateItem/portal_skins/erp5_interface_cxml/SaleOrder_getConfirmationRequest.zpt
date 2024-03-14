@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE cXML SYSTEM "http://xml.cXML.org/schemas/cXML/1.2.060/Fulfill.dtd">
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           tal:define="language string:de-DE;
+                       cxml_url python:'%s/ERP5Site_cml' %here.getPortalObject().absolute_url();
+                       order_request here/Order_getRelatedOrderRequestValue;
+                       source_section here/getSourceSectionValue;
+                       destination_section here/getDestinationSectionValue;
+                       connector here/Base_getCxmlConnectorValueForSale;">
+<cXML tal:attributes="xml:lang language; payloadID connector/getPayloadId; timestamp python:DateTime().ISO8601(); version connector/getCxmlVersion">
+  <Header>
+    <From>
+      <Credential domain="NetworkID">
+        <Identity tal:content="order_request/getTo"></Identity>
+      </Credential>
+    </From>
+    <To>
+      <Credential domain="NetworkID">
+        <Identity tal:content="order_request/getFrom"></Identity>
+      </Credential>
+    </To>
+    <Sender>
+      <Credential domain="NetworkID">
+        <Identity tal:content="here/Base_getCxmlUserIdForSale"></Identity>
+        <SharedSecret>REPLACE_WITH_PASSWORD</SharedSecret>
+      </Credential>
+      <UserAgent tal:content="here/Base_getCxmlUserIdForSale"></UserAgent>
+    </Sender>
+  </Header>
+  <Request tal:attributes="deploymentMode order_request/getDeploymentMode">
+    <ConfirmationRequest>
+      <ConfirmationHeader tal:attributes="noticeDate python:DateTime().ISO8601(); confirmID here/SaleOrder_getConfirmationRequestConfirmId; type here/SaleOrder_getConfirmationRequestType; operation here/SaleOrder_getConfirmationRequestOperation">
+        <IdReference tal:attributes="identifier here/getWoelfelReference" domain="supplierReference"></IdReference>
+      </ConfirmationHeader>
+      <OrderReference tal:attributes="orderDate python:here.getOrderDate().ISO8601(); orderID here/getDestinationReference">
+        <DocumentReference tal:attributes="payloadID here/Order_getPayloadId"></DocumentReference>
+      </OrderReference>
+      <span tal:omit-tag="" tal:repeat="line python:here.objectValues(sort_on=[('int_index', 'ascending')], portal_type='Sale Order Line')">
+      <ConfirmationItem tal:condition="line/SaleOrderLine_isConfirmationItem" tal:attributes="lineNumber line/getIntIndex; quantity line/SaleOrderLine_getCxmlOrderQuantity">
+        <UnitOfMeasure>EA</UnitOfMeasure>
+        <ConfirmationStatus tal:condition="python: line.getQuantity()-line.SaleOrderLine_getCxmlOrderQuantity() == 0" tal:attributes="shipmentDate python:line.getStartDate().ISO8601(); deliveryDate python:line.getStopDate().ISO8601(); quantity line/getQuantity" type="accept">
+          <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
+          <ItemIn tal:condition="python: False" tal:attributes="lineNumber line/getIntIndex; quantity line/getQuantity">
+            <ItemID>
+              <SupplierPartID tal:content="line/SaleOrderLine_getCxmlSupplierPartId"></SupplierPartID>
+              <BuyerPartID  tal:content="python:line.getResourceValue().getDefaultSaleSupplyLineDestinationReference()"></BuyerPartID>
+            </ItemID>
+            <ItemDetail>
+              <UnitPrice>
+                <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getPrice"></Money>
+              </UnitPrice>
+              <Description xml:lang="en" tal:content="line/getDescription"></Description>
+              <UnitOfMeasure  tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
+              <PriceBasisQuantity quantity="1" conversionFactor="1">
+                <UnitOfMeasure>EA</UnitOfMeasure>
+              </PriceBasisQuantity>
+              <Classification domain="ERPCommodityCode" tal:content="python: line.getResourceValue().getCxmlClassificationId()"></Classification>
+              <Classification domain="ERPCommodityCodeDescription" tal:content="python: line.getResourceValue().getCxmlClassificationTitle()"></Classification>
+            </ItemDetail>
+          </ItemIn>
+        </ConfirmationStatus>
+        <ConfirmationStatus tal:condition="python: line.SaleOrderLine_getCxmlOrderQuantity() - line.getQuantity()" tal:attributes="quantity python:line.SaleOrderLine_getCxmlOrderQuantity() - line.getQuantity()" type="reject">
+          <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
+        </ConfirmationStatus>
+      </ConfirmationItem>
+      </span>
+    </ConfirmationRequest>
+  </Request>
+</cXML>
+</tal:block>

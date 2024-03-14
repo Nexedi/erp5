@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE cXML SYSTEM "http://xml.cXML.org/schemas/cXML/1.2.014/cXML.dtd">
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal">
+<cXML tal:attributes="xml:lang string:en-US; payloadID here/getPayloadId; timestamp python:DateTime().ISO8601(); version here/getCxmlVersion">
+  <Header>
+    <From>
+      <Credential domain="NetworkID">
+        <Identity tal:content="here/getUserId"></Identity>
+      </Credential>
+    </From>
+    <To>
+      <Credential domain="NetworkID">
+        <Identity>AN01000000001</Identity>
+      </Credential>
+    </To>
+    <Sender>
+      <Credential domain="NetworkID">
+        <Identity tal:content="here/getUserId"></Identity>
+        <SharedSecret tal:content="here/getPassword"></SharedSecret>
+      </Credential>
+      <UserAgent tal:content="here/getUserId"></UserAgent>
+    </Sender>
+  </Header>
+  <Request>
+    <GetPendingRequest tal:attributes="lastReceivedTimestamp options/last_received_timestamp" maxMessages="20">
+      <MessageType tal:content="options/message_type"></MessageType>
+    </GetPendingRequest>
+  </Request>
+</cXML>
+</tal:block>

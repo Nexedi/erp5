@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE cXML SYSTEM "http://xml.cXML.org/schemas/cXML/1.2.014/cXML.dtd">
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           tal:define="cxml_url python:'%s/ERP5Site_cml' %here.getPortalObject().absolute_url()">
+  <cXML tal:attributes="xml:lang string:en-US; payloadID here/getPayloadId; timestamp python:DateTime().ISO8601(); version here/getCxmlVersion">
+    <Response>
+      <Status code="200" text="OK"/>
+      <ProfileResponse effectiveDate="2024-04-01T18:39:10-08:00">
+        <Transaction requestName="OrderRequest">
+          <URL tal:content="cxml_url"></URL>
+        </Transaction>
+      </ProfileResponse>
+    </Response>
+  </cXML>
+</tal:block>

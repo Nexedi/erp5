@@ -1,0 +1,34 @@
+<workflow_chain>
+ <chain>
+  <type>Cxml Connector</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Cxml Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Cxml Multipart Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Cxml Order Request</type>
+  <workflow>cxml_interaction_workflow, cxml_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Network Id</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Invoice Transaction</type>
+  <workflow>cxml_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order</type>
+  <workflow>cxml_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Packing List</type>
+  <workflow>cxml_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

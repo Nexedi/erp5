@@ -1,0 +1,4 @@
+document.erp5.CxmlConnector
+document.erp5.CxmlDocument
+document.erp5.CxmlMultipartDocument
+document.erp5.CxmlOrderRequest

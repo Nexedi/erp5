@@ -1,0 +1,16 @@
+Cxml Connector | Login
+Cxml Connector | Reference
+Cxml Connector | Url
+Cxml Document | Reference
+Cxml Document | Task
+Cxml Document | TextDocument
+Cxml Multipart Document | Data
+Cxml Order Request | Reference
+Cxml Order Request | TextDocument
+Network Id | Reference
+Organisation | CxmlNode
+Sale Invoice Transaction | CxmlOrderConstraint
+Sale Order | CxmlOrder
+Sale Order | CxmlOrderConstraint
+Sale Order | Version
+Sale Packing List | CxmlOrderConstraint

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE cXML SYSTEM "http://xml.cXML.org/schemas/cXML/1.2.060/Fulfill.dtd">
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           tal:define="language string:de-DE;
+                       cxml_url python:'%s/ERP5Site_cml' %here.getPortalObject().absolute_url();
+                       source here/getSourceValue;
+                       source_address python:here.Delivery_getSourceAddressText()[0];
+                       source_telephone python: here.getSourceValue().getDefaultTelephoneValue();
+                       source_section here/getSourceSectionValue;
+                       destination here/getDestinationValue;
+                       destination_address python:here.Delivery_getDestinationAddressText()[0];
+                       destination_section here/getDestinationSectionValue;
+                       order python:here.getCausalityValue(portal_type='Sale Order');
+                       order_request order/Order_getRelatedOrderRequestValue;
+                       connector here/Base_getCxmlConnectorValueForSale;
+                       operation python: here.SalePackingList_getShipNoticeOperation()">
+  <cXML tal:attributes="xml:lang language; payloadID connector/getPayloadId; timestamp python:DateTime().ISO8601(); version connector/getCxmlVersion">
+    <Header>
+      <From>
+        <Credential domain="NetworkID">
+          <Identity tal:content="order_request/getTo"></Identity>
+        </Credential>
+      </From>
+      <To>
+        <Credential domain="NetworkID">
+          <Identity tal:content="order_request/getFrom"></Identity>
+        </Credential>
+      </To>
+      <Sender>
+        <Credential domain="NetworkID">
+          <Identity tal:content="here/Base_getCxmlUserIdForSale"></Identity>
+          <SharedSecret>REPLACE_WITH_PASSWORD</SharedSecret>
+        </Credential>
+        <UserAgent tal:content="here/Base_getCxmlUserIdForSale"></UserAgent>
+      </Sender>
+    </Header>
+    <Request tal:attributes="deploymentMode order_request/getDeploymentMode">
+      <ShipNoticeRequest>
+        <ShipNoticeHeader tal:attributes="shipmentID here/SalePackingList_getShipmentId; noticeDate python:DateTime().ISO8601(); shipmentDate python:here.getStartDate().ISO8601(); deliveryDate python:here.getStopDate().ISO8601(); operation operation">
+          <DocumentReference tal:condition="python: operation != 'new'" tal:attributes="payloadID here/SalePackingList_getPreviousShipNoticeDocumentReference"/>
+          <Contact role="shipFrom">
+            <Name tal:attributes="xml:lang language" tal:content="source/Entity_getTitle"></Name>
+            <PostalAddress>
+              <Street tal:content="source_address/getStreetAddress"></Street>
+              <City tal:content="source_address/getCity"></City>
+              <State tal:omit-tag=""></State>
+              <PostalCode tal:content="source_address/getZipCode"></PostalCode>
+              <Country tal:attributes="isoCountryCode source_address/getRegionReference" tal:content="source_address/getRegionTitle"></Country>
+            </PostalAddress>
+            <Phone tal:omit-tag="">
+              <TelephoneNumber tal:omit-tag="">
+                <CountryCode tal:omit-tag="" tal:attributes="isoCountryCode source_address/getRegionReference"
+                             tal:content="source_telephone/getTelephoneCountry"></CountryCode>
+                <AreaOrCityCode tal:omit-tag="" tal:content="source_telephone/getTelephoneCity"></AreaOrCityCode>
+                <Number tal:omit-tag="" tal:content="source_telephone/getTelephoneNumber"></Number>
+              </TelephoneNumber>
+            </Phone>
+          </Contact>
+          <Contact tal:attributes="addressID destination_address/getReference" role="shipTo">
+            <Name tal:attributes="xml:lang language" tal:content="destination/Entity_getTitle"></Name>
+            <PostalAddress>
+              <Street tal:content="destination_address/getStreetAddress"></Street>
+              <City tal:content="destination_address/getCity"></City>
+              <State tal:omit-tag=""></State>
+              <PostalCode tal:content="destination_address/getZipCode"></PostalCode>
+              <Country tal:attributes="isoCountryCode destination_address/getRegionReference" tal:content="destination_address/getRegionTitle"></Country>
+            </PostalAddress>
+            <Phone tal:omit-tag="">
+              <TelephoneNumber tal:omit-tag="">
+                <CountryCode tal:omit-tag="" tal:attributes="isoCountryCode source_address/getRegionReference" tal:content="source_telephone/getTelephoneCountry"></CountryCode>
+                <AreaOrCityCode tal:omit-tag="" tal:content="source_telephone/getTelephoneCity"></AreaOrCityCode>
+                <Number tal:omit-tag="" tal:content="source_telephone/getTelephoneNumber"></Number>
+              </TelephoneNumber>
+            </Phone>
+          </Contact>
+          <Comments tal:omit-tag="" tal:attributes="xml:lang language"></Comments>
+          <Comments tal:omit-tag="" tal:attributes="xml:lang language" type="ReasonForShipment"></Comments>
+          <Comments tal:omit-tag="" tal:attributes="xml:lang language" type="TransitDirection"></Comments>
+          <Comments tal:omit-tag="" tal:attributes="xml:lang language"></Comments>
+          <TermsOfDelivery>
+            <TermsOfDeliveryCode value="Other" tal:content="here/getIncotermTitle"></TermsOfDeliveryCode>
+            <ShippingPaymentMethod tal:attributes="value here/Delivery_getShippingPaymentMethod"/>
+            <Comments tal:attributes="xml:lang language" type="Transport"></Comments>
+            <Comments tal:omit-tag="" tal:attributes="xml:lang language" type="TermsOfDelivery"></Comments>
+          </TermsOfDelivery>
+          <TermsOfTransport>
+            <TransportTerms value="Other" tal:content="here/getIncotermTitle"></TransportTerms>
+          </TermsOfTransport>
+        </ShipNoticeHeader>
+        <ShipControl>
+          <CarrierIdentifier domain="companyName" tal:content="here/getDestinationCarrierTitle"></CarrierIdentifier>
+          <ShipmentIdentifier tal:content="here/getDestinationReference" tal:attributes="trackingURL here/getTrackingUrl" domain="trackingNumber"></ShipmentIdentifier>
+          <ShipmentIdentifier tal:condition="here/getBillOfLading" domain="billOfLading" tal:content="here/getBillOfLading"></ShipmentIdentifier>
+          <TransportInformation tal:omit-tag="">
+            <ShippingContractNumber tal:omit-tag=""></ShippingContractNumber>
+            <ShippingInstructions tal:omit-tag="">
+              <Description tal:omit-tag="" xml:lang="de-DE"></Description>
+            </ShippingInstructions>
+          </TransportInformation>
+        </ShipControl>
+        <ShipNoticePortion>
+          <OrderReference tal:attributes="orderDate python:order.getOrderDate().ISO8601(); orderID order/getDestinationReference">
+            <DocumentReference tal:attributes="payloadID order/Order_getPayloadId"></DocumentReference>
+          </OrderReference>
+          <span tal:omit-tag="" tal:repeat="line python:here.objectValues(sort_on=[('int_index', 'ascending')], portal_type='Sale Packing List Line')">
+            <ShipNoticeItem tal:attributes="shipNoticeLineNumber line/getIntIndex; quantity line/getQuantity; lineNumber line/DeliveryLine_getOrderLineIntIndex">
+              <ItemID>
+                <SupplierPartID tal:content="line/getResourceReference"></SupplierPartID>
+                <BuyerPartID tal:content="line/DeliveryLine_getResourceDestinationReference"></BuyerPartID>
+              </ItemID>
+              <ShipNoticeItemDetail>
+                <UnitPrice>
+                  <Money tal:attributes="currency line/getPriceCurrencyTitle" tal:content="line/getPrice"></Money>
+                </UnitPrice>
+                <Description tal:content="line/getDescription" xml:lang="de-DE"></Description>
+              </ShipNoticeItemDetail>
+              <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
+              <AssetInfo tal:repeat="item_title python:line.getAggregateTitleList(portal_type='Item')" tal:attributes="serialNumber item_title" tagNumber=""></AssetInfo>
+            </ShipNoticeItem>
+          </span>
+        </ShipNoticePortion>
+      </ShipNoticeRequest>
+    </Request>
+  </cXML>
+</tal:block>

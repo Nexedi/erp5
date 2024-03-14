@@ -1,0 +1,36 @@
+<property_sheet_list>
+ <portal_type id="Cxml Connector">
+  <item>Login</item>
+  <item>Reference</item>
+  <item>Url</item>
+ </portal_type>
+ <portal_type id="Cxml Document">
+  <item>Reference</item>
+  <item>Task</item>
+  <item>TextDocument</item>
+ </portal_type>
+ <portal_type id="Cxml Multipart Document">
+  <item>Data</item>
+ </portal_type>
+ <portal_type id="Cxml Order Request">
+  <item>Reference</item>
+  <item>TextDocument</item>
+ </portal_type>
+ <portal_type id="Network Id">
+  <item>Reference</item>
+ </portal_type>
+ <portal_type id="Organisation">
+  <item>CxmlNode</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>CxmlOrderConstraint</item>
+ </portal_type>
+ <portal_type id="Sale Order">
+  <item>CxmlOrder</item>
+  <item>CxmlOrderConstraint</item>
+  <item>Version</item>
+ </portal_type>
+ <portal_type id="Sale Packing List">
+  <item>CxmlOrderConstraint</item>
+ </portal_type>
+</property_sheet_list>

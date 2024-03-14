@@ -1,0 +1,24 @@
+<base_category_list>
+ <portal_type id="Cxml Document">
+  <item>causality</item>
+  <item>follow_up</item>
+  <item>predecessor</item>
+  <item>successor</item>
+ </portal_type>
+ <portal_type id="Cxml Document Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Cxml Multipart Document">
+  <item>causality</item>
+  <item>successor</item>
+ </portal_type>
+ <portal_type id="Cxml Multipart Document Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Cxml Order Request">
+  <item>causality</item>
+  <item>follow_up</item>
+  <item>predecessor</item>
+  <item>successor</item>
+ </portal_type>
+</base_category_list>

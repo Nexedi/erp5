@@ -1,0 +1,15 @@
+<allowed_content_type_list>
+ <portal_type id="Cxml Document Module">
+  <item>Cxml Document</item>
+  <item>Cxml Order Request</item>
+ </portal_type>
+ <portal_type id="Cxml Multipart Document Module">
+  <item>Cxml Multipart Document</item>
+ </portal_type>
+ <portal_type id="Organisation">
+  <item>Network Id</item>
+ </portal_type>
+ <portal_type id="Web Service Tool">
+  <item>Cxml Connector</item>
+ </portal_type>
+</allowed_content_type_list>

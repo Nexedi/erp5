@@ -1,0 +1,12 @@
+Cxml Document Module | business_application
+Cxml Document | causality
+Cxml Document | follow_up
+Cxml Document | predecessor
+Cxml Document | successor
+Cxml Multipart Document Module | business_application
+Cxml Multipart Document | causality
+Cxml Multipart Document | successor
+Cxml Order Request | causality
+Cxml Order Request | follow_up
+Cxml Order Request | predecessor
+Cxml Order Request | successor

@@ -1,0 +1,11 @@
+Cxml Connector | edit_workflow
+Cxml Connector | validation_workflow
+Cxml Document | edit_workflow
+Cxml Multipart Document | edit_workflow
+Cxml Order Request | cxml_interaction_workflow
+Cxml Order Request | cxml_validation_workflow
+Cxml Order Request | edit_workflow
+Network Id | edit_workflow
+Sale Invoice Transaction | cxml_interaction_workflow
+Sale Order | cxml_interaction_workflow
+Sale Packing List | cxml_interaction_workflow

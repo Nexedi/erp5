@@ -1,0 +1,1 @@
+return organisation.newContent(**kw)
