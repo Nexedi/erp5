@@ -57,7 +57,9 @@
 
     if (this.value === sanitized) return
 
-    if (inEnum && this.hasPlaceholderOption) {
+    /* NXD: !this.hasPlaceholderOption seems to be a bug on upstream introduces by:
+      https://github.com/json-editor/json-editor/pull/1499/commits/2f9b1b3a30e64383b92dc4cd7494f55ba089ae66 */
+    if (inEnum && !this.hasPlaceholderOption) {
       this.input.value = this.enum_options[this.enum_values.indexOf(sanitized)]
     } else if (!inEnum && !this.hasPlaceholderOption) {
       this.input.value = sanitized 
