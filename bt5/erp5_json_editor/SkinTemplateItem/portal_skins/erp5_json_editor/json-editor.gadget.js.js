@@ -121,10 +121,10 @@
     if (this.schema.type === 'boolean' && (typeof value == "boolean")) {
       return value; 
     }
-    if (this.schema.type === 'boolean' && (value == "true")) {
+    if (this.schema.type === 'boolean' && (value === "true" || value === "1")) {
       return true; 
     }
-    if (this.schema.type === 'boolean' && (value == "false")) {
+    if (this.schema.type === 'boolean' && (value === "false" || value === "")) {
       return false; 
     }
     if (this.schema.type === 'number' && value === "") {
