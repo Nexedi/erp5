@@ -660,7 +660,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         messages = self._messages
 
         # Load the data
-        if isinstance(data, bytes):
+        if isinstance(data, bytes): # six.PY2
+            pass
+        elif isinstance(data, bytes): # six.PY3
             data = data.decode()
         po = polib.pofile(data)
         encoding = to_str(po.encoding)
