@@ -230,14 +230,6 @@
             save_action: true,
             change_password: chg_pwd_url
           });
-        })
-        .push(function () {
-          return gadget.checkSynchronize();
         });
-    })
-    .declareJob("checkSynchronize", function () {
-      if (this.state.auto_sync) {
-        return this.element.querySelector('button[type="submit"]').click();
-      }
     });
 }(window, rJS, RSVP));
