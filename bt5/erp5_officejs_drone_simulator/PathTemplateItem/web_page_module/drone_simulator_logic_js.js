@@ -763,8 +763,7 @@ var GameManager = /** @class */ (function () {
     };
 
   GameManager.prototype._timeOut = function () {
-    var seconds = Math.floor(this._game_duration / 1000);
-    return this._totalTime - seconds <= 0;
+    return this._totalTime - this._game_duration <= 0;
   };
 
   GameManager.prototype._allDronesFinished = function () {
@@ -904,7 +903,7 @@ var GameManager = /** @class */ (function () {
     _this.finish_deferred = RSVP.defer();
     console.log("Simulation started.");
     this._game_duration = Date.now();
-    this._totalTime = GAMEPARAMETERS.gameTime + this._game_duration;
+    this._totalTime = GAMEPARAMETERS.gameTime * 1000 + this._game_duration;
 
     return new RSVP.Queue()
       .push(function () {
