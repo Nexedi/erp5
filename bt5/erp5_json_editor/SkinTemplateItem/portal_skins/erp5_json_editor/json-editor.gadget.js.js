@@ -156,6 +156,31 @@
     return value.toString();
   };
 
+  if (JSONEditor.defaults.editors.object.prototype.original_getPropertySchema === undefined) {
+    JSONEditor.defaults.editors.object.prototype.original_getPropertySchema = JSONEditor.defaults.editors.object.prototype.getPropertySchema;
+  }
+
+  JSONEditor.defaults.editors.object.prototype.getPropertySchema = function (key) {
+    var schema = this.original_getPropertySchema(key);
+    /* Strip forbidden properties, that aren't part of json schema spec.
+        They are removed because the UI must be complaint with other usages of
+        json schemas.
+    */
+    delete schema.template;
+    delete schema.options;
+
+    /* Display default value as part of description */
+    if (schema.default !== undefined && typeof schema.default !== "object") {
+      if (schema.description !== undefined) {
+        schema.description = schema.description + " (default: " + schema.default + ")";
+      } else {
+        schema.description = " (default: " + schema.default + ")";
+      }
+    }
+    return schema;
+  }
+
+
   /* The original code would remove the field if value is undefined */
   JSONEditor.defaults.editors.object.prototype.setValue = function (value, initial) {
     var object_editor = this;
