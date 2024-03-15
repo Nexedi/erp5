@@ -27,7 +27,7 @@ for k, v in information.items():
         result['contributor'] = p.getRelativeUrl()
     elif key == 'keywords':
       if isinstance(v, (list, tuple)):
-        v = [x.encode('utf-8') if six.PY2 and isinstance(x, text_type) else x for x in v]
+        v = [x.encode('utf-8') if six.PY2 and isinstance(x, six.text_type) else x for x in v]
       else:
         v = v.split()
       result['subject_list'] = v
