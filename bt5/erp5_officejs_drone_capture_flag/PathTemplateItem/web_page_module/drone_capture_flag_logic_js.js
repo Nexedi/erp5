@@ -141,22 +141,31 @@ var DroneManager = /** @class */ (function () {
       this._internal_crash(error);
     }
   };
-  /**
-   * Set a target point to move
-   */
-  DroneManager.prototype.setTargetCoordinates =
-    function (latitude, longitude, altitude, speed) {
-      this._internal_setTargetCoordinates(latitude, longitude, altitude, speed);
-    };
-  DroneManager.prototype._internal_setTargetCoordinates =
+  DroneManager.prototype._callSetTargetCommand =
     function (latitude, longitude, altitude, speed, radius) {
-      if (!this._canPlay || !this.isReadyToFly()) {
+      if (!this.isReadyToFly()) {
         return;
       }
       if (this._API._gameManager._game_duration - this._last_command_timestamp
             < 1000 / this._API.getMaxCommandFrequency()) {
         this._internal_crash(new Error('Minimum interval between commands is ' +
             1000 / this._API.getMaxCommandFrequency() + ' milliseconds'));
+      }
+      this._internal_setTargetCoordinates(latitude, longitude, altitude, speed,
+                                          radius);
+      this._last_command_timestamp = this._API._gameManager._game_duration;
+    };
+  /**
+   * Set a target point to move
+   */
+  DroneManager.prototype.setTargetCoordinates =
+    function (latitude, longitude, altitude, speed) {
+      this._callSetTargetCommand(latitude, longitude, altitude, speed);
+    };
+  DroneManager.prototype._internal_setTargetCoordinates =
+    function (latitude, longitude, altitude, speed, radius) {
+      if (!this._canPlay) {
+        return;
       }
       //each drone API process coordinates on its needs
       //e.g. fixedwing drone converts real geo-coordinates to virtual x-y
@@ -168,7 +177,6 @@ var DroneManager = /** @class */ (function () {
         speed,
         radius
       );
-      this._last_command_timestamp = this._API._gameManager._game_duration;
     };
   DroneManager.prototype.getDroneDict = function () {
     return this._API._drone_dict_list;
@@ -319,13 +327,7 @@ var DroneManager = /** @class */ (function () {
    */
   DroneManager.prototype.loiter =
     function (latitude, longitude, altitude, radius, speed) {
-      this._internal_setTargetCoordinates(
-        latitude,
-        longitude,
-        altitude,
-        speed,
-        radius
-      );
+      this._callSetTargetCommand(latitude, longitude, altitude, speed, radius);
     };
   DroneManager.prototype.getFlightParameters = function () {
     if (this._API.getFlightParameters) {
