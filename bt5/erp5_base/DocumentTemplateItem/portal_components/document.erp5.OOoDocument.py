@@ -29,6 +29,7 @@
 
 import re, zipfile
 from io import BytesIO
+import six
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
@@ -339,6 +340,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
       # here mostly as a convenient way to decode with the encoding from BOM
       data = data.decode(guessEncodingFromText(data) or 'ascii')
+      if six.PY2:
+        data = data.encode('utf-8')
     return mime, data
 
   security.declareProtected(Permissions.ModifyPortalContent,
