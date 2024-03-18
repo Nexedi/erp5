@@ -22,17 +22,23 @@ div.json-editor-container {
     display: none;
   }
 
-  & .alert-danger {
+& .invalid-feedback{
+    padding: 1px 10px 2px 10px;
+    border-radius: 0.25rem;
+    border-color: #f5c2c7;
+    border: 1px solid #f5c2c7;
+  }
+  
+  & .alert-danger, .invalid-feedback{
     color: #842029;
     background-color: #f8d7da;
-    border-color: #f5c2c7;
   }
 
   & .alert {
     position: relative;
     padding: 1rem 1rem;
     margin-bottom: 1rem;
-    border: 1px solid transparent;
+    border: 1px solid #f5c2c7;
     border-radius: 0.25rem;
   }
   & .form-label {
