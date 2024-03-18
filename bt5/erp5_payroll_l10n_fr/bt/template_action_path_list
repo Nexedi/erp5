@@ -20,4 +20,6 @@ Leave Request | jump_to_pay_sheet_transaction
 Organisation | dsn_report_configuration
 Pay Sheet Transaction | add_holiday_acquisition
 Pay Sheet Transaction | add_leave_request
+Pay Sheet Transaction | jump_to_holiday_acquisition
+Pay Sheet Transaction | jump_to_leave_request
 Pay Sheet Transaction | pay_sheet_simplified_print
