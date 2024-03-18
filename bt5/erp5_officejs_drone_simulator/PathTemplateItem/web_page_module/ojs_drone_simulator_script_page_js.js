@@ -122,7 +122,8 @@
       '    }\n' +
       '    return;\n' +
       '  }\n' +
-      '  me.exit(0);\n' +
+      '  if (!me.isLanding()) { me.land() };\n' +
+      '  if (me.getCurrentPosition().altitude <= 0) { me.exit(0) };\n' +
       '};',
     DRAW = true,
     LOG = true,

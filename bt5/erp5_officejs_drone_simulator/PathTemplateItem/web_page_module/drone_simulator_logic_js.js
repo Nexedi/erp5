@@ -316,7 +316,9 @@ var DroneManager = /** @class */ (function () {
     return this._API.takeOff();
   };
   DroneManager.prototype.land = function () {
-    return this._API.land(this);
+    if (!this.isLanding()) {
+      return this._API.land(this);
+    }
   };
   DroneManager.prototype.exit = function () {
     return this._internal_crash();
