@@ -6,6 +6,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   "use strict";
 
   var DEFAULT_SPEED = 16,
+    PARACHUTE_SPEED = 8,
     EARTH_GRAVITY = 9.81,
     LOITER_LIMIT = 30,
     MAX_ACCELERATION = 6,
@@ -98,8 +99,12 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on every drone update, right before onUpdate AI script
   */
   FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
-    this._updateSpeed(context, delta_time);
-    this._updatePosition(context, delta_time);
+    if (context.position.z > 0) {
+      this._updateSpeed(context, delta_time);
+      this._updatePosition(context, delta_time);
+    } else {
+      context.setDirection(0, 0, 0);
+    }
 
     context._controlMesh.computeWorldMatrix(true);
     context._mesh.computeWorldMatrix(true);
@@ -486,8 +491,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     function (altitude_diff, max_climb_rate, speed, max_pitch) {
       var maxVerticalSpeed =
           Math.min(altitude_diff, Math.min(max_climb_rate, speed));
-      return (this._toDeg(Math.asin(maxVerticalSpeed / speed)) > max_pitch) ?
-            speed * Math.sin(this._toRad(max_pitch))
+      return (this._toDeg(Math.asin(maxVerticalSpeed / speed)) > max_pitch)
+        ? speed * Math.sin(this._toRad(max_pitch))
         : maxVerticalSpeed;
     };
   FixedWingDroneAPI.prototype._toRad = function (angle) {
@@ -511,11 +516,16 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(
+    this._flight_parameters.drone.minSpeed = 0;
+    drone._speed = 0;
+    drone._acceleration = EARTH_GRAVITY;
+    this._flight_parameters.drone.maxSinkRate = PARACHUTE_SPEED;
+    this._flight_parameters.drone.minPitchAngle = -90;
+    drone._internal_setTargetCoordinates(
       drone_pos.latitude,
       drone_pos.longitude,
-      0,
-      drone.get3DSpeed()
+      -PARACHUTE_SPEED,
+      PARACHUTE_SPEED
     );
     this._is_ready_to_fly = false;
     this._is_landing = true;
