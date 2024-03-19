@@ -2,41 +2,51 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+      <global name="Workflow State" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
+            <key> <string>acquire_permission</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/dqe_transaction_workflow/transition_cancel</string>
+                <string>destination/portal_workflow/dqe_transaction_workflow/transition_deliver</string>
+                <string>destination/portal_workflow/dqe_transaction_workflow/transition_start</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>started</string> </value>
+            <value> <string>state_confirmed</string> </value>
         </item>
         <item>
-            <key> <string>permission_roles</string> </key>
+            <key> <string>state_permission_role_list_dict</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>Started</string> </value>
-        </item>
-        <item>
-            <key> <string>transitions</string> </key>
-            <value>
-              <tuple>
-                <string>deliver</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_list</string> </key>
+            <key> <string>state_type</string> </key>
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Confirmed</string> </value>
         </item>
       </dictionary>
     </pickle>
