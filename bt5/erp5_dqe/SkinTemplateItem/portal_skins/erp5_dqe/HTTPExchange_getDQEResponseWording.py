@@ -1,3 +1,4 @@
+# encoding: utf-8
 resource_value = context.getResourceValue()
 if not resource_value.isMemberOf('http_exchange_resource/dqe'):
   return {}
