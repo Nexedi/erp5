@@ -255,6 +255,34 @@ class TestWorklist(TestWorkflowMixin):
           self.worklist_int_variable_id,
     ])
 
+  def test_edit_worklist_view(self):
+    """Checks we can view and edit worklist.
+    """
+    def check_visible(worklist):
+      self.clearCache()
+      worklist.view()
+    workflow_value = self.getWorkflowTool()[self.checked_workflow]
+
+    # edit reference first
+    worklist_value = workflow_value.newContent(portal_type='Worklist')
+    check_visible(worklist_value)
+    worklist_value.setReference(self.worklist_assignor_id)
+    check_visible(worklist_value)
+    worklist_value.setActionName('Test (%(count)s)')
+    worklist_value.setAction('/')
+    worklist_value.setActionType('global')
+    check_visible(worklist_value)
+
+    # edit reference last
+    worklist_value = workflow_value.newContent(portal_type='Worklist')
+    check_visible(worklist_value)
+    worklist_value.setActionName('Test (%(count)s)')
+    worklist_value.setAction('/')
+    worklist_value.setActionType('global')
+    check_visible(worklist_value)
+    worklist_value.setReference(self.worklist_owner_id)
+    check_visible(worklist_value)
+
   def test_01_permission(self, quiet=0, run=run_all_test):
     """
     Test the permission of the building module.

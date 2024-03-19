@@ -755,6 +755,8 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
   metadata_dict = {}
   for workflow_id, worklist in six.iteritems(worklist_dict):
     for worklist_id, worklist_match_dict in six.iteritems(worklist):
+      if not worklist_id:
+        continue
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
       if getSecurityUidDictAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
