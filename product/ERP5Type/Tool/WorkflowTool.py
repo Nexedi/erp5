@@ -28,6 +28,7 @@
 """
 Most of the code in this file has been taken from patches/WorkflowTool.py
 """
+from collections import defaultdict
 import re
 import warnings
 from six import string_types as basestring
@@ -662,23 +663,31 @@ WorkflowTool.security.declarePrivate('getWorkflowById')
 
 InitializeClass(WorkflowTool)
 
-class ExclusionList(list):
+
+class ExclusionSequence(object):
+  def __repr__(self):
+    return '<%s %s>' % (
+      self.__class__.__name__,
+      super(ExclusionSequence, self).__repr__())
+
+
+class ExclusionList(ExclusionSequence, list):
   """
     This is a dummy subclass of list.
     It is only used to detect wether contained values must be negated.
     It is not to be used outside of the scope of this document nor outside
     of the scope of worklist criterion handling.
   """
-  pass
 
-class ExclusionTuple(tuple):
+
+class ExclusionTuple(ExclusionSequence, tuple):
   """
     This is a dummy subclass of tuple.
     It is only used to detect wether contained values must be negated.
     It is not to be used outside of the scope of this document nor outside
     of the scope of worklist criterion handling.
   """
-  pass
+
 
 def getValidCriterionDict(worklist_match_dict, sql_catalog,
                           workflow_worklist_key):
@@ -755,6 +764,8 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
   metadata_dict = {}
   for workflow_id, worklist in six.iteritems(worklist_dict):
     for worklist_id, worklist_match_dict in six.iteritems(worklist):
+      if not worklist_id:
+        continue
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
       if getSecurityUidDictAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
@@ -962,21 +973,17 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
     It is better to avoid reading multiple times the catalog result from
     flexibility point of view: if it must ever be changed into a cursor, this
     code will keep working nicely without needing to rewind the cursor.
-
-    This code assumes that all worklists have the same set of criterion ids,
-    and that when a criterion id is associated with an ExclusionList it is
-    also true for all worklists.
   """
   worklist_result_dict = {}
   if len(catalog_result) > 0:
     # Transtype all worklist definitions where needed
-    criterion_id_list = []
+    criterion_id_list_by_worklist_dict = defaultdict(list)
     class_dict = {name: _sql_cast_dict.get(x['type'], _sql_cast_fallback)
       for name, x in six.iteritems(catalog_result.data_dictionary())}
-    for criterion_dict in six.itervalues(grouped_worklist_dict):
+    for worklist_id, criterion_dict in six.iteritems(grouped_worklist_dict):
       for criterion_id, criterion_value_list in six.iteritems(criterion_dict):
         if type(criterion_value_list) is not ExclusionList:
-          criterion_id_list.append(criterion_id)
+          criterion_id_list_by_worklist_dict[worklist_id].append(criterion_id)
           expected_class = class_dict[criterion_id]
           if type(criterion_value_list[0]) is not expected_class:
             criterion_dict[criterion_id] = frozenset([expected_class(x) for x in criterion_value_list])
@@ -987,7 +994,7 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
       result_count = int(result_line[COUNT_COLUMN_TITLE])
       for worklist_id, criterion_dict in six.iteritems(grouped_worklist_dict):
         is_candidate = True
-        for criterion_id in criterion_id_list:
+        for criterion_id in criterion_id_list_by_worklist_dict[worklist_id]:
           criterion_value_set = criterion_dict[criterion_id]
           if result_line[criterion_id] not in criterion_value_set:
             is_candidate = False
