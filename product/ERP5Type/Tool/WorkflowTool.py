@@ -662,23 +662,31 @@ WorkflowTool.security.declarePrivate('getWorkflowById')
 
 InitializeClass(WorkflowTool)
 
-class ExclusionList(list):
+
+class ExclusionSequence(object):
+  def __repr__(self):
+    return '<%s %s>' % (
+      self.__class__.__name__,
+      super(ExclusionSequence, self).__repr__())
+
+
+class ExclusionList(ExclusionSequence, list):
   """
     This is a dummy subclass of list.
     It is only used to detect wether contained values must be negated.
     It is not to be used outside of the scope of this document nor outside
     of the scope of worklist criterion handling.
   """
-  pass
 
-class ExclusionTuple(tuple):
+
+class ExclusionTuple(ExclusionSequence, tuple):
   """
     This is a dummy subclass of tuple.
     It is only used to detect wether contained values must be negated.
     It is not to be used outside of the scope of this document nor outside
     of the scope of worklist criterion handling.
   """
-  pass
+
 
 def getValidCriterionDict(worklist_match_dict, sql_catalog,
                           workflow_worklist_key):
