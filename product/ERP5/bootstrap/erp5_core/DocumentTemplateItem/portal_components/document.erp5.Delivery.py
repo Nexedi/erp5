@@ -34,7 +34,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager, \
     setSecurityManager, newSecurityManager
-from AccessControl.User import nobody
+from AccessControl.users import nobody
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject

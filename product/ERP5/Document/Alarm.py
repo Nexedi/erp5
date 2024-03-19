@@ -36,7 +36,7 @@ from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager, \
             setSecurityManager, newSecurityManager
-from AccessControl.User import nobody
+from AccessControl.users import nobody
 from Products.CMFActivity.ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject

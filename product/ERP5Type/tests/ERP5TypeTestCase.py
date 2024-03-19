@@ -1155,6 +1155,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
         return False
 
+      update_translation_table = False
       for url, bt_title in business_template_list:
         if (update_business_templates and
             erp5_load_data_fs and
@@ -1193,6 +1194,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         bt.install(light_install=light_install,
                    object_to_update=install_kw,
                    check_dependencies=False)
+        update_translation_table = True
         if bt.isCatalogUpdatable() and (
             int(os.environ.get('erp5_tests_recreate_catalog', 0)) or \
             int(os.environ.get('erp5_load_data_fs', 0)) == 0):
@@ -1201,6 +1203,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         self.commit()
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+      if update_translation_table:
+        self._updateTranslationTable()
 
     def _getSiteCreationParameterDict(self):
       kw = _getConnectionStringDict()
@@ -1295,7 +1299,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                               light_install=light_install,
                                               quiet=quiet)
             self._recreateCatalog()
-            self._updateTranslationTable()
             self._updateConversionServerConfiguration()
             self._updateMemcachedConfiguration()
             # Create a Manager user at the Portal level

@@ -305,12 +305,12 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     # Whenever we have new imports we need to warn the user about the
     # environment
     if (import_fixer.warning_module_names != []):
-      warning = ("print '"
+      warning = ("print ('"
                  "WARNING: You imported from the modules %s without "
                  "using the environment object, which is not recomended. "
                  "Your import was automatically converted to use such method. "
                  "The setup functions were named as *module*_setup. "
-                 "'") % (', '.join(import_fixer.warning_module_names))
+                 "')") % (', '.join(import_fixer.warning_module_names))
       tree = ast.parse(warning)
       tree.body[0].lineno = ast_node.body[-1].lineno+5
       ast_node.body.append(tree.body[0])

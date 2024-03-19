@@ -318,7 +318,8 @@
         {<br>
           &nbsp;&nbsp;latitude: number, //in degrees<br>
           &nbsp;&nbsp;longitude: number, //in degrees<br>
-          &nbsp;&nbsp;altitude: number  //in meters<br>
+          &nbsp;&nbsp;altitude: number,  //in meters<br>
+          &nbsp;&nbsp;timestamp: number  //in milliseconds<br>
         }<br>
       </p>
 
@@ -327,6 +328,36 @@
       <p class="item-example">
         var current_position = me.getCurrentPosition();<br>
         console.log(current_position);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getDroneDict -->
+      <h4 class="item-name" id="getDroneDict"><span>getDroneDict</span><span>: dictionary</span></h4>
+      <p class="item-descr">Access drones information dictionary. It contains one entry per drone:<br>
+        key-id: value-drone_dict<br>
+        {<br>
+          latitude: number, //latitude (in degrees)<br>
+          longitude: number, //longitude (in degrees)<br>
+          altitudeAbs: number,  //altitude (in meters)<br>
+          altitudeRel: number,  //altitude over ground (in meters)<br>
+          yaw: number,  //yaw angle (in degrees)<br>
+          speed: number,  //ground speed (in meters per second)<br>
+          climbRate: number,  //climb rate (in meters per second)<br>
+          timestamp: number  //timestamp (in milliseconds)<br>
+        }<br>
+      </p>
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">
+        var leader = me.getDroneDict()[LEADER_ID];<br>
+        console.log("leader latitude:", leader.latitude);<br>
+        console.log("leader longitude:", leader.longitude);<br>
+        console.log("leader absolute altitude:", leader.altitudeAbs);<br>
+        console.log("leader relative altitude:", leader.altitudeRel);<br>
+        console.log("leader yaw angle:", leader.yaw);<br>
+        console.log("leader climb rate:", leader.climbRate);<br>
+        console.log("leader's position timestamp:", leader.timestamp);<br>
       </p>
 
       <div class="line"></div>
@@ -603,28 +634,6 @@
 
       <p class="item-example">
         var drone_id = me.id;<br>
-      </p>
-
-      <div class="line"></div>
-
-      <!-- drone_dict -->
-      <h4 class="item-name" id="id"><span>drone_dict</span><span>: dictionary</span></h4>
-      <p class="item-descr">Access drones information dictionary. It contains one entry per drone:<br>
-        key-id: value-drone_dict<br>
-        {<br>
-          latitude: number, //latitude (in degrees)<br>
-          longitude: number, //longitude (in degrees)<br>
-          altitudeAbs: number  //altitude (in meters)<br>
-        }<br>
-      </p>
-
-      <h5 class="item-param-1">Example</h5>
-
-      <p class="item-example">
-        var leader = me.drone_dict[LEADER_ID];<br>
-        console.log("leader latitude:", leader.latitude);<br>
-        console.log("leader longitude:", leader.longitude);<br>
-        console.log("leader absolute altitude:", leader.altitudeAbs);<br>
       </p>
 
       <div class="line"></div>

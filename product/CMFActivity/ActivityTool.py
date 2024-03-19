@@ -47,7 +47,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.User import system as system_user
+from AccessControl.users import system as system_user
 from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
@@ -686,7 +686,7 @@ class ActivityTool (BaseTool):
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
-    activity_failure_mail_notification = True
+    activity_failure_mail_notification = False
     cancel_and_invoke_links_hidden = False
 
     # Filter content (ZMI))

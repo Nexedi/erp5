@@ -1,7 +1,7 @@
 import time
 from Products.StandardCacheManagers.AcceleratedHTTPCacheManager import \
     AcceleratedHTTPCache, AcceleratedHTTPCacheManager
-from App.Common import rfc1123_date
+from zope.datetime import rfc1123_date
 from App.special_dtml import DTMLFile
 from Products.ERP5Type import _dtmldir
 

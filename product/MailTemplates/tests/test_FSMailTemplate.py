@@ -8,7 +8,7 @@ from __future__ import absolute_import
 import os
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from AccessControl.User import system as SystemUser,SimpleUser
+from AccessControl.users import system as SystemUser,SimpleUser
 from OFS.Folder import Folder
 from .test_MailTemplate import DummyMailHost,Zope,get_transaction
 from Testing.makerequest import makerequest
