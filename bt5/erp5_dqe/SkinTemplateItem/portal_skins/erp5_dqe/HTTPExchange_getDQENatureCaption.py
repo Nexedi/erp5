@@ -1,3 +1,4 @@
+# encoding: utf-8
 dqe_resource_category = context.getPortalObject().portal_categories.http_exchange_resource.dqe
 # Values are hard-coded to fr, it is for Data Warehouse use and Investigation tab
 return {
