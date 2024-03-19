@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resource, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_addLeaveRequest</string> </value>
+            <value> <string>PaySheetTransaction_getRelatedLeaveRequestList</string> </value>
         </item>
       </dictionary>
     </pickle>

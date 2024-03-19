@@ -1,25 +1,36 @@
-leave_request = context.getCausalityRelatedValue(portal_type='Leave Request')
+leave_request_list = context.PaySheetTransaction_getRelatedLeaveRequestList()
 # I think I dont need this.
-if leave_request:
-  return leave_request.Base_redirect('view', context.Base_translateString('Leave Request is already created'))
+if leave_request_list:
+  return context.Base_redirect('view',
+    keep_items={
+      'portal_status_message': context.Base_translateString(
+        'You have at least one Leave Period for the period.')})
 
-raise NotImplementedError
+employee = context.getSourceSectionValue()
+stop_date = context.getStopDate()
 
-#employee = context.getSourceSectionValue()
-#stop_date = context.getStopDate()
+if not stop_date or not context.getStartDate():
+  return context.Base_redirect('view',
+    keep_items={
+      'portal_status_message': context.Base_translateString(
+        'Please set Start Date and Stop Date.')})
 
+leave_request = context.leave_request_module.newContent(
+  portal_type="Leave Request",
+  start_date= context.getStartDate(),
+  stop_date =  stop_date,
+  title="Leave Request %s For %s " % (stop_date.strftime('%Y%m'), employee.getTitle()),
+  destination_value = employee,
+  resource = resource,
+)
 
-#holiday_acquisition = context.holiday_acquisition_module.newContent(
-#  portal_type="Holiday Acquisition",
-#  quantity = holiday_per_hour * work_hour,
-#  start_date= stop_date,
-#  stop_date =  stop_date,
-#  title= "Holiday %s For %s " % (stop_date.strftime('%Y%m'), employee.getTitle()),
-#  destination_value = employee,
-#  resource = resource,
-#  causality = context.getRelativeUrl()
-#)
-#
-#holiday_acquisition.plan()
-#return holiday_acquisition.Base_redirect('view',
-#  context.Base_translateString('Holiday Acquisition is created'))
+# Create a period
+leave_request.newContent(
+  portal_type="Leave Request Period"
+)
+
+#leave_request.plan()
+return leave_request.Base_redirect('view',
+  keep_items={
+    'portal_status_message': 
+      context.Base_translateString('Leave Request is created')})
