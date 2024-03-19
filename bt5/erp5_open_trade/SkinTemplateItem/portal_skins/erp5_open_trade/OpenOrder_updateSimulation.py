@@ -12,7 +12,8 @@ for open_order_line in context.objectValues():
       if getattr(item.aq_explicit, 'updateSimulation', None) is not None and \
           item not in subscription_item_set:
         subscription_item_set.add(item)
-        stop_date = item.getNextPeriodicalDate(now)
+        # If start_date is in futur, do not look for unreachable period
+        stop_date = item.getNextPeriodicalDate(max(now, ob.getStartDate()))
         # Do not expand subscription item if there is
         # no new simulation movement to create
         # (expand always reindex the full simulation tree,
