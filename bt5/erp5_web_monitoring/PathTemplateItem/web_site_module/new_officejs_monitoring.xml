@@ -166,107 +166,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>frontpage_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_frontpage_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_application_title</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_hateoas_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_view_action_category</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_default_view_action_reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_panel_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_router_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_jio_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_header_gadget_url</string> </value>
+                      <value> <string>configuration_latest_document_version</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -286,37 +186,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_x_frame_options</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_latest_document_version</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_latest_version</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_cache_file</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -336,7 +206,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_landing_page</string> </value>
+                      <value> <string>configuration_x_frame_options</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -346,7 +216,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_sub_gadget_installer</string> </value>
+                      <value> <string>configuration_cache_file</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -396,14 +266,10 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/gadget_officejs_bootloader.html</string>
+                <string>caching_policy/must-revalidate</string>
               </tuple>
             </value>
-        </item>
-        <item>
-            <key> <string>configuration_application_title</string> </key>
-            <value> <string>Text Editor</string> </value>
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
@@ -411,37 +277,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net *.nexedi.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_default_view_action_reference</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas/</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_header_gadget_url</string> </key>
-            <value> <string>gadget_officejs_header.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_officejs_jio.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_landing_page</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com data: * localhost:5378 *.vifib.erp5.net *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_latest_document_version</string> </key>
@@ -452,32 +288,8 @@
             <value> <string>app</string> </value>
         </item>
         <item>
-            <key> <string>configuration_manifest_url</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_officejs_application_panel.html</string> </value>
-        </item>
-        <item>
             <key> <string>configuration_redirect_url</string> </key>
             <value> <string>app</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_officejs_text_editor_router.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_sub_gadget_installer</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_view_action_category</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
@@ -504,10 +316,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>frontpage_gadget_url</string> </key>
-            <value> <string>gadget_woelfel_pt_frontpage.html</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -681,7 +489,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1705602576.55</float>
+                              <float>1706017454.46</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -730,7 +538,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1013.31719.47629.17612</string> </value>
+                      <value> <string>1014.3363.61933.30344</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -750,7 +558,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1703789376.17</float>
+                              <float>1706806088.57</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
