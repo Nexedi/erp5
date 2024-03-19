@@ -452,11 +452,16 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     # request parameter.
     mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
     part, = [x for x in mail_message.walk() if x.get_content_type() == self.content_type]
-    report_as_txt = self.portal.portal_transforms.convertTo(
-            'text/plain',
-            part.get_payload(decode=True),
-            context=self.portal,
-            mimetype=self.content_type).getData()
+
+    doc = self.portal.document_module.newContent(
+      portal_type=self.portal_type,
+      content_type=self.content_type,
+      data=part.get_payload(decode=True),
+      temp_object=True,
+    )
+    doc.convertToBaseFormat()
+    report_as_txt = doc.asText()
+
     self.assertIn(
         'in_list_method: set_in_dialog_request == set_in_dialog_request, set_in_report_method == set_in_report_method',
         report_as_txt)
