@@ -63,6 +63,9 @@
         }
       }
     }
+    if (field_definition.values.extra) {
+      eval(field_definition.values.extra);
+    }
     return result;
   }
 
