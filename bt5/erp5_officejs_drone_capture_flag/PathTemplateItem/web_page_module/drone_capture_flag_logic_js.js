@@ -335,6 +335,9 @@ var DroneManager = /** @class */ (function () {
     }
     return null;
   };
+  DroneManager.prototype.getMaxCommandFrequency = function () {
+    return this._API.getMaxCommandFrequency();
+  };
   DroneManager.prototype.getYaw = function () {
     if (this._API.getYaw !== undefined) {
       return this._API.getYaw(this);
