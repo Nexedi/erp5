@@ -82,8 +82,6 @@
                                     'migration_version'])
         .push(function (result_list) {
           //TODO fix missing router setting (it's set but get returns undefined)
-          console.log("configuration_manifest setting:", result_list[0]);
-          console.log("migration_version setting:", result_list[1]);
           migration_version = result_list[1];
           manifest = "gadget_officejs_monitoring.configuration";
           if (options !== undefined) {
@@ -143,11 +141,11 @@
             };
             gadget.props.jio_storage = jIO.createJIO(monitoring_jio);
           }
-          appcache_storage = jIO.createJIO(appcache_jio);
           current_version = window.location.href.replace(window.location.hash, "");
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
           if (migration_version !== current_version) {
+            appcache_storage = jIO.createJIO(appcache_jio);
             return gadget.updateConfiguration(appcache_storage, migration_version, current_version);
           }
         })
