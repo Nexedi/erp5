@@ -237,7 +237,11 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+if (context_document && context_document.status) { switch (context_document.status) { case "ERROR" || "Error" || "error": result.css_class = \'label label-error\'; break; case "OK" || "Ok" || "ok": result.css_class = \'label label-ok\'; break; case "WARNING" || "Warning" || "warning": result.css_class = \'label label-warning\'; break; default: result.css_class = \'\'; } }
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
