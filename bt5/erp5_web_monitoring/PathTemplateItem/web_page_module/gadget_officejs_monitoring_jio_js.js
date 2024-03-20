@@ -148,6 +148,7 @@
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
           if (migration_version !== current_version) {
+            appcache_storage = jIO.createJIO(appcache_jio);
             return gadget.updateConfiguration(appcache_storage, migration_version, current_version);
           }
         })
