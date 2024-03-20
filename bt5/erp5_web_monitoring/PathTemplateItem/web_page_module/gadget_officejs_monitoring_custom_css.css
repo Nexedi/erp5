@@ -120,10 +120,10 @@
   color: #f0ad4e;
 }
 
-.label-warning, .label-WARNING {
+.label-warning p, .label-WARNING p, .label-warning a, .label-WARNING a {
   background-color: #f0ad4e;
 }
-.label-error, .label-ERROR {
+.label-error p, .label-ERROR p, .label-error a, .label-ERROR a {
   background-color: #DC4343;
 }
 .label-false {
