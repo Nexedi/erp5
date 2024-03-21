@@ -80,7 +80,7 @@ var DroneLogAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right before onUpdate AI script
   */
-  DroneLogAPI.prototype.internal_update = function (context, delta_time) {
+  DroneLogAPI.prototype.internal_position_update = function (context, delta_time) {
     var updateSpeed;
     context._speed += context._acceleration * delta_time / 1000;
     if (context._speed > context._maxSpeed) {
@@ -104,7 +104,7 @@ var DroneLogAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right after onUpdate AI script
   */
-  DroneLogAPI.prototype.internal_post_update = function (drone) {
+  DroneLogAPI.prototype.internal_info_update = function (drone) {
     return;
   };
   DroneLogAPI.prototype.internal_setTargetCoordinates =
@@ -212,6 +212,9 @@ var DroneLogAPI = /** @class */ (function () {
   };
   DroneLogAPI.prototype.getMaxCommandFrequency = function () {
     return Infinity;
+  };
+  DroneLogAPI.prototype.getOnUpdateInterval = function () {
+    return 0;
   };
 
   return DroneLogAPI;

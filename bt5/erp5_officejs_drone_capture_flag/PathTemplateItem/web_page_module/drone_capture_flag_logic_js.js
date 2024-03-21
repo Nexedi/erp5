@@ -27,6 +27,7 @@ var DroneManager = /** @class */ (function () {
     this._maxClimbRate = 0;
     this._maxCommandFrequency = 0;
     this._last_command_timestamp = 0;
+    this._onupdate_count = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = new BABYLON.Vector3(0, 0, 1); // North
@@ -135,7 +136,7 @@ var DroneManager = /** @class */ (function () {
     this._canPlay = true;
     this._canCommunicate = true;
     try {
-      return this.onStart(this._API._gameManager._game_duration);
+      return this.onStart(this._API._gameManager._start_time);
     } catch (error) {
       console.warn('Drone crashed on start due to error:', error);
       this._internal_crash(error);
@@ -143,17 +144,18 @@ var DroneManager = /** @class */ (function () {
   };
   DroneManager.prototype._callSetTargetCommand =
     function (latitude, longitude, altitude, speed, radius) {
+      var current_time = this._API._gameManager.getCurrentTime();
       if (!this.isReadyToFly()) {
         return;
       }
-      if (this._API._gameManager._game_duration - this._last_command_timestamp
+      if (current_time - this._last_command_timestamp
             < 1000 / this._API.getMaxCommandFrequency()) {
         this._internal_crash(new Error('Minimum interval between commands is ' +
             1000 / this._API.getMaxCommandFrequency() + ' milliseconds'));
       }
       this._internal_setTargetCoordinates(latitude, longitude, altitude, speed,
                                           radius);
-      this._last_command_timestamp = this._API._gameManager._game_duration;
+      this._last_command_timestamp = current_time;
     };
   /**
    * Set a target point to move
@@ -192,15 +194,16 @@ var DroneManager = /** @class */ (function () {
     return;
   };
   DroneManager.prototype.internal_update = function (delta_time) {
-    var context = this, milliseconds;
+    var context = this, gameManager = this._API._gameManager;
     if (this._controlMesh) {
-      context._API.internal_update(context, delta_time);
-      if (context._canUpdate) {
+      context._API.internal_position_update(context, delta_time);
+      if (context._canUpdate &&
+          gameManager._game_duration / (context._API.getOnUpdateInterval() * this._onupdate_count) >= 1) {
         context._canUpdate = false;
+        this._onupdate_count += 1;
         return new RSVP.Queue()
           .push(function () {
-            milliseconds = Math.floor(context._API._gameManager._game_duration);
-            return context.onUpdate(milliseconds);
+            return context.onUpdate(context._API._gameManager.getCurrentTime());
           })
           .push(function () {
             context._canUpdate = true;
@@ -209,7 +212,7 @@ var DroneManager = /** @class */ (function () {
             context._internal_crash(error);
           })
           .push(function () {
-            context._API.internal_post_update(context);
+            context._API.internal_info_update(context);
           })
           .push(undefined, function (error) {
             console.warn('Drone crashed on update due to error:', error);
@@ -313,7 +316,7 @@ var DroneManager = /** @class */ (function () {
         this._controlMesh.position.z,
         this._controlMesh.position.y
       );
-      position.timestamp = this._API._gameManager._game_duration;
+      position.timestamp = this._API._gameManager.getCurrentTime();
       //Backward compatibility sanitation
       position.x = position.latitude;
       position.y = position.longitude;
@@ -983,7 +986,8 @@ var GameManager = /** @class */ (function () {
       this._game_duration += delta_time;
       var color, drone_position, game_manager = this, geo_coordinates,
         log_count, map_info, map_manager, material, position_obj,
-        seconds = Math.floor(this._game_duration / 1000), trace_objects;
+        current_time = this.getCurrentTime(),
+        seconds = Math.floor(current_time  / 1000), trace_objects;
 
       if (GAMEPARAMETERS.log_drone_flight || GAMEPARAMETERS.draw_flight_path) {
         this._droneList_user.forEach(function (drone, index) {
@@ -1002,7 +1006,7 @@ var GameManager = /** @class */ (function () {
                   drone_position.z
                 );
                 game_manager._flight_log[index].push([
-                  game_manager._game_duration, geo_coordinates.latitude,
+                  current_time, geo_coordinates.latitude,
                   geo_coordinates.longitude,
                   map_info.start_AMSL + drone_position.z,
                   drone_position.z, drone.getYaw(), drone.getSpeed(),
@@ -1232,8 +1236,9 @@ var GameManager = /** @class */ (function () {
     _this.ongoing_update_promise = null;
     _this.finish_deferred = RSVP.defer();
     console.log("Simulation started.");
-    this._game_duration = Date.now();
-    this._totalTime = GAMEPARAMETERS.gameTime * 1000 + this._game_duration;
+    this._start_time = Date.now();
+    this._game_duration = 0;
+    this._totalTime = GAMEPARAMETERS.gameTime * 1000;
 
     return new RSVP.Queue()
       .push(function () {
@@ -1331,9 +1336,8 @@ var GameManager = /** @class */ (function () {
           "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
           " GameManager, FixedWingDroneAPI, EnemyDroneAPI, BABYLON, " +
           "GAMEPARAMETERS) {" +
-          "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
           "Date.now = function () {" +
-          "return start_time + drone._tick * 1000/60;}; " +
+          "return me._API._gameManager.getCurrentTime();}; " +
           "function Date() {if (!(this instanceof Date)) " +
           "{throw new Error('Missing new operator');} " +
           "if (arguments.length === 0) {return new NativeDate(Date.now());} " +
@@ -1393,6 +1397,10 @@ var GameManager = /** @class */ (function () {
                    drone_list[i], api, team);
       }
     }
+  };
+
+  GameManager.prototype.getCurrentTime = function () {
+    return this._start_time + this._game_duration;
   };
 
   return GameManager;
