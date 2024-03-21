@@ -101,6 +101,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_date</string>
+                        <string>my_state</string>
                         <string>my_status</string>
                       </list>
                     </value>
