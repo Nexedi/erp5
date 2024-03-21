@@ -5,6 +5,7 @@
 
   var SIMULATION_SPEED = 1,
     LOOP_INTERVAL = 1000 / 60,
+    ON_UPDATE_INTERVAL = LOOP_INTERVAL,
     SIMULATION_TIME = LOOP_INTERVAL / 1000,
     MIN_LAT = 45.6364,
     MAX_LAT = 45.65,
@@ -77,7 +78,8 @@
       '    time_interval = timestamp - me.start_time,\n' +
       '    expected_interval = ' + LOOP_INTERVAL + ',\n' +
       '    expectedDistance = (me.getSpeed() * expected_interval / 1000).toFixed(8);\n' +
-      '    assert(time_interval, Math.floor(expected_interval), "Timestamp");\n' +
+      '    assert(time_interval.toFixed(4), expected_interval.toFixed(4), "Timestamp");\n' +
+      '    assert(Date.now(), timestamp, "Date");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
       '  compare(current_position, {\n' +
@@ -152,6 +154,7 @@
           "maxPitchAngle": MAX_PITCH,
           "maxSinkRate": MAX_SINK_RATE,
           "maxClimbRate": MAX_CLIMB_RATE,
+          "onUpdateInterval": ON_UPDATE_INTERVAL,
           "list": DRONE_LIST
         },
         "gameTime": SIMULATION_TIME,
