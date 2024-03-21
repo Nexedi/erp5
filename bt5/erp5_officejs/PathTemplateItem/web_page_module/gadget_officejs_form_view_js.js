@@ -155,7 +155,8 @@
       var gadget = this;
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          var i, date, len = result.data.total_rows, date_key_array;
+          var i, date, len = result.data.total_rows, date_key_array,
+            status_key_array = ['status', 'category'], status;
           for (i = 0; i < len; i += 1) {
             date_key_array = Object.keys(
               result.data.rows[i].value).filter((k) => k.includes("date") ||
@@ -179,6 +180,28 @@
                     timezone_style: 0,
                     title: "Date",
                     type: "DateTimeField"
+                  }
+                };
+                result.data.rows[i].value["listbox_uid:list"] = {
+                  key: "listbox_uid:list",
+                  value: 2713
+                };
+              }
+            });
+            //TODO make it customizable from config
+            status_key_array.forEach((status_key) => {
+              if (result.data.rows[i].value.hasOwnProperty(status_key)) {
+                status = result.data.rows[i].value[status_key];
+                result.data.rows[i].value[status_key] = {
+                  field_gadget_param: {
+                    css_class: "",
+                    description: "",
+                    hidden: 0,
+                    "default": status,
+                    key: status_key,
+                    url: "gadget_erp5_field_status.html",
+                    title: "Status",
+                    type: "GadgetField"
                   }
                 };
                 result.data.rows[i].value["listbox_uid:list"] = {
