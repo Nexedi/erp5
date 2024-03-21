@@ -102,7 +102,8 @@ class TestInvoice(TestInvoiceMixin):
     delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
+    invoice_transaction_applied_rule = [x for x in invoice_movement.contentValues() \
+                                        if x.getSpecialiseReference() == 'default_invoice_transaction_rule'][0]
     invoice_transaction_movement =\
          invoice_transaction_applied_rule.contentValues()[0]
     self.assertEqual(currency,
@@ -349,7 +350,8 @@ class TestInvoice(TestInvoiceMixin):
     delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
+    invoice_transaction_applied_rule = [x for x in invoice_movement.contentValues() \
+                                        if x.getSpecialiseReference() == 'default_invoice_transaction_rule'][0]
 
     # utility function to return the simulation movement that should be used
     # for "income" line

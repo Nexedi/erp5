@@ -740,7 +740,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # the list.
     self.assertEqual(person.getDefaultRegion(), 'beta')
     person.setRegionSet(['alpha', 'beta', 'alpha'])
-    self.assertEqual(person.getRegionList(), ['beta', 'alpha'])
+    self.assertEqual(sorted(person.getRegionList()), ['alpha', 'beta'])
     # calling a set setter did not change the default region
     self.assertEqual(person.getDefaultRegion(), 'beta')
 
@@ -2185,6 +2185,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                   checked_permission=checked_permission)
     self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
+    foo.setRegionList([beta_path])
+    foo.setRegionSet([gamma_path, beta_path])
+    self.assertEqual(foo.getRegionList(), [beta_path, gamma_path])
+
     foo.setRegionValue(None)
     self.assertEqual(None, foo.getRegion())
     # Check setCategoryValueSet accessor
@@ -2198,6 +2202,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     foo.setRegionValueSet([gamma],
                   checked_permission=checked_permission)
     self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
+
+    foo.setRegionValueList([beta])
+    foo.setRegionValueSet([gamma, beta])
+    self.assertEqual(foo.getRegionValueList(), [beta, gamma])
 
     # check hasCategory accessors
     foo.setRegionValue(None)
@@ -2385,6 +2393,18 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     self.assertEqual('Could not get object region/gamma',
                       logged_errors[0].getMessage())
 
+  def test_portal_type_property_sheet_have_priority_over_class_property_sheet(self):
+    self._addProperty(
+      'Person',
+      self.id(),
+      'first_name',
+      elementary_type='string',
+      property_default='string:property sheet default',
+      portal_type='Standard Property',
+    )
+    obj = self.getPersonModule().newContent(portal_type='Person')
+    self.assertEqual(obj.getFirstName(), 'property sheet default')
+
   def test_list_accessors(self):
     self._addProperty('Person', 'test_list_accessors', 'dummy',
         elementary_type='lines',
@@ -2406,12 +2426,23 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDummyList(['a', 'b'])
     self.assertEqual(person.getDummy(), 'a')
     self.assertEqual(person.getDummyList(), ['a', 'b'])
-    self.assertEqual(person.getDummySet(), ['a', 'b'])
+    self.assertEqual(sorted(person.getDummySet()), ['a', 'b'])
+
+    person.setDummySet(['b', 'a', 'c'])
+    self.assertEqual(person.getDummy(), 'a')
+    self.assertEqual(sorted(person.getDummyList()), ['a', 'b', 'c'])
+    person.setDummySet(['b', 'c'])
+    self.assertEqual(sorted(person.getDummyList()), ['b', 'c'])
+
+    person.setDummyList(['a', 'b', 'b'])
+    self.assertEqual(person.getDummy(), 'a')
+    self.assertEqual(person.getDummyList(), ['a', 'b', 'b'])
+    self.assertEqual(sorted(person.getDummySet()), ['a', 'b'])
 
     person.setDummy('value')
     self.assertEqual(person.getDummy(), 'value')
     self.assertEqual(person.getDummyList(), ['value'])
-    self.assertEqual(person.getDummySet(), ['value'])
+    self.assertEqual(sorted(person.getDummySet()), ['value'])
 
   def test_translated_accessors(self):
     self._addProperty('Person',
@@ -3335,6 +3366,13 @@ def test_suite():
     pass
   else:
     import ZPublisher.tests.test_WSGIPublisher
+    # TestLoadApp tests are confused because running as a live test interfere with
+    # transaction system. Aborting the transaction at beginning of test seems OK.
+    TestLoadApp_setUp = ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp
+    def setUp(self):
+      TestLoadApp_setUp(self)
+      transaction.abort()
+    ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp = setUp
     add_tests(suite, ZPublisher.tests.test_WSGIPublisher)
 
   import ZPublisher.tests.test_mapply

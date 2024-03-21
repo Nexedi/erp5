@@ -37,9 +37,7 @@ class TitleMovementGroup(MovementGroup):
   portal_type = 'Title Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
-    property_dict['title'] = self._getTitle(movement)
-    return property_dict
+    return {'title': self._getTitle(movement)}
 
   def test(self, document, property_dict, **kw):
     # If title is different, we want to update existing document instead
