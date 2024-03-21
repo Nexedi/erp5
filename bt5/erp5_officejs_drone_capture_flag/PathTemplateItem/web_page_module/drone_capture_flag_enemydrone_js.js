@@ -56,7 +56,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right before onUpdate AI script
   */
-  EnemyDroneAPI.prototype.internal_update = function (context, delta_time) {
+  EnemyDroneAPI.prototype.internal_position_update = function (context, delta_time) {
     context._speed += context._acceleration * delta_time / 1000;
     if (context._speed > context._maxSpeed) {
       context._speed = context._maxSpeed;
@@ -81,7 +81,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right after onUpdate AI script
   */
-  EnemyDroneAPI.prototype.internal_post_update = function (drone) {
+  EnemyDroneAPI.prototype.internal_info_update = function (drone) {
     var _this = this, drone_position = drone.getCurrentPosition(), drone_info;
     if (drone_position) {
       drone_info = {
@@ -306,6 +306,9 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getMaxHeight = function () {
     return 800;
+  };
+  EnemyDroneAPI.prototype.getOnUpdateInterval = function () {
+    return 0;
   };
   EnemyDroneAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;

@@ -102,7 +102,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right before onUpdate AI script
   */
-  FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
+  FixedWingDroneAPI.prototype.internal_position_update = function (context, delta_time) {
     this._updateSpeed(context, delta_time);
     this._updatePosition(context, delta_time);
 
@@ -112,7 +112,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right after onUpdate AI script
   */
-  FixedWingDroneAPI.prototype.internal_post_update = function (drone) {
+  FixedWingDroneAPI.prototype.internal_info_update = function (drone) {
     var _this = this, drone_position = drone.getCurrentPosition(), drone_info;
     /*if (_this._start_altitude > 0) { //TODO move start_altitude here
       _this.reachAltitude(drone);
@@ -500,6 +500,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getMaxHeight = function () {
     return 800;
+  };
+  FixedWingDroneAPI.prototype.getOnUpdateInterval = function () {
+    return this._flight_parameters.drone.onUpdateInterval;
   };
   FixedWingDroneAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;

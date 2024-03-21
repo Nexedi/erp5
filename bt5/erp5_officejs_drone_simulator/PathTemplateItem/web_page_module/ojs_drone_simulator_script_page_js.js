@@ -128,6 +128,7 @@
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
+    ONUPDATE_INTERVAL = 100,
     DRONE_LIST = [],
     WIDTH = 680,
     HEIGHT = 340,
@@ -189,6 +190,17 @@
                   "required": 1,
                   "editable": 1,
                   "key": "simulation_time",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
+                "my_onupdate_interval": {
+                  "description": "Minimum interval (in milliseconds) between 2 executions of onUpdate function as well as periodicity to send telemetry to the swarm",
+                  "title": "OnUpdate interval",
+                  "default": ONUPDATE_INTERVAL,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "onupdate_interval",
                   "hidden": 0,
                   "type": "IntegerField"
                 },
@@ -445,8 +457,8 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_minimum_latitud"], ["my_maximum_latitud"],
+                [["my_simulation_speed"], ["my_simulation_time"], ["my_onupdate_interval"],
+                  ["my_number_of_drones"], ["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
                   ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_alt"],
                   ["my_map_height"]]
@@ -495,7 +507,8 @@
           "maxPitchAngle": parseFloat(options.drone_max_pitch),
           "maxSinkRate": parseFloat(options.drone_max_sink_rate),
           "maxClimbRate": parseFloat(options.drone_max_climb_rate),
-          "maxCommandFrequency": parseFloat(options.drone_max_command_frequency)
+          "maxCommandFrequency": parseFloat(options.drone_max_command_frequency),
+          "onUpdateInterval": parseInt(options.onupdate_interval, 10)
         },
         "gameTime": parseInt(options.simulation_time, 10),
         "simulation_speed": parseInt(options.simulation_speed, 10),

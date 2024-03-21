@@ -5,6 +5,7 @@
 
   var SIMULATION_SPEED = 1,
     LOOP_INTERVAL = 1000 / 60,
+    ON_UPDATE_INTERVAL = LOOP_INTERVAL,
     SIMULATION_TIME = LOOP_INTERVAL / 1000,
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
@@ -78,6 +79,7 @@
       '    expected_interval = ' + LOOP_INTERVAL + ',\n' +
       '    expectedDistance = (me.getSpeed() * expected_interval / 1000).toFixed(8);\n' +
       '    assert(time_interval.toFixed(4), expected_interval.toFixed(4), "Timestamp");\n' +
+      '    assert(Date.now(), timestamp, "Date");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
       '  compare(current_position, {\n' +
@@ -180,7 +182,8 @@
           "minPitchAngle": MIN_PITCH,
           "maxPitchAngle": MAX_PITCH,
           "maxSinkRate": MAX_SINK_RATE,
-          "maxClimbRate": MAX_CLIMB_RATE
+          "maxClimbRate": MAX_CLIMB_RATE,
+          "onUpdateInterval": ON_UPDATE_INTERVAL
         },
         "gameTime": SIMULATION_TIME,
         "simulation_speed": SIMULATION_SPEED,
