@@ -1,4 +1,4 @@
-maileva_connector = context.MailevaSOAPConnector_getAvailableConnector()
+maileva_connector = context.getPortalObject().ERP5Site_getAvailableMailevaSOAPConnector()
 result = maileva_connector.getPendingNotificationDetails(track_id)
 if result['status'] == "SENT":
   document = context.getFollowUpValue()
