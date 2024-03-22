@@ -36,6 +36,7 @@ MAIN FILE: generate report (book header/footer and report content)
 # report_title              report title
 # report_header             custom report header
 
+from Products.ERP5Type.Utils import str2bytes
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
@@ -258,11 +259,11 @@ if doc_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  header_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_head, allow_script=True)
+  header_embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_head, allow_script=True))
   before_toc_data_list = []
-  xsl_style_sheet_data = blank
-  embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_content, allow_script=True)
-  footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_foot, allow_script=True)
+  xsl_style_sheet_data = blank.encode()
+  embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_content, allow_script=True))
+  footer_embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_foot, allow_script=True))
   default_conversion_kw = dict(
     encoding="utf8",
     margin_top=40,
