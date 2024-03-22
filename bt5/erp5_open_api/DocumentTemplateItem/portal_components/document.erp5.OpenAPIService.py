@@ -25,9 +25,13 @@
 #
 ##############################################################################
 
+import base64
+import binascii
 import json
 import typing
+import six
 from six.moves.urllib.parse import unquote
+
 if typing.TYPE_CHECKING:
   from typing import Any, Callable, Optional
   from erp5.component.document.OpenAPITypeInformation import OpenAPIOperation, OpenAPIParameter
@@ -258,10 +262,8 @@ class OpenAPIService(XMLObject):
         parameter,
         parameter.getJSONSchema(),
       )
-    requestBody = self.validateParameter(
-      'request body',
+    requestBody = self.validateRequestBody(
       operation.getRequestBodyValue(request),
-      {},
       operation.getRequestBodyJSONSchema(request),
     )
     if requestBody:
@@ -295,6 +297,37 @@ class OpenAPIService(XMLObject):
           'Error validating {parameter_name}: {e}'.format(
             parameter_name=parameter_name, e=e.message), str(e))
     return parameter_value
+
+  security.declareProtected(
+    Permissions.AccessContentsInformation, 'validateRequestBody')
+
+  def validateRequestBody(self, parameter_value, schema):
+    # type: (str, dict) -> Any
+    """Validate the request body raising a ParameterValidationError
+    when the parameter is not valid according to the corresponding schema.
+    """
+    if schema is not None:
+      if schema.get('type') == 'string':
+        if schema.get('format') == 'base64':
+          try:
+            return base64.b64decode(parameter_value)
+          except (binascii.Error, TypeError) as e:
+            if isinstance(e, TypeError):
+              # BBB on python2 this raises a generic type error
+              # but we don't want to ignore potential TypeErrors
+              # on python3 here
+              if six.PY3:
+                raise
+            raise ParameterValidationError(
+              'Error validating request body: {e}'.format(e=str(e)))
+        elif schema.get('format') == 'binary':
+          return parameter_value or b''
+    return self.validateParameter(
+      'request body',
+      parameter_value,
+      {},
+      schema,
+    )
 
   def executeMethod(self, request):
     # type: (HTTPRequest) -> Any

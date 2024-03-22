@@ -25,6 +25,13 @@
 #
 ##############################################################################
 
+import six
+# pylint:disable=no-name-in-module
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
+# pylint:enable=no-name-in-module
 import io
 import json
 import unittest
@@ -1242,3 +1249,72 @@ class TestURLPathWithWebSiteAndVirtualHost(OpenAPIPetStoreTestCase):
         self.connector.getRelativeUrl()
     ))
     self.assertEqual(response.getBody(), b'"ok"')
+
+
+class TestOpenAPIRequestBody(OpenAPITestCase):
+  _type_id = 'Test Open API Request Body'
+
+  _open_api_schema = json.dumps(
+    {
+      'openapi': '3.0.3',
+      'info': {
+        'title': 'TestOpenAPIRequestBody',
+        'version': '0.0.0'
+      },
+      'paths': {
+        '/post': {
+          'post': {
+            'operationId': 'testPostByContentType',
+            'requestBody': {
+              'content': {
+                'image/*': {
+                  'schema': {
+                    'type': 'string',
+                    'format': 'binary',
+                  }
+                },
+                'application/x-base64': {
+                  'schema': {
+                    'type': 'string',
+                    'format': 'base64',
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+
+  def test_request_body_content_encoding(self):
+    self.addPythonScript(
+      'TestOpenAPIRequestBody_testPostByContentType',
+      'body=None',
+      'container.REQUEST.RESPONSE.setHeader("Content-Type", "application/octet-stream")\n'
+      'return body',
+    )
+    response = self.publish(
+      self.connector.getPath() + '/post',
+      request_method='POST',
+      stdin=io.BytesIO(b'png file content'),
+      env={"CONTENT_TYPE": 'image/png'})
+    self.assertEqual(response.getBody(), b'png file content')
+    self.assertEqual(response.getStatus(), 200)
+
+    response = self.publish(
+      self.connector.getPath() + '/post',
+      request_method='POST',
+      stdin=io.BytesIO(base64_encodebytes(b'base64 file content')),
+      env={"CONTENT_TYPE": 'application/x-base64'})
+    self.assertEqual(response.getBody(), b'base64 file content')
+    self.assertEqual(response.getStatus(), 200)
+
+    response = self.publish(
+      self.connector.getPath() + '/post',
+      request_method='POST',
+      stdin=io.BytesIO(b'not base64'),
+      env={"CONTENT_TYPE": 'application/x-base64'})
+    self.assertEqual(response.getStatus(), 400)
+    body = json.loads(response.getBody())
+    self.assertEqual(body['type'], 'parameter-validation-error')
+    self.assertIn('Error validating request body:', body['title'])
