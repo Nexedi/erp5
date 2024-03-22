@@ -75,7 +75,9 @@ class TestRESTAPIClientConnector(ERP5TypeTestCase):
     ) as mock_https_connection_request, mock.patch(
       'six.moves.http_client.HTTPSConnection.getresponse',
       return_value=HTTPResponse_getresponse()
-    ), mock.patch('six.moves.http_client.HTTPSConnection', return_value=HTTPSConnection) as mock_https_connection:
+    ), mock.patch(
+      'erp5.component.mixin.RESTAPIClientConnectorMixin.HTTPSConnection',
+      return_value=HTTPSConnection) as mock_https_connection:
       header_dict, body_dict, status = self.rest_api_client_connection.call(
         archive_resource=None,
         method='POST',
