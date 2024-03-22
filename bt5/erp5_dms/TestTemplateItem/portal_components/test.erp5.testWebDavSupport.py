@@ -286,10 +286,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
     file_object = self.makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
     document_module = self.getDocumentModule()
     document = document_module[filename]
 
