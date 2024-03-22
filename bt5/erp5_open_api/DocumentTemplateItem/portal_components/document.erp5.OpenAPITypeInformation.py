@@ -175,13 +175,15 @@ class OpenAPIOperation(dict):
     # type: (HTTPRequest) -> Optional[dict]
     """Returns the schema for the request body, or None if no `requestBody` defined
     """
-    request_content_type = request.getHeader('content-type')
-    # TODO there might be $ref ?
-    request_body_definition = self.get(
-      'requestBody', {'content': {}})['content'].get(request_content_type)
-    if request_body_definition:
-      return SchemaWithComponents(
-        self._schema, request_body_definition.get('schema', {}))
+    exact_request_content_type = request.getHeader('content-type')
+    wildcard_request_content_type = '%s/*' % ((exact_request_content_type or '').split('/')[0])
+    for request_content_type in exact_request_content_type, wildcard_request_content_type, '*/*':
+      # TODO there might be $ref ?
+      request_body_definition = self.get(
+        'requestBody', {'content': {}})['content'].get(request_content_type)
+      if request_body_definition:
+        return SchemaWithComponents(
+          self._schema, request_body_definition.get('schema', {}))
 
 
 class OpenAPIParameter(dict):
