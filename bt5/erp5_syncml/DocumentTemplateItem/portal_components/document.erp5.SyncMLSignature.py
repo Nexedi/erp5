@@ -220,12 +220,12 @@ class SyncMLSignature(XMLObject):
   def getFirstPdataChunk(self, max_len):
     """
     """
-    partial_data = self._baseGetPartialData()
+    partial_data = bytes(self._baseGetPartialData()).decode('utf-8')
     chunk = partial_data[:max_len]
     rest_in_queue = partial_data[max_len:]
     if rest_in_queue is not None:
-      self.setPartialData(rest_in_queue)
-    return bytes(chunk)
+      self.setPartialData(rest_in_queue.encode('utf-8'))
+    return chunk.encode('utf-8')
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setSubscriberXupdate')

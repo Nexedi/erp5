@@ -124,24 +124,6 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     self._setPredicateValueList(new_predicate_value)
     # No reindex needed since uid stable
 
-  # XXX FIXME: option variation are today not well implemented
-  # This little hack is needed to make the matrixbox working
-  # in DeliveryLine_viewIndustrialPhase
-  # Generic form (DeliveryLine_viewOption) is required
-  def _edit(self, **kw):
-    """
-    Store variation_category_list, in order to store new value of
-    industrial_phase after.
-    """
-    edit_order = ['variation_category_list', # edit this one first
-                  'item_id_list']            # this one must be the last
-    edit_order[1:1] = [x for x in kw.pop('edit_order', ())
-                       if x not in edit_order]
-    # Base._edit updates unordered properties first
-    edit_order[1:1] = [x for x in kw if x not in edit_order]
-    MappedValue._edit(self, edit_order=edit_order, **kw)
-#       if self.isSimulated():
-#         self.getRootDeliveryValue().activate().propagateResourceToSimulation()
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateSimulationDeliveryProperties')

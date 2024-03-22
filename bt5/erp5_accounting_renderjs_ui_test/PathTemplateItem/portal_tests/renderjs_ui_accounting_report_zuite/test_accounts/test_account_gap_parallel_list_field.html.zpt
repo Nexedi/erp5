@@ -90,23 +90,22 @@ Test Account GAP Parallel listfield.
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//label[@for='subfield_field_my_gap_list_my_country/my_accounting_standards' and text()='GAP - My Accounting Standards']</td>
+  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//label[@for='subfield_field_my_gap_list_another_country/another_standards' and text()='GAP - Another Standards']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//p[text()='1 - Equity Accounts']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//label[@for='subfield_field_my_gap_list_another_country/another_standards' and text()='GAP - Another Standards']</td>
+  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//p[text()='1 - Dummy Account']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//p[text()='1 - Dummy Account']</td>
+  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//label[@for='subfield_field_my_gap_list_my_country/my_accounting_standards' and text()='GAP - My Accounting Standards']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_gap_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//p[text()='1 - Equity Accounts']</td>
   <td></td>
 </tr>
 

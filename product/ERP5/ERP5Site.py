@@ -988,7 +988,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
         for state in wf.getStateValueList():
           if group in state.getStateTypeList():
             state_set.add(state.getReference())
-      return tuple(state_set)
+      return tuple(sorted(state_set))
 
     getStateList = CachingMethod(getStateList,
                                  id=('_getPortalGroupedStateList', group),

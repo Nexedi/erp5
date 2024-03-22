@@ -84,7 +84,7 @@
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>
+  <td>//div[@class="listbox-title"]//span[text()="Edit Workflow"]/../../..//span[contains(@class, "current-page-total-number")]</td>
   <td>4 records</td> <!-- Creation + edited 3 times -->
 </tr>
 
@@ -92,7 +92,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
 <tr>
   <td>clickAndWait</td>
-  <td>//tr[@class='x0_listbox-data-line-1 DataB']/td[4]/a</td>
+  <td>//div[@class="listbox-title"]//span[text()="Edit Workflow"]/../../../../../..//table//tr[2]/td[4]/a</td>
   <td></td>
 </tr>
 <tr>
@@ -157,7 +157,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
 <tr>
 <td>clickAndWait</td>
-  <td>//tr[@class='x0_listbox-data-line-2 DataA']/td[4]/a</td>
+  <td>//div[@class="listbox-title"]//span[text()="Edit Workflow"]/../../../../../..//table//tr[3]/td[4]/a</td>
   <td></td>
 </tr>
 </tal:block>
@@ -235,7 +235,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
 <tr>
   <td>clickAndWait</td>
-  <td>//tr[@class='x0_listbox-data-line-3 DataB']/td[4]/a</td>
+  <td>//div[@class="listbox-title"]//span[text()="Edit Workflow"]/../../../../../..//table//tr[4]/td[4]/a</td>
   <td></td>
 </tr>
 </tal:block>

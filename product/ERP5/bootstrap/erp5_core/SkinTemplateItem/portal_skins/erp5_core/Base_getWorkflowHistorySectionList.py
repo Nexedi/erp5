@@ -11,5 +11,5 @@ return [
       "workflow_id": workflow_id,
       "workflow_title": portal_workflow[workflow_id].title or workflow_id},
     temporary_selection=False)
-  for workflow_id in context.Base_getWorkflowHistory()
+  for workflow_id in sorted(context.Base_getWorkflowHistory())
 ]

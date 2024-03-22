@@ -14,6 +14,7 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from collections import OrderedDict
 import six
 from six import string_types as basestring
 from six.moves import xrange
@@ -132,6 +133,9 @@ else:
     return wrapper
 
 list_type_list = list, tuple, set, frozenset
+if six.PY3:
+  import collections.abc
+  list_type_list = list_type_list + (collections.abc.MappingView,)
 try:
   from ZPublisher.HTTPRequest import record
 except ImportError:
@@ -1928,7 +1932,7 @@ class Catalog(Folder,
       )
     else:
       query_list = []
-      value_dict = {}
+      value_dict = OrderedDict()
       append = query_list.append
       for subnode in node.getNodeList():
         if subnode.isLeaf():

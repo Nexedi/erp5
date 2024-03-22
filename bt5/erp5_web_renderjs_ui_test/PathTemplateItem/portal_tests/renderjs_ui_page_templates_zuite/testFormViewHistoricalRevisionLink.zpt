@@ -143,21 +143,46 @@
 <tr>
   <td>verifyText</td>
   <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[1]</td>
-  <td>short_title</td>
+  <td>frozen</td>
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[2]</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[1]</td>
+  <td>lines_list</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[2]</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[3]</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[3]</td>
+  <td>Foo,Bar</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[4]</td>
+  <td>Foo,Bar</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[3]/td[1]</td>
+  <td>short_title</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[3]/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[3]/td[3]</td>
   <td>A new foo</td>
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[4]</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[3]/td[4]</td>
   <td>A new foo</td>
 </tr>
 
