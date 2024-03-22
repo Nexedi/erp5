@@ -554,7 +554,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # unused variables
            '--dummy-variables-rgx=_$|dummy|__traceback_info__|__traceback_supplement__',
       ]
-
+      if six.PY3:
+        args.append("--msg-template='{C}: {line},{column}: {msg} ({symbol})'")
       if portal_type == 'Interface Component':
         # __init__ method from base class %r is not called
         args.append('--disable=W0231')
