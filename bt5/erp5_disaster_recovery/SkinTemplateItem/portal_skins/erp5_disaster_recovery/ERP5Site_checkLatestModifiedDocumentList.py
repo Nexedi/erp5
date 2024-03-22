@@ -15,5 +15,5 @@ if result_count:
     portal.portal_activities.activate(activity='SQLQueue', priority=3).ERP5Site_checkLatestModifiedDocumentList(document_list[-1].uid, limit, packet_size, before, now)
 
   column_list = [(x.path, x.uid) for x in document_list]
-  for i in xrange(0, result_count, packet_size):
+  for i in range(0, result_count, packet_size):
     portal.portal_activities.activate(activity='SQLQueue').ERP5Site_reindexOrUnindexDocumentList(column_list[i:i+packet_size])
