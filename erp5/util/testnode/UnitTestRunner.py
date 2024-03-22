@@ -32,14 +32,10 @@ import logging
 from . import logger
 from .ProcessManager import SubprocessError, format_command
 from .SlapOSControler import SlapOSControler
-from .Utils import createFolder
+from .Utils import createFolder, dealShebang
 from slapos.grid.utils import md5digest
 
-def dealShebang(run_test_suite_path):
-  with open(run_test_suite_path) as f:
-    if f.read(2) == '#!':
-      return f.readline().split(None, 1)
-  return []
+
 
 class UnitTestRunner(object):
 
@@ -203,6 +199,7 @@ class UnitTestRunner(object):
                           log_prefix='runTestSuite',
                           output_replacers=(hide_distributor_url,),
                           get_output=False)
+    return {'status_code' : 0}
 
   def getRelativePathUsage(self):
     """
