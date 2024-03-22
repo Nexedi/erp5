@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>MailevaSOAPConnector_getAvailableConnector</string> </value>
+            <value> <string>ERP5Site_getAvailableMailevaSOAPConnector</string> </value>
         </item>
       </dictionary>
     </pickle>
