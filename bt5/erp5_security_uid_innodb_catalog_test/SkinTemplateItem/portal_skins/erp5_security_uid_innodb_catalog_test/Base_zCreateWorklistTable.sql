@@ -2,8 +2,8 @@ DROP TABLE IF EXISTS worklist_cache
 <dtml-var sql_delimiter>
 CREATE TABLE `worklist_cache` (
   `count` INT UNSIGNED NOT NULL,
-  `owner` VARCHAR(32) DEFAULT '',
-  `viewable_owner` VARCHAR(32) NOT NULL DEFAULT '',
+  `owner` VARCHAR(255) binary DEFAULT '',
+  `viewable_owner` VARCHAR(255) binary NOT NULL DEFAULT '',
   `security_uid` INT UNSIGNED NOT NULL,
   `alternate_security_uid` INT UNSIGNED,
   `other_security_uid` INT UNSIGNED,
