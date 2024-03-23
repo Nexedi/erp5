@@ -104,6 +104,9 @@
                         <string>my_url_string</string>
                         <string>my_supply_computer</string>
                         <string>my_group_reference</string>
+                        <string>my_software_type</string>
+                        <string>my_shared</string>
+                        <string>my_filter_kw</string>
                       </list>
                     </value>
                 </item>

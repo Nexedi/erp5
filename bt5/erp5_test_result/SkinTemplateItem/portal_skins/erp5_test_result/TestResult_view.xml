@@ -87,7 +87,6 @@
                       <list>
                         <string>listbox_string_index</string>
                         <string>listbox_start_date</string>
-                        <string>listbox_duration</string>
                       </list>
                     </value>
                 </item>
@@ -100,7 +99,6 @@
                         <string>my_id</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>your_real_duration</string>
                       </list>
                     </value>
                 </item>
