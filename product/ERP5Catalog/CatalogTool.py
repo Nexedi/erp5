@@ -624,7 +624,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       user = _getAuthenticatedUser(self)
       user_str = user.getIdOrUserName()
-      if isinstance(user_str, six.text_type):
+      if six.PY2 and isinstance(user_str, six.text_type):
         user_str = user_str.encode('utf-8')
       user_is_superuser = (user == system_user) or (user_str == ERP5Security.SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
