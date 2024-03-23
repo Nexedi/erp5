@@ -5,8 +5,8 @@
 CREATE TABLE `catalog` (
   `uid` BIGINT UNSIGNED NOT NULL,
   `security_uid` INT UNSIGNED,
-  `owner` varbinary(255) NOT NULL default '',
-  `viewable_owner` varbinary(255) NOT NULL default '',
+  `owner` varchar(255) binary NOT NULL default '',
+  `viewable_owner` varchar(255) binary NOT NULL default '',
   `path` varchar(255) NOT NULL default '',
   `relative_url` varchar(255) NOT NULL default '',
   `parent_uid` BIGINT UNSIGNED default '0',
