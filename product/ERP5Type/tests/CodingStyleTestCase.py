@@ -62,10 +62,9 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     """
     Return the list of business templates to be
     checked for consistency. By default, return
-    the last business template of the
-    list of installed business templates.
+    all installed business templates.
     """
-    return self.getBusinessTemplateList()[-1:]
+    return self.getBusinessTemplateList()
 
   def afterSetUp(self):
     self.login()
