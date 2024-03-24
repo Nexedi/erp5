@@ -26,14 +26,17 @@
 ##############################################################################
 
 import os
+import socket
 import unittest
 import urlparse
+
+import mock
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
-class TestSFTPConnection(ERP5TypeTestCase):
-  if os.environ.get("testSFTPConnection_SFTP_URL"):
+if os.environ.get("testSFTPConnection_SFTP_URL"):
+  class TestSFTPConnection(ERP5TypeTestCase):
     def afterSetUp(self):
       url = os.environ["testSFTPConnection_SFTP_URL"]
       parsed_url = urlparse.urlparse(url)
@@ -98,7 +101,25 @@ class TestSFTPConnection(ERP5TypeTestCase):
       self.connection.removeDirectory("foo")
       self.assertItemsEqual([], self.connection.listFiles("."))
 
-  else:
+  class TestSFTPConnectionDisabledPublicKeyAlgorithms(TestSFTPConnection):
+    def afterSetUp(self):
+      url = os.environ["testSFTPConnection_SFTP_URL"]
+      parsed_url = urlparse.urlparse(url)
+      self.connection = self.portal.portal_web_services.newContent(
+          portal_type='FTP Connector',
+          reference=self.id(),
+          user_id=parsed_url.username,
+          password=parsed_url.password,
+          url_string=url,
+          url_protocol='sftp',
+          use_temporary_file_on_write=False,
+          disabled_public_key_algorithm_list=[
+            'rsa-sha2-256',
+            'rsa-sha2-512',
+          ]
+      )
+else:
+  class TestSFTPConnection(ERP5TypeTestCase):
     def test_no_SFTP_URL_in_environ(self):
       raise unittest.SkipTest(
         """This test needs the environment variable testSFTPConnection_SFTP_URL set to the URL of a SFTP connection.
@@ -107,3 +128,37 @@ class TestSFTPConnection(ERP5TypeTestCase):
         The directory from this URL must be empty and writeable.
         """
       )
+
+
+class TestSFTPConnectionMock(ERP5TypeTestCase):
+  def test_disabled_public_key_algorithm_list(self):
+    connection = self.portal.portal_web_services.newContent(
+      portal_type='FTP Connector',
+      reference=self.id(),
+      user_id='user',
+      password='pass',
+      url_string='sftp://sftp-example.erp5.net:21',
+      url_protocol='sftp',
+      use_temporary_file_on_write=False,
+      disabled_public_key_algorithm_list=[
+        'rsa-sha2-256',
+        'rsa-sha2-512',
+      ]
+    )
+    with mock.patch('erp5.component.module.erp5_version.SFTPConnection.Transport') as Transport,\
+        mock.patch('erp5.component.module.erp5_version.SFTPConnection.SFTPClient') as SFTPClient,\
+        mock.patch(
+          'erp5.component.module.erp5_version.SFTPConnection.getaddrinfo',
+          return_value=(
+            (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('127.0.0.1', 21)),
+          )
+        ),\
+        mock.patch(
+          'erp5.component.module.erp5_version.SFTPConnection.socket',
+        ) as sock:
+      connection.listFiles(".")
+    sock().connect.assert_called_once_with(('sftp-example.erp5.net', 21))
+    Transport.assert_called_once_with(
+      sock(),
+      disabled_algorithms={'pubkeys': ['rsa-sha2-256', 'rsa-sha2-512']})
+    SFTPClient.from_transport.assert_called_once()
