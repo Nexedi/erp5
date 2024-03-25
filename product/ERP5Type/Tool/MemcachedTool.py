@@ -37,7 +37,7 @@ from quopri import encodestring
 import six
 
 MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
-class _MemcacheTool(BaseTool):
+class _MemcachedTool(BaseTool):
   id = "portal_memcached"
   meta_type = "ERP5 Memcached Tool"
   portal_type = "Memcached Tool"
@@ -275,7 +275,7 @@ if memcache is not None:
 
   allow_class(SharedDict)
 
-  class MemcachedTool(_MemcacheTool):
+  class MemcachedTool(_MemcachedTool):
     """
       Memcached interface available as a tool.
     """
