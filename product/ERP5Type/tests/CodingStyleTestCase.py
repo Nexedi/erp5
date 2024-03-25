@@ -290,7 +290,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
                   'category': action_category,
                   'action_name': action_name,
               })
-      self.assertEqual(duplicate_action_list, [])
+    self.assertEqual(duplicate_action_list, [])
 
   def test_workflow_consistency(self):
     self.maxDiff = None
