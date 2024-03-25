@@ -187,22 +187,6 @@ class Getter(Method):
 
     psyco.bind(__call__)
 
-    class __roles__:
-      @staticmethod
-      def rolesForPermissionOn(ob):
-        self = ob.__self__
-        name = '%s__roles__' % ob.__name__
-        # we explictly call _aq_dynamic to prevent acquiering the attribute
-        # from container
-        roles = getattr(self.__class__, name, self)
-        if roles is self:
-          roles = self._aq_dynamic(name)
-          if roles is None:
-            return rolesForPermissionOn(None, self, ('Manager',),
-                                        '_Access_contents_information_Permission')
-        return getattr(roles, '__of__', lambda aq_parent: roles)(self)
-
-
 class Tester(Method):
     """
       Tests if an attribute value exists
