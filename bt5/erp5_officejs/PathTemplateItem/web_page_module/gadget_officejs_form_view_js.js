@@ -145,6 +145,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
@@ -152,7 +153,137 @@
 
     // XXX fix date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this;
+      var gadget = this, jio_gadget;
+      console.log("jio_allDocs params", param_list[0]);
+      if (param_list[0].query.indexOf('portal_type:"Promise"') !== -1 &&
+          gadget.state.doc && gadget.state.doc.source) {
+        return new RSVP.Queue()
+          .push(function () {
+            return gadget.declareGadget('gadget_officejs_monitoring_jio.html');
+          })
+          .push(function (result) {
+            jio_gadget = result;
+            console.log("jio_alldocs for a promise!");
+            console.log("gadget.state.doc:", gadget.state.doc);
+            console.log("creating webhttp jio with url:", gadget.state.doc.source_url);
+            return jio_gadget.createJio({
+              type: "webhttp",
+              // XXX fix of url
+              url: gadget.state.doc.source_url.replace("jio_public", "public")
+            });
+          })
+          .push(function () {
+            console.log("jio created");
+            console.log("get id:", gadget.state.doc.source + ".history");
+            // get history file on live
+            return jio_gadget.get(
+              gadget.state.doc.source + ".history"
+            )
+              .push(undefined, function (error) {
+                console.log("error, no status_history");
+                if (error.name === "cancel") {
+                  return undefined;
+                }
+                return gadget.notifySubmitted({
+                  status: "error",
+                  message: "Failed to get promise history content! \n" +
+                    error.message || ''
+                })
+                  .push(function () {
+                    return undefined;
+                  });
+              })
+              .push(function (status_history) {
+                var i, len, start, result = {};
+                result.data = {rows: [], total_rows: 0};
+
+                function addUTCTimezone(date_string) {
+                  if (new RegExp(/[+-][\d]{2}\:?[\d]{2}$/).test(date_string)) {
+                    return date_string;
+                  }
+                  return date_string + "+0000";
+                }
+
+                if (status_history && status_history.hasOwnProperty('data')) {
+                  // the status history list is reversed ([old, ...., newest])
+                  len = status_history.data.length;
+                  start = len - param_list[0].limit[0] - 1;
+                  //lines = param_list[0].limit[1] - param_list[0].limit[0];
+                  if (start < 0) {
+                    start = len - 1;
+                  }
+                  //if (lines > len) {
+                  //  lines = len - start;
+                  //}
+                  for (i = start; i >= 0; i -= 1) {
+                    result.data.total_rows += 1;
+                    result.data.rows.push({
+                      value: {
+                        status: {
+                          field_gadget_param: {
+                            css_class: "",
+                            description: "The Status",
+                            hidden: 0,
+                            "default": status_history.data[i].status,
+                            key: "status",
+                            url: "gadget_erp5_field_status.html",
+                            title: "Status",
+                            type: "GadgetField"
+                          }
+                        },
+                        start_date: {
+                          field_gadget_param: {
+                            allow_empty_time: 0,
+                            ampm_time_style: 0,
+                            css_class: "date_field",
+                            date_only: 0,
+                            description: "The Date",
+                            editable: 0,
+                            hidden: 0,
+                            hidden_day_is_last_day: 0,
+                            "default": addUTCTimezone(status_history.data[i].date ||
+                              status_history.data[i]['start-date']),
+                            key: "start_date",
+                            required: 0,
+                            timezone_style: 1,
+                            title: "Date",
+                            type: "DateTimeField"
+                          }
+                        },
+                        change_date:  {
+                          field_gadget_param: {
+                            allow_empty_time: 0,
+                            ampm_time_style: 0,
+                            css_class: "date_field",
+                            date_only: 0,
+                            description: "The Date",
+                            editable: 0,
+                            hidden: 0,
+                            hidden_day_is_last_day: 0,
+                            "default": addUTCTimezone(status_history.data[i]['change-date'] ||
+                              new Date(status_history.data[i]['change-time'] * 1000)
+                              .toUTCString()),
+                            key: "change_date",
+                            required: 0,
+                            timezone_style: 1,
+                            title: "Status Date",
+                            type: "DateTimeField"
+                          }
+                        },
+                        message: status_history.data[i].message,
+                        "listbox_uid:list": {
+                          key: "listbox_uid:list",
+                          value: 2713
+                        }
+                      }
+                    });
+                  }
+                }
+                console.log("result:", result);
+                return result;
+              });
+          });
+      }
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
           var i, date, len = result.data.total_rows, date_key_array,
@@ -188,7 +319,9 @@
                 };
               }
             });
+            console.log("jio_allDocs result data row", result.data.rows[i].value);
             //TODO make it customizable from config
+            //use global var set from config style_columns
             status_key_array.forEach((status_key) => {
               if (result.data.rows[i].value.hasOwnProperty(status_key)) {
                 status = result.data.rows[i].value[status_key];
