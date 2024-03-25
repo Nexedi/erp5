@@ -1,6 +1,8 @@
 from six import string_types as basestring
 import re
 import json
+import sys
+from zExceptions import ExceptionFormatter
 from Products.ERP5Type.Utils import checkPythonSourceCode
 
 
@@ -47,7 +49,15 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   else:
     body = data['code']
 
-  message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
+  try:
+    message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
+  except Exception:
+    message_list = [{
+      'type': 'E',
+      'row': 0,
+      'column': 0,
+      'text': 'pylint failed:\n%s' % ''.join(ExceptionFormatter.format_exception(*sys.exc_info())),
+    }]
   for message_dict in message_list:
     if is_script:
       message_dict['row'] = message_dict['row'] - 4
