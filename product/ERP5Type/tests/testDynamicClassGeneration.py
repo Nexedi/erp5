@@ -1907,11 +1907,18 @@ class TestZodbModuleComponent(SecurityTestCase):
     component.setTextContent("""import unexistent_module
 """ + valid_code)
     self.tic()
-    self.assertEqual(
-      [m.getMessage().translate() for m in component.checkConsistency()],
-      ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
-    self.assertEqual(component.getTextContentErrorMessageList(),
-                      ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    if six.PY2:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    else:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
     self.assertEqual(component.getTextContentWarningMessageList(),
                       ["W:  1,  0: Unused import unexistent_module (unused-import)"])
 
@@ -2693,7 +2700,7 @@ foobar = foobar().f
     base = self.portal.getPath()
     for query in 'x:int=-24&y:int=66', 'x:int=41':
       path = '%s/TestExternalMethod?%s' % (base, query)
-      self.assertEqual(self.publish(path).getBody(), '42')
+      self.assertEqual(self.publish(path).getBody(), b'42')
 
     # Test from a Python Script
     createZODBPythonScript(self.portal.portal_skins.custom,
