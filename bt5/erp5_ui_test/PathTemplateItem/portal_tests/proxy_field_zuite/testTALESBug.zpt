@@ -1,0 +1,54 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Simple Relation Field, using metadata tab to set categories</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test a bug</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Base_checkProxyFieldCache</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>field_your_couscous_1</td>
+  <td>your_couscous_1</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>field_your_couscous_2</td>
+  <td>your_couscous_2</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

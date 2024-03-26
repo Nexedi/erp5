@@ -1,0 +1,138 @@
+@colorheaderbackground: #085078;
+@colorsubheaderbackground: #0E81C2;
+@foreground-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+@colorlabel: hsl(0, 0%, 42%);
+@margin-size: 6pt;
+@double-margin-size: 12pt;
+@border-size: 1px;
+@border-type: solid;
+@border-transparency: .3;
+@border-color: rgba(0, 0, 0, @border-transparency);
+@border: @border-size @border-type @border-color;
+@border-radius: @radius;
+@radius: .325em;
+@white: #FFFFFF;
+@colorbackground: @white;
+@colorblocklinkbackground: #e0e0e0;
+@smartphone: ~"not screen and (min-width: 45em)";
+@tablet: ~"only screen and (min-width: 45em) and (max-width: 85em)";
+@desktop: ~"not screen and (max-width: 85em)";
+@listboxbordercolor: rgba(0, 0, 0, 0.14902);
+
+
+.button() {
+  padding: @margin-size;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: @border-radius;
+  background-color: @colorbackground;
+  &::before{
+    margin-right: @margin-size;
+  }
+  &:hover, &:active {
+    background-color: @colorblocklinkbackground;
+  }
+}
+
+.hide_text(@width: 3em) {
+  // https://css-tricks.com/forums/topic/hide-text-but-not-the-before-pseudo-class/
+  & when (@width > 0) {
+    width: @width;
+  }
+  overflow: hidden;
+  text-indent: -9999px;
+  white-space: nowrap;
+}
+
+
+
+@avatar_size: 3em;
+
+div[data-gadget-url$="gadget_thread_reader.html"] {
+  // Limit the width to make reading more pleasant on large screen
+  max-width: 50em;
+
+  & > ol {
+    background-color: @colorbackground;
+
+    & > li {
+      padding-bottom: @double-margin-size;
+/*
+      &:nth-child(even) {
+        background-color: rgba(230, 230, 230, 0.65);
+      }
+*/
+      & > div.post_content {
+        display: inline-block;
+        & > time {
+          color: @colorlabel;
+        }
+        & > div {
+          // Separate post info (user and time) from content
+          margin-top: @margin-size;
+        }
+      }
+
+      & > div.post_avatar {
+        display: inline-block;
+        margin-right: @margin-size;
+        width: @avatar_size;
+        height: @avatar_size;
+        line-height: @avatar_size;
+        text-align: center;
+        border-radius: 50%;
+        background: @colorsubheaderbackground;
+        color: @white;
+        text-shadow: @foreground-text-shadow;
+        vertical-align: top;
+        text-transform: uppercase;
+      }
+
+
+
+      & + li {
+        // Separate posts
+        border-top: solid 1px @colorsubheaderbackground;
+        padding-top: @margin-size;
+      }
+    }
+  }
+
+  & > nav {
+    // XXX Copied from listbox
+    display: flex;
+    padding-top: @margin-size;
+    border-top: 2px solid @listboxbordercolor;
+
+    span {
+      opacity: .3;
+      flex: 2;
+      text-align: right;
+      float: right;
+    }
+    a {
+      .button();
+
+      margin-right: @margin-size;
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      &:hover, &:active {
+        background-color: @colorblocklinkbackground;
+      }
+
+      @media @smartphone {
+        .hide_text(@width: initial);
+      }
+
+      &::before {
+
+        @media @smartphone {
+          float: left;
+          text-indent: @margin-size;
+        }
+      }
+    }
+
+  }
+}

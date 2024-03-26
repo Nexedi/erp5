@@ -716,7 +716,7 @@
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
-                                <value> <int>600</int> </value>
+                                <value> <int>86400</int> </value>
                             </item>
                             <item>
                                 <key> <string>_mtime_func</string> </key>
@@ -821,7 +821,7 @@
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
-                                <value> <int>600</int> </value>
+                                <value> <int>3600</int> </value>
                             </item>
                             <item>
                                 <key> <string>_mtime_func</string> </key>
