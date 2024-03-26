@@ -70,11 +70,24 @@
           return appcache_storage.repair(current_version);
         })
         .push(function () {
+          console.log("appcache repaired.");
           return jio_storage.repair();
         })
         .push(function () {
+          console.log("jio repaired.");
           return gadget.setSetting("migration_version", current_version);
         });
+    })
+
+    .declareMethod('createStorage', function (options, monitoring_jio) {
+      var gadget = this;
+      if (options !== undefined) {
+        gadget.props.jio_storage = jIO.createJIO(options);
+        console.log("jio options created!");
+      } else {
+        gadget.props.jio_storage = jIO.createJIO(monitoring_jio);
+        console.log("monitoring_jio created!");
+      }
     })
 
     .declareMethod('createJio', function (options) {
@@ -88,72 +101,105 @@
           migration_version = result_list[1];
           current_version = window.location.href.replace(window.location.hash, "");
           index = current_version.indexOf(window.location.host) + window.location.host.length;
-          current_version = current_version.substr(index);
-          if (migration_version !== current_version) {
-            //XXX is this a dirty hack?
-            indexedDB.deleteDatabase('monitoring-configuration-hash');
-            indexedDB.deleteDatabase('monitoring_local.db');
-          }
+          current_version = current_version.substr(index);/*
+          return;
+        })
+        .push(function () {
+          */
           manifest = "gadget_officejs_monitoring.configuration";
-          if (options !== undefined) {
-            gadget.props.jio_storage = jIO.createJIO(options);
-          } else {
-            monitoring_jio = {
-              type: "replicatedopml",
-              remote_storage_unreachable_status: "WARNING",
-              remote_opml_check_time_interval: 86400000,
-              request_timeout: 25000, // timeout is to 25 second
-              local_sub_storage: {
-                type: "query",
-                sub_storage: {
-                  type: "uuid",
-                  sub_storage: {
-                    type: "indexeddb",
-                    database: "monitoring_local.db"
-                  }
-                }
-              }
-            };
-            appcache_jio = {
-              type: "replicate",
-              parallel_operation_attachment_amount: 10,
-              parallel_operation_amount: 1,
-              conflict_handling: 2, //keep remote
-              signature_hash_key: 'hash',
-              check_remote_attachment_modification: true,
-              check_remote_attachment_creation: true,
-              check_remote_attachment_deletion: true,
-              check_remote_deletion: true,
-              check_local_creation: false,
-              check_local_deletion: false,
-              check_local_modification: false,
-              signature_sub_storage: {
-                type: "query",
+          monitoring_jio = {
+            type: "replicatedopml",
+            remote_storage_unreachable_status: "WARNING",
+            remote_opml_check_time_interval: 86400000,
+            request_timeout: 25000, // timeout is to 25 second
+            local_sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "monitoring-configuration-hash"
-                }
-              },
-              local_sub_storage: JSON.parse(JSON.stringify(monitoring_jio)),
-              remote_sub_storage: {
-                type: "saferepair",
-                sub_storage: {
-                  type: "configuration",
-                  origin_url: origin_url,
-                  hateoas_appcache: "hateoas_appcache",
-                  manifest: manifest,
-                  sub_storage: {
-                    type: "appcache",
-                    origin_url: origin_url,
-                    manifest: manifest
-                  }
+                  database: "monitoring_local.db"
                 }
               }
-            };
-            gadget.props.jio_storage = jIO.createJIO(monitoring_jio);
-          }
+            }
+          };
+          appcache_jio = {
+            type: "replicate",
+            parallel_operation_attachment_amount: 10,
+            parallel_operation_amount: 1,
+            conflict_handling: 2, //keep remote
+            signature_hash_key: 'hash',
+            check_remote_attachment_modification: true,
+            check_remote_attachment_creation: true,
+            check_remote_attachment_deletion: true,
+            check_remote_deletion: true,
+            check_local_creation: false,
+            check_local_deletion: false,
+            check_local_modification: false,
+            signature_sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "indexeddb",
+                database: "monitoring-configuration-hash"
+              }
+            },
+            local_sub_storage: JSON.parse(JSON.stringify(monitoring_jio)),
+            remote_sub_storage: {
+              type: "saferepair",
+              sub_storage: {
+                type: "configuration",
+                origin_url: origin_url,
+                hateoas_appcache: "hateoas_appcache",
+                manifest: manifest,
+                sub_storage: {
+                  type: "appcache",
+                  origin_url: origin_url,
+                  manifest: manifest
+                }
+              }
+            }
+          };
+          return gadget.createStorage(options, monitoring_jio);
+        })
+        .push(function () {
           if (migration_version !== current_version) {
+            console.log("NEW APP VERSION! gadget.props.jio_storage:", gadget.props.jio_storage);
+            if (gadget.props.jio_storage) {
+              console.log("call jio_allDocs!");
+              return gadget.props.jio_storage.allDocs();
+            }
+          }
+        })
+        .push(function (all_docs) {
+          console.log("all_docs:", all_docs);
+          if (all_docs && all_docs.data.total_rows) {
+            //iterate all docs, jio_remove, and recreate
+            //for gadget.jio_remove(options.jio_key);
+            var remove_queue = new RSVP.Queue(), i;
+            function remove_doc(id) {
+              remove_queue
+                .push(function () {
+                  return gadget.props.jio_storage.remove(id);
+                });
+            }
+            for (i = 0; i < all_docs.data.total_rows; i += 1) {
+              remove_doc(all_docs.data.rows[i].id);
+            }
+            return RSVP.all([
+              remove_queue,
+              gadget.createStorage(options, monitoring_jio),
+              gadget.setSetting("latest_import_date", undefined)
+            ]);
+          } else {
+            console.log("no new version, no delete");
+          }
+        })
+        .push(function () {
+          console.log("remove part done");
+          if (migration_version !== current_version) {
+            console.log("new app version! recreate appcache and force repair");
             appcache_storage = jIO.createJIO(appcache_jio);
+            console.log("appcache_jio created");
             return gadget.updateConfiguration(appcache_storage, migration_version, current_version, gadget.props.jio_storage);
           }
         })
