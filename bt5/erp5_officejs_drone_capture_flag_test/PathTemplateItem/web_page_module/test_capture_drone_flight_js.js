@@ -3,8 +3,9 @@
 (function (window, rJS, domsugar, document) {
   "use strict";
 
-  var SIMULATION_SPEED = 10,
-    SIMULATION_TIME = 270,
+  var SIMULATION_SPEED = 1,
+    LOOP_INTERVAL = 1000 / 60,
+    SIMULATION_TIME = LOOP_INTERVAL / 1000,
     MIN_LAT = 45.6364,
     MAX_LAT = 45.65,
     MIN_LON = 14.2521,
@@ -74,7 +75,7 @@
       '    me.getCurrentPosition().longitude\n' +
       '  ).toFixed(8),\n' +
       '    time_interval = timestamp - me.start_time,\n' +
-      '    expected_interval = 1000 / 60,\n' +
+      '    expected_interval = ' + LOOP_INTERVAL + ',\n' +
       '    expectedDistance = (me.getSpeed() * expected_interval / 1000).toFixed(8);\n' +
       '    assert(time_interval, Math.floor(expected_interval), "Timestamp");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
@@ -84,7 +85,6 @@
       '    longitude: me.initialPosition.longitude,\n' +
       '    altitude: me.initialPosition.altitude\n' +
       '  });\n' +
-      '  me.exit(me.land());\n' +
       '};',
     DRAW = true,
     LOG = true,
@@ -120,19 +120,19 @@
                          "script_content": DEFAULT_SCRIPT_CONTENT};
       }
       map_json = {
-        "height": parseInt(map_height, 10),
-        "start_AMSL": parseFloat(start_AMSL),
-        "min_lat": parseFloat(MIN_LAT),
-        "max_lat": parseFloat(MAX_LAT),
-        "min_lon": parseFloat(MIN_LON),
-        "max_lon": parseFloat(MAX_LON),
+        "height": map_height,
+        "start_AMSL": start_AMSL,
+        "min_lat": MIN_LAT,
+        "max_lat": MAX_LAT,
+        "min_lon": MIN_LON,
+        "max_lon": MAX_LON,
         "flag_list": [],
         "obstacle_list" : [],
         "enemy_list" : [],
         "initial_position": {
-          "longitude": parseFloat(INIT_LON),
-          "latitude": parseFloat(INIT_LAT),
-          "altitude": parseFloat(INIT_ALT)
+          "longitude": INIT_LON,
+          "latitude": INIT_LAT,
+          "altitude": INIT_ALT
         }
       };
       operator_init_msg = {
@@ -142,20 +142,20 @@
       game_parameters_json = {
         "debug_test_mode": true,
         "drone": {
-          "maxAcceleration": parseInt(MAX_ACCELERATION, 10),
-          "maxDeceleration": parseInt(MAX_DECELERATION, 10),
-          "minSpeed": parseInt(MIN_SPEED, 10),
-          "speed": parseFloat(DEFAULT_SPEED),
-          "maxSpeed": parseInt(MAX_SPEED, 10),
-          "maxRoll": parseFloat(MAX_ROLL),
-          "minPitchAngle": parseFloat(MIN_PITCH),
-          "maxPitchAngle": parseFloat(MAX_PITCH),
-          "maxSinkRate": parseFloat(MAX_SINK_RATE),
-          "maxClimbRate": parseFloat(MAX_CLIMB_RATE),
+          "maxAcceleration": MAX_ACCELERATION,
+          "maxDeceleration": MAX_DECELERATION,
+          "minSpeed": MIN_SPEED,
+          "speed": DEFAULT_SPEED,
+          "maxSpeed": MAX_SPEED,
+          "maxRoll": MAX_ROLL,
+          "minPitchAngle": MIN_PITCH,
+          "maxPitchAngle": MAX_PITCH,
+          "maxSinkRate": MAX_SINK_RATE,
+          "maxClimbRate": MAX_CLIMB_RATE,
           "list": DRONE_LIST
         },
-        "gameTime": parseInt(SIMULATION_TIME, 10),
-        "simulation_speed": parseInt(SIMULATION_SPEED, 10),
+        "gameTime": SIMULATION_TIME,
+        "simulation_speed": SIMULATION_SPEED,
         "latency": {
           "information": 0,
           "communication": 0
@@ -214,19 +214,24 @@
         })
         .push(function (result) {
           var div = domsugar('div', { text: "CONSOLE LOG ENTRIES:" }), lines,
-            l, node;
+            l, test_log_node = document.querySelector('.test_log');
           document.querySelector('.container').parentNode.appendChild(div);
-          function createLogNode(message) {
+          function appendToTestLog(test_log_node, message) {
             var log_node = document.createElement("div"),
               textNode = document.createTextNode(message);
             log_node.appendChild(textNode);
-            return log_node;
+            test_log_node.appendChild(log_node);
           }
           lines = result.console_log.split('\n');
           for (l = 0; l < lines.length; l += 1) {
-            node = createLogNode(lines[l]);
-            document.querySelector('.test_log').appendChild(node);
+            if (lines[l] !== 'TIMEOUT!') {
+              appendToTestLog(test_log_node, lines[l]);
+            } else {
+              appendToTestLog(test_log_node, 'Timeout: OK');
+              return;
+            }
           }
+          appendToTestLog(test_log_node, 'Timeout: FAILED');
         }, function (error) {
           return gadget.notifySubmitted({message: "Error: " + error.message,
                                          status: 'error'});
