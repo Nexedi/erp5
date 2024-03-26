@@ -62,12 +62,15 @@
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
 
-    .declareMethod('updateConfiguration', function (appcache_storage, migration_version, current_version) {
+    .declareMethod('updateConfiguration', function (appcache_storage, migration_version, current_version, jio_storage) {
       var gadget = this;
       if (!appcache_storage) { return; }
       return RSVP.Queue()
         .push(function () {
           return appcache_storage.repair(current_version);
+        })
+        .push(function () {
+          return jio_storage.repair();
         })
         .push(function () {
           return gadget.setSetting("migration_version", current_version);
@@ -83,6 +86,14 @@
         .push(function (result_list) {
           //TODO fix missing router setting (it's set but get returns undefined)
           migration_version = result_list[1];
+          current_version = window.location.href.replace(window.location.hash, "");
+          index = current_version.indexOf(window.location.host) + window.location.host.length;
+          current_version = current_version.substr(index);
+          if (migration_version !== current_version) {
+            //XXX is this a dirty hack?
+            indexedDB.deleteDatabase('monitoring-configuration-hash');
+            indexedDB.deleteDatabase('monitoring_local.db');
+          }
           manifest = "gadget_officejs_monitoring.configuration";
           if (options !== undefined) {
             gadget.props.jio_storage = jIO.createJIO(options);
@@ -141,12 +152,9 @@
             };
             gadget.props.jio_storage = jIO.createJIO(monitoring_jio);
           }
-          current_version = window.location.href.replace(window.location.hash, "");
-          index = current_version.indexOf(window.location.host) + window.location.host.length;
-          current_version = current_version.substr(index);
           if (migration_version !== current_version) {
             appcache_storage = jIO.createJIO(appcache_jio);
-            return gadget.updateConfiguration(appcache_storage, migration_version, current_version);
+            return gadget.updateConfiguration(appcache_storage, migration_version, current_version, gadget.props.jio_storage);
           }
         })
         .push(function () {
