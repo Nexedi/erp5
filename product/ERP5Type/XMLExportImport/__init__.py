@@ -40,18 +40,23 @@
 from Acquisition import aq_base, aq_inner
 from collections import OrderedDict
 from io import BytesIO
-from zodbpickle.pickle import Pickler
+# XXX-zope4py3: Python3 C implementation does not have Unpickler.dispatch
+# attribute. dispatch_table should be used instead.
+from zodbpickle.slowpickle import Pickler
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
 from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
-from base64 import standard_b64encode
+import six
+if six.PY2:
+  from base64 import standard_b64encode, encodestring as encodebytes
+else:
+  from base64 import standard_b64encode, encodebytes
+
 from hashlib import sha1
 from Products.ERP5Type.Utils import ensure_list
 #from zLOG import LOG
-
-import six
 
 try:
   long_ = long
@@ -205,7 +210,7 @@ def Base_asXML(object, root=None):
   if return_as_object:
     return root
   return etree.tostring(root, encoding='utf-8',
-                        xml_declaration=True, pretty_print=True)
+                        xml_declaration=True, pretty_print=True).decode('utf-8')
 
 def Folder_asXML(object, omit_xml_declaration=True, root=None):
   """
@@ -227,11 +232,10 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
       o.asXML(root=root_node)
 
   return etree.tostring(root, encoding='utf-8',
-                        xml_declaration=xml_declaration, pretty_print=True)
+                        xml_declaration=xml_declaration, pretty_print=True).decode('utf-8')
 
 ## The code below was initially from OFS.XMLExportImport
 from six import string_types as basestring
-from base64 import encodestring
 from ZODB.serialize import referencesf
 from ZODB.ExportImport import TemporaryFile, export_end_marker
 from ZODB.utils import p64
@@ -261,7 +265,6 @@ def reorderPickle(jar, p):
                         new_oid=storage.new_oid):
 
         "Remap a persistent id to an existing ID and create a ghost for it."
-
         if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
 
@@ -278,34 +281,43 @@ def reorderPickle(jar, p):
     unpickler.persistent_load=persistent_load
 
     newp=BytesIO()
-    pickler=OrderedPickler(newp,1)
+    pickler = OrderedPickler(newp, 3)
     pickler.persistent_id=persistent_id
 
     classdef = unpickler.load()
     obj = unpickler.load()
     pickler.dump(classdef)
     pickler.dump(obj)
+
+    if 0: # debug
+      debugp = BytesIO()
+      debugpickler = OrderedPickler(debugp, 3)
+      debugpickler.persistent_id = persistent_id
+      debugpickler.dump(obj)
+      import pickletools
+      print(debugp.getvalue())
+      print(pickletools.dis(debugp.getvalue()))
+
     p=newp.getvalue()
     return obj, p
 
 def _mapOid(id_mapping, oid):
     idprefix = str(u64(oid))
     id = id_mapping[idprefix]
-    old_aka = encodestring(oid)[:-1]
-    aka=encodestring(p64(long_(id)))[:-1]  # Rebuild oid based on mapped id
+    old_aka = encodebytes(oid)[:-1]
+    aka=encodebytes(p64(long_(id)))[:-1]  # Rebuild oid based on mapped id
     id_mapping.setConvertedAka(old_aka, aka)
     return idprefix+'.', id, aka
 
 def XMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
-    q=ppml.ToXMLUnpickler
-    f=BytesIO(p)
-    u=q(f)
+    f = BytesIO(p)
+    u = ppml.ToXMLUnpickler(f)
     u.idprefix, id, aka = _mapOid(id_mapping, oid)
-    p=u.load(id_mapping=id_mapping).__str__(4)
+    p = u.load(id_mapping=id_mapping).__str__(4)
     if f.tell() < plen:
         p=p+u.load(id_mapping=id_mapping).__str__(4)
-    String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka, p)
+    String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka.decode(), p)
     return String
 
 def exportXML(jar, oid, file=None):
@@ -342,15 +354,21 @@ def exportXML(jar, oid, file=None):
 
     # Do real export
     if file is None:
-        file = TemporaryFile()
+        file = TemporaryFile(mode='w')
     elif isinstance(file, basestring):
-        file = open(file, 'w+b')
+        file = open(file, 'w')
     write = file.write
     write('<?xml version="1.0"?>\n<ZopeData>\n')
     for oid in reordered_oid_list:
         p = getReorderedPickle(oid)
         write(XMLrecord(oid, len(p), p, id_mapping))
     write('</ZopeData>\n')
+    if 0:
+      try:
+        print(file.getvalue())
+      except AttributeError:
+        pass
+      import pdb; pdb.set_trace()
     return file
 
 class zopedata:
@@ -393,30 +411,32 @@ def save_record(parser, tag, data):
 
 import xml.parsers.expat
 def importXML(jar, file, clue=''):
-    if type(file) is str:
-        file=open(file, 'rb')
-    outfile=TemporaryFile()
-    data=file.read()
-    F=ppml.xmlPickler()
-    F.end_handlers['record'] = save_record
-    F.end_handlers['ZopeData'] = save_zopedata
-    F.start_handlers['ZopeData'] = start_zopedata
-    F.binary=1
-    F.file=outfile
-    # <patch>
-    # Our BTs XML files don't declare encoding but have accented chars in them
-    # So we have to declare an encoding but not use unicode, so the unpickler
-    # can deal with the utf-8 strings directly
-    p=xml.parsers.expat.ParserCreate('utf-8')
-    if six.PY2:
-      p.returns_unicode = False
-    # </patch>
-    p.CharacterDataHandler=F.handle_data
-    p.StartElementHandler=F.unknown_starttag
-    p.EndElementHandler=F.unknown_endtag
-    r=p.Parse(data)
-    outfile.seek(0)
-    return jar.importFile(outfile,clue)
+    if isinstance(file, str):
+        with open(file, 'rb') as f:
+          data = f.read()
+    else:
+        data = file.read()
+    with TemporaryFile() as outfile:
+        F=ppml.xmlPickler()
+        F.end_handlers['record'] = save_record
+        F.end_handlers['ZopeData'] = save_zopedata
+        F.start_handlers['ZopeData'] = start_zopedata
+        F.binary=1
+        F.file=outfile
+        # <patch>
+        # Our BTs XML files don't declare encoding but have accented chars in them
+        # So we have to declare an encoding but not use unicode, so the unpickler
+        # can deal with the utf-8 strings directly
+        p=xml.parsers.expat.ParserCreate('utf-8')
+        if six.PY2:
+          p.returns_unicode = False
+        # </patch>
+        p.CharacterDataHandler=F.handle_data
+        p.StartElementHandler=F.unknown_starttag
+        p.EndElementHandler=F.unknown_endtag
+        r=p.Parse(data)
+        outfile.seek(0)
+        return jar.importFile(outfile, clue)
 
 customImporters = {
   magic: importXML

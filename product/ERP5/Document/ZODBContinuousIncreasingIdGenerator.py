@@ -59,6 +59,8 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     """
     if id_group in (None, 'None'):
       raise ValueError('%r is not a valid group Id.' % id_group)
+    if not isinstance(id_group, str):
+      raise TypeError('id_group must be str')
     if default is None:
       default = 0
     last_id_dict = getattr(self, 'last_id_dict', None)
@@ -109,6 +111,8 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       for id_group, last_id in portal_ids.dict_ids.items():
         if not isinstance(id_group, str):
           id_group = repr(id_group)
+        if isinstance(id_group, bytes):
+          raise NotImplementedErro('TODO' + repr(id_group))
         if id_group in self.last_id_dict and \
            self.last_id_dict[id_group] > last_id:
           continue
@@ -148,7 +152,9 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       self.clearGenerator()
     if not isinstance(id_dict, dict):
       raise TypeError('the argument given is not a dictionary')
-    for value in id_dict.values():
+    for key, value in id_dict.items():
+      if not isinstance(key, str):
+        raise TypeError('key %r given in dictionary is not str' % (key, ))
       if not isinstance(value, six.integer_types):
         raise TypeError('the value given in dictionary is not a integer')
     self.last_id_dict.update(id_dict)

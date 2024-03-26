@@ -1,3 +1,4 @@
+import six
 translateString = context.Base_translateString
 
 
@@ -110,9 +111,11 @@ line_list = []
 total_price = 0.0
 
 def unicodeDict(d):
-  for k, v in d.items():
+  if six.PY3:
+    return d
+  for k, v in six.iteritems(d):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k: unicode(v, 'utf8')})
   return d
 
 line_list = context.PaySheetTransaction_getLineListAsDict()

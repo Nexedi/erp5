@@ -1,5 +1,13 @@
+import six
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Form.Report import ReportSection
+
+if six.PY2:
+  def translate(*args, **kw):
+    return unicode(translateString(*args, **kw))
+else:
+  def translate(*args, **kw):
+    return str(translateString(*args, **kw))
 
 request = container.REQUEST
 section_category = request['section_category']
@@ -30,16 +38,16 @@ previous_period = 0
 for idx, period in enumerate(period_list):
   if idx != 0:
     previous_period = period_list[idx - 1]
-  selection_columns.append(('period_%s' % idx, unicode(translateString(
+  selection_columns.append(('period_%s' % idx, translate(
       'Period ${period_number} (from ${from} to ${to} days)',
       mapping={'period_number': 1 + idx,
                'from': previous_period,
-               'to': period} ))))
+               'to': period} )))
   editable_columns.append(('period_%s' % idx, ''))
 
 selection_columns.append(('period_%s' % (idx + 1),
-  unicode(translateString('Older (more than ${day_count} days)',
-   mapping={'day_count': period_list[-1]}))))
+  translate('Older (more than ${day_count} days)',
+   mapping={'day_count': period_list[-1]})))
 editable_columns.append(('period_%s' % (idx + 1), ''))
 
 selection_params = dict(section_category=section_category,

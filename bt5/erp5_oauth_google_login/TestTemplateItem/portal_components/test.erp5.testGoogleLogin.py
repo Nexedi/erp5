@@ -28,8 +28,8 @@
 import uuid
 import mock
 import lxml
-import urlparse
-import httplib
+import six.moves.urllib.parse
+import six.moves.http_client
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
@@ -163,8 +163,8 @@ class TestGoogleLogin(GoogleLoginTestCase):
         'erp5.component.extension.GoogleLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
     getAccessTokenFromCode_mock.assert_called_once()
     getUserEntry_mock.assert_called_once()
@@ -207,8 +207,8 @@ class TestGoogleLogin(GoogleLoginTestCase):
         'erp5.component.extension.GoogleLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
 
     getAccessTokenFromCode_mock.assert_called_once()
@@ -278,8 +278,8 @@ return credential_request
         'erp5.component.extension.GoogleLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       response = self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
     getAccessTokenFromCode_mock.assert_called_once()
     getUserEntry_mock.assert_called_once()
@@ -328,9 +328,9 @@ class TestERP5JSGoogleLogin(GoogleLoginTestCase):
         if img.attrib['alt'] == 'Sign in with Google'
     ]
     self.assertIn('/ERP5Site_redirectToGoogleLoginPage', google_login_link)
-    resp = self.publish(urlparse.urlparse(google_login_link).path)
+    resp = self.publish(six.moves.urllib.parse.urlparse(google_login_link).path)
     # this request redirects to google
-    self.assertEqual(resp.getStatus(), httplib.FOUND)
+    self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
     self.assertIn('google.com', resp.getHeader('Location'))
 
   def test_logout(self):

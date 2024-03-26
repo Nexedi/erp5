@@ -30,7 +30,7 @@
 
 """
 
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 import lxml
 
 from DateTime import DateTime
@@ -3394,9 +3394,9 @@ class TestAccountingExport(AccountingTestCase):
         '40 - Payable',
         self.account_module.payable.Account_getFormattedTitle())
     # check that this account name can be found in the content
-    self.assertIn('40 - Payable', content_xml)
+    self.assertIn(b'40 - Payable', content_xml)
     # check that we don't have unknown categories
-    self.assertNotIn('???', content_xml)
+    self.assertNotIn(b'???', content_xml)
 
 
 class TestTransactions(AccountingTestCase):
@@ -4330,7 +4330,7 @@ class TestTransactions(AccountingTestCase):
            dict(source_value=self.account_module.receivable,
                 source_credit=100.000001)))
     invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
-    self.assertRaises(invoice.AccountingTransaction_roundDebitCredit)
+    self.assertRaises(Exception, invoice.AccountingTransaction_roundDebitCredit)
 
   def test_roundDebitCredit_when_payable_is_different_total_price(self):
     invoice = self._makeOne(

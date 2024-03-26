@@ -37,6 +37,7 @@ from Products.ERP5Type.Cache import clearCache
 from Products.ERP5Type.Core.Folder import FragmentedLength, FRAGMENTED_LENGTH_THRESHOLD
 from AccessControl.ZopeGuards import guarded_getattr
 from zExceptions import Unauthorized
+from six.moves import range
 
 class TestFolder(ERP5TypeTestCase, LogInterceptor):
 
@@ -108,7 +109,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
               'return %s[len(context)]' % (repr(id_generator_id_list), ))
     self.folder.setIdGenerator(id_generator_script_name)
     self.assertEqual(self.folder.getIdGenerator(), id_generator_script_name)
-    for expected_length in xrange(len(id_generator_id_list)):
+    for expected_length in range(len(id_generator_id_list)):
       self.assertEqual(len(self.folder), expected_length)
       obj = self.newContent()
       self.assertEqual(obj.getId(), id_generator_id_list[expected_length])
@@ -278,7 +279,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(folder), 1)
     self.assertIsInstance(folder_dict['_count'], Length)
     original_length_oid = folder_dict['_count']._p_oid
-    for _ in xrange(FRAGMENTED_LENGTH_THRESHOLD - len(folder) - 1):
+    for _ in range(FRAGMENTED_LENGTH_THRESHOLD - len(folder) - 1):
       folder.newContent(portal_type='Folder')
     self.assertEqual(len(folder), FRAGMENTED_LENGTH_THRESHOLD - 1)
     self.assertIsInstance(folder_dict['_count'], Length)

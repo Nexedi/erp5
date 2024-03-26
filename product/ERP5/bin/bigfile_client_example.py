@@ -1,10 +1,10 @@
 input_file = open('big_file.log', 'r')
 
-import httplib
-connection =  httplib.HTTPConnection('192.168.242.68:12001')
+import six.moves.http_client
+connection =  six.moves.http_client.HTTPConnection('192.168.242.68:12001')
 
 import base64
-base64string = base64.encodestring('zope:insecure')[:-1]
+base64string = base64.encodebytes(b'zope:insecure').decode()[:-1]
 
 n = 1 << 20
 

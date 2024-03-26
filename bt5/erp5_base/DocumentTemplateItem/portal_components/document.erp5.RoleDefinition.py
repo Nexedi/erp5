@@ -53,7 +53,7 @@ class RoleDefinition(XMLObject):
 
   def _setRoleName(self, value):
     if value and value not in \
-       zip(*self.RoleDefinition_getRoleNameItemList())[1]:
+        list(zip(*self.RoleDefinition_getRoleNameItemList()))[1]:
       raise Unauthorized("You are not allowed to give %s role" % value)
     self._baseSetRoleName(value)
 

@@ -35,7 +35,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
-from urllib import pathname2url
+from six.moves.urllib.request import pathname2url
+from Testing import ZopeTestCase
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -47,6 +48,8 @@ import tempfile
 import glob
 import sys
 from OFS.Image import Pdata
+from six.moves import range
+import six
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -201,6 +204,27 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
         property_sheet_tool.manage_delObjects([property_sheet])
     self.commit()
     self._ignore_log_errors()
+    self.cancelFailedActivities()
+
+  def cancelFailedActivities(self):
+    """Cancel failed activities and mark this test as failed if there was any.
+
+    We do this because we don't want a test which did not fail but left failing
+    activities to succeed. Test which failed and also left failing activities
+    will count as 2 failures, so with this method it may happen that the number
+    of failures is higher than the number of tests.
+    """
+    self.abort()
+    try:
+      self.tic()
+    except RuntimeError: # "tic is running forever"
+      activity_tool = self.portal.portal_activities
+      for message in activity_tool.getMessageList():
+        activity_tool.manageDelete(message.uid, message.activity)
+        ZopeTestCase._print('\nCancelling active message %s/%s\n'
+                            % ('/'.join(message.object_path), message.method_id) )
+      self.commit()
+      self.fail("A previous Tic failed")
 
   def getBusinessTemplate(self,title):
     """
@@ -644,7 +668,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module.manage_permission('Copy or Move', ['Assignor'], False)
     sequence.edit(module_id=module.getId())
     module_object_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       obj = module.newContent(portal_type = 'Geek Object')
       self.assertIsNotNone(obj)
       module_object_list.append(obj)
@@ -668,7 +692,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module = portal._getOb(module_id, None)
     self.assertIsNotNone(module)
     module_object_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       obj = module.newContent(portal_type = 'Geek Object')
       self.assertIsNotNone(obj)
       module_object_list.append(obj.getId())
@@ -978,8 +1002,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertIsNotNone(form)
     group_dict = sequence.get('group_dict')
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
-                      sorted(group_dict.iterkeys()))
-    for group in group_dict.iterkeys():
+                      sorted(six.iterkeys(group_dict)))
+    for group in six.iterkeys(group_dict):
       id_list = []
       for field in form.get_fields_in_group(group):
         id_list.append(field.getId())
@@ -1216,7 +1240,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     self.assertTrue(base_category is not None)
     category_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       category = base_category.newContent(portal_type='Category')
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
@@ -1283,7 +1307,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(category is not None)
     subcategory_list = []
     subcategory_uid_dict = {}
-    for _ in xrange(10):
+    for _ in range(10):
       subcategory = category.newContent(portal_type='Category', title='toto')
       subcategory_list.append(subcategory.getId())
       subcategory_uid_dict[subcategory.getId()] = subcategory.getUid()
@@ -2719,7 +2743,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     for item_name in item_list:
       item = getattr(bt, item_name)
       if item is not None:
-        for data in item._objects.itervalues():
+        for data in six.itervalues(item._objects):
           if hasattr(data, '__ac_local_roles__'):
             self.assertTrue(data.__ac_local_roles__ is None)
           if hasattr(data, '_owner'):
@@ -3084,7 +3108,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateFakeZODBScript(self, sequence=None, **kw):
     """Create a Script inside portal_skins
     """
-    grain_of_sand = ''.join([random.choice(string.ascii_letters) for _ in xrange(10)])
+    grain_of_sand = ''.join([random.choice(string.ascii_letters) for _ in range(10)])
     python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
     skin_folder_id = 'custom'
     if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
@@ -3312,7 +3336,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     copied, = template_tool.manage_pasteObjects(cb_data)
     current = current_bt._property_sheet_item._objects.copy()
     current_bt._property_sheet_item._objects = PersistentMapping()
-    for k,v in current.iteritems():
+    for k,v in six.iteritems(current):
       k = k.lstrip('portal_property_sheets/')
       current_bt._property_sheet_item._objects[k] = v
     sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
@@ -7318,7 +7342,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     skin_folder = skin_tool._getOb(sequence.get('skin_folder_id'))
 
     file_id = 'fake_js_file'
-    file_content = """
+    file_content = b"""
    var
 
         debug =  [42

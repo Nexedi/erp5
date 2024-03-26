@@ -15,7 +15,7 @@ import traceback
 
 from six.moves import StringIO
 from six.moves._thread import get_ident
-
+from Products.ERP5Type.Utils import bytes2str
 
 logger = logging.getLogger('Products.LongRequestLogger')
 
@@ -60,7 +60,7 @@ class Dumper(object):
         def _extract_sql(self, frame, func_code=DB._query.__code__):
             while frame is not None:
                 if frame.f_code is func_code:
-                    return frame.f_locals['query']
+                    return bytes2str(frame.f_locals['query'])
                 frame = frame.f_back
         del DB
 

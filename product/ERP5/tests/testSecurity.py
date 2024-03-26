@@ -75,7 +75,7 @@ class TestSecurityMixin(ERP5TypeTestCase):
     allowed_method_id_list = ['om_icons',]
     app = self.portal.aq_parent
     meta_type_set = set([None])
-    error_set = set()
+    error_dict = {}
     for _, obj in app.ZopeFind(app, search_sub=1):
       meta_type = getattr(obj, 'meta_type', None)
       if meta_type in meta_type_set:
@@ -88,17 +88,20 @@ class TestSecurityMixin(ERP5TypeTestCase):
           continue
         method = getattr(obj, method_id)
         if isinstance(method, MethodType) and \
-          getattr(method, 'func_name', None) is not None and \
+          getattr(method, '__name__', None) is not None and \
           method.__doc__ and \
           not hasattr(obj, '%s__roles__' % method_id) and \
+          not hasattr(method, '__roles__') and \
           method.__module__:
-          if method.__module__ == 'Products.ERP5Type.Accessor.WorkflowState' and method.func_code.co_name == 'serialize':
+          if method.__module__ == 'Products.ERP5Type.Accessor.WorkflowState' and method.__code__.co_name == 'serialize':
             continue
           func_code = method.__code__
-          error_set.add((func_code.co_filename, func_code.co_firstlineno, method_id))
+          if not hasattr(func_code, 'co_filename'): # ERP5 Accessor
+            func_code = method.__func__.__class__.__init__.__code__
+          error_dict[(func_code.co_filename, func_code.co_firstlineno)] = method_id
 
     error_list = []
-    for filename, lineno, method_id in sorted(error_set):
+    for (filename, lineno), method_id in sorted(error_dict.items()):
       # ignore security problems with non ERP5 documents, unless running in debug mode.
       if os.environ.get('erp5_debug_mode') or '/erp5/' in filename or '<portal_components' in filename:
         error_list.append('%s:%s %s' % (filename, lineno, method_id))

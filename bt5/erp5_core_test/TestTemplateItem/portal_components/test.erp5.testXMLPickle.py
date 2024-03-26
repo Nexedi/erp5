@@ -30,7 +30,8 @@ import unittest
 import pickle
 import re
 import xml.sax
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
+from io import BytesIO
 
 from Products.ERP5Type.XMLExportImport import ppml
 
@@ -58,8 +59,8 @@ class TestXMLPickle(unittest.TestCase):
     pattern = re.compile('WAA') # regex pattern object uses reduce.(See sre.py)
     obj.data.append(pattern)
 
-    pickled_string = pickle.dumps(obj)
-    f = StringIO(pickled_string)
+    pickled_string = pickle.dumps(obj, protocol=2)
+    f = BytesIO(pickled_string)
     xmldata = str(ppml.ToXMLUnpickler(f).load())
 
     output = StringIO()

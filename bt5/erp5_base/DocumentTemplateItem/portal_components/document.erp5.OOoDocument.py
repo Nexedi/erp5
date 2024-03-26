@@ -27,7 +27,9 @@
 #
 ##############################################################################
 
-import re, zipfile, cStringIO
+import re, zipfile
+from io import BytesIO
+import six
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
@@ -37,8 +39,8 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 from erp5.component.document.File import File
 from erp5.component.document.Document import Document, \
-       VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
-from Products.ERP5Type.Utils import fill_args_from_request
+       VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST, ConversionError, NotConvertedError
+from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, fill_args_from_request, str2bytes
 
 # Mixin Import
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
@@ -149,7 +151,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return []
 
     def cached_getTargetFormatItemList(content_type):
-      from xmlrpclib import Fault
+      from six.moves.xmlrpc_client import Fault
       server_proxy = DocumentConversionServerProxy(self)
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
@@ -198,10 +200,10 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       raise NotConvertedError()
     if format == 'text-content':
       # Extract text from the ODF file
-      cs = cStringIO.StringIO()
-      cs.write(str(self.getBaseData()))
+      cs = BytesIO()
+      cs.write(self.getBaseData())
       z = zipfile.ZipFile(cs)
-      s = z.read('content.xml')
+      s = bytes2str(z.read('content.xml'))
       s = self.rx_strip.sub(" ", s) # strip xml
       s = self.rx_compr.sub(" ", s) # compress multiple spaces
       cs.close()
@@ -210,7 +212,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     server_proxy = DocumentConversionServerProxy(self)
     orig_format = self.getBaseContentType()
     generate_result = server_proxy.run_generate(self.getId(),
-                                       enc(str(self.getBaseData())),
+                                       bytes2str(enc(bytes(self.getBaseData()))),
                                        None,
                                        format,
                                        orig_format)
@@ -222,7 +224,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       response_dict = generate_result
 
     # XXX: handle possible OOOd server failure
-    return response_dict['mime'], Pdata(dec(response_dict['data']))
+    return response_dict['mime'], Pdata(dec(str2bytes(response_dict['data'])))
 
   # Conversion API
   def _convert(self, format, frame=0, **kw): #  pylint: disable=redefined-builtin
@@ -258,7 +260,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     original_format = format
     allowed_format_list = self.getTargetFormatList()
     if format == 'base-data':
-      return self.getBaseContentType(), str(self.getBaseData())
+      return self.getBaseContentType(), self.getBaseData()
     if format == 'pdf':
       format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
@@ -301,8 +303,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       if is_html:
         # Extra processing required since
         # we receive a zip file
-        cs = cStringIO.StringIO()
-        cs.write(str(data))
+        cs = BytesIO()
+        cs.write(bytes(data))
         z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
         for f in z.infolist():
           fn = f.filename
@@ -324,7 +326,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         # create temporary image and use it to resize accordingly
         temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
-                                       file=cStringIO.StringIO(),
+                                       file=BytesIO(),
                                        filename=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
@@ -333,7 +335,14 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         # store conversion
         self.setConversion(data, mime, format=original_format, **kw)
 
-    return self.getConversion(format=original_format, **kw)
+    mime, data = self.getConversion(format=original_format, **kw)
+    if format in VALID_TEXT_FORMAT_LIST:
+      # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
+      # here mostly as a convenient way to decode with the encoding from BOM
+      data = data.decode(guessEncodingFromText(data) or 'ascii')
+      if six.PY2:
+        data = data.encode('utf-8')
+    return mime, data
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
@@ -346,8 +355,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       format_list = [x for x in self.getTargetFormatList()
                                 if x.startswith('html') or x.endswith('html')]
       mime, data = self._getConversionFromProxyServer(format_list[0])
-      archive_file = cStringIO.StringIO()
-      archive_file.write(str(data))
+      archive_file = BytesIO()
+      archive_file.write(data)
       zip_file = zipfile.ZipFile(archive_file)
       must_close = 1
     else:
@@ -384,13 +393,13 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     server_proxy = DocumentConversionServerProxy(self)
     response_code, response_dict, response_message = server_proxy.run_convert(
                                       self.getFilename() or self.getId(),
-                                      enc(str(self.getData())),
+                                      bytes2str(enc(bytes(self.getData()))),
                                       None,
                                       None,
                                       self.getContentType())
     if response_code == 200:
       # sucessfully converted document
-      self._setBaseData(dec(response_dict['data']))
+      self._setBaseData(dec(str2bytes(response_dict['data'])))
       metadata = response_dict['meta']
       self._base_metadata = metadata
       if metadata.get('MIMEType', None) is not None:
@@ -423,11 +432,11 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     server_proxy = DocumentConversionServerProxy(self)
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
-                                       enc(str(self.getBaseData())),
+                                       bytes2str(enc(bytes(self.getBaseData()))),
                                        kw)
     if response_code == 200:
       # successful meta data extraction
-      self._setBaseData(dec(response_dict['data']))
+      self._setBaseData(dec(str2bytes(response_dict['data'])))
       self.updateFileMetadata() # record in workflow history # XXX must put appropriate comments.
     else:
       # Explicitly raise the exception!

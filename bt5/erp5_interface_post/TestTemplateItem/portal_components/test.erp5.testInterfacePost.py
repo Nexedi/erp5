@@ -231,7 +231,7 @@ class TestInterfacePost(ERP5TypeTestCase):
 
     for internet_message_post in internet_message_post_list:
       self.assertEqual(internet_message_post.getSimulationState(), 'exported')
-      mail_object = email.message_from_string(internet_message_post.getData())
+      mail_object = email.message_from_string(internet_message_post.getData().decode())
       self.assertEqual(
         internet_message_post.getReference(), mail_object['message-id'].strip('<>')
       )
@@ -247,7 +247,10 @@ class TestInterfacePost(ERP5TypeTestCase):
     last_message, = self.portal.MailHost._message_list
     self.assertNotEqual((), last_message)
     _, _, message_text = last_message
-    self.assertIn(message_text, sequence['internet_message_post'].getData())
+    self.assertEqual(
+      bytes(email.message_from_bytes(message_text)),
+      bytes(email.message_from_bytes(sequence['internet_message_post'].getData())),
+    )
 
   def _getMailHostMessageForRecipient(self, recipient_email_address):
     message_list = self.portal.MailHost._message_list
@@ -263,12 +266,15 @@ class TestInterfacePost(ERP5TypeTestCase):
     message_list = self.portal.MailHost._message_list
     self.assertEqual(len(message_list), len(self.recipient_list))
     for post in sequence['internet_message_post_list']:
-      post_recipient = email.message_from_string(post.getData())['to']
+      post_recipient = email.message_from_string(post.getData().decode())['to']
       message_list = self._getMailHostMessageForRecipient(post_recipient)
       self.assertEqual(len(message_list), 1)
       message = message_list[0]
       _, _, message_text = message
-      self.assertIn(message_text, post.getData())
+      self.assertEqual(
+        bytes(email.message_from_bytes(message_text)),
+        bytes(email.message_from_bytes(post.getData())),
+      )
 
   def stepCheckMailMessagePreviewDisplaysLatestInternetMessagePostData(self, sequence=None, sequence_list=None):
     mail_message = sequence['mail_message']
@@ -282,7 +288,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     post = sequence['internet_message_post']
 
     # Create a response mail object
-    mail_object = email.message_from_string(post.getData())
+    mail_object = email.message_from_string(post.getData().decode())
 
     sender = mail_object['from']
     recipient = mail_object['to']
@@ -297,7 +303,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     # Ingest it
     response_post = self.portal.internet_message_post_module.newContent(
       portal_type='Internet Message Post',
-      data=mail_object.as_string(),
+      data=mail_object.as_string().encode(),
     )
     response_post.prepareImport()
     sequence['internet_message_post_response'] = response_post

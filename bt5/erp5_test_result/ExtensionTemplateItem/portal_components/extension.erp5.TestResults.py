@@ -2,6 +2,7 @@ import difflib
 import zipfile
 import os
 import re
+from six import string_types as basestring
 from zExceptions import Unauthorized
 
 separator1 = '=' * 70

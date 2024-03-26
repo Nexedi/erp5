@@ -28,6 +28,7 @@ from __future__ import division
 #
 ##############################################################################
 
+import functools
 from past.builtins import cmp
 from six import string_types as basestring
 from Products.CMFCore.utils import getToolByName
@@ -37,6 +38,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import str2bytes
 
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
@@ -61,6 +63,7 @@ from hashlib import md5
 from warnings import warn
 from six.moves.cPickle import loads, dumps
 from copy import deepcopy
+import base64
 import six
 
 MYSQL_MIN_DATETIME_RESOLUTION = 1/86400.
@@ -1411,10 +1414,10 @@ class SimulationTool(BaseTool):
     if src__:
       sql_source_list = []
     # Generate the cache key (md5 of query source)
-    sql_text_hash = md5(Resource_zGetInventoryList(
+    sql_text_hash = md5(str2bytes(Resource_zGetInventoryList(
       stock_table_id=stock_table_id,
       src__=1,
-      **kw)).digest()
+      **kw))).hexdigest()
     # Try to get result from cache
     Resource_zGetInventoryCacheResult = self.Resource_zGetInventoryCacheResult
     inventory_cache_kw = {'query': sql_text_hash}
@@ -1437,7 +1440,7 @@ class SimulationTool(BaseTool):
     if src__:
       sql_source_list.append(Resource_zGetInventoryCacheResult(src__=1, **inventory_cache_kw))
     if cached_sql_result:
-      brain_result = loads(cached_sql_result[0].result)
+      brain_result = loads(base64.b64decode(cached_sql_result[0].result))
       # Rebuild the brains
       cached_result = Results(
         (brain_result['items'], brain_result['data']),
@@ -1486,10 +1489,10 @@ class SimulationTool(BaseTool):
         self.Resource_zInsertInventoryCacheResult(
           query=sql_text_hash,
           date=cached_date,
-          result=dumps({
+          result=base64.b64encode(dumps({
             'items': result.__items__,
             'data': result._data,
-          }),
+          })),
         )
     else:
       # Cache miss and this getInventory() not specifying to_date,
@@ -1567,8 +1570,8 @@ class SimulationTool(BaseTool):
       try:
         # We must copy the path so that getObject works
         setattr(result, 'path', line_a.path)
-      except ValueError: # XXX: ValueError ? really ?
-        # getInventory return no object, so no path available
+      except (AttributeError, ValueError):
+        # getInventory returned no object, so no path available
         pass
       if parent is not None:
         result = result.__of__(parent)
@@ -1610,7 +1613,7 @@ class SimulationTool(BaseTool):
         line_key = getInventoryListKey(line)
         line_a = inventory_list_dict.get(line_key)
         inventory_list_dict[line_key] = addLineValues(line_a, line)
-    sorted_inventory_list = inventory_list_dict.values()
+    sorted_inventory_list = list(inventory_list_dict.values())
     # Sort results manually when required
     sort_on = new_kw.get('sort_on')
     if sort_on:
@@ -1635,7 +1638,10 @@ class SimulationTool(BaseTool):
               result *= -1
             break
         return result
-      sorted_inventory_list.sort(cmp_inventory_line)
+      if six.PY2:
+        sorted_inventory_list.sort(cmp_inventory_line)
+      else:
+        sorted_inventory_list.sort(key=functools.cmp_to_key(cmp_inventory_line))
     # Brain is rebuild properly using tuple not r instance
     column_list = first_result._searchable_result_columns()
     column_name_list = [x['name'] for x in column_list]

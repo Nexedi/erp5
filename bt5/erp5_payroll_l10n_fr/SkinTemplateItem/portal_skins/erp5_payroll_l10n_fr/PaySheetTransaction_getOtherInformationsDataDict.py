@@ -1,3 +1,4 @@
+import six
 portal = context.getPortalObject()
 translateString = portal.Base_translateString
 quantity_renderer = portal.Base_viewFieldLibrary.my_view_mode_money_quantity.render_pdf
@@ -162,9 +163,11 @@ year_to_date_taxable_net_salary = paysheet.PaySheetTransaction_getYearToDateSlic
     'base_contribution/base_amount/payroll/base/income_tax')
 
 def unicodeDict(d):
-  for k, v in d.items():
+  if six.PY3:
+    return d
+  for k, v in six.iteritems(d):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k: unicode(v, 'utf8')})
   return d
 
 source_section = paysheet.getSourceSectionValue()

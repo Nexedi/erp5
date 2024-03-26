@@ -1,11 +1,13 @@
+import base64
 import json
+import six
 portal = context.getPortalObject()
 record = context
 
 def byteify(string):
   if isinstance(string, dict):
     tmp = {}
-    for key, value in string.iteritems():
+    for key, value in six.iteritems(string):
       tmp[byteify(key)] = byteify(value)
     return tmp
   elif isinstance(string, list):
@@ -80,7 +82,7 @@ if photo_data:
     if "application/pdf" in photo_type:
       filename="tmp.pdf"
     image = portal.portal_contributions.newContent(
-      data = photo_data.decode('base64'),
+      data = base64.b64decode(photo_data),
       reference=ticket.getReference()+ "-justificatif",
       title = ticket.getReference() + " Justificatif",
       description = ticket.getDescription(),

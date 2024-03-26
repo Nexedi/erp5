@@ -1,3 +1,4 @@
+import six
 from pprint import pformat
 portal = context.getPortalObject()
 request= portal.REQUEST
@@ -89,7 +90,7 @@ for budget in budget_list:
       conversion_ratio = 1
 
   line_list.append(dict(is_budget=True,
-                        title=budget.getTitle().decode('utf8'),
+                        title=six.text_type(budget.getTitle()),
                         target_currency_title=target_currency_title,
                         conversion_ratio=conversion_ratio,
                         resource_title=budget.getResource() and
@@ -149,9 +150,9 @@ for budget in budget_list:
 
     # we use BudgetLine_asCellRange to get cell names, and have a default value
     # for "virtual level 2"
-    title = budget_line.getTitle().decode('utf8')
+    title = six.text_type(budget_line.getTitle())
     cell_name_dict = {budget_line.getResource(base=1):
-                          budget_line.getTitle().decode('utf8')}
+                          six.text_type(budget_line.getTitle())}
     cell_style_dict = {budget_line.getResource(base=1): 'Level2'}
     cell_depth_dict = {budget_line.getResource(base=1): 0}
 
@@ -168,7 +169,7 @@ for budget in budget_list:
 
     for cell_range_list in budget_line_as_cell_range_matrixbox:
       for category, title in cell_range_list:
-        cell_name_dict[category] = title.decode('utf8').replace(u'\xA0', '')
+        cell_name_dict[category] = six.text_type(title).replace(u'\xA0', '')
         if category in level_2_variation_category_list:
           depth = -min_depth + (title.count('\xA0') / 4) or title.count('/')
           cell_depth_dict[category] = depth
@@ -323,7 +324,7 @@ for budget in budget_list:
       if total_level_1_current_budget:
         consumed_ratio = total_level_1_consumed_budget / total_level_1_current_budget
       line_list.append(dict(is_level_1=True,
-                            title=budget_line.getTitle().decode('utf8'),
+                            title=six.text_type(budget_line.getTitle()),
                             initial_budget=total_level_1_initial_budget,
                             current_budget=total_level_1_current_budget,
                             engaged_budget=total_level_1_engaged_budget,

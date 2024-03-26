@@ -9,6 +9,7 @@ It will also not work if strict security is set on simulation. It's recommended 
 delivery builder.
 """
 from erp5.component.module.Log import log
+from Products.ERP5Type.Utils import ensure_list
 LOG = lambda msg:log(
           "Delivery_setCausalityFromSimulation on %s" % context.getPath(), msg)
 LOG = lambda msg:'DISABLED'
@@ -36,4 +37,4 @@ for simulation_movement in simulation_movement_list :
     causality_value_set[explanation_value] = 1
 
 LOG('setCausalityValueList %s'%causality_value_set.keys())
-delivery.setCausalityValueList(causality_value_set.keys() + delivery.getCausalityValueList())
+delivery.setCausalityValueList(ensure_list(causality_value_set.keys()) + ensure_list(delivery.getCausalityValueList()))

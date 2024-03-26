@@ -49,6 +49,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import (
 )
 from glob import glob
 import transaction
+import six
+if not six.PY2:
+  from importlib import reload
 
 from zLOG import LOG, DEBUG, INFO
 
@@ -256,7 +259,7 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
 
 def runLiveTest(test_list, verbosity=1, stream=None, request_server_url=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
-  from StringIO import StringIO
+  from six.moves import cStringIO as StringIO
   # Add path of the TestTemplateItem folder of the instance
   path = kw.get('path', None)
   if path is not None and path not in sys.path:

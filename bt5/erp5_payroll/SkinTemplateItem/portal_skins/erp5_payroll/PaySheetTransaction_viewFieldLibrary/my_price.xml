@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
                 <string>precision</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -91,7 +91,7 @@
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>2</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

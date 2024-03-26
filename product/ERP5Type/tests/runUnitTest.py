@@ -11,6 +11,7 @@ import signal
 import shutil
 import errno
 import random
+import six
 import transaction
 import warnings
 from glob import glob
@@ -214,14 +215,13 @@ def initializeInstanceHome(tests_framework_home,
         else:
           os.symlink(src, d)
     d = 'custom_zodb.py'
-    if not os.path.exists(d):
-      src = os.path.join(tests_framework_home, d)
-      if os.path.islink(d):
-        os.remove(d)
-      if WIN:
-        shutil.copy(src, d)
-      else:
-        os.symlink(src, d)
+    src = os.path.join(tests_framework_home, d)
+    if os.path.exists(d):
+      os.remove(d)
+    if WIN:
+      shutil.copy(src, d)
+    else:
+      os.symlink(src, d)
   finally:
     os.chdir(old_pwd)
 
@@ -288,10 +288,19 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     lambda self: self._testMethodPrefix,
     lambda self, value: None)
 
+  if six.PY3:
+    def __init__(self):
+        # override without call super() to avoid RecursionError in Python 3.
+        # super().__init__()
+        self.errors = []
+        # Tracks packages which we have called into via load_tests, to
+        # avoid infinite re-entrancy.
+        self._loading_packages = set()
+
   def _importZodbTestComponent(self, name):
     import erp5.component.test
     module = __import__('erp5.component.test.' + name,
-                        fromlist=['erp5.component.test'],
+                        fromlist=['erp5.component.test'] if six.PY2 else ['erp5'],
                         level=0)
     try:
       self._test_component_ref_list.append(module)
@@ -465,10 +474,8 @@ class DebugTestResult:
     self.result = result
 
   def _start_debugger(self, tb):
-    import Lifetime
-    if Lifetime._shutdown_phase:
-      return
     try:
+      raise ImportError()
       # try ipython if available
       import IPython
       try:
@@ -637,11 +644,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
   TestRunner = unittest.TextTestRunner
 
-  import Lifetime
   from Zope2.custom_zodb import Storage, save_mysql, \
       node_pid_list, neo_cluster, zeo_server_pid, wcfs_server
   def shutdown(signum, frame, signum_set=set()):
-    Lifetime.shutdown(0)
     signum_set.add(signum)
     if node_pid_list is None and len(signum_set) > 1:
       # in case of ^C, a child should also receive a SIGHUP from the parent,

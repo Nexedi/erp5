@@ -563,7 +563,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     XXX name of method is not good, because content is not necessarily XML
     return a xml with id replaced by a new id
     """
-    if isinstance(xml, bytes):
+    if isinstance(xml, (str, bytes)):
       xml = etree.XML(xml, parser=parser)
     else:
       # copy of xml object for modification

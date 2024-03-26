@@ -745,7 +745,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
     # add some entropy by disorder bt5list returned by
     # resolveBusinessTemplateListDependency
-    position_list = range(len(bt5list))
+    position_list = list(range(len(bt5list)))
     new_bt5_list = []
     while position_list:
       position = random.choice(position_list)
@@ -754,10 +754,10 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
-    first_group = range(0, 5)
-    second_group =  range(5, 12)
-    third_group = range(12, 14)
-    fourth_group = range(14, 15)
+    first_group = list(range(0, 5))
+    second_group =  list(range(5, 12))
+    third_group = list(range(12, 14))
+    fourth_group = list(range(14, 15))
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
@@ -793,7 +793,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt_dir = "%s/%s/bt" % (repository, kw['title'])
       if not os.path.exists(bt_dir):
         os.makedirs(bt_dir)
-      with open("%s/title" % bt_dir, "wb") as f:
+      with open("%s/title" % bt_dir, "w") as f:
         f.write(kw['title'])
       template = xml.createElement('template')
       template.setAttribute('id', kw['title'])
@@ -834,7 +834,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     createBtAndAddToRepository(repository, repo_xml, title='bt3')
     createBtAndAddToRepository(repository, repo_xml, title='bt4')
     createBtAndAddToRepository(repository, repo_xml, title='bt5')
-    with open("%s/bt5list" % repository,"wb") as repo_xml_fd:
+    with open("%s/bt5list" % repository, "w") as repo_xml_fd:
       repo_xml.writexml(repo_xml_fd)
       repo_xml_fd.close()
 
@@ -865,7 +865,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     erp5_test = self.portal.portal_skins['erp5_test']
     self.assertTrue(erp5_test.hasObject('test_file'))
 
-  def test_ownerhsip(self):
+  def test_ownership(self):
     self.assertEqual(
       self.portal.portal_skins.erp5_core.getOwnerTuple(),
       ([self.portal.getId(), 'acl_users'], 'System Processes'),

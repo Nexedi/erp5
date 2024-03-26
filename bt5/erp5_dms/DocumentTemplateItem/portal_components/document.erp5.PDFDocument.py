@@ -32,13 +32,16 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from erp5.component.interface.IWatermarkable import IWatermarkable
 from erp5.component.document.Image import Image
 from erp5.component.document.Document import ConversionError
 from subprocess import Popen, PIPE
 from zLOG import LOG, INFO, PROBLEM
 import errno
-from StringIO import StringIO
+from io import BytesIO
+from six.moves import range
+import six
 
 @zope.interface.implementer(IWatermarkable)
 class PDFDocument(Image):
@@ -90,8 +93,8 @@ class PDFDocument(Image):
         raise ValueError("watermark_data cannot not be empty")
       if not self.hasData():
         raise ValueError("Cannot watermark an empty document")
-      self_reader = PdfFileReader(StringIO(self.getData()))
-      watermark_reader = PdfFileReader(StringIO(watermark_data))
+      self_reader = PdfFileReader(BytesIO(self.getData()))
+      watermark_reader = PdfFileReader(BytesIO(watermark_data))
       watermark_page_count = watermark_reader.getNumPages()
 
       output = PdfFileWriter()
@@ -109,7 +112,7 @@ class PDFDocument(Image):
             self_page.mergePage(watermark_page)
         output.addPage(self_page)
 
-      outputStream = StringIO()
+      outputStream = BytesIO()
       output.write(outputStream)
       return outputStream.getvalue()
 
@@ -171,7 +174,7 @@ class PDFDocument(Image):
     """
     if not self.hasData():
       return ''
-    data = str(self.getData())
+    data = bytes(self.getData())
     try:
       from PyPDF2 import PdfFileReader
       from PyPDF2.utils import PdfReadError
@@ -179,7 +182,7 @@ class PDFDocument(Image):
       pass
     else:
       try:
-        if PdfFileReader(StringIO(data)).isEncrypted:
+        if PdfFileReader(BytesIO(data)).isEncrypted:
           return ''
       except PdfReadError:
         return ''
@@ -191,7 +194,7 @@ class PDFDocument(Image):
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())
     if result:
-      return result
+      return bytes2str(result)
     else:
       # Try to use OCR from ghostscript, but tolerate that the command might
       # not be available.
@@ -212,7 +215,7 @@ class PDFDocument(Image):
         if process.returncode:
           raise ConversionError(
               "Error invoking ghostscript.\noutput:%s\nerror:%s" % (output, error))
-        return output.strip()
+        return bytes2str(output).strip()
       except OSError as e:
         if e.errno != errno.ENOENT:
           raise
@@ -279,7 +282,7 @@ class PDFDocument(Image):
       command = ['pdftohtml', '-enc', 'UTF-8', '-stdout',
                  '-noframes', '-i', tmp.name]
       try:
-        command_result = Popen(command, stdout=PIPE).communicate()[0]
+        command_result = bytes2str(Popen(command, stdout=PIPE).communicate()[0])
       except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdftohtml was not found')
@@ -344,7 +347,7 @@ class PDFDocument(Image):
         raise
 
       result = {}
-      for line in command_result.splitlines():
+      for line in bytes2str(command_result).splitlines():
         item_list = line.split(':')
         key = item_list[0].strip()
         value = ':'.join(item_list[1:]).strip()
@@ -360,9 +363,9 @@ class PDFDocument(Image):
       else:
         try:
           pdf_file = PdfFileReader(tmp)
-          for info_key, info_value in (pdf_file.getDocumentInfo() or {}).iteritems():
+          for info_key, info_value in six.iteritems(pdf_file.getDocumentInfo() or {}):
             info_key = info_key.lstrip("/")
-            if isinstance(info_value, unicode):
+            if six.PY2 and isinstance(info_value, six.text_type):
               info_value = info_value.encode("utf-8")
 
             # Ignore values that cannot be pickled ( such as AAPL:Keywords )

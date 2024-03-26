@@ -6,10 +6,10 @@
  * body: body of the message as UTF-8 encoded string
  * content_type: mime type of this message, can be text/html for
    HTML message or anything else for text/plain message.
- * attachment_list: a list of attachement mapping in format:
-    - mime_type: mime type of thsi attachement
-    - content: file content of the attachement, as a string
-    - name: displayed name of this attachements
+ * attachment_list: a list of attachment mapping in format:
+    - mime_type (str): mime type of thsi attachment
+    - content (bytes): file content of the attachment
+    - name (str): displayed name of this attachment
  * embedded_file_list: a list of ERP5 File to use as attachments.
  * extra_header_dict: additional email headers
 

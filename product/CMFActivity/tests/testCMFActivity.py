@@ -62,6 +62,7 @@ import weakref
 import transaction
 from App.config import getConfiguration
 import socket
+from six.moves import range
 
 class CommitFailed(Exception):
   pass
@@ -138,12 +139,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # activity messages. We are testing CMFActivity so it's important to check
     # that everything works as expected on this subject.
     try:
-      if self._resultForDoCleanups.wasSuccessful():
-        getMessageList = self.portal.portal_activities.getMessageList
-        self.assertFalse(getMessageList())
-        # Also check if a test drop them without committing.
-        self.abort()
-        self.assertFalse(getMessageList())
+      getMessageList = self.portal.portal_activities.getMessageList
+      self.assertFalse(getMessageList())
+      # Also check if a test drop them without committing.
+      self.abort()
+      self.assertFalse(getMessageList())
     finally:
       ERP5TypeTestCase.tearDown(self)
 
@@ -619,7 +619,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Monkey patch Queue to induce conflict errors artificially.
     def query(self, query_string,*args, **kw):
       # Not so nice, this is specific to zsql method
-      if "REPLACE INTO" in query_string:
+      if b"REPLACE INTO" in query_string:
         raise OperationalError
       return self.original_query(query_string,*args, **kw)
 
@@ -733,7 +733,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     messages.
     """
     activity_tool = self.portal.portal_activities
-    for _ in xrange(loop_size):
+    for _ in range(loop_size):
       activity_tool.distribute(node_count=1)
       activity_tool.tic(processing_node=1)
 
@@ -926,7 +926,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     Organisation.updateDesc = updateDesc
 
     # First check dequeue read same message only once
-    for i in xrange(10):
+    for i in range(10):
       p.activate(activity="SQLDict").updateDesc()
       self.commit()
 
@@ -935,7 +935,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(p.getDescription(), "a")
 
     # Check if there is pending activity after deleting an object
-    for i in xrange(10):
+    for i in range(10):
       p.activate(activity="SQLDict").updateDesc()
       self.commit()
 
@@ -965,7 +965,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(0,organisation.getFoobar())
 
     # Test group_method_id is working without group_id
-    for x in xrange(5):
+    for x in range(5):
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar").reindexObject(number=1)
       self.commit()
 
@@ -977,7 +977,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
 
     # Test group_method_id is working with one group_id defined
-    for x in xrange(5):
+    for x in range(5):
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
       self.commit()
 
@@ -990,7 +990,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     del foobar_list[:]
 
     # Test group_method_id is working with many group_id defined
-    for x in xrange(5):
+    for x in range(5):
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
       self.commit()
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="2").reindexObject(number=3)
@@ -1026,7 +1026,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     activity_tool = self.getActivityTool()
     def delete_volatiles():
-      for property_id in activity_tool.__dict__.keys():
+      for property_id in list(six.iterkeys(activity_tool.__dict__)):
         if property_id.startswith('_v_'):
           delattr(activity_tool, property_id)
     organisation_module = self.getOrganisationModule()
@@ -1142,6 +1142,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.flushAllActivities(silent=1, loop_size=100)
       # Check there is a traceback in the email notification
       sender, recipients, mail = message_list.pop()
+      mail = mail.decode()
       self.assertIn("Module %s, line %s, in failingMethod" % (
         __name__, inspect.getsourcelines(failingMethod)[1]), mail)
       self.assertIn("ValueError:", mail)
@@ -1237,7 +1238,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Check that cmf_activity SQL connection still works
       connection_da = self.portal.cmf_activity_sql_connection()
       self.assertFalse(connection_da._registered)
-      connection_da.query('select 1')
+      connection_da.query(b'select 1')
       self.assertTrue(connection_da._registered)
       self.commit()
       self.assertFalse(connection_da._registered)
@@ -1693,7 +1694,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # This is a one-shot method, revert after execution
       SQLDict.dequeueMessage = original_dequeue
       result = self.dequeueMessage(activity_tool, processing_node, node_family_id_set)
-      queue_tic_test_dict['isAlive'] = process_shutdown_thread.isAlive()
+      queue_tic_test_dict['is_alive'] = process_shutdown_thread.is_alive()
       return result
     SQLDict.dequeueMessage = dequeueMessage
     Organisation.waitingActivity = waitingActivity
@@ -1717,7 +1718,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           activity_tool.tic()
       activity_thread = ActivityThread()
       # Do not try to outlive main thread.
-      activity_thread.setDaemon(True)
+      activity_thread.daemon = True
       # Call process_shutdown in yet another thread because it will wait for
       # running activity to complete before returning, and we need to unlock
       # activity *after* calling process_shutdown to make sure the next
@@ -1727,7 +1728,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           activity_tool.process_shutdown(3, 0)
       process_shutdown_thread = ProcessShutdownThread()
       # Do not try to outlive main thread.
-      process_shutdown_thread.setDaemon(True)
+      process_shutdown_thread.daemon = True
 
       activity_thread.start()
       # Wait at rendez-vous for activity to arrive.
@@ -1746,7 +1747,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.assertEqual(len(message_list), 1)
         self.assertEqual(message_list[0].method_id, 'getTitle')
         # Check that process_shutdown_thread was still runing when Queue_tic returned.
-        self.assertTrue(queue_tic_test_dict.get('isAlive'), repr(queue_tic_test_dict))
+        self.assertTrue(queue_tic_test_dict.get('is_alive'), repr(queue_tic_test_dict))
         # Call tic in foreground. This must not lead to activity execution.
         activity_tool.tic()
         self.assertEqual(len(activity_tool.getMessageList()), 1)
@@ -1894,13 +1895,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       """
     original_query = six.get_unbound_function(DB.query)
     def query(self, query_string, *args, **kw):
-      if query_string.startswith('INSERT'):
+      if query_string.startswith(b'INSERT'):
         insert_list.append(len(query_string))
         if not n:
           raise Skip
       return original_query(self, query_string, *args, **kw)
     def check():
-      for i in xrange(1, N):
+      for i in range(1, N):
         activity_tool.activate(activity=activity, group_id=str(i)
                               ).doSomething(arg)
       activity_tool.activate(activity=activity, group_id='~'
@@ -2391,7 +2392,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     #            /  \   |
     #           c3  c4  c5
     c = [category_tool.newContent()]
-    for i in xrange(5):
+    for i in range(5):
       c.append(c[i//2].newContent())
     self.tic()
     def activate(i, priority=1, **kw):
@@ -2462,7 +2463,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       check(1, tag="foo")
       check(0, tag="foo", method_id="getUid")
       check(1, processing_node=-1)
-      check(3, processing_node=range(-5,5))
+      check(3, processing_node=list(range(-5,5)))
     test()
     self.commit()
     test(check)
@@ -2490,7 +2491,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           self.assertEqual(1, activity_tool.countMessage())
           self.flushAllActivities()
           sender, recipients, mail = message_list.pop()
-          self.assertIn('UID mismatch', mail)
+          self.assertIn(b'UID mismatch', mail)
           m, = activity_tool.getMessageList()
           self.assertEqual(m.processing_node, INVOKE_ERROR_STATE)
           obj.flushActivity()

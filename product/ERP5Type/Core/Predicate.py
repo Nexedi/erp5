@@ -332,9 +332,7 @@ class Predicate(XMLObject):
       criterion_dict[p].property = p
       criterion_dict[p].min = self._range_criterion.get(p, (None, None))[0]
       criterion_dict[p].max = self._range_criterion.get(p, (None, None))[1]
-    criterion_list = criterion_dict.values()
-    criterion_list.sort()
-    return criterion_list
+    return sorted(criterion_dict.values())
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCriterion' )
   def setCriterion(self, property, identity=None, min=None, max=None, **kw):

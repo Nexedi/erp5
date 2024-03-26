@@ -30,11 +30,11 @@
 
 from __future__ import print_function
 from __future__ import absolute_import
-from six.moves import input, xrange
 import threading
 from .AdvancedSearchTextDetector import AdvancedSearchTextDetector
 from .AdvancedSearchTextParser import AdvancedSearchTextParser
 from .lexer import ParserOrLexerError
+from six.moves import range
 
 if __name__ == '__main__':
   DEBUG = 1
@@ -137,7 +137,7 @@ if __name__ == '__main__':
           return False
         other_query_list = other.query_list[:]
         for my_query in self.query_list:
-          for other_index in xrange(len(other_query_list)):
+          for other_index in range(len(other_query_list)):
             other_query = other_query_list[other_index]
             if my_query == other_query:
               other_query_list.pop(other_index)

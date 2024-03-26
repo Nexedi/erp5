@@ -22,7 +22,14 @@ from . import persistent_migration
 from ZODB.POSException import ConflictError
 import six
 
-class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
+if six.PY2:
+  class ERP5BaseBroken_(Broken, ERP5Base, PersistentBroken):
+    pass
+else:
+  class ERP5BaseBroken_(ERP5Base, PersistentBroken):
+    pass
+
+class ERP5BaseBroken(ERP5BaseBroken_):
   # PersistentBroken can't be reused directly
   # because its « layout differs from 'GhostPortalType' »
 
@@ -371,7 +378,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       for key, value in six.iteritems(attribute_dict):
         setattr(klass, key, value)
 
-      if getattr(klass.__setstate__, 'im_func', None) is \
+      if getattr(klass.__setstate__, '__func__', None) is \
          persistent_migration.__setstate__:
         # optimization to reduce overhead of compatibility code
         klass.__setstate__ = persistent_migration.Base__setstate__

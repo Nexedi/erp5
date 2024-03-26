@@ -70,7 +70,7 @@ def groupSameReportSectionLine(line_to_group_list):
       tmp2_base_dict[new_key]['employee_total_price'] = tmp2_base_dict[new_key]['employee_total_price'] + value['employee_total_price']
   new_value_list = []
   # recalculate for rounding issue
-  for value_dict in tmp2_base_dict.values():
+  for _, value_dict in sorted(tmp2_base_dict.items()):
     value_dict['employer_total_price'] = value_dict['base'] * value_dict['employer_price']
     value_dict['employee_total_price'] = value_dict['base'] * value_dict['employee_price']
     new_value_list.append(value_dict)

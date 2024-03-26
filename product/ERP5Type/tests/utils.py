@@ -67,8 +67,13 @@ def canonical_html(html):
     method="c14n",
   ).decode('utf-8')
 
+if six.PY2:
+  FileIO = file
+else:
+  from io import FileIO
+  from importlib import reload
 
-class FileUpload(file):
+class FileUpload(FileIO):
   """Act as an uploaded file.
   """
   __allow_access_to_unprotected_subobjects__ = 1
@@ -76,7 +81,7 @@ class FileUpload(file):
     if name is None:
       name = os.path.basename(path)
     self.filename = name
-    file.__init__(self, path)
+    FileIO.__init__(self, path)
     self.headers = {}
 
 # dummy objects
@@ -100,6 +105,8 @@ class DummyMailHostMixin(object):
   @staticmethod
   def _decodeMessage(messageText):
     """ Decode message"""
+    if six.PY3 and isinstance(messageText, bytes):
+      messageText = messageText.decode()
     message_text = messageText
     for part in message_from_string(messageText).walk():
       if part.get_content_type() in ['text/plain', 'text/html' ] \
@@ -390,7 +397,7 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
   m = 499 # must be a prime number
   x = instance_random.randrange(0, m)
   c = instance_random.randrange(1, m)
-  for i in xrange(m):
+  for i in range(m):
     yield default_host, 55000 + x
     x = (x + c) % m
   raise RuntimeError("Can't find free port (tried ports %u to %u)\n"
@@ -584,7 +591,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
 
   def getSortedCategoryList(line, base_id, category_list):
     result = []
-    index_list = line.index[base_id].keys()
+    index_list = list(line.index[base_id].keys())
     index_list.sort()
     for category in category_list:
       for index in index_list:
@@ -661,7 +668,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
                           *category_list)
 
       cell.edit(**mapped_value_dict)
-      cell.setMappedValuePropertyList(mapped_value_dict.keys())
+      cell.setMappedValuePropertyList(list(mapped_value_dict.keys()))
 
       base_category_list = [category_path
                             for category_path in category_list

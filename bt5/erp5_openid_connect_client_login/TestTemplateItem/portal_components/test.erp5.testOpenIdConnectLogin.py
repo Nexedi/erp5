@@ -126,8 +126,8 @@ class TestOpenIdConnectLogin(OpenIdConnectLoginTestCase):
         'erp5.component.extension.OpenIdConnectLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       self.portal.ERP5Site_receiveOpenIdCallback(code=CODE, state=state)
 
     getAccessTokenFromCode_mock.assert_called_once()
@@ -165,8 +165,8 @@ class TestOpenIdConnectLogin(OpenIdConnectLoginTestCase):
         'erp5.component.extension.OpenIdConnectLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       self.portal.ERP5Site_receiveOpenIdCallback(code=CODE, state=state)
     getAccessTokenFromCode_mock.assert_called_once()
     getUserEntry_mock.assert_called_once()
@@ -260,8 +260,8 @@ return credential_request
         'erp5.component.extension.OpenIdConnectLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       self.portal.ERP5Site_receiveOpenIdCallback(code=CODE, state=state)
     getAccessTokenFromCode_mock.assert_called_once()
     getUserEntry_mock.assert_called_once()

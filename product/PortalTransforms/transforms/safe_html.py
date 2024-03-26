@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from six import unichr
 from zLOG import ERROR
-from six.moves.html_parser import HTMLParser, HTMLParseError
+from six.moves.html_parser import HTMLParser
 import re
 from Products.PythonScripts.standard import html_quote
 import codecs
@@ -16,6 +16,11 @@ from lxml import etree
 from lxml.etree import HTMLParser as LHTMLParser
 from lxml.html import tostring
 import six
+
+if six.PY2:
+  from six.moves.html_parser import HTMLParseError
+else:
+  HTMLParseError = AssertionError
 
 try:
   from lxml.html.soupparser import fromstring as soupfromstring
@@ -221,7 +226,7 @@ class StrippingParser(HTMLParser):
     def handle_data(self, data):
         if self.suppress: return
         data = html_quote(data)
-        if self.original_charset and isinstance(data, str):
+        if self.original_charset and isinstance(data, bytes):
             data = data.decode(self.original_charset)
         self.result.append(data)
 
@@ -327,7 +332,7 @@ class StrippingParser(HTMLParser):
                  k = len(self.rawdata)
              data = self.rawdata[i+9:k]
              j = k+3
-             if self.original_charset and isinstance(data, str):
+             if self.original_charset and isinstance(data, bytes):
                  data = data.decode(self.original_charset)
              self.result.append("<![CDATA[%s]]>" % data)
         else:
@@ -365,7 +370,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
     # As suggested by python developpers:
     # "Python 3.0 implicitly rejects non-unicode strings"
     # We try to decode strings against provided codec first
-    if isinstance(html, str):
+    if isinstance(html, bytes):
       try:
         html = html.decode(default_encoding)
       except UnicodeDecodeError:
@@ -373,7 +378,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
     parser.feed(html)
     parser.close()
     result = parser.getResult()
-    if parser.original_charset and isinstance(result, str):
+    if parser.original_charset and isinstance(result, bytes):
         result = result.decode(parser.original_charset).encode(default_encoding)
     return result
 
@@ -535,7 +540,7 @@ class SafeHTML:
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:
-                if isinstance(orig, unicode):
+                if isinstance(orig, six.text_type):
                   orig = orig.encode('utf-8')
                 data.setData(orig)
                 break

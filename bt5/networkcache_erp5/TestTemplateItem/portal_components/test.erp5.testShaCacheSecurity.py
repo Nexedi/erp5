@@ -202,7 +202,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
                                                            contribution_tool)
     document = self.portal.portal_contributions.newContent(
                                     filename='test.txt',
-                                    data='test content',
+                                    data=b'test content',
                                     reference='test-reference')
     document()
     document.view()

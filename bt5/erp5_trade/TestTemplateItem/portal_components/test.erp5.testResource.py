@@ -1419,6 +1419,7 @@ class TestResource(ERP5TypeTestCase):
     self.assertEqual(resource.getInternalSupplyLineDestinationReference(),
         'test_destination_reference_on_internal_supply_line')
 
+  @expectedFailure
   def testQuantityUnitOnMovement(self):
     """Make sure that changing default quantity unit on resource does not
        affect to movement.
@@ -1471,7 +1472,8 @@ class TestResource(ERP5TypeTestCase):
 
     # Check existing movement again and make sure that quantity
     # unit is not changed.
-    expectedFailure(self.assertEqual)(
+    # XXX This is the expectedFailure
+    self.assertEqual(
       sale_order_line.getQuantityUnitValue(),
       self.quantity_unit_gram)
 

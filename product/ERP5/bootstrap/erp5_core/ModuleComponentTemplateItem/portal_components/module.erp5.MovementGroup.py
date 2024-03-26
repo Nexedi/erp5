@@ -31,6 +31,7 @@
 from collections import OrderedDict
 from warnings import warn
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type.Utils import ensure_list
 
 
 class MovementGroupNode:
@@ -422,7 +423,7 @@ class FakeMovement:
     """
     price_dict = self._getPriceDict()
     if len(price_dict) == 1:
-      return price_dict.keys()[0]
+      return list(price_dict.keys())[0]
     total_quantity = sum(price_dict.values())
     return (total_quantity and
       sum(price * quantity for price, quantity in price_dict.items())

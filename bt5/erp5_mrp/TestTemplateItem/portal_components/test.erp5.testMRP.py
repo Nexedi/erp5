@@ -28,7 +28,10 @@
 
 import unittest
 from DateTime import DateTime
+from Products.ERP5Type.Utils import OrderableKey
 from erp5.component.test.testBPMCore import TestBPMMixin
+from six.moves import range
+import six
 
 class TestMRPMixin(TestBPMMixin):
 
@@ -114,11 +117,11 @@ class TestMRPMixin(TestBPMMixin):
     self.createCategoriesInCategory(category_tool.quantity_unit.weight, ['kg'])
     self.createCategoriesInCategory(category_tool.trade_phase, ['mrp',])
     self.createCategoriesInCategory(category_tool.trade_phase.mrp,
-        ('manufacturing_step_' + str(i) for i in xrange(2)))
+        ('manufacturing_step_' + str(i) for i in range(2)))
     self.createCategoriesInCategory(category_tool.trade_phase.mrp,
-        ('sourcing_' + str(i) for i in xrange(1)))
+        ('sourcing_' + str(i) for i in range(1)))
     self.createCategoriesInCategory(category_tool.trade_state,
-        ('step_' + str(i) for i in xrange(6)))
+        ('step_' + str(i) for i in range(6)))
 
   def createDefaultOrder(self, business_process, transformation=None):
     if transformation is None:
@@ -278,7 +281,7 @@ class TestMRPMixin(TestBPMMixin):
                                               group_by_variation=1):
       self.assertEqual(expected_dict.pop((r.node_uid, r.variation_text), 0),
                        r.inventory)
-    self.assertFalse(any(expected_dict.itervalues()), expected_dict)
+    self.assertFalse(any(six.itervalues(expected_dict)), expected_dict)
 
 class TestMRPImplementation(TestMRPMixin):
   """the test for implementation"""
@@ -339,18 +342,18 @@ class TestMRPImplementation(TestMRPMixin):
         reference = None
       movement_list.append((sm.getTradePhase(), sm.getQuantity(),
                             reference, sm.getIndustrialPhaseList()))
-    movement_list.sort()
-    self.assertEqual(movement_list, sorted((
-      ('mrp/manufacturing_step_0', -10.0, None, []),
+    movement_list.sort(key=lambda x: [OrderableKey(e) for e in x])
+    self.assertEqual(movement_list, [
       ('mrp/manufacturing_step_0', -30.0, None, []),
+      ('mrp/manufacturing_step_0', -10.0, None, []),
       ('mrp/manufacturing_step_0', 10.0,
        'pr/mrp/manufacturing_step_0', ['trade_phase/mrp/manufacturing_step_0']),
+      ('mrp/manufacturing_step_1', -40.0, None, []),
+      ('mrp/manufacturing_step_1', -10.0, None, []),
       ('mrp/manufacturing_step_1', -10.0,
        'cr/mrp/manufacturing_step_1', ['trade_phase/mrp/manufacturing_step_0']),
-      ('mrp/manufacturing_step_1', -10.0, None, []),
-      ('mrp/manufacturing_step_1', -40.0, None, []),
       ('mrp/manufacturing_step_1', 10.0, 'pr', []),
-      )))
+    ])
 
     order.confirm()
     # Build Manufacturing Order

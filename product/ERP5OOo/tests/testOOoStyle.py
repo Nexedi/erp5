@@ -34,12 +34,12 @@ from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.ERP5OOo.tests.utils import Validator
-import httplib
+import six.moves.http_client
 import lxml.html
 import mock
 import PyPDF2
 
-HTTP_OK = httplib.OK
+HTTP_OK = six.moves.http_client.OK
 
 # setting this to True allows the .publish() calls to provide tracebacks
 debug = False
@@ -700,7 +700,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
     # Simplistic assertion that we are viewing the ODF XML source
-    self.assertIn('office:document-content', response.getBody())
+    self.assertIn(b'office:document-content', response.getBody())
 
   def test_form_list_ZMI(self):
     """We can edit form_list in the ZMI."""
@@ -710,7 +710,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertEqual('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertIn('office:document-content', response.getBody())
+    self.assertIn(b'office:document-content', response.getBody())
 
   def test_report_view_ZMI(self):
     """We can edit report_view in the ZMI."""
@@ -720,7 +720,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertEqual('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertIn('office:document-content', response.getBody())
+    self.assertIn(b'office:document-content', response.getBody())
+
 
 class TestODTStyle(TestOOoStyle):
   skin = 'ODT'

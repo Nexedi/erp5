@@ -29,6 +29,7 @@
 from Products.ERP5Type.XMLObject import XMLObject
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import ensure_list
 from erp5.component.interface.IMovementGroup import IMovementGroup
 import zope.interface
 
@@ -100,7 +101,7 @@ class MovementGroup(XMLObject):
         tmp_dict[key][0].append(movement)
       else:
         tmp_dict[key] = [[movement], property_dict]
-    return tmp_dict.values()
+    return ensure_list(tmp_dict.values())
 
   def separate(self, movement_list, **kw):
     # We sort group of simulation movements by their IDs.

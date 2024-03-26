@@ -30,7 +30,9 @@
 
 import weakref
 
-from SOAPpy.wstools import WSDLTools
+# 'from SOAPpy.wstools import WSDLTools' does not work with SOAPpy-py3 0.52.26
+import SOAPpy
+WSDLTools = SOAPpy.wstools.WSDLTools
 from SOAPpy.Client  import SOAPProxy
 from SOAPpy.Types   import headerType, faultType
 

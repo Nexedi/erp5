@@ -36,6 +36,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript, FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
+import six
 
 class TestERP5Base(ERP5TypeTestCase):
   """ERP5 Base tests.
@@ -1945,7 +1946,7 @@ class TestERP5Base(ERP5TypeTestCase):
       assertPublishedHeaderEqual(portal, header_name, script_value)
       assertPublishedHeaderEqual(person_module, header_name, script_value + ', ' + other_value)
     finally:
-      for document, header_name_set in response_header_dict.iteritems():
+      for document, header_name_set in six.iteritems(response_header_dict):
         for header_name in header_name_set:
           try:
             document.deleteResponseHeaderRule(header_name)
@@ -2116,8 +2117,7 @@ class TestImage(ERP5TypeTestCase):
     image_type, image_data = image.convert('jpg', display='thumbnail')
     self.assertEqual('image/jpeg', image_type)
     # magic
-    self.assertEqual('\xff', image_data[0])
-    self.assertEqual('\xd8', image_data[1])
+    self.assertEqual(image_data[0:2], b'\xff\xd8')
 
   def test_ImageSize(self):
     for filename, size in (

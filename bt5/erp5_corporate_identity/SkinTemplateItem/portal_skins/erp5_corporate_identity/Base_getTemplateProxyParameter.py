@@ -128,7 +128,7 @@ def populateOrganisationDict(my_organisation_list):
     if organisation_default_image:
       output_dict["logo_url"] = organisation_default_image.getRelativeUrl()
       output_dict["logo_data_url"] = 'data:image/png;;base64,%s' % (
-        b64encode(organisation_default_image.convert(format="png", display="thumbnail")[1])
+        b64encode(organisation_default_image.convert(format="png", display="thumbnail")[1]).decode()
       )
     else:
       output_dict["logo_url"] = err("logo_url")

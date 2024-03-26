@@ -25,6 +25,7 @@ The returned mapping has the following structure:
 This scripts guarantees that the list of category info is sorted in such a
 way that parent always precedes their children.
 """
+import six
 from Products.ERP5Type.Message import translateString
 from Products.ERP5OOo.OOoUtils import OOoParser
 parser = OOoParser()
@@ -41,41 +42,7 @@ if invalid_spreadsheet_error_handler is None:
 property_id_set = portal.portal_types.Category.getInstancePropertySet()
 property_id_set.update(getattr(portal.portal_types, 'Base Category').getInstancePropertySet())
 
-def getIDFromString(string=None):
-  """
-    This function transform a string to a safe and beautiful ID.
-    It is used here to create a safe category ID from a string.
-    But the code is not really clever...
-  """
-  if string is None:
-    return None
-  clean_id = ''
-  translation_map = { 'a'  : [u'\xe0', u'\xe3']
-                    , 'e'  : [u'\xe9', u'\xe8']
-                    , 'i'  : [u'\xed']
-                    , 'u'  : [u'\xf9']
-                    , '_'  : [' ', '+']
-                    , '-'  : ['-', u'\u2013']
-                    , 'and': ['&']
-                    }
-  # Replace odd chars by safe ascii
-  string = string.lower()
-  string = string.strip()
-  for (safe_char, char_list) in translation_map.items():
-    for char in char_list:
-      string = string.replace(char, safe_char)
-  # Exclude all non alphanumeric chars
-  for char in string:
-    if char.isalnum() or char in translation_map.keys():
-      clean_id += char
-  # Delete leading and trailing char which are not alpha-numerics
-  # This prevent having IDs with starting underscores
-  while len(clean_id) > 0 and not clean_id[0].isalnum():
-    clean_id = clean_id[1:]
-  while len(clean_id) > 0 and not clean_id[-1].isalnum():
-    clean_id = clean_id[:-1]
-
-  return clean_id
+getIDFromString = portal.Base_getSafeIdFromString
 
 # if the file is not an open office format, try to convert it using oood
 # FIXME: use portal_transforms
@@ -129,7 +96,7 @@ for table_name in spreadsheet_list.keys():
     else:
       # If there is a new column with a header and the path definition has
       # started, that seems the path definition has ended
-      property_map[column_index] = column_id.encode('utf8')
+      property_map[column_index] = column_id.encode('utf8') if six.PY2 else column_id
     column_index += 1
 
   # Construct categories data (with absolute path) from table lines
@@ -137,9 +104,9 @@ for table_name in spreadsheet_list.keys():
   # 1 table = 1 base category
   base_category_name = table_name
   base_category_id = getIDFromString(base_category_name)
-  if same_type(base_category_name, u''):
+  if six.PY2 and isinstance(base_category_name, unicode):
     base_category_name = base_category_name.encode('utf8')
-  if same_type(base_category_id, u''):
+  if six.PY2 and isinstance(base_category_id, unicode):
     base_category_id = base_category_id.encode('utf8')
   category_list = category_list_spreadsheet_mapping.setdefault(base_category_id, [])
   category_list.append({ 'path' : base_category_id
@@ -198,7 +165,7 @@ for table_name in spreadsheet_list.keys():
       if cell_id not in ('', None):
         # Handle normal properties
         if not property_id.startswith('path_'):
-          if same_type(cell_data, u''):
+          if six.PY2 and same_type(cell_data, u''):
             cell_data = cell_data.encode('utf8')
           category_property_list[property_id] = cell_data
         # Handle 'path' property
@@ -218,7 +185,7 @@ for table_name in spreadsheet_list.keys():
                 # Get the next depth
                 break
           path = '/'.join([base_category_id,] + absolute_path_element_list[::-1])
-          if same_type(path, u''):
+          if six.PY2 and same_type(path, u''):
             path = path.encode('utf8')
           category_property_list['path'] = path
 

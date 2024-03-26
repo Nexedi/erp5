@@ -27,7 +27,11 @@
 #
 ##############################################################################
 
-from base64 import encodestring, decodestring
+import six
+if six.PY2:
+  from base64 import encodestring as encodebytes, decodestring as decodebytes
+else:
+  from base64 import encodebytes, decodebytes
 from six.moves.urllib.parse import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
@@ -46,12 +50,18 @@ from Products.PluggableAuthService.plugins.CookieAuthHelper import CookieAuthHel
 
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
                                                   _AuthenticationFailure
 from Products import ERP5Security
 
+# TODO pycrypto is obsolete and should be replaced by cryptography or pycryptodome
 from Crypto.Cipher import AES
 from Crypto import Random
+if six.PY3:
+  import time
+  time.clock = time.process_time
+
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 class AESCipher:
@@ -64,7 +74,7 @@ class AESCipher:
   def encrypt(self, login):
     iv = Random.new().read(AES.block_size)
     encryptor = AES.new(self.encryption_key, self.mode, IV=iv)
-    return urlsafe_b64encode(iv + encryptor.encrypt(login.ljust(((len(login)-1)/16+1)*16)))
+    return urlsafe_b64encode(iv + encryptor.encrypt(login.ljust(((len(login)-1)//16+1)*16)))
 
   def decrypt(self, crypted_login):
     decoded_crypted_login = urlsafe_b64decode(crypted_login)
@@ -217,13 +227,13 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   def encrypt(self, login):
     """Encrypt the login"""
     cipher = globals()['%sCipher' % self._getCipher()](self.encryption_key)
-    return cipher.encrypt(login)
+    return bytes2str(cipher.encrypt(login))
 
   security.declarePrivate('decrypt')
   def decrypt(self, crypted_login):
     """Decrypt string and return the login"""
     cipher = globals()['%sCipher' % self._getCipher()](self.encryption_key)
-    return cipher.decrypt(crypted_login)
+    return bytes2str(cipher.decrypt(crypted_login))
 
   ####################################
   #ILoginPasswordHostExtractionPlugin#
@@ -263,7 +273,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
             default_cookie = request.get(self.default_cookie_name, None)
             if default_cookie is not None:
               #Cookie is found
-              cookie_val = decodestring(unquote(default_cookie))
+              cookie_val = decodebytes(unquote(default_cookie))
               if cookie_val is not None:
                 login, password = cookie_val.split(':')
                 creds['login'] = login
@@ -298,7 +308,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       response.setCookie(self.cookie_name, quote(cookie_val), path='/')#, expires=expires)
       response.expireCookie(self.default_cookie_name, path='/')
     elif login is not None and new_password is not None:
-      cookie_val = encodestring('%s:%s' % (login, new_password))
+      cookie_val = encodebytes('%s:%s' % (login, new_password))
       cookie_val = cookie_val.rstrip()
       response.setCookie(self.default_cookie_name, quote(cookie_val), path='/')
       response.expireCookie(self.cookie_name, path='/')

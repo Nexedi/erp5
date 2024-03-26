@@ -385,6 +385,8 @@ import six.moves.urllib.parse
 allow_module('six.moves.urllib.parse')
 allow_type(six.moves.urllib.parse.ParseResult)
 allow_type(six.moves.urllib.parse.SplitResult)
+# BBB this is different type on python3
+allow_type(type(six.moves.urllib.parse.urldefrag('')))
 ModuleSecurityInfo('six.moves.urllib.parse').declarePublic(
   'urlencode',
   'quote', 'unquote',
@@ -506,10 +508,12 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
   allow_type(type(rz[0]))
   allow_type(type(rz))
 
-allow_type(np.dtype)
+# TODO zope4py3
+#allow_type(np.dtype)
 allow_type(np.timedelta64)
 allow_type(type(np.c_))
-allow_type(type(np.dtype('int16')))
+# TODO zope4py3
+#allow_type(type(np.dtype('int16')))
 sz = np.array([('2017-07-12T12:30:20',)], dtype=[('date', 'M8[s]')])
 allow_type(type(sz[0]['date']))
 

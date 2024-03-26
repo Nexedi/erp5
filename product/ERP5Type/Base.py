@@ -3202,6 +3202,7 @@ class Base(
               searchable_text_list.extend(method_value)
             else:
               searchable_text_list.append(method_value)
+      __traceback_info__ = (self.getPath(), searchable_text_list)
       searchable_text = ' '.join([str(x) for x in searchable_text_list])
       return searchable_text.strip()
 
@@ -3655,7 +3656,7 @@ class Base(
       next_id = default
     new_next_id = None if poison else next_id + count
     id_generator_state[group].value = new_next_id
-    return range(next_id, new_next_id)
+    return ensure_list(range(next_id, new_next_id))
 
 InitializeClass(Base)
 
