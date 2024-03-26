@@ -155,10 +155,10 @@
     return storage.get(id)
       .push(function (doc) {
         if (doc.portal_type !== 'opml') {
-          throw new TypeError("Object with portal_type" + doc.portal_type +
-                              "is frozen, cannot remove it.");
+          return storage.remove(id);
         }
         function removeOPMLTree(url) {
+          console.log("portal_type 'opml'! complex opml remove");
           var remove_id_list = [],
             remove_signature_id_list = [];
 
