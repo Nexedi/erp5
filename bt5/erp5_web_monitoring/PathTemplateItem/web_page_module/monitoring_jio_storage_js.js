@@ -154,11 +154,16 @@
     var storage = this._local_sub_storage;
     return storage.get(id)
       .push(function (doc) {
+        console.log("monitoring jio storage REMOVE. id:", id);
+        console.log("with portal_type:", doc.portal_type);
         if (doc.portal_type !== 'opml') {
-          throw new TypeError("Object with portal_type" + doc.portal_type +
-                              "is frozen, cannot remove it.");
+          console.log("portal_type !== 'opml'! just jio remove");
+          return storage.remove(id);
+          /*throw new TypeError("Object with portal_type" + doc.portal_type +
+                              "is frozen, cannot remove it.");*/
         }
         function removeOPMLTree(url) {
+          console.log("portal_type 'opml'! complex opml remove");
           var remove_id_list = [],
             remove_signature_id_list = [];
 
