@@ -17,6 +17,7 @@
                 <string>editable_columns</string>
                 <string>lines</string>
                 <string>portal_types</string>
+                <string>search_columns</string>
                 <string>selection_name</string>
                 <string>sort</string>
                 <string>sort_columns</string>
@@ -181,6 +182,17 @@
                         <tuple>
                           <string>Promise</string>
                           <string>Promise</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
