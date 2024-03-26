@@ -5,4 +5,4 @@ td = context.newContent(
     temp_object=True,
     base_content_type=base_content_type,
     base_data=b'not empty')
-return  [('', '')] + td.getTargetFormatItemList()
+return  [('', '')] + sorted(td.getTargetFormatItemList())
