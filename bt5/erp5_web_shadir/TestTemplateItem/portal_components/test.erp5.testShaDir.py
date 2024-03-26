@@ -270,7 +270,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
             version="001",
             language="en",
             follow_up_value=person,
-            data="FILEDATA")
+            data=b"FILEDATA")
     doc.publish()
 
     self.tic()
