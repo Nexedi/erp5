@@ -3202,6 +3202,7 @@ class Base(
               searchable_text_list.extend(method_value)
             else:
               searchable_text_list.append(method_value)
+      __traceback_info__ = (self.getPath(), searchable_text_list)
       searchable_text = ' '.join([str(x) for x in searchable_text_list])
       return searchable_text.strip()
 
