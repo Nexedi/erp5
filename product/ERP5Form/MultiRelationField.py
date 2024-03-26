@@ -367,6 +367,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       )
     return html_string
 
+  render_pdf = Widget.LinesTextAreaWidget.render_pdf
+
   def render_autocomplete(self, field, key):
     """
     Use jquery-ui autocompletion for all relation fields by default, requiring
