@@ -86,7 +86,7 @@ def convertToString(value):
     return str(value)
   return value
 
-class Widget:
+class Widget(object):
   """A field widget that knows how to display itself as HTML.
   """
 
