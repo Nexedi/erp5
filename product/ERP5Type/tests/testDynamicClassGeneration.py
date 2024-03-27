@@ -3402,9 +3402,9 @@ break_at_import()
 
     output = runLiveTest('testRunLiveTestImportError')
     self.assertIn('''
-  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 4, in <module>
+  File "erp5://portal_components/test.erp5.testRunLiveTestImportError", line 4, in <module>
     break_at_import()
-  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 3, in break_at_import
+  File "erp5://portal_components/test.erp5.testRunLiveTestImportError", line 3, in break_at_import
     import non.existing.module # pylint:disable=import-error
 ImportError: No module named non.existing.module
 ''', output)
