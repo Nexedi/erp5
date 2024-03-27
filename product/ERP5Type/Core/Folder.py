@@ -682,22 +682,15 @@ _HANDLER_LIST = (
 _BROKEN_BTREE_HANDLER = 'CMFBTreeFolderHandler'
 
 # Import order:
-_Folder_Bases = (
-  # - FolderMixIn can be about anywhere, let's put it first.
-  FolderMixIn,
-  # - our CopyContainer before ObjectManager, as ObjectManager inherits from
-  #   OFS.CopySupport.CopyContainer, which methods we do not want.
-  CopyContainer,
-  # - ObjectManager before Base, as Base is only a PropertyManager (no
-  #   subobjects) and inheriting from ObjectManager overrides the necessary
-  #   methods.
-  ObjectManager,
-  # - Base before generic container types, to allow customising their methods.
-  Base,
-  # - container types, because instances of Folder must be instances of these.
-  OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder)
-
-class Folder(*_Folder_Bases):
+# - FolderMixIn can be about anywhere, let's put it first.
+# - our CopyContainer before ObjectManager, as ObjectManager inherits from
+#   OFS.CopySupport.CopyContainer, which methods we do not want.
+# - ObjectManager before Base, as Base is only a PropertyManager (no
+#   subobjects) and inheriting from ObjectManager overrides the necessary
+#   methods.
+# - Base before generic container types, to allow customising their methods.
+# - container types, because instances of Folder must be instances of these.
+class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder):
   """
   A Folder is a subclass of Base but not of XMLObject.
   Folders are not considered as documents and are therefore
