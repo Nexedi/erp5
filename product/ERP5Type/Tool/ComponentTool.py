@@ -163,8 +163,7 @@ class ComponentTool(BaseTool):
       if six.PY2:
         from astroid.builder import MANAGER
       else:
-        from astroid.builder import AstroidManager
-        MANAGER = AstroidManager()
+        from astroid.astroid_manager import MANAGER
       astroid_cache = MANAGER.astroid_cache
       for k in list(astroid_cache.keys()):
         if k.startswith('erp5.component.') and k not in component_package_list:
