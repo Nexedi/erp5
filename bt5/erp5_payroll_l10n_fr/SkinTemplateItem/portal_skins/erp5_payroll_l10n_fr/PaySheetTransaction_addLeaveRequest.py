@@ -29,6 +29,7 @@ leave_request.newContent(
   portal_type="Leave Request Period",
   start_date=leave_request.getStartDate(),
   stop_date=leave_request.getStopDate(),
+  effective_date=leave_request.getStopDate(),
   resource=leave_request.getResource(),
   quantity=quantity
 )
