@@ -332,7 +332,10 @@ class ComponentDynamicPackage(ModuleType):
 
     component = getattr(site.portal_components, component_id)
     relative_url = component.getRelativeUrl()
-    module_file = '<' + relative_url + '>'
+    if six.PY2:
+      module_file = '<' + relative_url + '>'
+    else:
+      module_file = 'erp5://' + relative_url
 
     module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
     module = ModuleType(module_fullname, component.getDescription())
