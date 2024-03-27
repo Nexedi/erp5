@@ -3383,9 +3383,11 @@ ModuleNotFoundError: No module named 'non'
 '''
     self.assertIn(expected_output, output)
     output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
-    self.assertIn(
-      "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist",
-      output)
+    if six.PY2:
+      expected_output = "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist"
+    else:
+      expected_output = "ModuleNotFoundError: No module named 'testDoesNotExist_import_error_because_module_does_not_exist'"
+    self.assertIn(expected_output, output)
 
   def testERP5Broken(self):
     # Create a broken ghost object
