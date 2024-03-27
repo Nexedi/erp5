@@ -143,7 +143,8 @@ def patch_linecache():
       if module_globals is None:
         module_globals = get_globals(sys._getframe(1))
 
-      # Get source code of ZODB Components following PEP 302
+      # Get source code of ZODB Components following PEP 302, when
+      # cache is not pre-filled by lazycache.
       if (filename.startswith('<portal_components/') and
           module_globals is not None):
         data = None
@@ -155,9 +156,9 @@ def patch_linecache():
             data = get_source(name)
           except (ImportError, AttributeError):
             pass
-
         return data.splitlines(True) if data is not None else ()
 
+      # in-ZODB python scripts
       if basename(filename) in ('Script (Python)', 'ERP5 Python Script', 'ERP5 Workflow Script'):
         try:
           script = module_globals['script']
@@ -166,12 +167,31 @@ def patch_linecache():
         except Exception:
           pass
         return ()
+
+      # TALES expressions
       x = expr_search(filename)
       if x:
         return x.groups()
+
+    if filename.startswith('<portal_components/'):
+      # use our special key for lazycache
+      filename = 'erp5-linecache://' + filename
     return linecache_getlines(filename, module_globals)
 
   linecache.getlines = getlines
+
+  if sys.version_info[:3] >= (3, ):
+    linecache_lazycache = linecache.lazycache
+    def lazycache(filename, module_globals):
+      if filename:
+        # XXX linecache ignores files named like <this>, but this is
+        # what we used for portal_components filename (and it's not so
+        # good because it's not easy to copy paste, so we might want to
+        # reconsider), for now, we add an arbitrary prefix for cache.
+        if (filename.startswith('<') and filename.endswith('>')):
+          filename = 'erp5-linecache://' + filename
+      return linecache_lazycache(filename, module_globals)
+    linecache.lazycache = lazycache
 
 patch_linecache()
 
