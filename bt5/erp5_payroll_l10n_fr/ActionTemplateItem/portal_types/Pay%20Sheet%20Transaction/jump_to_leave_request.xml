@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/PaySheetTransaction_jumpToLeaveRequests</string> </value>
+            <value> <string>string:${object_url}/PaySheetTransaction_jumpToLeaveRequest</string> </value>
         </item>
       </dictionary>
     </pickle>
