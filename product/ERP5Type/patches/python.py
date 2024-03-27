@@ -155,17 +155,20 @@ def patch_linecache():
             data = get_source(name)
           except (ImportError, AttributeError):
             pass
-
         return data.splitlines(True) if data is not None else ()
 
-      if basename(filename) in ('Script (Python)', 'ERP5 Python Script', 'ERP5 Workflow Script'):
-        try:
-          script = module_globals['script']
-          if script._p_jar.opened:
-            return script.body().splitlines(True)
-        except Exception:
-          pass
-        return ()
+      if module_globals is not None:
+        # in-ZODB python scripts
+        if basename(filename) in ('Script (Python)', 'ERP5 Python Script', 'ERP5 Workflow Script'):
+          try:
+            script = module_globals['script']
+            if script._p_jar.opened:
+              return script.body().splitlines(True)
+          except Exception:
+            pass
+          return ()
+
+      # TALES expressions
       x = expr_search(filename)
       if x:
         return x.groups()
@@ -173,4 +176,5 @@ def patch_linecache():
 
   linecache.getlines = getlines
 
-patch_linecache()
+if sys.version_info[:3] < (3, ):
+  patch_linecache()
