@@ -2715,7 +2715,7 @@ def foobar(self, a, b="portal_type"):
     external_method.manage_setGuard({'guard_roles': 'Member'})
     self.assertEqual(self.portal.TestPythonScript(a='portal_ids'), 'Id Tool')
     self.assertEqual(self.publish(base + '/portal_types/TestExternalMethod?'
-      'a=Types Tool&b=type_class', 'ERP5TypeTestCase:').getBody(), 'TypesTool')
+      'a=Types Tool&b=type_class', 'ERP5TypeTestCase:').getBody(), b'TypesTool')
 
     sm = getSecurityManager()
     try:
@@ -3189,13 +3189,11 @@ class Test(ERP5TypeTestCase):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def _restoreMailHost(self):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def test_01_sampleTest(self):
     self.assertEqual(0, 0)
@@ -3291,7 +3289,7 @@ class Test(ERP5TypeTestCase):
                                reset_portal_type_at_transaction_boundary=True)
 
     output = runLiveTest('testRunLiveTest')
-    expected_msg_re = re.compile('Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
+    expected_msg_re = re.compile(r'Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
     # Now try addCleanup
@@ -3367,14 +3365,23 @@ break_at_import()
       return self._component_tool.readTestOutput()
 
     output = runLiveTest('testRunLiveTestImportError')
-    self.assertIn('''
+    if six.PY2:
+      expected_output = '''
   File "<portal_components/test.erp5.testRunLiveTestImportError>", line 4, in <module>
     break_at_import()
   File "<portal_components/test.erp5.testRunLiveTestImportError>", line 3, in break_at_import
     import non.existing.module # pylint:disable=import-error
 ImportError: No module named non.existing.module
-''', output)
-
+'''
+    else:
+      expected_output = '''
+  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 4, in <module>
+    break_at_import()
+  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 3, in break_at_import
+    import non.existing.module # pylint:disable=import-error
+ModuleNotFoundError: No module named 'non'
+'''
+    self.assertIn(expected_output, output)
     output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
     self.assertIn(
       "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist",
