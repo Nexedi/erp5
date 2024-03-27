@@ -154,7 +154,8 @@
     // XXX fix date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this, jio_gadget;
-      console.log("jio_allDocs params", param_list[0]);
+      //TODO make this customizable from config
+      //add a gadget reference on portal type or query config?
       if (param_list[0].query.indexOf('portal_type:"Promise"') !== -1 &&
           gadget.state.doc && gadget.state.doc.source) {
         return new RSVP.Queue()
@@ -163,9 +164,6 @@
           })
           .push(function (result) {
             jio_gadget = result;
-            console.log("jio_alldocs for a promise!");
-            console.log("gadget.state.doc:", gadget.state.doc);
-            console.log("creating webhttp jio with url:", gadget.state.doc.source_url);
             return jio_gadget.createJio({
               type: "webhttp",
               // XXX fix of url
@@ -173,14 +171,11 @@
             });
           })
           .push(function () {
-            console.log("jio created");
-            console.log("get id:", gadget.state.doc.source + ".history");
             // get history file on live
             return jio_gadget.get(
               gadget.state.doc.source + ".history"
             )
               .push(undefined, function (error) {
-                console.log("error, no status_history");
                 if (error.name === "cancel") {
                   return undefined;
                 }
@@ -279,11 +274,12 @@
                     });
                   }
                 }
-                console.log("result:", result);
                 return result;
               });
           });
       }
+      //TODO make this customizable from config
+      //use global var set from config style_columns?
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
           var i, date, len = result.data.total_rows, date_key_array,
@@ -319,9 +315,6 @@
                 };
               }
             });
-            console.log("jio_allDocs result data row", result.data.rows[i].value);
-            //TODO make it customizable from config
-            //use global var set from config style_columns
             status_key_array.forEach((status_key) => {
               if (result.data.rows[i].value.hasOwnProperty(status_key)) {
                 status = result.data.rows[i].value[status_key];
