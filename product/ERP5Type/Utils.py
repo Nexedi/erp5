@@ -581,10 +581,9 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
       finally:
         if six.PY2:
           from astroid.builder import MANAGER
-          astroid_cache = MANAGER.astroid_cache
         else:
-          from astroid.manager import AstroidManager
-          astroid_cache = AstroidManager().astroid_cache
+          from astroid.astroid_manager import MANAGER
+        astroid_cache = MANAGER.astroid_cache
         astroid_cache.pop(
           os.path.splitext(os.path.basename(input_file.name))[0],
           None)
