@@ -70,11 +70,9 @@
           return appcache_storage.repair(current_version);
         })
         .push(function () {
-          console.log("appcache repaired.");
           return jio_storage.repair();
         })
         .push(function () {
-          console.log("jio repaired.");
           return gadget.setSetting("migration_version", current_version);
         });
     })
@@ -83,10 +81,8 @@
       var gadget = this;
       if (options !== undefined) {
         gadget.props.jio_storage = jIO.createJIO(options);
-        console.log("jio options created!");
       } else {
         gadget.props.jio_storage = jIO.createJIO(monitoring_jio);
-        console.log("monitoring_jio created!");
       }
     })
 
@@ -101,11 +97,7 @@
           migration_version = result_list[1];
           current_version = window.location.href.replace(window.location.hash, "");
           index = current_version.indexOf(window.location.host) + window.location.host.length;
-          current_version = current_version.substr(index);/*
-          return;
-        })
-        .push(function () {
-          */
+          current_version = current_version.substr(index);
           manifest = "gadget_officejs_monitoring.configuration";
           monitoring_jio = {
             type: "replicatedopml",
@@ -163,18 +155,14 @@
         })
         .push(function () {
           if (migration_version !== current_version) {
-            console.log("NEW APP VERSION! gadget.props.jio_storage:", gadget.props.jio_storage);
             if (gadget.props.jio_storage) {
-              console.log("call jio_allDocs!");
               return gadget.props.jio_storage.allDocs();
             }
           }
         })
         .push(function (all_docs) {
-          console.log("all_docs:", all_docs);
           if (all_docs && all_docs.data.total_rows) {
             //iterate all docs, jio_remove, and recreate
-            //for gadget.jio_remove(options.jio_key);
             var remove_queue = new RSVP.Queue(), i;
             function remove_doc(id) {
               remove_queue
@@ -190,16 +178,11 @@
               gadget.createStorage(options, monitoring_jio),
               gadget.setSetting("latest_import_date", undefined)
             ]);
-          } else {
-            console.log("no new version, no delete");
           }
         })
         .push(function () {
-          console.log("remove part done");
           if (migration_version !== current_version) {
-            console.log("new app version! recreate appcache and force repair");
             appcache_storage = jIO.createJIO(appcache_jio);
-            console.log("appcache_jio created");
             return gadget.updateConfiguration(appcache_storage, migration_version, current_version, gadget.props.jio_storage);
           }
         })
