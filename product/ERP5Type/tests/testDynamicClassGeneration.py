@@ -2866,12 +2866,15 @@ class TestGC(XMLObject):
       self.assertEqual(gc.garbage, [])
 
       import erp5.component
-      gc.set_debug(
-        gc.DEBUG_STATS |
-        gc.DEBUG_UNCOLLECTABLE |
-        gc.DEBUG_COLLECTABLE |
-        gc.DEBUG_OBJECTS |
-        gc.DEBUG_INSTANCES)
+      debug_flags = (
+        gc.DEBUG_STATS
+        | gc.DEBUG_UNCOLLECTABLE
+        | gc.DEBUG_COLLECTABLE )
+      if six.PY2:
+        debug_flags |= (
+          gc.DEBUG_OBJECTS
+          | gc.DEBUG_INSTANCES)
+      gc.set_debug(debug_flags)
       sys.stderr = stderr
       # Still not garbage collectable as RefManager still keeps a reference
       erp5.component.ref_manager.clear()
