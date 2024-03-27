@@ -3401,13 +3401,18 @@ break_at_import()
       return self._component_tool.readTestOutput()
 
     output = runLiveTest('testRunLiveTestImportError')
+    relative_url = 'portal_components/test.erp5.testRunLiveTestImportError'
+    if six.PY2:
+      module_file = '<' + relative_url + '>'
+    else:
+      module_file = 'erp5://' + relative_url
     self.assertIn('''
-  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 4, in <module>
+  File "%(module_file)s", line 4, in <module>
     break_at_import()
-  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 3, in break_at_import
+  File "%(module_file)s", line 3, in break_at_import
     import non.existing.module # pylint:disable=import-error
 ImportError: No module named non.existing.module
-''', output)
+''' % dict(module_file=module_file), output)
 
     output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
     self.assertIn(
