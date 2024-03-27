@@ -467,10 +467,6 @@ _pylint_message_re = re.compile(
 def checkPythonSourceCode(source_code_str, portal_type=None):
   """
   Check source code with pylint or compile() builtin if not available.
-
-  TODO-arnau: Get rid of NamedTemporaryFile (require a patch on pylint to
-              allow passing a string) and this should probably return a proper
-              ERP5 object rather than a dict...
   """
   if not source_code_str:
     return []
@@ -555,7 +551,13 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            '--dummy-variables-rgx=_$|dummy|__traceback_info__|__traceback_supplement__',
       ]
       if six.PY3:
-        args.append("--msg-template='{C}: {line},{column}: {msg} ({symbol})'")
+        args.extend(
+          (
+            "--msg-template='{C}: {line},{column}: {msg} ({symbol})'",
+            # BBB until we drop compatibility with PY2
+            "--disable=redundant-u-string-prefix,raise-missing-from",
+          )
+        )
       if portal_type == 'Interface Component':
         # __init__ method from base class %r is not called
         args.append('--disable=W0231')
@@ -581,10 +583,9 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
       finally:
         if six.PY2:
           from astroid.builder import MANAGER
-          astroid_cache = MANAGER.astroid_cache
         else:
-          from astroid.manager import AstroidManager
-          astroid_cache = AstroidManager().astroid_cache
+          from astroid.astroid_manager import MANAGER
+        astroid_cache = MANAGER.astroid_cache
         astroid_cache.pop(
           os.path.splitext(os.path.basename(input_file.name))[0],
           None)
