@@ -32,27 +32,25 @@ sys.modules.setdefault('isort', None)
 
 ## All arguments are passed as arguments and this needlessly outputs a 'No
 ## config file found, using default configuration' message on stderr.
-try:
+if six.PY2:
     from logilab.common.configuration import OptionsManagerMixIn
-except ImportError:
-    # pylint 2.x (python3)
-    from pylint.config import OptionsManagerMixIn
-OptionsManagerMixIn.read_config_file = lambda *args, **kw: None
+    OptionsManagerMixIn.read_config_file = lambda *args, **kw: None
 
 ## Pylint transforms and plugin to generate AST for ZODB Components
 from astroid.builder import AstroidBuilder
-from astroid.exceptions import AstroidBuildingException
+if six.PY2:
+    from astroid.exceptions import AstroidBuildingException as AstroidBuildingError
+else:
+    from astroid.exceptions import AstroidBuildingError
 from astroid import node_classes
 
 if six.PY2:
   from astroid import MANAGER
 else:
-  from astroid import AstroidManager
-  MANAGER = AstroidManager()
+  from astroid.astroid_manager import MANAGER
 
-try:
+if six.PY2:
   from astroid.builder import _guess_encoding
-except ImportError:
   # XXX: With python3, tokenize.detect_encoding() is used instead. This
   # should do the same instead of copying/pasting legacy code...
   import re
@@ -67,7 +65,7 @@ except ImportError:
           match = _ENCODING_RGX.match(line)
           if match is not None:
               return match.group(1)
-def string_build(self, data, modname='', path=None):
+  def string_build(self, data, modname='', path=None):
     """
     build astroid from source code string and return rebuilded astroid
 
@@ -101,11 +99,11 @@ def string_build(self, data, modname='', path=None):
         LOG("Products.ERP5Type.patches.pylint", WARNING,
             "%s: Considered as not importable: Wrong encoding? (%r)" %
             (modname, exc))
-        raise AstroidBuildingException(exc)
+        raise AstroidBuildingError(exc)
     module = self._data_build(data, modname, path)
     module.file_bytes = data
     return self._post_build(module, encoding)
-AstroidBuilder.string_build = string_build
+  AstroidBuilder.string_build = string_build
 
 # patch node_classes.const_factory not to fail on LazyModules that e.g.
 # pygolang installs for pytest and ipython into sys.modules dict:
@@ -160,17 +158,17 @@ def _buildAstroidModuleFromComponentModuleName(modname):
             obj = getattr(component_tool,
                           component_id.replace('_version', '', 1))
         except AttributeError:
-            raise AstroidBuildingException()
+            raise AstroidBuildingError()
         if obj.getValidationState() in ('modified', 'validated'):
             component_obj = obj
         else:
-            raise AstroidBuildingException()
+            raise AstroidBuildingError()
 
     else:
         try:
             package, reference = component_id.split('.', 1)
         except ValueError:
-            raise AstroidBuildingException()
+            raise AstroidBuildingError()
         for version in portal.getVersionPriorityNameList():
             try:
                 obj = getattr(component_tool,
@@ -189,7 +187,7 @@ def _buildAstroidModuleFromComponentModuleName(modname):
                 return module
 
     if component_obj is None:
-        raise AstroidBuildingException()
+        raise AstroidBuildingError()
 
     # module_build() could also be used but this requires importing
     # the ZODB Component and also monkey-patch it to support PEP-302
@@ -201,7 +199,7 @@ def _buildAstroidModuleFromComponentModuleName(modname):
 
 def fail_hook_erp5_component(modname):
     if not modname.startswith('erp5.'):
-        raise AstroidBuildingException()
+        raise AstroidBuildingError()
 
     if (modname in ('erp5.portal_type',
                     'erp5.component',
@@ -229,8 +227,11 @@ MANAGER.register_failed_import_hook(fail_hook_erp5_component)
 ## transforms but this would require either checking dynamically which
 ## attributes has been added (much more complex than the current approach)
 ## or listing them statically (inconvenient).
-from astroid.exceptions import NotFoundError
-from astroid.scoped_nodes import Module
+from astroid.exceptions import AstroidError, NotFoundError
+if six.PY2:
+    from astroid.scoped_nodes import Module
+else:
+    from astroid.nodes import Module
 Module_getattr = Module.getattr
 def _getattr(self, name, *args, **kw):
     try:
@@ -271,17 +272,25 @@ def _getattr(self, name, *args, **kw):
             if self.name == origin_module_name:
                 raise
 
-            # ast_from_class() actually works for any attribute of a Module
+            # ast_from_class() actually works for any attribute of a Module,
+            # but it raises some AssertionError when the class is defined
+            # dynamically, for example with zope.hookable.hookable , which
+            # (in version 6.0) is defined as:
+            #
+            #   if _PURE_PYTHON or _c_hookable is None:
+            #       hookable = _py_hookable
+            #   else:  # pragma: no cover
+            #       hookable = _c_hookable
             try:
                 ast = MANAGER.ast_from_class(attr)
-            except AstroidBuildingException:
+            except (AssertionError,  AstroidError):
                 raise e
 
         self.locals[name] = [ast]
         return [ast]
 Module.getattr = _getattr
 
-if sys.version_info < (2, 8):
+if six.PY2:
     from astroid.node_classes import From
     def _absolute_import_activated(self):
         if (self.name.startswith('checkPythonSourceCode') or
@@ -428,7 +437,7 @@ _inspected_modules = {}
 def fail_hook_BTrees(modname):
     # Only consider BTrees.OOBTree pattern
     if not modname.startswith('BTrees.') or len(modname.split('.')) != 2:
-        raise AstroidBuildingException()
+        raise AstroidBuildingError()
     if modname not in _inspected_modules:
         try:
             modcode = build_stub(
@@ -444,7 +453,7 @@ def fail_hook_BTrees(modname):
     else:
         astng = _inspected_modules[modname]
     if astng is None:
-        raise AstroidBuildingException('Failed to import module %r' % modname)
+        raise AstroidBuildingError('Failed to import module %r' % modname)
     return astng
 MANAGER.register_failed_import_hook(fail_hook_BTrees)
 

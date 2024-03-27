@@ -1950,11 +1950,10 @@ class TestZodbModuleComponent(SecurityTestCase):
        [ComponentMixin._message_text_content_not_set],
        [],
        []),
-      ("""def foobar(*args, **kwargs)
-  return 42
+      ("""None()
 """ + valid_code,
-       ["Error in Source Code: E:  1,  0: invalid syntax (syntax-error)"],
-       ["E:  1,  0: invalid syntax (syntax-error)"],
+       ["Error in Source Code: E:  1,  0: None is not callable (not-callable)"],
+       ["E:  1,  0: None is not callable (not-callable)"],
        []),
       # Make sure that foobar NameError is at the end to make sure that after
       # defining foobar function, it is not available at all
@@ -2227,8 +2226,7 @@ def function_foo(*args, **kwargs):
     if six.PY2:
       from astroid.builder import MANAGER
     else:
-      from astroid.builder import AstroidManager
-      MANAGER = AstroidManager()
+      from astroid.astroid_manager import MANAGER
     should_not_be_in_cache_list = []
     for modname in MANAGER.astroid_cache:
       if (modname.startswith('checkPythonSourceCode') or
@@ -2492,8 +2490,8 @@ def hoge():
       component = self._newComponent(reference)
       component.setTextContent(component.getTextContent() + """
 from %(namespace)s import %(reference)s
-from %(namespace)s.bar_version import %(reference)s
-from %(namespace)s.erp5_version import %(reference)s
+from %(namespace)s.bar_version import %(reference)s  # pylint:disable=reimported
+from %(namespace)s.erp5_version import %(reference)s  # pylint:disable=reimported
 
 # To avoid 'unused-import' warning...
 %(reference)s.hoge()
@@ -2504,8 +2502,7 @@ from %(namespace)s.erp5_version import %(reference)s
       if six.PY2:
         from astroid.builder import MANAGER
       else:
-        from astroid.builder import AstroidManager
-        MANAGER = AstroidManager()
+        from astroid.astroid_manager import MANAGER
       imported_module = self._getComponentFullModuleName(imported_reference)
       self.assertEqual(
         MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='bar')],
