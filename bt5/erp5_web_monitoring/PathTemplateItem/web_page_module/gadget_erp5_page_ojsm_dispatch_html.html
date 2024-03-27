@@ -5,37 +5,12 @@
     <meta name="viewport" content="width=device-width" />
     <title>ERP5 Page Monitoring Dispatch</title>
 
-    <link href="gadget_officejs_monitoring_custom.css" rel="stylesheet" type="text/css"/>
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
-    <script src="handlebars.js" type="text/javascript"></script>
-
     <script src="gadget_erp5_page_ojsm_dispatch.js" type="text/javascript"></script>
-    <script id="dispatch-template" type="text/x-handlebars-template">
-      <h3 class="ui-content-title ui-body-c" data-i18n="No results from your search">
-        <span class="ui-icon ui-icon-custom ui-icon-frown-o">&nbsp;</span>
-        No results from your search!
-      </h3>
-    </script>
 
   </head>
   <body>
-    <section class="ui-content-header-plain">
-      <h3 class="ui-content-title ui-body-c" data-i18n="Monitoring Search">
-        <span class="ui-icon ui-icon-custom ui-icon-search">&nbsp;</span>
-        Monitoring Search
-      </h3>
-    </section>
-    <p class="text-info">Type a text or query. ie: <i>portal_type: "Software Instance" AND title: "foo"</i></p>
-    <form class="dialog_form">
-      <button type="submit"
-              class="ui-btn ui-btn-b ui-btn-inline
-                     ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
-      <div data-gadget-url="gadget_erp5_searchfield.html"
-           data-gadget-scope="erp5_searchfield"
-           data-gadget-sandbox="public"></div>
-    </form>
-    <div class="search-result"></div>
   </body>
 </html>

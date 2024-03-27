@@ -32,6 +32,9 @@
 
   var rusha = new Rusha(),
     OPML_ATTACHMENT_NAME = "__opml__",
+    PROMISE_TYPE = "Promise",
+    SOFTWARE_INSTANCE_TYPE = "Software Instance",
+    INSTANCE_TREE_TYPE = "Instance Tree",
     ZONE_LIST = [
       "-1200",
       "-1100",
@@ -124,9 +127,10 @@
   };
 
   ReplicatedOPMLStorage.prototype.put = function (id, doc) {
-    if (!doc.hasOwnProperty('portal_type') || doc.portal_type !== 'opml') {
+    //allow app configuration types (forms, views, actions, etc)
+    /*if (!doc.hasOwnProperty('portal_type') || doc.portal_type !== 'opml') {
       throw new TypeError("Cannot put object which portal_type is not 'opml'");
-    }
+    }*/
     if (doc.active === undefined) {
       doc.active = true;
     }
@@ -151,10 +155,10 @@
     return storage.get(id)
       .push(function (doc) {
         if (doc.portal_type !== 'opml') {
-          throw new TypeError("Object with portal_type" + doc.portal_type +
-                              "is frozen, cannot remove it.");
+          return storage.remove(id);
         }
         function removeOPMLTree(url) {
+          console.log("portal_type 'opml'! complex opml remove");
           var remove_id_list = [],
             remove_signature_id_list = [];
 
@@ -306,7 +310,7 @@
     }
     // set portal_type is not defined
     if (!instance.hasOwnProperty('portal_type')) {
-      instance.portal_type = "Software Instance";
+      instance.portal_type = SOFTWARE_INSTANCE_TYPE;
     }
     return instance;
   }
@@ -321,7 +325,7 @@
           return context._local_sub_storage.get(id);
         })
         .push(function (doc) {
-          if (doc.portal_type === "promise") {
+          if (doc.portal_type === PROMISE_TYPE) {
             doc.category = next_status;
             return context._local_sub_storage.put(id, doc);
           }
@@ -445,7 +449,7 @@
     // Instance Tree is build from OPML and it has status
     instance_tree = {
       title: opml_title || "",
-      portal_type: "Instance Tree",
+      portal_type: INSTANCE_TREE_TYPE,
       opml_url: opml_url,
       status: "WARNING",
       instance_amount: 0,
@@ -538,7 +542,7 @@
               },
               id_hash,
               i,
-              'promise'
+              PROMISE_TYPE
             ));
             // Load private docs
             if (item.doc.url !== undefined) {
@@ -672,7 +676,7 @@
           extra_dict = undefined;
           start = 0;
           if (result_list[i].result.data.total_rows > 0) {
-            if (result_list[i].type === "promise") {
+            if (result_list[i].type === PROMISE_TYPE) {
               // the first element of rss is the header
               extra_dict = {
                 lastBuildDate: fixDateTimezone(result_list[i].result.data.
@@ -711,7 +715,7 @@
                 {
                   id: "monitor.global",
                   doc: {
-                    portal_type: "Software Instance",
+                    portal_type: SOFTWARE_INSTANCE_TYPE,
                     status: context._remote_storage_unreachable_status,
                     title: opml_result_list.data.rows[result_list[i]
                       .parent_index].doc.title,

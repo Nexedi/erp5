@@ -142,9 +142,9 @@
           // Update the global links
           .push(function () {
             return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "ojsm_status_list"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojsm_software_instance_list"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojsm_instance_tree_list"}}),
+              context.getUrlFor({command: 'display', options: {page: "ojs_local_controller", portal_type: "Promise Module"}}),
+              context.getUrlFor({command: 'display', options: {page: "ojs_local_controller", portal_type: "Software Instance Module"}}),
+              context.getUrlFor({command: 'display', options: {page: "ojs_local_controller", portal_type: "Instance Tree Module"}}),
               context.getUrlFor({command: 'display', options: {page: "settings_configurator"}}),
               context.getUrlFor({command: 'display', options: {page: "ojsm_import_export"}}),
               context.getUrlFor({command: 'display', options: {page: "ojsm_synchronize", reset: 1}})

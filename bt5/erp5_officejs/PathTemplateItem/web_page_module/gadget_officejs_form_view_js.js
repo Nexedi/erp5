@@ -1,11 +1,12 @@
-/*global document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console */
+/*global document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console) {
+(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape) {
   "use strict";
 
   function renderField(field_id, field_definition,
                        context_document, data, blob_type, content_editable) {
-    var key, raw_value, override, final_value, item_list, result = {};
+    var key, raw_value, override, final_value, item_list, result = {}, i,
+        extra_query, param_name, doc_key;
     for (key in field_definition.values) {
       if (field_definition.values.hasOwnProperty(key)) {
         // order to get the final value (based on Field.py get_value)
@@ -49,6 +50,21 @@
       if (!content_editable) {
         result.type = "EditorField";
       }
+    }
+    if (field_definition.type == "ListBox") {
+      if (field_definition.values.default_params) {
+        for (i = 0; i < field_definition.values.default_params.length; i += 1) {
+          param_name = field_definition.values.default_params[i][0];
+          doc_key = field_definition.values.default_params[i][1];
+          if (context_document.hasOwnProperty(doc_key) && context_document[doc_key]) {
+            extra_query = ` AND ${param_name}:"${context_document[doc_key]}"`;
+            result.query += escape(extra_query);
+          }
+        }
+      }
+    }
+    if (field_definition.values.extra) {
+      eval(field_definition.values.extra);
     }
     return result;
   }
@@ -129,43 +145,197 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
-    // XXX Hardcoded for modification_date rendering
+    // XXX fix date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this;
+      var gadget = this, jio_gadget;
+      //TODO make this customizable from config
+      //add a gadget reference on portal type or query config?
+      if (param_list[0].query.indexOf('portal_type:"Promise"') !== -1 &&
+          gadget.state.doc && gadget.state.doc.source) {
+        return new RSVP.Queue()
+          .push(function () {
+            return gadget.declareGadget('gadget_officejs_monitoring_jio.html');
+          })
+          .push(function (result) {
+            jio_gadget = result;
+            return jio_gadget.createJio({
+              type: "webhttp",
+              // XXX fix of url
+              url: gadget.state.doc.source_url.replace("jio_public", "public")
+            });
+          })
+          .push(function () {
+            // get history file on live
+            return jio_gadget.get(
+              gadget.state.doc.source + ".history"
+            )
+              .push(undefined, function (error) {
+                if (error.name === "cancel") {
+                  return undefined;
+                }
+                return gadget.notifySubmitted({
+                  status: "error",
+                  message: "Failed to get promise history content! \n" +
+                    error.message || ''
+                })
+                  .push(function () {
+                    return undefined;
+                  });
+              })
+              .push(function (status_history) {
+                var i, len, start, result = {};
+                result.data = {rows: [], total_rows: 0};
+
+                function addUTCTimezone(date_string) {
+                  if (new RegExp(/[+-][\d]{2}\:?[\d]{2}$/).test(date_string)) {
+                    return date_string;
+                  }
+                  return date_string + "+0000";
+                }
+
+                if (status_history && status_history.hasOwnProperty('data')) {
+                  // the status history list is reversed ([old, ...., newest])
+                  len = status_history.data.length;
+                  start = len - param_list[0].limit[0] - 1;
+                  //lines = param_list[0].limit[1] - param_list[0].limit[0];
+                  if (start < 0) {
+                    start = len - 1;
+                  }
+                  //if (lines > len) {
+                  //  lines = len - start;
+                  //}
+                  for (i = start; i >= 0; i -= 1) {
+                    result.data.total_rows += 1;
+                    result.data.rows.push({
+                      value: {
+                        status: {
+                          field_gadget_param: {
+                            css_class: "",
+                            description: "The Status",
+                            hidden: 0,
+                            "default": status_history.data[i].status,
+                            key: "status",
+                            url: "gadget_erp5_field_status.html",
+                            title: "Status",
+                            type: "GadgetField"
+                          }
+                        },
+                        start_date: {
+                          field_gadget_param: {
+                            allow_empty_time: 0,
+                            ampm_time_style: 0,
+                            css_class: "date_field",
+                            date_only: 0,
+                            description: "The Date",
+                            editable: 0,
+                            hidden: 0,
+                            hidden_day_is_last_day: 0,
+                            "default": addUTCTimezone(status_history.data[i].date ||
+                              status_history.data[i]['start-date']),
+                            key: "start_date",
+                            required: 0,
+                            timezone_style: 1,
+                            title: "Date",
+                            type: "DateTimeField"
+                          }
+                        },
+                        change_date:  {
+                          field_gadget_param: {
+                            allow_empty_time: 0,
+                            ampm_time_style: 0,
+                            css_class: "date_field",
+                            date_only: 0,
+                            description: "The Date",
+                            editable: 0,
+                            hidden: 0,
+                            hidden_day_is_last_day: 0,
+                            "default": addUTCTimezone(status_history.data[i]['change-date'] ||
+                              new Date(status_history.data[i]['change-time'] * 1000)
+                              .toUTCString()),
+                            key: "change_date",
+                            required: 0,
+                            timezone_style: 1,
+                            title: "Status Date",
+                            type: "DateTimeField"
+                          }
+                        },
+                        message: status_history.data[i].message,
+                        "listbox_uid:list": {
+                          key: "listbox_uid:list",
+                          value: 2713
+                        }
+                      }
+                    });
+                  }
+                }
+                return result;
+              });
+          });
+      }
+      //TODO make this customizable from config
+      //use global var set from config style_columns?
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          var i, date, len = result.data.total_rows;
+          var i, date, len = result.data.total_rows, date_key_array,
+            status_key_array = ['status', 'category'], status;
           for (i = 0; i < len; i += 1) {
-            if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
-              date = new Date(result.data.rows[i].value.modification_date);
-              result.data.rows[i].value.modification_date = {
-                field_gadget_param: {
-                  allow_empty_time: 0,
-                  ampm_time_style: 0,
-                  css_class: "date_field",
-                  date_only: 0,
-                  description: "The Date",
-                  editable: 0,
-                  hidden: 0,
-                  hidden_day_is_last_day: 0,
-                  "default": date.toUTCString(),
-                  key: "modification_date",
-                  required: 0,
-                  timezone_style: 0,
-                  title: "Modification Date",
-                  type: "DateTimeField"
-                }
-              };
-              result.data.rows[i].value["listbox_uid:list"] = {
-                key: "listbox_uid:list",
-                value: 2713
-              };
-            }
+            date_key_array = Object.keys(
+              result.data.rows[i].value).filter((k) => k.includes("date") ||
+                                                k.includes("Date"));
+            date_key_array.forEach((date_key) => {
+              if (result.data.rows[i].value.hasOwnProperty(date_key)) {
+                date = new Date(result.data.rows[i].value[date_key]);
+                result.data.rows[i].value[date_key] = {
+                  field_gadget_param: {
+                    allow_empty_time: 0,
+                    ampm_time_style: 0,
+                    css_class: "date_field",
+                    date_only: 0,
+                    description: "The Date",
+                    editable: 0,
+                    hidden: 0,
+                    hidden_day_is_last_day: 0,
+                    "default": date.toUTCString(),
+                    key: "date",
+                    required: 0,
+                    timezone_style: 0,
+                    title: "Date",
+                    type: "DateTimeField"
+                  }
+                };
+                result.data.rows[i].value["listbox_uid:list"] = {
+                  key: "listbox_uid:list",
+                  value: 2713
+                };
+              }
+            });
+            status_key_array.forEach((status_key) => {
+              if (result.data.rows[i].value.hasOwnProperty(status_key)) {
+                status = result.data.rows[i].value[status_key];
+                result.data.rows[i].value[status_key] = {
+                  field_gadget_param: {
+                    css_class: "",
+                    description: "",
+                    hidden: 0,
+                    "default": status,
+                    key: status_key,
+                    url: "gadget_erp5_field_status.html",
+                    title: "Status",
+                    type: "GadgetField"
+                  }
+                };
+                result.data.rows[i].value["listbox_uid:list"] = {
+                  key: "listbox_uid:list",
+                  value: 2713
+                };
+              }
+            });
           }
           return result;
         });
@@ -357,4 +527,4 @@
         });
     });
 
-}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console));
+}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape));
