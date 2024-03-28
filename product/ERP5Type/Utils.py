@@ -535,6 +535,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # TODO-arnau: Enable it properly would require inspection API
            # '%s %r has no %r member'
            '--disable=E1101,E1103',
+           # XXX duplicate-bases causes too many false positives
+           '--disable=duplicate-bases',
            # map and filter should not be considered bad as in some cases
            # map is faster than its recommended replacement (list
            # comprehension)
