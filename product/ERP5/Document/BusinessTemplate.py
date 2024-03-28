@@ -1494,7 +1494,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 subobject_data.seek(0)
                 subobject = connection.importFile(subobject_data)
                 obj._setObject(subobject_id, subobject)
-            except AttributeError:
+            except (AttributeError, KeyError):
               # XXX this may happen when an object which can contain
               # sub-objects (e.g. ERP5 Form) has been replaced with
               # an object which cannot (e.g. External Method).
