@@ -3,8 +3,8 @@
 (function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape) {
   "use strict";
 
-  function renderField(field_id, field_definition,
-                       context_document, data, blob_type, content_editable) {
+  function renderField(field_id, field_definition, context_document,
+                       data, blob_type, content_editable, gadget) {
     var key, raw_value, override, final_value, item_list, result = {}, i,
         extra_query, param_name, doc_key;
     for (key in field_definition.values) {
@@ -66,11 +66,14 @@
     if (field_definition.values.extra) {
       eval(field_definition.values.extra);
     }
+    if (field_definition.values.style_columns) {
+      gadget.state.style_columns = field_definition.values.style_columns;
+    }
     return result;
   }
 
   function renderForm(form_definition, context_document, data, blob_type,
-                      content_editable) {
+                      content_editable, gadget) {
     var i, j, field_list, field_info, my_element, element_id, rendered_field,
       raw_properties = form_definition.fields_raw_properties,
       form_json = {
@@ -95,7 +98,7 @@
           field_info = raw_properties[my_element];
           rendered_field = renderField(element_id, field_info,
                                        context_document, data, blob_type,
-                                       content_editable);
+                                       content_editable, gadget);
           form_json.erp5_document._embedded._view[my_element] =
             rendered_field;
         }
@@ -156,7 +159,7 @@
       var gadget = this, jio_gadget;
       //TODO make this customizable from config
       //add a gadget reference on portal type or query config?
-      if (param_list[0].query.indexOf('portal_type:"Promise"') !== -1 &&
+      /*if (param_list[0].query.indexOf('portal_type:"Promise"') !== -1 &&
           gadget.state.doc && gadget.state.doc.source) {
         return new RSVP.Queue()
           .push(function () {
@@ -277,13 +280,11 @@
                 return result;
               });
           });
-      }
-      //TODO make this customizable from config
-      //use global var set from config style_columns?
+      }*/
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          var i, date, len = result.data.total_rows, date_key_array,
-            status_key_array = ['status', 'category'], status;
+          // render dates with proper format
+          var i, date, len = result.data.total_rows, date_key_array;
           for (i = 0; i < len; i += 1) {
             date_key_array = Object.keys(
               result.data.rows[i].value).filter((k) => k.includes("date") ||
@@ -315,27 +316,9 @@
                 };
               }
             });
-            status_key_array.forEach((status_key) => {
-              if (result.data.rows[i].value.hasOwnProperty(status_key)) {
-                status = result.data.rows[i].value[status_key];
-                result.data.rows[i].value[status_key] = {
-                  field_gadget_param: {
-                    css_class: "",
-                    description: "",
-                    hidden: 0,
-                    "default": status,
-                    key: status_key,
-                    url: "gadget_erp5_field_status.html",
-                    title: "Status",
-                    type: "GadgetField"
-                  }
-                };
-                result.data.rows[i].value["listbox_uid:list"] = {
-                  key: "listbox_uid:list",
-                  value: 2713
-                };
-              }
-            });
+            if (gadget.state.style_columns) {
+              eval(gadget.state.style_columns[0][0]);
+            }
           }
           return result;
         });
@@ -420,7 +403,7 @@
       }
       form_json = renderForm(gadget.state.form_definition, gadget.state.doc,
                                gadget.state.data, gadget.state.blob_type,
-                               content_editable);
+                               content_editable, gadget);
       while (gadget.element.firstChild) {
         gadget.element.removeChild(gadget.element.firstChild);
       }
