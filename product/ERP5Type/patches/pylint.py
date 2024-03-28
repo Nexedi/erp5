@@ -19,9 +19,11 @@
 # 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 from __future__ import absolute_import
-import sys
-import warnings
+import importlib
 import six
+import sys
+import types
+import warnings
 from Products.ERP5Type import IS_ZOPE2
 
 # TODO: make sure that trying to use it does not import isort, because the
@@ -43,11 +45,7 @@ if six.PY2:
 else:
     from astroid.exceptions import AstroidBuildingError
 from astroid import node_classes
-
-if six.PY2:
-  from astroid import MANAGER
-else:
-  from astroid.astroid_manager import MANAGER
+from astroid import MANAGER
 
 if six.PY2:
   from astroid.builder import _guess_encoding
@@ -189,9 +187,10 @@ def _buildAstroidModuleFromComponentModuleName(modname):
     if component_obj is None:
         raise AstroidBuildingError()
 
-    # module_build() could also be used but this requires importing
-    # the ZODB Component and also monkey-patch it to support PEP-302
-    # for __file__ starting with '<'
+    if six.PY3:
+        return AstroidBuilder(MANAGER).module_build(
+            importlib.import_module(modname))
+
     module = AstroidBuilder(MANAGER).string_build(
         component_obj.getTextContent(validated_only=True),
         modname)
@@ -239,8 +238,12 @@ def _getattr(self, name, *args, **kw):
     except NotFoundError as e:
         if self.name.startswith('erp5.'):
             raise
-
-        real_module = __import__(self.name, fromlist=[self.name], level=0)
+        if six.PY3 and self.name == 'numpy' or self.name.startswith('numpy.'):
+            raise
+        real_module = __import__(
+            self.name,
+            fromlist=[self.name] if six.PY2 else [name],
+            level=0)
         try:
             attr = getattr(real_module, name)
         except AttributeError:
@@ -256,13 +259,21 @@ def _getattr(self, name, *args, **kw):
         except AttributeError:
             from astroid import nodes
             if isinstance(attr, dict):
-                ast = nodes.Dict(attr)
+                if six.PY2:
+                    ast = nodes.Dict(attr)
+                else:
+                    ast = nodes.Dict(attr, 0, None, end_lineno=0, end_col_offset=0)
             elif isinstance(attr, list):
                 ast = nodes.List(attr)
             elif isinstance(attr, tuple):
                 ast = nodes.Tuple(attr)
             elif isinstance(attr, set):
-                ast = nodes.Set(attr)
+                if six.PY2:
+                    ast = nodes.Set(attr)
+                else:
+                    ast = nodes.Set(attr, 0, None, end_lineno=0, end_col_offset=0)
+            elif isinstance(attr, types.ModuleType):
+                ast = MANAGER.ast_from_module(attr)
             else:
                 try:
                     ast = nodes.Const(attr)
@@ -272,10 +283,10 @@ def _getattr(self, name, *args, **kw):
             if self.name == origin_module_name:
                 raise
 
-            # ast_from_class() actually works for any attribute of a Module,
-            # but it raises some AssertionError when the class is defined
-            # dynamically, for example with zope.hookable.hookable , which
-            # (in version 6.0) is defined as:
+            # ast_from_class() actually works for any attribute of a Module
+            # (on py2 at least), but it raises some AssertionError when the class
+            # is defined dynamically, for example with zope.hookable.hookable,
+            # which (in version 6.0) is defined as:
             #
             #   if _PURE_PYTHON or _c_hookable is None:
             #       hookable = _py_hookable
@@ -283,8 +294,13 @@ def _getattr(self, name, *args, **kw):
             #       hookable = _c_hookable
             try:
                 ast = MANAGER.ast_from_class(attr)
-            except (AssertionError,  AstroidError):
-                raise e
+            except (AstroidError, AssertionError):
+                if six.PY2:
+                    raise e
+                try:
+                    ast = list(MANAGER.infer_ast_from_something(attr))
+                except AstroidError:
+                    raise e
 
         self.locals[name] = [ast]
         return [ast]
