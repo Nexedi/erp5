@@ -2357,8 +2357,11 @@ _ = ZBigArray
             module2_with_version=imported_module2_with_version)) +
       component.getTextContent())
 
+    must_be_in_cache_set = set()
+    if six.PY2:
+      must_be_in_cache_set.add(str(namespace))
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={'%s.erp5_version' % namespace,
                                 imported_module1,
                                 imported_module1_with_version,
@@ -2366,8 +2369,7 @@ _ = ZBigArray
                                 imported_module2_with_version})
     component.checkSourceCode()
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace,
-                            '%s.erp5_version' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set | {'%s.erp5_version' % namespace},
       must_not_be_in_cache_set={imported_module1,
                                 imported_module1_with_version,
                                 imported_module2,
@@ -2740,7 +2742,7 @@ def foobar(self, a, b="portal_type"):
     cfg.extensions = tempfile.mkdtemp()
     try:
       with open(os.path.join(cfg.extensions, module + '.py'), "w") as f:
-        f.write("foobar = lambda **kw: sorted(kw.iteritems())")
+        f.write("foobar = lambda **kw: sorted(kw.items())")
       self.assertEqual(external_method(z=1, a=0), [('a', 0), ('z', 1)])
     finally:
       shutil.rmtree(cfg.extensions)
