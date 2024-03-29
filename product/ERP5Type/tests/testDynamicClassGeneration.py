@@ -2360,7 +2360,7 @@ _ = ZBigArray
 
     must_be_in_cache_set = set()
     if six.PY2:
-      must_be_in_cache_set.add(str(namespace))
+      must_be_in_cache_set.add(namespace)
     self._assertAstroidCacheContent(
       must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={'%s.erp5_version' % namespace,
@@ -2369,8 +2369,10 @@ _ = ZBigArray
                                 imported_module2,
                                 imported_module2_with_version})
     component.checkSourceCode()
+    if six.PY2:
+      must_be_in_cache_set.add('%s.erp5_version' % namespace)
     self._assertAstroidCacheContent(
-      must_be_in_cache_set=must_be_in_cache_set | {'%s.erp5_version' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={imported_module1,
                                 imported_module1_with_version,
                                 imported_module2,
@@ -2471,7 +2473,7 @@ _ = ZBigArray
     self.tic()
     must_be_in_cache_set = set()
     if six.PY2:
-      must_be_in_cache_set.add(str(namespace))
+      must_be_in_cache_set.add(namespace)
     self._assertAstroidCacheContent(
       must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={'%s.erp5_version' % namespace,
@@ -3001,7 +3003,7 @@ from erp5.component.document.Person import Person
 from ITestPortalType import ITestPortalType
 import zope.interface
 
-zope.interface.implementer(ITestPortalType)
+@zope.interface.implementer(ITestPortalType)
 class TestPortalType(Person):
   def test42(self):
     return 42
@@ -3672,6 +3674,8 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
     component.setTextContent(value)
     self.tic()
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getValidationState(), 'validated')
 
   def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
