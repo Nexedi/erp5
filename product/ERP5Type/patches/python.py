@@ -143,8 +143,7 @@ def patch_linecache():
       if module_globals is None:
         module_globals = get_globals(sys._getframe(1))
 
-      # Get source code of ZODB Components following PEP 302, when
-      # cache is not pre-filled by lazycache.
+      # Get source code of ZODB Components following PEP 302
       if (filename.startswith('<portal_components/') and
           module_globals is not None):
         data = None
@@ -158,15 +157,16 @@ def patch_linecache():
             pass
         return data.splitlines(True) if data is not None else ()
 
-      # in-ZODB python scripts
-      if basename(filename) in ('Script (Python)', 'ERP5 Python Script', 'ERP5 Workflow Script'):
-        try:
-          script = module_globals['script']
-          if script._p_jar.opened:
-            return script.body().splitlines(True)
-        except Exception:
-          pass
-        return ()
+      if module_globals is not None:
+        # in-ZODB python scripts
+        if basename(filename) in ('Script (Python)', 'ERP5 Python Script', 'ERP5 Workflow Script'):
+          try:
+            script = module_globals['script']
+            if script._p_jar.opened:
+              return script.body().splitlines(True)
+          except Exception:
+            pass
+          return ()
 
       # TALES expressions
       x = expr_search(filename)
@@ -190,6 +190,29 @@ def patch_linecache():
         # reconsider), for now, we add an arbitrary prefix for cache.
         if (filename.startswith('<') and filename.endswith('>')):
           filename = 'erp5-linecache://' + filename
+
+        # For python scripts, insert a fake PEP302 loader so that
+        # linecache can find the source code
+        if basename(filename) in (
+            'Script (Python)',
+            'ERP5 Python Script',
+            'ERP5 Workflow Script',
+          ) and module_globals is not None:
+
+          script = module_globals['script']
+          body = ''
+          if script._p_jar is None or script._p_jar.opened:
+            body = script.body()
+          class PythonScriptLoader:
+            def __init__(self, filename, body):
+              self.filename = filename
+              self.body = body
+            def get_source(self, name, *args, **kw):
+              return self.body
+
+          assert '__loader___' not in module_globals
+          module_globals['__loader__'] = PythonScriptLoader(filename, body)
+
       return linecache_lazycache(filename, module_globals)
     linecache.lazycache = lazycache
 
