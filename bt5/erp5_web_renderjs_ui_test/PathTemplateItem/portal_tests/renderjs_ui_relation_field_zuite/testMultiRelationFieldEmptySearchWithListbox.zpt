@@ -249,19 +249,39 @@
   <td colspan="3"><b>Check multi relation field display</b></td>
 </tr>
 <tr>
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>A New Foo</td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>2</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]//input</td>
+  <td></td>
 </tr>
 <tr>
   <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]//input</td>
   <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>2</td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
