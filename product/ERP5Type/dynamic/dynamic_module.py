@@ -41,6 +41,17 @@ class PackageType(ModuleType):
   """
   __path__ = []
 
+  def __init__(self, name, doc=None):
+    super(PackageType, self).__init__(name=name, doc=doc)
+    if six.PY3:
+      # PEP-0451
+      import importlib.machinery
+      self.__spec__ = importlib.machinery.ModuleSpec(
+        name=self.__name__,
+        loader=None,
+      )
+
+
 class RefManager(dict):
   """
   self[ComponentTool.last_sync] = (HTTP_REQUEST_WEAKSET,
