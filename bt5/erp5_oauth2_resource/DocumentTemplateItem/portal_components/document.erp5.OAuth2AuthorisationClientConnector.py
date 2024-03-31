@@ -51,7 +51,7 @@ from OFS.Traversable import NotFound
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Timeout import getTimeLeft
-from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode
+from Products.ERP5Type.Utils import bytes2str, unicode2str, str2bytes, str2unicode
 from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
   OAuth2AuthorisationClientConnectorMixIn,
   ERP5OAuth2ResourceServerPlugin,
@@ -227,13 +227,16 @@ class _OAuth2AuthorisationServerProxy(object):
       )
     else:
       Connection = HTTPConnection
+    if six.PY2:
+      # Changed in version 3.4: The strict parameter was removed.
+      # HTTP 0.9-style "Simple Responses" are no longer supported.
+      Connection = functools.partial(Connection, strict=True)
     timeout = getTimeLeft()
     if timeout is None or timeout > self._timeout:
       timeout = self._timeout
     http_connection = Connection(
       host=parsed_url.hostname,
       port=parsed_url.port,
-      strict=True,
       timeout=timeout,
       source_address=self._bind_address,
     )
@@ -274,7 +277,7 @@ class _OAuth2AuthorisationServerProxy(object):
   def _queryOAuth2(self, method, REQUEST, RESPONSE):
     header_dict, body, status = self._query(
       method,
-      body=urlencode(REQUEST.form.items()),
+      body=urlencode(REQUEST.form),
       header_dict={
         'CONTENT_TYPE': REQUEST.environ['CONTENT_TYPE'],
       },
@@ -313,7 +316,7 @@ class _OAuth2AuthorisationServerProxy(object):
 
   def getAccessTokenSignatureAlgorithmAndPublicKeyList(self):
     return tuple(
-      (signature_algorithm.encode('ascii'), public_key.encode('ascii'))
+      (unicode2str(signature_algorithm), unicode2str(public_key))
       for signature_algorithm, public_key in self._queryERP5(
         'getAccessTokenSignatureAlgorithmAndPublicKeyList',
       )
@@ -864,7 +867,7 @@ class OAuth2AuthorisationClientConnector(
     try:
       state_dict = json.loads(
         self.__getMultiFernet().decrypt(
-          state,
+          str2bytes(state),
           ttl=self._SESSION_STATE_VALIDITY,
         ),
       )
@@ -882,7 +885,7 @@ class OAuth2AuthorisationClientConnector(
       came_from = state_dict.get(_STATE_CAME_FROM_NAME)
       if came_from:
         context = self # whatever
-        kw['redirect_url'] = came_from.encode('utf-8')
+        kw['redirect_url'] = unicode2str(came_from)
       else:
         context = self._getNeutralContextValue()
       context.Base_redirect(**kw)
@@ -930,7 +933,7 @@ class OAuth2AuthorisationClientConnector(
       REQUEST=REQUEST,
       RESPONSE=RESPONSE,
     )
-    identifier_from_state = state_dict[_STATE_IDENTIFIER_NAME].encode('ascii')
+    identifier_from_state = unicode2str(state_dict[_STATE_IDENTIFIER_NAME])
     for (
       state_cookie_name,
       identifier_from_cookie,
@@ -965,7 +968,7 @@ class OAuth2AuthorisationClientConnector(
         'code': code,
         'redirect_uri': self.getRedirectUri(),
         'client_id': self.getReference(),
-        'code_verifier': state_dict[_STATE_CODE_VERIFIER_NAME].encode('ascii'),
+        'code_verifier': unicode2str(state_dict[_STATE_CODE_VERIFIER_NAME])
       },
     )
     access_token, _, error_message = self._setCookieFromTokenResponse(

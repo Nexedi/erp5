@@ -5,17 +5,20 @@ Mutate REQUEST to call standard OAuth2 /authorize endpoint from an ERP5 Form in 
 import json
 import six
 from erp5.component.document.OAuth2AuthorisationServerConnector import substituteRequest
+from Products.ERP5Type.Utils import unicode2str
 # XXX: Accessing REQUEST from acquisition is bad. But Base_callDialogMethod
 # does not propagate the request cleanly, so no other way so far.
 REQUEST = context.REQUEST
 
 form = {
-  key.encode('utf-8'): value.encode('utf-8')
+  unicode2str(key): unicode2str(value)
   for key, value in six.iteritems(json.loads(request_info_json))
 }
 if scope_list:
   form['scopes'] = ' '.join(scope_list)
 portal = context.getPortalObject()
+from pprint import pprint
+pprint(('substituteRequest form', substituteRequest))
 with substituteRequest(
   context=portal,
   request=REQUEST,
