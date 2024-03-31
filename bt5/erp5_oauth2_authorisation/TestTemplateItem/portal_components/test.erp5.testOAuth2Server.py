@@ -45,7 +45,7 @@ from six.moves.urllib.parse import parse_qsl, quote, unquote, urlencode, urlspli
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5.ERP5Site import (
   ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME,
   ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME,
@@ -81,7 +81,7 @@ class FormExtractor(HTMLParser):
     elif self.__in_form and tag in _HTML_FIELD_TAG_SET:
       self.form_list[-1][1].append((
         attr_dict['name'],
-        attr_dict.get('value', '').encode('utf-8'),
+        unicode2str(attr_dict.get('value', ''))
       ))
 
   def handle_endtag(self, tag):
@@ -853,13 +853,13 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/token',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urlencode({
+      body=str2bytes(urlencode({
         'grant_type': 'authorization_code',
         'code': authorisation_code,
         'client_id': client_id,
         'code_verifier': code_verifier,
         'redirect_uri': _EXTERNAL_CLIENT_REDIRECT_URI,
-      }),
+      })),
     )
     time_after = int(time())
     self.assertEqual(status, 200, response)
@@ -881,10 +881,10 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/token',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urlencode({
+      body=str2bytes(urlencode({
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token,
-      }),
+      })),
     )
     self.assertEqual(status, 200)
     self.assertEqual(cookie_dict, {})
@@ -898,10 +898,10 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/revoke',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urlencode({
+      body=str2bytes(urlencode({
         'token_type_hint': 'refresh_token',
         'token': refresh_token,
-      }),
+      })),
     )
     self.assertEqual(status, 200)
     self.assertEqual(cookie_dict, {})
@@ -914,10 +914,10 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/token',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urlencode({
+      body=str2bytes(urlencode({
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token,
-      }),
+      })),
     )
     self.assertEqual(status, 400)
     self.assertEqual(cookie_dict, {})
