@@ -70,7 +70,7 @@ from DateTime import DateTime
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.UnrestrictedMethod import super_user
-from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str, str2unicode
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Security.ERP5GroupManager import (
   disableCache as ERP5GroupManager_disableCache,
@@ -196,6 +196,7 @@ def substituteRequest(
   request_container.REQUEST = inner_request
   try:
     __traceback_info__ = inner_request
+    print('inner_request =>', inner_request.text())
     yield inner_request
   finally:
     request_container.REQUEST = request_from_container
@@ -448,7 +449,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
             }
             for x in (
               portal.portal_categories.resolveCategory(
-                'oauth2_scope/' + y.encode('utf-8'),
+                'oauth2_scope/' + unicode2str(y),
               )
               for y in scope_list
             )
@@ -553,7 +554,7 @@ class _ERP5RequestValidator(RequestValidator):
         return token_callable(**kw)
       except jwt.InvalidTokenError:
         pass
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def client_authentication_required(self, request, *args, **kwargs):
     # Use this method, which is called early on most endpoints, to setup request.client .
@@ -699,7 +700,7 @@ class _ERP5RequestValidator(RequestValidator):
       client_value=request.client.erp5_client_value,
       redirect_uri=request.redirect_uri,
       scope_list=[
-        x.encode('utf-8')
+        unicode2str(x)
         for x in request.scopes
       ],
       code_challenge=request.code_challenge,
@@ -859,13 +860,13 @@ def _callEndpoint(endpoint, self, REQUEST):
   # not have to care about intermediate proxies).
   request_header_dict['X_FORWARDED_FOR'] = REQUEST.getClientAddr()
   request_body = REQUEST.get('BODY')
-  if request_body is None and content_type == 'application/x-www-form-urlencoded':
+  if (not request_body) and content_type == 'application/x-www-form-urlencoded':
     # XXX: very imperfect, but should be good enough for OAuth2 usage:
     # no standard OAuth2 POST field should be marshalled by Zope.
     request_body = urlencode([
       (x, y)
       for x, y in six.iteritems(REQUEST.form)
-      if isinstance(y, six.text_type)
+      if isinstance(y, six.string_types)
     ])
   uri = other.get('URL', '')
   query_string = environ.get('QUERY_STRING')
@@ -1287,7 +1288,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
           ensure_ascii(token_dict[JWT_PAYLOAD_KEY]),
         )
         return token_dict
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def _getRefreshTokenDict(self, value, request):
     for _, algorithm, symetric_key in self.__getRefreshTokenKeyList():
@@ -1309,14 +1310,14 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         return token_dict
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def _checkCustomTokenPolicy(self, token, request):
     """
     Validate non-standard jwt claims against request.
     """
     if not isAddressInNetworkList(
-      address=request.headers['X_FORWARDED_FOR'].decode('utf-8'),
+      address=str2unicode(request.headers['X_FORWARDED_FOR']),
       network_list=token[JWT_CLAIM_NETWORK_LIST_KEY],
     ):
       raise jwt.InvalidTokenError
@@ -1369,7 +1370,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         return token_dict['iss']
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   security.declarePrivate('getRefreshTokenClientId')
   def getRefreshTokenClientId(self, value, request):
@@ -1395,13 +1396,13 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         return token_dict['iss']
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def _getSessionValueFromTokenDict(self, token_dict):
     session_value = self._getSessionValue(
-      token_dict[JWT_PAYLOAD_KEY][
+      unicode2str(token_dict[JWT_PAYLOAD_KEY][
         JWT_PAYLOAD_AUTHORISATION_SESSION_ID_KEY
-      ].encode('utf-8'),
+      ]),
       'validated',
     )
     if session_value is not None:
