@@ -44,6 +44,8 @@ form = dict(parse_qsl(parsed_came_from.query))
 login_retry_url = REQUEST.form.get('login_retry_url')
 if login_retry_url is not None:
   form['login_retry_url'] = login_retry_url
+from pprint import pprint
+pprint(('logged_in_once substituteRequest', form))
 with substituteRequest(
   context=portal,
   request=REQUEST,
