@@ -30,6 +30,8 @@
 # There is absolutely no reason to use relative imports when loading a Component
 from __future__ import absolute_import
 
+import errno
+import os
 import six
 import sys
 import imp
@@ -330,11 +332,24 @@ class ComponentDynamicPackage(ModuleType):
 
     component = getattr(site.portal_components, component_id)
     relative_url = component.getRelativeUrl()
+    module_file = '<' + relative_url + '>'
 
     module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
     module = ModuleType(module_fullname, component.getDescription())
 
     source_code_str = component.getTextContent(validated_only=True)
+    for override_path in os.environ.get('ERP5_COMPONENT_OVERRIDE_PATH', '').split(os.pathsep):
+      try:
+        local_override_path = os.path.join(override_path, component.getId() + '.py')
+        with open(local_override_path) as f:
+          source_code_str = f.read()
+        module_file = local_override_path
+        LOG("component_package", WARNING, "Using local override %s" % local_override_path)
+        break
+      except IOError as e:
+        if e.errno != errno.ENOENT:
+          raise
+
     version_package = self._getVersionPackage(version)
 
     # All the required objects have been loaded, acquire import lock to modify
@@ -350,7 +365,7 @@ class ComponentDynamicPackage(ModuleType):
         sys.modules[module_fullname_filesystem] = module
 
       # This must be set for imports at least (see PEP 302)
-      module.__file__ = '<' + relative_url + '>'
+      module.__file__ = module_file
       if coverage.Coverage.current():
         if hasattr(component, '_erp5_coverage_filename'):
           module.__file__ = component._erp5_coverage_filename
