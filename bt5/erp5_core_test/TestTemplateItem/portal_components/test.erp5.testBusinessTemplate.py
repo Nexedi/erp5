@@ -29,7 +29,7 @@
 
 import unittest
 import logging
-from unittest import expectedFailure, skip
+from unittest import expectedFailure, skip, skipIf
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
@@ -7556,6 +7556,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         email = organisation['email%d' % (j+1)]
         self.assertTrue(email.getTitle().startswith('my email'))
 
+  @skipIf(six.PY3, 'Unsupported scenario on python3')
   def test_UpgradeBrokenObject(self):
     """
       Test a case that there is an broken object and upgrade the path.
