@@ -51,7 +51,7 @@ def decode_email(file_):
   msg = email.message_from_string(file_.decode())
   # Back up original file
   theMail['__original__'] = file_
-  for key, value in six.iteritems(msg):
+  for key, value in msg.items():
     decoded_value_list = decode_header(value)
     new_value = make_header(decoded_value_list)
     if six.PY2:
