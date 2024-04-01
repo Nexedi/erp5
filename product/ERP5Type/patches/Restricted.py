@@ -177,16 +177,21 @@ import past.builtins # six.PY2
 allow_module('past.builtins')
 ModuleSecurityInfo('past.builtins').declarePublic('cmp')
 
-def guarded_sorted(seq, cmp=None, key=None, reverse=False):
-    if cmp is not None: # six.PY2
-        from functools import cmp_to_key
-        key = cmp_to_key(cmp)
+if six.PY2:
+    def guarded_sorted(seq, cmp=None, key=None, reverse=False):
+        if cmp is not None:
+            from functools import cmp_to_key
+            key = cmp_to_key(cmp)
 
-    if not isinstance(seq, SafeIter):
-        for i, x in enumerate(seq):
-            guard(seq, x, i)
-    return sorted(seq, key=key, reverse=reverse)
-safe_builtins['sorted'] = guarded_sorted
+        if not isinstance(seq, SafeIter):
+            for i, x in enumerate(seq):
+                guard(seq, x, i)
+        return sorted(seq, key=key, reverse=reverse)
+    safe_builtins['sorted'] = guarded_sorted
+
+def guarded_enumerate(seq, start=0):
+    return NullIter(enumerate(guarded_iter(seq), start=start))
+safe_builtins['enumerate'] = guarded_enumerate
 
 def guarded_reversed(seq):
     return SafeIter(reversed(seq))
@@ -195,9 +200,6 @@ ContainerAssertions[reversed] = 1
 # listreverseiterator is a special type, returned by list.__reversed__
 ContainerAssertions[type(reversed([]))] = 1
 
-def guarded_enumerate(seq, start=0):
-    return NullIter(enumerate(guarded_iter(seq), start=start))
-safe_builtins['enumerate'] = guarded_enumerate
 
 def get_set_pop(s, name):
     def guarded_pop():
