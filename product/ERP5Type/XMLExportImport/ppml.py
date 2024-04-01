@@ -30,7 +30,7 @@ import re
 from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 
 from marshal import dumps as mdumps
 #from zLOG import LOG
@@ -94,7 +94,9 @@ def convert(S):
     ###              readable output.
     try:
         if not isinstance(S, six.text_type):
-            S = S.decode('utf8')
+            decoded = S.decode('utf8')
+            if six.PY3:
+                S = decoded
     except UnicodeDecodeError:
         return 'base64', base64_encodebytes(S)[:-1]
     else:
@@ -185,7 +187,7 @@ class String(Scalar):
                 # be converted.
                 encoding = 'base64'
                 v = base64_encodebytes(self._v)[:-1]
-                self._v = self.mapping.convertBase64(v).decode()
+                self._v = bytes2str(self.mapping.convertBase64(v))
             else:
                 encoding, self._v = convert(self._v)
             self.encoding = encoding
@@ -675,8 +677,8 @@ class ToXMLUnpickler(Unpickler):
         k = self.marker()
         args = Tuple(self.id_mapping, v=self.stack[k+1:])
         del self.stack[k:]
-        module = self.readline()[:-1].decode()
-        name = self.readline()[:-1].decode()
+        module = bytes2str(self.readline()[:-1])
+        name = bytes2str(self.readline()[:-1])
         value=Object(Global(module, name, self.id_mapping), args, self.id_mapping)
         self.append(value)
     if six.PY2:
@@ -709,8 +711,8 @@ class ToXMLUnpickler(Unpickler):
     dispatch[NEWOBJ[0]] = load_newobj
 
     def load_global(self):
-        module = self.readline()[:-1].decode()
-        name = self.readline()[:-1].decode()
+        module = bytes2str(self.readline()[:-1])
+        name = bytes2str(self.readline()[:-1])
         self.append(Global(module, name, self.id_mapping))
     if six.PY2:
         dispatch[GLOBAL] = load_global
@@ -861,7 +863,7 @@ def save_string(self, tag, data):
                   try:
                       v.decode('utf-8')
                       # XXX maybe check with repr_re ?
-                      op = BINUNICODE
+                      op = BINUNICODE if six.PY3 else BINSTRING
                       v = op + struct.pack('<i', l) + v
                       return save_put(self, v, a)
                   except UnicodeDecodeError:
@@ -874,7 +876,7 @@ def save_string(self, tag, data):
                   v.decode('ascii')
                   # XXX zope4py3 we could also create an unpickler with encoding utf-8 ?
               except UnicodeDecodeError:
-                  op = BINUNICODE
+                  op = BINUNICODE if six.PY3 else BINSTRING
                   v = op + struct.pack('<i', l) + v
                   return save_put(self, v, a)
 
