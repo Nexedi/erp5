@@ -1,6 +1,7 @@
 import json
 import re
 from six.moves.urllib.parse import urljoin
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -15,7 +16,7 @@ portal = context.getPortalObject()
 default_language = web_section.getLayoutProperty("default_available_language", default='en')
 website_url_set = {}
 
-#simplify code of Base_doLanguage, can't ues Base_doLanguage directly
+# simplify code of Base_doLanguage, can't use Base_doLanguage directly
 root_website_url = web_section.getOriginalDocument().absolute_url()
 website_url_pattern = r'^%s(?:%s)*(/|$)' % (
   re.escape(root_website_url),
@@ -85,7 +86,7 @@ if wallpaper_url is None:
   mapping_dict["extra_css_full_link_tag"] = ''
 else:
   from base64 import urlsafe_b64encode
-  mapping_dict["extra_css_full_link_tag"] = '<link rel="stylesheet" href="data:text/css;base64,%s">' % urlsafe_b64encode("""
+  mapping_dict["extra_css_full_link_tag"] = '<link rel="stylesheet" href="data:text/css;base64,%s">' % bytes2str(urlsafe_b64encode(b"""
   html::after {
     content: "";
     opacity: 0.1;
@@ -100,6 +101,6 @@ else:
     background-attachment: fixed;
     background-image: url("%s");
   }
-  """ % urljoin(base_prefix, wallpaper_url))
+  """ % str2bytes(urljoin(base_prefix, wallpaper_url))))
 
 return view_as_web_method(mapping_dict=mapping_dict)
