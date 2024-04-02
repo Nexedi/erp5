@@ -360,6 +360,7 @@ allow_class_attribute(datetime.date)
 allow_class_attribute(datetime.time)
 allow_class_attribute(datetime.timedelta)
 allow_class_attribute(datetime.tzinfo)
+
 # We need special care for datetime.datetime.strptime() in Python 2.7.
 # It is because datetime.datetime.strptime() imports _strptime by C function
 # PyImport_Import which calls
@@ -370,6 +371,8 @@ allow_class_attribute(datetime.tzinfo)
 # This prevents both importing _strptime with level=0, and accessing __doc__,
 # when calling datetime.datetime.strptime().
 import _strptime
+# on python3 it seems we actually need to call strptime for this.
+datetime.datetime.strptime('', '')
 
 # Allow dict.fromkeys, Only this method is a class method in dict module.
 allow_class_attribute(dict, {'fromkeys': 1})
