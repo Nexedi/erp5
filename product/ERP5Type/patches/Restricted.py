@@ -370,6 +370,8 @@ allow_class_attribute(datetime.tzinfo)
 # This prevents both importing _strptime with level=0, and accessing __doc__,
 # when calling datetime.datetime.strptime().
 import _strptime
+# on python3 it seems we actually need to call strptime for this.
+datetime.datetime.strptime('', '')
 
 # Allow dict.fromkeys, Only this method is a class method in dict module.
 allow_class_attribute(dict, {'fromkeys': 1})
