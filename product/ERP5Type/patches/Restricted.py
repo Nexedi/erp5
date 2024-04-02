@@ -360,6 +360,7 @@ allow_class_attribute(datetime.date)
 allow_class_attribute(datetime.time)
 allow_class_attribute(datetime.timedelta)
 allow_class_attribute(datetime.tzinfo)
+
 # We need special care for datetime.datetime.strptime() in Python 2.7.
 # It is because datetime.datetime.strptime() imports _strptime by C function
 # PyImport_Import which calls
