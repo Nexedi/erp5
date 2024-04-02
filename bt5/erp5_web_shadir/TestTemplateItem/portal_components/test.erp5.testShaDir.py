@@ -36,6 +36,8 @@ from base64 import b64encode
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
+from Products.ERP5Type.Utils import bytes2str
+
 
 class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
   """
@@ -103,6 +105,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     data_set = self.portal.portal_catalog.getResultValue(
       reference=self.key)
     self.assertEqual(self.key, data_set.getReference())
+    self.assertNotEqual(self.key, data_set.getId())
     self.assertEqual('published', data_set.getValidationState())
 
     # Asserting Document
@@ -110,6 +113,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       reference=self.sha512sum)
     self.assertEqual(self.sha512sum, document.getTitle())
     self.assertEqual(self.sha512sum, document.getReference())
+    self.assertNotEqual(self.sha512sum, document.getId())
     self.assertEqual(self.data, document.getData())
     self.assertEqual(data_set, document.getFollowUpValue())
     self.assertEqual(str(self.expiration_date),
@@ -131,7 +135,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_post_information_more_than_once(self):
     """
@@ -162,7 +166,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   @expectedFailure
   def test_post_information_more_than_once_no_tic(self):
@@ -202,7 +206,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_get_information_from_different_data_set(self):
     """

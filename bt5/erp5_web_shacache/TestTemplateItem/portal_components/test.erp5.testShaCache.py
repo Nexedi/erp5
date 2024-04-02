@@ -83,7 +83,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
     result, data = self.postFile()
     self.assertEqual(result, six.moves.http_client.CREATED)
-    self.assertEqual(data, self.key)
+    self.assertEqual(data, self.key.encode())
 
     self.tic()
 
@@ -101,7 +101,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
     result, data = self.postFile()
     self.assertEqual(result, six.moves.http_client.CREATED)
-    self.assertEqual(data, self.key)
+    self.assertEqual(data, self.key.encode())
 
     self.tic()
 
@@ -131,6 +131,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertEqual('published', document2.getValidationState())
     self.assertEqual('archived', document.getValidationState())
 
+  @expectedFailure
   def test_put_file_twice_no_tic(self):
     self.postFile()
     self.commit()
@@ -140,5 +141,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     document_list = self.portal.portal_catalog(reference=self.key)
 
     self.assertEqual(2, len(document_list))
-    expectedFailure(self.assertEqual)(sorted(['archived', 'published']),
-        sorted(q.getValidationState() for q in document_list))
+    # this is the expected failure
+    self.assertEqual(
+      sorted(['archived', 'published']),
+      sorted(q.getValidationState() for q in document_list))
