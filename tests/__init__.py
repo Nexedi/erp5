@@ -255,7 +255,7 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
       for path in chain(
         glob(HERE + '/../bt5/*'),
         glob(HERE + '/../product/ERP5/bootstrap/*'))
-        os.path.isdir(path) and not skip_business_template(path)
+      if os.path.isdir(path) and not skip_business_template(path)
     ]
     for path in chain(glob(HERE + '/../product/*'),
                       glob(HERE + '/../bt5')):
