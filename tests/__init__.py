@@ -7,6 +7,7 @@ import sys
 from itertools import chain
 
 HERE = os.path.dirname(__file__)
+PY3 = sys.version_info[0] > 2
 
 class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
@@ -46,11 +47,12 @@ class _ERP5(ERP5TypeTestSuite):
                                component_re_match.group(2))
       else:
         test_case = test_path.split(os.sep)[-1][:-3] # remove .py
-      if sys.version_info[0] > 2:
+      if PY3:
         # disable tests that are not compatible with Python 3.
         if test_case in (
-          'erp5_workflow_test:testWorkflowAndDCWorkflow', # using legacy workflow
-          'testUpgradeInstanceWithOldDataFs', # using legacy workflow
+          # using legacy workflow
+          'erp5_workflow_test:testWorkflowAndDCWorkflow',
+          'testUpgradeInstanceWithOldDataFsLegacyWorkflow'
         ):
           continue
       product = test_path.split(os.sep)[-3]
@@ -238,15 +240,24 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
   """Run coding style test on all business templates.
   """
   def getTestList(self):
+    def skip_business_template(path):
+      # we skip coding style check for business templates having this marker
+      # property. Since the property is not exported (on purpose), modified business templates
+      # will be candidate for coding style test again.
+      if os.path.exists(path + '/bt/skip_coding_style_test'):
+        return True
+      if PY3 and os.path.basename(path) in (
+          'erp5_workflow_test',  # uses legacy DCWorkflow
+        ):
+          return True
+      return False
+
     test_list = [
       os.path.basename(path)
       for path in chain(
         glob(HERE + '/../bt5/*'),
         glob(HERE + '/../product/ERP5/bootstrap/*'))
-      # we skip coding style check for business templates having this marker
-      # property. Since the property is not exported (on purpose), modified business templates
-      # will be candidate for coding style test again.
-      if not os.path.exists(path + '/bt/skip_coding_style_test') and os.path.isdir(path)
+      if os.path.isdir(path) and not skip_business_template(path)
     ]
     for path in chain(glob(HERE + '/../product/*'),
                       glob(HERE + '/../bt5')):
