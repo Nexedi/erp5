@@ -121,7 +121,7 @@ def unconvert(encoding,S):
     else:
         return str2bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"))
 
-class Global:
+class Global(object):
     def __init__(self, module, name, mapping):
         self.module=module
         self.name=name
@@ -135,14 +135,14 @@ class Global:
         return '%s<%s%s name="%s" module="%s"/>\n' % (
             ' '*indent, name, id, self.name, self.module)
 
-class Immutable:
+class Immutable(object):
     def __init__(self, value):
         self.value = value
 
     def getValue(self):
         return self.value
 
-class Scalar:
+class Scalar(object):
     def __init__(self, v, mapping):
         self._v=v
         self.mapping = mapping
@@ -215,7 +215,7 @@ class Bytes(String):
     pass
 
 
-class Wrapper:
+class Wrapper(object):
     def __init__(self, v, mapping):
         self._v=v
         self.mapping = mapping
@@ -235,7 +235,7 @@ class Wrapper:
             v=v.__str__(indent+2)
             return '%s<%s%s>\n%s%s</%s>\n' % (i, name, id, v, i, name)
 
-class Collection:
+class Collection(object):
     def __init__(self, mapping):
         self.mapping = mapping
 
@@ -349,7 +349,7 @@ class Persistent(Wrapper):
             return '%s<%s%s>\n%s%s</%s>\n' % (i, name, id, v, i, name)
 
 blanck_line_expression = re.compile('^ +$')
-class NoBlanks:
+class NoBlanks(object):
     """
     This allows to ignore at least whitespaces between elements and also
     correctly handle string/unicode
@@ -396,7 +396,7 @@ class NoBlanks:
 
                 self.append(data)
 
-class IdentityMapping:
+class IdentityMapping(object):
     def __init__(self):
       self.resetMapping()
       self.immutable = {}
