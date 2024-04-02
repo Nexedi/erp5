@@ -17,7 +17,7 @@ import Acquisition
 import astor
 import importlib
 from erp5.component.module.Log import log
-from Products.ERP5Type.Utils import ensure_list
+from Products.ERP5Type.Utils import ensure_list, str2bytes
 
 # Display matplotlib figure automatically like
 # the original python kernel
@@ -447,7 +447,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           "_result = %s()\n"
           "if _result and isinstance(_result, dict):\n"
           "    globals().update(_result)\n"
-          "_volatile_variable_list += _result.keys()\n"
+          "_volatile_variable_list += list(_result.keys())\n"
           "del %s, _result\n"
         ) % (data['code'], func_name, func_name)
         notebook_context['setup'][data['alias']] = {
@@ -468,7 +468,10 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
       # Execute the nodes with 'exec' mode
       for node in to_run_exec:
-        mod = ast.Module([node])
+        if six.PY2:
+          mod = ast.Module([node])
+        else:
+          mod = ast.Module([node], [])
         code = compile(mod, '<string>', "exec")
         try:
           exec(code, user_context, user_context)
@@ -500,8 +503,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     volatile_variable_list = ensure_list(current_setup_dict.keys()) + ensure_list(inject_variable_dict.keys()) + user_context.get('_volatile_variable_list', [])
     volatile_variable_list.append('__builtins__')
 
-    for key, val in user_context.items():
-      if not key in globals_dict.keys() and not isinstance(val, well_known_unserializable_type_tuple) and not key in volatile_variable_list:
+    for key, val in ensure_list(user_context.items()):
+      if key not in globals_dict and not isinstance(val, well_known_unserializable_type_tuple) and not key in volatile_variable_list:
         if canSerialize(val):
           notebook_context['variables'][key] = val
         else:
@@ -516,7 +519,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
     # Deleting from the variable storage the keys that are not in the user
     # context anymore (i.e., variables that are deleted by the user).
-    for key in notebook_context['variables'].keys():
+    for key in ensure_list(notebook_context['variables'].keys()):
       if not key in user_context:
         del notebook_context['variables'][key]
 
@@ -612,18 +615,28 @@ class CustomPrint(object):
   def __init__(self):
     self.captured_output_list = []
 
-  def write(self, *args):
+  def write(self, *args):  # BBB PY2
     self.captured_output_list += args
 
+  def __call__ (self, *args, **kw):
+    self.captured_output_list.extend(args)
+    self.captured_output_list.append(kw.get("end", "\n"))
+
   def getCapturedOutputString(self):
-    return ''.join(self.captured_output_list)
+    return ''.join(str(o) for o in self.captured_output_list)
 
 
 class PrintFixer(ast.NodeTransformer):
 
-  def visit_Print(self, node):
+  def visit_Print(self, node): # BBB PY2
     _print_name_node = ast.Name(id="_print", ctx=ast.Load())
     node.dest = _print_name_node
+    return node
+
+  def visit_Call(self, node):
+    # XXX this assumes that print was not renamed
+    if isinstance(node.func, ast.Name) and node.func.id == "print":
+      node.func.id = "_print"
     return node
 
 
@@ -706,6 +719,8 @@ class EnvironmentParser(ast.NodeTransformer):
                 ast.Str: lambda node: node.s,
                 ast.Name: lambda node: node.id
               }
+              if six.PY3:
+                node_value_dict[ast.Constant] = lambda node: node.value
               arg_value = node_value_dict[type(arg_value_node)](arg_value_node)
               self.environment_var_dict[arg_name] = arg_value
           elif name == 'environment' and function.attr == 'undefine':
@@ -769,7 +784,7 @@ class Environment(object):
 
 class ImportFixer(ast.NodeTransformer):
   """
-   The ImportFixer class is responsivle for fixing "normal" imports that users
+   The ImportFixer class is responsible for fixing "normal" imports that users
    might try to execute.
 
    It will automatically replace them with the proper usage of the environment
@@ -782,7 +797,7 @@ class ImportFixer(ast.NodeTransformer):
 
   def visit_FunctionDef(self, node):
     """
-      Processes funcion definition nodes. We want to store a list of all the
+      Processes function definition nodes. We want to store a list of all the
       import that are inside functions, because they do not affect the outter
       user context, thus do not imply in any un-pickleable variable being added
       there.
@@ -816,12 +831,14 @@ class ImportFixer(ast.NodeTransformer):
 
     module_names = []
 
+    star_import_used = False
     if getattr(node, "module", None) is not None:
       # case when 'from <module_name> import <something>'
       root_module_name = node.module
 
       if (node.names[0].name == '*'):
         # case when "from <module_name> import *"
+        star_import_used = True
         mod = importlib.import_module(node.module)
         tmp_dict = mod.__dict__
 
@@ -846,26 +863,24 @@ class ImportFixer(ast.NodeTransformer):
         test_import_string = "from %s import " %(node.module)
         for i in range(0, len(original_names)):
           test_import_string = test_import_string + original_names[i]
-          if as_names[i]!=None:
+          if as_names[i] is not None:
             test_import_string = test_import_string + ' as %s' %(as_names[i])
           test_import_string = test_import_string + ', '
         test_import_string = test_import_string[:-2]
 
         module_names = []
         for i in range(0, len(original_names)):
-          if as_names[i]!=None:
+          if as_names[i] is not None:
             module_names.append(as_names[i])
           else:
             module_names.append(original_names[i])
 
         for i in range(0, len(original_names)):
-          if as_names[i]!=None:
+          if as_names[i] is not None:
             result_name = result_name + '%s_' %(as_names[i])
           else:
             result_name = result_name + '%s_' %(original_names[i])
         result_name = result_name[:-1]
-
-
 
     elif getattr(node.names[0], 'asname'):
       # case when "import <module_name> as <name>""
@@ -878,7 +893,7 @@ class ImportFixer(ast.NodeTransformer):
     else:
       # case when "import <module_name>"
       module_names = [(node.names[0].name), ]
-      test_import_string = "import %s" %node.names[0].name
+      test_import_string = "import %s" % node.names[0].name
       result_name = node.names[0].name
       root_module_name = node.names[0].name
 
@@ -903,6 +918,19 @@ class ImportFixer(ast.NodeTransformer):
       empty_function = self.newEmptyFunction("%s_setup" %dotless_result_name)
       return_dict = self.newReturnDict(final_module_names)
 
+      if six.PY3 and star_import_used:
+        # since we are generating a function on the fly, we can not generate something
+        # like this, because star import are only allowed at module level:
+        #   def f():
+        #     from mod import *
+        # in that case we transform the ast to something like:
+        #   def f():
+        #     from mod import a, b, c
+        #
+        # this would be more correct to do it on python 2, but this triggers an error
+        # ( AttributeError: 'alias' object has no attribute 'asname' ) in astor codegen,
+        # so we ignore this on python 2.
+        node.names = [ast.alias(name=n) for n in final_module_names]
       empty_function.body = [node, return_dict]
       environment_set = self.newEnvironmentSetCall("%s_setup" %dotless_result_name)
       self.newImportWarningCall(root_module_name, dotless_result_name)
@@ -1050,7 +1078,7 @@ class ERP5ImageProcessor(ObjectProcessor):
 
   def process(self):
     from base64 import b64encode
-    figure_data = b64encode(self.subject.getData())
+    figure_data = b64encode(self.subject.getData()).decode()
     mime_type = self.subject.getContentType()
     return '<img src="data:%s;base64,%s" /><br />' % (mime_type, figure_data), 'text/html'
 
@@ -1193,7 +1221,7 @@ def erp5PivotTableUI(self, df):
   """
   html_string = template % df.to_csv()
   from hashlib import sha512
-  key = sha512(html_string).hexdigest()
+  key = sha512(str2bytes(html_string)).hexdigest()
   storeIFrame(self, html_string, key)
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
