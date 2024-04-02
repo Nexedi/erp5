@@ -124,26 +124,37 @@ class TypeAccessChecker:
     as "a method which returing a method" because we can not know what is the
     type until it is actually called. So the three ways are simulated the
     function returned by this method.
+
+    We don't return a simple function, but a class instance with a __bool__ method
+    to accomodate the two cases where this is called by SecurityManager.validate when
+    checking access on the class (then only the bool is used) or by guarded_getattr
+    when checking access on the instance (the __call__ is used).
     """
-    def factory(inst, name):
-      """
-      Check function used with ContainerAssertions checked by cAccessControl.
-      """
-      access = _safe_class_attribute_dict.get(inst, 0)
-      # The next 'dict' only checks the access configuration type
-      if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
-        pass
-      elif isinstance(access, dict) and callable(access.get(name, 0)):
-        guarded_method = access.get(name)
-        return guarded_method(inst, name)
-      elif callable(access):
-        # Only check whether the access configuration raise error or not
-        access(inst, name)
-      else:
-        # fallback to default security
-        aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
-      return v
-    return factory
+    class _AccessChecker:
+      def __call__(self, inst, name):
+        """
+        Check function used with ContainerAssertions checked by cAccessControl.
+        """
+        access = _safe_class_attribute_dict.get(inst, 0)
+        # The next 'dict' only checks the access configuration type
+        if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
+          pass
+        elif isinstance(access, dict) and callable(access.get(name, 0)):
+          guarded_method = access.get(name)
+          return guarded_method(inst, name)
+        elif callable(access):
+          # Only check whether the access configuration raise error or not
+          access(inst, name)
+        else:
+          # fallback to default security
+          aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
+        return v
+
+      def __bool__(self):
+        return False
+      __nonzero__ = __bool__ # six.PY2
+
+    return _AccessChecker()
 
   def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
