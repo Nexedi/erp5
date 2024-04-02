@@ -31,6 +31,7 @@ import unittest
 from unittest import expectedFailure
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Base import TempBase
+from Products.ERP5Type.Utils import str2bytes
 from erp5.component.test.testDms import TestDocumentMixin
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
@@ -431,7 +432,7 @@ class TestKM(TestKMMixIn):
     #self.changeSkin('KM')
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
     response = self.publish(url, self.auth)
-    self.assertIn(self.web_front_knowledge_pad.getTitle().encode(), response.getBody())
+    self.assertIn(str2bytes(self.web_front_knowledge_pad.getTitle()), response.getBody())
 
     # Web Front gadgets
     web_front_gadgets = [km_my_tasks_gadget,  km_my_documents_gadget,  km_my_contacts_gadget]
@@ -442,7 +443,7 @@ class TestKM(TestKMMixIn):
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
     for gadget in web_front_gadgets:
-      self.assertIn(gadget.getTitle().encode(), response.getBody())
+      self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
   def test_05MyTaskGadget(self):
     """ Check My Task Gadgets """
@@ -480,8 +481,8 @@ class TestKM(TestKMMixIn):
                                                   self.webpage.getRelativeUrl(),
                                                   km_my_tasks_box_url)
                                , self.auth)]:
-      self.assertIn(project.getTitle().encode(), response.getBody())
-      self.assertIn(visit.getTitle().encode(), response.getBody())
+      self.assertIn(str2bytes(project.getTitle()), response.getBody())
+      self.assertIn(str2bytes(visit.getTitle()), response.getBody())
 
   def test_06MyDocumentsGadget(self):
     """ Check My Document Gadgets """
@@ -523,8 +524,8 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(),
                                                  km_my_documents_gadget_box_url)
                          , self.auth)]:
-      self.assertIn(web_page.getTitle().encode(), response.getBody())
-      self.assertIn(presentation.getTitle().encode(), response.getBody())
+      self.assertIn(str2bytes(web_page.getTitle()), response.getBody())
+      self.assertIn(str2bytes(presentation.getTitle()), response.getBody())
 
   def test_07MyContactsGadget(self):
     """ Check My Contacts Gadgets """
@@ -560,7 +561,7 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(),
                                                  km_my_contacts_gadget_box_url)
                          , self.auth)]:
-      self.assertIn(person.getTitle().encode(), response.getBody())
+      self.assertIn(str2bytes(person.getTitle()), response.getBody())
 
   def test_08WebSectionGadget(self):
     """ Check Web Section Gadgets """
@@ -579,7 +580,7 @@ class TestKM(TestKMMixIn):
       self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
 
     for gadget in web_section_gadgets:
-      self.assertIn(gadget.getTitle().encode(), response.getBody())
+      self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
   def test_10LatestContentGadget(self):
     """ Check Latest Content Gadgets """
@@ -622,7 +623,7 @@ class TestKM(TestKMMixIn):
     presentation.publish()
     self.tic()
     self.changeSkin('KM')
-    self.assertIn(presentation.getTitle().encode(),
+    self.assertIn(str2bytes(presentation.getTitle()),
           self.publish(self.base_url_pattern %
                      (self.web_section_url + '/%s' % latest_docs_subsection.getId(),
                       gadget_view_form_id,
@@ -664,7 +665,7 @@ class TestKM(TestKMMixIn):
     assignment =  person.newContent(portal_type = 'Assignment', destination_project_value=project)
     self.tic()
     self.changeSkin('KM')
-    self.assertIn(person.getTitle().encode(),
+    self.assertIn(str2bytes(person.getTitle()),
                     self.publish(self.base_url_pattern
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),
               gadget_view_form_id,
@@ -690,7 +691,7 @@ class TestKM(TestKMMixIn):
       self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
 
     for gadget in web_section_content_gadgets:
-      self.assertIn(gadget.getTitle().encode(), response.getBody())
+      self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
   def test_12RelationGadget(self):
     """ Check  Relation Gadgets """
@@ -755,7 +756,7 @@ class TestKM(TestKMMixIn):
 
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' % self.web_site_url
     response = self.publish(url, self.auth)
-    self.assertIn(self.web_front_knowledge_pad.getTitle().encode(), response.getBody())
+    self.assertIn(str2bytes(self.web_front_knowledge_pad.getTitle()), response.getBody())
 
     gadget = portal_gadgets.km_latest_documents
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
@@ -763,7 +764,7 @@ class TestKM(TestKMMixIn):
 
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
-    self.assertIn(gadget.getTitle().encode(), response.getBody())
+    self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
     # set non existent view_form
     old_gadget_view_form_id =  gadget.view_form_id
@@ -808,14 +809,14 @@ class TestKM(TestKMMixIn):
                                   gadget_view_form_id,
                                   self.website.getRelativeUrl(),
                                   box_url)
-    self.assertNotIn(subsection.getTitle().encode(),
+    self.assertNotIn(str2bytes(subsection.getTitle()),
                     self.publish(url, self.auth).getBody())
 
     # make section visible
     subsection.edit(visible=True)
     self.tic()
     self.changeSkin('KM')
-    self.assertIn(subsection.getTitle().encode(),
+    self.assertIn(str2bytes(subsection.getTitle()),
                     self.publish(url, self.auth).getBody())
 
   def test_17AddGadgets(self):
