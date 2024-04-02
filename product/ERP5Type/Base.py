@@ -1014,10 +1014,10 @@ class Base(
               result = None
             else:
               if isinstance(value, (list, tuple)):
-                if len(value) is 0:
-                  result = None
-                else:
+                if len(value):
                   result = value[0]
+                else:
+                  result = None
               else:
                 result = value
           else:
@@ -1048,10 +1048,10 @@ class Base(
             result = None
           else:
             if isinstance(value, (list, tuple)):
-              if len(value) is 0:
-                result = None
-              else:
+              if len(value):
                 result = value[0]
+              else:
+                result = None
             else:
               result = value
         else:
@@ -1092,10 +1092,10 @@ class Base(
             result = None
           else:
             if isinstance(value, (list, tuple)):
-              if len(value) is 0:
-                result = None
-              else:
+              if len(value):
                 result = value[0]
+              else:
+                result = None
             else:
               result = value
         else:
