@@ -124,7 +124,9 @@ url_list = [
   "gadget_officejs_monitor.json",
   "NXD-Logo.Rapid.Space.png",
   "gadget_erp5_editor_panel.html",
-  "gadget_erp5_editor_panel.js"
+  "gadget_erp5_editor_panel.js",
+  "gadget_officejs_monitoring_jio_alldocs.html",
+  "gadget_officejs_monitoring_jio_alldocs.js"
 ]
 
 return url_list
