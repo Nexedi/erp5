@@ -27,6 +27,13 @@
 #
 ##############################################################################
 
+import six
+# pylint:disable=import-error,no-name-in-module
+if six.PY3:
+  from collections.abc import Set
+else:
+  from collections import Set
+# pylint:enable=import-error,no-name-in-module
 import difflib
 import warnings
 try:
@@ -144,7 +151,7 @@ class PortalPatch(Explicit):
 
     # Flatten the list of DiffValues
     for key, subset in tree_diff.items():
-      if isinstance(subset, set):
+      if isinstance(subset, Set):
         sublist = list(subset)
         for item in sublist:
           # XXX: This is important as the subsets with iterable item removed
@@ -192,9 +199,9 @@ class PortalPatch(Explicit):
       else:
         old_value = val.t1
         new_value = val.t2
-        if (val.t1 == None) or isinstance(val.t1, deepdiff.helper.NotPresent):
+        if (val.t1 is None) or isinstance(val.t1, deepdiff.helper.NotPresent):
           old_value = ''
-        if (val.t2 == None) or isinstance(val.t2, deepdiff.helper.NotPresent):
+        if (val.t2 is None) or isinstance(val.t2, deepdiff.helper.NotPresent):
           new_value = ''
 
         # Deepdiff doesn't creates diff for anything other than string, thus for all other cases,
