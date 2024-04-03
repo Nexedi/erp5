@@ -21,6 +21,7 @@
                 <string>selection_name</string>
                 <string>sort</string>
                 <string>sort_columns</string>
+                <string>style_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
               </list>
@@ -219,6 +220,17 @@
                         <tuple>
                           <string>change_date</string>
                           <string>Status Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>jio_allDocs</string>
+                          <string>gadget_officejs_monitoring_jio_alldocs.html</string>
                         </tuple>
                       </list>
                     </value>
