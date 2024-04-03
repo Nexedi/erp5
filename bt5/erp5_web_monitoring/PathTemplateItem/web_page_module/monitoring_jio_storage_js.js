@@ -158,7 +158,6 @@
           return storage.remove(id);
         }
         function removeOPMLTree(url) {
-          console.log("portal_type 'opml'! complex opml remove");
           var remove_id_list = [],
             remove_signature_id_list = [];
 
