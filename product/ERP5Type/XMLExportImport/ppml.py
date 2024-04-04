@@ -19,8 +19,8 @@
 # attribute. dispatch_table should be used instead.
 from zodbpickle.slowpickle import *
 
+import ast
 import struct
-
 import six
 if six.PY2:
   from base64 import encodestring as base64_encodebytes, decodestring as base64_decodebytes
@@ -33,7 +33,6 @@ from .xyap import xyap
 from Products.ERP5Type.Utils import str2bytes, bytes2str
 
 from marshal import dumps as mdumps
-#from zLOG import LOG
 
 binary = re.compile('[^\x1f-\x7f]').search
 
@@ -98,15 +97,12 @@ def convert(S):
             if six.PY3:
                 S = decoded
     except UnicodeDecodeError:
-        return 'base64', base64_encodebytes(S)[:-1]
+        return 'base64', bytes2str(base64_encodebytes(S)[:-1])
     else:
         new = reprs_re.sub(sub_reprs, S)
     ### patch end
     if len(new) > (1.4*len(S)):
-        if not isinstance(S, six.binary_type):
-            # TODO zope4py3: is this the right place ? this supports Unicode('\n')
-            S = S.encode('ascii')
-        return 'base64', base64_encodebytes(S)[:-1]
+        return 'base64', bytes2str(base64_encodebytes(str2bytes(S))[:-1])
     elif '>' in new or '<' in S or '&' in S:
         if not ']]>' in S:
             return 'cdata', '<![CDATA[\n\n' + new + '\n\n]]>'
@@ -119,7 +115,7 @@ def unconvert(encoding,S):
     if encoding == 'base64':
         return base64_decodebytes(S)
     else:
-        return str2bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"))
+        return str2bytes(ast.literal_eval(bytes2str(b"'" + S.replace(b'\n', b'') + b"'")))
 
 class Global(object):
     def __init__(self, module, name, mapping):
@@ -229,7 +225,7 @@ class Wrapper(object):
         name=self.__class__.__name__.lower()
         v=self._v
         i=' '*indent
-        if isinstance(v,Scalar):
+        if isinstance(v, Scalar):
             return '%s<%s%s> %s </%s>\n' % (i, name, id, str(v)[:-1], name)
         else:
             v=v.__str__(indent+2)
@@ -322,6 +318,7 @@ class Object(Sequence):
 
     def __setstate__(self, v): self.append(State(v, self.mapping))
 
+class Bool(Scalar): pass
 class Int(Scalar): pass
 class Float(Scalar): pass
 class List(Sequence): pass
@@ -552,6 +549,18 @@ class ToXMLUnpickler(Unpickler):
         dispatch[FLOAT] = load_float
     dispatch[FLOAT[0]] = load_float
 
+    def load_true(self):
+        self.append(Bool(True, self.id_mapping))
+    if six.PY2:
+        dispatch[NEWTRUE] = load_true
+    dispatch[NEWTRUE[0]] = load_true
+
+    def load_false(self):
+        self.append(Bool(False, self.id_mapping))
+    if six.PY2:
+        dispatch[NEWFALSE] = load_false
+    dispatch[NEWFALSE[0]] = load_false
+
     def load_binfloat(self, unpack=struct.unpack):
         self.append(Float(unpack('>d', self.read(8))[0], self.id_mapping))
     if six.PY2:
@@ -559,7 +568,7 @@ class ToXMLUnpickler(Unpickler):
     dispatch[BINFLOAT[0]] = load_binfloat
 
     def load_string(self):
-        self.append(String(eval(self.readline()[:-1],
+        self.append(String(ast.literal_eval(self.readline()[:-1],
                                 {'__builtins__': {}}), self.id_mapping)) # Let's be careful
     if six.PY2:
         dispatch[STRING] = load_string
@@ -574,7 +583,7 @@ class ToXMLUnpickler(Unpickler):
 
     def load_unicode(self):
         line = self.readline()
-        self.append(Unicode(six.text_type(eval(line[:-1],
+        self.append(Unicode(six.text_type(ast.literal_eval(line[:-1],
                                          {'__builtins__': {}})), self.id_mapping)) # Let's be careful
     if six.PY2:
         dispatch[UNICODE] = load_unicode
@@ -833,7 +842,7 @@ def save_put(self, v, attrs):
             else:
                 id = LONG_BINPUT + struct.pack('<i', id)
         else:
-            id = PUT + repr(id) + b'\n'
+            id = PUT + repr(id).encode() + b'\n'
         return v + id
     return v
 
@@ -892,15 +901,14 @@ def save_string(self, tag, data):
 
             v = op + struct.pack('<i', l) + v
     else:
-        v = STRING + repr(v) + '\n'
+        v = STRING + repr(v).encode() + b'\n'
     return save_put(self, v, a)
 
 def save_bytes(self, tag, data):
     a = data[1]
     v = b''.join(data[2:])
     encoding = a.get('encoding', 'repr')
-    assert encoding == 'base64'
-    if encoding != '':
+    if encoding:
         v = unconvert(encoding, v)
     if self.binary:
         l = len(v)
@@ -974,9 +982,9 @@ def save_reference(self, tag, data):
         if id < 256:
             return BINGET + six.int2byte(id)
         else:
-            return LONG_BINGET + struct.pack('<i', i)
+            return LONG_BINGET + struct.pack('<i', id)
     else:
-        return GET + repr(id) + b'\n'
+        return GET + repr(id).encode() + b'\n'
 
 def save_object(self, tag, data):
     if len(data)==5:
@@ -1016,7 +1024,14 @@ def save_pickle(self, tag, data):
     return data[2] + b'.'
 
 def save_none(self, tag, data):
-    return b'N'
+    return NONE
+
+def save_bool(self, tag, data):
+    if data[2] == b'True':
+        return TRUE
+    else:
+        assert data[2] == b'False', data
+        return FALSE
 
 def save_long(self, tag, data):
     return b'L'+data[2]+b'L\012'
@@ -1048,6 +1063,7 @@ class xmlPickler(NoBlanks, xyap):
         'none': save_none,
         'int': save_int,
         'long': save_long,
+        'bool': save_bool,
         'float': save_float,
         'bytes': save_bytes,
         'string': save_string,
