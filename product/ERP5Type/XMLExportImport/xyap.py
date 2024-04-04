@@ -24,7 +24,7 @@ import string
 import xml.parsers.expat
 
 
-class xyap:
+class xyap(object):
     start_handlers = {}
     end_handlers = {}
 
@@ -57,7 +57,7 @@ class xyap:
             top = end[tag](self, tag, top)
         append(top)
 
-class NoBlanks:
+class NoBlanks(object):
 
     def handle_data(self, data):
         if data.strip():
