@@ -107,6 +107,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(self.key, data_set.getReference())
     self.assertNotEqual(self.key, data_set.getId())
     self.assertEqual('published', data_set.getValidationState())
+    self.assertEqual(len(self.portal.data_set_module.contentValues()), 1)
 
     # Asserting Document
     document = self.portal.portal_catalog.getResultValue(
@@ -120,6 +121,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                                     str(document.getExpirationDate()))
     self.assertEqual('application/json', document.getContentType())
     self.assertEqual('Published', document.getValidationStateTitle())
+    self.assertEqual(len(self.portal.document_module.contentValues()), 1)
 
   def test_get_information(self):
     """

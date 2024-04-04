@@ -130,7 +130,12 @@ def WebSection_putFactory(self, name, typ, body):
                                                     filename=name,
                                                     discover_metadata=False)
 
-  return document.asContext(id=name)
+  # return a document for which getId() returns the name for _setObject to be
+  # called with id=name ( for WebSection_setObject ), but for which
+  # getRelativeUrl returns the relative url of the real document, for
+  # VirtualFolderMixin transactional variable cache between _setObject and
+  # _getOb
+  return document.asContext(getId=lambda: name)
 
 # The following scripts are helpers to search & clean up shadir entries.
 # XXX: Due to lack of View skin for shadir, external methods are currently
