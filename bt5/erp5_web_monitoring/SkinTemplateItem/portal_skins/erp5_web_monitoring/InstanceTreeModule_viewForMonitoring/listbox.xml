@@ -189,8 +189,12 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>status</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Instance Tree</string>
                         </tuple>
                       </list>
                     </value>

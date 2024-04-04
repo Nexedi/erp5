@@ -213,16 +213,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
                           <string>status</string>
                           <string>Status</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Instance Title</string>
                         </tuple>
                         <tuple>
                           <string>specialise_title</string>
