@@ -571,7 +571,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # otherwise it returns the object
     self.assertEqual(obj, portal_catalog.getObject(obj.getUid()).getObject())
     # but raises KeyError if object is not in catalog
-    self.assertRaises(KeyError, portal_catalog.getObject, sys.maxint)
+    self.assertRaises(KeyError, portal_catalog.getObject, sys.maxsize)
+    self.assertRaises(KeyError, portal_catalog.getObject, -1)
 
   def test_getRecordForUid(self):
     portal_catalog = self.getCatalogTool()
@@ -583,7 +584,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     obj = self._makeOrganisation()
     self.assertEqual(obj.getPath(), portal_catalog.getpath(obj.getUid()))
-    self.assertRaises(KeyError, portal_catalog.getpath, sys.maxint)
+    self.assertRaises(KeyError, portal_catalog.getpath, sys.maxsize)
+    self.assertRaises(KeyError, portal_catalog.getpath, -1)
 
   def test_16_newUid(self):
     # newUid should not assign the same uid
