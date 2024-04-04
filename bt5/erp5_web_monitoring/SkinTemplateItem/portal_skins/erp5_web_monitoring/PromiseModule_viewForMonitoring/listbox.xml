@@ -213,8 +213,28 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>category</string>
+                          <string>Status</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Promise</string>
+                        </tuple>
+                        <tuple>
+                          <string>channel_item</string>
+                          <string>Software Instance</string>
+                        </tuple>
+                        <tuple>
+                          <string>channel</string>
+                          <string>Instance Tree</string>
+                        </tuple>
+                        <tuple>
+                          <string>pubDate</string>
+                          <string>Promise Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Message</string>
                         </tuple>
                       </list>
                     </value>
