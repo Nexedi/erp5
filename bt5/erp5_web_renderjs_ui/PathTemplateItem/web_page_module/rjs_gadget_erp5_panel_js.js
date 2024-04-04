@@ -74,7 +74,21 @@
         view_list,
         action_list,
         clone_list,
-        jump_list;
+        jump_list,
+        index,
+        url,
+        link_list;
+
+      if (erp5_document !== undefined) {
+        if (erp5_document.hasOwnProperty('_links')) {
+          index = erp5_document._links.self.href.indexOf('/web_site_module');
+          url = erp5_document._links.self.href.substring(0, index + 1);
+          link_list = this.element.getElementsByClassName("panel_img_link");
+          if (link_list.length > 0) {
+            link_list[0].href = url + jio_key;
+          }
+        }
+      }
 
       if (visible === undefined) {
         visible = context.state.visible;
