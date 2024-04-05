@@ -618,9 +618,9 @@ class CustomPrint(object):
   def write(self, *args):  # BBB PY2
     self.captured_output_list += args
 
-  def __call__ (self, *args, end="\n", **kw):
+  def __call__ (self, *args, **kw):
     self.captured_output_list.extend(args)
-    self.captured_output_list.append(end)
+    self.captured_output_list.append(kw.get("end", "\n"))
 
   def getCapturedOutputString(self):
     return ''.join(str(o) for o in self.captured_output_list)
@@ -918,7 +918,7 @@ class ImportFixer(ast.NodeTransformer):
       empty_function = self.newEmptyFunction("%s_setup" %dotless_result_name)
       return_dict = self.newReturnDict(final_module_names)
 
-      if star_import_used:
+      if six.PY3 and star_import_used:
         # since we are generating a function on the fly, we can not generate something
         # like this, because star import are only allowed at module level:
         #   def f():
@@ -926,6 +926,10 @@ class ImportFixer(ast.NodeTransformer):
         # in that case we transform the ast to something like:
         #   def f():
         #     from mod import a, b, c
+        #
+        # this would be more correct to do it on python 2, but this triggers an error
+        # ( AttributeError: 'alias' object has no attribute 'asname' ) in astor codegen,
+        # so we ignore this on python 2.
         node.names = [ast.alias(name=n) for n in final_module_names]
       empty_function.body = [node, return_dict]
       environment_set = self.newEnvironmentSetCall("%s_setup" %dotless_result_name)
