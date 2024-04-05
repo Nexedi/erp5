@@ -63,6 +63,16 @@
         }
       }
     }
+    if (field_definition.type == "GadgetField") {
+      //TODO allow both, user renderjs_extra + doc info-jio_key
+      if (!field_definition.renderjs_extra) {
+        var extra_dict = {};
+        Object.assign(extra_dict, gadget.state.doc);
+        extra_dict.jio_key = gadget.state.options.jio_key;
+        field_definition.values.renderjs_extra = JSON.stringify(extra_dict);
+        result.renderjs_extra = JSON.stringify(extra_dict);
+      }
+    }
     if (field_definition.values.extra) {
       eval(field_definition.values.extra);
     }
@@ -305,13 +315,14 @@
     .declareMethod("renderSubGadget", function (options, subgadget, form_json) {
       var gadget = this, erp5_document = form_json.erp5_document,
         portal_type_dict = form_json.form_definition.portal_type_dict,
-        page_title;
+        page_title = '';
       if (options.doc && options.doc.title) {
         page_title = options.doc.title;
       } else if (options.doc && options.doc.header_title) {
         page_title = options.doc.header_title;
-      } else {
-        page_title = portal_type_dict.title;
+      }
+      if (portal_type_dict.title) {
+        page_title = portal_type_dict.title + page_title;
       }
       return subgadget.render({
         jio_key: options.jio_key,
@@ -326,7 +337,9 @@
       // render the header
         .push(function () {
           var url_for_parameter_list = [
-            {command: 'change', options: {page: "tab"}},
+            {command: 'change', options: {page: "action_officejs",
+                                          jio_key: options.jio_key,
+                                          portal_type: options.portal_type}},
             {command: 'change', options: {page: "action_officejs",
                                           jio_key: options.jio_key,
                                           portal_type: options.portal_type}},
@@ -373,7 +386,9 @@
             if (portal_type_dict.has_more_views) {
               header_dict.tab_url = url_list[0];
             }
-            header_dict.save_action = portal_type_dict.editable === 1;
+            if (portal_type_dict.editable === 1) {
+              header_dict.save_action = true;
+            }
             if (portal_type_dict.has_more_actions ||
                 portal_type_dict.has_more_views) {
               header_dict.actions_url = url_list[1];
