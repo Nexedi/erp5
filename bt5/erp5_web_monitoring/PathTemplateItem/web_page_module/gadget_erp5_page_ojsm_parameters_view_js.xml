@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -67,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>classification/collaborative/public</string>
               </tuple>
             </value>
         </item>
@@ -78,8 +76,14 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_settings_configurator.js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_parameters_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_settings_configurator_js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_parameters_view_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Officejs Monitoring Settings Configurator JS</string> </value>
+            <value> <string>Monitoring Parameters Js</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -173,7 +177,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -197,7 +201,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1509441101.54</float>
+                              <float>1712768158.73</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +250,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1015.53053.39496.16964</string> </value>
+                      <value> <string>1015.55908.18863.58897</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +270,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1712760903.3</float>
+                              <float>1712932100.79</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -297,7 +301,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -329,7 +333,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1509440963.17</float>
+                              <float>1712767849.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

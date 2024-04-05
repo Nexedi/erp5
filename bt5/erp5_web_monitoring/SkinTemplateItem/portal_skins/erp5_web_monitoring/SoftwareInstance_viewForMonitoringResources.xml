@@ -79,7 +79,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>resources</string>
                       </list>
                     </value>
                 </item>
@@ -98,28 +98,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_date</string>
-                        <string>my_state</string>
-                        <string>my_status</string>
-                        <string>my_public_url</string>
-                        <string>my_private_url</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_specialise_title</string>
-                        <string>my_aggregate_reference</string>
-                        <string>my_partition_id</string>
-                        <string>my_ipv4</string>
-                        <string>my_ipv6</string>
-                        <string>my_software_release</string>
-                        <string>my_rss_url</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -127,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SoftwareInstance_viewForMonitoring</string> </value>
+            <value> <string>SoftwareInstance_viewForMonitoringResources</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

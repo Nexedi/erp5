@@ -108,6 +108,9 @@
                         <string>my_title</string>
                         <string>my_category</string>
                         <string>my_pubDate</string>
+                        <string>my_lastBuildDate</string>
+                        <string>my_public_url</string>
+                        <string>my_private_url</string>
                       </list>
                     </value>
                 </item>
@@ -116,8 +119,11 @@
                     <value>
                       <list>
                         <string>my_channel</string>
-                        <string>my_partition_id</string>
                         <string>my_channel_item</string>
+                        <string>my_computer</string>
+                        <string>my_partition</string>
+                        <string>my_partition_ipv6</string>
+                        <string>my_software_release</string>
                       </list>
                     </value>
                 </item>
