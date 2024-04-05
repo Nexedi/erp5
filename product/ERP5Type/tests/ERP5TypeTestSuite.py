@@ -148,7 +148,7 @@ class SavedTestSuite(ERP5TypeTestSuite):
   def __init__(self, *args, **kw):
     # Use same portal id for all tests run by current instance
     # but keep it (per-run) random.
-    self._portal_id = 'portal_%i' % (random.randint(0, 2**64), )
+    self._portal_id = 'portal_%i' % (random.randint(0, sys.maxsize), )
     self._setup_failed = False
     super(SavedTestSuite, self).__init__(*args, **kw)
 
