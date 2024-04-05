@@ -29,7 +29,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
 
-      return gadget.jio_get(options.key)
+      return gadget.jio_get(options.parent_id)
         .push(function (outline) {
           return gadget.changeState({opml_outline: outline});
         })
