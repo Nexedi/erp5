@@ -363,12 +363,6 @@ def exportXML(jar, oid, file=None):
         p = getReorderedPickle(oid)
         write(XMLrecord(oid, len(p), p, id_mapping))
     write('</ZopeData>\n')
-    if 0:
-      try:
-        print(file.getvalue())
-      except AttributeError:
-        pass
-      import pdb; pdb.set_trace()
     return file
 
 class zopedata:
@@ -421,7 +415,6 @@ def importXML(jar, file, clue=''):
         F.end_handlers['record'] = save_record
         F.end_handlers['ZopeData'] = save_zopedata
         F.start_handlers['ZopeData'] = start_zopedata
-        F.binary=1
         F.file=outfile
         # <patch>
         # Our BTs XML files don't declare encoding but have accented chars in them
