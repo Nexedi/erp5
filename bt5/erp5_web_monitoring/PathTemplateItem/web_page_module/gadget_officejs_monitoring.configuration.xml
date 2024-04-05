@@ -87,12 +87,16 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Mon Mar  4 18:27:04 2024\n
+# generated on Fri Apr  5 16:41:30 2024\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNl\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNlL21vbml0b3Jpbmdfdmlldw==\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvU29mdHdhcmVJbnN0YW5jZV92aWV3Rm9yTW9uaXRvcmluZw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNlL21vbml0b3JpbmdfcmVzb3VyY2VzX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvU29mdHdhcmVJbnN0YW5jZV92aWV3Rm9yTW9uaXRvcmluZ1Jlc291cmNlcw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NvZnR3YXJlIEluc3RhbmNlL21vbml0b3JpbmdfcHJvY2Vzc2VzX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvU29mdHdhcmVJbnN0YW5jZV92aWV3Rm9yTW9uaXRvcmluZ1Byb2Nlc3Nlcw==\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0luc3RhbmNlIFRyZWU=\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0luc3RhbmNlIFRyZWUvbW9uaXRvcmluZ192aWV3\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX21vbml0b3JpbmcvSW5zdGFuY2VUcmVlX3ZpZXdGb3JNb25pdG9yaW5n\n
