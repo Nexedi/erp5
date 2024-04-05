@@ -417,6 +417,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     expected_result_dict = self[delivery.getPath()]
 
     for line in delivery.getMovementList():
+      currency_precision = line.getPricePrecision()
       simulation_movement_list_list = self.getTradeModelSimulationMovementList(line)
       self.assertEqual(len(simulation_movement_list_list), 1)
       simulation_movement_list = simulation_movement_list_list[0]
@@ -428,7 +429,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         total_price = expected_result_dict[use].get(line.getId()) or 0.0
         if True:
           sm = result_dict.pop(use)
-          self.assertEqual(str(sm.getTotalPrice() or 0.0), str(total_price))
+          self.assertEqual(round(sm.getTotalPrice() or 0.0, currency_precision), round(total_price, currency_precision))
           self.assertEqual(3, len(sm.getCausalityValueList()))
           self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.business_link_portal_type)))
@@ -468,12 +469,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     rounded_total_price = round(line_dict['normal'], currency_precision)
     rounded_tax_price = round(line_dict['tax'], currency_precision)
     rounded_discount_price = round(line_dict['discount'], currency_precision)
-    self.assertEqual(str(abs(line_dict['payable_receivable'])),
-        str(rounded_total_price + rounded_tax_price + rounded_discount_price))
-    self.assertEqual(str(abs(line_dict['vat'])),
-        str(rounded_tax_price))
-    self.assertEqual(str(abs(line_dict['income_expense'])),
-        str(rounded_total_price + rounded_discount_price))
+    self.assertEqual(round(abs(line_dict['payable_receivable']), currency_precision),
+        round(rounded_total_price + rounded_tax_price + rounded_discount_price, currency_precision))
+    self.assertEqual(round(abs(line_dict['vat']), currency_precision),
+        rounded_tax_price)
+    self.assertEqual(round(abs(line_dict['income_expense']), currency_precision),
+        round(rounded_total_price + rounded_discount_price, currency_precision))
 
   def buildPackingLists(self):
     self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
