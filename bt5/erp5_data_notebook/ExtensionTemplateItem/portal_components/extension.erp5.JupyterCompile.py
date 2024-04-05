@@ -618,9 +618,9 @@ class CustomPrint(object):
   def write(self, *args):  # BBB PY2
     self.captured_output_list += args
 
-  def __call__ (self, *args, end="\n", **kw):
+  def __call__ (self, *args, **kw):
     self.captured_output_list.extend(args)
-    self.captured_output_list.append(end)
+    self.captured_output_list.append(kw.get("end", "\n"))
 
   def getCapturedOutputString(self):
     return ''.join(str(o) for o in self.captured_output_list)
