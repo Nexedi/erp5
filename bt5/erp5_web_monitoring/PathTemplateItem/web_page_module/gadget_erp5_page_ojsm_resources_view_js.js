@@ -352,8 +352,8 @@
     .declareMethod("render", function (options) {
       var gadget = this;
 
-      gadget.property_dict.document_key = options.key;
-      return gadget.jio_get(options.key)
+      gadget.property_dict.document_key = options.parent_id;
+      return gadget.jio_get(options.parent_id)
         .push(function (outline) {
           return gadget.changeState({opml_outline: outline});
         })
