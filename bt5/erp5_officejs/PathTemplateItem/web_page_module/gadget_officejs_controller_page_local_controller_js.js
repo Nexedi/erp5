@@ -124,6 +124,7 @@
       var fragment = document.createElement('div'),
         gadget = this,
         view_gadget_url = "gadget_officejs_form_view.html",
+        //TODO: this should be a list, not only one custom view
         custom_gadget_url = gadget.state.form_definition.portal_type_dict
           .custom_view_gadget;
       while (this.element.firstChild) {
