@@ -63,6 +63,13 @@
         }
       }
     }
+    if (field_definition.type == "GadgetField") {
+      //TODO allow both, user renderjs_extra + doc info
+      if (!field_definition.renderjs_extra) {
+        field_definition.values.renderjs_extra = JSON.stringify(gadget.state.doc);
+        result.renderjs_extra = JSON.stringify(gadget.state.doc);
+      }
+    }
     if (field_definition.values.extra) {
       eval(field_definition.values.extra);
     }
