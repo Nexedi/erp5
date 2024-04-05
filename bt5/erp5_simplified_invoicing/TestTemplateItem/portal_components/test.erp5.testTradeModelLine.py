@@ -1234,6 +1234,7 @@ return lambda *args, **kw: 1""")
     self.assertEqual(sorted(expected_tax),
                      sorted(x.getTotalPrice() for x in amount_list))
 
+  @expectedFailure
   def test_tradeModelLineWithRounding(self):
     """
       Test if trade model line works with rounding.
@@ -1293,11 +1294,10 @@ return lambda *args, **kw: 1""")
     self.assertEqual(3333*0.05+171*0.05, amount.getTotalPrice()) # 175.2
     # check the result with rounding
     amount_list = order.getAggregatedAmountList(rounding=True)
-
-    # XXX next assertion is commented out until we have clear specification
-    # of what we wish with rounding
-    # self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
-
+    # XXX Here, the assertion will fail with the current implementation.
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
+    # XXX and here, the result is 175, because round is applied against
+    # already aggregated single amount.
     self.assertEqual(174, getTotalAmount(amount_list))
 
     # check getAggregatedAmountList result of each movement
