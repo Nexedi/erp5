@@ -61,7 +61,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # Define POST headers with Authentication
     self.content_type =  'application/json'
     authentication_string = b'lucas:lucas'
-    base64string = base64.encodebytes(authentication_string).decode().strip()
+    base64string = base64.b64decode(authentication_string).decode().strip()
     self.header_dict = {'Authorization': 'Basic %s' % base64string,
                         'Content-Type': self.content_type}
 
