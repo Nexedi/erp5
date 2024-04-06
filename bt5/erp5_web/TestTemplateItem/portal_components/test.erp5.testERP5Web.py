@@ -1058,7 +1058,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertIn(b'<p>initial text</p>', response.getBody())
 
     # modified the web_page content
-    document.edit(text_content='<p>modified text<p>')
+    document.edit(text_content='<p>modified text</p>')
     self.assertEqual(document.asText().strip(), 'modified text')
     self.tic()
 
@@ -1066,12 +1066,12 @@ Hé Hé Hé!""", page.asText().strip())
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertIn(b'<p>modified</p>', response.getBody())
+    self.assertIn(b'<p>modified text</p>', response.getBody())
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertIn(b'<p>modified</p>', response.getBody())
+    self.assertIn(b'<p>modified text</p>', response.getBody())
 
   def test_13a_DocumentMovedCache(self):
     """
