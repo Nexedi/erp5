@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
-from MethodObject import Method
+from Products.ERP5Type.Accessor.Base import Getter
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
 
@@ -54,7 +54,7 @@ class Priority:
 
 class func_code: pass
 
-class PreferenceMethod(Method):
+class PreferenceMethod(Getter):
   """ A method object that lookup the attribute on preferences. """
   # This is required to call the method form the Web
   __code__ = func_code = func_code()
