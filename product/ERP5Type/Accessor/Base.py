@@ -203,19 +203,10 @@ class Getter(Method):
         return getattr(roles, '__of__', lambda aq_parent: roles)(self)
 
 
-class Tester(Method):
+class Tester(Getter):
     """
       Tests if an attribute value exists
     """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    __code__ = func_code = func_code()
-    __code__.co_varnames = ('self',)
-    __code__.co_argcount = 1
-    __defaults__ = func_defaults = ()
-
     def __init__(self, id, key, property_type, storage_id=None):
       self._id = id
       self.__name__ = id
