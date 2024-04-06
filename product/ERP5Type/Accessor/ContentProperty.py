@@ -267,7 +267,7 @@ class ListGetter(Base.Getter):
 
 DefaultGetter = Getter
 
-class Tester(Method):
+class Tester(Base.Tester):
     """
       Tests if an attribute value exists
     """
