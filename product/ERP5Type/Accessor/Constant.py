@@ -96,6 +96,8 @@ class Getter(Accessor):
     self._key = key
     self.__name__ = id
     self.value = value
+    # Do not publish deprecated Constant getter
+    self.__doc__ = None
 
   def __call__(self, instance):
     return self.value
