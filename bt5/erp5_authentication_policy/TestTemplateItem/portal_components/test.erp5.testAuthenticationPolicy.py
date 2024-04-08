@@ -849,7 +849,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_reset_password_dialog('alice')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        '<span class="error">Yöü can not ... translated</span>'.encode('utf-8'),
+        u'<span class="error">Yöü can not ... translated</span>'.encode('utf-8'),
         ret.getBody())
 
     # now with a password complying to the policy
@@ -906,7 +906,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_change_password_dialog('short')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        '<span class="error">Töü short ... translated</span>'.encode('utf-8'),
+        u'<span class="error">Töü short ... translated</span>'.encode('utf-8'),
         ret.getBody())
 
     # if for some reason, PreferenceTool_setNewPassword is called directly,
