@@ -38,6 +38,16 @@ if six.PY2:
     from logilab.common.configuration import OptionsManagerMixIn
     OptionsManagerMixIn.read_config_file = lambda *args, **kw: None
 
+if six.PY3:
+    # workaround https://github.com/pylint-dev/astroid/issues/2409
+    import astroid.interpreter._import.util
+    util_is_namespace = astroid.interpreter._import.util.is_namespace
+    def is_namespace(modname):
+        if modname == 'six.moves':
+            return False
+        return util_is_namespace(modname)
+    astroid.interpreter._import.util.is_namespace = is_namespace
+
 ## Pylint transforms and plugin to generate AST for ZODB Components
 from astroid.builder import AstroidBuilder
 if six.PY2:
