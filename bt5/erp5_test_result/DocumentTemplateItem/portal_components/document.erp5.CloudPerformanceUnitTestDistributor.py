@@ -67,7 +67,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
       test_node.setAggregateList(test_suite_list)
 
   security.declarePublic("startTestSuite")
-  def startTestSuite(self,title, computer_guid=None, **kw): # pylint: disable=super-on-old-class
+  def startTestSuite(self,title, computer_guid=None, **kw):
     """
     give the list of test suite to start. We will take all test suites
     associated to the testnode. Then we add the test node title to the
@@ -82,7 +82,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     return json.dumps(config_list)
 
   security.declarePublic("generateConfiguration")
-  def generateConfiguration(self, test_suite_title, batch_mode=0): # pylint: disable=super-on-old-class
+  def generateConfiguration(self, test_suite_title, batch_mode=0):
     """
     return the list of configuration to create instances, in the case of ERP5 unit tests,
     we will have only one configuration (unlike scalability tests). But for API consistency,
@@ -94,6 +94,6 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     return super(CloudPerformanceUnitTestDistributor, self) \
       .generateConfiguration("ERP5-Cloud-Reliability", batch_mode)
 
-  def _getTestSuiteFromTitle(self, suite_title): # pylint: disable=super-on-old-class
+  def _getTestSuiteFromTitle(self, suite_title):
     return super(CloudPerformanceUnitTestDistributor,
                  self)._getTestSuiteFromTitle(suite_title.split("|")[0])
