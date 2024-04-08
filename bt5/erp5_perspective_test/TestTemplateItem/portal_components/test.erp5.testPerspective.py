@@ -30,8 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctiona
 
 class TestPerspective(ERP5TypeFunctionalTestCase):
   run_only = "perspective_zuite"
-  def afterSetUp(self):
-    pass
+
   def getBusinessTemplateList(self):
     return (
       'erp5_perspective',
