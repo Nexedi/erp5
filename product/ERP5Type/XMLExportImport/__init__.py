@@ -317,7 +317,7 @@ def XMLrecord(oid, plen, p, id_mapping):
     p = u.load(id_mapping=id_mapping).__str__(4)
     if f.tell() < plen:
         p=p+u.load(id_mapping=id_mapping).__str__(4)
-    String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka.decode(), p)
+    String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, bytes2str(aka), p)
     return String
 
 def exportXML(jar, oid, file=None):
