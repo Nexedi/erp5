@@ -918,7 +918,7 @@ class ImportFixer(ast.NodeTransformer):
       empty_function = self.newEmptyFunction("%s_setup" %dotless_result_name)
       return_dict = self.newReturnDict(final_module_names)
 
-      if star_import_used:
+      if six.PY3 and star_import_used:
         # since we are generating a function on the fly, we can not generate something
         # like this, because star import are only allowed at module level:
         #   def f():
