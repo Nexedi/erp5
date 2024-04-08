@@ -308,7 +308,7 @@ def _getattr(self, name, *args, **kw):
                 if six.PY2:
                     raise e
                 try:
-                    ast = list(MANAGER.infer_ast_from_something(attr))
+                    ast = next(MANAGER.infer_ast_from_something(attr))
                 except AstroidError:
                     raise e
 
