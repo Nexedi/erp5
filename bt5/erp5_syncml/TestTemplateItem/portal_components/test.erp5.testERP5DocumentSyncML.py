@@ -55,9 +55,9 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
 
   nb_objects = 10
   #for objects
-  ids = range(1, nb_objects+1)
+  ids = list(range(1, nb_objects+1))
   #id_max_text : number of document text
-  id_max_text = nb_objects/2
+  id_max_text = nb_objects // 2
   id1 = '2'
   id2 = '3'
   #for documents (encoding in unicode for utf-8)
@@ -644,7 +644,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     publication = portal_sync[self.pub_id]
     self.assertEqual(len(publication['1']), nb_document)
     gid = self.reference1 +  '-' + self.version1 + '-' + self.language1 # ie the title ''
-    gid = b16encode(gid)
+    gid = b16encode(gid.encode()).decode()
     document_c1 = subscription1.getDocumentFromGid(gid)
     document_s = publication.getSubscriber(self.subscription_url['two_way']).getDocumentFromGid(gid)
     id_s = document_s.getId()

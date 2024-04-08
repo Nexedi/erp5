@@ -28,6 +28,7 @@ from __future__ import absolute_import
 ##############################################################################
 
 
+from collections import OrderedDict
 from .Base import func_code, type_definition, list_types,\
                  ATTRIBUTE_PREFIX, Method, evaluateTales
 from .TypeDefinition import asList, identity
@@ -80,8 +81,7 @@ class DefaultSetter(Base.Setter):
       else:
         if self._item_cast is not identity:
           value = self._item_cast(value)
-        list_value = set(getattr(instance, self._storage_id, ()))
-        list_value.discard(value)
+        list_value = list(OrderedDict.fromkeys(e for e in getattr(instance, self._storage_id, ()) if e != value))
         setattr(instance, self._storage_id, (value,) + tuple(list_value))
 
 class ListSetter(DefaultSetter):
@@ -145,7 +145,7 @@ class SetSetter(Base.Setter):
         if self._item_cast is not identity:
           value = [self._item_cast(v) for v in value]
         if value:
-          value = set(value)
+          value = list(OrderedDict.fromkeys(value))
           list_value = getattr(instance, self._storage_id, None)
           if list_value:
             default_value = list_value[0]
@@ -273,6 +273,6 @@ class SetGetter(ListGetter):
     def __call__(self, instance, *args, **kw):
       result_list = ListGetter.__call__(self, instance, *args, **kw)
       if result_list is not None:
-        return list(set(result_list))
+        return list(OrderedDict.fromkeys(result_list))
 
 Tester = Base.Tester

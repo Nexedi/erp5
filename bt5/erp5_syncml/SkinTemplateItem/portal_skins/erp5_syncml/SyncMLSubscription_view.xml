@@ -127,7 +127,7 @@
                         <string>my_next_anchor</string>
                         <string>my_translated_portal_type</string>
                         <string>my_translated_validation_state_title</string>
-                        <string>my_synchronization_state_title</string>
+                        <string>my_translated_synchronization_state_title</string>
                       </list>
                     </value>
                 </item>

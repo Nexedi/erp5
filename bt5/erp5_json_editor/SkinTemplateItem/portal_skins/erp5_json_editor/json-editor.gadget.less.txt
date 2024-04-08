@@ -18,17 +18,27 @@ div.json-editor-container {
     display: inline-block;
   }
 
-  & .alert-danger {
+  & label.visually-hidden {
+    display: none;
+  }
+
+& .invalid-feedback{
+    padding: 1px 10px 2px 10px;
+    border-radius: 0.25rem;
+    border-color: #f5c2c7;
+    border: 1px solid #f5c2c7;
+  }
+  
+  & .alert-danger, .invalid-feedback{
     color: #842029;
     background-color: #f8d7da;
-    border-color: #f5c2c7;
   }
 
   & .alert {
     position: relative;
     padding: 1rem 1rem;
     margin-bottom: 1rem;
-    border: 1px solid transparent;
+    border: 1px solid #f5c2c7;
     border-radius: 0.25rem;
   }
   & .form-label {
@@ -52,9 +62,9 @@ div.json-editor-container {
     background-color: transparent;
     height: auto;
     width: auto;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     margin-left: 5px;
-    padding: 0px 0px 0px 3px;
+    padding: 0px 24pt 0px 3px;
   }
 
   & .btn {

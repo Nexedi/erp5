@@ -47,7 +47,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.User import system as system_user
+from AccessControl.users import system as system_user
 from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
@@ -58,7 +58,7 @@ from BTrees.OIBTree import OIBTree
 from BTrees.OOBTree import OOBTree
 from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
-from zope.site.hooks import setSite
+from zope.component.hooks import setSite
 import transaction
 from App.config import getConfiguration
 from Shared.DC.ZRDB.Results import Results
@@ -69,6 +69,7 @@ from Products.MailHost.MailHost import MailHostError
 from zLOG import LOG, INFO, WARNING, ERROR
 import warnings
 from time import time
+from pprint import pformat
 
 try:
   from Products.TimerService import getTimerService
@@ -326,7 +327,9 @@ class Message(BaseMessage):
       user = user.__of__(user_folder)
       newSecurityManager(None, user)
       if annotate_transaction:
-        transaction.get().setUser(user_name, '/'.join(user_folder.getPhysicalPath()))
+        if six.PY2:
+          user_name = user_name.decode('utf-8')
+        transaction.get().setUser(user_name, u'/'.join(user_folder.getPhysicalPath()))
     else :
       LOG("CMFActivity", WARNING,
           "Unable to find user %r in the portal" % user_name)
@@ -665,7 +668,7 @@ class ActivityTool (BaseTool):
                      ] + list(BaseTool.manage_options))
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivities' )
-    manageActivities = DTMLFile( 'dtml/manageActivities', globals() )
+    manageActivities = DTMLFile( 'dtml/manageActivities', globals(), pformat=pformat )
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivitiesAdvanced' )
     manageActivitiesAdvanced = DTMLFile( 'dtml/manageActivitiesAdvanced', globals() )
@@ -683,7 +686,7 @@ class ActivityTool (BaseTool):
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
-    activity_failure_mail_notification = True
+    activity_failure_mail_notification = False
     cancel_and_invoke_links_hidden = False
 
     # Filter content (ZMI))

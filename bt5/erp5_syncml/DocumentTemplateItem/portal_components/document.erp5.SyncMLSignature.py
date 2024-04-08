@@ -28,6 +28,7 @@
 ##############################################################################
 
 from hashlib import md5
+import six
 
 from AccessControl import ClassSecurityInfo
 
@@ -98,7 +99,8 @@ class SyncMLSignature(XMLObject):
     Set the XML corresponding to the object
     """
     if value:
-      # convert the string to Pdata
+      assert isinstance(value, bytes)
+      # convert the bytes to Pdata
       pdata_wrapper = PdataHelper(self.getPortalObject(), value)
       self._setData(pdata_wrapper)
       self.setTemporaryData(None) # We make sure that the data will not be erased
@@ -113,7 +115,7 @@ class SyncMLSignature(XMLObject):
     Get the XML corresponding to the object
     """
     if self.hasData():
-      return str(self._baseGetData())
+      return bytes(self._baseGetData())
     elif default is _MARKER:
       return self._baseGetData()
     else:
@@ -139,7 +141,7 @@ class SyncMLSignature(XMLObject):
     Return the temp xml as string
     """
     if self.hasTemporaryData():
-      return str(self._baseGetTemporaryData())
+      return bytes(self._baseGetTemporaryData())
     elif default is _MARKER:
       return self._baseGetTemporaryData()
     else:
@@ -153,7 +155,7 @@ class SyncMLSignature(XMLObject):
     changed or not
     Returns 1 if MD5 are equals, else it returns 0
     """
-    if isinstance(xml_string, unicode):
+    if six.PY2 and isinstance(xml_string, six.text_type):
       xml_string = xml_string.encode('utf-8')
     return md5(xml_string).hexdigest() == self.getContentMd5()
 
@@ -189,7 +191,7 @@ class SyncMLSignature(XMLObject):
     Return the patial xml as string
     """
     if self.hasPartialData():
-      return str(self._baseGetPartialData())
+      return bytes(self._baseGetPartialData())
     elif default is _MARKER:
       return self._baseGetPartialData()
     else:
@@ -218,12 +220,12 @@ class SyncMLSignature(XMLObject):
   def getFirstPdataChunk(self, max_len):
     """
     """
-    partial_data = self._baseGetPartialData()
+    partial_data = bytes(self._baseGetPartialData()).decode('utf-8')
     chunk = partial_data[:max_len]
     rest_in_queue = partial_data[max_len:]
     if rest_in_queue is not None:
-      self.setPartialData(rest_in_queue)
-    return str(chunk)
+      self.setPartialData(rest_in_queue.encode('utf-8'))
+    return chunk.encode('utf-8')
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setSubscriberXupdate')
@@ -244,7 +246,7 @@ class SyncMLSignature(XMLObject):
     Return the patial xml as string
     """
     if self.hasSubscriberXupdate():
-      return str(self._baseGetSubscriberXupdate())
+      return bytes(self._baseGetSubscriberXupdate())
     elif default is _MARKER:
       return self._baseGetSubscriberXupdate()
     else:
@@ -269,7 +271,7 @@ class SyncMLSignature(XMLObject):
     Return the partial xml as string
     """
     if self.hasPublisherXupdate():
-      return str(self._baseGetPublisherXupdate())
+      return bytes(self._baseGetPublisherXupdate())
     elif default is _MARKER:
       return self._baseGetPublisherXupdate()
     else:

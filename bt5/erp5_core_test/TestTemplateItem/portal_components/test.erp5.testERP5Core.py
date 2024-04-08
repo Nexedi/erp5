@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import collections
 import pprint
 import httplib
 import urlparse
@@ -206,9 +207,15 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     actions = self.portal.portal_actions.listFilteredActionsFor(target)
     got = {}
     for category, actions in actions.items():
+      actions_by_priority = collections.defaultdict(list)
       got[category] = [dict(title=action['title'], id=action['id'])
                        for action in actions
                        if action['visible']]
+      for action in actions:
+        actions_by_priority[action['priority']].append(actions)
+      for actions in actions_by_priority.values():
+        if len(actions) > 1:
+          self.assertFalse(actions) # no actions with same priority
     msg = ("Actions do not match. Expected:\n%s\n\nGot:\n%s\n" %
            (pprint.pformat(expected), pprint.pformat(got)))
     self.assertEqual(expected, got, msg)
@@ -222,8 +229,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                             'id': 'category_tool'},
                            {'title': 'Manage Callables',
                             'id': 'callable_tool'},
-                           {'title': 'Create Module',
-                            'id': 'create_module'},
                            {'title': 'Configure Portal Types',
                             'id': 'types_tool'},
                            {'id': 'property_sheet_tool',
@@ -232,7 +237,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                             'title': 'Configure Portal Catalog'},
                            {'id': 'portal_alarms_action',
                             'title': 'Configure Alarms'},
-                           {'title': 'Undo', 'id': 'undo'}],
+                           {'title': 'Undo', 'id': 'undo'},
+                           {'title': 'Create Module',
+                            'id': 'create_module'},],
                 'object': [],
                 'object_action': [{'id': 'diff_object_action', 'title': 'Diff Object'}],
                 'object_exchange': [{'id': 'csv_export', 'title': 'Export Csv File'},  # erp5_csv_style
@@ -576,7 +583,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
          0 != i.getUid() != i.getProperty('uid')])
 
   def test_04_site_manager_and_translation_migration(self):
-    from zope.site.hooks import setSite
+    from zope.component.hooks import setSite
     from zope.component import queryUtility
     # check translation is working normaly
     erp5_ui_catalog = self.portal.Localizer.erp5_ui

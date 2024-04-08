@@ -11,6 +11,9 @@
  <portal_type id="Group Presence Period">
   <item>Calendar Exception</item>
  </portal_type>
+ <portal_type id="Holiday Acquisition Module">
+  <item>Holiday Acquisition</item>
+ </portal_type>
  <portal_type id="Leave Request">
   <item>Leave Request Period</item>
  </portal_type>

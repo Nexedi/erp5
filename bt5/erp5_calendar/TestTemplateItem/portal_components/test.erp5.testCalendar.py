@@ -85,6 +85,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.category_tool = self.getCategoryTool()
     self.createCategories()
     self.createService()
+
     # activate constraints
     self._addPropertySheet('Group Calendar', 'CalendarConstraint')
     self._addPropertySheet('Presence Request', 'CalendarConstraint')
@@ -94,6 +95,7 @@ class TestCalendar(ERP5ReportTestCase):
     self._addPropertySheet('Leave Request', 'IndividualCalendarConstraint')
 
     self._addPropertySheet('Leave Request Period', 'CalendarPeriodConstraint')
+    self._addPropertySheet('Leave Request Period', 'LeaveRequestPeriodConstraint')
     self._addPropertySheet('Presence Request Period', 'CalendarPeriodConstraint')
     self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
 
@@ -820,6 +822,37 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCreateHolidayAcquisition(self, sequence=None, sequence_list=None, **kw):
+    person = sequence.get('person')
+    holiday_acquisition = self.portal.holiday_acquisition_module.newContent(
+      portal_type='Holiday Acquisition',
+      quantity=1,
+      destination_value=person,
+      resource_value = self.portal.service_module.newContent(portal_type='Service')
+    )
+    sequence.edit(
+      holiday_acquisition=holiday_acquisition,
+    )
+
+  def stepSetHolidayAcquisitionToCheck(self, sequence=None, sequence_list=None, **kw):
+    holiday_acquisition = sequence.get('holiday_acquisition')
+    sequence.edit(obj_to_check=holiday_acquisition)
+
+  def test_05_testIndexholidayAcquisition(self):
+    """
+    Test indexing
+    """
+    sequence_list = SequenceList()
+    sequence_string = '\
+              CreatePerson \
+              CreateHolidayAcquisition \
+              Tic \
+              SetHolidayAcquisitionToCheck \
+              CheckCatalogued \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
   def test_CalendarExceptionInGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
@@ -1005,15 +1038,17 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request_period = leave_request.newContent(
                                   portal_type='Leave Request Period')
     # no person, invalid line (no dates, no resource)
-    self.assertEqual(4, len(leave_request.checkConsistency()))
+    self.assertEqual(5, len(leave_request.checkConsistency()))
     leave_request_period.setStartDate(self.start_date)
     leave_request_period.setStopDate(self.stop_date)
-    self.assertEqual(2, len(leave_request.checkConsistency()))
+    self.assertEqual(3, len(leave_request.checkConsistency()))
     leave_request_period.setResourceValue(
           self.portal.portal_categories.calendar_period_type.type1)
-    self.assertEqual(1, len(leave_request.checkConsistency()))
+    self.assertEqual(2, len(leave_request.checkConsistency()))
     person = self.portal.person_module.newContent(portal_type='Person')
     leave_request.setDestinationValue(person)
+    self.assertEqual(1, len(leave_request.checkConsistency()))
+    leave_request_period.setQuantity(1)
     self.assertEqual(0, len(leave_request.checkConsistency()))
 
   def test_PresenceRequestCalendarConstraint(self):

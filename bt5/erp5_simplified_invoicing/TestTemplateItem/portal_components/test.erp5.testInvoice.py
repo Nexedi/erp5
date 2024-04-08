@@ -30,6 +30,7 @@
   Tests invoice creation from simulation.
 
 """
+from __future__ import print_function
 import xml.dom.minidom
 import zipfile
 
@@ -101,7 +102,8 @@ class TestInvoice(TestInvoiceMixin):
     delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
+    invoice_transaction_applied_rule = [x for x in invoice_movement.contentValues() \
+                                        if x.getSpecialiseReference() == 'default_invoice_transaction_rule'][0]
     invoice_transaction_movement =\
          invoice_transaction_applied_rule.contentValues()[0]
     self.assertEqual(currency,
@@ -348,7 +350,8 @@ class TestInvoice(TestInvoiceMixin):
     delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
+    invoice_transaction_applied_rule = [x for x in invoice_movement.contentValues() \
+                                        if x.getSpecialiseReference() == 'default_invoice_transaction_rule'][0]
 
     # utility function to return the simulation movement that should be used
     # for "income" line
@@ -635,7 +638,7 @@ class TestInvoice(TestInvoiceMixin):
 
     # the <draw:image> should not be present, because there's no logo
     parser = OOoParser()
-    parser.openFromString(odt)
+    parser.openFromBytes(odt)
     style_xml = parser.oo_files['styles.xml']
     self.assertNotIn('<draw:image', style_xml)
 
@@ -1273,7 +1276,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
 
   def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
-    print invoice, divergence_list
+    print(invoice, divergence_list)
     self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def test_accept_quantity_divergence_on_invoice_with_stopped_packing_list(
@@ -1326,7 +1329,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEqual('solved', packing_list.getCausalityState())
 
   def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
-    print invoice, divergence_list
+    print(invoice, divergence_list)
     self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
 
   def test_adopt_quantity_divergence_on_invoice_line_with_stopped_packing_list(

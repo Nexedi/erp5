@@ -40,10 +40,7 @@ class ParentExplanationMovementGroup(MovementGroup):
   portal_type = 'Parent Explanation Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
-    parent_explanation_value = movement.getParentExplanationValue()
-    property_dict['parent_explanation_value'] = parent_explanation_value
-    return property_dict
+    return {'parent_explanation_value': movement.getParentExplanationValue()}
 
   def test(self, document, property_dict, **kw):
     if document.getParentExplanationValue() == \

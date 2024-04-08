@@ -72,7 +72,7 @@ class OOoEscaper:
     self.parent_node = parent_node
   def __call__(self, match_object):
     match_value = match_object.group(1)
-    if match_value is None:
+    if match_value is None and match_object.group(2):
       self.parent_node.text = convert_to_xml_compatible_string(match_object.group(2))
     elif match_value == '\n':
       line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'line-break'))
@@ -86,7 +86,7 @@ def convertToString(value):
     return str(value)
   return value
 
-class Widget:
+class Widget(object):
   """A field widget that knows how to display itself as HTML.
   """
 

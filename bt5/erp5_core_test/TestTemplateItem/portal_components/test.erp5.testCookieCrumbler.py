@@ -18,7 +18,7 @@ import urllib
 
 from OFS.DTMLMethod import DTMLMethod
 from OFS.Folder import Folder
-from AccessControl.User import UserFolder
+from OFS.userfolder import UserFolder
 
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.tests.test_CookieCrumbler import makerequest

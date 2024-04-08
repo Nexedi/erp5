@@ -1,6 +1,13 @@
 from six import string_types as basestring
+import re
 import json
+import sys
+from zExceptions import ExceptionFormatter
 from Products.ERP5Type.Utils import checkPythonSourceCode
+
+
+match_PEP263 = re.compile(r'^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)').match
+
 
 def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   """
@@ -24,17 +31,36 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
       signature_parts += [data['params']]
     signature = ", ".join(signature_parts)
 
-    function_name = "function_name"
-    body = "def %s(%s):\n%s" % (function_name,
-                                signature,
-                                indent(data['code']) or "  pass")
+    # keep the PEP263 magic comment
+    pep263_comment = '#'
+    lines = data['code'].splitlines() + ['', '']
+    for line in lines[0], lines[1]:
+      m = match_PEP263(line)
+      if m:
+        pep263_comment = '# coding=' + m.groups()[0]
+        break
+
+    body = "%s\n"\
+           "from __future__ import print_function\n"\
+           "def function_name(%s):\n%s" % (
+              pep263_comment,
+              signature,
+              indent(data['code']) or "  pass")
   else:
     body = data['code']
 
-  message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
+  try:
+    message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
+  except Exception:
+    message_list = [{
+      'type': 'E',
+      'row': 0,
+      'column': 0,
+      'text': 'pylint failed:\n%s' % ''.join(ExceptionFormatter.format_exception(*sys.exc_info())),
+    }]
   for message_dict in message_list:
     if is_script:
-      message_dict['row'] = message_dict['row'] - 2
+      message_dict['row'] = message_dict['row'] - 4
     else:
       message_dict['row'] = message_dict['row'] - 1
 

@@ -478,7 +478,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       # one. Including setting up ZTK style utilities and adapters. We
       # can even call setSite(self), as long as we roll back that later,
       # since we are actually in the middle of a setSite() call.
-      from zope.site.hooks import getSite, setSite
+      from zope.component.hooks import getSite, setSite
       old_site = getSite()
       try:
         setSite(self)
@@ -988,7 +988,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
         for state in wf.getStateValueList():
           if group in state.getStateTypeList():
             state_set.add(state.getReference())
-      return tuple(state_set)
+      return tuple(sorted(state_set))
 
     getStateList = CachingMethod(getStateList,
                                  id=('_getPortalGroupedStateList', group),
@@ -2634,7 +2634,7 @@ def initialize(self):
           manage_addERP5Site(app.__of__(RequestContainer(REQUEST=REQUEST)),
             **{k: kw.get(k, v) for k, v in six.iteritems(default_kw)
                                if isinstance(v, str)})
-          transaction.get().note('Created ' + meta_type)
+          transaction.get().note(u'Created ' + meta_type)
           transaction.commit()
           break
       except OperationalError as e:

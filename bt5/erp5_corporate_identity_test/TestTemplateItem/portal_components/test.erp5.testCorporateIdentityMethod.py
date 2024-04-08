@@ -206,11 +206,11 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     # it has no matter with/without follow up
     doc_content = '<div> <a href="sale_opportunity_module/template_test_embed_sale_opportunity?report=Base_generateCorporareIdentityTestReport&amp;test=23"></a> </div>'
     output =web_page_with_follow_up.WebPage_embedReportDocumentList(doc_content)
-    self.assertEqual(output, '<div> test report {"test": "23", "document_language": null, "format": null} </div>')
+    self.assertEqual(output, '<div> test report {"document_language": null, "format": null, "test": "23"} </div>')
 
     doc_content = '<div> <a href="sale_opportunity_module/template_test_embed_sale_opportunity?report=Base_generateCorporareIdentityTestReport&amp;test=23"></a> </div>'
     output =web_page_no_follow_up.WebPage_embedReportDocumentList(doc_content)
-    self.assertEqual(output, '<div> test report {"test": "23", "document_language": null, "format": null} </div>')
+    self.assertEqual(output, '<div> test report {"document_language": null, "format": null, "test": "23"} </div>')
 
   def test_getTemplateProxyParameter_override_person(self):
     output_dict_list = self.test_person.Base_getTemplateProxyParameter(

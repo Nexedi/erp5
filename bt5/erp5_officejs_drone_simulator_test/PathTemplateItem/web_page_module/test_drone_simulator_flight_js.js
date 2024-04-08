@@ -56,14 +56,16 @@
       '  assert(coord1.altitude, coord2.altitude, "Altitude")\n' +
       '}\n' +
       '\n' +
-      'me.onStart = function () {\n' +
-      '  assert(me.getAirSpeed(), 16, "Initial speed");\n' +
+      'me.onStart = function (timestamp) {\n' +
+      '  assert(me.getSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
       '  assert(me.getYaw(), 0, "Yaw angle")\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
+      '  me.start_time = timestamp;\n' +
       '  me.setTargetCoordinates(\n' +
       '    me.initialPosition.latitude + 0.01,\n' +
       '    me.initialPosition.longitude,\n' +
-      '    me.getAltitudeAbs()\n' +
+      '    me.getAltitudeAbs(),\n' +
+      '    ' + DEFAULT_SPEED + '\n' +
       '  );\n' +
       '};\n' +
       '\n' +
@@ -75,8 +77,10 @@
       '    me.getCurrentPosition().latitude,\n' +
       '    me.getCurrentPosition().longitude\n' +
       '  ).toFixed(8),\n' +
-      '    expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
-      '    assert(timestamp, 1000 / 60, "Timestamp");\n' +
+      '    time_interval = timestamp - me.start_time,\n' +
+      '    expected_interval = 1000 / 60,\n' +
+      '    expectedDistance = (me.getSpeed() * expected_interval / 1000).toFixed(8);\n' +
+      '    assert(time_interval.toFixed(4), expected_interval.toFixed(4), "Timestamp");\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
       '  compare(current_position, {\n' +
@@ -84,7 +88,7 @@
       '    longitude: me.initialPosition.longitude,\n' +
       '    altitude: me.initialPosition.altitude\n' +
       '  });\n' +
-      '  me.exit(me.triggerParachute());\n' +
+      '  me.exit(me.land());\n' +
       '};',
     DRAW = true,
     LOG = true,

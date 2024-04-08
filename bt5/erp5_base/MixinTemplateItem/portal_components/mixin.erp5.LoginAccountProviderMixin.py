@@ -31,7 +31,7 @@ import zope.interface
 
 from Products.ERP5Type import Permissions
 from erp5.component.interface.ILoginAccountProvider import ILoginAccountProvider
-from AccessControl.AuthEncoding import pw_validate
+from AuthEncoding.AuthEncoding import pw_validate
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 

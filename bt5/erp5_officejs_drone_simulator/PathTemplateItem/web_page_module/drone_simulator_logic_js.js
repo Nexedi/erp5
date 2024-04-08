@@ -25,11 +25,11 @@ var DroneManager = /** @class */ (function () {
     this._maxRollAngle = 0;
     this._maxSinkRate = 0;
     this._maxClimbRate = 0;
-    this._maxOrientation = 0;
+    this._maxCommandFrequency = 0;
+    this._last_command_timestamp = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = new BABYLON.Vector3(0, 0, 1); // North
-    this._rotationSpeed = 0.4;
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
@@ -62,11 +62,6 @@ var DroneManager = /** @class */ (function () {
     // swap y and z axis so z axis represents altitude
     return new BABYLON.Vector3(vector.x, vector.z, vector.y);
   };
-  Object.defineProperty(DroneManager.prototype, "drone_dict", {
-    get: function () { return this._API._drone_dict_list; },
-    enumerable: true,
-    configurable: true
-  });
   Object.defineProperty(DroneManager.prototype, "can_play", {
     get: function () { return this._canPlay; },
     enumerable: true,
@@ -120,13 +115,16 @@ var DroneManager = /** @class */ (function () {
     enumerable: true,
     configurable: true
   });
+  DroneManager.prototype.getDroneDict = function () {
+    return this._API._drone_dict_list;
+  };
   DroneManager.prototype.internal_start = function (initial_position) {
     this._API.internal_start(this);
     this._canPlay = true;
     this._canCommunicate = true;
     this._targetCoordinates = initial_position;
     try {
-      return this.onStart();
+      return this.onStart(this._API._gameManager._game_duration);
     } catch (error) {
       console.warn('Drone crashed on start due to error:', error);
       this._internal_crash(error);
@@ -136,22 +134,29 @@ var DroneManager = /** @class */ (function () {
    * Set a target point to move
    */
   DroneManager.prototype.setTargetCoordinates =
-    function (latitude, longitude, altitude) {
-      this._internal_setTargetCoordinates(latitude, longitude, altitude);
+    function (latitude, longitude, altitude, speed) {
+      this._internal_setTargetCoordinates(latitude, longitude, altitude, speed);
     };
   DroneManager.prototype._internal_setTargetCoordinates =
-    function (latitude, longitude, altitude, radius) {
-      if (!this._canPlay) {
+    function (latitude, longitude, altitude, speed, radius) {
+      if (!this._canPlay || !this.isReadyToFly()) {
         return;
+      }
+      if (this._API._gameManager._game_duration - this._last_command_timestamp
+            < 1000 / this._API.getMaxCommandFrequency()) {
+        this._internal_crash(new Error('Minimum interval between commands is ' +
+            1000 / this._API.getMaxCommandFrequency() + ' milliseconds'));
       }
       //convert real geo-coordinates to virtual x-y coordinates
       this._targetCoordinates =
         this._API.processCoordinates(latitude, longitude, altitude);
-      return this._API.internal_setTargetCoordinates(
+      this._API.internal_setTargetCoordinates(
         this,
         this._targetCoordinates,
+        speed,
         radius
       );
+      this._last_command_timestamp = this._API._gameManager._game_duration;
     };
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this;
@@ -197,15 +202,6 @@ var DroneManager = /** @class */ (function () {
     }
     return this._API.setStartingPosition(this, x, y, z);
   };
-  DroneManager.prototype.setAirSpeed = function (speed) {
-    if (!this._canPlay) {
-      return;
-    }
-    if (isNaN(speed)) {
-      throw new Error('Speed must be a number');
-    }
-    return this._API.setSpeed(this, speed);
-  };
   DroneManager.prototype.setDirection = function (x, y, z) {
     if (!this._canPlay) {
       return;
@@ -215,20 +211,6 @@ var DroneManager = /** @class */ (function () {
     }
     // swap y and z axis so z axis represents altitude
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
-  };
-
-  //TODO rotation
-  DroneManager.prototype.setRotation = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setRotation(this, x, y, z);
-  };
-  DroneManager.prototype.setRotationBy = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setRotation(this, x, y, z);
   };
 
   /**
@@ -287,11 +269,13 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getCurrentPosition = function () {
     if (this._controlMesh) {
       // swap y and z axis so z axis represents altitude
-      return this._API.getCurrentPosition(
+      var position = this._API.getCurrentPosition(
         this._controlMesh.position.x,
         this._controlMesh.position.z,
         this._controlMesh.position.y
       );
+      position.timestamp = this._API._gameManager._game_duration;
+      return position;
     }
     return null;
   };
@@ -299,11 +283,12 @@ var DroneManager = /** @class */ (function () {
    * Make the drone loiter (circle with a set radius)
    */
   DroneManager.prototype.loiter =
-    function (latitude, longitude, altitude, radius) {
+    function (latitude, longitude, altitude, radius, speed) {
       this._internal_setTargetCoordinates(
         latitude,
         longitude,
         altitude,
+        speed,
         radius
       );
     };
@@ -316,27 +301,29 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getYaw = function () {
     return this._API.getYaw(this);
   };
-  DroneManager.prototype.getAirSpeed = function () {
+  DroneManager.prototype.get3DSpeed = function () {
     return this._speed;
   };
-  DroneManager.prototype.getGroundSpeed = function () {
-    return this._API.getGroundSpeed(this);
+  DroneManager.prototype.getSpeed = function () {
+    return this._API.getSpeed(this);
   };
   DroneManager.prototype.getClimbRate = function () {
     return this._API.getClimbRate(this);
   };
-  DroneManager.prototype.getSinkRate = function () {
-    return this._API.getSinkRate();
+  DroneManager.prototype.takeOff = function () {
+    return this._API.takeOff();
   };
-  DroneManager.prototype.triggerParachute = function () {
-    return this._API.triggerParachute(this);
+  DroneManager.prototype.land = function () {
+    return this._API.land(this);
   };
   DroneManager.prototype.exit = function () {
-    this._internal_crash();
-    return this._API.exit();
+    return this._internal_crash();
   };
-  DroneManager.prototype.landed = function () {
-    return this._API.landed(this);
+  DroneManager.prototype.isReadyToFly = function () {
+    return this._API.isReadyToFly();
+  };
+  DroneManager.prototype.isLanding = function () {
+    return this._API.isLanding();
   };
   /**
    * Set the drone last checkpoint reached
@@ -349,12 +336,12 @@ var DroneManager = /** @class */ (function () {
   /**
    * Function called on game start
    */
-  DroneManager.prototype.onStart = function () { return; };
+  DroneManager.prototype.onStart = function (timestamp) { return; };
   /**
    * Function called on game update
    * @param timestamp The tic value
    */
-  DroneManager.prototype.onUpdate = function () { return; };
+  DroneManager.prototype.onUpdate = function (timestamp) { return; };
   /**
    * Function called when drone crashes
    */
@@ -675,8 +662,12 @@ var GameManager = /** @class */ (function () {
         drone._tick += 1;
         if (drone._API.isCollidable && drone.can_play) {
           if (drone.getCurrentPosition().altitude <= 0) {
-            drone._internal_crash(new Error('Drone ' + drone.id +
-                                            ' touched the floor.'));
+            if (!drone.isLanding()) {
+              drone._internal_crash(new Error('Drone ' + drone.id +
+                                              ' touched the floor.'));
+            } else {
+              drone._internal_crash();
+            }
           } else {
             _this._droneList.forEach(function (other) {
               if (other.can_play && drone.id !== other.id) {
@@ -729,7 +720,7 @@ var GameManager = /** @class */ (function () {
                   game_manager._game_duration, geo_coordinates.latitude,
                   geo_coordinates.longitude,
                   map_info.start_AMSL + drone_position.z,
-                  drone_position.z, drone.getYaw(), drone.getGroundSpeed(),
+                  drone_position.z, drone.getYaw(), drone.getSpeed(),
                   drone.getClimbRate()
                 ]);
               }
@@ -912,8 +903,8 @@ var GameManager = /** @class */ (function () {
     _this.ongoing_update_promise = null;
     _this.finish_deferred = RSVP.defer();
     console.log("Simulation started.");
-    this._game_duration = 0;
-    this._totalTime = GAMEPARAMETERS.gameTime;
+    this._game_duration = Date.now();
+    this._totalTime = GAMEPARAMETERS.gameTime + this._game_duration;
 
     return new RSVP.Queue()
       .push(function () {

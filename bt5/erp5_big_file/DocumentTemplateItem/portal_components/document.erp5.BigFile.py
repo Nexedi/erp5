@@ -22,7 +22,7 @@ from erp5.component.document.File import File, _MARKER
 from erp5.component.module.BTreeData import BTreeData
 from ZPublisher.HTTPRequest import FileUpload
 from ZPublisher import HTTPRangeSupport
-from webdav.common import rfc1123_date
+from zope.datetime import rfc1123_date
 from mimetools import choose_boundary
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from DateTime import DateTime

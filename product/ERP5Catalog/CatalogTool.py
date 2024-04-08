@@ -36,7 +36,7 @@ from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from AccessControl.User import system as system_user
+from AccessControl.users import system as system_user
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper

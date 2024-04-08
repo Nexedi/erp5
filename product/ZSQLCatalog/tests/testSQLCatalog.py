@@ -29,6 +29,7 @@
 ##############################################################################
 
 from functools import partial
+import collections
 import unittest
 from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query
@@ -40,6 +41,7 @@ from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import six
+from AccessControl.ZopeGuards import guarded_getattr
 
 class MatchList(list):
   def __repr__(self):
@@ -323,6 +325,24 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  {column: ['a', 'b']})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
                  {column: ['=a', '=b']})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
+                 {column: ('a', 'b')})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=MatchList((['a', 'b'], ['b', 'a']))), operator='and'),
+                 {column: set('ab')})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=MatchList((['a', 'b'], ['b', 'a']))), operator='and'),
+                 {column: {'a': 1, 'b': 2}.keys()})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=MatchList((['a', 'b'], ['b', 'a']))), operator='and'),
+                 {column: {1: 'a', 2: 'b'}.values()})
+    # dict-like are also supported
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
+                 {column: collections.OrderedDict((('a', 1), ('b', 2))).keys()})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
+                 {column: collections.OrderedDict(((1, 'a'), (2, 'b'))).values()})
+    # restricted versions as well
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=MatchList((['a', 'b'], ['b', 'a']))), operator='and'),
+                 {column: guarded_getattr({'a': 1, 'b': 2}, 'keys')()})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=MatchList((['a', 'b'], ['b', 'a']))), operator='and'),
+                 {column: guarded_getattr({1: 'a', 2: 'b'}, 'values')()})
 
   def test_DefaultKey(self):
     self._testDefaultKey('default')

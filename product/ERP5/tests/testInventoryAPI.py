@@ -36,6 +36,7 @@ import os
 import random
 import unittest
 from unittest import expectedFailure
+import warnings
 
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
@@ -1639,7 +1640,7 @@ class TestInventoryList(InventoryAPITestCase):
     for month, value in six.iteritems(data):
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
-        self._makeMovement(start_date=d, resource_uid=resource_uid, **mov)
+        self._makeMovement(start_date=d, resource_value=resource, **mov)
 
     # and check
     for cur in sorted(data)[1:]:
@@ -1664,7 +1665,7 @@ class TestInventoryList(InventoryAPITestCase):
     for month, value in six.iteritems(internal_data):
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
-        self._makeMovement(is_internal=1, start_date=d, resource_uid=resource_uid, **mov)
+        self._makeMovement(is_internal=1, start_date=d, resource_value=resource, **mov)
     for cur in sorted(internal_data):
       to_date = DateTime("%s/1" % cur) + 31
       # check by section
@@ -4189,7 +4190,14 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
     delivery.confirm()
     delivery.start()
     delivery.stop()
-    self.tic()
+    with warnings.catch_warnings(record=True) as catched_warnings:
+      self.tic()
+    self.assertIn(
+      'quantity field of quantity_unit categories is deprecated. '
+      'Please use Quantity Unit Conversion Definitions instead and '
+      'reset the value of this field.',
+      [str(w.message) for w in catched_warnings],
+    )
 
     # inventories of that resource are indexed in grams
     self.assertEqual(3010,

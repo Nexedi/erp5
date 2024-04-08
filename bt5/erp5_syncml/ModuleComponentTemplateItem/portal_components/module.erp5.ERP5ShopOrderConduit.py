@@ -27,9 +27,9 @@
 #
 ##############################################################################
 
-from xml.dom.ext import PrettyPrint
+from xml.dom.ext import PrettyPrint  # pylint:disable=no-name-in-module,import-error
 import random
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG

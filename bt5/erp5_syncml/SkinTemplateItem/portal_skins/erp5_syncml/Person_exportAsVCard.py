@@ -3,24 +3,17 @@ first_name = context.getFirstName()
 last_name = context.getLastName()
 tel = context.getDefaultTelephoneTelephoneNumber()
 
-if same_type(first_name, u'a'):
-  first_name = first_name.encode('utf-8')
-if same_type(last_name, u'a'):
-  last_name = last_name.encode('utf-8')
-if same_type(tel, u'a') :
-  tel = tel.encode('utf-8')
-
 parameters_FN = ''
 parameters_N = ''
 
 try:
   first_name.encode('utf-8')
-except:
+except UnicodeEncodeError:
   parameters_FN = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8'
 
 try:
   last_name.encode('utf-8')
-except:
+except UnicodeEncodeError:
   parameters_N = ';ENCODING=QUOTED-PRINTABLE;CHARSET=UTF-8'
 
 append = vcard_string_list.append

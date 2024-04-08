@@ -55,6 +55,18 @@ from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
 import pytz
 import six
+import lxml.html
+
+
+def canonical_html(html):
+  # type: (str) -> str
+  """returns canonical form of html text.
+  """
+  return lxml.html.tostring(
+    lxml.html.fromstring(html),
+    method="c14n",
+  ).decode('utf-8')
+
 
 class FileUpload(file):
   """Act as an uploaded file.
@@ -384,30 +396,6 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
   raise RuntimeError("Can't find free port (tried ports %u to %u)\n"
                      % (55000, 54999 + m))
 
-def createZServer(log=os.devnull, zserver_type='http'):
-  import ZServer
-  if zserver_type == 'http':
-    zserver_class, zhandler_class = ZServer.zhttp_server, ZServer.zhttp_handler
-  elif zserver_type == 'webdav':
-    from ZServer.HTTPServer import zwebdav_server as zserver_class
-    from ZServer.WebDAVSrcHandler import WebDAVSrcHandler as zhandler_class
-  else:
-    raise NotImplementedError
-  lg = ZServer.logger.file_logger(log)
-  class new_zserver(zserver_class):
-    # I can't use __new__ because zhttp_handler is an old-style class :(
-    def __init__(self):
-      self.__class__, = self.__class__.__bases__
-  for ip, port in parseListeningAddress(os.environ.get('zserver')):
-    hs = new_zserver()
-    try:
-      hs.__init__(ip, port, resolver=None, logger_object=lg)
-      hs.install_handler(zhandler_class(module='Zope2', uri_base=''))
-      return hs
-    except socket.error as e:
-      if e[0] != errno.EADDRINUSE:
-        raise
-      hs.close()
 
 class DbFactory(ZopeDatabase):
 

@@ -1,3 +1,4 @@
+import bz2
 request = container.REQUEST
 request.form.update(report_request)
 request.other.update(report_request)
@@ -25,4 +26,4 @@ with portal.Localizer.translationContext(localizer_language):
 
   report_section.popReport(portal, render_prefix=render_prefix)
 
-return report_section_idx, data.encode('utf8').encode('bz2')
+return report_section_idx, bz2.compress(data.encode('utf8'))

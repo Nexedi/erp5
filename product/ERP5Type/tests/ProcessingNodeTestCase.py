@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
+import abc
 import errno, logging, mock, os, socket, time
 import itertools
 from threading import Thread
-from UserDict import IterableUserDict
+import six
+if six.PY2:
+  from UserDict import IterableUserDict as UserDict
+else:
+  from collections import UserDict
 import Lifetime
 import transaction
 from Testing import ZopeTestCase
@@ -12,13 +17,12 @@ from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
-  addUserToDeveloperRole, createZServer, DummyMailHostMixin, parseListeningAddress
+  addUserToDeveloperRole, DummyMailHostMixin, parseListeningAddress
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
-class DictPersistentWrapper(IterableUserDict, object):
-
-  def __metaclass__(name, base, d):
+class DictPersistentWrapperMetaClass(abc.ABCMeta):
+  def __new__(cls, name, base, d):
     def wrap(attr):
       wrapped = getattr(base[0], attr)
       def wrapper(self, *args, **kw):
@@ -28,7 +32,12 @@ class DictPersistentWrapper(IterableUserDict, object):
       return wrapper
     for attr in ('clear', 'setdefault', 'update', '__setitem__', '__delitem__'):
       d[attr] = wrap(attr)
-    return type(name, base, d)
+    return super(
+      DictPersistentWrapperMetaClass, cls).__new__(cls, name, base, d)
+
+
+@six.add_metaclass(DictPersistentWrapperMetaClass)
+class DictPersistentWrapper(UserDict, object):
 
   def __init__(self, dict, persistent_object):
     self.data = dict
@@ -172,7 +181,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
               s.listen(0)
             except socket.error as e:
               s.close()
-              if e[0] != errno.EADDRINUSE:
+              if e.args[0] != errno.EADDRINUSE:
                 raise
               if zserver:
                 raise RuntimeError(str(e))
@@ -337,7 +346,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
     This aborts current transaction.
     """
-    for i in xrange(60):
+    for i in range(60):
       node_list = list(self.portal.portal_activities.getProcessingNodeList())
       if len(node_list) >= node_count:
         node_list.remove(getCurrentNode())

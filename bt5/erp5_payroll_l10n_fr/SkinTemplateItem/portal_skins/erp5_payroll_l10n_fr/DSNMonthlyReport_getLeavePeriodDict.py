@@ -4,9 +4,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query
 portal = context.getPortalObject()
 portal_categories = portal.portal_categories
 
-now = DateTime()
 effective_date = context.getEffectiveDate()
-previous_pay_day = addToDate(effective_date, month=-1)
 
 # Get period dates
 result = portal.portal_catalog(portal_type="DSN Monthly Report",
@@ -50,7 +48,7 @@ leave_period_type_set = set(portal_categories.use.social_declaration.l10n.fr.lea
 
 # Create dict containing a DSN leave blocs, grouped by employee
 leave_dict = {}
-for period in leave_period_list:
+for period in sorted(leave_period_list, key=lambda lp: lp.getCreationDate()):
   # some leave periods don't have to be reported in DSN
   period_resource = period.getResourceValue()
   assert period_resource is not None, 'No type set on Leave Request %s' % period.absolute_url()
@@ -59,7 +57,7 @@ for period in leave_period_list:
     continue
   # Let's make a DSN Bloc for this leave period
   leave_category = leave_category.pop()
-  if period.getDestinationValue() in leave_dict.keys():
+  if period.getDestinationValue() in leave_dict:
     leave_dict[period.getDestination()].append(getLeaveBlocAsDict(period, leave_category))
   else:
     leave_dict[period.getDestination()] = [getLeaveBlocAsDict(period, leave_category),]

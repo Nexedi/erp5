@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+from __future__ import print_function
 import os
 import sys
 import pdb
@@ -11,6 +12,7 @@ import shutil
 import errno
 import random
 import transaction
+import warnings
 from glob import glob
 
 
@@ -495,6 +497,17 @@ class DebugTestResult:
 
 _print = sys.stderr.write
 
+
+def setupWarnings():
+  if not sys.warnoptions:
+    warnings.simplefilter("default")
+    os.environ["PYTHONWARNINGS"] = "default"
+  warnings.filterwarnings(
+    'ignore',
+    message='(?s)Node name auto-generation is deprecated.*product-config CMFActivity.*'
+  )
+
+
 def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
     _print("conflicting options: --zeo_client and --zeo_server\n")
@@ -686,7 +699,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     transaction.commit()
   except:
     import traceback
-    print "runUnitTestList Exception : %r" % (traceback.print_exc(),)
+    print("runUnitTestList Exception : %r" % (traceback.print_exc(),))
     # finally does not expect opened transaction, even in the
     # case of a Ctrl-C.
     transaction.abort()
@@ -721,10 +734,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
 def usage(stream, msg=None):
   if msg:
-    print >>stream, msg
-    print >>stream
+    print(msg, file=stream)
+    print(file=stream)
   program = os.path.basename(sys.argv[0])
-  print >>stream, __doc__ % {"program": program}
+  print(__doc__ % {"program": program}, file=stream)
 
 log_directory = None
 def main(argument_list=None):
@@ -897,6 +910,8 @@ def main(argument_list=None):
       _log_directory = os.path.abspath(arg)
     elif opt == "--with_wendelin_core":
       os.environ["with_wendelin_core"] = "1"
+
+  setupWarnings()
 
   bt5_path_list += filter(None,
     os.environ.get("erp5_tests_bt5_path", "").split(','))

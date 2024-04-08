@@ -30,7 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from AccessControl.SecurityManagement import newSecurityManager, \
         getSecurityManager, setSecurityManager
-from AccessControl.User import nobody
+from AccessControl.users import nobody
 from AccessControl import Unauthorized
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate

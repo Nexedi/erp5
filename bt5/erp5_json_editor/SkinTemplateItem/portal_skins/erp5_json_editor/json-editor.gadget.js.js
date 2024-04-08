@@ -43,6 +43,45 @@
     }
   };
 
+  JSONEditor.defaults.editors.select.prototype.setValue = function (value, initial) {
+    /* Sanitize value before setting it */
+    var sanitized = this.typecast(value),
+      inEnum = (this.enum_options.length > 0 && this.enum_values.includes(sanitized)),
+      haveToUseDefaultValue = (!!this.jsoneditor.options.use_default_values || this.schema.default === undefined);
+
+    if (!this.hasPlaceholderOption && (!inEnum || (initial && !this.isRequired() && !haveToUseDefaultValue))) {
+      /* NXD: We forcefuly include the value even  */
+      this.theme.setSelectOptions(this.input,
+        this.enum_options.concat([value]),
+        this.enum_display.concat([value]),
+        this.hasPlaceholderOption,
+        this.placeholderOptionText);
+    }
+
+    if (this.value === sanitized) {
+      return;
+    }
+
+    /* NXD: !this.hasPlaceholderOption seems to be a bug on upstream introduces by:
+      https://github.com/json-editor/json-editor/pull/1499/commits/2f9b1b3a30e64383b92dc4cd7494f55ba089ae66 */
+    if (inEnum && !this.hasPlaceholderOption) {
+      this.input.value = this.enum_options[this.enum_values.indexOf(sanitized)];
+    } else if (!inEnum && !this.hasPlaceholderOption) {
+      this.input.value = sanitized;
+    } else {
+      this.input.value = '_placeholder_';
+    }
+
+    this.value = sanitized;
+
+    if (!initial) {
+      this.is_dirty = true;
+    }
+
+    this.onChange();
+    this.change();
+  };
+
   if (JSONEditor.defaults.editors.select.prototype.original_preBuild === undefined) {
     JSONEditor.defaults.editors.select.prototype.original_preBuild = JSONEditor.defaults.editors.select.prototype.preBuild;
   }
@@ -80,8 +119,19 @@
   };
 
   JSONEditor.defaults.editors.select.prototype.typecast = function (value) {
-    if (this.schema.type === 'boolean') {
-      return value === 'undefined' || value === undefined ? undefined : !!value;
+    /* The value should be modified but it must be preserve its integrity,
+        it must not be modified even if the type is not the good one */
+    if (this.schema.type === 'boolean' && (value === 'undefined' || value === undefined)) {
+      return undefined;
+    }
+    if (this.schema.type === 'boolean' && (typeof value === "boolean")) {
+      return value;
+    }
+    if (this.schema.type === 'boolean' && (value === "true" || value === "1")) {
+      return true;
+    }
+    if (this.schema.type === 'boolean' && (value === "false" || value === "")) {
+      return false;
     }
     if (this.schema.type === 'number' && value === "") {
       return undefined;
@@ -90,10 +140,12 @@
       return undefined;
     }
     if (this.schema.type === 'number') {
-      return parseFloat(value) || 0;
+      return parseFloat(value) || value;
     }
     if (this.schema.type === 'integer') {
-      return Math.floor(parseFloat(value) || 0);
+      if (parseFloat(value)) {
+        return Math.floor(parseFloat(value));
+      }
     }
     if (this.schema.enum && value === undefined) {
       return undefined;
@@ -101,9 +153,33 @@
     if (value === undefined) {
       return undefined;
     }
-
     return value.toString();
   };
+
+  if (JSONEditor.defaults.editors.object.prototype.original_getPropertySchema === undefined) {
+    JSONEditor.defaults.editors.object.prototype.original_getPropertySchema = JSONEditor.defaults.editors.object.prototype.getPropertySchema;
+  }
+
+  JSONEditor.defaults.editors.object.prototype.getPropertySchema = function (key) {
+    var schema = this.original_getPropertySchema(key);
+    /* Strip forbidden properties, that aren't part of json schema spec.
+        They are removed because the UI must be complaint with other usages of
+        json schemas.
+    */
+    delete schema.template;
+    delete schema.options;
+
+    /* Display default value as part of description */
+    if (schema.default !== undefined && typeof schema.default !== "object") {
+      if (schema.description !== undefined) {
+        schema.description = schema.description + " (default: " + schema.default + ")";
+      } else {
+        schema.description = " (default: " + schema.default + ")";
+      }
+    }
+    return schema;
+  }
+
 
   /* The original code would remove the field if value is undefined */
   JSONEditor.defaults.editors.object.prototype.setValue = function (value, initial) {
@@ -248,8 +324,8 @@
           // editor relies on async load function, so we must return the promise
           // to finish before continue, otherwise rendering errors wont throw Errors 
           // in the same stack as expected.
-          return editor.promise
-        })
+          return editor.promise;
+        });
     })
     .declareMethod('getContent', function () {
       var form_data = {};

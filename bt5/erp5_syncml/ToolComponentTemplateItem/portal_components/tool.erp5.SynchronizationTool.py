@@ -26,6 +26,7 @@
 ##############################################################################
 
 from logging import getLogger
+import six
 
 from AccessControl import ClassSecurityInfo
 
@@ -184,8 +185,7 @@ class SynchronizationTool(BaseTool):
   #
   security.declarePublic('readResponse')
   def readResponse(self, text='', sync_id=None, from_url=None):
-    """
-    We will look at the url and we will see if we need to send mail, http
+    """We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
     syncml_logger.info('readResponse sync_id %s, text %s', sync_id, text)
@@ -193,6 +193,9 @@ class SynchronizationTool(BaseTool):
       # we are still anonymous at this time, use unrestrictedSearchResults
       # to fetch the Subcribers
       catalog_tool = self.getPortalObject().portal_catalog.unrestrictedSearchResults
+
+      if isinstance(text, six.text_type):
+        text = text.encode('utf-8')
       syncml_request = SyncMLRequest(text)
 
       # It is assumed that client & server does not share the same database ID
@@ -233,12 +236,12 @@ class SynchronizationTool(BaseTool):
                        % (sync_id, syncml_request.header['target']))
 
     # we use from only if we have a file
-    elif isinstance(from_url, basestring):
+    elif isinstance(from_url, six.string_types):
       if from_url.startswith('file:'):
         filename = from_url[len('file:'):]
         xml = None
         try:
-          stream = open(filename, 'r')
+          stream = open(filename, 'rb')
         except IOError:
           # XXX-Aurel : Why raising here make unit tests to fail ?
           # raise ValueError("Impossible to read file %s, error is %s"
@@ -313,7 +316,7 @@ class SynchronizationTool(BaseTool):
       raise NotImplementedError("Starting sync process from server is forbidden")
 
     # Return message for unit test purpose
-    return str(syncml_response)
+    return bytes(syncml_response)
 
   #
   # Following methods are related to client (subscription)
@@ -360,12 +363,12 @@ class SynchronizationTool(BaseTool):
         activity="SQLQueue",
         after_method_id=('processServerSynchronization',
                          'getAndIndex',
-                         'SQLCatalog_indexSyncMLDocumentList'),
+                         'ERP5Site_indexSyncMLDocumentList'),
         priority=ACTIVITY_PRIORITY,
-        tag=subscription.getRelativeUrl()).sendMessage(str(syncml_response))
+        tag=subscription.getRelativeUrl()).sendMessage(bytes(syncml_response))
     else:
-      subscription.sendMessage(str(syncml_response))
+      subscription.sendMessage(bytes(syncml_response))
 
-    return str(syncml_response)
+    return bytes(syncml_response)
 
 InitializeClass(SynchronizationTool)

@@ -42,12 +42,14 @@ from xml.sax.saxutils import unescape
 import re
 from lxml import etree
 from lxml.etree import Element
+import six
 parser = etree.XMLParser(remove_blank_text=True)
 from xml_marshaller.xml_marshaller import Unmarshaller
 from xupdate_processor import xuproc
 from base64 import standard_b64decode
 from zope.interface import implementer
 from copy import deepcopy
+from six import string_types as basestring
 
 import logging
 syncml_logger = logging.getLogger('ERP5SyncML')
@@ -229,10 +231,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       # /erp5/object[@gid='313730']/../workflow_action[@id=SHA(TIME + ACTOR)]
       wf_action_id = EXTRACT_ID_FROM_XPATH.findall(xpath_expression)[-1][-1]
       def deleteWorkflowNode():
-        for wf_id, wf_history_tuple in object.workflow_history.iteritems():
+        for wf_id, wf_history_tuple in six.iteritems(object.workflow_history):
           for wf_history_index, wf_history in enumerate(wf_history_tuple):
-            if sha1(wf_id + str(wf_history['time']) +
-                       wf_history['actor']).hexdigest() == wf_action_id:
+            if sha1((wf_id + str(wf_history['time']) +
+                       wf_history['actor']).encode('utf-8')).hexdigest() == wf_action_id:
               object.workflow_history[wf_id] = (
                 object.workflow_history[wf_id][:wf_history_index] +
                 object.workflow_history[wf_id][wf_history_index + 1:])
@@ -426,21 +428,21 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   def getFormatedArgs(self, args=None):
     """
     This lookd inside the args dictionnary and then
-    convert any unicode string to string
+    convert any unicode string to string ( on python 2 )
     """
     new_args = {}
     for keyword in args.keys():
       data = args[keyword]
-      if isinstance(keyword, unicode):
+      if six.PY2 and isinstance(keyword, six.text_type):
         keyword = keyword.encode(self.getEncoding())
       if isinstance(data, (tuple, list)):
         new_data = []
         for item in data:
-          if isinstance(item, unicode):
+          if six.PY2 and isinstance(item, six.text_type):
             item = item.encode(self.getEncoding())
           new_data.append(item)
         data = new_data
-      if isinstance(data, unicode):
+      if six.PY2 and isinstance(data, six.text_type):
         data = data.encode(self.getEncoding())
       new_args[keyword] = data
     return new_args
@@ -561,7 +563,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     XXX name of method is not good, because content is not necessarily XML
     return a xml with id replaced by a new id
     """
-    if isinstance(xml, str):
+    if isinstance(xml, bytes):
       xml = etree.XML(xml, parser=parser)
     else:
       # copy of xml object for modification
@@ -623,9 +625,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     if xml is a string, convert it to a node
     """
-    if xml is None: return None
-    if isinstance(xml, (str, unicode)):
-      if isinstance(xml, unicode):
+    if xml is None:
+      return None
+    if isinstance(xml, six.string_types + (bytes, )):
+      if six.PY2 and isinstance(xml, six.text_type):
         xml = xml.encode('utf-8')
       xml = etree.XML(xml, parser=parser)
     # If we have the xml from the node erp5, we just take the subnode
@@ -778,7 +781,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if data_type == NONE_TYPE:
       return None
     data = node.text
-    if data is not None and isinstance(data, unicode):
+    if data is not None and six.PY2 and isinstance(data, six.text_type):
       data = data.encode('utf-8')
     elif data is None and data_type in TEXT_TYPE_LIST:
       return ''
@@ -797,7 +800,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     elif data_type in DATA_TYPE_LIST:
       if data is None:
         # data is splitted inside  block_data nodes
-        data = ''.join([standard_b64decode(block.text) for\
+        data = b''.join([standard_b64decode(block.text) for\
                                                  block in node.iterchildren()])
     elif data_type == DATE_TYPE:
       data = DateTime(data)
@@ -812,7 +815,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     Parse the xupdate and then it will call the conduit
     """
     conflict_list = []
-    if isinstance(xupdate, (str, unicode)):
+    if isinstance(xupdate, six.string_types + (bytes, )):
       xupdate = etree.XML(xupdate, parser=parser)
     #LOG("applyXupdate", INFO, etree.tostring(xupdate, pretty_print=True))
     xupdate_builded = False
@@ -830,14 +833,16 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         xupdate_builded = True
 
         # Find the prefix used by marshaller.
-        for prefix, namespace_uri in subnode.nsmap.iteritems():
+        for prefix, namespace_uri in six.iteritems(subnode.nsmap):
           if namespace_uri == MARSHALLER_NAMESPACE_URI:
             break
         # TODO add support of etree objects for xuproc to avoid
         # serializing tree into string
-        if not isinstance(previous_xml, str):
-          previous_xml = etree.tostring(previous_xml)
-        xupdated_tree = xuproc.applyXUpdate(xml_xu_string=etree.tostring(xupdate),
+        if isinstance(previous_xml, bytes):
+          previous_xml = previous_xml.decode('utf-8')
+        if not isinstance(previous_xml, six.text_type):
+          previous_xml = etree.tostring(previous_xml, encoding='unicode')
+        xupdated_tree = xuproc.applyXUpdate(xml_xu_string=etree.tostring(xupdate, encoding='unicode'),
                                             xml_doc_string=previous_xml)
       if MARSHALLER_NAMESPACE_URI in subnode.nsmap.values():
         xpath_expression = original_xpath_expression
@@ -888,7 +893,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                          previous_xml=previous_xml, **kw)
 
     # Now apply collected xupdated_node
-    for update_dict in xpath_expression_update_dict.itervalues():
+    for update_dict in six.itervalues(xpath_expression_update_dict):
       update_dict.update(kw)
       conflict_list += self.updateNode(previous_xml=previous_xml,
                                        **update_dict)
@@ -913,7 +918,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if time <= action.get('time'):
         # action in the past are not appended
         addable = WORKFLOW_ACTION_INSERTABLE
-      key_list = action.keys()
+      key_list = list(action.keys())
       key_list.remove("time")
       for key in key_list:
         if status[key] != action[key]:
@@ -1100,8 +1105,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     # XXX xuproc does not support passing
     # etree objetcs
-    if not isinstance(diff, basestring):
-      diff = etree.tostring(diff)
+    if isinstance(diff, bytes):
+      diff = diff.decode('utf-8')
+    elif not isinstance(diff, basestring):
+      diff = etree.tostring(diff, encoding='unicode')
+    if not isinstance(original_data, six.text_type):
+      original_data = six.text_type(original_data, 'utf-8')
     return etree.tostring(xuproc.applyXUpdate(xml_xu_string=diff,
                                               xml_doc_string=original_data),
                                               encoding='utf-8')

@@ -39,10 +39,7 @@ class RootAppliedRuleCausalityMovementGroup(MovementGroup):
   portal_type = 'Root Applied Rule Causality Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
-    root_causality_value = self._getRootCausalityValue(movement)
-    property_dict['root_causality_value_list'] = [root_causality_value]
-    return property_dict
+    return {'root_causality_value_list': [self._getRootCausalityValue(movement)]}
 
   def test(self, movement, property_dict, **kw):
     # We can always update

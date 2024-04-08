@@ -153,14 +153,24 @@
       <h3>Functions called by game on event</h3>
 
       <!-- Start -->
-      <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
+      <h4 class="item-name" id="start"><span>onStart</span><span>: timestamp</span></h4>
       <p class="item-descr">Function called on game start.</p>
+
+     <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">timestamp: Integer</p>
+        <p class="item-param-2">Timestamp in milliseconds from UNIX epoch</p>
+      </div>
 
       <div>
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.onStart = function() {<br>
+      <p class="item-param-1">me.onStart = function(timestamp) {<br>
         &nbsp;&nbsp;//one time execution code<br>
         }
       </p>
@@ -168,7 +178,7 @@
       <div class="line"></div>
 
       <!-- Update -->
-      <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
+      <h4 class="item-name" id="update"><span>onUpdate</span><span>: timestamp</span></h4>
       <p class="item-descr">Function called on game update, 60 times / second. <br></p>
 
       <div>
@@ -183,7 +193,7 @@
 
       <h5 class="item-param-1">Example</h5>
 
-      <p class="item-example">me.onUpdate = function() {<br>
+      <p class="item-example">me.onUpdate = function(timestamp) {<br>
         &nbsp;&nbsp;//code executed 60 times per second<br>
         }
       </p>
@@ -308,7 +318,8 @@
         {<br>
           &nbsp;&nbsp;latitude: number, //in degrees<br>
           &nbsp;&nbsp;longitude: number, //in degrees<br>
-          &nbsp;&nbsp;altitude: number  //in meters<br>
+          &nbsp;&nbsp;altitude: number,  //in meters<br>
+          &nbsp;&nbsp;timestamp: number  //in milliseconds<br>
         }<br>
       </p>
 
@@ -317,6 +328,36 @@
       <p class="item-example">
         var current_position = me.getCurrentPosition();<br>
         console.log(current_position);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getDroneDict -->
+      <h4 class="item-name" id="getDroneDict"><span>getDroneDict</span><span>: dictionary</span></h4>
+      <p class="item-descr">Access drones information dictionary. It contains one entry per drone:<br>
+        key-id: value-drone_dict<br>
+        {<br>
+          latitude: number, //latitude (in degrees)<br>
+          longitude: number, //longitude (in degrees)<br>
+          altitudeAbs: number,  //altitude (in meters)<br>
+          altitudeRel: number,  //altitude over ground (in meters)<br>
+          yaw: number,  //yaw angle (in degrees)<br>
+          speed: number,  //ground speed (in meters per second)<br>
+          climbRate: number,  //climb rate (in meters per second)<br>
+          timestamp: number  //timestamp (in milliseconds)<br>
+        }<br>
+      </p>
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">
+        var leader = me.getDroneDict()[LEADER_ID];<br>
+        console.log("leader latitude:", leader.latitude);<br>
+        console.log("leader longitude:", leader.longitude);<br>
+        console.log("leader absolute altitude:", leader.altitudeAbs);<br>
+        console.log("leader relative altitude:", leader.altitudeRel);<br>
+        console.log("leader yaw angle:", leader.yaw);<br>
+        console.log("leader climb rate:", leader.climbRate);<br>
+        console.log("leader's position timestamp:", leader.timestamp);<br>
       </p>
 
       <div class="line"></div>
@@ -336,6 +377,24 @@
         &nbsp;&nbsp;me.getDroneViewInfo();<br>
         &nbsp;&nbsp;me.ongoing_detection = true;<br>
         }<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- takeOff -->
+      <h4 class="item-name" id="takeOff"><span>takeOff</span><span>: void</span></h4>
+      <p class="item-descr">Trigger drone's takeoff (has only effect on multicopters as fixed wings drones need to take off manually).</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.takeOff();<br>
       </p>
 
       <div class="line"></div>
@@ -363,6 +422,10 @@
         <p class="item-param-1">altitude: Float</p>
         <p class="item-param-2">altitude value (in meters).</p>
       </div>
+      <div>
+        <p class="item-param-1">speed: Float</p>
+        <p class="item-param-2">speed value (in meters per second).</p>
+      </div>
 
       <div>
       <h5 class="item-param-1">Example</h5>
@@ -370,32 +433,9 @@
 
       <div>
         <p class="item-example">
-          me.setTargetCoordinates(lat, lon, altitude);<br>
+          me.setTargetCoordinates(lat, lon, altitude, speed);<br>
         </p>
       </div>
-
-      <div class="line"></div>
-
-      <!-- setAirSpeed -->
-      <h4 class="item-name" id="setAirSpeed"><span>setAirSpeed</span><span>: void</span></h4>
-      <p class="item-descr">Set the drone speed in meters/second. The drone will move at the given value.</p>
-
-      <div>
-        <h5 class="item-param-1">Param</h5>
-        <h5 class="item-param-2">Description</h5>
-      </div>
-
-      <div>
-        <p class="item-param-1">speed: Float</p>
-        <p class="item-param-2">Speed value</p>
-      </div>
-
-      <div>
-        <h5 class="item-param-1">Example</h5>
-      </div>
-
-      <p class="item-param-1">me.setAirSpeed(16);<br>
-      </p>
 
       <div class="line"></div>
 
@@ -458,9 +498,9 @@
 
       <div class="line"></div>
 
-      <!-- triggerParachute -->
-      <h4 class="item-name" id="triggerParachute"><span>triggerParachute</span><span>: void</span></h4>
-      <p class="item-descr">Indicates the drone to deploy the parachute to finish the landing.</p>
+      <!-- land -->
+      <h4 class="item-name" id="land"><span>land</span><span>: void</span></h4>
+      <p class="item-descr">Indicates the drone to trigger landing.</p>
 
       <div>
         <h5 class="item-param-1">Param</h5>
@@ -471,23 +511,33 @@
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.triggerParachute();<br>
+      <p class="item-param-1">me.land();<br>
       </p>
 
       <div class="line"></div>
 
-      <!-- landed -->
-      <h4 class="item-name" id="landed"><span>landed</span><span>: boolean</span></h4>
-      <p class="item-descr">Indicates if the drone has landed (reached the floor altitude).</p>
+      <!-- isReadyToFly -->
+      <h4 class="item-name" id="isReadyToFly"><span>isReadyToFly</span><span>: void</span></h4>
+      <p class="item-descr">Check if drone takeoff is finished.</p>
 
       <div>
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-example">
-        if (me.landed()) {<br>
-        &nbsp;&nbsp;//do something<br>
-        }<br>
+      <p class="item-param-1">me.isReadyToFly();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- isLanding -->
+      <h4 class="item-name" id="isLanding"><span>isLanding</span><span>: void</span></h4>
+      <p class="item-descr">Check if drone landing has been triggered.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.isLanding();<br>
       </p>
 
       <div class="line"></div>
@@ -520,15 +570,15 @@
 
       <div class="line"></div>
 
-      <!-- getAirSpeed -->
-      <h4 class="item-name" id="getAirSpeed"><span>getAirSpeed</span><span>: Float</span></h4>
-      <p class="item-descr">Get drone air speed in meters/second.</p>
+      <!-- getSpeed -->
+      <h4 class="item-name" id="getSpeed"><span>getSpeed</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone ground speed in meters/second as wind is neglected in simulation. In real flights with fixed wings drones the returned value is the airspeed.</p>
 
       <div>
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.getAirSpeed();<br>
+      <p class="item-param-1">me.getSpeed();<br>
       </p>
 
       <div class="line"></div>
@@ -572,19 +622,6 @@
 
       <div class="line"></div>
 
-      <!-- getSinkRate -->
-      <h4 class="item-name" id="getSinkRate"><span>getSinkRate</span><span>: Float</span></h4>
-      <p class="item-descr">Get drone sink rate in meters/second.</p>
-
-      <div>
-        <h5 class="item-param-1">Example</h5>
-      </div>
-
-      <p class="item-param-1">me.getSinkRate();<br>
-      </p>
-
-      <div class="line"></div>
-
       <h3>Drone properties</h3>
 
       <div class="line"></div>
@@ -597,28 +634,6 @@
 
       <p class="item-example">
         var drone_id = me.id;<br>
-      </p>
-
-      <div class="line"></div>
-
-      <!-- drone_dict -->
-      <h4 class="item-name" id="id"><span>drone_dict</span><span>: dictionary</span></h4>
-      <p class="item-descr">Access drones information dictionary. It contains one entry per drone:<br>
-        key-id: value-drone_dict<br>
-        {<br>
-          latitude: number, //latitude (in degrees)<br>
-          longitude: number, //longitude (in degrees)<br>
-          altitudeAbs: number  //altitude (in meters)<br>
-        }<br>
-      </p>
-
-      <h5 class="item-param-1">Example</h5>
-
-      <p class="item-example">
-        var leader = me.drone_dict[LEADER_ID];<br>
-        console.log("leader latitude:", leader.latitude);<br>
-        console.log("leader longitude:", leader.longitude);<br>
-        console.log("leader absolute altitude:", leader.altitudeAbs);<br>
       </p>
 
       <div class="line"></div>
