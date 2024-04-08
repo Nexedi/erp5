@@ -926,6 +926,10 @@ class ImportFixer(ast.NodeTransformer):
         # in that case we transform the ast to something like:
         #   def f():
         #     from mod import a, b, c
+        #
+        # this would be more correct to do it on python 2, but this triggers an error
+        # ( AttributeError: 'alias' object has no attribute 'asname' ) in astor codegen,
+        # so we ignore this on python 2.
         node.names = [ast.alias(name=n) for n in final_module_names]
       empty_function.body = [node, return_dict]
       environment_set = self.newEnvironmentSetCall("%s_setup" %dotless_result_name)
