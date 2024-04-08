@@ -95,7 +95,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitle')
-  def getTitle(self, **kw):  # pylint: disable=super-on-old-class
+  def getTitle(self, **kw):
     """
     Returns the title if it exists or a combination of
     first name, middle name and last name
@@ -109,7 +109,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTranslatedTitle')
-  def getTranslatedTitle(self, **kw):  # pylint: disable=super-on-old-class
+  def getTranslatedTitle(self, **kw):
     """
     Returns the title if it exists or a combination of
     first name, middle name and last name
