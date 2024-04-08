@@ -103,6 +103,8 @@
                         <string>my_date</string>
                         <string>my_state</string>
                         <string>my_status</string>
+                        <string>my_public_url</string>
+                        <string>my_private_url</string>
                       </list>
                     </value>
                 </item>
@@ -113,6 +115,10 @@
                         <string>my_specialise_title</string>
                         <string>my_aggregate_reference</string>
                         <string>my_partition_id</string>
+                        <string>my_ipv4</string>
+                        <string>my_ipv6</string>
+                        <string>my_software_release</string>
+                        <string>my_rss_url</string>
                       </list>
                     </value>
                 </item>
