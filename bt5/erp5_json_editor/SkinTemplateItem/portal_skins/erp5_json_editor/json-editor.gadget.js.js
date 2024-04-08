@@ -156,6 +156,84 @@
     return value.toString();
   };
 
+  JSONEditor.defaults.editors.multiple.prototype.setValue = function (val, initial) {
+    /* Determine type by getting the first one that validates */
+
+    var field = this,
+      typeChanged,
+      prevType = this.type,
+      /* find the best match one */
+      fitTestVal = {
+        match: 0,
+        extra: 0,
+        i: this.type
+      },
+      validVal = {
+        match: 0,
+        extra: null,
+        i: null
+      },
+      finalI;
+
+    field.validators.forEach(function (validator, i) {
+      var fitTestResult = null;
+      if (field.anyOf !== undefined && field.anyOf) {
+        /* here is tries to guess what fits best, but it is 
+           expected that some sense of similarity between the forms
+        */
+        fitTestResult = validator.fitTest(val);
+        if (fitTestVal.match < fitTestResult.match) {
+          fitTestVal = fitTestResult;
+          fitTestVal.i = i;
+        } else if (fitTestVal.match === fitTestResult.match) {
+          if (fitTestVal.extra > fitTestResult.extra) {
+            fitTestVal = fitTestResult;
+            fitTestVal.i = i;
+          }
+        }
+      }
+      if (!validator.validate(val).length && validVal.i === null) {
+        validVal.i = i;
+        if (fitTestResult !== null) {
+          validVal.match = fitTestResult.match;
+        }
+      } else {
+        fitTestVal = validVal;
+      }
+    });
+
+    finalI = validVal.i;
+    /* if the best fit schema has more match properties, then use the best fit schema. */
+    /* usually the value could be */
+    if (field.anyOf !== undefined && field.anyOf) {
+      if (validVal.match < fitTestVal.match) {
+        finalI = fitTestVal.i;
+      }
+    }
+    if (field.if) {
+      finalI = field.getIfType(val);
+    }
+    if (finalI === null) {
+      finalI = field.type;
+    }
+    field.type = finalI;
+    field.switcher.value = field.display_text[finalI];
+
+    typeChanged = field.type !== prevType;
+
+    if (typeChanged) {
+      field.switchEditor(field.type);
+      field.editors[field.type].setValue(val, initial);
+    }
+
+    if ((val !== undefined) && (!isEmpty(val))) {
+      field.editors[field.type].setValue(val, initial);
+    }
+
+    field.refreshValue();
+    field.onChange(typeChanged);
+  };
+
   if (JSONEditor.defaults.editors.object.prototype.original_getPropertySchema === undefined) {
     JSONEditor.defaults.editors.object.prototype.original_getPropertySchema = JSONEditor.defaults.editors.object.prototype.getPropertySchema;
   }
@@ -178,8 +256,7 @@
       }
     }
     return schema;
-  }
-
+  };
 
   /* The original code would remove the field if value is undefined */
   JSONEditor.defaults.editors.object.prototype.setValue = function (value, initial) {
@@ -312,7 +389,7 @@
             disable_array_delete_last_row: true,
             no_additional_properties: false,
             remove_empty_properties: true,
-            keep_oneof_values: false,
+            keep_oneof_values: true,
             startval: JSON.parse(gadget.state.value),
             readonly: gadget.state.editable ? false : true
           });
