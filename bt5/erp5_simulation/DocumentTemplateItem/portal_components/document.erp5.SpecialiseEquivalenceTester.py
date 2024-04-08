@@ -43,7 +43,7 @@ class SpecialiseEquivalenceTester(CategoryMembershipEquivalenceTester):
   movement_specialise_type = ()
   movement_exclude_specialise_type = ()
 
-  def _compare(self, prevision_movement, decision_movement, sorted=lambda x:x): # pylint: disable=super-on-old-class,redefined-builtin
+  def _compare(self, prevision_movement, decision_movement, sorted=lambda x:x): # pylint: disable=redefined-builtin
     return super(SpecialiseEquivalenceTester, self)._compare(
       prevision_movement, decision_movement, sorted)
 
