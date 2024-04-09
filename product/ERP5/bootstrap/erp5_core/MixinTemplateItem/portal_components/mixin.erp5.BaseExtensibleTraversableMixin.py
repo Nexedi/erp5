@@ -29,10 +29,12 @@
 
 from warnings import warn
 import six
+# pylint:disable=no-name-in-module
 if six.PY2:
   from base64 import decodestring as decodebytes
 else:
   from base64 import decodebytes
+# pylint:enable=no-name-in-module
 
 from zLOG import LOG
 from AccessControl import ClassSecurityInfo, getSecurityManager
