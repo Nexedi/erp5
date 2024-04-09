@@ -29,7 +29,6 @@
 
 import six
 
-from past.builtins import cmp
 from hashlib import md5
 
 # Some workflow does not make sense in the context of mass transition and are
