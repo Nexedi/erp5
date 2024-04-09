@@ -420,9 +420,9 @@
       return form_data;
     })
     .declareMethod('checkValidity', function () {
-      if (this.state.errors !== undefined) {
-        return this.state.errors.length === 0;
+      if (this.editor === undefined) {
+        return true;
       }
-      return true;
+      return isEmpty(this.editor.validate());
     });
 }(window, rJS, RSVP, JSONEditor, domsugar, JSON, $RefParser, URL));
