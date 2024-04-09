@@ -28,10 +28,13 @@
 ##############################################################################
 
 import six
+# pylint:disable=no-name-in-module,import-error
 if six.PY3:
   from collections.abc import Set
 else:
   from collections import Set
+# pylint:enable=no-name-in-module,import-error
+
 import difflib
 import warnings
 try:
