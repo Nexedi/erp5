@@ -351,7 +351,6 @@ class BusinessTemplateArchive(object):
       if hasattr(obj, 'read'):
         obj.seek(0)
         obj = obj.read()
-        #import pdb; pdb.set_trace()
       if not isinstance(obj, bytes):
         obj = obj.encode('utf-8')
       self.revision.hash(path, obj)
@@ -875,7 +874,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
         f = StringIO()
         exportXML(obj._p_jar, obj._p_oid, f)
-        bta.addObject(f.getvalue().encode(), key, path=path)
+        bta.addObject(str2bytes(f.getvalue()), key, path=path)
 
       if catalog_method_template_item:
         # add all datas specific to catalog inside one file
