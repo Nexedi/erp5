@@ -329,7 +329,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestTimeZoneContext))
   suite.addTest(unittest.makeSuite(TestDateTimePatch))
 
-  # also run original tests from DateTime module
+  # also run original tests from DateTime module BBB ZOPE2
   # pylint:disable=no-name-in-module
   try:
     import DateTime.tests.testDateTime as test_datetime
@@ -340,6 +340,10 @@ def test_suite():
   class DateTimeTests(test_datetime.DateTimeTests):
     testTimezoneNaiveHandling = unittest.expectedFailure(
       test_datetime.DateTimeTests.testTimezoneNaiveHandling)
+    # ERP5 never used the pickle format with micros as float
+    # https://github.com/zopefoundation/DateTime/pull/62
+    test_pickle_old_with_micros_as_float = unittest.expectedFailure(
+      test_datetime.DateTimeTests.test_pickle_old_with_micros_as_float)
 
     # This test is only in DateTime >= 3
     if hasattr(test_datetime.DateTimeTests, 'test_intl_format_hyphen'):
