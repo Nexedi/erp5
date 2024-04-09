@@ -99,7 +99,6 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       Redefine this method, because it seems nothing interesting can be
       done before building Delivery.
     """
-    pass
 
   security.declarePrivate('searchMovementList')
   @UnrestrictedMethod
