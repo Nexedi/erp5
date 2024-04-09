@@ -48,10 +48,12 @@ except ImportError:
     not installed yet.
     """
 
-if six.PY2:
-  from email import message_from_string as message_from_bytes
-else:
+# pylint:disable=no-name-in-module
+if six.PY3:
   from email import message_from_bytes
+else:
+  from email import message_from_string as message_from_bytes
+# pylint:enable=no-name-in-module
 
 from email.utils import parsedate_tz, mktime_tz
 
