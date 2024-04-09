@@ -52,8 +52,7 @@ class XMLPickleTestCase(unittest.TestCase):
     pickled_string = pickle.dumps(obj, protocol=self._pickle_protocol)
     f = BytesIO(pickled_string)
     xml = ppml.ToXMLUnpickler(f).load().__str__()
-    if six.PY2 and isinstance(xml, six.text_type):
-      xml = xml.encode('utf-8')
+    self.assertIsInstance(xml, str)
     return xml
 
   def load_from_xml(self, xml_string, persistent_load=None):

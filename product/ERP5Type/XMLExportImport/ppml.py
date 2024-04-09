@@ -32,7 +32,7 @@ import re
 from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
-from Products.ERP5Type.Utils import str2bytes, bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
 from marshal import dumps as mdumps
 
@@ -209,6 +209,9 @@ class Unicode(String):
         if six.PY3:
             return 'string'
         return super(Unicode, self).tag_name()
+
+    def value(self):
+        return unicode2str(super(Unicode, self).value())
 
 
 class Bytes(String):
