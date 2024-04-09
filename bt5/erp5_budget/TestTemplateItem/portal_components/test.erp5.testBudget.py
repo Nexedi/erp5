@@ -1190,23 +1190,6 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('available'))
 
-    if 0 :self.assertEqual(
-        dict(from_date=DateTime(2000, 1, 1),
-             at_date=DateTime(2000, 12, 31).latestTime(),
-             #node_category_strict_membership=['account_type/expense',
-             #                                 'account_type/asset'],
-             node_category_strict_membership='account_type',
-
-             section_category_strict_membership=['group/demo_group/sub1'],
-             group_by_node_category_strict_membership=True,
-             group_by_node=True,
-             node_uid=[self.portal.account_module.goods_purchase.getUid(),
-                       self.portal.account_module.fixed_assets.getUid()],
-             group_by_section_category_strict_membership=True,
-             ),
-        budget_model.getInventoryListQueryDict(budget_line))
-
-
     atransaction = self.portal.accounting_module.newContent(
                   portal_type='Accounting Transaction',
                   resource_value=self.portal.currency_module.euro,

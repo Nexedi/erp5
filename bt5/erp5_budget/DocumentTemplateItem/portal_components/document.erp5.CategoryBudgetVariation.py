@@ -207,7 +207,7 @@ class CategoryBudgetVariation(BudgetVariation):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBudgetVariationRangeCategoryList')
-  def getBudgetVariationRangeCategoryList(self, context):
+  def getBudgetVariationRangeCategoryList(self, budget):
     """Returns the Variation Range Category List that can be applied to this
     budget.
     """
