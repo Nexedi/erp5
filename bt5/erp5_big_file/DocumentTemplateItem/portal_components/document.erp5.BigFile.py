@@ -14,7 +14,6 @@
 #
 ##############################################################################
 
-from six.moves import cStringIO as StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import removeIContentishInterface
@@ -33,7 +32,7 @@ if six.PY3:
   long = int  # pylint:disable=redefined-builtin
   from email.generator import _make_boundary as choose_boundary
 else:
-  from mimetools import choose_boundary
+  from mimetools import choose_boundary  # pylint:disable=import-error
 
 class BigFile(File):
   """
