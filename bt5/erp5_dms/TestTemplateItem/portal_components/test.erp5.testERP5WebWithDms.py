@@ -121,7 +121,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getTitle(self):
     return "ERP5WebWithDms"
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     user = uf.getUserById(self.manager_username).__of__(uf)
