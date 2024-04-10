@@ -24,7 +24,6 @@ MAIN FILE: generate presentation in different output formats
 # remote_content:           convert legacy odp, sxi formats (not active)
 
 import re
-import six
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
