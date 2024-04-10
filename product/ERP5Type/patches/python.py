@@ -251,6 +251,8 @@ def round2(number, ndigits=None):
 
 		return float(d)
 
+round_native = round
+
 if sys.version_info > (2, ):
   __builtins__['round'] = round2
   from AccessControl.ZopeGuards import safe_builtins
