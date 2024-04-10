@@ -3,7 +3,7 @@ Modify given URL so that the resulting one prevents further login attempts when 
 
 Useful to break redirection loops.
 """
-from six.moves.urllib.parse import urlencode, urlsplit, urlunsplit
+from six.moves.urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 PARAMETER_NAME = 'disable_cookie_login__'
 parsed_url = urlsplit(url)
 return urlunsplit((
