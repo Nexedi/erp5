@@ -27,10 +27,12 @@
 from __future__ import print_function
 import base64
 import six
+# pylint:disable=no-name-in-module
 if six.PY2:
   from base64 import encodestring as base64_encodebytes
 else:
   from base64 import encodebytes as base64_encodebytes
+# pylint:enable=no-name-in-module
 from collections import defaultdict
 from functools import partial, wraps
 import hashlib
