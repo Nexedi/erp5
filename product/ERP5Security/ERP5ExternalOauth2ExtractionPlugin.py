@@ -38,10 +38,10 @@ from Products.ERP5Security import _setUserNameForAccessLog
 from AccessControl.SecurityManagement import getSecurityManager, \
   setSecurityManager, newSecurityManager
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
-import time
+
 import six
+import time
 from six.moves import urllib
-import json
 from zLOG import LOG, ERROR, INFO
 
 try:
@@ -49,41 +49,13 @@ try:
 except ImportError:
   facebook = None
 
-try:
-  import apiclient.discovery
-  import httplib2
-  import oauth2client.client
-except ImportError:
-  httplib2 = None
 
-#Form for new plugin in ZMI
+# Form for new plugin in ZMI
 manage_addERP5FacebookExtractionPluginForm = PageTemplateFile(
   'www/ERP5Security_addERP5FacebookExtractionPlugin', globals(),
   __name__='manage_addERP5FacebookExtractionPluginForm')
 
-def getGoogleUserEntry(token):
-  if httplib2 is None:
-    LOG('ERP5GoogleExtractionPlugin', INFO,
-        'No Google modules available, please install google-api-python-client '
-        'package. Authentication disabled..')
-    return None
 
-  http = oauth2client.client.AccessTokenCredentials(token,
-                                                    'ERP5 Client'
-    ).authorize(httplib2.Http(timeout=5))
-  service = apiclient.discovery.build("oauth2", "v1", http=http)
-  google_entry = service.userinfo().get().execute()
-
-  user_entry = {}
-  if google_entry is not None:
-    # sanitise value
-    for k in (('first_name', 'given_name'),
-        ('last_name', 'family_name'),
-        ('email', 'email'),
-        ('reference', 'email'),):
-      value = google_entry.get(k[1], '').encode('utf-8')
-      user_entry[k[0]] = value
-  return user_entry
 
 def addERP5FacebookExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
   """ Add a ERP5FacebookExtractionPlugin to a Pluggable Auth Service. """
@@ -98,7 +70,7 @@ def addERP5FacebookExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
       'ERP5FacebookExtractionPlugin+added.'
       % dispatcher.absolute_url())
 
-#Form for new plugin in ZMI
+# Form for new plugin in ZMI
 manage_addERP5GoogleExtractionPluginForm = PageTemplateFile(
   'www/ERP5Security_addERP5GoogleExtractionPlugin', globals(),
   __name__='manage_addERP5GoogleExtractionPluginForm')
@@ -157,13 +129,13 @@ class ERP5ExternalOauth2ExtractionPlugin:
     for cache_plugin in cache_factory.getCachePluginList():
       cache_entry = cache_plugin.get(key, DEFAULT_CACHE_SCOPE)
       if cache_entry is not None:
-        # Avoid errors if the plugin don't have the funcionality of refresh token
-        refreshTokenIfExpired = getattr(self, "refreshTokenIfExpired", None)
         cache_value = cache_entry.getValue()
-        if refreshTokenIfExpired is not None:
-          return refreshTokenIfExpired(key, cache_value)
-        else:
-          return cache_value
+        # getToken is called for the access_token_dict and for
+        # the user entry. We try to refresh only for the
+        # access_token_dict
+        if 'refresh_token' in cache_value:
+          return self.refreshTokenIfExpired(key, cache_value)
+        return cache_value
     raise KeyError('Key %r not found' % key)
 
   ####################################
@@ -171,19 +143,29 @@ class ERP5ExternalOauth2ExtractionPlugin:
   ####################################
   security.declarePrivate('extractCredentials')
   def extractCredentials(self, request):
-    """ Extract Oauth2 credentials from the request header. """
-    user_dict = {}
+    """ Extract Oauth2 credentials from cookie.
+
+    This plugins uses two level of cache storage:
+     - cookie_value => access_token_dict
+     - access_token => user_entry
+
+    access_token_dict depends on the concrete plugin classes,
+    but this is generally access_token and refresh_token.
+    user_entry must contain "reference", which is the reference
+    of the corresponding login document in ERP5.
+    """
+    access_token_dict = {}
     cookie_hash = request.get(self.cookie_name)
     if cookie_hash is not None:
       try:
-        user_dict = self.getToken(cookie_hash)
+        access_token_dict = self.getToken(cookie_hash)
       except KeyError:
         LOG(self.getId(), INFO, 'Hash %s not found' % cookie_hash)
         return {}
 
     token = None
-    if "access_token" in user_dict:
-      token = user_dict["access_token"]
+    if "access_token" in access_token_dict:
+      token = access_token_dict["access_token"]
 
     if token is None:
       # no token, then no credentials
@@ -193,7 +175,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
     try:
       user_entry = self.getToken(token)
     except KeyError:
-      user_entry = self.getUserEntry(token)
+      user_entry = self.getUserEntry(access_token_dict)
       if user_entry is not None:
         # Reduce data size because, we don't need more than reference
         user_entry = {"reference": user_entry["reference"]}
@@ -263,40 +245,36 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
   cookie_name = "__ac_facebook_hash"
   cache_factory_name = "facebook_server_auth_token_cache_factory"
 
-  def refreshTokenIfExpired(self, key, cache_value):
-    return cache_value
+  def refreshTokenIfExpired(self, key, access_token_dict):
+    return access_token_dict
 
   def getUserEntry(self, token):
     return getFacebookUserDict(token)
 
+
 class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin):
   """
-  Plugin to authenicate as machines.
+  Plugin to authenticate using google OAuth2.
   """
-
   meta_type = "ERP5 Google Extraction Plugin"
   login_portal_type = "Google Login"
   cookie_name = "__ac_google_hash"
   cache_factory_name = "google_server_auth_token_cache_factory"
 
-  def refreshTokenIfExpired(self, key, cache_value):
-    expires_in = cache_value.get("token_response", {}).get("expires_in")
-    refresh_token = cache_value.get("refresh_token")
-    if expires_in and refresh_token:
-     if (time.time() - cache_value["response_timestamp"]) >= float(expires_in):
-       credential = oauth2client.client.OAuth2Credentials(
-         cache_value["access_token"], cache_value["client_id"],
-         cache_value["client_secret"], refresh_token,
-         cache_value["token_expiry"], cache_value["token_uri"],
-         cache_value["user_agent"])
-       credential.refresh(httplib2.Http(timeout=5))
-       cache_value = json.loads(credential.to_json())
-       cache_value["response_timestamp"] = time.time()
-       self.setToken(key, cache_value)
-    return cache_value
+  def refreshTokenIfExpired(self, key, access_token_dict):
+    if (time.time() - access_token_dict["response_timestamp"]) \
+         >= access_token_dict['expires_in']:
+      access_token_dict = self.getPortalObject().unrestrictedTraverse(
+        access_token_dict['connector_relative_url']
+      ).refreshToken(access_token_dict)
+      self.setToken(key, access_token_dict)
+    return access_token_dict
 
-  def getUserEntry(self, token):
-    return getGoogleUserEntry(token)
+  def getUserEntry(self, access_token_dict):
+    return self.getPortalObject().unrestrictedTraverse(
+      access_token_dict['connector_relative_url'],
+    ).getUserEntry(access_token_dict['access_token'])
+
 
 #List implementation of class
 classImplements( ERP5FacebookExtractionPlugin,
