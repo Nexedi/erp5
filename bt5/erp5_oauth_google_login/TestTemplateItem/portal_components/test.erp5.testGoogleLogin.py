@@ -25,290 +25,373 @@
 #
 ##############################################################################
 
-import uuid
+import contextlib
 import mock
 import lxml
-import six.moves.urllib.parse
+import json
+import responses
+import time
+import six.moves.urllib as urllib
 import six.moves.http_client
+import six.moves.http_cookies
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript
-
-
-CLIENT_ID = "a1b2c3"
-SECRET_KEY = "3c2ba1"
-ACCESS_TOKEN = "T1234"
-CODE = "1234"
-
-def getUserId(access_token):
-  return "dummy@example.com"
-
-def getAccessTokenFromCode(code, redirect_uri):
-  assert code == CODE, "Invalid code"
-  # This is an example of a Google response
-  return  {'_module': 'oauth2client.client',
-           'scopes': ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'],
-           'revoke_uri': 'https://accounts.google.com/o/oauth2/revoke',
-           'access_token': ACCESS_TOKEN,
-           'token_uri': 'https://www.googleapis.com/oauth2/v4/token',
-           'token_info_uri': 'https://www.googleapis.com/oauth2/v3/tokeninfo',
-           'invalid': False,
-           'token_response': {
-             'access_token': ACCESS_TOKEN,
-             'token_type': 'Bearer',
-             'expires_in': 3600,
-             'refresh_token': "111",
-             'id_token': '222'
-           },
-           'client_id': CLIENT_ID,
-           'id_token': {
-             'picture': '',
-             'sub': '',
-             'aud': '',
-             'family_name': 'D',
-             'iss': 'https://accounts.google.com',
-             'email_verified': True,
-             'at_hash': 'p3vPYQkVuqByBA',
-             'given_name': 'John',
-             'exp': 123,
-             'azp': '123.apps.googleusercontent.com',
-             'iat': 455,
-             'locale': 'pt',
-             'email': getUserId(None),
-             'name': 'John D'
-           },
-           'client_secret': 'secret',
-           'token_expiry': '2017-03-31T16:06:28Z',
-           '_class': 'OAuth2Credentials',
-           'refresh_token': '111',
-           'user_agent': None
-          }
-
-def getUserEntry(access_token):
-  return {
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": getUserId(None),
-    "reference": getUserId(None)
-  }
 
 
 class GoogleLoginTestCase(ERP5TypeTestCase):
+  default_google_login_email_address = 'dummy@example.com'
+  dummy_connector_id = 'test_google_connector'
+  client_id = "a1b2c3"
+  secret_key = "3c2ba1"
+
   def afterSetUp(self):
-    """
-    This is ran before anything, used to set the environment
-    """
-    self.login()
     self.portal.TemplateTool_checkGoogleExtractionPluginExistenceConsistency(fixit=True)
 
-    self.dummy_connector_id = "test_google_connector"
+    # use random tokens because we can not clear the memcached cache
+    self.access_token = 'access-token' + self.id() + self.newPassword()
+    self.refresh_token = 'refresh-token' + self.id() + self.newPassword()
+
+    self.default_user_person = self.portal.person_module.newContent(
+      portal_type='Person',
+      first_name=self.id(),
+    )
+    self.default_user_person.newContent(
+      portal_type='Google Login',
+      reference=self.default_google_login_email_address,
+    ).validate()
+    self.default_user_person.newContent(portal_type='Assignment').open()
+
+    if getattr(self.portal.portal_oauth, self.dummy_connector_id, None) is None:
+      connector = self.portal.portal_oauth.newContent(
+        id=self.dummy_connector_id,
+        portal_type="Google Connector",
+        reference="default",
+        client_id=self.client_id,
+        secret_key=self.secret_key)
+      connector.validate()
+    self.tic()
+
+  def beforeTearDown(self):
+    self.abort()
+    self.portal.portal_caches.getRamCacheRoot().get(
+      self.portal.acl_users.erp5_google_extraction.cache_factory_name
+    ).clearCache()
+    self.portal.person_module.manage_delObjects([self.default_user_person.getId()])
+
     portal_catalog = self.portal.portal_catalog
-    for obj in portal_catalog(portal_type=["Google Login", "Person"],
-                              reference=getUserId(None),
-                              validation_state="validated"):
-      obj.getObject().invalidate()
-      uuid_str = uuid.uuid4().hex
-      obj.setReference(uuid_str)
-      obj.setUserId(uuid_str)
     for connector in portal_catalog(portal_type="Google Connector",
                                     validation_state="validated",
                                     id="NOT %s" % self.dummy_connector_id,
                                     reference="default"):
       connector.invalidate()
-
-    if getattr(self.portal.portal_oauth, self.dummy_connector_id, None) is None:
-      connector = self.portal.portal_oauth.newContent(id=self.dummy_connector_id,
-                                                      portal_type="Google Connector",
-                                                      reference="default",
-                                                      client_id=CLIENT_ID,
-                                                      secret_key=SECRET_KEY)
-      connector.validate()
     self.tic()
-    self.logout()
+
+  @contextlib.contextmanager
+  def _default_login_responses(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+        method='POST',
+        url='https://accounts.google.com/o/oauth2/token',
+        json={
+          'access_token': self.access_token,
+          'refresh_token': self.refresh_token,
+          'expires_in': 3600,
+        },
+      )
+      rsps.add(
+        method='GET',
+        url='https://www.googleapis.com/oauth2/v1/userinfo',
+        json={
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": self.default_google_login_email_address,
+        }
+      )
+      yield
 
 
 class TestGoogleLogin(GoogleLoginTestCase):
   def test_redirect(self):
     """
-      Check URL generate to redirect to Google
+      Check URL generated to redirect to Google
     """
     self.logout()
-    self.portal.ERP5Site_redirectToGoogleLoginPage()
-    location = self.portal.REQUEST.RESPONSE.getHeader("Location")
+    response = self.portal.REQUEST.RESPONSE
+    self.portal.ERP5Site_redirectToGoogleLoginPage(RESPONSE=response)
+    location = response.getHeader("Location")
     self.assertIn("https://accounts.google.com/o/oauth2/", location)
     self.assertIn("response_type=code", location)
-    self.assertIn("client_id=%s" % CLIENT_ID, location)
+    self.assertIn("client_id=%s" % self.client_id, location)
     self.assertNotIn("secret_key=", location)
     self.assertIn("ERP5Site_receiveGoogleCallback", location)
 
   def test_existing_user(self):
-    self.login()
-    person = self.portal.person_module.newContent(
-        portal_type='Person',
-    )
-    person.newContent(
-        portal_type='Google Login',
-        reference=getUserId(None)
-    ).validate()
-    person.newContent(portal_type='Assignment').open()
-    self.tic()
-    self.logout()
-
     request = self.portal.REQUEST
     response = request.RESPONSE
-    with mock.patch(
-        'erp5.component.extension.GoogleLoginUtility.getAccessTokenFromCode',
-        side_effect=getAccessTokenFromCode,
-    ) as getAccessTokenFromCode_mock, \
+
+    redirect_url = urllib.parse.urlparse(
+      self.portal.ERP5Site_redirectToGoogleLoginPage(RESPONSE=response))
+    state = dict(urllib.parse.parse_qsl(redirect_url.query))['state']
+    self.assertTrue(state)
+
+    code = 'code-ABC'
+    def token_callback(request):
+      self.assertEqual(
+        request.headers['Content-Type'],
+        'application/x-www-form-urlencoded')
+      self.assertEqual(
+        dict(urllib.parse.parse_qsl(request.body)),
+        {
+          'client_id': self.client_id,
+          'code': code,
+          'grant_type': 'authorization_code',
+          'client_secret': self.secret_key,
+          'redirect_uri': self.portal.absolute_url() + '/ERP5Site_receiveGoogleCallback',
+        },
+      )
+      return 200, {}, json.dumps({
+        'access_token': self.access_token,
+        'refresh_token': self.refresh_token,
+        'expires_in': 3600,
+      })
+
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        'https://accounts.google.com/o/oauth2/token',
+        token_callback,
+      )
+      self.portal.ERP5Site_receiveGoogleCallback(code=code, state=state)
+
+    def userinfo_callback(request):
+      self.assertEqual(
+        request.headers['Authorization'],
+        'Bearer ' + self.access_token)
+      return 200, {}, json.dumps({
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": self.default_google_login_email_address,
+      })
+
+    request['__ac_google_hash'] = response.cookies['__ac_google_hash']['value']
+    with responses.RequestsMock() as rsps, \
       mock.patch(
-        'erp5.component.extension.GoogleLoginUtility.getUserEntry',
-        side_effect=getUserEntry
-      ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
-      getUserEntry_mock.__code__ = getUserEntry.__code__
-      self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
-    getAccessTokenFromCode_mock.assert_called_once()
-    getUserEntry_mock.assert_called_once()
-
-    request["__ac_google_hash"] = response.cookies["__ac_google_hash"]["value"]
-
-    with mock.patch(
         'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin._setUserNameForAccessLog'
       ) as _setUserNameForAccessLog:
-      credentials = self.portal.acl_users.erp5_google_extraction.extractCredentials(request)
-    self.assertEqual(
-        'Google Login',
-        credentials['login_portal_type'])
-    self.assertEqual(
-        getUserId(None),
-        credentials['external_login'])
-    # this is what will appear in Z2.log
-    _setUserNameForAccessLog.assert_called_once_with(
-        'erp5_google_extraction=%s' % getUserId(None),
+      rsps.add_callback(
+        responses.GET,
+        'https://www.googleapis.com/oauth2/v1/userinfo',
+        userinfo_callback,
+      )
+      credentials = self.portal.acl_users.erp5_google_extraction.extractCredentials(
         request)
 
-    user_id, login = self.portal.acl_users.erp5_login_users.authenticateCredentials(credentials)
-    self.assertEqual(person.getUserId(), user_id)
-    self.assertEqual(getUserId(None), login)
+    self.assertEqual(credentials['login_portal_type'], 'Google Login')
+    self.assertEqual(
+      credentials['external_login'],
+      self.default_google_login_email_address)
+
+    # this is what will appear in Z2.log
+    _setUserNameForAccessLog.assert_called_once_with(
+      'erp5_google_extraction=dummy@example.com',
+      request)
+
+    user_id, user_name = self.portal.acl_users.erp5_login_users.authenticateCredentials(credentials)
+    self.assertEqual(user_id, self.default_user_person.getUserId())
+    self.assertEqual(user_name, self.default_google_login_email_address)
 
     self.login(user_id)
-    self.assertEqual(self.portal.Base_getUserCaption(), login)
+    self.assertEqual(self.portal.Base_getUserCaption(), user_name)
 
   def test_auth_cookie(self):
     request = self.portal.REQUEST
     response = request.RESPONSE
+
     # (the secure flag is only set if we accessed through https)
     request.setServerURL('https', 'example.com')
 
+    redirect_url = urllib.parse.urlparse(
+      self.portal.ERP5Site_redirectToGoogleLoginPage(RESPONSE=response))
+    state = dict(urllib.parse.parse_qsl(redirect_url.query))['state']
+
+    with self._default_login_responses():
+      self.portal.ERP5Site_receiveGoogleCallback(code='code', state=state)
+      ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_google_hash=' in v]
+      self.assertIn('; secure', ac_cookie.lower())
+      self.assertIn('; httponly', ac_cookie.lower())
+      self.assertIn('; samesite=lax', ac_cookie.lower())
+      
+      # make sure user info URL is called for _default_login_responses
+      cookie = six.moves.http_cookies.SimpleCookie()
+      cookie.load(ac_cookie)
+      resp = self.publish(
+        self.portal.getPath(),
+        env={
+          'HTTP_COOKIE': '__ac_google_hash="%s"' % cookie.get('__ac_google_hash').value
+        }
+      )
+      self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
+
+  def test_non_existing_user(self):
+    request = self.portal.REQUEST
+    response = request.RESPONSE
+
+    redirect_url = urllib.parse.urlparse(
+      self.portal.ERP5Site_redirectToGoogleLoginPage(RESPONSE=response))
+    state = dict(urllib.parse.parse_qsl(redirect_url.query))['state']
+
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+        method='POST',
+        url='https://accounts.google.com/o/oauth2/token',
+        json={
+          'access_token': self.access_token,
+          'refresh_token': self.refresh_token,
+          'expires_in': 3600,
+        },
+      )
+      self.portal.ERP5Site_receiveGoogleCallback(code='code', state=state)
+
+    request['__ac_google_hash'] = response.cookies['__ac_google_hash']['value']
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+        method='GET',
+        url='https://www.googleapis.com/oauth2/v1/userinfo',
+        json={
+          "first_name": "Bob",
+          "last_name": "Doe",
+          "email": "unknown@example.com",
+        }
+      )
+      credentials = self.portal.acl_users.erp5_google_extraction.extractCredentials(
+        request)
+
+    self.assertEqual(credentials['login_portal_type'], 'Google Login')
+    self.assertEqual(
+      credentials['external_login'],
+      "unknown@example.com")
+
+    self.assertIsNone(
+      self.portal.acl_users.erp5_login_users.authenticateCredentials(credentials))
+
+  def test_invalid_cookie(self):
+    request = self.portal.REQUEST
+    request['__ac_google_hash'] = '???'
+    credentials = self.portal.acl_users.erp5_google_extraction.extractCredentials(
+      request)
+    self.assertEqual(credentials, {})
+
+  def test_refresh_token(self):
+    request = self.portal.REQUEST
+    response = request.RESPONSE
+
+    redirect_url = urllib.parse.urlparse(
+      self.portal.ERP5Site_redirectToGoogleLoginPage(RESPONSE=response))
+    state = dict(urllib.parse.parse_qsl(redirect_url.query))['state']
+
+    with self._default_login_responses():
+      resp = self.publish(
+        '%s/ERP5Site_receiveGoogleCallback?%s' % (
+          self.portal.getPath(),
+          urllib.parse.urlencode(
+            {
+              'code': 'code',
+              'state': state,
+            }
+          )
+        )
+      )
+      self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
+      env = {
+        'HTTP_COOKIE': '__ac_google_hash="%s"' % resp.getCookie('__ac_google_hash')['value']
+      }
+      resp = self.publish(self.portal.getPath(), env=env)
+      self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
+
+    def token_callback(request):
+      self.assertEqual(
+        request.headers['Content-Type'],
+        'application/x-www-form-urlencoded')
+      self.assertEqual(
+        dict(urllib.parse.parse_qsl(request.body)),
+        {
+          'access_type': 'offline',
+          'client_id': self.client_id,
+          'client_secret': self.secret_key,
+          'grant_type': 'refresh_token',
+          'refresh_token': self.refresh_token,
+        }
+      )
+      return 200, {}, json.dumps({
+        'access_token': 'new' + self.access_token,
+        'refresh_token': 'new' + self.refresh_token,
+        'expires_in': 3600,
+      })
+
     with mock.patch(
-        'erp5.component.extension.GoogleLoginUtility.getAccessTokenFromCode',
-        side_effect=getAccessTokenFromCode,
-    ) as getAccessTokenFromCode_mock, \
-      mock.patch(
-        'erp5.component.extension.GoogleLoginUtility.getUserEntry',
-        side_effect=getUserEntry
-      ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
-      getUserEntry_mock.__code__ = getUserEntry.__code__
-      self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+        'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin.time.time',
+        return_value=time.time() + 5000), \
+        responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        'https://accounts.google.com/o/oauth2/token',
+        token_callback,
+      )
+      # refreshing the token calls userinfo again
+      rsps.add(
+        method='GET',
+        url='https://www.googleapis.com/oauth2/v1/userinfo',
+        json={
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": self.default_google_login_email_address,
+        }
+      )
+      resp = self.publish(self.portal.getPath(), env=env)
+      self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
 
-    getAccessTokenFromCode_mock.assert_called_once()
-    getUserEntry_mock.assert_called_once()
+    resp = self.publish(self.portal.getPath(), env=env)
+    self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
 
-    ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_google_hash=' in v]
-    self.assertIn('; secure', ac_cookie.lower())
-    self.assertIn('; httponly', ac_cookie.lower())
-    self.assertIn('; samesite=lax', ac_cookie.lower())
+  def test_refresh_token_expired(self):
+    request = self.portal.REQUEST
+    response = request.RESPONSE
 
-  def test_create_user_in_ERP5Site_createGoogleUserToOAuth(self):
-    """
-      Check if ERP5 set cookie properly after receive code from external service
-    """
-    self.login()
-    id_list = []
-    for result in self.portal.portal_catalog(portal_type="Credential Request",
-                                                         reference=getUserId(None)):
-      id_list.append(result.getObject().getId())
-    self.portal.credential_request_module.manage_delObjects(ids=id_list)
-    skin = self.portal.portal_skins.custom
-    createZODBPythonScript(skin, "CredentialRequest_createUser", "", """
-person = context.getDestinationDecisionValue(portal_type="Person")
+    redirect_url = urllib.parse.urlparse(
+      self.portal.ERP5Site_redirectToGoogleLoginPage(RESPONSE=response))
+    state = dict(urllib.parse.parse_qsl(redirect_url.query))['state']
 
-login_list = [x for x in person.objectValues(portal_type='Google Login') \
-              if x.getValidationState() == 'validated']
+    with self._default_login_responses():
+      resp = self.publish(
+        '%s/ERP5Site_receiveGoogleCallback?%s' % (
+          self.portal.getPath(),
+          urllib.parse.urlencode(
+            {
+              'code': 'code',
+              'state': state,
+            }
+          )
+        )
+      )
+      self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
 
-if len(login_list):
-  login = login_list[0]
-else:
-  login = person.newContent(portal_type='Google Login')
-
-reference = context.getReference()
-if not login.hasReference():
-  if not reference:
-    raise ValueError("Impossible to create an account without login")
-  login.setReference(reference)
-  if not person.Person_getUserId():
-    person.setUserId(reference)
-
-  if login.getValidationState() == 'draft':
-    login.validate()
-
-return reference, None
-""")
-
-    createZODBPythonScript(skin, "ERP5Site_createGoogleUserToOAuth", "user_reference, user_dict", """
-module = context.getPortalObject().getDefaultModule(portal_type='Credential Request')
-credential_request = module.newContent(
-  portal_type="Credential Request",
-  first_name=user_dict["first_name"],
-  last_name=user_dict["last_name"],
-  reference=user_reference,
-  default_email_text=user_dict["email"],
-)
-credential_request.submit()
-context.portal_alarms.accept_submitted_credentials.activeSense()
-return credential_request
-""")
-    self.logout()
+      env = {
+        'HTTP_COOKIE': '__ac_google_hash="%s"' % resp.getCookie('__ac_google_hash')['value']
+      }
+      resp = self.publish(self.portal.getPath(), env=env)
+      self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
 
     with mock.patch(
-        'erp5.component.extension.GoogleLoginUtility.getAccessTokenFromCode',
-        side_effect=getAccessTokenFromCode,
-    ) as getAccessTokenFromCode_mock, \
-      mock.patch(
-        'erp5.component.extension.GoogleLoginUtility.getUserEntry',
-        side_effect=getUserEntry
-      ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
-      getUserEntry_mock.__code__ = getUserEntry.__code__
-      response = self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
-    getAccessTokenFromCode_mock.assert_called_once()
-    getUserEntry_mock.assert_called_once()
-
-    google_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")["value"]
-    self.assertEqual("b01533abb684a658dc71c81da4e67546", google_hash)
-    absolute_url = self.portal.absolute_url()
-    self.assertNotEqual(absolute_url[-1], '/')
-    self.assertEqual(absolute_url + '/', response)
-    cache_dict = self.portal.Base_getBearerToken(google_hash, "google_server_auth_token_cache_factory")
-    self.assertEqual(CLIENT_ID, cache_dict["client_id"])
-    self.assertEqual(ACCESS_TOKEN, cache_dict["access_token"])
-    self.assertEqual({'reference': getUserId(None)},
-      self.portal.Base_getBearerToken(ACCESS_TOKEN, "google_server_auth_token_cache_factory")
-    )
-    self.portal.REQUEST["__ac_google_hash"] = google_hash
-    erp5_google_extractor = self.portal.acl_users.erp5_google_extraction
-    self.assertEqual({'external_login': getUserId(None),
-      'login_portal_type': 'Google Login',
-      'remote_host': '',
-      'remote_address': ''}, erp5_google_extractor.extractCredentials(self.portal.REQUEST))
-    self.tic()
-    self.login()
-    credential_request = self.portal.portal_catalog(portal_type="Credential Request",
-                                                    reference=getUserId(None))[0].getObject()
-    credential_request.accept()
-    person = credential_request.getDestinationDecisionValue()
-    google_login = person.objectValues(portal_types="Google Login")[0]
-    self.assertEqual(getUserId(None), google_login.getReference())
+        'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin.time.time',
+        return_value=time.time() + 5000), \
+        responses.RequestsMock() as rsps:
+      rsps.add(
+        method='POST',
+        url='https://accounts.google.com/o/oauth2/token',
+        status=six.moves.http_client.UNAUTHORIZED,
+      )
+      resp = self.publish(self.portal.getPath(), env=env)
+      self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
+      self.assertIn('/login_form', resp.getHeader('Location'))
 
   def test_logout(self):
     resp = self.publish(self.portal.getId() + '/logout')
@@ -328,7 +411,7 @@ class TestERP5JSGoogleLogin(GoogleLoginTestCase):
         if img.attrib['alt'] == 'Sign in with Google'
     ]
     self.assertIn('/ERP5Site_redirectToGoogleLoginPage', google_login_link)
-    resp = self.publish(six.moves.urllib.parse.urlparse(google_login_link).path)
+    resp = self.publish(urllib.parse.urlparse(google_login_link).path)
     # this request redirects to google
     self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
     self.assertIn('google.com', resp.getHeader('Location'))
