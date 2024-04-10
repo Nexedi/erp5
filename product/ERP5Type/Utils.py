@@ -558,6 +558,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
             "--msg-template='{C}: {line},{column}: {msg} ({symbol})'",
             # BBB until we drop compatibility with PY2
             "--disable=redundant-u-string-prefix,raise-missing-from,keyword-arg-before-vararg",
+            # XXX acceptable to ignore in the context of ERP5
+            "--disable=unspecified-encoding",
           )
         )
       if portal_type == 'Interface Component':
