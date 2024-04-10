@@ -66,7 +66,6 @@ from threading import Thread
 import six.moves.http_client
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlencode
-import difflib
 import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
@@ -90,7 +89,7 @@ def makeFilePath(name):
 def getFileSize(name):
   path = makeFilePath(name)
   with open(path, "rb") as f:
-   return len(f.read())
+    return len(f.read())
 
 
 class DocumentUploadTestCase(ERP5TypeTestCase):
