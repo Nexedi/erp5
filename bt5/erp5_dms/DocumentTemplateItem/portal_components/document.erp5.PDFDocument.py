@@ -32,7 +32,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import bytes2str
 from erp5.component.interface.IWatermarkable import IWatermarkable
 from erp5.component.document.Image import Image
 from erp5.component.document.Document import ConversionError
@@ -240,7 +240,7 @@ class PDFDocument(Image):
             frame=page_number, display='identical')
         if not src_mimetype.endswith('png'):
           continue
-        content = str(png_data)
+        content = bytes(png_data)
         if content is not None:
           filename = self.getStandardFilename(format='png')
           result = portal_transforms.convertToData(mime_type, content,
