@@ -158,7 +158,6 @@
 
   JSONEditor.defaults.editors.multiple.prototype.setValue = function (val, initial) {
     /* Determine type by getting the first one that validates */
-
     var field = this,
       typeChanged,
       prevType = this.type,
@@ -214,7 +213,11 @@
       finalI = field.getIfType(val);
     }
     if (finalI === null) {
-      finalI = field.type;
+      if (isEmpty(val)) {
+         finalI = field.type;
+      } else {
+        throw new Error("Could not safely render data into the form.")
+      }
     }
     field.type = finalI;
     field.switcher.value = field.display_text[finalI];
