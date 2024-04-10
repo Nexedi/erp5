@@ -43,7 +43,7 @@ import random
 import pprint
 from time import time
 import unittest
-from six.moves.urllib.parse import parse_qsl, quote, unquote, urlencode, urlsplit, urlunsplit
+from six.moves.urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
