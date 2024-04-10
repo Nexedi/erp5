@@ -30,7 +30,6 @@
 
 import io
 import unittest
-import os
 from unittest import skip
 
 from Testing import ZopeTestCase
@@ -1048,8 +1047,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(None, obj.getViewPermissionOwner())
 
   def test_Member_Base_download(self):
-    import Products.ERP5Type
-
     # tests that members can download files
     class DummyFile(io.BytesIO):
       filename = 'dummy.txt'
