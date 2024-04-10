@@ -379,14 +379,14 @@ def build_stub(parent, identifier_re=r'^[A-Za-z_]\w*$'):
     constants = {}
     methods = {}
     for name in dir(parent):
-        if name.startswith("__"):
+        if name in dir(object):
             continue
         # Check if this is a valid name in python
         if not re.match(identifier_re, name):
             continue
         try:
             obj = getattr(parent, name)
-        except:
+        except AttributeError:
             continue
         if inspect.isclass(obj):
             classes[name] = obj
