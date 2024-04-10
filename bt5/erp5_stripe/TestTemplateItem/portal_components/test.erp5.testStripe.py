@@ -26,7 +26,6 @@
 ##############################################################################
 
 import json
-from six.moves import urllib
 from io import BytesIO
 from six.moves.urllib.parse import parse_qs
 
