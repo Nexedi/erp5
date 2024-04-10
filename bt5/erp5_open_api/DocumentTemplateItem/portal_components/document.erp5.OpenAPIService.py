@@ -25,15 +25,11 @@
 #
 ##############################################################################
 
+import base64
 import binascii
 import json
 import typing
 from six.moves.urllib.parse import unquote
-import six
-if six.PY2:
-  from base64 import decodestring as base64_decodebytes
-else:
-  from base64 import decodebytes as base64_decodebytes
 
 if typing.TYPE_CHECKING:
   from typing import Any, Callable, Optional
@@ -313,7 +309,7 @@ class OpenAPIService(XMLObject):
       if schema.get('type') == 'string':
         if schema.get('format') == 'base64':
           try:
-            return base64_decodebytes(parameter_value)
+            return base64.b64decode(parameter_value)
           except binascii.Error as e:
             raise ParameterValidationError(
               'Error validating request body: {e}'.format(e=str(e)))

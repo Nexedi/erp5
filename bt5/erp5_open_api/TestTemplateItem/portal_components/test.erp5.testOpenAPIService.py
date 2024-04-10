@@ -26,10 +26,12 @@
 ##############################################################################
 
 import six
+# pylint:disable=no-name-in-module
 if six.PY2:
   from base64 import encodestring as base64_encodebytes
 else:
   from base64 import encodebytes as base64_encodebytes
+# pylint:enable=no-name-in-module
 import io
 import json
 import unittest
