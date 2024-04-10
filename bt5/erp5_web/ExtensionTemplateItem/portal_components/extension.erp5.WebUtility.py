@@ -134,6 +134,7 @@ def parseCssForUrl(text):
       result.append(("data", data))
   return result
 
+# pylint:disable=no-name-in-module
 if six.PY2:
   def unescape(self, html):
     return HTMLParser().unescape(html)
@@ -141,3 +142,4 @@ else:
   from html import unescape as html_unescape
   def unescape(self, html):
     return html_unescape(html)
+# pylint:enable=no-name-in-module
