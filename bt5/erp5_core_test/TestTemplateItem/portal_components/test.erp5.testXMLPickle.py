@@ -60,10 +60,10 @@ class XMLPickleTestCase(unittest.TestCase):
     class DummyJar:
       loaded = None
       """follow interface expected by importXML"""
-      def importFile(self, file, clue):
+      def importFile(self, file_, clue):
         assertEqual(clue, 'ignored')
-        assertEqual(file.read(4), b'ZEXP')
-        unpickler = pickle.Unpickler(file)
+        assertEqual(file_.read(4), b'ZEXP')
+        unpickler = pickle.Unpickler(file_)
         if persistent_load:
           unpickler.persistent_load = persistent_load
         self.loaded = unpickler.load()
@@ -126,6 +126,7 @@ class TestXMLPickle(XMLPickleTestCase):
 
   if six.PY2:
     def test_long(self):
+      # pylint:disable=undefined-variable
       self.check_and_load(long(-0))
       self.check_and_load(long(1))
       self.check_and_load(long(-1))
@@ -134,6 +135,7 @@ class TestXMLPickle(XMLPickleTestCase):
       self.check_and_load(long(0xffff))
       self.check_and_load(long(2**128))
       self.check_and_load(12345678910111213141516178920 << (256*8))
+      # pylint:enable=undefined-variable
 
   def test_float(self):
     self.check_and_load(-0.0)
