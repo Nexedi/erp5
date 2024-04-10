@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import sys
 import mock
 
 import transaction

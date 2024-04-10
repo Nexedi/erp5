@@ -30,7 +30,7 @@ from Products.ERP5Type.tests.runUnitTest import log_directory
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 import os
 import requests
-import unittest
+
 
 def get_Z2_log_last_line():
   z2_log_path = os.path.join(log_directory, 'Z2.log')
@@ -42,6 +42,7 @@ def get_Z2_log_last_line():
   last_line = f.readlines()[-1]
   f.close()
   return last_line
+
 
 class TestXForwardedFor(ERP5TypeTestCase):
   def test_request_with_x_forwarded_for(self):
@@ -56,6 +57,7 @@ class TestXForwardedFor(ERP5TypeTestCase):
     response = requests.get(
       '%s/%s' % (self.portal.absolute_url(), script_id),
       headers={'X-Forwarded-For': '1.2.3.4'},
+      timeout=5,
     )
     self.assertNotEqual(response.text, '1.2.3.4')
     last_line = get_Z2_log_last_line()
@@ -63,6 +65,7 @@ class TestXForwardedFor(ERP5TypeTestCase):
     response = requests.get(
       '%s/%s' % (self.portal.absolute_url(), script_id),
       headers={'X-Forwarded-For': '1.2.3.4, 5.6.7.8'},
+      timeout=5,
     )
     self.assertNotEqual(response.text, '1.2.3.4')
     self.assertNotEqual(response.text, '5.6.7.8')
@@ -71,6 +74,7 @@ class TestXForwardedFor(ERP5TypeTestCase):
     self.assertFalse(last_line.startswith('5.6.7.8 - '), last_line)
     response = requests.get(
       '%s/%s' % (self.portal.absolute_url(), script_id),
+      timeout=5,
     )
     self.assertNotEqual(response.text, '1.2.3.4')
     last_line = get_Z2_log_last_line()
@@ -81,6 +85,7 @@ class TestXForwardedFor(ERP5TypeTestCase):
     response = requests.get(
       '%s/%s' % (self.portal.absolute_url(), script_id),
       headers={'X-Forwarded-For': '1.2.3.4'},
+      timeout=5,
     )
     self.assertEqual(response.text, '1.2.3.4')
     last_line = get_Z2_log_last_line()
@@ -88,18 +93,15 @@ class TestXForwardedFor(ERP5TypeTestCase):
     response = requests.get(
       '%s/%s' % (self.portal.absolute_url(), script_id),
       headers={'X-Forwarded-For': '1.2.3.4, 5.6.7.8'},
+      timeout=5,
     )
     self.assertEqual(response.text, '1.2.3.4')
     last_line = get_Z2_log_last_line()
     self.assertTrue(last_line.startswith('1.2.3.4 - '), last_line)
     response = requests.get(
       '%s/%s' % (self.portal.absolute_url(), script_id),
+      timeout=5,
     )
     self.assertNotEqual(response.text, '1.2.3.4')
     last_line = get_Z2_log_last_line()
     self.assertFalse(last_line.startswith('1.2.3.4 - '), last_line)
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestXForwardedFor))
-  return suite

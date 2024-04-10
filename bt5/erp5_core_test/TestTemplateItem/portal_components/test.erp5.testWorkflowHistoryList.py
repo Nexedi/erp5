@@ -67,7 +67,7 @@ def old(items):
     if len(whl._log) < 16:
       whl._log.append(item)
     else:
-      prev = whl.__new__(whl.__class__)
+      prev = whl.__new__(whl.__class__)  # pylint:disable=no-value-for-parameter
       prev._prev = whl._prev
       prev._log = whl._log
       whl._prev = prev
@@ -91,7 +91,8 @@ class TestWorkflowHistoryList(TestCase):
     self.assertEqual(ddl, new(type(ddl), EXPECTED))
 
     class check(object):
-      def __getitem__(_, item): # pylint: disable=no-self-argument
+      def __getitem__(self_, item): # pylint: disable=no-self-argument
+        del self_
         try:
           a = EXPECTED[item]
         except IndexError:

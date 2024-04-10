@@ -36,7 +36,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript, FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
-import six
+
 
 class TestERP5Base(ERP5TypeTestCase):
   """ERP5 Base tests.
