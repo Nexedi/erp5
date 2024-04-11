@@ -61,7 +61,7 @@ class HtmlParseHelper(HTMLParser):
   def unknown_decl(self, data):
     self.result.append(("unknown_decl", data))
   def error(self, message):
-    raise ValueEror(message)
+    raise ValueError(message)
 
 
 def parseHtml(text):
