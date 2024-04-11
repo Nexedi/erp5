@@ -194,7 +194,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data=b"<p>L
         data = bytes(obj.data or b"")
       else:
         data = getattr(obj, "getData", lambda: bytes(obj))() or b""
-      if six.PY2 and isinstance(data, unicode):
+      if six.PY2 and isinstance(data, unicode):  # pylint:disable=undefined-variable
         data = data.encode("utf-8")
       assert isinstance(data, bytes)
       return handleLinkedData(mime, data, src)
@@ -205,7 +205,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data=b"<p>L
   # use the same behavior as when we call a script from browser URL bar.
   if not hasattr(obj, "getPortalType") and callable(obj):
     mime, data = "text/html", obj()
-    if six.PY2 and isinstance(data, unicode):
+    if six.PY2 and isinstance(data, unicode):  # pylint:disable=undefined-variable
       data = data.encode("utf-8")
     return handleLinkedData(mime, data, src)
 
