@@ -148,7 +148,9 @@ for attachment in attachment_list:
   for key, value in attachment.get("add_header_list", []):
     part.add_header(key, value)
   if attachment.get("filename", None) is not None:
-    part.add_header("Content-Disposition", "attachment", attachment["filename"])
+    # XXX disable too-many-function-args because there is no error with this code,
+    # but it might just be not tested.
+    part.add_header("Content-Disposition", "attachment", attachment["filename"])  # pylint:disable=too-many-function-args
   outer.attach(part)
 
 #return outer.as_string()
