@@ -64,10 +64,13 @@
       }
     }
     if (field_definition.type == "GadgetField") {
-      //TODO allow both, user renderjs_extra + doc info
+      //TODO allow both, user renderjs_extra + doc info-jio_key
       if (!field_definition.renderjs_extra) {
-        field_definition.values.renderjs_extra = JSON.stringify(gadget.state.doc);
-        result.renderjs_extra = JSON.stringify(gadget.state.doc);
+        var extra_dict = {};
+        Object.assign(extra_dict, gadget.state.doc);
+        extra_dict.jio_key = gadget.state.options.jio_key;
+        field_definition.values.renderjs_extra = JSON.stringify(extra_dict);
+        result.renderjs_extra = JSON.stringify(extra_dict);
       }
     }
     if (field_definition.values.extra) {
