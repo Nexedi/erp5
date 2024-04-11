@@ -29,6 +29,7 @@ import base64
 import binascii
 import json
 import typing
+import six
 from six.moves.urllib.parse import unquote
 
 if typing.TYPE_CHECKING:
@@ -310,7 +311,13 @@ class OpenAPIService(XMLObject):
         if schema.get('format') == 'base64':
           try:
             return base64.b64decode(parameter_value)
-          except binascii.Error as e:
+          except (binascii.Error, TypeError) as e:
+            if isinstance(e, TypeError):
+              # BBB on python2 this raises a generic type error
+              # but we don't want to ignore potential TypeErrors
+              # on python3 here
+              if six.PY3:
+                raise
             raise ParameterValidationError(
               'Error validating request body: {e}'.format(e=str(e)))
         elif schema.get('format') == 'binary':
