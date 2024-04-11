@@ -442,7 +442,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
     return result
 
-  def _edit(self, **kw):
+  def _edit(self, *args, **kw):
     # XXX it is unclear if we should keep this behavior in other potential subclasses.
     # Probably yes.
     if self.getPortalType() in WEB_SECTION_PORTAL_TYPE_TUPLE:
@@ -453,4 +453,4 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       else:
         # cleanup beforeTraverse hooks that may exist after this document was cloned.
         self._cleanupBeforeTraverseHooks()
-    super(WebSection, self)._edit(**kw)
+    super(WebSection, self)._edit(*args, **kw)
