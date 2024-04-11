@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -24,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -56,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -80,23 +81,21 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_monitoring_parameter_view.html</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_parameters_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Parameter View/edit widget</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_monitoring_parameter_view_html</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_parameters_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -106,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs Monitoring Parameters view widget</string> </value>
+            <value> <string>Monitoring Parameters</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -168,11 +167,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -196,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1457541237.88</float>
+                              <float>1712768148.54</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -205,7 +204,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -245,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1014.2117.47678.65518</string> </value>
+                      <value> <string>1015.54529.53343.17390</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -265,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1712768014.45</float>
+                              <float>1712850844.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -292,11 +291,13 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -308,7 +309,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -328,7 +329,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1457539323.65</float>
+                              <float>1712767926.59</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

@@ -79,6 +79,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>Parameters</string>
                         <string>listbox</string>
                       </list>
                     </value>
@@ -98,19 +99,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_source_reference</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_status</string>
-                        <string>my_url_string</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
