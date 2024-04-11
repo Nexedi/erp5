@@ -248,7 +248,14 @@ def _getattr(self, name, *args, **kw):
     except NotFoundError as e:
         if self.name.startswith('erp5.'):
             raise
-        if six.PY3 and self.name == 'numpy' or self.name.startswith('numpy.'):
+        if six.PY3 and (
+                # astroid/pylint on py3 have built-in support for numpy
+                self.name == 'numpy'
+                or self.name.startswith('numpy.')
+                # SOAPPy.Types contains "from SOAPPy.Types import *" which confuses
+                # this patch
+                or self.name == 'SOAPpy.Types'
+            ):
             raise
         real_module = __import__(
             self.name,
