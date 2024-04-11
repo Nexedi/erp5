@@ -1343,6 +1343,7 @@ Hé Hé Hé!""", page.asText().strip())
     conditional_get_response = requests.get(
       web_section.absolute_url(),
       headers={'If-Modified-Since': DateTime().utcdatetime().strftime('%a, %d %b %Y %H:%M:%S UTC')},
+      timeout=5,
     )
     self.assertEqual(conditional_get_response.status_code, 304)
     self.assertIn('Cache-Control', conditional_get_response.headers)
