@@ -79,6 +79,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>Parameters</string>
                         <string>listbox</string>
                       </list>
                     </value>
@@ -86,9 +87,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>parameters</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

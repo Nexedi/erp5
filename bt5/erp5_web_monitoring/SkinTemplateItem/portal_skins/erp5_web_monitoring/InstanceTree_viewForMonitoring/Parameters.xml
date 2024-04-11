@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>parameters</string> </value>
+            <value> <string>Parameters</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -227,7 +227,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>parameters</string> </value>
+                    <value> <string>Parameters</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
