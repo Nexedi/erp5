@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from erp5.component.tool.WebServiceTool import ConnectionError
+from erp5.component.tool.WebServiceTool import WebServiceConnectionError
 from Products.ERP5.ERP5Site import getSite
 
 class MethodWrapper(object):
@@ -45,11 +45,11 @@ class MethodWrapper(object):
       return method.absolute_url(), response
 ##       try:
 ##       except ValueError, msg:
-##         raise ConnectionError(msg)
+##         raise WebServiceConnectionError(msg)
 ##       except Exception, msg:
-##         raise ConnectionError(msg)
+##         raise WebServiceConnectionError(msg)
     else:
-      raise ConnectionError("Method %s does not exist" %(method_name))
+      raise WebServiceConnectionError("Method %s does not exist" %(method_name))
 
 class DocumentConnection:
   """
