@@ -153,7 +153,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
 
   def beforeTearDown(self):
-    return
     self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.web_page_module)
 
