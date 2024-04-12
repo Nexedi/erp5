@@ -36,6 +36,7 @@ import re
 import six
 
 from Products.PythonScripts.standard import html_quote
+from Products.ERP5Type.Utils import str2bytes
 from base64 import b64encode
 
 blank = ''
@@ -359,22 +360,22 @@ elif book_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  header_embedded_html_data = book.Base_convertHtmlToSingleFile(book_head, allow_script=True).encode('utf-8')
+  header_embedded_html_data = str2bytes(book.Base_convertHtmlToSingleFile(book_head, allow_script=True))
   before_toc_data_list = [
-    b64encode(book.Base_convertHtmlToSingleFile(book_cover, allow_script=True).encode('utf-8')).decode(),
+    b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_cover, allow_script=True))).decode(),
   ]
   after_toc_data_list = []
   if book_include_history_table:
     before_toc_data_list.append(
-      b64encode(book.Base_convertHtmlToSingleFile(book_history, allow_script=True).encode('utf-8')).decode()
+      b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_history, allow_script=True))).decode()
     )
   #if book_include_reference_table:
   #  after_toc_data_list.append(
-  #    b64encode(book.Base_convertHtmlToSingleFile(book_references, allow_script=True).encode('utf-8')).decode()
+  #    b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))).decode()
   #  )
   xsl_style_sheet_data = book_table_of_content.encode('utf-8')
-  embedded_html_data = book.Base_convertHtmlToSingleFile(book_content, allow_script=True).encode('utf-8')
-  footer_embedded_html_data = book.Base_convertHtmlToSingleFile(book_foot, allow_script=True).encode('utf-8')
+  embedded_html_data = str2bytes(book.Base_convertHtmlToSingleFile(book_content, allow_script=True))
+  footer_embedded_html_data = str2bytes(book.Base_convertHtmlToSingleFile(book_foot, allow_script=True))
   if margin_15mm:
     margin_top = 50
     margin_bottom = 25
