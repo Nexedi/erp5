@@ -31,6 +31,7 @@
 from erp5.component.document.Document import DocumentConversionServerProxy
 from base64 import b64encode, b64decode
 from zExceptions import Unauthorized
+from Products.ERP5Type.Utils import bytes2str
 
 def convertDocumentByConversionServer(
     self,
@@ -48,7 +49,7 @@ def convertDocumentByConversionServer(
   proxy = DocumentConversionServerProxy(self)
   return b64decode(
     proxy.convertFile(
-      b64encode(data).decode(),
+      bytes2str(b64encode(data)),
       source_mimetype,
       destination_mimetype,
       zip,
