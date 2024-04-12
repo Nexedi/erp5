@@ -42,7 +42,7 @@ from string import Template
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
-from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str
+from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes
 
 from lxml import html as etree_html
 from lxml import etree
@@ -428,8 +428,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         data = self._baseGetTextContent()
       else:
         data = self._baseGetTextContent(default)
-      if not isinstance(data, bytes):
-        return data.encode('utf-8')
+      return str2bytes(data)
     else:
       if default is _MARKER:
         return File.getData(self)
