@@ -28,6 +28,8 @@ mhtml_message = {
 }
 
 def main(data):
+  # type: (str) -> str
+  # Preserves input type (unicode or bytes)
   if isinstance(data, bytes):
     data = data.decode("utf-8")
   data = u"".join([fn(p) for fn, p in handleHtmlPartList(parseHtml(data))])
