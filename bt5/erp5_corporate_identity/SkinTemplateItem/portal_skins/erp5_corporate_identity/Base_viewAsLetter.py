@@ -28,6 +28,7 @@ MAIN FILE: generate letter in different output formats
 import re
 
 from base64 import b64encode
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 
 blank = ''
 pref = context.getPortalObject().portal_preferences
@@ -256,9 +257,9 @@ if letter_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_content, allow_script=True).encode('utf-8')
-  header_embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_head, allow_script=True).encode('utf-8')
-  footer_embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_foot, allow_script=True).encode('utf-8')
+  embedded_html_data = str2bytes(letter.Base_convertHtmlToSingleFile(letter_content, allow_script=True))
+  header_embedded_html_data = str2bytes(letter.Base_convertHtmlToSingleFile(letter_head, allow_script=True))
+  footer_embedded_html_data = str2bytes(letter.Base_convertHtmlToSingleFile(letter_foot, allow_script=True))
   pdf_file = letter.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
       margin_top=letter_header_margin_to_top,
@@ -266,8 +267,8 @@ if letter_format == "pdf":
       margin_left=0,
       margin_right=0,
       header_spacing=1,
-      header_html_data=b64encode(header_embedded_html_data).decode(),
-      footer_html_data=b64encode(footer_embedded_html_data).decode(),
+      header_html_data=bytes2str(b64encode(header_embedded_html_data)),
+      footer_html_data=bytes2str(b64encode(footer_embedded_html_data)),
     )
   )
 
