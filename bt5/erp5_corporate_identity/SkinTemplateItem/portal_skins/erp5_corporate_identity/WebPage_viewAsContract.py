@@ -2,6 +2,7 @@ import re
 import six
 
 from base64 import b64encode
+from Products.ERP5Type.Utils import bytes2str, str2bytes 
 
 blank = b''
 pref = context.getPortalObject().portal_preferences
@@ -290,22 +291,22 @@ elif contract_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  header_embedded_html_data = context.Base_convertHtmlToSingleFile(contract_head, allow_script=True).encode('utf-8')
+  header_embedded_html_data = str2bytes(context.Base_convertHtmlToSingleFile(contract_head, allow_script=True))
   before_toc_data_list = [
-    b64encode(context.Base_convertHtmlToSingleFile(contract_cover, allow_script=True).encode('utf-8')).decode(),
+    bytes2str(b64encode(str2bytes(context.Base_convertHtmlToSingleFile(contract_cover, allow_script=True)))),
   ]
   after_toc_data_list = []
   if contract_include_history_table:
     before_toc_data_list.append(
-      b64encode(context.Base_convertHtmlToSingleFile(contract_history, allow_script=True).encode('utf-8')).decode()
+      bytes2str(b64encode(str2bytes(context.Base_convertHtmlToSingleFile(contract_history, allow_script=True))))
     )
   #if contract_include_reference_table:
   #  after_toc_data_list.append(
-  #    b64encode(context.Base_convertHtmlToSingleFile(contract_references, allow_script=True)).decode()
+  #    bytes2str(b64encode(str2bytes(context.Base_convertHtmlToSingleFile(contract_references, allow_script=True))))
   #  )
   xsl_style_sheet_data = contract_table_of_content
-  embedded_html_data = context.Base_convertHtmlToSingleFile(contract_content, allow_script=True).encode('utf-8')
-  footer_embedded_html_data = context.Base_convertHtmlToSingleFile(contract_foot, allow_script=True).encode('utf-8')
+  embedded_html_data = str2bytes(context.Base_convertHtmlToSingleFile(contract_content, allow_script=True))
+  footer_embedded_html_data = str2bytes(context.Base_convertHtmlToSingleFile(contract_foot, allow_script=True))
   margin_top = 40
   margin_bottom = 20
   pdf_file = context.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
@@ -314,11 +315,11 @@ elif contract_format == "pdf":
     margin_bottom=margin_bottom,
     toc=True if contract_include_content_table else False,
     before_toc_data_list=before_toc_data_list,
-    xsl_style_sheet_data=b64encode(xsl_style_sheet_data).decode(),
+    xsl_style_sheet_data=bytes2str(b64encode(xsl_style_sheet_data)),
     after_toc_data_list=after_toc_data_list,
-    header_html_data=b64encode(header_embedded_html_data).decode(),
+    header_html_data=bytes2str(b64encode(header_embedded_html_data)),
     header_spacing=10,
-    footer_html_data=b64encode(footer_embedded_html_data).decode(),
+    footer_html_data=bytes2str(b64encode(footer_embedded_html_data)),
     footer_spacing=3,
     )
   )

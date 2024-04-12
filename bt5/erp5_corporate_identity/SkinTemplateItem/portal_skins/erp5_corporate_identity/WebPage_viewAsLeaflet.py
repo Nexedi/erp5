@@ -26,6 +26,7 @@ import six
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 blank = ''
 pref = context.getPortalObject().portal_preferences
@@ -257,9 +258,9 @@ if leaflet_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  embedded_html_data = leaflet.Base_convertHtmlToSingleFile(leaflet_content, allow_script=True).encode('utf-8')
-  header_embedded_html_data = leaflet.Base_convertHtmlToSingleFile(leaflet_head, allow_script=True).encode('utf-8')
-  footer_embedded_html_data = leaflet.Base_convertHtmlToSingleFile(leaflet_foot, allow_script=True).encode('utf-8')
+  embedded_html_data = str2bytes(leaflet.Base_convertHtmlToSingleFile(leaflet_content, allow_script=True))
+  header_embedded_html_data = str2bytes(leaflet.Base_convertHtmlToSingleFile(leaflet_head, allow_script=True))
+  footer_embedded_html_data = str2bytes(leaflet.Base_convertHtmlToSingleFile(leaflet_foot, allow_script=True))
   pdf_file = leaflet.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
       orientation="portrait",
@@ -267,9 +268,9 @@ if leaflet_format == "pdf":
       margin_bottom=20,
       margin_left=0,
       margin_right=0,
-      header_html_data=b64encode(header_embedded_html_data).decode(),
+      header_html_data=bytes2str(b64encode(header_embedded_html_data)),
       header_spacing=10,
-      footer_html_data=b64encode(footer_embedded_html_data).decode(),
+      footer_html_data=bytes2str(b64encode(footer_embedded_html_data)),
       footer_spacing=3
     )
   )
