@@ -106,7 +106,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs Monitoring Parameters view widget</string> </value>
+            <value> <string>Monitoring Parameter View Widget</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -245,7 +245,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1014.2117.47678.65518</string> </value>
+                      <value> <string>1015.53173.37695.40857</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -265,7 +265,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1712768014.45</float>
+                              <float>1712933886.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
