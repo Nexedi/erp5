@@ -18,7 +18,6 @@
     .declareAcquiredMethod('jio_get', 'jio_get')
 
     .declareMethod("render", function (options) {
-      console.log("PARAMETER VIEW!", options);
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
@@ -30,7 +29,8 @@
         .push(function () {
           return gadget.jio_allDocs({
             query: '(portal_type:"Software Instance") AND (specialise_title:"' +
-            options.title + '")'
+            options.title + '")',
+            select_list: ["_links", "title", "parameters", "aggregate_reference"],
           })
         })
         .push(function (result) {
