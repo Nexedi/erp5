@@ -36,7 +36,7 @@ import re
 import six
 
 from Products.PythonScripts.standard import html_quote
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import str2bytes bytes2str
 from base64 import b64encode
 
 blank = ''
@@ -362,18 +362,18 @@ elif book_format == "pdf":
   # ================ encode and build cloudoo elements =========================
   header_embedded_html_data = str2bytes(book.Base_convertHtmlToSingleFile(book_head, allow_script=True))
   before_toc_data_list = [
-    b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_cover, allow_script=True))).decode(),
+    bytes2str(b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_cover, allow_script=True)))),
   ]
   after_toc_data_list = []
   if book_include_history_table:
     before_toc_data_list.append(
-      b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_history, allow_script=True))).decode()
+      bytes2str(b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_history, allow_script=True))))
     )
   #if book_include_reference_table:
   #  after_toc_data_list.append(
   #    b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))).decode()
   #  )
-  xsl_style_sheet_data = book_table_of_content.encode('utf-8')
+  xsl_style_sheet_data = str2bytes(book_table_of_content)
   embedded_html_data = str2bytes(book.Base_convertHtmlToSingleFile(book_content, allow_script=True))
   footer_embedded_html_data = str2bytes(book.Base_convertHtmlToSingleFile(book_foot, allow_script=True))
   if margin_15mm:
@@ -388,11 +388,11 @@ elif book_format == "pdf":
     margin_bottom=margin_bottom,
     toc=True if book_include_content_table else False,
     before_toc_data_list=before_toc_data_list,
-    xsl_style_sheet_data=b64encode(xsl_style_sheet_data).decode(),
+    xsl_style_sheet_data=bytes2str(b64encode(xsl_style_sheet_data)),
     after_toc_data_list=after_toc_data_list,
-    header_html_data=b64encode(header_embedded_html_data).decode(),
+    header_html_data=bytes2str(b64encode(header_embedded_html_data)),
     header_spacing=10,
-    footer_html_data=b64encode(footer_embedded_html_data).decode(),
+    footer_html_data=bytes2str(b64encode(footer_embedded_html_data)),
     footer_spacing=3,
     )
   )
