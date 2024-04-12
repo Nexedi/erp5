@@ -27,6 +27,7 @@ import re
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 blank = ''
 flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
@@ -420,23 +421,23 @@ if doc_format == "pdf" or doc_format == "mhtml":
   )
 
   # ================ encode and build cloudoo elements =========================
-  footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True).encode('utf-8')
-  #embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True).encode('utf-8')
-  cover = doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True).encode('utf-8')
+  footer_embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True))
+  #embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True))
+  cover = str2bytes(doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True))
   before_body_data_list = [
-    b64encode(cover).decode(),
+    bytes2str(b64encode(cover)),
   ]
   if doc_format == "mhtml":
     context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
     return doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
   if doc_display_notes:
     #after_body_data_list = [
-    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True).encode('utf-8')).decode(),
+    #  bytes2str(b64encode(str2bytes(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)))),
     #]
-    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True).encode('utf-8')
+    embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True))
     after_body_data_list = []
   else:
-    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True).encode('utf-8')
+    embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True))
     after_body_data_list = []
     #after_body_data_list = []
   pdf_file = doc.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
@@ -447,7 +448,7 @@ if doc_format == "pdf" or doc_format == "mhtml":
       before_body_data_list=before_body_data_list,
       after_body_data_list=after_body_data_list,
       header_spacing=10,
-      footer_html_data=b64encode(footer_embedded_html_data).decode(),
+      footer_html_data=bytes2str(b64encode(footer_embedded_html_data)),
       footer_spacing=3
     )
   )
