@@ -36,7 +36,7 @@ import re
 import six
 
 from Products.PythonScripts.standard import html_quote
-from Products.ERP5Type.Utils import str2bytes bytes2str
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 from base64 import b64encode
 
 blank = ''
