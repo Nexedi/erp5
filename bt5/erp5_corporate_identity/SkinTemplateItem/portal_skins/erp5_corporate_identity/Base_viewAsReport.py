@@ -36,7 +36,7 @@ MAIN FILE: generate report (book header/footer and report content)
 # report_title              report title
 # report_header             custom report header
 
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
@@ -261,7 +261,7 @@ if doc_format == "pdf":
   # ================ encode and build cloudoo elements =========================
   header_embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_head, allow_script=True))
   before_toc_data_list = []
-  xsl_style_sheet_data = blank.encode()
+  xsl_style_sheet_data = str2bytes(blank)
   embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_content, allow_script=True))
   footer_embedded_html_data = str2bytes(doc.Base_convertHtmlToSingleFile(doc_foot, allow_script=True))
   default_conversion_kw = dict(
@@ -270,10 +270,10 @@ if doc_format == "pdf":
     margin_bottom=20,
     toc=False,
     before_toc_data_list=before_toc_data_list,
-    xsl_style_sheet_data=b64encode(xsl_style_sheet_data).decode(),
-    header_html_data=b64encode(header_embedded_html_data).decode(),
+    xsl_style_sheet_data=bytes2str(b64encode(xsl_style_sheet_data)),
+    header_html_data=bytes2str(b64encode(header_embedded_html_data)),
     header_spacing=10,
-    footer_html_data=b64encode(footer_embedded_html_data).decode(),
+    footer_html_data=bytes2str(b64encode(footer_embedded_html_data)),
     footer_spacing=3,
   )
   default_conversion_kw.update(conversion_dict)

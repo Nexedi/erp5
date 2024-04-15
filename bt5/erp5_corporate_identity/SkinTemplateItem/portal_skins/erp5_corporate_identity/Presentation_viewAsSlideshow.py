@@ -13,6 +13,7 @@ Try to convert old OpenOffice presentations into slideshows
 import re
 from io import BytesIO
 from zipfile import ZipFile
+from Products.ERP5Type.Utils import bytes2str 
 
 blank = ''
 flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
@@ -32,7 +33,7 @@ def getSlideList(zip_content):
           name.replace('img', '').replace('text', ''))):
       if name.endswith('.html'):
         slide_list.extend(
-          re.findall(r'<html>(.*?)</html>', zf.read(name).decode('utf-8'), flags=flags)
+          re.findall(r'<html>(.*?)</html>', bytes2str(zf.read(name)), flags=flags)
         )
   return slide_list
 
