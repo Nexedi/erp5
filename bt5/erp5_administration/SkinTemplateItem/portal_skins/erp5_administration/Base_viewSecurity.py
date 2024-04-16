@@ -1,5 +1,4 @@
 from AccessControl import getSecurityManager
-from zExceptions import Unauthorized
 from pprint import pformat
 
 u = getSecurityManager().getUser()
@@ -36,15 +35,5 @@ except AttributeError:
 
 print()
 print('Local roles on document:\n', pformat(context.get_local_roles()))
-
-print('''
-----------------
-Security mapping
-----------------''')
-if u.getId() is not None:
-  try:
-    print(context.Base_viewSecurityMappingAsUser(u.getId()))
-  except Unauthorized:
-    print("user doesn't have permission to security mapping in this context")
 
 return printed
