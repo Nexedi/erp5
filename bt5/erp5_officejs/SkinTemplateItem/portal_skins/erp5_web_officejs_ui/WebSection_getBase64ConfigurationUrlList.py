@@ -1,6 +1,7 @@
 import json
 import base64
 from erp5.component.module.Log import log
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 def getElementFromContent(key, content):
   before_template = '"%s" type="text/x-renderjs-configuration">'
@@ -69,22 +70,22 @@ try:
   configuration_path_list = []
   for key in portal_actions_dict:
     path = "portal_types/%s" % key
-    configuration_path_list.append(base64.b64encode(path.encode()).decode())
+    configuration_path_list.append(bytes2str(base64.b64encode(str2bytes(path))))
     for action in portal_actions_dict[key]:
       path = "portal_types/%s/%s" % (key, action)
-      configuration_path_list.append(base64.b64encode(path.encode()).decode())
+      configuration_path_list.append(bytes2str(base64.b64encode(str2bytes(path))))
       try:
         action_object = context.restrictedTraverse(path)
         form = action_object.getActionText().split('/')[-1]
         path = "portal_skins/%s/%s" % (portal_skin, form)
-        configuration_path_list.append(base64.b64encode(path.encode()).decode())
+        configuration_path_list.append(bytes2str(base64.b64encode(str2bytes(path))))
       except KeyError as e:
         raise KeyError("Error getting portal action info: " + str(e))
 
   if new_dialog_form_list:
     for form in new_dialog_form_list:
       path = "portal_skins/%s/%s" % (portal_skin, form)
-      configuration_path_list.append(base64.b64encode(path.encode()).decode())
+      configuration_path_list.append(bytes2str(base64.b64encode(str2bytes(path))))
 
   url_list = []
   for path in configuration_path_list:
