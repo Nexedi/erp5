@@ -22,7 +22,7 @@ import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
 from Acquisition import aq_base
 from Products.ERP5Form.Selection import Selection, DomainSelection
-from Products.ERP5Type.Utils import str2unicode, unicode2str
+from Products.ERP5Type.Utils import bytes2str, str2unicode, unicode2str
 
 
 def changeSkin(skin_name):
@@ -3189,11 +3189,11 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     ))
     fake_portal = replace_request(fake_request, self.portal)
 
-    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+    result = bytes2str(fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    ).decode()
+    ))
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
@@ -3253,11 +3253,11 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     ))
     fake_portal = replace_request(fake_request, self.portal)
 
-    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+    result = bytes2str(fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    ).decode()
+    ))
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
