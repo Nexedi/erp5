@@ -1,4 +1,5 @@
 from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Utils import bytes2str
 portal = context.getPortalObject()
 support_request = context.getFollowUpValue()
 web_site_value = portal.restrictedTraverse(web_site_relative_url)
@@ -34,7 +35,7 @@ web_message = portal.event_module.newContent(
     portal_type='Web Message',
     title=context.getTitle() if context.hasTitle() else None,
     content_type='text/html' if is_html else 'text/plain',
-    text_content=data.decode('utf-8'),
+    text_content=bytes2str(data),
     follow_up_value=support_request,
     aggregate_value_list=[context] + context.getSuccessorValueList(
       portal_type=portal.getPortalDocumentTypeList()),
