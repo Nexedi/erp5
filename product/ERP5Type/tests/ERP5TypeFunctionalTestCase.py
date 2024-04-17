@@ -42,7 +42,7 @@ from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.runUnitTest import log_directory
-from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
+from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG, unicode2str
 from lxml import etree
 from lxml.html.builder import E
 import certifi
@@ -398,7 +398,7 @@ class FunctionalTestRunner:
             for test_tr in test_table.xpath('.//tr[contains(@class, "status_failed")]'):
               test_tr.set('style', 'background-color: red;')
             details_attribute_dict = {}
-            if "expected failure" in etree.tostring(test_table, encoding="unicode"):
+            if u"expected failure" in etree.tostring(test_table, encoding="unicode"):
               expected_failure_amount += 1
             else:
               failure_amount += 1
@@ -406,7 +406,7 @@ class FunctionalTestRunner:
               details_attribute_dict['open'] = 'true'
             detail_element = E.div()
             detail_element.append(E.details(E.summary(test_name), test_table, **details_attribute_dict))
-            detail += etree.tostring(detail_element, encoding="unicode")
+            detail += unicode2str(etree.tostring(detail_element, encoding="unicode"))
       tr_count += 1
     success_amount = tr_count - 1 - failure_amount - expected_failure_amount
     if detail:
