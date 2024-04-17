@@ -291,12 +291,11 @@ def runLiveTest(test_list, verbosity=1, stream=None, request_server_url=None, **
   if stream is None:
     output = StringIO()
   def print_and_write(data):
-    sys.stdout.write(data)
-    sys.stdout.flush()
-    return StringIO.write(output, data)
-  output.write = print_and_write
-  output.write("**Running Live Test:\n")
-  ZopeTestCase._print = output.write
+    sys.stderr.write(data)
+    sys.stderr.flush()
+    return output.write(data)
+  print_and_write("**Running Live Test:\n")
+  ZopeTestCase._print = print_and_write
 
   with warnings.catch_warnings():
     warnings.simplefilter(kw['warnings'])
