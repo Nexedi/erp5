@@ -151,6 +151,7 @@ class TestIdTool(ERP5TypeTestCase):
 
     # generateNewId expect str, but convert id_group when passed a wrong type
     with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
       self.assertEqual(
         self.id_tool.generateNewId(
           id_generator=id_generator,
@@ -168,6 +169,7 @@ class TestIdTool(ERP5TypeTestCase):
         id_group='bytes',
       ), 0)
     with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
       self.assertEqual(
         self.id_tool.generateNewId(
           id_generator=id_generator,
@@ -269,6 +271,7 @@ class TestIdTool(ERP5TypeTestCase):
 
     # generateNewIdList expect str, but convert id_group when passed a wrong type
     with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
       self.assertEqual(
         self.id_tool.generateNewIdList(
           id_generator=id_generator,
@@ -287,6 +290,7 @@ class TestIdTool(ERP5TypeTestCase):
         id_count=1,
         ), [0])
     with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
       self.assertEqual(
         self.id_tool.generateNewIdList(
           id_generator=id_generator,
