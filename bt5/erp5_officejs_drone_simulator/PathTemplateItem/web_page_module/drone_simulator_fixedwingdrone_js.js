@@ -53,7 +53,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       throw new Error('max acceleration must be superior to 0');
     }
     drone._minSpeed = this.getMinSpeed();
-    if (drone._minSpeed <= 0) {
+    if (drone._minSpeed < 0) {
       throw new Error('min speed must be superior to 0');
     }
     drone._maxSpeed = this.getMaxSpeed();
