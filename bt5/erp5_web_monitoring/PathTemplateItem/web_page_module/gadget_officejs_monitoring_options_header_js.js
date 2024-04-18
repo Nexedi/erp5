@@ -33,7 +33,6 @@
             }});
           })
           .push(function (url) {
-            //TODO set title here
             header_options.jump_url = url;
             header_options.save_action = true;
             return header_options;
@@ -41,6 +40,7 @@
       case "software_instance":
         header_options.refresh_action = true;
         if (page_options.doc._links !== undefined) {
+          //TODO get view/action urls
           header_options.resources_url = "a";
           header_options.processes_url = "b";
           if (header_options.hasOwnProperty('actions_url'))
