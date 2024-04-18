@@ -50,9 +50,10 @@
         }
         return header_options;
       case "promise":
-        return {};
+        header_options.refresh_action = true;
+        return header_options;
       default:
-        return {};
+        return header_options;
       }
     });
 
