@@ -322,7 +322,6 @@
         page_title = options.doc.header_title;
       }
       if (portal_type_dict.title) {
-        //TODO do this in custom header not here
         page_title = portal_type_dict.title + page_title;
       }
       return subgadget.render({
