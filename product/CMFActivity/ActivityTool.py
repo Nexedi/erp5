@@ -1398,6 +1398,7 @@ class ActivityTool (BaseTool):
         with tic_lock:
           active_threads -= 1
 
+    security.declarePublic('hasActivity')
     def hasActivity(self, *args, **kw):
       # Check in each queue if the object has deferred tasks
       # if not argument is provided, then check on self
