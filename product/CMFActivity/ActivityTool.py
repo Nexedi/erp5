@@ -658,6 +658,7 @@ class ActivityTool (BaseTool):
     title = 'Activities'
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
+    security.declareObjectPrivate()
 
     manage_options = tuple(
                      [ { 'label' : 'Overview', 'action' : 'manage_overview' }
