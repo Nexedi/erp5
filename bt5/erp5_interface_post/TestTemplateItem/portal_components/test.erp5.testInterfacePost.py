@@ -37,6 +37,7 @@ else:
 
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from DateTime import DateTime
 
@@ -238,7 +239,7 @@ class TestInterfacePost(ERP5TypeTestCase):
 
     for internet_message_post in internet_message_post_list:
       self.assertEqual(internet_message_post.getSimulationState(), 'exported')
-      mail_object = email.message_from_string(internet_message_post.getData().decode())
+      mail_object = email.message_from_string(bytes2str(internet_message_post.getData()))
       self.assertEqual(
         internet_message_post.getReference(), mail_object['message-id'].strip('<>')
       )
@@ -273,7 +274,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     message_list = self.portal.MailHost._message_list
     self.assertEqual(len(message_list), len(self.recipient_list))
     for post in sequence['internet_message_post_list']:
-      post_recipient = email.message_from_string(post.getData().decode())['to']
+      post_recipient = email.message_from_string(bytes2str(post.getData()))['to']
       message_list = self._getMailHostMessageForRecipient(post_recipient)
       self.assertEqual(len(message_list), 1)
       message = message_list[0]
@@ -295,7 +296,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     post = sequence['internet_message_post']
 
     # Create a response mail object
-    mail_object = email.message_from_string(post.getData().decode())
+    mail_object = email.message_from_string(bytes2str(post.getData()))
 
     sender = mail_object['from']
     recipient = mail_object['to']
@@ -310,7 +311,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     # Ingest it
     response_post = self.portal.internet_message_post_module.newContent(
       portal_type='Internet Message Post',
-      data=mail_object.as_string().encode(),
+      data=str2bytes(mail_object.as_string()),
     )
     response_post.prepareImport()
     sequence['internet_message_post_response'] = response_post
