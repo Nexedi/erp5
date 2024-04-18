@@ -39,7 +39,16 @@
             return header_options;
           });
       case "software_instance":
-        return {};
+        header_options.refresh_action = true;
+        if (page_options.doc._links !== undefined) {
+          header_options.resources_url = "a";
+          header_options.processes_url = "b";
+          if (header_options.hasOwnProperty('actions_url'))
+            delete header_options.actions_url;
+          if (header_options.hasOwnProperty('tab_url'))
+            delete header_options.tab_url;
+        }
+        return header_options;
       case "promise":
         return {};
       default:
