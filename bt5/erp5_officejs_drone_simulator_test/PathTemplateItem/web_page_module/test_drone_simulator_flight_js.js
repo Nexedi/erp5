@@ -29,11 +29,17 @@
     INIT_ALT = 15,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'function assert(a, b, msg) {\n' +
-      '  if (a === b)\n' +
+      'function assert(result, msg) {\n' +
+      '  if (result)\n' +
       '    console.log(msg + ": OK");\n' +
       '  else\n' +
       '    console.log(msg + ": FAIL");\n' +
+      '}\n' +
+      'function assertEqual(a, b, msg) {\n' +
+      '  assert(a === b, msg);\n' +
+      '}\n' +
+      'function assertGreaterOrEqual(a, b, msg) {\n' +
+      '  assert(a >= b, msg);\n' +
       '}\n' +
       '\n' +
       'function distance(lat1, lon1, lat2, lon2) {\n' +
@@ -49,14 +55,14 @@
       '}\n' +
       '\n' +
       'function compare(coord1, coord2) {\n' +
-      '  assert(coord1.latitude, coord2.latitude, "Latitude")\n' +
-      '  assert(coord1.longitude, coord2.longitude, "Longitude")\n' +
-      '  assert(coord1.altitude, coord2.altitude, "Altitude")\n' +
+      '  assertEqual(coord1.latitude, coord2.latitude, "Latitude")\n' +
+      '  assertEqual(coord1.longitude, coord2.longitude, "Longitude")\n' +
+      '  assertEqual(coord1.altitude, coord2.altitude, "Altitude")\n' +
       '}\n' +
       '\n' +
       'me.onStart = function (timestamp) {\n' +
-      '  assert(me.getSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
-      '  assert(me.getYaw(), 0, "Yaw angle")\n' +
+      '  assertEqual(me.getSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
+      '  assertEqual(me.getYaw(), 0, "Yaw angle")\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
       '  me.start_time = timestamp;\n' +
       '  me.setTargetCoordinates(\n' +
@@ -78,9 +84,9 @@
       '    time_interval = timestamp - me.start_time,\n' +
       '    expected_interval = ' + LOOP_INTERVAL + ',\n' +
       '    expectedDistance = (me.getSpeed() * expected_interval / 1000).toFixed(8);\n' +
-      '    assert(time_interval.toFixed(4), expected_interval.toFixed(4), "Timestamp");\n' +
-      '    assert(Date.now(), timestamp, "Date");\n' +
-      '    assert(realDistance, expectedDistance, "Distance");\n' +
+      '    assertEqual(time_interval.toFixed(4), expected_interval.toFixed(4), "Timestamp");\n' +
+      '    assertGreaterOrEqual(Date.now(), timestamp, "Date.now");\n' +
+      '    assertEqual(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
       '  compare(current_position, {\n' +
       '    latitude: (me.initialPosition.latitude + 2.3992831666911723e-06).toFixed(7),\n' +

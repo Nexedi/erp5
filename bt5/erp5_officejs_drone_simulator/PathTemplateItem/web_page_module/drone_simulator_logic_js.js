@@ -27,7 +27,10 @@ var DroneManager = /** @class */ (function () {
     this._maxClimbRate = 0;
     this._maxCommandFrequency = 0;
     this._last_command_timestamp = 0;
-    this._onupdate_count = 0;
+    this._lastInfoUpdateTime = 0;
+    this._lastOnUpdateTime = 0;
+    this._onUpdateExecutionDuration = 0;
+    this._timeDifference = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = new BABYLON.Vector3(0, 0, 1); // North
@@ -169,25 +172,32 @@ var DroneManager = /** @class */ (function () {
       );
     };
   DroneManager.prototype.internal_update = function (delta_time) {
-    var context = this, gameManager = this._API._gameManager;
+    var context = this, time = context._API._gameManager.getCurrentTime(),
+      min_interval = context._API.getOnUpdateInterval(),
+      onUpdateInterval = Math.max(min_interval,
+                                  this._onUpdateExecutionDuration);
     if (this._controlMesh) {
       context._API.internal_position_update(context, delta_time);
-      if (context._canUpdate &&
-          gameManager._game_duration / (context._API.getOnUpdateInterval() * this._onupdate_count) >= 1) {
+      if (time - this._lastInfoUpdateTime >= min_interval) {
+        context._API.internal_info_update(context);
+        this._lastInfoUpdateTime = time;
+      }
+      if (context._canUpdate
+          && time - this._lastOnUpdateTime >= onUpdateInterval) {
         context._canUpdate = false;
-        this._onupdate_count += 1;
+        this._lastOnUpdateTime = time;
+        this._timeDifference = time - Date.now();
         return new RSVP.Queue()
           .push(function () {
-            return context.onUpdate(context._API._gameManager.getCurrentTime());
+            return context.onUpdate(time);
           })
           .push(function () {
+            context._onUpdateExecutionDuration =
+              Date.now() + context._timeDifference - time;
             context._canUpdate = true;
           }, function (error) {
             console.warn('Drone crashed on update due to error:', error);
             context._internal_crash(error);
-          })
-          .push(function () {
-            context._API.internal_info_update(context);
           })
           .push(undefined, function (error) {
             console.warn('Drone crashed on update due to error:', error);
@@ -1005,7 +1015,7 @@ var GameManager = /** @class */ (function () {
           " GameManager, DroneLogAPI, FixedWingDroneAPI, BABYLON, " +
           "GAMEPARAMETERS) {" +
           "Date.now = function () {" +
-          "return me._API._gameManager.getCurrentTime();}; " +
+          "return NativeDate.now() + me._timeDifference;}; " +
           "function Date() {if (!(this instanceof Date)) " +
           "{throw new Error('Missing new operator');} " +
           "if (arguments.length === 0) {return new NativeDate(Date.now());} " +
