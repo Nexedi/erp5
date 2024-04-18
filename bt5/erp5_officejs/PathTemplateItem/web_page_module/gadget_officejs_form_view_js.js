@@ -315,7 +315,7 @@
     .declareMethod("renderSubGadget", function (options, subgadget, form_json) {
       var gadget = this, erp5_document = form_json.erp5_document,
         portal_type_dict = form_json.form_definition.portal_type_dict,
-        page_title = '';
+        page_title = '', header_dict;
       if (options.doc && options.doc.title) {
         page_title = options.doc.title;
       } else if (options.doc && options.doc.header_title) {
@@ -367,7 +367,7 @@
           return gadget.getUrlForList(url_for_parameter_list);
         })
         .push(function (url_list) {
-          var header_dict = { "page_title": page_title };
+          header_dict = { "page_title": page_title };
           if (options.form_type === 'dialog') {
             //TODO: find correct url
             header_dict.cancel_url = url_list[6];
@@ -406,7 +406,19 @@
               }
             }
           }
-          return gadget.updateHeader(header_dict);
+          return gadget.declareGadget(portal_type_dict.custom_header);
+        })
+        .push(function (header_gadget) {
+          return header_gadget.getOptions(portal_type_dict, options, header_dict);
+        }, function (error) {
+          if (!portal_type_dict.custom_header) {
+            return header_dict;
+          } else {
+            throw error;
+          }
+        })
+        .push(function (header_options) {
+          return gadget.updateHeader(header_options);
         });
     });
 
