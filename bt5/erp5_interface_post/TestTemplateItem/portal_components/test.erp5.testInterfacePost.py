@@ -34,12 +34,48 @@ if six.PY3:
 else:
   from email import message_from_string as message_from_bytes
 # pylint:enable=no-name-in-module
+from email.generator import Generator
 
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Utils import bytes2str, str2bytes
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from DateTime import DateTime
+
+from six import StringIO
+import re
+
+def normalize_email_bytes(email_bytes):
+  # type: (bytes) -> str
+  """
+  Normalizes the representation of email text, so that it can be compared.
+
+  The fields of the message are written in a predefined order, with
+  the `unixfrom` field removed and no line wrapping.
+
+  The code is intended to be compatible with both Python 2 and Python 3.
+
+  Args:
+    email_bytes: Content of the email, including headers.
+
+  Returns:
+    Normalized string representation of the e-mail contents.
+  """
+  # Unfolding removes newlines followed by whitespace, as per RFC5322.
+  # This SHOULD be done by Python itself, but seemingly no-one cared
+  # enough.
+  email_bytes_unfolded = re.sub(
+    br"\r?\n(?P<space>\s)",
+    br"\g<space>",
+    email_bytes,
+  )
+  msg = message_from_bytes(email_bytes_unfolded)
+
+  fp = StringIO()
+  g = Generator(fp, mangle_from_=False, maxheaderlen=0)
+  g.flatten(msg)
+
+  return fp.getvalue()
 
 
 class TestInterfacePost(ERP5TypeTestCase):
@@ -256,8 +292,8 @@ class TestInterfacePost(ERP5TypeTestCase):
     self.assertNotEqual((), last_message)
     _, _, message_text = last_message
     self.assertEqual(
-      bytes(message_from_bytes(message_text)),
-      bytes(message_from_bytes(sequence['internet_message_post'].getData())),
+      normalize_email_bytes(message_text),
+      normalize_email_bytes(sequence['internet_message_post'].getData()),
     )
 
   def _getMailHostMessageForRecipient(self, recipient_email_address):
@@ -280,8 +316,8 @@ class TestInterfacePost(ERP5TypeTestCase):
       message = message_list[0]
       _, _, message_text = message
       self.assertEqual(
-        bytes(message_from_bytes(message_text)),
-        bytes(message_from_bytes(post.getData())),
+        normalize_email_bytes(message_text),
+        normalize_email_bytes(post.getData()),
       )
 
   def stepCheckMailMessagePreviewDisplaysLatestInternetMessagePostData(self, sequence=None, sequence_list=None):
