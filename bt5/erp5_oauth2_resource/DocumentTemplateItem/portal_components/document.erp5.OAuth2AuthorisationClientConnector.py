@@ -227,13 +227,16 @@ class _OAuth2AuthorisationServerProxy(object):
       )
     else:
       Connection = HTTPConnection
+    if six.PY2:
+      # Changed in version 3.4: The strict parameter was removed.
+      # HTTP 0.9-style “Simple Responses” are no longer supported.
+      Connection = functools.partial(Connection, strict=True)
     timeout = getTimeLeft()
     if timeout is None or timeout > self._timeout:
       timeout = self._timeout
     http_connection = Connection(
       host=parsed_url.hostname,
       port=parsed_url.port,
-      strict=True,
       timeout=timeout,
       source_address=self._bind_address,
     )
@@ -274,7 +277,7 @@ class _OAuth2AuthorisationServerProxy(object):
   def _queryOAuth2(self, method, REQUEST, RESPONSE):
     header_dict, body, status = self._query(
       method,
-      body=urlencode(REQUEST.form.items()),
+      body=urlencode(REQUEST.form),
       header_dict={
         'CONTENT_TYPE': REQUEST.environ['CONTENT_TYPE'],
       },
@@ -864,7 +867,7 @@ class OAuth2AuthorisationClientConnector(
     try:
       state_dict = json.loads(
         self.__getMultiFernet().decrypt(
-          state,
+          str2bytes(state),
           ttl=self._SESSION_STATE_VALIDITY,
         ),
       )

@@ -43,6 +43,7 @@ import random
 import pprint
 from time import time
 import unittest
+import six.moves.urllib as urllib
 from six.moves.urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
@@ -69,12 +70,13 @@ _HTML_FIELD_TAG_SET = {
   # Very incomplete, but enough for this tests' purpose: ignores "select"s...
 }
 class FormExtractor(HTMLParser):
+  # pylint:disable=abstract-method
   def reset(self):
     self.__in_form = False
     self.form_list = []
     HTMLParser.reset(self)
 
-  def handle_starttag(self, tag, attribute_item_list):
+  def handle_starttag(self, tag, attribute_item_list): # pylint:disable=arguments-renamed
     attr_dict = dict(attribute_item_list)
     if tag == 'form':
       assert not self.__in_form
@@ -91,6 +93,7 @@ class FormExtractor(HTMLParser):
       self.__in_form = False
 
 class TestOAuth2(ERP5TypeTestCase):
+  # pylint:disable=unused-private-member
   __cleanup_list = None
   __port = None
   __query_trace = None
@@ -428,7 +431,7 @@ class TestOAuth2(ERP5TypeTestCase):
           cookie_value, cookie_attributes = cookie_body.split(';', 1)
           cookie_value = cookie_value.strip('"')
           cookie_value_dict = {
-            'value': six.moves.urllib.parse.unquote(cookie_value),
+            'value': urllib.parse.unquote(cookie_value),
           }
           for cookie_attribute in cookie_attributes.split(';'):
             cookie_attribute = cookie_attribute.lstrip()
@@ -497,7 +500,7 @@ class TestOAuth2(ERP5TypeTestCase):
         b'',
         # XXX: Tolerate the redirect URL being returned in the body.
         # This is a bug, body should really be empty.
-        header_dict.get('location', b''),
+        str2bytes(header_dict.get('location', '')),
       ),
     )
     parsed_location = urlsplit(header_dict.get('location', ''))
