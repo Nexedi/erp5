@@ -48,7 +48,7 @@ from Products.PluggableAuthService.interfaces.plugins import (
 )
 from Products.ERP5Security import _setUserNameForAccessLog
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str
 
 # Public constants. Must not change once deployed.
 
@@ -426,7 +426,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     The schema of this dictionary is purely an internal implementation detail
     of this plugin.
     """
-    client_address = request.getClientAddr().decode('utf-8')
+    client_address = str2unicode(request.getClientAddr())
     token = self.__checkTokenSignature(access_token)
     if token is None and can_update_key:
       self.__updateAccessTokenSignatureKeyList(request=request)
