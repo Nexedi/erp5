@@ -9,6 +9,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -38,17 +39,40 @@
             return header_options;
           });
       case "software_instance":
-        header_options.refresh_action = true;
-        if (page_options.doc._links !== undefined) {
-          //TODO get view/action urls
-          header_options.resources_url = "a";
-          header_options.processes_url = "b";
-          if (header_options.hasOwnProperty('actions_url'))
-            delete header_options.actions_url;
-          if (header_options.hasOwnProperty('tab_url'))
-            delete header_options.tab_url;
-        }
-        return header_options;
+        var promise_list = [];
+        return new RSVP.Queue()
+          .push(function () {
+            promise_list.push({ command: 'change', options: page_options.view_action_dict.view_list.monitoring_resources_view });
+            promise_list.push({ command: 'change', options: page_options.view_action_dict.view_list.monitoring_processes_view });
+            promise_list.push({command: 'history_previous'});
+            return gadget.getUrlForList(promise_list);
+          })
+          .push(function (url_list) {
+            header_options.refresh_action = true;
+            if (page_options.doc._links !== undefined) {
+              header_options.resources_url = url_list[0];
+              header_options.processes_url = url_list[1];
+              if (header_options.hasOwnProperty('actions_url'))
+                delete header_options.actions_url;
+              if (header_options.hasOwnProperty('tab_url'))
+                delete header_options.tab_url;
+            }
+            if (page_options.form_definition.title == "Processes") {
+              header_options.selection_url = url_list[2];
+              delete header_options.processes_url;
+              delete header_options.refresh_action;
+              delete header_options.previous_url;
+              delete header_options.next_url;
+            }
+            if (page_options.form_definition.title == "Resources") {
+              header_options.selection_url = url_list[2];
+              delete header_options.resources_url;
+              delete header_options.refresh_action;
+              delete header_options.previous_url;
+              delete header_options.next_url;
+            }
+            return header_options;
+          });
       case "promise":
         header_options.refresh_action = true;
         return header_options;
