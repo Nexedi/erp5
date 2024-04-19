@@ -24,13 +24,13 @@
             return gadget.jio_get(page_options.jio_key);
           })
           .push(function (instance_tree) {
-            //TODO migrate
-            gadget.getUrlFor({command: 'store_and_change', options: {
+            return gadget.getUrlFor({command: 'store_and_change', options: {
               page: "ojsm_jump",
               jio_key: instance_tree.opml_url,
               title: instance_tree.title,
               view_title: "Related OPML",
-              search_page: "ojsm_status_list"
+              search_page: "ojs_local_controller",
+              portal_type: "Promise Module"
             }});
           })
           .push(function (url) {
