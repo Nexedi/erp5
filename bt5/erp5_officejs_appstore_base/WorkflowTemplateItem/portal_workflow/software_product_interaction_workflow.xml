@@ -2,45 +2,67 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="InteractionWorkflowDefinition" module="Products.ERP5.InteractionWorkflow"/>
+      <global name="Interaction Workflow" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_objects</string> </key>
+            <key> <string>_count</string> </key>
             <value>
-              <tuple/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>creation_guard</string> </key>
+            <key> <string>_mt_index</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>software_product_interaction_workflow</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string>A software product is linked to a web section by its reference. If the software product reference changes, the corresponding web section must be updated accordingly (web section id = software product reference)</string> </value>
         </item>
         <item>
-            <key> <string>groups</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>software_product_interaction_workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>manager_bypass</string> </key>
-            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>Interaction Workflow Definition</string> </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
     </pickle>
   </record>
 </ZopeData>
