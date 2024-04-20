@@ -57,8 +57,6 @@ class GoogleConnector(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  @security.protected(Permissions.AccessContentsInformation)
-
   @security.public
   def redirectToGoogleLoginPage(self, redirect_uri, RESPONSE):
     """Redirect to authorization page.
