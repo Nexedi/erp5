@@ -15,15 +15,12 @@ if accounting_module.getProperty('current_content_script',
   return "Accounting Transactions Created."
 
 
-# first, cleanup accounting module
-# XXX should be done in an external script / tool, because we have to
-# workaround some security checks
-if 1:
-  for module_id in ['accounting_module',
-                    'sale_packing_list_module',
-                    'portal_simulation', ]:
-    module = portal[module_id]
-    module.manage_delObjects(list(module.objectIds()))
+# first, cleanup modules
+for module_id in ['accounting_module',
+                  'sale_packing_list_module',
+                  'portal_simulation', ]:
+  module = portal[module_id]
+  module.manage_delObjects(list(module.objectIds()))
 
 # XXX copy & paste
 def getAccountByTitle(title):
