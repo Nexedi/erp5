@@ -535,8 +535,6 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # TODO-arnau: Enable it properly would require inspection API
            # '%s %r has no %r member'
            '--disable=E1101,E1103',
-           # XXX duplicate-bases causes too many false positives
-           '--disable=duplicate-bases',
            # map and filter should not be considered bad as in some cases
            # map is faster than its recommended replacement (list
            # comprehension)
@@ -557,9 +555,12 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
           (
             "--msg-template='{C}: {line},{column}: {msg} ({symbol})'",
             # BBB until we drop compatibility with PY2
-            "--disable=redundant-u-string-prefix,raise-missing-from,keyword-arg-before-vararg",
+            '--disable=redundant-u-string-prefix,raise-missing-from,keyword-arg-before-vararg',
             # XXX acceptable to ignore in the context of ERP5
-            "--disable=unspecified-encoding",
+            '--disable=unspecified-encoding',
+            # XXX to many errors for now
+            '--disable=arguments-differ,arguments-renamed',
+            '--disable=duplicate-bases,inconsistent-mro',
           )
         )
       if portal_type == 'Interface Component':
