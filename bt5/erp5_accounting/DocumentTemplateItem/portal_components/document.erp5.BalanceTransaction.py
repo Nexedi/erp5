@@ -43,22 +43,12 @@ class InventoryKey(UserDict):
     self.data = {}
     self.data.update(kw)
 
-  def clear(self):
+  def _raise_immutable(self, *args, **kw):
     raise TypeError('InventoryKey are immutable')
 
-  def pop(self, keys, *args):
-    raise TypeError('InventoryKey are immutable')
+  clear = pop = update = __delitem__ = __setitem__ = _raise_immutable
 
-  def update(self, dict=None, **kwargs): # pylint: disable=redefined-builtin
-    raise TypeError('InventoryKey are immutable')
-
-  def __delitem__(self, key):
-    raise TypeError('InventoryKey are immutable')
-
-  def __setitem__(self, key, item):
-    raise TypeError('InventoryKey are immutable')
-
-  def setdefault(self, key, failobj=None):
+  def setdefault(self, key, default=None):
     if key in self.data:
       return self.data[key]
     raise TypeError('InventoryKey are immutable')
@@ -440,7 +430,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
 
     return factory
 
-  def _immediateReindexObject(self, **kw):
+  def _immediateReindexObject(self, *args, **kw):
     """Reindexes the object.
     This is different indexing that the default Inventory indexing, because
     we want to take into account that lines in this balance transaction to

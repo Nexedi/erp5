@@ -16,10 +16,7 @@ if accounting_module.getProperty('current_content_script',
   return "Accounting Transactions Created."
 
 # first, cleanup accounting module
-# XXX should be done in an external script / tool, because we have to
-# workaround some security checks
-if 1:
-  accounting_module.manage_delObjects(list(accounting_module.objectIds()))
+accounting_module.manage_delObjects(list(accounting_module.objectIds()))
 
 # XXX copy & paste
 def getAccountByTitle(title):
