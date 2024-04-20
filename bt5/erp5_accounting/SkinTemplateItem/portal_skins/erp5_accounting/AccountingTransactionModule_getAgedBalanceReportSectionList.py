@@ -2,12 +2,8 @@ import six
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Form.Report import ReportSection
 
-if six.PY2:
-  def translate(*args, **kw):
-    return unicode(translateString(*args, **kw))
-else:
-  def translate(*args, **kw):
-    return str(translateString(*args, **kw))
+def translate(*args, **kw):
+  return six.text_type(translateString(*args, **kw))
 
 request = container.REQUEST
 section_category = request['section_category']
