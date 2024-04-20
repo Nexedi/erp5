@@ -60,11 +60,9 @@ def binary_search(binary):
 
 class CertificateAuthorityBusy(Exception):
   """Exception raised when certificate authority is busy"""
-  pass
 
 class CertificateAuthorityDamaged(Exception):
   """Exception raised when certificate authority is damaged"""
-  pass
 
 class CertificateAuthorityTool(BaseTool):
   """CertificateAuthorityTool
