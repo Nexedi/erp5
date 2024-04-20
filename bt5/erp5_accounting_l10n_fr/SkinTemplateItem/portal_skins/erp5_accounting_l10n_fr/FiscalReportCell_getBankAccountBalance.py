@@ -25,7 +25,7 @@ if ledger is not None:
   if isinstance(ledger, list) or isinstance(ledger, tuple):
     kw['ledger_uid'] = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
   else:
-    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(item).getUid()
+    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(ledger).getUid()
 
 sum_ = 0.0
 for account in accounts:
