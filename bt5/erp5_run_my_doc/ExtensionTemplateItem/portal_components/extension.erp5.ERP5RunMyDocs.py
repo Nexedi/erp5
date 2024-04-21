@@ -29,29 +29,6 @@ def parseTestReport(text):
       row_report["cell_list"].append(column.text)
     i += 1
   return report
-  """
-  title = table.xpath('//td')[0].text
-  html[0][1].text = title
-
-  # Insert completly the first table
-  html[1].append(table)
-
-  # Insert only the content of tbody
-  for table in table_list[1:]:
-    for row in table[-1]:
-      html[1][-1].append(row)
-
-  stack = [html[1]]
-  # Let's display everything in the test by removing the style attributes (they're not supposed to have any style attributes at all during the tests)
-  while stack:
-    element = stack.pop()
-    if element.attrib.has_key('style'):
-      del element.attrib['style']
-    for child in element:
-      stack.append(child)
-
-  return dict(title = title, text = lxml.html.tostring(html))
-  """
 
 """
   Return the content of a web page
