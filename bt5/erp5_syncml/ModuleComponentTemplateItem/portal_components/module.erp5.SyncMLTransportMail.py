@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from erp5.component.module.SyncMLTransportHTTP import ConnectionError
+from erp5.component.module.SyncMLTransportHTTP import ConnectionError as _ConnectionError
 from Products.ERP5.ERP5Site import getSite
 
 class MailTransport:
@@ -36,4 +36,4 @@ class MailTransport:
     try:
       getSite().sendMail(from_address, to_address, sync_id, xml)
     except:
-      raise ConnectionError
+      raise _ConnectionError
