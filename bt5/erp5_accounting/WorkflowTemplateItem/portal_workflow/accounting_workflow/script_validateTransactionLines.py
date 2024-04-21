@@ -27,15 +27,15 @@ for line in transaction_lines:
       line.getSourceValue(portal_type='Account'),
       line.getDestinationSectionValue(portal_type=section_portal_type_list),
       line.getSourcePaymentValue(portal_type=bank_account_portal_type),
-      lambda: (x[1] for x in getBankAccountItemList(   # pylint:disable=cell-var-from-loop
-        organisation=line.getSourceSection(portal_type=section_portal_type_list))),
+      lambda: (x[1] for x in getBankAccountItemList(
+        organisation=line.getSourceSection(portal_type=section_portal_type_list))),    # pylint:disable=cell-var-from-loop
     ),
     (
       line.getDestinationValue(portal_type='Account'),
       line.getSourceSectionValue(portal_type=section_portal_type_list),
       line.getDestinationPaymentValue(portal_type=bank_account_portal_type),
-      lambda: (x[1] for x in getBankAccountItemList(   # pylint:disable=cell-var-from-loop
-        organisation=line.getDestinationSection(portal_type=section_portal_type_list))),
+      lambda: (x[1] for x in getBankAccountItemList(
+        organisation=line.getDestinationSection(portal_type=section_portal_type_list))),    # pylint:disable=cell-var-from-loop
     ),
   ):
     if account is not None and account.getValidationState() != 'validated':
