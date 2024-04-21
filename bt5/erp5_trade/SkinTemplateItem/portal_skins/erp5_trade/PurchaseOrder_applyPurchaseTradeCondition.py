@@ -27,33 +27,30 @@ def rank_method(trade_condition):
   source_section = trade_condition.getSourceSection()
   if source_section:
     if source_section == context.getSourceSection():
-      rank += 10
+      rank -= 10
     else:
-      rank -= 2
+      rank += 2
   source = trade_condition.getSource()
   if source:
     if source == context.getSource():
-      rank += 10
+      rank -= 10
     else:
-      rank -= 2
+      rank += 2
   if trade_condition.getDestinationSection():
-    rank += 1
+    rank -= 1
   if trade_condition.getDestination():
-    rank += 1
-  rank += len(trade_condition.getSpecialiseList())
+    rank -= 1
+  rank -= len(trade_condition.getSpecialiseList())
   if trade_condition.getValidationState() == 'validated':
-    rank += 2
+    rank -= 2
   return rank
-
-def sort_method(a, b):
-  return -cmp(rank_method(a), rank_method(b))
 
 while count > 0 and len(trade_condition_list) == 0:
   count -= 1
   trade_condition_list = context.portal_domains.searchPredicateList(
       predicate_context, portal_type=trade_condition_portal_type,
       tested_base_category_list=tested_base_category_list[:count],
-      sort_method=sort_method)
+      sort_key_method=rank_method)
 
 keep_items = {}
 if len(trade_condition_list ) == 0 :
