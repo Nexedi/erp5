@@ -217,7 +217,7 @@ class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
         hasDiff = lambda path: bool(getFilteredDiff(diff(path)))
       else:
         hasDiff = lambda path: True
-      self.__hasDiff = hasDiff
+      self.__hasDiff = hasDiff  # pylint:disable=unused-private-member
     return hasDiff(path)
 
   def treeToXML(self, item) :
