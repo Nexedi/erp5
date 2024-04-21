@@ -1799,7 +1799,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                                                            sale_packing_list2.getUid()))]
     self.assertEqual({self.default_quantity-4, self.default_quantity-3},
                      set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
-    self.assertEqual({1, 1}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual({1}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list3.getCausalityState())
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     def getSolverProcessStateList(delivery):
@@ -1811,7 +1811,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual({self.default_quantity-4, self.default_quantity-3},
                      set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({1, 2}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
-    self.assertEqual({2, 2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual({2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
     self.assertEqual("solved", sale_packing_list3.getCausalityState())
@@ -1822,7 +1822,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual({self.default_quantity-5, self.default_quantity-4},
                      set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
-    self.assertEqual({2, 2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual({2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
     self.assertEqual("solved", sale_packing_list3.getCausalityState())
@@ -1837,7 +1837,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual({self.default_quantity-6, self.default_quantity-5},
                      set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
-    self.assertEqual({3, 3}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual({3}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
     self.assertEqual("solved", sale_packing_list3.getCausalityState())
