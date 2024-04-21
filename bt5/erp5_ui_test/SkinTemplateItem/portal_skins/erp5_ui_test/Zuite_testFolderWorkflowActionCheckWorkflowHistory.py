@@ -9,7 +9,7 @@ wtool = getToolByName(context, 'portal_workflow')
 result = 'OK'
 error_list = []
 
-def assertEquals(a, b, msg=''):
+def assertEqual(a, b, msg=''):
   if a != b:
     if msg:
       error_list.append(msg)
@@ -17,18 +17,18 @@ def assertEquals(a, b, msg=''):
       error_list.append('%r != %r' % (a, b))
 
 foo_2 = foo_module['2']
-assertEquals(foo_2.getSimulationState(), 'validated',
+assertEqual(foo_2.getSimulationState(), 'validated',
              'Foo 2 state is %s' % foo_2.getSimulationState())
 if not error_list:
-  assertEquals(
+  assertEqual(
    wtool.getInfoFor(foo_2, 'history', wf_id='foo_workflow')[-2]['comment'],
    'Comment !')
 
 foo_3 = foo_module['3']
-assertEquals(foo_3.getSimulationState(), 'validated',
+assertEqual(foo_3.getSimulationState(), 'validated',
              'Foo 3 state is %s' % foo_3.getSimulationState())
 if not error_list:
-  assertEquals(
+  assertEqual(
    wtool.getInfoFor(foo_3, 'history', wf_id='foo_workflow')[-2]['comment'],
   'Comment !')
 
