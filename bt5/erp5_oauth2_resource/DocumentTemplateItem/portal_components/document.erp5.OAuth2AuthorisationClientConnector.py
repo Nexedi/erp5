@@ -229,7 +229,7 @@ class _OAuth2AuthorisationServerProxy(object):
       Connection = HTTPConnection
     if six.PY2:
       # Changed in version 3.4: The strict parameter was removed.
-      # HTTP 0.9-style “Simple Responses” are no longer supported.
+      # HTTP 0.9-style "Simple Responses" are no longer supported.
       Connection = functools.partial(Connection, strict=True)
     timeout = getTimeLeft()
     if timeout is None or timeout > self._timeout:
