@@ -141,7 +141,7 @@ class VCardConduit(ERP5Conduit):
 
     property_value_list_well_incoded=[]
     if encoding == 'QUOTED-PRINTABLE':
-      import mimify
+      import mimify  # pylint:disable=import-error
       for property_value in property_value_list:
         property_value = mimify.mime_decode(property_value)
         property_value_list_well_incoded.append(property_value)
