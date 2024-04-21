@@ -41,7 +41,7 @@ GIT_ASKPASS = os.path.join(Products.ERP5.product_path, 'bin', 'git_askpass')
 
 class GitInstallationError(EnvironmentError):
   """Raised when an installation is broken"""
-  pass
+
 
 class GitError(EnvironmentError):
   def __init__(self, err, out, returncode):
@@ -240,7 +240,7 @@ class Git(WorkingCopy):
         node_dict[parent] = [path]
         path_dict[parent] = status
         if parent:
-          path_list.append(parent)
+          path_list.append(parent)  # pylint:disable=modified-iterating-list
       else:
         while path_dict.get(parent, status) != status:
           path_dict[parent] = status = '*'
@@ -265,7 +265,7 @@ class Git(WorkingCopy):
           else:
             child = Dir(basename, dir_status(status))
             node.sub_dirs.append(child)
-            path_list.append((content, child))
+            path_list.append((content, child))  # pylint:disable=modified-iterating-list
     return (root.sub_dirs or root.sub_files) and root
 
   def update(self, keep=False):
@@ -275,7 +275,7 @@ class Git(WorkingCopy):
     if not keep:
       self.clean()
       self.remote_git('pull', '--ff-only')
-    elif 1: # elif local_changes:
+    elif 1: # elif local_changes:   # pylint:disable=using-constant-test
       raise NotImplementedError
       # addremove
       # write-tree | commit-tree -> A
@@ -363,16 +363,15 @@ class Git(WorkingCopy):
             raise
           # try to update our working copy
           # TODO: find a solution if there are other local changes
-          # TODO: solve conflicts on */bt/revision automatically
           try:
             self.git(merge, '@{u}', env=env)
-          except GitError as e:
+          except GitError as e2:
             # XXX: how to know how it failed ?
             try:
               self.git(merge, '--abort')
             except GitError:
               pass
-            raise e
+            raise e2
           # no need to keep a merge commit if push fails again
           if merge == 'merge':
             reset += 1
