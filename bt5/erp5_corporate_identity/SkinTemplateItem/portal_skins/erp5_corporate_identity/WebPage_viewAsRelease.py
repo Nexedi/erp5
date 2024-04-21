@@ -140,9 +140,9 @@ if release_display_about:
   )
   #release_content = release_content.decode() + release_about.decode()
   if six.PY2:
-    if isinstance(release_content, unicode):
+    if isinstance(release_content, six.text_type):
       release_content = release_content.encode("UTF-8")
-    if isinstance(release_about, unicode):
+    if isinstance(release_about, six.text_type):
       release_about = release_about.encode("UTF-8")
 
   release_content = release_content + release_about
