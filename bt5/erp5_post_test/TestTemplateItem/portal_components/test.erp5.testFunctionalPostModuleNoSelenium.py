@@ -47,8 +47,6 @@ class TestHTMLPostLogic(ERP5TypeTestCase):
 
     # here, you can create the categories and objects your test will depend on
     """
-    pass
-
 
   def test_01_sampleTest(self):
     """
