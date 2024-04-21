@@ -25,10 +25,7 @@
 #
 ##############################################################################
 
-from __future__ import print_function
-from test import pystone
 from time import time
-pystone.clock = time
 from erp5.component.test.testPerformance import TestPerformanceMixin
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Testing import ZopeTestCase
@@ -72,8 +69,6 @@ class TestWorkflowPerformance(TestPerformanceMixin):
       foo.getSimulationState()
 
     end = time()
-
-    print("\n%s pystones/second" % pystone.pystones()[1])
     message = "\n%s took %.4gs (%s foo(s))" % (self._testMethodName,
                                              end - start, foo_count)
     print(message)
