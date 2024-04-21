@@ -244,7 +244,6 @@ class WechatService(XMLObject):
 
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
-    pass
 
   def navigate(self, wechat_dict, REQUEST=None, **kw):
     """Returns a redirection to the payment page"""
