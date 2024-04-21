@@ -105,7 +105,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         parent = obj.getParentValue()
         parent.deleteContent(obj.getId())
         if len(parent) == 0 and parent != parent.getRootDeliveryValue():
-          _delete(parent)
+          _delete(parent)  # pylint:disable=cell-var-from-loop
 
       for movement in delivery.getMovementList():
         simulation_movement_list = movement.getDeliveryRelatedValueList()
