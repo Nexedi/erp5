@@ -429,7 +429,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         sequence.edit(variation_2=cell_key)
         quantity = 3
       cell.edit(
-          quantity = quantity,
+          quantity = quantity,  # pylint:disable=used-before-assignment
           predicate_category_list = cell_key,
           variation_category_list = cell_key,
           mapped_value_property_list = ['quantity'],
