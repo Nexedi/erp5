@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from erp5.component.module.SyncMLTransportHTTP import ConnectionError
+from erp5.component.module.SyncMLTransportHTTP import ConnectionError as _ConnectionError
 
 class FileTransport:
 
@@ -35,4 +35,4 @@ class FileTransport:
       with open(filename, 'wb') as stream:
         stream.write(data)
     except IOError:
-      raise ConnectionError
+      raise _ConnectionError
