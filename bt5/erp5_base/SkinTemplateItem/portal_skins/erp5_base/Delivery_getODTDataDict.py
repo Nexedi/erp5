@@ -115,7 +115,7 @@ def unicodeDict(d):
     return d
   for k, v in six.iteritems(d):
     if isinstance(v, str):
-      d.update({k: unicode(v, 'utf8')})
+      d.update({k: unicode(v, 'utf8')})  # pylint:disable=undefined-variable
   return d
 
 

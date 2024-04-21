@@ -340,7 +340,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
                             'solveDivergence')
   solveDivergence = UnrestrictedMethod(_solveDivergence)
 
-  def _createDelivery(self, delivery_module, movement_list, activate_kw):  # pylint: disable=super-on-old-class
+  def _createDelivery(self, delivery_module, movement_list, activate_kw):
     """
       Refer to the docstring in GeneratedDeliveryBuilder.
       Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect
