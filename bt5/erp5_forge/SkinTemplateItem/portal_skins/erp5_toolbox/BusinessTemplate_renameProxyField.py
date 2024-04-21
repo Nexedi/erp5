@@ -67,7 +67,7 @@ def iterate(document, skin_path):
           sub_object.proxifyField(field_dict=proxify_dict)
 
     if sub_object.meta_type == "Folder":
-      skin_path = "%s/%s" % (skin_path, x.getId())
+      skin_path = "%s/%s" % (skin_path, sub_object.getId())
       iterate(sub_object, skin_path=skin_path)
 
 # Only search ProxyFields within skin folder defined by this business template
