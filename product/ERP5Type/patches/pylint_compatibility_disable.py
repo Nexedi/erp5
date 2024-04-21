@@ -18,6 +18,11 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
             "unused-private-member",
             "",
         ),
+        "E9993": (
+            "using-constant-test",
+            "using-constant-test",
+            ""
+        )
     }
 
 
