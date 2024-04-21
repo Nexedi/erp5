@@ -37,7 +37,7 @@ contract_version = context.getVersion() or "001"
 contract_description = context.getDescription()
 contract_title = context.getTitle()
 
-if six.PY2 and isinstance(contract_content, unicode):
+if six.PY2 and isinstance(contract_content, six.text_type):
   contract_content = contract_content.encode("UTF-8")
 
 contract_history_section_list = re.findall('<section.+?>.+?</section>', contract_content, re.S)
