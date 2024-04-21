@@ -1627,7 +1627,7 @@ class SimulationTool(BaseTool):
           try:
             result = cmp(line_a[key], line_b[key])
           except KeyError:
-            raise Exception('Impossible to sort result since columns sort '
+            raise ValueError('Impossible to sort result since columns sort '
               'happens on are not available in result: %r' % (key, ))
           if result:
             if not sort_direction.upper().startswith('A'):
