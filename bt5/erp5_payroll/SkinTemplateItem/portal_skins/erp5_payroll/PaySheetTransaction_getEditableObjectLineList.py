@@ -9,12 +9,9 @@
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5Type.Message import translateString
 
-def sortByIntIndex(a, b):
-  return cmp(a.getIntIndex(), b.getIntIndex())
-
 portal_type_list = ['Pay Sheet Model Line']
 sub_object_list = context.getInheritedObjectValueList(portal_type_list)
-sub_object_list.sort(sortByIntIndex)
+sub_object_list.sort(key=lambda x:x.getIntIndex())
 model_line_list = sub_object_list
 
 # remove editable model line
@@ -117,37 +114,16 @@ if batch_mode:
   return object_dict_list
 
 # sort results
-
-def sortByTitleAscending(x, y):
-  return cmp(x.getTitle(), y.getTitle())
-
-def sortByTitleDescending(x, y):
-  return cmp(y.getTitle(), x.getTitle())
-
-def sortByIntIndexAscending(x, y):
-  return cmp(x.getIntIndex(), y.getIntIndex())
-
-def sortByIntIndexDescending(x, y):
-  return cmp(y.getIntIndex(), x.getIntIndex())
-
-sortByDefaultSortMethod = sortByIntIndexAscending
-
 if 'sort_on' in kw:
   sort_on = kw['sort_on']
-  if sort_on[0][0] == 'title' and sort_on[0][1]=='ascending':
-    line_list.sort(sortByTitleAscending)
-  elif sort_on[0][0] == 'title' and sort_on[0][1]=='descending':
-    line_list.sort(sortByTitleDescending)
-  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='ascending':
-    line_list.sort(sortByIntIndexAscending)
-  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='descending':
-    line_list.sort(sortByIntIndexDescending)
+  if sort_on[0][0] == 'title':
+    line_list = sorted(line_list, key=lambda x: x.getTitle() or '', reverse=sort_on[0][1]=='ascending')
+  elif sort_on[0][0] == 'int_index':
+    line_list = sorted(line_list, key=lambda x: x.getIntIndex() or 0, reverse=sort_on[0][1]=='ascending')
   else:
-    line_list.sort(sortByDefaultSortMethod)
+    line_list = sorted(line_list, key=lambda x: x.getIntIndex())
 else:
-  line_list.sort(sortByDefaultSortMethod)
-
-
+  line_list = sorted(line_list, key=lambda x: x.getIntIndex())
 
 #return pprint.pformat(line_list)
 return line_list
