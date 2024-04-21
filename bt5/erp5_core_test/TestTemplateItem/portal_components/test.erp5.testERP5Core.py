@@ -42,7 +42,7 @@ from Products.ERP5Type.tests.utils import DummyTranslationService
 
 from zExceptions import Unauthorized
 
-if 1: # BBB
+def setup_translation_service(): # BBB
   # Zope 2.12, simulate setting the globalTranslationService with
   # zope.i18n utilities
   import zope.interface
@@ -95,6 +95,8 @@ if 1: # BBB
       ui_domain = Acquisition.aq_base(ui_domain)
       sm.registerUtility(ui_domain, ITranslationDomain, 'ui')
       del portal._save_ui_domain
+
+setup_translation_service()
 
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
@@ -599,26 +601,27 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # now let's simulate a site just migrated from Zope 2.8 that's being
     # accessed for the first time:
     from Products.ERP5 import ERP5Site
-    if 1: # BBB
-      setSite()
-      # Sites from Zope2.8 don't have a site_manager yet.
-      del self.portal._components
-      self.assertIsNotNone(ERP5Site._missing_tools_registered)
-      ERP5Site._missing_tools_registered = None
-      self.commit()
-      # check that we can't get any translation utility
-      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
-      # Now simulate first access. Default behaviour from
-      # ObjectManager is to raise a ComponentLookupError here:
 
-      setSite(self.portal)
-      self.commit()
-      self.assertIsNotNone(ERP5Site._missing_tools_registered)
-      # This should have automatically reconstructed the i18n utility
-      # registrations:
-      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
-                       erp5_ui_catalog)
-      self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
+    # BBB
+    setSite()
+    # Sites from Zope2.8 don't have a site_manager yet.
+    del self.portal._components
+    self.assertIsNotNone(ERP5Site._missing_tools_registered)
+    ERP5Site._missing_tools_registered = None
+    self.commit()
+    # check that we can't get any translation utility
+    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
+    # Now simulate first access. Default behaviour from
+    # ObjectManager is to raise a ComponentLookupError here:
+
+    setSite(self.portal)
+    self.commit()
+    self.assertIsNotNone(ERP5Site._missing_tools_registered)
+    # This should have automatically reconstructed the i18n utility
+    # registrations:
+    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
+                      erp5_ui_catalog)
+    self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
 
   def test_BasicAuthenticateDesactivated(self):
     """Make sure Unauthorized error does not lead to Basic auth popup in browser"""
