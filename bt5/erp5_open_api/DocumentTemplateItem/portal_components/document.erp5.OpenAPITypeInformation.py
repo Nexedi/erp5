@@ -105,7 +105,7 @@ if six.PY2:
       return [byteify(element) for element in string]
     elif isinstance(string, tuple):
       return tuple(byteify(element) for element in string)
-    elif isinstance(string, unicode):
+    elif isinstance(string, six.text_type):
       return string.encode('utf-8')
     else:
       return string
