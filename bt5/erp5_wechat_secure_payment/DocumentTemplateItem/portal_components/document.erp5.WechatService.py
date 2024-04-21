@@ -7,10 +7,7 @@ import random, string, hashlib, socket
 from six.moves.urllib.request import Request, urlopen
 from six.moves.urllib.parse import urlparse
 from six import string_types as basestring
-try:
-  import xml.etree.cElementTree as ET
-except ImportError:
-  import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET
 
 
 class WechatException(Exception):
@@ -114,8 +111,8 @@ class WechatService(XMLObject):
       if result_msg=="ok":
         sandbox_signkey = result_dict_content['sandbox_signkey']
         return sandbox_signkey
-      raise Exception(result_dict_content['result_msg'].encode('utf-8'))
-    raise Exception("Get sanbox key failed: " + str(result_dict_content))
+      raise WechatException(result_dict_content['result_msg'].encode('utf-8'))
+    raise WechatException("Get sanbox key failed: " + str(result_dict_content))
 
   def callWechatApi(self, URL, wechat_dict):
     portal = self.getPortalObject()
@@ -160,7 +157,7 @@ class WechatService(XMLObject):
     if return_code=="SUCCESS":
       return result_dict_content
     else:
-      raise Exception(u"ERROR could not communicate with Wechat (return_code {}: {})".format(return_code, result_dict_content.get("return_msg")))
+      raise WechatException(u"ERROR could not communicate with Wechat (return_code {}: {})".format(return_code, result_dict_content.get("return_msg")))
 
   def getWechatPaymentURL(self, wechat_dict):
     portal = self.getPortalObject()
@@ -173,7 +170,7 @@ class WechatService(XMLObject):
     if result_code=="SUCCESS":
       return wechat_answer['code_url']
     else:
-      raise Exception(u"ERROR Wechat notified a problem (result_code {}: {})".format(result_code, wechat_answer.get("err_code_des")))
+      raise WechatException(u"ERROR Wechat notified a problem (result_code {}: {})".format(result_code, wechat_answer.get("err_code_des")))
 
   def queryWechatOrderStatus(self, wechat_dict):
     '''
@@ -247,7 +244,6 @@ class WechatService(XMLObject):
 
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
-    pass
 
   def navigate(self, wechat_dict, REQUEST=None, **kw):
     """Returns a redirection to the payment page"""
