@@ -154,7 +154,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     """
     self._svn_setup_ssl()
     # we make this class a global so that it can be pickled
-    global PropertiesTool  # pylint:disable=global-variable-not-assigned
+    global PropertiesTool  # pylint:disable=global-variable-not-assigned,global-variable-undefined
     class PropertiesTool(ActionsTool):  # pylint:disable=redefined-outer-name
       id = 'portal_properties'
     cls = PropertiesTool
