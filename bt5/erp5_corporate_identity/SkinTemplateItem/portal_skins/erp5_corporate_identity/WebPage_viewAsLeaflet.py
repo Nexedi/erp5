@@ -149,9 +149,9 @@ if leaflet_display_side:
   #leaflet_content = leaflet_legalese.decode() + leaflet_content.decode()
 
   if six.PY2:
-    if isinstance(leaflet_legalese, unicode):
+    if isinstance(leaflet_legalese, six.text_type):
       leaflet_legalese = leaflet_legalese.encode("UTF-8")
-    if isinstance(leaflet_content, unicode):
+    if isinstance(leaflet_content, six.text_type):
       leaflet_content = leaflet_content.encode("UTF-8")
 
   leaflet_content = leaflet_legalese + leaflet_content
