@@ -225,41 +225,41 @@ class SyncMLResponse(object):
     receiving a challenge message
     """
     raise NotImplementedError("To review")
-    """
-    # create element 'SyncML' with a default namespace
-    xml = E.SyncML()
-    # syncml header
-    xml.append(self.buildHeader(
-      session_id=subscription.incrementSessionId(),
-      msg_id=subscription.incrementMessageId(),
-      target=subscription.getUrlString(),
-      source=subscription.getSubscriptionUrlString(),
-      user_id=subscription.getUserId(),
-      password=subscription.getPassword(),
-      authentication_format=subscription.getAuthenticationFormat(),
-      authentication_type=subscription.getAuthenticationType()))
 
-    # Build the message body
-    sync_body = E.SyncBody()
+#    # create element 'SyncML' with a default namespace
+#    xml = E.SyncML()
+#    # syncml header
+#    xml.append(self.buildHeader(
+#      session_id=subscription.incrementSessionId(),
+#      msg_id=subscription.incrementMessageId(),
+#      target=subscription.getUrlString(),
+#      source=subscription.getSubscriptionUrlString(),
+#      user_id=subscription.getUserId(),
+#      password=subscription.getPassword(),
+#      authentication_format=subscription.getAuthenticationFormat(),
+#      authentication_type=subscription.getAuthenticationType()))
+#
+#    # Build the message body
+#    sync_body = E.SyncBody()
+#
+#    # alert message
+#    sync_body.append(self.buildAlertMessage(
+#      command_id=self._getNextCommandId(),
+#      alert_code=subscription.getSyncmlAlertCode(),
+#      target=subscription.getDestinationReference(),
+#      source=subscription.getSourceReference(),
+#      last_anchor=subscription.getLastAnchor(),
+#      next_anchor=subscription.getNextAnchor()))
+#    syncml_put = self.buildPutMessage(subscription)
+#    if syncml_put is not None:
+#      sync_body.append(syncml_put)
+#    sync_body.append(E.Final())
+#
+#    xml.append(sync_body)
+#    xml_string = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
+#                                pretty_print=True)
+#    self.data_append(xml_string)
 
-    # alert message
-    sync_body.append(self.buildAlertMessage(
-      command_id=self._getNextCommandId(),
-      alert_code=subscription.getSyncmlAlertCode(),
-      target=subscription.getDestinationReference(),
-      source=subscription.getSourceReference(),
-      last_anchor=subscription.getLastAnchor(),
-      next_anchor=subscription.getNextAnchor()))
-    syncml_put = self.buildPutMessage(subscription)
-    if syncml_put is not None:
-      sync_body.append(syncml_put)
-    sync_body.append(E.Final())
-
-    xml.append(sync_body)
-    xml_string = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
-                                pretty_print=True)
-    self.data_append(xml_string)
-    """
 
   def addPutMessage(self,subscription, markup='Put',
                     cmd_ref=None, message_id=None):
