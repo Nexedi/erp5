@@ -642,7 +642,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(['5'],folder_object_list)
     if six.PY2:
       folder_object_list = [x.getObject().getId() for x in
-                              person_module.searchFolder(title=unicode(title, 'utf-8'))]
+                              person_module.searchFolder(title=six.text_type(title, 'utf-8'))]
       self.assertEqual(['5'],folder_object_list)
 
   def test_Collation(self):
@@ -2167,7 +2167,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         result = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers LIKE "%s:%%" AND uid = %i' % (line['allowedRolesAndUsers'], uid) )
         self.assertNotEqual(len(result), 0, 'No line found for allowedRolesAndUsers=%r and uid=%i' % (line['allowedRolesAndUsers'], uid))
       else:
-        raise Exception('Malformed allowedRolesAndUsers value: %(allowedRolesAndUsers)r' % line)
+        raise ValueError('Malformed allowedRolesAndUsers value: %(allowedRolesAndUsers)r' % line)
 
     # Check that object that 'bar' can view because of 'Author' role can *not*
     # be found when searching for his other 'Whatever' role.
@@ -4067,7 +4067,8 @@ VALUES
     def doSomething(self, message_list):
       r = []
       for m in message_list:
-        m.result = r.append(m.object.getPath())
+        r.append(m.object.getPath())
+        m.result = None
       r.sort()
       group_method_call_list.append(r)
     self.portal.portal_activities.__class__.doSomething = doSomething
