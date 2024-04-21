@@ -92,7 +92,7 @@ for r_event in event_list:
           unassigned_dic[event.getSimulationState()]=unassigned_dic[event.getSimulationState()]+1
           unassigned_dic['total']=unassigned_dic['total']+1
 #Sort the result and add unassigned
-column_list.sort(key=lambda x=(x['ticket_type'], x['ticket_title']))
+column_list.sort(key=lambda x: (x['ticket_type'], x['ticket_title']))
 if unassigned_dic['total']>0: column_list.append(unassigned_dic)
 #fill line_list that is returned to report
 line_list = []

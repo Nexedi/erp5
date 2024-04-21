@@ -6,6 +6,6 @@ LENGTH = 25
 if six.PY3:
   return text[:LENGTH]
 try:
-  return six.text_type(unicode(text, 'utf-8'))[:LENGTH].encode('utf-8')
+  return six.text_type(text, 'utf-8')[:LENGTH].encode('utf-8')
 except UnicodeDecodeError:
   return text[:LENGTH]
