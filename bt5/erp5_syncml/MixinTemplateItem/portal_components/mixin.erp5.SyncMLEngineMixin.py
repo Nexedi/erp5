@@ -76,11 +76,10 @@ class SyncMLEngineMixin(object):
                                         status['authentication_type']))
           # XXX Not working To Review !
           raise NotImplementedError("Adding credentials")
-          """
-          syncml_response = domain.generateBaseResponse()
-          syncml_response.addCredentialMessage(domain)
-          return syncml_response
-          """
+          # syncml_response = domain.generateBaseResponse()
+          # syncml_response.addCredentialMessage(domain)
+          # return syncml_response
+
         elif status['status_code'] == \
           resolveSyncmlStatusCode('invalid_credentials'):
           syncml_logger.error("\tClient authentication refused")
