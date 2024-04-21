@@ -541,7 +541,7 @@ class SyncMLSubscription(XMLObject):
           xml_document = etree.tostring(xml_document, encoding='utf-8',
                                         pretty_print=True)
 
-        if six.PY2 and isinstance(xml_document, unicode):
+        if six.PY2 and isinstance(xml_document, six.text_type):
           xml_document = xml_document.encode('utf-8')
         # Link the signature to the document
         if signature:
