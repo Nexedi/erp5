@@ -115,7 +115,7 @@ def unicodeDict(d):
     return d
   for k, v in six.iteritems(d):
     if isinstance(v, str):
-      d.update({k: unicode(v, 'utf8')})
+      d.update({k: six.text_type(v, 'utf8')})
   return d
 
 line_list = context.PaySheetTransaction_getLineListAsDict()
