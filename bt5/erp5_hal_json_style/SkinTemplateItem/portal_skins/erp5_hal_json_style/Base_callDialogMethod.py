@@ -216,7 +216,7 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
 # At this point the 'dialog_method' should point to a form (if we are in report)
 # if we are not in Deferred mode - then it points to `Base_activateSimpleView`
 
-if True:
+if True:  # pylint:disable=using-constant-test
   if dialog_method != update_method:
     # When we are not executing the update action, we have to change the skin
     # manually,
