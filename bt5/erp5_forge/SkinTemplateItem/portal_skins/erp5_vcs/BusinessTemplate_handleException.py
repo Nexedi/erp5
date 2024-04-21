@@ -2,6 +2,9 @@ from erp5.component.module.Git import GitLoginError
 from erp5.component.module.SubversionClient import SubversionSSLTrustError, SubversionLoginError
 import json
 
+kw = {}
+method = 'view'
+message = 'Unknown error'
 try:
   raise exception
 except SubversionSSLTrustError as e:
