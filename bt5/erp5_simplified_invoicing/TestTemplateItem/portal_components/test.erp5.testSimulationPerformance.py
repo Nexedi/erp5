@@ -28,10 +28,7 @@
 from __future__ import print_function
 import subprocess
 import unittest
-from test import pystone
 from time import time
-from six.moves import range
-pystone.clock = time
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 from erp5.component.test.testTradeModelLine import TestTradeModelLineSale
 
@@ -59,7 +56,6 @@ class TestSimulationPerformance(TestTradeModelLineSale):
     self.test_01_OrderWithSimpleTaxedAndDiscountedLines()
     self.__class__._order = self['order'].getRelativeUrl()
     self.runAlarms()
-    print("\n%s pystones/second" % pystone.pystones()[1])
 
   def perf_01_invoiceSimpleOrder(self, order_count=1):
     start = time()
