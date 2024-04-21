@@ -163,7 +163,7 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
     # movement with an industrial_phase (other properties like reference
     # starting with "pr/" is possible). The drawback with such filter is that
     # Same Total Quantity check must be disabled.
-    if 1:
+    if 1:  # pylint:disable=using-constant-test
       cr_quantity = - parent_movement.getQuantity()
       def newIntermediateMovement(reference_prefix, industrial_phase, **kw):
         movement = newMovement(reference_prefix + phase, kw)
