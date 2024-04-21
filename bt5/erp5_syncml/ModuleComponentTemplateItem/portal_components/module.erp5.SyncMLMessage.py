@@ -225,41 +225,41 @@ class SyncMLResponse(object):
     receiving a challenge message
     """
     raise NotImplementedError("To review")
-    """
-    # create element 'SyncML' with a default namespace
-    xml = E.SyncML()
-    # syncml header
-    xml.append(self.buildHeader(
-      session_id=subscription.incrementSessionId(),
-      msg_id=subscription.incrementMessageId(),
-      target=subscription.getUrlString(),
-      source=subscription.getSubscriptionUrlString(),
-      user_id=subscription.getUserId(),
-      password=subscription.getPassword(),
-      authentication_format=subscription.getAuthenticationFormat(),
-      authentication_type=subscription.getAuthenticationType()))
 
-    # Build the message body
-    sync_body = E.SyncBody()
+#    # create element 'SyncML' with a default namespace
+#    xml = E.SyncML()
+#    # syncml header
+#    xml.append(self.buildHeader(
+#      session_id=subscription.incrementSessionId(),
+#      msg_id=subscription.incrementMessageId(),
+#      target=subscription.getUrlString(),
+#      source=subscription.getSubscriptionUrlString(),
+#      user_id=subscription.getUserId(),
+#      password=subscription.getPassword(),
+#      authentication_format=subscription.getAuthenticationFormat(),
+#      authentication_type=subscription.getAuthenticationType()))
+#
+#    # Build the message body
+#    sync_body = E.SyncBody()
+#
+#    # alert message
+#    sync_body.append(self.buildAlertMessage(
+#      command_id=self._getNextCommandId(),
+#      alert_code=subscription.getSyncmlAlertCode(),
+#      target=subscription.getDestinationReference(),
+#      source=subscription.getSourceReference(),
+#      last_anchor=subscription.getLastAnchor(),
+#      next_anchor=subscription.getNextAnchor()))
+#    syncml_put = self.buildPutMessage(subscription)
+#    if syncml_put is not None:
+#      sync_body.append(syncml_put)
+#    sync_body.append(E.Final())
+#
+#    xml.append(sync_body)
+#    xml_string = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
+#                                pretty_print=True)
+#    self.data_append(xml_string)
 
-    # alert message
-    sync_body.append(self.buildAlertMessage(
-      command_id=self._getNextCommandId(),
-      alert_code=subscription.getSyncmlAlertCode(),
-      target=subscription.getDestinationReference(),
-      source=subscription.getSourceReference(),
-      last_anchor=subscription.getLastAnchor(),
-      next_anchor=subscription.getNextAnchor()))
-    syncml_put = self.buildPutMessage(subscription)
-    if syncml_put is not None:
-      sync_body.append(syncml_put)
-    sync_body.append(E.Final())
-
-    xml.append(sync_body)
-    xml_string = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
-                                pretty_print=True)
-    self.data_append(xml_string)
-    """
 
   def addPutMessage(self,subscription, markup='Put',
                     cmd_ref=None, message_id=None):
@@ -280,61 +280,59 @@ class SyncMLResponse(object):
     Both must be able to handle and process these informations
     """
     return
-    """
-    # XXX-Aurel : must be reviewed according to specification
-    # This part can be skipped for now
-    conduit = subscription.getConduit()
-    xml = None
-    # The conduit defined what capabilities the service offers
-    if getattr(conduit, 'getCapabilitiesCTTypeList', None) and \
-        getattr(conduit, 'getCapabilitiesVerCTList', None) and \
-        getattr(conduit, 'getPreferedCapabilitieVerCT', None):
-      xml = Element('{%s}%s' % (SYNCML_NAMESPACE, markup))
-      xml.append(E.CmdID(self._getNextCommandId()))
-      if message_id:
-        xml.append(E.MsgRef('%s' % message_id))
-      if cmd_ref:
-        xml.append(E.CmdRef('%s' % cmd_ref))
-      xml.extend((E.Meta(E.Type('application/vnd.syncml-devinf+xml')),
-                  E.Item(E.Source(E.LocURI('./devinf12')),
-                         E.Data(E.DevInf(E.VerDTD('1.2'),
-                                         E.Man('Nexedi'),
-                                         E.Mod('ERP5SyncML'),
-                                         E.OEM('Open Source'),
-                                         E.SwV('0.1'),
-                                         E.DevID(subscription.getSubscriptionUrlString()),
-                                         E.DevTyp('workstation'),
-                                         E.UTC(),
-                                         E.DataStore(E.SourceRef(subscription.getSourceReference()))
-                                         )
-                                )
-                         )))
-      data_store = xml.find('{%(ns)s}Item/{%(ns)s}Data/{%(ns)s}DevInf/{%(ns)s}DataStore' % {'ns': SYNCML_NAMESPACE})
-      tx_element_list = []
-      rx_element_list = []
-      for cttype in conduit.getCapabilitiesCTTypeList():
-        if cttype != 'text/xml':
-          for x_version in conduit.getCapabilitiesVerCTList(cttype):
-            rx_element_list.append(E.Rx(E.CTType(cttype), E.VerCT(x_version)))
-            tx_element_list.append(E.Tx(E.CTType(cttype), E.VerCT(x_version)))
-      rx_pref = Element('{%s}Rx-Pref' % SYNCML_NAMESPACE)
-      rx_pref.extend((E.CTType(conduit.getPreferedCapabilitieCTType()),
-                      E.VerCT(conduit.getPreferedCapabilitieVerCT())))
-      data_store.append(rx_pref)
-      data_store.extend(rx_element_list)
-      tx_pref = Element('{%s}Tx-Pref' % SYNCML_NAMESPACE)
-      tx_pref.extend((E.CTType(conduit.getPreferedCapabilitieCTType()),
-                      E.VerCT(conduit.getPreferedCapabilitieVerCT())))
-      data_store.append(tx_pref)
-      data_store.extend(tx_element_list)
-      data_store.append(E.SyncCap(
-        E.SyncType('2'),
-        E.SyncType('1'),
-        E.SyncType('4'),
-        E.SyncType('6')
-        ))
-    self.data_append(xml)
-    """
+#    # XXX-Aurel : must be reviewed according to specification
+#    # This part can be skipped for now
+#    conduit = subscription.getConduit()
+#    xml = None
+#    # The conduit defined what capabilities the service offers
+#    if getattr(conduit, 'getCapabilitiesCTTypeList', None) and \
+#        getattr(conduit, 'getCapabilitiesVerCTList', None) and \
+#        getattr(conduit, 'getPreferedCapabilitieVerCT', None):
+#      xml = Element('{%s}%s' % (SYNCML_NAMESPACE, markup))
+#      xml.append(E.CmdID(self._getNextCommandId()))
+#      if message_id:
+#        xml.append(E.MsgRef('%s' % message_id))
+#      if cmd_ref:
+#        xml.append(E.CmdRef('%s' % cmd_ref))
+#      xml.extend((E.Meta(E.Type('application/vnd.syncml-devinf+xml')),
+#                  E.Item(E.Source(E.LocURI('./devinf12')),
+#                         E.Data(E.DevInf(E.VerDTD('1.2'),
+#                                         E.Man('Nexedi'),
+#                                         E.Mod('ERP5SyncML'),
+#                                         E.OEM('Open Source'),
+#                                         E.SwV('0.1'),
+#                                         E.DevID(subscription.getSubscriptionUrlString()),
+#                                         E.DevTyp('workstation'),
+#                                         E.UTC(),
+#                                         E.DataStore(E.SourceRef(subscription.getSourceReference()))
+#                                         )
+#                                )
+#                         )))
+#      data_store = xml.find('{%(ns)s}Item/{%(ns)s}Data/{%(ns)s}DevInf/{%(ns)s}DataStore' % {'ns': SYNCML_NAMESPACE})
+#      tx_element_list = []
+#      rx_element_list = []
+#      for cttype in conduit.getCapabilitiesCTTypeList():
+#        if cttype != 'text/xml':
+#          for x_version in conduit.getCapabilitiesVerCTList(cttype):
+#            rx_element_list.append(E.Rx(E.CTType(cttype), E.VerCT(x_version)))
+#            tx_element_list.append(E.Tx(E.CTType(cttype), E.VerCT(x_version)))
+#      rx_pref = Element('{%s}Rx-Pref' % SYNCML_NAMESPACE)
+#      rx_pref.extend((E.CTType(conduit.getPreferedCapabilitieCTType()),
+#                      E.VerCT(conduit.getPreferedCapabilitieVerCT())))
+#      data_store.append(rx_pref)
+#      data_store.extend(rx_element_list)
+#      tx_pref = Element('{%s}Tx-Pref' % SYNCML_NAMESPACE)
+#      tx_pref.extend((E.CTType(conduit.getPreferedCapabilitieCTType()),
+#                      E.VerCT(conduit.getPreferedCapabilitieVerCT())))
+#      data_store.append(tx_pref)
+#      data_store.extend(tx_element_list)
+#      data_store.append(E.SyncCap(
+#        E.SyncType('2'),
+#        E.SyncType('1'),
+#        E.SyncType('4'),
+#        E.SyncType('6')
+#        ))
+#    self.data_append(xml)
 
 
   def addSyncCommand(self, sync_command, gid, data, media_type, more_data):

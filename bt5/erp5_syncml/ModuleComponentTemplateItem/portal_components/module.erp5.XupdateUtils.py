@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 from erp5.component.module.XMLSyncUtils import XMLSyncUtilsMixin
 from xml.dom.ext.reader.Sax2 import FromXml  # pylint:disable=no-name-in-module,import-error
 
@@ -40,7 +41,7 @@ class XupdateUtils(XMLSyncUtilsMixin):
     Parse the xupdate and then it will call the conduit
     """
     conflict_list = []
-    if isinstance(xupdate, (str, unicode)):
+    if isinstance(xupdate, six.string_types):
       xupdate = FromXml(xupdate)
 
     for subnode in xupdate:
