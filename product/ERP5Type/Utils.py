@@ -554,6 +554,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
         args.extend(
           (
             "--msg-template='{C}: {line},{column}: {msg} ({symbol})'",
+            '--load-plugins=pylint.extensions.bad_builtin',
             # BBB until we drop compatibility with PY2
             '--disable=redundant-u-string-prefix,raise-missing-from,keyword-arg-before-vararg',
             # XXX acceptable to ignore in the context of ERP5
@@ -561,6 +562,12 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
             # XXX to many errors for now
             '--disable=arguments-differ,arguments-renamed',
             '--disable=duplicate-bases,inconsistent-mro',
+          )
+        )
+      else:
+        args.extend(
+          (
+            '--load-plugins=Products.ERP5Type.patches.pylint_compatibility_disable',
           )
         )
       if portal_type == 'Interface Component':
@@ -575,11 +582,6 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
         # Method should have "self" as first argument (no-self-argument)
         args.append('--disable=E0213')
 
-      try:
-        from pylint.extensions.bad_builtin import __name__ as ext
-        args.append('--load-plugins=' + ext)
-      except ImportError:
-        pass
       try:
         # Note that we don't run pylint as a subprocess, but directly from
         # ERP5 process, so that pylint can access the code from ERP5Type
