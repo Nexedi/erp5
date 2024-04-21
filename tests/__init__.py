@@ -114,7 +114,7 @@ class ERP5(_ERP5):
       return self.runUnitTest('--load', '--save', '--with_wendelin_core', full_test)
     elif test.startswith('testFunctional'):
       return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
-    elif test == 'testUpgradeInstanceWithOldDataFs':
+    elif test.startswith('testUpgradeInstanceWithOldDataFs'):
       old_data_path = None
       for path in sys.path:
         if path.endswith('/erp5-bin'):
