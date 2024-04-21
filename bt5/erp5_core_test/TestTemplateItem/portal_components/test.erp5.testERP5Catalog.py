@@ -105,8 +105,8 @@ class TransactionThread(threading.Thread):
       # Login
       newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
       self.payload(portal_value=portal_value)
-    except Exception as e: # pylint: disable=redefine-in-handler
-      self.exception = e # pylint: disable=redefine-in-handler
+    except Exception as e:
+      self.exception = e
       if six.PY2:
         self.exception.__traceback__ = sys.exc_info()[2]
 
