@@ -70,13 +70,12 @@ _HTML_FIELD_TAG_SET = {
   # Very incomplete, but enough for this tests' purpose: ignores "select"s...
 }
 class FormExtractor(HTMLParser):
-  # pylint:disable=abstract-method
   def reset(self):
     self.__in_form = False
     self.form_list = []
     HTMLParser.reset(self)
 
-  def handle_starttag(self, tag, attribute_item_list): # pylint:disable=arguments-renamed
+  def handle_starttag(self, tag, attribute_item_list):
     attr_dict = dict(attribute_item_list)
     if tag == 'form':
       assert not self.__in_form
@@ -91,6 +90,10 @@ class FormExtractor(HTMLParser):
   def handle_endtag(self, tag):
     if tag == 'form':
       self.__in_form = False
+
+  def error(self, message):
+    raise ValueError(message)
+
 
 class TestOAuth2(ERP5TypeTestCase):
   # pylint:disable=unused-private-member
