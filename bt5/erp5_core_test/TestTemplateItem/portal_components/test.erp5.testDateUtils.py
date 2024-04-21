@@ -29,6 +29,7 @@
 
 import os
 import unittest
+import six
 
 import zodbpickle.fastpickle as pickle
 from DateTime import DateTime
@@ -340,26 +341,14 @@ def test_suite():
   class DateTimeTests(test_datetime.DateTimeTests):
     testTimezoneNaiveHandling = unittest.expectedFailure(
       test_datetime.DateTimeTests.testTimezoneNaiveHandling)
-    # ERP5 never used the pickle format with micros as float
-    # https://github.com/zopefoundation/DateTime/pull/62
-    test_pickle_old_with_micros_as_float = unittest.expectedFailure(
-      test_datetime.DateTimeTests.test_pickle_old_with_micros_as_float)
+    if six.PY3:
+      # ERP5 never used the pickle format with micros as float
+      # https://github.com/zopefoundation/DateTime/pull/62
+      test_pickle_old_with_micros_as_float = unittest.expectedFailure(
+        test_datetime.DateTimeTests.test_pickle_old_with_micros_as_float)
 
-    # This test is only in DateTime >= 3
-    if hasattr(test_datetime.DateTimeTests, 'test_intl_format_hyphen'):
-      test_intl_format_hyphen = unittest.expectedFailure(
-        test_datetime.DateTimeTests.test_intl_format_hyphen)
-
-    # These 3 tests are only in DateTime 2
-    if hasattr(test_datetime.DateTimeTests, 'test_pickle_new_with_micros'):
-      test_pickle_new_with_micros = unittest.expectedFailure(
-        test_datetime.DateTimeTests.test_pickle_new_with_micros)
-    if hasattr(test_datetime.DateTimeTests, 'test_pickle_new_with_tz'):
-      test_pickle_new_with_tz = unittest.expectedFailure(
-        test_datetime.DateTimeTests.test_pickle_new_with_tz)
-    if hasattr(test_datetime.DateTimeTests, 'testLegacyTimezones'):
-      testLegacyTimezones = unittest.expectedFailure(
-        test_datetime.DateTimeTests.testLegacyTimezones)
+    test_intl_format_hyphen = unittest.expectedFailure(
+      test_datetime.DateTimeTests.test_intl_format_hyphen)
 
   suite.addTest(unittest.makeSuite(DateTimeTests))
 
