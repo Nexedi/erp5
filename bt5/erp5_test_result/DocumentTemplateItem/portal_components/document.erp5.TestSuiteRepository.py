@@ -13,15 +13,15 @@ class TestSuiteRepository(XMLObject):
   # setting of some properties that were defined with type "lines" instead of "string".
   # This was making the property existence constraint not working properly.
   def _fixPropertyConsistency(self):
-    self = aq_base(self)
+    aq_base_self = aq_base(self)
     for property_name in ('branch', 'buildout_section_id', 'git_url', 'profile_path'):
-      property_value = getattr(self, property_name, None)
+      property_value = getattr(aq_base_self, property_name, None)
       if property_value is not None and isinstance(property_value, tuple):
         if len(property_value) > 0:
           property_value = property_value[0]
-          setattr(self, property_name, property_value)
+          setattr(aq_base_self, property_name, property_value)
         else:
-          delattr(self, property_name)
+          delattr(aq_base_self, property_name)
 
   def getBranch(self, *args, **kw):
     self._fixPropertyConsistency()
