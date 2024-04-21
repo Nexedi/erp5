@@ -12,6 +12,13 @@
     return undefined;
   };
 
+  JSONEditor.AbstractEditor.prototype.preBuild = function () {
+    if (this.jsoneditor.options.readonly) {
+      this.schema.readOnly = this.jsoneditor.options.readonly;
+    }
+  };
+
+
   function isEmpty(obj) {
     return obj === undefined || obj === '' ||
       (
@@ -37,10 +44,77 @@
     return result;
   };
 
-  JSONEditor.AbstractEditor.prototype.preBuild = function () {
-    if (this.jsoneditor.options.readonly) {
-      this.schema.readOnly = this.jsoneditor.options.readonly;
+  if (JSONEditor.defaults.editors.object.prototype.original_getPropertySchema === undefined) {
+    JSONEditor.defaults.editors.object.prototype.original_getPropertySchema = JSONEditor.defaults.editors.object.prototype.getPropertySchema;
+  }
+
+  JSONEditor.defaults.editors.object.prototype.getPropertySchema = function (key) {
+    var schema = this.original_getPropertySchema(key);
+    /* Strip forbidden properties, that aren't part of json schema spec.
+        They are removed because the UI must be complaint with other usages of
+        json schemas.
+    */
+    delete schema.template;
+    delete schema.options;
+
+    if (schema.const !== undefined) {
+      schema.enum = [schema.const];
     }
+
+    /* Display default value as part of description */
+    if (schema.default !== undefined && typeof schema.default !== "object") {
+      if (schema.description !== undefined) {
+        schema.description = schema.description + " (default: " + schema.default + ")";
+      } else {
+        schema.description = " (default: " + schema.default + ")";
+      }
+    }
+    return schema;
+  };
+
+  /* The original code would remove the field if value is undefined */
+  JSONEditor.defaults.editors.object.prototype.setValue = function (value, initial) {
+    var object_editor = this;
+    value = value || {};
+
+    if (typeof value !== 'object' || Array.isArray(value)) {
+      value = {};
+    }
+
+    /* First, set the values for all of the defined properties */
+    // @ts-ignore
+    Object.entries(this.cached_editors).forEach(function (entry) {
+      var i = entry[0],
+        editor = entry[1];
+      /* Value explicitly set */
+      if (value[i] !== undefined) {
+        object_editor.addObjectProperty(i);
+        editor.setValue(value[i], initial);
+        editor.activate();
+        /* Otherwise if it is read only remove the field */
+      } else if (editor.schema.readOnly) {
+        object_editor.removeObjectProperty(i);
+        /* Otherwise, set the value to the default */
+      } else {
+        editor.setValue(editor.getDefault(), initial);
+      }
+    });
+
+    // @ts-ignore
+    Object.entries(value).forEach(function (entry) {
+      var i = entry[0],
+        val = entry[1];
+      if (!object_editor.cached_editors[i]) {
+        object_editor.addObjectProperty(i);
+        if (object_editor.editors[i]) {
+          object_editor.editors[i].setValue(val, initial, !!object_editor.editors[i].template);
+        }
+      }
+    });
+
+    object_editor.refreshValue();
+    object_editor.layoutEditors();
+    object_editor.onChange();
   };
 
   JSONEditor.defaults.editors.select.prototype.setValue = function (value, initial) {
@@ -156,74 +230,97 @@
     return value.toString();
   };
 
-  if (JSONEditor.defaults.editors.object.prototype.original_getPropertySchema === undefined) {
-    JSONEditor.defaults.editors.object.prototype.original_getPropertySchema = JSONEditor.defaults.editors.object.prototype.getPropertySchema;
-  }
+  JSONEditor.defaults.editors.multiple.prototype.setValue = function (val, initial) {
+    /* Determine type by getting the first one that validates */
+    var field = this,
+      typeChanged,
+      prevType = this.type,
+      /* find the best match one */
+      fitTestVal = {
+        match: 0,
+        extra: 0,
+        i: this.type
+      },
+      validVal = {
+        match: 0,
+        extra: null,
+        i: null
+      },
+      finalI;
 
-  JSONEditor.defaults.editors.object.prototype.getPropertySchema = function (key) {
-    var schema = this.original_getPropertySchema(key);
-    /* Strip forbidden properties, that aren't part of json schema spec.
-        They are removed because the UI must be complaint with other usages of
-        json schemas.
-    */
-    delete schema.template;
-    delete schema.options;
-
-    /* Display default value as part of description */
-    if (schema.default !== undefined && typeof schema.default !== "object") {
-      if (schema.description !== undefined) {
-        schema.description = schema.description + " (default: " + schema.default + ")";
-      } else {
-        schema.description = " (default: " + schema.default + ")";
-      }
-    }
-    return schema;
-  }
-
-
-  /* The original code would remove the field if value is undefined */
-  JSONEditor.defaults.editors.object.prototype.setValue = function (value, initial) {
-    var object_editor = this;
-    value = value || {};
-
-    if (typeof value !== 'object' || Array.isArray(value)) {
-      value = {};
-    }
-
-    /* First, set the values for all of the defined properties */
-    // @ts-ignore
-    Object.entries(this.cached_editors).forEach(function (entry) {
-      var i = entry[0],
-        editor = entry[1];
-      /* Value explicitly set */
-      if (value[i] !== undefined) {
-        object_editor.addObjectProperty(i);
-        editor.setValue(value[i], initial);
-        editor.activate();
-        /* Otherwise if it is read only remove the field */
-      } else if (editor.schema.readOnly) {
-        object_editor.removeObjectProperty(i);
-        /* Otherwise, set the value to the default */
-      } else {
-        editor.setValue(editor.getDefault(), initial);
-      }
-    });
-
-    // @ts-ignore
-    Object.entries(value).forEach(function (entry) {
-      var i = entry[0],
-        val = entry[1];
-      if (!object_editor.cached_editors[i]) {
-        object_editor.addObjectProperty(i);
-        if (object_editor.editors[i]) {
-          object_editor.editors[i].setValue(val, initial, !!object_editor.editors[i].template);
+    field.validators.forEach(function (validator, i) {
+      var fitTestResult = null;
+      if (field.anyOf !== undefined && field.anyOf) {
+        /* here is tries to guess what fits best, but it is 
+           expected that some sense of similarity between the forms
+        */
+        fitTestResult = validator.fitTest(val);
+        if (fitTestVal.match < fitTestResult.match) {
+          fitTestVal = fitTestResult;
+          fitTestVal.i = i;
+        } else if (fitTestVal.match === fitTestResult.match) {
+          if (fitTestVal.extra > fitTestResult.extra) {
+            fitTestVal = fitTestResult;
+            fitTestVal.i = i;
+          }
         }
       }
+      if (!validator.validate(val).length && validVal.i === null) {
+        validVal.i = i;
+        if (fitTestResult !== null) {
+          validVal.match = fitTestResult.match;
+        }
+      } else {
+        fitTestVal = validVal;
+      }
     });
 
-    object_editor.refreshValue();
-    object_editor.layoutEditors();
-    object_editor.onChange();
+    finalI = validVal.i;
+    /* if the best fit schema has more match properties, then use the best fit schema. */
+    /* usually the value could be */
+    if (field.anyOf !== undefined && field.anyOf) {
+      if (validVal.match < fitTestVal.match) {
+        finalI = fitTestVal.i;
+      }
+    }
+    if (field.if) {
+      finalI = field.getIfType(val);
+    }
+    if (finalI === null) {
+      if (isEmpty(val)) {
+         finalI = field.type;
+      } else {
+        throw new Error("Could not safely render data into the form.")
+      }
+    }
+    field.type = finalI;
+    field.switcher.value = field.display_text[finalI];
+
+    typeChanged = field.type !== prevType;
+
+    if (typeChanged) {
+      field.switchEditor(field.type);
+      field.editors[field.type].setValue(val, initial);
+    }
+
+    if ((val !== undefined) && (!isEmpty(val))) {
+      field.editors[field.type].setValue(val, initial);
+    }
+
+    field.refreshValue();
+    field.onChange(typeChanged);
+  };
+
+  JSONEditor.defaults.editors.array.prototype.ensureArraySize = function (value) {
+    // Don't extend or slice data based on the input
+    // Let the user handle it.
+    return value;
+  };
+
+  JSONEditor.defaults.editors.table.prototype.ensureArraySize = function (value) {
+    // Don't extend or slice data based on the input
+    // Let the user handle it.
+    return value;
   };
 
   JSONEditor.defaults.editors.string.prototype.setValueToInputField = function (value) {
@@ -312,7 +409,7 @@
             disable_array_delete_last_row: true,
             no_additional_properties: false,
             remove_empty_properties: true,
-            keep_oneof_values: false,
+            keep_oneof_values: true,
             startval: JSON.parse(gadget.state.value),
             readonly: gadget.state.editable ? false : true
           });
@@ -343,9 +440,9 @@
       return form_data;
     })
     .declareMethod('checkValidity', function () {
-      if (this.state.errors !== undefined) {
-        return this.state.errors.length === 0;
+      if (this.editor === undefined) {
+        return true;
       }
-      return true;
+      return isEmpty(this.editor.validate());
     });
 }(window, rJS, RSVP, JSONEditor, domsugar, JSON, $RefParser, URL));
