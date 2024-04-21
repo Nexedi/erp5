@@ -401,12 +401,11 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       kw = {}
       for reference, result in six.iteritems(expected_result_dict):
         total_price = result.get(movement_id) or 0.0
-        if True:
-          model_line = self['trade_model_line/' + reference]
-          kw[reference] = dict(total_price=total_price,
-            causality_value_list=[model_line],
-            base_application_list=model_line.getBaseApplicationList(),
-            base_contribution_list=model_line.getBaseContributionList())
+        model_line = self['trade_model_line/' + reference]
+        kw[reference] = dict(total_price=total_price,
+          causality_value_list=[model_line],
+          base_application_list=model_line.getBaseApplicationList(),
+          base_contribution_list=model_line.getBaseContributionList())
       self.getAggregatedAmountDict(movement, **kw)
 
     check(order, None)
@@ -427,20 +426,19 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                        len(result_dict))
       for use in 'discount', 'tax':
         total_price = expected_result_dict[use].get(line.getId()) or 0.0
-        if True:
-          sm = result_dict.pop(use)
-          self.assertEqual(round(sm.getTotalPrice() or 0.0, currency_precision), round(total_price, currency_precision))
-          self.assertEqual(3, len(sm.getCausalityValueList()))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type=self.business_link_portal_type)))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type=self.trade_model_path_portal_type)))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type='Trade Model Line')))
-          self.assertEqual(sm.getBaseApplicationList(),
-                           ['base_amount/' + use])
-          self.assertEqual(sm.getBaseContributionList(),
-                           dict(discount=['base_amount/tax'], tax=[])[use])
+        sm = result_dict.pop(use)
+        self.assertEqual(round(sm.getTotalPrice() or 0.0, currency_precision), round(total_price, currency_precision))
+        self.assertEqual(3, len(sm.getCausalityValueList()))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type=self.business_link_portal_type)))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type=self.trade_model_path_portal_type)))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type='Trade Model Line')))
+        self.assertEqual(sm.getBaseApplicationList(),
+                          ['base_amount/' + use])
+        self.assertEqual(sm.getBaseContributionList(),
+                          dict(discount=['base_amount/tax'], tax=[])[use])
       self.assertEqual({}, result_dict)
 
   def checkCausalityState(self, delivery, state):
