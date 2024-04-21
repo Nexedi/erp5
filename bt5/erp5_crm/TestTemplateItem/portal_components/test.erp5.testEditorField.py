@@ -162,12 +162,10 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     if html_text.find(match_string1) == -1:
       print(html_text)
       print(match_string1)
-      import pdb; pdb.set_trace()
       return False
     if html_text.find(match_string2) == -1:
       print(html_text)
       print(match_string2)
-      import pdb; pdb.set_trace()
       return False
     return True
 
