@@ -849,7 +849,7 @@ class TestResource(ERP5TypeTestCase):
                                      destination_section_value=node)
         supply.validate()
 
-        if 0:
+        if 0:  # pylint:disable=using-constant-test
           # XXX if both a supply line for the resource and a supply cell for
           # the resource with the exact variation can be applied, one of them
           # is choosen randomly. It looks like a bug, but I'm not sure we
