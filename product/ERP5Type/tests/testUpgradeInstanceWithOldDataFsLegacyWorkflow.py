@@ -33,7 +33,7 @@ import urllib
 import httplib
 
 
-class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
+class TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
@@ -155,5 +155,5 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
 def test_suite():
   suite = unittest.TestSuite()
   if WITH_LEGACY_WORKFLOW:
-    suite.addTest(unittest.makeSuite(TestUpgradeInstanceWithOldDataFs))
+    suite.addTest(unittest.makeSuite(TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow))
   return suite
