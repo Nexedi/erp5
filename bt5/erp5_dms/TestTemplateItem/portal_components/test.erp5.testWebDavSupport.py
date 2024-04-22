@@ -207,7 +207,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     # Convert to base format and run conversion into utf-8
     self.tic()
     # Content-Type header is replaced if conversion encoding succeed
-    new_text_content = text_content.replace('charset=iso-8859-1', 'charset=utf-8')
+    new_text_content = text_content.encode('utf8').replace('charset=iso-8859-1', 'charset=utf-8')
     self.assertEqual(web_page_module[filename].getTextContent(), new_text_content)
 
   def test_GET_on_document(self):
