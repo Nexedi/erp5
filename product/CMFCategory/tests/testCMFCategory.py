@@ -1000,23 +1000,25 @@ class TestCMFCategory(ERP5TypeTestCase):
     # emitted. Because the method exists on both category and base category
     # there can be two warnings.
     with warnings.catch_warnings(record=True) as warning_list:
+      warnings.simplefilter("always")
       c1.getCategoryChildValueList(local_sort_method=sort_func)
     self.assertEqual(
-      [str(w.message) for w in warning_list],
-      ['`local_sort_method` argument is deprecated, use `local_sort_key` instead'])
+      {str(w.message) for w in warning_list},
+      {'`local_sort_method` argument is deprecated, use `local_sort_key` instead'})
     with warnings.catch_warnings(record=True) as warning_list:
+      warnings.simplefilter("always")
       bc.getCategoryChildValueList(local_sort_method=sort_func)
     self.assertEqual(
-      [str(w.message) for w in warning_list],
-      ['`local_sort_method` argument is deprecated, use `local_sort_key` instead'] * 2)
+      {str(w.message) for w in warning_list},
+      {'`local_sort_method` argument is deprecated, use `local_sort_key` instead'})
 
-    sort_func_calls.clear()
+    del sort_func_calls[:]
     # here c1, c2, c3 are sorted by their titles
     self.assertEqual(list(bc.getCategoryChildValueList(
                                         local_sort_method=sort_func)),
                       [c3, c2, c1, c11, c111, c12])
     self.assertTrue(sort_func_calls)
-    sort_func_calls.clear()
+    del sort_func_calls[:]
     # here c11 & c12 are sorted by their titles
     self.assertEqual(list(c1.getCategoryChildValueList(
                               local_sort_method=sort_func)), [c11, c111, c12])
