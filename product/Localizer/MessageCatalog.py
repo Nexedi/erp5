@@ -660,7 +660,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         messages = self._messages
 
         # Load the data
-        data = data.decode("utf-8")
+        if isinstance(data, bytes):
+            data = data.decode("utf-8")
         po = polib.pofile(data)
         encoding = to_str(po.encoding)
         for entry in po:
