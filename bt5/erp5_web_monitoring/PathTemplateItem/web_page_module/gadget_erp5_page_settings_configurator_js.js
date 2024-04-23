@@ -317,8 +317,7 @@
                   "key": "monitoring_setting_listbox",
                   "lines": 20,
                   "list_method": "portal_catalog",
-                  "query": "urn:jio:allDocs?query=portal_type%3A%22" +
-                    result[1] + "%22",
+                  "query": "urn:jio:allDocs?query=portal_type%3A%22opml%22",
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
