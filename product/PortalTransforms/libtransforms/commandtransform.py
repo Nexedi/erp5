@@ -42,7 +42,7 @@ class commandtransform:
     def subObjects(self, tmpdir):
         imgs = []
         for f in os.listdir(tmpdir):
-            result = re.match("^.+\.(?P<ext>.+)$", f)
+            result = re.match(r"^.+\.(?P<ext>.+)$", f)
             if result is not None:
                 ext = result.group('ext')
                 if ext in ('png', 'jpg', 'gif'):
