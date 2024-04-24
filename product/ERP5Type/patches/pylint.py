@@ -534,12 +534,20 @@ def register_xpkg(pkgname):
     except ImportError:
         pass
     else:
-        def xpkg_transform(node):
-            m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % pkg.__path__)
-            m.package = True
-            m.name = pkgname
-            return m
-        MANAGER.register_transform(Module, xpkg_transform, lambda node: node.name == pkgname)
+        if six.PY2:
+            def xpkg_transform(node):
+                m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % pkg.__path__)
+                m.package = True
+                m.name = pkgname
+                return m
+            MANAGER.register_transform(Module, xpkg_transform, lambda node: node.name == pkgname)
+        else:
+            import importlib
+            def fail_hook_xpkg(modname):
+                if modname.split('.')[0] == pkgname:
+                    return MANAGER.ast_from_module(importlib.import_module(modname))
+                raise AstroidBuildingError()
+            MANAGER.register_failed_import_hook(fail_hook_xpkg)
 register_xpkg('wendelin')
 register_xpkg('xlte')
 
