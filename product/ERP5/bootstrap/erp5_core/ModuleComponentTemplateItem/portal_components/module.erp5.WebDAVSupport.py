@@ -47,7 +47,7 @@ class TextContent:
     try:
       tree = html.fromstring(text)
       if tree.tag != "html":
-        raise Exception
+        raise ValueError
     except Exception:
       # this is probably not html code, try rfc822 parsing
       if six.PY3:
