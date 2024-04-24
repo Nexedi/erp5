@@ -193,7 +193,7 @@ class CompositionMixin:
                             'asComposedDocument')
   asComposedDocument = transactional_cached(
     lambda self, portal_type_list=None: (self, portal_type_list)
-    )(asComposedDocument)
+    )(asComposedDocument)  # pylint:disable=used-before-assignment
 
   # XXX add accessors to get properties from '_effective_model_list' ?
   #     (cf PaySheetModel)
@@ -226,7 +226,7 @@ class CompositionMixin:
         model = _getEffectiveModel(model, start_date, stop_date)
         if model not in effective_set:
           effective_set.add(model)
-          if 1: #model.test(self): # XXX
+          if 1: #model.test(self): # XXX  # pylint:disable=using-constant-test
             effective_list.append(model)
     return effective_list, specialise_value_list
 

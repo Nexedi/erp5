@@ -319,7 +319,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
             try:
               best_sm_list = best_dict[None]
             except KeyError:
-              best_sm_list, = best_dict.values()
+              best_sm_list, = best_dict.values()  # pylint:disable=unbalanced-dict-unpacking
             if len(best_sm_list) < len(sm_list):
               sm_dict[k] = list(set(sm_list).difference(best_sm_list))
             sm_list = best_sm_list
