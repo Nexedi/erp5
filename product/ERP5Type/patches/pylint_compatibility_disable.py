@@ -9,12 +9,12 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
     name = "compatibility-disable"
     msgs = {
         "E9991": (
-            "The raise statement is not inside an except clause",
+            "misplaced-bare-raise",
             "misplaced-bare-raise",
             "",
         ),
         "W9992": (
-            "Unused private member",
+            "unused-private-member",
             "unused-private-member",
             "",
         ),
@@ -22,6 +22,16 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
             "using-constant-test",
             "using-constant-test",
             ""
+        ),
+        "E9994": (
+            "modified-iterating-list",
+            'modified-iterating-list",
+            "",
+        ),
+        "E9995": (
+            "unsubscriptable-object",
+            "unsubscriptable-object",
+            "",
         )
     }
 
