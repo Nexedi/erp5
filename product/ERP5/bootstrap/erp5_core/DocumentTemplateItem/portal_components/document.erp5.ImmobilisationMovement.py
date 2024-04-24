@@ -142,7 +142,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     # Check if the date of this movement is unique
     date_error = 0
     for item in self.getAggregateValueList():
-      if IImmobilisationItem.providedBy(item):
+      if IImmobilisationItem.providedBy(item):  # pylint:disable=no-value-for-parameter
         same_date_list = item.getUnfilteredImmobilisationMovementValueList(
                        from_date = self.getStopDate(),
                        to_date = self.getStopDate(),
@@ -200,7 +200,7 @@ class ImmobilisationMovement(Movement, XMLObject):
               return checkPreviousMovementForItem(previous_movement, item)
             return checkPreviousMovementForItem(previous_movement, item)
           for item in self.getAggregateValueList():
-            if IImmobilisationItem.providedBy(item):
+            if IImmobilisationItem.providedBy(item):  # pylint:disable=no-value-for-parameter
               if not checkPreviousMovementForItem(self,item):
                 check_uncontinuous = 1
               else:

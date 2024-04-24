@@ -153,8 +153,8 @@ class File(Document, OFS_File):
   security.declarePrivate('update_data')
   def update_data(self, *args, **kw):
     super(File, self).update_data(*args, **kw)
-    if six.PY2 and isinstance(self.size, long):  # pylint:disable=undefined-variable
-      self.size = int(self.size)  # pylint:disable=access-member-before-definition
+    if six.PY2 and isinstance(self.size, long):  # pylint:disable=access-member-before-definition,undefined-variable
+      self.size = int(self.size)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
   def setFile(self, data, precondition=None):
