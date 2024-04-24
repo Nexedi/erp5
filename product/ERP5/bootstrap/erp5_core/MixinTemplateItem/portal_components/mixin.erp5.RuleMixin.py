@@ -79,7 +79,8 @@ class RuleMixin(Predicate):
     return context.newContent(portal_type='Applied Rule',
                               specialise_value=self, **kw)
 
-  if 0: # XXX-JPS - if people are stupid enough not to configfure predicates,
+  if 0: # pylint:disable=using-constant-test
+        # XXX-JPS - if people are stupid enough not to configfure predicates,
         # it is not our role to be clever for them
         # Rules have a workflow - make sure applicable rule system works
         # if you wish, add a test here on workflow state to prevent using
