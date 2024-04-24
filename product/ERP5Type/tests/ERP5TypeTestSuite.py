@@ -52,7 +52,8 @@ class ERP5TypeTestSuite(TestSuite):
       args = ("--firefox_bin=%s" % firefox_bin,) + args
     if xvfb_bin:
       args = ("--xvfb_bin=%s" % xvfb_bin,) + args
-    if 'testUpgradeInstanceWithOldDataFs' in args:
+    if ('testUpgradeInstanceWithOldDataFs' in args
+        or 'testUpgradeInstanceWithOldDataFsLegacyWorkflow' in args):
       # our reference Data.fs uses `CONNECTION_STRING_REPLACED_BY_TEST_INIT_______________________________`
       # as a connection string. Before we start, replace this by the connection string
       # that this test node is using.
@@ -61,6 +62,11 @@ class ERP5TypeTestSuite(TestSuite):
       assert len(marker_connection_string) == len(actual_connection_string)
       with open(os.path.join(instance_home, 'var', 'Data.fs'), 'rb') as f:
         data_fs = f.read()
+      # XXX adjust FileStorage "magic" number so that python3 ZODB accepts reading a
+      # ZODB for python2, we'll handle the data migration ourselves.
+      from ZODB._compat import FILESTORAGE_MAGIC
+      data_fs = FILESTORAGE_MAGIC + data_fs[len(FILESTORAGE_MAGIC):]
+
       with open(os.path.join(instance_home, 'var', 'Data.fs'), 'wb') as f:
         f.write(data_fs.replace(marker_connection_string, actual_connection_string))
 
