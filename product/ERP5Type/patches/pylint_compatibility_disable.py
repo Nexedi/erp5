@@ -8,6 +8,11 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
 
     name = "compatibility-disable"
     msgs = {
+        "E9990": (
+            "not-an-iterable",
+            "not-an-iterable",
+            "",
+        ),
         "E9991": (
             "misplaced-bare-raise",
             "misplaced-bare-raise",
@@ -32,7 +37,27 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
             "unsubscriptable-object",
             "unsubscriptable-object",
             "",
-        )
+        ),
+        "E9996": (
+            "invalid-unary-operand-type",
+            "invalid-unary-operand-type",
+            "",
+        ),
+        "E9997": (
+            "unbalanced-dict-unpacking",
+            "unbalanced-dict-unpacking",
+            "",
+        ),
+        "E9998": (
+            "self-cls-assignment",
+            "self-cls-assignment",
+            "",
+        ),
+        "E9999": (
+            "deprecated-class",
+            "deprecated-class",
+            "",
+        ),
     }
 
 
