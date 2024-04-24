@@ -62,6 +62,11 @@ class ERP5TypeTestSuite(TestSuite):
       assert len(marker_connection_string) == len(actual_connection_string)
       with open(os.path.join(instance_home, 'var', 'Data.fs'), 'rb') as f:
         data_fs = f.read()
+      # XXX adjust FileStorage "magic" number so that python3 ZODB accepts reading a
+      # ZODB for python2, we'll handle the data migration ourselves.
+      from ZODB._compat import FILESTORAGE_MAGIC
+      data_fs = FILESTORAGE_MAGIC + data_fs[len(FILESTORAGE_MAGIC):]
+
       with open(os.path.join(instance_home, 'var', 'Data.fs'), 'wb') as f:
         f.write(data_fs.replace(marker_connection_string, actual_connection_string))
 
