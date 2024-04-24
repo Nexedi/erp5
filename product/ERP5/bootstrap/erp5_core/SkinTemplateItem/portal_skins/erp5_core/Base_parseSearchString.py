@@ -101,7 +101,7 @@ def resolveCriterion(criterion_alias, criterion_value_list):
       break
     seen_alias_dict[criterion_alias] = None
     if next_alias in seen_alias_dict:
-      raise Exception('Endless alias loop detected: lookup of %r reached alias %r twice' % (initial_criterion_alias, next_alias))
+      raise RuntimeError('Endless alias loop detected: lookup of %r reached alias %r twice' % (initial_criterion_alias, next_alias))
     criterion_alias = next_alias
   return criterion_alias, criterion_value_list
 
