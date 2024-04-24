@@ -50,7 +50,9 @@ class _ERP5(ERP5TypeTestSuite):
       if PY3:
         # disable tests that are not compatible with Python 3.
         if test_case in (
-          'erp5_workflow_test:testWorkflowAndDCWorkflow', # using legacy workflow
+          # using legacy workflow
+          'erp5_workflow_test:testWorkflowAndDCWorkflow',
+          'testUpgradeInstanceWithOldDataFsLegacyWorkflow'
         ):
           continue
       product = test_path.split(os.sep)[-3]
