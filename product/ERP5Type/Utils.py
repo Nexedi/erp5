@@ -462,7 +462,7 @@ def fill_args_from_request(*optional_args):
   return decorator
 
 _pylint_message_re = re.compile(
-  '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
+  r'^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
 
 def checkPythonSourceCode(source_code_str, portal_type=None):
   """
