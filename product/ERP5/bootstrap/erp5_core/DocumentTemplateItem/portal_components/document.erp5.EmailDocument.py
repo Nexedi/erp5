@@ -309,7 +309,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
       to extract content information from this mail
       message.
     """
-    pass
 
   security.declareProtected(Permissions.View, 'index_html')
   index_html = TextDocument.index_html
