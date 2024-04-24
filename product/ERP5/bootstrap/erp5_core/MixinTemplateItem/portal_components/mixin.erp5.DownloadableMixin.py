@@ -43,7 +43,7 @@ try:
 except ImportError:
   # BBB backport https://github.com/zopefoundation/Zope/pull/893 with py2 support
   def make_content_disposition(disposition, file_name):
-    if six.PY2 and not isinstance(file_name, unicode):
+    if six.PY2 and not isinstance(file_name, six.text_type):
       file_name = file_name.decode('utf-8')
     try:
       file_name.encode('us-ascii')
