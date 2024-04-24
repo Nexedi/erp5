@@ -462,7 +462,7 @@ def fill_args_from_request(*optional_args):
   return decorator
 
 _pylint_message_re = re.compile(
-  '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
+  r'^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
 
 def checkPythonSourceCode(source_code_str, portal_type=None):
   """
@@ -770,7 +770,7 @@ from .Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
 from AccessControl.PermissionRole import PermissionRole
 
-python_file_parser = re.compile('^(.*)\.py$')
+python_file_parser = re.compile(r'^(.*)\.py$')
 
 def getLocalPropertySheetList():
   if not getConfiguration:
@@ -1748,12 +1748,12 @@ from six.moves.urllib.parse import urlsplit, urlunsplit, urljoin
 
 # Regular expressions
 re_cleanup_anchors = re.compile('#.*')
-re_extract_port = re.compile(':(\d+)$')
+re_extract_port = re.compile(r':(\d+)$')
 def uppercaseLetter(matchobject):
   return matchobject.group(0).upper()
-re_cleanup_escaped_url = re.compile('%\w\d')
+re_cleanup_escaped_url = re.compile(r'%\w\d')
 re_cleanup_slashes = re.compile('/{2,}')
-re_cleanup_tail = re.compile('\??$')
+re_cleanup_tail = re.compile(r'\??$')
 
 def legacyNormalizeUrl(url, base_url=None):
   """this method does normalisation itself.

@@ -130,7 +130,7 @@ def patch_linecache():
     properly without requiring to create a temporary file on the filesystem
 
     The filename is is always '<portal_components/*>' for ZODB Components,
-    '(FILENAME)?Script \(Python\)' for Zope Python Scripts and 'Python
+    '(FILENAME)?Script \\(Python\\)' for Zope Python Scripts and 'Python
     Expression "CODE"' for TALES expressions.
 
     linecache.cache filled by linecache.updatecache() called by the original

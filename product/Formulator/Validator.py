@@ -184,7 +184,7 @@ class EmailValidator(StringValidator):
     # brackets around the address (we assume these would be added by
     # some custom script if needed), and of course no characters that
     # don't belong in an e-mail address.
-    pattern = re.compile('^[0-9a-zA-Z_\'&.%+-]+@([0-9a-zA-Z]([0-9a-zA-Z-]*[0-9a-zA-Z])?\.)+[a-zA-Z]{2,}$')
+    pattern = re.compile(r'^[0-9a-zA-Z_\'&.%+-]+@([0-9a-zA-Z]([0-9a-zA-Z-]*[0-9a-zA-Z])?\.)+[a-zA-Z]{2,}$')
 
     def validate(self, field, key, REQUEST):
         value = StringValidator.validate(self, field, key, REQUEST)

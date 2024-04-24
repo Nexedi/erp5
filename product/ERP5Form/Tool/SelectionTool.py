@@ -684,7 +684,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         # qdsqdsq/Base_view/qsdsqd --> matches
         # qdsqdsq/Base_viewAaa --> doesn't match
         # qdsqdsq/Umpa_view --> doesn't match
-        if re.search('/%s($|\W+)' % form_id, url):
+        if re.search(r'/%s($|\W+)' % form_id, url):
           return form_id
       return 'view'
 
