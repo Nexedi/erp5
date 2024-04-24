@@ -25,7 +25,7 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
         ),
         "E9994": (
             "modified-iterating-list",
-            'modified-iterating-list",
+            "modified-iterating-list",
             "",
         ),
         "E9995": (
