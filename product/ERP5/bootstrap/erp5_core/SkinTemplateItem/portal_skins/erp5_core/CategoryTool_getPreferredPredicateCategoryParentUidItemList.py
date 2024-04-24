@@ -29,5 +29,9 @@ for base_category_id in preferred_predicate_category_list:
 
 uid_item_list_list = category_parent_uid_item_dict.values()
 if uid_item_list_list:
-  return reduce(lambda a,b:a+b, uid_item_list_list)
+  result = []
+  for uid_item_list in uid_item_list_list:
+    result.extend(uid_item_list)
+  return result
+
 return ()
