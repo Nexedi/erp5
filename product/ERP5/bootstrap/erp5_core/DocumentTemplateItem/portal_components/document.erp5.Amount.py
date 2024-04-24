@@ -195,7 +195,6 @@ class Amount(Base, VariatedMixin):
     """Do nothing in the case of an amount, because variation base category
     list are set on the resource.
     """
-    pass
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryItemList')
@@ -577,7 +576,7 @@ class Amount(Base, VariatedMixin):
 
     if destination in (None, ''):
       if quantity < 0:
-        return - quantity
+        return - quantity  # pylint:disable=invalid-unary-operand-type
       else:
         return 0.0
 
@@ -604,7 +603,7 @@ class Amount(Base, VariatedMixin):
 
     if source in (None, ''):
       if quantity < 0:
-        return - quantity
+        return - quantity  # pylint:disable=invalid-unary-operand-type
       else:
         return 0.0
 

@@ -2528,7 +2528,7 @@ class SimulationTool(BaseTool):
                 simulation_movement.expand(expand_policy='immediate')
 
               # activate builder
-              movement_portal_type, = movement_portal_type_set
+              movement_portal_type, = movement_portal_type_set  # pylint:disable=unbalanced-tuple-unpacking
               merged_builder = self._findBuilderForDelivery(main_delivery, movement_portal_type)
               if merged_builder is None:
                 error_list.append(translateString("Unable to find builder"))

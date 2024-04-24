@@ -154,7 +154,7 @@ class File(Document, OFS_File):
   def update_data(self, *args, **kw):
     super(File, self).update_data(*args, **kw)
     if six.PY2 and isinstance(self.size, long):  # pylint:disable=undefined-variable
-      self.size = int(self.size)
+      self.size = int(self.size)  # pylint:disable=access-member-before-definition
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
   def setFile(self, data, precondition=None):

@@ -349,7 +349,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     def cached_getSystemVersionDict():
       import pkg_resources
       version_dict = {}
-      for dist in pkg_resources.working_set:
+      for dist in pkg_resources.working_set:  # pylint:disable=not-an-iterable
         version_dict[dist.key] = dist.version
 
       from Products import ERP5 as erp5_product

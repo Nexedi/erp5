@@ -271,6 +271,7 @@ class AmountGeneratorMixin:
     - is rounding really well supported (ie. before and after aggregation)
       very likely not - proxying before or after must be decided
     """
+    # pylint:disable=self-cls-assignment
     # It is the only place where we can import this
     portal = self.getPortalObject()
     getRoundingProxy = portal.portal_roundings.getRoundingProxy
