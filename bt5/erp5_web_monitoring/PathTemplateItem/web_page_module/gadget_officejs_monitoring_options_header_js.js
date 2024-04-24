@@ -1,7 +1,9 @@
-/*global document, window, rJS, RSVP */
+/*global document, window, rJS, RSVP, Rusha */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP) {
+(function (document, window, rJS, RSVP, Rusha) {
   "use strict";
+
+  var rusha = new Rusha();
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -76,9 +78,33 @@
       case "promise":
         header_options.refresh_action = true;
         return header_options;
+      case "opml":
+        return new RSVP.Queue()
+          .push(function () {
+            var hosting_key = rusha.digestFromString(page_options.jio_key);
+            return RSVP.all([
+              gadget.getUrlFor({command: 'push_history', options: {
+                page: "ojsm_jump",
+                jio_key: hosting_key,
+                title: page_options.opml_title,
+                view_title: "Related Instance Tree"
+              }}),
+              gadget.getUrlFor({command: 'change', options: {
+                page: 'ojsm_opml_delete',
+                jio_key: page_options.jio_key,
+                return_url: 'settings_configurator'
+              }})
+            ]);
+          })
+          .push(function (url_list) {
+            header_options.jump_url = url_list[0];
+            header_options.delete_url = url_list[1];
+            header_options.save_action = true;
+            return header_options;
+          });
       default:
         return header_options;
       }
     });
 
-}(document, window, rJS, RSVP));
+}(document, window, rJS, RSVP, Rusha));
