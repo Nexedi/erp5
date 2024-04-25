@@ -6,3 +6,4 @@ portal_types/Software Instance Module/monitoring_view
 portal_types/Software Instance/monitoring_processes_view
 portal_types/Software Instance/monitoring_resources_view
 portal_types/Software Instance/monitoring_view
+portal_types/opml/monitoring_view
