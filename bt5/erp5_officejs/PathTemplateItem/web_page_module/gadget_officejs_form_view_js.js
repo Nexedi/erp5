@@ -178,9 +178,17 @@
       }
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          // render dates with proper format
+          function truncate(str, n) {
+            return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
+          }
           var i, date, len = result.data.total_rows, date_key_array;
           for (i = 0; i < len; i += 1) {
+            // truncate long strings
+            for (var key in result.data.rows[i].value) {
+              result.data.rows[i].value[key] =
+                truncate(result.data.rows[i].value[key], 40);
+            }
+            // render dates with proper format
             date_key_array = Object.keys(
               result.data.rows[i].value).filter((k) => k.includes("date") ||
                                                 k.includes("Date"));
