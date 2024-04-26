@@ -2178,3 +2178,26 @@ class TestImage(ERP5TypeTestCase):
           content_type,
           (filename, image.getContentType(), content_type))
       self.portal.manage_delObjects([self.id()])
+
+
+class Base_generateBarcodeImageTest(ERP5TypeTestCase):
+
+  def test_datamatrix_png(self):
+    png = self.portal.Base_generateBarcodeImage(
+      barcode_type='datamatrix', data='test')
+    self.assertTrue(png.startswith(b'\x89PNG'), png)
+
+  def test_ean13_png(self):
+    png = self.portal.Base_generateBarcodeImage(
+      barcode_type='ean13', data='0799439112766')
+    self.assertTrue(png.startswith(b'\x89PNG'), png)
+
+  def test_code128_png(self):
+    png = self.portal.Base_generateBarcodeImage(
+      barcode_type='code128', data='123')
+    self.assertTrue(png.startswith(b'\x89PNG'), png)
+
+  def test_qrcode_png(self):
+    png = self.portal.Base_generateBarcodeImage(
+      barcode_type='qrcode', data='test')
+    self.assertTrue(png.startswith(b'\x89PNG'), png)
