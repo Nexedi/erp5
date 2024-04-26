@@ -25,8 +25,8 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import str2bytes
 import io
-import unittest
 import six.moves.urllib as urllib
 import six.moves.http_client
 from DateTime import DateTime
@@ -226,13 +226,13 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
     ret = self.publish(
       '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
       basic='%s:current' % self.id(),
-      stdin=io.BytesIO(urllib.parse.urlencode({
+      stdin=io.BytesIO(str2bytes(urllib.parse.urlencode({
         'Base_callDialogMethod:method': '',
         'dialog_id': 'Alarm_viewSolveDialog',
         'dialog_method': 'Alarm_solve',
         'form_id': 'Alarm_view',
         'selection_name': 'foo_selection',
-      })),
+      }))),
       request_method="POST",
       handle_errors=False
     )
@@ -259,7 +259,7 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
 
   def check_user_can_login(self):
     ret = self.publish(self.portal.person_module.getPath(), basic='user-login:secret')
-    self.assertIn('Persons', ret.getBody())
+    self.assertIn(b'Persons', ret.getBody())
     self.assertEqual(ret.getStatus(), six.moves.http_client.OK)
     self.loginByUserName('user-login')
     self.assertIn(
