@@ -30,8 +30,9 @@
           return gadget.jio_allDocs({
             query: '(portal_type:"Software Instance") AND (specialise_title:"' +
             options.title + '")',
-            select_list: ["_links", "title", "parameters", "aggregate_reference"],
-          })
+            sort_on: [["title", "ascending"]],
+            select_list: ["_links", "title", "parameters", "aggregate_reference"]
+          });
         })
         .push(function (result) {
           return gadget.changeState({instance_dict: result});
