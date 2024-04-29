@@ -79,6 +79,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>graph</string>
                         <string>listbox</string>
                       </list>
                     </value>
