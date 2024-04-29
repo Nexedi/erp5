@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,15 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
               </tuple>
             </value>
         </item>
@@ -78,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ojsm_graph_field.js</string> </value>
+            <value> <string>gadget_officejs_monitoring_submit.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,15 +83,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ojsm_graph_field_js</string> </value>
+            <value> <string>gadget_officejs_monitoring_submit_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -107,11 +99,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Officejs Monitoring Graph JS</string> </value>
+            <value> <string>Monitoring Submit</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -173,7 +167,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -197,7 +191,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1514308148.29</float>
+                              <float>1714399878.9</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1016.15098.37978.45994</string> </value>
+                      <value> <string>1016.14835.20658.8448</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1714415735.15</float>
+                              <float>1714399889.98</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -297,7 +291,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -329,7 +323,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1514308114.16</float>
+                              <float>1714399832.4</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
