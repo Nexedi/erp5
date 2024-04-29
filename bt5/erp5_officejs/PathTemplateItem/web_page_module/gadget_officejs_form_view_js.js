@@ -56,7 +56,8 @@
         for (i = 0; i < field_definition.values.default_params.length; i += 1) {
           param_name = field_definition.values.default_params[i][0];
           doc_key = field_definition.values.default_params[i][1];
-          if (context_document.hasOwnProperty(doc_key) && context_document[doc_key]) {
+          if (context_document.hasOwnProperty(doc_key) &&
+              context_document[doc_key]) {
             extra_query = ` AND ${param_name}:"${context_document[doc_key]}"`;
             result.query += escape(extra_query);
           }
@@ -78,6 +79,12 @@
     }
     if (field_definition.values.style_columns) {
       gadget.state.style_columns = field_definition.values.style_columns;
+    }
+    function truncate(str, n) {
+      return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
+    }
+    if (field_definition.type == "TextAreaField") {
+      result["default"] = truncate(result["default"], 100);
     }
     return result;
   }
@@ -164,10 +171,11 @@
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
-    // XXX fix date rendering
+    // Format date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
-      if (gadget.state.style_columns && gadget.state.style_columns[0][0] === 'jio_allDocs') {
+      if (gadget.state.style_columns &&
+          gadget.state.style_columns[0][0] === 'jio_allDocs') {
         return new RSVP.Queue()
           .push(function () {
             return gadget.declareGadget(gadget.state.style_columns[0][1]);
@@ -240,6 +248,13 @@
 
     .declareMethod("triggerSubmit", function (argument_list) {
       var gadget = this, child_gadget, content_dict;
+      if (gadget.state.form_definition.portal_type_dict.custom_submit) {
+        return gadget.declareGadget(gadget.state.form_definition
+                                    .portal_type_dict.custom_submit)
+          .push(function (submit_gadget) {
+            return submit_gadget.handle_submit(argument_list, gadget.state);
+          });
+      }
       return gadget.getDeclaredGadget('erp5_pt_gadget')
         .push(function (result) {
           child_gadget = result;
