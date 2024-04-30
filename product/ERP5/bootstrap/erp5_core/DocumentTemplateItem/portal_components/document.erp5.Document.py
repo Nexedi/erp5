@@ -27,8 +27,9 @@
 #
 ##############################################################################
 
+import logging
 import re
-from zLOG import LOG, WARNING
+from zLOG import LOG
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -102,6 +103,7 @@ class DocumentConversionServerProxy():
   """
   def __init__(self, context):
     self._serverproxy_list = []
+    self._logger = logging.getLogger(__name__)
     preference_tool = getToolByName(context, 'portal_preferences')
     self._ooo_server_retry = (
       preference_tool.getPreferredDocumentConversionServerRetry() or
@@ -113,9 +115,9 @@ class DocumentConversionServerProxy():
       if not (address and port):
         raise ConversionError('OOoDocument: cannot proceed with conversion:'
               ' conversion server url is not defined in preferences')
-
-      LOG('Document', WARNING, 'PreferredOoodocServer{Address,PortNumber}' + \
-          ' are DEPRECATED please use PreferredDocumentServerUrl instead', error=True)
+      self._logger.warning(
+        'PreferredOoodocServer{Address,PortNumber} are DEPRECATED '
+        'please use PreferredDocumentServerUrl instead')
 
       uri_list =  ['%s://%s:%s' % ('http', address, port)]
 
@@ -208,6 +210,18 @@ class DocumentConversionServerProxy():
 
   def __getattr__(self, attr):
     return partial(self._proxy_function, attr)
+
+  def close(self):
+    error_list = []
+    for server_addr, proxy in self._serverproxy_list:
+      try:
+        proxy.__call__('close')()
+      except Exception as e:
+        self._logger.exception('Error closing %s', server_addr)
+        error_list.append(e)
+    for e in error_list:
+      raise e
+
 
 from erp5.component.mixin.DocumentExtensibleTraversableMixin import DocumentExtensibleTraversableMixin
 from erp5.component.interface.IConvertable import IConvertable
