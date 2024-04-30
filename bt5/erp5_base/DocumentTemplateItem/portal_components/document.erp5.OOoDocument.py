@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import contextlib
 import re, zipfile
 from io import BytesIO
 import six
@@ -179,7 +180,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         warn('Your oood version is too old, using old method '
             'getAllowedTargets instead of getAllowedTargetList',
              DeprecationWarning)
-
+      finally:
+        server_proxy.close()
       # tuple order is reversed to be compatible with ERP5 Form
       return [(y, x) for x, y in allowed]
 
@@ -209,9 +211,9 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       cs.close()
       z.close()
       return 'text/plain', s
-    server_proxy = DocumentConversionServerProxy(self)
     orig_format = self.getBaseContentType()
-    generate_result = server_proxy.run_generate(self.getId(),
+    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
+      generate_result = server_proxy.run_generate(self.getId(),
                                        bytes2str(enc(bytes(self.getBaseData()))),
                                        None,
                                        format,
@@ -390,8 +392,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       by invoking the conversion server. Store the result
       on the object. Update metadata information.
     """
-    server_proxy = DocumentConversionServerProxy(self)
-    response_code, response_dict, response_message = server_proxy.run_convert(
+    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
+      response_code, response_dict, response_message = server_proxy.run_convert(
                                       self.getFilename() or self.getId(),
                                       bytes2str(enc(bytes(self.getData()))),
                                       None,
@@ -429,8 +431,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # XXX please pass a meaningful description of error as argument
       raise NotConvertedError()
 
-    server_proxy = DocumentConversionServerProxy(self)
-    response_code, response_dict, response_message = \
+    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
+      response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
                                        bytes2str(enc(bytes(self.getBaseData()))),
                                        kw)
