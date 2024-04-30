@@ -86,7 +86,7 @@ class CaptchasDotNet:
         return url
 
     def image (self, random, id = 'captchas.net'):
-        return '''
+        return r'''
         <img class="captchas_dot_net"
             id="%(id)s" src="%(source)s" width="%(width)d" height="%(height)d"
             alt="The CAPTCHA image" />
