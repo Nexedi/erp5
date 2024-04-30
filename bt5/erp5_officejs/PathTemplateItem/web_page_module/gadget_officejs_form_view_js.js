@@ -252,7 +252,7 @@
         return gadget.declareGadget(gadget.state.form_definition
                                     .portal_type_dict.custom_submit)
           .push(function (submit_gadget) {
-            return submit_gadget.handle_submit();
+            return submit_gadget.handle_submit(argument_list, gadget.state);
           });
       }
       return gadget.getDeclaredGadget('erp5_pt_gadget')
