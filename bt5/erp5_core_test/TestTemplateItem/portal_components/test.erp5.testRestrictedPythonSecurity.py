@@ -482,6 +482,26 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected="ok"
     )
 
+  def test_io_StringIO(self):
+    self.createAndRunScript('''
+        import io
+        s = io.StringIO()
+        s.write(u"ok")
+        return s.getvalue()
+        ''',
+        expected=u"ok"
+    )
+
+  def test_io_BytesIO(self):
+    self.createAndRunScript('''
+        import io
+        s = io.BytesIO()
+        s.write(b"ok")
+        return s.getvalue()
+        ''',
+        expected=b"ok"
+    )
+
   def testNumpy(self):
     self.createAndRunScript('''
         import numpy as np
