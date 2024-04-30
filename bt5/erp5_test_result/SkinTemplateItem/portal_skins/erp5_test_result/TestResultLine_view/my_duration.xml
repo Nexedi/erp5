@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: modules[\'datetime\'].timedelta(seconds=context.getProperty(\'duration\'))</string> </value>
+            <value> <string>python: str(modules[\'datetime\'].timedelta(seconds=int(context.getProperty(\'duration\'))))</string> </value>
         </item>
       </dictionary>
     </pickle>
