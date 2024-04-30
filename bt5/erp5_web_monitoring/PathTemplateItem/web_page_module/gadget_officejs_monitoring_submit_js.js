@@ -13,8 +13,14 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("handle_submit", function () {
-      return this.redirect({command: 'reload'});
+    .declareMethod("handle_submit", function (argument_list, options) {
+      switch (options.options.portal_type) {
+      case "Instance Tree":
+        //XXX do the old parameter gadget save here and fix it
+        return this.redirect({command: 'reload'});
+      default:
+        return this.redirect({command: 'reload'});
+      }
     });
 
 }(document, window, rJS, RSVP));
