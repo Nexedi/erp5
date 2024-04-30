@@ -440,7 +440,11 @@ def fill_args_from_request(*optional_args):
   required by the method.
   """
   def decorator(wrapped):
-    names = inspect.getargspec(wrapped)[0]
+    if six.PY3:
+      getfullargspec = inspect.getfullargspec
+    else:
+      getfullargspec = inspect.getargspec
+    names = getfullargspec(wrapped)[0]
     assert names[:2] == ['self', 'REQUEST']
     del names[:2]
     names += optional_args
