@@ -241,7 +241,10 @@ from ZODB.ExportImport import TemporaryFile, export_end_marker
 from ZODB.utils import p64
 from ZODB.utils import u64
 from functools import partial
-from inspect import getargspec
+if six.PY2:
+  from inspect import getargspec as getfullargspec
+else:
+  from inspect import getfullargspec
 from OFS import ObjectManager
 from . import ppml
 
@@ -328,7 +331,7 @@ def exportXML(jar, oid, file=None):
     # can have values that have a shorter representation in 'repr' instead of
     # 'base64' (see ppml.convert) and ppml.String does not support this.
     load = jar._storage.load
-    if 'version' in getargspec(load).args: # BBB: ZODB<5 (TmpStore)
+    if 'version' in getfullargspec(load).args: # BBB: ZODB<5 (TmpStore)
         load = partial(load, version='')
     pickle_dict = {oid: None}
     max_cache = [1e7] # do not cache more than 10MB of pickle data
