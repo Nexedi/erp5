@@ -18,13 +18,20 @@ Change default behaviour of MailHost to send mails immediately.
 In ERP5, we have Activity Tool to postpone mail delivery.
 """
 
-from inspect import getargspec, isfunction
-from Products.MailHost.MailHost import MailBase
+from inspect import isfunction
 import six
+if six.PY3:
+  from inspect import getfullargspec
+else:
+  from inspect import getargspec as getfullargspec
+from Products.MailHost.MailHost import MailBase
+
 
 for f in six.itervalues(MailBase.__dict__):
   if isfunction(f):
-    args, _, _, defaults = getargspec(f)
+    argspec = getfullargspec(f)
+    args = argspec.args
+    defaults = argspec.defaults
     try:
       i = args.index('immediate') - len(args)
     except ValueError:
