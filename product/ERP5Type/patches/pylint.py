@@ -342,25 +342,25 @@ from astroid import register_module_extender
 def AccessControl_PermissionRole_transform():
     return AstroidBuilder(MANAGER).string_build('''
 def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
-    return None
+    return tuple()
 
 class PermissionRole(object):
     def __init__(self, name, default=('Manager',)):
         return None
     def __of__(self, parent):
-        return None
+        return imPermissionRole(self)
     def rolesForPermissionOn(self, value):
-        return None
+        return self.rolesForPermissionOn(None, self)
 
 class imPermissionRole(object):
     def __of__(self, value):
-        return None
+        return self.rolesForPermissionOn(None, self)
     def rolesForPermissionOn(self, value):
-        return None
+        return rolesForPermissionOn(None, self)
     def __getitem__(self, i):
         return None
     def __len__(self):
-        return None
+        return 0
 
 _what_not_even_god_should_do = []
 ''')
