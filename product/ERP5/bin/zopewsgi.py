@@ -157,6 +157,7 @@ def app_wrapper(large_file_threshold, webdav_ports):
 
 def createServer(application, logger, **kw):
     global server
+    kw.setdefault('asyncore_use_poll', True)
     server = create_server(
         TransLogger(application, logger=logger),
         # We handle X-Forwarded-For by ourselves. See ERP5Type/patches/WSGITask.py.
