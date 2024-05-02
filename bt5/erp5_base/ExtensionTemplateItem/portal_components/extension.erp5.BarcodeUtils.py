@@ -2,11 +2,9 @@ import io
 import six
 from Products.ERP5Type.Utils import str2bytes
 
+# pylint:disable=import-error
 def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
   # type: (str, str, HTTPRequest) -> bytes
-  # huBarcode's DataMatrix support has limitation for data size.
-  # huBarcode's QRCode support is broken.
-  # more 1-D barcode types can be added by pyBarcode library.
   barcode_type = barcode_type.lower()
   if barcode_type == 'datamatrix':
     from subprocess import Popen, PIPE
@@ -62,3 +60,4 @@ def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
   if REQUEST is not None:
     REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
   return output
+# pylint:enable=import-error
