@@ -223,7 +223,7 @@ class DocumentConversionServerProxy():
       try:
         proxy.__call__('close')()
       except Exception as e:
-        self._logger.exception('Error closing %s' % server_addr)
+        self._logger.exception('Error closing %s', server_addr)
         error_list.append(e)
     for e in error_list:
       raise e
