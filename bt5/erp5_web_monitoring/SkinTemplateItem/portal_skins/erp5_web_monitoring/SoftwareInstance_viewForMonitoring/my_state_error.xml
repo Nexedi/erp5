@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="LinkField" module="Products.Formulator.StandardFields"/>
+      <global name="StringField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_software_release</string> </value>
+            <value> <string>my_state_error</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -17,10 +17,6 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_link</string> </key>
-                    <value> <string>The specified link is broken.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
@@ -43,14 +39,6 @@
                 </item>
                 <item>
                     <key> <string>autocomplete</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>check_link</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>check_timeout</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -95,10 +83,6 @@
                 </item>
                 <item>
                     <key> <string>input_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>link_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -141,14 +125,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>check_link</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>check_timeout</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -190,10 +166,6 @@
                 </item>
                 <item>
                     <key> <string>input_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>link_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -236,14 +208,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>check_link</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>check_timeout</string> </key>
-                    <value> <float>7.0</float> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -277,7 +241,11 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+if (context_document && context_document.state ) { result.default = context_document.state.error ? context_document.state.error : "0"; }
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -286,10 +254,6 @@
                 <item>
                     <key> <string>input_type</string> </key>
                     <value> <string>text</string> </value>
-                </item>
-                <item>
-                    <key> <string>link_type</string> </key>
-                    <value> <string>external</string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -301,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Software Release</string> </value>
+                    <value> <string>Promises Error</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

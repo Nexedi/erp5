@@ -132,7 +132,9 @@ url_list = [
   "gadget_officejs_monitoring_options_header.html",
   "gadget_officejs_monitoring_options_header.js",
   "gadget_officejs_monitoring_submit.html",
-  "gadget_officejs_monitoring_submit.js"
+  "gadget_officejs_monitoring_submit.js",
+  "gadget_erp5_field_parent.html",
+  "gadget_erp5_field_parent.js"
 ]
 
 return url_list

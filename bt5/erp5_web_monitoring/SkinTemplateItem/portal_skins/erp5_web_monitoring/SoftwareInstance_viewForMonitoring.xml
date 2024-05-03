@@ -101,9 +101,10 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_date</string>
-                        <string>my_state</string>
                         <string>my_status</string>
+                        <string>my_date</string>
+                        <string>my_state_error</string>
+                        <string>my_state_ok</string>
                         <string>my_public_url</string>
                         <string>my_private_url</string>
                       </list>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_channel</string> </value>
+            <value> <string>my_state_ok</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -35,6 +35,10 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>autocomplete</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -117,6 +121,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>autocomplete</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -196,6 +204,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>autocomplete</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -229,7 +241,11 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+if (context_document && context_document.state ) { result.default = context_document.state.success ? context_document.state.success : "0"; }
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -249,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Instance Tree</string> </value>
+                    <value> <string>Promises Ok</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

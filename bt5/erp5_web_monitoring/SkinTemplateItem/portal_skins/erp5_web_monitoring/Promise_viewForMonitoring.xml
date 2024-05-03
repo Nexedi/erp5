@@ -118,12 +118,12 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_channel</string>
-                        <string>my_channel_item</string>
-                        <string>my_computer</string>
-                        <string>my_partition</string>
-                        <string>my_partition_ipv6</string>
-                        <string>my_software_release</string>
+                        <string>my_parent_instance_tree</string>
+                        <string>my_parent_software_instance</string>
+                        <string>my_parent_computer</string>
+                        <string>my_parent_partition</string>
+                        <string>my_parent_ipv6</string>
+                        <string>my_parent_software_release</string>
                       </list>
                     </value>
                 </item>
