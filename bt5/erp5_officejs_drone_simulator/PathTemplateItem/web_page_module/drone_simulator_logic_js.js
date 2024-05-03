@@ -6,6 +6,50 @@ var GAMEPARAMETERS = {};
 //for DEBUG/TEST mode
 var baseLogFunction = console.log, console_log = "";
 
+function spawnDrone(spawnDrone_x, spawnDrone_y, spawnDrone_z, spawnDrone_index,
+                    spawnDrone_drone_info, spawnDrone_api, spawnDrone_scene,
+                    spawnDrone_droneList) {
+  "use strict";
+  var default_drone_AI = spawnDrone_api.getDroneAI(), spawnDrone_code,
+    spawnDrone_base, code_eval;
+  if (default_drone_AI) {
+    spawnDrone_code = default_drone_AI;
+  } else {
+    spawnDrone_code = spawnDrone_drone_info.script_content;
+  }
+  code_eval = "let spawnDrone_drone = new DroneManager(spawnDrone_scene, " +
+      spawnDrone_index + ', spawnDrone_api);' +
+      "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
+      " GameManager, DroneLogAPI, FixedWingDroneAPI, BABYLON, " +
+      "GAMEPARAMETERS) {" +
+      "Date.now = function () {" +
+      "return me._API._gameManager.getCurrentTime();}; " +
+      "function Date() {if (!(this instanceof Date)) " +
+      "{throw new Error('Missing new operator');} " +
+      "if (arguments.length === 0) {return new NativeDate(Date.now());} " +
+      "else {return new NativeDate(...arguments);}}";
+  // Simple desactivation of direct access of all globals
+  // It is still accessible in reality, but it will me more visible
+  // if people really access them
+  if (spawnDrone_x !== null && spawnDrone_y !== null && spawnDrone_z !== null) {
+    code_eval += "me.setStartingPosition(" + spawnDrone_x + ", "
+      + spawnDrone_y + ", " + spawnDrone_z + ");";
+  }
+  spawnDrone_base = code_eval;
+  code_eval +=
+    spawnDrone_code + "}; droneMe(Date, spawnDrone_drone, Math, {});";
+  spawnDrone_base += "};spawnDrone_droneList.push(spawnDrone_drone)";
+  code_eval += "spawnDrone_droneList.push(spawnDrone_drone)";
+  /*jslint evil: true*/
+  try {
+    eval(code_eval);
+  } catch (error) {
+    console.error(error);
+    eval(spawnDrone_base);
+  }
+  /*jslint evil: false*/
+}
+
 /******************************* DRONE MANAGER ********************************/
 var DroneManager = /** @class */ (function () {
   "use strict";
@@ -1002,43 +1046,6 @@ var GameManager = /** @class */ (function () {
       }
       return false;
     }
-    function spawnDrone(x, y, z, index, drone_info, api) {
-      var default_drone_AI = api.getDroneAI(), code, base, code_eval;
-      if (default_drone_AI) {
-        code = default_drone_AI;
-      } else {
-        code = drone_info.script_content;
-      }
-      code_eval = "let drone = new DroneManager(ctx._scene, " +
-          index + ', api);' +
-          "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
-          " GameManager, DroneLogAPI, FixedWingDroneAPI, BABYLON, " +
-          "GAMEPARAMETERS) {" +
-          "Date.now = function () {" +
-          "return me._API._gameManager.getCurrentTime();}; " +
-          "function Date() {if (!(this instanceof Date)) " +
-          "{throw new Error('Missing new operator');} " +
-          "if (arguments.length === 0) {return new NativeDate(Date.now());} " +
-          "else {return new NativeDate(...arguments);}}";
-      // Simple desactivation of direct access of all globals
-      // It is still accessible in reality, but it will me more visible
-      // if people really access them
-      if (x !== null && y !== null && z !== null) {
-        code_eval += "me.setStartingPosition(" + x + ", " + y + ", " + z + ");";
-      }
-      base = code_eval;
-      code_eval += code + "}; droneMe(Date, drone, Math, {});";
-      base += "};ctx._droneList.push(drone)";
-      code_eval += "ctx._droneList.push(drone)";
-      /*jslint evil: true*/
-      try {
-        eval(code_eval);
-      } catch (error) {
-        console.error(error);
-        eval(base);
-      }
-      /*jslint evil: false*/
-    }
     function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
       var u = Math.random(), v = Math.random(),
         rx = Math.random() * rx0, ry = Math.random() * ry0,
@@ -1066,7 +1073,7 @@ var GameManager = /** @class */ (function () {
           i
         );
         spawnDrone(position.x, position.y, position.z, i,
-                   drone_list[i], api);
+                   drone_list[i], api, ctx._scene, ctx._droneList);
       }
     }
   };
