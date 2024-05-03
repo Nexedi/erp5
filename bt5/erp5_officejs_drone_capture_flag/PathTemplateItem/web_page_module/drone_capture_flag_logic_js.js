@@ -6,6 +6,56 @@ var GAMEPARAMETERS = {}, TEAM_USER = "user", TEAM_ENEMY = "enemy";
 //for DEBUG/TEST mode
 var baseLogFunction = console.log, console_log = "";
 
+function spawnDrone(spawnDrone_x, spawnDrone_y, spawnDrone_z, spawnDrone_index,
+                    spawnDrone_drone_info, spawnDrone_api, spawnDrone_team,
+                    spawnDrone_scene, spawnDrone_droneList_user,
+                    spawnDrone_droneList_enemy) {
+  "use strict";
+  var default_drone_AI = spawnDrone_api.getDroneAI(), spawnDrone_code,
+    code_eval;
+  if (default_drone_AI) {
+    spawnDrone_code = default_drone_AI;
+  } else {
+    spawnDrone_code = spawnDrone_drone_info.script_content;
+  }
+  if (!spawnDrone_code.includes("me.onStart")) {
+    spawnDrone_code = "me.onStart = function () { me.exit(); };";
+  }
+  code_eval = "let spawnDrone_drone = new DroneManager(spawnDrone_scene, " +
+    spawnDrone_index + ', spawnDrone_api, spawnDrone_team);' +
+    "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
+    " GameManager, FixedWingDroneAPI, EnemyDroneAPI, BABYLON, " +
+    "GAMEPARAMETERS) {" +
+    "Date.now = function () {" +
+    "return me._API._gameManager.getCurrentTime();}; " +
+    "function Date() {if (!(this instanceof Date)) " +
+    "{throw new Error('Missing new operator');} " +
+    "if (arguments.length === 0) {return new NativeDate(Date.now());} " +
+    "else {return new NativeDate(...arguments);}}";
+  // Simple desactivation of direct access of all globals
+  // It is still accessible in reality, but it will me more visible
+  // if people really access them
+  if (spawnDrone_x !== null && spawnDrone_y !== null && spawnDrone_z !== null) {
+    code_eval += "me.setStartingPosition(" + spawnDrone_x + ", "
+      + spawnDrone_y + ", " + spawnDrone_z + ");";
+  }
+  //base = code_eval;
+  code_eval +=
+    spawnDrone_code + "}; droneMe(Date, spawnDrone_drone, Math, {});";
+  //base +=
+  //  "};spawnDrone_droneList_" + spawnDrone_team + ".push(spawnDrone_drone)";
+  code_eval +=
+    "spawnDrone_droneList_" + spawnDrone_team + ".push(spawnDrone_drone)";
+  /*jslint evil: true*/
+  eval(code_eval);
+  /*jslint evil: false*/
+  /*try {
+    eval(code_eval);
+  } catch (error) {
+    eval(base);
+  }*/
+}
+
 /******************************* DRONE MANAGER ********************************/
 var DroneManager = /** @class */ (function () {
   "use strict";
@@ -1331,46 +1381,6 @@ var GameManager = /** @class */ (function () {
       }
       return false;
     }
-    function spawnDrone(x, y, z, index, drone_info, api, team) {
-      var default_drone_AI = api.getDroneAI(), code, code_eval;
-      if (default_drone_AI) {
-        code = default_drone_AI;
-      } else {
-        code = drone_info.script_content;
-      }
-      if (!code.includes("me.onStart")) {
-        code = "me.onStart = function () { me.exit(); };";
-      }
-      code_eval = "let drone = new DroneManager(ctx._scene, " +
-          index + ', api, team);' +
-          "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
-          " GameManager, FixedWingDroneAPI, EnemyDroneAPI, BABYLON, " +
-          "GAMEPARAMETERS) {" +
-          "Date.now = function () {" +
-          "return me._API._gameManager.getCurrentTime();}; " +
-          "function Date() {if (!(this instanceof Date)) " +
-          "{throw new Error('Missing new operator');} " +
-          "if (arguments.length === 0) {return new NativeDate(Date.now());} " +
-          "else {return new NativeDate(...arguments);}}";
-      // Simple desactivation of direct access of all globals
-      // It is still accessible in reality, but it will me more visible
-      // if people really access them
-      if (x !== null && y !== null && z !== null) {
-        code_eval += "me.setStartingPosition(" + x + ", " + y + ", " + z + ");";
-      }
-      //base = code_eval;
-      code_eval += code + "}; droneMe(Date, drone, Math, {});";
-      //base += "};ctx._droneList_" + team + ".push(drone)";
-      code_eval += "ctx._droneList_" + team + ".push(drone)";
-      /*jslint evil: true*/
-      eval(code_eval);
-      /*jslint evil: false*/
-      /*try {
-        eval(code_eval);
-      } catch (error) {
-        eval(base);
-      }*/
-    }
     function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
       var u = Math.random(), v = Math.random(),
         rx = Math.random() * rx0, ry = Math.random() * ry0,
@@ -1404,7 +1414,8 @@ var GameManager = /** @class */ (function () {
           i + id_offset
         );
         spawnDrone(position.x, position.y, position.z, i + id_offset,
-                   drone_list[i], api, team);
+                   drone_list[i], api, team, ctx._scene, ctx._droneList_user,
+                   ctx._droneList_enemy);
       }
     }
   };
