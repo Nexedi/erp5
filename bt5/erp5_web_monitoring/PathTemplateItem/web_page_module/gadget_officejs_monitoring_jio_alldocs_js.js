@@ -53,9 +53,6 @@
                   return date_string + "+0000";
                 }
 
-                function truncate(str, n) {
-                  return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
-                }
                 if (status_history && status_history.hasOwnProperty('data')) {
                   // the status history list is reversed ([old, ...., newest])
                   len = status_history.data.length;
@@ -118,7 +115,7 @@
                             type: "DateTimeField"
                           }
                         },
-                        message: truncate(status_history.data[i].message, 100),
+                        message: status_history.data[i].message,
                         "listbox_uid:list": {
                           key: "listbox_uid:list",
                           value: 2713
