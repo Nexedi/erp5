@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_state</string> </value>
+            <value> <string>my_state_error</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -35,6 +35,10 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>autocomplete</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -114,6 +118,10 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>autocomplete</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -235,7 +243,7 @@
                     <key> <string>extra</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-if (context_document && context_document.state ) { result.default = context_document.state.success + \' success - \' + context_document.state.error + \' errors\'; }
+if (context_document && context_document.state ) { result.default = context_document.state.error ? context_document.state.error : "0"; }
 
 ]]></string> </value>
                 </item>
@@ -257,7 +265,7 @@ if (context_document && context_document.state ) { result.default = context_docu
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Promises</string> </value>
+                    <value> <string>Promises Error</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
