@@ -1905,18 +1905,30 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         activity_tool.activate(activity=activity, group_id=str(i)
                               ).doSomething(arg)
       activity_tool.activate(activity=activity, group_id='~'
-                            ).doSomething(' ' * n)
+                            ).doSomething(last_message_arg)
       self.tic()
       self.assertEqual(len(invoke_list), N)
-      invoke_list.remove(n)
+      invoke_list.remove(len(last_message_arg))
       self.assertEqual(set(invoke_list), {len(arg)})
       del invoke_list[:]
     activity_tool.__class__.doSomething = \
       lambda self, arg: invoke_list.append(len(arg))
+    original_dump = Message.dump
+    def dump(m):
+      dumped = original_dump(m)
+      if m.args == (last_message_arg, ):
+        dumped += b' ' * n
+      return dumped
+    Message.dump = staticmethod(dump)
     try:
       DB.query = query
       for activity in ActivityTool.activity_dict:
+        # We'll activate N-1 times with `arg`, which is a long string that
+        # should produce large messsage dumps and 1 time with
+        # `last_message_arg`, for which dump is patched to artificially
+        # produce a message dump `n` bytes longer than usual.
         arg = ' ' * (max_allowed_packet // N)
+        last_message_arg = 'last'
         # Find the size of the last message argument, such that all messages
         # are inserted in a single query whose size is to the maximum allowed.
         n = 0
@@ -1937,6 +1949,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del activity_tool.__class__.doSomething
       DB.query = original_query
+      Message.dump = original_dump
 
   def test_115_TestSerializationTagSQLDictPreventsParallelExecution(self):
     """
