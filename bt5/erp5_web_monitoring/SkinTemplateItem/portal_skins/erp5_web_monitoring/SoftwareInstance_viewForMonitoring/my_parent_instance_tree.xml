@@ -2,18 +2,27 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="HyperLinkField" module="Products.ERP5Form.HyperLinkField"/>
+      <global name="GadgetField" module="Products.ERP5Form.GadgetField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_specialise_title</string> </value>
+            <value> <string>my_parent_instance_tree</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>no_validator</string> </key>
+                    <value> <string>Does not support this operation.</string> </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -21,7 +30,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -41,7 +58,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -49,11 +74,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>href</string> </key>
+                    <key> <string>js_sandbox</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -64,7 +101,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -84,7 +129,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -92,11 +145,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>href</string> </key>
+                    <key> <string>js_sandbox</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -107,8 +172,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -127,24 +200,47 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>extra</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-if (context_document && context_document.specialise_title) { result.default = context_document.specialise_title; }
-
-]]></string> </value>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>gadget_url</string> </key>
+                    <value> <string>gadget_erp5_field_parent.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>href</string> </key>
-                    <value> <string>*</string> </value>
+                    <key> <string>js_sandbox</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>{"field": "instance_tree"}</string>
+                          <string>{"field": "instance_tree"}</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Instance Tree</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>

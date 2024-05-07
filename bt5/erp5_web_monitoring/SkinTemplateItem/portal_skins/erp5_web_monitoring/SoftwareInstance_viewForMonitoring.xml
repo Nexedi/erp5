@@ -114,7 +114,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_specialise_title</string>
+                        <string>my_parent_instance_tree</string>
                         <string>my_aggregate_reference</string>
                         <string>my_partition_id</string>
                         <string>my_ipv4</string>
