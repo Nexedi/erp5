@@ -178,6 +178,13 @@
           })
           .push(function (jio_alldocs) {
             return jio_alldocs.jio_allDocs(param_list, gadget);
+          })
+          .push(function (result) {
+            if (result) {
+              return result;
+            } else {
+              return gadget.jio_allDocs(param_list[0]);
+            }
           });
       }
       return gadget.jio_allDocs(param_list[0])
