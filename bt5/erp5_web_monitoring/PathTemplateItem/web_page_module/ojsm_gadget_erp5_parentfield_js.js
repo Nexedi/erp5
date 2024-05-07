@@ -40,8 +40,12 @@
           });
         })
         .push(function (result) {
-          for (i = 0; i < result.data.total_rows; i += 1) {
-            software_instance = result.data.rows[i].value;
+          if (result) {
+            for (i = 0; i < result.data.total_rows; i += 1) {
+              software_instance = result.data.rows[i].value;
+            }
+          } else {
+            software_instance = {};
           }
           switch (options.field) {
           case "instance_tree":
@@ -68,19 +72,27 @@
                 return gadget.changeState(state_dict);
               });
           case "software_instance":
-            return new RSVP.Queue()
-              .push(function () {
-                return gadget.getUrlFor({command: 'push_history', options: {
-                  jio_key: software_instance.reference
-                }});
-              })
-              .push(function (hosting_url) {
-                state_dict.content = link_template({
-                  url: hosting_url,
-                  title: software_instance.title
+            if (software_instance.reference) {
+              return new RSVP.Queue()
+                .push(function () {
+                  return gadget.getUrlFor({command: 'push_history', options: {
+                    jio_key: software_instance.reference
+                  }});
+                })
+                .push(function (hosting_url) {
+                  state_dict.content = link_template({
+                    url: hosting_url,
+                    title: software_instance.title
+                  });
+                  return gadget.changeState(state_dict);
                 });
-                return gadget.changeState(state_dict);
+            } else {
+              state_dict.content = link_template({
+                url: '*',
+                title: options.channel_item
               });
+              return gadget.changeState(state_dict);
+            }
           case "computer":
             state_dict.content = software_instance.aggregate_reference;
             return gadget.changeState(state_dict);
