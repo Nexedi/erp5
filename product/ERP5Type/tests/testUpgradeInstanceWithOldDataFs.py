@@ -280,7 +280,7 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
     )
     self.assertEqual(new_id_uid, 457)
 
-  def check_documents(self):
+  def check_existing_documents(self):
     self.assertEqual(len(self.portal.organisation_module.contentValues()), 2)
     organisation = self.portal.organisation_module.test_organisation
     self.assertEqual(organisation.getTitle(), 'test héhé')
@@ -296,10 +296,11 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       self.portal.person_module.test_person_login.getUserId())
     self.assertEqual(workflow_history[-1]['time'], DateTime(2123, 4, 5))
 
-    organisation.setDescription('test\n\héhé\nafter')
+    organisation.setDescription('test\nhéhé\nafter')
     self.tic()
-    self.assertEqual(organisation.getDescription(), 'test\n\héhé\nafter')
+    self.assertEqual(organisation.getDescription(), 'test\nhéhé\nafter')
 
+  def check_existing_dms_documents(self):
     self.assertEqual(
       self.portal.document_module.file_content_ascii.getData(),
       b'easy',
@@ -312,6 +313,21 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       self.portal.document_module.file_content_invalid_utf8.getData(),
       b'\xff',
     )
+
+  def check_new_documents(self):
+    existing_document_list = list(self.portal.document_module.contentValues())
+    self.assertTrue(existing_document_list)
+    self.portal.document_module.newContent(portal_type='File')
+    self.tic()
+    self.assertEqual(
+      len(list(self.portal.document_module.contentValues())),
+      len(existing_document_list) + 1,
+    )
+
+  def check_documents(self):
+    self.check_existing_documents()
+    self.check_existing_dms_documents()
+    self.check_new_documents()
 
   def check_catalog_as_manager(self):
     self.login()
