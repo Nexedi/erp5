@@ -65,14 +65,16 @@
       }
     }
     if (field_definition.type == "GadgetField") {
-      //TODO allow both, user renderjs_extra + doc info-jio_key
-      if (!field_definition.renderjs_extra) {
-        var extra_dict = {};
-        Object.assign(extra_dict, gadget.state.doc);
-        extra_dict.jio_key = gadget.state.options.jio_key;
-        field_definition.values.renderjs_extra = JSON.stringify(extra_dict);
-        result.renderjs_extra = JSON.stringify(extra_dict);
+      var context_dict = {}, renderjs_extra, rjs_extra_parsed;
+      Object.assign(context_dict, gadget.state.doc);
+      context_dict.jio_key = gadget.state.options.jio_key;
+      if (field_definition.values.renderjs_extra &&
+          !Array.isArray(field_definition.values.renderjs_extra)) {
+        rjs_extra_parsed = JSON.parse(field_definition.values.renderjs_extra);
       }
+      renderjs_extra = Object.assign({}, context_dict, rjs_extra_parsed);
+      field_definition.values.renderjs_extra = JSON.stringify(renderjs_extra);
+      result.renderjs_extra = JSON.stringify(renderjs_extra);
     }
     if (field_definition.values.extra) {
       eval(field_definition.values.extra);
