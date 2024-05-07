@@ -71,7 +71,7 @@ def main(*args):
   for key in ('slapos_directory','working_directory','test_suite_directory',
               'log_directory','run_directory', 'srv_directory', 'proxy_host',
               'software_directory',
-              'proxy_port', 'git_binary','zip_binary','node_quantity',
+              'proxy_port', 'git_binary','node_quantity',
               'test_node_title', 'ipv4_address','ipv6_address','test_suite_master_url',
               'slapos_binary', 'httpd_ip', 'httpd_port', 'httpd_software_access_port',
               'computer_id', 'server_url', 'shared_part_list', 'keep_log_days',
