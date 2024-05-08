@@ -1,3 +1,4 @@
+import zlib
 from Products.CMFActivity.ActiveResult import ActiveResult
 portal = context.getPortalObject()
 active_process = portal.restrictedTraverse(active_process)
@@ -12,7 +13,7 @@ if result_list:
       journal_lib=journal_lib,
       result_list=result_list)
 
-  active_process.postResult(ActiveResult(detail=journal_fragment.encode('utf8').encode('zlib')))
+  active_process.postResult(ActiveResult(detail=zlib.compress(journal_fragment.encode('utf8'))))
 
 # delete no longer needed active process
 this_journal_active_process.getParentValue().manage_delObjects(ids=[this_journal_active_process.getId()])

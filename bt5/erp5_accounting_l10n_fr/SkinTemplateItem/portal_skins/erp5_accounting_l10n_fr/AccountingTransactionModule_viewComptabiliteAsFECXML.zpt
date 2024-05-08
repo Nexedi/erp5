@@ -2,6 +2,6 @@
 <comptabilite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="formatA47A-I-VII-1.xsd" xmlns:tal="http://xml.zope.org/namespaces/tal">
   <exercice>
     <DateCloture tal:content="python: options['at_date'].strftime('%Y-%m-%d')">20141231</DateCloture>
-    <tal:block tal:repeat="result options/result_list"><tal:block tal:replace="structure python: result.detail.decode('zlib')"/></tal:block>
+    <tal:block tal:repeat="result options/result_list"><tal:block tal:replace="structure python: modules['zlib'].decompress(result.detail)"/></tal:block>
   </exercice>
 </comptabilite>
