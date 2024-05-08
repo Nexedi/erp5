@@ -14,7 +14,7 @@
   </head>
   <body>
     <header>
-      <h2 id="invoice_title" tal:define='orig_string string:Invoice; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+      <h2 id="invoice_title" tal:define='orig_string string:Invoice; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                     <span><span tal:content='orig_message'/></span>
                     <span tal:condition='python:translated_message != orig_message'><span tal:content='translated_message'/></span>
       </h2>
@@ -108,8 +108,8 @@
         <div id="invoice_information">
           <div id="invoice_information_title">
             <tal:block tal:define='orig_string        string: Invoice; 
-                              orig_message       python: unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8");
-                              translated_message python: unicode(here.Base_translateString(orig_string),"utf-8")'>
+                              orig_message       python: here.Base_translateString(orig_string, lang=default_language);
+                              translated_message python: here.Base_translateString(orig_string)'>
               <span style="font-weight:bold"><span tal:replace='orig_message'/></span>
               <span style="font-weight:bold" tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
             </tal:block>
@@ -117,8 +117,8 @@
           <div id="invoice_information_detail">
             <div>
               <tal:block tal:define='orig_string        string: Invoice Number; 
-                                orig_message       python: unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8");
-                                translated_message python: unicode(here.Base_translateString(orig_string),"utf-8")'>
+                                orig_message       python: here.Base_translateString(orig_string, lang=default_language);
+                                translated_message python: here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/>:</span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>
               </tal:block>
@@ -126,8 +126,8 @@
             </div>
             <div>
               <tal:block tal:define='orig_string        string: Document Date;
-                                orig_message       python: unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8");
-                                translated_message python: unicode(here.Base_translateString(orig_string),"utf-8")'>
+                                orig_message       python: here.Base_translateString(orig_string, lang=default_language);
+                                translated_message python: here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/>:</span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>
               </tal:block>
@@ -135,29 +135,29 @@
             </div>
             <div>
               <tal:block tal:define='orig_string        string: Currency;
-                                orig_message       python: unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8");
-                                translated_message python: unicode(here.Base_translateString(orig_string),"utf-8")'>
+                                orig_message       python: here.Base_translateString(orig_string, lang=default_language);
+                                translated_message python: here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/>:</span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>
               </tal:block>
               <span tal:content='python:data_dict["currency"]'>EUR</span>
             </div>
             <div>
-              <tal:block tal:define='orig_string string:Payment; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <tal:block tal:define='orig_string string:Payment; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/>:</span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>
               </tal:block>
               <span tal:content='python:data_dict["payment_condition"]'>60 days</span>
             </div>
             <div>
-              <tal:block tal:define='orig_string string:Delivery Mode; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <tal:block tal:define='orig_string string:Delivery Mode; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/>:</span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>
               </tal:block>
               <span tal:content='python:data_dict["delivery_mode"]'>del mode</span>
             </div>
             <div>
-              <tal:block tal:define='orig_string string:Incoterm; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <tal:block tal:define='orig_string string:Incoterm; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/>:</span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>
               </tal:block>
@@ -169,8 +169,8 @@
       <br>
       <div id="product_detail_title">
         <span tal:define='orig_string        string: Products details; 
-                          orig_message       python: unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8");
-                          translated_message python: unicode(here.Base_translateString(orig_string),"utf-8")'>
+                          orig_message       python: here.Base_translateString(orig_string, lang=default_language);
+                          translated_message python: here.Base_translateString(orig_string)'>
           <span style="font-weight:bold"><span tal:replace='orig_message'/></span>
           <span style="font-weight:bold" tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
         </span>
@@ -179,23 +179,23 @@
       <table id="invoice_line">
         <thead>
             <tr>
-              <th tal:define='orig_string string:PROD; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:PROD; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>
-              <th tal:define='orig_string string:QTY; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:QTY; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>
-              <th tal:define='orig_string string:U/P; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:U/P; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>
-              <th tal:define='orig_string string:TAX; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:TAX; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>
-              <th tal:define='orig_string string:PRICE; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:PRICE; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span  tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>
@@ -224,7 +224,7 @@
       <br>
       <table id="total_without_tax">
         <tr>
-          <th tal:define='orig_string string:Total Excluding Tax; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+          <th tal:define='orig_string string:Total Excluding Tax; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
             <span><span tal:replace='orig_message'/>:</span>
             <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>  
           </th>
@@ -234,8 +234,8 @@
 
       <div id="tax_detail_title">
         <span tal:define='orig_string        string: Tax details; 
-                          orig_message       python: unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8");
-                          translated_message python: unicode(here.Base_translateString(orig_string),"utf-8")'>
+                          orig_message       python: here.Base_translateString(orig_string, lang=default_language);
+                          translated_message python: here.Base_translateString(orig_string)'>
           <span style="font-weight:bold"><span tal:replace='orig_message'/></span>
           <span style="font-weight:bold" tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
         </span>
@@ -244,19 +244,19 @@
       <table id="tax">
         <thead>
           <tr>
-              <th tal:define='orig_string string:TAX; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:TAX; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>  
-              <th tal:define='orig_string string:AMT; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:AMT; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>    
-              <th tal:define='orig_string string:RATE; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:RATE; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>   
-              <th tal:define='orig_string string:PRICE; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <th tal:define='orig_string string:PRICE; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
                 <span><span tal:replace='orig_message'/></span>
                 <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></span>
               </th>  
@@ -283,7 +283,7 @@
       </table>
       <table id="total_price">
         <tr>
-          <th tal:define='orig_string string:Total Including Tax; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+          <th tal:define='orig_string string:Total Including Tax; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
             <span><span tal:replace='orig_message'/> :</span>
             <span tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</span>  
           </th>
@@ -293,7 +293,7 @@
         </tr>
       </table>
       <table>
-        <td tal:define='orig_string string:Notes; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+        <td tal:define='orig_string string:Notes; orig_message python:here.Base_translateString(orig_string, lang=default_language); translated_message python:here.Base_translateString(orig_string)'>
           <p><span tal:replace='orig_message'/><span tal:omit-tag='' tal:condition='python:translated_message != orig_message'> / <span tal:replace='translated_message'/></span>:</p>
         </td>
       </table>
