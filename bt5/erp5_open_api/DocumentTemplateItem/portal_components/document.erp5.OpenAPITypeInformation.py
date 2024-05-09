@@ -90,7 +90,7 @@ ModuleSecurityInfo(__name__).declarePublic(
 )
 
 # On python2, make sure we use UTF-8 strings for the json schemas, so that we don't
-# have  ugly u' prefixs in the reprs. This also transforms the collections.OrderedDict
+# have ugly u' prefixes in the reprs. This also transforms the collections.OrderedDict
 # to simple dicts, because the former also have an ugly representation.
 # http://stackoverflow.com/a/13105359
 if six.PY2:
@@ -105,7 +105,7 @@ if six.PY2:
       return [byteify(element) for element in string]
     elif isinstance(string, tuple):
       return tuple(byteify(element) for element in string)
-    elif isinstance(string, unicode):
+    elif isinstance(string, six.text_type):
       return string.encode('utf-8')
     else:
       return string
@@ -175,13 +175,15 @@ class OpenAPIOperation(dict):
     # type: (HTTPRequest) -> Optional[dict]
     """Returns the schema for the request body, or None if no `requestBody` defined
     """
-    request_content_type = request.getHeader('content-type')
-    # TODO there might be $ref ?
-    request_body_definition = self.get(
-      'requestBody', {'content': {}})['content'].get(request_content_type)
-    if request_body_definition:
-      return SchemaWithComponents(
-        self._schema, request_body_definition.get('schema', {}))
+    exact_request_content_type = request.getHeader('content-type')
+    wildcard_request_content_type = '%s/*' % ((exact_request_content_type or '').split('/')[0])
+    for request_content_type in exact_request_content_type, wildcard_request_content_type, '*/*':
+      # TODO there might be $ref ?
+      request_body_definition = self.get(
+        'requestBody', {'content': {}})['content'].get(request_content_type)
+      if request_body_definition:
+        return SchemaWithComponents(
+          self._schema, request_body_definition.get('schema', {}))
 
 
 class OpenAPIParameter(dict):
@@ -340,7 +342,10 @@ class OpenAPITypeInformation(ERP5TypeInformation):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def getSchema(self):
-    stream = io.BytesIO(self.getTextContent() or b'{}')
+    text_content = self.getTextContent() or '{}'
+    if six.PY3:
+      text_content = text_content.encode()
+    stream = io.BytesIO(text_content)
     if self.getContentType() == 'application/x-yaml':
       try:
         import yaml  # pylint:disable=import-error
