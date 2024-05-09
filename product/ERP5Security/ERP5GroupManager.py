@@ -18,6 +18,7 @@
 from collections import defaultdict
 from contextlib import contextmanager
 from threading import local
+import warnings
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -25,8 +26,10 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.ERP5Type \
-  import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+from Products.ERP5Type.ERP5Type import (
+    ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT,
+    ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2,
+)
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from ZODB.POSException import ConflictError
@@ -115,60 +118,149 @@ class ERP5GroupManager(BasePlugin):
       user_value = getattr(principal, 'getUserValue', lambda: None)()
       if user_value is None:
         return ()
-      security_category_dict = defaultdict(list)
-      for method_name, base_category_list in self.getPortalSecurityCategoryMapping():
-        base_category_list = tuple(base_category_list)
-        security_category_list = security_category_dict[base_category_list]
-        try:
-          # The called script may want to distinguish if it is called
-          # from here or from _updateLocalRolesOnSecurityGroups.
-          # Currently, passing portal_type='' (instead of 'Person')
-          # is the only way to make the difference.
-          security_category_list.extend(
-            getattr(self, method_name)(
-              base_category_list,
-              user_id,
-              user_value,
-              '',
-            )
-          )
-        except ConflictError:
-          raise
-        except Exception:
-          LOG(
-            'ERP5GroupManager',
-            WARNING,
-            'could not get security categories from %s' % (method_name, ),
-            error=True,
-          )
-      # Get group names from category values
-      # XXX try ERP5Type_asSecurityGroupIdList first for compatibility
-      generator_name = 'ERP5Type_asSecurityGroupIdList'
-      group_id_list_generator = getattr(self, generator_name, None)
-      if group_id_list_generator is None:
-        generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
-        group_id_list_generator = getattr(self, generator_name, None)
-      security_group_list = []
-      for base_category_list, category_value_list in six.iteritems(security_category_dict):
-        for category_dict in category_value_list:
+      category_mapping = self.getPortalSecurityCategoryMapping()
+      if category_mapping: # BBB
+        warnings.warn(
+          'Consider migrating ERP5Type_getSecurityCategoryMapping to '
+          'ERP5User_getUserSecurityCategoryValueList to get better '
+          'performance',
+          DeprecationWarning,
+        )
+        has_relative_urls = True
+        security_category_dict = defaultdict(list)
+        for method_name, base_category_list in category_mapping:
+          base_category_list = tuple(base_category_list)
+          security_category_list = security_category_dict[base_category_list]
           try:
-            group_id_list = group_id_list_generator(
-              category_order=base_category_list,
-              **category_dict
+            # The called script may want to distinguish if it is called
+            # from here or from _updateLocalRolesOnSecurityGroups.
+            # Currently, passing portal_type='' (instead of 'Person')
+            # is the only way to make the difference.
+            security_category_list.extend(
+              getattr(self, method_name)(
+                base_category_list,
+                user_id,
+                user_value,
+                '',
+              )
             )
-            if isinstance(group_id_list, str):
-              group_id_list = [group_id_list]
-            security_group_list.extend(group_id_list)
           except ConflictError:
             raise
           except Exception:
             LOG(
               'ERP5GroupManager',
               WARNING,
-              'could not get security groups from %s' % (generator_name, ),
+              'could not get security categories from %s' % (method_name, ),
               error=True,
             )
-      return tuple(security_group_list)
+      else:
+        has_relative_urls = False
+        try:
+          getUserSecurityCategoryValueList = user_value.ERP5User_getUserSecurityCategoryValueList
+        except AttributeError: # BBB
+          security_category_value_dict_list = []
+        else:
+          security_category_value_dict_list = getUserSecurityCategoryValueList()
+      security_group_set = set()
+      # XXX try ERP5Type_asSecurityGroupIdList first for compatibility
+      generator_name = 'ERP5Type_asSecurityGroupIdList'
+      group_id_list_generator = getattr(self, generator_name, None)
+      if group_id_list_generator is None:
+        generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+        group_id_list_generator = getattr(self, generator_name, None)
+      if group_id_list_generator is None:
+        if has_relative_urls:
+          # Convert security_category_dict to security_category_value_dict_list
+          # Differences with direct security_category_value_dict_list production:
+          # - incomplete deduplication
+          # - extra intermediate sorting
+          getCategoryValue = self.portal_categories.getCategoryValue
+          security_category_value_dict_list = (
+            dict(x)
+            for x in {
+              tuple(sorted(
+                (
+                  (
+                    base_category,
+                    tuple(
+                      (
+                        getCategoryValue(base_category + '/' + relative_url.rstrip('*')),
+                        relative_url.endswith('*'),
+                      )
+                      for relative_url in (
+                        (relative_url_list, )
+                        if isinstance(relative_url_list, str) else
+                        sorted(relative_url_list)
+                      )
+                    )
+                  )
+                  for (
+                    base_category,
+                    relative_url_list,
+                  ) in six.iteritems(security_dict)
+                ),
+                # Avoid comparing persistent objects, for performance purposes:
+                # these are stored by path.
+                key=lambda x: x[0]
+              ))
+              for security_category_list in six.itervalues(security_category_dict)
+              for security_dict in security_category_list
+            }
+          )
+        for security_category_value_dict in security_category_value_dict_list:
+          security_group_set.update(
+            getattr(self, ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2)(
+              category_dict=security_category_value_dict,
+            ),
+          )
+      else: # BBB
+        warnings.warn(
+          'Consider migrating %s to %s to get better performance' % (
+            generator_name,
+            ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT_V2,
+          ),
+          DeprecationWarning,
+        )
+        if not has_relative_urls:
+          # Convert security_category_value_dict_list to security_category_dict
+          # Differences with direct security_category_dict generation:
+          # - the order of items in the tuples used as keys is random
+          # - repetitions will be missing (which is arguably an improvement)
+          security_category_dict = {
+            tuple(security_category_value_dict): [
+              {
+                base_category: [
+                  category_value.getRelativeUrl() + ('*' if parent else '')
+                  for category_value, parent in category_value_list
+                ]
+                for base_category, category_value_list in six.iteritems(
+                  security_category_value_dict,
+                )
+              }
+            ]
+            for security_category_value_dict in security_category_value_dict_list
+          }
+        # Get group names from category values
+        for base_category_list, category_value_list in six.iteritems(security_category_dict):
+          for category_dict in category_value_list:
+            try:
+              group_id_list = group_id_list_generator(
+                category_order=base_category_list,
+                **category_dict
+              )
+              if isinstance(group_id_list, str):
+                group_id_list = [group_id_list]
+              security_group_set.update(group_id_list)
+            except ConflictError:
+              raise
+            except Exception:
+              LOG(
+                'ERP5GroupManager',
+                WARNING,
+                'could not get security groups from %s' % (generator_name, ),
+                error=True,
+              )
+      return tuple(security_group_set)
 
     if not NO_CACHE_MODE and getattr(_CACHE_ENABLED_LOCAL, 'value', True):
       _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,

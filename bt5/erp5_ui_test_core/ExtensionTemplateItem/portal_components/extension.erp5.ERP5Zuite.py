@@ -13,7 +13,8 @@ def waitForActivities(self, delay=100, count=None):
   activity_tool = self.getPortalObject().portal_activities
   assert not (
     activity_tool.isSubscribed()
-    and getCurrentNode() in activity_tool.getProcessingNodeList())
+    and getCurrentNode() in activity_tool.getProcessingNodeList()), \
+    'still subscribed to activities'
 
   if count is not None: # BBB
     # completely arbitrary conversion factor: count used to default to 1000

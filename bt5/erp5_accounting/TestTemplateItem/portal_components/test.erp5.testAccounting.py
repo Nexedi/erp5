@@ -4322,7 +4322,7 @@ class TestTransactions(AccountingTestCase):
     self.assertFalse(invoice_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingReference())
 
-  def test_roundDebitCredit_raises_if_big_difference(self):
+  def test_roundDebitCredit_does_nothing_if_big_difference(self):
     invoice = self._makeOne(
       portal_type='Sale Invoice Transaction',
       lines=(dict(source_value=self.account_module.goods_sales,
@@ -4330,7 +4330,11 @@ class TestTransactions(AccountingTestCase):
            dict(source_value=self.account_module.receivable,
                 source_credit=100.000001)))
     invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
-    self.assertRaises(invoice.AccountingTransaction_roundDebitCredit)
+    self.assertEqual(
+      sorted([
+        m.getQuantity() for m in invoice.getMovementList(
+          portal_type='Sale Invoice Transaction Line')]),
+      [-100.032345, 100.000001])
 
   def test_roundDebitCredit_when_payable_is_different_total_price(self):
     invoice = self._makeOne(

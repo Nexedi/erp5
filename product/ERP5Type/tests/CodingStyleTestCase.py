@@ -136,6 +136,8 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     """
     self.maxDiff = None
     template_tool = self.portal.portal_templates
+    diff_line_list = []
+    diff_files = []
     for bt_title in self.getTestedBusinessTemplateList():
       bt = template_tool.getInstalledBusinessTemplate(bt_title, strict=True)
       # run migrations on the business template, except for the BT used to
@@ -158,7 +160,6 @@ class CodingStyleTestCase(ERP5TypeTestCase):
           p.strip() for p in self.rebuild_business_template_ignored_path.splitlines()
           if p and not p.strip().startswith("#")}
 
-      diff_line_list = []
       def get_difference(path, has_old=True, has_new=True):
         old = (
           os.path.join(bt_base_path, path)
@@ -214,13 +215,14 @@ class CodingStyleTestCase(ERP5TypeTestCase):
           for diff in get_differences(sub_dcmp, os.path.join(base, sub_path)):
             yield diff
 
-      diff_files = list(get_differences(filecmp.dircmp(bt_dir, export_dir), bt_local_path))
-      # dump a diff in log directory, to help debugging
-      from Products.ERP5Type.tests.runUnitTest import log_directory
-      if log_directory and diff_line_list:
-        with open(os.path.join(log_directory, '%s.diff' % self.id()), 'w') as f:
-          f.writelines(diff_line_list)
-      self.assertEqual(diff_files, [])
+      diff_files.extend(list(get_differences(filecmp.dircmp(bt_dir, export_dir), bt_local_path)))
+
+    # dump a diff in log directory, to help debugging
+    from Products.ERP5Type.tests.runUnitTest import log_directory
+    if log_directory and diff_line_list:
+      with open(os.path.join(log_directory, '%s.diff' % self.id()), 'w') as f:
+        f.writelines(diff_line_list)
+    self.assertEqual(diff_files, [])
 
 
   def test_run_upgrader(self):
@@ -288,7 +290,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
                   'category': action_category,
                   'action_name': action_name,
               })
-      self.assertEqual(duplicate_action_list, [])
+    self.assertEqual(duplicate_action_list, [])
 
   def test_workflow_consistency(self):
     self.maxDiff = None
