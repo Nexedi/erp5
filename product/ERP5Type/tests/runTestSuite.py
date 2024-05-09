@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from __future__ import print_function
-import argparse, sys, os, textwrap
+import argparse, json, sys, os, textwrap
 from erp5.util import taskdistribution
 
 # XXX: This import is required, just to populate sys.modules['test_suite'].
@@ -127,6 +127,9 @@ def main():
   # sanity check
   assert len(args.zserver_address_list) == len(args.zserver_frontend_url_list)
 
+  with open(os.environ['ERP5_TEST_RUNNER_CONFIGURATION']) as f:
+    test_runner_configuration = json.load(f)
+
   suite = makeSuite(test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
                     revision=revision,
@@ -137,12 +140,17 @@ def main():
                     firefox_bin=args.firefox_bin,
                     xvfb_bin=args.xvfb_bin,
                     log_directory=args.log_directory)
-  test_result = master.createTestResult(revision, suite.getTestList(),
+  test_list = suite.getTestList()
+  test_list_json = json.dumps(test_list)
+  if test_runner_configuration.get('coverage', {}).get('enabled'):
+    test_list.append("coverage_report")
+  test_result = master.createTestResult(revision, test_list,
     args.test_node_title, suite.allow_restart, test_suite_title,
     args.project_title)
   if test_result is not None:
     os.environ['ERP5_TEST_RESULT_REVISION'] = test_result.revision
     os.environ['ERP5_TEST_RESULT_ID'] = (test_result.test_result_path or '').split('/')[-1]
+    os.environ['ERP5_TEST_TEST_LIST'] = test_list_json
 
     assert revision == test_result.revision, (revision, test_result.revision)
     while suite.acquire():
