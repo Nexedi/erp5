@@ -125,7 +125,7 @@
   };
 
   var formatGraphDict = function (input_dict) {
-    var i, series = [], label_list = ['date'], point_list = [], serie_length, point;
+    var i, j, series = [], label_list = ['x'], point_list = [], serie_length, point;
     for (i = 0; i < input_dict.data.length; i = i + 1) {
       serie_length = input_dict.data[i].value_dict[0].length;
       if (series.length === 0) {
@@ -135,9 +135,14 @@
       label_list.push(input_dict.data[i].title);
     }
     for (i = 0; i < serie_length; i = i + 1) {
-      //TODO iterate
-      //TODO add a control to date?
-      point = [new Date(series[0][i]), parseInt(series[1][i]), parseInt(series[2][i])];
+      //TODO format conversion shouldn't be here, the input must come formatted
+      for (j = 0; j < series.length; j = j + 1) {
+        if (j === 0) {
+          point = [new Date(series[j][i])];
+        } else {
+          point.push(parseInt(series[j][i]));
+        }
+      }
       point_list.push(point);
     }
     var dygraph_dict = {
