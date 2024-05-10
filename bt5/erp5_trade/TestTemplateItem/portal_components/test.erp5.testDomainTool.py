@@ -156,7 +156,7 @@ class TestDomainTool(TestPredicateMixIn):
     searchPredicateList = self.getDomainTool().searchPredicateList
     def assertPredicateItemsMatchingOrderLineEqual(expected, **kw):
       self.tic()
-      self.assertItemsEqual(
+      self.assertCountEqual(
         expected,
         searchPredicateList(order_line, test=test, **kw),
       )
@@ -410,7 +410,7 @@ class TestDomainTool(TestPredicateMixIn):
         self.assertIn('LEFT JOIN', src)
       else:
         self.assertNotIn('LEFT JOIN', src)
-      self.assertItemsEqual(expected, searchPredicateList(**kw))
+      self.assertCountEqual(expected, searchPredicateList(**kw))
 
     # Check left join mode
     assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1])

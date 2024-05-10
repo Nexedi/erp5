@@ -129,7 +129,7 @@ class TestTrashTool(ERP5TypeTestCase):
     trashbin_uid = trashbin.getUid()
     self.assertNotEqual(trash_uid, None)
     self.assertNotEqual(trashbin_uid, None)
-    self.assertItemsEqual(
+    self.assertCountEqual(
       [
         x.path
         for x in self.portal.portal_catalog(
