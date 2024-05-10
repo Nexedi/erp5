@@ -791,7 +791,7 @@ class TestOAuth2(ERP5TypeTestCase):
     refresh_token_lifespan = oauth2_client_declaration_value.getRefreshTokenLifespan()
 
     # Sanity check: there must be no valid OAuth2 session for the test user
-    self.assertItemsEqual(
+    self.assertCountEqual(
       self.__searchOAuth2Session(
         select_list=['creation_date', 'title']
       ).dictionaries(),
@@ -995,7 +995,7 @@ class TestOAuth2(ERP5TypeTestCase):
     portal_path = portal.getPath()
     portal_url = portal.absolute_url() + '/'
     # Sanity check: there must be no valid OAuth2 session for the test user
-    self.assertItemsEqual(
+    self.assertCountEqual(
       self.__searchOAuth2Session(
         select_list=['creation_date', 'title']
       ).dictionaries(),

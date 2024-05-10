@@ -1624,7 +1624,7 @@ class TestERP5Base(ERP5TypeTestCase):
     newContent(portal_type='Person', title='Owned by user_3')
     login()
     self.tic()
-    self.assertItemsEqual(
+    self.assertCountEqual(
       must_find_path_list,
       [
         x.path

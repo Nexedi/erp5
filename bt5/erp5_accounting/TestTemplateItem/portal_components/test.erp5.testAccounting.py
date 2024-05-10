@@ -6323,7 +6323,7 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
         'Internal Invoice Transaction',
         payment.getPortalType())
     self.assertEqual(internal_invoice, payment.getCausalityValue())
-    self.assertItemsEqual(
+    self.assertCountEqual(
         [ (self.portal.account_module.bank, 100, 0),
           (self.portal.account_module.receivable, 0, 100), ],
         [ (line.getSourceValue(), line.getSourceDebit(), line.getSourceCredit())

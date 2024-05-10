@@ -1304,7 +1304,7 @@ class _TestLocalRoleManagementMixIn(object):
     user_id = person_value.getUserId()
     getUserById = self.portal.acl_users.getUserById
     def assertRoleItemsEqual(expected_role_set):
-      self.assertItemsEqual(getUserById(user_id).getGroups(), expected_role_set)
+      self.assertCountEqual(getUserById(user_id).getGroups(), expected_role_set)
     # check if assignment change is effective immediately
     assertRoleItemsEqual(['F1_G1_S1'])
     self.login()

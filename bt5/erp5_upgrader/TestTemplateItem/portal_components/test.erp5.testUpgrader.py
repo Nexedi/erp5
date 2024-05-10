@@ -328,7 +328,7 @@ class TestUpgrader(ERP5TypeTestCase):
   def stepCheckNoActivitiesCreated(self, sequence=None):
     portal_activities = self.getActivityTool()
     message_list = portal_activities.getMessageList()
-    self.assertItemsEqual(['Alarm_runUpgrader', 'notify'],
+    self.assertCountEqual(['Alarm_runUpgrader', 'notify'],
       [x.method_id for x in message_list])
     getTitleList = self.getTemplateTool().getInstalledBusinessTemplateTitleList
     self.assertNotIn('erp5_web', getTitleList())

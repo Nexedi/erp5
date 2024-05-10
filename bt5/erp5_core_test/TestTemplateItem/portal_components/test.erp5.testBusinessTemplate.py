@@ -1699,7 +1699,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # check filter
     filter_dict = catalog._getFilterDict()
     filter_ = filter_dict[method_id]
-    self.assertItemsEqual(filter_['expression_cache_key'], ['portal_type'])
+    self.assertCountEqual(filter_['expression_cache_key'], ['portal_type'])
     self.assertEqual(filter_['type'], [])
     self.assertEqual(filter_['filtered'], 1)
     self.assertEqual(filter_['expression'], 'python: context.isPredicate()')
@@ -1716,7 +1716,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # check filter
     filter_dict = catalog._getFilterDict()
     filter_ = filter_dict[method_id]
-    self.assertItemsEqual(filter_['expression_cache_key'], ['portal_type'])
+    self.assertCountEqual(filter_['expression_cache_key'], ['portal_type'])
     self.assertEqual(filter_['type'], [])
     self.assertEqual(filter_['filtered'], 1)
     self.assertEqual(filter_['expression'], 'python: context.isDelivery()')

@@ -331,7 +331,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     person = module.newContent(portal_type='Person')
     address = person.newContent(portal_type='Address')
     # Non-strict, implicit base category
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=cat2.getRelativeUrl(),
       ),
@@ -340,7 +340,7 @@ class TestCMFCategory(ERP5TypeTestCase):
         (cat1.getUid(), basecat.getUid(), 0),
       ],
     )
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=cat22.getRelativeUrl(),
       ),
@@ -351,7 +351,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       ],
     )
     # Non-canonical path
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=cat2.getRelativeUrl() + '/' + cat3.getId(),
       ),
@@ -362,7 +362,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       ],
     )
     # Strict, implicit base category
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=cat2.getRelativeUrl(),
         strict=True,
@@ -372,7 +372,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       ],
     )
     # Non-strict, explicit base category
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=cat2.getRelativeUrl(),
         base_category=basecat2.getId(),
@@ -384,7 +384,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       ],
     )
     # Strict, explicit base category
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=cat2.getRelativeUrl(),
         base_category=basecat2.getId(),
@@ -396,7 +396,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     )
     # Non-strict with a non-category relation: only strict relation uid.
     # Note: not providing base_category is undefined behaviour.
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=person.getRelativeUrl(),
         base_category=basecat.getId(),
@@ -406,7 +406,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       ],
     )
     # ... even on a subobject
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getCategoryParentUidList(
         relative_url=address.getRelativeUrl(),
         base_category=basecat.getId(),
@@ -617,18 +617,18 @@ class TestCMFCategory(ERP5TypeTestCase):
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='related_value_test')
     self.tic()
-    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc])
+    self.assertCountEqual(pc.getRelatedValueList(bc), [bc])
 
     c1 = bc.newContent(portal_type='Category', id='1')
     self.tic()
-    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc])
-    self.assertItemsEqual(pc.getRelatedValueList(c1), [c1])
+    self.assertCountEqual(pc.getRelatedValueList(bc), [bc])
+    self.assertCountEqual(pc.getRelatedValueList(c1), [c1])
 
     c11 = c1.newContent(portal_type='Category', id='1')
     self.tic()
-    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc])
-    self.assertItemsEqual(pc.getRelatedValueList(c1), [c1, c11])
-    self.assertItemsEqual(pc.getRelatedValueList(c11), [c11])
+    self.assertCountEqual(pc.getRelatedValueList(bc), [bc])
+    self.assertCountEqual(pc.getRelatedValueList(c1), [c1, c11])
+    self.assertCountEqual(pc.getRelatedValueList(c11), [c11])
 
     #test _getDefaultRelatedProperty Accessor
     person = self.portal.person_module.newContent(id='person_test')
@@ -675,7 +675,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     # or if we set other categories
     europe.setCategoryList(['subordination/person_module'])
-    self.assertItemsEqual(
+    self.assertCountEqual(
             ['region/europe', 'subordination/person_module'],
             europe.getCategoryList())
     self.assertEqual(

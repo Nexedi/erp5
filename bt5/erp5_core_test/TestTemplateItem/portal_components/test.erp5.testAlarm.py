@@ -234,7 +234,7 @@ class TestAlarm(AlarmTestCase):
           tag_set.add(m.activity_kw.get('after_tag'))
         elif m.method_id in (sense_method_id, 'immediateReindexObject'):
           tag_set.add(m.activity_kw.get('tag'))
-      self.assertItemsEqual(method_id_list, expected_method_list)
+      self.assertCountEqual(method_id_list, expected_method_list)
       self.assertEqual(len(tag_set), 1, tag_set)
     # check tags after activeSense
     assertSingleTagAndMethodItemsEqual(['notify', sense_method_id])

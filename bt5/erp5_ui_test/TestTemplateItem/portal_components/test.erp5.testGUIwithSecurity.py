@@ -202,7 +202,7 @@ class TestGUISecurity(ERP5TypeTestCase):
     self.assertEqual(bar_1.getTranslatedValidationStateTitle(), 'Invalidated')
     self.assertEqual(bar_2.getTranslatedValidationStateTitle(), 'Validated')
     self.tic()
-    self.assertItemsEqual(
+    self.assertCountEqual(
       portal.portal_catalog(
         select_list=['translated_validation_state_title'],
         uid=[

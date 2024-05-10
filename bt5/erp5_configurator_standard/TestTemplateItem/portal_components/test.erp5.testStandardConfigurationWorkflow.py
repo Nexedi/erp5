@@ -1163,7 +1163,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
 
     solver_decision, = sale_packing_list.Delivery_getSolverDecisionList()
 
-    self.assertItemsEqual(
+    self.assertCountEqual(
         solver_decision.getCausalityValue().getSolverValueList(),
         [
             self.portal.portal_solvers['Simple Quantity Split Solver'],
@@ -1601,7 +1601,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
 
     solver_decision, = purchase_packing_list.Delivery_getSolverDecisionList()
 
-    self.assertItemsEqual(
+    self.assertCountEqual(
         solver_decision.getCausalityValue().getSolverValueList(),
         [
             self.portal.portal_solvers['Simple Quantity Split Solver'],
