@@ -124,6 +124,41 @@
     return graph_data_and_parameter;
   };
 
+  var formatGraphDict = function (input_dict) {
+    var i, series = [], label_list = ['date'], point_list = [], serie_length, point;
+    for (i = 0; i < input_dict.data.length; i = i + 1) {
+      serie_length = input_dict.data[i].value_dict[0].length;
+      if (series.length === 0) {
+        series.push(input_dict.data[i].value_dict[0]); //x
+      }
+      series.push(input_dict.data[i].value_dict[1]); //yi
+      label_list.push(input_dict.data[i].title);
+    }
+    for (i = 0; i < serie_length; i = i + 1) {
+      //TODO iterate
+      //TODO add a control to date?
+      point = [new Date(series[0][i]), parseInt(series[1][i]), parseInt(series[2][i])];
+      point_list.push(point);
+    }
+    var dygraph_dict = {
+      dygraph_data: point_list,
+      dygraph_parameter_dict: {
+        labels: label_list
+        //TODO more options. scatter?
+      }
+    };
+    /*var dygraph_dict = {
+      dygraph_data: [
+        [ new Date("2024-05-04T22:04:56+0000"), 100, 200 ],
+        [ new Date("2024-06-04T22:04:56+0000"), 150, 220 ]
+      ],
+      dygraph_parameter_dict: {
+        labels: [ "x", "A", "B" ]
+      }
+    };*/
+    return dygraph_dict;
+  };
+
   /////////////////////////////////////////////////////////////////
   // some methods
   /////////////////////////////////////////////////////////////////
@@ -162,7 +197,7 @@
           graph_data_and_parameter;
 
       container = gadget.element.querySelector(".graph-content");
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(modification_dict.value);
+      graph_data_and_parameter = formatGraphDict(modification_dict.value);
       gadget.property_dict.graph = new Dygraph(container,
                                                graph_data_and_parameter.dygraph_data,
                                                graph_data_and_parameter.dygraph_parameter_dict);
