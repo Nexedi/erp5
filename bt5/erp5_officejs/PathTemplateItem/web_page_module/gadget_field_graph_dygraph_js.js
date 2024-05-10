@@ -125,23 +125,24 @@
   };
 
   var formatGraphDict = function (input_dict) {
-    var i, j, series = [], label_list = ['x'], point_list = [], serie_length, point;
+    var i, j, key, series = [], label_list = ['x'], point_list = [], serie_length, point;
     for (i = 0; i < input_dict.data.length; i = i + 1) {
-      serie_length = input_dict.data[i].value_dict[0].length;
-      if (series.length === 0) {
-        series.push(input_dict.data[i].value_dict[0]); //x
+      for (key of Object.keys(input_dict.data[i].value_dict)) {
+        serie_length = input_dict.data[i].value_dict[key].length;
+        if (key == 0) {
+          if (series.length === 0) {
+            series.push(input_dict.data[i].value_dict[key]); //x
+          }
+        } else {
+          series.push(input_dict.data[i].value_dict[key]); //yi
+        }
       }
-      series.push(input_dict.data[i].value_dict[1]); //yi
       label_list.push(input_dict.data[i].title);
     }
     for (i = 0; i < serie_length; i = i + 1) {
-      //TODO format conversion shouldn't be here, the input must come formatted
+      point = [];
       for (j = 0; j < series.length; j = j + 1) {
-        if (j === 0) {
-          point = [new Date(series[j][i])];
-        } else {
-          point.push(parseInt(series[j][i]));
-        }
+        point.push(series[j][i]);
       }
       point_list.push(point);
     }
@@ -152,15 +153,6 @@
         //TODO more options. scatter?
       }
     };
-    /*var dygraph_dict = {
-      dygraph_data: [
-        [ new Date("2024-05-04T22:04:56+0000"), 100, 200 ],
-        [ new Date("2024-06-04T22:04:56+0000"), 150, 220 ]
-      ],
-      dygraph_parameter_dict: {
-        labels: [ "x", "A", "B" ]
-      }
-    };*/
     return dygraph_dict;
   };
 
