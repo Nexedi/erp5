@@ -4,6 +4,21 @@
   "use strict";
 
   function displayGraph(gadget, data) {
+    var i, j, key;
+    //Format data for monitoring graphs:
+    // dates in the x-axis
+    // int in the y-axis
+    for (i = 0; i < data.data.length; i = i + 1) {
+      for (key of Object.keys(data.data[i].value_dict)) {
+        for (j = 0; j < data.data[i].value_dict[key].length; j = j + 1) {
+          if (key == 0) { //x-ayis
+            data.data[i].value_dict[key][j] = new Date(data.data[i].value_dict[key][j]);
+          } else { //y-axis
+            data.data[i].value_dict[key][j] = parseInt(data.data[i].value_dict[key][j]);
+          }
+        }
+      }
+    }
     return gadget.getDeclaredGadget('graph_gadget')
       .push(function (graph_gadget) {
         return graph_gadget.render({value: data});
