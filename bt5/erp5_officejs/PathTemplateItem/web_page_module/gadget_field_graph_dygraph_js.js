@@ -149,8 +149,9 @@
     var dygraph_dict = {
       dygraph_data: point_list,
       dygraph_parameter_dict: {
-        labels: label_list
-        //TODO more options. scatter?
+        labels: label_list,
+        drawPoints : true,
+        pointSize : 1,
       }
     };
     return dygraph_dict;
