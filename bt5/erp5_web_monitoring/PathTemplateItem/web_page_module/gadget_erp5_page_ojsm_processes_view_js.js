@@ -114,6 +114,13 @@
             });
           }
           return result;
+        }, function (error) {
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            return result;
+          } else {
+            throw error;
+          }
         });
     })
 
