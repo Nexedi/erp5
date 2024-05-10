@@ -666,7 +666,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         [x.getObject() for x in
             bank_reconciliation_for_main_section.BankReconciliation_getAccountingTransactionLineList()])
 
-    self.assertItemsEqual(
+    self.assertCountEqual(
         [bank_reconciliation_for_section],
         internal_transaction.bank.getAggregateValueList())
 
@@ -692,7 +692,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         [x.getObject() for x in
             bank_reconciliation_for_section.BankReconciliation_getAccountingTransactionLineList()])
 
-    self.assertItemsEqual(
+    self.assertCountEqual(
         [bank_reconciliation_for_section, bank_reconciliation_for_main_section],
         internal_transaction.bank.getAggregateValueList())
 
@@ -719,7 +719,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         [x.getObject() for x in
             bank_reconciliation_for_main_section.BankReconciliation_getAccountingTransactionLineList()])
 
-    self.assertItemsEqual(
+    self.assertCountEqual(
         [bank_reconciliation_for_main_section],
         internal_transaction.bank.getAggregateValueList())
 

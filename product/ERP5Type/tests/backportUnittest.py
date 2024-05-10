@@ -12,7 +12,15 @@ def patch():
     import six
 
     import traceback
-    from unittest import TextTestResult, TextTestRunner
+    from unittest import TestCase, TextTestResult, TextTestRunner
+
+    # backport methods from python3.
+    if six.PY2:
+      # We use this tricky getattr syntax so that lib2to3.fixers.fix_asserts
+      # do not fix this code.
+      TestCase.assertRaisesRegex = getattr(TestCase, 'assertRaisesRegexp')
+      TestCase.assertRegex = getattr(TestCase, 'assertRegexpMatches')
+      TestCase.assertCountEqual = TestCase.assertItemsEqual
 
     TextTestResult_addError = six.get_unbound_function(TextTestResult.addError)
     def addError(self, test, err):
