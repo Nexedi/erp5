@@ -27,8 +27,12 @@
 ##############################################################################
 
 import warnings
-from collections import Mapping
-from collections import Iterable
+import six
+if six.PY3:
+  from collections.abc import Iterable, Mapping
+else:
+  from collections import Iterable, Mapping
+
 try:
   from deepdiff import DeepDiff
   from deepdiff.helper import strings, numbers
