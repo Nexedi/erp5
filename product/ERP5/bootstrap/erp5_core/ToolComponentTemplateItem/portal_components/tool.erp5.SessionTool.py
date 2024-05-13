@@ -34,8 +34,14 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Acquisition import aq_base
 from six.moves import UserDict
-import collections
 import six
+# pylint:disable=import-error,no-name-in-module
+if six.PY3:
+  import collections.abc as collections_abc
+else:
+  import collections as collections_abc
+# pylint:enable=import-error,no-name-in-module
+
 
 # the ERP5 cache factory used as a storage
 SESSION_CACHE_FACTORY = 'erp5_session_cache'
@@ -54,11 +60,11 @@ def remove_acquisition_wrapper(obj):
   if isinstance(obj, basestring):
     return obj
   obj = aq_base(obj)
-  if isinstance(obj, collections.Mapping):
+  if isinstance(obj, collections_abc.Mapping):
     return obj.__class__({
         remove_acquisition_wrapper(k): remove_acquisition_wrapper(v)
         for k, v in obj.items()})
-  if isinstance(obj, (collections.Sequence, collections.Set)):
+  if isinstance(obj, (collections_abc.Sequence, collections_abc.Set)):
     return obj.__class__([remove_acquisition_wrapper(o) for o in obj])
   return obj
 
@@ -68,11 +74,11 @@ def restore_acquisition_wrapper(obj, context):
     return obj
   if hasattr(obj, '__of__'):
     obj = obj.__of__(context)
-  if isinstance(obj, collections.Mapping):
+  if isinstance(obj, collections_abc.Mapping):
     return obj.__class__({
         restore_acquisition_wrapper(k, context): restore_acquisition_wrapper(v, context)
         for k, v in obj.items()})
-  if isinstance(obj, (collections.Sequence, collections.Set)):
+  if isinstance(obj, (collections_abc.Sequence, collections_abc.Set)):
     return obj.__class__([restore_acquisition_wrapper(o, context) for o in obj])
   return obj
 
