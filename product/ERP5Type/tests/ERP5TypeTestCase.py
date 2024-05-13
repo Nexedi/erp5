@@ -743,7 +743,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       """
         Shortcut function to log a message
       """
-      ZopeTestCase._print('\n%s ' % message)
+      ZopeTestCase._print('\n%s' % message)
       LOG('Testing ... ', DEBUG, message)
 
     def publish(self, path, basic=None, env=None, extra=None,
