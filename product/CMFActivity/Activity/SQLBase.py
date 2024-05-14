@@ -83,7 +83,8 @@ def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
   return message.line.priority, message.line.date, message.uid
 
-_DequeueMessageException = Exception()
+class _DequeueMessageException(Exception):
+  pass
 
 _ITEMGETTER0 = operator.itemgetter(0)
 _IDENTITY = lambda x: x
@@ -1009,11 +1010,11 @@ CREATE TABLE %s (
         # increased.
         for m in message_list:
           if m.getExecutionState() == MESSAGE_NOT_EXECUTED:
-            raise _DequeueMessageException
+            raise _DequeueMessageException()
         transaction.commit()
       except:
         exc_info = sys.exc_info()
-        if exc_info[1] is not _DequeueMessageException:
+        if not isinstance(exc_info[1], _DequeueMessageException):
           self._log(WARNING,
             'Exception raised when invoking messages (uid, path, method_id) %r'
             % [(m.uid, m.object_path, m.method_id) for m in message_list])
