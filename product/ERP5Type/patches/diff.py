@@ -31,13 +31,9 @@ from collections import Mapping
 from collections import Iterable
 try:
   from deepdiff import DeepDiff
-except ImportError:
-  DeepDiff = None
-  warnings.warn("Please install deepdiff, it is needed by json_representable mixin",
-                DeprecationWarning)
-try:
   from deepdiff.helper import strings, numbers
 except ImportError:
+  DeepDiff = None
   strings = None
   numbers = None
   warnings.warn("Please install deepdiff, it is needed by json_representable mixin",
