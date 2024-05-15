@@ -37,8 +37,7 @@ else:
   variation_dict["start_date"] = date
   variation_dict["stop_date"] = date+0.00001
 
-if web_site_value is not None:
-  price_currency_value = web_site_value.WebSite_getShoppingCartDefaultCurrency()
+price_currency_value = web_site_value.WebSite_getShoppingCartDefaultCurrency()
 
 movement = context.newContent(
     temp_object=True,
