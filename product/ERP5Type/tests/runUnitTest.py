@@ -526,7 +526,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # testReceiptRecognition for example.
   os.environ.setdefault('OMP_NUM_THREADS', '3')
 
-  _print("Loading Zope ... \n")
+  _print("Loading Zope ...\n")
   _start = time.time()
 
   import Testing

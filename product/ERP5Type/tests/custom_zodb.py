@@ -51,14 +51,14 @@ if load:
   if save_mysql:
     if os.path.exists(dump_sql_path):
       command = "mysql %s < %s" % (getMySQLArguments(), dump_sql_path)
-      _print("Restoring MySQL database with %s ... " % command)
+      _print("Restoring MySQL database with %s ..." % command)
       _start = time.time()
       subprocess.check_call(command, shell=True)
       _print('done (%.3fs)\n' % (time.time() - _start))
     else:
-      _print("Could not find MySQL dump (%r), will recreate catalog ... " % dump_sql_path)
+      _print("Could not find MySQL dump (%r), will recreate catalog ..." % dump_sql_path)
       os.environ['erp5_tests_recreate_catalog'] = '1'
-  _print("Restoring static files ... ")
+  _print("Restoring static files ...")
 else:
   if save and not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
     _print("About to remove existing Data.fs %s (press Ctrl+C to abort)" % data_fs_path)
@@ -194,4 +194,4 @@ if with_wendelin_core and not in_forked_process:
     wcfs_server = wcfs.start(zurl)
 
 if node_pid_list is not None:
-  _print("Instance at %r loaded ... " % instance_home)
+  _print("Instance at %r loaded ..." % instance_home)

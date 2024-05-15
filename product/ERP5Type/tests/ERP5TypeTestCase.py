@@ -744,7 +744,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       """
         Shortcut function to log a message
       """
-      ZopeTestCase._print('\n%s ' % message)
+      ZopeTestCase._print('\n%s' % message)
       LOG('Testing ... ', DEBUG, message)
 
     def publish(self, path, basic=None, env=None, extra=None,
@@ -1321,7 +1321,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
             # Log out
             if not quiet:
-              ZopeTestCase._print('Logout ... \n')
+              ZopeTestCase._print('Logout ...\n')
             noSecurityManager()
             if not quiet:
               ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))

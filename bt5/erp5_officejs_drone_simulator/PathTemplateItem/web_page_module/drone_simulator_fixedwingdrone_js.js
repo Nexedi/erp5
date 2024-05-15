@@ -7,6 +7,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
 
   // var TAKEOFF_RADIUS = 60,
   var DEFAULT_SPEED = 16,
+    PARACHUTE_SPEED = 8,
     EARTH_GRAVITY = 9.81,
     LOITER_LIMIT = 30,
     MAX_ACCELERATION = 6,
@@ -52,7 +53,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       throw new Error('max acceleration must be superior to 0');
     }
     drone._minSpeed = this.getMinSpeed();
-    if (drone._minSpeed <= 0) {
+    if (drone._minSpeed < 0) {
       throw new Error('min speed must be superior to 0');
     }
     drone._maxSpeed = this.getMaxSpeed();
@@ -101,7 +102,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right before onUpdate AI script
   */
-  FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
+  FixedWingDroneAPI.prototype.internal_position_update = function (context, delta_time) {
     this._updateSpeed(context, delta_time);
     this._updatePosition(context, delta_time);
 
@@ -111,7 +112,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   /*
   ** Function called on every drone update, right after onUpdate AI script
   */
-  FixedWingDroneAPI.prototype.internal_post_update = function (drone) {
+  FixedWingDroneAPI.prototype.internal_info_update = function (drone) {
     var _this = this, drone_position = drone.getCurrentPosition(), drone_info;
     /*if (_this._start_altitude > 0) { //TODO move start_altitude here
       _this.reachAltitude(drone);
@@ -373,8 +374,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
     var processed_coordinates =
       this._mapManager.convertToLocalCoordinates(lat, lon, z);
     processed_coordinates.z -= this._map_dict.start_AMSL;
-    //this._last_altitude_point_reached = -1;
-    //this.takeoff_path = [];
     return processed_coordinates;
   };
   FixedWingDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
@@ -470,11 +469,16 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.land = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    drone.setTargetCoordinates(
+    this._flight_parameters.drone.minSpeed = 0;
+    drone._speed = 0;
+    drone._acceleration = EARTH_GRAVITY;
+    this._flight_parameters.drone.maxSinkRate = PARACHUTE_SPEED;
+    this._flight_parameters.drone.minPitchAngle = -90;
+    drone._internal_setTargetCoordinates(
       drone_pos.latitude,
       drone_pos.longitude,
       0,
-      drone.get3DSpeed()
+      PARACHUTE_SPEED
     );
     this._is_ready_to_fly = false;
     this._is_landing = true;
@@ -496,6 +500,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getMaxHeight = function () {
     return 800;
+  };
+  FixedWingDroneAPI.prototype.getOnUpdateInterval = function () {
+    return this._flight_parameters.drone.onUpdateInterval;
   };
   FixedWingDroneAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;

@@ -18,6 +18,10 @@ from waitress.server import create_server
 import ZConfig
 import Zope2
 from Zope2.Startup.run import make_wsgi_app
+from App.config import getConfiguration
+from zope.component import getGlobalSiteManager
+import zope.interface
+import ZPublisher.interfaces
 
 try:
   from ZPublisher.WSGIPublisher import _MODULES
@@ -84,6 +88,12 @@ class TransLogger(object):
             }
         message = self.format % d
         self.logger.info(message)
+
+
+@zope.interface.implementer(ZPublisher.interfaces.IXmlrpcChecker)
+class XMLRPCDisabler:
+  def __call__(self, request):
+    return False
 
 
 def app_wrapper(large_file_threshold, webdav_ports):
@@ -187,6 +197,7 @@ def runwsgi():
       '--with-max-rlimit-nofile',
       help='Set soft limit of file descriptors erp5 can open to hard limit',
       action="store_true")
+    parser.add_argument('--enable-xml-rpc', help='Enable XML-RPC interface', action='store_true')
     args = parser.parse_args()
 
     if not sys.warnoptions:
@@ -239,6 +250,12 @@ def runwsgi():
     else: # BBB Zope2
       schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
+
+    if not args.enable_xml_rpc:
+      getGlobalSiteManager().registerUtility(
+        XMLRPCDisabler(),
+        ZPublisher.interfaces.IXmlrpcChecker,
+      )
 
     if conf.debug_mode:
       console_handler = logging.StreamHandler(sys.stderr)
