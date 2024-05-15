@@ -199,7 +199,10 @@ class DataBucketStream(Document):
     """
       Get one bucket
     """
-    return self._tree[key].value
+    persistent_string = self._tree[key]
+    v = persistent_string.value
+    persistent_string._p_deactivate()  # free memory
+    return v
 
   def getBucketByIndex(self, index=None):
     """
