@@ -87,7 +87,7 @@ class _Policy(six.with_metaclass(_PolicyMetaClass, object)):
     if attr == 'merge_parent':
       self.merge_parent = value = self.context.getRootAppliedRule().getPath()
     else:
-      object.__getattribute__(self, attr)
+      value = object.__getattribute__(self, attr)
     return value
 
   def deferAll(self):
