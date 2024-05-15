@@ -986,7 +986,8 @@ class ImmobilisableItem(Item, Amount):
       raw_annuity_price = annuity_start_price * current_ratio
     elif price_calculation_basis == "period recalculated start price":
       raw_annuity_price = local_period_start_price * current_ratio
-
+    else:
+      raise ValueError("Unsupported price_calculation_basis: %s" % price_calculation_basis)
     # Apply the prorata temporis on the raw annuity value
     if annuity_number and \
         price_calculation_basis == 'period recalculated start price' and \
