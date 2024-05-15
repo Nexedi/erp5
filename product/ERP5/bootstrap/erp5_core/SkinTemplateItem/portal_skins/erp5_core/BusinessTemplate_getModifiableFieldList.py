@@ -42,7 +42,7 @@ skin_id_list = context.getTemplateSkinIdList()
 if skin_id_list:
   if bt_title in skin_id_list:
     main_skin_id = bt_title
-  elif skin_id_list:
+  else:
     main_skin_id = skin_id_list[0]
   form_path = '%s/%s' % (main_skin_id, field_library_id)
   form = getForm(portal.portal_skins[main_skin_id], field_library_id)

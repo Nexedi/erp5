@@ -8,6 +8,7 @@ request=context.REQUEST
 # We stop doing this
 #base_category = context.getBaseCategoryId()
 base_category = None
+redirect_url = None
 
 o = context.restrictedTraverse(object_path)
 
