@@ -477,6 +477,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if get_target_parent:
       result_list = result_list[:-1]
     first_object = True
+    sub_context = None
     while result_list:
       object_block = result_list[0][0]
       sub_context_id = result_list[0][3]
