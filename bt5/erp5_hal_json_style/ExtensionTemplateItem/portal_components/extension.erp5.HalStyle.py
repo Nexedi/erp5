@@ -22,6 +22,7 @@ def Listbox_getBrainValue(self, brain, obj, select, can_check_local_property, ed
   ListBox.py / getValueList
   """
   tales = False
+  default_field_value = None
 
   # Use a widget, if any.
   if editable_field is not None:

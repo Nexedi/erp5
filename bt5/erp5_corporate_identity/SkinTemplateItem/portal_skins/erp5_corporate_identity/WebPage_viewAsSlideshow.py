@@ -29,6 +29,7 @@ from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
 blank = ''
+slide_content = blank
 flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
 details_separator = '</section><section class="ci-notes-continue"><section><h1>cont.</h1></section>'
 pref = context.getPortalObject().portal_preferences
