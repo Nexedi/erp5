@@ -253,6 +253,7 @@ if force_base_url:
   root_url = "/".join(base_url.split("/", 3)[:3])
   if root_url != base_url:
     base_url = "/".join(base_url.split("/")[:-1])
+  request_protocol = 'https:'
 else:
   request_protocol = context.REQUEST.SERVER_URL.split(":", 1)[0] + ":"
   root_url = base_url_root_object.absolute_url()

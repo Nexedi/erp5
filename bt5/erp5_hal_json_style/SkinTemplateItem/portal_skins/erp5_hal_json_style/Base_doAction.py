@@ -4,8 +4,7 @@ Base_translateString = portal.Base_translateString
 preserved_parameter_dict = {}
 
 Base_doAction = select_action.split()
-if len(Base_doAction) != 0:
-  doAction0 = Base_doAction[0]
+doAction0 = Base_doAction[0]
 
 kw['keep_items'] = preserved_parameter_dict
 

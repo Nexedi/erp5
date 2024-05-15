@@ -78,6 +78,8 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           "Base Category %s should be created" % bc_id))
         if fixit:
           bc = ctool.newContent(id=bc_id)
+        else:
+          continue
 
       if fixit:
         for category_info in category_list:
