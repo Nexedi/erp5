@@ -206,7 +206,7 @@ class DataBucketStream(Document):
       Get one bucket
     """
     key = self._long_index_tree[index]
-    return self.getBucketByKey(key).value
+    return self.getBucketByKey(key)
 
   def getKeyByIndex(self, index):
     """

@@ -261,6 +261,7 @@ class Test(ERP5TypeTestCase):
     key = len(bucket_stream) + 1
     bucket_stream.insertBucket(key, bin_string )
     self.assertEqual(bin_string, bucket_stream.getBucketByKey(key))
+    self.assertEqual(bin_string, bucket_stream.getBucketByIndex(0))
 
     # test sequence
     self.assertEqual(1, len(bucket_stream))
