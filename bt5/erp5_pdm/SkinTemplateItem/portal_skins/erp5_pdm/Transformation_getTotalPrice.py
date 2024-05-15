@@ -16,7 +16,7 @@ if selection_name is not None:
     resource = line.getResourceValue()
     if resource is not None:
       sender = line.getResourceValue().getPurchaseSupplyLineSource()
-    line.setCategoryMembership('source', sender)
+      line.setCategoryMembership('source', sender)
     line.setCategoryMembership('price_currency', price_currency)
 
   result = aal.getTotalPrice()

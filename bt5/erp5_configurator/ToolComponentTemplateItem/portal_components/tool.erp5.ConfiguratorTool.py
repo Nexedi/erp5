@@ -226,6 +226,7 @@ class ConfiguratorTool(BaseTool):
         return response
 
     ## show next form in transitions
+    html = None
     rendered = False
     while rendered is False:
       if need_validation == 1:

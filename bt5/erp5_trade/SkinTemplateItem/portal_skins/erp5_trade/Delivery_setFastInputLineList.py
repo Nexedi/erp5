@@ -3,6 +3,8 @@
   input information.It should take into account any trade document line
   which were already created so that they are not duplicated.
 """
+# pylint:disable=possibly-used-before-assignment
+
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 
