@@ -43,6 +43,7 @@ elif line_portal_type in portal.getPortalInternalTypeList():
 elif line_portal_type in portal.getPortalInventoryMovementTypeList():
   section_uid = None
   no_inventory = True
+  supply_cell_portal_type = supply_line_id = None
   use_list = portal.portal_preferences.getPreferredPurchaseUseList() \
              + portal.portal_preferences.getPreferredSaleUseList()
 else:
