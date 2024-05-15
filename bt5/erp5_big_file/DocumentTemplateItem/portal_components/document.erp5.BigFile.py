@@ -30,7 +30,9 @@ import re
 import six
 
 if six.PY3:
-  long = int  # pylint:disable=redefined-builtin
+  long_or_int = int
+else:
+  long_or_int = long  # pylint:disable=undefined-variable
 
 class BigFile(File):
   """
@@ -189,13 +191,13 @@ class BigFile(File):
         else:
           # Date
           date = if_range.split( ';')[0]
-          try: mod_since=long(DateTime(date).timeTime())
+          try: mod_since=long_or_int(DateTime(date).timeTime())
           except Exception: mod_since=None
           if mod_since is not None:
             last_mod = self._data_mtime()
             if last_mod is None:
               last_mod = 0
-            last_mod = long(last_mod)
+            last_mod = long_or_int(last_mod)
             if last_mod > mod_since:
               # Modified, so send a normal response. We delete
               # the ranges, which causes us to skip to the 200
