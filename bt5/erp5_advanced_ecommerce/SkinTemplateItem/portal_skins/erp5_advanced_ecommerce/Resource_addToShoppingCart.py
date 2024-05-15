@@ -55,6 +55,7 @@ shopping_cart_items = context.SaleOrder_getShoppingCartItemList()
 
 # get category like size and variation
 category = request.form.get('field_variation_box_your_category', '')
+base_category = ''
 if category:
   [base_category, category] = category.split('/', 1)
 variation = request.form.get('field_variation_box_your_variation', None)

@@ -30,6 +30,7 @@ from base64 import b64encode
 from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 blank = ''
+slide_content = blank
 flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
 details_separator = '</section><section class="ci-notes-continue"><section><h1>cont.</h1></section>'
 pref = context.getPortalObject().portal_preferences

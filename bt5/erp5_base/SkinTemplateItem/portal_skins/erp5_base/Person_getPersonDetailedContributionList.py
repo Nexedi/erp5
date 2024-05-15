@@ -28,6 +28,8 @@ elif aggregation_level == "week":
   sql_format = "%Y-%u"
 elif aggregation_level == "day":
   sql_format = "%Y-%m-%d"
+else:
+  raise ValueError("Unsupported aggregation level %s" % aggregation_level)
 if to_date is not None:
   to_date = atTheEndOfPeriod(to_date, period=aggregation_level)
 count_kw = {}
