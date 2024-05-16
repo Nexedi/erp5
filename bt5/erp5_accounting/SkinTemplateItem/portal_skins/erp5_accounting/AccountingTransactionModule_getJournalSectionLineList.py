@@ -30,14 +30,12 @@ def getAccountId(node_relative_url):
   return account_title_cache[node_relative_url]
 
 
-# FIXME: this can be passed as node category to getMovementHistoryList
-account_in_gap_root_cache = {}
-def isAccountInGapRoot(node_relative_url):
-  if node_relative_url not in account_in_gap_root_cache:
-    is_in = portal.restrictedTraverse(node_relative_url).isMemberOf(gap_root)
-    account_in_gap_root_cache[node_relative_url] = is_in
-  return account_in_gap_root_cache[node_relative_url]
-
+node_search_kw = {
+  'portal_type': 'Account'
+}
+if gap_root:
+  node_search_kw['gap_uid'] = portal.portal_categories.gap.restrictedTraverse(gap_root).getUid()
+node_uid = [b.uid for b in portal.portal_catalog(**node_search_kw)]
 
 displayed_transaction = {}
 total_credit = 0
@@ -52,6 +50,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
       # may contain some non accounting lines that are in stock table (eg. Pay Sheet Lines)
                                 parent_portal_type=portal_type,
                                 simulation_state=simulation_state,
+                                node_uid=node_uid,
                                 sort_on=(('stock.date', 'ASC'),
 # FIXME: this should actually be sorted on parent_delivery_specific_reference
 # a related key which does not exists, and would anyway not be efficient with
@@ -59,8 +58,6 @@ for brain in portal.portal_simulation.getMovementHistoryList(
                                          ('parent_uid', 'descending'),
                                          ('stock.total_price', 'descending')),
                                 **extra_kw):
-  if gap_root and not isAccountInGapRoot(brain.node_relative_url):
-    continue
 
   debit = max(brain.total_price, 0) or 0
   credit = max(-(brain.total_price or 0), 0) or 0
