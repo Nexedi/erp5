@@ -65,6 +65,9 @@
                     result.data.rows.push({
                       value: {
                         status: {
+                          url_value: {
+                            onclick: "return false;"
+                          },
                           field_gadget_param: {
                             css_class: "",
                             description: "The Status",
@@ -77,6 +80,9 @@
                           }
                         },
                         start_date: {
+                          url_value: {
+                            onclick: "return false;"
+                          },
                           field_gadget_param: {
                             allow_empty_time: 0,
                             ampm_time_style: 0,
@@ -96,6 +102,9 @@
                           }
                         },
                         change_date:  {
+                          url_value: {
+                            onclick: "return false;"
+                          },
                           field_gadget_param: {
                             allow_empty_time: 0,
                             ampm_time_style: 0,
@@ -115,7 +124,22 @@
                             type: "DateTimeField"
                           }
                         },
-                        message: status_history.data[i].message,
+                        message: {
+                          url_value: {
+                            onclick: "return false;"
+                          },
+                          field_gadget_param: {
+                            css_class: "",
+                            description: "The promise output message",
+                            editable: 0,
+                            hidden: 0,
+                            "default": status_history.data[i].message,
+                            key: "message",
+                            required: 0,
+                            title: "Promise Output",
+                            type: "StringField"
+                          }
+                        },
                         "listbox_uid:list": {
                           key: "listbox_uid:list",
                           value: 2713
