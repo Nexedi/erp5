@@ -489,6 +489,96 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=100, credit=100)
 
+  def testJournalAcquiredNode(self):
+    account_module = self.account_module
+
+    first = self._makeOne(
+      portal_type='Accounting Transaction',
+      title='First One',
+      simulation_state='delivered',
+      start_date=DateTime(2006, 2, 2),
+      destination_section_value=self.organisation_module.client_1,
+      lines=(
+        dict(
+          source_value=account_module.receivable,
+          source_debit=119.60),
+        dict(
+          source_value=account_module.collected_vat,
+          source_credit=19.60),
+        dict(
+          source_value=account_module.goods_sales,
+          source_credit=100.00)))
+    # transaction from another entity is not displayed in report and it does not interefer.
+    self._makeOne(
+      portal_type='Accounting Transaction',
+      title='Another entity',
+      simulation_state='delivered',
+      start_date=DateTime(2006, 2, 2),
+      source_section_value=self.organisation_module.client_1,
+      destination_section_value=self.section,
+      destination_value=self.section,
+      lines=(
+        dict(
+          source_value=account_module.receivable,
+          source_debit=11.96),
+        dict(
+          source_value=account_module.collected_vat,
+          source_credit=1.96),
+        dict(
+          source_value=account_module.goods_sales,
+          source_credit=10.00)))
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['portal_type'] = ['Accounting Transaction']
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountingTransactionModule_viewJournalReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # we have 1 transaction, with 3 lines
+    self.assertEqual(3, len(data_line_list))
+    # First Transaction
+    self.checkLineProperties(data_line_list[0],
+                            specific_reference=first.getSourceReference(),
+                            date=DateTime(2006, 2, 2),
+                            title='First One',
+                            node_title='41',
+                            debit=119.60,
+                            credit=0)
+    self.checkLineProperties(data_line_list[1],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='4457',
+                            debit=0,
+                            credit=19.60)
+    self.checkLineProperties(data_line_list[2],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='7',
+                            debit=0,
+                            credit=100)
+    # Stat Line
+    stat_line = line_list[-1]
+    self.assertTrue(stat_line.isStatLine())
+    self.assertFalse(stat_line.getColumnProperty('specific_reference'))
+    self.assertFalse(stat_line.getColumnProperty('date'))
+    self.assertFalse(stat_line.getColumnProperty('title'))
+    self.assertFalse(stat_line.getColumnProperty('node_title'))
+    self.assertFalse(stat_line.getColumnProperty('mirror_section_title'))
+    self.assertEqual(stat_line.getColumnProperty('debit'), 119.60)
+    self.assertEqual(stat_line.getColumnProperty('credit'), 119.60)
+
   def testJournalProject(self):
     self.createProjectAndFunctionDataSet()
     request_form = self.portal.REQUEST.form
