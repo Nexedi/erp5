@@ -185,6 +185,7 @@ var OperatorAPI = /** @class */ (function () {
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
+    ONUPDATE_INTERVAL = 100,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
       'gadget_erp5_page_drone_capture_map_utils.js',
@@ -566,6 +567,17 @@ var OperatorAPI = /** @class */ (function () {
                 "hidden": 0,
                 "type": "IntegerField"
               },
+              "my_onupdate_interval": {
+                "description": "Minimum interval (in milliseconds) between 2 executions of onUpdate function as well as periodicity to send telemetry to the swarm",
+                "title": "OnUpdate interval",
+                "default": gadget.state.onupdate_interval,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "onupdate_interval",
+                "hidden": 0,
+                "type": "IntegerField"
+              },
               "my_drone_min_speed": {
                 "description": "",
                 "title": "Drone min speed",
@@ -708,7 +720,7 @@ var OperatorAPI = /** @class */ (function () {
           form_definition: {
             group_list: [[
               "left",
-              [["my_simulation_speed"], ["my_simulation_time"],
+              [["my_simulation_speed"], ["my_simulation_time"], ["my_onupdate_interval"],
                 ["my_number_of_drones"], ["my_map_seed"]]
             ], [
               "right",
@@ -845,6 +857,7 @@ var OperatorAPI = /** @class */ (function () {
           "maxSinkRate": parseFloat(gadget.state.drone_max_sink_rate),
           "maxClimbRate": parseFloat(gadget.state.drone_max_climb_rate),
           "maxCommandFrequency": parseFloat(gadget.state.drone_max_command_frequency),
+          "onUpdateInterval": parseInt(gadget.state.onupdate_interval, 10),
           "list": drone_list
         },
         "gameTime": parseInt(gadget.state.simulation_time, 10),
@@ -970,6 +983,7 @@ var OperatorAPI = /** @class */ (function () {
       drone_max_speed: MAX_SPEED,
       drone_speed: DEFAULT_SPEED,
       drone_min_speed: MIN_SPEED,
+      onupdate_interval: ONUPDATE_INTERVAL,
       simulation_time: SIMULATION_TIME,
       simulation_speed: SIMULATION_SPEED,
       operator_init_msg: {},
