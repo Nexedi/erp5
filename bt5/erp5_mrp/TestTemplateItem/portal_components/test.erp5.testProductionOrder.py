@@ -884,6 +884,7 @@ class TestProductionOrderMixin(TestOrderMixin):
                                               'operation/operation1')
     component_resource = sequence.get('component1')
 #     for consumed_movement in (applied_rule.cr_1, applied_rule.cr_2):
+    operation_movement = component_movement = None
     for consumed_movement in simulation_movement_list:
       if consumed_movement.getResourceValue() == operation_resource:
         operation_movement = consumed_movement
@@ -1096,6 +1097,7 @@ class TestProductionOrderMixin(TestOrderMixin):
                                               'operation/operation1')
     component_resource = sequence.get('component1')
 #     for consumed_movement in (applied_rule.cr_1, applied_rule.cr_2):
+    operation_movement = component_movement = None
     for consumed_movement in simulation_movement_list:
       if consumed_movement.getResourceValue() == operation_resource:
         operation_movement = consumed_movement
@@ -1216,6 +1218,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     operation_resource = resource.portal_categories.resolveCategory(
                                               'operation/operation2')
     component_resource = sequence.get('component2')
+    operation_movement = component_movement = None
     for consumed_movement in simulation_movement_list:
       if consumed_movement.getResourceValue() == operation_resource:
         operation_movement = consumed_movement
