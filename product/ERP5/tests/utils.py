@@ -29,7 +29,7 @@ import os
 import tarfile
 import xml.parsers.expat
 import xml.dom.minidom
-from urllib import url2pathname
+from six.moves.urllib.request import url2pathname
 from ZODB.DemoStorage import DemoStorage
 from ZODB import DB
 from Products.ERP5Type.XMLExportImport import importXML
@@ -165,14 +165,14 @@ class BusinessTemplateInfoDir(BusinessTemplateInfoBase):
 
   def findFileInfosByName(self, startswith='', endswith=''):
     allfiles = []
-    def visit(arg, dirname, names):
-      if '.svn' in dirname:
-        return
-      for i in names:
-        path = os.path.join(self.target, dirname, i)
+    for root, dir_list, file_list in os.walk(self.target):
+      # We can drop this block as we no longer use Subversion.
+      if '.svn' in root.split(os.path.sep):
+        continue
+      for file_ in file_list:
+        path = os.path.join(self.target, root, file_)
         if os.path.isfile(path):
           allfiles.append(path)
-    os.path.walk(self.target, visit, None)
     for i in allfiles:
       if i.startswith(startswith) and i.endswith(endswith):
         yield i
@@ -186,4 +186,5 @@ class BusinessTemplateInfoDir(BusinessTemplateInfoBase):
     return fileinfo
 
   def readFileInfo(self, fileinfo):
-    return open(fileinfo).read()
+    with open(fileinfo) as f:
+      return f.read()
