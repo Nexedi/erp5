@@ -35,8 +35,7 @@ from DateTime import DateTime
 import email, re
 from email.header import decode_header, make_header
 from email.utils import parseaddr
-import cgi
-import urlparse
+import six.moves.urllib.parse
 
 use_verbose_security = 0
 if use_verbose_security:
@@ -173,21 +172,22 @@ class TestERP5Credential(ERP5TypeTestCase):
       'headers': {}
     }
     # Get Message
-    msg = email.message_from_string(file_)
+    msg = email.message_from_string(file_.decode())
     # Back up original file
     theMail['__original__'] = file_
-    # Recode headers to UTF-8 if needed
     for key, value in msg.items():
       decoded_value_list = decode_header(value)
-      unicode_value = make_header(decoded_value_list)
-      new_value = unicode_value.__unicode__().encode('utf-8')
+      new_value = make_header(decoded_value_list)
+      if six.PY2:
+        # Recode headers to UTF-8 if needed
+        new_value = new_value.__unicode__().encode('utf-8')
       theMail['headers'][key.lower()] = new_value
     # Filter mail addresses
     for header in ('resent-to', 'resent-from', 'resent-cc', 'resent-sender',
                    'to', 'from', 'cc', 'sender', 'reply-to'):
       header_field = theMail['headers'].get(header)
       if header_field:
-        theMail['headers'][header] = parseaddr(header_field)[1]
+        theMail['headers'][header] = parseaddr(header_field.encode())[1]
     # Get attachments
     body_found = 0
     for part in msg.walk():
@@ -203,11 +203,13 @@ class TestERP5Credential(ERP5TypeTestCase):
       elif content_type == 'message/rfc822':
         continue
       elif content_type in ("text/plain", "text/html"):
-        charset = part.get_content_charset()
+        charset = part.get_content_charset() or 'utf-8'
         payload = part.get_payload(decode=True)
         #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
         if charset:
-          payload = unicode(payload, charset).encode('utf-8')
+          payload = payload.decode(charset)
+        if six.PY2:
+          payload = payload.encode('utf-8')
         if body_found:
           # Keep the content type
           theMail['attachment_list'].append((file_name,
@@ -810,7 +812,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     url = url.strip()
     self.assertNotEqual(url, None)
     self.publish(url)
-    parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
+    parameters = six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(url)[4])
     self.assertTrue(
       'reset_key' in parameters,
       'reset_key not found in mail message : %s' % body_message
@@ -1097,15 +1099,13 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_follow_up_uid=credential_request.getUid())
     last_message = self.portal.MailHost._last_message
     self.assertNotEqual((), last_message)
-    mfrom, mto, message_text = last_message
+    mfrom, mto, _ = last_message
     self.assertEqual(mfrom, 'Portal Administrator <postmaster@localhost>')
     self.assertEqual(['Vifib Test <barney@duff.com>'], mto)
-    self.assertNotEqual(re.search(r"Subject\:.*Welcome", message_text), None)
-    self.assertNotEqual(re.search(r"Hello\ Vifib\ Test\,", message_text), None)
     decoded_message = self.decode_email(last_message[2])
-    body_message = decoded_message['body']
-    self.assertNotEqual(re.search("key=%s" % mail_message.getReference(),
-                                   body_message), None)
+    self.assertEqual(decoded_message["headers"]["subject"].encode(), "Welcome")
+    self.assertRegex(self.decode_email(last_message[2])['body'], r"Hello\ Vifib\ Test\,")
+    self.assertRegex(self.decode_email(last_message[2])['body'], "key=%s" % mail_message.getReference())
 
   def testAssignmentCreationUsingSystemPreferenceProperty(self):
     """
@@ -1322,7 +1322,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.ERP5Site_viewNewPersonCredentialUpdateDialog()
     ret = self.portal.ERP5Site_newPersonCredentialUpdate(password='new_password')
     self.assertEqual(
-      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
       ['Password changed.'],
     )
     self.tic()
@@ -1490,7 +1490,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     ret = self.portal.ERP5Site_newCredentialRecovery(reference=self._testMethodName)
     self.assertEqual(
-      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
       ['We have sent you an email to enable you to reset your password. Please check your inbox and your junk/spam mail for this email and follow the link to reset your password.'],
     )
     person.setDefaultEmailCoordinateText(None)

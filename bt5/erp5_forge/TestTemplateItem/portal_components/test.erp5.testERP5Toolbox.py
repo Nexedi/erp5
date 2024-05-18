@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import urlparse
+import six.moves.urllib.parse
 
 
 class TestBusinessTemplateScripts(ERP5TypeTestCase):
@@ -46,10 +46,10 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
         skin_folder=self.skin_folder.getId(),
         use_from_date_at_date=None)
 
-    resp_url = urlparse.urlparse(resp)
+    resp_url = six.moves.urllib.parse.urlparse(resp)
     self.assertEqual(
         ['Report created.'],
-        urlparse.parse_qs(resp_url.query)['portal_status_message'])
+        six.moves.urllib.parse.parse_qs(resp_url.query)['portal_status_message'])
 
     # report is usable (also in ERP5JS)
     action, = [
@@ -60,7 +60,7 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
     self.assertEqual('dummy_report_report', action['id'])
     self.assertEqual(
         'FooModule_viewDummyReportReportDialog',
-        urlparse.urlparse(action['url']).path.split('/')[-1])
+        six.moves.urllib.parse.urlparse(action['url']).path.split('/')[-1])
 
     self.assertIn(
         'FooModule_viewDummyReportReportDialog', self.skin_folder.objectIds())
@@ -90,10 +90,10 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
         skin_layer_priority=None,
         skin_layer_list=self.portal.portal_skins.getSkinSelections(),
     )
-    resp_url = urlparse.urlparse(resp)
+    resp_url = six.moves.urllib.parse.urlparse(resp)
     self.assertEqual(
         ['Skin folder created.'],
-        urlparse.parse_qs(resp_url.query)['portal_status_message'])
+        six.moves.urllib.parse.parse_qs(resp_url.query)['portal_status_message'])
 
     self.assertIn('dummy_skin_folder', self.portal.portal_skins.objectIds())
     # skin is added to business template
@@ -107,10 +107,10 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
         skin_layer_priority=99,
         skin_layer_list=self.portal.portal_skins.getSkinSelections(),
     )
-    resp_url = urlparse.urlparse(resp)
+    resp_url = six.moves.urllib.parse.urlparse(resp)
     self.assertEqual(
         ['Skin folder created.'],
-        urlparse.parse_qs(resp_url.query)['portal_status_message'])
+        six.moves.urllib.parse.parse_qs(resp_url.query)['portal_status_message'])
 
     self.assertIn('dummy_skin_folder', self.portal.portal_skins.objectIds())
     self.assertEqual(
@@ -130,10 +130,10 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
         skin_folder_name='dummy_skin_folder',
         skin_layer_priority=99,
         skin_layer_list=['View', 'SelectedSkinSelection'])
-    resp_url = urlparse.urlparse(resp)
+    resp_url = six.moves.urllib.parse.urlparse(resp)
     self.assertEqual(
         ['Skin folder created.'],
-        urlparse.parse_qs(resp_url.query)['portal_status_message'])
+        six.moves.urllib.parse.parse_qs(resp_url.query)['portal_status_message'])
 
     self.assertIn('dummy_skin_folder', self.portal.portal_skins.objectIds())
     skin_folders_by_skin_selection = {
