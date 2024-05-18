@@ -35,6 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.utils import todo_erp5
+import six
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""
@@ -172,7 +173,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       portal_type=self.trade_model_path_portal_type, **kw)
     if criterion_property_dict:
       trade_model_path._setCriterionPropertyList(tuple(criterion_property_dict))
-      for property_, identity in criterion_property_dict.iteritems():
+      for property_, identity in six.iteritems(criterion_property_dict):
         trade_model_path.setCriterion(property_, identity)
     reference = kw.get('reference', None)
     if reference is not None:

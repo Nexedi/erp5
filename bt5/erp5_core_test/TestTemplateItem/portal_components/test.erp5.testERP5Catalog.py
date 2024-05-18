@@ -595,7 +595,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uid_dict = {}
     for _ in range(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
-      self.assertIsInstance(uid, long)
+      self.assertIsInstance(uid, long)  # pylint:disable=possibly-used-before-assignment
       self.assertNotIn(uid, uid_dict)
       uid_dict[uid] = None
 
