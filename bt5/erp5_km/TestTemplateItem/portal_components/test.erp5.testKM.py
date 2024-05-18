@@ -30,13 +30,15 @@
 import unittest
 from unittest import expectedFailure
 from Products.ERP5Type.Base import TempBase
-from erp5.component.test.testDms import makeFileUpload, TestDocumentMixin
+from Products.ERP5Type.Utils import str2bytes
+from erp5.component.test.testDms import TestDocumentMixin
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""
   return knowledge_pad.searchFolder(
                 portal_type = 'Knowledge Box',
                 specialise_uid = gadget.getUid())[0].getObject().getRelativeUrl()
+
 
 class TestKMMixIn(TestDocumentMixin):
   """
@@ -177,6 +179,7 @@ class TestKM(TestKMMixIn):
     self.tic()
     pads = knowledge_pad_module.ERP5Site_getKnowledgePadListForUser()
     self.assertEqual(2, len(pads))
+    new_pad = None
     for pad in pads:
       pad = pad.getObject()
       if pad == default_pad:
@@ -420,7 +423,7 @@ class TestKM(TestKMMixIn):
     #self.changeSkin('KM')
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
     response = self.publish(url, self.auth)
-    self.assertIn(self.web_front_knowledge_pad.getTitle(), response.getBody())
+    self.assertIn(str2bytes(self.web_front_knowledge_pad.getTitle()), response.getBody())
 
     # Web Front gadgets
     web_front_gadgets = [km_my_tasks_gadget,  km_my_documents_gadget,  km_my_contacts_gadget]
@@ -431,7 +434,7 @@ class TestKM(TestKMMixIn):
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
     for gadget in web_front_gadgets:
-      self.assertIn(gadget.getTitle(), response.getBody())
+      self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
   def test_05MyTaskGadget(self):
     """ Check My Task Gadgets """
@@ -469,8 +472,8 @@ class TestKM(TestKMMixIn):
                                                   self.webpage.getRelativeUrl(),
                                                   km_my_tasks_box_url)
                                , self.auth)]:
-      self.assertIn(project.getTitle(), response.getBody())
-      self.assertIn(visit.getTitle(), response.getBody())
+      self.assertIn(str2bytes(project.getTitle()), response.getBody())
+      self.assertIn(str2bytes(visit.getTitle()), response.getBody())
 
   def test_06MyDocumentsGadget(self):
     """ Check My Document Gadgets """
@@ -512,8 +515,8 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(),
                                                  km_my_documents_gadget_box_url)
                          , self.auth)]:
-      self.assertIn(web_page.getTitle(), response.getBody())
-      self.assertIn(presentation.getTitle(), response.getBody())
+      self.assertIn(str2bytes(web_page.getTitle()), response.getBody())
+      self.assertIn(str2bytes(presentation.getTitle()), response.getBody())
 
   def test_07MyContactsGadget(self):
     """ Check My Contacts Gadgets """
@@ -549,7 +552,7 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(),
                                                  km_my_contacts_gadget_box_url)
                          , self.auth)]:
-      self.assertIn(person.getTitle(), response.getBody())
+      self.assertIn(str2bytes(person.getTitle()), response.getBody())
 
   def test_08WebSectionGadget(self):
     """ Check Web Section Gadgets """
@@ -568,7 +571,7 @@ class TestKM(TestKMMixIn):
       self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
 
     for gadget in web_section_gadgets:
-      self.assertIn(gadget.getTitle(), response.getBody())
+      self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
   def test_10LatestContentGadget(self):
     """ Check Latest Content Gadgets """
@@ -581,37 +584,39 @@ class TestKM(TestKMMixIn):
                                uids=[km_latest_documents_gadget.getUid()])
 
     # "Latest Content" gadget
-    gadget_view_form_id  = km_latest_documents_gadget.view_form_id
-    publication_section_category_id_list = ['documentation',  'administration']
+    gadget_view_form_id = km_latest_documents_gadget.view_form_id
+    publication_section_category_id_list = ['documentation', 'administration']
     for category_id in publication_section_category_id_list:
-      portal.portal_categories.publication_section.newContent(portal_type = 'Category',
-                                                              id = category_id)
+      if category_id not in portal.portal_categories.publication_section.objectIds():
+        portal.portal_categories.publication_section.newContent(
+          portal_type='Category',
+          id=category_id)
     latest_docs_subsection = self.websection.newContent(portal_type='Web Section')
-    latest_docs_subsection.edit(membership_criterion_base_category = ['publication_section'],
+    latest_docs_subsection.edit(membership_criterion_base_category=['publication_section'],
                                 membership_criterion_category=['publication_section/%s'
-                                              %publication_section_category_id_list[0]])
+                                              % publication_section_category_id_list[0]])
     self.tic()
     km_latest_documents_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad(
                                            self.web_section_knowledge_pad,
                                            km_latest_documents_gadget)
     self.changeSkin('KM')
     # set here to prevent  failing to render a form's field which reads directly requets
-    request.set('box_relative_url',  km_latest_documents_gadget_box_url)
+    request.set('box_relative_url', km_latest_documents_gadget_box_url)
 
     # add some documents to this web section
     presentation = portal.document_module.newContent(
                           title='My presentation',
-                          portal_type = 'Presentation',
-                          reference = 'Presentation-12456_',
+                          portal_type='Presentation',
+                          reference='Presentation-12456_',
                           version='001',
                           language='en',
-                          publication_section_list = publication_section_category_id_list[:1])
+                          publication_section_list=publication_section_category_id_list[:1])
     presentation.publish()
     self.tic()
     self.changeSkin('KM')
-    self.assertIn(presentation.getTitle(),
-          self.publish(self.base_url_pattern
-                    %(self.web_section_url+'/%s' %latest_docs_subsection.getId(),
+    self.assertIn(str2bytes(presentation.getTitle()),
+          self.publish(self.base_url_pattern %
+                     (self.web_section_url + '/%s' % latest_docs_subsection.getId(),
                       gadget_view_form_id,
                       latest_docs_subsection.getRelativeUrl(),
                       km_latest_documents_gadget_box_url)
@@ -637,7 +642,7 @@ class TestKM(TestKMMixIn):
                                           self.web_section_knowledge_pad,
                                           km_assigned_member_gadget)
     self.changeSkin('KM')
-    self.assertIn('No result',
+    self.assertIn(b'No result',
           self.publish(self.base_url_pattern
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),
               gadget_view_form_id,
@@ -651,7 +656,7 @@ class TestKM(TestKMMixIn):
     assignment =  person.newContent(portal_type = 'Assignment', destination_project_value=project)
     self.tic()
     self.changeSkin('KM')
-    self.assertIn(person.getTitle(),
+    self.assertIn(str2bytes(person.getTitle()),
                     self.publish(self.base_url_pattern
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),
               gadget_view_form_id,
@@ -677,7 +682,7 @@ class TestKM(TestKMMixIn):
       self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
 
     for gadget in web_section_content_gadgets:
-      self.assertIn(gadget.getTitle(), response.getBody())
+      self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
   def test_12RelationGadget(self):
     """ Check  Relation Gadgets """
@@ -740,9 +745,9 @@ class TestKM(TestKMMixIn):
     portal = self.getPortal()
     portal_gadgets = portal.portal_gadgets
 
-    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
+    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' % self.web_site_url
     response = self.publish(url, self.auth)
-    self.assertIn(self.web_front_knowledge_pad.getTitle(), response.getBody())
+    self.assertIn(str2bytes(self.web_front_knowledge_pad.getTitle()), response.getBody())
 
     gadget = portal_gadgets.km_latest_documents
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
@@ -750,25 +755,25 @@ class TestKM(TestKMMixIn):
 
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
-    self.assertIn(gadget.getTitle(), response.getBody())
+    self.assertIn(str2bytes(gadget.getTitle()), response.getBody())
 
     # set non existent view_form
     old_gadget_view_form_id =  gadget.view_form_id
     gadget.view_form_id = 'NO_SUCH_FORM_EXISTS'
     response = self.publish(url, self.auth)
-    self.assertIn('Server side error', response.getBody())
+    self.assertIn(b'Server side error', response.getBody())
     gadget.view_form_id = old_gadget_view_form_id
     response = self.publish(url, self.auth)
-    self.assertNotIn('Server side error', response.getBody())
+    self.assertNotIn(b'Server side error', response.getBody())
 
     # set non existent edit_form
-    old_gadget_edit_form_id =  gadget.edit_form_id
+    old_gadget_edit_form_id = gadget.edit_form_id
     gadget.edit_form_id = 'NO_SUCH_FORM_EXISTS'
     response = self.publish(url, self.auth)
-    self.assertIn('Server side error', response.getBody())
+    self.assertIn(b'Server side error', response.getBody())
     gadget.edit_form_id = old_gadget_edit_form_id
     response = self.publish(url, self.auth)
-    self.assertNotIn('Server side error', response.getBody())
+    self.assertNotIn(b'Server side error', response.getBody())
 
   def test_16WebSiteBrowserGadget(self):
     """
@@ -783,7 +788,7 @@ class TestKM(TestKMMixIn):
 
     self.changeSkin('KM')
     # "Subsections" gadget
-    gadget_view_form_id  = web_site_browser_gadget.view_form_id
+    gadget_view_form_id = web_site_browser_gadget.view_form_id
     box_url = _getGadgetInstanceUrlFromKnowledgePad( \
                                      self.web_front_knowledge_pad,  \
                                      web_site_browser_gadget)
@@ -795,14 +800,14 @@ class TestKM(TestKMMixIn):
                                   gadget_view_form_id,
                                   self.website.getRelativeUrl(),
                                   box_url)
-    self.assertNotIn(subsection.getTitle(),
+    self.assertNotIn(str2bytes(subsection.getTitle()),
                     self.publish(url, self.auth).getBody())
 
     # make section visible
     subsection.edit(visible=True)
     self.tic()
     self.changeSkin('KM')
-    self.assertIn(subsection.getTitle(),
+    self.assertIn(str2bytes(subsection.getTitle()),
                     self.publish(url, self.auth).getBody())
 
   def test_17AddGadgets(self):
@@ -998,38 +1003,38 @@ class TestKMSearch(TestKMMixIn):
     # create docs to be referenced:
     # (1) TEST, 002, en
     filename = 'TEST-en-002.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     self.portal.portal_contributions.newContent(file=file_)
 
     # (2) TEST, 002, fr
     as_name = 'TEST-fr-002.odt'
-    file_ = makeFileUpload(filename, as_name)
+    file_ = self.makeFileUpload(filename, as_name)
     document2 = self.portal.portal_contributions.newContent(file=file_)
 
     # (3) TEST, 003, en
     as_name = 'TEST-en-003.odt'
-    file_ = makeFileUpload(filename, as_name)
+    file_ = self.makeFileUpload(filename, as_name)
     document3 = self.portal.portal_contributions.newContent(file=file_)
 
     # create docs to contain references in text_content:
     # REF, 002, en; "I use reference to look up TEST"
     filename = 'REF-en-002.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document5 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFLANG, 001, en: "I use reference and language to look up TEST-fr"
     #filename = 'REFLANG-en-001.odt'
-    #file = makeFileUpload(filename)
+    #file = self.makeFileUpload(filename)
     #document6 = self.portal.portal_contributions.newContent(file=file)
 
     # REFVER, 001, en: "I use reference and version to look up TEST-002"
     #filename = 'REFVER-en-001.odt'
-    #file = makeFileUpload(filename)
+    #file = self.makeFileUpload(filename)
     #document7 = self.portal.portal_contributions.newContent(file=file)
 
     # REFVERLANG, 001, en: "I use reference, version and language to look up TEST-002-en"
     #filename = 'REFVERLANG-en-001.odt'
-    #file = makeFileUpload(filename)
+    #file = self.makeFileUpload(filename)
     #document8 = self.portal.portal_contributions.newContent(file=file)
 
     self.tic()
