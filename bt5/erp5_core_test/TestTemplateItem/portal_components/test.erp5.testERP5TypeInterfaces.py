@@ -27,6 +27,7 @@
 ##############################################################################
 
 from zope.interface.verify import verifyClass
+import six
 import unittest
 
 implements_tuple_list = [
@@ -59,7 +60,7 @@ def makeTestMethod(import_tuple, interface):
   """Common method which checks if documents implements interface"""
   def testMethod(self):
     Klass = getattr(
-      __import__(import_tuple[0], globals(), locals(), [import_tuple[0]]),
+      __import__(import_tuple[0], globals(), locals(), [import_tuple[0]] if six.PY2 else ['erp5']),
       import_tuple[1])
 
     import Products.ERP5Type.interfaces
@@ -68,7 +69,7 @@ def makeTestMethod(import_tuple, interface):
     except AttributeError:
       InterfaceModuleName = 'erp5.component.interface.%s' % interface
       Interface = getattr(
-        __import__(InterfaceModuleName, globals(), locals(), [InterfaceModuleName]),
+        __import__(InterfaceModuleName, globals(), locals(), [InterfaceModuleName] if six.PY2 else ['erp5']),
         interface)
 
     verifyClass(Interface, Klass)
