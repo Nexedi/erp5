@@ -154,7 +154,7 @@ def main():
 
     assert revision == test_result.revision, (revision, test_result.revision)
     while suite.acquire():
-      test = test_result.start(suite.running.keys())
+      test = test_result.start(list(suite.running.keys()))
       if test is not None:
         suite.start(test.name, lambda status_dict, __test=test:
           __test.stop(**status_dict))
