@@ -43,7 +43,7 @@ class TestOOoParser(unittest.TestCase):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('import_data_list.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Person'], mapping.keys())
+    self.assertEqual(['Person'], list(mapping.keys()))
     person_mapping = mapping['Person']
     self.assertTrue(isinstance(person_mapping, list))
     self.assertTrue(102, len(person_mapping))
@@ -57,14 +57,14 @@ class TestOOoParser(unittest.TestCase):
     with open(makeFilePath('import_data_list.ods'), 'rb') as f:
       parser.openFromBytes(f.read())
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Person'], mapping.keys())
+    self.assertEqual(['Person'], list(mapping.keys()))
 
   def test_getSpreadSheetMappingStyle(self):
     parser = OOoParser()
     with open(makeFilePath('import_data_list_with_style.ods'), 'rb') as f:
       parser.openFile(f)
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(['Feuille1'], list(mapping.keys()))
     self.assertEqual(mapping['Feuille1'][1],
                       ['a line with style'])
     self.assertEqual(mapping['Feuille1'][2],
@@ -79,7 +79,7 @@ class TestOOoParser(unittest.TestCase):
     with open(makeFilePath('import_data_list_data_type.ods'), 'rb') as f:
       parser.openFile(f)
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(['Feuille1'], list(mapping.keys()))
     self.assertEqual(mapping['Feuille1'][0],
                       ['1234.5678'])
     self.assertEqual(mapping['Feuille1'][1],
@@ -112,7 +112,7 @@ class TestOOoParser(unittest.TestCase):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('complex_text.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(['Feuille1'], list(mapping.keys()))
     self.assertEqual(mapping['Feuille1'][0], [' leading space'])
     self.assertEqual(mapping['Feuille1'][1], ['   leading space'])
     self.assertEqual(mapping['Feuille1'][2], ['tab\t'])
@@ -122,7 +122,7 @@ class TestOOoParser(unittest.TestCase):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('empty_cells.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(['Feuille1'], list(mapping.keys()))
     self.assertEqual(mapping['Feuille1'],
       [
         ['A1', None, 'C1'],
