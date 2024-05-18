@@ -28,10 +28,9 @@
 ##############################################################################
 
 import collections
-import httplib
-import urlparse
+import six.moves.http_client
+import six.moves.urllib.parse
 import base64
-import urllib
 import lxml.html
 
 from AccessControl.SecurityManagement import newSecurityManager
@@ -42,58 +41,58 @@ from Products.ERP5Type.tests.utils import DummyTranslationService
 
 from zExceptions import Unauthorized
 
-if 1: # BBB
-  # Zope 2.12, simulate setting the globalTranslationService with
-  # zope.i18n utilities
-  import zope.interface
-  import zope.component
-  import Acquisition
+# Zope 2.12, simulate setting the globalTranslationService with
+# zope.i18n utilities
+import zope.interface
+import zope.component
+import Acquisition
 
-  global_translation_service = None
-  from zope.i18n.interfaces import ITranslationDomain, \
-                                   IFallbackTranslationDomainFactory
-  @zope.interface.implementer(ITranslationDomain)
-  @zope.interface.provider(IFallbackTranslationDomainFactory)
-  class DummyTranslationDomainFallback(object):
+global_translation_service = None
 
-    def __init__(self, domain):
-      self.domain = domain
+from zope.i18n.interfaces import ITranslationDomain, \
+                                  IFallbackTranslationDomainFactory
+@zope.interface.implementer(ITranslationDomain)
+@zope.interface.provider(IFallbackTranslationDomainFactory)
+class DummyTranslationDomainFallback(object):
+  def __init__(self, domain):
+    self.domain = domain
 
-    def translate(self, msgid, mapping=None, *args, **kw):
-      return global_translation_service.translate(self.domain, msgid, mapping,
-                                                  *args, **kw)
+  def translate(self, msgid, mapping=None, *args, **kw):
+    return global_translation_service.translate(self.domain, msgid, mapping,
+                                                *args, **kw)
 
-  def setGlobalTranslationService(translation_service):
-    global global_translation_service   # pylint:disable=global-statement
-    global_translation_service = translation_service
-    zope.component.provideUtility(DummyTranslationDomainFallback,
-                                  provides=IFallbackTranslationDomainFactory)
-    # disable translation for the 'ui' domain so it can use the fallback above.
-    # Save it on a portal attribute since we don't have access to the test
-    # class
-    sm = zope.component.getSiteManager()
-    portal = Acquisition.aq_parent(sm)
-    from zope.interface.interfaces import ComponentLookupError
-    try:
-      ui_domain = sm.getUtility(ITranslationDomain, name='ui')
-    except ComponentLookupError:
-      pass
-    else:
-      # store in a list to avoid acquisition wrapping
-      portal._save_ui_domain = [ui_domain]
-      sm.unregisterUtility(provided=ITranslationDomain, name='ui')
+def setGlobalTranslationService(translation_service):
+  global global_translation_service   # pylint:disable=global-statement
+  global_translation_service = translation_service
+  zope.component.provideUtility(DummyTranslationDomainFallback,
+                                provides=IFallbackTranslationDomainFactory)
+  # disable translation for the 'ui' domain so it can use the fallback above.
+  # Save it on a portal attribute since we don't have access to the test
+  # class
+  sm = zope.component.getSiteManager()
+  portal = Acquisition.aq_parent(sm)
+  from zope.interface.interfaces import ComponentLookupError
+  try:
+    ui_domain = sm.getUtility(ITranslationDomain, name='ui')
+  except ComponentLookupError:
+    pass
+  else:
+    # store in a list to avoid acquisition wrapping
+    portal._save_ui_domain = [ui_domain]
+    sm.unregisterUtility(provided=ITranslationDomain, name='ui')
 
-  def unregister_translation_domain_fallback():
-    from zope.component.globalregistry import base
-    base.unregisterUtility(DummyTranslationDomainFallback)
-    sm = zope.component.getSiteManager()
-    portal = Acquisition.aq_parent(sm)
-    ui_domain = getattr(portal, '_save_ui_domain', [None]).pop()
-    if ui_domain is not None:
-      # aq_base() to remove acquisition wrapping
-      ui_domain = Acquisition.aq_base(ui_domain)
-      sm.registerUtility(ui_domain, ITranslationDomain, 'ui')
-      del portal._save_ui_domain
+def unregister_translation_domain_fallback():
+  from zope.component.globalregistry import base
+  base.unregisterUtility(DummyTranslationDomainFallback)
+  sm = zope.component.getSiteManager()
+  portal = Acquisition.aq_parent(sm)
+  ui_domain = getattr(portal, '_save_ui_domain', [None]).pop()
+  if ui_domain is not None:
+    # aq_base() to remove acquisition wrapping
+    ui_domain = Acquisition.aq_base(ui_domain)
+    sm.registerUtility(ui_domain, ITranslationDomain, 'ui')
+    del portal._save_ui_domain
+
 
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
@@ -531,7 +530,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(0, person.getRelationCountForDeletion())
     def delete(assert_deleted, obj):
       redirect = self._Folder_delete(obj)
-      self.assertTrue((urllib.quote('Sorry, 1 item is in use.'), 'Deleted.')[assert_deleted]
+      self.assertTrue((six.moves.urllib.parse.quote('Sorry, 1 item is in use.'), 'Deleted.')[assert_deleted]
                       in redirect, redirect)
       self.tic()
     delete(0, organisation)
@@ -560,7 +559,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_1.manage_permission('View', [], acquire=0)
     document_1.manage_permission('Access contents information', [], acquire=0)
     redirect = self._Folder_delete(document_2)
-    self.assertTrue(urllib.quote('Sorry, 1 item is in use.') in redirect, redirect)
+    self.assertTrue(six.moves.urllib.parse.quote('Sorry, 1 item is in use.') in redirect, redirect)
     self.assertEqual(module.objectCount(), 2)
 
   def test_getPropertyForUid(self):
@@ -588,26 +587,27 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # now let's simulate a site just migrated from Zope 2.8 that's being
     # accessed for the first time:
     from Products.ERP5 import ERP5Site
-    if 1: # BBB
-      setSite()
-      # Sites from Zope2.8 don't have a site_manager yet.
-      del self.portal._components
-      self.assertIsNotNone(ERP5Site._missing_tools_registered)
-      ERP5Site._missing_tools_registered = None
-      self.commit()
-      # check that we can't get any translation utility
-      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
-      # Now simulate first access. Default behaviour from
-      # ObjectManager is to raise a ComponentLookupError here:
 
-      setSite(self.portal)
-      self.commit()
-      self.assertIsNotNone(ERP5Site._missing_tools_registered)
-      # This should have automatically reconstructed the i18n utility
-      # registrations:
-      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
-                       erp5_ui_catalog)
-      self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
+    # BBB
+    setSite()
+    # Sites from Zope2.8 don't have a site_manager yet.
+    del self.portal._components
+    self.assertIsNotNone(ERP5Site._missing_tools_registered)
+    ERP5Site._missing_tools_registered = None
+    self.commit()
+    # check that we can't get any translation utility
+    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
+    # Now simulate first access. Default behaviour from
+    # ObjectManager is to raise a ComponentLookupError here:
+
+    setSite(self.portal)
+    self.commit()
+    self.assertIsNotNone(ERP5Site._missing_tools_registered)
+    # This should have automatically reconstructed the i18n utility
+    # registrations:
+    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
+                      erp5_ui_catalog)
+    self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
 
   def test_BasicAuthenticateDesactivated(self):
     """Make sure Unauthorized error does not lead to Basic auth popup in browser"""
@@ -623,16 +623,16 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.auth = '%s:%s' % (login_name, password)
     self.tic()
 
-    _, api_netloc, _, _, _ = urlparse.urlsplit(self.portal.absolute_url())
+    _, api_netloc, _, _, _ = six.moves.urllib.parse.urlsplit(self.portal.absolute_url())
 
-    connection = httplib.HTTPConnection(api_netloc)
+    connection = six.moves.http_client.HTTPConnection(api_netloc)
     connection.request(
       method='GET',
       url='%s/Person_getPrimaryGroup' % \
           self.portal.absolute_url(),
       headers={
        'Authorization': 'Basic %s' % \
-         base64.b64encode(self.auth)
+         base64.b64encode(self.auth.encode()).decode()
       }
     )
     response = connection.getresponse()
@@ -713,7 +713,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual("""Path,Id,Title,Short Title,Reference,Codification,Int Index,Description
 *,bar,Bar,SBar,,,3,desc
 *,foo,Foo,,Rfoo,CFoo,,
-""", csv_data)
+""", csv_data.decode())
 
   def test_ERP5Site_reindexLatestIndexedObjects(self):
     module = self.portal.newContent(portal_type='Folder', id='test_folder')
