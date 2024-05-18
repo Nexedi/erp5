@@ -87,7 +87,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['1', '2', '3'], ['a', 'b', 'c']]
     kwd = {'base_id' : 'quantity'}
     matrix.renameCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
 
     i = 0
     for place in cartesianProduct(cell_range):
@@ -98,7 +98,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
 
     cell_range = [['2', '3', '4'], ['b', 'c', 'd']]
     matrix.renameCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     i = 0
     for place in cartesianProduct(cell_range):
       cell = matrix.getCell(*place, **kwd)
@@ -109,7 +109,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
     value_list = (0, 1, 2, None, 3, 4, 5, None, 6, 7, 8, None, None, None, None, None)
     matrix.renameCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     i = 0
     for place in cartesianProduct(cell_range):
       cell = matrix.getCell(*place, **kwd)
@@ -123,7 +123,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['1', '2'], ['a', 'b']]
     value_list = (0, 1, 3, 4)
     matrix.renameCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     i = 0
     for place in cartesianProduct(cell_range):
       cell = matrix.getCell(*place, **kwd)
@@ -134,7 +134,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['3'], ['a', 'b', 'c'], ['A', 'B', 'C']]
     value_list = (0, None, None, 1, None, None, None, None, None)
     matrix.renameCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     i = 0
     for place in cartesianProduct(cell_range):
       cell = matrix.getCell(*place, **kwd)
@@ -148,7 +148,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['1', '2'], ['A', 'B']]
     value_list = (0, 1, None, None)
     matrix.renameCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     i = 0
     for place in cartesianProduct(cell_range):
       cell = matrix.getCell(*place, **kwd)
@@ -169,7 +169,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['1', '2'], ['A', 'B'], ['a', 'b']]
     value_list = (0, None, 1, None, 2, None, 3, None)
     matrix.renameCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     i = 0
     for place in cartesianProduct(cell_range):
       cell = matrix.getCell(*place, **kwd)
@@ -197,7 +197,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['1', '2', '3'], ['a', 'b', 'c']]
     kwd = {'base_id' : 'quantity'}
     matrix.setCellRange(*cell_range, **kwd)
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
 
     for place in cartesianProduct(cell_range):
       matrix.newCell(portal_type="Purchase Order Cell",
@@ -211,7 +211,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     matrix.setCellRange(*cell_range, **kwd)
     # We must commit transaction in order to put cell reindexing in activity queue
     self.commit()
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     next_cell_id_list = list(matrix.objectIds())
     # the cells on coordinates 2b, 3b, 3b and 3c are kept
     self.assertEqual(4, len(next_cell_id_list))
@@ -231,7 +231,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['0', '1'], ['a','b']]
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     next2_cell_id_list = list(matrix.objectIds())
     removed_id_list = [x for x in next_cell_id_list if x not in next2_cell_id_list]
     self.tic()
@@ -244,7 +244,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     kwd = {'base_id' : 'movement'}
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     self.tic()
     for id_ in next2_cell_id_list:
       self.assertFalse(catalog.hasPath(url + '/' + id_))
@@ -259,7 +259,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     # if we keep the same range, nothing happens
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     self.assertEqual(len(matrix.getCellValueList(**kwd)), 2)
     self.tic()
 
@@ -271,7 +271,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['0', '2'], ['a', ], ['Z']]
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     self.tic()
 
     # in this case, cells has been removed
@@ -291,7 +291,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['1', '2'], ['a', ], ['X']]
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
-    self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
+    self.assertEqual(list(map(set, matrix.getCellRange(**kwd))), list(map(set, cell_range)))
     self.tic()
 
     # in this case, cells has been removed

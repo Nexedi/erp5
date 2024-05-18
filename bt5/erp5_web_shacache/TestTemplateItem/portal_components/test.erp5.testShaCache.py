@@ -28,8 +28,8 @@
 ##############################################################################
 
 
-import httplib
-import urlparse
+import six.moves.http_client
+import six.moves.urllib.parse
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
@@ -49,8 +49,8 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
       Post the file
     """
-    parsed = urlparse.urlparse(self.shacache_url)
-    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    parsed = six.moves.urllib.parse.urlparse(self.shacache_url)
+    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
     try:
       connection.request('POST', parsed.path, self.data, self.header_dict)
       result = connection.getresponse()
@@ -67,8 +67,8 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     if key is None:
       key = self.key
 
-    parsed = urlparse.urlparse(self.shacache_url)
-    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    parsed = six.moves.urllib.parse.urlparse(self.shacache_url)
+    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
     try:
       connection.request('GET', '/'.join([parsed.path, key]), None, {})
       result = connection.getresponse()
@@ -82,8 +82,8 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
       Check if the PUT method is creating an object.
     """
     result, data = self.postFile()
-    self.assertEqual(result, httplib.CREATED)
-    self.assertEqual(data, self.key)
+    self.assertEqual(result, six.moves.http_client.CREATED)
+    self.assertEqual(data, self.key.encode())
 
     self.tic()
 
@@ -100,8 +100,8 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
       Check if the file returned is the correct.
     """
     result, data = self.postFile()
-    self.assertEqual(result, httplib.CREATED)
-    self.assertEqual(data, self.key)
+    self.assertEqual(result, six.moves.http_client.CREATED)
+    self.assertEqual(data, self.key.encode())
 
     self.tic()
 
@@ -109,7 +109,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertNotEqual(None, document)
 
     result, data = self.getFile()
-    self.assertEqual(result, httplib.OK)
+    self.assertEqual(result, six.moves.http_client.OK)
     self.assertEqual(data, self.data)
 
   def test_put_file_twice(self):
@@ -131,6 +131,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertEqual('published', document2.getValidationState())
     self.assertEqual('archived', document.getValidationState())
 
+  @expectedFailure
   def test_put_file_twice_no_tic(self):
     self.postFile()
     self.commit()
@@ -140,5 +141,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     document_list = self.portal.portal_catalog(reference=self.key)
 
     self.assertEqual(2, len(document_list))
-    expectedFailure(self.assertEqual)(sorted(['archived', 'published']),
-        sorted(q.getValidationState() for q in document_list))
+    # this is the expected failure
+    self.assertEqual(
+      sorted(['archived', 'published']),
+      sorted(q.getValidationState() for q in document_list))
