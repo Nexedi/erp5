@@ -26,22 +26,29 @@
 ##############################################################################
 from __future__ import print_function
 import base64
+import six
+# pylint:disable=no-name-in-module
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
+# pylint:enable=no-name-in-module
 from collections import defaultdict
 from functools import partial, wraps
 import hashlib
-import HTMLParser
+from six.moves.html_parser import HTMLParser
 from io import BytesIO
 import json
 import random
 import pprint
 from time import time
 import unittest
-import urllib
-import urlparse
-import six
+import six.moves.urllib as urllib
+from six.moves.urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5.ERP5Site import (
   ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME,
   ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME,
@@ -50,6 +57,7 @@ import Zope2
 from ZPublisher.mapply import mapply
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
+from six.moves import xrange
 
 _TEST_ACCESS_COOKIE_NAME = '__Site-test_at'
 _TEST_REFRESH_COOKIE_NAME = '__Site-test_rt'
@@ -61,11 +69,11 @@ _HTML_FIELD_TAG_SET = {
   'submit',
   # Very incomplete, but enough for this tests' purpose: ignores "select"s...
 }
-class FormExtractor(HTMLParser.HTMLParser):
+class FormExtractor(HTMLParser):
   def reset(self):
     self.__in_form = False
     self.form_list = []
-    HTMLParser.HTMLParser.reset(self)
+    HTMLParser.reset(self)
 
   def handle_starttag(self, tag, attribute_item_list):
     attr_dict = dict(attribute_item_list)
@@ -76,14 +84,19 @@ class FormExtractor(HTMLParser.HTMLParser):
     elif self.__in_form and tag in _HTML_FIELD_TAG_SET:
       self.form_list[-1][1].append((
         attr_dict['name'],
-        attr_dict.get('value', '').encode('utf-8'),
+        unicode2str(attr_dict.get('value', ''))
       ))
 
   def handle_endtag(self, tag):
     if tag == 'form':
       self.__in_form = False
 
+  def error(self, message):
+    raise ValueError(message)
+
+
 class TestOAuth2(ERP5TypeTestCase):
+  # pylint:disable=unused-private-member
   __cleanup_list = None
   __port = None
   __query_trace = None
@@ -181,7 +194,7 @@ class TestOAuth2(ERP5TypeTestCase):
 
   def afterSetUp(self):
     super(TestOAuth2, self).afterSetUp()
-    parsed_site_url = urlparse.urlsplit(self.portal.absolute_url())
+    parsed_site_url = urlsplit(self.portal.absolute_url())
     self.__scheme = parsed_site_url.scheme
     context_netloc_list = parsed_site_url.netloc.rsplit(':', 1)
     try:
@@ -292,7 +305,7 @@ class TestOAuth2(ERP5TypeTestCase):
     cleanup_list = self.__cleanup_list
     # XXX: imperfect cleanup if indexation did not complete
     cleanup_list.extend(
-      x.getObject() for x in self.__searchOAuth2Session(),
+      x.getObject() for x in self.__searchOAuth2Session()
     )
     parent_dict = defaultdict(list)
     for document_value in cleanup_list:
@@ -353,7 +366,7 @@ class TestOAuth2(ERP5TypeTestCase):
     cookie_header = ';'.join(
       '%s="%s"' % (
         name,
-        urllib.quote(cookie_dict['value']),
+        quote(cookie_dict['value']),
       ) for name, cookie_dict in six.iteritems(dict(cookie_dict))
       if cookie_dict
     )
@@ -393,6 +406,7 @@ class TestOAuth2(ERP5TypeTestCase):
       Zope2.app(connection=self.portal._p_jar),
     ]
     published_callable = request.traverse(path)
+    exc = None
     try:
       response.setBody(
         mapply(
@@ -403,10 +417,9 @@ class TestOAuth2(ERP5TypeTestCase):
           bind=1,
         ),
       )
-    except Exception as exc:
+    except Exception as e:
+      exc = e
       raise
-    else:
-      exc = None
     finally:
       setSecurityManager(current_security_manager)
       cookie_dict = {}
@@ -421,7 +434,7 @@ class TestOAuth2(ERP5TypeTestCase):
           cookie_value, cookie_attributes = cookie_body.split(';', 1)
           cookie_value = cookie_value.strip('"')
           cookie_value_dict = {
-            'value': urllib.unquote(cookie_value),
+            'value': urllib.parse.unquote(cookie_value),
           }
           for cookie_attribute in cookie_attributes.split(';'):
             cookie_attribute = cookie_attribute.lstrip()
@@ -482,7 +495,7 @@ class TestOAuth2(ERP5TypeTestCase):
     Assert that given call redirects to given location with given status.
     Only scheme, netloc and path are matched (ex: query is ignored).
     """
-    parsed_reference_location = urlparse.urlsplit(reference_location)
+    parsed_reference_location = urlsplit(reference_location)
     status, header_dict, cookie_dict, body = query_result
     self.assertIn(
       body.strip(),
@@ -490,10 +503,10 @@ class TestOAuth2(ERP5TypeTestCase):
         b'',
         # XXX: Tolerate the redirect URL being returned in the body.
         # This is a bug, body should really be empty.
-        header_dict.get('location', b''),
+        str2bytes(header_dict.get('location', '')),
       ),
     )
-    parsed_location = urlparse.urlsplit(header_dict.get('location', ''))
+    parsed_location = urlsplit(header_dict.get('location', ''))
     self.assertEqual(
       (
         status,
@@ -549,7 +562,7 @@ class TestOAuth2(ERP5TypeTestCase):
     self.assertContentTypeEqual(result_header_dict, 'text/html')
     assert result_body
     parser = FormExtractor()
-    parser.feed(result_body)
+    parser.feed(bytes2str(result_body))
     parser.close()
     (action_url, field_list), = parser.form_list # pylint: disable=unbalanced-tuple-unpacking
     for field_name, _ in field_list:
@@ -560,19 +573,19 @@ class TestOAuth2(ERP5TypeTestCase):
       raise ValueError('No field name ending with ":method"')
     # Call Base_callDialogMethod
     status, inner_header_dict, inner_cookie_dict, body = self._query(
-      path=urlparse.urlsplit(action_url).path + '/' + script_id,
+      path=urlsplit(action_url).path + '/' + script_id,
       method='POST',
       client_ip=client_ip,
       content_type='application/x-www-form-urlencoded',
       header_dict=header_dict,
       cookie_dict=cookie_dict,
-      body=urllib.urlencode(list(value_callback(
+      body=str2bytes(urlencode(list(value_callback(
         field_item_list=tuple(
           (key, value)
           for key, value in field_list
           if not key.endswith(':method')
         ),
-      ))),
+      )))),
     )
     if script_id == 'Base_callDialogMethod' and status == 302:
       # Base_callDialogMethod ended in redirection. It may be that the action
@@ -589,7 +602,7 @@ class TestOAuth2(ERP5TypeTestCase):
       # portal, so if it is outside we know the redirection comes from the
       # action script and we are done.
       if location.startswith(portal.absolute_url()):
-        parsed_location = urlparse.urlsplit(location)
+        parsed_location = urlsplit(location)
         dialog_method, = [
           value
           for key, value in field_list
@@ -642,7 +655,7 @@ class TestOAuth2(ERP5TypeTestCase):
       If the login form is displayed but this is None, test fails.
       If the login for is not displayed and this is not None, test fails.
       Called with:
-        parsed_location (urlparse.urlsplit)
+        parsed_location (urlsplit)
           Parsed locator. Use this if you want, for example, to access the portal_status_message.
       See _submitDialog for further signature definitions.
     authentication_is_local (bool)
@@ -658,7 +671,7 @@ class TestOAuth2(ERP5TypeTestCase):
       throughout the course of this method.
 
     Returns:
-    parsed_location (urlparse.urlsplit)
+    parsed_location (urlsplit)
       Parsed version of the actual redirection location aimed at redirect_uri.
     cookie_dict (dict)
       Flattened view of all response set-cookie headers.
@@ -676,7 +689,7 @@ class TestOAuth2(ERP5TypeTestCase):
         else:
           cookie_jar[key] = value
         cookie_dict[key] = value
-    parsed_redirect_uri = urlparse.urlsplit(redirect_uri)
+    parsed_redirect_uri = urlsplit(redirect_uri)
     def isRedirectURI(parsed_location):
       return (
         parsed_location.scheme == parsed_redirect_uri.scheme and
@@ -686,7 +699,7 @@ class TestOAuth2(ERP5TypeTestCase):
     assert not parsed_redirect_uri.query
     assert not parsed_redirect_uri.fragment
     # XXX: just to satisfy authentication_callback
-    parsed_location = urlparse.urlsplit(urlparse.urlunsplit((
+    parsed_location = urlsplit(urlunsplit((
       '',
       '',
       path,
@@ -713,7 +726,7 @@ class TestOAuth2(ERP5TypeTestCase):
       updateCookieDictAndJar(inner_cookie_dict)
       if status == 302:
         # Being redirected...
-        parsed_location = urlparse.urlsplit(inner_header_dict.get('location', ''))
+        parsed_location = urlsplit(inner_header_dict.get('location', ''))
         if isRedirectURI(parsed_location):
           # ...to client: check if this is expected and leave
           self.assertTrue(
@@ -781,9 +794,9 @@ class TestOAuth2(ERP5TypeTestCase):
     """
     Get a token, renew it, terminate session.
     """
-    basic_auth = 'Basic ' + base64.encodestring(
-      _TEST_USER_LOGIN + ':' + self.__password,
-    ).rstrip()
+    basic_auth = 'Basic ' + bytes2str(base64_encodebytes(
+      str2bytes(_TEST_USER_LOGIN + ':' + self.__password),
+    )).rstrip()
     oauth2_server_connector = self.__oauth2_server_connector_value.getPath()
     oauth2_client_declaration_value = self.__oauth2_external_client_declaration
     authorisation_code_lifespan = oauth2_client_declaration_value.getAuthorisationCodeLifespan()
@@ -802,20 +815,20 @@ class TestOAuth2(ERP5TypeTestCase):
     # Client produces a PKCE secret and sends the Resource Owner to the Authorisation Server
     # to authorise them, getting an ahutorisation code.
     code_verifier = base64.urlsafe_b64encode(
-      'this is not a good secret6789012', # 32 bytes
+      b'this is not a good secret6789012', # 32 bytes
     )
     reference_state = 'dummy'
     client_id = oauth2_client_declaration_value.getId()
     parsed_location, cookie_dict, time_before, time_after = response = self._authorise(
       path=oauth2_server_connector + '/authorize',
-      query=urllib.urlencode({
+      query=urlencode({
         'response_type': 'code',
         'client_id': client_id,
         'state': reference_state,
         'code_challenge_method': 'S256',
-        'code_challenge': base64.urlsafe_b64encode(
+        'code_challenge': bytes2str(base64.urlsafe_b64encode(
           hashlib.sha256(code_verifier).digest(),
-        ).rstrip('='),
+        )).rstrip('='),
         'redirect_uri': _EXTERNAL_CLIENT_REDIRECT_URI,
       }),
       redirect_uri=_EXTERNAL_CLIENT_REDIRECT_URI,
@@ -827,7 +840,7 @@ class TestOAuth2(ERP5TypeTestCase):
       },
     )
     self.assertEqual(cookie_dict, {})
-    query_list = urlparse.parse_qsl(parsed_location.query)
+    query_list = parse_qsl(parsed_location.query)
     query_dict = dict(query_list)
     self.assertEqual(len(query_list), len(query_dict), (query_list, query_dict))
     authorisation_code = query_dict['code']
@@ -848,13 +861,13 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/token',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urllib.urlencode({
+      body=str2bytes(urlencode({
         'grant_type': 'authorization_code',
         'code': authorisation_code,
         'client_id': client_id,
         'code_verifier': code_verifier,
         'redirect_uri': _EXTERNAL_CLIENT_REDIRECT_URI,
-      }),
+      })),
     )
     time_after = int(time())
     self.assertEqual(status, 200, response)
@@ -876,10 +889,10 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/token',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urllib.urlencode({
+      body=str2bytes(urlencode({
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token,
-      }),
+      })),
     )
     self.assertEqual(status, 200)
     self.assertEqual(cookie_dict, {})
@@ -893,10 +906,10 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/revoke',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urllib.urlencode({
+      body=str2bytes(urlencode({
         'token_type_hint': 'refresh_token',
         'token': refresh_token,
-      }),
+      })),
     )
     self.assertEqual(status, 200)
     self.assertEqual(cookie_dict, {})
@@ -909,10 +922,10 @@ class TestOAuth2(ERP5TypeTestCase):
       path=oauth2_server_connector + '/token',
       method='POST',
       content_type='application/x-www-form-urlencoded',
-      body=urllib.urlencode({
+      body=str2bytes(urlencode({
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token,
-      }),
+      })),
     )
     self.assertEqual(status, 400)
     self.assertEqual(cookie_dict, {})
@@ -1018,8 +1031,8 @@ class TestOAuth2(ERP5TypeTestCase):
     _, _, cookie_dict, _ = query_result = self._query(
       path=parsed_location.path,
       method='GET',
-      query=urllib.urlencode(
-        urlparse.parse_qsl(parsed_location.query) + [
+      query=urlencode(
+        parse_qsl(parsed_location.query) + [
           ('client_id', oauth2_client_connector_value.getReference()),
         ],
       ),
@@ -1203,8 +1216,8 @@ class TestOAuth2(ERP5TypeTestCase):
       ),
       reference_location=portal_url + 'login_form',
     )
-    login_form_query = urllib.urlencode(
-      urlparse.parse_qsl(parsed_login_form_location.query) + [
+    login_form_query = urlencode(
+      parse_qsl(parsed_login_form_location.query) + [
         # Pick the local client_id, for simplicity
         ('client_id', self.__oauth2_local_client_connector_value.getReference()),
       ],
