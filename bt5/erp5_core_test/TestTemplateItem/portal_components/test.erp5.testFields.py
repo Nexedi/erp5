@@ -54,6 +54,7 @@ from DateTime import DateTime
 import lxml.html
 
 from Products.Formulator.Widget import NSMAP
+import six
 ODG_XML_WRAPPING_XPATH = 'draw:text-box/text:p/text:span'
 
 class TestRenderViewAPI(ERP5TypeTestCase):
@@ -65,7 +66,7 @@ class TestRenderViewAPI(ERP5TypeTestCase):
     return "{Field,Widget}.render_view"
 
   def test_signature(self):
-    for field in FieldRegistry.get_field_classes().itervalues(): # pylint: disable=no-value-for-parameter
+    for field in six.itervalues(FieldRegistry.get_field_classes()): # pylint: disable=no-value-for-parameter
       self.assertEqual(('self', 'value', 'REQUEST', 'render_prefix'),
                         field.render_view.__code__.co_varnames)
       if field is not ProxyField:
@@ -1134,7 +1135,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
 
   def _getCacheSize(self, cache_id):
     count = 0
-    for cache_key in field_value_cache.iterkeys():
+    for cache_key in six.iterkeys(field_value_cache):
       if cache_key[0] == cache_id:
         count += 1
 
