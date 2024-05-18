@@ -11,10 +11,16 @@
 #
 ##############################################################################
 
-import base64
-from cStringIO import StringIO
+import six
+# pylint:disable=no-name-in-module
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
+# pylint:enable=no-name-in-module
+from six.moves import cStringIO as StringIO
 import unittest
-import urllib
+from six.moves.urllib.parse import quote
 
 from OFS.DTMLMethod import DTMLMethod
 from OFS.Folder import Folder
@@ -72,8 +78,8 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.responseOut = StringIO()
     self.req = makerequest(root, self.responseOut)
 
-    self.credentials = urllib.quote(
-        base64.encodestring('abraham:pass-w').replace('\012', ''))
+    self.credentials = quote(
+        base64_encodebytes(b'abraham:pass-w').decode().replace('\012', ''))
 
   def testCookieLongLogin(self):
     # verify the user and auth cookie get set
@@ -88,7 +94,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
                          'abrahammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
     resp = self.req.response
     self.assertIn('__ac', resp.cookies)
-    self.credentials = base64.encodestring('%s:%s' % (long_name, long_pass)).replace('\012', '')
+    self.credentials = base64_encodebytes(('%s:%s' % (long_name, long_pass)).encode()).decode().replace('\012', '')
     self.assertEqual(resp.cookies['__ac']['value'],
                          self.credentials)
     self.assertEqual(resp.cookies['__ac'][normalizeCookieParameterName('path')], '/')
