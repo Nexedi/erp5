@@ -27,6 +27,7 @@
 ##############################################################################
 
 from zope.interface.verify import verifyClass
+import six
 import unittest
 
 implements_tuple_list = [

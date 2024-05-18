@@ -45,10 +45,10 @@
   These are subject to another suite "testIngestion".
 """
 
+import base64
+import io
 import unittest
 import time
-import StringIO
-import base64
 from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
@@ -64,15 +64,15 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
-import httplib
-import urllib
-import difflib
+import six.moves.http_client
+from six.moves.urllib.request import urlopen
 import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
 import PyPDF2
+from six.moves import range
 from OFS.Image import Pdata
 
 QUIET = 0
@@ -85,20 +85,25 @@ REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2
 def makeFilePath(name):
   return os.path.join(TEST_FILES_HOME, name)
 
-def makeFileUpload(name, as_name=None):
-  if as_name is None:
-    as_name = name
-  path = makeFilePath(name)
-  return FileUpload(path, as_name)
 
 def getFileSize(name):
   path = makeFilePath(name)
-  f = open(path, "r")
-  file_size = len(f.read())
-  f.close()
-  return file_size
+  with open(path, "rb") as f:
+    return len(f.read())
 
-class TestDocumentMixin(ERP5TypeTestCase):
+
+class DocumentUploadTestCase(ERP5TypeTestCase):
+
+  def makeFileUpload(self, name, as_name=None):
+    if as_name is None:
+      as_name = name
+    path = makeFilePath(name)
+    fu = FileUpload(path, as_name)
+    self.addCleanup(fu.close)
+    return fu
+
+
+class TestDocumentMixin(DocumentUploadTestCase):
 
   business_template_list = ['erp5_core_proxy_field_legacy',
                             'erp5_jquery',
@@ -182,6 +187,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     doc_module.manage_delObjects(list(doc_module.objectIds()))
     self.tic()
 
+
 class TestDocument(TestDocumentMixin):
   """
     Test basic document - related operations
@@ -229,15 +235,17 @@ class TestDocument(TestDocumentMixin):
   def getURLSizeList(self, uri, **kw):
     kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
     url = '%s?%s' % (uri, make_query(kw))
-    format_=kw.get('format', 'jpeg')
-    infile = urllib.urlopen(url)
+    format_ = kw.get('format', 'jpeg')
+    infile = urlopen(url)
+    try:
+      image_data = infile.read()
+    finally:
+      infile.close()
+
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
-    filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format_)
-    f = open(filename, "w")
-    image_data = infile.read()
-    f.write(image_data)
-    f.close()
-    infile.close()
+    filename = "%s%stest-image-format-resize.%s" % (os.getcwd(), os.sep, format_)
+    with open(filename, "wb") as f:
+      f.write(image_data)
     file_size = len(image_data)
     try:
       from PIL import Image
@@ -245,6 +253,7 @@ class TestDocument(TestDocumentMixin):
       image_size = image.size
     except ImportError:
       identify_output = Popen(['identify', filename],
+                              universal_newlines=True,
                               stdout=PIPE).communicate()[0]
       image_size = tuple([int(x) for x in identify_output.split()[2].split('x')])
     os.remove(filename)
@@ -277,7 +286,7 @@ class TestDocument(TestDocumentMixin):
     # the same document should now have revision 4 (because it should have done mergeRevision)
     # getRevisionList should return (1, 2, 3, 4)
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
@@ -489,38 +498,38 @@ class TestDocument(TestDocumentMixin):
     # create docs to be referenced:
     # (1) TEST, 002, en
     filename = 'TEST-en-002.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document1 = self.portal.portal_contributions.newContent(file=file_)
 
     # (2) TEST, 002, fr
     as_name = 'TEST-fr-002.odt'
-    file_ = makeFileUpload(filename, as_name)
+    file_ = self.makeFileUpload(filename, as_name)
     document2 = self.portal.portal_contributions.newContent(file=file_)
 
     # (3) TEST, 003, en
     as_name = 'TEST-en-003.odt'
-    file_ = makeFileUpload(filename, as_name)
+    file_ = self.makeFileUpload(filename, as_name)
     document3 = self.portal.portal_contributions.newContent(file=file_)
 
     # create docs to contain references in text_content:
     # REF, 002, en; "I use reference to look up TEST"
     filename = 'REF-en-002.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document5 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFLANG, 001, en: "I use reference and language to look up TEST-fr"
     filename = 'REFLANG-en-001.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document6 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFVER, 001, en: "I use reference and version to look up TEST-002"
     filename = 'REFVER-en-001.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document7 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFVERLANG, 001, en: "I use reference, version and language to look up TEST-002-en"
     filename = 'REFVERLANG-en-001.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document8 = self.portal.portal_contributions.newContent(file=file_)
 
     self.tic()
@@ -576,7 +585,7 @@ class TestDocument(TestDocumentMixin):
   def test_catalog_search_by_size(self):
     doc = self.portal.document_module.newContent(
       portal_type='Spreadsheet',
-      file=makeFileUpload('import_data_list.ods'))
+      file=self.makeFileUpload('import_data_list.ods'))
     self.tic()
     self.assertEqual(
       [x.getObject() for x in self.portal.portal_catalog(size=doc.getSize())], [doc])
@@ -584,8 +593,8 @@ class TestDocument(TestDocumentMixin):
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
-    doc.edit(file=makeFileUpload('import_data_list.ods'))
-    self.assertEqual(len(makeFileUpload('import_data_list.ods').read()),
+    doc.edit(file=self.makeFileUpload('import_data_list.ods'))
+    self.assertEqual(len(self.makeFileUpload('import_data_list.ods').read()),
                       doc.get_size())
 
   def testTempOOoDocument_get_size(self):
@@ -598,14 +607,14 @@ class TestDocument(TestDocumentMixin):
     # test hasData on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
     self.assertFalse(doc.hasData())
-    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    doc.edit(file=self.makeFileUpload('import_data_list.ods'))
     self.assertTrue(doc.hasData())
 
   def testTempOOoDocument_hasData(self):
     # test hasData on TempOOoDocument
     doc = self.portal.newContent(temp_object=True, portal_type='OOo Document', id='tmp')
     self.assertFalse(doc.hasData())
-    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    doc.edit(file=self.makeFileUpload('import_data_list.ods'))
     self.assertTrue(doc.hasData())
 
   def test_Owner_Base_download(self):
@@ -615,7 +624,7 @@ class TestDocument(TestDocumentMixin):
     doc = self.portal.document_module.newContent(
                                   filename='test.ods',
                                   portal_type='Spreadsheet')
-    doc.edit(file=makeFileUpload('TEST-en-002.doc'))
+    doc.edit(file=self.makeFileUpload('TEST-en-002.doc'))
     self.tic()
 
     uf = self.portal.acl_users
@@ -625,7 +634,7 @@ class TestDocument(TestDocumentMixin):
 
     response = self.publish('%s/Base_download' % doc.getPath(),
                             basic='member_user1:secret')
-    self.assertEqual(makeFileUpload('TEST-en-002.doc').read(),
+    self.assertEqual(self.makeFileUpload('TEST-en-002.doc').read(),
                       response.getBody())
     self.assertEqual('application/msword',
                       response.headers['content-type'])
@@ -654,7 +663,7 @@ class TestDocument(TestDocumentMixin):
     doc = self.portal.document_module.newContent(
                                   filename='test.ods',
                                   portal_type='Spreadsheet')
-    doc.edit(file=makeFileUpload('import.file.with.dot.in.filename.ods'))
+    doc.edit(file=self.makeFileUpload('import.file.with.dot.in.filename.ods'))
     doc.publish()
     self.tic()
 
@@ -669,12 +678,8 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.getHeader('content-disposition'))
     response_body = response.getBody()
-    conversion = str(doc.convert('pdf')[1])
-    diff = '\n'+'\n'.join(difflib.unified_diff(response_body.splitlines(),
-                                          conversion.splitlines(),
-                                          fromfile='first_call.pdf',
-                                          tofile='second_call.pdf'))
-    self.assertEqual(response_body, conversion, diff)
+    conversion = doc.convert('pdf')[1]
+    self.assertEqual(response_body, conversion)
 
     # test Print icon works on OOoDocument
     response = self.publish('%s/OOoDocument_print' % doc.getPath())
@@ -732,13 +737,13 @@ class TestDocument(TestDocumentMixin):
   def test_csv(self):
     doc = self.portal.document_module.newContent(
       portal_type='Spreadsheet',
-      file=makeFileUpload('simple.csv'),
+      file=self.makeFileUpload('simple.csv'),
     )
     self.assertEqual(doc.getContentType(), 'text/csv')
     doc.publish()
     self.tic()
     response = self.publish('%s?format=' % doc.getPath())
-    self.assertEqual(response.getBody(), makeFileUpload('simple.csv').read())
+    self.assertEqual(response.getBody(), self.makeFileUpload('simple.csv').read())
     self.assertEqual(response.getHeader('Content-Type'), 'text/csv; charset=utf-8')
     self.assertEqual(response.getHeader('Content-Disposition'), 'attachment; filename="simple.csv"')
 
@@ -760,7 +765,7 @@ class TestDocument(TestDocumentMixin):
     is not draft
     """
     filename = 'TEST-en-002.doc'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
     self.assertEqual('converting', document.getExternalProcessingState())
@@ -825,7 +830,7 @@ class TestDocument(TestDocumentMixin):
     document.
     """
     filename = 'EmbeddedImage-en-002.odt'
-    file_ = makeFileUpload(filename)
+    file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
     self.tic()
@@ -975,7 +980,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('%s "%s"' %(kw['searchabletext_any'], kw['searchabletext_phrase']), \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string.keys()))
 
 
     # search "with all of the words"
@@ -984,7 +989,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string.keys()))
 
     # search without these words
     kw["searchabletext_without"] = "searchabletext_without1 searchabletext_without2"
@@ -992,7 +997,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string.keys()))
 
     # search limited to a certain date range
     kw['created_within'] = '1w'
@@ -1000,7 +1005,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertSameSet(['searchabletext', 'creation_from'], parsed_string.keys())
+    self.assertSameSet(['searchabletext', 'creation_from'], list(parsed_string.keys()))
 
     # search with portal_type
     kw['search_portal_type'] = 'Document'
@@ -1009,7 +1014,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # search by reference
@@ -1019,7 +1024,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
 
@@ -1030,7 +1035,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', 'version'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1043,7 +1048,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1057,7 +1062,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1071,7 +1076,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1086,7 +1091,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1102,7 +1107,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest', 'mode'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1119,7 +1124,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
                       search_string)
     self.assertSameSet(['searchabletext', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     #self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # parse with multiple portal_type containing spaces in one portal_type
@@ -1309,7 +1314,7 @@ class TestDocument(TestDocumentMixin):
   re_html_nbsp = re.compile('&(nbsp|#160);')
 
   def test_PDFTextContent(self):
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
     self.assertEqual('I use reference to look up TEST\n',
@@ -1320,7 +1325,7 @@ class TestDocument(TestDocumentMixin):
                  document.SearchableText())
 
   def test_PDFToPng(self):
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
 
@@ -1332,7 +1337,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(image_data[1:4], b'PNG')
 
   def test_PDFToJpg(self):
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
 
@@ -1343,7 +1348,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(image_data[6:10], b'JFIF')
 
   def test_PDFToGif(self):
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
 
@@ -1354,7 +1359,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(image_data[0:4], b'GIF8')
 
   def test_PDFToTiff(self):
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
 
@@ -1366,7 +1371,7 @@ class TestDocument(TestDocumentMixin):
 
 
   def test_PDF_content_information(self):
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
     content_information = document.getContentInformation()
@@ -1378,7 +1383,7 @@ class TestDocument(TestDocumentMixin):
   def test_PDF_content_information_extra_metadata(self):
     # Extra metadata, such as those stored by pdftk update_info are also
     # available in document.getContentInformation()
-    upload_file = makeFileUpload('metadata.pdf', as_name='REF-en-001.pdf')
+    upload_file = self.makeFileUpload('metadata.pdf', as_name='REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.tic()
     self.assertEqual('PDF', document.getPortalType())
@@ -1389,7 +1394,7 @@ class TestDocument(TestDocumentMixin):
 
     # contribute file which will be merged to current document in synchronous mode
     # and check content_type recalculated
-    upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf', as_name='REF-en-001.pdf')
+    upload_file = self.makeFileUpload('Forty-Two.Pages-en-001.pdf', as_name='REF-en-001.pdf')
     contributed_document = self.portal.Base_contribute(file=upload_file, \
                                                        synchronous_metadata_discovery=True)
     self.tic()
@@ -1403,7 +1408,7 @@ class TestDocument(TestDocumentMixin):
                      document.getContentInformation()['Pages'])
 
     # upload with another file and check content_type recalculated
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document.setFile(upload_file)
     self.tic()
     content_information = document.getContentInformation()
@@ -1421,7 +1426,7 @@ class TestDocument(TestDocumentMixin):
     # IndirectObject instance which is not picklable
     document = self.portal.document_module.newContent(
       portal_type='PDF',
-      file=makeFileUpload('apple_metadata.pdf'))
+      file=self.makeFileUpload('apple_metadata.pdf'))
     # content_information is picklable
     content_information = document.getContentInformation()
     from pickle import dumps
@@ -1434,7 +1439,7 @@ class TestDocument(TestDocumentMixin):
     """ Test that pypdf2 handle wrong formatted PDF """
     pdf = self.portal.document_module.newContent(
       portal_type='PDF',
-      file=makeFileUpload('FEUILLE BLANCHE.pdf'),
+      file=self.makeFileUpload('FEUILLE BLANCHE.pdf'),
       title='Bad PDF')
     self.tic()
     pdf.share()
@@ -1444,7 +1449,7 @@ class TestDocument(TestDocumentMixin):
     self.assertNotEqual(result, None)
 
   def test_PDF_content_content_type(self):
-    upload_file = makeFileUpload('REF-en-001.pdf')
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
     # Here we use edit instead of setFile,
     # because only edit method set filename as filename.
@@ -1453,17 +1458,17 @@ class TestDocument(TestDocumentMixin):
 
   def test_PDF_watermark(self):
     original_document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('REF-en-001.pdf'))
+      file=self.makeFileUpload('REF-en-001.pdf'))
     # This watermark.pdf document is a pdf with a transparent background. Such
     # document can be created using GIMP
     watermark_document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('watermark.pdf'))
+      file=self.makeFileUpload('watermark.pdf'))
     watermarked_data = original_document.getWatermarkedData(
       watermark_data=watermark_document.getData(),
       repeat_watermark=False)
 
     # this looks like a pdf
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
 
     # and ERP5 can make a PDF Document out of it
     watermarked_document = self.portal.document_module.newContent(
@@ -1476,14 +1481,14 @@ class TestDocument(TestDocumentMixin):
   def test_PDF_watermark_repeat(self):
     # watermark a pdf, repeating the watermark
     original_document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('Forty-Two.Pages-en-001.pdf'))
+      file=self.makeFileUpload('Forty-Two.Pages-en-001.pdf'))
     watermark_document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('watermark.pdf'))
+      file=self.makeFileUpload('watermark.pdf'))
     watermarked_data = original_document.getWatermarkedData(
       watermark_data=watermark_document.getData(),
       repeat_watermark=True)
 
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
     watermarked_document = self.portal.document_module.newContent(
       portal_type='PDF',
       data=watermarked_data)
@@ -1494,15 +1499,15 @@ class TestDocument(TestDocumentMixin):
   def test_PDF_watermark_start_page(self):
     # watermark a pdf, starting on the second page
     original_document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('Forty-Two.Pages-en-001.pdf'))
+      file=self.makeFileUpload('Forty-Two.Pages-en-001.pdf'))
     watermark_document = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('watermark.pdf'))
+      file=self.makeFileUpload('watermark.pdf'))
     watermarked_data = original_document.getWatermarkedData(
       watermark_data=watermark_document.getData(),
       repeat_watermark=False,
       watermark_start_page=1) # This is 0 based.
 
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
     watermarked_document = self.portal.document_module.newContent(
       portal_type='PDF',
       data=watermarked_data)
@@ -1511,7 +1516,7 @@ class TestDocument(TestDocumentMixin):
       watermarked_document.getData())
 
   def test_checkVisibleTextInPresentationToImageConversion(self):
-    odp = makeFileUpload("TEST-en-003.odp")
+    odp = self.makeFileUpload("TEST-en-003.odp")
     presentation = self.portal.document_module.newContent(
       portal_type="Presentation",
       data=odp,
@@ -1531,7 +1536,7 @@ class TestDocument(TestDocumentMixin):
     self.assertIn("ERP5 DMS page 1", txt)
 
   def test_Document_getStandardFilename(self):
-    upload_file = makeFileUpload('metadata.pdf')
+    upload_file = self.makeFileUpload('metadata.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
     document.edit(file=upload_file)
     self.assertEqual(document.getStandardFilename(), 'metadata.pdf')
@@ -1543,7 +1548,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(document.getStandardFilename(format='png'),
                       'metadata-001-en.png')
     # check when format contains multiple '.'
-    upload_file = makeFileUpload('TEST-en-003.odp')
+    upload_file = self.makeFileUpload('TEST-en-003.odp')
     document = self.portal.document_module.newContent(portal_type='Presentation')
     document.edit(file=upload_file)
     self.assertEqual(document.getStandardFilename(), 'TEST-en-003.odp')
@@ -1551,7 +1556,7 @@ class TestDocument(TestDocumentMixin):
 
 
   def test_CMYKImageTextContent(self):
-    upload_file = makeFileUpload('cmyk_sample.jpg')
+    upload_file = self.makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('Image', document.getPortalType())
     for _ in ('empty_cache', 'cache'):
@@ -1559,7 +1564,7 @@ class TestDocument(TestDocumentMixin):
       self.tic()
 
   def test_MonochromeImageResize(self):
-    upload_file = makeFileUpload('monochrome_sample.tiff')
+    upload_file = self.makeFileUpload('monochrome_sample.tiff')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('Image', document.getPortalType())
     resized_image = document.convert(format='png', display='small')[1]
@@ -1574,7 +1579,7 @@ class TestDocument(TestDocumentMixin):
     document = self.portal.document_module.newContent(portal_type='Drawing')
     self.assertEqual('empty', document.getExternalProcessingState())
 
-    upload_file = makeFileUpload('TEST-en-002.odt')
+    upload_file = self.makeFileUpload('TEST-en-002.odt')
     document.edit(file=upload_file)
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
@@ -1589,7 +1594,7 @@ class TestDocument(TestDocumentMixin):
                       document.Base_showFoundText())
 
     # upload again good content
-    upload_file = makeFileUpload('TEST-en-002.odt')
+    upload_file = self.makeFileUpload('TEST-en-002.odt')
     document.edit(file=upload_file)
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
@@ -1600,18 +1605,18 @@ class TestDocument(TestDocumentMixin):
     Check that encoding remains.
     """
     web_page_portal_type = 'Web Page'
-    string_to_test = 'éààéôù'
+    string_to_test = u'éààéôù'
     web_page = self.portal.getDefaultModule(web_page_portal_type)\
           .newContent(portal_type=web_page_portal_type)
-    html_content = '<p>%s</p>' % string_to_test
+    html_content = u'<p>%s</p>' % string_to_test
     web_page.edit(text_content=html_content)
     _, pdf_data = web_page.convert('pdf')
     text_content = self.portal.portal_transforms.\
                                       convertToData('text/plain',
-                                          str(pdf_data),
+                                          bytes(pdf_data),
                                           object=web_page, context=web_page,
                                           filename='test.pdf')
-    self.assertIn(string_to_test, text_content)
+    self.assertIn(string_to_test, text_content.decode('utf-8'))
 
   def test_HTML_to_ODT_conversion_keep_related_image_list(self):
     """This test create a Web Page and an Image.
@@ -1633,7 +1638,7 @@ class TestDocument(TestDocumentMixin):
           .newContent(portal_type=image_portal_type)
 
     # edit content and publish it
-    upload_file = makeFileUpload('cmyk_sample.jpg')
+    upload_file = self.makeFileUpload('cmyk_sample.jpg')
     image.edit(reference=image_reference,
                version='001',
                language='en',
@@ -1669,7 +1674,7 @@ class TestDocument(TestDocumentMixin):
 
     # Let's continue with Presentation Document as embbeded image
     document = self.portal.document_module.newContent(portal_type='Presentation')
-    upload_file = makeFileUpload('TEST-en-003.odp')
+    upload_file = self.makeFileUpload('TEST-en-003.odp')
     image_reference = 'IMAGE-odp'
     document.edit(file=upload_file, reference=image_reference)
     document.publish()
@@ -1740,7 +1745,7 @@ class TestDocument(TestDocumentMixin):
     module = self.portal.getDefaultModule(web_page_portal_type)
     web_page = module.newContent(portal_type=web_page_portal_type)
 
-    html_content = """<html>
+    html_content = u"""<html>
       <head>
         <meta http-equiv="refresh" content="5;url=http://example.com/"/>
         <meta http-equiv="Set-Cookie" content=""/>
@@ -1765,7 +1770,8 @@ class TestDocument(TestDocumentMixin):
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAIAAAACtmMCAAAGmklEQVRIiYXWSYwcVxkH8O+9V6+qurbepmfs8WQyduxgJ4AnyLEdCyl2HBEJriwSixB3jggkfIjEARFxCRyAwA0hEYKMFBSioCCQjSNvsbzEdvAy45lkxtPT3dPd1bW8V2/lYEtIkVH+9/9P3+mvDxVFAf8n40k1SittkFKgtTXW+C6iFPseacSu7zuPbKFHiv0tvrZRpFlhjQkDHwGilFCXAFgAsMbyotC8nF9ob9/R+RSxYHLlo1xZggCEkkYpz6WiEpub62C1MSpOGq3mVDlJyzwTUtTr8eIXdgeB92hxNObnLt1tNzthFCFkpVYVZ6vLt86dOfXBtUt5PuGsqjfazx87fujgc54XamOkEBjZA88+OdVpfFIcp/z8xaVxOm61Op3pju95RTF556033v373/q9nlRKKWON1lq5bu1z+xe/+e3vNZtt0CIbjxljL3zpuW3bOwBATpw4AQDDYXr631eGg25VZul4pLQCBO+f++c/3j45Ho4xwsZYa7S1BiFsrb2/vsbLbNf8TJkNgbi0lqysdhd2zrrUwQ8OPPPeNc5Fs729MzMfRQ3G2OrSrRtXzhGwgUfjwI1DjziYEGKMEUIorS6cP3f71odSKsYZr5iU1elTlwEAA8Dt26tZxrQSgDB1a0GUBGGUpaPN7kZZybwssFXYKGu01YqAIUgbrSZ5trS8QqhPCGHFmCAtWLa+tukAwNmz72upiyJjZVZvzIRxExGc55PBKB1ujUMsP78wu3J/OErzkOIgcCptR6yqtF1auXcwz+Oo7jpOkaXZiJ8/PXb6g7TISyOZ70esSD3q14IoqMVgNEa4GQVfPba4b7516sIHg9FEK12jOOcVQdjBpuIyrjcBXLBEGzbeGuR56qytb9Wb2wcbd5FRCAznudHS8/xdncbibCtuJUcPPTPsrUvOAwfvfmK25HLENps+KiqBMAbsuV5oijRO2hiRvJw4lYAwSvIwMaryXNdoyYuM82JbI9q/I2EeTXwwob+4e2737La9T3/m7KWbm4MUYRTHwWMLO6QoMXE4mwAiylqHAPnOd7+vlDRKa608P/BqMSaEc54k8Y7QTndiSqAqsnQ4HA9TjJ3l5XUpqlbkCwtx4rNyODP7hF9LXNenrtfv3XOUgiSpS86sloAspR71AmtMrmm3tPMJohQqlo8nhR9G712+fvn2eiPwpKpKYfv9npQqmbq577MHBeP1uD49PYd7vR5jIojiqN70/AAZ6Tm4UW8KqV87+e7bZ64xVnDJe3lZCa1KTTEphMqlDRuNOAytVbduXsrSrVazwVhJECXPH32RM04wppQiQIJn1to4aVqAe/dWsJosTAdCVkHouwRfvb024cIg6/hee2bKdVDJi8FggAAlcRQnzbjeJt/4+reySTYeDpBVfhAQgl3XrzdbtaDW6Mwb68l81Ot32502xmSYFhPGLXFqzamCM6OlFzbGBR8O1nrdZQzG931n58JjV0fXaz5Nh/eN4UncotShFEou7nYnK1vJxY2ou5wSfcdokRfccUhUj5AfV8WE55kvAQMN4qmsVP+5cTEddZ09exZW7n1sjPaITrc2A79Gw1Cw8vqFC+MP70DKdF5Z5K0NdF5OMDaUkAqwQ7uuSzNZWYv2Pv3s/J7FkrOlmxc2eiOn2YzKrNvf3HCQRoB760vZuNcbZO/89U1VZDUMDlhPmchRkhKutJLaTti2dj32qeckCEgcuBRVRpZhGIHOHQDYu3fn2X+9VQmpLVXG6fbT+xv9vMgJRsgYCsZDoK1BRhOLDICQemVjFEe10POV1Cu3ri7fubKVi5pHf/DDH2EAOPzFo9ppXr8zunKze/nG6urHm0WeaSWU1MpAadBImcrYhkNnPbdNcYyRZnxrKyOOhzByCKLIYF12pjpHj7/0cMPX1u5/5ctfGw1HYMFoq7VCCADAWoswAgxaCQ/BlOcGhEitlTW1KNi+axphqawGbLyg9uov/zAzM/twcefmZl/77S+01qJiUnFjtDHGGGOttdYCEELcyqKuEF0h+1JhTPbOPQ40LImEUNpA//SV38zMzD5c3Ac5fPjAn0/+PklCCwrQQ8sisADWggWMEAFEJMG5VkybmpC7m3OCTVdV8PKPf7Vz4ckHzv9EADhy5NBf3vzTU0/tAzCADCB46FoN1gDC1oIFizEeSfFRf9CS8oUjx37369cX9x/4lA/g9T++8fNXXl1b3wBAAIAQAkCAEIAGMMgia83+XY//7CcvP/PS8U90/wv0LRSL/rwEwgAAAABJRU5ErkJggg==" />
       </body>
     </html>
-    """.decode('utf-8').encode('iso-8859-1')
+    """
+    html_content = html_content.encode('iso-8859-1')
     # content encoded into another codec
     # than utf-8 comes from necessarily an external file
     # (Ingestion, or FileField), not from user interface
@@ -1774,9 +1780,8 @@ class TestDocument(TestDocumentMixin):
     # as it is done in reality
 
     # Mimic the behaviour of a FileUpload from WebPage_view
-    file_like = StringIO.StringIO()
-    file_like.write(html_content)
-    setattr(file_like, 'filename', 'something.htm')
+    file_like = io.BytesIO(html_content)
+    file_like.filename = 'something.htm'
     web_page.edit(file=file_like)
     # run conversion to base format
     self.tic()
@@ -1883,7 +1888,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertNotIn('#FFAA44', safe_html)
 
     filename = 'broken_html.html'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     web_page.edit(file=file_object)
     assert web_page.convert('html')[1]
 
@@ -1902,12 +1907,17 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     </html>
 """
     web_page.edit(text_content=html_content)
-    from HTMLParser import HTMLParseError
-    try:
+    if six.PY3:
       web_page.asStrippedHTML()
-    except HTMLParseError:
-      expectedFailure(self.fail)(
-        'Even BeautifulSoup is not able to parse such HTML')
+      # TODO(emmuvouriot): this test shouldn't exist anymore in Py3 since HTMLParseError has been removed
+      # The rationale being that the HTML parser never fails (except in strict mode, which is not used here).
+    else:
+      from six.moves.html_parser import HTMLParseError
+      try:
+        web_page.asStrippedHTML()  # TODO(emmuvouriot): does this even attempt to parse the code? Can the exception ever be thrown?
+      except HTMLParseError:
+        expectedFailure(self.fail)(
+          'Even BeautifulSoup is not able to parse such HTML')
 
   def test_safeHTML_unknown_codec(self):
     """Some html declare unknown codecs.
@@ -1938,7 +1948,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     document_module = self.portal.getDefaultModule(portal_type)
     document = document_module.newContent(portal_type=portal_type)
 
-    upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf')
+    upload_file = self.makeFileUpload('Forty-Two.Pages-en-001.pdf')
     document.edit(file=upload_file)
     pages_number = int(document.getContentInformation()['Pages'])
     self.tic()
@@ -1970,16 +1980,16 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
           assert response.getHeader('content-type') == 'image/png', \
                                              response.getHeader('content-type')
-          assert response.getStatus() == httplib.OK
+          assert response.getStatus() == six.moves.http_client.OK
 
     credential = '%s:%s' % (self.manager_username, self.manager_password)
     tested_list = []
-    frame_list = range(pages_number)
+    frame_list = list(range(pages_number))
     # assume that ZServer is configured with 4 Threads
-    conversion_per_tread = pages_number / 4
+    conversion_per_tread = pages_number // 4
     while frame_list:
       local_frame_list = [frame_list.pop() for i in\
-                            xrange(min(conversion_per_tread, len(frame_list)))]
+                            range(min(conversion_per_tread, len(frame_list)))]
       instance = ThreadWrappedConverter(self.publish, document.getPath(),
                                         local_frame_list, credential)
       tested_list.append(instance)
@@ -1997,7 +2007,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                   'resolution': None}
 
     result_list = []
-    for i in xrange(pages_number):
+    for i in range(pages_number):
       # all conversions should succeeded and stored in cache storage
       convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
@@ -2041,16 +2051,24 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     """
     web_page_portal_type = 'Web Page'
     module = self.portal.getDefaultModule(web_page_portal_type)
-    upload_file = makeFileUpload('TEST-text-iso8859-1.txt')
-    web_page = module.newContent(portal_type=web_page_portal_type,
-                                 file=upload_file)
+    upload_file = self.makeFileUpload('TEST-text-iso8859-1.txt')
+    web_page = module.newContent(
+      portal_type=web_page_portal_type,
+      file=upload_file)
     self.tic()
+    self.assertEqual(web_page.getContentType(), 'text/plain')
     text_content = web_page.getTextContent()
-    my_utf_eight_token = 'ùééàçèîà'
-    text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)
+    self.assertIn('éèàùôâïî', text_content)
+    self.assertIn('éèàùôâïî', web_page.asStrippedHTML())
+    self.assertIn('éèàùôâïî', web_page.asEntireHTML())
+
+    added_utf_eight_token = 'ùééàçèîà'
+    text_content = text_content.replace('\n', '\n%s\n' % added_utf_eight_token)
     web_page.edit(text_content=text_content)
-    self.assertIn(my_utf_eight_token, web_page.asStrippedHTML())
-    self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), unicode))
+    self.assertIn('éèàùôâïî', web_page.asStrippedHTML())
+    self.assertIn('éèàùôâïî', web_page.asEntireHTML())
+    self.assertIn(added_utf_eight_token, web_page.asStrippedHTML())
+    self.assertIn(added_utf_eight_token, web_page.asEntireHTML())
 
   @unittest.expectedFailure  # if test start to pass, drop the non strict test.
   def test_PDFDocument_asTextConversion_strict(self):
@@ -2065,7 +2083,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
   def _test_PDFDocument_asTextConversion(self, strict):
     document = self.portal.document_module.newContent(
         portal_type='PDF',
-        file=makeFileUpload('TEST.Embedded.Image.pdf'))
+        file=self.makeFileUpload('TEST.Embedded.Image.pdf'))
     for _ in ('empty_cache', 'cache'):
       if strict:
         self.assertEqual(document.asText(), 'ERP5 is a free software.')
@@ -2077,20 +2095,20 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
       self.tic()
 
   def test_broken_pdf_asText(self):
-    class StringIOWithFilename(StringIO.StringIO):
+    class BytesIOWithFilename(io.BytesIO):
       filename = 'broken.pdf'
     document = self.portal.document_module.newContent(
         portal_type='PDF',
-        file=StringIOWithFilename('broken'))
+        file=BytesIOWithFilename(b'broken'))
     self.assertEqual(document.asText(), '')
     self.tic() # no activity failure
 
   def test_password_protected_pdf_asText(self):
-    pdf_reader = PyPDF2.PdfFileReader(makeFileUpload('TEST.Embedded.Image.pdf'))
+    pdf_reader = PyPDF2.PdfFileReader(self.makeFileUpload('TEST.Embedded.Image.pdf'))
     pdf_writer = PyPDF2.PdfFileWriter()
     pdf_writer.addPage(pdf_reader.getPage(0))
     pdf_writer.encrypt('secret')
-    encrypted_pdf_stream = StringIO.StringIO()
+    encrypted_pdf_stream = io.BytesIO()
     pdf_writer.write(encrypted_pdf_stream)
     document = self.portal.document_module.newContent(
         portal_type='PDF',
@@ -2112,7 +2130,7 @@ return 1
   def _test_document_conversion_to_base_format_no_original_format_access(self,
       portal_type, filename):
     module = self.portal.getDefaultModule(portal_type)
-    upload_file = makeFileUpload(filename)
+    upload_file = self.makeFileUpload(filename)
     document = module.newContent(portal_type=portal_type,
                                  file=upload_file)
 
@@ -2169,7 +2187,7 @@ return 1
 
     # Create document with good content
     document = self.portal.document_module.newContent(portal_type='Presentation')
-    upload_file = makeFileUpload('TEST-en-003.odp')
+    upload_file = self.makeFileUpload('TEST-en-003.odp')
     document.edit(file=upload_file)
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
@@ -2177,12 +2195,12 @@ return 1
       for credential in ['%s:%s' % (self.manager_username, self.manager_password), 'zope_user:%s' % zope_user_password]:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
-        self.assertIn('200 OK', response.getOutput())
-        # OOod produced HTML navigation, test it
-        self.assertIn('First page', response.getBody())
-        self.assertIn('Back', response.getBody())
-        self.assertIn('Continue', response.getBody())
-        self.assertIn('Last page', response.getBody())
+        self.assertIn(b'200 OK', response.getOutput())
+        # cloudooo produced HTML navigation, test it
+        self.assertIn(b'First page', response.getBody())
+        self.assertIn(b'Back', response.getBody())
+        self.assertIn(b'Continue', response.getBody())
+        self.assertIn(b'Last page', response.getBody())
 
   def test_getTargetFormatItemList(self):
     """
@@ -2194,7 +2212,7 @@ return 1
     portal_type = 'PDF'
     module = self.portal.getDefaultModule(portal_type)
 
-    upload_file = makeFileUpload('TEST.Large.Document.pdf')
+    upload_file = self.makeFileUpload('TEST.Large.Document.pdf')
     pdf = module.newContent(portal_type=portal_type, file=upload_file)
 
     self.assertIn('html', pdf.getTargetFormatList())
@@ -2215,7 +2233,7 @@ return 1
     self.assertSameSet([], presentation.getTargetFormatList())
 
     # test uploading some data
-    upload_file = makeFileUpload('Foo_001.odg')
+    upload_file = self.makeFileUpload('Foo_001.odg')
     presentation.edit(file=upload_file)
     self.tic()
     self.assertIn('odg', presentation.getTargetFormatList())
@@ -2243,7 +2261,7 @@ return 1
 
     # images from same instance accessed by reference and wrong conversion arguments (dispay NOT display)
     # code should be more resilient
-    upload_file = makeFileUpload('cmyk_sample.jpg')
+    upload_file = self.makeFileUpload('cmyk_sample.jpg')
     image = self.portal.image_module.newContent(portal_type='Image',
                                                reference='Embedded-XXX',
                                                version='001',
@@ -2286,15 +2304,15 @@ return 1
     """
     # Create OOo document
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
-    upload_file = makeFileUpload('TEST-en-003.odp')
+    upload_file = self.makeFileUpload('TEST-en-003.odp')
     ooo_document.edit(file=upload_file)
 
     pdf_document = self.portal.document_module.newContent(portal_type='PDF')
-    upload_file = makeFileUpload('TEST-en-002.pdf')
+    upload_file = self.makeFileUpload('TEST-en-002.pdf')
     pdf_document.edit(file=upload_file)
 
     image_document = self.portal.image_module.newContent(portal_type='Image')
-    upload_file = makeFileUpload('TEST-en-002.png')
+    upload_file = self.makeFileUpload('TEST-en-002.png')
     image_document.edit(file=upload_file)
 
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
@@ -2379,18 +2397,18 @@ return 1
     def getURL(uri, **kw):
       kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
       url = '%s?%s' % (uri, make_query(kw))
-      return urllib.urlopen(url)
+      return urlopen(url)
 
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
-    upload_file = makeFileUpload('TEST-en-003.odp')
+    upload_file = self.makeFileUpload('TEST-en-003.odp')
     ooo_document.edit(file=upload_file)
 
     pdf_document = self.portal.document_module.newContent(portal_type='PDF')
-    upload_file = makeFileUpload('TEST-en-002.pdf')
+    upload_file = self.makeFileUpload('TEST-en-002.pdf')
     pdf_document.edit(file=upload_file)
 
     image_document = self.portal.image_module.newContent(portal_type='Image')
-    upload_file = makeFileUpload('TEST-en-002.png')
+    upload_file = self.makeFileUpload('TEST-en-002.png')
     image_document.edit(file=upload_file)
 
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
@@ -2399,25 +2417,25 @@ return 1
     web_page_document.setTextContentSubstitutionMappingMethodId('WebPage_getStandardSubstitutionMappingDict')
     self.tic()
 
-    response = getURL(image_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: image/png\r\n', response.info().headers)
-    self.assertIn('Content-Length: %s\r\n' %getFileSize('TEST-en-002.png'), response.info().headers)
+    response = getURL(image_document.absolute_url(), **{'format': ''})
+    self.assertEqual(response.info().get('Content-Type'), 'image/png')
+    self.assertEqual(response.info().get('Content-Length'), str(getFileSize('TEST-en-002.png')))
 
-    response = getURL(ooo_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: application/vnd.oasis.opendocument.presentation\r\n', response.info().headers)
-    self.assertIn('Content-Disposition: attachment; filename="TEST-en-003.odp"\r\n', response.info().headers)
-    self.assertIn('Content-Length: %s\r\n' %getFileSize('TEST-en-003.odp'), response.info().headers)
+    response = getURL(ooo_document.absolute_url(), **{'format': ''})
+    self.assertEqual(response.info().get('Content-Type'), 'application/vnd.oasis.opendocument.presentation')
+    self.assertEqual(response.info().get('Content-Disposition'), 'attachment; filename="TEST-en-003.odp"')
+    self.assertEqual(response.info().get('Content-Length'), str(getFileSize('TEST-en-003.odp')))
 
-    response = getURL(pdf_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: application/pdf\r\n', response.info().headers)
-    self.assertIn('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n', response.info().headers)
+    response = getURL(pdf_document.absolute_url(), **{'format': ''})
+    self.assertEqual(response.info().get('Content-Type'), 'application/pdf')
+    self.assertEqual(response.info().get('Content-Disposition'), 'attachment; filename="TEST-en-002.pdf"')
 
-    response = getURL(pdf_document.absolute_url(), **{'format':'pdf'})
-    self.assertIn('Content-Type: application/pdf\r\n', response.info().headers)
-    self.assertIn('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n', response.info().headers)
+    response = getURL(pdf_document.absolute_url(), **{'format': 'pdf'})
+    self.assertEqual(response.info().get('Content-Type'), 'application/pdf')
+    self.assertEqual(response.info().get('Content-Disposition'), 'attachment; filename="TEST-en-002.pdf"')
 
-    response = getURL(web_page_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: text/html; charset=utf-8\r\n', response.info().headers)
+    response = getURL(web_page_document.absolute_url(), **{'format': ''})
+    self.assertEqual(response.info().get('Content-Type'), 'text/html; charset=utf-8')
 
   def test_checkConversionFormatPermission(self):
     """
@@ -2425,7 +2443,7 @@ return 1
     """
     portal_type = 'PDF'
     module = self.portal.getDefaultModule(portal_type)
-    upload_file = makeFileUpload('TEST.Large.Document.pdf')
+    upload_file = self.makeFileUpload('TEST.Large.Document.pdf')
     pdf = module.newContent(portal_type=portal_type, file=upload_file)
 
     # if PDF size is larger than A4 format system should deny conversion
@@ -2434,7 +2452,7 @@ return 1
     # raster -> svg image should deny conversion if image width or height > 128 px
     portal_type = 'Image'
     module = self.portal.getDefaultModule(portal_type)
-    upload_file = makeFileUpload('TEST-en-002.jpg')
+    upload_file = self.makeFileUpload('TEST-en-002.jpg')
     image = module.newContent(portal_type=portal_type, file=upload_file)
     self.assertRaises(Unauthorized, image.convert, format='svg')
 
@@ -2444,7 +2462,7 @@ return 1
       return a default (i.e. indicating a conversion failures)
     """
     doc = self.portal.document_module.newContent(portal_type='Presentation')
-    upload_file = makeFileUpload('TEST-en-003.odp')
+    upload_file = self.makeFileUpload('TEST-en-003.odp')
     doc.edit(file=upload_file)
     doc.publish()
     self.tic()
@@ -2572,7 +2590,7 @@ return 1
       Test various cases of contributing to an existing document
     """
     # contribute a document, then make it not editable and check we can not contribute to it
-    upload_file = makeFileUpload('TEST-en-002.doc')
+    upload_file = self.makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
     self.tic()
@@ -2597,12 +2615,12 @@ return 1
     """
     # contribute a document, then make it not editable and check we can not contribute to it
     kw=dict(synchronous_metadata_discovery=True)
-    upload_file = makeFileUpload('TEST-en-002.doc')
+    upload_file = self.makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
     self.tic()
 
-    upload_file = makeFileUpload('TEST-en-003.odp', 'TEST-en-002.doc')
+    upload_file = self.makeFileUpload('TEST-en-003.odp', 'TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
     self.tic()
@@ -2636,7 +2654,7 @@ return 1
   def test_base_convertable_uses_pdata_for_base_data(self):
     document = self.portal.document_module.newContent(
       portal_type='Spreadsheet',
-      file=makeFileUpload('import_big_spreadsheet.ods'))
+      file=self.makeFileUpload('import_big_spreadsheet.ods'))
     self.tic()
     # for large documents base_data is stored as Pdata
     self.assertIsInstance(document.base_data, Pdata)
@@ -2646,7 +2664,7 @@ return 1
     # for small documents, it's bytes directly
     document = self.portal.document_module.newContent(
       portal_type='Text',
-      file=makeFileUpload('TEST-en-002.odt'))
+      file=self.makeFileUpload('TEST-en-002.odt'))
     self.tic()
     self.assertIsInstance(document.base_data, bytes)
     self.assertIsInstance(document.getBaseData(), bytes)
@@ -2658,7 +2676,7 @@ return 1
     When cloning a document base_data must not be computed once again.
     """
     # create a document
-    upload_file = makeFileUpload('TEST-en-002.doc')
+    upload_file = self.makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
     self.tic()
@@ -2676,7 +2694,7 @@ return 1
 
     # Update document with another content by using setData:
     # base_data must be recomputed
-    document.edit(data=makeFileUpload('TEST-en-002.odt').read())
+    document.edit(data=self.makeFileUpload('TEST-en-002.odt').read())
     self.tic()
     self.assertTrue(document.hasBaseData())
     self.assertNotEqual(previous_base_data, document.getBaseData(),
@@ -2688,7 +2706,7 @@ return 1
 
     # Update document with another content by using setFile:
     # base_data must be recomputed
-    document.edit(file=makeFileUpload('TEST-en-002.doc'))
+    document.edit(file=self.makeFileUpload('TEST-en-002.doc'))
     self.tic()
     self.assertTrue(document.hasBaseData())
     self.assertNotEqual(previous_base_data, document.getBaseData(),
@@ -2709,7 +2727,7 @@ return 1
     back to empty state
     """
     # create a document
-    upload_file = makeFileUpload('TEST-en-002.doc')
+    upload_file = self.makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
     self.tic()
@@ -2857,7 +2875,7 @@ return 1
     """ Test "visible" instances of a doc are auto archived when a new
     instance is made "visible" except when they have a future effective date.
     """
-    upload_file = makeFileUpload('TEST-en-002.doc')
+    upload_file = self.makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document_002 = self.portal.Base_contribute(**kw)
     document_002.publish()
@@ -2916,14 +2934,14 @@ return 1
     self.tic()
 
   def testFileWithNotDefinedMimeType(self):
-    upload_file = makeFileUpload('TEST-001-en.dummy')
+    upload_file = self.makeFileUpload('TEST-001-en.dummy')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True,
               portal_type='File')
     document = self.portal.Base_contribute(**kw)
     document.setReference('TEST')
     request = self.app.REQUEST
     download_file = document.index_html(REQUEST=request, format=None)
-    self.assertEqual(download_file, 'foo\n')
+    self.assertEqual(download_file, b'foo\n')
     document_format = None
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))
@@ -2933,7 +2951,7 @@ return 1
       Checks Base_getRelatedDocumentList works correctly with both
       related (follow_up) Documents and with sub-object Embedded Files
     """
-    uploaded_file = makeFileUpload('TEST-001-en.dummy')
+    uploaded_file = self.makeFileUpload('TEST-001-en.dummy')
     document_value = self.portal.Base_contribute(
       file=uploaded_file,
       synchronous_metadata_discovery=True,
@@ -2986,7 +3004,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     Make sure that uploader can preview document after submitted.
     """
     filename = 'REF-en-001.odt'
-    upload_file = makeFileUpload(filename)
+    upload_file = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.tic()
 
@@ -3009,9 +3027,8 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     text_document = document_module.newContent(portal_type=portal_type,
                                                reference='Foo_001',
                                                title='Foo_OO1')
-    f = makeFileUpload('Foo_001.odt')
+    f = self.makeFileUpload('Foo_001.odt')
     text_document.edit(file=f)
-    f.close()
     self.tic()
 
     # the document should be automatically converted to html
@@ -3080,14 +3097,14 @@ class TestDocumentWithSecurity(TestDocumentMixin):
 
   def test_mergeRevision(self):
     document1 = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('TEST-en-002.doc'))
+      file=self.makeFileUpload('TEST-en-002.doc'))
     self.tic()
     self.assertEqual(
       (document1.getReference(), document1.getLanguage(), document1.getVersion()),
       ('TEST', 'en', '002'))
     self.assertNotIn('This document is modified', document1.asText())
     document2 = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('TEST-en-002-modified.doc'))
+      file=self.makeFileUpload('TEST-en-002-modified.doc'))
     self.tic()
     self.assertIn('This document is modified', document2.asText())
     self.assertEqual(
@@ -3106,7 +3123,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     with self.assertRaisesRegex(
         Unauthorized,
         "You are not allowed to update the existing document"):
-      self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
+      self.portal.portal_contributions.newContent(file=self.makeFileUpload('TEST-en-002.doc'))
 
     # this also works with another user which can not see the document
     another_user_id = self.id()
@@ -3116,7 +3133,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     with self.assertRaisesRegex(
         Unauthorized,
         "You are not allowed to update the existing document"):
-      self.portal.portal_contributions.newContent(file=makeFileUpload('TEST-en-002.doc'))
+      self.portal.portal_contributions.newContent(file=self.makeFileUpload('TEST-en-002.doc'))
 
   def test_mergeRevision_with_node_reference_local_reference_filename_regular_expression(self):
     # this filename regular expression comes from configurator
@@ -3125,14 +3142,14 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     )
     self.tic()
     document1 = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+      file=self.makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
     self.tic()
     self.assertEqual(
       (document1.getReference(), document1.getLanguage(), document1.getVersion()),
       ('P-PROJ-TEST', 'en', '002'))
     self.assertNotIn('This document is modified', document1.asText())
     document2 = self.portal.portal_contributions.newContent(
-      file=makeFileUpload('TEST-en-002-modified.doc', as_name='P-PROJ-TEST-002-en.doc'))
+      file=self.makeFileUpload('TEST-en-002-modified.doc', as_name='P-PROJ-TEST-002-en.doc'))
     self.tic()
     self.assertIn('This document is modified', document2.asText())
     self.assertEqual(
@@ -3152,7 +3169,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
         Unauthorized,
         "You are not allowed to update the existing document"):
       self.portal.portal_contributions.newContent(
-        file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+        file=self.makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
 
     # this also works with another user which can not see the document
     another_user_id = self.id()
@@ -3163,7 +3180,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
         Unauthorized,
         "You are not allowed to update the existing document"):
       self.portal.portal_contributions.newContent(
-        file=makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
+        file=self.makeFileUpload('TEST-en-002.doc', as_name='P-PROJ-TEST-002-en.doc'))
 
 
 class TestDocumentPerformance(TestDocumentMixin):
@@ -3173,7 +3190,7 @@ class TestDocumentPerformance(TestDocumentMixin):
       Test large OOoDocument to image conversion
     """
     ooo_document = self.portal.document_module.newContent(portal_type='Spreadsheet')
-    upload_file = makeFileUpload('import_big_spreadsheet.ods')
+    upload_file = self.makeFileUpload('import_big_spreadsheet.ods')
     ooo_document.edit(file=upload_file)
     self.tic()
     before = time.time()
@@ -3192,7 +3209,7 @@ class TestDocumentPerformance(TestDocumentMixin):
         req_time)
 
 
-class DocumentConsistencyTestCase(ERP5TypeTestCase):
+class DocumentConsistencyTestCase(DocumentUploadTestCase):
   portal_type = NotImplemented
   content_type = NotImplemented
   filename = NotImplemented
@@ -3202,8 +3219,8 @@ class DocumentConsistencyTestCase(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.document = self._getDocumentModule().newContent(portal_type=self.portal_type)
-    self.file_upload = makeFileUpload(self.filename)
-    with open(makeFilePath(self.filename)) as f:
+    self.file_upload = self.makeFileUpload(self.filename)
+    with open(makeFilePath(self.filename), 'rb') as f:
       self.file_data = f.read()
     self.file_size = len(self.file_data)
 
