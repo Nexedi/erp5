@@ -26,9 +26,8 @@
 ##############################################################################
 
 import json
-from six.moves import urllib
 from io import BytesIO
-from urlparse import parse_qs
+from six.moves.urllib.parse import parse_qs
 
 import requests
 import responses
@@ -461,8 +460,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=BytesIO(urllib.parse.urlencode({
-          "BODY": json.dumps({
+        stdin=BytesIO(
+          json.dumps({
             "url": "https://stripe.url",
             "id": "evt_%s" % "abc321_expired",
             "object": "event",
@@ -474,9 +473,10 @@ class TestStripePaymentSession(ERP5TypeTestCase):
                 "object": "checkout.session"
               }
             }
-          })
-        }).encode()),
+          }).encode()
+        ),
         request_method="POST",
+        env={'CONTENT_TYPE': 'application/json'},
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
       self.tic()
@@ -658,8 +658,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=BytesIO(urllib.parse.urlencode({
-          "BODY": json.dumps({
+        stdin=BytesIO(
+          json.dumps({
             "id": "evt_%s" % session_id,
             "object": "event",
             "data": {
@@ -670,9 +670,10 @@ class TestStripePaymentSession(ERP5TypeTestCase):
                 "object": "checkout.session"
               }
             }
-          })
-        }).encode()),
+          }).encode(),
+        ),
         request_method="POST",
+        env={'CONTENT_TYPE': 'application/json'},
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
       self.tic()
