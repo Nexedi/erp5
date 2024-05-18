@@ -297,3 +297,26 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     id_generator.clearGenerator() # clear stored data
     self._checkDataStructureMigration(id_generator)
 
+  def test_portal_ids_table_id_group_column_binary(self):
+    """portal_ids.id_group is now created as VARCHAR,
+    but it use to be binary. There is no data migration, the
+    SQL method has been adjusted to cast during select.
+    This checks that id generator works well when the column
+    is VARBINARY, like it's the case for old instances.
+    """
+    self.assertEqual(
+      self.sql_generator.generateNewId(id_group=self.id()),
+      0)
+    exported = self.sql_generator.exportGeneratorIdDict()
+    self.tic()
+    self.portal.portal_ids.IdTool_zCommit()
+
+    self.portal.erp5_sql_connection.manage_test(
+      'ALTER TABLE portal_ids MODIFY COLUMN id_group VARBINARY(255)'
+    )
+    self.tic()
+    self.sql_generator.importGeneratorIdDict(exported, clear=True)
+    self.tic()
+    self.assertEqual(
+      self.sql_generator.generateNewId(id_group=self.id()),
+      1)
