@@ -30,7 +30,7 @@
 
 """
 
-from StringIO import StringIO
+from six import StringIO
 import lxml
 
 from DateTime import DateTime
@@ -3394,9 +3394,9 @@ class TestAccountingExport(AccountingTestCase):
         '40 - Payable',
         self.account_module.payable.Account_getFormattedTitle())
     # check that this account name can be found in the content
-    self.assertIn('40 - Payable', content_xml)
+    self.assertIn(b'40 - Payable', content_xml)
     # check that we don't have unknown categories
-    self.assertNotIn('???', content_xml)
+    self.assertNotIn(b'???', content_xml)
 
 
 class TestTransactions(AccountingTestCase):
