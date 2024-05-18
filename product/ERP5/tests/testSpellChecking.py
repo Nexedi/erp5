@@ -58,7 +58,7 @@ class Aspell(object):
     command = 'echo %s | aspell -l %s -a' % (word, language)
     subprocess = Popen(command, shell=True, stdin=PIPE,
                                      stdout=PIPE, stderr=PIPE, close_fds=True)
-    return subprocess.communicate()[0].split('\n')[1:]
+    return subprocess.communicate()[0].decode('utf-8').split('\n')[1:]
 
 class TestSpellChecking(ERP5TypeTestCase):
 
@@ -115,7 +115,7 @@ class TestSpellChecking(ERP5TypeTestCase):
     message = '"%s" is misspelled, suggestion are : "%s"'
     result_dict = {}
     for word, result_list in six.iteritems(self.spellChecker(sentence)):
-      filtered_result_list = filter(lambda x: x not in ('*', ''), result_list)
+      filtered_result_list = [x for x in result_list if x not in ('*', '')]
       if filtered_result_list:
         result_dict[word] = message % (word, \
                                 filtered_result_list[0].split(':')[-1].strip())
@@ -133,8 +133,8 @@ class TestSpellChecking(ERP5TypeTestCase):
 
     # check some suggestion are given for a small mistake
     self.assertNotEqual(self.validate_spell('canceled'), {})
-    self.assertIn('is misspelled', \
-                             self.validate_spell('canceled').values()[0])
+    self.assertIn('is misspelled',
+                             list(self.validate_spell('canceled').values())[0])
 
   def test_business_template_list_with_workflow_template_item(self):
     """
