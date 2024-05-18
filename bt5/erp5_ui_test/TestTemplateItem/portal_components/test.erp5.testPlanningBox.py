@@ -29,7 +29,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Globals import get_request
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 from DateTime import DateTime
 
 class DummyFieldStorage:
