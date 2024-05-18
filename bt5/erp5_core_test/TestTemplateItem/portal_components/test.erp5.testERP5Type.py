@@ -26,12 +26,7 @@
 #
 ##############################################################################
 
-try:
-  from ZODB._compat import cPickle
-except ImportError: # BBB: ZODB < 4
-  import cPickle
 import unittest
-import sys
 import mock
 
 import transaction
@@ -51,8 +46,11 @@ from AccessControl import Unauthorized
 from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
-from Products.ERP5Type import IS_ZOPE2, Permissions
+from Products.ERP5Type import Permissions
 from DateTime import DateTime
+from zodbpickle.pickle import PicklingError
+import six
+
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -330,7 +328,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     portal.person_module._setObject(o.getId(), aq_base(o))
     try:
       self.commit()
-    except cPickle.PicklingError:
+    except PicklingError:
       self.abort()
     else:
       self.fail("No exception raised when storing explicitly a temp object"
@@ -466,11 +464,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     modified_title = getTitleFromCatalog() + '_not_reindexed'
     catalog_connection = self.getSQLConnection()()
     catalog_connection.query(
-      'UPDATE catalog SET title=%s WHERE uid=%i' % (
+      b'UPDATE catalog SET title=%s WHERE uid=%i' % (
         catalog_connection.string_literal(modified_title),
         person_object.getUid(),
-      ),
-    )
+      ))
     self.commit()
     # sanity check
     self.assertEqual(getTitleFromCatalog(), modified_title)
@@ -2382,7 +2379,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                       foo.getRegionList())
     # using relations to non existant objects will issue a warning in
     # event.log
-    self._catch_log_errors(ignored_level=sys.maxint)
+    self._catch_log_errors(ignored_level=2**32)
     self.assertEqual([beta],
                       foo.getRegionValueList())
     self.assertEqual([beta_title],
@@ -3313,39 +3310,9 @@ def test_suite():
   add_tests(suite, ZPublisher.tests.testHTTPRangeSupport)
 
   import ZPublisher.tests.testHTTPRequest
-  if IS_ZOPE2: # BBB Zope2
-    # ERP5 processes requests as utf-8 by default, but we adjust this test assuming that
-    # default is iso-8859-15
-    def forceISO885915DefaultRequestCharset(method):
-      def wrapped(self):
-        from ZPublisher import HTTPRequest as module
-        old_encoding = module.default_encoding
-        module.default_encoding = 'iso-8859-15'
-        try:
-          return method(self)
-        finally:
-          module.default_encoding = old_encoding
-      return wrapped
-    HTTPRequestTests = ZPublisher.tests.testHTTPRequest.HTTPRequestTests
-    for e in dir(HTTPRequestTests):
-      if e.startswith('test_'):
-        setattr(HTTPRequestTests, e, forceISO885915DefaultRequestCharset(getattr(HTTPRequestTests, e)))
   add_tests(suite, ZPublisher.tests.testHTTPRequest)
 
   import ZPublisher.tests.testHTTPResponse
-  if IS_ZOPE2: # BBB Zope2
-    # ERP5 forces utf-8 responses by default, but we adjust these tests so that they run
-    # with iso-8859-15 as default response charset
-    def forceISO885915DefaultResponseCharset(method):
-      def wrapped(self):
-        # here we can use this utility method which clean up at teardown
-        self._setDefaultEncoding('iso-8859-15')
-        return method(self)
-      return wrapped
-    HTTPResponseTests = ZPublisher.tests.testHTTPResponse.HTTPResponseTests
-    for e in dir(HTTPResponseTests):
-      if e.startswith('test_'):
-        setattr(HTTPResponseTests, e, forceISO885915DefaultResponseCharset(getattr(HTTPResponseTests, e)))
   add_tests(suite, ZPublisher.tests.testHTTPResponse)
 
   import ZPublisher.tests.testIterators
@@ -3354,42 +3321,33 @@ def test_suite():
   import ZPublisher.tests.testPostTraversal
   add_tests(suite, ZPublisher.tests.testPostTraversal)
 
-  if IS_ZOPE2: # BBB Zope2
-    import ZPublisher.tests.testPublish # pylint:disable=no-name-in-module,import-error
-    add_tests(suite, ZPublisher.tests.testPublish)
-
   import ZPublisher.tests.test_Converters
   add_tests(suite, ZPublisher.tests.test_Converters)
 
-  if IS_ZOPE2: # BBB Zope2
-    # XXX don't run test_WSGIPublisher for now because too many failures
-    pass
-  else:
-    import ZPublisher.tests.test_WSGIPublisher
-    # TestLoadApp tests are confused because running as a live test interfere with
-    # transaction system. Aborting the transaction at beginning of test seems OK.
-    TestLoadApp_setUp = ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp
-    def setUp(self):
-      TestLoadApp_setUp(self)
-      transaction.abort()
-    ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp = setUp
-    add_tests(suite, ZPublisher.tests.test_WSGIPublisher)
+  import ZPublisher.tests.test_WSGIPublisher
+  # TestLoadApp tests are confused because running as a live test interfere with
+  # transaction system. Aborting the transaction at beginning of test seems OK.
+  TestLoadApp_setUp = ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp
+  def setUp(self):
+    TestLoadApp_setUp(self)
+    transaction.abort()
+  ZPublisher.tests.test_WSGIPublisher.TestLoadApp.setUp = setUp
+  add_tests(suite, ZPublisher.tests.test_WSGIPublisher)
 
   import ZPublisher.tests.test_mapply
   add_tests(suite, ZPublisher.tests.test_mapply)
 
-  if IS_ZOPE2: # BBB Zope2
-    import ZPublisher.tests.testpubevents # pylint:disable=no-name-in-module,import-error
-    add_tests(suite, ZPublisher.tests.testpubevents)
-  else:
-    import ZPublisher.tests.test_pubevents
-    add_tests(suite, ZPublisher.tests.test_pubevents)
+  import ZPublisher.tests.test_pubevents
+  add_tests(suite, ZPublisher.tests.test_pubevents)
 
-  if IS_ZOPE2: # BBB Zope2
-    pass
-  else:
-    import ZPublisher.tests.test_utils
-    add_tests(suite, ZPublisher.tests.test_utils)
+  import ZPublisher.tests.test_utils
+  if six.PY3:
+    # "fix_properties" does not work with ERP5Type patched properties
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_ulines)
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_ustring)
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_utext)
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_utokens)
+  add_tests(suite, ZPublisher.tests.test_utils)
 
   import ZPublisher.tests.test_xmlrpc
   add_tests(suite, ZPublisher.tests.test_xmlrpc)

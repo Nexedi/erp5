@@ -156,7 +156,7 @@ class TestZODBHistory(ERP5TypeTestCase):
           os.path.dirname(Products.ERP5.tests.__file__),
           'test_data',
           'images',
-          'erp5_logo.png')))
+          'erp5_logo.png'), 'rb'))
     document.setTitle("ロゴ")
     self.commit()
 
