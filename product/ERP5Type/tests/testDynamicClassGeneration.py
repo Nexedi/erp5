@@ -1903,11 +1903,18 @@ class TestZodbModuleComponent(SecurityTestCase):
     component.setTextContent("""import unexistent_module
 """ + valid_code)
     self.tic()
-    self.assertEqual(
-      [m.getMessage().translate() for m in component.checkConsistency()],
-      ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
-    self.assertEqual(component.getTextContentErrorMessageList(),
-                      ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    if six.PY2:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    else:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
     self.assertEqual(component.getTextContentWarningMessageList(),
                       ["W:  1,  0: Unused import unexistent_module (unused-import)"])
 
@@ -1939,11 +1946,10 @@ class TestZodbModuleComponent(SecurityTestCase):
        [ComponentMixin._message_text_content_not_set],
        [],
        []),
-      ("""def foobar(*args, **kwargs)
-  return 42
+      ("""None()
 """ + valid_code,
-       ["Error in Source Code: E:  1,  0: invalid syntax (syntax-error)"],
-       ["E:  1,  0: invalid syntax (syntax-error)"],
+       ["Error in Source Code: E:  1,  0: None is not callable (not-callable)"],
+       ["E:  1,  0: None is not callable (not-callable)"],
        []),
       # Make sure that foobar NameError is at the end to make sure that after
       # defining foobar function, it is not available at all
@@ -2213,7 +2219,10 @@ def function_foo(*args, **kwargs):
   def _assertAstroidCacheContent(self,
                                  must_be_in_cache_set,
                                  must_not_be_in_cache_set):
-    from astroid.builder import MANAGER
+    if six.PY2:
+      from astroid.builder import MANAGER
+    else:
+      from astroid.astroid_manager import MANAGER
     should_not_be_in_cache_list = []
     for modname in MANAGER.astroid_cache:
       if (modname.startswith('checkPythonSourceCode') or
@@ -2269,10 +2278,10 @@ def hoge():
       """# -*- coding: utf-8 -*-
 # Source code with non-ASCII character should not fail: éàホゲ
 from %(namespace)s import %(reference1)s
-from %(namespace)s.erp5_version import %(reference1)s
+from %(namespace)s.erp5_version import %(reference1)s  # pylint:disable=reimported
 
 from %(module2)s import hoge
-from %(module2_with_version)s import hoge
+from %(module2_with_version)s import hoge  # pylint:disable=reimported
 
 import %(module2)s
 import %(module2_with_version)s
@@ -2297,7 +2306,8 @@ from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, i
 
 # Monkey patch of astroid 1.3.8: it raised 'no-name-in-module' because
 # Shared.DC was not considered a namespace package
-from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
+from Shared.DC.ZRDB.Results import Results
+_ = Results
 
 import lxml.etree
 lxml.etree.Element('test')
@@ -2344,17 +2354,21 @@ _ = ZBigArray
             module2_with_version=imported_module2_with_version)) +
       component.getTextContent())
 
+    must_be_in_cache_set = set()
+    if six.PY2:
+      must_be_in_cache_set.add(namespace)
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={'%s.erp5_version' % namespace,
                                 imported_module1,
                                 imported_module1_with_version,
                                 imported_module2,
                                 imported_module2_with_version})
     component.checkSourceCode()
+    if six.PY2:
+      must_be_in_cache_set.add('%s.erp5_version' % namespace)
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace,
-                            '%s.erp5_version' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={imported_module1,
                                 imported_module1_with_version,
                                 imported_module2,
@@ -2362,35 +2376,69 @@ _ = ZBigArray
 
     self.tic()
     self.assertEqual(component.getValidationState(), 'modified')
-    self.assertEqual(
-      component.getTextContentErrorMessageList(),
-      ["E:  3,  0: No name '%s' in module '%s' (no-name-in-module)" %
-       (imported_reference1, namespace),
-       "E:  4,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
-       (imported_reference1, namespace),
-       # Spurious message but same as filesystem modules: 2 errors raised
-       # (no-name-in-module and import-error)
-       "E:  6,  0: No name '%s' in module '%s' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F:  6,  0: Unable to import '%s' (import-error)" %
-       imported_module2,
-       # Spurious message (see above comment)
-       "E:  7,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F:  7,  0: Unable to import '%s' (import-error)" %
-       imported_module2_with_version,
-       # Spurious message (see above comment)
-       "E:  9,  0: No name '%s' in module '%s' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F:  9,  0: Unable to import '%s' (import-error)" %
-       imported_module2,
-       # Spurious message (see above comment)
-       "E: 10,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F: 10,  0: Unable to import '%s' (import-error)" %
-       imported_module2_with_version])
+    if six.PY2:
+      self.assertEqual(
+        component.getTextContentErrorMessageList(),
+        [
+          "E:  3,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          "E:  4,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          # Spurious message but same as filesystem modules: 2 errors raised
+          # (no-name-in-module and import-error)
+          "E:  6,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F:  6,  0: Unable to import '%s' (import-error)" %
+          imported_module2,
+          # Spurious message (see above comment)
+          "E:  7,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F:  7,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+          # Spurious message (see above comment)
+          "E:  9,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F:  9,  0: Unable to import '%s' (import-error)" %
+          imported_module2,
+          # Spurious message (see above comment)
+          "E: 10,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F: 10,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+        ],
+      )
+    else:
+      self.assertEqual(
+        component.getTextContentErrorMessageList(),
+        [
+          "E:  3,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          "E:  4,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          "E:  6,  0: Unable to import '%s.%s' (import-error)" %
+          (namespace, imported_reference2),
+          # Spurious message but same as filesystem modules: 2 errors raised
+          # (no-name-in-module and import-error)
+          "E:  6,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "E:  7,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+          # Spurious message (see above comment)
+          "E:  7,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "E:  9,  0: Unable to import '%s.%s' (import-error)" %
+          (namespace, imported_reference2),
+          # Spurious message (see above comment)
+          "E:  9,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "E: 10,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+          # Spurious message (see above comment)
+          "E: 10,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+        ],
+      )
     self.assertEqual(component.getTextContentWarningMessageList(), [])
-
     ## Simulate user:
     # 1) First check and validate 'imported' Components
     self.portal.portal_workflow.doActionFor(imported_component1, 'validate_action')
@@ -2401,20 +2449,29 @@ _ = ZBigArray
 
     message_list = component.checkSourceCode()
     self.assertEqual(message_list, [])
+    must_be_in_cache_set = {
+      imported_module1,
+      imported_module1_with_version,
+      imported_module2,
+      imported_module2_with_version,
+    }
+    if six.PY2:
+      must_be_in_cache_set.update({
+        '%s' % namespace,
+        '%s.erp5_version' % namespace,
+      })
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace,
-                            '%s.erp5_version' % namespace,
-                            imported_module1,
-                            imported_module1_with_version,
-                            imported_module2,
-                            imported_module2_with_version},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set=set())
 
     # 2) Then modify the main one so that it automatically 'validate'
     component.setTextContent(component.getTextContent() + '\n')
     self.tic()
+    must_be_in_cache_set = set()
+    if six.PY2:
+      must_be_in_cache_set.add(namespace)
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={'%s.erp5_version' % namespace,
                                 imported_module1,
                                 imported_module1_with_version,
@@ -2427,10 +2484,11 @@ _ = ZBigArray
     component.setTextContent(
       """# -*- coding: utf-8 -*-
 from %(module)s import undefined
-from %(module_with_version)s import undefined
+from %(module_with_version)s import undefined2
 
 # To avoid 'unused-import' warning...
 undefined()
+undefined2()
 
 """ % (dict(module=imported_module2,
             module_with_version=imported_module2_with_version)) +
@@ -2441,7 +2499,7 @@ undefined()
       component.getTextContentErrorMessageList(),
       ["E:  2,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
        imported_module2_with_version,
-       "E:  3,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
+       "E:  3,  0: No name 'undefined2' in module '%s' (no-name-in-module)" %
        imported_module2_with_version])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
 
@@ -2477,8 +2535,8 @@ def hoge():
       component = self._newComponent(reference)
       component.setTextContent(component.getTextContent() + """
 from %(namespace)s import %(reference)s
-from %(namespace)s.bar_version import %(reference)s
-from %(namespace)s.erp5_version import %(reference)s
+from %(namespace)s.bar_version import %(reference)s  # pylint:disable=reimported
+from %(namespace)s.erp5_version import %(reference)s  # pylint:disable=reimported
 
 # To avoid 'unused-import' warning...
 %(reference)s.hoge()
@@ -2486,7 +2544,10 @@ from %(namespace)s.erp5_version import %(reference)s
            reference=imported_reference))
 
       component.checkSourceCode()
-      from astroid.builder import MANAGER
+      if six.PY2:
+        from astroid.builder import MANAGER
+      else:
+        from astroid.astroid_manager import MANAGER
       imported_module = self._getComponentFullModuleName(imported_reference)
       self.assertEqual(
         MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='bar')],
