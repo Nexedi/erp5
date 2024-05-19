@@ -31,7 +31,7 @@ from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
 
-from Products.ERP5Type.Accessor.Base import func_code, ATTRIBUTE_PREFIX, evaluateTales, Getter as BaseGetter, Method
+from Products.ERP5Type.Accessor.Base import func_code, ATTRIBUTE_PREFIX, evaluateTales, Getter as BaseGetter, Setter as BaseSetter, Tester as BaseTester
 from Products.ERP5Type.Accessor import Accessor, AcquiredProperty
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 from Products.ERP5Type.Utils import unicode2str
@@ -218,7 +218,7 @@ class AcquiredPropertyGetter(AcquiredProperty.Getter):
       else:
         return default
 
-class TranslatedPropertyTester(Method):
+class TranslatedPropertyTester(BaseTester):
   """
     Tests if an attribute value exists
   """
