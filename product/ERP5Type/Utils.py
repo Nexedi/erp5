@@ -419,7 +419,7 @@ def fill_args_from_request(*optional_args):
   return decorator
 
 _pylint_message_re = re.compile(
-  '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
+  r'^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
 
 def checkPythonSourceCode(source_code_str, portal_type=None):
   """
@@ -462,8 +462,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   message_list = []
   output_file = StringIO()
   try:
-    with tempfile.NamedTemporaryFile(prefix='checkPythonSourceCode',
-                                     suffix='.py') as input_file:
+    with tempfile.NamedTemporaryFile(
+        prefix='checkPythonSourceCode',
+        suffix='.py',
+        mode='w',
+      ) as input_file:
       input_file.write(source_code_str)
       input_file.flush()
 
@@ -493,6 +496,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # TODO-arnau: Enable it properly would require inspection API
            # '%s %r has no %r member'
            '--disable=E1101,E1103',
+           # XXX duplicate-bases causes too many false positives
+           '--disable=duplicate-bases',
            # map and filter should not be considered bad as in some cases
            # map is faster than its recommended replacement (list
            # comprehension)
@@ -508,7 +513,26 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # unused variables
            '--dummy-variables-rgx=_$|dummy|__traceback_info__|__traceback_supplement__',
       ]
-
+      if six.PY3:
+        args.extend(
+          (
+            "--msg-template='{C}: {line},{column}: {msg} ({symbol})'",
+            '--load-plugins=pylint.extensions.bad_builtin',
+            # BBB until we drop compatibility with PY2
+            '--disable=redundant-u-string-prefix,raise-missing-from,keyword-arg-before-vararg',
+            # XXX acceptable to ignore in the context of ERP5
+            '--disable=unspecified-encoding',
+            # XXX to many errors for now
+            '--disable=arguments-differ,arguments-renamed',
+            '--disable=duplicate-bases,inconsistent-mro',
+          )
+        )
+      else:
+        args.extend(
+          (
+            '--load-plugins=Products.ERP5Type.patches.pylint_compatibility_disable',
+          )
+        )
       if portal_type == 'Interface Component':
         # __init__ method from base class %r is not called
         args.append('--disable=W0231')
@@ -522,18 +546,14 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
         args.append('--disable=E0213')
 
       try:
-        from pylint.extensions.bad_builtin import __name__ as ext
-        args.append('--load-plugins=' + ext)
-      except ImportError:
-        pass
-      try:
         # Note that we don't run pylint as a subprocess, but directly from
         # ERP5 process, so that pylint can access the code from ERP5Type
         # dynamic modules from ZODB.
         Run(args, reporter=TextReporter(output_file), exit=False)
       finally:
-        from astroid.builder import MANAGER
-        MANAGER.astroid_cache.pop(
+        from astroid import MANAGER
+        astroid_cache = MANAGER.astroid_cache
+        astroid_cache.pop(
           os.path.splitext(os.path.basename(input_file.name))[0],
           None)
 
