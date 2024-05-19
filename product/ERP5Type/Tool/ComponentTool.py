@@ -159,16 +159,12 @@ class ComponentTool(BaseTool):
       erp5.component.filesystem_import_dict = None
       erp5.component.ref_manager.gc()
 
-      # Clear pylint cache
-      try:
-        from astroid.builder import MANAGER
-      except ImportError:
-        pass
-      else:
-        astroid_cache = MANAGER.astroid_cache
-        for k in astroid_cache.keys():
-          if k.startswith('erp5.component.') and k not in component_package_list:
-            del astroid_cache[k]
+      # Clear astroid (pylint) cache
+      from astroid import MANAGER
+      astroid_cache = MANAGER.astroid_cache
+      for k in list(astroid_cache.keys()):
+        if k.startswith('erp5.component.') and k not in component_package_list:
+          del astroid_cache[k]
 
     if reset_portal_type_at_transaction_boundary:
       portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
