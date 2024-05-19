@@ -2052,15 +2052,28 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertIn(my_utf_eight_token, web_page.asStrippedHTML())
     self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), unicode))
 
-  def test_PDFDocument_asTextConversion(self):
+  @unittest.expectedFailure  # if test start to pass, drop the non strict test.
+  def test_PDFDocument_asTextConversion_strict(self):
     """Test a PDF document with embedded images
     To force usage of ghostscript with embedded tesseract OCR device
     """
+    self._test_PDFDocument_asTextConversion(strict=True)
+
+  def test_PDFDocument_asTextConversion_non_strict(self):
+    self._test_PDFDocument_asTextConversion(strict=False)
+
+  def _test_PDFDocument_asTextConversion(self, strict):
     document = self.portal.document_module.newContent(
         portal_type='PDF',
         file=makeFileUpload('TEST.Embedded.Image.pdf'))
     for _ in ('empty_cache', 'cache'):
-      self.assertEqual(document.asText(), 'ERP5 is a free software.')
+      if strict:
+        self.assertEqual(document.asText(), 'ERP5 is a free software.')
+      else:
+        # When updating ghostscript 10.02.1 -> 10.03.1
+        # OCR started to read "ERP5" as "ERPS", this "non strict" test
+        # tolerate this.
+        self.assertIn(' is a free software.', document.asText())
       self.tic()
 
   def test_broken_pdf_asText(self):
