@@ -1553,7 +1553,9 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('Image', document.getPortalType())
-    self.assertEqual('ERP5 is a free software.', document.asText())
+    for _ in ('empty_cache', 'cache'):
+      self.assertEqual(document.asText(), 'ERP5 is a free software.')
+      self.tic()
 
   def test_MonochromeImageResize(self):
     upload_file = makeFileUpload('monochrome_sample.tiff')
@@ -1561,8 +1563,10 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('Image', document.getPortalType())
     resized_image = document.convert(format='png', display='small')[1]
     identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
-    self.assertNotIn('1-bit', identify_output)
-    self.assertEqual('ERP5 is a free software.', document.asText())
+    self.assertNotIn(b'1-bit', identify_output)
+    for _ in ('empty_cache', 'cache'):
+      self.assertEqual(document.asText(), 'ERP5 is a free software.')
+      self.tic()
 
   def test_Base_showFoundText(self):
     # Create document with good content
@@ -2055,7 +2059,9 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     document = self.portal.document_module.newContent(
         portal_type='PDF',
         file=makeFileUpload('TEST.Embedded.Image.pdf'))
-    self.assertEqual(document.asText(), 'ERP5 is a free software.')
+    for _ in ('empty_cache', 'cache'):
+      self.assertEqual(document.asText(), 'ERP5 is a free software.')
+      self.tic()
 
   def test_broken_pdf_asText(self):
     class StringIOWithFilename(StringIO.StringIO):
