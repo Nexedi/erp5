@@ -121,7 +121,7 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     # Check if all objects are catalogued as before
     self.maxDiff = None
-    self.assertItemsEqual(original_path_list, self.getSQLPathList())
+    self.assertCountEqual(original_path_list, self.getSQLPathList())
 
   # Note: this test is only working as a sinde-effect of
   # test_1_ERP5Site_reindexAll being run first (it produces a "clean" catalog).
@@ -172,7 +172,7 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     original_path_list = self.getSQLPathList(original_connection_id)
     new_path_list = self.getSQLPathList(self.new_erp5_sql_connection)
     self.maxDiff = None
-    self.assertItemsEqual(original_path_list, new_path_list)
+    self.assertCountEqual(original_path_list, new_path_list)
     organisation2 = module.newContent(portal_type='Organisation', title="GreatTitle2")
     first_deleted_url = organisation2.getRelativeUrl()
     self.tic()
@@ -246,7 +246,7 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(portal_catalog.getHotReindexingState(), HOT_REINDEXING_FINISHED_STATE)
     # Check Security UID object exist in roles and users
     # compare the number object in the catalog
-    self.assertItemsEqual(
+    self.assertCountEqual(
       self.getSQLPathList(original_connection_id),
       self.getSQLPathListWithRolesAndUsers(original_connection_id),
     )

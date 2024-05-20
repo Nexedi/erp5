@@ -11,6 +11,7 @@ import signal
 import shutil
 import errno
 import random
+import six
 import transaction
 import warnings
 from glob import glob
@@ -214,14 +215,13 @@ def initializeInstanceHome(tests_framework_home,
         else:
           os.symlink(src, d)
     d = 'custom_zodb.py'
-    if not os.path.exists(d):
-      src = os.path.join(tests_framework_home, d)
-      if os.path.islink(d):
-        os.remove(d)
-      if WIN:
-        shutil.copy(src, d)
-      else:
-        os.symlink(src, d)
+    src = os.path.join(tests_framework_home, d)
+    if os.path.exists(d):
+      os.remove(d)
+    if WIN:
+      shutil.copy(src, d)
+    else:
+      os.symlink(src, d)
   finally:
     os.chdir(old_pwd)
 
@@ -287,6 +287,15 @@ class ERP5TypeTestLoader(unittest.TestLoader):
   testMethodPrefix = property(
     lambda self: self._testMethodPrefix,
     lambda self, value: None)
+
+  if six.PY3:
+    def __init__(self):
+        # override without call super() to avoid RecursionError in Python 3.
+        # super().__init__()
+        self.errors = []
+        # Tracks packages which we have called into via load_tests, to
+        # avoid infinite re-entrancy.
+        self._loading_packages = set()
 
   def _importZodbTestComponent(self, name):
     import erp5.component.test

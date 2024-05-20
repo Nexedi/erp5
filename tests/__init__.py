@@ -105,7 +105,7 @@ class ERP5(_ERP5):
       return self.runUnitTest('--load', '--save', '--with_wendelin_core', full_test)
     elif test.startswith('testFunctional'):
       return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
-    elif test == 'testUpgradeInstanceWithOldDataFs':
+    elif test.startswith('testUpgradeInstanceWithOldDataFs'):
       old_data_path = None
       for path in sys.path:
         if path.endswith('/erp5-bin'):
@@ -151,13 +151,13 @@ class ERP5(_ERP5):
     """
     # Parse relevant information to update response information
     try:
-      summary, html_test_result = status_dict['stderr'].split("-"*79)[1:3]
+      summary, html_test_result = status_dict['stderr'].split(b"-"*79)[1:3]
     except ValueError:
       # In case of error when parse the file, preserve the original
       # information. This prevents we have unfinished tests.
       return status_dict
     status_dict['html_test_result'] = html_test_result
-    search = self.FTEST_PASS_FAIL_RE.search(summary)
+    search = self.FTEST_PASS_FAIL_RE.search(summary.decode())
     if search:
       group_dict = search.groupdict()
       status_dict['failure_count'] = int(group_dict['failures']) \
