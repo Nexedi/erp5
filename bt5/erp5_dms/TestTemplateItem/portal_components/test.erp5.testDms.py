@@ -53,14 +53,14 @@ from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from AccessControl.SecurityManagement import newSecurityManager
 from erp5.component.document.Document import NotConvertedError
 from Products.ERP5Form.PreferenceTool import Priority
-from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
@@ -1324,6 +1324,17 @@ class TestDocument(TestDocumentMixin):
     self.assertIn('I use reference to look up TEST',
                  document.SearchableText())
 
+  def test_PDFToHTML(self):
+    upload_file = self.makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    for _ in ('empty_cache', 'cache'):
+      mime, html = document.convert(format='html')
+      self.assertEqual(mime, 'text/html')
+      self.assertIn('TEST', html)
+      self.tic()
+
   def test_PDFToPng(self):
     upload_file = self.makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
@@ -1697,7 +1708,7 @@ class TestDocument(TestDocumentMixin):
   def test_HTML_to_PDF(self):
     web_page = self.portal.web_page_module.newContent(
       portal_type='Web Page',
-      text_content=u'<p>héhé</p>'
+      text_content='<p>héhé</p>'
     )
     # ERP5 convert API
     _, pdf_data = web_page.convert('pdf')
@@ -1705,19 +1716,19 @@ class TestDocument(TestDocumentMixin):
       portal_type='PDF',
       data=pdf_data
     )
-    self.assertEqual(pdf.asText().strip(), u'héhé')
+    self.assertEqual(pdf.asText().strip(), 'héhé')
 
     # portal_transforms convert API
     pdf_data = self.portal.portal_transforms.convertTo(
       'application/pdf',
-      orig=u'<p>héhé</p>',
+      orig='<p>héhé</p>',
       context=self.portal,
       mimetype='test/html').getData()
     pdf = self.portal.document_module.newContent(
       portal_type='PDF',
       data=pdf_data
     )
-    self.assertEqual(pdf.asText().strip(), u'héhé')
+    self.assertEqual(pdf.asText().strip(), 'héhé')
 
   def test_addContributorToDocument(self):
     """
