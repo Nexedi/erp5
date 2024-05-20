@@ -263,7 +263,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (edit)...
-    login.edit(password = '123456789-4')
+    login.edit(password='123456789-4')
     self.tic()
     old_password5 = login.getPassword()
     self.assertSameSet([old_password5, old_password4, old_password3, old_password2, old_password1, old_password], \
