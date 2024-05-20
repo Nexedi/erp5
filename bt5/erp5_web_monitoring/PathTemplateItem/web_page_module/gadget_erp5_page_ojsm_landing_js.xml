@@ -2,39 +2,35 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Static Web Section" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>_Add_portal_folders_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Copy_or_Move_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Delete_objects_Permission</string> </key>
+            <key> <string>_Change_local_roles_Permission</string> </key>
             <value>
               <tuple>
                 <string>Assignor</string>
@@ -49,92 +45,39 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>__before_publishing_traverse__</string> </key>
+            <key> <string>_View_Permission</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_defined_in_class</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hookname</string> </key>
-                        <value> <string>__before_publishing_traverse__</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_list</string> </key>
-                        <value>
-                          <list>
-                            <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                          </list>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_prior</string> </key>
-                        <value>
-                          <none/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
-            <key> <string>__before_traverse__</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Section/hateoas_appcache</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-              </dictionary>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
             </value>
         </item>
         <item>
-            <key> <string>_identity_criterion</string> </key>
+            <key> <string>content_md5</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
-            <key> <string>_range_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>container_layout</string> </key>
-            <value> <string>StaticWebSite_getRedirectSourceUrlForOfficeJSApplication</string> </value>
-        </item>
-        <item>
-            <key> <string>content_layout</string> </key>
-            <value> <string>StaticWebSite_getRedirectSourceUrlForOfficeJSApplication</string> </value>
-        </item>
-        <item>
-            <key> <string>custom_render_method_id</string> </key>
-            <value> <string>StaticWebSite_getRedirectSourceUrlForOfficeJSApplication</string> </value>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_page_ojsm_landing.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -143,16 +86,16 @@
             </value>
         </item>
         <item>
-            <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>hateoas_appcache</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_landing_js</string> </value>
         </item>
         <item>
-            <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>StaticWebSite_viewRedirectAssistConfiguration</string> </value>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -161,65 +104,23 @@
             </value>
         </item>
         <item>
-            <key> <string>skin_selection_name</string> </key>
-            <value> <string>AppCache</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>hateoas_appcache</string> </value>
+            <value> <string>Gadget Officejs Monitoring Landing JS</string> </value>
         </item>
         <item>
-            <key> <string>visible</string> </key>
-            <value> <int>0</int> </value>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="WebSectionTraversalHook" module="Products.ERP5.Document.WebSection"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -230,15 +131,21 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>category_publication_workflow</string> </key>
+                    <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -247,7 +154,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -260,9 +167,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -290,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1706020076.68</float>
+                              <float>1716391806.07</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -299,7 +204,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>embedded</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -308,7 +213,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -339,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1014.3364.27014.64238</string> </value>
+                      <value> <string>1016.49474.6665.29303</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -359,7 +264,70 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1716562039.61</float>
+                              <float>1716391830.68</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>detect_converted_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <unicode>zope</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>external_processing_state</string> </key>
+                      <value> <string>converted</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="_reconstructor" module="copy_reg"/>
+                          </klass>
+                          <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1716391550.04</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
