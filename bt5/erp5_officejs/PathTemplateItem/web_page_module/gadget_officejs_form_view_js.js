@@ -197,7 +197,7 @@
             // truncate long strings
             for (var key in result.data.rows[i].value) {
               result.data.rows[i].value[key] =
-                truncate(result.data.rows[i].value[key], 40);
+                truncate(result.data.rows[i].value[key], 100);
             }
             // render dates with proper format
             date_key_array = Object.keys(
