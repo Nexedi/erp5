@@ -3,6 +3,8 @@
 (function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console, escape) {
   "use strict";
 
+  var MAX_LENGTH = 100;
+
   function renderField(field_id, field_definition, context_document,
                        data, blob_type, content_editable, gadget) {
     var key, raw_value, override, final_value, item_list, result = {}, i,
@@ -197,7 +199,7 @@
             // truncate long strings
             for (var key in result.data.rows[i].value) {
               result.data.rows[i].value[key] =
-                truncate(result.data.rows[i].value[key], 100);
+                truncate(result.data.rows[i].value[key], MAX_LENGTH);
             }
             // render dates with proper format
             date_key_array = Object.keys(
