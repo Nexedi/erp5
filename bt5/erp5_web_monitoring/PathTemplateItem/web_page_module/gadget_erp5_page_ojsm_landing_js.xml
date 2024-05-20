@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -78,14 +76,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_opml_add.js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_landing.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -95,13 +87,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_opml_add_js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_landing_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -115,13 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Monitoring Add OPML JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Officejs Monitoring Landing JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -187,7 +171,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -211,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506075175.77</float>
+                              <float>1716391806.07</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -260,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1016.46878.65388.21691</string> </value>
+                      <value> <string>1016.49474.6665.29303</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -280,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1716236126.38</float>
+                              <float>1716391830.68</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -311,7 +295,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -343,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506072210.95</float>
+                              <float>1716391550.04</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

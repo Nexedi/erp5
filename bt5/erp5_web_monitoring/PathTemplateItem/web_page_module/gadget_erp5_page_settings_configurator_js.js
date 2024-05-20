@@ -353,7 +353,7 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.getUrlFor({command: "change", options: {"page": "ojsm_opml_add"}}),
+            gadget.getUrlFor({command: "change", options: {"page": "ojsm_opml_add", "intra": true}}),
             gadget.getSetting('document_title')
           ]);
         })
