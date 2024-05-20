@@ -228,13 +228,13 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
 
     # password change date should be saved as well hashed old password value
-    old_password = login.getPassword().decode()
+    old_password = login.getPassword()
     self.assertSameSet([old_password], [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # .. test one more time to check history of password is saved in a list
     login.setPassword('123456789')
     self.tic()
-    old_password1 = login.getPassword().decode()
+    old_password1 = login.getPassword()
 
     # password change date should be saved as well hashed old password value
     self.assertSameSet([old_password1, old_password], [x.getPassword() for x in self._getPasswordEventList(login)])
@@ -242,29 +242,29 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # other methods (_setPassword)...
     login._setPassword('123456789-1')
     self.tic()
-    old_password2 = login.getPassword().decode()
+    old_password2 = login.getPassword()
     self.assertSameSet([old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (_forceSetPassword)...
     login._forceSetPassword('123456789-2')
     self.tic()
-    old_password3 = login.getPassword().decode()
+    old_password3 = login.getPassword()
     self.assertSameSet([old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
 
     # other methods (setEncodedPassword)...
-    login.setEncodedPassword(b'123456789-3')
+    login.setEncodedPassword('123456789-3')
     self.tic()
-    old_password4 = login.getPassword().decode()
+    old_password4 = login.getPassword()
     self.assertSameSet([old_password4, old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (edit)...
-    login.edit(password = '123456789-4')
+    login.edit(password='123456789-4')
     self.tic()
-    old_password5 = login.getPassword().decode()
+    old_password5 = login.getPassword()
     self.assertSameSet([old_password5, old_password4, old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 

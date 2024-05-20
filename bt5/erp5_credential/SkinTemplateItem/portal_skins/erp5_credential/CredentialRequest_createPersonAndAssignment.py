@@ -35,7 +35,7 @@ for portal_type in related_portal_type:
 context.CredentialRequest_updateLocalRolesOnSecurityGroups()
 
 if password is not None:
-  if password.startswith(b'{SSHA}'):
+  if password.startswith('{SSHA}'):
     #password is encoded, set it to None to script witch send the password to user
     password = None
 # Send notification in activities
