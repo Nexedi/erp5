@@ -105,9 +105,9 @@
                         <string>my_url</string>
                         <string>my_username</string>
                         <string>my_password</string>
-                        <string>my_state</string>
                         <string>my_active</string>
-                        <string>verify</string>
+                        <string>my_verify</string>
+                        <string>my_translated_state</string>
                       </list>
                     </value>
                 </item>
@@ -122,7 +122,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Opml_viewForMonitoring</string> </value>
+            <value> <string>opml_viewForMonitoring</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,7 +130,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Promise_view</string> </value>
+            <value> <string>InstanceTree_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -146,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Promise</string> </value>
+            <value> <string>Opml</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
