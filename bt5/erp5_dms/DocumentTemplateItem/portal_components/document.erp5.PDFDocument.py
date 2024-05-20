@@ -123,7 +123,8 @@ class PDFDocument(Image):
     """
     if format == 'html':
       try:
-        return self.getConversion(format=format)
+        mime, data = self.getConversion(format=format)
+        return mime, bytes2str(data)
       except KeyError:
         mime = 'text/html'
         data = self._convertToHTML()
@@ -131,7 +132,8 @@ class PDFDocument(Image):
         return (mime, data)
     elif format in ('txt', 'text'):
       try:
-        return self.getConversion(format='txt')
+        mime, data = self.getConversion(format='txt')
+        return mime, bytes2str(data)
       except KeyError:
         mime = 'text/plain'
         data = self._convertToText()
