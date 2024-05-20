@@ -1694,6 +1694,30 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(builder.extract('Pictures/%s.png' % image_count),
                       converted_image, failure_message)
 
+  def test_HTML_to_PDF(self):
+    web_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      text_content=u'<p>héhé</p>'
+    )
+    # ERP5 convert API
+    _, pdf_data = web_page.convert('pdf')
+    pdf = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=pdf_data
+    )
+    self.assertEqual(pdf.asText().strip(), u'héhé')
+
+    # portal_transforms convert API
+    pdf_data = self.portal.portal_transforms.convertTo(
+      'application/pdf',
+      orig=u'<p>héhé</p>',
+      context=self.portal,
+      mimetype='test/html').getData()
+    pdf = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=pdf_data
+    )
+    self.assertEqual(pdf.asText().strip(), u'héhé')
 
   def test_addContributorToDocument(self):
     """
