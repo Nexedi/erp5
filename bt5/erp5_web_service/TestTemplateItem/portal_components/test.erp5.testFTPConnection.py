@@ -77,7 +77,7 @@ class TestSFTPConnection(ERP5TypeTestCase):
       self.connection.putFile("first_file", "first file content ( a bit bigger )")
       self.connection.putFile("second_file", "second file content")
       # by default, ordering is not specified
-      self.assertItemsEqual(
+      self.assertCountEqual(
           ["first_file", "second_file"],
           self.connection.listFiles(".")
       )
@@ -94,9 +94,9 @@ class TestSFTPConnection(ERP5TypeTestCase):
 
     def test_create_remove_directory(self):
       self.connection.createDirectory("foo")
-      self.assertItemsEqual(["foo"], self.connection.listFiles("."))
+      self.assertCountEqual(["foo"], self.connection.listFiles("."))
       self.connection.removeDirectory("foo")
-      self.assertItemsEqual([], self.connection.listFiles("."))
+      self.assertCountEqual([], self.connection.listFiles("."))
 
   else:
     def test_no_SFTP_URL_in_environ(self):

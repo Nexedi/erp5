@@ -674,15 +674,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       self.assertEqual(method(), reference_workflow_state)
       return workflow_error_message
 
-    # BBB backport methods from python3.
-    # We use this tricky getattr syntax so that lib2to3.fixers.fix_asserts
-    # do not fix this code.
-    if six.PY2:
-      def assertRaisesRegex(self, *args, **kwargs):
-        return getattr(self, 'assertRaisesRegexp')(*args, **kwargs)
-      def assertRegex(self, *args, **kwargs):
-        return getattr(self, 'assertRegexpMatches')(*args, **kwargs)
-
     def stepPdb(self, sequence=None, sequence_list=None):
       """Invoke debugger"""
       try: # try ipython if available
