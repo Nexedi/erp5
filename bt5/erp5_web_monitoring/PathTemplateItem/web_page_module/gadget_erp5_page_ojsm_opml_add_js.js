@@ -98,7 +98,7 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this;
+      var gadget = this, auto_sync = !options.intra;
       return RSVP.Queue()
         .push(function () {
           var button_no_pwd = gadget.element.getElementsByClassName("btn-nopasswd");
@@ -230,6 +230,14 @@
             save_action: true,
             change_password: chg_pwd_url
           });
+        })
+        .push(function () {
+          return gadget.checkSynchronize(auto_sync);
         });
+    })
+    .declareJob("checkSynchronize", function (auto_sync) {
+      if (auto_sync) {
+        return this.element.querySelector('button[type="submit"]').click();
+      }
     });
 }(window, rJS, RSVP));
