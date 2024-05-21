@@ -2544,6 +2544,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         else:
           cell_html = u''
 
+        if error_message:
+          error_message = u' <span class="error">%s</span>' % error_message
         if url is None:
           html = cell_html + error_message
         else:
@@ -2551,8 +2553,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             html = u'%s' % cell_html
           else:
             html = u'<a href="%s">%s</a>' % (url, cell_html)
-          if error_message not in ('', None):
-            html += u' <span class="error">%s</span>' % error_message
+          if error_message:
+            html += error_message
       else:
         # If not editable, show a static text with a link, if enabled.
         html = html_quote(processed_value)
