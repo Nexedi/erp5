@@ -122,7 +122,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Opml_viewForMonitoring</string> </value>
+            <value> <string>opml_viewForMonitoring</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,7 +130,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Opml_view</string> </value>
+            <value> <string>InstanceTree_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
