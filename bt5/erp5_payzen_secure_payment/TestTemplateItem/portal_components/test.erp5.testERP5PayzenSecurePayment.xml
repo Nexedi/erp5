@@ -11,6 +11,12 @@
             <value> <string>testERP5PayzenSecurePayment</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>test.erp5.testERP5PayzenSecurePayment</string> </value>
         </item>
@@ -22,6 +28,18 @@
             <key> <string>sid</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -73,35 +91,6 @@
                   <item>
                       <key> <string>action</string> </key>
                       <value> <string>validate</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>ERP5TypeTestCase</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1377844605.76</float>
-                              <string>GMT+9</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
