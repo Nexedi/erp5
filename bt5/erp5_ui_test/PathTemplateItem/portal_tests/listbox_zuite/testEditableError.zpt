@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Title Line</title>
+<title>Editable fields validation errors</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test that and Editable Column has no Link</td></tr>
+<tr><td rowspan="1" colspan="3">Editable fields validation errors</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
@@ -76,6 +76,116 @@
   <td></td>
   <td>Make sure there is an input tag in line 1 col 1</td>
 </tr>
+<tr>
+  <td>type</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//td[3]/input</td>
+  <td>X</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//td[3]/input</td>
+  <td>X</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//td[3]/span[@class="error"]</td>
+  <td>You did not enter a floating point number.</td>
+</tr>
+<!-- prevent "you have unsaved changes" beforeunload warning -->
+<tr>
+  <td>storeEval</td>
+  <td>window.changed = false</td>
+  <td>_</td>
+</tr>
+
+<!-- now check with an URL column -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/Foo_view/listbox/manage_main</td>
+  <td>X</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_url_columns</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_url_columns</td>
+  <td>quantity |</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>submit</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Content changed</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//td[3]/input</td>
+  <td>X</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//td[3]/input</td>
+  <td>X</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//td[3]/span[@class="error"]</td>
+  <td>You did not enter a floating point number.</td>
+</tr>
+<tr>
+  <td>storeEval</td>
+  <td>window.changed = false</td>
+  <td>_</td>
+</tr>
+<!-- restore listbox configuration -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/Foo_view/listbox/manage_main</td>
+  <td>X</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_url_columns</td>
+  <td>quantity |</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_url_columns</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>submit</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Content changed</td>
+  <td></td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
