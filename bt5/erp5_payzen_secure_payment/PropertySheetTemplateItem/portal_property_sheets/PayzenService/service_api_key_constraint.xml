@@ -39,7 +39,7 @@
             <key> <string>constraint_property</string> </key>
             <value>
               <tuple>
-                <string>service_password</string>
+                <string>service_api_key</string>
               </tuple>
             </value>
         </item>
@@ -51,15 +51,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>service_password_constraint</string> </value>
+            <value> <string>service_api_key_constraint</string> </value>
         </item>
         <item>
             <key> <string>message_attribute_not_match</string> </key>
-            <value> <string>service_password has to be set.</string> </value>
+            <value> <string>service_api_key  has to be set.</string> </value>
         </item>
         <item>
             <key> <string>message_no_such_property</string> </key>
-            <value> <string>service_password has to be set.</string> </value>
+            <value> <string>service_api_key has to be set.</string> </value>
         </item>
         <item>
             <key> <string>message_property_not_set</string> </key>

@@ -61,10 +61,13 @@ class TestERP5PayzenSecurePaymenConstraint(TestERP5PayzenSecurePaymentMixin):
     self.assertNotIn(message, getMessageList(self.service))
 
   def test_service_username(self):
-    self._test('vads_site_id have to be set', 'service_username')
+    self._test('service_username have to be set', 'service_username')
 
   def test_service_password(self):
-    self._test('Certificate has to be set.', 'service_password')
+    self._test('service_password has to be set.', 'service_password')
+
+  def test_service_api_key(self):
+    self._test('service_api_key has to be set.', 'service_api_key')
 
   def test_link_url_string(self):
     self._test('Payzen URL have to be set', 'link_url_string')
@@ -144,7 +147,8 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
       payzen_vads_ctx_mode='TEST',
       payzen_vads_page_action='REGISTER',
       payzen_vads_version='V2',
-      service_username='0123456'
+      service_username='0123456',
+      service_api_key='ABC123'
     )
     pt_id = str(random.random())
     self.portal.portal_skins.custom.manage_addProduct['PageTemplates']\
