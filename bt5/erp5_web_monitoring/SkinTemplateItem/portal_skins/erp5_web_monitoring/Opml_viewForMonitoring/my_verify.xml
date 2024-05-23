@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>verify</string> </value>
+            <value> <string>my_verify</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
