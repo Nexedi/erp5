@@ -99,9 +99,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_translated_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
