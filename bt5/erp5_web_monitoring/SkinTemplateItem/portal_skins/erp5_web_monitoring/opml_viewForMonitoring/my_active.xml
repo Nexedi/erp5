@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="GadgetField" module="Products.ERP5Form.GadgetField"/>
+      <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Parameters</string> </value>
+            <value> <string>my_active</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,8 +19,8 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>no_validator</string> </key>
-                    <value> <string>Does not support this operation.</string> </value>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>This field is mandatory.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -35,10 +35,6 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>data_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -66,31 +62,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -109,10 +89,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>data_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -137,31 +113,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -180,12 +140,8 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>data_url</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -208,34 +164,16 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string>gadget_erp5_page_ojsm_parameters_view.html</string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Parameters</string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_form_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Active (Enable Sync)</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -82,10 +82,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>Parameters</string>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -103,7 +100,15 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_url</string>
+                        <string>my_username</string>
+                        <string>my_password</string>
+                        <string>my_state</string>
+                        <string>my_active</string>
+                        <string>my_verify</string>
+                      </list>
                     </value>
                 </item>
                 <item>
