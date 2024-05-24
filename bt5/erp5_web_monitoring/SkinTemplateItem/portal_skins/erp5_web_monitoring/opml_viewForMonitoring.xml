@@ -107,6 +107,7 @@
                         <string>my_password</string>
                         <string>my_active</string>
                         <string>my_verify</string>
+                        <string>my_translated_state</string>
                       </list>
                     </value>
                 </item>
