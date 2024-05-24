@@ -105,7 +105,6 @@
                         <string>my_url</string>
                         <string>my_username</string>
                         <string>my_password</string>
-                        <string>my_state</string>
                         <string>my_active</string>
                         <string>my_verify</string>
                       </list>

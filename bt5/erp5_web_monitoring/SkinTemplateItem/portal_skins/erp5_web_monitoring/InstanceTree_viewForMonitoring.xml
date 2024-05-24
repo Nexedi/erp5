@@ -99,7 +99,9 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_state</string>
+                      </list>
                     </value>
                 </item>
                 <item>
