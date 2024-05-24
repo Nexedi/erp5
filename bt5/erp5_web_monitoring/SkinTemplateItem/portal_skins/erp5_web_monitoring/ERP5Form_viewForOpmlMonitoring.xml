@@ -82,7 +82,10 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>Parameters</string>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -100,15 +103,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_url</string>
-                        <string>my_username</string>
-                        <string>my_password</string>
-                        <string>my_state</string>
-                        <string>my_active</string>
-                        <string>verify</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -122,7 +117,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Configuration_viewForMonitoring</string> </value>
+            <value> <string>ERP5Form_viewForOpmlMonitoring</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,7 +125,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Promise_view</string> </value>
+            <value> <string>InstanceTree_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -146,7 +141,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OPML</string> </value>
+            <value> <string>Opml</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
