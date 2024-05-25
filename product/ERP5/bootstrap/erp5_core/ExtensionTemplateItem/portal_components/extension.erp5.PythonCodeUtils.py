@@ -60,9 +60,8 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
     }]
   for message_dict in message_list:
     if is_script:
-      message_dict['row'] = message_dict['row'] - 4
-    else:
-      message_dict['row'] = message_dict['row'] - 1
+      message_dict['row'] = message_dict['row'] - 3
+      message_dict['column'] = message_dict['column'] - 2
 
     if message_dict['type'] in ('E', 'F'):
       message_dict['type'] = 'error'
