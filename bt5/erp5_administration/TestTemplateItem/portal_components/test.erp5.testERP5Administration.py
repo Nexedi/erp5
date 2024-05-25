@@ -194,6 +194,42 @@ class TestERP5Administration(InventoryAPITestCase):
     transition.setCategoryList('destination/' + transition.getPath())
     self.assertTrue(transition.Base_viewDict())
 
+  def test_BusinessTemplate_getPythonSourceCodeMessageList(self):
+    self.portal.portal_skins.manage_addProduct['OFS'].manage_addFolder(
+      self.id())
+    self.portal.portal_skins[
+      self.id()].manage_addProduct['PythonScripts'].manage_addPythonScript(
+        'Base_testSourceCode')
+    self.portal.portal_skins[self.id()]['Base_testSourceCode'].write(
+      '''# empty line
+script_error()
+''')
+    self.portal.portal_components.newContent(
+      portal_type='Extension Component',
+      id='extension.erp5.DummyComponentForSourceCodeTest',
+      reference='DummyComponentForSourceCodeTest',
+      version='erp5',
+      text_content='''# empty line
+component_error()
+''')
+    bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template', )
+    bt.setTemplateSkinIdList([self.id()])
+    bt.setTemplateExtensionIdList(
+      ['extension.erp5.DummyComponentForSourceCodeTest'])
+    message_list = bt.BusinessTemplate_getPythonSourceCodeMessageList()
+    location_and_message_list = [(m.location, m.message) for m in message_list]
+    self.assertIn(
+      (
+        'portal_skins/%s/Base_testSourceCode:2:0' % self.id(),
+        "Undefined variable 'script_error' (undefined-variable)"),
+      location_and_message_list)
+    self.assertIn(
+      (
+        'portal_components/extension.erp5.DummyComponentForSourceCodeTest:2:0',
+        "Undefined variable 'component_error' (undefined-variable)"),
+      location_and_message_list)
+
 
 def test_suite():
   suite = unittest.TestSuite()
