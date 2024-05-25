@@ -178,17 +178,17 @@ class WebDriverWait(_WebDriverWait):
     except:
       logger.exception("unable to find login field, dumping the page")
       try:
-        with open(os.path.join(log_directory, 'page.html'), 'w') as f:
-          f.write(
-            self._driver.execute_script(
-                  "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"))
-      except:
-        logger.exception("error when dumping page")
-      try:
         with open(os.path.join(log_directory, 'page-screenshot.png'), 'wb') as f:
           f.write(self._driver.get_screenshot_as_png())
       except:
         logger.exception("error when taking screenshot")
+      try:
+        with open(os.path.join(log_directory, 'page.html'), 'w') as f:
+          f.write(
+            self._driver.execute_script(
+                  "return document.getElementById('selenium_myiframe').contentDocument.querySelector('html').innerHTML"))
+      except:
+        logger.exception("error when dumping page")
       raise
 
 
