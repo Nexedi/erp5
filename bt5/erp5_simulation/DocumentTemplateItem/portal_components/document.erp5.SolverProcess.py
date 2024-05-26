@@ -231,7 +231,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     movement_list = []
     isMovement = IMovement.providedBy
     for x in delivery_or_movement:
-      if isMovement(x):
+      if isMovement(x):  # pylint:disable=no-value-for-parameter
         movement_list.append(x)
       else:
         movement_list.extend(x.getMovementList())
