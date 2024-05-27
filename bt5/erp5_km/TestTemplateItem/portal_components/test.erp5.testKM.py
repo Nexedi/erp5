@@ -29,7 +29,6 @@
 
 import unittest
 from unittest import expectedFailure
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Base import TempBase
 from erp5.component.test.testDms import makeFileUpload, TestDocumentMixin
 
@@ -43,9 +42,6 @@ class TestKMMixIn(TestDocumentMixin):
   """
     Mix in class for Knowledge Management system.
   """
-
-  manager_username = 'ivan'
-  manager_password = ''
   website_id = 'km_test'
   business_template_list = ['erp5_core_proxy_field_legacy',
                             'erp5_full_text_mroonga_catalog','erp5_base',
@@ -85,12 +81,6 @@ class TestKMMixIn(TestDocumentMixin):
     self.tic()
     return website
 
-  def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('ivan', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-    user = uf.getUserById('ivan').__of__(uf)
-    newSecurityManager(None, user)
 
 class TestKM(TestKMMixIn):
   """

@@ -144,13 +144,6 @@ class InventoryAPITestCase(ERP5TypeTestCase):
 
     self.tic()
 
-  def login(self, quiet=0, run=1):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
-                               'Associate', 'Auditor', 'Author'], [])
-    user = uf.getUserById('alex').__of__(uf)
-    newSecurityManager(None, user)
-
   def createCategories(self):
     """Create the categories for our test. """
     # create categories

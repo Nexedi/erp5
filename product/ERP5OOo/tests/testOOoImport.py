@@ -399,7 +399,7 @@ class TestOOoImport(TestOOoImportMixin):
 
     user_name = 'author'
     user_folder = self.portal.acl_users
-    user_folder._doAddUser(user_name, '', ['Author', 'Member'], [])
+    user_folder._doAddUser(user_name, self.newPassword(), ['Author', 'Member'], [])
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 

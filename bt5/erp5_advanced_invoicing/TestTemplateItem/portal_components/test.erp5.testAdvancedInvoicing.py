@@ -462,10 +462,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     portal = self.getPortal()
     builder = portal.portal_deliveries.advanced_sale_invoice_transaction_builder
     delivery_movement_group_list = builder.getDeliveryMovementGroupList()
-    uf = self.getPortal().acl_users
-    uf._doAddUser('admin', '', ['Manager'], [])
-    user = uf.getUserById('admin').__of__(uf)
-    newSecurityManager(None, user)
+    self.login()
     for movement_group in delivery_movement_group_list:
       if movement_group.getPortalType() == 'Property Movement Group':
         # it contains 'start_date' and 'stop_date' only, so we remove
@@ -476,6 +473,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
           collect_order_group='delivery',
           int_index=len(delivery_movement_group_list)+1
           )
+        uf = portal.acl_users
         user = uf.getUserById('test_user').__of__(uf)
         newSecurityManager(None, user)
 

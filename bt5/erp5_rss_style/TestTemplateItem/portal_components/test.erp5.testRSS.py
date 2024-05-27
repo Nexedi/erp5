@@ -29,7 +29,6 @@ import time
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 
 from xml.dom.minidom import parseString
 
@@ -57,16 +56,7 @@ class TestRSS(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_rss_style')
 
   def afterSetUp(self):
-    self.portal = self.getPortal()
     self.makeDataObjects()
-    #self.login()
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def makeDataObjects(self, quiet=0, run=run_all_test):
     """
@@ -120,7 +110,7 @@ class TestRSS(ERP5TypeTestCase):
     item = channel.getElementsByTagName('item')[0] # the two person, because we have default sorting in form
     self.assertEqual(getSubnodeContent(item, 'title'), 'Two')
     self.assertEqual(getSubnodeContent(item, 'description'), 'Person Two')
-    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'author'), self.manager_username)
     expected_link = '%s/view' %two.absolute_url()
     self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
     self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)
@@ -130,7 +120,7 @@ class TestRSS(ERP5TypeTestCase):
     item = channel.getElementsByTagName('item')[1] # the one person
     self.assertEqual(getSubnodeContent(item, 'title'), 'One')
     self.assertEqual(getSubnodeContent(item, 'description'), 'Person One')
-    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'author'), self.manager_username)
     expected_link = '%s/view' %one.absolute_url()
     self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
     self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)
@@ -192,7 +182,7 @@ class TestRSS(ERP5TypeTestCase):
     item = channel.getElementsByTagName('item')[0] # the two person, because we have default sorting in form
     self.assertEqual(getSubnodeContent(item, 'title'), 'Two')
     self.assertEqual(getSubnodeContent(item, 'description'), 'Person Two')
-    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'author'), self.manager_username)
     expected_link = two.absolute_url()
     self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
     self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)
@@ -202,7 +192,7 @@ class TestRSS(ERP5TypeTestCase):
     item = channel.getElementsByTagName('item')[1] # the one person
     self.assertEqual(getSubnodeContent(item, 'title'), 'One')
     self.assertEqual(getSubnodeContent(item, 'description'), 'Person One')
-    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'author'), self.manager_username)
     expected_link = one.absolute_url()
     self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
     self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)

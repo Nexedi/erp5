@@ -47,7 +47,7 @@ class TestOOoChartMixin(ERP5TypeTestCase, ZopeTestCase.Functional):
   content_type = 'application/vnd.oasis.opendocument.graphics'
 
   def afterSetUp(self):
-    self.auth = 'ERP5TypeTestCase:'
+    self.auth = '%s:%s' % (self.manager_username, self.manager_password)
     portal = self.getPortal()
     container = portal.portal_skins.custom
     if self.form_id not in container.objectIds():

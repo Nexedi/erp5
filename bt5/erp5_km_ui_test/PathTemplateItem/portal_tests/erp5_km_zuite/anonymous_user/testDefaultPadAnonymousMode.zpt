@@ -52,26 +52,35 @@
 	<td></td>
 </tr>
 <tr>
+	<td>storeEval</td>
+	<td>selenium.getCookieByName("manager_username")</td>
+	<td>manager_username</td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>__ac_name</td>
-	<td>ERP5TypeTestCase</td>
+	<td>${manager_username}</td>
+</tr>
+<tr>
+	<td>storeEval</td>
+	<td>selenium.getCookieByName("manager_password")</td>
+	<td>manager_password</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>__ac_password</td>
-	<td></td>
+	<td>${manager_password}</td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>WebSite_login:method</td>
-	<td></td>
+    <td>clickAndWait</td>
+    <td>WebSite_login:method</td>
+    <td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>ERP5TypeTestCase</td>
-	<td></td>
+    <td>verifyTextPresent</td>
+    <td>${manager_username}</td>
+    <td></td>
 </tr>
-
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
 
 </tbody></table>

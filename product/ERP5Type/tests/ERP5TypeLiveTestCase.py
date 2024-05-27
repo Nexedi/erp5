@@ -151,12 +151,6 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def _setup(self):
         '''Change some site properties in order to be ready for live test
         '''
-        # force a random password for ERP5TypeTestCase user by removing
-        # any existing one
-        try:
-          self.portal.acl_users.zodb_users.removeUser('ERP5TypeTestCase')
-        except (AttributeError, KeyError):
-          pass
         # Disabling portal_activities is required in order to avoid
         # conflict with other threads doing tic in the same time
         self.login()

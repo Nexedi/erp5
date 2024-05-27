@@ -159,8 +159,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   def login(self):
     uf = self.portal.acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+    uf._doAddUser('seb', self.newPassword(), ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
@@ -715,7 +714,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation =  self.getOrganisation()
     # Add new user toto
     uf = self.portal.acl_users
-    uf._doAddUser('toto', '', ['Manager'], [])
+    uf._doAddUser('toto', self.newPassword(), ['Manager'], [])
     user = uf.getUserById('toto').__of__(uf)
     newSecurityManager(None, user)
     # Execute something as toto

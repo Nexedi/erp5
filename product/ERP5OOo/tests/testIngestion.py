@@ -37,7 +37,7 @@ from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import bytes2str, convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -2057,7 +2057,7 @@ return result
                                         'disable_cookie_login__': 1,
                                         }), headers={
        'Authorization': 'Basic %s' %
-         base64.b64encode('ERP5TypeTestCase:')
+         bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication

@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import unittest
 import sys
 import traceback
 
@@ -71,7 +70,7 @@ class TestERP5PythonScript(ERP5TypeTestCase):
   def test_manage_addPythonScriptThroughZMI(self):
     resp = self.publish(
       '/{}/portal_skins/manage_addProduct/ERP5/addPythonScriptThroughZMIForm'.format(self.portal.getId()),
-      basic='ERP5TypeTestCase:',
+      basic='%s:%s' % (self.manager_username, self.manager_password),
       handle_errors=False,
     )
     self.assertIn('ERP5 Python Scripts', resp.getBody())

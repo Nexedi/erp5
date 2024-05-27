@@ -90,7 +90,7 @@ class TestERP5(ERP5TypeTestCase):
     other_node = self.getOtherZopeNodeList()[0]
     self.other_node = self.portal.portal_web_services.connect(
       "http://%s%s" % (other_node, self.portal.getPath()),
-      'ERP5TypeTestCase', '', 'xml-rpc')
+      self.manager_username, self.manager_password, 'xml-rpc')
     self.login()
 
   def testZODBCookie(self):

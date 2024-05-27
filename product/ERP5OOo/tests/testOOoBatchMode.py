@@ -33,21 +33,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestOoodResponse(ERP5TypeTestCase):
-
-  manager_username = 'rie'
-  manager_password = 'rie'
-  quiet = 1
-  run_all_test = 1
-
-  def getTitle(self):
-    return "TestOOoBatchMode"
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    user = uf.getUserById(self.manager_username).__of__(uf)
-    newSecurityManager(None, user)
-
   def getBusinessTemplateList(self):
     return ('erp5_base',)
 

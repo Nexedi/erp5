@@ -38,10 +38,6 @@ from erp5.component.test.testDms import makeFileUpload
 class TestERP5Discussion(ERP5TypeTestCase):
   """Test for erp5_discussion business template.
   """
-
-  manager_username = 'manager'
-  manager_password = 'pwd'
-
   def getTitle(self):
     return "Test ERP5 Discussion"
 
@@ -58,17 +54,6 @@ class TestERP5Discussion(ERP5TypeTestCase):
             'erp5_rss_style',
             'erp5_jquery',
             'erp5_discussion', )
-
-  def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    user = uf.getUserById(self.manager_username).__of__(uf)
-    newSecurityManager(None, user)
-
-  def afterSetUp(self):
-    self.login()
-    self.portal_id = self.portal.getId()
-    self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def beforeTearDown(self):
     self.abort()

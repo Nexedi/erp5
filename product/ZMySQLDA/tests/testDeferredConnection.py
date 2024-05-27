@@ -69,15 +69,6 @@ class TestDeferredConnection(ERP5TypeTestCase):
   def getTitle(self):
     return "Deferred Connection"
 
-  def afterSetUp(self):
-    self.login()
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('vincent', '', ['Manager'], [])
-    user = uf.getUserById('vincent').__of__(uf)
-    newSecurityManager(None, user)
-
   def monkeypatchConnection(self, connection):
     """
       Apply monkey patch on db and reset connection state to "unconnected".

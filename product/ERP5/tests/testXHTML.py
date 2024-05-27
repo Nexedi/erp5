@@ -439,18 +439,7 @@ class TestXHTML(TestXHTMLMixin):
     )
 
   def afterSetUp(self):
-    self.portal = self.getPortal()
-
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-
-    self.loginByUserName('seb')
-    addUserToDeveloperRole('seb') # required to create content in portal_components
-    self.enableDefaultSitePreference()
-
-  def enableDefaultSitePreference(self):
-    portal_preferences = getToolByName(self.portal, 'portal_preferences')
-    default_site_preference = portal_preferences.default_site_preference
+    default_site_preference = self.portal.portal_preferences.default_site_preference
     if self.portal.portal_workflow.isTransitionPossible(default_site_preference, 'enable'):
       default_site_preference.enable()
 

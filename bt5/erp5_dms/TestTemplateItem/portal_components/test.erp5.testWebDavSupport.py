@@ -54,9 +54,6 @@ def makeFileUpload(name, as_name=None):
 class TestWebDavSupport(ERP5TypeTestCase):
   """Test for WEBDAV access.
   """
-
-  authentication = 'ERP5TypeTestCase:'
-
   def getTitle(self):
     return "Test WebDav Support"
 
@@ -72,7 +69,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
             )
 
   def afterSetUp(self):
-    pass
+    self.authentication = '%s:%s' % (self.manager_username, self.manager_password)
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))

@@ -26,12 +26,11 @@
 #
 ##############################################################################
 
-import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from AccessControl.SecurityManagement import newSecurityManager
+
 
 TESTED_SKIN_FOLDER_ID = 'custom'
 
@@ -56,12 +55,6 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     # (request-scope cache).
     # Use None as skinname to keep using the default one.
     self.getSkinnableObject().changeSkin(skinname=None)
-
-  def login(self): # pylint:disable=arguments-differ
-    uf = self.portal.acl_users
-    uf._doAddUser('vincent', '', ['Manager'], [])
-    user = uf.getUserById('vincent').__of__(uf)
-    newSecurityManager(None, user)
 
   def getSkinnableObject(self):
     """
@@ -137,7 +130,7 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     script_id = 'Base_getOwnerId'
     ob = self.portal.portal_activities
     orig = getattr(ob, script_id)()
-    self.assertEqual(orig, 'ERP5TypeTestCase')
+    self.assertEqual(orig, ob.getOwner().getId())
     try:
       script = createZODBPythonScript(tested_skin_folder, script_id, '',
           'return not %r' % orig)
@@ -149,6 +142,3 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
       self.assertRaises(AttributeError, getattr(ob, script_id))
     finally:
       self.abort()
-
-if __name__ == '__main__':
-  unittest.main()

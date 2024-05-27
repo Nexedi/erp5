@@ -62,7 +62,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       gender.newContent(id='male')
       self.portal.portal_caches.clearAllCache()
 
-    self.auth = 'ERP5TypeTestCase:'
+    self.auth = '%s:%s' % (self.manager_username, self.manager_password)
     person_module = self.portal.person_module
     if person_module._getOb('pers', None) is None:
       person_module.newContent(id='pers', portal_type='Person')
