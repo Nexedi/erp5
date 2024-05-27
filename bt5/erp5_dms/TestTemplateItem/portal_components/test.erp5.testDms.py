@@ -48,15 +48,16 @@
 import unittest
 import time
 import StringIO
+import base64
 from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl import getSecurityManager
 from erp5.component.document.Document import NotConvertedError
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -226,8 +227,8 @@ class TestDocument(TestDocumentMixin):
     return (width, height)
 
   def getURLSizeList(self, uri, **kw):
-    # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-    url = '%s?%s&__ac=%s' %(uri, make_query(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+    kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
+    url = '%s?%s' % (uri, make_query(kw))
     format_=kw.get('format', 'jpeg')
     infile = urllib.urlopen(url)
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
@@ -1186,7 +1187,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     # login as another user
-    super(TestDocument, self).loginByUserName('user1')
+    self.loginByUserName('user1')
     document_4 = portal.document_module.newContent(
                    portal_type = 'Presentation',
                    description = 'owner different user contributing document',
@@ -1269,7 +1270,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
 
     # only my docs
-    super(TestDocument, self).loginByUserName('user1')
+    self.loginByUserName('user1')
     kw = {'searchabletext_any': 'owner'}
     # should return all documents matching a word no matter if we're owner or not
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
@@ -1705,7 +1706,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     # login as first one
-    super(TestDocument, self).loginByUserName('contributor1')
+    self.loginByUserName('contributor1')
     doc = document_module.newContent(portal_type='File',
                                      title='Test1')
     self.tic()
@@ -1714,7 +1715,7 @@ class TestDocument(TestDocumentMixin):
                        doc.getContributorValueList())
 
     # login as second one
-    super(TestDocument, self).loginByUserName('contributor2')
+    self.loginByUserName('contributor2')
     doc.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
     doc.edit(title='Test2')
     self.tic()
@@ -1971,8 +1972,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                                              response.getHeader('content-type')
           assert response.getStatus() == httplib.OK
 
-    # assume there is no password
-    credential = '%s:' % (getSecurityManager().getUser().getId(),)
+    credential = '%s:%s' % (self.manager_username, self.manager_password)
     tested_list = []
     frame_list = range(pages_number)
     # assume that ZServer is configured with 4 Threads
@@ -2158,10 +2158,15 @@ return 1
       Test extensible content of some DMS types. As this is possible only on URL traversal use publish.
     """
     # Create a root level zope user
-    root_user_folder = self.getPortalObject().aq_parent.acl_users
-    if not root_user_folder.getUserById('zope_user'):
-      root_user_folder._doAddUser('zope_user', '', ['Manager',], [])
-      self.commit()
+    root_user_folder = self.app.acl_users
+    assert not root_user_folder.getUserById('zope_user')
+    zope_user_password = self.newPassword()
+    root_user_folder._doAddUser('zope_user', zope_user_password, ['Manager',], [])
+    def remove_user():
+      root_user_folder._doDelUsers(('zope_user', ))
+      self.tic()
+    self.addCleanup(remove_user)
+
     # Create document with good content
     document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = makeFileUpload('TEST-en-003.odp')
@@ -2169,7 +2174,7 @@ return 1
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
     for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
-      for credential in ['ERP5TypeTestCase:', 'zope_user:']:
+      for credential in ['%s:%s' % (self.manager_username, self.manager_password), 'zope_user:%s' % zope_user_password]:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
         self.assertIn('200 OK', response.getOutput())
@@ -2372,8 +2377,8 @@ return 1
       Return original content on traversal.
     """
     def getURL(uri, **kw):
-      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
+      url = '%s?%s' % (uri, make_query(kw))
       return urllib.urlopen(url)
 
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
@@ -2961,6 +2966,7 @@ return 1
       [sub_document_value]
     )
 
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
@@ -2969,8 +2975,9 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     return "DMS with security"
 
   def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.username, '', ['Auditor', 'Author'], [])
+    # login as a user with only Auditor / Author roles
+    uf = self.portal.acl_users
+    uf._doAddUser(self.username, self.newPassword(), ['Auditor', 'Author'], [])
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
 
@@ -3030,7 +3037,6 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     those properties are taken into account when the user
     views an image
     """
-    super(TestDocumentWithSecurity, self).login('yusei')
     preference_tool = self.portal.portal_preferences
     #get the thumbnail sizes defined by default on default site preference
     default_thumbnail_image_height = \

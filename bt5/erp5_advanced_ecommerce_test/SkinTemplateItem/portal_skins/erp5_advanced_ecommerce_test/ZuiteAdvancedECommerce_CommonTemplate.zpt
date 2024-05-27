@@ -13,10 +13,20 @@
        <td></td>
       </tr>
     </tal:block>
+    <tr>
+      <td>storeEval</td>
+      <td>selenium.getCookieByName("manager_username")</td>
+      <td>manager_username</td>
+    </tr>
+    <tr>
+      <td>storeEval</td>
+      <td>selenium.getCookieByName("manager_password")</td>
+      <td>manager_password</td>
+    </tr>
     <tal:block tal:define="submit_name python:'//input[@value=\'Login\']'">
       <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
-        <tal:block metal:fill-slot="username">super_user</tal:block>
-        <tal:block metal:fill-slot="password">super_user</tal:block>
+        <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+        <tal:block metal:fill-slot="password">${manager_password}</tal:block>
       </tal:block>
     </tal:block>
     <tr>
