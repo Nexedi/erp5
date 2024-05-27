@@ -29,12 +29,12 @@
             return gadget.redirect(
               {"command": "display",
                "options": {
-              "url": options.url,
-              "username": options.username,
-              "password": options.password,
-              "page": "ojsm_opml_add"
-            }
-            });
+                 "url": options.url,
+                 "username": options.username,
+                 "password": options.password,
+                 "page": "ojsm_opml_add"
+               }
+              });
           } else {
             // URL queries from slapos master / panel rapid space:
             // 'portal_type: "Instance Tree" AND title:"my-title"'
@@ -54,6 +54,16 @@
               });
           }
         });
+      } else if (options.url && options.username && options.password) {
+        return gadget.redirect(
+          {"command": "display",
+           "options": {
+             "url": options.url,
+             "username": options.username,
+             "password": options.password,
+             "page": "ojsm_opml_add"
+           }
+          });
       }
       return new RSVP.Queue()
         .push(function () {
