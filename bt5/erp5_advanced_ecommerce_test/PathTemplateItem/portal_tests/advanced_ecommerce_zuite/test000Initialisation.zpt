@@ -51,18 +51,6 @@ this selenium test is executed at first. so other tests are executed by anonymou
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/ERP5Site_createSuperUser</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Done</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>openAndWait</td>
   <td>${base_url}/Base_validateRule</td>
   <td></td>
 </tr>

@@ -4137,7 +4137,7 @@ VALUES
     """
     ret = self.publish(
         self.portal.portal_catalog.getPath(),
-        basic='ERP5TypeTestCase:')
+        basic='%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(httplib.OK, ret.getStatus())
     # check if we did not just publish the result of `str(portal_catalog.__call__())`,
     # but a proper page

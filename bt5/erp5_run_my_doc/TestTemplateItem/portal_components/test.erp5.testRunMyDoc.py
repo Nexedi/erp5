@@ -187,17 +187,17 @@ class TestRunMyDoc(ERP5TypeTestCase):
         </tr>
       </thead>
       <tbody>
-        <span metal:use-macro="container/Zuite_CommonTemplate/macros/init" style="display: none;">init</span>        <tr>
-          <td>store</td>
-          <!-- ERP5TypeTestCase is the default for any UnitTest -->
-          <td>%s</td>
-          <td>base_user</td>
-         </tr>
+        <span metal:use-macro="container/Zuite_CommonTemplate/macros/init" style="display: none;">init</span>
         <tr>
-          <td>store</td>
-          <td>%s</td>
+          <td>storeEval</td>
+          <td>selenium.getCookieByName("manager_username")</td>
+          <td>base_user</td>
+        </tr>
+        <tr>
+          <td>storeEval</td>
+          <td>selenium.getCookieByName("manager_password")</td>
           <td>base_password</td>
-         </tr>
+        </tr>
         <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr>
             <td>selectAndWait</td>
             <td>name=select_module</td>
@@ -225,8 +225,8 @@ class TestRunMyDoc(ERP5TypeTestCase):
     test_page = self.portal.test_page_module.newContent(title="TEST",
                                                         reference='TESTPAGEREFERENCE',
                                                         text_content=test_page_html)
-    self.assertEqual(test_page.TestPage_viewSeleniumTest(), expected_test_html %
-                                 ("ERP5TypeTestCase", ""))
+    self.assertEqual(
+      test_page.TestPage_viewSeleniumTest(), expected_test_html)
 
     self.tic()
     test_page.TestPage_runSeleniumTest()
@@ -237,9 +237,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     zptest = getattr(zuite, "TEST", None)
     self.assertNotEqual(zptest, None)
 
-    expected_html = expected_test_html % ("ERP5TypeTestCase", "")
-
-    self.assertEqual(zptest._text, expected_html.strip())
+    self.assertEqual(zptest._text, expected_test_html.strip())
 
     expected_test_html = u"""<html>
   <head>
@@ -256,20 +254,19 @@ class TestRunMyDoc(ERP5TypeTestCase):
       <tbody>
         <tr>
           <td>store</td>
-          <td>%s</td>
+          <td>http://toto.com</td>
           <td>base_url</td>
         </tr>
         <tr>
           <td>store</td>
-          <!-- ERP5TypeTestCase is the default for any UnitTest -->
-          <td>%s</td>
+          <td>titi</td>
           <td>base_user</td>
-         </tr>
+        </tr>
         <tr>
           <td>store</td>
-          <td>%s</td>
+          <td>toto</td>
           <td>base_password</td>
-         </tr>
+        </tr>
         <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr>
             <td>selectAndWait</td>
             <td>name=select_module</td>
@@ -297,11 +294,11 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     # Mimic usage of TestPage_viewSeleniumTest?url=...
     self.portal.REQUEST['url'] = "http://toto.com"
-    self.portal.REQUEST['user'] = "toto"
+    self.portal.REQUEST['user'] = "titi"
     self.portal.REQUEST['password'] = "toto"
 
     self.assertEqual(test_page.TestPage_viewSeleniumTest(REQUEST=self.portal.REQUEST),
-                      expected_test_html % ("http://toto.com", "toto", "toto"))
+                      expected_test_html)
     self.tic()
     test_page.TestPage_runSeleniumTest()
 
@@ -311,6 +308,4 @@ class TestRunMyDoc(ERP5TypeTestCase):
     zptest = getattr(zuite, "TEST", None)
     self.assertNotEqual(zptest, None)
 
-    expected_html = expected_test_html % ("http://toto.com", "toto", "toto")
-
-    self.assertEqual(zptest._text, expected_html.strip())
+    self.assertEqual(zptest._text, expected_test_html.strip())

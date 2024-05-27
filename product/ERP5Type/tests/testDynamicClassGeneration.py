@@ -1564,7 +1564,7 @@ class TestZodbModuleComponent(SecurityTestCase):
     uf = self.portal.acl_users
     if not uf.getUserById('ERP5TypeTestCase_NonDeveloper'):
       uf._doAddUser('ERP5TypeTestCase_NonDeveloper',
-                    '', ['Manager', 'Member', 'Assignee',
+                    self.newPassword(), ['Manager', 'Member', 'Assignee',
                          'Assignor', 'Author', 'Auditor', 'Associate'], [])
 
     reference = self._generateReference('TestValidateInvalidateComponent')
@@ -2694,8 +2694,10 @@ def foobar(self, a, b="portal_type"):
 
     external_method.manage_setGuard({'guard_roles': 'Member'})
     self.assertEqual(self.portal.TestPythonScript(a='portal_ids'), 'Id Tool')
-    self.assertEqual(self.publish(base + '/portal_types/TestExternalMethod?'
-      'a=Types Tool&b=type_class', 'ERP5TypeTestCase:').getBody(), 'TypesTool')
+    self.assertEqual(self.publish(
+      base + '/portal_types/TestExternalMethod?a=Types Tool&b=type_class',
+      '%s:%s' % (self.manager_username, self.manager_password)
+    ).getBody(), b'TypesTool')
 
     sm = getSecurityManager()
     try:
@@ -3125,7 +3127,7 @@ InitializeClass(%(class_name)s)
     self.tic()
     response = self.publish(
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
-      'ERP5TypeTestCase:')
+      '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
     self.assertNotIn('ERP5 Test Hook After Load Tool', response.getBody())
 
@@ -3137,7 +3139,7 @@ InitializeClass(%(class_name)s)
     self.assertEqual(component.getTextContentWarningMessageList(), [])
     response = self.publish(
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
-      'ERP5TypeTestCase:')
+      '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
     self.assertIn('ERP5 Test Hook After Load Tool', response.getBody())
 
