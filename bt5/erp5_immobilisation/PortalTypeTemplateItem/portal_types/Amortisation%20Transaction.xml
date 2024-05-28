@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Base Type" module="erp5.portal_type"/>
+      <global name="Delivery Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,6 +67,10 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>AccountingTransaction</string> </value>
         </item>
       </dictionary>
     </pickle>
