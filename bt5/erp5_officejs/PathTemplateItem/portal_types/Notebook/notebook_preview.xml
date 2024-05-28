@@ -24,7 +24,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_jio_view</string>
+                <string>action_type/object_jio_js_script</string>
               </tuple>
             </value>
         </item>
