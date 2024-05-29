@@ -105,6 +105,7 @@
                         <string>my_url</string>
                         <string>my_username</string>
                         <string>my_password</string>
+                        <string>my_slapos_master_url</string>
                         <string>my_active</string>
                         <string>my_verify</string>
                         <string>my_translated_state</string>
@@ -122,7 +123,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>opml_viewForMonitoring</string> </value>
+            <value> <string>Opml_viewForMonitoring</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
