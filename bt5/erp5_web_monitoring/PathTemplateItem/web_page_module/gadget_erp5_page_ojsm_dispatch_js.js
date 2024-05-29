@@ -26,21 +26,25 @@
           })
         .push(function (result) {
           if (result === undefined || result.data.total_rows === 0) {
+            //TODO set redirect options setting to ojs_controller+extended_search
             return gadget.redirect(
               {"command": "display",
                "options": {
                  "url": options.url,
                  "username": options.username,
                  "password": options.password,
+                 "slapos_master_url": options.slapos_master_url || "not-provided",
                  "page": "ojsm_opml_add"
                }
               });
           } else {
             // URL queries from slapos master / panel rapid space:
-            // 'portal_type: "Instance Tree" AND title:"my-title"'
+            // 'portal_type: "Instance Tree" AND title:"my-title"
+            //           AND slapos_master_url:"url"'
             // or
             // 'portal_type: "Software Instance" AND title:"my-title"
-            //           AND specialise_title:"my-parent-title"'
+            //           AND specialise_title:"my-parent-title"
+            //           AND slapos_master_url:"url"'
             query_parts_list = options.query.split('AND');
             portal_type = query_parts_list[0].replace('portal_type:', '').replaceAll('"', '').trim();
             extended_search = options.query.replace(query_parts_list[0] + 'AND ', '').trim();
@@ -61,6 +65,7 @@
              "url": options.url,
              "username": options.username,
              "password": options.password,
+             "slapos_master_url": options.slapos_master_url || "not-provided",
              "page": "ojsm_opml_add"
            }
           });
