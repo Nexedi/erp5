@@ -72,7 +72,6 @@
         serie.drawPoints = true;
         serie.strokeWidth = 0;
       }
-      console.log("serie", serie);
       graph_data_and_parameter.series[trace.title || ''] = serie;
     }
     for (i = 0; i < data.length; i = i + 1) {
@@ -195,7 +194,11 @@
           graph_data_and_parameter;
 
       container = gadget.element.querySelector(".graph-content");
-      graph_data_and_parameter = formatGraphDict(modification_dict.value);
+      if (modification_dict.value.new_format) {
+        graph_data_and_parameter = formatGraphDict(modification_dict.value);
+      } else {
+        graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(modification_dict.value);
+      }
       gadget.property_dict.graph = new Dygraph(container,
                                                graph_data_and_parameter.dygraph_data,
                                                graph_data_and_parameter.dygraph_parameter_dict);
