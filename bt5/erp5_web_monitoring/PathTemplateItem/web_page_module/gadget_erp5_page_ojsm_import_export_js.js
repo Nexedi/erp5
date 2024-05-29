@@ -19,7 +19,8 @@
 
   function getMonitorSetting(gadget) {
     return gadget.jio_allDocs({
-      select_list: ["basic_login", "url", "title", "active", "state"],
+      select_list: ["basic_login", "url", "title", "active", "state",
+                    "slapos_master_url"],
       query: '(portal_type:"opml")'
     })
       .push(function (opml_result) {
@@ -394,7 +395,8 @@
                                   tmp_parameter.password),
                 active: tmp_parameter.opml_url !== undefined &&
                   instance_tree_list[uid_dict[tmp_uid]].active,
-                state: instance_tree_list[uid_dict[tmp_uid]].state
+                state: instance_tree_list[uid_dict[tmp_uid]].state,
+                slapos_master_url: gadget.state.slapos_master_list[1]
               });
             }
           }
@@ -412,12 +414,15 @@
       config: "",
       is_export: false,
       options: "",
-      erp5_gadget: ""
+      erp5_gadget: "",
+      //erp5_gadget_list: "",
+      slapos_master_list: ""
     })
     .ready(function (g) {
       return g.getDeclaredGadget('erp5_gadget')
         .push(function (erp5_gadget) {
-          return g.changeState({erp5_gadget: erp5_gadget});
+          return g.changeState({erp5_gadget: erp5_gadget,
+                                slapos_master_list: []});
         });
     })
     /////////////////////////////////////////////////////////////////
@@ -453,12 +458,17 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this,
+      var gadget = this, i,
         is_exporter = options.exporter === "true",
         message_element = gadget.element.querySelector('.ui-message-alert');
       message_element.textContent = "";
-      if (options.url && !options.url.endsWith('/')) {
-        options.url += '/';
+      if (options.url_list) {
+        options.url_list = options.url_list.split(",");
+        for (i = 0; i < options.url_list.length; i += 1) {
+          if (!options.url_list[i].endsWith('/')) {
+            options.url_list[i] += '/';
+          }
+        }
       }
       if (is_exporter) {
         return new RSVP.Queue()
@@ -482,7 +492,7 @@
         config: "",
         message: message_element,
         sync: options.auto_sync,
-        storage_url: options.url
+        storage_url_list: options.url_list
       });
     })
     .declareJob('deferChangeState', function deferStateChange(state) {
@@ -586,13 +596,10 @@
             });
         })
         .push(function () {
-          var has_failed = false;
-          if (gadget.state.sync === "erp5" && gadget.state.storage_url) {
-            // start import from erp5 now
-            return gadget.notifySubmitting()
-              .push(function () {
-                return gadget.setSetting("hateoas_url", gadget.state.storage_url);
-              })
+          var has_failed = false, push_queue = [],
+            i, full_opml_list = [];
+          function pushStorage(storage_url) {
+              return gadget.setSetting("hateoas_url", gadget.state.storage_url_list[i])//;
               .push(function () {
                 return gadget.state.erp5_gadget.createJio();
               })
@@ -602,7 +609,7 @@
               .push(function (select_limit) {
                 return getInstanceOPMLListFromMaster(gadget, select_limit);
               })
-              .push(undefined, function () {
+              .push(undefined, function (error) {
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
@@ -611,13 +618,24 @@
                   });
                 has_failed = true;
                 return [];
+              });
+          }
+          if (gadget.state.sync === "erp5" && gadget.state.storage_url_list) {
+            // start import from erp5 now
+            return gadget.notifySubmitting()
+              .push(function () {
+                for (i = 0; i < gadget.state.storage_url_list.length; i += 1) {
+                  push_queue.push(pushStorage(gadget.state.storage_url_list[i]));
+                }
+                return RSVP.all(push_queue);
               })
-              .push(function (opml_list) {
+              .push(function (all_results) {
+                full_opml_list = all_results.flat(1);
                 var i,
-                  push_queue = new RSVP.Queue();
+                  push_queue_2 = new RSVP.Queue();
 
                 function pushOPML(opml_dict) {
-                  push_queue
+                  push_queue_2
                     .push(function () {
                       return gadget.jio_put(opml_dict.url, opml_dict);
                     })
@@ -626,12 +644,12 @@
                     });
                 }
 
-                for (i = 0; i < opml_list.length; i += 1) {
-                  pushOPML(opml_list[i]);
+                for (i = 0; i < full_opml_list.length; i += 1) {
+                  pushOPML(full_opml_list[i]);
                 }
-                return push_queue;
+                return push_queue_2;
               })
-              .push(undefined, function () {
+              .push(undefined, function (error) {
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
