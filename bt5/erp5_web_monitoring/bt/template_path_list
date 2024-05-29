@@ -1,13 +1,13 @@
 image_module/gadget_officejs_appstore_rapid_spage
 portal_types/Instance Tree Module/monitoring_view
 portal_types/Instance Tree/monitoring_view
+portal_types/Opml/monitoring_view
 portal_types/Promise Module/monitoring_view
 portal_types/Promise/monitoring_view
 portal_types/Software Instance Module/monitoring_view
 portal_types/Software Instance/monitoring_processes_view
 portal_types/Software Instance/monitoring_resources_view
 portal_types/Software Instance/monitoring_view
-portal_types/opml/monitoring_view
 web_page_module/gadget_erp5_field_status_*
 web_page_module/gadget_erp5_page_ojsm_*
 web_page_module/gadget_erp5_page_settings_configurator_*
