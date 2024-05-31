@@ -5,6 +5,7 @@
            URLSearchParams) {
   "use strict";
 
+  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
     notify_msg_template = Handlebars.compile(
@@ -21,7 +22,7 @@
     return gadget.jio_allDocs({
       select_list: ["basic_login", "url", "title", "active", "state",
                     "slapos_master_url"],
-      query: '(portal_type:"opml")'
+      query: '(portal_type:"' + OPML_PORTAL_TYPE + '")'
     })
       .push(function (opml_result) {
         var i,
@@ -195,7 +196,7 @@
                     title: configuration_dict.opml_description[i].title,
                     url: configuration_dict.opml_description[i].href,
                     active: configuration_dict.opml_description[i].active,
-                    portal_type: "opml",
+                    portal_type: OPML_PORTAL_TYPE,
                     has_monitor: configuration_dict.opml_description[i]
                       .href.startsWith("https://"),
                     state: configuration_dict.opml_description[i].state || "Started"
@@ -221,7 +222,7 @@
               } else {
                 for (i = 0; i < configuration_dict.opml_description_list.length; i += 1) {
                   item = configuration_dict.opml_description_list[i];
-                  item.portal_type = "opml";
+                  item.portal_type = OPML_PORTAL_TYPE;
                   cred_list = atob(item.basic_login).split(':');
                   item.username = cred_list[0];
                   item.password = cred_list[1];
@@ -327,7 +328,7 @@
     }
   }
 
-  function getInstanceOPMLListFromMaster(gadget, limit) {
+  function getInstanceOPMLListFromMaster(gadget, limit, storage_url) {
     var instance_tree_list = [],
       opml_list = [],
       uid_dict = {};
@@ -382,7 +383,7 @@
             }
             if (instance_tree_list[uid_dict[tmp_uid]]) {
               opml_list.push({
-                portal_type: "opml",
+                portal_type: OPML_PORTAL_TYPE,
                 title: instance_tree_list[uid_dict[tmp_uid]]
                   .title,
                 relative_url: instance_tree_list[uid_dict[tmp_uid]]
@@ -396,7 +397,7 @@
                 active: tmp_parameter.opml_url !== undefined &&
                   instance_tree_list[uid_dict[tmp_uid]].active,
                 state: instance_tree_list[uid_dict[tmp_uid]].state,
-                slapos_master_url: gadget.state.slapos_master_list[1]
+                slapos_master_url: storage_url
               });
             }
           }
@@ -414,15 +415,12 @@
       config: "",
       is_export: false,
       options: "",
-      erp5_gadget: "",
-      //erp5_gadget_list: "",
-      slapos_master_list: ""
+      erp5_gadget: ""
     })
     .ready(function (g) {
       return g.getDeclaredGadget('erp5_gadget')
         .push(function (erp5_gadget) {
-          return g.changeState({erp5_gadget: erp5_gadget,
-                                slapos_master_list: []});
+          return g.changeState({erp5_gadget: erp5_gadget});
         });
     })
     /////////////////////////////////////////////////////////////////
@@ -599,7 +597,7 @@
           var has_failed = false, push_queue = [],
             i, full_opml_list = [];
           function pushStorage(storage_url) {
-              return gadget.setSetting("hateoas_url", gadget.state.storage_url_list[i])//;
+              return gadget.setSetting("hateoas_url", gadget.state.storage_url_list[i])
               .push(function () {
                 return gadget.state.erp5_gadget.createJio();
               })
@@ -607,7 +605,7 @@
                 return gadget.getSetting('opml_import_limit', 300);
               })
               .push(function (select_limit) {
-                return getInstanceOPMLListFromMaster(gadget, select_limit);
+                return getInstanceOPMLListFromMaster(gadget, select_limit, storage_url);
               })
               .push(undefined, function (error) {
                 gadget.state.message
