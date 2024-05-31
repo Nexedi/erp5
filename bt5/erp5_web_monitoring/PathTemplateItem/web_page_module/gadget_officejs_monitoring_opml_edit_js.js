@@ -148,7 +148,8 @@
         password: doc.password,
         active: (doc.active === "on") ? true : false,
         has_monitor: true,
-        state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
+        state: doc.state || (doc.active === "on" ? "Started" : "Stopped"),
+        slapos_master_url: doc.slapos_master_url
       },
       update_password_list = [],
       allow_force = false,
