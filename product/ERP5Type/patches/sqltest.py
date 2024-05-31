@@ -174,12 +174,12 @@ else: # For easy diff with original (ZSQLMethods 3.14)
             else:
                 if not isinstance(v, StringTypes):
                     v = str(v)
-                if isinstance(v, six.binary_type):
+                if six.PY3 and isinstance(v, six.binary_type):
                     v = v.decode('utf-8')
                 # The call to sql_quote__ can return something that is not
                 # a native string anymore!
                 v = md.getitem('sql_quote__', 0)(v)
-                if isinstance(v, six.binary_type):
+                if six.PY3 and isinstance(v, six.binary_type):
                     v = v.decode('utf-8')
                 # if v.find("\'") >= 0: v="''".(v.split("\'"))
                 # v="'%s'" % v
