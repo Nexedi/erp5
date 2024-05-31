@@ -147,7 +147,7 @@
               </tal:block>
               <tal:block tal:condition="python: field is not None">
                 <tal:block tal:condition="python:field.meta_type=='DateTimeField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'DateTimeField')">
-                  <tal:block tal:condition="python:field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order')">
+                  <tal:block tal:condition="python:field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order') or 'ymd'">
                     <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
                                     table:style-name string:${style_prefix}date_${input_order};"
                                     table:style-name="date"
@@ -155,7 +155,7 @@
                       <text:p tal:content="python: field.render_pdf(value)"/>
                     </table:table-cell>
                   </tal:block>
-                  <tal:block tal:condition="python:not field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order')">
+                  <tal:block tal:condition="python:not field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order') or 'ymd'">
                     <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
                                     table:style-name string:${style_prefix}date_with_time_${input_order};"
                                     table:style-name="date_with_time"

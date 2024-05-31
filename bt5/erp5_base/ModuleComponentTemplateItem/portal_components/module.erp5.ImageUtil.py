@@ -65,6 +65,10 @@ def transformUrlToDataURI(content):
     if url_value.startswith("http"):
       image.set(xlink_href, getDataURI(image.get(xlink_href)))
 
-  return """<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n""" + \
-         etree.tostring(root)
+  return etree.tostring(
+    root,
+    encoding="utf-8",
+    xml_declaration=True,
+    standalone="no",
+  )
 
