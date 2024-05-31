@@ -113,9 +113,9 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     """
     return the permission/roles dict
     """
-    if self.state_permission_role_list_dict is None:
-      return {}
-    return dict(self.state_permission_role_list_dict.items())
+    state_permission_role_list_dict_get = (self.state_permission_role_list_dict or {}).get
+    return {k: state_permission_role_list_dict_get(k, ())
+            for k in self.getWorkflowManagedPermissionList()}
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setPermission')
