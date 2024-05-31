@@ -173,50 +173,13 @@ def patch_linecache():
       if x:
         return x.groups()
 
-    if filename.startswith('<portal_components/'):
-      # use our special key for lazycache
-      filename = 'erp5-linecache://' + filename
     return linecache_getlines(filename, module_globals)
 
   linecache.getlines = getlines
 
-  if sys.version_info[:3] >= (3, ):
-    linecache_lazycache = linecache.lazycache
-    def lazycache(filename, module_globals):
-      if filename:
-        # XXX linecache ignores files named like <this>, but this is
-        # what we used for portal_components filename (and it's not so
-        # good because it's not easy to copy paste, so we might want to
-        # reconsider), for now, we add an arbitrary prefix for cache.
-        if (filename.startswith('<') and filename.endswith('>')):
-          filename = 'erp5-linecache://' + filename
 
-        # For python scripts, insert a fake PEP302 loader so that
-        # linecache can find the source code
-        if basename(filename) in (
-            'Script (Python)',
-            'ERP5 Python Script',
-            'ERP5 Workflow Script',
-          ) and module_globals is not None:
-
-          script = module_globals['script']
-          body = ''
-          if script._p_jar is None or script._p_jar.opened:
-            body = script.body()
-          class PythonScriptLoader:
-            def __init__(self, filename, body):
-              self.filename = filename
-              self.body = body
-            def get_source(self, name, *args, **kw):
-              return self.body
-
-          assert '__loader___' not in module_globals
-          module_globals['__loader__'] = PythonScriptLoader(filename, body)
-
-      return linecache_lazycache(filename, module_globals)
-    linecache.lazycache = lazycache
-
-patch_linecache()
+if sys.version_info[:3] < (3, ):
+  patch_linecache()
 
 import decimal as _decimal
 
