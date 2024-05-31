@@ -1254,7 +1254,7 @@ def renderFormDefinition(form, response_dict):
       for field in form.get_fields_in_group(group['goid'], include_disabled=1):
         field_list.append((field.id, {'meta_type': field.meta_type}))
 
-      group_list.append((group['gid'], field_list))
+      group_list.append((group['gid'], field_list, group['gtitle']))
 
   # some forms might not have any fields so we put empty bottom group
   if not group_list:
