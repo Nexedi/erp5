@@ -3,6 +3,7 @@
 (function (window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars, jIO) {
   "use strict";
 
+  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
     notify_msg_template = Handlebars.compile(
@@ -139,21 +140,24 @@
 
   function saveOPML(gadget, doc, verify_password) {
     var opml_dict = {
-        type: "opml",
+        type: OPML_PORTAL_TYPE,
         title: doc.title,
-        portal_type: "opml",
+        portal_type: OPML_PORTAL_TYPE,
         url: doc.url,
         basic_login: btoa(doc.username + ':' + doc.password),
         username: doc.username,
         password: doc.password,
         active: (doc.active === "on") ? true : false,
         has_monitor: true,
-        state: doc.state || (doc.active === "on" ? "Started" : "Stopped"),
-        slapos_master_url: doc.slapos_master_url
+        state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
       },
       update_password_list = [],
       allow_force = false,
       return_dict;
+    if (doc.slapos_master_url && doc.slapos_master_url !== undefined &&
+      doc.slapos_master_url !== "") {
+      opml_dict.slapos_master_url = doc.slapos_master_url;
+    }
     gadget.state.message.textContent = "";
 
     function validateOPML() {

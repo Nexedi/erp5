@@ -3,6 +3,7 @@
 (function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
+  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
 
@@ -101,7 +102,7 @@
           .push(function () {
             element.setAttribute("disabled", "disabled");
             return gadget.jio_allDocs({
-              query: 'portal_type: "opml"',
+              query: 'portal_type: "' + OPML_PORTAL_TYPE + '"',
               select_list: ['title']
             })
               .push(function (result) {
