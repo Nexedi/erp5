@@ -89,7 +89,7 @@
                 title: page_options.opml_title,
                 view_title: "Related Instance Tree"
               }}),
-              gadget.getUrlFor({command: 'display', options: {
+              gadget.getUrlFor({command: 'change', options: {
                 page: 'ojsm_opml_delete',
                 jio_key: page_options.jio_key
               }})
