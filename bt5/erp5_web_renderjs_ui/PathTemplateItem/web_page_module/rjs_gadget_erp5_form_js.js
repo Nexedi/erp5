@@ -84,9 +84,12 @@
   function addGroup(group, rendered_document, form_definition, form_gadget, modification_dict) {
     var group_name = group[0],
       field_list = group[1],
+      group_title = group[2],
       // XXX: > Romain: fieldset will be needed later for menus
       fieldset_element = domsugar("div", {"class": group_name});
-
+    if (group_title) {
+      fieldset_element.appendChild(domsugar('label', {"class": "group_title"}, group_title));
+    }
     return new RSVP.Queue()
       .push(function () {
         var first_listbox_found = false;
