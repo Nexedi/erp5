@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+from Products.ERP5Type.Utils import str2unicode
+
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -360,8 +362,8 @@ class Message(BaseMessage):
           method = getattr(obj, self.method_id)
           transaction.get().note(
             u'CMFActivity {}/{}'.format(
-              '/'.join([x.decode('utf-8') for x in self.object_path]),
-              self.method_id.decode('utf-8'),
+              '/'.join([str2unicode(x) for x in self.object_path]),
+              str2unicode(self.method_id),
             )
           )
           # Store site info
