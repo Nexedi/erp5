@@ -19,8 +19,7 @@ Breaks strict compatibility:
 
 It is possible to specify a group id and a group title by naming a group following the
   "group id (Group Title)" pattern. In this case the group id will be used as fieldset css
-  class and as tag id. The group title will be used as a legend for the fieldset. If no group
-  title is found, we use group id as title.
+  class and as tag id. The group title will be used as a legend for the fieldset.
 -->
   </tal:block>
 
