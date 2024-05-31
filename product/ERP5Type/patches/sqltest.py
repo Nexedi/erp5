@@ -133,6 +133,7 @@ else: # For easy diff with original (ZSQLMethods 3.14)
             v = [v]
 
         vs = []
+        encoding = self.encoding or 'UTF-8'
         for v in v:
             if not v and isinstance(v, StringTypes) and t != 'string':
                 continue
@@ -140,7 +141,7 @@ else: # For easy diff with original (ZSQLMethods 3.14)
                 try:
                     if isinstance(v, StringTypes):
                         if six.PY3 and isinstance(v, bytes):
-                            v = v.decode(self.encoding or 'UTF-8')
+                            v = v.decode(encoding)
                         if v[-1:] == 'L':
                             v = v[:-1]
                         int(v)
@@ -154,7 +155,7 @@ else: # For easy diff with original (ZSQLMethods 3.14)
                     continue
                 try:
                     if six.PY3 and isinstance(v, bytes):
-                        v = v.decode(self.encoding or 'UTF-8')
+                        v = v.decode(encoding)
                     if isinstance(v, StringTypes):
                         float(v)
                     else:
@@ -174,13 +175,13 @@ else: # For easy diff with original (ZSQLMethods 3.14)
             else:
                 if not isinstance(v, StringTypes):
                     v = str(v)
-                if isinstance(v, six.binary_type):
-                    v = v.decode('utf-8')
+                if six.PY3 and isinstance(v, six.binary_type):
+                    v = v.decode(encoding)
                 # The call to sql_quote__ can return something that is not
                 # a native string anymore!
                 v = md.getitem('sql_quote__', 0)(v)
-                if isinstance(v, six.binary_type):
-                    v = v.decode('utf-8')
+                if six.PY3 and isinstance(v, six.binary_type):
+                    v = v.decode(encoding)
                 # if v.find("\'") >= 0: v="''".(v.split("\'"))
                 # v="'%s'" % v
             vs.append(v)
