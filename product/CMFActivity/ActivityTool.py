@@ -359,7 +359,10 @@ class Message(BaseMessage):
           #      that method !
           method = getattr(obj, self.method_id)
           transaction.get().note(
-            u'CMFActivity {}/{}'.format('/'.join(self.object_path), self.method_id)
+            u'CMFActivity {}/{}'.format(
+              '/'.join([x.decode('utf-8') for x in self.object_path]),
+              self.method_id.decode('utf-8'),
+            )
           )
           # Store site info
           setSite(activity_tool.getParentValue())
