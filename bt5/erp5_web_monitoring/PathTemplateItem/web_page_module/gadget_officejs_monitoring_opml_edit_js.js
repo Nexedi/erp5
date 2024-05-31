@@ -151,7 +151,8 @@
         state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
       },
       update_password_list = [],
-      allow_force = false;
+      allow_force = false,
+      return_dict;
     gadget.state.message.textContent = "";
 
     function validateOPML() {
@@ -328,6 +329,13 @@
             });
         }
         return {status: status, can_force: allow_force};
+      })
+      .push(function (dict) {
+        return_dict = dict;
+        return gadget.setSetting("latest_import_date", new Date().getTime());
+      })
+      .push(function (dict) {
+        return return_dict;
       });
   }
 
@@ -359,6 +367,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_put", "jio_put")
 
