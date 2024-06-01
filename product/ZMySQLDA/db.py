@@ -482,9 +482,10 @@ class DB(TM):
         return items, result
 
     def string_literal(self, s):
-        # This method accepts bytes or str with only ASCII characters
-        # and return bytes.
-        return self.db.string_literal(s)
+        try:
+            return self.db.string_literal(s)
+        except UnicodeEncodeError:
+            return self.db.string_literal(s.encode('utf-8'))
 
     def _begin(self, *ignored):
         """Begin a transaction (when TM is enabled)."""
