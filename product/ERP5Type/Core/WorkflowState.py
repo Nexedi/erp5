@@ -95,6 +95,17 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     return [parent._getOb(destination_id) for destination_id in
             self.getDestinationIdList()]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAcquirePermissionList')
+  def getAcquirePermissionList(self):
+    """
+    acquire all permissions if not yet configured, like DCWorkflow
+    """
+    if not self.state_permission_role_list_dict:
+      return self.getWorkflowManagedPermissionList()
+    else:
+      return self._baseGetAcquirePermissionList()
+
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setStatePermissionRoleListDict')
   def setStatePermissionRoleListDict(self, permission_roles):
