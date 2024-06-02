@@ -12,25 +12,6 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
 <tr>
-  <td>openAndWait</td>
-  <td>${base_url}/ERP5Site_createPersonWhoHasPermissionToAccess</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>done</td>
-  <td></td>
-</tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
-
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-
-<tr>
   <td>open</td>
   <td>${base_url}/web_site_module/renderjs_runner/#/portal_preferences/default_system_preference</td>
   <td></td>
@@ -69,9 +50,14 @@
 </tr>
 
 <tr>
+  <td>storeEval</td>
+  <td>selenium.getCookieByName("manager_username")</td>
+  <td>manager_username</td>
+</tr>
+<tr>
   <td>type</td>
   <td>//textarea[@name='field_my_preferred_html_style_allowed_user_id_list']</td>
-  <td>user_logout_test</td>
+  <td>${manager_username}</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
@@ -103,9 +89,19 @@
   login_form_url python: '${base_url}';
   submit_name python: '//input[@value=\'Login\']';
 ">
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_username")</td>
+    <td>manager_username</td>
+  </tr>
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_password")</td>
+    <td>manager_password</td>
+  </tr>
   <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
-    <tal:block metal:fill-slot="username">user_logout_test</tal:block>
-    <tal:block metal:fill-slot="password">user_logout_test</tal:block>
+    <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+    <tal:block metal:fill-slot="password">${manager_password}</tal:block>
   </tal:block>
 </tal:block>
 
@@ -184,8 +180,8 @@
   submit_name python: '//input[@value=\'Login\']';
 ">
   <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
-    <tal:block metal:fill-slot="username">user_logout_test</tal:block>
-    <tal:block metal:fill-slot="password">user_logout_test</tal:block>
+    <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+    <tal:block metal:fill-slot="password">${manager_password}</tal:block>
   </tal:block>
 </tal:block>
 

@@ -23,17 +23,6 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>open</td>
-  <td>${base_url}/ERP5Site_createPersonWhoHasPermissionToAccess</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>done</td>
-  <td></td>
-</tr>
-
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <tr>
@@ -88,9 +77,19 @@
   wait python: False;
   submit_name python: '//input[@value=\'Login\']';
 ">
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_username")</td>
+    <td>manager_username</td>
+  </tr>
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_password")</td>
+    <td>manager_password</td>
+  </tr>
   <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
-    <tal:block metal:fill-slot="username">user_logout_test</tal:block>
-    <tal:block metal:fill-slot="password">user_logout_test</tal:block>
+    <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+    <tal:block metal:fill-slot="password">${manager_password}</tal:block>
   </tal:block>
 </tal:block>
 
@@ -181,8 +180,8 @@
   wait python: False;
   submit_name python: '//input[@value=\'Login\']';
 "><tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
-  <tal:block metal:fill-slot="username">user_logout_test</tal:block>
-  <tal:block metal:fill-slot="password">user_logout_test</tal:block>
+  <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+  <tal:block metal:fill-slot="password">${manager_password}</tal:block>
 </tal:block></tal:block>
 
 <tr>
