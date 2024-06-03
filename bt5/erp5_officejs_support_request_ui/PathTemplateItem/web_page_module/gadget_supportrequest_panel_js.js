@@ -211,7 +211,7 @@
                 domsugar('a', {
                   href: result_dict.url_list[i],
                   'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
-                  accesskey: icon_and_key_list[2 * i],
+                  accesskey: icon_and_key_list[2 * i + 1],
                   text: result_dict.translation_list[i]
                 })
               ]));
