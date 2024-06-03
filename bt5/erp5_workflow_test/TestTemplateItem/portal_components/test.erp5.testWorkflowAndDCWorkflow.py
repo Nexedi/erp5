@@ -294,16 +294,16 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     workflow.updateRoleMappingsFor(text_document)
     self.assertEqual(getattr(text_document, permission_key), ['Assignor', 'Auditor'])
 
-    # remove permission from the workflow, it should be removed from state
-    workflow.setWorkflowManagedPermissionList([])
-    self.assertEqual(workflow.state_current.getAcquirePermissionList(), [])
-
     # check the permissions are saved sorted in a canonical form: sorted and as
     # tuple
     workflow.state_current.setPermission(permission, ['Auditor', 'Assignor'])
     self.assertEqual(
       workflow.state_current.getStatePermissionRoleListDict().get(permission),
       ('Assignor', 'Auditor'))
+
+    # remove permission from the workflow, it should be removed from state
+    workflow.setWorkflowManagedPermissionList([])
+    self.assertEqual(workflow.state_current.getAcquirePermissionList(), [])
 
   def test_14_multiple_workflow_different_permission_roles(self):
     workflow1 = self.createERP5Workflow('edit_workflow', 'temporary_workflow1')
@@ -395,9 +395,8 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     # create document
     text_document1 = self.getTestObject()
     text_document1_permission = getattr(text_document1, permission_key, None)
-
- #    self.assertEqual(getattr(text_document1, permission_key),
- #                     ['Assignee', 'Assignor', 'Auditor', 'Author'])
+    self.assertEqual(text_document1_permission,
+                     ('Assignor', 'Assignee', 'Auditor', 'Author'))
 
     # add the second workflow
     text_portal_type.setTypeWorkflowList(['temporary_dc_workflow1', 'temporary_dc_workflow2'])
@@ -405,9 +404,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     # create document
     text_document2 = self.getTestObject()
     text_document2_permission = getattr(text_document2, permission_key, None)
-
- #    self.assertEqual(getattr(text_document2, permission_key),
- #                     ['Assignee', 'Assignor', 'Auditor', 'Author'])
+    self.assertEqual(text_document2_permission, None)
 
     # migrate workflows
     self.portal.portal_workflow.WorkflowTool_convertWorkflow(
@@ -416,15 +413,21 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     )
     self.tic()
 
-    # create another document
-    text_document3 = self.getTestObject()
-    text_document3_permission = getattr(text_document3, permission_key, None)
+    # with only one workflow
+    text_portal_type.setTypeWorkflowList(['temporary_dc_workflow1'])
 
-    print('text_document1_permission: %r' % (text_document1_permission, ))
-    print('text_document2_permission: %r' % (text_document2_permission, ))
-    print('text_document3_permission: %r' % (text_document3_permission, ))
-    self.assertEqual(tuple(getattr(text_document3, permission_key)),
-                     ('Assignee', 'Assignor', 'Auditor', 'Author'))
+    # create document
+    text_document1a = self.getTestObject()
+    text_document1a_permission = getattr(text_document1a, permission_key, None)
+    self.assertSameSet(text_document1a_permission, text_document1_permission)
+
+    # add the second workflow
+    text_portal_type.setTypeWorkflowList(['temporary_dc_workflow1', 'temporary_dc_workflow2'])
+
+    # create document
+    text_document2a = self.getTestObject()
+    text_document2a_permission = getattr(text_document2a, permission_key, None)
+    self.assertEqual(text_document2a_permission, text_document2_permission)
 
   def test_16_testWorklistViewIsAccessible(self):
     # check worklist view is available on workflow

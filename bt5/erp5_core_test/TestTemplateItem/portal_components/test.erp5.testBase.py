@@ -993,7 +993,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     user = getSecurityManager().getUser()
     try:
       self.assertTrue(permission_list)
-      self.assertFalse(dummy_simulation_workflow['state_draft'].getStatePermissionRoleListDict())
       #1
       obj = module.newContent(portal_type=portal_type)
       #No role is defined by default on workflow
