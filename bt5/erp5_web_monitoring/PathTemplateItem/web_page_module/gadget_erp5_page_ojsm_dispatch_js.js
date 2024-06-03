@@ -26,12 +26,14 @@
           })
         .push(function (result) {
           if (result === undefined || result.data.total_rows === 0) {
+            //TODO set redirect options setting to ojs_controller+extended_search
             return gadget.redirect(
               {"command": "display",
                "options": {
                  "url": options.url,
                  "username": options.username,
                  "password": options.password,
+                 "slapos_master_url": options.slapos_master_url || "not-provided",
                  "page": "ojsm_opml_add"
                }
               });
@@ -63,6 +65,7 @@
              "url": options.url,
              "username": options.username,
              "password": options.password,
+             "slapos_master_url": options.slapos_master_url || "not-provided",
              "page": "ojsm_opml_add"
            }
           });
