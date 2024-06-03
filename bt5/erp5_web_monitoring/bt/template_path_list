@@ -11,8 +11,6 @@ portal_types/Software Instance/monitoring_view
 web_page_module/gadget_erp5_field_status_*
 web_page_module/gadget_erp5_page_ojsm_*
 web_page_module/gadget_erp5_page_settings_configurator_*
-web_page_module/gadget_officejs_jio_opml_view_html
-web_page_module/gadget_officejs_jio_opml_view_js
 web_page_module/gadget_officejs_monitoring.configuration
 web_page_module/gadget_officejs_monitoring_*
 web_page_module/gadget_ojsm_*
