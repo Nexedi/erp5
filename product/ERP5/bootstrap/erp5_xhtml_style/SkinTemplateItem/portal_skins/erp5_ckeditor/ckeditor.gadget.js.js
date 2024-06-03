@@ -37,6 +37,8 @@
     MOBILE_CONFIGURATION = {
       toolbar: TOOLBAR_MOBILE,
       disableNativeSpellChecker: false,
+      // Image pasting is already handled by a plugin
+      clipboard_handleImages: false,
       // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
       removePlugins: 'scayt,wsc',
       // Disable ACF to not destroy HTML on mobile
@@ -48,6 +50,8 @@
     DESKTOP_CONFIGURATION = {
       toolbar: TOOLBAR_DESKTOP,
       disableNativeSpellChecker: false,
+      // Image pasting is already handled by a plugin
+      clipboard_handleImages: false,
       // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
       removePlugins: 'scayt,wsc',
       // Disable ACF to not destroy HTML on mobile
@@ -59,6 +63,7 @@
     READONLY_CONFIGURATION = {
       allowedContent: true,
       readOnly: true,
+      clipboard_handleImages: false,
       // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
       removePlugins: 'elementspath,scayt,wsc,toolbar,pastefromword,' +
                      'tableselection,uploadwidget,clipboard,pastetext,' +
