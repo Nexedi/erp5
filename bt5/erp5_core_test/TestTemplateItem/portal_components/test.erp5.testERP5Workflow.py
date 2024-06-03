@@ -148,7 +148,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(workflow.getCurrentStatusDict(doc)['variable1'], None)
 
 
-  def test_WorkflowVariables(self):
+  def test_WorkflowPermissions(self):
     workflow = self.workflow_module.newContent(
       portal_type='Workflow',
     )
