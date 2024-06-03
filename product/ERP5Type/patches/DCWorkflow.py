@@ -1024,12 +1024,16 @@ def convertToERP5Workflow(self, temp_object=False):
 
         acquire_permission_list = []
         permission_roles_dict = {}
-        if sdef.permission_roles:
-          for (permission, roles) in sdef.permission_roles.items():
-            if permission in self.permissions:
-              if isinstance(roles, list): # type 'list' means acquisition
-                acquire_permission_list.append(permission)
-              permission_roles_dict[permission] = list(roles)
+        permission_roles = sdef.permission_roles or {}
+        for permission in self.permissions:
+          roles = permission_roles.get(permission, None)
+          if roles is None:
+            acquire_permission_list.append(permission)
+            permission_roles_dict[permission] = ()
+          else:
+            if isinstance(roles, list): # type 'list' means acquisition
+              acquire_permission_list.append(permission)
+            permission_roles_dict[permission] = list(roles)
 
         state.setAcquirePermission(acquire_permission_list)
         state.setStatePermissionRoleListDict(permission_roles_dict)
