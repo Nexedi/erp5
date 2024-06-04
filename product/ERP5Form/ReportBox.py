@@ -41,12 +41,14 @@ class ReportBoxWidget(Widget.Widget):
   default = fields.StringField('default',
                                 title='Default',
                                 description="",
+                                css_class="form-control",
                                 default="",
                                 required=0)
 
   report_method = fields.StringField('report_method',
                                      title='Report Method',
                                      description="",
+                                     css_class="form-control",
                                      default="",
                                      required=0)
 
