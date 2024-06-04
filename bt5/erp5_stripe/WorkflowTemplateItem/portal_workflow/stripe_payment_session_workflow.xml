@@ -64,6 +64,18 @@
             <key> <string>title</string> </key>
             <value> <string>stripe_payment_session_workflow</string> </value>
         </item>
+        <item>
+            <key> <string>workflow_managed_permission</string> </key>
+            <value>
+              <tuple>
+                <string>Access contents information</string>
+                <string>Add portal content</string>
+                <string>Delete objects</string>
+                <string>Modify portal content</string>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
