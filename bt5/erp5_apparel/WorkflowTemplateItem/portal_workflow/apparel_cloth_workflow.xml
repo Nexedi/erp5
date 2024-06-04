@@ -65,11 +65,7 @@
         <item>
             <key> <string>workflow_managed_permission</string> </key>
             <value>
-              <tuple>
-                <string>View</string>
-                <string>Access contents information</string>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
       </dictionary>
