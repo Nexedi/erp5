@@ -66,6 +66,7 @@ class EditorWidget(Widget.TextAreaWidget):
                                    description=(
         "The text editor widget to use."
         ""),
+                                   css_class="form-control",
                                    default="text_area",
                                    required=1,
                                    size=1,
