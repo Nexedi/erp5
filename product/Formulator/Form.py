@@ -578,18 +578,22 @@ def create_settings_form():
     title = fields.StringField('title',
                                title="Title",
                                required=False,
+                               css_class="form-control",
                                default="")
     row_length = fields.IntegerField('row_length',
                                      title='Number of groups in row (in order tab)',
                                      required=True,
+                                     css_class="form-control",
                                      default=4)
     name = fields.StringField('name',
                               title="Form name",
                               required=False,
+                              css_class="form-control",
                               default="")
     action = fields.StringField('action',
                                 title='Form action',
                                 required=False,
+                                css_class="form-control",
                                 default="")
     method = fields.ListField('method',
                               title='Form method',
@@ -597,6 +601,7 @@ def create_settings_form():
                                      ('GET', 'GET')],
                               required=True,
                               size=1,
+                              css_class="form-control",
                               default='POST')
     enctype = fields.ListField('enctype',
                                title='Form enctype',
@@ -607,20 +612,24 @@ def create_settings_form():
                                        'multipart/form-data')],
                                required=False,
                                size=1,
+                               css_class="form-control",
                                default=None)
 
     encoding = fields.StringField('encoding',
                                   title='Encoding of pages the form is in',
                                   default="UTF-8",
+                                  css_class="form-control",
                                   required=True)
 
     stored_encoding = fields.StringField('stored_encoding',
                                       title='Encoding of form properties',
                                       default='ISO-8859-1',
+                                      css_class="form-control",
                                       required=True)
     unicode_mode = fields.CheckBoxField('unicode_mode',
                                         title='Form properties are unicode',
                                         default=False,
+                                        css_class="form-control",
                                         required=True)
 
     form.add_fields([title, row_length, name, action, method,
@@ -819,14 +828,6 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
             message = message + ' ' + unicode_message
         return self.formSettings(self, REQUEST,
                                  manage_tabs_message=message)
-
-    security.declareProtected('Change Formulator Forms', 'manage_refresh')
-    def manage_refresh(self, REQUEST):
-        """Refresh internal data structures of this form.
-        FIXME: this doesn't work right now
-        """
-        # self.update_groups()
-        REQUEST.RESPONSE.redirect('manage_main')
 
     security.declarePrivate('_get_field_ids')
     def _get_field_ids(self, group, REQUEST):
