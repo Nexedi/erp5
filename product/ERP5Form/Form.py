@@ -480,38 +480,48 @@ def create_settings_form():
     title = fields.StringField('title',
                                title="Title",
                                required=0,
+                               css_class="form-control",
                                default="")
     description = fields.TextAreaField('description',
                                title="Description",
                                required=0,
+                               css_class="form-control",
                                default="")
     row_length = fields.IntegerField('row_length',
+                                     input_type='number',
                                      title='Number of groups in row (in order tab)',
                                      required=1,
+                                     css_class="form-control",
                                      default=4)
     name = fields.StringField('name',
                               title="Form name",
                               required=0,
+                              css_class="form-control",
                               default="")
     pt = fields.StringField('pt',
                               title="Page Template",
                               required=0,
+                              css_class="form-control code",
                               default="")
     action = fields.StringField('action',
                                 title='Form action',
                                 required=0,
+                                css_class="form-control code",
                                 default="")
     action_title = fields.StringField('action_title',
                                title="Action Title",
                                required=0,
+                               css_class="form-control",
                                default="")
     update_action = fields.StringField('update_action',
                                 title='Form update action',
                                 required=0,
+                                css_class="form-control code",
                                 default="")
     update_action_title = fields.StringField('update_action_title',
                                title="Update Action Title",
                                required=0,
+                               css_class="form-control",
                                default="")
     method = fields.ListField('method',
                               title='Form method',
@@ -519,6 +529,7 @@ def create_settings_form():
                                      ('GET', 'GET')],
                               required=1,
                               size=1,
+                              css_class="form-control",
                               default='POST')
     enctype = fields.ListField('enctype',
                                title='Form enctype',
@@ -529,22 +540,27 @@ def create_settings_form():
                                        'multipart/form-data')],
                                required=0,
                                size=1,
+                               css_class="form-control",
                                default=None)
     encoding = fields.StringField('encoding',
                                   title='Encoding of pages the form is in',
                                   default="UTF-8",
+                                  css_class="form-control",
                                   required=1)
     stored_encoding = fields.StringField('stored_encoding',
                                       title='Encoding of form properties',
                                       default='UTF-8',
+                                      css_class="form-control",
                                       required=1)
     unicode_mode = fields.CheckBoxField('unicode_mode',
                                         title='Form properties are unicode',
                                         default=0,
+                                        css_class="form-control",
                                         required=0)
     edit_order = fields.LinesField('edit_order',
                                    title='Setters for these properties should be'
-                                   '<br /> called by edit() in the defined order')
+                                   '<br /> called by edit() in the defined order',
+                                   css_class="form-control code")
 
     form.add_fields([title, description, row_length, name, pt, action, action_title, update_action, update_action_title,
                      method, enctype, encoding, stored_encoding, unicode_mode, edit_order])
