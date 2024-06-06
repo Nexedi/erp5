@@ -218,6 +218,9 @@ class ERP5TypeTestCaseRequestConnection(object):
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.Functional):
     """Mixin class for ERP5 based tests.
     """
+    manager_username = 'ERP5TypeTestCase'
+    manager_password = None  # will be generated at setup
+
     def __init__(self, *args, **kw):
       super(ERP5TypeTestCaseMixin, self).__init__(*args, **kw)
       self.sequence_string_registry = {}
@@ -239,19 +242,40 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       """
       return str(self.__class__)
 
-    def addERP5TypeTestCaseUser(self, password=None, user_folder=None):
-      if password is None:
-        password = self.newPassword()
-      if user_folder is None:
-        user_folder = self.portal.acl_users
-      user_folder._doAddUser('ERP5TypeTestCase', password, ['Manager', 'Member', 'Assignee',
+    def setUpManagerUser(self, quiet=False):
+      """Adds default manager user with all roles.
+      """
+      self._setUpManagerPassword()
+      uf = self.portal.acl_users
+      user = uf.getUser(self.manager_username)
+      if user is not None:
+        uf.zodb_users.removeUser(self.manager_username)
+
+      self._addUserWithAllRoles(
+        user_folder=uf,
+        username=self.manager_username,
+        password=self.manager_password,
+      )
+      if not quiet:
+        ZopeTestCase._print(
+          'Added %s user with password %s ...\n' % (
+            self.manager_username, self.manager_password))
+
+    def _setUpManagerPassword(self):
+      if self.manager_password is None:
+        ERP5TypeTestCaseMixin.manager_password = self.newPassword()
+
+    def _addUserWithAllRoles(self, user_folder, username, password):
+      """Adds a user with all roles.
+      """
+      assert user_folder._doAddUser(username, password, ['Manager', 'Member', 'Assignee',
                     'Assignor', 'Author', 'Auditor', 'Associate'], [])
 
     def newPassword(self):
       """ Generate a password """
       return ''.join(random.SystemRandom().sample(string.ascii_letters + string.digits, 20))
 
-    def login(self, user_name='ERP5TypeTestCase', quiet=0):
+    def login(self, user_name=None, quiet=0):
       """
       Most of the time, we need to login before doing anything
 
@@ -259,28 +283,18 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       reality. If you want to login by user_name, use loginByUserName()
       instead.
       """
-      try:
-        PortalTestCase.login(self, user_name)
-      except AttributeError:
-        if user_name == 'ERP5TypeTestCase':
-          self.addERP5TypeTestCaseUser()
-          return PortalTestCase.login(self, user_name)
-        else:
-          raise
+      if user_name is None:
+        user_name = self.manager_username
+      return PortalTestCase.login(self, user_name)
 
-    def loginByUserName(self, user_name='ERP5TypeTestCase', quiet=0):
+    def loginByUserName(self, user_name=None, quiet=0):
       """
       Most of the time, we need to login before doing anything
       """
       uf = self.portal.acl_users
+      if user_name is None:
+        user_name = self.manager_username
       user = uf.getUser(user_name)
-      if user is None:
-        if user_name == 'ERP5TypeTestCase':
-          self.addERP5TypeTestCaseUser(password='', user_folder=uf)
-          user = uf.getUser(user_name)
-        else:
-          raise RuntimeError("Could not find username '%s'" % user_name)
-
       if not hasattr(user, 'aq_base'):
         user = user.__of__(uf)
       newSecurityManager(None, user)
@@ -348,7 +362,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
           self.REQUEST.other.pop(key, None)
 
     def _setupUser(self):
-      '''Creates the default user.'''
+      '''Creates the default member user (for PortalTestCase).'''
       uf = self.portal.acl_users
       # do nothing if the user already exists
       if not uf.getUserById(user_name):
@@ -537,7 +551,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
     def createSimpleUser(self, title, reference, function):
       """
         Helper function to create a Simple ERP5 User.
-        User password is the reference.
+        Default password is the reference.
       """
       user = self.createUser(reference, person_kw=dict(title=title))
       assignment = self.createUserAssignment(user, assignment_kw=dict(function=function))
@@ -546,7 +560,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
     def createUser(self, reference, password=None, person_kw=None):
       """
         Create an ERP5 User.
-        Default password is the reference.
+        User password is the reference.
         person_kw is passed as additional arguments when creating the person
       """
       if password is None:
@@ -673,15 +687,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
         self.assertEqual(workflow_error_message, error_message)
       self.assertEqual(method(), reference_workflow_state)
       return workflow_error_message
-
-    # BBB backport methods from python3.
-    # We use this tricky getattr syntax so that lib2to3.fixers.fix_asserts
-    # do not fix this code.
-    if six.PY2:
-      def assertRaisesRegex(self, *args, **kwargs):
-        return getattr(self, 'assertRaisesRegexp')(*args, **kwargs)
-      def assertRegex(self, *args, **kwargs):
-        return getattr(self, 'assertRegexpMatches')(*args, **kwargs)
 
     def stepPdb(self, sequence=None, sequence_list=None):
       """Invoke debugger"""
@@ -913,9 +918,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     __original_ZMySQLDA_connect = None
 
-    def addERP5TypeTestCaseUser(self, password=None, **kw):
-      return super(ERP5TypeCommandLineTestCase, self).addERP5TypeTestCaseUser(password='', **kw)
-
     def getPortalName(self):
       """
         Return the name of a portal for this test case.
@@ -1018,6 +1020,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
+      self._setUpManagerPassword()
       self.setUpERP5Site(business_template_list=template_list,
                          light_install=light_install,
                          create_activities=create_activities,
@@ -1247,17 +1250,20 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             self._getBTPathAndIdList(business_template_list)
           try:
             _start = time.time()
-            # Add user and log in
-            if not quiet:
-              ZopeTestCase._print('Adding ERP5TypeTestCase user ...\n')
+            # Add user at the root and log in
             uf = app.acl_users
-            self.addERP5TypeTestCaseUser(user_folder=uf)
-            user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
+            root_username = 'ERP5TypeTestCase.root'
+            self._addUserWithAllRoles(
+              user_folder=uf,
+              username=root_username,
+              password=self.manager_password,
+            )
+            user = uf.getUserById(root_username).__of__(uf)
             newSecurityManager(None, user)
 
             # bt5s contain ZODB Components which can be only installed if the
             # user has Developer Role
-            addUserToDeveloperRole('ERP5TypeTestCase')
+            addUserToDeveloperRole(root_username)
 
             # Add ERP5 Site
             reindex = 1
@@ -1301,10 +1307,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             self._recreateCatalog()
             self._updateConversionServerConfiguration()
             self._updateMemcachedConfiguration()
-            # Create a Manager user at the Portal level
-            uf = self.getPortal().acl_users
-            self.addERP5TypeTestCaseUser()
-            user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
+            # Create a Manager user at the Portal level.
+            self.setUpManagerUser(quiet=quiet)
+            uf = self.portal.acl_users
+            user = uf.getUserById(self.manager_username).__of__(uf)
+            newSecurityManager(None, user)
+            addUserToDeveloperRole(self.manager_username)
 
             self._callSetUpOnce()
             self._reindexSite()

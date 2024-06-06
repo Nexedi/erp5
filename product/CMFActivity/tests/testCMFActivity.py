@@ -159,8 +159,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   def login(self):
     uf = self.portal.acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+    uf._doAddUser('seb', self.newPassword(), ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
@@ -715,7 +714,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation =  self.getOrganisation()
     # Add new user toto
     uf = self.portal.acl_users
-    uf._doAddUser('toto', '', ['Manager'], [])
+    uf._doAddUser('toto', self.newPassword(), ['Manager'], [])
     user = uf.getUserById('toto').__of__(uf)
     newSecurityManager(None, user)
     # Execute something as toto
@@ -1342,7 +1341,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(activity_tool.getMessageList()), 2)
     activity_tool.distribute()
     # After distribute, duplicate is still present.
-    self.assertItemsEqual([uid1, uid2],
+    self.assertCountEqual([uid1, uid2],
       [x.uid for x in self.getMessageList(activity)])
     activity_tool.tic()
 
@@ -1372,7 +1371,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activate('a')
     self.commit()
     # Both activities are queued
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getMessageList(),
       [
         ('a', -1),
@@ -1384,7 +1383,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Note: this specific test implmeentation relies on the absence of
     # validation-time deduplication which is not strictly related to
     # serialization_tag behaviour.
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getMessageList(),
       [
         ('a', 0),
@@ -1396,7 +1395,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activate('b')
     self.commit()
     # 3rd & 4th activities queued
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getMessageList(),
       [
         ('a', 0),
@@ -1407,7 +1406,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     )
     activity_tool.distribute()
     # 3rd activity does not get validated, 4th is validated
-    self.assertItemsEqual(
+    self.assertCountEqual(
       getMessageList(),
       [
         ('a', 0),
@@ -2663,7 +2662,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     does_not_exist = 'baz'
 
     # Family declaration API
-    self.assertItemsEqual(activity_tool.getFamilyNameList(), [])
+    self.assertCountEqual(activity_tool.getFamilyNameList(), [])
     self.assertRaises(
         ValueError,
         activity_tool.createFamily, 'same', # Reserved name
@@ -2694,39 +2693,39 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Silent success
     activity_tool.deleteFamily(member)
     activity_tool.createFamily(non_member)
-    self.assertItemsEqual(activity_tool.getFamilyNameList(), [other, non_member])
+    self.assertCountEqual(activity_tool.getFamilyNameList(), [other, non_member])
 
     # API for node a-/di-ssociation with/from families
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [])
     activity_tool.addNodeToFamily(node_id, other)
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
     # Silent success
     activity_tool.addNodeToFamily(node_id, other)
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
     activity_tool.addNodeToFamily(node_id, non_member)
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other, non_member])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other, non_member])
     activity_tool.removeNodeFromFamily(node_id, non_member)
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
     # Silent success
     activity_tool.removeNodeFromFamily(node_id, non_member)
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
     activity_tool.createFamily(does_not_exist)
     activity_tool.addNodeToFamily(node_id, does_not_exist)
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other, does_not_exist])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other, does_not_exist])
     activity_tool.deleteFamily(does_not_exist)
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
-    self.assertItemsEqual(activity_tool.getFamilyNameList(), [other, non_member])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    self.assertCountEqual(activity_tool.getFamilyNameList(), [other, non_member])
     activity_tool.renameFamily(other, member)
-    self.assertItemsEqual(activity_tool.getFamilyNameList(), [member, non_member])
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member])
+    self.assertCountEqual(activity_tool.getFamilyNameList(), [member, non_member])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member])
     activity_tool.createFamily(other)
     activity_tool.addNodeToFamily(node_id, other)
-    self.assertItemsEqual(activity_tool.getFamilyNameList(), [member, non_member, other])
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member, other])
+    self.assertCountEqual(activity_tool.getFamilyNameList(), [member, non_member, other])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member, other])
     activity_tool.deleteFamily(other)
 
-    self.assertItemsEqual(activity_tool.getFamilyNameList(), [member, non_member])
-    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member])
+    self.assertCountEqual(activity_tool.getFamilyNameList(), [member, non_member])
+    self.assertCountEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member])
     o = self.getOrganisation()
     for activity in 'SQLDict', 'SQLQueue':
       # Sanity check.
@@ -2765,7 +2764,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation.activate(tag='3', after_tag='foo').getId()
     self.commit()
     activity_tool.getMessageList()
-    self.assertItemsEqual(
+    self.assertCountEqual(
       [('1', 0), ('2', 0), ('3', -1)],
       [
           (x.activity_kw['tag'], x.processing_node)
@@ -2828,8 +2827,8 @@ return [x.getObject() for x in context.portal_catalog(limit=100)]
       self.assertIs(type(aq_base(user)), PropertiedUser)
       self.assertEqual(aq_parent(user), aq_parent(artificial_user))
       self.assertEqual(user.getId(), artificial_user.getId())
-      self.assertItemsEqual(user.getGroups(), artificial_user.getGroups())
-      self.assertItemsEqual(user.getRoles(), artificial_user.getRoles())
+      self.assertCountEqual(user.getGroups(), artificial_user.getGroups())
+      self.assertCountEqual(user.getRoles(), artificial_user.getRoles())
     Organisation.checkUserGroupAndRole = checkUserGroupAndRole
     try:
       newSecurityManager(None, artificial_user)

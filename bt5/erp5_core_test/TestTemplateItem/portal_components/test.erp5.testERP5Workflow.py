@@ -148,6 +148,47 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(workflow.getCurrentStatusDict(doc)['variable1'], None)
 
 
+  def test_WorkflowPermissions(self):
+    workflow = self.workflow_module.newContent(
+      portal_type='Workflow',
+    )
+    workflow.setReference('wf')
+    permission_list = [
+      'Access contents information',
+      'Modify portal content',
+      'View',
+    ]
+    workflow.setWorkflowManagedPermissionList(
+      permission_list
+    )
+    state1 = workflow.newContent(portal_type='Workflow State',
+                                 title='State 1')
+    state1.setReference('state1')
+    workflow.setSourceValue(state1)
+    self.assertEqual(
+      state1.getAcquirePermissionList(),
+      permission_list,
+    )
+    self.assertEqual(
+      state1.getStatePermissionRoleListDict(),
+      {k: () for k in permission_list},
+    )
+    state1.setStatePermissionRoleListDict(
+      {k: ['Assignor', 'Manager'] for k in permission_list},
+    )
+    workflow.setWorkflowManagedPermissionList(
+      permission_list + ['Delete objects']
+    )
+    self.assertEqual(
+      state1.getStatePermissionRoleListDict(),
+      {
+        'Access contents information': ('Assignor', 'Manager'),
+        'Delete objects': (),
+        'Modify portal content': ('Assignor', 'Manager'),
+        'View': ('Assignor', 'Manager'),
+      },
+    )
+
 
   def test_afterScript(self):
     workflow = self.workflow_module.newContent(

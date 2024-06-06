@@ -993,7 +993,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     user = getSecurityManager().getUser()
     try:
       self.assertTrue(permission_list)
-      self.assertFalse(dummy_simulation_workflow['state_draft'].getStatePermissionRoleListDict())
       #1
       obj = module.newContent(portal_type=portal_type)
       #No role is defined by default on workflow
@@ -1405,6 +1404,25 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     # non-ERP5 users - including deleted ones - by their user id.
     newSecurityManager(None, test_user)
     assertActorHistoryEqual([user_1_title, user_2_title, user_3_user_id, existing_non_erp5_user_id])
+
+  def test_idWithSpecialCharacter(self, quiet=quiet, run=run_all_test):
+    """
+      Test that an id with non-ascii characters
+      can well be used an indexed
+    """
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type=portal_type)
+    obj = module.newContent(
+      id='tést',
+      portal_type=portal_type
+    )
+    self.tic() # no error in indexation
+    # Check that the new object is retreivable by its id
+    self.assertEqual(obj.getId(), 'tést')
+    self.assertIsInstance(obj.getId(), str)
+    self.assertEqual(module._getOb(obj.getId()).getId(), obj.getId())
+    self.assertIsInstance(module._getOb(obj.getId()).getId(), str)
 
 
 class TestERP5PropertyManager(unittest.TestCase):

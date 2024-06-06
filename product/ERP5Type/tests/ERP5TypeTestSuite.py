@@ -52,7 +52,8 @@ class ERP5TypeTestSuite(TestSuite):
       args = ("--firefox_bin=%s" % firefox_bin,) + args
     if xvfb_bin:
       args = ("--xvfb_bin=%s" % xvfb_bin,) + args
-    if 'testUpgradeInstanceWithOldDataFs' in args:
+    if ('testUpgradeInstanceWithOldDataFs' in args
+        or 'testUpgradeInstanceWithOldDataFsLegacyWorkflow' in args):
       # our reference Data.fs uses `CONNECTION_STRING_REPLACED_BY_TEST_INIT_______________________________`
       # as a connection string. Before we start, replace this by the connection string
       # that this test node is using.
@@ -148,7 +149,7 @@ class SavedTestSuite(ERP5TypeTestSuite):
   def __init__(self, *args, **kw):
     # Use same portal id for all tests run by current instance
     # but keep it (per-run) random.
-    self._portal_id = 'portal_%i' % (random.randint(0, sys.maxint), )
+    self._portal_id = 'portal_%i' % (random.randint(0, sys.maxsize), )
     self._setup_failed = False
     super(SavedTestSuite, self).__init__(*args, **kw)
 

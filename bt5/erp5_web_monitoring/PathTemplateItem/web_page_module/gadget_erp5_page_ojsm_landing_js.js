@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
@@ -14,28 +14,12 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-      var gadget = this,
-        redirect_options = {
-          "page": "ojsm_dispatch",
-          "url": options.url,
-          "username": options.username,
-          "password": options.password,
-          "query": options.query
-        };
-      if (options.query) {
-        return gadget.redirect({"command": "display",
-                                "options": redirect_options
-                               });
-      }
-      if (options.url && options.username && options.password) {
-        redirect_options.page = "ojsm_opml_add";
-        return gadget.redirect({"command": "display",
-                                "options": redirect_options
-                               });
-      }
-      return gadget.redirect({"command": "display",
-                              "options": {"page": "ojsm_status_list"}
-                             });
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          options.page = 'ojsm_dispatch';
+          return gadget.redirect({command: 'display', options: options });
+        });
     });
 
-}(window, rJS));
+}(window, rJS, RSVP));

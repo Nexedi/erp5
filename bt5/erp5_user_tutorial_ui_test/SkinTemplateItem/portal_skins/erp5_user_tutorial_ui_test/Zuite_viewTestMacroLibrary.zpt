@@ -65,14 +65,24 @@
     <td colspan="3"><b>Login as manager</b></td>
   </tr>
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_username")</td>
+    <td>manager_username</td>
+  </tr>
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_password")</td>
+    <td>manager_password</td>
+  </tr>
   <tal:block tal:define="
     login_form_url python: None;
     wait python: False;
     submit_name python:'//input[@value=\'Login\']';
   ">
     <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
-      <tal:block metal:fill-slot="username" tal:content="python: here.Zuite_getHowToInfo()['manager_username']"></tal:block>
-      <tal:block metal:fill-slot="password" tal:content="python: here.Zuite_getHowToInfo()['manager_password']"></tal:block>
+      <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+      <tal:block metal:fill-slot="password">${manager_password}</tal:block>
     </tal:block>
   </tal:block>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

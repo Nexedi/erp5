@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Officejs Monitoring Landing JS</string> </value>
+            <value> <string>Gadget Officejs Monitoring Landing JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1701370167.02</float>
+                              <float>1716391806.07</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1012.62723.14122.57258</string> </value>
+                      <value> <string>1016.49474.6665.29303</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1701717573.46</float>
+                              <float>1716391830.68</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -327,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1701369695.71</float>
+                              <float>1716391550.04</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

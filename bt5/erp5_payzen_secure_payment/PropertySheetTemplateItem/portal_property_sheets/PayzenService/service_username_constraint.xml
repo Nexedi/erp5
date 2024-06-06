@@ -55,11 +55,11 @@
         </item>
         <item>
             <key> <string>message_attribute_not_match</string> </key>
-            <value> <string>vads_site_id have to be set</string> </value>
+            <value> <string>service_username have to be set</string> </value>
         </item>
         <item>
             <key> <string>message_no_such_property</string> </key>
-            <value> <string>vads_site_id have to be set</string> </value>
+            <value> <string>service_username have to be set</string> </value>
         </item>
         <item>
             <key> <string>message_property_not_set</string> </key>

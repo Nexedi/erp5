@@ -8,6 +8,7 @@ This file is used in two contexts:
 """
 
 from __future__ import print_function
+import datetime
 import json
 import logging
 import os
@@ -22,6 +23,10 @@ import uritemplate
 from six.moves.urllib.parse import urlparse
 
 from Products.ERP5Type.tests.runUnitTest import log_directory
+
+
+if six.PY2:
+  TimeoutError = RuntimeError
 
 
 def _get_auth_list_from_url(parsed_url):
@@ -95,6 +100,10 @@ class CoverageReport(unittest.TestCase):
     download_url_template = self._test_runner_configuration['coverage']['upload-url']
     assert download_url_template
 
+    # erp5.util.testnode.ProcessManager applies a 4 hours MAX_TIMEOUT, give up
+    # before this timeout, otherwise this will be restarted forever in loop.
+    deadline = datetime.datetime.now() + datetime.timedelta(hours=3, minutes=30)
+
     coverage_data_directory = os.path.join(log_directory, 'coverage_data')
     if not os.path.exists(coverage_data_directory):
       os.makedirs(coverage_data_directory)
@@ -148,6 +157,8 @@ class CoverageReport(unittest.TestCase):
               auth.__class__.__name__,
             )
             time.sleep(60 if resp.status_code == 404 else 5)
+            if datetime.datetime.now() > deadline:
+              raise TimeoutError("Timeout downloading %s" % to_download)
     return downloaded_coverage_path_set
 
   def test_coverage_report(self):

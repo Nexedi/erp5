@@ -297,7 +297,7 @@
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
-            <value> <string>ALLOW-FROM-ALL</string> </value>
+            <value> <string>SAMEORIGIN</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
@@ -320,6 +320,12 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>officejs_monitoring</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
@@ -465,7 +471,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -489,7 +495,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1507825401.94</float>
+                              <float>1706017454.46</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -524,7 +530,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -538,7 +544,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.51134.29615.45363</string> </value>
+                      <value> <string>1015.32811.46439.54528</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -558,7 +564,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1624634946.02</float>
+                              <float>1716562039.61</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

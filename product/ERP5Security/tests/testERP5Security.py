@@ -1304,7 +1304,7 @@ class _TestLocalRoleManagementMixIn(object):
     user_id = person_value.getUserId()
     getUserById = self.portal.acl_users.getUserById
     def assertRoleItemsEqual(expected_role_set):
-      self.assertItemsEqual(getUserById(user_id).getGroups(), expected_role_set)
+      self.assertCountEqual(getUserById(user_id).getGroups(), expected_role_set)
     # check if assignment change is effective immediately
     assertRoleItemsEqual(['F1_G1_S1'])
     self.login()
@@ -1584,7 +1584,7 @@ class _TestKeyAuthenticationMixIn(object):
     self.assertEqual(response.getStatus(), 200)
     response = self.publish(
       base_url + '/' + web_page.getReference(),
-      basic='ERP5TypeTestCase:',
+      basic='%s:%s' % (self.manager_username, self.manager_password),
     )
     self.assertEqual(response.getStatus(), 200)
 
@@ -1603,7 +1603,7 @@ class TestOwnerRole(UserManagementTestCase):
       role_list = ['Member', 'Assignee', 'Assignor', 'Author', 'Auditor',
           'Associate']
     uf = self.portal.acl_users
-    uf._doAddUser(login, '', role_list, [])
+    uf._doAddUser(login, self.newPassword(), role_list, [])
 
   def test_owner_local_role_on_clone(self):
     # check that tested stuff is ok

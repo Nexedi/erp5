@@ -1069,7 +1069,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       "application/hal+json"
     )
     result_dict = json.loads(result)
-    _, group_fields = result_dict['group_list'][-1]
+    _, group_fields, _ = result_dict['group_list'][-1]
     field_names = [field_name for field_name, _ in group_fields]
     self.assertIn("form_id", field_names)
     self.assertIn("dialog_id", field_names)
