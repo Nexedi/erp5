@@ -73,7 +73,7 @@
                 <tal:block tal:define="gid    group/gid">
                   <fieldset tal:condition="python: 'hidden' not in gid and 'bottom' not in gid and 'head' not in gid"
                     tal:attributes="class gid;">
-                    <legend tal:content="group/gtitle" class="group_title" />
+                    <legend i18n:translate="" i18n:domain="ui" tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"></legend>
                     <tal:block tal:repeat="field python: form.get_fields_in_group(group['goid'])">
                       <tal:block metal:use-macro="field_render" />
                     </tal:block>

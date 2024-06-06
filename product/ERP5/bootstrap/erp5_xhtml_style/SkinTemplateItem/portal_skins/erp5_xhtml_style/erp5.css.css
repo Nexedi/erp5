@@ -342,7 +342,8 @@ table.fake tr td {
 }
 
 .group_title {
-  display: none;
+  padding-bottom: 0.5em;
+  font-size: larger;
 }
 
 table.fake,
