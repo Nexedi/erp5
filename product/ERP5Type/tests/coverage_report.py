@@ -25,6 +25,10 @@ from six.moves.urllib.parse import urlparse
 from Products.ERP5Type.tests.runUnitTest import log_directory
 
 
+if six.PY2:
+  TimeoutError = RuntimeError
+
+
 def _get_auth_list_from_url(parsed_url):
   if parsed_url.username:
     # try Digest and Basic authentication
@@ -154,7 +158,7 @@ class CoverageReport(unittest.TestCase):
             )
             time.sleep(60 if resp.status_code == 404 else 5)
             if datetime.datetime.now() > deadline:
-              raise TimeoutError()
+              raise TimeoutError("Timeout downloading %s" % to_download)
     return downloaded_coverage_path_set
 
   def test_coverage_report(self):
