@@ -11,6 +11,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
@@ -72,17 +73,27 @@
                     "options": {page: "ojs_local_controller",
                                 portal_type: "Promise Module"}
                   };
-                  if (gadget.state.auto_sync) {
-                    return gadget.getDeclaredGadget('sync_gadget')
-                      .push(function (sync_gadget) {
-                        // start synchronization now
-                        return sync_gadget.register({now: true});
-                      })
-                      .push(function () {
-                        return gadget.redirect(redirect_options);
-                      });
-                  }
-                  return gadget.redirect(redirect_options);
+                  return gadget.getSetting('sync_redirect_options')
+                    .push(function (sync_redirect_options) {
+                      if (sync_redirect_options) {
+                        redirect_options.options = sync_redirect_options;
+                        return gadget.setSetting("sync_redirect_options", undefined);
+                      }
+                    })
+                    .push(function () {
+
+                      if (gadget.state.auto_sync) {
+                        return gadget.getDeclaredGadget('sync_gadget')
+                          .push(function (sync_gadget) {
+                            // start synchronization now
+                            return sync_gadget.register({now: true});
+                          })
+                          .push(function () {
+                            return gadget.redirect(redirect_options);
+                          });
+                      }
+                      return gadget.redirect(redirect_options);
+                    });
                 }
                 if (result_list[1].can_force) {
                   gadget.element.getElementsByClassName("btn-nopasswd")[0]
