@@ -125,7 +125,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertEqual(['userA@example.invalid'], mto)
     reset_key, = list(six.iterkeys(self.portal.portal_password._password_request_dict))
     self.assertIn(
-      ('PasswordTool_viewResetPassword?reset_key=' + reset_key).encode(),
+      ('PasswordTool_viewResetPassword?reset_key=' + reset_key),
       mbody)
 
     ret = self.portal.portal_password.changeUserPassword(
