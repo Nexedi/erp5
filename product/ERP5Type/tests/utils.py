@@ -30,6 +30,7 @@
 """
 import contextlib
 from datetime import datetime
+import email
 import errno
 import os
 import logging
@@ -49,7 +50,6 @@ from Zope2.Startup.datatypes import ZopeDatabase
 from Testing import ZopeTestCase
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
-from email import message_from_string
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
@@ -106,14 +106,19 @@ class DummyMailHostMixin(object):
 
   @staticmethod
   def _decodeMessage(messageText):
+    # type: (bytes) -> str
     """ Decode message"""
-    if six.PY3 and isinstance(messageText, bytes):
-      messageText = messageText.decode()
+    if six.PY3:
+      message = email.message_from_bytes(messageText)
+    else:
+      message = email.message_from_string(messageText)
     message_text = messageText
-    for part in message_from_string(messageText).walk():
+    for part in message.walk():
       if part.get_content_type() in ['text/plain', 'text/html' ] \
                   and not part.is_multipart():
-        message_text = part.get_payload(decode=1)
+        message_text = part.get_payload(decode=True)
+        if six.PY3:
+          message_text = message_text.decode(part.get_content_charset('ascii'))
     return message_text
 
   security.declarePrivate('getMessageList')
