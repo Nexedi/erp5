@@ -1347,13 +1347,17 @@ class ActivityTool (BaseTool):
       """
         Distribute load
       """
+      inner_self = aq_inner(self)
       while is_running_lock.acquire(0):
         try:
-          has_distributed = False
+          # Note: "has_more_to_distribute" is to be taken in a lose sense, we
+          # do not positively know there is more, just that distribute returned
+          # before it could confirm there is nothing left to do.
+          has_more_to_distribute = False
           # Call distribute on each queue
           for activity in six.itervalues(activity_dict):
-            has_distributed |= activity.distribute(aq_inner(self), node_count)
-          if not has_distributed:
+            has_more_to_distribute |= activity.distribute(inner_self, node_count)
+          if not has_more_to_distribute:
             break
         finally:
           is_running_lock.release()
