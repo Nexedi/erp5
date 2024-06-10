@@ -36,6 +36,12 @@
           query_parts_list = options.query.split('AND');
           portal_type = query_parts_list[0].replace('portal_type:', '').replaceAll('"', '').trim();
           extended_search = options.query.replace(query_parts_list[0] + 'AND ', '').trim();
+          if (options.slapos_master_url) {
+            // disambiguate equal instances by slapos master url
+            if (result !== undefined && result.data.total_rows > 1) {
+              extended_search += ' AND slapos_master_url:"' + options.slapos_master_url + '"';
+            }
+          }
           query_redirect = {
             "page": "ojs_local_controller",
             "portal_type": portal_type + " Module",
