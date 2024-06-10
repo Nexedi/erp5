@@ -1387,7 +1387,7 @@ class ActivityTool (BaseTool):
             activity_list.sort(key=sort_key) # stable sort
             for i, activity in enumerate(activity_list):
               # Transaction processing is the responsability of the activity
-              if not activity.dequeueMessage(inner_self, processing_node,
+              if activity.dequeueMessage(inner_self, processing_node,
                 node_family_id_set):
                 activity_list.append(activity_list.pop(i))
                 break

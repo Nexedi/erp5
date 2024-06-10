@@ -1038,7 +1038,7 @@ CREATE TABLE %s (
       self.finalizeMessageExecution(activity_tool, message_list,
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()
-    return not message_list
+    return bool(message_list)
 
   def deleteMessageList(self, db, uid_list):
     db.query("DELETE FROM %s WHERE uid IN (%s)" % (
