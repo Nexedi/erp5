@@ -683,8 +683,8 @@ CREATE TABLE %s (
     while 1:
       result = self._getMessageList(db, **where_kw)
       if not result:
+        transaction.commit()
         return
-      transaction.commit()
       message_list = [Message.load(line.message, uid=line.uid, line=line)
                       for line in result]
       message_set = self._getExecutableMessageSet(activity_tool, db, message_list)
@@ -714,6 +714,7 @@ CREATE TABLE %s (
           self.assignMessageList(db, 0, distributable_uid_set)
           validated_count += distributable_count
           if validated_count >= MAX_VALIDATED_LIMIT:
+            transaction.commit()
             return
       line = result[-1]
       where_kw['above_priority_date_uid'] = (line.priority, line.date, line.uid)
