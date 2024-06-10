@@ -1347,9 +1347,16 @@ class ActivityTool (BaseTool):
       """
         Distribute load
       """
-      # Call distribute on each queue
-      for activity in six.itervalues(activity_dict):
-        activity.distribute(aq_inner(self), node_count)
+      while is_running_lock.acquire(0):
+        try:
+          has_distributed = False
+          # Call distribute on each queue
+          for activity in six.itervalues(activity_dict):
+            has_distributed |= activity.distribute(aq_inner(self), node_count)
+          if not has_distributed:
+            break
+        finally:
+          is_running_lock.release()
 
     security.declarePublic('tic')
     def tic(self, processing_node=1, force=0):
