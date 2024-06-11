@@ -21,8 +21,8 @@ elif code is not None:
     code,
     "{0}/ERP5Site_callbackFacebookLogin".format(context.absolute_url()))
   if response_dict is not None:
-    access_token = response_dict['access_token'].encode('utf-8')
-    hash_str = context.Base_getHMAC(access_token, access_token)
+    access_token = response_dict['access_token']
+    hash_str = context.Base_getHMAC(access_token.encode('utf-8'), access_token.encode('utf-8'))
 
     context.setAuthCookie(response, '__ac_facebook_hash', hash_str)
     # store timestamp in second since the epoch in UTC is enough
