@@ -19,7 +19,7 @@
     // Form submit
     /////////////////////////////////////////
     .onEvent('submit', function () {
-      var gadget = this,
+      var gadget = this, i,
         master_url_list;
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
@@ -27,6 +27,9 @@
         })
         .push(function (content) {
           master_url_list = content.erp5_url_list.split(/\r?\n|\r|\n/g);
+          for (i = 0; i < master_url_list.length; i += 1) {
+            master_url_list[i] = master_url_list[i].trim();
+          }
           return gadget.redirect({command: "display", options: {
             page: "ojsm_import_export",
             auto_sync: "erp5",
