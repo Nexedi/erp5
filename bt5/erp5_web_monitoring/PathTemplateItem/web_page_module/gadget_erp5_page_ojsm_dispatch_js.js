@@ -28,11 +28,9 @@
         .push(function (result) {
           // URL queries from slapos master / panel rapid space:
           // 'portal_type: "Instance Tree" AND title:"my-title"
-          //           AND slapos_master_url:"url"'
           // or
           // 'portal_type: "Software Instance" AND title:"my-title"
           //           AND specialise_title:"my-parent-title"
-          //           AND slapos_master_url:"url"'
           query_parts_list = options.query.split('AND');
           portal_type = query_parts_list[0].replace('portal_type:', '').replaceAll('"', '').trim();
           extended_search = options.query.replace(query_parts_list[0] + 'AND ', '').trim();
