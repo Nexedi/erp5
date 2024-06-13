@@ -174,3 +174,17 @@ def patch_linecache():
   linecache.getlines = getlines
 
 patch_linecache()
+
+orig_sum = __builtins__['sum']
+from math import fsum
+def sum_(iterable, start=0):
+  if start == 0:
+    ret = fsum(iterable)
+    int_ret = int(ret)
+    if int_ret == ret:
+      return int_ret
+    else:
+      return ret
+  else:
+    return orig_sum(iterable, start)
+__builtins__['sum'] = sum_
