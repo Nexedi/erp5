@@ -39,6 +39,7 @@ if related:
                      "that_title": context.getTitleOrId() }),)
         return module.Base_redirect(
                  'view', keep_items={'%s__uid' % base_category: relation.getUid(),
+                                     'portal_type': portal_type,
                                      'ignore_hide_rows': 1,
                                      'reset': 1,
                                      'portal_status_message': message})
