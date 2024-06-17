@@ -161,10 +161,6 @@
                           <string>specialise_title</string>
                           <string>title</string>
                         </tuple>
-                        <tuple>
-                          <string>slapos_master_url</string>
-                          <string>slapos_master_url</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

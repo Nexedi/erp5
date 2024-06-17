@@ -91,7 +91,8 @@
               }}),
               gadget.getUrlFor({command: 'change', options: {
                 page: 'ojsm_opml_delete',
-                jio_key: page_options.jio_key
+                jio_key: page_options.jio_key,
+                return_url: 'settings_configurator'
               }})
             ]);
           })

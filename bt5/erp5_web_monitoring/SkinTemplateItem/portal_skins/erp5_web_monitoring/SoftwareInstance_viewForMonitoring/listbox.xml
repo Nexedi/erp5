@@ -165,10 +165,6 @@
                           <string>channel_item</string>
                           <string>title</string>
                         </tuple>
-                        <tuple>
-                          <string>slapos_master_url</string>
-                          <string>slapos_master_url</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

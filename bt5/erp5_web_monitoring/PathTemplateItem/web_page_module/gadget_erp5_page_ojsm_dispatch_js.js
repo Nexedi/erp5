@@ -10,14 +10,13 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-      var gadget = this, portal_type, extended_search, query_parts_list, query_redirect;
+      var gadget = this, portal_type, extended_search, query_parts_list;
       if (options.query && options.url && options.username && options.password) {
         return new RSVP.Queue()
           .push(function () {
@@ -26,44 +25,33 @@
             });
           })
         .push(function (result) {
-          // URL queries from slapos master / panel rapid space:
-          // 'portal_type: "Instance Tree" AND title:"my-title"
-          // or
-          // 'portal_type: "Software Instance" AND title:"my-title"
-          //           AND specialise_title:"my-parent-title"
-          query_parts_list = options.query.split('AND');
-          portal_type = query_parts_list[0].replace('portal_type:', '').replaceAll('"', '').trim();
-          extended_search = options.query.replace(query_parts_list[0] + 'AND ', '').trim();
-          if (options.slapos_master_url) {
-            // disambiguate equal instances by slapos master url
-            if (result !== undefined && result.data.total_rows > 1) {
-              extended_search += ' AND slapos_master_url:"' + options.slapos_master_url + '"';
-            }
-          }
-          query_redirect = {
-            "page": "ojs_local_controller",
-            "portal_type": portal_type + " Module",
-            "extended_search": extended_search
-          };
           if (result === undefined || result.data.total_rows === 0) {
-            return gadget.setSetting('sync_redirect_options', query_redirect)
-              .push(function (result) {
-                return gadget.redirect(
-                  {"command": "display",
-                   "options": {
-                     "url": options.url,
-                     "username": options.username,
-                     "password": options.password,
-                     "slapos_master_url": options.slapos_master_url || "not-provided",
-                     "page": "ojsm_opml_add"
-                   }
-                  });
+            return gadget.redirect(
+              {"command": "display",
+               "options": {
+                 "url": options.url,
+                 "username": options.username,
+                 "password": options.password,
+                 "page": "ojsm_opml_add"
+               }
               });
           } else {
-            return gadget.redirect({
-              "command": "display",
-              "options": query_redirect
-            });
+            // URL queries from slapos master / panel rapid space:
+            // 'portal_type: "Instance Tree" AND title:"my-title"'
+            // or
+            // 'portal_type: "Software Instance" AND title:"my-title"
+            //           AND specialise_title:"my-parent-title"'
+            query_parts_list = options.query.split('AND');
+            portal_type = query_parts_list[0].replace('portal_type:', '').replaceAll('"', '').trim();
+            extended_search = options.query.replace(query_parts_list[0] + 'AND ', '').trim();
+            return gadget.redirect(
+              {"command": "display",
+               "options": {
+                "page": "ojs_local_controller",
+                "portal_type": portal_type + " Module",
+                "extended_search": extended_search
+              }
+              });
           }
         });
       } else if (options.url && options.username && options.password) {
@@ -73,7 +61,6 @@
              "url": options.url,
              "username": options.username,
              "password": options.password,
-             "slapos_master_url": options.slapos_master_url || "not-provided",
              "page": "ojsm_opml_add"
            }
           });

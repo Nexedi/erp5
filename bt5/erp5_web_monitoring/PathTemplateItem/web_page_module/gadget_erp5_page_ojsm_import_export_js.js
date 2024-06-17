@@ -5,7 +5,6 @@
            URLSearchParams) {
   "use strict";
 
-  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
     notify_msg_template = Handlebars.compile(
@@ -20,9 +19,8 @@
 
   function getMonitorSetting(gadget) {
     return gadget.jio_allDocs({
-      select_list: ["basic_login", "url", "title", "active", "state",
-                    "slapos_master_url"],
-      query: '(portal_type:"' + OPML_PORTAL_TYPE + '")'
+      select_list: ["basic_login", "url", "title", "active", "state"],
+      query: '(portal_type:"opml")'
     })
       .push(function (opml_result) {
         var i,
@@ -196,7 +194,7 @@
                     title: configuration_dict.opml_description[i].title,
                     url: configuration_dict.opml_description[i].href,
                     active: configuration_dict.opml_description[i].active,
-                    portal_type: OPML_PORTAL_TYPE,
+                    portal_type: "opml",
                     has_monitor: configuration_dict.opml_description[i]
                       .href.startsWith("https://"),
                     state: configuration_dict.opml_description[i].state || "Started"
@@ -222,7 +220,7 @@
               } else {
                 for (i = 0; i < configuration_dict.opml_description_list.length; i += 1) {
                   item = configuration_dict.opml_description_list[i];
-                  item.portal_type = OPML_PORTAL_TYPE;
+                  item.portal_type = "opml";
                   cred_list = atob(item.basic_login).split(':');
                   item.username = cred_list[0];
                   item.password = cred_list[1];
@@ -328,7 +326,7 @@
     }
   }
 
-  function getInstanceOPMLListFromMaster(gadget, limit, storage_url) {
+  function getInstanceOPMLListFromMaster(gadget, limit) {
     var instance_tree_list = [],
       opml_list = [],
       uid_dict = {};
@@ -383,7 +381,7 @@
             }
             if (instance_tree_list[uid_dict[tmp_uid]]) {
               opml_list.push({
-                portal_type: OPML_PORTAL_TYPE,
+                portal_type: "opml",
                 title: instance_tree_list[uid_dict[tmp_uid]]
                   .title,
                 relative_url: instance_tree_list[uid_dict[tmp_uid]]
@@ -396,8 +394,7 @@
                                   tmp_parameter.password),
                 active: tmp_parameter.opml_url !== undefined &&
                   instance_tree_list[uid_dict[tmp_uid]].active,
-                state: instance_tree_list[uid_dict[tmp_uid]].state,
-                slapos_master_url: storage_url
+                state: instance_tree_list[uid_dict[tmp_uid]].state
               });
             }
           }
@@ -456,17 +453,12 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this, i,
+      var gadget = this,
         is_exporter = options.exporter === "true",
         message_element = gadget.element.querySelector('.ui-message-alert');
       message_element.textContent = "";
-      if (options.url_list) {
-        options.url_list = options.url_list.split(",");
-        for (i = 0; i < options.url_list.length; i += 1) {
-          if (!options.url_list[i].endsWith('/')) {
-            options.url_list[i] += '/';
-          }
-        }
+      if (options.url && !options.url.endsWith('/')) {
+        options.url += '/';
       }
       if (is_exporter) {
         return new RSVP.Queue()
@@ -490,7 +482,7 @@
         config: "",
         message: message_element,
         sync: options.auto_sync,
-        storage_url_list: options.url_list
+        storage_url: options.url
       });
     })
     .declareJob('deferChangeState', function deferStateChange(state) {
@@ -594,10 +586,13 @@
             });
         })
         .push(function () {
-          var has_failed = false, push_queue = [],
-            i, full_opml_list = [];
-          function pushStorage(storage_url) {
-              return gadget.setSetting("hateoas_url", gadget.state.storage_url_list[i])
+          var has_failed = false;
+          if (gadget.state.sync === "erp5" && gadget.state.storage_url) {
+            // start import from erp5 now
+            return gadget.notifySubmitting()
+              .push(function () {
+                return gadget.setSetting("hateoas_url", gadget.state.storage_url);
+              })
               .push(function () {
                 return gadget.state.erp5_gadget.createJio();
               })
@@ -605,9 +600,9 @@
                 return gadget.getSetting('opml_import_limit', 300);
               })
               .push(function (select_limit) {
-                return getInstanceOPMLListFromMaster(gadget, select_limit, storage_url);
+                return getInstanceOPMLListFromMaster(gadget, select_limit);
               })
-              .push(undefined, function (error) {
+              .push(undefined, function () {
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
@@ -616,24 +611,13 @@
                   });
                 has_failed = true;
                 return [];
-              });
-          }
-          if (gadget.state.sync === "erp5" && gadget.state.storage_url_list) {
-            // start import from erp5 now
-            return gadget.notifySubmitting()
-              .push(function () {
-                for (i = 0; i < gadget.state.storage_url_list.length; i += 1) {
-                  push_queue.push(pushStorage(gadget.state.storage_url_list[i]));
-                }
-                return RSVP.all(push_queue);
               })
-              .push(function (all_results) {
-                full_opml_list = all_results.flat(1);
+              .push(function (opml_list) {
                 var i,
-                  push_queue_2 = new RSVP.Queue();
+                  push_queue = new RSVP.Queue();
 
                 function pushOPML(opml_dict) {
-                  push_queue_2
+                  push_queue
                     .push(function () {
                       return gadget.jio_put(opml_dict.url, opml_dict);
                     })
@@ -642,12 +626,12 @@
                     });
                 }
 
-                for (i = 0; i < full_opml_list.length; i += 1) {
-                  pushOPML(full_opml_list[i]);
+                for (i = 0; i < opml_list.length; i += 1) {
+                  pushOPML(opml_list[i]);
                 }
-                return push_queue_2;
+                return push_queue;
               })
-              .push(undefined, function (error) {
+              .push(undefined, function () {
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',

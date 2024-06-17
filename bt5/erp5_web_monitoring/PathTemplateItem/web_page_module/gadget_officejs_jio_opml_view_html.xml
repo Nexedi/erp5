@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -79,13 +79,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_import_export.js</string> </value>
+            <value> <string>gadget_officejs_jio_opml_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -95,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_import_export_js</string> </value>
+            <value> <string>gadget_officejs_jio_opml_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +103,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -115,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Monitoring Import Export JS</string> </value>
+            <value> <string>OfficeJS Jio OPML View</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -211,7 +209,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506444427.15</float>
+                              <float>1506358065.91</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -260,7 +258,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1014.43844.29599.43673</string> </value>
+                      <value> <string>963.29465.32349.33501</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -280,7 +278,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1708448979.03</float>
+                              <float>1510675412.13</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -343,7 +341,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506444397.32</float>
+                              <float>1506358032.88</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

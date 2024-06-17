@@ -3,7 +3,6 @@
 (function (window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars, jIO) {
   "use strict";
 
-  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
     notify_msg_template = Handlebars.compile(
@@ -140,9 +139,9 @@
 
   function saveOPML(gadget, doc, verify_password) {
     var opml_dict = {
-        type: OPML_PORTAL_TYPE,
+        type: "opml",
         title: doc.title,
-        portal_type: OPML_PORTAL_TYPE,
+        portal_type: "opml",
         url: doc.url,
         basic_login: btoa(doc.username + ':' + doc.password),
         username: doc.username,
@@ -152,12 +151,7 @@
         state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
       },
       update_password_list = [],
-      allow_force = false,
-      return_dict;
-    if (doc.slapos_master_url && doc.slapos_master_url !== undefined &&
-      doc.slapos_master_url !== "") {
-      opml_dict.slapos_master_url = doc.slapos_master_url;
-    }
+      allow_force = false;
     gadget.state.message.textContent = "";
 
     function validateOPML() {
@@ -334,13 +328,6 @@
             });
         }
         return {status: status, can_force: allow_force};
-      })
-      .push(function (dict) {
-        return_dict = dict;
-        return gadget.setSetting("latest_import_date", new Date().getTime());
-      })
-      .push(function (dict) {
-        return return_dict;
       });
   }
 
@@ -372,7 +359,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_put", "jio_put")
 

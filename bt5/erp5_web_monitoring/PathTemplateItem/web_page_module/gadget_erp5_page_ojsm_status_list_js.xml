@@ -67,7 +67,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>classification/collaborative/public</string>
               </tuple>
             </value>
         </item>
@@ -79,13 +79,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_import_export.js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_status_list.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -95,13 +93,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_import_export_js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_status_list_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -115,13 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Monitoring Import Export JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Monitoring Promise Status List Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -211,7 +201,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506444427.15</float>
+                              <float>1506516418.22</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +236,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -260,7 +250,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1014.43844.29599.43673</string> </value>
+                      <value> <string>971.52364.9776.56234</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -280,7 +270,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1708448979.03</float>
+                              <float>1542962994.23</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -343,7 +333,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506444397.32</float>
+                              <float>1506516385.15</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
