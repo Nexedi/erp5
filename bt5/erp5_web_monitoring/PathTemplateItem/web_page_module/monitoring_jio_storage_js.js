@@ -13,7 +13,7 @@
   /**
    *
    * Sample OPML Tree Replicated Storage spec
-   * 
+   *
    * {
    *  "type": "replicatedopml",
    *  "remote_storage_unreachable_status": "WARNING",
@@ -27,7 +27,7 @@
    *    }
    *  }
    * }
-   * 
+   *
    */
 
   var rusha = new Rusha(),
@@ -35,6 +35,7 @@
     PROMISE_TYPE = "Promise",
     SOFTWARE_INSTANCE_TYPE = "Software Instance",
     INSTANCE_TREE_TYPE = "Instance Tree",
+    OPML_PORTAL_TYPE = "Opml",
     ZONE_LIST = [
       "-1200",
       "-1100",
@@ -154,7 +155,7 @@
     var storage = this._local_sub_storage;
     return storage.get(id)
       .push(function (doc) {
-        if (doc.portal_type !== 'opml') {
+        if (doc.portal_type !== OPML_PORTAL_TYPE) {
           return storage.remove(id);
         }
         function removeOPMLTree(url) {
@@ -809,7 +810,7 @@
 
   function syncOpmlStorage(context) {
     return context._local_sub_storage.allDocs({
-      query: '(portal_type:"opml") AND (active:true) AND (url:"https://%")',
+      query: '(portal_type:"' + OPML_PORTAL_TYPE + '") AND (active:true) AND (url:"https://%")',
       select_list: ["title", "url", "basic_login"]
     })
       .push(function (storage_result) {

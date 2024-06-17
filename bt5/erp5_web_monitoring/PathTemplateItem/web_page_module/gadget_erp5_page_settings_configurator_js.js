@@ -3,6 +3,7 @@
 (function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
+  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
 
@@ -101,7 +102,7 @@
           .push(function () {
             element.setAttribute("disabled", "disabled");
             return gadget.jio_allDocs({
-              query: 'portal_type: "opml"',
+              query: 'portal_type: "' + OPML_PORTAL_TYPE + '"',
               select_list: ['title']
             })
               .push(function (result) {
@@ -317,7 +318,7 @@
                   "key": "monitoring_setting_listbox",
                   "lines": 20,
                   "list_method": "portal_catalog",
-                  "query": "urn:jio:allDocs?query=portal_type%3A%22opml%22",
+                  "query": "urn:jio:allDocs?query=portal_type%3A%22" + OPML_PORTAL_TYPE + "%22",
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
