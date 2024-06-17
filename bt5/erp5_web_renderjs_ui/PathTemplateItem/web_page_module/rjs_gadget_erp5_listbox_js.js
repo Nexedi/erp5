@@ -92,7 +92,6 @@
       element_data,
       sub_element,
       a_element,
-      a_properties,
       sub_element_list,
       td_element_list,
       tr_element_list = [];
@@ -157,13 +156,9 @@
             if (cell.editable || !cell.href) {
               sub_element_list.push(sub_element);
             } else {
-              a_properties = {
+              a_element = domsugar('a', {
                 "href": cell.href
-              };
-              if (cell.onclick) {
-                a_properties.onclick = cell.onclick;
-              }
-              a_element = domsugar('a', a_properties, [sub_element]);
+              }, [sub_element]);
               sub_element_list.push(a_element);
             }
 
@@ -1000,9 +995,6 @@
                       if (value.url_value.command) {
                         url_value = line_link_list[counter + index];
                         index += 1;
-                      } else if (value.url_value.onclick) {
-                        url_value = false;
-                        value.onclick = value.url_value.onclick;
                       } else {
                         url_value = false;
                       }
