@@ -5,6 +5,7 @@
            URLSearchParams) {
   "use strict";
 
+  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
     notify_msg_template = Handlebars.compile(
@@ -19,8 +20,9 @@
 
   function getMonitorSetting(gadget) {
     return gadget.jio_allDocs({
-      select_list: ["basic_login", "url", "title", "active", "state"],
-      query: '(portal_type:"opml")'
+      select_list: ["basic_login", "url", "title", "active", "state",
+                    "slapos_master_url"],
+      query: '(portal_type:"' + OPML_PORTAL_TYPE + '")'
     })
       .push(function (opml_result) {
         var i,
@@ -194,7 +196,7 @@
                     title: configuration_dict.opml_description[i].title,
                     url: configuration_dict.opml_description[i].href,
                     active: configuration_dict.opml_description[i].active,
-                    portal_type: "opml",
+                    portal_type: OPML_PORTAL_TYPE,
                     has_monitor: configuration_dict.opml_description[i]
                       .href.startsWith("https://"),
                     state: configuration_dict.opml_description[i].state || "Started"
@@ -220,7 +222,7 @@
               } else {
                 for (i = 0; i < configuration_dict.opml_description_list.length; i += 1) {
                   item = configuration_dict.opml_description_list[i];
-                  item.portal_type = "opml";
+                  item.portal_type = OPML_PORTAL_TYPE;
                   cred_list = atob(item.basic_login).split(':');
                   item.username = cred_list[0];
                   item.password = cred_list[1];
@@ -381,7 +383,7 @@
             }
             if (instance_tree_list[uid_dict[tmp_uid]]) {
               opml_list.push({
-                portal_type: "opml",
+                portal_type: OPML_PORTAL_TYPE,
                 title: instance_tree_list[uid_dict[tmp_uid]]
                   .title,
                 relative_url: instance_tree_list[uid_dict[tmp_uid]]
@@ -613,8 +615,7 @@
                 return [];
               })
               .push(function (opml_list) {
-                var i,
-                  push_queue = new RSVP.Queue();
+                var i, push_queue = new RSVP.Queue();
 
                 function pushOPML(opml_dict) {
                   push_queue
