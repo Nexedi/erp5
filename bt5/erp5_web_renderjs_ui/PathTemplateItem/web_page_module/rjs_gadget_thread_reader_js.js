@@ -222,7 +222,7 @@
                 }
                 var source_title = entry.value[gadget.state.source_column] || '',
                   attachment_list = entry.value
-                                         .DiscussionPost_getAttachmentList || [],
+                                         .Event_getAttachmentList || [],
                   attachment_element_list = [],
                   j,
                   word_list = source_title.split(' '),
@@ -320,7 +320,7 @@
         limit: limit_options,
         select_list: ['asStrippedHTML', gadget.state.date_column,
                       gadget.state.source_column,
-                      'DiscussionPost_getAttachmentList'],
+                      'Event_getAttachmentList'],
         sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
       })
         .push(function (result) {
