@@ -241,7 +241,10 @@
                         text: attachment_list[j].title,
                         href: attachment_list[j].url,
                         download: attachment_list[j].title
-                      })
+                      }),
+                      ' (',
+                      attachment_list[j].content_type || 'application/octet-stream',
+                      ')'
                     ])
                   );
                 }
