@@ -328,7 +328,7 @@
     }
   }
 
-  function getInstanceOPMLListFromMaster(gadget, limit) {
+  function getInstanceOPMLListFromMaster(gadget, limit, storage_url) {
     var instance_tree_list = [],
       opml_list = [],
       uid_dict = {};
@@ -396,7 +396,8 @@
                                   tmp_parameter.password),
                 active: tmp_parameter.opml_url !== undefined &&
                   instance_tree_list[uid_dict[tmp_uid]].active,
-                state: instance_tree_list[uid_dict[tmp_uid]].state
+                state: instance_tree_list[uid_dict[tmp_uid]].state,
+                slapos_master_url: storage_url
               });
             }
           }
@@ -455,12 +456,17 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this,
+      var gadget = this, i,
         is_exporter = options.exporter === "true",
         message_element = gadget.element.querySelector('.ui-message-alert');
       message_element.textContent = "";
-      if (options.url && !options.url.endsWith('/')) {
-        options.url += '/';
+      if (options.url_list) {
+        options.url_list = options.url_list.split(",");
+        for (i = 0; i < options.url_list.length; i += 1) {
+          if (!options.url_list[i].endsWith('/')) {
+            options.url_list[i] += '/';
+          }
+        }
       }
       if (is_exporter) {
         return new RSVP.Queue()
@@ -484,7 +490,7 @@
         config: "",
         message: message_element,
         sync: options.auto_sync,
-        storage_url: options.url
+        storage_url_list: options.url_list
       });
     })
     .declareJob('deferChangeState', function deferStateChange(state) {
@@ -589,11 +595,13 @@
         })
         .push(function () {
           var has_failed = false;
-          if (gadget.state.sync === "erp5" && gadget.state.storage_url) {
+          if (gadget.state.sync === "erp5" && gadget.state.storage_url_list) {
+            var storage_definition_list = [];
             // start import from erp5 now
             return gadget.notifySubmitting()
               .push(function () {
-                return gadget.setSetting("hateoas_url", gadget.state.storage_url);
+                //TODO use only one url for now
+                return gadget.setSetting("hateoas_url", gadget.state.storage_url_list[0]);
               })
               .push(function () {
                 return gadget.state.erp5_gadget.createJio();
@@ -602,14 +610,14 @@
                 return gadget.getSetting('opml_import_limit', 300);
               })
               .push(function (select_limit) {
-                return getInstanceOPMLListFromMaster(gadget, select_limit);
+                return getInstanceOPMLListFromMaster(gadget, select_limit, gadget.state.storage_url_list[0]);
               })
               .push(undefined, function () {
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
                     message: 'Error: Failed to get Monitor Configuration from URL: ' +
-                      gadget.state.storage_url
+                      gadget.state.storage_url_list[0]
                   });
                 has_failed = true;
                 return [];
@@ -637,7 +645,7 @@
                   .innerHTML = notify_msg_template({
                     status: 'error',
                     message: 'An error occurred while saving Configuration from URL: ' +
-                      gadget.state.storage_url
+                      gadget.state.storage_url_list[0]
                   });
                 has_failed = true;
               })
