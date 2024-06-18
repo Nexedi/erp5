@@ -434,14 +434,11 @@ var MapManager = /** @class */ (function () {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
       largeGroundBottom, width, depth, terrain, max;
     this.setMapInfo(GAMEPARAMETERS.map, GAMEPARAMETERS.initialPosition);
-    max = _this.map_info.width;
-    if (_this.map_info.depth > max) {
-      max = _this.map_info.depth;
-    }
-    if (_this.map_info.height > max) {
-      max = _this.map_info.height;
-    }
-    max = max < _this.map_info.depth ? _this.map_info.depth : max;
+    max = Math.max(
+      _this.map_info.depth,
+      _this.map_info.height,
+      _this.map_info.width
+    );
     // Skybox
     max_sky = (max * 10 < 20000) ? max * 10 : 20000;
     skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
@@ -475,20 +472,16 @@ var MapManager = /** @class */ (function () {
     terrain = scene.getMeshByName("terrain001");
     terrain.isVisible = true;
     terrain.position = BABYLON.Vector3.Zero();
-    terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
+    terrain.scaling = new BABYLON.Vector3(depth / 50000, _this.map_info.height / 50000,
                                           width / 50000);
   }
   MapManager.prototype.setMapInfo = function (map_dict, initial_position) {
-    var max_width = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                       [map_dict.min_lat, map_dict.max_lon]),
-      max_height = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                      [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height));
     this.map_info = {
-      "depth": map_size,
+      "depth": this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                   [map_dict.max_lat, map_dict.min_lon]),
       "height": map_dict.height,
-      "width": map_size,
-      "map_size": map_size,
+      "width": this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                   [map_dict.min_lat, map_dict.max_lon]),
       "start_AMSL": map_dict.start_AMSL
     };
     this.map_info.min_x = this.longitudToX(map_dict.min_lon);
@@ -505,10 +498,10 @@ var MapManager = /** @class */ (function () {
     return this.map_info;
   };
   MapManager.prototype.longitudToX = function (lon) {
-    return (this.map_info.map_size / 360.0) * (180 + lon);
+    return (this.map_info.width / 360.0) * (180 + lon);
   };
   MapManager.prototype.latitudeToY = function (lat) {
-    return (this.map_info.map_size / 180.0) * (90 - lat);
+    return (this.map_info.depth / 180.0) * (90 - lat);
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
     var R = 6371e3,
@@ -528,24 +521,22 @@ var MapManager = /** @class */ (function () {
         x = this.longitudToX(longitude),
         y = this.latitudeToY(latitude);
       return {
-        x: ((x - map_info.min_x) / (map_info.max_x - map_info.min_x))
-          * 1000 - map_info.width / 2,
-        y: ((y - map_info.min_y) / (map_info.max_y - map_info.min_y))
-          * 1000 - map_info.depth / 2,
+        x: (((x - map_info.min_x) / (map_info.max_x - map_info.min_x)) - 0.5)
+            * map_info.width,
+        y: (((y - map_info.min_y) / (map_info.max_y - map_info.min_y)) - 0.5)
+            * map_info.depth,
         z: altitude
       };
     };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z) {
-    var lon = x + this.map_info.width / 2,
-      lat = y + this.map_info.depth / 2;
-    lon = lon / 1000;
+    var lon = (x / this.map_info.width) + 0.5,
+      lat = (y / this.map_info.depth) + 0.5;
     lon = lon * (this.map_info.max_x - this.map_info.min_x) +
       this.map_info.min_x;
-    lon = lon / (this.map_info.map_size / 360.0) - 180;
-    lat = lat / 1000;
+    lon = lon / (this.map_info.width / 360.0) - 180;
     lat = lat * (this.map_info.max_y - this.map_info.min_y) +
       this.map_info.min_y;
-    lat = 90 - lat / (this.map_info.map_size / 180.0);
+    lat = 90 - lat / (this.map_info.depth / 180.0);
     return {
       latitude: lat,
       longitude: lon,
