@@ -586,8 +586,8 @@ var MapManager = /** @class */ (function () {
     largeGroundBottom.renderingGroupId = 1;
     // Terrain
     // Give map some margin from the flight limits
-    width = _this.map_info.width * 1.10;
-    depth = _this.map_info.depth * 1.10;
+    width = _this.map_info.width * 1.30;
+    depth = _this.map_info.depth * 1.30;
     //height = _this.map_info.height;
     terrain = scene.getMeshByName("terrain001");
     terrain.isVisible = true;
