@@ -1152,7 +1152,12 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._init = function () {
     var _this = this, canvas, hemi_north, hemi_south, camera, cam_radius,
-      on3DmodelsReady, map_size = 900; //GAMEPARAMETERS.map.map_size
+      on3DmodelsReady, mapUtils = new MapUtils(GAMEPARAMETERS.map),
+      map_size = Math.max(
+        mapUtils.map_info.depth,
+        mapUtils.map_info.height,
+        mapUtils.map_info.width
+      );
     canvas = this._canvas;
     this._delayed_defer_list = [];
     this._dispose();
@@ -1189,9 +1194,11 @@ var GameManager = /** @class */ (function () {
       this._scene
     );
     hemi_south.intensity = 0.75;
-    //HARDCODE camera to a hardcoded map_size
      //skybox scene limit
-    cam_radius = (map_size * 1.10 < 6000) ? map_size * 1.10 : 6000;
+    cam_radius = Math.min(
+      1.10 * Math.sqrt(mapUtils.map_info.width * mapUtils.map_info.depth),
+      6000
+    );
     camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;

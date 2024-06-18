@@ -425,87 +425,45 @@ var DroneManager = /** @class */ (function () {
 
 
 
-/******************************** MAP MANAGER *********************************/
+/******************************** MAP UTILIS **********************************/
 
-var MapManager = /** @class */ (function () {
+var MapUtils = /** @class */ (function () {
   "use strict";
+
+  var R = 6371e3;
+
   //** CONSTRUCTOR
-  function MapManager(scene) {
-    var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
-      largeGroundBottom, width, depth, terrain, max;
-    this.setMapInfo(GAMEPARAMETERS.map, GAMEPARAMETERS.initialPosition);
-    max = Math.max(
-      _this.map_info.depth,
-      _this.map_info.height,
-      _this.map_info.width
+  function MapUtils(map_param) {
+    var _this = this;
+    _this.map_param = {};
+    _this.map_param.height = map_param.height;
+    _this.map_param.start_AMSL = map_param.start_AMSL;
+    _this.map_param.min_lat = map_param.min_lat;
+    _this.map_param.max_lat = map_param.max_lat;
+    _this.map_param.min_lon = map_param.min_lon;
+    _this.map_param.max_lon = map_param.max_lon;
+    _this.map_param.depth = _this.latLonDistance(
+      [map_param.min_lat, map_param.min_lon],
+      [map_param.max_lat, map_param.min_lon]
     );
-    // Skybox
-    max_sky = (max * 10 < 20000) ? max * 10 : 20000;
-    skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
-    skybox.infiniteDistance = true;
-    skybox.renderingGroupId = 0;
-    skyboxMat = new BABYLON.StandardMaterial("skybox", scene);
-    skyboxMat.backFaceCulling = false;
-    skyboxMat.disableLighting = true;
-    skyboxMat.reflectionTexture = new BABYLON.CubeTexture("./assets/skybox/sky",
-                                                          scene);
-    skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMat.infiniteDistance = true;
-    skybox.material = skyboxMat;
-    // Plane from bottom
-    largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat", scene);
-    largeGroundMat.specularColor = BABYLON.Color3.Black();
-    largeGroundMat.alpha = 0.4;
-    largeGroundBottom = BABYLON.Mesh.CreatePlane("largeGroundBottom",
-                                                     max * 11, scene);
-    largeGroundBottom.position.y = -0.01;
-    largeGroundBottom.rotation.x = -Math.PI / 2;
-    largeGroundBottom.rotation.y = Math.PI;
-    largeGroundBottom.material = largeGroundMat;
-    // Camera
-    scene.activeCamera.upperRadiusLimit = max * 4;
-    // Terrain
-    // Give map some margin from the flight limits
-    width = _this.map_info.width * 1.10;
-    depth = _this.map_info.depth * 1.10;
-    //height = _this.map_info.height;
-    terrain = scene.getMeshByName("terrain001");
-    terrain.isVisible = true;
-    terrain.position = BABYLON.Vector3.Zero();
-    terrain.scaling = new BABYLON.Vector3(depth / 50000, _this.map_info.height / 50000,
-                                          width / 50000);
-  }
-  MapManager.prototype.setMapInfo = function (map_dict, initial_position) {
-    this.map_info = {
-      "depth": this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                   [map_dict.max_lat, map_dict.min_lon]),
-      "height": map_dict.height,
-      "width": this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                   [map_dict.min_lat, map_dict.max_lon]),
-      "start_AMSL": map_dict.start_AMSL
+    _this.map_param.width = _this.latLonDistance(
+      [map_param.min_lat, map_param.min_lon],
+      [map_param.min_lat, map_param.max_lon]
+    );
+    _this.map_info = {
+      "depth": _this.map_param.depth,
+      "width": _this.map_param.width
     };
-    this.map_info.min_x = this.longitudToX(map_dict.min_lon);
-    this.map_info.min_y = this.latitudeToY(map_dict.min_lat);
-    this.map_info.max_x = this.longitudToX(map_dict.max_lon);
-    this.map_info.max_y = this.latitudeToY(map_dict.max_lat);
-    this.map_info.initial_position = this.convertToLocalCoordinates(
-      initial_position.latitude,
-      initial_position.longitude,
-      initial_position.altitude
-    );
-  };
-  MapManager.prototype.getMapInfo = function () {
-    return this.map_info;
-  };
-  MapManager.prototype.longitudToX = function (lon) {
-    return (this.map_info.width / 360.0) * (180 + lon);
-  };
-  MapManager.prototype.latitudeToY = function (lat) {
-    return (this.map_info.depth / 180.0) * (90 - lat);
-  };
-  MapManager.prototype.latLonDistance = function (c1, c2) {
-    var R = 6371e3,
-      q1 = c1[0] * Math.PI / 180,
+    _this.map_info.height = _this.map_param.height;
+    _this.map_info.start_AMSL = _this.map_param.start_AMSL;
+    _this.map_info.min_x = _this.longitudToX(map_param.min_lon);
+    _this.map_info.min_y = _this.latitudeToY(map_param.min_lat);
+    _this.map_info.max_x = _this.longitudToX(map_param.max_lon);
+    _this.map_info.max_y = _this.latitudeToY(map_param.max_lat);
+  }
+
+  MapUtils.prototype.latLonDistance = function (c1, c2) {
+    var q1 = c1[0] * Math.PI / 180,
       q2 = c2[0] * Math.PI / 180,
       dq = (c2[0] - c1[0]) * Math.PI / 180,
       dl = (c2[1] - c1[1]) * Math.PI / 180,
@@ -515,7 +473,13 @@ var MapManager = /** @class */ (function () {
       c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-  MapManager.prototype.convertToLocalCoordinates =
+  MapUtils.prototype.longitudToX = function (lon) {
+    return (this.map_info.width / 360.0) * (180 + lon);
+  };
+  MapUtils.prototype.latitudeToY = function (lat) {
+    return (this.map_info.depth / 180.0) * (90 - lat);
+  };
+  MapUtils.prototype.convertToLocalCoordinates =
     function (latitude, longitude, altitude) {
       var map_info = this.map_info,
         x = this.longitudToX(longitude),
@@ -528,7 +492,7 @@ var MapManager = /** @class */ (function () {
         z: altitude
       };
     };
-  MapManager.prototype.convertToGeoCoordinates = function (x, y, z) {
+  MapUtils.prototype.convertToGeoCoordinates = function (x, y, z) {
     var lon = (x / this.map_info.width) + 0.5,
       lat = (y / this.map_info.depth) + 0.5;
     lon = lon * (this.map_info.max_x - this.map_info.min_x) +
@@ -542,6 +506,111 @@ var MapManager = /** @class */ (function () {
       longitude: lon,
       altitude: z
     };
+  };
+
+  return MapUtils;
+}());
+
+/******************************************************************************/
+
+
+
+/******************************** MAP MANAGER *********************************/
+
+var MapManager = /** @class */ (function () {
+  "use strict";
+  //default square map
+  var  MAP_HEIGHT = 700,
+    START_AMSL = 595,
+    MIN_LAT = 45.6419,
+    MAX_LAT = 45.65,
+    MIN_LON = 14.265,
+    MAX_LON = 14.2766,
+    MAP = {
+      "height": MAP_HEIGHT,
+      "start_AMSL": START_AMSL,
+      "min_lat": MIN_LAT,
+      "max_lat": MAX_LAT,
+      "min_lon": MIN_LON,
+      "max_lon": MAX_LON
+    };
+
+  //** CONSTRUCTOR
+  function MapManager(scene, map_param, initial_position) {
+    var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
+      largeGroundBottom, width, depth, terrain, max;
+    if (!map_param) {
+      // Use default map base parameters
+      map_param = MAP;
+    }
+    _this.mapUtils = new MapUtils(map_param);
+    _this.map_info = map_param;
+    Object.assign(_this.map_info, _this.mapUtils.map_info);
+    _this.map_info.initial_position = _this.mapUtils.convertToLocalCoordinates(
+      initial_position.latitude,
+      initial_position.longitude,
+      initial_position.altitude
+    );
+    max = Math.max(
+      _this.map_info.depth,
+      _this.map_info.height,
+      _this.map_info.width
+    );
+    // Skybox
+    max_sky =  (max * 15 < 20000) ? max * 15 : 20000; //skybox scene limit
+    skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: max_sky }, scene);
+    skyboxMat = new BABYLON.StandardMaterial("skybox", scene);
+    skyboxMat.backFaceCulling = false;
+    skyboxMat.disableLighting = true;
+    skyboxMat.reflectionTexture = new BABYLON.CubeTexture("./assets/skybox/sky",
+                                                          scene);
+    skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMat.infiniteDistance = true;
+    skybox.material = skyboxMat;
+    skybox.infiniteDistance = true;
+    skyboxMat.disableLighting = true;
+    skyboxMat.reflectionTexture = new BABYLON.CubeTexture("./assets/skybox/sky",
+                                                          scene);
+    skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skybox.renderingGroupId = 0;
+    // Plane from bottom
+    largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat", scene);
+    largeGroundMat.specularColor = BABYLON.Color3.Black();
+    largeGroundMat.alpha = 0.4;
+    largeGroundBottom = BABYLON.Mesh.CreatePlane("largeGroundBottom",
+                                                 max * 11, scene);
+    largeGroundBottom.position.y = -0.01;
+    largeGroundBottom.rotation.x = -Math.PI / 2;
+    largeGroundBottom.rotation.y = Math.PI;
+    largeGroundBottom.material = largeGroundMat;
+    largeGroundBottom.renderingGroupId = 1;
+    // Terrain
+    // Give map some margin from the flight limits
+    width = _this.map_info.width * 1.10;
+    depth = _this.map_info.depth * 1.10;
+    //height = _this.map_info.height;
+    terrain = scene.getMeshByName("terrain001");
+    terrain.isVisible = true;
+    terrain.position = BABYLON.Vector3.Zero();
+    terrain.scaling = new BABYLON.Vector3(depth / 50000, _this.map_info.height / 50000,
+                                          width / 50000);
+  }
+  MapManager.prototype.getMapInfo = function () {
+    return this.map_info;
+  };
+  MapManager.prototype.latLonDistance = function (c1, c2) {
+    return this.mapUtils.latLonDistance(c1, c2);
+  };
+  MapManager.prototype.convertToLocalCoordinates =
+    function (latitude, longitude, altitude) {
+      return this.mapUtils.convertToLocalCoordinates(
+        latitude,
+        longitude,
+        altitude
+      );
+    };
+  MapManager.prototype.convertToGeoCoordinates = function (x, y, z) {
+    return this.mapUtils.convertToGeoCoordinates(x, y, z);
   };
   return MapManager;
 }());
@@ -847,7 +916,14 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._init = function () {
-    var _this = this, canvas, hemi_north, hemi_south, camera, on3DmodelsReady;
+    var _this = this, canvas, hemi_north, hemi_south, camera, cam_radius,
+      on3DmodelsReady,
+      mapUtils = new MapUtils(GAMEPARAMETERS.map),
+      map_size = Math.max(
+        mapUtils.map_info.depth,
+        mapUtils.map_info.height,
+        mapUtils.map_info.width
+      );
     canvas = this._canvas;
     this._delayed_defer_list = [];
     this._dispose();
@@ -881,9 +957,15 @@ var GameManager = /** @class */ (function () {
       this._scene
     );
     hemi_south.intensity = 0.75;
-    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, 800,
+    cam_radius = Math.min(
+      1.10 * Math.sqrt(mapUtils.map_info.width * mapUtils.map_info.depth),
+      6000
+    );
+    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;
+    //zoom out limit
+    camera.upperRadiusLimit = map_size * 10;
     //changed for event handling
     //camera.attachControl(this._scene.getEngine().getRenderingCanvas()); //orig
     camera.attachControl(canvas, true);
@@ -902,8 +984,9 @@ var GameManager = /** @class */ (function () {
         ctx._map_swapped = true;
       }
       // Init the map
-      _this._mapManager = new MapManager(ctx._scene);
-      ctx._spawnDrones(_this._mapManager.map_info.initial_position,
+      _this._mapManager = new MapManager(ctx._scene, GAMEPARAMETERS.map,
+                                         GAMEPARAMETERS.initialPosition);
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.droneList, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
