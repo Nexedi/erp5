@@ -21,6 +21,7 @@
     }
     return gadget.getDeclaredGadget('graph_gadget')
       .push(function (graph_gadget) {
+        data.new_format = true;
         return graph_gadget.render({value: data});
       });
   }

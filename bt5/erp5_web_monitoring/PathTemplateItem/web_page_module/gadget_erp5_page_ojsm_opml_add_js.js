@@ -11,6 +11,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
@@ -72,17 +73,27 @@
                     "options": {page: "ojs_local_controller",
                                 portal_type: "Promise Module"}
                   };
-                  if (gadget.state.auto_sync) {
-                    return gadget.getDeclaredGadget('sync_gadget')
-                      .push(function (sync_gadget) {
-                        // start synchronization now
-                        return sync_gadget.register({now: true});
-                      })
-                      .push(function () {
-                        return gadget.redirect(redirect_options);
-                      });
-                  }
-                  return gadget.redirect(redirect_options);
+                  return gadget.getSetting('sync_redirect_options')
+                    .push(function (sync_redirect_options) {
+                      if (sync_redirect_options) {
+                        redirect_options.options = sync_redirect_options;
+                        return gadget.setSetting("sync_redirect_options", undefined);
+                      }
+                    })
+                    .push(function () {
+
+                      if (gadget.state.auto_sync) {
+                        return gadget.getDeclaredGadget('sync_gadget')
+                          .push(function (sync_gadget) {
+                            // start synchronization now
+                            return sync_gadget.register({now: true});
+                          })
+                          .push(function () {
+                            return gadget.redirect(redirect_options);
+                          });
+                      }
+                      return gadget.redirect(redirect_options);
+                    });
                 }
                 if (result_list[1].can_force) {
                   gadget.element.getElementsByClassName("btn-nopasswd")[0]
@@ -146,6 +157,17 @@
                   "hidden": 0,
                   "type": "PasswordField"
                 },
+                "my_slapos_master_url": {
+                  "description": "Slapos master URL",
+                  "title": "Slapos master URL",
+                  "default": options.slapos_master_url || "not-provided",
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "slapos_master_url",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
                 "my_portal_type": {
                   "description": "The name of a document in ERP5",
                   "title": "Portal Type",
@@ -202,7 +224,7 @@
               group_list: [[
                 "left",
                 [["my_url"], ["my_username"], ["my_password"],
-                  ["my_portal_type"], ["my_active"],
+                  ["my_slapos_master_url"], ["my_portal_type"], ["my_active"],
                   ["my_new_password"], ["my_confirm_new_password"]]
               ]]
             }

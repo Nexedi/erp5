@@ -5,7 +5,7 @@
 
   rJS(window)
     .setState({
-      erp5_url: "https://panel.rapid.space/hateoas/"
+      erp5_url_list: "https://panel.rapid.space/hateoas/"
     })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -19,21 +19,21 @@
     // Form submit
     /////////////////////////////////////////
     .onEvent('submit', function () {
-      var gadget = this,
-        master_url;
+      var gadget = this, i,
+        master_url_list;
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.getContent();
         })
         .push(function (content) {
-          master_url = content.erp5_url;
-          return gadget.setSetting("hateoas_url", master_url);
-        })
-        .push(function () {
+          master_url_list = content.erp5_url_list.split(/\r?\n|\r|\n/g);
+          for (i = 0; i < master_url_list.length; i += 1) {
+            master_url_list[i] = master_url_list[i].trim();
+          }
           return gadget.redirect({command: "display", options: {
             page: "ojsm_import_export",
             auto_sync: "erp5",
-            url: master_url
+            url_list: master_url_list
           }});
         });
     })
@@ -47,19 +47,20 @@
 
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
+          //TODO replace textarea by N stringfield inputs
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
-                "my_erp5_url": {
+                "my_erp5_url_list": {
                   "description": "",
-                  "title": "Connection Url",
-                  "default": gadget.state.erp5_url,
+                  "title": "Connection Url List",
+                  "default": gadget.state.erp5_url_list,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "erp5_url",
+                  "key": "erp5_url_list",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "TextAreaField"
                 }
               }},
               "_links": {
@@ -72,7 +73,7 @@
             form_definition: {
               group_list: [[
                 "top",
-                [["my_erp5_url"]]
+                [["my_erp5_url_list"]]
               ]]
             }
           });
