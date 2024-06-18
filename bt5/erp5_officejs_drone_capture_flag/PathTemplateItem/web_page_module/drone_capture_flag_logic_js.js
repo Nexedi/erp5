@@ -505,8 +505,9 @@ var MapManager = /** @class */ (function () {
   //** CONSTRUCTOR
   function MapManager(scene, map_param) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
-      largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
+      largeGroundBottom, width, depth, terrain, flag_a, flag_b, mast, flag,
       count = 0, new_obstacle, obstacle, flag_info, enemy,
+      max,
       FLAG_SIZE = {
         'x': 1,
         'y': 1,
@@ -524,14 +525,11 @@ var MapManager = /** @class */ (function () {
       _this.map_info.initial_position.longitude,
       _this.map_info.initial_position.altitude
     );
-    max = _this.map_info.width;
-    if (_this.map_info.depth > max) {
-      max = _this.map_info.depth;
-    }
-    if (_this.map_info.height > max) {
-      max = _this.map_info.height;
-    }
-    max = max < _this.map_info.depth ? _this.map_info.depth : max;
+    max = Math.max(
+      _this.map_info.depth,
+      _this.map_info.height,
+      _this.map_info.width
+    );
     // Skybox
     max_sky =  (max * 15 < 20000) ? max * 15 : 20000; //skybox scene limit
     skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: max_sky }, scene);
@@ -564,7 +562,7 @@ var MapManager = /** @class */ (function () {
     terrain = scene.getMeshByName("terrain001");
     terrain.isVisible = true;
     terrain.position = BABYLON.Vector3.Zero();
-    terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
+    terrain.scaling = new BABYLON.Vector3(depth / 50000, _this.map_info.height / 50000,
                                           width / 50000);
     // Enemies
     _this._enemy_list = [];
@@ -696,12 +694,6 @@ var MapManager = /** @class */ (function () {
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
     return this.mapUtils.latLonDistance(c1, c2);
-  };
-  MapManager.prototype.longitudToX = function (lon) {
-    return this.mapUtils.longitudToX(lon);
-  };
-  MapManager.prototype.latitudeToY = function (lat) {
-    return this.mapUtils.latitudeToY(lat);
   };
   MapManager.prototype.convertToLocalCoordinates =
     function (latitude, longitude, altitude) {
@@ -862,12 +854,14 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._checkDroneOut = function (drone) {
     if (drone.position) {
-      var map_limit = this._mapManager.getMapInfo().map_size / 2;
-      return (drone.position.z > this._mapManager.getMapInfo().height) ||
-        (drone.position.x < -map_limit) ||
-        (drone.position.x > map_limit) ||
-        (drone.position.y < -map_limit) ||
-        (drone.position.y > map_limit);
+      var map_info = this._mapManager.getMapInfo(),
+        width_limit = map_info.width / 2,
+        depth_limit = map_info.depth / 2;
+      return (drone.position.z > map_info.height) ||
+        (drone.position.x < -width_limit) ||
+        (drone.position.x > width_limit) ||
+        (drone.position.y < -depth_limit) ||
+        (drone.position.y > depth_limit);
     }
   };
 
