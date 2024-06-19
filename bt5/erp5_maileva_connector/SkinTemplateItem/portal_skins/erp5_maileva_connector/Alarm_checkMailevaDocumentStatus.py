@@ -1,5 +1,5 @@
 portal = context.getPortalObject()
-maileva_connector = context.MailevaSOAPConnector_getAvailableConnector()
+maileva_connector = portal.ERP5Site_getAvailableMailevaSOAPConnector()
 
 notification_dict = maileva_connector.checkPendingNotifications()
 
