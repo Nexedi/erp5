@@ -27,7 +27,13 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Preferences' and contains(@href, '#!push_history') and contains(@href, 'n.page=preference')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Active Preference' and contains(@href, '#!push_history') and contains(@href, 'n.page=preference')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Preferences' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=portal_preferences')]</td>
   <td></td>
 </tr>
 

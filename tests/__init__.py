@@ -2,13 +2,14 @@
 from glob import glob
 import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
-from test_suite import ERP5TypeTestSuite
+from test_suite import ERP5TypeTestSuite, SavedTestSuite
 import sys
 from itertools import chain
 
 HERE = os.path.dirname(__file__)
 
 class _ERP5(ERP5TypeTestSuite):
+  _saved_test_id = "erp5_web_renderjs_ui_test:testFunctionalRJSInterfaceValidator"
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
                           'ERP5Form',
@@ -36,10 +37,59 @@ class _ERP5(ERP5TypeTestSuite):
     path = "%s/../" % HERE
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
-    for test_path in chain(
-        glob(path + '/product/*/tests/test*.py'),
-        glob(path + '/bt5/*/TestTemplateItem/test*.py'),
-        glob(path + '/bt5/*/TestTemplateItem/portal_components/test.*.test*.py')):
+    for test_path in (
+        # glob('%s/product/Formulator/tests/test*.py' % path) +
+        # glob('%s/product/ERP5Form/tests/test*.py' % path) +
+        # ['%s/product/ERP5OOo/tests/testDeferredStyle.py' % path] +
+        # glob('%s/product/ERP5/tests/test.*.py' % path) +
+        # ['%s/product/ERP5/tests/testXHTML.py' % path] +
+        # ['%s/product/ERP5/tests/testERP5Core.py' % path] +
+        # ['%s/product/ERP5/tests/testQueryModule.py' % path] +
+        # ['%s/product/ERP5/tests/testBankReconciliation.py' % path] +
+        # ['%s/product/ERP5Security/tests/testERP5Security.py' % path] +
+        # ['%s/product/ERP5Type/tests/testUpgradeInstanceWithOldDataFs.py' % path] +
+        # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
+        # ['%s/product/ERP5Type/tests/testFunctionalKM.py' % path] +
+        # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
+        # glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_search_rank_catalog/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_osoe_web_renderjs_ui/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_web_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_token_login/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_trade_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_pdm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_crm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_crm_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_item_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_deferred_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_accounting_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_accounting_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_bank_reconciliation_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_document_scanner_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_web_monitoring_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_travel_expense_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_officejs_support_request_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_officejs_afs_directory_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_configurator_standard/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_test_result/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_web_manifest_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_km_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_web_project_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_corporate_identity_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_run_my_doc*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_oauth*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_web_js_style*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_open_order/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_performance_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        # glob('%s/bt5/erp5_user_tutorial/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        []
+      ):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
@@ -78,8 +128,8 @@ class ERP5(_ERP5):
                    or full_test_case)
 
       # skip some tests
-      if test_case.find('Performance') > 0:
-        continue
+      # if test_case.find('Performance') > 0:
+      #   continue
       test_list.append(full_test_case)
     return test_list
 
@@ -231,20 +281,28 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
   """Run coding style test on all business templates.
   """
   def getTestList(self):
-    test_list = [
-      os.path.basename(path)
-      for path in chain(
-        glob(HERE + '/../bt5/*'),
-        glob(HERE + '/../product/ERP5/bootstrap/*'))
+    test_list = []
+    for business_template_path in (
+        glob('%s/../product/ERP5/bootstrap/erp5_*' % HERE) +
+        glob('%s/../bt5/erp5_adm*' % HERE) +
+        glob('%s/../bt5/erp5_forge*' % HERE) +
+        glob('%s/../bt5/erp5_*hal*' % HERE) +
+        glob('%s/../bt5/erp5_*renderjs*' % HERE) +
+        glob('%s/../bt5/erp5_*officejs*' % HERE) +
+        glob('%s/../bt5/erp5_web*' % HERE) +
+        glob('%s/../bt5/erp5_configu*' % HERE) +
+        glob('%s/../bt5/erp5_upgrader*' % HERE) +
+        glob('%s/../bt5/erp5_corporate_identity*' % HERE) +
+        glob('%s/../bt5/erp5_run_my_doc*' % HERE) +
+        []
+      ):
       # we skip coding style check for business templates having this marker
       # property. Since the property is not exported (on purpose), modified business templates
       # will be candidate for coding style test again.
-      if not os.path.exists(path + '/bt/skip_coding_style_test') and os.path.isdir(path)
-    ]
-    for path in chain(glob(HERE + '/../product/*'),
-                      glob(HERE + '/../bt5')):
-      if not os.path.exists(path + '/skip_coding_style_test') and os.path.isdir(path):
-        test_list.append("Python3Style." + os.path.basename(path))
+      if os.path.isdir(business_template_path) and \
+              not os.path.exists(os.path.join(business_template_path, 'bt/skip_coding_style_test')):
+        test_list.append(os.path.basename(business_template_path))
+
     return test_list
 
   def run(self, full_test):

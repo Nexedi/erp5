@@ -29,6 +29,7 @@
 
           return RSVP.hash({
             translation: gadget.getTranslationDict([
+              'Active Preference',
               'Preferences',
               'Language',
               'Profile',
@@ -50,8 +51,6 @@
                 // Calculate user name
                 if (result === undefined) {
                   user = null;
-                } else if (result.data.rows.length === 0) {
-                  user = null;
                 } else {
                   user = result.data.rows[0].value.title;
                 }
@@ -60,8 +59,10 @@
             url_dict: gadget.getUrlForDict({
               // Back url
               back: {command: 'history_previous'},
-              preference: {command: 'push_history',
-                           options: {page: "preference"}},
+              my_preference: {command: 'push_history',
+                              options: {page: "preference"}},
+              portal_preference: {command: 'push_history',
+                                  options: {jio_key: "portal_preferences"}},
               person: {command: 'push_history',
                         options: {jio_key: me_relative_url}},
               // Change language
@@ -75,7 +76,11 @@
           domsugar(gadget.element.querySelector('.document_list'), [
             domsugar('ul', {'class': 'document-listview'}, [
               domsugar('li', [
-                domsugar('a', {href: result_dict.url_dict.preference,
+                domsugar('a', {href: result_dict.url_dict.my_preference,
+                               text: result_dict.translation['Active Preference']})
+              ]),
+              domsugar('li', [
+                domsugar('a', {href: result_dict.url_dict.portal_preference,
                                text: result_dict.translation.Preferences})
               ]),
               (me_relative_url === undefined) ? '' :
