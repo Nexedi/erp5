@@ -1764,7 +1764,9 @@ class ActivityTool (BaseTool):
         return RESPONSE.redirect(self.absolute_url_path() +
           '/manageActivitiesAdvanced?manage_tabs_message=Activities%20Cleared')
 
-    security.declarePublic('getMessageTempObjectList')
+
+    security.declareProtected( CMFCorePermissions.ManagePortal,
+                               'getMessageTempObjectList')
     def getMessageTempObjectList(self, **kw):
       """
         Get object list of messages waiting in queues
