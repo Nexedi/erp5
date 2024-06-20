@@ -620,7 +620,7 @@ var OperatorAPI = /** @class */ (function () {
                 "editable": 1,
                 "key": "drone_max_acceleration",
                 "hidden": 0,
-                "type": "IntegerField"
+                "type": "FloatField"
               },
               "my_drone_max_deceleration": {
                 "description": "",
@@ -846,7 +846,7 @@ var OperatorAPI = /** @class */ (function () {
       }
       game_parameters_json = {
         "drone": {
-          "maxAcceleration": parseInt(gadget.state.drone_max_acceleration, 10),
+          "maxAcceleration": parseFloat(gadget.state.drone_max_acceleration),
           "maxDeceleration": parseInt(gadget.state.drone_max_deceleration, 10),
           "minSpeed": parseInt(gadget.state.drone_min_speed, 10),
           "speed": parseFloat(gadget.state.drone_speed),
