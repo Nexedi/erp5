@@ -335,7 +335,7 @@
     if (limit === undefined) {
       limit = 300;
     }
-    return gadget.state.erp5_gadget.allDocs({
+    return gadget.state.jio_gadget.allDocs({
       query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
       select_list: ['title', 'default_successor_uid', 'uid', 'slap_state'],
       limit: [0, limit],
@@ -362,7 +362,7 @@
             }
           }
         }
-        return gadget.state.erp5_gadget.allDocs({
+        return gadget.state.jio_gadget.allDocs({
           query: '(portal_type:"Software Instance") AND ' +
             '(successor_related_uid:("' + uid_search_list.join('","') + '"))',
           select_list: ['uid', 'successor_related_uid', 'connection_xml'],
@@ -415,12 +415,12 @@
       config: "",
       is_export: false,
       options: "",
-      erp5_gadget: ""
+      jio_gadget: ""
     })
     .ready(function (g) {
-      return g.getDeclaredGadget('erp5_gadget')
-        .push(function (erp5_gadget) {
-          return g.changeState({erp5_gadget: erp5_gadget});
+      return g.declareGadget('gadget_jio.html')
+        .push(function (jio_gadget) {
+          return g.changeState({jio_gadget: jio_gadget});
         });
     })
     /////////////////////////////////////////////////////////////////
@@ -600,11 +600,15 @@
             // start import from erp5 now
             return gadget.notifySubmitting()
               .push(function () {
-                //TODO use only one url for now
-                return gadget.setSetting("hateoas_url", gadget.state.storage_url_list[0]);
+                gadget.getSetting('default_view_reference');
               })
-              .push(function () {
-                return gadget.state.erp5_gadget.createJio();
+              .push(function (default_view_reference) {
+                return gadget.state.jio_gadget.createJio({
+                  type: "erp5",
+                  //TODO use only one url for now
+                  url: gadget.state.storage_url_list[0],
+                  default_view_reference: default_view_reference
+                });
               })
               .push(function () {
                 return gadget.getSetting('opml_import_limit', 300);
