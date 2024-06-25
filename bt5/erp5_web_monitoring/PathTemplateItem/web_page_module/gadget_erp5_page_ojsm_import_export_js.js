@@ -328,7 +328,7 @@
     }
   }
 
-  function getInstanceOPMLListFromMaster(gadget, limit, storage_url) {
+  function getInstanceOPMLListFromMaster(gadget, limit) {
     var instance_tree_list = [],
       opml_list = [],
       uid_dict = {};
@@ -344,13 +344,17 @@
       ]*/
     })
       .push(function (result) {
-        var i,
+        var i, slapos_id,
           uid_search_list = [];
         for (i = 0; i < result.data.total_rows; i += 1) {
           if (result.data.rows[i].value.slap_state !== "destroy_requested") {
+            //TODO slapos_id could be used to desambiguate identic title
+            //instances trees between different storages
+            slapos_id = result.data.rows[i].value.title;
             instance_tree_list.push({
               title: result.data.rows[i].value.title,
               relative_url: result.data.rows[i].id,
+              slapos_id: slapos_id,
               active: (result.data.rows[i].value.slap_state ===
                        "start_requested") ? true : false,
               state: (result.data.rows[i].value.slap_state ===
@@ -397,7 +401,7 @@
                 active: tmp_parameter.opml_url !== undefined &&
                   instance_tree_list[uid_dict[tmp_uid]].active,
                 state: instance_tree_list[uid_dict[tmp_uid]].state,
-                slapos_master_url: storage_url
+                slapos_master_url: ""
               });
             }
           }
@@ -621,7 +625,7 @@
                 return gadget.getSetting('opml_import_limit', 300);
               })
               .push(function (select_limit) {
-                return getInstanceOPMLListFromMaster(gadget, select_limit, gadget.state.storage_url_list[0]);
+                return getInstanceOPMLListFromMaster(gadget, select_limit);
               })
               .push(undefined, function () {
                 gadget.state.message

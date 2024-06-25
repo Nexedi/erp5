@@ -36,6 +36,7 @@
           extended_search = options.query.replace(query_parts_list[0] + 'AND ', '').trim();
           if (options.slapos_master_url) {
             // disambiguate equal instances by slapos master url
+            // TODO refactor this if slapos_id disambiguation way is choose
             if (result !== undefined && result.data.total_rows > 1) {
               extended_search += ' AND slapos_master_url:"' + options.slapos_master_url + '"';
             }
