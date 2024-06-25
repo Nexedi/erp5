@@ -41,6 +41,7 @@ from AccessControl import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole, findContentChain
+from Products.ERP5Form.ProxyField import BrokenProxyField
 from Products.CMFCore.utils import getToolByName
 # You can invoke same tests in your favourite collection of business templates
 # by using TestXHTMLMixin like the following :
@@ -106,7 +107,10 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         for field_path, field in skins_tool[skin_folder_id].ZopeFind(
                   skins_tool[skin_folder_id],
                   obj_metatypes=['ProxyField'], search_sub=1):
-          template_field = field.getTemplateField(cache=False)
+          try:
+            template_field = field.getTemplateField(cache=False)
+          except BrokenProxyField:
+            template_field = None
           if template_field is None:
             # Base_viewRelatedObjectList (used for proxy listbox ids on
             # relation fields) is an exception, the proxy field has no target
