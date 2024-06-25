@@ -112,6 +112,11 @@ class TestXHTMLMixin(ERP5TypeTestCase):
           except BrokenProxyField:
             template_field = None
           if template_field is None:
+            # field's parent form can actually exists but not in current skin, check if it can be found in portal_skins
+            found_list_action_list = skins_tool.ZopeFind(skins_tool, obj_ids=[field.form.id], search_sub=1)
+            if found_list_action_list:
+              if found_list_action_list[0][1] != field.form:
+                continue
             # Base_viewRelatedObjectList (used for proxy listbox ids on
             # relation fields) is an exception, the proxy field has no target
             # by default.
