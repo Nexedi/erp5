@@ -432,14 +432,11 @@ class ProxyField(ZMIField):
     else:
       proxy_form = getattr(object, form_id, None)
 
-    if (proxy_form is not None):
+    if (proxy_form is not None) and (proxy_form.meta_type == 'ERP5 Form'):
+      # If the proxy_form is not an ERP5 Form, but a Page Template,
+      # accessing _getOb method fails
       field_id = self.get_value('field_id')
-      try:
-        proxy_field = proxy_form._getOb(field_id, None)
-      except AttributeError:
-        # If the proxy_form is not an ERP5 Form, but a Page Template,
-        # accessing _getOb method fails
-        proxy_field = None
+      proxy_field = proxy_form._getOb(field_id, None)
       if proxy_field is None:
         if form_id_with_skin_folder_name_flag is False:
           # Try to get the field from another field library with a lower
