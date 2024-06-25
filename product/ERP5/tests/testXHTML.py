@@ -112,6 +112,12 @@ class TestXHTMLMixin(ERP5TypeTestCase):
           except BrokenProxyField:
             template_field = None
           if template_field is None:
+            # check if the field parent form can be used by this skin_name
+            field_form_id = field_path.split('/')[0]
+            if not skins_tool.isFirstInSkin('%s/%s' % (skin_folder_id, field_form_id), skin=skin_name):
+              # The problematic form will not be used by this skin selection
+              # as another object with the same name exists
+              continue
             # Base_viewRelatedObjectList (used for proxy listbox ids on
             # relation fields) is an exception, the proxy field has no target
             # by default.
