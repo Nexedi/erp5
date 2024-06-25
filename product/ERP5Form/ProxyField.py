@@ -432,7 +432,9 @@ class ProxyField(ZMIField):
     else:
       proxy_form = getattr(object, form_id, None)
 
-    if (proxy_form is not None):
+    if (proxy_form is not None) and (proxy_form.meta_type == 'ERP5 Form'):
+      # If the proxy_form is not an ERP5 Form, but a Page Template,
+      # accessing _getOb method fails
       field_id = self.get_value('field_id')
       proxy_field = proxy_form._getOb(field_id, None)
       if proxy_field is None:
