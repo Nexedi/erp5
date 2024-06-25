@@ -337,11 +337,11 @@
     }
     return gadget.state.jio_gadget.allDocs({
       query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
-      select_list: ['title', 'default_successor_uid', 'uid', 'slap_state'],
-      limit: [0, limit],
+      select_list: ['title', 'default_successor_uid', 'uid', 'slap_state', 'id'],
+      /*limit: [0, limit],
       sort_on: [
         ["creation_date", "descending"]
-      ]
+      ]*/
     })
       .push(function (result) {
         var i,
@@ -365,8 +365,8 @@
         return gadget.state.jio_gadget.allDocs({
           query: '(portal_type:"Software Instance") AND ' +
             '(successor_related_uid:("' + uid_search_list.join('","') + '"))',
-          select_list: ['uid', 'successor_related_uid', 'connection_xml'],
-          limit: [0, limit]
+          select_list: ['uid', 'successor_related_uid', 'connection_xml']/*,
+          limit: [0, limit]*/
         });
       })
       .push(function (result) {
@@ -594,7 +594,7 @@
             });
         })
         .push(function () {
-          var has_failed = false;
+          var has_failed = false, i;
           if (gadget.state.sync === "erp5" && gadget.state.storage_url_list) {
             var storage_definition_list = [];
             // start import from erp5 now
@@ -603,12 +603,19 @@
                 gadget.getSetting('default_view_reference');
               })
               .push(function (default_view_reference) {
-                return gadget.state.jio_gadget.createJio({
-                  type: "erp5",
-                  //TODO use only one url for now
-                  url: gadget.state.storage_url_list[0],
-                  default_view_reference: default_view_reference
-                });
+                for (i = 0; i < gadget.state.storage_url_list.length; i += 1) {
+                  storage_definition_list.push({
+                    type: "erp5",
+                    url: gadget.state.storage_url_list[i],
+                    default_view_reference: default_view_reference
+                  });
+                }
+                return gadget.state.jio_gadget.createJio(
+                  {
+                    "type": "union",
+                    "storage_list": storage_definition_list
+                  }
+                );
               })
               .push(function () {
                 return gadget.getSetting('opml_import_limit', 300);
