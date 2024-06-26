@@ -1,6 +1,7 @@
 <property_sheet_list>
  <portal_type id="Google Connector">
   <item>OAuthClient</item>
+  <item>SocketClient</item>
  </portal_type>
  <portal_type id="Template Tool">
   <item>TemplateToolERP5GoogleExtractionPluginConstraint</item>

@@ -50,19 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>login, REQUEST=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>REQUEST=None, response=None, mapping_dict=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getPersonFromGoogleLogin</string> </value>
+            <value> <string>PDF_viewAsWeb</string> </value>
         </item>
       </dictionary>
     </pickle>
