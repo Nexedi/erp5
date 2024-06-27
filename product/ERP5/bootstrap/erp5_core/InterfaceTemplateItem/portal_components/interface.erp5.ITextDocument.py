@@ -35,8 +35,16 @@ class ITextDocument(Interface):
 
   Document which implement ITextDocument can handle text content in multiple
   format (html, structured-text, text).
+
   Substitution mapping can occurs on result if
   text_content_substitution_mapping_method_id is defined.
+
+  Substitutions are made using python string templates described by PEP-0292
+  ( https://www.python.org/dev/peps/pep-0292 ). The substitution is done using
+  "safe_subsitute" method, ie. in the case of missing variables, the substitution
+  marker will be kept as-is. To make missing variables an error, one can either
+  define the text_content_substitution_mapping_ignore_missing property to False
+  on the text document, or pass safe_substitute=False to methods.
   """
 
   def getTextContent(default=None):
