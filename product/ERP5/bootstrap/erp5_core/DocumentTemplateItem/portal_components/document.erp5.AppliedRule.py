@@ -392,7 +392,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
       return {k: sum(v.values(), []) for k, v in deleted}, delivery_set
     simulation_tool._delObject(self.getId())
 
-  def _checkExpand(self, ignore_nul_movements=False, filter=None):
+  def _checkExpand(self, ignore_nul_movements=False, filter=None):  # pylint:disable=redefined-builtin
     """Check that expand() would not fail nor do major changes to the subobjects
 
     Transaction is aborted after 'expand' is called.
