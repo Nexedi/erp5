@@ -189,6 +189,7 @@ def profile_if_environ(environment_var_name):
 assert getattr(DateTime, '_original_parse_args', None) is None
 DateTime._original_parse_args = DateTime._parse_args
 
+_datetime_system_time_patcher = None
 _pinned_date_time = None
 
 def _parse_args(self, *args, **kw):
@@ -368,26 +369,38 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       if not uf.getUserById(user_name):
         uf._doAddUser(user_name, self.newPassword(), ['Member'], [])
 
-    def pinDateTime(self, date_time):
+    @classmethod
+    def pinDateTime(cls, date_time):
       # pretend time has stopped at a certain date (i.e. the test runs
       # infinitely fast), for example to avoid errors on tests that are started
       # just before midnight.
-      # This can be used as a context manager, otherwise use unpinDateTime to
+      # This is best used as a context manager, otherwise use unpinDateTime to
       # reset.
-      global _pinned_date_time
+      global _pinned_date_time, _datetime_system_time_patcher
       assert date_time is None or isinstance(date_time, DateTime)
       _pinned_date_time = date_time
 
-      unpinDateTime = self.unpinDateTime
+      if _datetime_system_time_patcher is not None:
+        _datetime_system_time_patcher.stop()
+      if date_time is not None:
+        _datetime_system_time_patcher = mock.patch.object(
+          sys.modules['DateTime.DateTime'],
+          '_system_time',
+          return_value=date_time.timeTime())
+        _datetime_system_time_patcher.start()
+
+      unpinDateTime = cls.unpinDateTime
       class UnpinContextManager(object):
         def __enter__(self):
           return self
         def __exit__(self, *args):
           unpinDateTime()
+          _datetime_system_time_patcher.stop()
       return UnpinContextManager()
 
-    def unpinDateTime(self):
-      self.pinDateTime(None)
+    @classmethod
+    def unpinDateTime(cls):
+      cls.pinDateTime(None)
 
     def setTimeZoneToUTC(self):
       # Deprecated, prefer using `timeZoneContext` context manager instead.
