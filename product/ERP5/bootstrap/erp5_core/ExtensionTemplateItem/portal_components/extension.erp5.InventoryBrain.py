@@ -136,6 +136,9 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       return node.title
   node_title = ComputedAttribute(getNodeTitle, 1)
 
+  def getVariationCategoryItemList(self):
+    return self.getObject().getVariationCategoryItemList()
+
   def getNodeTranslatedTitle(self):
     node = self.getNodeValue()
     if node is not None:
