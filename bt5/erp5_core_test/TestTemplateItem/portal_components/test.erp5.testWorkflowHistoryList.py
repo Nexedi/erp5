@@ -34,8 +34,10 @@ from Products.ERP5Type.Workflow import WorkflowHistoryList
 from Products.ERP5Type.patches.WorkflowTool import \
   WorkflowHistoryList as LegacyWorkflowHistoryList
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from six.moves import range
+from six import get_unbound_function
 
-orig_maybe_rotate = DoublyLinkList._maybe_rotate.__func__
+orig_maybe_rotate = get_unbound_function(DoublyLinkList._maybe_rotate)
 
 def _maybe_rotate(self):
   if len(self._log) < 16:
@@ -65,7 +67,7 @@ def old(items):
     if len(whl._log) < 16:
       whl._log.append(item)
     else:
-      prev = whl.__new__(whl.__class__)
+      prev = whl.__new__(whl.__class__)  # pylint:disable=no-value-for-parameter
       prev._prev = whl._prev
       prev._log = whl._log
       whl._prev = prev
@@ -73,7 +75,7 @@ def old(items):
   return whl
 
 COUNT = 45
-EXPECTED = range(COUNT)
+EXPECTED = list(range(COUNT))
 
 class TestWorkflowHistoryList(TestCase):
 
@@ -89,7 +91,8 @@ class TestWorkflowHistoryList(TestCase):
     self.assertEqual(ddl, new(type(ddl), EXPECTED))
 
     class check(object):
-      def __getitem__(_, item): # pylint: disable=no-self-argument
+      def __getitem__(self_, item): # pylint: disable=no-self-argument
+        del self_
         try:
           a = EXPECTED[item]
         except IndexError:
@@ -101,7 +104,7 @@ class TestWorkflowHistoryList(TestCase):
     check = check()
 
     i = COUNT + 1
-    for i in xrange(-i, i):
+    for i in range(-i, i):
       _ = check[i]
     _ = check[-50:10]
     _ = check[:20:3]
@@ -129,7 +132,7 @@ class TestWorkflowHistoryList(TestCase):
 
   @fixed_count_bucket
   def test_01_DoublyLinkList(self):
-    self.checkList(new(DoublyLinkList, range(COUNT)))
+    self.checkList(new(DoublyLinkList, list(range(COUNT))))
 
   @fixed_count_bucket
   def test_02_LegacyWorkflowHistoryList(self):
@@ -159,13 +162,13 @@ class TestWorkflowHistoryList(TestCase):
     self.assertIs(prev, whl._prev)
     self.assertEqual(slots, EXPECTED[32:])
 
-    whl += xrange(3)
+    whl += range(3)
     self.checkClass(whl, LegacyWorkflowHistoryList)
-    whl += xrange(2)
+    whl += range(2)
     self.checkClass(whl, WorkflowHistoryList)
     self.abort()
 
-    whl += xrange(3)
+    whl += range(3)
     self.checkClass(whl, LegacyWorkflowHistoryList)
     whl.append('foo')
     whl.append('bar')
@@ -186,8 +189,8 @@ class TestWorkflowHistoryList(TestCase):
   def test_04_rotation(self):
     self.app.ddl = ddl = DoublyLinkList()
     item_size = ddl._bucket_size // 3
-    for _ in xrange(3):
-      for _ in xrange(3):
+    for _ in range(3):
+      for _ in range(3):
         ddl.append('.' * item_size)
       self.commit()
     self.assertEqual(6, ddl._tail_count)

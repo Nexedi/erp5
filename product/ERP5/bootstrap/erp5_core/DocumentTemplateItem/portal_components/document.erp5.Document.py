@@ -27,8 +27,9 @@
 #
 ##############################################################################
 
+import logging
 import re
-from zLOG import LOG, WARNING
+from zLOG import LOG
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -83,9 +84,15 @@ class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
+import six
 import base64
-enc = base64.encodestring
-dec = base64.decodestring
+if six.PY2:
+  enc = base64.encodestring
+  dec = base64.decodestring
+else:
+  enc = base64.encodebytes
+  dec = base64.decodebytes
+
 DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT = 360
 DOCUMENT_CONVERSION_SERVER_RETRY = 0
 # store time (as int) where we had last failure in order
@@ -102,6 +109,7 @@ class DocumentConversionServerProxy():
   """
   def __init__(self, context):
     self._serverproxy_list = []
+    self._logger = logging.getLogger(__name__)
     preference_tool = getToolByName(context, 'portal_preferences')
     self._ooo_server_retry = (
       preference_tool.getPreferredDocumentConversionServerRetry() or
@@ -113,9 +121,9 @@ class DocumentConversionServerProxy():
       if not (address and port):
         raise ConversionError('OOoDocument: cannot proceed with conversion:'
               ' conversion server url is not defined in preferences')
-
-      LOG('Document', WARNING, 'PreferredOoodocServer{Address,PortNumber}' + \
-          ' are DEPRECATED please use PreferredDocumentServerUrl instead', error=True)
+      self._logger.warning(
+        'PreferredOoodocServer{Address,PortNumber} are DEPRECATED '
+        'please use PreferredDocumentServerUrl instead')
 
       uri_list =  ['%s://%s:%s' % ('http', address, port)]
 
@@ -208,6 +216,18 @@ class DocumentConversionServerProxy():
 
   def __getattr__(self, attr):
     return partial(self._proxy_function, attr)
+
+  def close(self):
+    error_list = []
+    for server_addr, proxy in self._serverproxy_list:
+      try:
+        proxy.__call__('close')()
+      except Exception as e:
+        self._logger.exception('Error closing %s', server_addr)
+        error_list.append(e)
+    for e in error_list:
+      raise e
+
 
 from erp5.component.mixin.DocumentExtensibleTraversableMixin import DocumentExtensibleTraversableMixin
 from erp5.component.interface.IConvertable import IConvertable
@@ -410,7 +430,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   body_parser = re.compile(r'<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
   title_parser = re.compile(r'<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
   base_parser = re.compile(r'<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
-  charset_parser = re.compile(r'(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
+  charset_parser = re.compile(br'(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -477,8 +497,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     tmp = {}
     for match in rx_search.finditer(text):
       group = match.group()
-      group_item_list = match.groupdict().items()
-      group_item_list.sort()
+      group_item_list = sorted(match.groupdict().items())
       key = (group, tuple(group_item_list))
       tmp[key] = None
     for group, group_item_tuple in tmp.keys():

@@ -31,10 +31,10 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from DateTime import DateTime
-import urllib
-import httplib
+from six.moves.urllib.parse import urlencode
+import six.moves.http_client
 import base64
-import StringIO
+from six.moves import cStringIO as StringIO
 import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import ERP5DumbHTTPExtractionPlugin
@@ -140,15 +140,15 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
 
     response = self.publish('/%s/Base_getUserCaption?%s' % (
         self.portal.getId(),
-        urllib.urlencode({
+        urlencode({
             'access_token': access_token.getId(),
             'access_token_secret': access_token.getReference()})))
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), six.moves.http_client.OK)
     # XXX caption currently shows plugin id and relative URL of the token,
     # that's not ideal.
     self.assertEqual(
         response.getBody(),
-        'erp5_access_token_plugin=%s' % access_token.getRelativeUrl())
+        ('erp5_access_token_plugin=%s' % access_token.getRelativeUrl()).encode())
 
   def test_bad_token(self):
     person = self._createPerson(self.new_id)
@@ -438,10 +438,10 @@ class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
     env['GATEWAY_INTERFACE']='CGI/1.1 '
     env['SCRIPT_NAME']='Main'
     env.update(headers)
-    return HTTPRequest(StringIO.StringIO(), env, HTTPResponse())
+    return HTTPRequest(StringIO(), env, HTTPResponse())
 
   def test_working_authentication(self):
-    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("login:password")})
+    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode(b"login:password").decode()})
     ret = ERP5DumbHTTPExtractionPlugin("default_extraction").extractCredentials(request)
     self.assertEqual(ret, {'login': 'login', 'password': 'password', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
 

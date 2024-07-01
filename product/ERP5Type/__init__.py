@@ -39,8 +39,7 @@ if  getZopeVersion()[0] == 2: # BBB Zope2
 else:
   IS_ZOPE2 = False
 import six
-if six.PY2:
-  from .patches import pylint
+from .patches import pylint
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 

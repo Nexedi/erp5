@@ -44,10 +44,11 @@ from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from .OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
-from six.moves import cStringIO as StringIO
+from io import BytesIO
 import re
 import itertools
 import six
+from Products.ERP5Type.Utils import bytes2str
 
 try:
   from zExceptions import ResourceLockedError
@@ -226,7 +227,7 @@ class OOoTemplate(ZopePageTemplate):
         self.OLE_documents_zipstring = None
       # create a zip archive and store it
       if attached_files_list:
-        memory_file = StringIO()
+        memory_file = BytesIO()
         try:
           zf = ZipFile(memory_file, mode='w', compression=ZIP_DEFLATED)
         except RuntimeError:
@@ -277,7 +278,7 @@ class OOoTemplate(ZopePageTemplate):
 
   def renderIncludes(self, here, text, extra_context, request, sub_document=None):
     attached_files_dict = {}
-    arguments_re = re.compile('''(\S+?)\s*=\s*('|")(.*?)\\2\s*''',re.DOTALL)
+    arguments_re = re.compile(r'''(\S+?)\s*=\s*('|")(.*?)\2\s*''',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
       ret = []
       for opt_name in opts_names:
@@ -345,7 +346,10 @@ class OOoTemplate(ZopePageTemplate):
                                       ('style', 'draw:style-name', 'fr1')):
         options_dict.setdefault(name, options_dict.pop(old_name, default))
 
-      picture = self._resolvePath(options_dict.pop('path').encode())
+      if six.PY2:
+        picture = self._resolvePath(options_dict.pop('path').encode())
+      else:
+        picture = self._resolvePath(options_dict.pop('path'))
 
       # If this is not a File, build a new file with this content
       if not isinstance(picture, File):
@@ -436,9 +440,9 @@ class OOoTemplate(ZopePageTemplate):
       draw_object.attrib.update({'{%s}href' % xml_doc.nsmap.get('xlink'): new_path})
       draw_object.attrib.update(dict(office_include.attrib))
       office_include.getparent().replace(office_include, draw_object)
-    text = etree.tostring(xml_doc, encoding='utf-8', xml_declaration=True,
-                          pretty_print=False)
-    text = re.sub('<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
+    text = bytes2str(etree.tostring(xml_doc, encoding='utf-8', xml_declaration=True,
+                                    pretty_print=False))
+    text = re.sub(r'<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
 
     return (text, attached_files_dict)
   # Proxy method to PageTemplate

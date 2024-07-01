@@ -12,7 +12,7 @@ for line in result:
   resource = line.getResourceValue()
   if resource is not None:
     sender = line.getResourceValue().getPurchaseSupplyLineSource()
-  line.setCategoryMembership('source', sender)
+    line.setCategoryMembership('source', sender)
   line.setCategoryMembership('price_currency', price_currency)
 
 return result

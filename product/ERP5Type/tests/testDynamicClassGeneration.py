@@ -1389,10 +1389,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     with self.assertRaises(TypeError):
       person.setSocialTitle(social_title_value)
 
-    # Passing a unicode object to a not-Value setter should raise
     with self.assertRaises(TypeError):
       organisation = self.portal.organisation_module.newContent()
-      person.setSubordination(unicode(organisation.getRelativeUrl()))
+      if six.PY2:
+        # Passing a unicode object to a not-Value setter should raise
+        person.setSubordination(six.text_type(organisation.getRelativeUrl()))
+      else:
+        # Passing a bytes object to a not-Value setter should raise
+        person.setSubordination(organisation.getRelativeUrl().encode())
 
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool
@@ -1450,7 +1454,7 @@ class TestZodbModuleComponent(SecurityTestCase):
   def afterSetUp(self):
     self._component_tool = self.portal.portal_components
     self._module = __import__(self._document_class._getDynamicModuleNamespace(),
-                              fromlist=['erp5.component'])
+                              fromlist=['erp5.component'] if six.PY2 else ['erp5'])
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
@@ -1520,7 +1524,10 @@ class TestZodbModuleComponent(SecurityTestCase):
 
     if expected_default_version is not None:
       top_module_name = self._document_class._getDynamicModuleNamespace()
-      top_module = __import__(top_module_name, level=0, fromlist=[top_module_name])
+      top_module = __import__(
+        top_module_name,
+        level=0,
+        fromlist=[top_module_name] if six.PY2 else ['erp5'])
 
       # The module must be available in its default version
       self.assertHasAttribute(top_module, expected_default_version)
@@ -1551,7 +1558,8 @@ class TestZodbModuleComponent(SecurityTestCase):
     module_name = self._getComponentFullModuleName(module_name)
     module = __import__(
       module_name,
-      fromlist=[self._document_class._getDynamicModuleNamespace()],
+      fromlist=[self._document_class._getDynamicModuleNamespace()]
+        if six.PY2 else ['erp5'],
       level=0)
     self.assertIn(module_name, sys.modules)
     return module
@@ -1899,11 +1907,18 @@ class TestZodbModuleComponent(SecurityTestCase):
     component.setTextContent("""import unexistent_module
 """ + valid_code)
     self.tic()
-    self.assertEqual(
-      [m.getMessage().translate() for m in component.checkConsistency()],
-      ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
-    self.assertEqual(component.getTextContentErrorMessageList(),
-                      ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    if six.PY2:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    else:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
     self.assertEqual(component.getTextContentWarningMessageList(),
                       ["W:  1,  0: Unused import unexistent_module (unused-import)"])
 
@@ -1935,11 +1950,10 @@ class TestZodbModuleComponent(SecurityTestCase):
        [ComponentMixin._message_text_content_not_set],
        [],
        []),
-      ("""def foobar(*args, **kwargs)
-  return 42
+      ("""None()
 """ + valid_code,
-       ["Error in Source Code: E:  1,  0: invalid syntax (syntax-error)"],
-       ["E:  1,  0: invalid syntax (syntax-error)"],
+       ["Error in Source Code: E:  1,  0: None is not callable (not-callable)"],
+       ["E:  1,  0: None is not callable (not-callable)"],
        []),
       # Make sure that foobar NameError is at the end to make sure that after
       # defining foobar function, it is not available at all
@@ -2038,7 +2052,7 @@ def bar(*args, **kwargs):
     self.assertModuleImportable('erp5_version.%s' % imported_reference)
 
     top_module = __import__(top_module_name, level=0,
-                            fromlist=[top_module_name])
+                            fromlist=[top_module_name] if six.PY2 else ['erp5'])
 
     self._importModule('erp5_version.%s' % imported_reference)
 
@@ -2101,7 +2115,7 @@ def function_foo(*args, **kwargs):
 
       top_module_name = self._document_class._getDynamicModuleNamespace()
       top_module = __import__(top_module_name, level=0,
-                              fromlist=[top_module_name])
+                              fromlist=[top_module_name] if six.PY2 else ['erp5'])
 
       self._importModule(reference)
       module = getattr(top_module, reference)
@@ -2209,7 +2223,10 @@ def function_foo(*args, **kwargs):
   def _assertAstroidCacheContent(self,
                                  must_be_in_cache_set,
                                  must_not_be_in_cache_set):
-    from astroid.builder import MANAGER
+    if six.PY2:
+      from astroid.builder import MANAGER
+    else:
+      from astroid.astroid_manager import MANAGER
     should_not_be_in_cache_list = []
     for modname in MANAGER.astroid_cache:
       if (modname.startswith('checkPythonSourceCode') or
@@ -2265,10 +2282,10 @@ def hoge():
       """# -*- coding: utf-8 -*-
 # Source code with non-ASCII character should not fail: éàホゲ
 from %(namespace)s import %(reference1)s
-from %(namespace)s.erp5_version import %(reference1)s
+from %(namespace)s.erp5_version import %(reference1)s  # pylint:disable=reimported
 
 from %(module2)s import hoge
-from %(module2_with_version)s import hoge
+from %(module2_with_version)s import hoge  # pylint:disable=reimported
 
 import %(module2)s
 import %(module2_with_version)s
@@ -2293,7 +2310,8 @@ from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, i
 
 # Monkey patch of astroid 1.3.8: it raised 'no-name-in-module' because
 # Shared.DC was not considered a namespace package
-from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
+from Shared.DC.ZRDB.Results import Results
+_ = Results
 
 import lxml.etree
 lxml.etree.Element('test')
@@ -2340,17 +2358,21 @@ _ = ZBigArray
             module2_with_version=imported_module2_with_version)) +
       component.getTextContent())
 
+    must_be_in_cache_set = set()
+    if six.PY2:
+      must_be_in_cache_set.add(namespace)
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={'%s.erp5_version' % namespace,
                                 imported_module1,
                                 imported_module1_with_version,
                                 imported_module2,
                                 imported_module2_with_version})
     component.checkSourceCode()
+    if six.PY2:
+      must_be_in_cache_set.add('%s.erp5_version' % namespace)
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace,
-                            '%s.erp5_version' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={imported_module1,
                                 imported_module1_with_version,
                                 imported_module2,
@@ -2358,35 +2380,69 @@ _ = ZBigArray
 
     self.tic()
     self.assertEqual(component.getValidationState(), 'modified')
-    self.assertEqual(
-      component.getTextContentErrorMessageList(),
-      ["E:  3,  0: No name '%s' in module '%s' (no-name-in-module)" %
-       (imported_reference1, namespace),
-       "E:  4,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
-       (imported_reference1, namespace),
-       # Spurious message but same as filesystem modules: 2 errors raised
-       # (no-name-in-module and import-error)
-       "E:  6,  0: No name '%s' in module '%s' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F:  6,  0: Unable to import '%s' (import-error)" %
-       imported_module2,
-       # Spurious message (see above comment)
-       "E:  7,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F:  7,  0: Unable to import '%s' (import-error)" %
-       imported_module2_with_version,
-       # Spurious message (see above comment)
-       "E:  9,  0: No name '%s' in module '%s' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F:  9,  0: Unable to import '%s' (import-error)" %
-       imported_module2,
-       # Spurious message (see above comment)
-       "E: 10,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
-       (imported_reference2, namespace),
-       "F: 10,  0: Unable to import '%s' (import-error)" %
-       imported_module2_with_version])
+    if six.PY2:
+      self.assertEqual(
+        component.getTextContentErrorMessageList(),
+        [
+          "E:  3,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          "E:  4,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          # Spurious message but same as filesystem modules: 2 errors raised
+          # (no-name-in-module and import-error)
+          "E:  6,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F:  6,  0: Unable to import '%s' (import-error)" %
+          imported_module2,
+          # Spurious message (see above comment)
+          "E:  7,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F:  7,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+          # Spurious message (see above comment)
+          "E:  9,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F:  9,  0: Unable to import '%s' (import-error)" %
+          imported_module2,
+          # Spurious message (see above comment)
+          "E: 10,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "F: 10,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+        ],
+      )
+    else:
+      self.assertEqual(
+        component.getTextContentErrorMessageList(),
+        [
+          "E:  3,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          "E:  4,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference1, namespace),
+          "E:  6,  0: Unable to import '%s.%s' (import-error)" %
+          (namespace, imported_reference2),
+          # Spurious message but same as filesystem modules: 2 errors raised
+          # (no-name-in-module and import-error)
+          "E:  6,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "E:  7,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+          # Spurious message (see above comment)
+          "E:  7,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "E:  9,  0: Unable to import '%s.%s' (import-error)" %
+          (namespace, imported_reference2),
+          # Spurious message (see above comment)
+          "E:  9,  0: No name '%s' in module '%s' (no-name-in-module)" %
+          (imported_reference2, namespace),
+          "E: 10,  0: Unable to import '%s' (import-error)" %
+          imported_module2_with_version,
+          # Spurious message (see above comment)
+          "E: 10,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+          (imported_reference2, namespace),
+        ],
+      )
     self.assertEqual(component.getTextContentWarningMessageList(), [])
-
     ## Simulate user:
     # 1) First check and validate 'imported' Components
     self.portal.portal_workflow.doActionFor(imported_component1, 'validate_action')
@@ -2397,20 +2453,29 @@ _ = ZBigArray
 
     message_list = component.checkSourceCode()
     self.assertEqual(message_list, [])
+    must_be_in_cache_set = {
+      imported_module1,
+      imported_module1_with_version,
+      imported_module2,
+      imported_module2_with_version,
+    }
+    if six.PY2:
+      must_be_in_cache_set.update({
+        '%s' % namespace,
+        '%s.erp5_version' % namespace,
+      })
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace,
-                            '%s.erp5_version' % namespace,
-                            imported_module1,
-                            imported_module1_with_version,
-                            imported_module2,
-                            imported_module2_with_version},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set=set())
 
     # 2) Then modify the main one so that it automatically 'validate'
     component.setTextContent(component.getTextContent() + '\n')
     self.tic()
+    must_be_in_cache_set = set()
+    if six.PY2:
+      must_be_in_cache_set.add(namespace)
     self._assertAstroidCacheContent(
-      must_be_in_cache_set={'%s' % namespace},
+      must_be_in_cache_set=must_be_in_cache_set,
       must_not_be_in_cache_set={'%s.erp5_version' % namespace,
                                 imported_module1,
                                 imported_module1_with_version,
@@ -2423,10 +2488,11 @@ _ = ZBigArray
     component.setTextContent(
       """# -*- coding: utf-8 -*-
 from %(module)s import undefined
-from %(module_with_version)s import undefined
+from %(module_with_version)s import undefined2
 
 # To avoid 'unused-import' warning...
 undefined()
+undefined2()
 
 """ % (dict(module=imported_module2,
             module_with_version=imported_module2_with_version)) +
@@ -2437,7 +2503,7 @@ undefined()
       component.getTextContentErrorMessageList(),
       ["E:  2,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
        imported_module2_with_version,
-       "E:  3,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
+       "E:  3,  0: No name 'undefined2' in module '%s' (no-name-in-module)" %
        imported_module2_with_version])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
 
@@ -2473,8 +2539,8 @@ def hoge():
       component = self._newComponent(reference)
       component.setTextContent(component.getTextContent() + """
 from %(namespace)s import %(reference)s
-from %(namespace)s.bar_version import %(reference)s
-from %(namespace)s.erp5_version import %(reference)s
+from %(namespace)s.bar_version import %(reference)s  # pylint:disable=reimported
+from %(namespace)s.erp5_version import %(reference)s  # pylint:disable=reimported
 
 # To avoid 'unused-import' warning...
 %(reference)s.hoge()
@@ -2482,7 +2548,10 @@ from %(namespace)s.erp5_version import %(reference)s
            reference=imported_reference))
 
       component.checkSourceCode()
-      from astroid.builder import MANAGER
+      if six.PY2:
+        from astroid.builder import MANAGER
+      else:
+        from astroid.astroid_manager import MANAGER
       imported_module = self._getComponentFullModuleName(imported_reference)
       self.assertEqual(
         MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='bar')],
@@ -2677,7 +2746,7 @@ foobar = foobar().f
     base = self.portal.getPath()
     for query in 'x:int=-24&y:int=66', 'x:int=41':
       path = '%s/TestExternalMethod?%s' % (base, query)
-      self.assertEqual(self.publish(path).getBody(), '42')
+      self.assertEqual(self.publish(path).getBody(), b'42')
 
     # Test from a Python Script
     createZODBPythonScript(self.portal.portal_skins.custom,
@@ -2722,7 +2791,7 @@ def foobar(self, a, b="portal_type"):
     cfg.extensions = tempfile.mkdtemp()
     try:
       with open(os.path.join(cfg.extensions, module + '.py'), "w") as f:
-        f.write("foobar = lambda **kw: sorted(kw.iteritems())")
+        f.write("foobar = lambda **kw: sorted(kw.items())")
       self.assertEqual(external_method(z=1, a=0), [('a', 0), ('z', 1)])
     finally:
       shutil.rmtree(cfg.extensions)
@@ -2813,8 +2882,8 @@ class TestWithImport(TestImported):
 from ITestGC import ITestGC
 import zope.interface
 
+@zope.interface.implementer(ITestGC)
 class TestGC(XMLObject):
-  zope.interface.implements(ITestGC)
   def foo(self):
       pass
 """)
@@ -2845,12 +2914,15 @@ class TestGC(XMLObject):
       self.assertEqual(gc.garbage, [])
 
       import erp5.component
-      gc.set_debug(
-        gc.DEBUG_STATS |
-        gc.DEBUG_UNCOLLECTABLE |
-        gc.DEBUG_COLLECTABLE |
-        gc.DEBUG_OBJECTS |
-        gc.DEBUG_INSTANCES)
+      debug_flags = (
+        gc.DEBUG_STATS
+        | gc.DEBUG_UNCOLLECTABLE
+        | gc.DEBUG_COLLECTABLE )
+      if six.PY2:
+        debug_flags |= (
+          gc.DEBUG_OBJECTS
+          | gc.DEBUG_INSTANCES)
+      gc.set_debug(debug_flags)
       sys.stderr = stderr
       # Still not garbage collectable as RefManager still keeps a reference
       erp5.component.ref_manager.clear()
@@ -2933,11 +3005,11 @@ from erp5.component.document.Person import Person
 from ITestPortalType import ITestPortalType
 import zope.interface
 
+@zope.interface.implementer(ITestPortalType)
 class TestPortalType(Person):
   def test42(self):
     return 42
 
-  zope.interface.implements(ITestPortalType)
   def foo(self):
     pass
 """)
@@ -3129,7 +3201,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
-    self.assertNotIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertNotIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
     component.validate()
     self.tic()
@@ -3141,7 +3213,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
@@ -3168,13 +3240,11 @@ class Test(ERP5TypeTestCase):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def _restoreMailHost(self):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def test_01_sampleTest(self):
     self.assertEqual(0, 0)
@@ -3270,7 +3340,7 @@ class Test(ERP5TypeTestCase):
                                reset_portal_type_at_transaction_boundary=True)
 
     output = runLiveTest('testRunLiveTest')
-    expected_msg_re = re.compile('Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
+    expected_msg_re = re.compile(r'Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
     # Now try addCleanup
@@ -3346,18 +3416,29 @@ break_at_import()
       return self._component_tool.readTestOutput()
 
     output = runLiveTest('testRunLiveTestImportError')
-    self.assertIn('''
+    if six.PY2:
+      expected_output = '''
   File "<portal_components/test.erp5.testRunLiveTestImportError>", line 4, in <module>
     break_at_import()
   File "<portal_components/test.erp5.testRunLiveTestImportError>", line 3, in break_at_import
     import non.existing.module # pylint:disable=import-error
 ImportError: No module named non.existing.module
-''', output)
-
+'''
+    else:
+      expected_output = '''
+  File "erp5://portal_components/test.erp5.testRunLiveTestImportError", line 4, in <module>
+    break_at_import()
+  File "erp5://portal_components/test.erp5.testRunLiveTestImportError", line 3, in break_at_import
+    import non.existing.module # pylint:disable=import-error
+ModuleNotFoundError: No module named 'non'
+'''
+    self.assertIn(expected_output, output)
     output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
-    self.assertIn(
-      "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist",
-      output)
+    if six.PY2:
+      expected_output = "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist"
+    else:
+      expected_output = "ModuleNotFoundError: No module named 'testDoesNotExist_import_error_because_module_does_not_exist'"
+    self.assertIn(expected_output, output)
 
   def testERP5Broken(self):
     # Create a broken ghost object
@@ -3365,9 +3446,9 @@ ImportError: No module named non.existing.module
     name = self._testMethodName
     types_tool = self.portal.portal_types
     ptype = types_tool.newContent(name, type_class="File", portal_type='Base Type')
-    file = ptype.constructInstance(self.portal, name, data="foo")
+    file = ptype.constructInstance(self.portal, name, data=b"foo")
     file_uid = file.getUid()
-    self.assertEqual(file.size, len("foo"))
+    self.assertEqual(file.size, len(b"foo"))
     self.commit()
     try:
       self.portal._p_jar.cacheMinimize()
@@ -3383,7 +3464,7 @@ ImportError: No module named non.existing.module
       # Check that the class is unghosted before resolving __setattr__
       self.assertRaises(BrokenModified, setattr, file, "size", 0)
       self.assertIsInstance(file, ERP5BaseBroken)
-      self.assertEqual(file.size, len("foo"))
+      self.assertEqual(file.size, len(b"foo"))
 
       # Now if we repair the portal type definition, instances will
       # no longer be broken and be modifiable again.
@@ -3393,9 +3474,9 @@ ImportError: No module named non.existing.module
       file = self.portal[name]
       self.assertNotIsInstance(file, ERP5BaseBroken)
       self.assertEqual(file.getUid(), file_uid)
-      self.assertEqual(file.getData(), "foo")
-      file.setData("something else")
-      self.assertEqual(file.getData(), "something else")
+      self.assertEqual(file.getData(), b"foo")
+      file.setData(b"something else")
+      self.assertEqual(file.getData(), b"something else")
       self.assertNotIn("__Broken_state__", file.__dict__)
     finally:
       self.portal._delObject(name)
@@ -3595,6 +3676,8 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
     component.setTextContent(value)
     self.tic()
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getValidationState(), 'validated')
 
   def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
     component = self.portal.portal_components['document.erp5.BusinessProcess']

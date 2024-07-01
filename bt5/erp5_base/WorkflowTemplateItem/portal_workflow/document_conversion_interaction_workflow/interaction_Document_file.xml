@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>guard_expression</string> </key>
-            <value> <string>here/hasFilename</string> </value>
+            <value> <string>not: here/isSupportBaseDataConversion</string> </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>

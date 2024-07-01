@@ -20,6 +20,7 @@ from lxml import etree
 from zLOG import LOG, ERROR
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
+import six
 
 # Global variables
 SEPARATOR = '\n'
@@ -39,7 +40,7 @@ class TioSafeBrain(Explicit):
     self.object_type = object_type
     self.context = context
     # save properties as attributes
-    for k,v in kw.iteritems():
+    for k,v in six.iteritems(kw):
       # FIXME: '0000-00-00 00:00:00' is an error find in the Prestashop sync
       if v is not None and v != '0000-00-00 00:00:00':
         setattr(self, k.lower(), v)
@@ -49,7 +50,7 @@ class TioSafeBrain(Explicit):
     Update self properties with the one from
     another brain
     """
-    for k,v in brain.__dict__.iteritems():
+    for k,v in six.iteritems(brain.__dict__):
       setattr(self, k, v)
 
   def _asXML(self):
@@ -462,7 +463,7 @@ class Resource(TioSafeBrain):
         category = etree.SubElement(element, 'category')
         category.text = category_value
       mapping.pop('category_list')
-      for k, v in mapping.iteritems():
+      for k, v in six.iteritems(mapping):
         prop = etree.SubElement(element, k)
         prop.text = v
 

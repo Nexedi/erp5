@@ -37,6 +37,7 @@ from erp5.component.mixin.MovementCollectionUpdaterMixin import \
 from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
+import six
 
 @zope.interface.implementer(IRule,
                             IDivergenceController,
@@ -100,7 +101,7 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
         # FIXME: Is it the right way to have source/destination and other
         #        non-Amount properties set on the generated movement ?
         movement = input_movement.asContext(**{k: v
-            for k, v in amount.__dict__.iteritems()
+            for k, v in six.iteritems(amount.__dict__)
             if k[0] != '_' and k != 'categories'})
         base_category_set = set(amount.getBaseCategoryList())
         base_category_set.remove('price_currency') # XXX

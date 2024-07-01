@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+import six
 import hashlib
 from base64 import b64decode
 from binascii import a2b_hex
@@ -33,6 +34,7 @@ from json import dumps, loads
 from zExceptions import BadRequest
 from DateTime import DateTime
 from Products.ERP5Type.UnrestrictedMethod import super_user
+from Products.ERP5Type.Utils import unicode2str, str2bytes
 
 
 def WebSection_getDocumentValue(self, key, portal=None, language=None,\
@@ -67,10 +69,9 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
                          validation_state='published')]
 
     temp_file = self.newContent(temp_object=True, portal_type='File', id='%s.txt' % key)
-    temp_file.setData(dumps(document_list))
+    temp_file.setData(str2bytes(dumps(document_list)))
     temp_file.setContentType('application/json')
     return temp_file.getObject()
-
   return None
 
 def WebSection_setObject(self, id, ob, **kw):
@@ -78,12 +79,14 @@ def WebSection_setObject(self, id, ob, **kw):
     Make any change related to the file uploaded.
   """
   portal = self.getPortalObject()
+  ob = ob.getOriginalDocument()
   data = self.REQUEST.get('BODY')
+
   try:
     metadata, signature = loads(data)
     metadata = loads(metadata)
     # a few basic checks
-    b64decode(signature)
+    b64decode(str2bytes(signature))
     if len(a2b_hex(metadata['sha512'])) != 64:
       raise Exception('sha512: invalid length')
   except Exception as e:
@@ -126,7 +129,13 @@ def WebSection_putFactory(self, name, typ, body):
   document = portal.portal_contributions.newContent(data=body,
                                                     filename=name,
                                                     discover_metadata=False)
-  return document
+
+  # return a document for which getId() returns the name for _setObject to be
+  # called with id=name ( for WebSection_setObject ), but for which
+  # getRelativeUrl returns the relative url of the real document, for
+  # VirtualFolderMixin transactional variable cache between _setObject and
+  # _getOb
+  return document.asContext(getId=lambda: name)
 
 # The following scripts are helpers to search & clean up shadir entries.
 # XXX: Due to lack of View skin for shadir, external methods are currently
@@ -217,10 +226,10 @@ def ShaDir_search(self, filename, summary, delete=False):
     document_list.append(document)
     metadata = loads(loads(document.getData())[0])
     del metadata[u"sha512"]
-    x[';'.join('%s=%r' % (k, v.encode('utf-8') if type(v) is unicode else v)
+    x[';'.join('%s=%r' % (k, unicode2str(v))
                for k, v in sorted(metadata.iteritems()))].append(
       document.getId())
-  r = '\n'.join('%s %s' % (k, sorted(v)) for k, v in sorted(x.iteritems()))
+  r = '\n'.join('%s %s' % (k, sorted(v)) for k, v in sorted(six.iteritems(x)))
   if delete:
     r += '\n' + _deleteDocumentList(self, document_list)
   return r

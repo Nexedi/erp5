@@ -27,6 +27,7 @@
 
 ##############################################################################
 
+import six
 from time import time
 import transaction
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -54,16 +55,17 @@ policy_dict = {} # {None: preferred, 'foo_bar': FooBar}
 
 VERTICAL_EXPAND_TIMEOUT = 5  # XXX: hardcoded for the moment
 
-class _Policy(object):
+class _PolicyMetaClass(type):
+  """Automatically register policies in policy_dict"""
+  def __init__(cls, name, bases, d):
+    type.__init__(cls, name, bases, d)
+    if name[0] != '_':
+      policy_dict[convertToLowerCase(name)[1:]] = cls
+
+
+class _Policy(six.with_metaclass(_PolicyMetaClass, object)):
   """Base class of policies for RuleMixin.expand and SimulationMovement.expand
   """
-  class __metaclass__(type):
-    """Automatically register policies in policy_dict"""
-    def __init__(cls, name, bases, d):
-      type.__init__(cls, name, bases, d)
-      if name[0] != '_':
-        policy_dict[convertToLowerCase(name)[1:]] = cls
-
   def __init__(self, activate_kw=None):
     self.activate_kw = activate_kw
 
@@ -85,7 +87,7 @@ class _Policy(object):
     if attr == 'merge_parent':
       self.merge_parent = value = self.context.getRootAppliedRule().getPath()
     else:
-      object.__getattribute__(self, attr)
+      value = object.__getattribute__(self, attr)
     return value
 
   def deferAll(self):

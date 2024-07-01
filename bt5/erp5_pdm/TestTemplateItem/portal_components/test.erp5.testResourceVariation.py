@@ -135,8 +135,7 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
     colour.newContent(portal_type='Category', title='Red',
                       reference='l',id='red')
 
-    if not self.portal_categories.hasContent('individual_aspect'):
-      aspect = self.portal_categories.newContent(portal_type='Base Category',
+    aspect = self.portal_categories.newContent(portal_type='Base Category',
                                 title='Individual Aspect',
                                 reference='individual_aspect',
                                 id='individual_aspect',

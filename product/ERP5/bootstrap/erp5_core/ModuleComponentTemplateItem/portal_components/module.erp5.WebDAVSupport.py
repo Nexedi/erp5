@@ -23,7 +23,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalContent import ResourceLockedError
 from zExceptions import Forbidden
-from six.moves import cStringIO as StringIO
+from io import BytesIO
 import six
 
 security = ModuleSecurityInfo(__name__)
@@ -47,10 +47,13 @@ class TextContent:
     try:
       tree = html.fromstring(text)
       if tree.tag != "html":
-        raise Exception
+        raise ValueError
     except Exception:
       # this is probably not html code, try rfc822 parsing
-      message = email.message_from_string(text)
+      if six.PY3:
+        message = email.message_from_bytes(text)
+      else:
+        message = email.message_from_string(text)
       return {k.capitalize(): '\n'.join(message.get_all(k))
               for k in message.keys()}
 
@@ -78,7 +81,7 @@ class TextContent:
       headers = self.parseHeadersFromText(body)
       content_type = REQUEST.get_header('Content-Type', '')
       headers.setdefault('content_type', content_type)
-      headers['file'] = StringIO(body)
+      headers['file'] = BytesIO(body)
       self._edit(**headers)
     except ResourceLockedError:
       transaction.abort()

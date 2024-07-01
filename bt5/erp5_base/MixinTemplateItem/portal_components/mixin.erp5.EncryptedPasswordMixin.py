@@ -36,8 +36,11 @@ from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from erp5.component.interface.IEncryptedPassword import IEncryptedPassword
 from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.Utils import bytes2str
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
+from six import string_types as basestring
+
 
 @zope.interface.implementer(IEncryptedPassword,)
 class EncryptedPasswordMixin(object):
@@ -102,7 +105,7 @@ class EncryptedPasswordMixin(object):
     # workflows on this method.
     self.password = PersistentMapping()
     if value:
-      self._setEncodedPassword(pw_encrypt(value))
+      self._setEncodedPassword(bytes2str(pw_encrypt(value)))
 
   def _setPassword(self, value):
     self.checkPasswordValueAcceptable(value)
@@ -110,8 +113,6 @@ class EncryptedPasswordMixin(object):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPassword')
   def getPassword(self, *args, **kw):
-    """
-    """
     marker = []
     if len(args):
       default_password = args[0]

@@ -19,12 +19,12 @@ def getSkinHash(skin, skin_container):
   elif skin.meta_type in ('ERP5 Form', ):
     try:
       content = skin.formXML()
-      if isinstance(content, unicode):
+      if not isinstance(content, bytes):
         content = content.encode('utf8', 'repr')
     except AttributeError as e:
       # This can happen with dead proxy fields.
       content = "broken form %s" % e
-    content = 'ignore'
+    content = b'ignore'
   m = hashlib.md5()
   m.update(content)
   content_hash = m.hexdigest()

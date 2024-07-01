@@ -138,7 +138,7 @@ class PropertyTranslationDomainGetter(BaseGetter):
           ptype_domain = ''
         else:
           ptype_domain = domain.getDomainName()
-      if ptype_domain is '' and default is not None:
+      if ptype_domain == '' and default is not None:
         # then get the default property defined on property sheet
         value = default
       else:

@@ -80,43 +80,41 @@ class Order(Delivery):
       # Call getAggregatedAmountList and sum all the amounts which
       # base_contribution category is matched with.
       raise NotImplementedError
-      """
-      rounding = kw.get('rounding')
-      from Products.ERP5.PropertySheet.TradeModelLine import TARGET_LEVEL_MOVEMENT
-      trade_condition = self.getSpecialiseValue()
-      if trade_condition is None:
-        # We cannot find any amount so that the result is 0.
-        return 0
-      base_contribution = kw.get('base_contribution')
-      if isinstance(base_contribution, (tuple, list)):
-        base_contribution_list = base_contribution
-      else:
-        base_contribution_list = (base_contribution,)
-      base_contribution_value_list = []
-      portal_categories = self.portal_categories
-      for relative_url in base_contribution_list:
-        base_contribution_value = portal_categories.getCategoryValue(relative_url)
-        if base_contribution_value is not None:
-          base_contribution_value_list.append(base_contribution_value)
-      if not base_contribution_value_list:
-        # We cannot find any amount so that the result is 0.
-        return 0
-      current_aggregated_amount_list = trade_condition.getAggregatedAmountList(self, rounding=rounding, force_create_line=True)
-      trade_model_line = self.newContent(temp_object=True,
-          portal_type='Trade Model Line',
-          id='_temp_' + self.getId(), notify_workflow=False)
-      # prevent invoking interaction workflows.
-      trade_model_line.portal_type = ''
-      trade_model_line.edit(target_level=TARGET_LEVEL_MOVEMENT, price=1,
-                            efficiency=1, quantity=None,
-                            base_application_value_list=base_contribution_value_list)
-      aggregated_amount_list = trade_model_line._getAggregatedAmountList(
-          self,
-          movement_list=self.getMovementList(),
-          current_aggregated_amount_list=current_aggregated_amount_list,
-          rounding=rounding)
-      return aggregated_amount_list.getTotalPrice()
-      """
+#      rounding = kw.get('rounding')
+#      from Products.ERP5.PropertySheet.TradeModelLine import TARGET_LEVEL_MOVEMENT
+#      trade_condition = self.getSpecialiseValue()
+#      if trade_condition is None:
+#        # We cannot find any amount so that the result is 0.
+#        return 0
+#      base_contribution = kw.get('base_contribution')
+#      if isinstance(base_contribution, (tuple, list)):
+#        base_contribution_list = base_contribution
+#      else:
+#        base_contribution_list = (base_contribution,)
+#      base_contribution_value_list = []
+#      portal_categories = self.portal_categories
+#      for relative_url in base_contribution_list:
+#        base_contribution_value = portal_categories.getCategoryValue(relative_url)
+#        if base_contribution_value is not None:
+#          base_contribution_value_list.append(base_contribution_value)
+#      if not base_contribution_value_list:
+#        # We cannot find any amount so that the result is 0.
+#        return 0
+#      current_aggregated_amount_list = trade_condition.getAggregatedAmountList(self, rounding=rounding, force_create_line=True)
+#      trade_model_line = self.newContent(temp_object=True,
+#          portal_type='Trade Model Line',
+#          id='_temp_' + self.getId(), notify_workflow=False)
+#      # prevent invoking interaction workflows.
+#      trade_model_line.portal_type = ''
+#      trade_model_line.edit(target_level=TARGET_LEVEL_MOVEMENT, price=1,
+#                            efficiency=1, quantity=None,
+#                            base_application_value_list=base_contribution_value_list)
+#      aggregated_amount_list = trade_model_line._getAggregatedAmountList(
+#          self,
+#          movement_list=self.getMovementList(),
+#          current_aggregated_amount_list=current_aggregated_amount_list,
+#          rounding=rounding)
+#      return aggregated_amount_list.getTotalPrice()
 
   def getTotalQuantity(self, **kw) :
     """Returns the total quantity for this Order. """

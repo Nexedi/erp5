@@ -1,6 +1,7 @@
+from Products.ERP5Type.Utils import str2unicode
 import unicodedata
 
-data = unicodedata.normalize('NFKD', context.getTextContent().decode('utf-8')).encode('iso-8859-1', 'ignore')
+data = unicodedata.normalize('NFKD', str2unicode(context.getTextContent())).encode('iso-8859-1', 'ignore')
 
 # Update sending mode "on the fly"
 dsn_line_list = data.split(b'\n')

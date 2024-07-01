@@ -254,14 +254,14 @@
     <style:master-page style:name="Standard" style:page-layout-name="pm1">
       <style:header tal:define="default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
                     orig_title string:Invoice;
-                    en_title python: unicode(here.Base_translateString(orig_title, lang=default_language), 'utf-8');
-                    my_title python: unicode(here.Base_translateString(orig_title), 'utf-8');
+                    en_title python: here.Base_translateString(orig_title, lang=default_language);
+                    my_title python: here.Base_translateString(orig_title);
                     orig_page string:Page;
-                    en_page python: unicode(here.Base_translateString(orig_page, lang=default_language), 'utf-8');
-                    my_page python: unicode(here.Base_translateString(orig_page), 'utf-8');
+                    en_page python: here.Base_translateString(orig_page, lang=default_language);
+                    my_page python: here.Base_translateString(orig_page);
                     orig_of string:of;
-                    en_of python: unicode(here.Base_translateString(orig_of, lang=default_language), 'utf-8');
-                    my_of python: unicode(here.Base_translateString(orig_of), 'utf-8');
+                    en_of python: here.Base_translateString(orig_of, lang=default_language);
+                    my_of python: here.Base_translateString(orig_of);
                     image_path python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_path'] or (data_dict['source_decision_image_path'] or data_dict['source_section_image_path']);
                     image_width python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_width'] or (data_dict['source_decision_image_width'] or data_dict['source_section_image_width']);
                     image_height python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_height'] or (data_dict['source_decision_image_height'] or data_dict['source_section_image_height'])">

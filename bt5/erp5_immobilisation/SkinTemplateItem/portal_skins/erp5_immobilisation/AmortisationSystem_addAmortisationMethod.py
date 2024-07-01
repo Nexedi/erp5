@@ -5,9 +5,6 @@
 # This script adds the needed actions in the Immobilisation portal_type, and
 # each amortisable portal_type
 
-from string import capitalize
-
-
 def addAction(portal_type, portal_type_type, country, amortisation_method):
   print('Adding UI tab "Amortisation Details" for method %s on portal_type %s... ' % (amortisation_method,portal_type), end=' ')
   id = "%s_%s_amortisation_details_view" % (country, amortisation_method)
@@ -22,8 +19,8 @@ def addAction(portal_type, portal_type_type, country, amortisation_method):
                           name = "Amortisation Details",
                           action = action,
                           condition = "object/IsUsing%s%sAmortisationMethod" % (
-                                           capitalize(country),
-                                           "".join([capitalize(x) for x in amortisation_method.split('_')]) ),
+                                           country.capitalize(),
+                                           "".join([x.capitalize() for x in amortisation_method.split('_')]) ),
                           permission = ('View',),
                           category = "object_view",
                           visible = 1)

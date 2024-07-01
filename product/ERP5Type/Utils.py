@@ -29,11 +29,11 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
-from past.builtins import cmp
-from six import int2byte as chr
 from six import string_types as basestring
 from six.moves import xrange
 import six
+if six.PY3:
+  from functools import cmp_to_key, total_ordering
 import os
 import re
 import string
@@ -123,9 +123,46 @@ from Products.ERP5Type.Globals import get_request
 from .Accessor.TypeDefinition import type_definition
 from .Accessor.TypeDefinition import list_types
 
+if six.PY3:
+  def cmp(a, b):
+    try:
+      return (a > b) - (a < b)
+    except TypeError:
+      if a is None:
+          return -1
+      elif b is None:
+          return 1
+      type_a = '' if isinstance(a, (int, float)) else type(a).__name__
+      type_b = '' if isinstance(b, (int, float)) else type(b).__name__
+      return (type_a > type_b) - (type_a < type_b)
+else:
+  import __builtin__
+  cmp = __builtin__.cmp
+
 #####################################################
 # Generic sort method
 #####################################################
+
+if six.PY2:
+  OrderableKey = lambda x: x
+else:
+  @total_ordering
+  class OrderableKey(object):
+    def __init__(self, value):
+      self.value = value
+
+    def __lt__(self, other):
+      if not isinstance(other, OrderableKey):
+        raise TypeError
+      return cmp(self.value, other.value) != 1
+
+    def __eq__(self, other):
+      if not isinstance(other, OrderableKey):
+        raise TypeError
+      return self.value == other.value
+
+    def __repr__(self):
+      return 'OrderableKey(%r)' % self.value
 
 sort_kw_cache = {}
 
@@ -184,7 +221,10 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
               except TypeError:
                 pass
             value_list.append(x)
-          return value_list
+          if six.PY2:
+            return value_list
+          else:
+            return [OrderableKey(e) for e in value_list]
         sort_kw = {'key':sortValue, 'reverse':reverse}
         sort_kw_cache[(sort_on, sort_order)] = sort_kw
       else:
@@ -206,7 +246,10 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
             if result != 0:
               break
           return result
-        sort_kw = {'cmp':sortValues}
+        if six.PY2:
+          sort_kw = {'cmp':sortValues}
+        else:
+          sort_kw = {'key': cmp_to_key(sortValues)}
         sort_kw_cache[(sort_on, sort_order)] = sort_kw
 
     if isinstance(value_list, LazyMap):
@@ -375,7 +418,7 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
    result = localizer.erp5_ui.gettext(msg_id_context, default='')
    if result == '':
      result = localizer.erp5_ui.gettext(msg_id)
-   return result.encode('utf8')
+   return unicode2str(result)
 
 def Email_parseAddressHeader(text):
   """
@@ -397,7 +440,11 @@ def fill_args_from_request(*optional_args):
   required by the method.
   """
   def decorator(wrapped):
-    names = inspect.getargspec(wrapped)[0]
+    if six.PY3:
+      getfullargspec = inspect.getfullargspec
+    else:
+      getfullargspec = inspect.getargspec
+    names = getfullargspec(wrapped)[0]
     assert names[:2] == ['self', 'REQUEST']
     del names[:2]
     names += optional_args
@@ -419,15 +466,11 @@ def fill_args_from_request(*optional_args):
   return decorator
 
 _pylint_message_re = re.compile(
-  '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
+  r'^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
 
 def checkPythonSourceCode(source_code_str, portal_type=None):
   """
   Check source code with pylint or compile() builtin if not available.
-
-  TODO-arnau: Get rid of NamedTemporaryFile (require a patch on pylint to
-              allow passing a string) and this should probably return a proper
-              ERP5 object rather than a dict...
   """
   if not source_code_str:
     return []
@@ -462,8 +505,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   message_list = []
   output_file = StringIO()
   try:
-    with tempfile.NamedTemporaryFile(prefix='checkPythonSourceCode',
-                                     suffix='.py') as input_file:
+    with tempfile.NamedTemporaryFile(
+        prefix='checkPythonSourceCode',
+        suffix='.py',
+        mode='w',
+      ) as input_file:
       input_file.write(source_code_str)
       input_file.flush()
 
@@ -493,6 +539,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # TODO-arnau: Enable it properly would require inspection API
            # '%s %r has no %r member'
            '--disable=E1101,E1103',
+           # XXX duplicate-bases causes too many false positives
+           '--disable=duplicate-bases',
            # map and filter should not be considered bad as in some cases
            # map is faster than its recommended replacement (list
            # comprehension)
@@ -508,7 +556,26 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # unused variables
            '--dummy-variables-rgx=_$|dummy|__traceback_info__|__traceback_supplement__',
       ]
-
+      if six.PY3:
+        args.extend(
+          (
+            "--msg-template='{C}: {line},{column}: {msg} ({symbol})'",
+            '--load-plugins=pylint.extensions.bad_builtin',
+            # BBB until we drop compatibility with PY2
+            '--disable=redundant-u-string-prefix,raise-missing-from,keyword-arg-before-vararg',
+            # XXX acceptable to ignore in the context of ERP5
+            '--disable=unspecified-encoding',
+            # XXX to many errors for now
+            '--disable=arguments-differ,arguments-renamed',
+            '--disable=duplicate-bases,inconsistent-mro',
+          )
+        )
+      else:
+        args.extend(
+          (
+            '--load-plugins=Products.ERP5Type.patches.pylint_compatibility_disable',
+          )
+        )
       if portal_type == 'Interface Component':
         # __init__ method from base class %r is not called
         args.append('--disable=W0231')
@@ -522,18 +589,17 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
         args.append('--disable=E0213')
 
       try:
-        from pylint.extensions.bad_builtin import __name__ as ext
-        args.append('--load-plugins=' + ext)
-      except ImportError:
-        pass
-      try:
         # Note that we don't run pylint as a subprocess, but directly from
         # ERP5 process, so that pylint can access the code from ERP5Type
         # dynamic modules from ZODB.
         Run(args, reporter=TextReporter(output_file), exit=False)
       finally:
-        from astroid.builder import MANAGER
-        MANAGER.astroid_cache.pop(
+        if six.PY2:
+          from astroid.builder import MANAGER
+        else:
+          from astroid.astroid_manager import MANAGER
+        astroid_cache = MANAGER.astroid_cache
+        astroid_cache.pop(
           os.path.splitext(os.path.basename(input_file.name))[0],
           None)
 
@@ -710,7 +776,7 @@ from .Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
 from AccessControl.PermissionRole import PermissionRole
 
-python_file_parser = re.compile('^(.*)\.py$')
+python_file_parser = re.compile(r'^(.*)\.py$')
 
 def getLocalPropertySheetList():
   if not getConfiguration:
@@ -1679,23 +1745,21 @@ class ScalarMaxConflictResolver(persistent.Persistent):
 #  URL Normaliser #
 ###################
 from Products.PythonScripts.standard import url_unquote
-# No new release of urlnorm since 2016 and no py3 support
 urlnorm = None
-if six.PY2:
-  try:
-    import urlnorm
-  except ImportError:
-    warnings.warn("urlnorm lib is not installed", DeprecationWarning)
+try:
+  import urlnorm
+except ImportError:
+  warnings.warn("urlnorm lib is not installed", DeprecationWarning)
 from six.moves.urllib.parse import urlsplit, urlunsplit, urljoin
 
 # Regular expressions
 re_cleanup_anchors = re.compile('#.*')
-re_extract_port = re.compile(':(\d+)$')
+re_extract_port = re.compile(r':(\d+)$')
 def uppercaseLetter(matchobject):
   return matchobject.group(0).upper()
-re_cleanup_escaped_url = re.compile('%\w\d')
+re_cleanup_escaped_url = re.compile(r'%\w\d')
 re_cleanup_slashes = re.compile('/{2,}')
-re_cleanup_tail = re.compile('\??$')
+re_cleanup_tail = re.compile(r'\??$')
 
 def legacyNormalizeUrl(url, base_url=None):
   """this method does normalisation itself.
@@ -1742,7 +1806,7 @@ def legacyNormalizeUrl(url, base_url=None):
   # Remove trailing '?'
   # http://www.example.com/? -> http://www.example.com/
   url = re_cleanup_tail.sub('', url)
-  if isinstance(url, six.text_type):
+  if six.PY2 and isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
@@ -1764,7 +1828,7 @@ def urlnormNormaliseUrl(url, base_url=None):
   if base_url and not (url_protocol or url_domain):
     # Make relative URL absolute
     url = urljoin(base_url, url)
-  if isinstance(url, six.text_type):
+  if six.PY2 and isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
@@ -1800,11 +1864,11 @@ def guessEncodingFromText(data, content_type='text/html'):
 
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe
-    str2bytes("!'()*-." "0123456789" "_~"
-              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-              "abcdefghijklmnopqrstuvwxyz"
-              # reserved (maybe unsafe)
-              "#$&+,/:;=?@[]")
+    "!'()*-." "0123456789" "_~"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    # reserved (maybe unsafe)
+    "#$&+,/:;=?@[]"
   else "%%%02X" % x
   for x in xrange(256)}
 

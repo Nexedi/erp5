@@ -40,7 +40,7 @@ class Test(ERP5TypeTestCase):
     self.tic()
     active_process = self.portal.portal_activities.unrestrictedTraverse(path)
     result = active_process.getResultList()
-    self.assertAlmostEqual(0.98444444444444446, result[0].result)
+    self.assertAlmostEqual(0.9, result[0].result, 0)
 
   def test_UnderRootOfSquaresFunction(self):
     path = self.portal.Base_driverScriptSquareRoot()

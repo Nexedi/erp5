@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 import unittest
 from unittest import expectedFailure
 
@@ -1490,15 +1491,16 @@ class TestConstraint(PropertySheetTestCase):
     # the error message.
     error_list = person.checkConsistency()
     self.assertEqual(1, len(error_list))
-    self.assertEqual("Attribute source_title should be of type string but is of type <type 'int'>",
-                      str(error_list[0].getMessage()))
+    expected_message = "Attribute source_title should be of type string but is of type <class 'int'>"
+    if six.PY2:
+      expected_message = "Attribute source_title should be of type string but is of type <type 'int'>"
+    self.assertEqual(str(error_list[0].getMessage()), expected_message)
     self.stepLoginAsAssignee()
     # Assignee cannot access testGroup3, so full information is not
     # included in the error message.
     error_list = person.checkConsistency()
     self.assertEqual(1, len(error_list))
-    self.assertNotEqual("Attribute source_title should be of type string but is of type <type 'int'>",
-                         str(error_list[0].getMessage()))
+    self.assertEqual(str(error_list[0].getMessage()), 'There is something wrong.')
 
   def test_PropertyTypeValidityForMultivaluedProperty(self):
     """

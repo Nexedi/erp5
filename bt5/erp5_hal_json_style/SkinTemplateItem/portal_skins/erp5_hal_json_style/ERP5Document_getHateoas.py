@@ -202,37 +202,37 @@ def generateDomainTreeList(url_tool, domain_tool, domain, depth, domain_list):
 def getDomainSelection(domain_list):
   root_dict = {}
 
-  if len(domain_list) > 0:
+  if domain_list:
     category_tool = portal.portal_categories
     domain_tool = portal.portal_domains
     preference_tool = portal.portal_preferences
     url_tool = portal.portal_url
 
-  for base_domain_id in domain_list:
-    domain = None
-    if category_tool is not None:
-      domain = category_tool.restrictedTraverse(base_domain_id, None)
-      if domain is not None :
+    for base_domain_id in domain_list:
+      domain = None
+      if category_tool is not None:
+        domain = category_tool.restrictedTraverse(base_domain_id, None)
+        if domain is not None :
 
-        root_dict[base_domain_id] = getattr(
-          domain,
-          preference_tool.getPreference(
-            'preferred_category_child_item_list_method_id',
-            'getCategoryChildCompactLogicalPathItemList'
-          )
-        )(local_sort_id=('int_index', 'translated_title'), checked_permission='View',
-          filter_node=0, display_none_category=0)
+          root_dict[base_domain_id] = getattr(
+            domain,
+            preference_tool.getPreference(
+              'preferred_category_child_item_list_method_id',
+              'getCategoryChildCompactLogicalPathItemList'
+            )
+          )(local_sort_id=('int_index', 'translated_title'), checked_permission='View',
+            filter_node=0, display_none_category=0)
 
-      elif domain_tool is not None:
-        try:
-          domain = domain_tool.getDomainByPath(base_domain_id, None)
-        except KeyError:
-          domain = None
-        if domain is not None:
-          # XXX Implement recursive fetch
-          domain_list = []
-          generateDomainTreeList(url_tool, domain_tool, domain, 0, domain_list)
-          root_dict[base_domain_id] = domain_list
+        elif domain_tool is not None:
+          try:
+            domain = domain_tool.getDomainByPath(base_domain_id, None)
+          except KeyError:
+            domain = None
+          if domain is not None:
+            # XXX Implement recursive fetch
+            domain_list = []
+            generateDomainTreeList(url_tool, domain_tool, domain, 0, domain_list)
+            root_dict[base_domain_id] = domain_list
 
   return root_dict
 
@@ -782,8 +782,9 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     if list_method is not None:
       selectKwargsForCallable(list_method, list_method_query_dict, REQUEST)
 
-    if (True):  # editable_column_list (we need that template fields resolution
-                # (issued by existence of `form_relative_url`) always kicks in
+    if True:  # pylint:disable=using-constant-test
+      # editable_column_list (we need that template fields resolution
+      # (issued by existence of `form_relative_url`) always kicks in
       extra_param_dict = {
         # in case of a dialog the form_id points to previous form, otherwise current form
         "form_id": REQUEST.get('form_id', form.id)
@@ -2169,7 +2170,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               # XXX If only available on brains, maybe better to call on aq_self
               getBrainListItemUrlDict = getattr(brain, 'getListItemUrlDict', None)
               is_getListItemUrlDict_calculated = True
-            if getBrainListItemUrlDict is not None:
+            if getBrainListItemUrlDict is not None:  # pylint:disable=possibly-used-before-assignment
               # Check if we can get URL result from the brain
               try:
                 url_parameter_dict = getBrainListItemUrlDict(

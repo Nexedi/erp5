@@ -32,8 +32,8 @@ import re
 import requests
 import time
 from unittest import expectedFailure, skip
-from StringIO import StringIO
-from urllib import urlencode
+from six.moves import cStringIO as StringIO
+from six.moves.urllib.parse import urlencode
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 from DateTime import DateTime
@@ -62,7 +62,7 @@ class WebTraversalHookTestMixin(object):
     """
     self.assertEqual(1, len(self.web_section.__before_traverse__))
     self.assertIsInstance(
-      self.web_section.__before_traverse__.values()[0],
+      list(self.web_section.__before_traverse__.values())[0],
       self.traversal_hook_class)
 
   def test_TraversalHook_on_clone(self):
@@ -259,6 +259,7 @@ class TestERP5Web(ERP5TypeTestCase):
     page.edit(text_content='<p>Hé Hé Hé!</p>', content_type='text/html')
     self.tic()
     self.assertEqual('Hé Hé Hé!', page.asText().strip())
+    self.assertIn('Hé Hé Hé!', page.getSearchableText())
 
   def test_WebPageAsTextHTMLEntities(self):
     """Check if Web Page's asText() converts html entities properly
@@ -511,7 +512,7 @@ Hé Hé Hé!""", page.asText().strip())
                      '15': dict(language='pt', version="2", reference="F"),
                      '16': dict(language='', version="1", reference="A"),
                     }
-    sequence_one = property_dict.keys()
+    sequence_one = list(property_dict.keys())
     sequence_two = ['01', '13', '12', '09', '06', '15', '04', '11', '02',
                     '05', '03', '07', '10', '08', '14', '16']
     sequence_three = ['05', '12', '13', '14', '06', '09', '10', '07',
@@ -1023,12 +1024,10 @@ Hé Hé Hé!""", page.asText().strip())
     web_section_portal_type = 'Web Section'
     web_section = website.newContent(portal_type=web_section_portal_type)
 
-    content = '<p>initial text</p>'
-    new_content = '<p>modified text<p>'
     document = portal.web_page_module.newContent(portal_type='Web Page',
             id='document_cache',
             reference='NXD-Document.Cache',
-            text_content=content)
+            text_content='<p>initial text</p>')
     document.publish()
     self.tic()
     self.assertEqual(document.asText().strip(), 'initial text')
@@ -1042,15 +1041,15 @@ Hé Hé Hé!""", page.asText().strip())
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(content), -1)
+    self.assertIn(b'<p>initial text</p>', response.getBody())
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(content), -1)
+    self.assertIn(b'<p>initial text</p>', response.getBody())
 
     # modified the web_page content
-    document.edit(text_content=new_content)
+    document.edit(text_content='<p>modified text</p>')
     self.assertEqual(document.asText().strip(), 'modified text')
     self.tic()
 
@@ -1058,12 +1057,12 @@ Hé Hé Hé!""", page.asText().strip())
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(new_content), -1)
+    self.assertIn(b'<p>modified text</p>', response.getBody())
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(new_content), -1)
+    self.assertIn(b'<p>modified text</p>', response.getBody())
 
   def test_13a_DocumentMovedCache(self):
     """
@@ -1114,12 +1113,10 @@ Hé Hé Hé!""", page.asText().strip())
     web_section_portal_type = 'Web Section'
     web_section = website.newContent(portal_type=web_section_portal_type)
 
-    content = '<p>initial text</p>'
-    new_content = '<p>modified text</p>'
     document = portal.web_page_module.newContent(portal_type='Web Page',
             id='document_cache',
             reference='NXD-Document.Cache',
-            text_content=content)
+            text_content='<p>initial text</p>')
     document.publish()
     self.tic()
     self.assertEqual(document.asText().strip(), 'initial text')
@@ -1127,16 +1124,16 @@ Hé Hé Hé!""", page.asText().strip())
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(content), -1)
+    self.assertIn(b'<p>initial text</p>', response.getBody())
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(content), -1)
+    self.assertIn(b'<p>initial text</p>', response.getBody())
 
     # Modify the web_page content
     # Use unrestrictedTraverse (XXX-JPS reason unknown)
     web_document = website.unrestrictedTraverse('web_page_module/%s' % document.getId())
-    web_document.edit(text_content=new_content)
+    web_document.edit(text_content='<p>modified text</p>')
     # Make sure cached is emptied
     self.assertFalse(web_document.hasConversion(format='txt'))
     self.assertFalse(document.hasConversion(format='txt'))
@@ -1161,14 +1158,14 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_document.asText().strip(), 'modified text')
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(new_content), -1)
+    self.assertIn(b'<p>modified text</p>', response.getBody())
 
     # Through a web_site.
     web_document = website.restrictedTraverse('NXD-Document.Cache')
     self.assertEqual(web_document.asText().strip(), 'modified text')
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEqual(response.getBody().find(new_content), -1)
+    self.assertIn(b'<p>modified text</p>', response.getBody())
 
   def test_14_AccessWebSiteForWithDifferentUserPreferences(self):
     """Check that Ram Cache Manager do not mix websection
@@ -1230,18 +1227,18 @@ Hé Hé Hé!""", page.asText().strip())
 
     # connect as administrator and check that only developper_mode is enable
     response = self.publish(websection_url, 'administrator:administrator')
-    self.assertIn('manage_main', response.getBody())
-    self.assertNotIn('manage_messages', response.getBody())
+    self.assertIn(b'manage_main', response.getBody())
+    self.assertNotIn(b'manage_messages', response.getBody())
 
     # connect as webeditor and check that only translator_mode is enable
     response = self.publish(websection_url, 'webeditor:webeditor')
-    self.assertNotIn('manage_main', response.getBody())
-    self.assertIn('manage_messages', response.getBody())
+    self.assertNotIn(b'manage_main', response.getBody())
+    self.assertIn(b'manage_messages', response.getBody())
 
     # anonymous user doesn't exists, check anonymous access without preferences
     response = self.publish(websection_url, 'anonymous:anonymous')
-    self.assertNotIn('manage_main', response.getBody())
-    self.assertNotIn('manage_messages', response.getBody())
+    self.assertNotIn(b'manage_main', response.getBody())
+    self.assertNotIn(b'manage_messages', response.getBody())
 
   def test_15_Check_LastModified_Header(self):
     """Checks that Last-Modified header set by caching policy manager
@@ -1337,6 +1334,7 @@ Hé Hé Hé!""", page.asText().strip())
     conditional_get_response = requests.get(
       web_section.absolute_url(),
       headers={'If-Modified-Since': DateTime().utcdatetime().strftime('%a, %d %b %Y %H:%M:%S UTC')},
+      timeout=5,
     )
     self.assertEqual(conditional_get_response.status_code, 304)
     self.assertIn('Cache-Control', conditional_get_response.headers)
@@ -1409,7 +1407,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
-    self.assertIn("Data updated.", response.getBody())
+    self.assertIn(b"Data updated.", response.getBody())
 
     self.tic()
 
@@ -1467,7 +1465,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
-    self.assertIn("Data updated.", response.getBody())
+    self.assertIn(b"Data updated.", response.getBody())
 
     self.tic()
 

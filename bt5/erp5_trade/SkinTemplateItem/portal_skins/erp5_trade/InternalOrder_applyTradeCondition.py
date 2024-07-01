@@ -29,40 +29,37 @@ def rank_method(trade_condition):
   if destination_section:
     destination_section_group = trade_condition.getDestinationSectionValue().getGroup()
     if destination_section == context.getDestinationSection():
-      rank += 10
+      rank -= 10
     else:
-      rank -= 2
+      rank += 2
   destination = trade_condition.getDestination()
   if destination:
     if destination == context.getDestination():
-      rank += 10
+      rank -= 10
     else:
-      rank -= 2
+      rank += 2
   if trade_condition.getSourceSection():
-    rank += 1
+    rank -= 1
     if destination_section_group:
       source_section_group = trade_condition.getSourceSectionValue().getGroup()
       if source_section_group:
         if source_section_group.startswith(destination_section_group) \
              or destination_section_group.startswith(source_section_group):
           # trade conditions where both sections are in the same group must have high priority
-          rank += 20
+          rank -= 20
   if trade_condition.getSource():
-    rank += 1
-  rank += len(trade_condition.getSpecialiseList())
+    rank -= 1
+  rank -= len(trade_condition.getSpecialiseList())
   if trade_condition.getValidationState() == 'validated':
-    rank += 2
+    rank -= 2
   return rank
-
-def sort_method(a, b):
-  return -cmp(rank_method(a), rank_method(b))
 
 while count > 0 and len(trade_condition_list) == 0:
   count -= 1
   trade_condition_list = context.portal_domains.searchPredicateList(
       predicate_context, portal_type=trade_condition_portal_type_list,
       tested_base_category_list=tested_base_category_list[:count],
-      sort_method=sort_method)
+      sort_key_method=rank_method)
 
 keep_items = {}
 if len(trade_condition_list ) == 0 :

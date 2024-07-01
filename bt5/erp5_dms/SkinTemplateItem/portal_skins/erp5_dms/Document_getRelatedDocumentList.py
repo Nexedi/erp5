@@ -41,6 +41,6 @@ if relation_id == 'all':
   for obj in (predecessor_value_list + successor_value_list +
               similar_value_list):
     dic[obj] = None
-  return dic.keys()
+  return list(dic.keys())
 
 return [] # failover - undefined relation

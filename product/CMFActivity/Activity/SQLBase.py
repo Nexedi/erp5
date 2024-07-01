@@ -29,7 +29,7 @@ from __future__ import absolute_import
 
 from six import string_types as basestring
 from six.moves import xrange
-from Products.ERP5Type.Utils import ensure_list, str2bytes
+from Products.ERP5Type.Utils import bytes2str, ensure_list, str2bytes
 from collections import defaultdict
 from contextlib import contextmanager
 from itertools import product, chain
@@ -83,7 +83,8 @@ def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
   return message.line.priority, message.line.date, message.uid
 
-_DequeueMessageException = Exception()
+class _DequeueMessageException(Exception):
+  pass
 
 _ITEMGETTER0 = operator.itemgetter(0)
 _IDENTITY = lambda x: x
@@ -140,10 +141,10 @@ def sqltest_dict():
       if value is None: # XXX: see comment in SQLBase._getMessageList
         return column + b" IS NULL"
       for x in value:
-        return b"%s IN (%s)" % (column, str2bytes(', '.join(map(
+        return str2bytes("%s IN (%s)" % (column, ', '.join(map(
           str if isinstance(x, _SQLTEST_NO_QUOTE_TYPE_SET) else
           render_datetime if isinstance(x, DateTime) else
-          render_string, value))))
+          lambda v: bytes2str(render_string(v)), value))))
       return b"0"
     sqltest_dict[name] = render
   _('active_process_uid')
@@ -245,7 +246,7 @@ def getNow(db):
     Note that this value is not cached, and is not transactionnal on MySQL
     side.
   """
-  return db.query("SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
+  return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
 
 class SQLBase(Queue):
   """
@@ -283,7 +284,7 @@ CREATE TABLE %s (
     db = activity_tool.getSQLConnection()
     create = self.createTableSQL()
     if clear:
-      db.query("DROP TABLE IF EXISTS " + self.sql_table)
+      db.query(str2bytes("DROP TABLE IF EXISTS " + self.sql_table))
       db.query(create)
     else:
       src = db.upgradeSchema(create, create_if_not_exists=1,
@@ -397,10 +398,10 @@ CREATE TABLE %s (
       for line in result]
 
   def countMessageSQL(self, quote, **kw):
-    return "SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
-      self.sql_table, DEPENDENCY_IGNORED_ERROR_STATE, " AND ".join(
+    return b"SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
+      str2bytes(self.sql_table), DEPENDENCY_IGNORED_ERROR_STATE, b" AND ".join(
         sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v
-        ) or "1")
+        ) or b"1")
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
     where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
@@ -425,7 +426,7 @@ CREATE TABLE %s (
         0,
       )[1]
     else:
-      subquery = (b"("
+      subquery = lambda *a, **k: str2bytes(bytes2str(b"("
         b"SELECT 3*priority{} AS effective_priority, date"
         b" FROM %s"
         b" WHERE"
@@ -434,7 +435,7 @@ CREATE TABLE %s (
         b"  date <= UTC_TIMESTAMP(6)"
         b" ORDER BY priority, date"
         b" LIMIT 1"
-      b")" % self.sql_table).format
+      b")" % str2bytes(self.sql_table)).format(*a, **k))
       result = query(
         b"SELECT *"
         b" FROM (%s) AS t"
@@ -443,11 +444,11 @@ CREATE TABLE %s (
           b" UNION ALL ".join(
             chain(
               (
-                subquery(b'-1', b'node = %i' % processing_node),
-                subquery(b'', b'node=0'),
+                subquery('-1', 'node = %i' % processing_node),
+                subquery('', 'node=0'),
               ),
               (
-                subquery(b'-1', b'node = %i' % x)
+                subquery('-1', 'node = %i' % x)
                 for x in node_set
               ),
             ),
@@ -464,7 +465,7 @@ CREATE TABLE %s (
         # sorted set to filter negative node values.
         # This is why this query is only executed when the previous one
         # did not find anything.
-        result = query(subquery(b'+1', b'node>0'), 0)[1]
+        result = query(subquery('+1', 'node>0'), 0)[1]
     if result:
       return result[0]
     return Queue.getPriority(self, activity_tool, processing_node, node_set)
@@ -779,7 +780,7 @@ CREATE TABLE %s (
           0,
         ))
       else:
-        subquery = (b"("
+        subquery = lambda *a, **k: str2bytes(bytes2str(b"("
           b"SELECT *, 3*priority{} AS effective_priority"
           b" FROM %s"
           b" WHERE"
@@ -788,8 +789,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-          b" FOR UPDATE"
-        b")" % args).format
+        b")" % args).format(*a, **k))
         result = Results(query(
           b"SELECT *"
           b" FROM (%s) AS t"
@@ -798,11 +798,11 @@ CREATE TABLE %s (
             b" UNION ALL ".join(
               chain(
                 (
-                  subquery(b'-1', b'node = %i' % processing_node),
-                  subquery(b'', b'node=0'),
+                  subquery('-1', 'node = %i' % processing_node),
+                  subquery('', 'node=0'),
                 ),
                 (
-                  subquery(b'-1', b'node = %i' % x)
+                  subquery('-1', 'node = %i' % x)
                   for x in node_set
                 ),
               ),
@@ -820,7 +820,7 @@ CREATE TABLE %s (
           # sorted set to filter negative node values.
           # This is why this query is only executed when the previous one
           # did not find anything.
-          result = Results(query(subquery(b'+1', b'node>0'), 0))
+          result = Results(query(subquery('+1', 'node>0'), 0))
       if result:
         # Reserve messages.
         uid_list = [x.uid for x in result]
@@ -833,8 +833,8 @@ CREATE TABLE %s (
     """
       Put messages back in given processing_node.
     """
-    db.query("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
-      self.sql_table, state, ','.join(map(str, uid_list))))
+    db.query(("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+      self.sql_table, state, ','.join(map(str, uid_list)))).encode())
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
@@ -1010,11 +1010,11 @@ CREATE TABLE %s (
         # increased.
         for m in message_list:
           if m.getExecutionState() == MESSAGE_NOT_EXECUTED:
-            raise _DequeueMessageException
+            raise _DequeueMessageException()
         transaction.commit()
       except:
         exc_info = sys.exc_info()
-        if exc_info[1] is not _DequeueMessageException:
+        if not isinstance(exc_info[1], _DequeueMessageException):
           self._log(WARNING,
             'Exception raised when invoking messages (uid, path, method_id) %r'
             % [(m.uid, m.object_path, m.method_id) for m in message_list])
@@ -1041,16 +1041,16 @@ CREATE TABLE %s (
     return not message_list
 
   def deleteMessageList(self, db, uid_list):
-    db.query("DELETE FROM %s WHERE uid IN (%s)" % (
-      self.sql_table, ','.join(map(str, uid_list))))
+    db.query(str2bytes("DELETE FROM %s WHERE uid IN (%s)" % (
+      self.sql_table, ','.join(map(str, uid_list)))))
 
   def reactivateMessageList(self, db, uid_list, delay, retry):
-    db.query("UPDATE %s SET"
+    db.query(str2bytes("UPDATE %s SET"
       " date = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL %s SECOND)"
       "%s WHERE uid IN (%s)" % (
         self.sql_table, delay,
         ", retry = retry + 1" if retry else "",
-        ",".join(map(str, uid_list))))
+        ",".join(map(str, uid_list)))))
 
   def finalizeMessageExecution(self, activity_tool, message_list,
                                uid_to_duplicate_uid_list_dict=None):
@@ -1207,8 +1207,8 @@ CREATE TABLE %s (
       To simulate time shift, we simply substract delay from
       all dates in message(_queue) table
     """
-    activity_tool.getSQLConnection().query("UPDATE %s SET"
+    activity_tool.getSQLConnection().query(("UPDATE %s SET"
       " date = DATE_SUB(date, INTERVAL %s SECOND)"
       % (self.sql_table, delay)
       + ('' if processing_node is None else
-         "WHERE processing_node=%s" % processing_node))
+         "WHERE processing_node=%s" % processing_node)).encode())

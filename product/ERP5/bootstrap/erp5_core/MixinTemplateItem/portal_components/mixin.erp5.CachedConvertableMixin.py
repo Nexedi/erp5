@@ -37,13 +37,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Utils import str2bytes
 from OFS.Image import Pdata, Image as OFSImage
 from DateTime import DateTime
 
 def makeSortedTuple(kw):
-  items = kw.items()
-  items.sort()
-  return tuple(items)
+  return tuple(sorted(kw.items()))
 
 def hashPdataObject(pdata_object):
   """Pdata objects are iterable, use this feature strongly
@@ -53,10 +52,7 @@ def hashPdataObject(pdata_object):
   while pdata_object is not None:
     chunk = pdata_object.aq_base
     md5_hash.update(chunk.data)
-    if six.PY2:
-      pdata_object = chunk.next
-    else:
-      pdata_object = chunk.__next__
+    pdata_object = chunk.next
     chunk._p_deactivate()
   return md5_hash.hexdigest()
 
@@ -105,8 +101,12 @@ class CachedConvertableMixin:
     http://pypi.python.org/pypi/uuid/ to generate
     a uuid stored as private property.
     """
-    format_cache_id = str(makeSortedTuple(kw)).\
-                             translate(string.maketrans('', ''), '[]()<>\'", ')
+    if six.PY2:
+      format_cache_id = str(makeSortedTuple(kw)).\
+                              translate(string.maketrans('', ''), '[]()<>\'", ')
+    else:
+      format_cache_id = str(makeSortedTuple(kw)).\
+                              translate(str.maketrans('', '', '[]()<>\'", '))
     return '%s:%s:%s' % (aq_base(self).getUid(), self.getRevision(),
                          format_cache_id)
 
@@ -130,17 +130,20 @@ class CachedConvertableMixin:
       conversion_md5 = None
       size = 0
     elif isinstance(data, Pdata):
-      cached_value = aq_base(data)
-      size = str(cached_value) # not a size but avoids a 'del' statement
-      conversion_md5 = md5(size).hexdigest()
-      size = len(size)
+      cached_value = bytes(aq_base(data))
+      conversion_md5 = md5(cached_value).hexdigest()
+      size = len(cached_value)
     elif isinstance(data, OFSImage):
       warn('Passing an OFS.Image to setConversion is deprecated', stacklevel=1)
+      cached_value = bytes(data)
+      conversion_md5 = md5(cached_value).hexdigest()
+      size = len(cached_value)
+    elif isinstance(data, bytes):
       cached_value = data
-      conversion_md5 = md5(str(data.data)).hexdigest()
-      size = len(data.data)
+      conversion_md5 = md5(cached_value).hexdigest()
+      size = len(cached_value)
     elif isinstance(data, six.string_types):
-      cached_value = data
+      cached_value = str2bytes(data)
       conversion_md5 = md5(cached_value).hexdigest()
       size = len(cached_value)
     elif isinstance(data, dict):
@@ -225,7 +228,7 @@ class CachedConvertableMixin:
     if isinstance(data, OFSImage):
       data = data.data
     if isinstance(data, Pdata):
-      data = str(data)
+      data = bytes(data)
     return mime, data
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversionSize')

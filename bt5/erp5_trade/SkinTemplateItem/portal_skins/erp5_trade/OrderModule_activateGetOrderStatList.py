@@ -51,6 +51,8 @@ elif aggregation_level == "week":
   date_format = "%Y-%U"
 elif aggregation_level == "day":
   date_format = "%Y-%m-%d"
+else:
+  raise ValueError("Unsupported aggregation_level: %s" % aggregation_level)
 
 if from_date is not None and at_date is not None:
   catalog_params['delivery.start_date'] = {

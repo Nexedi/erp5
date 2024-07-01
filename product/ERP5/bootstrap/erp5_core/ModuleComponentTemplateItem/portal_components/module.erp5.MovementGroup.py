@@ -160,7 +160,8 @@ class MovementGroupNode:
         movement, self._property_dict, property_list=property_list)
       # The following check is partial because it does not check mutable values
       # recursively.
-      if property_dict is self._property_dict != property_dict:
+      different_property_dict = self._property_dict != property_dict
+      if property_dict is different_property_dict:
         raise ValueError(
           "Movement Group must not modify the passed 'property_dict':"
           " copy it, deeply if necessary, before editing properties")
@@ -422,7 +423,7 @@ class FakeMovement:
     """
     price_dict = self._getPriceDict()
     if len(price_dict) == 1:
-      return price_dict.keys()[0]
+      return list(price_dict.keys())[0]
     total_quantity = sum(price_dict.values())
     return (total_quantity and
       sum(price * quantity for price, quantity in price_dict.items())

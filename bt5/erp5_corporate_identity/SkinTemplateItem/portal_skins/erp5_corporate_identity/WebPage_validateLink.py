@@ -11,6 +11,7 @@ Upgrade link for the specific type of display
 import re
 
 link_href = re.findall("href=['\"](.*?)['\"]", link_string)[0]
+link_title = ''
 
 # XXX flag if broken link
 if link_href.find("http") == -1:

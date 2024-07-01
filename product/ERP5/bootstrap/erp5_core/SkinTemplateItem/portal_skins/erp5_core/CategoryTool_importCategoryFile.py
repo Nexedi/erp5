@@ -60,7 +60,7 @@ if detailed_report_result:
   REQUEST.other['category_import_report'] = detailed_report_result
   REQUEST.RESPONSE.setBody(portal_categories.CategoryTool_viewImportReport().encode('utf-8'), lock=True)
   REQUEST.RESPONSE.setStatus(200, 'OK', lock=True)
-  raise Exception('Spreadsheet contains errors')
+  raise ValueError('Spreadsheet contains errors')
 
 for base_category, category_list in six.iteritems(category_list_spreadsheet_dict):
   total_category_counter += len(category_list)
@@ -212,7 +212,10 @@ if detailed_report:
   if simulation_mode:
     REQUEST.RESPONSE.setBody(result, lock=True)
     REQUEST.RESPONSE.setStatus(200, 'OK', lock=True)
-    raise Exception('Dry run')
+    class DryRun(Exception):
+      """Exception raised to not commit transaction.
+      """
+    raise DryRun()
   return result
 portal_categories.Base_redirect(
   keep_items={

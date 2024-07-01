@@ -27,9 +27,13 @@
 #
 ##############################################################################
 
+import six
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
 
-import base64
-import httplib
+import six.moves.http_client
 from unittest import expectedFailure
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -59,8 +63,8 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
 
     # Define POST headers with Authentication
     self.content_type =  'application/json'
-    authentication_string = 'lucas:lucas'
-    base64string = base64.encodestring(authentication_string).strip()
+    authentication_string = b'lucas:lucas'
+    base64string = base64_encodebytes(authentication_string).decode().strip()
     self.header_dict = {'Authorization': 'Basic %s' % base64string,
                         'Content-Type': self.content_type}
 
@@ -74,7 +78,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       Test the external usage to POST information
     """
     now = DateTime()
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = six.moves.http_client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('POST', self.path, self.data, self.header_dict)
       result = connection.getresponse()
@@ -82,8 +86,8 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(self.key, data)
-    self.assertEqual(httplib.CREATED, result.status)
+    self.assertEqual(self.key, data.decode())
+    self.assertEqual(six.moves.http_client.CREATED, result.status)
 
     # Check Document
     document = self.portal.portal_catalog.getResultValue(portal_type='File',
@@ -104,7 +108,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     if not annonymous:
       header_dict = self.header_dict
 
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = six.moves.http_client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('GET', '/'.join([self.path, self.key]),
         headers=header_dict)
@@ -113,7 +117,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     finally:
       connection.close()
     self.assertEqual(self.data, data)
-    self.assertEqual(httplib.OK, result.status)
+    self.assertEqual(six.moves.http_client.OK, result.status)
     self.assertEqual(self.expected_content_type,
                            result.getheader("content-type"))
 
@@ -129,7 +133,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     """
       Anonymous should not be able to POST a file.
     """
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = six.moves.http_client.HTTPConnection('%s:%s' % (self.host, self.port))
     header_dict = {'Content-Type': self.content_type}
     try:
       connection.request('POST', self.path, self.data, header_dict)
@@ -143,4 +147,4 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # Ref: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4
     # self.assertEqual(httplib.UNAUTHORIZED, result.status)
     # FORBIDDEN seems more suitable for RESTful server...
-    self.assertEqual(httplib.FORBIDDEN, result.status)
+    self.assertEqual(six.moves.http_client.FORBIDDEN, result.status)

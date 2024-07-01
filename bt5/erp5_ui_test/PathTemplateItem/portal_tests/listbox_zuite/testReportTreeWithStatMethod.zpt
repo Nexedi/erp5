@@ -35,7 +35,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=portal_catalog;field_report_tree=checked;field_report_root_list=foo_domain%7CFoo%20Domain</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=portal_catalog&amp;field_report_tree=checked&amp;field_report_root_list=foo_domain%7CFoo%20Domain</td>
   <td></td>
 </tr>
 <tr>

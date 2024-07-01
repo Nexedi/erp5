@@ -32,14 +32,13 @@
 
 import os
 import subprocess
-from cStringIO import StringIO
-
+from io import BytesIO
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
 import Products.ERP5
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import fill_args_from_request
+from Products.ERP5Type.Utils import bytes2str, fill_args_from_request
 from erp5.component.document.File import File
 from erp5.component.document.Document import Document, ConversionError,\
                      VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
@@ -117,7 +116,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     content_type, width, height = getImageInfo(self.data)
     if not content_type:
       try:
-        image = PIL.Image.open(StringIO(str(self.data)))
+        image = PIL.Image.open(BytesIO(bytes(self.data)))
       except IOError:
         width = height = -1
         content_type = 'application/unknown'
@@ -281,7 +280,8 @@ class Image(TextConvertableMixin, File, OFSImage):
 
     if format in VALID_TEXT_FORMAT_LIST:
       try:
-        return self.getConversion(format=format)
+        mime, data = self.getConversion(format=format)
+        return mime, bytes2str(data)
       except KeyError:
         mime_type, data = self._convertToText(format)
         data = aq_base(data)
@@ -381,7 +381,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     else:
       parameter_list.append('-')
 
-    data = str(self.getData())
+    data = bytes(self.getData())
     if self.getContentType() == "image/svg+xml":
       data = transformUrlToDataURI(data)
 
@@ -401,7 +401,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     finally:
       del process
     if image:
-      return StringIO(image)
+      return BytesIO(image)
     raise ConversionError('Image conversion failed (%s).' % err)
 
   def _getContentTypeAndImageData(

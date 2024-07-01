@@ -70,7 +70,6 @@ with ImmediateReindexContextManager() as immediate_reindex_context_manager:
         line_variation_base_category_list = line_variation_base_category_dict.keys()
 
       # construct new content (container_line)
-      resource_url = resource_url
       new_container_line_id = str(container.generateNewId())
       container_line = container.newContent(
         immediate_reindex=immediate_reindex_context_manager,

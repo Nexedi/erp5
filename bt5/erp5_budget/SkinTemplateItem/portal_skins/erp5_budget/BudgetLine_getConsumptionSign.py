@@ -1,4 +1,4 @@
-editable_property_list = zip(*context.BudgetLine_getEditablePropertyList())[0]
+editable_property_list = list(zip(*context.BudgetLine_getEditablePropertyList()))[0]
 
 if 'destination_credit' in editable_property_list:
   return -1

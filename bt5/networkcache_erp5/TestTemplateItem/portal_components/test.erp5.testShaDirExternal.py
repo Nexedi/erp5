@@ -31,7 +31,7 @@
 import base64
 import json
 import os
-import httplib
+import six.moves.http_client
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
@@ -60,8 +60,8 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
 
     # Define POST headers with Authentication
     self.content_type =  'application/json'
-    authentication_string = 'lucas:lucas'
-    base64string = base64.encodestring(authentication_string).strip()
+    authentication_string = b'lucas:lucas'
+    base64string = base64.b64encode(authentication_string).decode().strip()
     self.header_dict = {'Authorization': 'Basic %s' % base64string,
                         'Content-Type': self.content_type}
 
@@ -75,7 +75,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       Test the external usage to POST information
     """
     now = DateTime()
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = six.moves.http_client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('PUT', self.path, self.data, self.header_dict)
       result = connection.getresponse()
@@ -83,7 +83,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual('', data)
+    self.assertEqual(b'', data)
     self.assertEqual(201, result.status)
 
     # Check Data Set
@@ -114,14 +114,14 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     if not annonymous:
       header_dict = self.header_dict
 
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = six.moves.http_client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('GET', self.path, headers=header_dict)
       result = connection.getresponse()
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(json.dumps([json.loads(self.data)]), data)
+    self.assertEqual(json.dumps([json.loads(self.data)]), data.decode())
     self.assertEqual(200, result.status)
     self.assertEqual(self.content_type, result.getheader("content-type"))
 
@@ -135,7 +135,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
   def test_external_post_anonymous(self):
     """
     """
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = six.moves.http_client.HTTPConnection('%s:%s' % (self.host, self.port))
     header_dict = {'Content-Type': self.content_type}
     try:
       connection.request('PUT', self.path, self.data, header_dict)
@@ -153,7 +153,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     data[0] = json.dumps(data[0])
     data = json.dumps(data)
 
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = six.moves.http_client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('PUT', self.path, data, self.header_dict)
       result = connection.getresponse()

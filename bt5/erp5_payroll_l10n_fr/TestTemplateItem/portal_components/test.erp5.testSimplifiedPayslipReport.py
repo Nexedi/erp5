@@ -28,7 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from PIL import Image
-import cStringIO
+from io import BytesIO
 import math
 import os.path
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
@@ -58,8 +58,8 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     # http://snipplr.com/view/757/compare-two-pil-images-in-python/
     # http://effbot.org/zone/pil-comparing-images.htm
     # http://effbot.org/imagingbook/image.htm
-    image1 = Image.open(cStringIO.StringIO(image_data_1))
-    image2 = Image.open(cStringIO.StringIO(image_data_2))
+    image1 = Image.open(BytesIO(image_data_1))
+    image2 = Image.open(BytesIO(image_data_2))
 
     # image can be converted into greyscale without transparency
     h1 = image1.histogram()
@@ -181,7 +181,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     image_source_pdf_doc.setData(pdf_data)
     self.tic()
     _, png = image_source_pdf_doc.convert("png", frame=0, quality=100)
-    self.assertImageRenderingEquals(str(png), str(expected_image.getData()))
+    self.assertImageRenderingEquals(bytes(png), bytes(expected_image.getData()))
 
   def test_03_payslip_holiday(self):
     for i in self.portal.portal_catalog(
@@ -257,5 +257,3 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     self.assertEqual(payslip_data["report_data"]["total_holiday_this_year"], 2)
     self.assertEqual(payslip_data["report_data"]["taken_holiday"], 2)
     self.assertEqual(payslip_data["report_data"]["total_holiday_year_before"], 0)
-
-

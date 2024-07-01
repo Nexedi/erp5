@@ -28,7 +28,7 @@
 ##############################################################################
 
 from Products.ERP5Form.FormBox import FormBox
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 
 def Base_updatePropertyMapListWithFieldLabel(self, property_map_list):
   """Try to get the title of field which edit the given inside property_map_list

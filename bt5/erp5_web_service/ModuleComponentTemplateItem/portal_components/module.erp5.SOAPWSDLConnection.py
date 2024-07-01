@@ -87,13 +87,13 @@ class AuthenticationBase(object):
       This hook is called upon connection. It can be used to exchange
       credentials with remote server.
     """
-    pass
+
 
 class NullAuthentication(AuthenticationBase):
   """
     NO-OP authentication.
   """
-  pass
+
 
 class HeaderAuthentication(AuthenticationBase):
   """

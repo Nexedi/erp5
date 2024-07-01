@@ -33,8 +33,6 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.document.Movement import Movement
 
-from string import capitalize
-
 UNIMMOBILISING_METHOD = "unimmobilise"
 NO_CHANGE_METHOD = "no_change"
 AMORTISATION_METHOD_PREFIX = "portal_skins/erp5_accounting_"
@@ -103,7 +101,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     def checkValuesAreNotNone(property_list):
       errors = []
       for key, value, name in property_list:
-        value = 'get' + ''.join(map(capitalize, value.split('_')))
+        value = 'get' + ''.join(e.capitalize() for e in value.split('_'))
         value = getattr(self, value, None)
         if value is not None:
           value = value()
@@ -144,7 +142,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     # Check if the date of this movement is unique
     date_error = 0
     for item in self.getAggregateValueList():
-      if IImmobilisationItem.providedBy(item):
+      if IImmobilisationItem.providedBy(item):  # pylint:disable=no-value-for-parameter
         same_date_list = item.getUnfilteredImmobilisationMovementValueList(
                        from_date = self.getStopDate(),
                        to_date = self.getStopDate(),
@@ -202,7 +200,7 @@ class ImmobilisationMovement(Movement, XMLObject):
               return checkPreviousMovementForItem(previous_movement, item)
             return checkPreviousMovementForItem(previous_movement, item)
           for item in self.getAggregateValueList():
-            if IImmobilisationItem.providedBy(item):
+            if IImmobilisationItem.providedBy(item):  # pylint:disable=no-value-for-parameter
               if not checkPreviousMovementForItem(self,item):
                 check_uncontinuous = 1
               else:

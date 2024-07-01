@@ -2,6 +2,7 @@ import difflib
 import zipfile
 import os
 import re
+from six import string_types as basestring
 from zExceptions import Unauthorized
 
 separator1 = '=' * 70
@@ -300,7 +301,7 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
                     " %s lines" % max_line_count)
       traceback_attachment[max_line_count:] = '', '', '(truncated) ...'
     content = '\n'.join(traceback_attachment)
-    if isinstance(content, unicode):
+    if not isinstance(content, bytes):
       content = content.encode('utf8')
     attachment_list.append(dict(name='traceback.txt',
                                 mime_type='text/plain',

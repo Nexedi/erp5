@@ -44,10 +44,9 @@ delivery_count = len(source_section_list)
 for item in object_list:
   source_section = item.Item_getCurrentOwnerValue()
   if source_section is not None:
-    if source_section.getUid() is not None:
-      pl_value =  pl_dict[str(source_section.getUid())]
+    pl_value = pl_dict[str(source_section.getUid())]
   else:
-    pl_value =  pl_dict['UID']
+    pl_value = pl_dict['UID']
 
   source = item.Item_getCurrentSiteValue()
   resource = item.Item_getResourceValue()

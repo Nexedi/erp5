@@ -64,35 +64,35 @@ line_list = context.AccountingTransaction_getAccountingTransactionLineList(
 if not cancellation_amount:
   line_list.reverse()
 
-# guess portal_type to create lines
 if line_list:
+  # guess portal_type to create lines
   line_portal_type = line_list[0].getPortalType()
 
-for line in line_list:
-  new_line = reversal.newContent( portal_type=line_portal_type )
-  new_line.edit(
-    source=line.getSource(portal_type='Account'),
-    destination=line.getDestination(portal_type='Account'),
-    quantity= - line.getQuantity(), )
+  for line in line_list:
+    new_line = reversal.newContent( portal_type=line_portal_type )
+    new_line.edit(
+      source=line.getSource(portal_type='Account'),
+      destination=line.getDestination(portal_type='Account'),
+      quantity= - line.getQuantity(), )
 
-  if line.getSourceTotalAssetPrice():
-    new_line.setSourceTotalAssetPrice( - line.getSourceTotalAssetPrice() )
-  if line.getDestinationTotalAssetPrice():
-    new_line.setDestinationTotalAssetPrice(
-                                  - line.getDestinationTotalAssetPrice() )
+    if line.getSourceTotalAssetPrice():
+      new_line.setSourceTotalAssetPrice( - line.getSourceTotalAssetPrice() )
+    if line.getDestinationTotalAssetPrice():
+      new_line.setDestinationTotalAssetPrice(
+                                    - line.getDestinationTotalAssetPrice() )
 
-  new_line.setCancellationAmount(cancellation_amount)
+    new_line.setCancellationAmount(cancellation_amount)
 
-  # copy some values if they are defined explicitly on line
-  for prop in [ 'source_section', 'destination_section',
-                'source_payment', 'destination_payment',
-                'source_project', 'destination_project',
-                'source_function', 'destination_function',
-                'source_funding', 'destination_funding',
-                'source_payment_request', 'destination_payment_request',
-                'resource', 'product_line', 'string_index' ]:
-    if line.getProperty(prop) != context.getProperty(prop):
-      new_line.setProperty(prop, line.getProperty(prop))
+    # copy some values if they are defined explicitly on line
+    for prop in [ 'source_section', 'destination_section',
+                  'source_payment', 'destination_payment',
+                  'source_project', 'destination_project',
+                  'source_function', 'destination_function',
+                  'source_funding', 'destination_funding',
+                  'source_payment_request', 'destination_payment_request',
+                  'resource', 'product_line', 'string_index' ]:
+      if line.getProperty(prop) != context.getProperty(prop):
+        new_line.setProperty(prop, line.getProperty(prop))
 
 if plan:
   reversal.plan()

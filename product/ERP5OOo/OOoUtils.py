@@ -49,6 +49,7 @@ from lxml import etree
 from lxml.etree import Element, XMLSyntaxError
 from copy import deepcopy
 from warnings import warn
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5Type.Utils import deprecated
 
 class CorruptedOOoFile(Exception): pass
@@ -81,10 +82,7 @@ class OOoBuilder(Implicit):
         dat = document.data
         while dat is not None:
           self._document.write(dat.data)
-          if six.PY2:
-            dat = dat.next
-          else:
-            dat = dat.__next__
+          dat = dat.next
       else:
         # Default behaviour
         self._document.write(document.data)
@@ -138,7 +136,7 @@ class OOoBuilder(Implicit):
     return li
 
   def getMimeType(self):
-    return self.extract('mimetype')
+    return bytes2str(self.extract('mimetype'))
 
   def prepareContentXml(self, ooo_xml_file_id):
     """
@@ -146,7 +144,7 @@ class OOoBuilder(Implicit):
         - add tal namespace
         - indent the xml
     """
-    content_xml = self.extract(ooo_xml_file_id)
+    content_xml = bytes2str(self.extract(ooo_xml_file_id))
     content_doc = etree.XML(content_xml)
     root = content_doc.getroottree().getroot()
     #Declare zope namespaces
@@ -177,7 +175,7 @@ class OOoBuilder(Implicit):
   def updateManifest(self):
     """ Add a path to the manifest """
     MANIFEST_FILENAME = 'META-INF/manifest.xml'
-    meta_infos = self.extract(MANIFEST_FILENAME)
+    meta_infos = bytes2str(self.extract(MANIFEST_FILENAME))
     # prevent some duplicates
     for meta_line in meta_infos.split('\n'):
         for new_meta_line in self._manifest_additions_list:

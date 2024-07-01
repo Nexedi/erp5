@@ -27,9 +27,9 @@
   xmlns:metal='http://xml.zope.org/namespaces/metal'>
   <tal:block metal:define-macro="other_informations" 
              tal:define="data_dict here/PaySheetTransaction_getOtherInformationsDataDict;
- quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;
-               default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
-             hour_renderer nocall:here/AnnotationLine_viewFieldLibrary/my_work_time_annotation_line_quantity/render_pdf;">
+                         quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;
+                         default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
+                         hour_renderer nocall:here/AnnotationLine_viewFieldLibrary/my_work_time_annotation_line_quantity/render_pdf;">
     <table:table-row table:style-name='Tableau3.8'>
       <table:table-cell table:style-name='Tableau3.A8' office:value-type='string'>
         <text:p text:style-name='Table_20_Contents' />
@@ -142,27 +142,27 @@
             <table:covered-table-cell/>
           </table:table-row>
           <table:table-row>
-            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Gross Salary; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Gross Salary; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python: here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Tranche A; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Tranche A; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python: here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Heures Normales; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Heures Normales; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python: here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Heures supp.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Heures supp.; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python: here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Cotisations patronales; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Cotisations patronales; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python: here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
-            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Net Imposable.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+            <table:table-cell table:style-name='Tableau1.A6' office:value-type='string' tal:define='orig_string string:Net Imposable.; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python: here.Base_translateString(orig_string)'>
               <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='orig_message'/></text:p>
               <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/></text:p>
             </table:table-cell>
@@ -266,7 +266,7 @@
       <table:covered-table-cell/>
     </table:table-row>
     <table:table-row table:style-name='Tableau3.6' tal:condition="data_dict/description">
-      <table:table-cell table:style-name='Tableau3.A6' office:value-type='string' tal:define='orig_string string:Notes; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+      <table:table-cell table:style-name='Tableau3.A6' office:value-type='string' tal:define='orig_string string:Notes; orig_message python: here.Base_translateString(orig_string, lang=default_language); translated_message python: here.Base_translateString(orig_string)'>
         <text:p text:style-name='P2'><span tal:replace='orig_message'/>
           <span tal:omit-tag='' tal:condition='python:translated_message != orig_message'> / <span tal:replace='translated_message'/></span>:</text:p>
       </table:table-cell>
