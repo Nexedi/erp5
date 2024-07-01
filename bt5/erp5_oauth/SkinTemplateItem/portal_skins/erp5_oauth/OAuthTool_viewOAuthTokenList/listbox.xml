@@ -73,6 +73,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
