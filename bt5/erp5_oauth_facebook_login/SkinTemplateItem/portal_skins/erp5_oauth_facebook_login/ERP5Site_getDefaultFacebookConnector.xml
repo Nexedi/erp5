@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getFacebookConnector</string> </value>
+            <value> <string>ERP5Site_getDefaultFacebookConnector</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
