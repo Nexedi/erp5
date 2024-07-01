@@ -79,6 +79,7 @@ class TestAlarm(AlarmTestCase):
     alarm.setEnabled(True)
     self.assertEqual(alarm.getAlarmDate(), date)
     alarm.setNextAlarmDate(current_date=now) # This should not do change the alarm date
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),date)
 
   def test_14_NewActiveProcess(self):
@@ -384,6 +385,7 @@ class TestPeriodicity(AlarmTestCase):
     for date in args[:-1]:
       self.assertEqual(alarm.getAlarmDate(),date)
       alarm.setNextAlarmDate(current_date=date)
+      self.commit()
     self.assertEqual(alarm.getAlarmDate(),args[-1])
 
   def test_03_EveryHour(self):
@@ -394,13 +396,16 @@ class TestPeriodicity(AlarmTestCase):
     alarm.setPeriodicityHourFrequency(1)
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(), date)
     now = addToDate(now,day=2)
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     next_date = addToDate(date,hour=1)
     self.assertEqual(alarm.getAlarmDate(),next_date)
     now = addToDate(now,hour=1,minute=5)
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     next_date = addToDate(next_date,hour=1)
     self.assertEqual(alarm.getAlarmDate(),next_date)
     # check if manual invoking does not break getAlarmDate() result.
@@ -417,13 +422,16 @@ class TestPeriodicity(AlarmTestCase):
     alarm.setPeriodicityHourFrequency(3)
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),date)
     now = addToDate(now,day=2)
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     next_date = addToDate(date,hour=3)
     self.assertEqual(alarm.getAlarmDate(),next_date)
     now = addToDate(now,hour=3,minute=7,second=4)
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     next_date = addToDate(next_date,hour=3)
     self.assertEqual(alarm.getAlarmDate(),next_date)
 
@@ -440,10 +448,13 @@ class TestPeriodicity(AlarmTestCase):
     self.tic()
     self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_third_date)
     alarm.setNextAlarmDate(current_date=right_third_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
 
   def test_06_EveryDayOnce(self):
@@ -458,8 +469,10 @@ class TestPeriodicity(AlarmTestCase):
     self.tic()
     self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_third_date)
 
   def test_07_Every3DaysSomeHours(self):
@@ -475,10 +488,13 @@ class TestPeriodicity(AlarmTestCase):
     self.tic()
     self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_third_date)
     alarm.setNextAlarmDate(current_date=right_third_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
 
   def test_07a_Every4DaysSomeHours(self):
@@ -495,12 +511,16 @@ class TestPeriodicity(AlarmTestCase):
     self.tic()
     self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_third_date)
     alarm.setNextAlarmDate(current_date=right_third_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
     alarm.setNextAlarmDate(current_date=right_fourth_date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),right_fifth_date)
 
   def test_08_SomeWeekDaysSomeHours(self):
@@ -574,13 +594,16 @@ class TestPeriodicity(AlarmTestCase):
     alarm.setPeriodicityMinuteFrequency(5)
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),date)
     now = addToDate(now,day=2)
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     next_date = addToDate(date,minute=5)
     self.assertEqual(alarm.getAlarmDate(),next_date)
     now = addToDate(now,minute=5,second=14)
     alarm.setNextAlarmDate(current_date=now)
+    self.commit()
     next_date = addToDate(next_date,minute=5)
     self.assertEqual(alarm.getAlarmDate(),next_date)
 
@@ -592,6 +615,7 @@ class TestPeriodicity(AlarmTestCase):
     alarm.setPeriodicityMinuteFrequency(1)
     self.tic()
     alarm.setNextAlarmDate(current_date=date)
+    self.commit()
     self.assertEqual(alarm.getAlarmDate(),date)
 
   def test_week_day_item_list(self):

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import re
 import time
 import unittest
 
@@ -176,6 +177,13 @@ class TestArchive(InventoryAPITestCase):
     addSQLConnection(self.new_connection_id,'', db1)
     new_connection = portal[self.new_connection_id]
     new_connection.manage_open_connection()
+    # the READ-COMMITTED one
+    self.new_read_committed_connection_id = 'erp5_sql_read_committed_connection1'
+    addSQLConnection(self.new_read_committed_connection_id, '',
+                     re.sub(
+                       r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', db1))
+    new_connection = portal[self.new_read_committed_connection_id]
+    new_connection.manage_open_connection()
     # the deferred one
     self.new_deferred_connection_id = 'erp5_sql_connection2'
     addSQLConnection(self.new_deferred_connection_id,'', db1)
@@ -186,6 +194,13 @@ class TestArchive(InventoryAPITestCase):
     self.archive_connection_id = 'erp5_sql_connection3'
     addSQLConnection(self.archive_connection_id,'', db2)
     archive_connection = portal[self.archive_connection_id]
+    archive_connection.manage_open_connection()
+    # the READ-COMMITTED one
+    self.archive_read_committed_connection_id = 'erp5_sql_read_committed_connection3'
+    addSQLConnection(self.archive_read_committed_connection_id, '',
+                     re.sub(
+                       r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', db2))
+    archive_connection = portal[self.archive_read_committed_connection_id]
     archive_connection.manage_open_connection()
     # the deferred one
     self.archive_deferred_connection_id = 'erp5_sql_connection4'
@@ -212,6 +227,7 @@ class TestArchive(InventoryAPITestCase):
     archive = portal_archive.newContent(portal_type="Archive",
                                         catalog_id=self.archive_catalog_id,
                                         connection_id=self.archive_connection_id,
+                                        read_committed_connection_id=self.archive_read_committed_connection_id,
                                         deferred_connection_id=self.archive_deferred_connection_id,
                                         priority=3,
                                         inventory_method_id='Archive_createAllInventory',
@@ -224,6 +240,7 @@ class TestArchive(InventoryAPITestCase):
     dest = portal_archive.newContent(portal_type="Archive",
                                      catalog_id=self.new_catalog_id,
                                      connection_id=self.new_connection_id,
+                                     read_committed_connection_id=self.new_read_committed_connection_id,
                                      deferred_connection_id=self.new_deferred_connection_id,
                                      priority=1,
                                      test_method_id='Archive_test',
