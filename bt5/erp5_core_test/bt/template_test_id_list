@@ -19,6 +19,7 @@ test.erp5.testERP5Catalog
 test.erp5.testERP5Category
 test.erp5.testERP5Coordinate
 test.erp5.testERP5Core
+test.erp5.testERP5CoreSkins
 test.erp5.testERP5Form
 test.erp5.testERP5Type
 test.erp5.testERP5TypeInterfaces
