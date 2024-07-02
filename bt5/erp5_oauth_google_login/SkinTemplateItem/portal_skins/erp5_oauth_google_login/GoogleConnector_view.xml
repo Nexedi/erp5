@@ -81,6 +81,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_translated_portal_type</string>
                         <string>my_reference</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
