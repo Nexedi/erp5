@@ -32,11 +32,13 @@
  this done by an ajax call.-->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//option[@text="BugReport"]</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//option[@text="BugReport"]</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
 </tr>
 <tr><td>select</td>
   <td>field_your_project</td>
@@ -44,19 +46,23 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//option[@text="BugReport"]</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//option[@text="BugReport"]</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//option[@text="FeatureRequire"]</td>
+  <td>//option[text()="FeatureRequire"]</td>
+  <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//option[@text="FeatureRequire"]</td>
+  <td>//option[text()="FeatureRequire"]</td>
+  <td></td>
 </tr>
 <tr><td>select</td>
     <td>field_your_resource</td>
