@@ -1,6 +1,9 @@
 holiday_acquisition = context.getCausalityRelatedValue(portal_type='Holiday Acquisition')
 if holiday_acquisition:
-  return holiday_acquisition.Base_redirect('view', keep_items={'portal_status_message': context.Base_translateString('Holiday Acquisition is already created')})
+  return holiday_acquisition.Base_redirect('view', 
+    keep_items={
+      'portal_status_message': 
+        context.Base_translateString('Holiday Acquisition is already created')})
 
 employee = context.getSourceSectionValue()
 stop_date = context.getStopDate()
@@ -10,7 +13,10 @@ work_hour = context.getWorkTimeAnnotationLineQuantity(0)
 
 if work_hour is None:
   return context.Base_redirect('view',
-    context.Base_translateString('Cannot create a Holiday Acquisition without set work time.'))
+    keep_items={
+      'portal_status_message': 
+        context.Base_translateString(
+          'Cannot create a Holiday Acquisition without set work time.')})
 
 holiday_acquisition = context.holiday_acquisition_module.newContent(
   portal_type="Holiday Acquisition",
@@ -24,4 +30,7 @@ holiday_acquisition = context.holiday_acquisition_module.newContent(
 )
 
 holiday_acquisition.plan()
-return holiday_acquisition.Base_redirect('view', keep_items={'portal_status_message': context.Base_translateString('Holiday Acquisition is created')})
+return holiday_acquisition.Base_redirect('view',
+  keep_items={
+    'portal_status_message': 
+      context.Base_translateString('Holiday Acquisition is created')})
