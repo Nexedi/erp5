@@ -34,6 +34,11 @@
   <td>RobotMaking</td>
 </tr>
 <tr>
+  <td>waitForTextNotPresent</td>
+  <td>BugReport</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForTextPresent</td>
   <td>FeatureRequire</td>
   <td></td>
