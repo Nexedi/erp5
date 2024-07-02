@@ -28,19 +28,41 @@
   <td>//input[@name='field_your_title']</td>
   <td>test</td>
 </tr>
+<!-- Wait for the gadget to update the resource according to the project type,
+ this done by an ajax call.-->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
+</tr>
 <tr>
   <td>select</td>
   <td>field_your_project</td>
   <td>RobotMaking</td>
 </tr>
 <tr>
-  <td>waitForTextNotPresent</td>
-  <td>BugReport</td>
+  <td>waitForElementNotPresent</td>
+  <td>//option[text()="BugReport"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>FeatureRequire</td>
+  <td>assertElementNotPresent</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//option[text()="FeatureRequire"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//option[text()="FeatureRequire"]</td>
   <td></td>
 </tr>
 <tr>
