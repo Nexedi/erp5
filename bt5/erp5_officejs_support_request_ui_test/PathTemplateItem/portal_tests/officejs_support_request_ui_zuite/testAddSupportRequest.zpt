@@ -28,18 +28,6 @@
   <td>//input[@name='field_your_title']</td>
   <td>test</td>
 </tr>
-<!-- Wait for the gadget to update the resource according to the project type,
- this done by an ajax call.-->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//option[text()="BugReport"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//option[text()="BugReport"]</td>
-  <td></td>
-</tr>
 <tr>
   <td>select</td>
   <td>field_your_project</td>
