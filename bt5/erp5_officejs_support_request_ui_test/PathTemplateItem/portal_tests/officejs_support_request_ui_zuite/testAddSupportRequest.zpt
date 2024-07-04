@@ -34,8 +34,23 @@
   <td>RobotMaking</td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>FeatureRequire</td>
+  <td>waitForElementNotPresent</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//option[text()="FeatureRequire"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//option[text()="FeatureRequire"]</td>
   <td></td>
 </tr>
 <tr>

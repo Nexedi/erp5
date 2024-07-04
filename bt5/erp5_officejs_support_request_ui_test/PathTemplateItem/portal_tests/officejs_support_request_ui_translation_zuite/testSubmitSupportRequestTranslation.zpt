@@ -72,6 +72,11 @@
         <td>RobotMaking</td>
       </tr>
       <tr>
+        <td>waitForTextNotPresent</td>
+        <td>BugReport</td>
+        <td></td>
+      </tr>
+      <tr>
         <td>waitForElementPresent</td>
         <td>//select[@name="field_your_resource"]/option[text()="FeatureRequire"]</td>
         <td></td>

@@ -14,6 +14,7 @@
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[contains(@class, "ui-icon-life-ring") and text() = "Support Requests"]</td>
@@ -45,6 +46,8 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tr>
   <td>type</td>
   <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
@@ -55,6 +58,8 @@
   <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@class="document_table"]/table/tbody/tr/td[1]/a[contains(text(), "123dsfa")]</td>
