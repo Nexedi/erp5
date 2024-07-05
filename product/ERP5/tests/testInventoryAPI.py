@@ -1715,7 +1715,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # default is an empty list
     self.assertEqual(0, len(mvt_history_list))
 
-  def testDefault0(self):
+  def testDefaultNone(self):
     self._makeMovement()
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt_history_list = getMovementHistoryList(
@@ -1724,6 +1724,32 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(0, mvt_history_list[0].total_quantity)
     # If a movement have no price, None is returned
     self.assertEqual(None, mvt_history_list[0].total_price)
+
+  def testPriceZero(self):
+    self._makeMovement(quantity=1, price=0)
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.section.getUid())],
+      [(1, 0), ]
+    )
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.mirror_section.getUid())],
+      [(-1, 0), ]
+    )
+
+  def testPriceNone(self):
+    self._makeMovement(quantity=1, price=None)
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt_history_list = getMovementHistoryList(
+      section_uid=self.section.getUid(),)
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.section.getUid())],
+      [(1, None), ]
+    )
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.mirror_section.getUid())],
+      [(-1, None), ]
+    )
 
   def testMovementBothSides(self):
     """Movement History List returns movement from both sides"""
