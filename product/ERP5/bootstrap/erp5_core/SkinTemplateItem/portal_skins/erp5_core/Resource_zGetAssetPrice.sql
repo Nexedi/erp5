@@ -128,7 +128,7 @@ SELECT
    GREATEST(0, quantity-@unbalanced_output)
  ) AS running_quantity,
  (@running_total_asset_price:=@running_total_asset_price +
-   GREATEST(0, (quantity-@unbalanced_output) * IFNULL(total_price,0)/quantity)
+   GREATEST(0, (quantity-@unbalanced_output) * total_price/quantity)
  ) AS running_total_asset_price,
  (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy,
  <dtml-if "lowest_value_test">
