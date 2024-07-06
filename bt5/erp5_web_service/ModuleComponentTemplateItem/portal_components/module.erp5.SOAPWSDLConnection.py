@@ -27,6 +27,7 @@
 ##############################################################################
 
 import SOAPpy
+import wstools
 from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
 from AccessControl.SecurityInfo import allow_class
 import threading
@@ -163,7 +164,7 @@ class MethodWrapper(object):
 # Be on the safe side by using threading.local as a storage for it.
 wsdl_cache = threading.local()
 
-# XXX: SOAPpy.wstools.WSDLTools.WSDL.__del__ calls unlink on an xml document
+# XXX: wstools.WSDLTools.WSDL.__del__ calls unlink on an xml document
 # instance, which happens to fail (AttributeError: NoneType has no attribute
 # 'unlink') somewhere down in xml module. As that unlink is only acting on xml
 # nodes in memory, it's safe to ignore it.
@@ -174,7 +175,8 @@ def WSDL___del__(self):
       unlink()
     except AttributeError:
       pass
-SOAPpy.wstools.WSDLTools.WSDL.__del__ = WSDL___del__
+
+wstools.WSDLTools.WSDL.__del__ = WSDL___del__
 
 class SOAPWSDLConnection:
   """
@@ -212,7 +214,7 @@ class SOAPWSDLConnection:
     try:
       wsdl = wsdl_cache.parsed
     except AttributeError:
-      wsdl = wsdl_cache.parsed = SOAPpy.wstools.WSDLTools.WSDLReader().loadFromURL(self.url)
+      wsdl = wsdl_cache.parsed = wstools.WSDLTools.WSDLReader().loadFromURL(self.url)
     # TODO: transport (http) level authentication using self._user_name and
     # self._password
     return WSDLConnection(wsdl, self._credentials, self._service)
