@@ -3,6 +3,29 @@
 (function (window, rJS) {
   "use strict";
 
+  function updateResourceListField(gadget) {
+    var selectedProject = gadget.element.querySelector('#field_your_project').value;
+    return gadget.jio_getAttachment(
+      'support_request_module',
+      gadget.hateoas_url + 'support_request_module'
+        + "/SupportRequest_getSupportTypeList"
+        + "?project_id=" + selectedProject + "&json_flag=True"
+    ).push(function (sp_list) {
+      var i, j,
+        sp_select = gadget.element.querySelector('#field_your_resource');
+      for (i = sp_select.options.length - 1; i >= 0; i -= 1) {
+        sp_select.remove(i);
+      }
+
+      for (j = 0; j < sp_list.length; j += 1) {
+        sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
+      }
+      if (sp_select.options.length === 2) {
+        sp_select.selectedIndex = 1;
+      }
+    });
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -41,40 +64,22 @@
         })
         .push(function (hateoas_url) {
           gadget.hateoas_url = hateoas_url;
-        }).push(function () {
-          gadget.updateResourceListField();
+          // Do it synchronously, to ensure the full form
+          // will be displayed only when the select field has the expected
+          // values
+          return updateResourceListField(gadget);
         });
     })
     .declareMethod('triggerSubmit', function () {
       return this.form.triggerSubmit();
     })
-    .declareJob('updateResourceListField', function () {
-      var gadget = this,
-        selectedProject = document.getElementById('field_your_project').value;
-      return gadget.jio_getAttachment(
-        'support_request_module',
-        gadget.hateoas_url + 'support_request_module'
-          + "/SupportRequest_getSupportTypeList"
-          + "?project_id=" + selectedProject + "&json_flag=True"
-      ).push(function (sp_list) {
-        var i, j,
-          sp_select = document.getElementById('field_your_resource');
-        for (i = sp_select.options.length - 1; i >= 0; i -= 1) {
-          sp_select.remove(i);
-        }
-
-        for (j = 0; j < sp_list.length; j += 1) {
-          sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
-        }
-        if (sp_select.options.length === 2) {
-          sp_select.selectedIndex = 1;
-        }
-      });
+    .declareJob('deferUpdateResourceListField', function () {
+      return updateResourceListField(this);
     })
     .onEvent('change', function (evt) {
       var gadget = this;
       if (evt.target.id === "field_your_project") {
-        gadget.updateResourceListField();
+        gadget.deferUpdateResourceListField();
       }
     }, false, false);
 }(window, rJS));

@@ -41,6 +41,7 @@ from erp5.component.module.WorkingCopy import \
   WorkingCopy, Dir, File, selfcached, \
   NotAWorkingCopyError, NotVersionedError, VcsConflictError
 from erp5.component.module.SubversionClient import newSubversionClient
+from six import string_types as basestring
 
 # XXX This does not work with concurrent processes/threads accessing the
 # same working copy...

@@ -356,7 +356,6 @@ class DB(TM):
             c = self._query('SHOW COLUMNS FROM %s' % table_name)
         except Exception:
             return ()
-        from string import join
         r=[]
         for Field, Type, Null, Key, Default, Extra in c.fetch_row(0):
             info = {}
@@ -380,7 +379,7 @@ class DB(TM):
             info['Name'] = Field
             info['Type'] = type_xlate.get(short_type,'string')
             info['Extra'] = Extra,
-            info['Description'] = join([Type, field_default, Extra or '',
+            info['Description'] = ' '.join([Type, field_default, Extra or '',
                                         key_types.get(Key, Key or ''),
                                         Null != 'YES' and 'NOT NULL' or '']),
             info['Nullable'] = Null == 'YES'
@@ -482,9 +481,10 @@ class DB(TM):
         return items, result
 
     def string_literal(self, s):
-        # This method accepts bytes or str with only ASCII characters
-        # and return bytes.
-        return self.db.string_literal(s)
+        try:
+            return self.db.string_literal(s)
+        except UnicodeEncodeError:
+            return self.db.string_literal(s.encode('utf-8'))
 
     def _begin(self, *ignored):
         """Begin a transaction (when TM is enabled)."""

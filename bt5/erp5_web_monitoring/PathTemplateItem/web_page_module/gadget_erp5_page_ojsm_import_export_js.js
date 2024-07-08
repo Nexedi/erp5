@@ -5,6 +5,7 @@
            URLSearchParams) {
   "use strict";
 
+  var OPML_PORTAL_TYPE = "Opml";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
     notify_msg_template = Handlebars.compile(
@@ -19,8 +20,9 @@
 
   function getMonitorSetting(gadget) {
     return gadget.jio_allDocs({
-      select_list: ["basic_login", "url", "title", "active", "state"],
-      query: '(portal_type:"opml")'
+      select_list: ["basic_login", "url", "title", "active", "state",
+                    "slapos_master_url"],
+      query: '(portal_type:"' + OPML_PORTAL_TYPE + '")'
     })
       .push(function (opml_result) {
         var i,
@@ -194,7 +196,7 @@
                     title: configuration_dict.opml_description[i].title,
                     url: configuration_dict.opml_description[i].href,
                     active: configuration_dict.opml_description[i].active,
-                    portal_type: "opml",
+                    portal_type: OPML_PORTAL_TYPE,
                     has_monitor: configuration_dict.opml_description[i]
                       .href.startsWith("https://"),
                     state: configuration_dict.opml_description[i].state || "Started"
@@ -220,7 +222,7 @@
               } else {
                 for (i = 0; i < configuration_dict.opml_description_list.length; i += 1) {
                   item = configuration_dict.opml_description_list[i];
-                  item.portal_type = "opml";
+                  item.portal_type = OPML_PORTAL_TYPE;
                   cred_list = atob(item.basic_login).split(':');
                   item.username = cred_list[0];
                   item.password = cred_list[1];
@@ -333,22 +335,26 @@
     if (limit === undefined) {
       limit = 300;
     }
-    return gadget.state.erp5_gadget.allDocs({
+    return gadget.state.jio_gadget.allDocs({
       query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
-      select_list: ['title', 'default_successor_uid', 'uid', 'slap_state'],
+      select_list: ['title', 'default_successor_uid', 'uid', 'slap_state', 'id'],
       limit: [0, limit],
       sort_on: [
         ["creation_date", "descending"]
       ]
     })
       .push(function (result) {
-        var i,
+        var i, slapos_id,
           uid_search_list = [];
         for (i = 0; i < result.data.total_rows; i += 1) {
           if (result.data.rows[i].value.slap_state !== "destroy_requested") {
+            //TODO slapos_id could be used to desambiguate identic title
+            //instances trees between different storages
+            slapos_id = result.data.rows[i].value.title;
             instance_tree_list.push({
               title: result.data.rows[i].value.title,
               relative_url: result.data.rows[i].id,
+              slapos_id: slapos_id,
               active: (result.data.rows[i].value.slap_state ===
                        "start_requested") ? true : false,
               state: (result.data.rows[i].value.slap_state ===
@@ -360,7 +366,7 @@
             }
           }
         }
-        return gadget.state.erp5_gadget.allDocs({
+        return gadget.state.jio_gadget.allDocs({
           query: '(portal_type:"Software Instance") AND ' +
             '(successor_related_uid:("' + uid_search_list.join('","') + '"))',
           select_list: ['uid', 'successor_related_uid', 'connection_xml'],
@@ -381,7 +387,7 @@
             }
             if (instance_tree_list[uid_dict[tmp_uid]]) {
               opml_list.push({
-                portal_type: "opml",
+                portal_type: OPML_PORTAL_TYPE,
                 title: instance_tree_list[uid_dict[tmp_uid]]
                   .title,
                 relative_url: instance_tree_list[uid_dict[tmp_uid]]
@@ -394,7 +400,8 @@
                                   tmp_parameter.password),
                 active: tmp_parameter.opml_url !== undefined &&
                   instance_tree_list[uid_dict[tmp_uid]].active,
-                state: instance_tree_list[uid_dict[tmp_uid]].state
+                state: instance_tree_list[uid_dict[tmp_uid]].state,
+                slapos_master_url: ""
               });
             }
           }
@@ -412,12 +419,12 @@
       config: "",
       is_export: false,
       options: "",
-      erp5_gadget: ""
+      jio_gadget: ""
     })
     .ready(function (g) {
-      return g.getDeclaredGadget('erp5_gadget')
-        .push(function (erp5_gadget) {
-          return g.changeState({erp5_gadget: erp5_gadget});
+      return g.declareGadget('gadget_jio.html')
+        .push(function (jio_gadget) {
+          return g.changeState({jio_gadget: jio_gadget});
         });
     })
     /////////////////////////////////////////////////////////////////
@@ -453,12 +460,17 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this,
+      var gadget = this, i,
         is_exporter = options.exporter === "true",
         message_element = gadget.element.querySelector('.ui-message-alert');
       message_element.textContent = "";
-      if (options.url && !options.url.endsWith('/')) {
-        options.url += '/';
+      if (options.url_list) {
+        options.url_list = options.url_list.split(",");
+        for (i = 0; i < options.url_list.length; i += 1) {
+          if (!options.url_list[i].endsWith('/')) {
+            options.url_list[i] += '/';
+          }
+        }
       }
       if (is_exporter) {
         return new RSVP.Queue()
@@ -482,7 +494,7 @@
         config: "",
         message: message_element,
         sync: options.auto_sync,
-        storage_url: options.url
+        storage_url_list: options.url_list
       });
     })
     .declareJob('deferChangeState', function deferStateChange(state) {
@@ -586,15 +598,34 @@
             });
         })
         .push(function () {
-          var has_failed = false;
-          if (gadget.state.sync === "erp5" && gadget.state.storage_url) {
+          var has_failed = false, i;
+          if (gadget.state.sync === "erp5" && gadget.state.storage_url_list) {
+            var storage_definition_list = [];
             // start import from erp5 now
             return gadget.notifySubmitting()
               .push(function () {
-                return gadget.setSetting("hateoas_url", gadget.state.storage_url);
+                gadget.getSetting('default_view_reference');
               })
-              .push(function () {
-                return gadget.state.erp5_gadget.createJio();
+              .push(function (default_view_reference) {
+                for (i = 0; i < gadget.state.storage_url_list.length; i += 1) {
+                  storage_definition_list.push({
+                    type: "erp5",
+                    url: gadget.state.storage_url_list[i],
+                    default_view_reference: default_view_reference
+                  });
+                }
+                //TODO fix. union doesn't bring all elements (limit issue?)
+                /*return gadget.state.jio_gadget.createJio(
+                  {
+                    "type": "union",
+                    "storage_list": storage_definition_list
+                  }
+                );*/
+                return gadget.state.jio_gadget.createJio({
+                  type: "erp5",
+                  url: gadget.state.storage_url_list[0],
+                  default_view_reference: default_view_reference
+                });
               })
               .push(function () {
                 return gadget.getSetting('opml_import_limit', 300);
@@ -607,14 +638,13 @@
                   .innerHTML = notify_msg_template({
                     status: 'error',
                     message: 'Error: Failed to get Monitor Configuration from URL: ' +
-                      gadget.state.storage_url
+                      gadget.state.storage_url_list[0]
                   });
                 has_failed = true;
                 return [];
               })
               .push(function (opml_list) {
-                var i,
-                  push_queue = new RSVP.Queue();
+                var i, push_queue = new RSVP.Queue();
 
                 function pushOPML(opml_dict) {
                   push_queue
@@ -636,7 +666,7 @@
                   .innerHTML = notify_msg_template({
                     status: 'error',
                     message: 'An error occurred while saving Configuration from URL: ' +
-                      gadget.state.storage_url
+                      gadget.state.storage_url_list[0]
                   });
                 has_failed = true;
               })

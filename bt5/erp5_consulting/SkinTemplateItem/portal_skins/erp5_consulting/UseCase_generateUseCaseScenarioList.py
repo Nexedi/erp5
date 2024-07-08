@@ -1,5 +1,3 @@
-from string import zfill
-
 destination_obj = context.getObject()
 
 first_level_type  = 'Use Case Scenario'

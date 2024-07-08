@@ -170,6 +170,10 @@ class Widget(object):
     except KeyError:
     # In case extra is not defined as in DateTimeWidget
       extra = ''
+    try:
+      autocomplete = field.get_value('autocomplete')
+    except KeyError:
+      autocomplete = ''
     result = ''
     # We must adapt the rendering to the type of the value
     # in order to get the correct type back
@@ -179,12 +183,14 @@ class Widget(object):
                           type="hidden",
                           name="%s:list" % key,
                           value=v,
+                          autocomplete=autocomplete,
                           extra=extra)
     else:
       result = render_element("input",
                           type="hidden",
                           name=key,
                           value=value,
+                          autocomplete=autocomplete,
                           extra=extra)
     return result
 

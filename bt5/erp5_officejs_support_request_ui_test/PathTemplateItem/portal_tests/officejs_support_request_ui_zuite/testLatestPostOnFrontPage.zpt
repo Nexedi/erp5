@@ -28,35 +28,29 @@
 <tr><td>type</td>
     <td>//input[@name='field_your_title']</td>
     <td>testLatestPostOnFrontPage</td></tr>
-<!-- Wait for the gadget to update the resource according to the project type,
- this done by an ajax call.-->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//option[@text="BugReport"]</td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//option[@text="BugReport"]</td>
-</tr>
 <tr><td>select</td>
   <td>field_your_project</td>
   <td>RobotMaking</td>
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//option[@text="BugReport"]</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//option[@text="BugReport"]</td>
+  <td>//option[text()="BugReport"]</td>
+  <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//option[@text="FeatureRequire"]</td>
+  <td>//option[text()="FeatureRequire"]</td>
+  <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//option[@text="FeatureRequire"]</td>
+  <td>//option[text()="FeatureRequire"]</td>
+  <td></td>
 </tr>
 <tr><td>select</td>
     <td>field_your_resource</td>

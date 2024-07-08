@@ -89,7 +89,6 @@ $Id: DA.py,v 1.4 2001/08/09 20:16:36 adustman Exp $''' % database_type
 __version__='$Revision: 1.4 $'[11:-2]
 
 import os
-import six
 from collections import defaultdict
 from weakref import WeakKeyDictionary
 import transaction
@@ -177,8 +176,6 @@ class Connection(DABase.Connection):
             # any reason, that would generate an infinite loop.
             self.connect(self.connection_string)
             connection = self._v_database_connection
-        if not isinstance(v, six.binary_type):
-            v = v.encode('utf-8')
         return connection.string_literal(v)
 
 

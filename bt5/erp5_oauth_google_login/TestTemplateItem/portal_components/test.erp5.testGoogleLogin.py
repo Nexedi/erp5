@@ -60,13 +60,16 @@ class GoogleLoginTestCase(ERP5TypeTestCase):
     ).validate()
     self.default_user_person.newContent(portal_type='Assignment').open()
 
-    if getattr(self.portal.portal_oauth, self.dummy_connector_id, None) is None:
+    connector = getattr(self.portal.portal_oauth, self.dummy_connector_id, None)
+    if connector is None:
       connector = self.portal.portal_oauth.newContent(
         id=self.dummy_connector_id,
         portal_type="Google Connector",
         reference="default",
         client_id=self.client_id,
         secret_key=self.secret_key)
+
+    if connector.getValidationState() != "validated":
       connector.validate()
     self.tic()
 
@@ -415,6 +418,22 @@ class TestERP5JSGoogleLogin(GoogleLoginTestCase):
     # this request redirects to google
     self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
     self.assertIn('google.com', resp.getHeader('Location'))
+
+
+  def test_login_form_not_configured(self):
+    connector = getattr(self.portal.portal_oauth, self.dummy_connector_id, None)
+    if connector is not None:
+      if connector.getValidationState() == "validated":
+        connector.invalidate()
+    
+    self.tic()
+    resp = self.publish(self._getWebSite().getPath() + '/login_form')
+    tree = lxml.etree.fromstring(resp.getBody(), parser=lxml.etree.HTMLParser())
+    self.assertEqual([], [
+        img.getparent().attrib['href']
+        for img in tree.findall('.//a/img')
+        if img.attrib['alt'] == 'Sign in with Google'
+    ])
 
   def test_logout(self):
     resp = self.publish(self._getWebSite().getPath() + '/WebSite_logout')

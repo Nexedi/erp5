@@ -29,6 +29,8 @@
 import urllib2
 from lxml import etree
 from erp5.component.document.Document import ConversionError
+import base64
+from Products.ERP5Type.Utils import bytes2str
 
 SVG_DEFAULT_NAMESPACE = "http://www.w3.org/2000/svg"
 
@@ -38,7 +40,7 @@ def getDataURI(url):
   except Exception as e:
     raise ConversionError("Error to transform url (%s) into data uri. ERROR = %s" % (url, Exception(e)))
   return 'data:%s;base64,%s' % (data.info()["content-type"],
-                                data.read().encode("base64").replace('\n', ""))
+                                bytes2str(base64.b64encode(data.read())).replace('\n', ""))
 
 def transformUrlToDataURI(content):
   if content is None or len(content) == 0:

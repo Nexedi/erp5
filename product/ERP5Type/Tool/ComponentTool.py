@@ -159,16 +159,12 @@ class ComponentTool(BaseTool):
       erp5.component.filesystem_import_dict = None
       erp5.component.ref_manager.gc()
 
-      # Clear pylint cache
-      try:
-        from astroid.builder import MANAGER
-      except ImportError:
-        pass
-      else:
-        astroid_cache = MANAGER.astroid_cache
-        for k in astroid_cache.keys():
-          if k.startswith('erp5.component.') and k not in component_package_list:
-            del astroid_cache[k]
+      # Clear astroid (pylint) cache
+      from astroid import MANAGER
+      astroid_cache = MANAGER.astroid_cache
+      for k in list(astroid_cache.keys()):
+        if k.startswith('erp5.component.') and k not in component_package_list:
+          del astroid_cache[k]
 
     if reset_portal_type_at_transaction_boundary:
       portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
@@ -234,7 +230,6 @@ class Test(ERP5TypeTestCase):
     This is ran before anything, used to set the environment
     """
     # here, you can create the categories and objects your test will depend on
-    pass
 
   def test_sampleTest(self):
     """
@@ -243,7 +238,7 @@ class Test(ERP5TypeTestCase):
     For the method to be called during the test,
     its name must start with 'test'.
 
-    See https://docs.python.org/2/library/unittest.html for help with available
+    See https://docs.python.org/library/unittest.html for help with available
     assertion methods.
     """
     self.assertEqual(0, 1)

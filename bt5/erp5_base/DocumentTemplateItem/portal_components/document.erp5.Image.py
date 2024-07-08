@@ -32,8 +32,7 @@
 
 import os
 import subprocess
-from cStringIO import StringIO
-
+from io import BytesIO
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
@@ -117,7 +116,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     content_type, width, height = getImageInfo(self.data)
     if not content_type:
       try:
-        image = PIL.Image.open(StringIO(str(self.data)))
+        image = PIL.Image.open(BytesIO(bytes(self.data)))
       except IOError:
         width = height = -1
         content_type = 'application/unknown'
@@ -381,7 +380,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     else:
       parameter_list.append('-')
 
-    data = str(self.getData())
+    data = bytes(self.getData())
     if self.getContentType() == "image/svg+xml":
       data = transformUrlToDataURI(data)
 
@@ -401,7 +400,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     finally:
       del process
     if image:
-      return StringIO(image)
+      return BytesIO(image)
     raise ConversionError('Image conversion failed (%s).' % err)
 
   def _getContentTypeAndImageData(

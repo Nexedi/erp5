@@ -7176,10 +7176,12 @@
                                             return [3 /*break*/, 4];
                                         case 4:
                                             if (image) {
+                                                var imageWidth = isNaN(image.width) || image.width === 0 ? 1 : image.width;
+                                                var imageHeight = isNaN(image.height) || image.height === 0 ? 1 : image.height;
                                                 _c = calculateBackgroundRendering(container, index, [
-                                                    image.width,
-                                                    image.height,
-                                                    image.width / image.height
+                                                    imageWidth,
+                                                    imageHeight,
+                                                    imageWidth / imageHeight
                                                 ]), path = _c[0], x = _c[1], y = _c[2], width = _c[3], height = _c[4];
                                                 pattern = this_1.ctx.createPattern(this_1.resizeImage(image, width, height), 'repeat');
                                                 this_1.renderRepeat(path, pattern, x, y);

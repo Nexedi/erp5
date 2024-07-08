@@ -30,7 +30,7 @@
 
 import weakref
 
-from SOAPpy.wstools import WSDLTools
+from wstools        import WSDLTools
 from SOAPpy.Client  import SOAPProxy
 from SOAPpy.Types   import headerType, faultType
 

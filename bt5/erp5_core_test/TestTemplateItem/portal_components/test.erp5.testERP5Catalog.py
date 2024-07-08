@@ -351,7 +351,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       # XXX: duplicate ActivityTool.tic, without locking as we are being
       # multiple activity nodes in a single process.
       for activity in ActivityTool.activity_dict.itervalues():
-        while not activity.dequeueMessage(activity_tool, node_id, ()):
+        while activity.dequeueMessage(activity_tool, node_id, ()):
           pass
     # Monkey-patch catalog to synchronise between main thread and the
     # isolated transaction.

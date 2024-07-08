@@ -83,7 +83,8 @@ def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
   return message.line.priority, message.line.date, message.uid
 
-_DequeueMessageException = Exception()
+class _DequeueMessageException(Exception):
+  pass
 
 _ITEMGETTER0 = operator.itemgetter(0)
 _IDENTITY = lambda x: x
@@ -683,8 +684,8 @@ CREATE TABLE %s (
     while 1:
       result = self._getMessageList(db, **where_kw)
       if not result:
-        return
-      transaction.commit()
+        transaction.commit()
+        return False
       message_list = [Message.load(line.message, uid=line.uid, line=line)
                       for line in result]
       message_set = self._getExecutableMessageSet(activity_tool, db, message_list)
@@ -714,7 +715,8 @@ CREATE TABLE %s (
           self.assignMessageList(db, 0, distributable_uid_set)
           validated_count += distributable_count
           if validated_count >= MAX_VALIDATED_LIMIT:
-            return
+            transaction.commit()
+            return True
       line = result[-1]
       where_kw['above_priority_date_uid'] = (line.priority, line.date, line.uid)
 
@@ -1010,11 +1012,11 @@ CREATE TABLE %s (
         # increased.
         for m in message_list:
           if m.getExecutionState() == MESSAGE_NOT_EXECUTED:
-            raise _DequeueMessageException
+            raise _DequeueMessageException()
         transaction.commit()
       except:
         exc_info = sys.exc_info()
-        if exc_info[1] is not _DequeueMessageException:
+        if not isinstance(exc_info[1], _DequeueMessageException):
           self._log(WARNING,
             'Exception raised when invoking messages (uid, path, method_id) %r'
             % [(m.uid, m.object_path, m.method_id) for m in message_list])
@@ -1038,7 +1040,7 @@ CREATE TABLE %s (
       self.finalizeMessageExecution(activity_tool, message_list,
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()
-    return not message_list
+    return bool(message_list)
 
   def deleteMessageList(self, db, uid_list):
     db.query("DELETE FROM %s WHERE uid IN (%s)" % (

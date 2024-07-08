@@ -14,11 +14,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>translation_zuite</string> </value>
+            <value> <string>officejs_support_request_ui_logout_zuite</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Tests which logs out the default manager user, put in this folder so that they run at the end)</string> </value>
         </item>
       </dictionary>
     </pickle>

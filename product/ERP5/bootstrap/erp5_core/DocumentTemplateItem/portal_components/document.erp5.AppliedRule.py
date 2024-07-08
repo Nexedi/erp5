@@ -28,6 +28,8 @@
 ##############################################################################
 
 from collections import deque
+from difflib import unified_diff
+from pprint import pformat
 import sys
 import transaction
 import zope.interface
@@ -390,7 +392,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
       return {k: sum(v.values(), []) for k, v in deleted}, delivery_set
     simulation_tool._delObject(self.getId())
 
-  def _checkExpand(self):
+  def _checkExpand(self, ignore_nul_movements=False, filter=None):  # pylint:disable=redefined-builtin
     """Check that expand() would not fail nor do major changes to the subobjects
 
     Transaction is aborted after 'expand' is called.
@@ -405,12 +407,19 @@ class AppliedRule(XMLObject, ExplainableMixin):
       while object_list:
         document = object_list.popleft()
         portal_type = document.getPortalType()
-        document_dict = {'portal_type': portal_type}
-        for property_ in property_dict[portal_type]:
-          document_dict[property_] = document.getProperty(property_)
-        rule_dict[document.getRelativeUrl()] = document_dict
-        object_list += document.objectValues()
+        document_dict = {property: document.getProperty(property)
+                         for property in property_dict[portal_type]}
+        if ignore_nul_movements and portal_type == 'Simulation Movement' and \
+           not (document_dict['quantity'] and document.getPrice()):
+          if document.isDeletable():
+            continue
+          del document_dict['quantity']
+        document_dict['portal_type'] = portal_type
+        if filter is None or filter(initial_rule_dict, document, document_dict):
+          rule_dict[document.getRelativeUrl()] = document_dict
+          object_list += document.objectValues()
       return rule_dict
+    initial_rule_dict = None
     initial_rule_dict = fillRuleDict()
     try:
       self.expand("immediate")
@@ -420,7 +429,15 @@ class AppliedRule(XMLObject, ExplainableMixin):
       msg = ''.join(ExceptionFormatter.format_exception(*sys.exc_info())[1:])
     else:
       final_rule_dict = fillRuleDict()
-      msg = "%r != %r" % (initial_rule_dict, final_rule_dict) \
-            if initial_rule_dict != final_rule_dict else None
+      if initial_rule_dict == final_rule_dict:
+        msg = None
+      else:
+        diff = unified_diff(
+          pformat(initial_rule_dict, width=1000).splitlines(),
+          pformat(final_rule_dict, width=1000).splitlines(),
+          lineterm='')
+        next(diff)
+        next(diff)
+        msg = '\n'.join(diff)
     transaction.abort()
     return msg
