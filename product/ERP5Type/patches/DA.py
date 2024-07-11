@@ -279,7 +279,7 @@ def getObjectMeta(original_function):
     # imported, which is enough to use a ZODB Extension as a brain.
     try:
       m = __import__('erp5.component.extension.%s' % module, globals(),
-                     {}, 'erp5.component.extension')
+                     {}, [''])
 
       o = getattr(m, name, None)
       if o is None:
