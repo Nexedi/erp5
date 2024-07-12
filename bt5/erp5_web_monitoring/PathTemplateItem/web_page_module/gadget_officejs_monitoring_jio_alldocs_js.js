@@ -18,6 +18,7 @@
           })
           .push(function (result) {
             jio_gadget = result;
+            // TODO check url response before creating jio? sometimes public feeds url is broken
             return jio_gadget.createJio({
               type: "webhttp",
               // XXX fix of url
@@ -30,6 +31,7 @@
               gadget.state.doc.source + ".history"
             )
               .push(undefined, function (error) {
+                //check if json error
                 if (error.name === "cancel") {
                   return undefined;
                 }

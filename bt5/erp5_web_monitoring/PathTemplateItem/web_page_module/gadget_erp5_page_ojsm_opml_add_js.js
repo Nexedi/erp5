@@ -160,7 +160,7 @@
                 "my_slapos_master_url": {
                   "description": "Slapos master URL",
                   "title": "Slapos master URL",
-                  "default": options.slapos_master_url || "not-provided",
+                  "default": options.slapos_master_url || "",
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
