@@ -599,6 +599,7 @@
         })
         .push(function () {
           var has_failed = false, i;
+          //TODO drop this as it is done within monitoring jio storage. drop this whole page?
           if (gadget.state.sync === "erp5" && gadget.state.storage_url_list) {
             var storage_definition_list = [];
             // start import from erp5 now
