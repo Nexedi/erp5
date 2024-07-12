@@ -371,3 +371,8 @@ margin-top: 5px;
   margin: 30px 25px 10px 0;
   border-top: 1px solid #dedede;
 }
+
+
+div[data-gadget-scope$="output_message"] p {
+  margin: 0;
+}
