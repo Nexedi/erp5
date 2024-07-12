@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>classification/collaborative/public</string>
               </tuple>
             </value>
         </item>
@@ -77,11 +77,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_monitoring_jio_alldocs.html</string> </value>
+            <value> <string>monitoring_jio_erp5monitor_storage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_monitoring_jio_alldocs_html</string> </value>
+            <value> <string>monitoring_jio_erp5monitor_storage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +101,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -109,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs Monitoring All Docs</string> </value>
+            <value> <string>Monitoring Jio Erp5 Monitor Storage</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -199,7 +201,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1712168087.71</float>
+                              <float>1723124663.84</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -248,7 +250,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1019.35831.119.51780</string> </value>
+                      <value> <string>1019.25867.59368.11707</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -268,7 +270,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1727283353.81</float>
+                              <float>1726686313.79</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -331,7 +333,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1712167647.48</float>
+                              <float>1723124587.09</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

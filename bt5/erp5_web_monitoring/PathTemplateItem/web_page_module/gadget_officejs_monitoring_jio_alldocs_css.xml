@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,12 +76,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_monitoring_jio_alldocs.html</string> </value>
+            <value> <string>gadget_officejs_monitoring_jio_alldocs.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,15 +87,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_monitoring_jio_alldocs_html</string> </value>
+            <value> <string>gadget_officejs_monitoring_jio_alldocs_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -109,11 +107,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs Monitoring All Docs</string> </value>
+            <value> <string>Officejs Monitoring All Docs css</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -199,7 +199,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1712168087.71</float>
+                              <float>1727283385.27</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -248,7 +248,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1019.35831.119.51780</string> </value>
+                      <value> <string>1019.35832.27620.40430</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -268,7 +268,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1727283353.81</float>
+                              <float>1727283398.43</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -331,7 +331,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1712167647.48</float>
+                              <float>1727283335.24</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
