@@ -5,7 +5,7 @@
 
   rJS(window)
     .setState({
-      erp5_url_list: "https://panel.rapid.space/hateoas/"
+      erp5_url_list: ["https://panel.rapid.space/hateoas/"]
     })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -13,7 +13,8 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSettingList", "setSettingList")
 
     /////////////////////////////////////////
     // Form submit
@@ -30,6 +31,10 @@
           for (i = 0; i < master_url_list.length; i += 1) {
             master_url_list[i] = master_url_list[i].trim();
           }
+          return gadget.setSettingList({'master_url_list': master_url_list,
+                                        'master_url_list_updated': true});
+        })
+        .push(function () {
           return gadget.redirect({command: "display", options: {
             page: "ojsm_import_export",
             auto_sync: "erp5",
@@ -44,8 +49,13 @@
 
     .declareMethod("render", function () {
       var gadget = this;
-
-      return gadget.getDeclaredGadget('form_view')
+      return gadget.getSetting('master_url_list')
+        .push(function (master_url_list) {
+          if (master_url_list) {
+            gadget.state.erp5_url_list = master_url_list;
+          }
+          return gadget.getDeclaredGadget('form_view');
+        })
         .push(function (form_gadget) {
           //TODO replace textarea by N stringfield inputs
           return form_gadget.render({
@@ -54,7 +64,7 @@
                 "my_erp5_url_list": {
                   "description": "",
                   "title": "Connection Url List",
-                  "default": gadget.state.erp5_url_list,
+                  "default": gadget.state.erp5_url_list.join('\r\n'),
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
