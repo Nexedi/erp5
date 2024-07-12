@@ -13,7 +13,7 @@
     .declareAcquiredMethod("setSetting", "setSetting")
 
     .declareMethod("render", function (options) {
-      var gadget = this;
+      var gadget = this, notify = {}, redirect_options;
       return this.updateHeader({
         page_title: "Monitoring Synchronization"
       })
@@ -24,8 +24,19 @@
               return sync_gadget.register({now: true});
             });
         })
+        .push(function (result) {
+          redirect_options = {"page": "ojsm_dispatch", "notify_msg": result.msg, "notify_type": result.type};
+          notify.msg = result.msg;
+          notify.type = result.type;
+          if (notify.type === "error") {
+            // drop master url list settings if sync failed
+            return gadget.setSetting('latest_master_url_list', undefined)
+              .push(function () {
+                return gadget.setSetting('master_url_list', undefined);
+              });
+          }
+        })
         .push(function () {
-          var redirect_options = {"page": "ojsm_dispatch"};
           if (options.reset === "1") {
             // reset redirections
             return gadget.setSetting("sync_redirect_options", undefined)
@@ -38,7 +49,9 @@
           }
           return gadget.getSetting('sync_redirect_options')
             .push(function (redirect_dict) {
-              if (redirect_options) {
+              if (redirect_dict) {
+                redirect_dict.msg = notify.msg;
+                redirect_dict.type = notify.type;
                 redirect_options = redirect_dict;
                 return gadget.setSetting("sync_redirect_options", undefined);
               }
