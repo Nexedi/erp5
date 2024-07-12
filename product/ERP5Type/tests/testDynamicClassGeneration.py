@@ -1454,7 +1454,7 @@ class TestZodbModuleComponent(SecurityTestCase):
   def afterSetUp(self):
     self._component_tool = self.portal.portal_components
     self._module = __import__(self._document_class._getDynamicModuleNamespace(),
-                              fromlist=['erp5.component'] if six.PY2 else ['erp5'])
+                              fromlist=[''])
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
@@ -1524,10 +1524,7 @@ class TestZodbModuleComponent(SecurityTestCase):
 
     if expected_default_version is not None:
       top_module_name = self._document_class._getDynamicModuleNamespace()
-      top_module = __import__(
-        top_module_name,
-        level=0,
-        fromlist=[top_module_name] if six.PY2 else ['erp5'])
+      top_module = __import__(top_module_name, level=0, fromlist=[''])
 
       # The module must be available in its default version
       self.assertHasAttribute(top_module, expected_default_version)
@@ -1558,8 +1555,7 @@ class TestZodbModuleComponent(SecurityTestCase):
     module_name = self._getComponentFullModuleName(module_name)
     module = __import__(
       module_name,
-      fromlist=[self._document_class._getDynamicModuleNamespace()]
-        if six.PY2 else ['erp5'],
+      fromlist=[''],
       level=0)
     self.assertIn(module_name, sys.modules)
     return module
@@ -2052,7 +2048,7 @@ def bar(*args, **kwargs):
     self.assertModuleImportable('erp5_version.%s' % imported_reference)
 
     top_module = __import__(top_module_name, level=0,
-                            fromlist=[top_module_name] if six.PY2 else ['erp5'])
+                            fromlist=[''])
 
     self._importModule('erp5_version.%s' % imported_reference)
 
@@ -2115,7 +2111,7 @@ def function_foo(*args, **kwargs):
 
       top_module_name = self._document_class._getDynamicModuleNamespace()
       top_module = __import__(top_module_name, level=0,
-                              fromlist=[top_module_name] if six.PY2 else ['erp5'])
+                              fromlist=[''])
 
       self._importModule(reference)
       module = getattr(top_module, reference)
