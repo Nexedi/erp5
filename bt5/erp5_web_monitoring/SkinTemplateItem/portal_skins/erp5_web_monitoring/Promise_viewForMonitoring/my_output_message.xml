@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="TextAreaField" module="Products.Formulator.StandardFields"/>
+      <global name="GadgetField" module="Products.ERP5Form.GadgetField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_description</string> </value>
+            <value> <string>my_output_message</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,20 +19,8 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>line_too_long</string> </key>
-                    <value> <string>A line was too long.</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>You entered too many characters.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_many_lines</string> </key>
-                    <value> <string>You entered too many lines.</string> </value>
+                    <key> <string>no_validator</string> </key>
+                    <value> <string>Does not support this operation.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -47,6 +35,10 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -74,7 +66,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
+                    <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -82,19 +74,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>js_sandbox</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>renderjs_extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -102,15 +86,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
+                    <key> <string>validator_field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -129,6 +109,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -153,7 +137,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
+                    <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -161,19 +145,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>js_sandbox</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>renderjs_extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -181,15 +157,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
+                    <key> <string>validator_field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -206,6 +178,10 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -229,47 +205,46 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+if (context_document && context_document.output_message) { result.default = "<p style=\'margin: 0;\'>" + context_document.output_message + "</p>"; result.default = result.default.replaceAll("\\n", "</p><p style=\'margin: 0;\'>"); result.default = result.default.replaceAll("\\\\n", "</p><p style=\'margin: 0;\'>"); }
+
+]]></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
+                    <key> <string>gadget_url</string> </key>
+                    <value> <string>gadget_editor.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
+                    <key> <string>js_sandbox</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>{"editor": "fck_editor", "maximize": true}</string>
+                          <string>{"editor": "fck_editor", "maximize": true}</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Output message</string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
