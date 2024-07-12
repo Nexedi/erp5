@@ -16,6 +16,7 @@ url_list = [
   "erp5_launcher_nojqm.js",
   "monitoring_jio_storage.js",
   "monitoring_jio_web_storage.js",
+  "monitoring_jio_erp5monitor_storage.js",
   "jio_ojs_storage.js",
   "jio_configuration_storage.js",
   "jio_appcachestorage.js",
