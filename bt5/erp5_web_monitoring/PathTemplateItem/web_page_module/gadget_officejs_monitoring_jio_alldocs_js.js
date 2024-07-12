@@ -18,6 +18,7 @@
           })
           .push(function (result) {
             jio_gadget = result;
+            // TODO check url response before creating jio? sometimes public feeds url is broken
             return jio_gadget.createJio({
               type: "webhttp",
               // XXX fix of url
@@ -30,6 +31,7 @@
               gadget.state.doc.source + ".history"
             )
               .push(undefined, function (error) {
+                //check if json error
                 if (error.name === "cancel") {
                   return undefined;
                 }
@@ -133,7 +135,7 @@
                             description: "The promise output message",
                             editable: 0,
                             hidden: 0,
-                            "default": status_history.data[i].message,
+                            "default": status_history.data[i].message.replaceAll("\n", "").replaceAll("\\n", ""),
                             key: "message",
                             required: 0,
                             title: "Promise Output",

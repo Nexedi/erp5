@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, Handlebars, atob */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, RSVP, Handlebars, atob) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -72,7 +72,7 @@
                 return gadget.changeState(state_dict);
               });
           case "software_instance":
-            if (software_instance.reference) {
+            if (software_instance && software_instance.reference) {
               return new RSVP.Queue()
                 .push(function () {
                   return gadget.getUrlFor({command: 'push_history', options: {
@@ -94,21 +94,54 @@
               return gadget.changeState(state_dict);
             }
           case "computer":
-            state_dict.content = software_instance.aggregate_reference;
+            if (software_instance) {
+              state_dict.content = software_instance.aggregate_reference;
+            }
             return gadget.changeState(state_dict);
           case "partition":
-            state_dict.content = software_instance.partition_id;
+            if (software_instance) {
+              state_dict.content = software_instance.partition_id;
+            }
             return gadget.changeState(state_dict);
           case "partition_ipv6":
-            state_dict.content = software_instance.ipv6;
+            if (software_instance) {
+              state_dict.content = software_instance.ipv6;
+            }
             return gadget.changeState(state_dict);
           case "software_release":
+            if (software_instance) {
+              state_dict.content = link_template({
+                url: software_instance.software_release,
+                title: "Access Software release",
+                target: "_blank"
+              });
+            }
+            return gadget.changeState(state_dict);
+          case "public_url":
             state_dict.content = link_template({
-              url: software_instance.software_release,
-              title: "Access Software release",
+              url: options.link.replace('private', 'public'),
+              title: "Access Public files",
               target: "_blank"
             });
             return gadget.changeState(state_dict);
+          case "private_url":
+            return gadget.jio_get(options.parent_id)
+              .push(function (outline_doc) {
+                return RSVP.all([outline_doc.parent_id,
+                                 gadget.jio_get(outline_doc.parent_url)]);
+              })
+              .push(function (doc_list) {
+                if (software_instance && software_instance._links) {
+                  var pass_url = "https://" + atob(doc_list[1].basic_login) +
+                    "@" + software_instance._links.private_url.href.split("//")[1];
+                  state_dict.content = link_template({
+                    url: pass_url,
+                    title: "Access Private files",
+                    target: "_blank"
+                  });
+                }
+                return gadget.changeState(state_dict);
+              });
           default:
             state_dict.content = "";
             return gadget.changeState(state_dict);
@@ -120,4 +153,4 @@
       this.element.innerHTML = modification_dict.content;
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP, Handlebars, atob));
