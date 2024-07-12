@@ -1003,7 +1003,7 @@
         );
       })
       .push(function () {
-      
+        //
         return context._remote_sub_storage.repair.apply(
           context._remote_sub_storage,
           argument_list
@@ -1036,7 +1036,7 @@
         return push_queue;
       })
       .push(function () {
-      
+        //
         return syncOpmlStorage(context);
       });
       //TODO update latest_import_date setting
