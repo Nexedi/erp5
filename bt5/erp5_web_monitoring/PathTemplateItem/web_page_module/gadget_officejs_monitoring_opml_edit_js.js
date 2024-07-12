@@ -63,10 +63,14 @@
       .push(function () {
         return {status: 'OK'};
       }, function (error) {
-        //console.error(error);
+        console.log(error);
+        var code = error.status;
+        if (!code && error.target) {
+          code = error.target.status;
+        }
         return {
           status: 'ERROR',
-          code: error.status || error.target.status,
+          code: code,
           url: base_url,
           title: title
         };
@@ -149,13 +153,14 @@
         password: doc.password,
         active: (doc.active === "on") ? true : false,
         has_monitor: true,
-        state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
+        state: doc.state || (doc.active === "on" ? "Started" : "Stopped"),
+        slapos_master_url: doc.slapos_master_url,
+        manually_added: true
       },
       update_password_list = [],
       allow_force = false,
       return_dict;
-    if (doc.slapos_master_url && doc.slapos_master_url !== undefined &&
-      doc.slapos_master_url !== "") {
+    if (doc.slapos_master_url !== undefined) {
       opml_dict.slapos_master_url = doc.slapos_master_url;
     }
     gadget.state.message.textContent = "";
