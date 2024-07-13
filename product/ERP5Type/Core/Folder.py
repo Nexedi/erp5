@@ -667,6 +667,10 @@ class OFSFolder2(OFSFolder):
     except AttributeError as exc:
       raise KeyError(exc.args)
 
+  def _cleanup(self):
+    # Keep compatibility with BTreeFolder2 API, despite it is not reaquired.
+    LOG("OFSFolder2._cleanup", WARNING, "This folder class do not implement _cleanup, skip.")
+
 OFS_HANDLER = 0
 BTREE_HANDLER = 1
 HBTREE_HANDLER = 2
