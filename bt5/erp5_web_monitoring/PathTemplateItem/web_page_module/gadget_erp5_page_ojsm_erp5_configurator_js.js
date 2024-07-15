@@ -30,6 +30,9 @@
           for (i = 0; i < master_url_list.length; i += 1) {
             master_url_list[i] = master_url_list[i].trim();
           }
+          return gadget.setSetting('master_url_list', master_url_list);
+        })
+        .push(function () {
           return gadget.redirect({command: "display", options: {
             page: "ojsm_import_export",
             auto_sync: "erp5",
