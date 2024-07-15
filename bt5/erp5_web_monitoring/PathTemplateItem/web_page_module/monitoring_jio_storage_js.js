@@ -849,6 +849,7 @@
 
   ReplicatedOPMLStorage.prototype.repair = function () {
     var context = this,
+      has_failed = false,
       argument_list = arguments;
 
     function getParameterDictFromUrl(uri_param) {
@@ -1016,7 +1017,10 @@
           return getInstanceOPMLList(context._remote_sub_storage);
         }
       })
-      //TODO handle and notify error
+      .push(undefined, function () {
+        has_failed = true;
+        return [];
+      })
       .push(function (opml_list) {
         var i, push_queue = new RSVP.Queue();
 
@@ -1033,11 +1037,18 @@
         for (i = 0; i < opml_list.length; i += 1) {
           pushOPML(opml_list[i]);
         }
+        if (has_failed) {
+          return context.notifySubmitted({
+            message: "Failed to import Configurations",
+            status: "error"
+          });
+        }
         return push_queue;
       })
       .push(function () {
-        //
-        return syncOpmlStorage(context);
+        if (!has_failed) {
+          return syncOpmlStorage(context);
+        }
       });
       //TODO update latest_import_date setting
   };
