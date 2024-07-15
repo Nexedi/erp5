@@ -33,6 +33,7 @@
           return gadget.setSetting('master_url_list', master_url_list);
         })
         .push(function () {
+          //TODO redirect to sync directly? drop import_export?
           return gadget.redirect({command: "display", options: {
             page: "ojsm_import_export",
             auto_sync: "erp5",
