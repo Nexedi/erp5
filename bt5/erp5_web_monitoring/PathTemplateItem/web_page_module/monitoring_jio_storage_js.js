@@ -1043,7 +1043,16 @@
             status: "error"
           });
         }
-        return push_queue;
+        return RSVP.all([
+          context.setSetting("latest_import_date", new Date().getTime()),
+          context.notifySubmitted({
+            message: "Configuration Saved!",
+            status: "success"
+          }),
+          push_queue
+        ]);
+      })
+      .push(function () {
       })
       .push(function () {
         if (!has_failed) {
