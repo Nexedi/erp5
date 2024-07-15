@@ -89,18 +89,18 @@
     .declareMethod('createJio', function (options) {
       var gadget = this, current_version, index, appcache_storage,
         monitoring_jio, appcache_jio, migration_version, manifest,
-        origin_url = window.location.href, i, storage_url_list,
+        origin_url = window.location.href, i, master_url_list,
         storage_definition_list;
       return gadget.getSettingList(['configuration_manifest',
                                     'migration_version',
                                     'default_view_reference',
-                                    'storage_url_list'])
+                                    'master_url_list'])
         .push(function (result_list) {
-          storage_url_list = result_list[3];
-          for (i = 0; i < storage_url_list.length; i += 1) {
+          master_url_list = result_list[3];
+          for (i = 0; i < master_url_list.length; i += 1) {
             storage_definition_list.push({
               type: "erp5",
-              url: storage_url_list[i],
+              url: master_url_list[i],
               default_view_reference: result_list[2]
             });
           }
