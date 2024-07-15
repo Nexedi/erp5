@@ -525,6 +525,21 @@ class ToXMLUnpickler(Unpickler):
         dispatch[NONE] = load_none
     dispatch[NONE[0]] = load_none
 
+    def load_int(self):
+        line = self.readline()[:-1]
+        # on protocol 1, bool are saved as int
+        # https://github.com/python/cpython/blob/b455a5a55cb1fd5bb6178a969e8ebd0e6e91b610/Lib/pickletools.py#L1173-L1179
+        if line == b'00':
+            val = Bool(False, self.id_mapping)
+        elif line == b'01':
+            val = Bool(True, self.id_mapping)
+        else:
+            val = Int(int(line), self.id_mapping)
+        self.append(val)
+    if six.PY2:
+        dispatch[INT] = load_int
+    dispatch[INT[0]] = load_int
+
     def load_binint(self):
         self.append(Int(mloads(b'i' + self.read(4)), self.id_mapping))
     if six.PY2:
@@ -542,6 +557,17 @@ class ToXMLUnpickler(Unpickler):
     if six.PY2:
         dispatch[BININT2] = load_binint2
     dispatch[BININT2[0]] = load_binint2
+
+    def load_long(self):
+        val = self.readline()[:-1]
+        if six.PY3:
+            val = val.decode('ascii')
+            if val and val[-1] == 'L':
+                val = val[:-1]
+        self.append(Long(long_(val, 0), self.id_mapping))
+    if six.PY2:
+        dispatch[LONG] = load_long
+    dispatch[LONG[0]] = load_long
 
     def load_long1(self):
         n = ord(self.read(1))
@@ -752,12 +778,6 @@ class ToXMLUnpickler(Unpickler):
         dispatch[LONG_BINGET] = load_long_binget
     dispatch[LONG_BINGET[0]] = load_long_binget
 
-    def load_put(self):
-        self.stack[-1].id=self.idprefix+self.readline()[:-1]
-    if six.PY2:
-        dispatch[PUT] = load_put
-    dispatch[PUT[0]] = load_put
-
     def load_binput(self):
         i = mloads(b'i' + self.read(1) + b'\000\000\000')
         self.stack[-1].id=self.idprefix+repr(i)
@@ -772,11 +792,6 @@ class ToXMLUnpickler(Unpickler):
         dispatch[LONG_BINPUT] = load_long_binput
     dispatch[LONG_BINPUT[0]] = load_long_binput
 
-    for code in PERSID, INT, LONG, FLOAT, STRING, UNICODE, GET, PUT:
-        if six.PY2:
-            dispatch[code] = unsupported_opcode(code)
-        dispatch[code[0]] = unsupported_opcode(code)
-
     class LogCall:
       def __init__(self, func):
         self.func = func
@@ -787,6 +802,17 @@ class ToXMLUnpickler(Unpickler):
 
     # for code in dispatch.keys():
     #   dispatch[code] = LogCall(dispatch[code])
+
+    for opcode, name in (
+            (STRING, 'STRING'),
+            (UNICODE, 'UNICODE'),
+            (GET, 'GET'),
+            (PUT, 'PUT'),
+        ):
+        if six.PY2:
+            dispatch[opcode] = unsupported_opcode(name)
+        dispatch[opcode[0]] = unsupported_opcode(name)
+
 
 def ToXMLload(file):
     return ToXMLUnpickler(file).load()

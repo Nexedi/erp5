@@ -67,6 +67,10 @@ MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
 marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
                                                             as_tree=True).dumps
 
+DEFAULT_PICKLE_PROTOCOL = 1
+HIGHEST_PICKLE_PROTOCOL = 1 if six.PY2 else 3
+
+
 class OrderedPickler(Pickler):
     """Pickler producing consistent output by saving dicts in order
     """
@@ -250,7 +254,8 @@ from . import ppml
 
 magic=b'<?xm' # importXML(jar, file, clue)}
 
-def reorderPickle(jar, p):
+
+def reorderPickle(jar, p, pickle_protocol):
     try:
         from ZODB._compat import Unpickler, Pickler
     except ImportError: # BBB: ZODB 3.10
@@ -284,7 +289,7 @@ def reorderPickle(jar, p):
     unpickler.persistent_load=persistent_load
 
     newp=BytesIO()
-    pickler = OrderedPickler(newp, 3)
+    pickler = OrderedPickler(newp, pickle_protocol)
     pickler.persistent_id=persistent_id
 
     classdef = unpickler.load()
@@ -294,7 +299,7 @@ def reorderPickle(jar, p):
 
     if 0: # debug
       debugp = BytesIO()
-      debugpickler = OrderedPickler(debugp, 3)
+      debugpickler = OrderedPickler(debugp, pickle_protocol)
       debugpickler.persistent_id = persistent_id
       debugpickler.dump(obj)
       import pickletools
@@ -323,7 +328,8 @@ def XMLrecord(oid, plen, p, id_mapping):
     String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, bytes2str(aka), p)
     return String
 
-def exportXML(jar, oid, file=None):
+
+def exportXML(jar, oid, file=None, pickle_protocol=DEFAULT_PICKLE_PROTOCOL):
     # For performance reasons, exportXML does not use 'XMLrecord' anymore to map
     # oids. This requires to initialize MinimalMapping.marked_reference before
     # any string output, i.e. in ppml.Reference.__init__
@@ -339,7 +345,7 @@ def exportXML(jar, oid, file=None):
         p = pickle_dict[oid]
         if p is None:
             p = load(oid)[0]
-            p = reorderPickle(jar, p)[1]
+            p = reorderPickle(jar, p, HIGHEST_PICKLE_PROTOCOL)[1]
             if len(p) < max_cache[0]:
                 max_cache[0] -= len(p)
                 pickle_dict[oid] = p
