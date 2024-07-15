@@ -35,6 +35,7 @@ from io import BytesIO
 from six import StringIO
 from Products.ERP5Type.XMLExportImport import importXML, ppml
 import six
+import lxml.etree
 
 
 class DummyClass:
@@ -46,11 +47,21 @@ class DummyClass:
     self.data = []
 
 
+class DummyPersistentClass:
+  def __init__(self, v, oid):
+    self.v = v
+    self._p_oid = oid
+
+
 class XMLPickleTestCase(unittest.TestCase):
   _pickle_protocol = 3
-  def dump_to_xml(self, obj):
-    pickled_string = pickle.dumps(obj, protocol=self._pickle_protocol)
-    f = BytesIO(pickled_string)
+  def dump_to_xml(self, obj, persistent_id=None):
+    f = BytesIO()
+    pickler = pickle.Pickler(f, protocol=self._pickle_protocol)
+    if persistent_id:
+      pickler.persistent_id = persistent_id
+    pickler.dump(obj)
+    f.seek(0)
     xml = ppml.ToXMLUnpickler(f).load().__str__()
     self.assertIsInstance(xml, str)
     return xml
@@ -150,8 +161,10 @@ class TestXMLPickle(XMLPickleTestCase):
   def test_bytes(self):
     self.check_and_load(b"bytes")
     self.check_and_load(b"long bytes" * 100)
-    self.check_and_load(zodbpickle.binary(b"bytes"))
-    self.check_and_load(zodbpickle.binary(b""))
+    if six.PY3 or self._pickle_protocol > 1:
+      # protocol 1 does not keep bytes
+      self.check_and_load(zodbpickle.binary(b"bytes"))
+      self.check_and_load(zodbpickle.binary(b""))
 
   def test_unicode(self):  # BBB PY2
     self.assertIs(type(self.dump_and_load(u"OK")), six.text_type)
@@ -217,6 +230,47 @@ class TestXMLPickle(XMLPickleTestCase):
     reconstructed = self.dump_and_load([ref, ref, ref])
     self.assertEqual(reconstructed, [ref, ref, ref])
     self.assertIs(reconstructed[0], reconstructed[1])
+
+  def test_persistent(self):
+    p1 = DummyPersistentClass(1, b'1')
+    p2 = DummyPersistentClass(2, b'2')
+
+    persistent_ids = []
+    def persistent_id(obj):
+      if isinstance(obj, DummyPersistentClass):
+        persistent_ids.append(obj._p_oid)
+        return obj._p_oid
+
+    xml = self.dump_to_xml(
+      {'p1': p1, 'p2': p2, 'not p': 'not p'},
+      persistent_id=persistent_id)
+    self.assertEqual(sorted(persistent_ids), [b'1', b'2'])
+
+    def persistent_load(oid):
+      persistent_ids.remove(oid)
+      return oid
+    obj = self.load_from_xml(xml, persistent_load)
+    self.assertEqual(obj,
+      {'p1': b'1', 'p2': b'2', 'not p': 'not p'})
+    self.assertEqual(persistent_ids, [])
+
+  def test_renamed_class(self):
+    if six.PY2:
+      from UserList import UserList
+    else:
+      from collections import UserList
+    l = UserList([1, 2])
+    xml = self.dump_to_xml(l)
+    if self._pickle_protocol == 1:
+      self.assertEqual(
+        lxml.etree.fromstring(xml).xpath('//global[@name="UserList"]/@module'),
+        ["UserList"],
+      )
+    self.check_and_load(l)
+
+
+class TestXMLPickleProtocol1(TestXMLPickle):
+  _pickle_protocol = 1
 
 
 class TestXMLPickleStringEncoding(XMLPickleTestCase):
