@@ -1004,7 +1004,6 @@
         );
       })
       .push(function () {
-        //
         return context._remote_sub_storage.repair.apply(
           context._remote_sub_storage,
           argument_list
@@ -1049,7 +1048,7 @@
             message: "Configuration Saved!",
             status: "success"
           }),
-          push_queue
+          push_queue //TODO CHECK
         ]);
       })
       .push(function () {
