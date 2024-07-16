@@ -63,15 +63,15 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
-import httplib
-import urllib
-import difflib
+import six.moves.http_client
+from six.moves.urllib.request import urlopen
 import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
 import PyPDF2
+from six.moves import range
 from OFS.Image import Pdata
 
 QUIET = 0
@@ -959,7 +959,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('%s "%s"' %(kw['searchabletext_any'], kw['searchabletext_phrase']), \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string))
 
 
     # search "with all of the words"
@@ -968,7 +968,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string))
 
     # search without these words
     kw["searchabletext_without"] = "searchabletext_without1 searchabletext_without2"
@@ -976,7 +976,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string))
 
     # search limited to a certain date range
     kw['created_within'] = '1w'
@@ -984,7 +984,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertSameSet(['searchabletext', 'creation_from'], parsed_string.keys())
+    self.assertSameSet(['searchabletext', 'creation_from'], list(parsed_string))
 
     # search with portal_type
     kw['search_portal_type'] = 'Document'
@@ -993,7 +993,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # search by reference
@@ -1003,7 +1003,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
 
@@ -1014,7 +1014,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', 'version'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1027,7 +1027,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1041,7 +1041,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1055,7 +1055,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1070,7 +1070,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1086,7 +1086,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest', 'mode'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1103,7 +1103,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
                       search_string)
     self.assertSameSet(['searchabletext', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     #self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # parse with multiple portal_type containing spaces in one portal_type
@@ -1954,16 +1954,16 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
           assert response.getHeader('content-type') == 'image/png', \
                                              response.getHeader('content-type')
-          assert response.getStatus() == httplib.OK
+          assert response.getStatus() == six.moves.http_client.OK
 
     credential = '%s:%s' % (self.manager_username, self.manager_password)
     tested_list = []
-    frame_list = range(pages_number)
+    frame_list = list(range(pages_number))
     # assume that ZServer is configured with 4 Threads
     conversion_per_tread = pages_number / 4
     while frame_list:
       local_frame_list = [frame_list.pop() for i in\
-                            xrange(min(conversion_per_tread, len(frame_list)))]
+                            range(min(conversion_per_tread, len(frame_list)))]
       instance = ThreadWrappedConverter(self.publish, document.getPath(),
                                         local_frame_list, credential)
       tested_list.append(instance)
@@ -1981,7 +1981,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                   'resolution': None}
 
     result_list = []
-    for i in xrange(pages_number):
+    for i in range(pages_number):
       # all conversions should succeeded and stored in cache storage
       convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
@@ -2161,12 +2161,12 @@ return 1
       for credential in ['%s:%s' % (self.manager_username, self.manager_password), 'zope_user:%s' % zope_user_password]:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
-        self.assertIn('200 OK', response.getOutput())
-        # OOod produced HTML navigation, test it
-        self.assertIn('First page', response.getBody())
-        self.assertIn('Back', response.getBody())
-        self.assertIn('Continue', response.getBody())
-        self.assertIn('Last page', response.getBody())
+        self.assertIn(b'200 OK', response.getOutput())
+        # cloudooo produced HTML navigation, test it
+        self.assertIn(b'First page', response.getBody())
+        self.assertIn(b'Back', response.getBody())
+        self.assertIn(b'Continue', response.getBody())
+        self.assertIn(b'Last page', response.getBody())
 
   def test_getTargetFormatItemList(self):
     """

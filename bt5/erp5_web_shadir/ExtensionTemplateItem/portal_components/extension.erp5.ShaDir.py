@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+import six
 import hashlib
 from base64 import b64decode
 from binascii import a2b_hex
@@ -220,7 +221,7 @@ def ShaDir_search(self, filename, summary, delete=False):
     x[';'.join('%s=%r' % (k, v.encode('utf-8') if type(v) is unicode else v)
                for k, v in sorted(metadata.iteritems()))].append(
       document.getId())
-  r = '\n'.join('%s %s' % (k, sorted(v)) for k, v in sorted(x.iteritems()))
+  r = '\n'.join('%s %s' % (k, sorted(v)) for k, v in sorted(six.iteritems(x)))
   if delete:
     r += '\n' + _deleteDocumentList(self, document_list)
   return r

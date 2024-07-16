@@ -19,12 +19,12 @@ import sys
 import time
 import traceback
 import urllib
-import ConfigParser
+from six.moves import configparser
 from contextlib import contextmanager
 from io import BytesIO
 from functools import partial
 from six.moves.urllib.parse import unquote_to_bytes
-from cPickle import dumps
+from six.moves.cPickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
@@ -155,7 +155,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getVolatileMemcachedServerDict()
   cloudooo_url_list = _getConversionServerUrlList()
 
-  promise_config = ConfigParser.RawConfigParser()
+  promise_config = configparser.RawConfigParser()
   promise_config.add_section('external_service')
   promise_config.set('external_service', 'cloudooo_url_list', cloudooo_url_list)
   promise_config.set('external_service', 'memcached_url',memcached_url)
@@ -1607,7 +1607,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.func_code # trigger compilation if needed
+    self.__code__ # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent

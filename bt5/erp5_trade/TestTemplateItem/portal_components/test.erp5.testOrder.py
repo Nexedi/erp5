@@ -29,6 +29,7 @@
 ##############################################################################
 
 import unittest
+import functools
 import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -516,7 +517,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       self.assertEqual(len(cell_key_list), 0)
     else:
       len_range = [len(x) for x in cell_range]
-      self.assertEqual(len(cell_key_list), reduce(lambda x,y: x*y, len_range))
+      self.assertEqual(len(cell_key_list), functools.reduce(lambda x,y: x*y, len_range))
 
   def stepCompleteOrderLineMatrix(self,sequence=None, sequence_list=None, \
                                   **kw):

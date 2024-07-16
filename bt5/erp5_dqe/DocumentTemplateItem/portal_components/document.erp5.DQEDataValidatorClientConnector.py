@@ -3,7 +3,7 @@ from json import loads
 from socket import timeout
 from requests import ConnectionError, Timeout
 from Products.ERP5Type.XMLObject import XMLObject
-from urllib import urlencode
+from six.moves import urllib
 from zLOG import LOG, INFO
 
 class DQEDataValidatorClientConnector(XMLObject):
@@ -41,7 +41,7 @@ class DQEDataValidatorClientConnector(XMLObject):
       archiveExchange = self._getTypeBasedMethod('archiveExchange')
       if archiveExchange is not None:
         archiveExchange(
-          raw_request=base_url + '?' + urlencode(params), # XXX is this correct?
+          raw_request=base_url + '?' + urllib.urlparse.urlencode(params), # XXX is this correct?
           raw_response=raw_response,
           service=service,
           archive_kw=archive_kw,
