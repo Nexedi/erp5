@@ -9,4 +9,4 @@ if REQUEST is not None:
   from zExceptions import Unauthorized
   raise Unauthorized
 
-context.getPortalObject().MailHost.send(context.getData())
+context.getPortalObject().MailHost.send(context.getData().decode())
