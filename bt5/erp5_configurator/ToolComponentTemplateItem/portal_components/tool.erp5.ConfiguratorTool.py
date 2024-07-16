@@ -53,12 +53,14 @@ def _validateFormToRequest(form, REQUEST, **kw):
     form.validate_all_to_request(REQUEST)
     validation_status = 0
     validation_errors = None
-  except FormValidationError as validation_errors:
+  except FormValidationError as e:
     ## not all fields valid
     validation_status = 1
-  except Exception as validation_errors:
+    validation_errors = e
+  except Exception as e:
     ## missing fields
     validation_status = 2
+    validation_errors = e
   ## extract form arguments and remove leading prefixes
   if validation_status == 0:
     for field in form.get_fields():

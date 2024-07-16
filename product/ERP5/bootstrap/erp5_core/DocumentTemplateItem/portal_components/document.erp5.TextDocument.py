@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
@@ -42,7 +43,7 @@ from string import Template
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
-from Products.ERP5Type.Utils import guessEncodingFromText
+from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes
 
 from lxml import html as etree_html
 from lxml import etree
@@ -90,17 +91,22 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         return text
       mapping = method(**kw)
 
+      # unicode()
       is_str = isinstance(text, str)
-      if is_str:
+      if six.PY2 and is_str:
         text = text.decode('utf-8')
 
       class UnicodeMapping:
         def __getitem__(self, item):
           v = mapping[item]
-          if isinstance(v, str):
-            v = v.decode('utf-8')
-          elif not isinstance(v, unicode):
-            v = str(v).decode('utf-8')
+          if six.PY2:
+            if isinstance(v, str):
+              v = v.decode('utf-8')
+            elif not isinstance(v, six.text_type):
+              v = str(v).decode('utf-8')
+          else:
+            if not isinstance(v, str):
+              v = str(v)
           return v
       unicode_mapping = UnicodeMapping()
 
@@ -109,8 +115,8 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       else:
         text = Template(text).substitute(unicode_mapping)
 
-      # If the original was a str, convert it back to str.
-      if is_str:
+      # If the original was a str, convert it back from unicode() to str
+      if six.PY2 and is_str:
         text = text.encode('utf-8')
 
     return text
@@ -158,7 +164,10 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         if mime_type == 'text/html':
           mime_type = 'text/x-html-safe'
         if src_mimetype != "image/svg+xml":
-          result = portal_transforms.convertToData(mime_type, text_content,
+          data = text_content
+          if not isinstance(data, bytes):
+            data = str2bytes(data)
+          result = portal_transforms.convertToData(mime_type, data,
                                                    object=self, context=self,
                                                    filename=filename,
                                                    mimetype=src_mimetype,
@@ -177,18 +186,23 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                                        file=BytesIO(),
                                        filename=self.getId(),
                                        temp_object=1)
+          if not isinstance(result, bytes):
+            result = str2bytes(result)
           temp_image._setData(result)
           _, result = temp_image.convert(**kw)
 
         self.setConversion(result, original_mime_type, **kw)
       else:
         mime_type, result = self.getConversion(**kw)
-      if substitute and format in VALID_TEXT_FORMAT_LIST:
-        # only textual content can be sustituted
-        if substitution_method_parameter_dict is None:
-          substitution_method_parameter_dict = {}
-        result = self._substituteTextContent(result, safe_substitute=safe_substitute,
-                                             **substitution_method_parameter_dict)
+      if format in VALID_TEXT_FORMAT_LIST:
+        if six.PY3 and isinstance(result, bytes):
+          result = bytes2str(result)
+        if substitute:
+          # only textual content can be sustituted
+          if substitution_method_parameter_dict is None:
+            substitution_method_parameter_dict = {}
+          result = self._substituteTextContent(result, safe_substitute=safe_substitute,
+                                               **substitution_method_parameter_dict)
       return original_mime_type, result
     else:
       # text_content is not set, return empty string instead of None
@@ -215,7 +229,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
   def setBaseData(self, value):
     """Store base_data into text_content
     """
-    self._setTextContent(value)
+    self._setTextContent(bytes2str(value))
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
   _setBaseData = setBaseData
@@ -241,9 +255,12 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     """
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
-      return self.getTextContent()
+      text_content = self.getTextContent()
     else:
-      return self.getTextContent(default=default)
+      text_content = self.getTextContent(default=default)
+    if six.PY3 and text_content and text_content is not default:
+      text_content = str2bytes(text_content)
+    return text_content
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
   def hasBaseData(self):
@@ -278,9 +295,12 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
 
   def _convertToBaseFormat(self):
     """Conversion to base format for TextDocument consist
-    to convert file content into utf-8
+    to convert file content into utf-8.
+    If the data embeds charset information, this information is updated
+    to the new (utf-8) charset. This supports XML and HTML.
     """
     def guessCharsetAndConvert(document, text_content, content_type):
+      # type: (TextDocument, bytes, str) -> Tuple[bytes, str]
       """
       return encoded content_type and message if encoding
       is not utf-8
@@ -310,26 +330,25 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       return text_content, message
 
     content_type = self.getContentType() or DEFAULT_CONTENT_TYPE
-    text_content = self.getData()
+    data = bytes(self.getData())
     if content_type.endswith('xml'):
       try:
-        tree = etree.fromstring(text_content)
-        text_content = etree.tostring(tree, encoding='utf-8', xml_declaration=True)
+        tree = etree.fromstring(data)
+        data = etree.tostring(tree, encoding='utf-8', xml_declaration=True)
         message = 'Conversion to base format succeeds'
       except etree.XMLSyntaxError: # pylint: disable=catching-non-exception
         message = 'Conversion to base format without codec fails'
     elif content_type == 'text/html':
-      re_match = self.charset_parser.search(text_content)
+      re_match = self.charset_parser.search(data)
       message = 'Conversion to base format succeeds'
       if re_match is not None:
-        charset = re_match.group('charset')
+        charset = re_match.group('charset').decode('ascii')
         try:
           # Use encoding in html document
-          text_content = text_content.decode(charset).encode('utf-8')
+          data = data.decode(charset).encode('utf-8')
         except (UnicodeDecodeError, LookupError):
           # Encoding read from document is wrong
-          text_content, message = guessCharsetAndConvert(self,
-                                                text_content, content_type)
+          data, message = guessCharsetAndConvert(self, data, content_type)
         else:
           message = 'Conversion to base format with charset %r succeeds'\
                                                                   % charset
@@ -344,23 +363,21 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                 return matchobj.group(0)
               elif keyword:
                 # if keyword is present, replace charset just after
-                return keyword + 'utf-8'
-            text_content = self.charset_parser.sub(subCharset, text_content)
+                return keyword + b'utf-8'
+            data = self.charset_parser.sub(subCharset, data)
       else:
-        text_content, message = guessCharsetAndConvert(self,
-                                                  text_content, content_type)
+        data, message = guessCharsetAndConvert(self, data, content_type)
     else:
       # generaly text/plain
       try:
         # if succeeds, not need to change encoding
         # it's already utf-8
-        text_content.decode('utf-8')
+        data.decode('utf-8')
       except (UnicodeDecodeError, LookupError):
-        text_content, message = guessCharsetAndConvert(self,
-                                                  text_content, content_type)
+        data, message = guessCharsetAndConvert(self, data, content_type)
       else:
         message = 'Conversion to base format succeeds'
-    self._setBaseData(text_content)
+    self._setBaseData(data)
     self._setBaseContentType(content_type)
     return message
 
@@ -400,15 +417,17 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     return self._setContentType(value)
 
   def getData(self, default=_MARKER):
+    # type: () -> bytes | PData
     """getData must returns original content but TextDocument accepts
     data or text_content to store original content.
     Fallback on text_content property if data is not defined
     """
     if not self.hasData():
       if default is _MARKER:
-        return self.getTextContent()
+        data = self._baseGetTextContent()
       else:
-        return self.getTextContent(default)
+        data = self._baseGetTextContent(default)
+      return str2bytes(data)
     else:
       if default is _MARKER:
         return File.getData(self)

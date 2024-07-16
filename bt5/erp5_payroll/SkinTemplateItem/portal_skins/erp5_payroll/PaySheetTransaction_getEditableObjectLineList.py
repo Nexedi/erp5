@@ -7,6 +7,7 @@
 """
 
 from Products.ERP5Type.Utils import cartesianProduct
+from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.Message import translateString
 
 def sortByIntIndex(a, b):
@@ -113,7 +114,7 @@ for model_line in model_line_list:
 
 
 if batch_mode:
-  object_dict_list = [x.values()[0] for x in object_dict_list]
+  object_dict_list = [ensure_list(x.values())[0] for x in object_dict_list]
   return object_dict_list
 
 # sort results

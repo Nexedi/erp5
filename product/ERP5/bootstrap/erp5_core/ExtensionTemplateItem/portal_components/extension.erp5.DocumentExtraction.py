@@ -25,10 +25,14 @@
 #
 ##############################################################################
 
+import six
 import string, re
 
 redundant_chars='"\'.:;,-+<>()*~' # chars we need to strip from a word before we see if it matches, and from the searchwords to eliminate boolean mode chars
-tr=string.maketrans(redundant_chars,' '*len(redundant_chars))
+if six.PY2:
+  tr = string.maketrans(redundant_chars, ' ' * len(redundant_chars))
+else:
+  tr = str.maketrans('', '', redundant_chars)
 
 class Done(Exception):
   pass
