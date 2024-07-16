@@ -39,6 +39,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from erp5.component.module.ExplanationCache import _getExplanationCache
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
+import six
 
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
@@ -334,7 +335,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     edit_order = []
     property_dict = {'edit_order': edit_order}
     for d in property_dict_list:
-      for k,v in d.iteritems():
+      for k,v in six.iteritems(d):
         if k in property_dict:
           raise DuplicatedPropertyDictKeysError(k)
         property_dict[k] = v

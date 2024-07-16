@@ -84,9 +84,10 @@ if "bytes" not in safe_builtins: # BBB Zope2
     assert six.PY2
     add_builtins(bytes=str)
 
+from Products.ERP5Type.Utils import ensure_list
 add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              property=property, staticmethod=staticmethod,
-             super=super, type=type)
+             super=super, type=type, ensure_list=ensure_list)
 
 # XXX: backport of https://github.com/zopefoundation/AccessControl/pull/131
 def guarded_next(iterator, default=_marker):
@@ -406,6 +407,8 @@ import six.moves.urllib.parse
 allow_module('six.moves.urllib.parse')
 allow_type(six.moves.urllib.parse.ParseResult)
 allow_type(six.moves.urllib.parse.SplitResult)
+# BBB this is different type on python3
+allow_type(type(six.moves.urllib.parse.urldefrag('')))
 ModuleSecurityInfo('six.moves.urllib.parse').declarePublic(
   'urlencode',
   'quote', 'unquote',
