@@ -30,6 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from erp5.component.mixin.ConfigurablePropertySolverMixin import ConfigurablePropertySolverMixin
+import six
 
 class AdoptSolver(ConfigurablePropertySolverMixin):
   """Target solver that adopts the values from the prevision on the decision.
@@ -50,7 +51,7 @@ class AdoptSolver(ConfigurablePropertySolverMixin):
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
-    for movement, simulation_movement_list in delivery_dict.iteritems():
+    for movement, simulation_movement_list in six.iteritems(delivery_dict):
       if activate_kw is not None:
         movement.setDefaultActivateParameterDict(activate_kw)
       for solved_property in solved_property_list:

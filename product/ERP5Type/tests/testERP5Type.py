@@ -31,6 +31,7 @@ other Tests are in erp5_core_test:testERP5Type) which is deprecated in favor
 of Portal Type as Classes and ZODB Components
 """
 
+import six
 import pickle
 import unittest
 import warnings
@@ -189,7 +190,10 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
       not_ok = NotOk().__of__(doc)
       self.assertRaises(ValueError, getattr, not_ok, 'attr')
-      self.assertFalse(hasattr(not_ok, 'attr'))
+      if six.PY2:
+        self.assertFalse(hasattr(not_ok, 'attr'))
+      else:
+        self.assertRaises(ValueError, hasattr, not_ok, 'attr')
 
     def test_renameObjectsReindexSubobjects(self):
       """Test that renaming an object with subobjects causes them to be
