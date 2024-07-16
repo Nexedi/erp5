@@ -9,4 +9,5 @@ if REQUEST is not None:
   from zExceptions import Unauthorized
   raise Unauthorized
 
-context.getPortalObject().MailHost.send(context.getData())
+from Products.ERP5Type.Utils import bytes2str
+context.getPortalObject().MailHost.send(bytes2str(context.getData()))

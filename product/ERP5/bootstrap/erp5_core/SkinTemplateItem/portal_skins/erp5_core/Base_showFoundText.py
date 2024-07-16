@@ -6,6 +6,7 @@
 """
 import six
 from erp5.component.document.Document import NotConvertedError
+from Products.ERP5Type.Utils import str2unicode, unicode2str
 
 encoding = 'utf-8'
 is_gadget_mode = context.REQUEST.get('is_gadget_mode', 0)
@@ -18,9 +19,13 @@ if is_gadget_mode:
 def getRandomDocumentTextExcerpt(document_text):
   # try to get somewhat arbitrary choice of searchable attrs
   if isinstance(document_text, str) and document_text!='':
-    document_text = document_text.decode(encoding, 'ignore')
+    if six.PY2:
+      document_text = str2unicode(document_text, encoding, 'ignore')
     start = min(len(document_text) - 300, 200)
-    return '... %s ...' %document_text[start:start + max_text_length].encode(encoding)
+    result = '... %s ...' % document_text[start:start + max_text_length]
+    if six.PY2:
+      result = unicode2str(result, encoding)
+    return result
   else:
     return ''
 
@@ -54,7 +59,8 @@ else:
   result = ' '.join(map(str, found_text_fragments))
 
   # Document may contains charactors which utf8 codec cannot decode.
-  unicode_result = result.decode(encoding, 'ignore')
-  result = unicode_result.encode(encoding)
+  if six.PY2:
+    unicode_result = str2unicode(result, encoding, 'ignore')
+    result = unicode2str(unicode_result, encoding)
 
   return result

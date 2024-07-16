@@ -34,6 +34,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
+from Products.ERP5Type.Utils import bytes2str
 from email import message_from_string
 from email.header import decode_header
 
@@ -315,8 +316,8 @@ class TestBug(ERP5TypeTestCase):
     _, _, messageText = last_message
     from email.parser import Parser
     p = Parser()
-    m = p.parsestr(messageText)
-    self.assertIn('Re-assign!', m.get_payload()[0].get_payload(decode=True))
+    m = p.parsestr(bytes2str(messageText))
+    self.assertIn(b'Re-assign!', m.get_payload()[0].get_payload(decode=True))
 
 
   def stepCheckBugInit(self, sequence=None, sequence_list=None, **kw):

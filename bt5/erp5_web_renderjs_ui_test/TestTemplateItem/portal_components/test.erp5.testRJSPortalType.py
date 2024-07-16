@@ -25,6 +25,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import bytes2str
 
 class TestRenderJSPortalType(ERP5TypeTestCase):
   """Test Web Script & Web Style portal types added by Render JS.
@@ -42,7 +43,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       portal_type='Web Style',
       reference='test_web_style.css'
     )
-    web_style.setTextContent('/* cl\xc3\xa0sse */ .classe { background: red }')
+    web_style.setTextContent(bytes2str(b'/* cl\xc3\xa0sse */ .classe { background: red }'))
     web_style.publish()
     self.tic()
     self.assertEqual('text/css', web_style.getContentType())
@@ -52,7 +53,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       '%s/%s' % (self.web_site.getPath(), web_style.getReference())
     )
     self.assertEqual(
-      '/* cl\xc3\xa0sse */ .classe { background: red }',
+      b'/* cl\xc3\xa0sse */ .classe { background: red }',
       response.getBody()
     )
     self.assertEqual(
@@ -65,7 +66,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       portal_type='Web Script',
       reference='test_web_script.js'
     )
-    web_script.setTextContent('alert("h\xc3\xa9h\xc3\xa9")')
+    web_script.setTextContent(bytes2str(b'alert("h\xc3\xa9h\xc3\xa9")'))
     web_script.publish()
     self.tic()
     self.assertEqual('application/javascript', web_script.getContentType())
@@ -75,7 +76,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       '%s/%s' % (self.web_site.getPath(), web_script.getReference())
     )
     self.assertEqual(
-      'alert("h\xc3\xa9h\xc3\xa9")',
+      b'alert("h\xc3\xa9h\xc3\xa9")',
       response.getBody()
     )
     self.assertEqual(

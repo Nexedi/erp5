@@ -4,6 +4,7 @@
 # the key has the value of one 'input_data_name' of the corresponding level
 # a key is unique and required (in this version)
 ##################################################
+from Products.ERP5Type.Utils import ensure_list
 
 # some analysis of transformation rules
 
@@ -137,7 +138,7 @@ for i in range(len(ordered_items)):
   # item is level-coherent, so keep it
   if item_ok == True:
     # add to the clean list
-    clean_data.append(current_item_data.values()[0])
+    clean_data.append(ensure_list(current_item_data.values())[0])
     # add to the processed list of level
     processed_level.append(current_item_level)
 

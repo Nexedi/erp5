@@ -31,7 +31,7 @@ from six.moves.urllib.parse import quote
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import fill_args_from_request
+from Products.ERP5Type.Utils import fill_args_from_request, str2bytes, str2unicode, unicode2str
 from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders,\
     _ViewEmulator
 import warnings
@@ -43,8 +43,8 @@ try:
 except ImportError:
   # BBB backport https://github.com/zopefoundation/Zope/pull/893 with py2 support
   def make_content_disposition(disposition, file_name):
-    if six.PY2 and not isinstance(file_name, unicode):
-      file_name = file_name.decode('utf-8')
+    if six.PY2 and not isinstance(file_name, six.text_type):
+      file_name = str2unicode(file_name)
     try:
       file_name.encode('us-ascii')
     except UnicodeEncodeError:
@@ -55,8 +55,9 @@ except ImportError:
       # also see https://tools.ietf.org/html/rfc6266#appendix-D
       encoded_file_name = file_name.encode('us-ascii', errors='ignore')
       if six.PY2:
-        quoted_file_name = quote(file_name.encode('utf-8'))
+        quoted_file_name = quote(unicode2str(file_name))
       else:
+        encoded_file_name = encoded_file_name.decode('us-ascii')
         quoted_file_name = quote(file_name)
 
       return '{disposition}; '\
@@ -145,7 +146,6 @@ class DownloadableMixin:
     if output_format is None:
       output_format = format
 
-    RESPONSE.setHeader('Content-Length', len(data))
     if output_format in VALID_TEXT_FORMAT_LIST:
       RESPONSE.setHeader('Content-Type', '%s; charset=utf-8' % mime)
     else:
@@ -167,7 +167,12 @@ class DownloadableMixin:
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
     else:
       RESPONSE.setHeader('Content-Disposition', 'inline')
-    return str(data)
+    if isinstance(data, six.text_type):
+      data = str2bytes(data)
+    else:
+      data = bytes(data)
+    RESPONSE.setHeader('Content-Length', len(data))
+    return data
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStandardFilename')
