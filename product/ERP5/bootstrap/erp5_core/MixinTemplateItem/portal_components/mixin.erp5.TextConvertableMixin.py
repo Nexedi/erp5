@@ -48,7 +48,7 @@ class TextConvertableMixin:
     """
     kw['format'] = 'txt'
     _, data = self.convert(**kw)
-    return str(data)
+    return data
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asRawText')

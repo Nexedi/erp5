@@ -41,6 +41,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from tempfile import mkdtemp
 import shutil
+import six
 
 
 class getTransactionalDirectory(str):
@@ -140,9 +141,9 @@ try:
         self.client.setException(SubversionLoginError(realm))
         return False, '', '', False
       # BBB. support older versions of pysvn <= 1.6.3
-      if isinstance(user, unicode):
+      if six.PY2 and isinstance(user, six.text_type):
         user = user.encode('utf-8')
-      if isinstance(password, unicode):
+      if six.PY2 and isinstance(password, six.text_type):
         password = password.encode('utf-8')
       return True, user, password, False
 
@@ -178,7 +179,7 @@ try:
 
     def __call__(self, instance):
       value = getattr(instance._obj, self._key)
-      if isinstance(value, unicode):
+      if six.PY2 and isinstance(value, six.text_type):
         value = value.encode('utf-8')
       #elif isinstance(value, pysvn.Entry):
       elif str(type(value)) == "<type 'entry'>":
