@@ -4,11 +4,14 @@ in ERP5.
 """
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 
-import email
-
 portal = context.getPortalObject()
 
-email_object = email.message_from_string(context.getData())
+import six
+if six.PY2:
+  from email import email.message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
+email_object = message_from_bytes(context.getData())
 
 mail_message = portal.portal_contributions.newContent(
   container_path='event_module',
