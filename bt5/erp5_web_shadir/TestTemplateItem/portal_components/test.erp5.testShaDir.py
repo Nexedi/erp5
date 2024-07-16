@@ -27,15 +27,17 @@
 #
 ##############################################################################
 
+import six.moves.http_client
+import six.moves.urllib.parse
 import hashlib
-import httplib
-import urlparse
 import json
 import random
 from base64 import b64encode
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
+from Products.ERP5Type.Utils import bytes2str
+
 
 class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
   """
@@ -53,8 +55,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       Post the information calling the Python Script.
       It simulates the real usage.
     """
-    parsed = urlparse.urlparse(self.shadir_url)
-    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    parsed = six.moves.urllib.parse.urlparse(self.shadir_url)
+    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
     try:
       connection.request('PUT', '/'.join([parsed.path, key or self.key]),
         data or self.data, self.header_dict)
@@ -62,16 +64,16 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(result.status, httplib.CREATED)
-    self.assertEqual(data, '')
+    self.assertEqual(result.status, six.moves.http_client.CREATED)
+    self.assertEqual(data, b'')
 
   def getInformation(self, key=None):
     """
       Get the information calling the Python Script.
       It simulates the real usage.
     """
-    parsed = urlparse.urlparse(self.shadir_url)
-    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    parsed = six.moves.urllib.parse.urlparse(self.shadir_url)
+    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
     try:
       connection.request('GET', '/'.join([parsed.path, key or self.key]),
         self.data, self.header_dict)
@@ -126,12 +128,12 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.tic()
 
     result, data = self.getInformation()
-    self.assertEqual(result, httplib.OK)
+    self.assertEqual(result, six.moves.http_client.OK)
 
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_post_information_more_than_once(self):
     """
@@ -158,11 +160,11 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
         q.getValidationState() for q in document_list]))
 
     result, data = self.getInformation()
-    self.assertEqual(result, httplib.OK)
+    self.assertEqual(result, six.moves.http_client.OK)
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_post_information_more_than_once_no_tic(self):
     """
@@ -196,11 +198,11 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.tic()
 
     result, data = self.getInformation()
-    self.assertEqual(result, httplib.OK)
+    self.assertEqual(result, six.moves.http_client.OK)
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_get_information_from_different_data_set(self):
     """
@@ -215,7 +217,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.postInformation()
     self.tic()
 
-    sha512_2 = hashlib.sha512(str(random.random())).hexdigest()
+    sha512_2 = hashlib.sha512(str(random.random()).encode()).hexdigest()
     key_2 = 'another_key' + str(random.random())
     data_list_2 = [json.dumps({
                       'sha512': sha512_2,
@@ -223,7 +225,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      b64encode("User SIGNATURE goes here.")]
+                      b64encode(b"User SIGNATURE goes here.").decode()]
     data_2 = json.dumps(data_list_2)
     self.postInformation(key_2, data_2)
     self.tic()
@@ -268,7 +270,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
             version="001",
             language="en",
             follow_up_value=person,
-            data="FILEDATA")
+            data=b"FILEDATA")
     doc.publish()
 
     self.tic()
