@@ -54,10 +54,7 @@ def hashPdataObject(pdata_object):
   while pdata_object is not None:
     chunk = pdata_object.aq_base
     md5_hash.update(chunk.data)
-    if six.PY2:
-      pdata_object = chunk.next
-    else:
-      pdata_object = chunk.__next__
+    pdata_object = chunk.next
     chunk._p_deactivate()
   return md5_hash.hexdigest()
 
@@ -106,8 +103,12 @@ class CachedConvertableMixin:
     http://pypi.python.org/pypi/uuid/ to generate
     a uuid stored as private property.
     """
+    if six.PY2:
+      translate_argument_tuple = (string.maketrans('', ''), '[]()<>\'", ',)
+    else:
+      translate_argument_tuple = (str.maketrans('', '', '[]()<>\'", '),)
     format_cache_id = str(makeSortedTuple(kw)).\
-                             translate(string.maketrans('', ''), '[]()<>\'", ')
+                             translate(*translate_argument_tuple)
     return '%s:%s:%s' % (aq_base(self).getUid(), self.getRevision(),
                          format_cache_id)
 
@@ -229,7 +230,7 @@ class CachedConvertableMixin:
     if isinstance(data, OFSImage):
       data = data.data
     if isinstance(data, Pdata):
-      data = str(data)
+      data = bytes(data)
     return mime, data
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversionSize')

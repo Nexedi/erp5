@@ -28,6 +28,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCase, immediateCompilation
+from Products.ERP5Type.Utils import ensure_list
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from runUnitTest import tests_home
 import base64
@@ -121,7 +122,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
         pass
       file_document_path = document_path + extension
       self.assertEqual([os.path.basename(file_document_path)],
-                       list(map(os.path.basename, exported)))
+                       ensure_list(map(os.path.basename, exported)))
       with open(file_document_path, 'rb') as test_file:
         self.assertEqual(test_file.read(), data)
     else:

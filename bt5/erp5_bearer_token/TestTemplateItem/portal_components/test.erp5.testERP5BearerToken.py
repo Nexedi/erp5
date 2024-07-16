@@ -108,7 +108,7 @@ class TestERP5BearerToken(ERP5TypeTestCase):
       'remote-addr': self.portal.REQUEST.get('REMOTE_ADDR')
     }
     hmac = self.portal.Base_getHMAC(self.portal.Base_getBearerTokenKey(), str(
-      token))
+      token).encode('utf-8'))
     self.portal.Base_setBearerToken(hmac, token)
     reference = self.getTokenCredential(self.portal.REQUEST)
     self.assertEqual(reference, None)
