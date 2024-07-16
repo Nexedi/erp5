@@ -1,12 +1,13 @@
 import base64
 import json
+import six
 portal = context.getPortalObject()
 record = context
 
 def byteify(string):
   if isinstance(string, dict):
     tmp = {}
-    for key, value in string.iteritems():
+    for key, value in six.iteritems(string):
       tmp[byteify(key)] = byteify(value)
     return tmp
   elif isinstance(string, list):
