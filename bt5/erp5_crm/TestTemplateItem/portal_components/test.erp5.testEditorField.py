@@ -170,7 +170,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       document -- the document which content is displayed in
                   read only mode
     """
-    html_text = html_text.encode('utf-8')
+    if six.PY2:
+      html_text = html_text.encode('utf-8')
     match_string1 = "data-gadget-editable="
     match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) != -1:
@@ -206,7 +207,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
@@ -235,7 +236,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
@@ -263,7 +264,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
@@ -291,7 +292,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
