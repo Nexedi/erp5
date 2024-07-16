@@ -23,7 +23,7 @@ class DocyToDocx:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     docy = OOOdCommandTransform(context, filename, data, self.inputs[0])
     docx = docy.convertTo('docx')
     if cache is not None:

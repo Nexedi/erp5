@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 from zodbpickle.pickle import PicklingError
 import unittest
 import sys
@@ -2379,7 +2380,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                       foo.getRegionList())
     # using relations to non existant objects will issue a warning in
     # event.log
-    self._catch_log_errors(ignored_level=sys.maxint)
+    self._catch_log_errors(ignored_level=sys.maxsize)
     self.assertEqual([beta],
                       foo.getRegionValueList())
     self.assertEqual([beta_title],
@@ -3341,6 +3342,12 @@ def test_suite():
   add_tests(suite, ZPublisher.tests.test_pubevents)
 
   import ZPublisher.tests.test_utils
+  if six.PY3:
+    # "fix_properties" does not work with ERP5Type patched properties
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_ulines)
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_ustring)
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_utext)
+    expectedFailure(ZPublisher.tests.test_utils.FixPropertiesTests.test_utokens)
   add_tests(suite, ZPublisher.tests.test_utils)
 
   import ZPublisher.tests.test_xmlrpc

@@ -36,7 +36,7 @@ To send specific encoded data, please make your attachment dict look like:
   "mime_type": "text/html",
   "encode": "noop",
   "add_header_list": [("Content-Transfer-Encoding", "my-encoding")],
-  "data": encodestring(html_data),
+  "data": encodebytes(html_data),
 }
 """
 
@@ -49,6 +49,7 @@ from email.mime.audio import MIMEAudio
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 import quopri
+from Products.ERP5Type.Utils import str2bytes
 
 def formatMultipartMessageToRFC2822String(msg):
   """
@@ -80,7 +81,7 @@ def encode_quopri(msg):
   when necessary.
   """
   orig = msg.get_payload()
-  encdata = quopri.encodestring(orig).replace("=\n", "=\r\n")
+  encdata = quopri.encodestring(str2bytes(orig)).replace(b"=\n", b"=\r\n")
   msg.set_payload(encdata)
   msg.add_header("Content-Transfer-Encoding", "quoted-printable")
 

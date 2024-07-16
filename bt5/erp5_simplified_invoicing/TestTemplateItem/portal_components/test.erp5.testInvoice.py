@@ -43,7 +43,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.test.testPackingList import TestPackingListMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from erp5.component.module.TestInvoiceMixin import TestInvoiceMixin, TestSaleInvoiceMixin
-
+from Products.ERP5Type.Utils import ensure_ascii
 
 class TestInvoice(TestInvoiceMixin):
   """Test methods for sale and purchase invoice.
@@ -563,11 +563,11 @@ class TestInvoice(TestInvoiceMixin):
     invoice.confirm()
     self.tic()
     odt = invoice.Invoice_viewAsODT()
-    import cStringIO
-    output = cStringIO.StringIO()
+    from io import BytesIO
+    output = BytesIO()
     output.write(odt)
     m = OpenDocumentTextFile(output)
-    text_content=m.toString().encode('ascii','replace')
+    text_content=ensure_ascii(m.toString(), 'replace')
     if text_content.find('Resource Tax') != -1 :
       self.fail('fail to delete the tax line in product line')
     if text_content.find('Tax Code') == -1 :

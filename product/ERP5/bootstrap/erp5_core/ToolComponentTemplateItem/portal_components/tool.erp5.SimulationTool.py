@@ -37,7 +37,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import str2bytes, ensure_list
 
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
@@ -1611,7 +1611,7 @@ class SimulationTool(BaseTool):
         line_key = getInventoryListKey(line)
         line_a = inventory_list_dict.get(line_key)
         inventory_list_dict[line_key] = addLineValues(line_a, line)
-    sorted_inventory_list = inventory_list_dict.values()
+    sorted_inventory_list = ensure_list(inventory_list_dict.values())
     # Sort results manually when required
     sort_on = new_kw.get('sort_on')
     if sort_on:

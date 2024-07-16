@@ -28,6 +28,7 @@
 
 import six
 from Products.ERP5Type.Globals import InitializeClass, Persistent
+from Products.ERP5Type.Utils import unicode2str, str2unicode
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 if 1: # BBB
@@ -114,8 +115,8 @@ class Message(Persistent):
     if self.domain is None:
       # Map the translated string with given parameters
       if type(self.mapping) is dict:
-        if isinstance(message, six.text_type) :
-          message = message.encode('utf-8')
+        if six.PY2 and isinstance(message, six.text_type) :
+          message = unicode2str(message)
         message = Template(message).substitute(self.mapping)
     else:
       from Products.ERP5.ERP5Site import getSite
@@ -124,8 +125,8 @@ class Message(Persistent):
       if self.mapping:
         unicode_mapping = {}
         for k, v in six.iteritems(self.mapping):
-          if isinstance(v, str):
-            v = v.decode('utf-8')
+          if six.PY2 and isinstance(v, str):
+            v = str2unicode(v)
           unicode_mapping[k] = v
       else:
         unicode_mapping = self.mapping
@@ -139,10 +140,10 @@ class Message(Persistent):
         message = translated_message
 
     if isinstance(self.message, str):
-      if isinstance(message, six.text_type):
-        message = message.encode('utf-8')
-    elif isinstance(message, str):
-      message = message.decode('utf-8')
+      if six.PY2 and isinstance(message, six.text_type):
+        message = unicode2str(message)
+    elif six.PY2 and isinstance(message, str):
+      message = str2unicode(message)
 
     return message
 
@@ -154,17 +155,8 @@ class Message(Persistent):
     Return the translated message as a string object.
     """
     message = self.translate()
-    if isinstance(message, six.text_type):
-      message = message.encode('utf-8')
-    return message
-
-  def __unicode__(self):
-    """
-    Return the translated message as a unicode object.
-    """
-    message = self.translate()
-    if isinstance(message, str):
-      message = message.decode('utf-8')
+    if six.PY2 and isinstance(message, six.text_type):
+      message = unicode2str(message)
     return message
 
   def __len__(self):
@@ -175,6 +167,17 @@ class Message(Persistent):
 
   def __getslice__(self, i, j):
     return str(self)[i:j]
+
+if six.PY2:
+  def __unicode__(self):
+    """
+    Return the translated message as a unicode object.
+    """
+    message = self.translate()
+    if isinstance(message, str):
+      message = str2unicode(message)
+    return message
+  Message.__unicode__ = __unicode__
 
 InitializeClass(Message)
 allow_class(Message)

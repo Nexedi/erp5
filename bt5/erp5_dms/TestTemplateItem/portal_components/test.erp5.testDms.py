@@ -47,14 +47,14 @@
 
 import unittest
 import time
-import StringIO
+import io
 import base64
 from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from AccessControl.SecurityManagement import newSecurityManager
 from erp5.component.document.Document import NotConvertedError
@@ -63,15 +63,15 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
-import httplib
-import urllib
-import difflib
+import six.moves.http_client
+from six.moves.urllib.request import urlopen
 import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
 import PyPDF2
+from six.moves import range
 from OFS.Image import Pdata
 
 QUIET = 0
@@ -214,14 +214,16 @@ class TestDocument(TestDocumentMixin):
     kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
     url = '%s?%s' % (uri, make_query(kw))
     format_=kw.get('format', 'jpeg')
-    infile = urllib.urlopen(url)
+    infile = urlopen(url)
+    try:
+      image_data = infile.read()
+    finally:
+      infile.close()
+
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
     filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format_)
-    f = open(filename, "w")
-    image_data = infile.read()
-    f.write(image_data)
-    f.close()
-    infile.close()
+    with open(filename, "wb") as f:
+      f.write(image_data)
     file_size = len(image_data)
     try:
       from PIL import Image
@@ -229,6 +231,7 @@ class TestDocument(TestDocumentMixin):
       image_size = image.size
     except ImportError:
       identify_output = Popen(['identify', filename],
+                              universal_newlines=True, # six.PY3: text=True
                               stdout=PIPE).communicate()[0]
       image_size = tuple([int(x) for x in identify_output.split()[2].split('x')])
     os.remove(filename)
@@ -955,7 +958,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('%s "%s"' %(kw['searchabletext_any'], kw['searchabletext_phrase']), \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string))
 
 
     # search "with all of the words"
@@ -964,7 +967,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string))
 
     # search without these words
     kw["searchabletext_without"] = "searchabletext_without1 searchabletext_without2"
@@ -972,7 +975,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string))
 
     # search limited to a certain date range
     kw['created_within'] = '1w'
@@ -980,7 +983,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertSameSet(['searchabletext', 'creation_from'], parsed_string.keys())
+    self.assertSameSet(['searchabletext', 'creation_from'], list(parsed_string))
 
     # search with portal_type
     kw['search_portal_type'] = 'Document'
@@ -989,7 +992,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # search by reference
@@ -999,7 +1002,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
 
@@ -1010,7 +1013,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', 'version'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1023,7 +1026,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1037,7 +1040,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1051,7 +1054,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1066,7 +1069,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1082,7 +1085,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest', 'mode'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1099,7 +1102,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
                       search_string)
     self.assertSameSet(['searchabletext', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string))
     #self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # parse with multiple portal_type containing spaces in one portal_type
@@ -1454,7 +1457,7 @@ class TestDocument(TestDocumentMixin):
       repeat_watermark=False)
 
     # this looks like a pdf
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
 
     # and ERP5 can make a PDF Document out of it
     watermarked_document = self.portal.document_module.newContent(
@@ -1474,7 +1477,7 @@ class TestDocument(TestDocumentMixin):
       watermark_data=watermark_document.getData(),
       repeat_watermark=True)
 
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
     watermarked_document = self.portal.document_module.newContent(
       portal_type='PDF',
       data=watermarked_data)
@@ -1493,7 +1496,7 @@ class TestDocument(TestDocumentMixin):
       repeat_watermark=False,
       watermark_start_page=1) # This is 0 based.
 
-    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    self.assertTrue(watermarked_data.startswith(b'%PDF-1.3'))
     watermarked_document = self.portal.document_module.newContent(
       portal_type='PDF',
       data=watermarked_data)
@@ -1599,10 +1602,10 @@ class TestDocument(TestDocumentMixin):
     _, pdf_data = web_page.convert('pdf')
     text_content = self.portal.portal_transforms.\
                                       convertToData('text/plain',
-                                          str(pdf_data),
+                                          bytes(pdf_data),
                                           object=web_page, context=web_page,
                                           filename='test.pdf')
-    self.assertIn(string_to_test, text_content)
+    self.assertIn(string_to_test, bytes2str(text_content))
 
   def test_HTML_to_ODT_conversion_keep_related_image_list(self):
     """This test create a Web Page and an Image.
@@ -1755,7 +1758,7 @@ class TestDocument(TestDocumentMixin):
     module = self.portal.getDefaultModule(web_page_portal_type)
     web_page = module.newContent(portal_type=web_page_portal_type)
 
-    html_content = """<html>
+    html_content = unicode2str(u"""<html>
       <head>
         <meta http-equiv="refresh" content="5;url=http://example.com/"/>
         <meta http-equiv="Set-Cookie" content=""/>
@@ -1780,7 +1783,7 @@ class TestDocument(TestDocumentMixin):
         <img src="data:image/png;base64,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" />
       </body>
     </html>
-    """.decode('utf-8').encode('iso-8859-1')
+    """, encoding='iso-8859-1')
     # content encoded into another codec
     # than utf-8 comes from necessarily an external file
     # (Ingestion, or FileField), not from user interface
@@ -1789,9 +1792,8 @@ class TestDocument(TestDocumentMixin):
     # as it is done in reality
 
     # Mimic the behaviour of a FileUpload from WebPage_view
-    file_like = StringIO.StringIO()
-    file_like.write(html_content)
-    setattr(file_like, 'filename', 'something.htm')
+    file_like = io.BytesIO(str2bytes(html_content))
+    file_like.filename = 'something.htm'
     web_page.edit(file=file_like)
     # run conversion to base format
     self.tic()
@@ -1902,28 +1904,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     web_page.edit(file=file_object)
     assert web_page.convert('html')[1]
 
-  def test_safeHTML_impossible_conversion(self):
-    """Some html are not parsable.
-    """
-    web_page_portal_type = 'Web Page'
-    module = self.portal.getDefaultModule(web_page_portal_type)
-    web_page = module.newContent(portal_type=web_page_portal_type)
-    # very dirty html
-    html_content = """
-    <html>
-      <body>
-        <p><a href="http://www.example.com/category/html/" style="font-weight: bold; color: rgb(0, 0, 0); font-size: 90.8777%; text-decoration: none;" title="catégorie how to write valid html d" alt="Diancre pas d" accord="" :="" 6="" articles="">Its french</a></p>
-      </body>
-    </html>
-"""
-    web_page.edit(text_content=html_content)
-    from HTMLParser import HTMLParseError
-    try:
-      web_page.asStrippedHTML()
-    except HTMLParseError:
-      expectedFailure(self.fail)(
-        'Even BeautifulSoup is not able to parse such HTML')
-
   def test_safeHTML_unknown_codec(self):
     """Some html declare unknown codecs.
     """
@@ -1985,16 +1965,16 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
           assert response.getHeader('content-type') == 'image/png', \
                                              response.getHeader('content-type')
-          assert response.getStatus() == httplib.OK
+          assert response.getStatus() == six.moves.http_client.OK
 
     credential = '%s:%s' % (self.manager_username, self.manager_password)
     tested_list = []
-    frame_list = range(pages_number)
+    frame_list = list(range(pages_number))
     # assume that ZServer is configured with 4 Threads
-    conversion_per_tread = pages_number / 4
+    conversion_per_tread = pages_number // 4
     while frame_list:
       local_frame_list = [frame_list.pop() for i in\
-                            xrange(min(conversion_per_tread, len(frame_list)))]
+                            range(min(conversion_per_tread, len(frame_list)))]
       instance = ThreadWrappedConverter(self.publish, document.getPath(),
                                         local_frame_list, credential)
       tested_list.append(instance)
@@ -2012,7 +1992,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                   'resolution': None}
 
     result_list = []
-    for i in xrange(pages_number):
+    for i in range(pages_number):
       # all conversions should succeeded and stored in cache storage
       convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
@@ -2062,11 +2042,17 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.tic()
     self.assertEqual(web_page.getContentType(), 'text/plain')
     text_content = web_page.getTextContent()
-    my_utf_eight_token = 'ùééàçèîà'
-    text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)
+    self.assertIn('éèàùôâïî', text_content)
+    self.assertIn('éèàùôâïî', web_page.asStrippedHTML())
+    self.assertIn('éèàùôâïî', web_page.asEntireHTML())
+
+    added_utf_eight_token = 'ùééàçèîà'
+    text_content = text_content.replace('\n', '\n%s\n' % added_utf_eight_token)
     web_page.edit(text_content=text_content)
-    self.assertIn(my_utf_eight_token, web_page.asStrippedHTML())
-    self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), unicode))
+    self.assertIn('éèàùôâïî', web_page.asStrippedHTML())
+    self.assertIn('éèàùôâïî', web_page.asEntireHTML())
+    self.assertIn(added_utf_eight_token, web_page.asStrippedHTML())
+    self.assertIn(added_utf_eight_token, web_page.asEntireHTML())
 
   @unittest.expectedFailure  # if test start to pass, drop the non strict test.
   def test_PDFDocument_asTextConversion_strict(self):
@@ -2093,11 +2079,11 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
       self.tic()
 
   def test_broken_pdf_asText(self):
-    class StringIOWithFilename(StringIO.StringIO):
+    class BytesIOWithFilename(io.BytesIO):
       filename = 'broken.pdf'
     document = self.portal.document_module.newContent(
         portal_type='PDF',
-        file=StringIOWithFilename('broken'))
+        file=BytesIOWithFilename(b'broken'))
     self.assertEqual(document.asText(), '')
     self.tic() # no activity failure
 
@@ -2106,7 +2092,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     pdf_writer = PyPDF2.PdfFileWriter()
     pdf_writer.addPage(pdf_reader.getPage(0))
     pdf_writer.encrypt('secret')
-    encrypted_pdf_stream = StringIO.StringIO()
+    encrypted_pdf_stream = io.BytesIO()
     pdf_writer.write(encrypted_pdf_stream)
     document = self.portal.document_module.newContent(
         portal_type='PDF',
@@ -2193,12 +2179,12 @@ return 1
       for credential in ['%s:%s' % (self.manager_username, self.manager_password), 'zope_user:%s' % zope_user_password]:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
-        self.assertIn('200 OK', response.getOutput())
-        # OOod produced HTML navigation, test it
-        self.assertIn('First page', response.getBody())
-        self.assertIn('Back', response.getBody())
-        self.assertIn('Continue', response.getBody())
-        self.assertIn('Last page', response.getBody())
+        self.assertIn(b'200 OK', response.getOutput())
+        # cloudooo produced HTML navigation, test it
+        self.assertIn(b'First page', response.getBody())
+        self.assertIn(b'Back', response.getBody())
+        self.assertIn(b'Continue', response.getBody())
+        self.assertIn(b'Last page', response.getBody())
 
   def test_getTargetFormatItemList(self):
     """
@@ -2395,7 +2381,7 @@ return 1
     def getURL(uri, **kw):
       kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
       url = '%s?%s' % (uri, make_query(kw))
-      return urllib.urlopen(url)
+      return urlopen(url)
 
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = self.makeFileUpload('TEST-en-003.odp')
@@ -2416,26 +2402,24 @@ return 1
     self.tic()
 
     response = getURL(image_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: image/png\r\n', response.info().headers)
-    self.assertIn('Content-Length: %s\r\n' % len(self.makeFileUpload('TEST-en-002.png').read()),
-                  response.info().headers)
+    self.assertEqual(response.info().get('Content-Type'), 'image/png')
+    self.assertEqual(response.info().get('Content-Length'), str(len(self.makeFileUpload('TEST-en-002.png').read())))
 
     response = getURL(ooo_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: application/vnd.oasis.opendocument.presentation\r\n', response.info().headers)
-    self.assertIn('Content-Disposition: attachment; filename="TEST-en-003.odp"\r\n', response.info().headers)
-    self.assertIn('Content-Length: %s\r\n' % len(self.makeFileUpload('TEST-en-003.odp').read()),
-                  response.info().headers)
+    self.assertEqual(response.info().get('Content-Type'), 'application/vnd.oasis.opendocument.presentation')
+    self.assertEqual(response.info().get('Content-Disposition'), 'attachment; filename="TEST-en-003.odp"')
+    self.assertEqual(response.info().get('Content-Length'), str(len(self.makeFileUpload('TEST-en-003.odp').read())))
 
     response = getURL(pdf_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: application/pdf\r\n', response.info().headers)
-    self.assertIn('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n', response.info().headers)
+    self.assertEqual(response.info().get('Content-Type'), 'application/pdf')
+    self.assertEqual(response.info().get('Content-Disposition'), 'attachment; filename="TEST-en-002.pdf"')
 
     response = getURL(pdf_document.absolute_url(), **{'format':'pdf'})
-    self.assertIn('Content-Type: application/pdf\r\n', response.info().headers)
-    self.assertIn('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n', response.info().headers)
+    self.assertEqual(response.info().get('Content-Type'), 'application/pdf')
+    self.assertEqual(response.info().get('Content-Disposition'), 'attachment; filename="TEST-en-002.pdf"')
 
     response = getURL(web_page_document.absolute_url(), **{'format':''})
-    self.assertIn('Content-Type: text/html; charset=utf-8\r\n', response.info().headers)
+    self.assertEqual(response.info().get('Content-Type'), 'text/html; charset=utf-8')
 
   def test_checkConversionFormatPermission(self):
     """
@@ -2941,7 +2925,7 @@ return 1
     document.setReference('TEST')
     request = self.app.REQUEST
     download_file = document.index_html(REQUEST=request, format=None)
-    self.assertEqual(download_file, 'foo\n')
+    self.assertEqual(download_file, b'foo\n')
     document_format = None
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))

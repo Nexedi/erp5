@@ -1,7 +1,9 @@
+import six
 from Products.PythonScripts.standard import Object
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
 from Products.ERP5Type.Document import newTempBase
+from Products.ERP5Type.Utils import bytes2str
 Base_translateString = context.Base_translateString
 
 try:
@@ -23,6 +25,20 @@ result = []
 binary_data_explanation = Base_translateString("Binary data can't be displayed")
 base_error_message = Base_translateString('(value retrieval failed)')
 
+def get_value_as_text(value):
+  """check if values are unicode convertible (binary are not)
+  """
+  if not isinstance(value, six.text_type):
+    try:
+      if isinstance(value, bytes):
+        bytes2str(value)
+      else:
+        str(value)
+    except UnicodeDecodeError:
+      value = binary_data_explanation
+  return value
+
+
 for prop_dict in sorted(context.getPropertyMap(), key=lambda prop: prop['id']):
   prop = prop_dict['id']
   error = False
@@ -42,22 +58,9 @@ for prop_dict in sorted(context.getPropertyMap(), key=lambda prop: prop['id']):
     error = True
     new_value = base_error_message
   if new_value != old_value or error:
-    # check if values are unicode convertible (binary are not)
-    if isinstance(new_value, (str, unicode)):
-      try:
-        unicode(str(new_value), 'utf-8')
-      except UnicodeDecodeError:
-        new_value = binary_data_explanation
-    if isinstance(old_value, (str, unicode)):
-      try:
-        unicode(str(old_value), 'utf-8')
-      except UnicodeDecodeError:
-        old_value = binary_data_explanation
-    if isinstance(current_value, (str, unicode)):
-      try:
-        unicode(str(current_value), 'utf-8')
-      except UnicodeDecodeError:
-        current_value = binary_data_explanation
+    new_value = get_value_as_text(new_value)
+    old_value = get_value_as_text(old_value)
+    current_value = get_value_as_text(current_value)
     x = {'property_name': prop,
          'new_value': new_value,
          'old_value': old_value,

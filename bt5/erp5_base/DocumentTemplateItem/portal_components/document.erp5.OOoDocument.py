@@ -30,6 +30,7 @@
 import contextlib
 import re, zipfile
 from io import BytesIO
+import six
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
@@ -39,8 +40,12 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 from erp5.component.document.File import File
 from erp5.component.document.Document import Document, \
-       VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
-from Products.ERP5Type.Utils import bytes2str, fill_args_from_request, str2bytes
+       VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST, ConversionError, NotConvertedError
+from Products.ERP5Type.Utils import (guessEncodingFromText,
+                                     bytes2str,
+                                     fill_args_from_request,
+                                     str2bytes,
+                                     unicode2str)
 
 # Mixin Import
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
@@ -151,7 +156,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return []
 
     def cached_getTargetFormatItemList(content_type):
-      from xmlrpclib import Fault
+      from six.moves.xmlrpc_client import Fault
       server_proxy = DocumentConversionServerProxy(self)
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
@@ -336,7 +341,14 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         # store conversion
         self.setConversion(data, mime, format=original_format, **kw)
 
-    return self.getConversion(format=original_format, **kw)
+    mime, data = self.getConversion(format=original_format, **kw)
+    if format in VALID_TEXT_FORMAT_LIST:
+      # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
+      # here mostly as a convenient way to decode with the encoding from BOM
+      data = data.decode(guessEncodingFromText(data) or 'ascii')
+      if six.PY2:
+        data = unicode2str(data)
+    return mime, data
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
