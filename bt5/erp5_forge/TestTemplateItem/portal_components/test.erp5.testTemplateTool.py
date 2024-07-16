@@ -745,7 +745,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
     # add some entropy by disorder bt5list returned by
     # resolveBusinessTemplateListDependency
-    position_list = range(len(bt5list))
+    position_list = list(range(len(bt5list)))
     new_bt5_list = []
     while position_list:
       position = random.choice(position_list)
@@ -754,10 +754,10 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
-    first_group = range(0, 5)
-    second_group =  range(5, 12)
-    third_group = range(12, 14)
-    fourth_group = range(14, 15)
+    first_group = list(range(0, 5))
+    second_group =  list(range(5, 12))
+    third_group = list(range(12, 14))
+    fourth_group = list(range(14, 15))
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,

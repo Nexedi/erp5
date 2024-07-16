@@ -20,7 +20,9 @@ def formToXML(form, prologue=1):
         else:
           value = 'false'
       sub_element = SubElement(form_as_xml, id)
-      sub_element.text = str(value).decode(encoding)
+      sub_element.text = str(value)
+      if six.PY2:
+        sub_element.text = sub_element.text.decode(encoding)
     groups = SubElement(form_as_xml, 'groups')
     # export form groups
     for group in form.get_groups(include_empty=1):
@@ -57,7 +59,9 @@ def formToXML(form, prologue=1):
             if not isinstance(value, six.string_types):
               value = str(value)
             value_element = SubElement(values_element, key)
-          value_element.text = str(value).decode(encoding)
+          value_element.text = str(value)
+          if six.PY2:
+            value_element.text = value_element.text.decode(encoding)
 
         tales_element = SubElement(field_element, 'tales')
         items = field.tales.items()
@@ -65,11 +69,15 @@ def formToXML(form, prologue=1):
         for key, value in items:
           if value:
             tale_element = SubElement(tales_element, key)
-            tale_element.text = str(value._text).decode(encoding)
+            tale_element.text = str(value._text)
+            if six.PY2:
+              tale_element.text = tale_element.text.decode(encoding)
         messages = SubElement(field_element, 'messages')
         for message_key in field.get_error_names():
           message_element = SubElement(messages, 'message', name=message_key)
-          message_element.text = field.get_error_message(message_key).decode(encoding)
+          message_element.text = field.get_error_message(message_key)
+          if six.PY2:
+            message_element.text = message_element.text.decode(encoding)
         # Special attribute for ProxyFields *delegated_list*
         delegated_list = getattr(field, 'delegated_list', [])
         if delegated_list:
@@ -78,8 +86,11 @@ def formToXML(form, prologue=1):
           [SubElement(delegated_list_element, delegated) for delegated in delegated_list]
 
     if form.unicode_mode:
-      return etree.tostring(form_as_xml, encoding='utf-8',
+      xml = etree.tostring(form_as_xml, encoding='utf-8',
                                     xml_declaration=True, pretty_print=True)
     else:
-      return etree.tostring(form_as_xml, encoding=form.stored_encoding,
+      xml = etree.tostring(form_as_xml, encoding=form.stored_encoding,
                                     xml_declaration=True, pretty_print=True)
+    if six.PY3:
+      xml = xml.decode()
+    return xml

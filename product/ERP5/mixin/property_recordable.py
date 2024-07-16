@@ -95,7 +95,7 @@ class PropertyRecordableMixin:
     Returns the list of property IDs which have
     been recorded.
     """
-    return self._getRecordedPropertyDict({}).keys()
+    return list(self._getRecordedPropertyDict({}))
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isPropertyRecorded')
