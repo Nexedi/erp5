@@ -32,7 +32,7 @@ import os
 import quopri
 import functools
 import requests
-from StringIO import StringIO
+import io
 from lxml import etree
 from base64 import b64decode, b64encode
 from email.parser import Parser as EmailParser
@@ -46,11 +46,12 @@ from Products.ERP5Type.Utils import bytes2str, str2bytes
 from erp5.component.document.Document import ConversionError
 
 from PIL import Image
+from six.moves import range
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 IMAGE_COMPARE_TOLERANCE = 850
 
-XSMALL_SVG_IMAGE_ICON_DATA = '''<svg width="30" height="35" xmlns="http://www.w3.org/2000/svg">
+XSMALL_SVG_IMAGE_ICON_DATA = b'''<svg width="30" height="35" xmlns="http://www.w3.org/2000/svg">
   <path d="m5,5l15,0l0,5l5,0l0,20l-20,0z" stroke-width="1.5" stroke="gray" fill="skyblue"/>
   <path d="m6,29l8,-8l5,5l2,-2l3,3l0,2z" stroke-width="0" fill="green"/>
   <path d="m25,10l0,-1l-4,-4l-1,0l0,5z" stroke-width="1.5" stroke="gray" fill="white"/>
@@ -479,7 +480,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     policy_list = self.portal.caching_policy_manager.listPolicies()
     policy = [policy[1] for policy in policy_list\
                 if policy[0] == 'unauthenticated no language'][0]
-    for i in xrange(3):
+    for i in range(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))
@@ -542,15 +543,14 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertIn('<form', response.getBody()) # means the web_page
-                                      # is rendered in web_site context
+    # means the web_page is rendered in web_site context
+    self.assertIn(b'<form', response.getBody())
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertIn('<form', response.getBody()) # means the web_page
-                                      # is rendered in web_site context
+    self.assertIn(b'<form', response.getBody())
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference + '?format=pdf', credential)
@@ -656,7 +656,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertEqual(policy.getMaxAgeSecs(), 1200)
       self.assertEqual(policy.getStaleWhileRevalidateSecs(), 30)
       self.assertEqual(policy.getStaleIfErrorSecs(), 600)
-      for i in xrange(3):
+      for i in range(3):
         path = '/'.join((website_url,
                          reference,
                          'img%s.png' % i))
@@ -721,7 +721,7 @@ return True
                               credential)
       self.assertTrue(response.getHeader('content-type').startswith('text/html'))
       html = response.getBody()
-      self.assertTrue('<img' in html, html)
+      self.assertIn(b'<img', html)
 
       # find the img src
       img_list = etree.HTML(html).findall('.//img')
@@ -733,7 +733,7 @@ return True
                               credential)
       self.assertEqual(response.getHeader('content-type'), 'image/png')
       png = response.getBody()
-      self.assertTrue(png.startswith('\x89PNG'))
+      self.assertTrue(png.startswith(b'\x89PNG'))
 
     # then publish the document and access it anonymously by reference through
     # the web site
@@ -745,7 +745,7 @@ return True
               website.absolute_url_path(), document_reference))
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
-    self.assertTrue('<img' in html, html)
+    self.assertIn(b'<img', html)
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
@@ -757,7 +757,7 @@ return True
            website.absolute_url_path(), document_reference, src))
     self.assertEqual(response.getHeader('content-type'), 'image/png')
     png = response.getBody()
-    self.assertTrue(png.startswith('\x89PNG'))
+    self.assertTrue(png.startswith(b'\x89PNG'))
 
     # Now purge cache and let Anonymous user converting the document.
     self.login()
@@ -767,7 +767,7 @@ return True
                             website.absolute_url_path(), document_reference))
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
-    self.assertTrue('<img' in html, html)
+    self.assertIn(b'<img', html)
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')

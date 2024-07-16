@@ -47,6 +47,7 @@ from Products.ERP5Type.tests.utils import reindex
 from zExceptions import BadRequest
 
 import six
+from six.moves import range
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -2992,7 +2993,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
   def afterSetUp(self):
     InventoryAPITestCase.afterSetUp(self)
     self.CACHE_LAG = cache_lag = self.getSimulationTool().getInventoryCacheLag()
-    min_lag = cache_lag / 2
+    min_lag = cache_lag // 2
     self.NOW = now = DateTime(DateTime().strftime("%Y-%m-%d %H:%M:%S UTC"))
     self.CACHE_DATE = cache_date = now - min_lag
     from erp5.component.tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
@@ -3065,7 +3066,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       inventory_list = inventory_list[:] # That list is modified in this method
     for criterion_dict in criterion_dict_list:
       success = False
-      for inventory_position in xrange(len(inventory_list)):
+      for inventory_position in range(len(inventory_list)):
         if self._doesInventoryLineMatch(criterion_dict,
                                         inventory_list[inventory_position]):
           del inventory_list[inventory_position]
