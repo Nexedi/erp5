@@ -29,6 +29,7 @@
 
 import os
 import unittest
+import six
 
 import zodbpickle.fastpickle as pickle
 from DateTime import DateTime
@@ -359,6 +360,11 @@ def test_suite():
   class DateTimeTests(test_datetime.DateTimeTests):
     testTimezoneNaiveHandling = unittest.expectedFailure(
       test_datetime.DateTimeTests.testTimezoneNaiveHandling)
+    if six.PY3:
+      # ERP5 never used the pickle format with micros as float
+      # https://github.com/zopefoundation/DateTime/pull/62
+      test_pickle_old_with_micros_as_float = unittest.expectedFailure(
+        test_datetime.DateTimeTests.test_pickle_old_with_micros_as_float)
 
     test_intl_format_hyphen = unittest.expectedFailure(
       test_datetime.DateTimeTests.test_intl_format_hyphen)

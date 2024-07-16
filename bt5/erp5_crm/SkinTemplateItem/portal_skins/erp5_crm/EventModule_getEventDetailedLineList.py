@@ -1,4 +1,5 @@
 from Products.PythonScripts.standard import Object
+from six.moves import range
 request = container.REQUEST
 portal = context.getPortalObject()
 state_item_list=[x[1] for x in portal.ERP5Site_getWorkflowStateItemList(
@@ -32,7 +33,7 @@ unassigned_dic['ticket_type']=portal.Base_translateString("Unassigned")
 
 #Return index of uid into the list and append if not exists
 def createReturnLine(uid, list_):
-  for i in xrange(len(list_)):
+  for i in range(len(list_)):
     if list[i]['uid']==uid:
       return i
   new_dic=default_dic.copy()

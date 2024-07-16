@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
@@ -209,11 +210,16 @@ class TestWebCrawler(ERP5TypeTestCase):
     </html>"""
     web_page.edit(text_content=text_content)
     self.assertEqual(web_page.getContentBaseURL(), "http://www.example.com")
+    if six.PY2:
+      expected_encoded_url = 'http://www.example.com/?title=\xc3\xa9crit'
+    else:
+      expected_encoded_url = 'http://www.example.com/?title=%E9crit'
     self.assertEqual(web_page.getContentNormalisedURLList(),
                     ["http://www.example.com/I don't care I put what/ I want/",
                      'http://www.example.com/section',
                      'http://www.example.com/section2',
-                     'http://www.example.com/?title=\xc3\xa9crit',])
+                      expected_encoded_url,
+                    ])
     # relative links without base tag
     text_content = """<html>
     <head>
