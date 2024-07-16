@@ -229,7 +229,7 @@ class Git(WorkingCopy):
     path_dict = dict.fromkeys(self.git('ls-files').splitlines(), '')
     path_dict.update(self._patch_with_raw()[0])
     node_dict = {}
-    path_list = path_dict.keys()
+    path_list = list(path_dict)
     for path in path_list:
       status = path_dict[path]
       parent = os.path.dirname(path)

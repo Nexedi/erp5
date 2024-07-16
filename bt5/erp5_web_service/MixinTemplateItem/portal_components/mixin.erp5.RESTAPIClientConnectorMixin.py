@@ -185,7 +185,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       with time_tracker('call'), Deadline(timeout):
         # Limit numbers of retries, in case the authentication API succeeds
         # but the token is not usable.
-        for _ in xrange(2):
+        for _ in range(2):
           with time_tracker('token'):
             access_token = self._getAccessToken()
             if access_token is not None:

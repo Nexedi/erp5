@@ -29,12 +29,11 @@
 ##############################################################################
 
 from functools import partial
+import io
 import unittest
-import urllib
-import urlparse
-from StringIO import StringIO
+import six.moves.urllib.parse
 import time
-import httplib
+import six.moves.http_client
 import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Document import newTempBase
@@ -703,9 +702,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       basic='test-05:used_ALREADY_1234',
     )
     response = publish()
-    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    redirect_url = six.moves.urllib.parse.urlparse(response.getHeader("Location"))
     self.assertEqual(redirect_url.path, '{}/login_form'.format(portal.absolute_url_path()))
-    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    redirect_url_params = six.moves.urllib.parse.parse_qsl(redirect_url.query)
     self.assertEqual(redirect_url_params, [('portal_status_message', 'Account is blocked.')] )
 
     # test expire password message, first unblock it
@@ -714,9 +713,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     self._clearCache()
     response = publish()
-    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    redirect_url = six.moves.urllib.parse.urlparse(response.getHeader("Location"))
     self.assertEqual(redirect_url.path, '{}/login_form'.format(portal.absolute_url_path()))
-    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    redirect_url_params = six.moves.urllib.parse.parse_qsl(redirect_url.query)
     self.assertEqual(redirect_url_params, [('portal_status_message', 'Password is expired.')] )
     self.assertTrue(login.isPasswordExpired())
 
@@ -726,9 +725,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     self._clearCache()
     response = publish()
-    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    redirect_url = six.moves.urllib.parse.urlparse(response.getHeader("Location"))
     self.assertEqual(redirect_url.path, '{}/ERP5Site_viewNewPersonCredentialUpdateDialog'.format(portal.absolute_url_path()))
-    redirect_url_params = urlparse.parse_qs(redirect_url.query)
+    redirect_url_params = six.moves.urllib.parse.parse_qs(redirect_url.query)
     # status message contain the password expiration date
     self.assertIn('Your password will expire at 20', redirect_url_params['portal_status_message'][0])
     self.assertIn('You are advised to change it as soon as possible', redirect_url_params['portal_status_message'][0])
@@ -747,12 +746,12 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     response = self.publish(
       portal.absolute_url_path() + '/logged_in',
       basic='test-05:used_ALREADY_1234',
-      stdin=StringIO(urllib.urlencode({'came_from': 'https://www.erp5.com'})),
+      stdin=io.BytesIO(six.moves.urllib.parse.urlencode({'came_from': 'https://www.erp5.com'}).encode()),
       request_method='POST',
     )
-    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    redirect_url = six.moves.urllib.parse.urlparse(response.getHeader("Location"))
     self.assertEqual(redirect_url.path, portal.absolute_url_path())
-    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    redirect_url_params = six.moves.urllib.parse.parse_qsl(redirect_url.query)
     self.assertEqual(redirect_url_params, [('portal_status_message', 'Redirection to an external site prevented.')] )
 
   def test_ExpireOldAuthenticationEventList(self):
@@ -810,7 +809,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     def submit_reset_password_dialog(new_password):
       return self.publish(
         '%s/portal_password' % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=io.BytesIO(six.moves.urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PasswordTool_viewResetPassword',
           'dialog_method': 'PasswordTool_changeUserPassword',
@@ -823,7 +822,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
         handle_errors=False)
 
     ret = submit_reset_password_dialog('alice')
-    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     self.assertIn(
       '<span class="error">You can not use any parts of your '
       'first and last name in password.</span>',
@@ -839,7 +838,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext):
       ret = submit_reset_password_dialog('alice')
-      self.assertEqual(httplib.OK, ret.getStatus())
+      self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
         '<span class="error">Yöü can not ... translated</span>',
         ret.getBody())
@@ -868,20 +867,20 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       return self.publish(
         '%s/portal_preferences' % self.portal.getPath(),
         basic='%s:current' % self.id(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=io.BytesIO(six.moves.urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
           'dialog_method': 'PreferenceTool_setNewPassword',
           'field_your_current_password': 'current',
           'field_your_new_password': new_password,
           'field_password_confirm': new_password,
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
 
     # too short password is refused
     ret = submit_change_password_dialog('short')
-    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     self.assertIn(
       '<span class="error">Too short.</span>',
       ret.getBody())
@@ -896,7 +895,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext):
       ret = submit_change_password_dialog('short')
-      self.assertEqual(httplib.OK, ret.getStatus())
+      self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
         '<span class="error">Töü short ... translated</span>',
         ret.getBody())
@@ -913,7 +912,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # long enough password is accepted
     ret = submit_change_password_dialog('long_enough_password')
     # When password reset is successful, user is logged out
-    self.assertEqual(httplib.FOUND, ret.getStatus())
+    self.assertEqual(six.moves.http_client.FOUND, ret.getStatus())
     self.assertEqual(self.portal.portal_preferences.absolute_url(),
                      ret.getHeader("Location"))
 
