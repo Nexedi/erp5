@@ -90,19 +90,21 @@
       var gadget = this, current_version, index, appcache_storage,
         monitoring_jio, appcache_jio, migration_version, manifest,
         origin_url = window.location.href, i, master_url_list,
-        storage_definition_list;
+        storage_definition_list = [];
       return gadget.getSettingList(['configuration_manifest',
                                     'migration_version',
                                     'default_view_reference',
                                     'master_url_list'])
         .push(function (result_list) {
-          master_url_list = result_list[3];
-          for (i = 0; i < master_url_list.length; i += 1) {
-            storage_definition_list.push({
-              type: "erp5",
-              url: master_url_list[i],
-              default_view_reference: result_list[2]
-            });
+          if (result_list[3]) {
+            master_url_list = result_list[3];
+            for (i = 0; i < master_url_list.length; i += 1) {
+              storage_definition_list.push({
+                type: "erp5",
+                url: master_url_list[i],
+                default_view_reference: result_list[2]
+              });
+            }
           }
           //TODO fix missing router setting (it's set but get returns undefined)
           migration_version = result_list[1];
@@ -137,7 +139,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "monitoring_local_roque.db"
+                  database: "monitoring_local.db"
                 }
               }
             },
