@@ -735,6 +735,8 @@ class TestCRMMailIngestion(BaseTestCRM):
       ('me@erp5.org', ['person_module/me']),
       ('me@erp5.org, he@erp5.org', ['person_module/me', 'person_module/he']),
       ('Sender <sender@customer.com>', ['person_module/sender']),
+      # title is also an email, it should return the person once, not twice
+      ('sender@customer.com <sender@customer.com>', ['person_module/sender']),
       # tricks to confuse the e-mail parser:
       # a comma in the name
       ('"Sender," <sender@customer.com>, he@erp5.org', ['person_module/sender',
@@ -750,9 +752,10 @@ class TestCRMMailIngestion(BaseTestCRM):
     for header, expected_paths in expected_values:
       paths = [entity.getRelativeUrl()
                for entity in portal.Base_getEntityListFromFromHeader(header)]
-      self.assertEqual(paths, expected_paths,
-                        '%r should return %r, but returned %r' %
-                        (header, expected_paths, paths))
+      self.assertEqual(
+        sorted(paths), sorted(expected_paths),
+        '%r should return %r, but returned %r' % (header, expected_paths, paths)
+      )
 
   def test_document_creation(self):
     # CRM email ingestion creates a Mail Message in event_module
