@@ -34,7 +34,7 @@ import unittest
 import zipfile
 import email
 import os.path
-from cStringIO import StringIO
+import io
 from DateTime import DateTime
 
 from lxml import etree
@@ -128,7 +128,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
       if file_name == 'FEC-20141231.zip':
         self.assertEqual('application/zip', content_type)
         data = part.get_payload(decode=True)
-        zf = zipfile.ZipFile(StringIO(data))
+        zf = zipfile.ZipFile(io.BytesIO(data))
         self.assertIn("12345689FEC20141231.xml", zf.namelist())
         return zf.open("12345689FEC20141231.xml").read()
     self.fail("Attachment not found")
