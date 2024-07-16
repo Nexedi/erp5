@@ -2,6 +2,8 @@ from __future__ import print_function
 from BTrees.LOBTree import LOBTree
 from persistent import Persistent
 import itertools
+from six.moves import range
+import six
 
 # Maximum memory to allocate for sparse-induced padding.
 MAX_PADDING_CHUNK = 2 ** 20
@@ -10,11 +12,13 @@ class PersistentString(Persistent):
   def __init__(self, value):
     self.value = value
 
-  def __str__(self):
+  def __bytes__(self):
     return self.value
+  if six.PY2:
+    __str__ = __bytes__
 
   # Save place when storing this data in zodb
-  __getstate__ = __str__
+  __getstate__ = __bytes__
   __setstate__ = __init__
 
 negative_offset_error = ValueError('Negative offset')
@@ -109,7 +113,7 @@ class BTreeData(Persistent):
         chunk = tree[lower_key]
         chunk_end = lower_key + len(chunk.value)
         if chunk_end > offset or (
-              len(chunk.value) < self._chunk_size and
+              len(chunk.value) < (self._chunk_size or 0) and
               chunk_end == offset
             ):
           key = lower_key
@@ -136,7 +140,7 @@ class BTreeData(Persistent):
       try:
         chunk = tree[key]
       except KeyError:
-        tree[key] = chunk = PersistentString('')
+        tree[key] = chunk = PersistentString(b'')
       entry_size = len(chunk.value)
       if entry_size < to_write_len:
         to_write_len = min(to_write_len, max_to_write_len)
@@ -157,9 +161,9 @@ class BTreeData(Persistent):
     size (int)
      Number of bytes to read.
 
-    Returns string of read data.
+    Returns bytes of read data.
     """
-    return ''.join(self.iterate(offset, size))
+    return b''.join(self.iterate(offset, size))
 
   def iterate(self, offset=0, size=None):
     """
@@ -242,7 +246,7 @@ class BTreeData(Persistent):
         except ValueError:
           break
         del tree[key]
-    self.write('', offset)
+    self.write(b'', offset)
 
   # XXX: Various batch_size values need to be benchmarked, and a saner
   # default is likely to be applied.
@@ -318,7 +322,7 @@ if __name__ == '__main__':
     print(list(tree._tree.items()))
     tree_length = len(tree)
     tree_data = tree.read(read_offset, read_length)
-    tree_iterator_data = ''.join(tree.iterate(read_offset, read_length))
+    tree_iterator_data = b''.join(tree.iterate(read_offset, read_length))
     assert tree_length == length, tree_length
     assert tree_data == data_, repr(tree_data)
     assert tree_iterator_data == data_, repr(tree_iterator_data)
@@ -419,22 +423,22 @@ if __name__ == '__main__':
   check(data, 36, 0, 36, '01ABC56789ABcDEFGHIJKL\x00NOPQRSTUVWXYZ', [0, 10, 20, 23, 33])
 
   data = BTreeData(max_chunk_size=10)
-  for x in xrange(255):
+  for x in range(255):
     data.write('%02x' % x, x * 2)
-  check(data, 510, 0, 10, '0001020304', [x * 2 for x in xrange(255)])
+  check(data, 510, 0, 10, '0001020304', [x * 2 for x in range(255)])
   defragment_generator = data.defragment(batch_size=2)
   defragment_generator.next()
-  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in xrange(2, 255)])
+  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in range(2, 255)])
   opaque = defragment_generator.next()
   defragment_generator.close()
-  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in xrange(4, 255)])
+  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in range(4, 255)])
   defragment_generator = data.defragment(batch_size=2, resume_at=opaque)
   defragment_generator.next()
-  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in xrange(5, 255)])
+  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in range(5, 255)])
   defragment_generator.send(10)
-  check(data, 510, 0, 10, '0001020304', [0, 10, 20] + [x * 2 for x in xrange(13, 255)])
+  check(data, 510, 0, 10, '0001020304', [0, 10, 20] + [x * 2 for x in range(13, 255)])
   defragment_generator.next()
-  check(data, 510, 0, 10, '0001020304', [0, 10, 20, 30, 40] + [x * 2 for x in xrange(23, 255)])
+  check(data, 510, 0, 10, '0001020304', [0, 10, 20, 30, 40] + [x * 2 for x in range(23, 255)])
   for _ in defragment_generator:
     pass
-  check(data, 510, 0, 10, '0001020304', [x * 10 for x in xrange(51)])
+  check(data, 510, 0, 10, '0001020304', [x * 10 for x in range(51)])

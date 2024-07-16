@@ -27,6 +27,11 @@
 import email
 import mock
 import time
+import six
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -231,7 +236,7 @@ class TestInterfacePost(ERP5TypeTestCase):
 
     for internet_message_post in internet_message_post_list:
       self.assertEqual(internet_message_post.getSimulationState(), 'exported')
-      mail_object = email.message_from_string(internet_message_post.getData())
+      mail_object = message_from_bytes(internet_message_post.getData())
       self.assertEqual(
         internet_message_post.getReference(), mail_object['message-id'].strip('<>')
       )
@@ -263,7 +268,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     message_list = self.portal.MailHost._message_list
     self.assertEqual(len(message_list), len(self.recipient_list))
     for post in sequence['internet_message_post_list']:
-      post_recipient = email.message_from_string(post.getData())['to']
+      post_recipient = message_from_bytes(post.getData())['to']
       message_list = self._getMailHostMessageForRecipient(post_recipient)
       self.assertEqual(len(message_list), 1)
       message = message_list[0]
@@ -282,7 +287,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     post = sequence['internet_message_post']
 
     # Create a response mail object
-    mail_object = email.message_from_string(post.getData())
+    mail_object = message_from_bytes(post.getData())
 
     sender = mail_object['from']
     recipient = mail_object['to']
@@ -297,7 +302,7 @@ class TestInterfacePost(ERP5TypeTestCase):
     # Ingest it
     response_post = self.portal.internet_message_post_module.newContent(
       portal_type='Internet Message Post',
-      data=mail_object.as_string(),
+      data=str2bytes(mail_object.as_string()),
     )
     response_post.prepareImport()
     sequence['internet_message_post_response'] = response_post
