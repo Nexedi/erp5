@@ -34,11 +34,12 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from unittest import expectedFailure
 
-import httplib
-from StringIO import StringIO
+import six.moves.http_client
+from io import BytesIO
 from DateTime import DateTime
 
 from lxml import etree
+from six.moves import range
 
 def makeFilePath(name):
   import Products.ERP5.tests
@@ -148,9 +149,9 @@ class TestWebDavSupport(ERP5TypeTestCase):
     # force usage of manage_FTPget like zwebdav_server does
     response = self.publish('%s/%s/manage_FTPget' % (path, document_id),
                             request_method='GET',
-                            stdin=StringIO(),
+                            stdin=BytesIO(),
                             basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), six.moves.http_client.OK)
     self.assertEqual(response.getBody(), document.getData(),
           'Error in getting data, get:%r' % response.getHeader('content-type'))
 
@@ -165,7 +166,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='PUT',
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     web_page_module = self.getWebPageModule()
     self.assertIn(filename, web_page_module.objectIds())
     self.assertEqual(web_page_module[filename].getPortalType(), 'Web Page')
@@ -183,8 +184,9 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     iso_text_content = text_content.decode('utf-8').encode('iso-8859-1')
     path = web_page_module.getPath()
-    for _ in xrange(2): # Run twice to check the code that compares
-                        # old & new data when setting file attribute.
+    # Run twice to check the code that compares old & new data
+    # when setting file attribute.
+    for _ in range(2):
       response = self.publish('%s/%s' % (path, filename),
                               request_method='PUT',
                               stdin=StringIO(iso_text_content),
@@ -279,10 +281,10 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish(document.getPath(),
                             request_method='PROPFIND',
                             env={'HTTP_DEPTH': '0'},
-                            stdin=StringIO(),
+                            stdin=BytesIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), six.moves.http_client.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
     self.assertEqual(xml_metadata.find(
