@@ -1,10 +1,12 @@
+import hashlib
 import hmac
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 
 CACHE_FACTORY_NAME = 'bearer_token_cache_factory'
 
 def getHMAC(self, key, body):
-  digest = hmac.new(key, body)
+  # type: (erp5.portal_type.Base, bytes, bytes) -> str
+  digest = hmac.new(key, body, digestmod=hashlib.md5)
   return digest.hexdigest()
 
 def _getCacheFactory(self, cache_factory_name):
