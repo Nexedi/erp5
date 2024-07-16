@@ -99,6 +99,9 @@
                           "is not defined");
     }
     this._local_sub_storage = jIO.createJIO(spec.local_sub_storage);
+    if (spec.remote_sub_storage !== undefined) {
+      this._remote_sub_storage = jIO.createJIO(spec.remote_sub_storage);
+    }
     this._remote_storage_unreachable_status =
       spec.remote_storage_unreachable_status;
     this._remote_storage_dict = {};
@@ -919,6 +922,7 @@
     }
 
     function getInstanceOPMLList(storage, limit) {
+      if (!storage) return [];
       var instance_tree_list = [],
         opml_list = [],
         uid_dict = {};
@@ -1004,17 +1008,15 @@
         );
       })
       .push(function () {
-        return context._remote_sub_storage.repair.apply(
-          context._remote_sub_storage,
-          argument_list
-        );
+        if (context._remote_sub_storage) {
+          return context._remote_sub_storage.repair.apply(
+            context._remote_sub_storage,
+            argument_list
+          );
+        }
       })
       .push(function () {
-        if (!context._remote_sub_storage) {
-          return [];
-        } else {
-          return getInstanceOPMLList(context._remote_sub_storage);
-        }
+        return getInstanceOPMLList(context._remote_sub_storage);
       })
       .push(undefined, function () {
         has_failed = true;
