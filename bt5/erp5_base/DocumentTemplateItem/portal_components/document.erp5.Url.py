@@ -121,9 +121,9 @@ class Url(Coordinate, UrlMixin):
     This method was previously named 'SendMail' and is used to send email
 
     * attachment_list is a list of dictionnaries with those keys:
-     - name : name of the attachment,
-     - content: data of the attachment
-     - mime_type: mime-type corresponding to the attachment
+     - name (str): name of the attachment,
+     - content (bytes): data of the attachment
+     - mime_type (str): mime-type corresponding to the attachment
     * extra_headers is a dictionnary of custom headers to add to the email.
       "X-" prefix is automatically added to those headers.
     """

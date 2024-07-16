@@ -400,15 +400,17 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     return self._setContentType(value)
 
   def getData(self, default=_MARKER):
+    # type: () -> bytes | PData
     """getData must returns original content but TextDocument accepts
     data or text_content to store original content.
     Fallback on text_content property if data is not defined
     """
     if not self.hasData():
       if default is _MARKER:
-        return self.getTextContent()
+        data = self._baseGetTextContent()
       else:
-        return self.getTextContent(default)
+        data = self._baseGetTextContent(default)
+      return str2bytes(data)
     else:
       if default is _MARKER:
         return File.getData(self)

@@ -315,8 +315,8 @@ class TestBug(ERP5TypeTestCase):
     _, _, messageText = last_message
     from email.parser import Parser
     p = Parser()
-    m = p.parsestr(messageText)
-    self.assertIn('Re-assign!', m.get_payload()[0].get_payload(decode=True))
+    m = p.parsestr(messageText.decode())
+    self.assertIn(b'Re-assign!', m.get_payload()[0].get_payload(decode=True))
 
 
   def stepCheckBugInit(self, sequence=None, sequence_list=None, **kw):
