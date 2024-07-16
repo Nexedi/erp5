@@ -21,7 +21,7 @@ class TestSafeImage(ERP5TypeTestCase):
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
     path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
-    os.write(fd,str(image.data))
+    os.write(fd, image.data)
     os.close(fd)
     _image = self.makeFileUpload(path_image)
     image = self.image_module.newContent(portal_type='Image',title='testImage',
@@ -33,7 +33,7 @@ class TestSafeImage(ERP5TypeTestCase):
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
     path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
-    os.write(fd,str(image.data))
+    os.write(fd, image.data)
     os.close(fd)
     tile_image = self.makeFileUpload(path_image)
     tile = self.image_module.newContent(portal_type='Image Tile',title='testTile',
@@ -45,7 +45,7 @@ class TestSafeImage(ERP5TypeTestCase):
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
     path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
-    os.write(fd,str(image.data))
+    os.write(fd, image.data)
     os.close(fd)
     tile_image_transformed = self.makeFileUpload(path_image)
     tile_transformed = self.image_module.newContent(portal_type='Image Tile Transformed',
@@ -75,7 +75,7 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(tile,None)
      image_property = getattr(tile, "ImageProperties.xml", None)
      self.assertEqual(image_property.getData(),
- """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
+ b"""<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
      self.assertNotEqual(image_property, None)
      self.assertEqual("Embedded File", image_property.getPortalType())
      image_group = getattr(tile, "TileGroup0", None)
@@ -105,7 +105,7 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(tile_transformed,None)
      image_property = getattr(tile_transformed, "ImageProperties.xml", None)
      self.assertEqual(image_property.getData(),
- """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
+ b"""<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
      self.assertNotEqual(image_property, None)
      self.assertEqual("Embedded File", image_property.getPortalType())
      image_transform = getattr(tile_transformed, "TransformFile.txt", None)

@@ -27,10 +27,10 @@
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
-import StringIO
+from six.moves import cStringIO as StringIO
 import unittest
-import urllib
-import httplib
+from six.moves.urllib.parse import urlencode
+import six.moves.http_client
 
 
 class TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow(ERP5TypeTestCase):
@@ -120,7 +120,7 @@ class TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow(ERP5TypeTestCase):
     ret = self.publish(
       '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
       basic='%s:current' % self.id(),
-      stdin=StringIO.StringIO(urllib.urlencode({
+      stdin=StringIO(urlencode({
         'Base_callDialogMethod:method': '',
         'dialog_id': 'Alarm_viewSolveDialog',
         'dialog_method': 'Alarm_solve',
@@ -130,7 +130,7 @@ class TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow(ERP5TypeTestCase):
       request_method="POST",
       handle_errors=False
     )
-    self.assertEqual(httplib.FOUND, ret.getStatus())
+    self.assertEqual(six.moves.http_client.FOUND, ret.getStatus())
 
     alarm.Alarm_solve()
 
