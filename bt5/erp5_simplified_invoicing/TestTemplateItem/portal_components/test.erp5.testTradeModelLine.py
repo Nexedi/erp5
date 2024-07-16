@@ -901,7 +901,7 @@ return context""" % (base_amount, base_amount))
       } for index, application, contribution in lines]
     def check():
       resolver(delivery_amount, property_dict_list)
-      self.assertEqual(range(len(property_dict_list)),
+      self.assertEqual(list(range(len(property_dict_list))),
                        [x['index'] for x in property_dict_list])
 
     # Case 1: calculation of some base_amount depends on others.
