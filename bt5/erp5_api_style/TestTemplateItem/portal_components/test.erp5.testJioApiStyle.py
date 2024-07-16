@@ -31,6 +31,8 @@ import json
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Utils import unicode2str
+import six
 
 
 class TestjIOApiStyle(ERP5TypeTestCase):
@@ -77,7 +79,7 @@ class TestjIOApiStyle(ERP5TypeTestCase):
       "alldocs": "object_json_api_all_docs",
       "get": "object_json_api_get",
     }
-    for key, action_type in self.action_type_dict.iteritems():
+    for key, action_type in six.iteritems(self.action_type_dict):
       self.updateCreateActionType(action_type)
       self.api_web_section.setProperty(
         "configuration_%s_action_type" % key,
@@ -345,7 +347,7 @@ class TestjIOApiStyle(ERP5TypeTestCase):
     self.assertEqual(400, result[u"status"])
     self.assertEqual(u"API-JSON-NOT-JSON-OBJECT", result[u"name"])
     self.assertEqual(u"Did not received a JSON Object", result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result['debug_id']))
     self.assertEqual(error_record.getDescription(), "Did not received a JSON Object")
     self.assertEqual(error_record.getTitle(), "API-JSON-NOT-JSON-OBJECT")
     self.assertEqual(error_record.getTextContent(), json_payload)
@@ -402,7 +404,7 @@ return json.dumps({
     self.assertEqual(404, result[u"status"])
     self.assertEqual(u"API-DOCUMENT-NOT-FOUND", result[u"name"])
     self.assertEqual(u"Document has not been found", result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-DOCUMENT-NOT-FOUND")
     self.assertEqual(error_record.getDescription(), "Document has not been found")
     self.assertEqual(error_record.getTextContent(), json_payload)
@@ -423,7 +425,7 @@ return json.dumps({
     self.assertEqual(400, result[u"status"])
     self.assertEqual(u"API-JSON-NO-ID-PROPERTY", result[u"name"])
     self.assertEqual(u"Cannot find id property", result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-JSON-NO-ID-PROPERTY")
     self.assertEqual(error_record.getDescription(), "Cannot find id property")
     self.assertEqual(error_record.getTextContent(), json_payload)
@@ -446,9 +448,9 @@ return json.dumps({
       self.action_type_dict["get"], person.getRelativeUrl())
     self.assertEqual(u"API-NO-ACTION-FOUND", result[u"name"])
     self.assertEqual(message, result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-NO-ACTION-FOUND")
-    self.assertEqual(error_record.getDescription(), message.encode())
+    self.assertEqual(error_record.getDescription(), unicode2str(message))
     self.assertEqual(error_record.getTextContent(), json_payload)
 
   def test_action_get_bad_json(self):
@@ -512,7 +514,7 @@ return json.dumps({
     self.assertEqual(404, result[u"status"])
     self.assertEqual(u"API-DOCUMENT-NOT-FOUND", result[u"name"])
     self.assertEqual(u"Document has not been found", result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-DOCUMENT-NOT-FOUND")
     self.assertEqual(error_record.getDescription(), "Document has not been found")
     self.assertEqual(error_record.getTextContent(), json_payload)
@@ -532,7 +534,7 @@ return json.dumps({
     self.assertEqual(400, result[u"status"])
     self.assertEqual(u"API-JSON-NO-ID-PROPERTY", result[u"name"])
     self.assertEqual(u"Cannot find id property", result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-JSON-NO-ID-PROPERTY")
     self.assertEqual(error_record.getDescription(), "Cannot find id property")
     self.assertEqual(error_record.getTextContent(), json_payload)
@@ -554,9 +556,9 @@ return json.dumps({
       self.action_type_dict["put"], person.getRelativeUrl())
     self.assertEqual(u"API-NO-ACTION-FOUND", result[u"name"])
     self.assertEqual(message, result[u"message"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-NO-ACTION-FOUND")
-    self.assertEqual(error_record.getDescription(), message.encode())
+    self.assertEqual(error_record.getDescription(), unicode2str(message))
     self.assertEqual(error_record.getTextContent(), json_payload)
 
   def test_action_put_bad_json(self):
@@ -603,7 +605,7 @@ return json.dumps({
       raise ValueError("Unexcpected Answer %s" % response)
     self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
-    person = self.portal.restrictedTraverse(response['id'].encode())
+    person = self.portal.restrictedTraverse(unicode2str(response['id']))
     self.assertEqual(person.getTitle(), self.id_template)
 
   def createUpdateScriptjIOWebSectionCreateOrganisationFromJSON(self):
@@ -650,7 +652,7 @@ return json.dumps({
       raise ValueError("Unexcpected Answer %s" % response)
     self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
-    organisation = self.portal.restrictedTraverse(response['id'].encode())
+    organisation = self.portal.restrictedTraverse(unicode2str(response['id']))
     self.assertEqual(organisation.getTitle(), self.id_template)
     # Check Second action
     response = json.loads(self.postToApi(
@@ -663,7 +665,7 @@ return json.dumps({
       raise ValueError("Unexcpected Answer %s" % response)
     self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
-    person = self.portal.restrictedTraverse(response['id'].encode())
+    person = self.portal.restrictedTraverse(unicode2str(response['id']))
     self.assertEqual(person.getTitle(), self.id_template)
 
   def test_action_post_no_action_matches(self):
@@ -696,7 +698,7 @@ return json.dumps({
     self.assertEqual(u"API-NO-ACTION-FOUND", result[u"name"])
     self.assertEqual(message, result[u"message"])
     self.assertEqual(details_list, result[u"details"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-NO-ACTION-FOUND")
     self.assertEqual(error_record.getTextContent(), json_payload)
 
@@ -727,7 +729,7 @@ return json.dumps({
     self.assertEqual(u"API-NO-ACTION-FOUND", result[u"name"])
     self.assertEqual(message, result[u"message"])
     self.assertEqual(details_list, result[u"details"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-NO-ACTION-FOUND")
     self.assertEqual(error_record.getTextContent(), json_payload)
 
@@ -980,7 +982,7 @@ return [{
     self.assertEqual(u"API-NO-ACTION-FOUND", result[u"name"])
     self.assertEqual(message, result[u"message"])
     self.assertEqual(details, result[u"details"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-NO-ACTION-FOUND")
     self.assertEqual(error_record.getTextContent(), json_payload)
 
@@ -1011,7 +1013,7 @@ return [{
     self.assertEqual(u"API-NO-ACTION-FOUND", result[u"name"])
     self.assertEqual(message, result[u"message"])
     self.assertEqual(details_list, result[u"details"])
-    error_record = self.portal.restrictedTraverse("error_record_module/" + result[u"debug_id"].encode())
+    error_record = self.portal.restrictedTraverse("error_record_module/" + unicode2str(result[u"debug_id"]))
     self.assertEqual(error_record.getTitle(), "API-NO-ACTION-FOUND")
     self.assertEqual(error_record.getTextContent(), json_payload)
 

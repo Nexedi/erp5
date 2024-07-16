@@ -27,7 +27,7 @@
 ##############################################################################
 
 import unittest
-import urlparse
+import six.moves.urllib.parse
 import os
 import textwrap
 from unittest import expectedFailure
@@ -562,7 +562,7 @@ class TestCRM(BaseTestCRM):
     # This action checks everything is properly defined
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Recipients must be defined"])
     campaign.setDefaultEventPathDestination(
         "portal_domains/%s" % person_domain.getRelativeUrl())
@@ -570,38 +570,38 @@ class TestCRM(BaseTestCRM):
     campaign.setDefaultEventPathEventPortalType(None)
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Event Type must be defined"])
     campaign.setDefaultEventPathEventPortalType('Mail Message')
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Sender must be defined"])
     campaign.setDefaultEventPathSource(sender.getRelativeUrl())
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Notification Message must be defined"])
     campaign.setDefaultEventPathResource(notification_message.getRelativeUrl())
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Notification Message must be validated"])
     notification_message.setReference(notification_message_reference)
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Notification Message must be validated"])
     notification_message.validate()
     self.tic()
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Events are being created in background"])
     self.tic()
     event_list = [event for event in campaign.getFollowUpRelatedValueList()
@@ -1033,7 +1033,8 @@ class TestCRMMailIngestion(BaseTestCRM):
     file_path = '%s/test_data/%s' % (
       os.path.dirname(Products.ERP5.tests.__file__),
       html_filename)
-    html_message = open(file_path, 'r').read()
+    with open(file_path, 'rb') as f:
+      html_message = f.read()
     message = MIMEMultipart('alternative')
     message.attach(MIMEText('text plain content', _charset='utf-8'))
     part = MIMEBase('text', 'html')
@@ -1058,7 +1059,8 @@ class TestCRMMailIngestion(BaseTestCRM):
       file_path = '%s/test_data/%s' % (
         os.path.dirname(Products.ERP5.tests.__file__),
         filename)
-      event.setData(open(file_path).read())
+      with open(file_path, 'rb') as f:
+        event.setData(f.read())
       self.assertTrue(event.getTextContent().startswith('<'))
 
 

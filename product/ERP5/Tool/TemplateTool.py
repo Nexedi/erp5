@@ -703,7 +703,7 @@ class TemplateTool (BaseTool):
       """
         Get the list of repositories.
       """
-      return self.repository_dict.keys()
+      return list(self.repository_dict)
 
     security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
     def decodeRepositoryBusinessTemplateUid(self, uid):
