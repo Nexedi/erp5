@@ -150,7 +150,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     self.getPortal().Localizer.changeLanguage('en')
     response = self.publish('/' + self.getPortal().Dynamic_viewAsOdt.absolute_url(1))
     # then, it is not a zip stream
-    self.assertFalse(response.getBody().startswith('PK'))
+    self.assertFalse(response.getBody().startswith(b'PK'))
     self.assertEqual(500, response.getStatus())
 
 
@@ -198,7 +198,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     Static_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
                                 ooo_stylesheet='NotFound_getODTStyleSheet', script_name='')
     response = self.publish('/' + self.getPortal().Static_viewAsOdt.absolute_url(1))
-    self.assertFalse(response.getBody().startswith('PK'))
+    self.assertFalse(response.getBody().startswith(b'PK'))
     self.assertEqual(500, response.getStatus())
 
   def test_include_img(self):
