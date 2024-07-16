@@ -44,7 +44,7 @@ def ERP5Site_getGraphEditorGraphLayout(self, graph_editor_dict):
       edge['destination'],
     ))
 
-  new_graph, = pydot.graph_from_dot_data(graph.create_dot())  # pylint:disable=unpacking-non-sequence
+  new_graph, = pydot.graph_from_dot_data(graph.create_dot().decode())  # pylint:disable=unpacking-non-sequence
 
   # calulate the ratio from the size of the bounding box
   origin_left, origin_top, max_left, max_top = [
@@ -55,8 +55,8 @@ def ERP5Site_getGraphEditorGraphLayout(self, graph_editor_dict):
 
   node_position_dict = dict()
   for node in new_graph.get_nodes():
-    # skip technical nodes
-    if node.get_name() in ('graph', 'node', 'edge'):
+    # skip technical nodes (and \n bug on py3)
+    if node.get_name() in ('graph', 'node', 'edge', '"\\n"'):
       continue
     left, top = [float(p) for p in node.get_pos()[1:-1].split(",")]
     node_position_dict[node.get_name().strip('"')] = dict(

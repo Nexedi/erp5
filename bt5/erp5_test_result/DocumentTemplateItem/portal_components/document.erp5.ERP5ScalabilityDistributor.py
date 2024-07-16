@@ -33,6 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 import json
 import jinja2
+from six.moves import range
 
 class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
   security = ClassSecurityInfo()
@@ -342,7 +343,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
 
     try:
       template = jinja2.Template(cluster_configuration)
-      for index in xrange(0, len(number_configuration_list)):
+      for index in range(0, len(number_configuration_list)):
         template_vars = { "count" : number_configuration_list[index],
                           "comp" : remaining_nodes }
         configuration_list_json.append( json.loads(
