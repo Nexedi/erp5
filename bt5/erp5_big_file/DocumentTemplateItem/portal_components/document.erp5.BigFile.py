@@ -23,7 +23,6 @@ from erp5.component.module.BTreeData import BTreeData
 from ZPublisher.HTTPRequest import FileUpload
 from ZPublisher import HTTPRangeSupport
 from zope.datetime import rfc1123_date
-from mimetools import choose_boundary
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from DateTime import DateTime
 import re
@@ -31,8 +30,10 @@ import six
 
 if six.PY3:
   long_or_int = int
+  from email.generator import _make_boundary as choose_boundary
 else:
   long_or_int = long  # pylint:disable=undefined-variable
+  from mimetools import choose_boundary  # pylint:disable=import-error
 
 class BigFile(File):
   """

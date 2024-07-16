@@ -798,7 +798,7 @@ return context.objectValues()
       '%s:%s' % (self.manager_username, self.manager_password),
     )
     self.assertEqual(result.getStatus(), 500)
-    self.assertIn('Error Type: TimeoutReachedError', result.getBody())
+    self.assertIn(b'Error Type: TimeoutReachedError', result.getBody())
 
 def test_suite():
   suite = unittest.TestSuite()
