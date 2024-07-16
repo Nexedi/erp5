@@ -456,12 +456,14 @@ class Field:
           return obj.method_name
         elif obj_type is TALESField.TALESMethod:
           return obj._text
-        elif obj_type is six.text_type:
+        elif six.PY2 and isinstance(obj_type, six.text_type):
           return obj.encode('utf-8')
         return str(obj)
+      from Products.ERP5Type.Utils import ensure_list
       return ' '.join(map(getSearchSource,
-                         (self.values.values()+self.tales.values()+
-                          self.overrides.values())))
+                         (ensure_list(self.values.values()) +
+                          ensure_list(self.tales.values()) +
+                          ensure_list(self.overrides.values()))))
 
 InitializeClass(Field)
 

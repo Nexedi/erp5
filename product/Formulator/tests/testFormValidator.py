@@ -56,11 +56,11 @@ class StringValidatorTestCase(ValidatorTestCase):
         self.assertEqual('<html>', result)
 
     def test_encoding(self):
-        utf8_string = 'M\303\274ller' # this is a M&uuml;ller
-        unicode_string = unicode(utf8_string, 'utf-8')
+        utf8_bytes = b'M\303\274ller' # this is a M&uuml;ller
+        unicode_string = utf8_bytes.decode('utf-8')
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0, required=0, unicode=1),
-            'f', {'f' : utf8_string})
+            'f', {'f' : utf8_bytes})
         self.assertEqual(unicode_string, result)
 
     def test_strip_whitespace(self):

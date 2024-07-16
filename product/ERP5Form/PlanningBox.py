@@ -1382,7 +1382,8 @@ class BasicStructure:
     Generates a tree from one domain, this will be used for create Lane Axis.
     """
     if self.params.get('lane_path', None):
-      default_selection_lane_path = self.params.get('lane_path')
+      # six.PY3: BTrees key must be of the same type: str() here, not int()...
+      default_selection_lane_path = str(self.params.get('lane_path'))
     else:
       # get first
       default_selection_lane_path = self.lane_root_list[0][0].split('/', 1)[0]

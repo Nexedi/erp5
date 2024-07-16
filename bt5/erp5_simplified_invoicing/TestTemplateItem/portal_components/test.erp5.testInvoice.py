@@ -563,11 +563,11 @@ class TestInvoice(TestInvoiceMixin):
     invoice.confirm()
     self.tic()
     odt = invoice.Invoice_viewAsODT()
-    import cStringIO
-    output = cStringIO.StringIO()
+    from io import BytesIO
+    output = BytesIO()
     output.write(odt)
     m = OpenDocumentTextFile(output)
-    text_content=m.toString().encode('ascii','replace')
+    text_content=m.toString().encode('ascii','replace').decode()
     if text_content.find('Resource Tax') != -1 :
       self.fail('fail to delete the tax line in product line')
     if text_content.find('Tax Code') == -1 :
