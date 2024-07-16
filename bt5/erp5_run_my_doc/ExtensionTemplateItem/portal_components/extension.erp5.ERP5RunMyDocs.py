@@ -34,12 +34,13 @@ def parseTestReport(text):
   Return the content of a web page
 """
 def urlread(url):
-  import urllib
-  return urllib.urlopen(url).read()
+  from six.moves.urllib.request import urlopen
+  return urlopen(url).read()
 
 """
   Remove everything but the test in a webpage
 """
+from Products.ERP5Type.Utils import unicode2str
 def extractTest(text):
   import lxml.html
   root = lxml.html.fromstring(text)
@@ -53,7 +54,7 @@ def extractTest(text):
           # Include Macros as it is defined by the user.
           testcode += row[0].text
         else:
-          testcode += lxml.html.tostring(row)
+          testcode += unicode2str(lxml.html.tostring(row, encoding='unicode'))
   return testcode.strip()
 
 """

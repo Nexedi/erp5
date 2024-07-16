@@ -31,7 +31,7 @@ import unittest
 import MethodObject
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Utils import getMessageIdWithContext
+from Products.ERP5Type.Utils import getMessageIdWithContext, str2unicode, unicode2str
 
 # dependency order
 target_business_templates = (
@@ -100,7 +100,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     if (result == msgid) and (self.lang != 'en'):
       #result = None
       result = self.portal.Localizer.erp5_ui.gettext(msgid)
-    return result.encode('utf8')
+    return unicode2str(result)
 
   def logMessage(self, message):
     self.message += '%s\n' % message
@@ -180,7 +180,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
       if error:
         for key, item_list in error_dict.items():
           if len(item_list) != 0:
-            self.logMessage("\n'%s'" % key.encode('utf-8'))
+            self.logMessage("\n'%s'" % unicode2str(key))
             self.logMessage('\t### Conflicting workflow with common states (ie, what user can see) ###')
             for item in item_list:
               # XXX Improve rendering
@@ -250,7 +250,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
                                                     'item_workflow'),
                             add=1)
     message_catalog.message_edit('Validated', self.lang,
-                                 'Validé'.decode('utf8'), '')
+                                 str2unicode('Validé'), '')
     message_catalog.message_edit(getMessageIdWithContext('Validated',
                                                          'state',
                                                          'item_workflow'),
@@ -433,7 +433,7 @@ class TestTranslation(ERP5TypeTestCase):
     </tal:ommit>
     """ % domain
     self.myzpt.pt_edit(zpt_template, 'text/html')
-    return self.myzpt(words=words).encode('utf-8').split()
+    return unicode2str(self.myzpt(words=words)).split()
 
   def test_ZPT_translation(self):
     results = self.translate_by_zpt('erp5_ui', 'Person', 'Draft')
