@@ -856,7 +856,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if xupdated_node_list:
           xupdated_node = xupdated_node_list[0]
         else:
-          ValueError('Wrong xpath expression:%r' % base_xpath_expression)
+          raise ValueError('Wrong xpath expression:%r' % base_xpath_expression)
         if base_xpath_expression not in xpath_expression_update_dict:
           xpath_expression_update_dict[base_xpath_expression] = \
                                    dict(xml=xupdated_node,
@@ -876,7 +876,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if xupdated_node_list:
           xupdated_node = xupdated_node_list[0]
         else:
-          ValueError('Wrong xpath expression:%r' % base_xpath_expression)
+          raise ValueError('Wrong xpath expression:%r' % base_xpath_expression)
         if base_xpath_expression not in xpath_expression_update_dict:
           xpath_expression_update_dict[base_xpath_expression] = \
                                    dict(xml=xupdated_node,

@@ -25,8 +25,8 @@
 #
 ##############################################################################
 
-from urllib import urlencode
-from urllib2 import urlopen
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.request import urlopen
 
 def OpenAMLogout(self, url, token):
   code = urlopen(url, urlencode({'subjectid':token})).getcode()
