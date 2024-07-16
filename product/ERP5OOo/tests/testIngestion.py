@@ -29,6 +29,7 @@
 #
 ##############################################################################
 
+import six
 import io
 import unittest
 import os
@@ -49,10 +50,8 @@ from zExceptions import BadRequest
 from zExceptions import Redirect
 import ZPublisher.HTTPRequest
 from unittest import expectedFailure
-import urllib
-import urllib2
-import httplib
-import urlparse
+import six.moves.http_client
+import six.moves.urllib.parse, six.moves.urllib.request
 import base64
 import mock
 
@@ -755,33 +754,50 @@ class TestIngestion(IngestionTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'doc',
                                  ['pdf', 'doc', 'rtf', 'txt', 'odt'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'doc',
-                                                 ['writer.html'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'doc',
+                                                   ['writer.html'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'doc', ['writer.html'])
 
   def stepCheckSpreadsheetDocumentExportList(self, sequence=None,
                                              sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'xls', ['csv', 'xls', 'ods', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'xls',
-                                 ['calc.html', 'calc.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'xls',
+                                   ['calc.html', 'calc.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'xls', ['calc.html', 'calc.pdf'])
 
   def stepCheckPresentationDocumentExportList(self, sequence=None,
                                               sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'ppt', ['ppt', 'odp', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
-                                                 'ppt', ['impr.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
+                                                   'ppt', ['impr.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'ppt', ['impr.pdf'])
 
   def stepCheckDrawingDocumentExportList(self, sequence=None,
                                          sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'sxd', ['jpg', 'svg', 'pdf', 'odg'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
                                                  'sxd', ['draw.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'sxd', ['draw.pdf'])
+
 
   def stepExportPDF(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1504,6 +1520,7 @@ class TestIngestion(IngestionTestCase):
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1512,7 +1529,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1537,7 +1554,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1559,7 +1576,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
@@ -1585,6 +1602,7 @@ return result
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1593,7 +1611,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1615,7 +1633,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1637,7 +1655,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
@@ -1673,7 +1691,7 @@ context.setReference(reference)
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1695,7 +1713,7 @@ context.setReference(reference)
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1725,6 +1743,7 @@ context.setReference(reference)
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1733,7 +1752,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1764,7 +1783,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1786,7 +1805,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1816,6 +1835,7 @@ return result
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1824,7 +1844,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1853,7 +1873,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
 
@@ -1876,7 +1896,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1922,7 +1942,7 @@ return result
     module = self.portal.document_module
     document = module.newContent(portal_type='File',
                                  property_which_doesnot_exists='Foo',
-                                 data='Hello World!',
+                                 data=b'Hello World!',
                                  filename='toto.txt')
     document.publish()
     self.tic()
@@ -1937,7 +1957,7 @@ return result
     self.assertEqual(new_doc.getTitle(), 'One title')
     self.assertEqual(new_doc.getReference(), 'EFAA')
     self.assertEqual(new_doc.getValidationState(), 'published')
-    self.assertEqual(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getData(), b'Hello World!')
 
     # Migrate a document with url property
     url = new_doc.absolute_url() + '/getData'
@@ -1949,7 +1969,7 @@ return result
     new_doc = document.migratePortalType('File')
     self.assertEqual(new_doc.getPortalType(), 'File')
     self.assertEqual(new_doc.asURL(), url)
-    self.assertEqual(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getData(), b'Hello World!')
     self.assertEqual(new_doc.getValidationState(), 'submitted')
 
   def test_ContributionTool_isURLIngestionPermitted(self):
@@ -2028,25 +2048,25 @@ return result
     reference = 'ITISAREFERENCE'
 
     portal_url = self.portal.absolute_url()
-    url_split = urlparse.urlsplit(portal_url)
+    url_split = six.moves.urllib.parse.urlsplit(portal_url)
     url_dict = dict(protocol=url_split[0],
                     hostname=url_split[1])
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
-    request = urllib2.Request(push_url, urllib.urlencode(
-                                        {'data': data,
+    request = six.moves.urllib.request.Request(push_url, str2bytes(six.moves.urllib.parse.urlencode(
+                                        {'data:bytes': data,
                                         'filename': filename,
                                         'reference': reference,
                                         'disable_cookie_login__': 1,
-                                        }), headers={
+                                        })), headers={
        'Authorization': 'Basic %s' %
          bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
-    response = urllib2.urlopen(request)
-    self.assertEqual(response.getcode(), httplib.OK)
+    response = six.moves.urllib.request.urlopen(request)
+    self.assertEqual(response.getcode(), six.moves.http_client.OK)
     self.tic()
     document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
                                                          reference=reference)
@@ -2134,11 +2154,10 @@ class Base_contributeMixin:
       Test contributing an empty file and attaching it to context.
     """
     person = self.portal.person_module.newContent(portal_type='Person')
-    empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=io.BytesIO(),
-                            environ=dict(REQUEST_METHOD='PUT'),
-                            headers={"content-disposition":
-                              "attachment; filename=empty;"}))
+    class FileUpload(io.BytesIO):
+      filename = "empty"
+      headers = {}
+    empty_file_upload = FileUpload(b"")
 
     contributed_document = person.Base_contribute(
                                     portal_type=None,
@@ -2302,7 +2321,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF created successfully.'),
-      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(ret).query))
 
     document, = self.portal.document_module.contentValues()
     self.assertEqual(
@@ -2320,7 +2339,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF updated successfully.'),
-      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(ret).query))
 
     document, = self.portal.document_module.contentValues()
     self.assertEqual(
@@ -2344,10 +2363,10 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       self.assertIn(
         ('portal_status_message',
         'You are not allowed to update the existing document which has the same coordinates.'),
-        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+        six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
       self.assertIn(
         ('portal_status_level', 'error'),
-        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+        six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
 
       # document is not updated
       self.assertEqual(document.getData(), b'')
@@ -2381,10 +2400,10 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
         file=self.makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'You are not allowed to contribute document in that state.'),
-      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
     self.assertIn(
       ('portal_status_level', 'error'),
-      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
 
     # when using the script directly it's an error
     with self.assertRaisesRegex(

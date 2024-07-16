@@ -37,10 +37,7 @@ from pandas import *
 import six as _six
 from AccessControl.ZopeGuards import Unauthorized as _ZopeGuardsUnauthorized
 
-if _six.PY2:
-  from StringIO import StringIO as _StringIO
-else:
-  from io import StringIO as _StringIO
+from six.moves import cStringIO as _StringIO
 
 
 def _addRestrictedPandasReadFunction(function_name):
