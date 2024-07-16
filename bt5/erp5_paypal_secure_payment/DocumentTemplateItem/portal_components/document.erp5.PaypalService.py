@@ -33,6 +33,7 @@ from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Utils import ensure_list
 from erp5.component.interface.IPaymentService import IPaymentService
 
 @zope.interface.implementer(IPaymentService)
@@ -57,10 +58,7 @@ class PaypalService(XMLObject):
     """See Payment Service Interface Documentation"""
 
   def _getFieldList(self, paypal_dict):
-    field_list = []
-    for k,v in paypal_dict.iteritems():
-      field_list.append((k, v))
-    return field_list
+    return ensure_list(paypal_dict.items())
 
   def navigate(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""

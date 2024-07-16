@@ -50,10 +50,8 @@ from zExceptions import BadRequest
 from zExceptions import Redirect
 import ZPublisher.HTTPRequest
 from unittest import expectedFailure
-import urllib
-import urllib2
-import httplib
-import urlparse
+import six.moves.http_client
+import six.moves.urllib.parse, six.moves.urllib.request
 import base64
 import mock
 
@@ -2044,25 +2042,25 @@ return result
     reference = 'ITISAREFERENCE'
 
     portal_url = self.portal.absolute_url()
-    url_split = urlparse.urlsplit(portal_url)
+    url_split = six.moves.urllib.parse.urlsplit(portal_url)
     url_dict = dict(protocol=url_split[0],
                     hostname=url_split[1])
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
-    request = urllib2.Request(push_url, urllib.urlencode(
-                                        {'data': data,
+    request = six.moves.urllib.request.Request(push_url, str2bytes(six.moves.urllib.parse.urlencode(
+                                        {'data:bytes': data,
                                         'filename': filename,
                                         'reference': reference,
                                         'disable_cookie_login__': 1,
-                                        }), headers={
+                                        })), headers={
        'Authorization': 'Basic %s' %
          bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
-    response = urllib2.urlopen(request)
-    self.assertEqual(response.getcode(), httplib.OK)
+    response = six.moves.urllib.request.urlopen(request)
+    self.assertEqual(response.getcode(), six.moves.http_client.OK)
     self.tic()
     document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
                                                          reference=reference)
@@ -2318,7 +2316,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       file=makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF created successfully.'),
-      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(ret).query))
 
     document, = self.portal.document_module.contentValues()
     self.assertEqual(
@@ -2336,7 +2334,7 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       file=makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'PDF updated successfully.'),
-      urlparse.parse_qsl(urlparse.urlparse(ret).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(ret).query))
 
     document, = self.portal.document_module.contentValues()
     self.assertEqual(
@@ -2360,10 +2358,10 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
       self.assertIn(
         ('portal_status_message',
         'You are not allowed to update the existing document which has the same coordinates.'),
-        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+        six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
       self.assertIn(
         ('portal_status_level', 'error'),
-        urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+        six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
 
       # document is not updated
       self.assertEqual(document.getData(), b'')
@@ -2397,10 +2395,10 @@ class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
         file=makeFileUpload('TEST-en-002.pdf'))
     self.assertIn(
       ('portal_status_message', 'You are not allowed to contribute document in that state.'),
-      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
     self.assertIn(
       ('portal_status_level', 'error'),
-      urlparse.parse_qsl(urlparse.urlparse(str(ctx.exception)).query))
+      six.moves.urllib.parse.parse_qsl(six.moves.urllib.parse.urlparse(str(ctx.exception)).query))
 
     # when using the script directly it's an error
     with self.assertRaisesRegex(

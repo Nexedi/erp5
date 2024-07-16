@@ -2728,7 +2728,7 @@ foobar = foobar().f
     base = self.portal.getPath()
     for query in 'x:int=-24&y:int=66', 'x:int=41':
       path = '%s/TestExternalMethod?%s' % (base, query)
-      self.assertEqual(self.publish(path).getBody(), '42')
+      self.assertEqual(self.publish(path).getBody(), b'42')
 
     # Test from a Python Script
     createZODBPythonScript(self.portal.portal_skins.custom,
@@ -2773,7 +2773,7 @@ def foobar(self, a, b="portal_type"):
     cfg.extensions = tempfile.mkdtemp()
     try:
       with open(os.path.join(cfg.extensions, module + '.py'), "w") as f:
-        f.write("foobar = lambda **kw: sorted(kw.iteritems())")
+        f.write("foobar = lambda **kw: sorted(kw.items())")
       self.assertEqual(external_method(z=1, a=0), [('a', 0), ('z', 1)])
     finally:
       shutil.rmtree(cfg.extensions)
@@ -3180,7 +3180,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
-    self.assertNotIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertNotIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
     component.validate()
     self.tic()
@@ -3192,7 +3192,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
