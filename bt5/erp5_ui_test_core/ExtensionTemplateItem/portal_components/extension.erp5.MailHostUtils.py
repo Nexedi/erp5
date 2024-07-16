@@ -41,4 +41,4 @@ def setupDummyMailHost(self):
     cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
     pmc_init_of(cls)
   mailhost.reset()
-  return True
+  return "True" # In python2 returned value is passed to str(), not on python3

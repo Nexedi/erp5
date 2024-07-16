@@ -24,12 +24,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import six
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from erp5.component.document.Item import Item
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin
-
-import email
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 
 class InternetMessagePost(Item, MailMessageMixin):
 
@@ -43,7 +47,7 @@ class InternetMessagePost(Item, MailMessageMixin):
 
 
   def _getMessage(self):
-    return email.message_from_string(self.getData())
+    return message_from_bytes(self.getData())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'stripMessageId')
   def stripMessageId(self, message_id):
