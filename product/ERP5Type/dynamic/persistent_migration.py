@@ -42,6 +42,7 @@ from persistent import Persistent, wref
 from ZODB.serialize import ObjectWriter, ObjectReader
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base, TempBase, WorkflowMethod
+from zodbpickle import binary
 
 log = logging.getLogger('ERP5Type')
 log.trace = lambda *args, **kw: log.log(5, *args, **kw)
@@ -152,7 +153,7 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
   def persistent_id(self, obj):
     assert type(obj) is not Ghost
     oid = self.getOid(obj)
-    if type(oid) is str:
+    if isinstance(oid, binary):
       try:
         return self.oid_dict[oid]
       except KeyError:
