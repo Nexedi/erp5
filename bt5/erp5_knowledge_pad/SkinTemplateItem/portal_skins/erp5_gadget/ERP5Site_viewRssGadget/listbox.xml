@@ -247,7 +247,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (request.get(\'rss_link\') or \'\').encode(\'utf-8\')</string> </value>
+            <value> <string>python: (request.get(\'rss_link\') or \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>

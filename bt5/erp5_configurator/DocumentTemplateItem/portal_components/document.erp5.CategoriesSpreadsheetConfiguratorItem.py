@@ -27,17 +27,14 @@
 ##############################################################################
 
 import zope.interface
-from StringIO import StringIO
+import io
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
-
-
-class UnrestrictedStringIO(StringIO):
-  __allow_access_to_unprotected_subobjects__ = 1
+import six
 
 
 @zope.interface.implementer(IConfiguratorItem)
@@ -96,9 +93,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
               path = path[cat]
           edit_dict = category_info.copy()
           edit_dict.pop('path')
-          if 'id' in edit_dict.keys():
-            edit_dict.pop('id')
-
+          edit_dict.pop('id', None)
           path.edit(**edit_dict)
           ## add to customer template
           business_configuration = self.getBusinessConfigurationValue()
@@ -118,7 +113,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       # TODO use a invalid_spreadsheet_error_handler to report invalid
       # spreadsheet messages (see http://svn.erp5.org?rev=24908&view=rev )
       aq_self._category_cache = self.Base_getCategoriesSpreadSheetMapping(
-                    UnrestrictedStringIO(self.getDefaultConfigurationSpreadsheetData()))
+                    io.BytesIO(self.getDefaultConfigurationSpreadsheetData()))
 
   security.declareProtected(Permissions.ModifyPortalContent,
                            'setDefaultConfigurationSpreadsheetFile')
@@ -151,7 +146,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     category_path_dict = {item['path']: item
       for item in cache[base_category_id]}
 
-    for path in category_path_dict.iterkeys():
+    for path in six.iterkeys(category_path_dict):
       # the first item in this list is the base category itself, so we skip it.
       if path == base_category_id:
         continue

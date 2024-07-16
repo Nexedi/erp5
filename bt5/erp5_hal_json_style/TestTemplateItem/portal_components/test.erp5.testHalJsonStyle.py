@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2002-2015 Nexedi SA and Contributors. All Rights Reserved.
+import six
 import transaction
 from zExceptions import Unauthorized
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -12,7 +13,7 @@ from ZPublisher.HTTPResponse import HTTPResponse
 
 import base64
 import DateTime
-import StringIO
+from six.moves import cStringIO as StringIO
 import json
 import re
 from six.moves.urllib.parse import quote, quote_plus
@@ -21,7 +22,7 @@ import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
 from Acquisition import aq_base
 from Products.ERP5Form.Selection import Selection, DomainSelection
-from Products.ERP5Type.Utils import str2unicode, unicode2str
+from Products.ERP5Type.Utils import bytes2str, str2unicode, unicode2str
 
 
 def changeSkin(skin_name):
@@ -118,7 +119,7 @@ def do_fake_request(request_method, headers=None, data=()):
   env['GATEWAY_INTERFACE']='CGI/1.1 '
   env['SCRIPT_NAME']='Main'
   env.update(headers)
-  body_stream = StringIO.StringIO()
+  body_stream = StringIO()
 
   # for some mysterious reason QUERY_STRING does not get parsed into data fields
   if data and request_method.upper() == 'GET':
@@ -1324,7 +1325,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasDocument_property_corrupted_encoding(self):
     document = self._makeDocument()
     # this sequence of bytes does not encode to UTF-8
-    document.setTitle('\xe9\xcf\xf3\xaf')
+    document.setTitle(b'\xe9\xcf\xf3\xaf')
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
     self.assertEqual(fake_request.RESPONSE.status, 200)
@@ -1332,9 +1333,10 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       "application/hal+json"
     )
     result_dict = json.loads(result)
-    self.assertEqual(result_dict['_embedded']['_view']['my_title']['default'], u'\ufffd\ufffd\ufffd')
-    self.assertEqual(result_dict['title'], u'\ufffd\ufffd\ufffd')
-    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], u'\ufffd\ufffd\ufffd')
+    expected = u'\ufffd\ufffd\ufffd' if six.PY2 else u'\udce9\udccf\udcf3\udcaf'
+    self.assertEqual(result_dict['_embedded']['_view']['my_title']['default'], expected)
+    self.assertEqual(result_dict['title'], expected)
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], expected)
 
 
 class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -2422,7 +2424,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
   @changeSkin('Hal')
   def test_getHateoas_property_corrupted_encoding(self, document):
     # this sequence of bytes does not encode to UTF-8
-    document.setTitle('\xe9\xcf\xf3\xaf')
+    document.setTitle(b'\xe9\xcf\xf3\xaf')
     # self.tic()
 
     fake_request = do_fake_request("GET")
@@ -2439,7 +2441,9 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     result_dict = json.loads(result)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
-    self.assertEqual(result_dict['_embedded']['contents'][0]["title"], u'\ufffd\ufffd\ufffd')
+    self.assertEqual(
+      result_dict['_embedded']['contents'][0]["title"],
+      u'\ufffd\ufffd\ufffd' if six.PY2 else u'\udce9\udccf\udcf3\udcaf')
 
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -3183,11 +3187,11 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     ))
     fake_portal = replace_request(fake_request, self.portal)
 
-    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+    result = bytes2str(fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    )
+    ))
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
@@ -3247,11 +3251,11 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     ))
     fake_portal = replace_request(fake_request, self.portal)
 
-    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+    result = bytes2str(fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    )
+    ))
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
