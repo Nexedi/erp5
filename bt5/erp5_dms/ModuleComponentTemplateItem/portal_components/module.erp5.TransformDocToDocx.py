@@ -24,7 +24,7 @@ class DocToDocx:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     doc = OOOdCommandTransform(context, filename, data, self.inputs[0])
     docx = doc.convertTo('docx')
     if cache is not None:

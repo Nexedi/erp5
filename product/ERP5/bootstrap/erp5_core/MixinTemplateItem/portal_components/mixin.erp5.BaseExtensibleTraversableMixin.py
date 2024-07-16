@@ -28,7 +28,11 @@
 ##############################################################################
 
 from warnings import warn
-from base64 import decodestring
+import six
+if six.PY2:
+  from base64 import decodestring as decodebytes
+else:
+  from base64 import decodebytes
 
 from zLOG import LOG
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -106,7 +110,7 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixin):
                 # this logic is copied from identify() in
                 # AccessControl.User.BasicUserFolder.
                 if auth and auth.lower().startswith('basic '):
-                  name = decodestring(auth.split(' ')[-1]).split(':', 1)[0]
+                  name = decodebytes(auth.split(' ')[-1].encode()).decode().split(':', 1)[0]
               if name is not None:
                 user = portal_membership._huntUser(name, self)
               else:

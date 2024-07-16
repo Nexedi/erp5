@@ -48,7 +48,7 @@ class ShaDirMixin(object):
     self.portal = self.getPortal()
 
     self.key = 'mykey' + str(random.random())
-    self.file_content = 'This is the content.'
+    self.file_content = b'This is the content.'
     self.file_sha512sum = hashlib.sha512(self.file_content).hexdigest()
     self.distribution = 'pypi'
     self.creation_date = DateTime()
