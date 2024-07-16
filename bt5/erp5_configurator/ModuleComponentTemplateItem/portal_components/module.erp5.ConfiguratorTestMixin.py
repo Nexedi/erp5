@@ -341,9 +341,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     # title is translated here
     title = account_business_configuration_item.getTitle()
-    self.assertIn(title, ('Capital', 'Gezeichnetes Kapital',
-        '\xd0\xa3\xd1\x81\xd1\x82\xd0\xb0\xd0\xb2\xd0\xbd\xd1\x8b\xd0\xb9 ' \
-                  '\xd0\xba\xd0\xb0\xd0\xbf\xd0\xb8\xd1\x82\xd0\xb0\xd0\xbb'))
+    self.assertIn(title, ('Capital', 'Gezeichnetes Kapital', 'Уставный капитал'))
 
     # 4. An accounting period configuration item
     accounting_period_configuration_item = \

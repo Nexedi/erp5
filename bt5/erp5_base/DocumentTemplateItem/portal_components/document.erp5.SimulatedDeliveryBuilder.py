@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.mixin.BuilderMixin import BuilderMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
+import six
 
 
 class SimulatedDeliveryBuilder(BuilderMixin):
@@ -202,7 +203,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     if property_dict in (None, {}):
       return
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
-    for (prop, value) in property_dict.iteritems():
+    for (prop, value) in six.iteritems(property_dict):
       delivery.setPropertyList(prop, value)
 
     # Try to remove existing properties/categories from Movements that
