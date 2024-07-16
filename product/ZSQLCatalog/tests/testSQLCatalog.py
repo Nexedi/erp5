@@ -120,7 +120,7 @@ class ReferenceQuery:
         return False
       other_query_list = other.query_list[:]
       for subquery in self.args:
-        for other_query_id in xrange(len(other_query_list)):
+        for other_query_id in range(len(other_query_list)):
           other_query = other_query_list[other_query_id]
           if subquery == other_query:
             other_query_list.pop(other_query_id)

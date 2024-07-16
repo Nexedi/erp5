@@ -73,6 +73,7 @@ from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
 import PyPDF2
+from six.moves import range
 from OFS.Image import Pdata
 
 QUIET = 0
@@ -1974,12 +1975,12 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
     credential = '%s:%s' % (self.manager_username, self.manager_password)
     tested_list = []
-    frame_list = range(pages_number)
+    frame_list = list(range(pages_number))
     # assume that ZServer is configured with 4 Threads
     conversion_per_tread = pages_number / 4
     while frame_list:
       local_frame_list = [frame_list.pop() for i in\
-                            xrange(min(conversion_per_tread, len(frame_list)))]
+                            range(min(conversion_per_tread, len(frame_list)))]
       instance = ThreadWrappedConverter(self.publish, document.getPath(),
                                         local_frame_list, credential)
       tested_list.append(instance)
@@ -1997,7 +1998,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                   'resolution': None}
 
     result_list = []
-    for i in xrange(pages_number):
+    for i in range(pages_number):
       # all conversions should succeeded and stored in cache storage
       convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
