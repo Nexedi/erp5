@@ -90,6 +90,7 @@ from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
 from six.moves.urllib.parse import quote, unquote, urlparse
 from difflib import unified_diff
+from importlib import import_module
 import posixpath
 import transaction
 import inspect
@@ -6858,9 +6859,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             if component_portal_type in ('Document Component',
                                          'Tool Component'):
               try:
-                klass = getattr(
-                  __import__(source_reference, {}, {}, [source_reference]),
-                  subsubmodule_name)
+                klass = getattr(import_module(source_reference), subsubmodule_name)
               except ImportError as e:
                 LOG("BusinessTemplate", WARNING,
                     "Skipping %s: Cannot be imported (%s)" % (filepath, e),
@@ -6890,7 +6889,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               # Generally: foo_bar.py => IFooBar, but to avoid quirks (such as
               # 'sql_foo.py' => 'ISQLFoo'), get the Interface class __name__
               try:
-                interface_module = __import__(source_reference, {}, {}, source_reference)
+                interface_module = import_module(source_reference)
               except ImportError as e:
                 LOG("BusinessTemplate", WARNING,
                     "Skipping %s: Cannot be imported (%s)" % (filepath, e),
@@ -6919,7 +6918,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             # TODO-arnau: Refactor with 'Interface Component'
             elif component_portal_type == 'Mixin Component':
               try:
-                mixin_module = __import__(source_reference, {}, {}, source_reference)
+                mixin_module = import_module(source_reference)
               except ImportError as e:
                 LOG("BusinessTemplate", WARNING,
                     "Skipping %s: Cannot be imported (%s)" % (filepath, e),

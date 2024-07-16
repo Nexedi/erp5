@@ -23,6 +23,7 @@ import six
 import sys
 import types
 import warnings
+import importlib
 from Products.ERP5Type import IS_ZOPE2
 
 # TODO: make sure that trying to use it does not import isort, because the
@@ -245,10 +246,7 @@ def _getattr(self, name, *args, **kw):
                 # XXX actually maybe we don't need this branch at all on py3
             ):
             raise
-        real_module = __import__(
-            self.name,
-            fromlist=[self.name] if six.PY2 else [name],
-            level=0)
+        real_module = importlib.import_module(self.name)
         try:
             attr = getattr(real_module, name)
         except AttributeError:
@@ -462,7 +460,7 @@ def fail_hook_BTrees(modname):
     if modname not in _inspected_modules:
         try:
             modcode = build_stub(
-              __import__(modname, {}, {}, [modname], level=0),
+              importlib.import_module(modname),
               # Exclude all classes ending with 'Py' (no reason to not call the
               # C version and not part of public API anyway)
               identifier_re=r'^[A-Za-z_]\w*(?<!Py)$')
@@ -507,7 +505,7 @@ for filename in os.listdir(os.path.dirname(lxml.__file__)):
         module_name = 'lxml.' + filename.split('.', 1)[0]
         _register_module_extender_from_live_module(
             module_name,
-            __import__(module_name, fromlist=[module_name], level=0))
+            importlib.import_module(module_name))
 
 # Wendelin and XLTE are special namespace packages which pylint fails to recognize, and so
 # complains about things like `from wendelin.bigarray.array_zodb import ZBigArray`
@@ -528,7 +526,6 @@ def register_xpkg(pkgname):
                 return m
             MANAGER.register_transform(Module, xpkg_transform, lambda node: node.name == pkgname)
         else:
-            import importlib
             def fail_hook_xpkg(modname):
                 if modname.split('.')[0] == pkgname:
                     return MANAGER.ast_from_module(importlib.import_module(modname))

@@ -63,9 +63,10 @@ ACQUIRE_LOCAL_ROLE_GETTER_DICT = {
 
 
 def _importFilesystemClass(classpath):
+  from importlib import import_module
   try:
     module_path, class_name = classpath.rsplit('.', 1)
-    module = __import__(module_path, {}, {}, (module_path,))
+    module = import_module(module_path)
     klass = getattr(module, class_name)
 
     # XXX is this required? (here?)

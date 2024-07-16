@@ -55,15 +55,14 @@ handler_module_dict = {
   'sql' : "SQLConnection",
   'document' : "DocumentConnection",
 }
+from importlib import import_module
 for handler_id, module_id in handler_module_dict.iteritems():
   # Ignore non-functionnal plugins.
   # This is done to avoid adding strict dependencies.
   # Code relying on the presence of a plugin will fail upon
   # WebServiceTool.connect .
   try:
-    module = __import__(
-      'erp5.component.module.%s' % (module_id, ),
-      globals(), {}, [module_id])
+    module = import_module('erp5.component.module.' + module_id)
   except ImportError:
     LOG('WebServiceTool', WARNING,
         'Unable to import module %r. %r transport will not be available.' % \
