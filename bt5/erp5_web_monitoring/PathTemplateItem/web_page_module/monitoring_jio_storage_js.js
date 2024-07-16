@@ -1037,7 +1037,10 @@
           pushOPML(opml_list[i]);
         }
         if (has_failed) {
-          return context.notifySubmitted({
+          throw "Failed to import Configurations";
+        }
+        //TODO move this to sync gadget?
+          /*return context.notifySubmitted({
             message: "Failed to import Configurations",
             status: "error"
           });
@@ -1047,9 +1050,9 @@
           context.notifySubmitted({
             message: "Configuration Saved!",
             status: "success"
-          }),
-          push_queue //TODO CHECK
-        ]);
+          })
+        ]);*/
+        return push_queue;
       })
       .push(function () {
       })
