@@ -2379,7 +2379,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                       foo.getRegionList())
     # using relations to non existant objects will issue a warning in
     # event.log
-    self._catch_log_errors(ignored_level=sys.maxint)
+    self._catch_log_errors(ignored_level=sys.maxsize)
     self.assertEqual([beta],
                       foo.getRegionValueList())
     self.assertEqual([beta_title],

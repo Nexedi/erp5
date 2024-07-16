@@ -13,8 +13,12 @@
 #
 ##############################################################################
 
+import six
 import collections
-import email
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 import transaction
 from lxml import html
 from Products.ERP5Type.Utils import formatRFC822Headers
@@ -23,8 +27,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalContent import ResourceLockedError
 from zExceptions import Forbidden
-from six.moves import cStringIO as StringIO
-import six
+from io import BytesIO
 
 security = ModuleSecurityInfo(__name__)
 
@@ -50,7 +53,7 @@ class TextContent:
         raise Exception
     except Exception:
       # this is probably not html code, try rfc822 parsing
-      message = email.message_from_string(text)
+      message = message_from_bytes(text)
       return {k.capitalize(): '\n'.join(message.get_all(k))
               for k in message.keys()}
 
@@ -78,7 +81,7 @@ class TextContent:
       headers = self.parseHeadersFromText(body)
       content_type = REQUEST.get_header('Content-Type', '')
       headers.setdefault('content_type', content_type)
-      headers['file'] = StringIO(body)
+      headers['file'] = BytesIO(body)
       self._edit(**headers)
     except ResourceLockedError:
       transaction.abort()

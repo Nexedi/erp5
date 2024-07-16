@@ -32,7 +32,7 @@
   publication date is entirely up to you.
 """
 
-from Products.CMFCore.utils import getToolByName
+import six
 from Products.PythonScripts.standard import html_quote
 
 items = []
@@ -72,7 +72,7 @@ for line in line_list:
     rss_item_dict[header] = value
   # build xml from dict (we have to do it here because we need to manipulate tag names
   rss_item_string = ''
-  for key, value in rss_item_dict.items():
+  for key, value in six.iteritems(rss_item_dict):
     if key == 'pubdate':
       # pubDate should be returned unconditionally as 'pubDate'
       key = 'pubDate'
@@ -85,7 +85,7 @@ for line in line_list:
   # if required fields not present in listbox columns as label we
   # added theirs appropriate xml dynamically
   for required_field in required_field_list:
-    if required_field not in rss_item_dict.keys():
+    if required_field not in rss_item_dict:
       field_data = ''
       if required_field == 'title':
         if hasattr(line.getBrain(), 'Title'):
