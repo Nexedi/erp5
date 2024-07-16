@@ -61,6 +61,7 @@ class TestLocalizer(ERP5TypeTestCase):
     self.assertNotIn(u'This is 1€.'.encode('utf-8'), self.message_catalog._messages)
     self.assertIn(u'This is 1€.', self.message_catalog._messages)
 
+  @unittest.skipIf(six.PY3, "only makes sense for py2")
   def test_migrated_non_ascii_msgid(self):
     # register str key to simulate existing message that was already
     # created by old Localizer.
