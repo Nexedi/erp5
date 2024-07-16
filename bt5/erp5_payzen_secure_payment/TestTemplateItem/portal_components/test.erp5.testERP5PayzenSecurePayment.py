@@ -26,6 +26,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import str2bytes
 import hashlib
 import DateTime
 import random
@@ -115,19 +116,19 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
   def test_getSignature_dict_simple(self):
     self.assertEqual(
       self.service._getSignature({'key': 'value'}, ['key']),
-      sha1('value+' + self.service_password)
+      sha1(str2bytes('value+' + self.service_password))
     )
 
   def test_getSignature_dict_key_sort(self):
     self.assertEqual(
       self.service._getSignature({'key': 'value', 'key1': 'value1'}, ['key',
         'key1']),
-      sha1('value+value1+' + self.service_password)
+      sha1(str2bytes('value+value1+' + self.service_password))
     )
     self.assertEqual(
       self.service._getSignature({'key': 'value', 'key1': 'value1'}, ['key1',
         'key']),
-      sha1('value1+value+' + self.service_password)
+      sha1(str2bytes('value1+value+' + self.service_password))
     )
 
   def test_getSignature_dict_date_as_datetime(self):
@@ -135,7 +136,7 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
     d = {'key': now}
     self.assertEqual(
       self.service._getSignature(d, ['key']),
-      sha1(now.strftime('%Y%m%d') + '+' + self.service_password)
+      sha1(str2bytes(now.strftime('%Y%m%d') + '+' + self.service_password))
     )
     # dict was updated
     self.assertEqual(d['key'], now)
@@ -158,8 +159,8 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
     self.portal.changeSkin(None)
     try:
       result = self.service.navigate(pt_id, {"key": 'value'})
-      signature = sha1('value+INTERACTIVE+ERP5+TEST+REGISTER+SINGLE+0123456+V2+'
-        + self.service_password)
+      signature = sha1(str2bytes('value+INTERACTIVE+ERP5+TEST+REGISTER+SINGLE+0123456+V2+'
+        + self.service_password))
       self.assertEqual(result, """key=key value=value
 key=signature value=%s
 key=vads_action_mode value=INTERACTIVE

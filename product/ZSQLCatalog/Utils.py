@@ -24,6 +24,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import six
+from Products.ERP5Type.Utils import bytes2str
 
 def sqlquote(value):
   # See MySQL documentation of string literals.
@@ -31,6 +33,8 @@ def sqlquote(value):
   # (ex: ZMySQLDA.DA.Connection.sql_quote__).
   # Duplicating such code is error-prone, and makes us rely on a specific SQL
   # dialect...
+  if six.PY3 and isinstance(value, bytes):
+    value = bytes2str(value)
   return "'" + (value
     .replace('\x5c', r'\\')
     .replace('\x00', r'\0')

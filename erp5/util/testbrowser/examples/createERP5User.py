@@ -43,9 +43,10 @@ post_data_format = "submit=Add&roles:list=Manager&roles:list=Owner&name=" \
 zope_url = url.rsplit('/', 2)[0]
 
 import base64
-browser.mech_browser.addheaders.append(
+from Products.ERP5Type.Utils import bytes2str, str2bytes
+browser.mech_browser.addheaders.append(bytes2str(
     ('Authorization',
-     'Basic %s' % base64.encodestring('%s:%s' % (username, password))))
+     'Basic %s' % base64.encodebytes(str2bytes('%s:%s' % (username, password))))))
 
 for index in range(user_nbr):
   new_username = "%s%d" % (new_username_prefix, index)
