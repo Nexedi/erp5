@@ -1,5 +1,6 @@
 from Products.PythonScripts.standard import Object
 from json import loads
+import six
 
 portal = context.getPortalObject()
 
@@ -11,20 +12,20 @@ active_process_path = request.get('active_process')
 def _addDict(global_dict, local_dict, only_amount=False):
   if report_group_by == "both" and not only_amount:
     # we have client -> product -> period -> amount
-    for local_title, local_product_dict in local_dict.iteritems():
+    for local_title, local_product_dict in six.iteritems(local_dict):
       product_dict = global_dict.setdefault(local_title, {})
-      for local_product, local_period_dict in local_product_dict.iteritems():
+      for local_product, local_period_dict in six.iteritems(local_product_dict):
         period_dict = product_dict.setdefault(local_product, {})
-        for period, local_amount_dict in local_period_dict.iteritems():
+        for period, local_amount_dict in six.iteritems(local_period_dict):
           amount_dict = period_dict.setdefault(period, {'amount' : 0, 'quantity' : 0, 'quantity_unit' : ''})
           amount_dict['amount'] = amount_dict['amount'] + local_amount_dict['amount']
           amount_dict['quantity'] = amount_dict['quantity'] + local_amount_dict['quantity']
           amount_dict['quantity_unit'] = local_amount_dict['quantity_unit']
   else:
     # We have client or product -> period -> amount
-    for local_title, local_period_dict in local_dict.iteritems():
+    for local_title, local_period_dict in six.iteritems(local_dict):
       period_dict = global_dict.setdefault(local_title, {})
-      for period, local_amount_dict in local_period_dict.iteritems():
+      for period, local_amount_dict in six.iteritems(local_period_dict):
         amount_dict = period_dict.setdefault(period, {'amount' : 0, 'quantity' : 0, 'quantity_unit' : ''})
         amount_dict['amount'] = amount_dict['amount'] + local_amount_dict['amount']
         if not only_amount:

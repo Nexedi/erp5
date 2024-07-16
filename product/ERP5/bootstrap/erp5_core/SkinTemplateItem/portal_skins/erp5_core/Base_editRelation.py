@@ -24,7 +24,7 @@ else:
 
 request = container.REQUEST
 request_form = request.form
-for k in request_form.keys():
+for k in list(request_form):
   del request_form[k]
 
 request.form.update(old_request)
