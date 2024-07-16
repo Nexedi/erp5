@@ -47,7 +47,10 @@ DEFAULT_CACHE_FACTORY = 'erp5_ui_long'
 
 from zLOG import LOG
 
-NBSP_UTF8 = u'\xA0'.encode('utf-8')
+if six.PY2:
+  NBSP_UTF8 = u'\xA0'.encode('utf-8')
+else:
+  NBSP_UTF8 = '\xA0'
 
 manage_addCategoryForm=DTMLFile('dtml/category_add', globals())
 

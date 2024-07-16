@@ -15,17 +15,20 @@
 """ ERP5Security product initialization.
 """
 from __future__ import absolute_import
+import six
 
 from copy import deepcopy
 from collections import defaultdict
-from base64 import encodestring
+if six.PY2:
+  from base64 import encodestring as encodebytes
+else:
+  from base64 import encodebytes
 
 from Acquisition import aq_inner, aq_parent
 from AccessControl.Permissions import manage_users as ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.ERP5Type import IS_ZOPE2
-import six
 
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'
@@ -77,7 +80,7 @@ if IS_ZOPE2: # BBB
     except AttributeError:
       pass
     else:
-      medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
+      medusa_headers['authorization'] = 'Basic %s' % encodebytes(('%s:' % username).encode()).decode().rstrip()
   else:
     REQUEST._orig_env['REMOTE_USER'] = username
 else: # zope4
