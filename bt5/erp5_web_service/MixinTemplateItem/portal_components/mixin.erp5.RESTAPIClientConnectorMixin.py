@@ -26,9 +26,7 @@
 #
 ##############################################################################
 import time
-import urlparse
 import ssl
-import httplib
 import json
 from Products.ERP5Type.Timeout import getTimeLeft
 from contextlib import contextmanager
@@ -39,6 +37,8 @@ from Products.ERP5Type.Timeout import Deadline, TimeoutReachedError
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from zLOG import LOG, ERROR
 from six import string_types as basestring
+from six.moves.http_client import HTTPSConnection
+from six.moves.urllib.parse import urlparse
 
 def isJson(header_dict):
   return header_dict.get('content-type', '').split(';', 1)[0] == 'application/json'
@@ -106,7 +106,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       header_dict['content-type'] = 'application/json'
       body = json.dumps(body)
     plain_url = self.getBaseUrl().rstrip('/') + '/' + path.lstrip('/')
-    parsed_url = urlparse.urlparse(plain_url)
+    parsed_url = urlparse(plain_url)
     ssl_context = ssl.create_default_context(
       cadata=self.getCaCertificatePem(),
     )
@@ -116,10 +116,9 @@ class RESTAPIClientConnectorMixin(XMLObject):
     if bind_address:
       bind_address = (bind_address, 0)
     time_left_before_timeout = getTimeLeft()
-    http_connection = httplib.HTTPSConnection(
+    http_connection = HTTPSConnection(
       host=parsed_url.hostname,
       port=parsed_url.port,
-      strict=True,
       timeout=time_left_before_timeout,
       source_address=bind_address,
       context=ssl_context,
@@ -136,7 +135,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       http_response = http_connection.getresponse()
       request_stop_time = time.time()
     except ssl.SSLError as exc:
-      if 'The read operation timed out' == exc.message:
+      if 'The read operation timed out' == exc.args[0]:
         LOG(__name__, ERROR, "Call to %s %s raised Timeout (%ss)" %(
           method, path, round(time_left_before_timeout, 6)
         ), error=True)
@@ -185,7 +184,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       with time_tracker('call'), Deadline(timeout):
         # Limit numbers of retries, in case the authentication API succeeds
         # but the token is not usable.
-        for _ in xrange(2):
+        for _ in range(2):
           with time_tracker('token'):
             access_token = self._getAccessToken()
             if access_token is not None:

@@ -25,7 +25,10 @@
 #
 ##############################################################################
 
-from HTMLParser import HTMLParser
+import six
+from six.moves.html_parser import HTMLParser
+
+
 class HtmlParseHelper(HTMLParser):
   """
   Listens to all the HTMLParser methods and push results in a list of tuple.
@@ -131,5 +134,12 @@ def parseCssForUrl(text):
       result.append(("data", data))
   return result
 
-def unescape(self, html):
-  return HTMLParser().unescape(html)
+# pylint:disable=no-name-in-module
+if six.PY2:
+  def unescape(self, html):
+    return HTMLParser().unescape(html)
+else:
+  from html import unescape as html_unescape
+  def unescape(self, html):
+    return html_unescape(html)
+# pylint:enable=no-name-in-module

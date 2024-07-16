@@ -6,6 +6,7 @@ from zExceptions import ExceptionFormatter, Unauthorized
 
 from Products.CMFActivity.ActiveResult import ActiveResult
 from zLOG import LOG, INFO
+import six
 
 def dumpWorkflowChain(self, ignore_default=False,
                       ignore_id_set=None, keep_order=False, batch_mode=False):
@@ -92,7 +93,7 @@ def MessageCatalog_getMessageDict(self):
     Get Localizer's MessageCatalog instance messages.
   """
   d = {}
-  for k,v in self._messages.iteritems():
+  for k,v in six.iteritems(self._messages):
     d[k] = v
   return d
 
@@ -102,7 +103,7 @@ def MessageCatalog_getNotTranslatedMessageDict(self):
   """
   not_translated_message_dict = {}
   messages = MessageCatalog_getMessageDict(self)
-  for k, v in messages.iteritems():
+  for k, v in six.iteritems(messages):
     if not [x for x in v.values() if x]:
       not_translated_message_dict[k] = v
   return not_translated_message_dict

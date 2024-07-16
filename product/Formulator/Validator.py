@@ -517,7 +517,7 @@ class SelectionValidator(StringBaseValidator):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and isinstance(item_value, six.text_type):
+        if six.PY2 and field.get_value('unicode') and isinstance(item_value, six.text_type):
           str_value = item_value.encode(field.get_form_encoding())
         else:
           str_value = str(item_value)
@@ -863,9 +863,7 @@ class DateTimeValidator(Validator):
                             int(day),
                             hour,
                             minute, timezone))
-      # ugh, a host of string based exceptions (not since Zope 2.7)
-    except ('DateTimeError', 'Invalid Date Components', 'TimeError',
-            DateError, TimeError) :
+    except (DateError, TimeError):
       self.raise_error('not_datetime', field)
     # pass value through request in order to be restored in case if validation fail
     if getattr(REQUEST, 'form', None):
@@ -908,10 +906,14 @@ fullwidth_minus_character_list = (
     )
 def normalizeFullWidthNumber(value):
   try:
-    value = unicodedata.normalize('NFKD', value.decode('UTF8'))
+    if six.PY2:
+      value = value.decode('UTF8')
+    value = unicodedata.normalize('NFKD', value)
     if value[0] in fullwidth_minus_character_list:
       value = u'-' + value[1:]
     value = value.encode('ASCII', 'ignore')
+    if six.PY3:
+      value = value.decode()
   except UnicodeDecodeError:
     pass
   return value

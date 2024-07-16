@@ -16,14 +16,14 @@ from __future__ import print_function
 from threading import Thread
 from time import sleep
 from urllib import addinfourl
-from urllib import splithost
-from urllib import splituser
-from urllib import unquote
-from urllib import splittype
+from six.moves.urllib.parse import splithost
+from six.moves.urllib.parse import splituser
+from six.moves.urllib.parse import unquote
+from six.moves.urllib.parse import splittype
 import string
 
-from urllib import FancyURLopener
-from Cookie import SimpleCookie
+from six.moves.urllib.request import FancyURLopener
+from six.moves.http_cookies import SimpleCookie
 
 def main():
   max_thread = 7  # The number of thread we want by the same time
@@ -55,7 +55,7 @@ def main():
       print("thread: %i request: %i url: %s" % (i,request_number,url))
     else:
       for t in range(0,max_thread):
-        if threads[t].isAlive() == 0:
+        if threads[t].is_alive() == 0:
           url = '//user%i:user%i@localhost:9673%s?__ac_name=user%s&__ac_password=user%s' % \
                (t,t,list_url[i][:-1],t,t)
           threads[t] = Thread(target=checker[t].CheckUrl,kwargs={'url':url})
@@ -75,7 +75,7 @@ class URLOpener(FancyURLopener):
 
     def open_http(self, url, data=None):
         """Use HTTP protocol."""
-        import httplib
+        import six.moves.http_client
         user_passwd = None
         if type(url) is type(""):
             host, selector = splithost(url)
@@ -99,10 +99,10 @@ class URLOpener(FancyURLopener):
         if not host: raise IOError('http error', 'no host given')
         if user_passwd:
             import base64
-            auth = base64.encodestring(user_passwd).strip()
+            auth = base64.encodebytes(user_passwd).strip()
         else:
             auth = None
-        h = httplib.HTTP(host)
+        h = six.moves.http_client.HTTP(host)
         if data is not None:
             h.putrequest('POST', selector)
             h.putheader('Content-type', 'application/x-www-form-urlencoded')
@@ -142,7 +142,7 @@ class Checker(URLOpener):
     try:
       thread = Thread(target=self.SearchUrl,args=(url,))
       thread.start()
-      while thread.isAlive():
+      while thread.is_alive():
         sleep(0.5)
       print("Connection to %s went fine" % url)
     except IOError as err:

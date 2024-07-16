@@ -33,6 +33,7 @@ from Products.ERP5Type.TransactionalVariable import TransactionalResource
 from Products.ERP5.mixin.timer_service import TimerServiceMixin
 from AccessControl.SecurityManagement import newSecurityManager, \
   getSecurityManager, setSecurityManager
+import six
 
 # TODO: Current API was designed to avoid compability issues in case it is
 #       reimplemented using https://pypi.python.org/pypi/pyinotify
@@ -95,7 +96,7 @@ class InotifyTool(TimerServiceMixin, BaseTool):
                 update_state_dict[path] = new_state
                 events = [{'path': p, 'mask': IN_DELETE}
                   for p in set(state).difference(new_state)]
-                for p, m in new_state.iteritems():
+                for p, m in six.iteritems(new_state):
                   if p in state:
                     if m == state[p]:
                       continue
