@@ -1,5 +1,6 @@
 """Return a list of Report Section"""
 from Products.ERP5Form.Report import ReportSection
+from six.moves import range
 kw = {
   'path': context.getPhysicalPath(),
   'form_id': 'Foo_viewDummyListBox',
@@ -8,4 +9,4 @@ kw = {
 #  'selection_params': {},
   'temporary_selection': False,
 }
-return [ReportSection(**kw) for _ in xrange(3)]
+return [ReportSection(**kw) for _ in range(3)]

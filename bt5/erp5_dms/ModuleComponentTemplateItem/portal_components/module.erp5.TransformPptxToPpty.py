@@ -23,7 +23,7 @@ class PptxToPpty:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     pptx = OOOdCommandTransform(context, filename, data, self.inputs[0])
     ppty = pptx.convertTo('ppty')
     if cache is not None:
