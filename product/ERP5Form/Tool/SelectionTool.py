@@ -434,7 +434,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             selection_uid_dict[int(uid)] = 1
           except (ValueError, TypeError):
             selection_uid_dict[uid] = 1
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, list(selection_uid_dict), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -455,7 +455,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             if int(uid) in selection_uid_dict: del selection_uid_dict[int(uid)]
           except (ValueError, TypeError):
             if uid in selection_uid_dict: del selection_uid_dict[uid]
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, list(selection_uid_dict), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -1540,7 +1540,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def _getSelectionNameListFromContainer(self):
       user_id = self._getUserId()
       return list(set(self._getContainer().getSelectionNameList(user_id) +
-                      self.getTemporarySelectionDict().keys()))
+                      list(self.getTemporarySelectionDict())))
 
     def isAnonymous(self):
       return self._getUserId() == 'Anonymous User'
@@ -1605,7 +1605,7 @@ class TransactionalCacheContainer(MemcachedContainer):
 class PersistentMappingContainer(BaseContainer):
   def getSelectionNameList(self, user_id):
     try:
-      return self._container[user_id].keys()
+      return list(self._container[user_id])
     except KeyError:
       return []
 
