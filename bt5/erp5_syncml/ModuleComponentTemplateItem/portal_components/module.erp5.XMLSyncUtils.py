@@ -128,18 +128,19 @@ def getConduitByName(conduit_name):
   Conduit can also be defined as Extension to have it editable through the web, in this
   case its definition must be Extensions.<Conduit Module>
   """
+  from importlib import import_module
   if conduit_name.startswith('Products'):
     path = conduit_name
     conduit_name = conduit_name.split('.')[-1]
-    conduit_module = __import__(path, globals(), locals(), [''])
+    conduit_module = import_module(path)
   elif conduit_name.startswith('Extensions'):
-    conduit_module = __import__(conduit_name, globals(), locals(), [''])
+    conduit_module = import_module(conduit_name)
     conduit_name = conduit_name.split('.')[-1]
   elif conduit_name.startswith('extension.'):
-    conduit_module = __import__("erp5.component."+conduit_name, globals(), locals(), [''])
+    conduit_module = import_module("erp5.component." + conduit_name)
     conduit_name = conduit_name.split('.')[-1]
   else:
-    conduit_module = __import__('erp5.component.module.'+conduit_name, globals(), locals(), [''])
+    conduit_module = import_module('erp5.component.module.' + conduit_name)
   conduit_instance = getattr(conduit_module, conduit_name)()
   return conduit_instance
 

@@ -380,9 +380,9 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
     if source_reference is None or not source_reference.startswith('Products'):
       path = os.path.join(cls._getFilesystemPath(), reference + '.py')
     else:
+      from importlib import import_module
+      module_obj = import_module(source_reference)
       import inspect
-      module_obj = __import__(source_reference, globals(), {},
-                              level=0, fromlist=[source_reference])
       path = inspect.getsourcefile(module_obj)
 
     with open(path) as f:

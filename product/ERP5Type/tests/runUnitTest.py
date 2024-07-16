@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+from __future__ import absolute_import
 from __future__ import print_function
 import os
 import sys
@@ -298,10 +299,9 @@ class ERP5TypeTestLoader(unittest.TestLoader):
         self._loading_packages = set()
 
   def _importZodbTestComponent(self, name):
+    from importlib import import_module
     import erp5.component.test
-    module = __import__('erp5.component.test.' + name,
-                        fromlist=['erp5.component.test'],
-                        level=0)
+    module = import_module('erp5.component.test.' + name)
     try:
       self._test_component_ref_list.append(module)
     except AttributeError:

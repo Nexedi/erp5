@@ -1076,7 +1076,8 @@ def importLocalDocument(class_id, path=None, class_path=None):
   if class_path:
     assert path is None
     module_path = class_path.rsplit('.', 1)[0]
-    module = __import__(module_path, {}, {}, (module_path,))
+    from importlib import import_module
+    module = import_module(module_path)
     try:
       klass = getattr(module, class_id)
     except AttributeError:
