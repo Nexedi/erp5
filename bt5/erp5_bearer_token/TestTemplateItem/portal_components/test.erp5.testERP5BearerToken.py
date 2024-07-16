@@ -1,6 +1,7 @@
 # Copyright (c) 2002-2012 Nexedi SA and Contributors. All Rights Reserved.
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import str2bytes
 from DateTime import DateTime
 
 class TestERP5BearerToken(ERP5TypeTestCase):
@@ -107,8 +108,8 @@ class TestERP5BearerToken(ERP5TypeTestCase):
       'user-agent': self.portal.REQUEST.getHeader('User-Agent'),
       'remote-addr': self.portal.REQUEST.get('REMOTE_ADDR')
     }
-    hmac = self.portal.Base_getHMAC(self.portal.Base_getBearerTokenKey(), str(
-      token))
+    hmac = self.portal.Base_getHMAC(self.portal.Base_getBearerTokenKey(),
+                                    str2bytes(str(token)))
     self.portal.Base_setBearerToken(hmac, token)
     reference = self.getTokenCredential(self.portal.REQUEST)
     self.assertEqual(reference, None)

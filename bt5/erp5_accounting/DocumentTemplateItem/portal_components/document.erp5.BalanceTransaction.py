@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from UserDict import UserDict
+from six.moves import UserDict
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -43,22 +43,11 @@ class InventoryKey(UserDict):
     self.data = {}
     self.data.update(kw)
 
-  def clear(self):
+  def _raise_immutable(self, *args, **kw):
     raise TypeError('InventoryKey are immutable')
+  clear = pop = update = __delitem__ = __setitem__ = _raise_immutable
 
-  def pop(self, keys, *args):
-    raise TypeError('InventoryKey are immutable')
-
-  def update(self, dict=None, **kwargs): # pylint: disable=redefined-builtin
-    raise TypeError('InventoryKey are immutable')
-
-  def __delitem__(self, key):
-    raise TypeError('InventoryKey are immutable')
-
-  def __setitem__(self, key, item):
-    raise TypeError('InventoryKey are immutable')
-
-  def setdefault(self, key, failobj=None):
+  def setdefault(self, key, *args, **kwargs):
     if key in self.data:
       return self.data[key]
     raise TypeError('InventoryKey are immutable')

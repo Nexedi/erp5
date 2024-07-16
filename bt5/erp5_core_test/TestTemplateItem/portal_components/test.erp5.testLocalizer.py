@@ -32,6 +32,7 @@ import six
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Utils import unicode2str
 from Persistence import PersistentMapping
 from zope.component.hooks import setSite
 
@@ -61,6 +62,7 @@ class TestLocalizer(ERP5TypeTestCase):
     self.assertNotIn(u'This is 1€.'.encode('utf-8'), self.message_catalog._messages)
     self.assertIn(u'This is 1€.', self.message_catalog._messages)
 
+  @unittest.skipIf(six.PY3, "only makes sense for py2")
   def test_migrated_non_ascii_msgid(self):
     # register str key to simulate existing message that was already
     # created by old Localizer.
@@ -208,8 +210,10 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     # zope.i18n.translate and sets 'default' to 'message' before passing it to
     # MessageCatalog (Localizer.erp5_ui.translate)
     self.assertEqual(message, self.portal.Base_translateString(message))
-    self.assertEqual(message,
-                      self.portal.Localizer.translate('ui', message).encode('utf-8'))
+    translated = self.portal.Localizer.translate('ui', message)
+    if six.PY2:
+      translated = unicode2str(translated)
+    self.assertEqual(message, translated)
 
     # default=None, thus 'message' was previously stripped before being set as
     # 'default' value (MessageCatalog.gettext)

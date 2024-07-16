@@ -38,8 +38,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from .Selection import Selection, DomainSelection
 from .Tool.SelectionTool import createFolderMixInPageSelectionMethod
-from Products.ERP5Type.Utils import getPath
-from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath, str2bytes, bytes2str
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
@@ -106,7 +105,7 @@ class CatalogMethodWrapper(MethodWrapper):
     # XXX: I'm not sure if this filtering really belongs to here.
     # It is probably needed at a more generic level (Forms ? Selection ?), or
     # even a more specific one (limited to HTML ?)...
-    for key, value in kw.items():
+    for key, value in ensure_list(kw.items()):
       if value == '':
         kw.pop(key)
     return getattr(self.context, self.method_name)(*args, **kw)
@@ -706,7 +705,7 @@ class ListBoxRenderer:
     """Return the title. Make sure that it is in unicode.
     """
     if six.PY2:
-      return unicode(self.field.get_value('title'), self.getEncoding())
+      return six.text_type(self.field.get_value('title'), self.getEncoding())
     else:
       return self.field.get_value('title')
 
@@ -898,7 +897,7 @@ class ListBoxRenderer:
     """
     columns = self.field.get_value('columns')
     if six.PY2:
-      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in columns]
+      return [(str(c[0]), six.text_type(c[1], self.getEncoding())) for c in columns]
     else:
       return columns
 
@@ -910,7 +909,7 @@ class ListBoxRenderer:
     all_column_list = list(self.getColumnList())
     all_column_id_set = {c[0] for c in all_column_list}
     if six.PY2:
-      all_column_list.extend((str(c[0]), unicode(c[1], self.getEncoding()))
+      all_column_list.extend((str(c[0]), six.text_type(c[1], self.getEncoding()))
                              for c in self.field.get_value('all_columns')
                              if c[0] not in all_column_id_set)
     else:
@@ -932,7 +931,7 @@ class ListBoxRenderer:
     stat_columns = self.field.get_value('stat_columns')
     if stat_columns:
       if six.PY2:
-        stat_column_list = [(str(c[0]), unicode(c[1], self.getEncoding())) for c in stat_columns]
+        stat_column_list = [(str(c[0]), six.text_type(c[1], self.getEncoding())) for c in stat_columns]
       else:
         stat_column_list = stat_columns
     else:
@@ -965,7 +964,7 @@ class ListBoxRenderer:
     """
     domain_root_list = self.field.get_value('domain_root_list')
     if six.PY2:
-      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in domain_root_list]
+      return [(str(c[0]), six.text_type(c[1], self.getEncoding())) for c in domain_root_list]
     else:
       return domain_root_list
 
@@ -975,7 +974,7 @@ class ListBoxRenderer:
     """
     report_root_list = self.field.get_value('report_root_list')
     if six.PY2:
-      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in report_root_list]
+      return [(str(c[0]), six.text_type(c[1], self.getEncoding())) for c in report_root_list]
     else:
       return report_root_list
 
@@ -985,7 +984,7 @@ class ListBoxRenderer:
     titles are in unicode"""
     display_style_list = self.field.get_value('display_style_list')
     if six.PY2:
-      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in \
+      return [(str(c[0]), six.text_type(c[1], self.getEncoding())) for c in \
                                                       display_style_list]
     else:
       return display_style_list
@@ -1258,7 +1257,7 @@ class ListBoxRenderer:
         params.setdefault('meta_type', meta_type_list)
 
       # Remove FileUpload parameters
-      for k, v in params.items():
+      for k, v in ensure_list(params.items()):
         if k == "listbox":
           # listbox can also contain useless parameters
           new_list = []
@@ -1752,10 +1751,10 @@ class ListBoxRenderer:
 
       if not isinstance(processed_value, six.text_type):
         if six.PY2:
-          processed_value = unicode(str(processed_value), self.getEncoding(), 'replace')
+          processed_value = six.text_type(str(processed_value), self.getEncoding(), 'replace')
         else:
-          processed_value = str(processed_value).encode(
-            self.getEncoding(), 'replace').decode()
+          processed_value = bytes2str(
+            str2bytes(str(processed_value), self.getEncoding(), 'replace'))
 
       value_list.append((original_value, processed_value))
 
@@ -2382,7 +2381,7 @@ class ListBoxRendererLine:
         processed_value = u''
       elif not isinstance(processed_value, six.text_type):
         if six.PY2:
-          processed_value = unicode(str(processed_value), renderer.getEncoding(), 'replace')
+          processed_value = six.text_type(str(processed_value), renderer.getEncoding(), 'replace')
         else:
           processed_value = str(processed_value).encode(
             renderer.getEncoding(), 'replace').decode()
@@ -2717,7 +2716,10 @@ class ListBoxListRenderer(ListBoxRenderer):
     title_listboxline = ListBoxLine()
     title_listboxline.markTitleLine()
     for c in self.getSelectedColumnList():
-      title_listboxline.addColumn(c[0], c[1].encode(self.getEncoding()))
+      if six.PY2:
+        title_listboxline.addColumn(c[0], c[1].encode(self.getEncoding()))
+      else:
+        title_listboxline.addColumn(c[0], c[1])
     listboxline_list.append(title_listboxline)
 
     # Obtain the list of lines.
@@ -2743,7 +2745,7 @@ class ListBoxListRenderer(ListBoxRenderer):
         listboxline.checkLine(uid in checked_uid_set)
 
       for (original_value, processed_value), (sql, title) in zip(line.getValueList(), self.getSelectedColumnList()):
-        if isinstance(original_value, six.text_type):
+        if six.PY2 and isinstance(original_value, six.text_type):
           value = original_value.encode(self.getEncoding())
         else:
           value = original_value
@@ -2761,7 +2763,7 @@ class ListBoxListRenderer(ListBoxRenderer):
       stat_listboxline.markStatLine()
 
       for (original_value, processed_value), (sql, title) in zip(self.getStatValueList(), self.getSelectedColumnList()):
-        if isinstance(original_value, six.text_type):
+        if six.PY2 and isinstance(original_value, six.text_type):
           value = original_value.encode(self.getEncoding())
         else:
           value = original_value

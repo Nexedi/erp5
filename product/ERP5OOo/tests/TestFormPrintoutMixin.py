@@ -48,7 +48,7 @@ class TestFormPrintoutMixin(ERP5TypeTestCase):
     '''return odf document from the printout
     '''
     document_file = getattr(self.portal, printout_form.template, None)
-    document_file = StringIO(document_file).read()
+    document_file = bytes(document_file)
     if document_file is not None:
       return document_file
     raise ValueError ('%s template not found' % printout_form.template)

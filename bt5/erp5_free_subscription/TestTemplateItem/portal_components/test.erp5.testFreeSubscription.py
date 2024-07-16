@@ -308,12 +308,14 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepClickUnsubscriptionLinkInEvent(self, sequence=None, sequence_list=None,
       **kw):
-    from urllib import urlopen
+    import requests
     link = sequence['unsubscription_link']
     self.logout()
-    data = urlopen(link)
-    self.assertNotIn("Site Error", data)
-    self.assertNotIn("You do not have enough permissions to access this page", data.read())
+    response = requests.get(link)
+    self.assertEqual(200, response.status_code)
+    self.assertNotIn(b"Site Error", response.content)
+    self.assertNotIn(b"You do not have enough permissions to access this page",
+                     response.content)
     self.login()
 
   def stepCheckFreeSubscriptionRequestCreated(self, sequence=None, sequence_list=None,

@@ -28,11 +28,12 @@
 ##############################################################################
 
 import re
+import six
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import non_publishable
+from Products.ERP5Type.Utils import non_publishable, str2bytes
 from erp5.component.document.TextDocument import TextDocument
 from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
@@ -48,7 +49,11 @@ except ImportError:
     not installed yet.
     """
 
-from email import message_from_string
+if six.PY3:
+  from email import message_from_bytes
+else:
+  from email import message_from_string as message_from_bytes
+
 from email.utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
@@ -171,7 +176,9 @@ class EmailDocument(TextDocument, MailMessageMixin):
           content_type=self.getContentType(),
           embedded_file_list=self.getAggregateValueList(portal_type=document_type_list),
         )
-      result = message_from_string(data)
+        if six.PY3:
+          data = str2bytes(data)
+      result = message_from_bytes(data)
       self._v_message = result
     return result
 

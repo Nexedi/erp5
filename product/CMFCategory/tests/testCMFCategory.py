@@ -33,6 +33,7 @@ import unittest
 
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import ensure_list
 from Products.CMFCategory.Category import NBSP_UTF8
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -785,31 +786,31 @@ class TestCMFCategory(ERP5TypeTestCase):
         base_cat.getCategoryChildIndentedTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['\xc2\xa0\xc2\xa0The Sub Title', 'the_id/the_sub_id']],
+            [NBSP_UTF8 * 2 + 'The Sub Title', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedIndentedTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['\xc2\xa0\xc2\xa0The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            [NBSP_UTF8 * 2 + 'The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedCompactTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedLogicalPathItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Title/The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedCompactLogicalPathItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Title/The Süb Tïtle', 'the_id/the_sub_id']],
       )
 
   def test_CategoryChildTitleItemListFilterNodeFilterLeave(self):
@@ -1363,9 +1364,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(get(bc.id), list('aa'))
     _set(bc.id, list('baa'))
     self.assertEqual(get(bc.id), list('aba'))
-    _set(bc.id, map(base, 'bb'), 1)
+    _set(bc.id, ensure_list(map(base, 'bb')), 1)
     self.assertEqual(get(bc.id), list('bb'))
-    _set(bc.id, map(base, 'abb'), 1)
+    _set(bc.id, ensure_list(map(base, 'abb')), 1)
     self.assertEqual(get(bc.id), list('bab'))
     _set(bc.id, ())
 

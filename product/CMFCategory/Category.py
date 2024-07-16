@@ -40,14 +40,17 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
-from Products.ERP5Type.Utils import sortValueList
+from Products.ERP5Type.Utils import sortValueList, unicode2str
 from Products.ERP5Type.Cache import CachingMethod
 
 DEFAULT_CACHE_FACTORY = 'erp5_ui_long'
 
 from zLOG import LOG
 
-NBSP_UTF8 = u'\xA0'.encode('utf-8')
+if six.PY2:
+  NBSP_UTF8 = unicode2str(u'\xA0')
+else:
+  NBSP_UTF8 = '\xA0'
 
 manage_addCategoryForm=DTMLFile('dtml/category_add', globals())
 
