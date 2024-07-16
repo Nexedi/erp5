@@ -32,7 +32,7 @@ import os
 import quopri
 import functools
 import requests
-from StringIO import StringIO
+import io
 from lxml import etree
 from base64 import b64decode, b64encode
 from email.parser import Parser as EmailParser
@@ -46,11 +46,12 @@ from Products.ERP5Type.Utils import bytes2str, str2bytes
 from erp5.component.document.Document import ConversionError
 
 from PIL import Image
+from six.moves import range
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 IMAGE_COMPARE_TOLERANCE = 850
 
-XSMALL_SVG_IMAGE_ICON_DATA = '''<svg width="30" height="35" xmlns="http://www.w3.org/2000/svg">
+XSMALL_SVG_IMAGE_ICON_DATA = b'''<svg width="30" height="35" xmlns="http://www.w3.org/2000/svg">
   <path d="m5,5l15,0l0,5l5,0l0,20l-20,0z" stroke-width="1.5" stroke="gray" fill="skyblue"/>
   <path d="m6,29l8,-8l5,5l2,-2l3,3l0,2z" stroke-width="0" fill="green"/>
   <path d="m25,10l0,-1l-4,-4l-1,0l0,5z" stroke-width="1.5" stroke="gray" fill="white"/>
@@ -455,7 +456,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     policy_list = self.portal.caching_policy_manager.listPolicies()
     policy = [policy[1] for policy in policy_list\
                 if policy[0] == 'unauthenticated no language'][0]
-    for i in xrange(3):
+    for i in range(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))
@@ -518,15 +519,14 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertIn('<form', response.getBody()) # means the web_page
-                                      # is rendered in web_site context
+    # means the web_page is rendered in web_site context
+    self.assertIn(b'<form', response.getBody())
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertIn('<form', response.getBody()) # means the web_page
-                                      # is rendered in web_site context
+    self.assertIn(b'<form', response.getBody())
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference + '?format=pdf', credential)
@@ -632,7 +632,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertEqual(policy.getMaxAgeSecs(), 1200)
       self.assertEqual(policy.getStaleWhileRevalidateSecs(), 30)
       self.assertEqual(policy.getStaleIfErrorSecs(), 600)
-      for i in xrange(3):
+      for i in range(3):
         path = '/'.join((website_url,
                          reference,
                          'img%s.png' % i))
@@ -697,7 +697,7 @@ return True
                               credential)
       self.assertTrue(response.getHeader('content-type').startswith('text/html'))
       html = response.getBody()
-      self.assertTrue('<img' in html, html)
+      self.assertIn(b'<img', html)
 
       # find the img src
       img_list = etree.HTML(html).findall('.//img')
@@ -709,7 +709,7 @@ return True
                               credential)
       self.assertEqual(response.getHeader('content-type'), 'image/png')
       png = response.getBody()
-      self.assertTrue(png.startswith('\x89PNG'))
+      self.assertTrue(png.startswith(b'\x89PNG'))
 
     # then publish the document and access it anonymously by reference through
     # the web site
@@ -721,7 +721,7 @@ return True
               website.absolute_url_path(), document_reference))
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
-    self.assertTrue('<img' in html, html)
+    self.assertIn(b'<img', html)
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
@@ -733,7 +733,7 @@ return True
            website.absolute_url_path(), document_reference, src))
     self.assertEqual(response.getHeader('content-type'), 'image/png')
     png = response.getBody()
-    self.assertTrue(png.startswith('\x89PNG'))
+    self.assertTrue(png.startswith(b'\x89PNG'))
 
     # Now purge cache and let Anonymous user converting the document.
     self.login()
@@ -743,7 +743,7 @@ return True
                             website.absolute_url_path(), document_reference))
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
-    self.assertTrue('<img' in html, html)
+    self.assertIn(b'<img', html)
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
@@ -860,7 +860,7 @@ return True
     expected_image = self.makeFileUpload('%s.png' % filename)
 
     # Compare images and accept some minimal difference,
-    difference_value = compare_image(StringIO(converted_data), expected_image)
+    difference_value = compare_image(io.BytesIO(converted_data), expected_image)
     self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
       "so it failed to download the image. (%s >= %s)" % (difference_value,
@@ -873,7 +873,7 @@ return True
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
     upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
-    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE", image_url)
+    svg_content = upload_file.read().replace(b"REPLACE_THE_URL_HERE", image_url.encode())
 
     # Add image using data instead file this time as it is not the goal of
     # This test assert this topic.
@@ -890,7 +890,7 @@ return True
     expected_image = self.makeFileUpload('user-TESTSVG-CASE-URL.png')
 
     # Compare images and accept some minimal difference,
-    difference_value = compare_image(StringIO(converted_data), expected_image)
+    difference_value = compare_image(io.BytesIO(converted_data), expected_image)
     self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
       "so it failed to download the image. (%s >= %s)" % (difference_value,
@@ -934,13 +934,12 @@ return True
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
     upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
-    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
-                           "http://soidjsoidjqsoijdqsoidjqsdoijsqd.idjsijds/../user-XXX-XXX")
+    svg_content = upload_file.read().replace(b"REPLACE_THE_URL_HERE",
+                           b"http://soidjsoidjqsoijdqsoidjqsdoijsqd.idjsijds/../user-XXX-XXX")
 
     upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
-    svg2_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
-                           "https://www.erp5.com/usXXX-XXX")
-
+    svg2_content = upload_file.read().replace(b"REPLACE_THE_URL_HERE",
+                           b"https://www.erp5.com/usXXX-XXX")
 
     # Add image using data instead file this time as it is not the goal of
     # This test assert this topic.
@@ -1118,7 +1117,7 @@ return True
       "quoted-printable",
     )
     self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), html_data)
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), html_data)
 
   def test_WebPageAsEmbeddedHtml_pageWithLink(self):
     """Test convert one html page with links to embedded html file"""
@@ -1172,7 +1171,7 @@ return True
       "quoted-printable",
     )
     self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "".join([
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), "".join([
       "<p>Hello</p>",
       '<a href="%s//a.a/">aa</a>' % self.portal.absolute_url().split("/", 1)[0],
       '<a href="%s/b">bb</a>' % self.portal.absolute_url(),
@@ -1182,7 +1181,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, = message.get_payload()
     self.assertEqual(htmlmessage.get("Content-Location"), "https://hel.lo/world")
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "".join([
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), "".join([
       "<p>Hello</p>",
       '<a href="https://a.a/">aa</a>',
       '<a href="https://hel.lo/b">bb</a>',
@@ -1221,7 +1220,7 @@ return True
       "quoted-printable",
     )
     self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
-    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "<p>World</p>")
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()).decode(), "<p>World</p>")
 
   def test_WebPageAsEmbeddedHtml_pageWithMoreThanOneImage(self):
     """Test convert one html page with images to embedded html file"""
@@ -1245,8 +1244,8 @@ return True
     ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
     self.assertTrue(ehtml_data.startswith("".join([
       "<p>Hello</p>",
-      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA),
-      '<img src="data:image/png;base64,%s" />' % b64encode(XSMALL_PNG_IMAGE_ICON_DATA),
+      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA).decode(),
+      '<img src="data:image/png;base64,%s" />' % b64encode(XSMALL_PNG_IMAGE_ICON_DATA).decode(),
       '<img src="data:image/png;base64,'
     ])))
 
@@ -1273,7 +1272,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, svgmessage, pngmessage, svgtopngmessage = message.get_payload()
     self.assertEqual(
-      quopri.decodestring(htmlmessage.get_payload()),
+      quopri.decodestring(htmlmessage.get_payload()).decode(),
       "".join([
         "<p>Hello</p>",
         '<img src="%s?format=" />' % svg.absolute_url(),
@@ -1347,7 +1346,7 @@ return True
     self.assertEqual(ehtml_data, "".join([
       "<p>Hello</p>",
     ] + ([
-      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA),
+      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA).decode(),
     ] * 6) + [
       '<img src="%s//example.com/%s?format=" />' % (protocol, svg.getRelativeUrl()),
       '<img src="http://example.com/%s?format=" />' % svg.getRelativeUrl(),
@@ -1390,7 +1389,7 @@ return True
     self.assertEqual(len(message.get_payload()), 7)
     htmlmessage = message.get_payload()[0]
     self.assertEqual(
-      quopri.decodestring(htmlmessage.get_payload()),
+      quopri.decodestring(htmlmessage.get_payload()).decode(),
       "".join([
         "<p>Hello</p>",
         '<img src="%s/%s?format=" />' % (page.absolute_url(), svg.getRelativeUrl()),
@@ -1512,7 +1511,7 @@ return True
       ehtml_data,
       "<style>%s</style><p>Hello</p>" % (
         'body { background-image: url(data:image/svg+xml;base64,%s); }' % (
-          b64encode(XSMALL_SVG_IMAGE_ICON_DATA))),
+          b64encode(XSMALL_SVG_IMAGE_ICON_DATA).decode())),
     )
 
   def test_WebPageAsMhtml_pageWithStyle(self):
@@ -1534,7 +1533,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, imagemessage = message.get_payload()
     self.assertEqual(
-      quopri.decodestring(htmlmessage.get_payload()),
+      quopri.decodestring(htmlmessage.get_payload()).decode(),
       "<style>%s</style><p>Hello</p>" % (
         "body { background-image: url(%s?format=); }" % (
           img.absolute_url())),
