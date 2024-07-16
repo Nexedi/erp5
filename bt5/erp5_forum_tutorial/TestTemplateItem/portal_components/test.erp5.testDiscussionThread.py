@@ -1,5 +1,5 @@
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-from httplib import OK as HTTP_OK
+from six.moves.http_client import OK as HTTP_OK
 
 class TestDiscussionThread(SecurityTestCase):
   """

@@ -1,6 +1,6 @@
 # coding: utf-8
 import unicodedata
-from cStringIO import StringIO
+from io import BytesIO
 import zipfile
 from Products.ERP5Type.Message import translateString
 
@@ -20,9 +20,11 @@ if test_compta_demat_compatibility:
   # https://github.com/DGFiP/Test-Compta-Demat/issues/39
   fec_file = unicodedata.normalize(
     'NFKD', fec_file.replace(u"€", "EUR")
-  ).encode('ascii', 'ignore')
+  ).encode(
+    'ascii', 'ignore'
+  ).decode('ascii')
 
-zipbuffer = StringIO()
+zipbuffer = BytesIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')
 zipfileobj = zipfile.ZipFile(zipbuffer, 'w', compression=zipfile.ZIP_DEFLATED)
 filename = 'FEC.xml'

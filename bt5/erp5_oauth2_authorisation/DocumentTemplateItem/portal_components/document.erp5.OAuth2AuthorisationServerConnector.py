@@ -31,8 +31,7 @@ from io import BytesIO
 import json
 from os import urandom
 from time import time
-import urllib
-import urlparse
+from six.moves.urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import uuid
 from cryptography.hazmat.backends import default_backend
 from cryptography import fernet
@@ -71,6 +70,7 @@ from DateTime import DateTime
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.UnrestrictedMethod import super_user
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Security.ERP5GroupManager import (
   disableCache as ERP5GroupManager_disableCache,
@@ -145,7 +145,7 @@ def substituteRequest(
   environ = request.environ
   inner_environ_dict = environ.copy()
   inner_environ_dict['REQUEST_METHOD'] = method
-  inner_environ_dict['QUERY_STRING'] = urllib.urlencode(query_list)
+  inner_environ_dict['QUERY_STRING'] = urlencode(query_list)
   if request._auth:
     inner_environ_dict['HTTP_AUTHORIZATION'] = request._auth
 
@@ -256,18 +256,18 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
         if is_local_client and self.__login_retry_url:
           # ...with a local resource server, redirect user agent to
           # the provided login URL.
-          split_login_retry_url = urlparse.urlsplit(self.__login_retry_url)
+          split_login_retry_url = urlsplit(self.__login_retry_url)
           return (
             (
               (
                 'Location',
-                urlparse.urlunsplit((
+                urlunsplit((
                   split_login_retry_url.scheme,
                   split_login_retry_url.netloc,
                   split_login_retry_url.path,
-                  urllib.urlencode([
+                  urlencode([
                     (x, y)
-                    for x, y in urlparse.parse_qsl(split_login_retry_url.query)
+                    for x, y in parse_qsl(split_login_retry_url.query)
                     if x != 'portal_status_message'
                   ] + [(
                     'portal_status_message',
@@ -299,7 +299,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
         credentials=credentials,
       )
       if authorization_status == 302 and is_local_client:
-        split_location = urlparse.urlsplit(authorization_header_dict['Location'])
+        split_location = urlsplit(authorization_header_dict['Location'])
         # XXX: to cut down on code complexity, this code has strong expectations on what location is.
         _, client_connector_id, method_id = split_location.path.rsplit('/', 2)
         if method_id != 'loggedIn':
@@ -307,11 +307,11 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
         client_connector_value = client_value.getParentValue().getParentValue()[client_connector_id]
         if client_connector_value.getPortalType() != 'OAuth2 Authorisation Client Connector':
           raise ValueError(split_location.path)
-        query_list = urlparse.parse_qsl(split_location.query)
+        query_list = parse_qsl(split_location.query)
         # Note: query string generation should not have produce any duplicate
         # entries, so convert into a dict for code simplicity.
         query_dict = {
-          x.encode('ascii'): y.encode('ascii')
+          ensure_ascii(x): ensure_ascii(y)
           for x, y in query_list
         }
         inner_response = HTTPResponse(stdout=None, stderr=None)
@@ -385,7 +385,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
             # Use the internal path back to us so it can be traversed to while
             # still in the just-authenticated request.
             (
-              self.__server_connector_path + '?' + urlparse.urlsplit(uri).query
+              self.__server_connector_path + '?' + urlsplit(uri).query
             ) if is_local_client else
             # Use the external URL back to us so user can be redirected to it,
             # as they are then authenticated over multiple requests.
@@ -407,8 +407,8 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
             login_form = neutral_context_value.login_form
           portal_status_message_list = [
             value
-            for name, value in urlparse.parse_qsl(
-              urlparse.urlsplit(came_from).query,
+            for name, value in parse_qsl(
+              urlsplit(came_from).query,
             )
             if name == 'portal_status_message'
           ]
@@ -763,8 +763,8 @@ class _ERP5RequestValidator(RequestValidator):
       # redirect_uri path, but it may be under an extra layer of VirtualHost Monster
       # magic.
       # Client is declared local, accept any redirect URI on our scheme and netloc.
-      split_my_url = urlparse.urlsplit(client_value.absolute_url())
-      split_redirect_uri = urlparse.urlsplit(redirect_uri)
+      split_my_url = urlsplit(client_value.absolute_url())
+      split_redirect_uri = urlsplit(redirect_uri)
       return (
         split_my_url.scheme == split_redirect_uri.scheme and
         split_my_url.netloc == split_redirect_uri.netloc
@@ -854,7 +854,7 @@ def _callEndpoint(endpoint, self, REQUEST):
   if request_body is None and content_type == 'application/x-www-form-urlencoded':
     # XXX: very imperfect, but should be good enough for OAuth2 usage:
     # no standard OAuth2 POST field should be marshalled by Zope.
-    request_body = urllib.urlencode([
+    request_body = urlencode([
       (x, y)
       for x, y in six.iteritems(REQUEST.form)
       if isinstance(y, six.string_types)
@@ -1028,7 +1028,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     multi_fernet = self.__getLoginRetryURLMultiFernet()
     # Retrieve posted field, validate signature and extract the url.
     try:
-      login_retry_url = multi_fernet.decrypt(REQUEST.form['login_retry_url'])
+      login_retry_url = bytes2str(multi_fernet.decrypt(str2bytes(REQUEST.form['login_retry_url'])))
     except (fernet.InvalidToken, TypeError, KeyError):
       # No login_retry_url provided or its value is unusable: if this is a GET
       # request (trying to display a login form), use the current URL.
@@ -1042,7 +1042,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     def getSignedLoginRetryUrl():
       if login_retry_url is None:
         return None
-      return multi_fernet.encrypt(login_retry_url)
+      return bytes2str(multi_fernet.encrypt(str2bytes(login_retry_url)))
     return _ERP5AuthorisationEndpoint(
       server_connector_path=self.getPath(),
       zope_request=REQUEST,
@@ -1075,7 +1075,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       method=method,
       query_list=query_list + [(
         'login_retry_url',
-        self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
+        bytes2str(self.__getLoginRetryURLMultiFernet().encrypt(str2bytes(login_retry_url))),
       )],
     ) as inner_request:
       # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
