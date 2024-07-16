@@ -12,9 +12,9 @@
 ##############################################################################
 
 import base64
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 import unittest
-import urllib
+from six.moves.urllib.parse import quote
 
 from OFS.DTMLMethod import DTMLMethod
 from OFS.Folder import Folder

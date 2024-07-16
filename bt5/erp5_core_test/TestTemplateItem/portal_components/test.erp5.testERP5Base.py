@@ -1945,7 +1945,7 @@ class TestERP5Base(ERP5TypeTestCase):
       assertPublishedHeaderEqual(portal, header_name, script_value)
       assertPublishedHeaderEqual(person_module, header_name, script_value + ', ' + other_value)
     finally:
-      for document, header_name_set in response_header_dict.iteritems():
+      for document, header_name_set in six.iteritems(response_header_dict):
         for header_name in header_name_set:
           try:
             document.deleteResponseHeaderRule(header_name)

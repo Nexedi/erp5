@@ -36,7 +36,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from Products.ERP5OOo.tests.utils import Validator
 from lxml import html
-import email, urlparse, httplib
+import email, six.moves.urllib.parse, six.moves.http_client
 from Products.Formulator.MethodField import Method
 
 
@@ -158,9 +158,9 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     self.assertTrue("History%s" % extension or self.attachment_file_extension in content)
     tree = html.fromstring(content)
     link, = [href for href in tree.xpath('//a/@href') if href]
-    relative_url =urlparse.urlparse(link)
+    relative_url =six.moves.urllib.parse.urlparse(link)
     report = self.publish(relative_url.path+"?"+relative_url.query, '%s:%s' % (self.username, self.password))
-    self.assertEqual(httplib.OK, report.getStatus())
+    self.assertEqual(six.moves.http_client.OK, report.getStatus())
     self.assertEqual(report.getHeader('content-type'), content_type or self.content_type)
 
   def _checkDocument(self):
