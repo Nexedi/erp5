@@ -33,6 +33,7 @@ from Acquisition import aq_base
 from OFS.Traversable import Traversable
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
+from Products.ERP5Type.Utils import str2bytes
 from Products.PythonScripts.Utility import allow_class
 from hashlib import md5
 
@@ -133,9 +134,9 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if uids is None: uids = []
         if columns is None: columns = []
         if checked_uids is None: checked_uids = []
-        # XXX Because method_path is an URI, it must be in ASCII.
-        #     Shouldn't Zope automatically does this conversion? -yo
-        if type(method_path) is type(u'a'):
+        if six.PY2 and isinstance(method_path, six.text_type):
+          # XXX Because method_path is an URI, it must be in ASCII.
+          #     Shouldn't Zope automatically does this conversion? -yo
           method_path = method_path.encode('ascii')
         self.method_path = method_path
         self.params = params
@@ -170,9 +171,9 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if kw is not None:
           for k,v in six.iteritems(kw):
             if k in ('domain', 'report', 'domain_path', 'report_path', 'domain_list', 'report_list') or v is not None:
-              # XXX Because method_path is an URI, it must be in ASCII.
-              #     Shouldn't Zope automatically does this conversion? -yo
-              if k == 'method_path' and isinstance(v, six.text_type):
+              if six.PY2 and k == 'method_path' and isinstance(v, six.text_type):
+                # XXX Because method_path is an URI, it must be in ASCII.
+                #     Shouldn't Zope automatically does this conversion? -yo
                 v = v.encode('ascii')
               if getattr(self, k, None) != v:
                 setattr(self, k, v)
@@ -375,8 +376,8 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     security.declarePublic('getAnonymousSelectionKey')
     def getAnonymousSelectionKey(self):
-        return md5(repr({k: v for k, v in six.iteritems(self.__dict__)
-                              if k != 'index'})).hexdigest()
+        return md5(str2bytes(repr({k: v for k, v in six.iteritems(self.__dict__)
+                                        if k != 'index'}))).hexdigest()
 
 InitializeClass(Selection)
 allow_class(Selection)

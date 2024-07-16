@@ -15,6 +15,7 @@ TODO: export same components into one mhtml attachment if possible.
 # ERP5 web uses format= argument, which is also a python builtin
 # pylint: disable=redefined-builtin
 
+import six
 from Products.PythonScripts.standard import html_quote
 from zExceptions import Unauthorized
 from base64 import b64encode, b64decode
@@ -28,10 +29,13 @@ mhtml_message = {
 }
 
 def main(data):
-  if isinstance(data, str):
+  # type: (str) -> str
+  # Preserves input type (unicode or bytes)
+  if isinstance(data, bytes):
     data = data.decode("utf-8")
   data = u"".join([fn(p) for fn, p in handleHtmlPartList(parseHtml(data))])
-  data = data.encode("utf-8")
+  if six.PY2:
+    data = data.encode("utf-8")
   if format == "mhtml":
     mhtml_message["attachment_list"].insert(0, {
       "mime_type": "text/html",
@@ -178,21 +182,21 @@ def handleImageSourceObject(obj, src):
         format_kw["display"] = str(value)
     if format_kw:
       mime, data = obj.convert(**format_kw)
-      return handleLinkedData(mime, str(data), src)
+      return handleLinkedData(mime, bytes(data), src)
 
   return handleHrefObject(obj, src, default_mimetype=bad_image_mime_type, default_data=bad_image_data)
 
-def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Linked page not found</p>"):
+def handleHrefObject(obj, src, default_mimetype="text/html", default_data=b"<p>Linked page not found</p>"):
   # handle File portal_skins/folder/file.png
   # XXX handle "?portal_skin=" parameter ?
   if hasattr(obj, "getContentType"):
     mime = obj.getContentType()
     if mime:
       if hasattr(obj, "data"):
-        data = str(obj.data or "")
+        data = bytes(obj.data or b"")
       else:
-        data = getattr(obj, "getData", lambda: str(obj))() or ""
-      if isinstance(data, unicode):
+        data = getattr(obj, "getData", lambda: bytes(obj))() or b""
+      if six.PY2 and isinstance(data, six.text_type):
         data = data.encode("utf-8")
       return handleLinkedData(mime, data, src)
     return handleLinkedData(default_mimetype, default_data, src)
@@ -202,7 +206,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
   # use the same behavior as when we call a script from browser URL bar.
   if not hasattr(obj, "getPortalType") and callable(obj):
     mime, data = "text/html", obj()
-    if isinstance(data, unicode):
+    if six.PY2 and isinstance(data, six.text_type):
       data = data.encode("utf-8")
     return handleLinkedData(mime, data, src)
 
@@ -268,11 +272,15 @@ def handleLinkedData(mime, data, href):
       "mime_type": mime,
       "encode": "quoted-printable" if mime.startswith("text/") else None,
       "add_header_list": [("Content-Location", url)],
-      "data": str(data),
+      "data": bytes(data),
     })
     return url
   else:
-    return "data:%s;base64,%s" % (mime, b64encode(data))
+    if isinstance(data, six.text_type):
+      data = data.encode('utf-8')
+    else:
+      data = bytes(data)
+    return "data:%s;base64,%s" % (mime, b64encode(data).decode())
 
 def makeHrefAbsolute(href):
   if isHrefAnAbsoluteUrl(href) or not isHrefAUrl(href):
@@ -328,7 +336,7 @@ def replaceFromDataUri(data_uri, replacer):
     is_base64 = True
     data = b64decode(data)
   data = replacer(data)
-  return "%s,%s" % (header, b64encode(data) if is_base64 else data)
+  return "%s,%s" % (header, b64encode(data).decode() if is_base64 else data)
 
 def extractUrlSearch(url):
   url = url.split("#", 1)[0].split("?", 1)

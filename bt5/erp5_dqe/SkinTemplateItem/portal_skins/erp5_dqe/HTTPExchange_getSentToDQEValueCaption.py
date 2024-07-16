@@ -1,4 +1,4 @@
-import urlparse
+from six.moves import urllib
 
 resource_value = context.getResourceValue()
 if not resource_value.isMemberOf('http_exchange_resource/dqe'):
@@ -7,7 +7,7 @@ if not resource_value.isMemberOf('http_exchange_resource/dqe'):
 request = context.getRequest()
 if not request:
   return ''
-query_dict = urlparse.parse_qs(urlparse.urlparse(request).query)
+query_dict = urllib.urlparse.parse_qs(urllib.urlparse.urlparse(request).query)
 dqe_resource_category = context.getPortalObject().portal_categories.http_exchange_resource.dqe
 service_value_to_key_list_dict = {
   dqe_resource_category.DefaultEmail: ('Email', ),

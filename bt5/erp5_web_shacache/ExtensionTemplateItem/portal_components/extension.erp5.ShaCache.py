@@ -26,8 +26,9 @@
 #
 ##############################################################################
 
-
-import hashlib, httplib
+import hashlib
+import six
+import six.moves.http_client
 from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
@@ -77,7 +78,7 @@ def File_viewAsWeb(self):
 
   # Shortcut if the file is not a Pdata.
   data=self.data
-  if isinstance(data, str):
+  if isinstance(data, bytes):
     # Do this way instead of 'return data'
     # to bypass default caching policy manager.
     RESPONSE.write(data)
@@ -110,6 +111,6 @@ def WebSite_viewAsWebPost(self, *args, **kwargs):
     # security check should be done already.
     document.publish()
 
-  self.REQUEST.RESPONSE.setStatus(httplib.CREATED)
+  self.REQUEST.RESPONSE.setStatus(six.moves.http_client.CREATED)
   return sha512sum
 

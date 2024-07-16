@@ -24,7 +24,7 @@ class OdsToPdf:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     ods = OOOdCommandTransform(context, filename, data, self.inputs[0])
     pdf = ods.convertTo('pdf')
     if cache is not None:
