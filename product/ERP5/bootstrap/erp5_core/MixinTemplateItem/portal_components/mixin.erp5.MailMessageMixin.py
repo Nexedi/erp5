@@ -26,10 +26,11 @@
 #
 ##############################################################################
 
+import six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import guessEncodingFromText
+from Products.ERP5Type.Utils import unicode2str, guessEncodingFromText # TODO: guessEncodingFromBytes
 from zLOG import LOG, INFO
 
 from email.header import decode_header, HeaderParseError
@@ -39,20 +40,22 @@ import re
 filename_regexp = 'name="([^"]*)"'
 
 def testCharsetAndConvert(text_content, content_type, encoding):
-  try:
-    if encoding is not None:
-      text_content = text_content.decode(encoding).encode('utf-8')
-    else:
-      text_content = text_content.decode().encode('utf-8')
-  except (UnicodeDecodeError, LookupError):
-    encoding = guessEncodingFromText(text_content, content_type)
-    if encoding is not None:
-      try:
-        text_content = text_content.decode(encoding).encode('utf-8')
-      except (UnicodeDecodeError, LookupError):
+  if not isinstance(text_content, six.text_type):
+    try:
+      if encoding is not None:
+        text_content = unicode2str(text_content.decode(encoding))
+      else:
+        text_content = unicode2str(text_content.decode())
+    except (UnicodeDecodeError, LookupError):
+      encoding = guessEncodingFromText(text_content, content_type)
+      if encoding is not None:
+        try:
+          text_content = unicode2str(text_content.decode(encoding))
+        except (UnicodeDecodeError, LookupError):
+          # TODO: errors => repr?
+          text_content = repr(text_content)[1:-1]
+      else:
         text_content = repr(text_content)[1:-1]
-    else:
-      text_content = repr(text_content)[1:-1]
   return text_content, encoding
 
 
@@ -121,12 +124,15 @@ class MailMessageMixin:
         LOG('MailMessageMixin.getContentInformation', INFO,
             'Failed to decode %s header of %s with error: %s' %
             (name, self.getPath(), error_message))
+      header_list = []
       for text, encoding in decoded_header:
-        text, encoding = testCharsetAndConvert(text, 'text/plain', encoding)
-        if name in result:
-          result[name] = '%s %s' % (result[name], text)
-        else:
-          result[name] = text
+        text, _ = testCharsetAndConvert(text, 'text/plain', encoding)
+        header_list.append(text)
+      if six.PY3:
+        result[name] = ''.join(header_list)
+      else:
+        # https://bugs.python.org/issue1079
+        result[name] = ' '.join(header_list)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentInformationList')
