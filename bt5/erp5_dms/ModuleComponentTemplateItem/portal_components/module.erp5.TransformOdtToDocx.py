@@ -24,7 +24,7 @@ class OdtToDocx:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     odt = OOOdCommandTransform(context, filename, data, self.inputs[0])
     docx = odt.convertTo('docx')
     if cache is not None:
