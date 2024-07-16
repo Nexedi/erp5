@@ -17,12 +17,12 @@ import string
 import sys
 import time
 import traceback
-import ConfigParser
+from six.moves import configparser
 from contextlib import contextmanager
 from io import BytesIO
 from functools import partial
 from six.moves.urllib.parse import unquote_to_bytes
-from cPickle import dumps
+from six.moves.cPickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
@@ -44,7 +44,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
-from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes, bytes2str
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
@@ -152,7 +152,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getVolatileMemcachedServerDict()
   cloudooo_url_list = _getConversionServerUrlList()
 
-  promise_config = ConfigParser.RawConfigParser()
+  promise_config = configparser.RawConfigParser()
   promise_config.add_section('external_service')
   promise_config.set('external_service', 'cloudooo_url_list', cloudooo_url_list)
   promise_config.set('external_service', 'memcached_url',memcached_url)
@@ -963,7 +963,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       forced_portal_id = os.environ.get('erp5_tests_portal_id')
       if forced_portal_id:
         return str(forced_portal_id)
-      m = md5(repr(self.getBusinessTemplateList()) + self.getTitle())
+      m = md5(str2bytes(repr(self.getBusinessTemplateList()) + self.getTitle()))
       return portal_name + '_' + m.hexdigest()
 
     def getPortal(self):
@@ -1532,7 +1532,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
-      os.write(zeo_client, repr(host_port))
+      os.write(zeo_client, str2bytes(repr(host_port)))
       os.close(zeo_client)
     ZopeTestCase._print("\nZEO Storage started at %s:%s ... " % host_port)
 
@@ -1605,7 +1605,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.func_code # trigger compilation if needed
+    self.__code__ # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent

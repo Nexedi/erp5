@@ -181,14 +181,14 @@ region_item_list = [
   ('Romania', 'europe/eastern_europe/romania'),
   ('Russian Federation', 'europe/eastern_europe/russian_federation'),
   ('Rwanda', 'africa/eastern_africa/rwanda'),
-  ('R\xc3\xa9union', 'africa/eastern_africa/reunion'),
+  ('Réunion', 'africa/eastern_africa/reunion'),
   ('Saint Helena', 'africa/western_africa/saint_helena'),
   ('Saint Kitts and Nevis', 'americas/caribbean/saint_kitts_and_nevis'),
   ('Saint Lucia', 'americas/caribbean/saint_lucia'),
   ('Saint Martin (French part)', 'americas/caribbean/saint_martin'),
   ('Saint Pierre and Miquelon', 'americas/northern_america/saint_pierre_and_miquelon'),
   ('Saint Vincent and the Grenadines', 'americas/caribbean/saint_vincent_and_the_grenadines'),
-  ('Saint-Barth\xc3\xa9lemy', 'americas/caribbean/saint-barthelemy'),
+  ('Saint-Barthélemy', 'americas/caribbean/saint-barthelemy'),
   ('Samoa', 'oceania/polynesia/samoa'),
   ('San Marino', 'europe/southern_europe/san_marino'),
   ('Sao Tome and Principe', 'africa/middle_africa/sao_tome_and_principe'),
@@ -242,7 +242,7 @@ region_item_list = [
   ('Yemen', 'asia/western_asia/yemen'),
   ('Zambia', 'africa/eastern_africa/zambia'),
   ('Zimbabwe', 'africa/eastern_africa/zimbabwe'),
-  ('\xc3\x85land Islands', 'europe/northern_europe/aland_islands'),
+  ('Åland Islands', 'europe/northern_europe/aland_islands'),
 ]
 
 return [['', '']] + [[str(translateString(title)), relative_url] for (title, relative_url) in region_item_list]
