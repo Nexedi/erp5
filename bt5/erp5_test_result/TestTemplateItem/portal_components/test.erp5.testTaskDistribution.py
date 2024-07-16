@@ -5,6 +5,7 @@ from time import sleep
 from DateTime import DateTime
 import responses
 import httplib
+from six.moves import range
 
 
 class TaskDistributionTestCase(ERP5TypeTestCase):
@@ -1348,7 +1349,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       zope_partition_dict += "{% endif %}\n"
     cluster_configuration += zope_partition_dict + '\n}}'
     # -Generate graph coordinate
-    graph_coordinate = range(1, len(node_list)+1)
+    graph_coordinate = list(range(1, len(node_list)+1))
     # -Create the test suite
     self._createTestSuite(quantity=1,priority=1, reference_correction=0,
                        specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite",

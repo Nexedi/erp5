@@ -50,6 +50,7 @@ import Zope2
 from ZPublisher.mapply import mapply
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
+from six.moves import xrange
 
 _TEST_ACCESS_COOKIE_NAME = '__Site-test_at'
 _TEST_REFRESH_COOKIE_NAME = '__Site-test_rt'

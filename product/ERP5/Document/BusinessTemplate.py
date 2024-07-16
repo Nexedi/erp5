@@ -550,7 +550,7 @@ class BaseTemplateItem(Implicit, Persistent):
     pass
 
   def getKeys(self):
-    return ensure_list(self._objects.keys())
+    return list(self._objects)
 
   def importFile(self, bta, **kw):
     bta.importFiles(self)
@@ -559,7 +559,7 @@ class BaseTemplateItem(Implicit, Persistent):
     workflow_history = getattr(obj, 'workflow_history', None)
     if workflow_history is None:
       return
-    for workflow_id in ensure_list(workflow_history.keys()):
+    for workflow_id in list(workflow_history):
       workflow_history[workflow_id] = WorkflowHistoryList(
         [workflow_history[workflow_id][-1]])
 
@@ -618,7 +618,7 @@ class BaseTemplateItem(Implicit, Persistent):
       elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
         attr_set.add('type_provider_list')
 
-    for attr in ensure_list(obj.__dict__.keys()):
+    for attr in list(obj.__dict__):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
@@ -717,7 +717,7 @@ class ObjectTemplateItem(BaseTemplateItem):
   def __init__(self, id_list, tool_id=None, **kw):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     if tool_id is not None:
-      id_list = self._archive.keys()
+      id_list = list(self._archive)
       self._archive.clear()
       for id in id_list :
         if id != '':
@@ -1671,7 +1671,7 @@ class PathTemplateItem(ObjectTemplateItem):
   """
   def __init__(self, id_list, tool_id=None, **kw):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
-    id_list = ensure_list(self._archive.keys())
+    id_list = list(self._archive)
     self._archive.clear()
     self._path_archive = PersistentMapping()
     for id in id_list:
@@ -2030,7 +2030,7 @@ class SkinTemplateItem(ObjectTemplateItem):
     for (bt_obj_path, bt_obj) in six.iteritems(self._objects):
       if getattr(bt_obj, 'meta_type', None) == 'ERP5 Form':
         # search sub-objects of ERP5 Forms that are marked as "modified"
-        for upd_obj_path in ensure_list(modified_object_list.keys()):
+        for upd_obj_path in list(modified_object_list):
           if upd_obj_path.startswith(bt_obj_path):
             # a child of the ERP5 Form must be updated, so the form too
             if bt_obj_path not in modified_object_list:
@@ -2455,7 +2455,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
       obj = obj._getCopy(context)
       obj._p_activate()
-      for attr in ensure_list(obj.__dict__.keys()):
+      for attr in list(obj.__dict__):
         if attr == '_property_domain_dict':
           continue
         if attr[0] == '_' or attr in ('allowed_content_types',
@@ -3255,7 +3255,7 @@ class ActionTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, **kw):
     # XXX It's look like ObjectTemplateItem __init__
     BaseTemplateItem.__init__(self, id_list, **kw)
-    id_list = ensure_list(self._archive.keys())
+    id_list = list(self._archive)
     self._archive.clear()
     for id in id_list:
       self._archive["%s/%s" % ('portal_types', id)] = None
@@ -3873,7 +3873,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     # fix key if necessary in installed bt for diff
     extra_prefix = self.__class__.__name__ + '/'
-    for key in ensure_list(installed_item._objects.keys()):
+    for key in list(installed_item._objects):
       if key.startswith(extra_prefix):
         new_key = key[len(extra_prefix):]
         installed_item._objects[new_key] = installed_item._objects[key]
@@ -4019,7 +4019,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     backward-compatibility
     """
     def inner(self, *args, **kw):
-      if self._is_already_migrated(ensure_list(getattr(self, object_dict_name).keys())):
+      if self._is_already_migrated(list(getattr(self, object_dict_name))):
         result = getattr(ObjectTemplateItem, method_name)(self, *args, **kw)
       else:
         result = getattr(FilesystemDocumentTemplateItem,
@@ -4061,7 +4061,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = ensure_list(self._archive.keys())
+      object_keys = list(self._archive)
 
     if self._is_already_migrated(object_keys):
       ObjectTemplateItem.uninstall(self, *args, **kw)
@@ -4103,7 +4103,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     id_set = set(tool.objectIds())
 
     # careful, that dictionary will change
-    for class_id in ensure_list(migrate_object_dict.keys()):
+    for class_id in list(migrate_object_dict):
       # If the Property Sheet already exists in ZODB, then skip it,
       # otherwise it should not be needed anymore once the deletion
       # code of the filesystem Property Sheets is enabled
@@ -4168,7 +4168,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
         getattr(context.getPortalObject(), self._tool_id, None) is None):
       return FilesystemDocumentTemplateItem.install(self, context, **kw)
 
-    if not self._is_already_migrated(ensure_list(self._objects.keys())):
+    if not self._is_already_migrated(list(self._objects)):
       self._migrateAllFromFilesystem(context,
                                      self._objects,
                                      self._archive,
@@ -4270,7 +4270,7 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     the source code and its state to load it is necessary for ZODB Components
     and too much history would be exported (edit_workflow)
     """
-    for wf_id in ensure_list(obj.workflow_history.keys()):
+    for wf_id in list(obj.workflow_history):
       if wf_id != 'component_validation_workflow':
         del obj.workflow_history[wf_id]
         continue
@@ -4401,7 +4401,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
       return
 
     # After running the migration script, update bt5 property accordingly
-    if not self._is_already_migrated(ensure_list(self._archive.keys())):
+    if not self._is_already_migrated(list(self._archive)):
       document_id_list = self.getTemplateIdList()
       if document_id_list[0] not in getattr(context.getPortalObject(),
                                             'portal_components', ()):
@@ -4418,7 +4418,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
     automatically as the version must be set manually. This should not be an
     issue as there are not so many Documents in bt5...
     """
-    if self._is_already_migrated(ensure_list(self._objects.keys())):
+    if self._is_already_migrated(list(self._objects)):
       _ZodbComponentTemplateItem.install(self, context, **kw)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
