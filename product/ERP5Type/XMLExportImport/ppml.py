@@ -534,7 +534,16 @@ class ToXMLUnpickler(Unpickler):
 
     @register(INT)
     def load_int(self):
-        self.append(Int(int(self.readline()[:-1]), self.id_mapping))
+        line = self.readline()[:-1]
+        # on protocol 1, bool are saved as int
+        # https://github.com/python/cpython/blob/b455a5a55cb1fd5bb6178a969e8ebd0e6e91b610/Lib/pickletools.py#L1173-L1179
+        if line == b'00':
+            val = Bool(False, self.id_mapping)
+        elif line == b'01':
+            val = Bool(True, self.id_mapping)
+        else:
+            val = Int(int(line), self.id_mapping)
+        self.append(val)
 
     @register(BININT)
     def load_binint(self):

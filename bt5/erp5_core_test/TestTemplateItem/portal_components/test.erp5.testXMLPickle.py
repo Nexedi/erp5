@@ -272,10 +272,6 @@ class TestXMLPickle(XMLPickleTestCase):
 class TestXMLPickleProtocol1(TestXMLPickle):
   _pickle_protocol = 1
 
-  @unittest.expectedFailure
-  def test_bool(self):
-    super(TestXMLPickleProtocol1, self).test_bool()
-
 
 class TestXMLPickleStringEncoding(XMLPickleTestCase):
   def test_string_base64(self):
