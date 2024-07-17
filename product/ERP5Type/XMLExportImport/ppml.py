@@ -15,20 +15,26 @@
 """Provide conversion between Python pickles and XML
 """
 
-# Python3 C implementation does not have Unpickler.dispatch attribute
-from zodbpickle.pickle import *
+# XXX-zope4py3: Python3 C implementation does not have Unpickler.dispatch
+# attribute. dispatch_table should be used instead.
+from zodbpickle.slowpickle import *
 
+import ast
 import struct
-import base64
+import six
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes, decodestring as base64_decodebytes
+  from zodbpickle.pickle_2 import decode_long
+else:
+  from base64 import encodebytes as base64_encodebytes, decodebytes as base64_decodebytes
+  from zodbpickle.pickle_3 import decode_long
 import re
 from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
-import six
 from marshal import dumps as mdumps
-#from zLOG import LOG
 
 binary = re.compile('[^\x1f-\x7f]').search
 
@@ -41,7 +47,7 @@ else:
 
 def escape(s, encoding='repr'):
     if binary(s) and isinstance(s, str):
-        s = base64.encodestring(s)[:-1]
+        s = base64_encodebytes(s)[:-1]
         encoding = 'base64'
     elif '>' in s or '<' in s or '&' in s:
         if not ']]>' in s:
@@ -55,7 +61,7 @@ def escape(s, encoding='repr'):
 
 def unescape(s, encoding):
     if encoding == 'base64':
-        return base64.decodestring(s)
+        return base64_decodebytes(s)
     else:
         s = s.replace(b'&lt;', b'<')
         s = s.replace(b'&gt;', b'>')
@@ -89,14 +95,16 @@ def convert(S):
     ###              readable output.
     try:
         if not isinstance(S, six.text_type):
-            S.decode('utf8')
+            decoded = S.decode('utf8')
+            if six.PY3:
+                S = decoded
     except UnicodeDecodeError:
-        return 'base64', base64.encodestring(S)[:-1]
+        return 'base64', bytes2str(base64_encodebytes(S)[:-1])
     else:
         new = reprs_re.sub(sub_reprs, S)
     ### patch end
     if len(new) > (1.4*len(S)):
-        return 'base64', base64.encodestring(S)[:-1]
+        return 'base64', bytes2str(base64_encodebytes(str2bytes(S))[:-1])
     elif '>' in new or '<' in S or '&' in S:
         if not ']]>' in S:
             return 'cdata', '<![CDATA[\n\n' + new + '\n\n]]>'
@@ -107,11 +115,11 @@ def convert(S):
 # For optimization.
 def unconvert(encoding,S):
     if encoding == 'base64':
-        return base64.decodestring(S)
+        return base64_decodebytes(S)
     else:
-        return str2bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"))
+        return str2bytes(ast.literal_eval(bytes2str(b"'" + S.replace(b'\n', b'') + b"'")))
 
-class Global:
+class Global(object):
     def __init__(self, module, name, mapping):
         self.module=module
         self.name=name
@@ -125,14 +133,14 @@ class Global:
         return '%s<%s%s name="%s" module="%s"/>\n' % (
             ' '*indent, name, id, self.name, self.module)
 
-class Immutable:
+class Immutable(object):
     def __init__(self, value):
         self.value = value
 
     def getValue(self):
         return self.value
 
-class Scalar:
+class Scalar(object):
     def __init__(self, v, mapping):
         self._v=v
         self.mapping = mapping
@@ -158,6 +166,10 @@ class Long(Scalar):
         return result
 
 class String(Scalar):
+
+    def tag_name(self):
+        return self.__class__.__name__.lower()
+
     encoding = None
 
     def __init__(self, v, mapping, encoding=''):
@@ -172,8 +184,8 @@ class String(Scalar):
                 # This is used when strings represent references which need to
                 # be converted.
                 encoding = 'base64'
-                v = base64.encodestring(self._v)[:-1]
-                self._v = self.mapping.convertBase64(v)
+                v = base64_encodebytes(self._v)[:-1]
+                self._v = bytes2str(self.mapping.convertBase64(v))
             else:
                 encoding, self._v = convert(self._v)
             self.encoding = encoding
@@ -183,7 +195,7 @@ class String(Scalar):
             encoding = '' # JPS repr is default encoding
         else:
             encoding = ' encoding="%s"' % encoding
-        name=self.__class__.__name__.lower()
+        name = self.tag_name()
         result = '<%s%s%s>%s</%s>' % (name, id, encoding, v, name)
         if hasattr(self, 'id'):
             # The value is Immutable - let us add it the the immutable mapping
@@ -191,11 +203,22 @@ class String(Scalar):
             self.mapping.setImmutable(self.id, Immutable(value = result))
         return '%s%s\n' % (' '*indent, result)
 
-class Unicode(String):
-    def value(self):
-        return self._v.encode('utf-8')
 
-class Wrapper:
+class Unicode(String):
+    def tag_name(self):
+        if six.PY3:
+            return 'string'
+        return super(Unicode, self).tag_name()
+
+    def value(self):
+        return unicode2str(super(Unicode, self).value())
+
+
+class Bytes(String):
+    pass
+
+
+class Wrapper(object):
     def __init__(self, v, mapping):
         self._v=v
         self.mapping = mapping
@@ -209,13 +232,13 @@ class Wrapper:
         name=self.__class__.__name__.lower()
         v=self._v
         i=' '*indent
-        if isinstance(v,Scalar):
-            return '%s<%s%s> %s </%s>\n' % (i, name, id, str(v)[:-1], name)
+        if isinstance(v, Scalar):
+            return '%s<%s%s> %s </%s>\n' % (i, name, id, v.__str__()[:-1], name)
         else:
             v=v.__str__(indent+2)
             return '%s<%s%s>\n%s%s</%s>\n' % (i, name, id, v, i, name)
 
-class Collection:
+class Collection(object):
     def __init__(self, mapping):
         self.mapping = mapping
 
@@ -302,6 +325,7 @@ class Object(Sequence):
 
     def __setstate__(self, v): self.append(State(v, self.mapping))
 
+class Bool(Scalar): pass
 class Int(Scalar): pass
 class Float(Scalar): pass
 class List(Sequence): pass
@@ -328,8 +352,9 @@ class Persistent(Wrapper):
             v=v.__str__(indent+2)
             return '%s<%s%s>\n%s%s</%s>\n' % (i, name, id, v, i, name)
 
+
 blanck_line_expression = re.compile('^ +$')
-class NoBlanks:
+class NoBlanks(object):
     """
     This allows to ignore at least whitespaces between elements and also
     correctly handle string/unicode
@@ -376,7 +401,7 @@ class NoBlanks:
 
                 self.append(data)
 
-class IdentityMapping:
+class IdentityMapping(object):
     def __init__(self):
       self.resetMapping()
       self.immutable = {}
@@ -462,6 +487,18 @@ class MinimalMapping(IdentityMapping):
     def __str__(self, a):
       return "Error here"
 
+
+class UnsupportedOpCode(AssertionError):
+    """Error when encountering an opcode that is not supposed to be used
+    by this implementation.
+    """
+
+def unsupported_opcode(opcode):
+    def handler(self):
+        raise UnsupportedOpCode(opcode)
+    return handler
+
+
 class ToXMLUnpickler(Unpickler):
     def load(self, id_mapping=None):
       if id_mapping is None:
@@ -476,91 +513,184 @@ class ToXMLUnpickler(Unpickler):
     def persistent_load(self, v):
         return Persistent(v, self.id_mapping)
 
-    def load_persid(self):
-        pid = self.readline()[:-1]
-        self.append(self.persistent_load(String(pid, self.id_mapping)))
-    dispatch[PERSID] = load_persid
+    def load_binpersid(self):
+        pid = self.stack.pop()
+        self.append(self.persistent_load(pid))
+    if six.PY2:
+        dispatch[BINPERSID] = load_binpersid
+    dispatch[BINPERSID[0]] = load_binpersid
 
     def load_none(self):
         self.append(none)
-    dispatch[NONE] = load_none
+    if six.PY2:
+        dispatch[NONE] = load_none
+    dispatch[NONE[0]] = load_none
 
     def load_int(self):
-        self.append(Int(int(self.readline()[:-1]), self.id_mapping))
-    dispatch[INT] = load_int
+        line = self.readline()[:-1]
+        # on protocol 1, bool are saved as int
+        # https://github.com/python/cpython/blob/b455a5a55cb1fd5bb6178a969e8ebd0e6e91b610/Lib/pickletools.py#L1173-L1179
+        if line == b'00':
+            val = Bool(False, self.id_mapping)
+        elif line == b'01':
+            val = Bool(True, self.id_mapping)
+        else:
+            val = Int(int(line), self.id_mapping)
+        self.append(val)
+    if six.PY2:
+        dispatch[INT] = load_int
+    dispatch[INT[0]] = load_int
 
     def load_binint(self):
-        self.append(Int(mloads('i' + self.read(4)), self.id_mapping))
-    dispatch[BININT] = load_binint
+        self.append(Int(mloads(b'i' + self.read(4)), self.id_mapping))
+    if six.PY2:
+        dispatch[BININT] = load_binint
+    dispatch[BININT[0]] = load_binint
 
     def load_binint1(self):
-        self.append(Int(mloads('i' + self.read(1) + '\000\000\000'), self.id_mapping))
-    dispatch[BININT1] = load_binint1
+        self.append(Int(mloads(b'i' + self.read(1) + b'\000\000\000'), self.id_mapping))
+    if six.PY2:
+        dispatch[BININT1] = load_binint1
+    dispatch[BININT1[0]] = load_binint1
 
     def load_binint2(self):
-        self.append(Int(mloads('i' + self.read(2) + '\000\000'), self.id_mapping))
-    dispatch[BININT2] = load_binint2
+        self.append(Int(mloads(b'i' + self.read(2) + b'\000\000'), self.id_mapping))
+    if six.PY2:
+        dispatch[BININT2] = load_binint2
+    dispatch[BININT2[0]] = load_binint2
 
     def load_long(self):
-        self.append(Long(long_(self.readline()[:-1], 0), self.id_mapping))
-    dispatch[LONG] = load_long
+        val = self.readline()[:-1]
+        if six.PY3:
+            val = val.decode('ascii')
+            if val and val[-1] == 'L':
+                val = val[:-1]
+        self.append(Long(long_(val, 0), self.id_mapping))
+    if six.PY2:
+        dispatch[LONG] = load_long
+    dispatch[LONG[0]] = load_long
 
-    def load_float(self):
-        self.append(Float(float(self.readline()[:-1]), self.id_mapping))
-    dispatch[FLOAT] = load_float
+    def load_long1(self):
+        n = ord(self.read(1))
+        data = self.read(n)
+        self.append(Long(decode_long(data), self.id_mapping))
+    if six.PY2:
+        dispatch[LONG1] = load_long1
+    dispatch[LONG1[0]] = load_long1
+
+    def load_long4(self):
+        n = mloads(b'i' + self.read(4))
+        if n < 0:
+            # Corrupt or hostile pickle -- we never write one like this
+            raise UnpicklingError("LONG pickle has negative byte count");
+        data = self.read(n)
+        self.append(Long(decode_long(data), self.id_mapping))
+    if six.PY2:
+        dispatch[LONG4] = load_long4
+    dispatch[LONG4[0]] = load_long4
+
+    def load_true(self):
+        self.append(Bool(True, self.id_mapping))
+    if six.PY2:
+        dispatch[NEWTRUE] = load_true
+    dispatch[NEWTRUE[0]] = load_true
+
+    def load_false(self):
+        self.append(Bool(False, self.id_mapping))
+    if six.PY2:
+        dispatch[NEWFALSE] = load_false
+    dispatch[NEWFALSE[0]] = load_false
 
     def load_binfloat(self, unpack=struct.unpack):
         self.append(Float(unpack('>d', self.read(8))[0], self.id_mapping))
-    dispatch[BINFLOAT] = load_binfloat
-
-    def load_string(self):
-        self.append(String(eval(self.readline()[:-1],
-                                {'__builtins__': {}}), self.id_mapping)) # Let's be careful
-    dispatch[STRING] = load_string
+    if six.PY2:
+        dispatch[BINFLOAT] = load_binfloat
+    dispatch[BINFLOAT[0]] = load_binfloat
 
     def load_binstring(self):
-        len = mloads('i' + self.read(4))
+        len = mloads(b'i' + self.read(4))
         self.append(String(self.read(len), self.id_mapping))
-    dispatch[BINSTRING] = load_binstring
-
-    def load_unicode(self):
-        self.append(Unicode(six.text_type(eval(self.readline()[:-1],
-                                         {'__builtins__': {}})), self.id_mapping)) # Let's be careful
-    dispatch[UNICODE] = load_unicode
+    if six.PY2:
+        dispatch[BINSTRING] = load_binstring
+    dispatch[BINSTRING[0]] = load_binstring
 
     def load_binunicode(self):
-        len = mloads('i' + self.read(4))
+        len = mloads(b'i' + self.read(4))
         self.append(Unicode(six.text_type(self.read(len), 'utf-8'), self.id_mapping))
-    dispatch[BINUNICODE] = load_binunicode
+    if six.PY2:
+        dispatch[BINUNICODE] = load_binunicode
+    dispatch[BINUNICODE[0]] = load_binunicode
 
     def load_short_binstring(self):
-        len = mloads('i' + self.read(1) + '\000\000\000')
+        len = mloads(b'i' + self.read(1) + b'\000\000\000')
         self.append(String(self.read(len), self.id_mapping))
-    dispatch[SHORT_BINSTRING] = load_short_binstring
+    if six.PY2:
+        dispatch[SHORT_BINSTRING] = load_short_binstring
+    dispatch[SHORT_BINSTRING[0]] = load_short_binstring
+
+    def load_binbytes(self):
+        len = mloads(b'i' + self.read(4))
+        self.append(Bytes(self.read(len), self.id_mapping))
+    if six.PY2:
+        dispatch[BINBYTES] = load_binbytes
+    dispatch[BINBYTES[0]] = load_binbytes
+
+    def load_short_binbytes(self):
+        len = mloads(b'i' + self.read(1) + b'\000\000\000')
+        self.append(Bytes(self.read(len), self.id_mapping))
+    if six.PY2:
+        dispatch[SHORT_BINBYTES] = load_short_binbytes
+    dispatch[SHORT_BINBYTES[0]] = load_short_binbytes
 
     def load_tuple(self):
         k = self.marker()
-        #LOG('load_tuple, k',0,k)
-        #LOG('load_tuple, stack[k+1:]',0,self.stack[k+1:])
         self.stack[k:] = [Tuple(self.id_mapping, v=self.stack[k+1:])]
-    dispatch[TUPLE] = load_tuple
+    if six.PY2:
+        dispatch[TUPLE] = load_tuple
+    dispatch[TUPLE[0]] = load_tuple
+
+    def load_tuple1(self):
+        self.stack[-1] = Tuple(self.id_mapping, v=(self.stack[-1],))
+    if six.PY2:
+        dispatch[TUPLE1] = load_tuple1
+    dispatch[TUPLE1[0]] = load_tuple1
+
+    def load_tuple2(self):
+        self.stack[-2:] = [Tuple(self.id_mapping, v=(self.stack[-2], self.stack[-1]))]
+    if six.PY2:
+        dispatch[TUPLE2] = load_tuple2
+    dispatch[TUPLE2[0]] = load_tuple2
+
+    def load_tuple3(self):
+        self.stack[-3:] = [Tuple(self.id_mapping, v=(self.stack[-3], self.stack[-2], self.stack[-1]))]
+    if six.PY2:
+        dispatch[TUPLE3] = load_tuple3
+    dispatch[TUPLE3[0]] = load_tuple3
 
     def load_empty_tuple(self):
         self.stack.append(Tuple(self.id_mapping))
-    dispatch[EMPTY_TUPLE] = load_empty_tuple
+    if six.PY2:
+        dispatch[EMPTY_TUPLE] = load_empty_tuple
+    dispatch[EMPTY_TUPLE[0]] = load_empty_tuple
 
     def load_empty_list(self):
         self.stack.append(List(self.id_mapping))
-    dispatch[EMPTY_LIST] = load_empty_list
+    if six.PY2:
+        dispatch[EMPTY_LIST] = load_empty_list
+    dispatch[EMPTY_LIST[0]] = load_empty_list
 
     def load_empty_dictionary(self):
         self.stack.append(Dictionary(self.id_mapping))
-    dispatch[EMPTY_DICT] = load_empty_dictionary
+    if six.PY2:
+        dispatch[EMPTY_DICT] = load_empty_dictionary
+    dispatch[EMPTY_DICT[0]] = load_empty_dictionary
 
     def load_list(self):
         k = self.marker()
         self.stack[k:] = [List(self.id_mapping, v=self.stack[k+1:])]
-    dispatch[LIST] = load_list
+    if six.PY2:
+        dispatch[LIST] = load_list
+    dispatch[LIST[0]] = load_list
 
     def load_dict(self):
         k = self.marker()
@@ -571,17 +701,21 @@ class ToXMLUnpickler(Unpickler):
             value = items[i+1]
             d[key] = value
         self.stack[k:] = [d]
-    dispatch[DICT] = load_dict
+    if six.PY2:
+        dispatch[DICT] = load_dict
+    dispatch[DICT[0]] = load_dict
 
     def load_inst(self):
         k = self.marker()
         args = Tuple(self.id_mapping, v=self.stack[k+1:])
         del self.stack[k:]
-        module = self.readline()[:-1]
-        name = self.readline()[:-1]
+        module = bytes2str(self.readline()[:-1])
+        name = bytes2str(self.readline()[:-1])
         value=Object(Global(module, name, self.id_mapping), args, self.id_mapping)
         self.append(value)
-    dispatch[INST] = load_inst
+    if six.PY2:
+        dispatch[INST] = load_inst
+    dispatch[INST[0]] = load_inst
 
     def load_obj(self):
         stack = self.stack
@@ -592,13 +726,29 @@ class ToXMLUnpickler(Unpickler):
         del stack[k:]
         value=Object(klass,args, self.id_mapping)
         self.append(value)
-    dispatch[OBJ] = load_obj
+    if six.PY2:
+        dispatch[OBJ] = load_obj
+    dispatch[OBJ[0]] = load_obj
+    
+    def load_newobj(self):
+        # TODO: not really sure of this one, maybe we need
+        # a NewObj instead of Object
+        args = self.stack.pop()
+        cls = self.stack[-1]
+        obj = Object(cls, args, self.id_mapping)
+        self.stack[-1] = obj
+        #print('load_newobj', self.stack)
+    if six.PY2:
+        dispatch[NEWOBJ] = load_newobj
+    dispatch[NEWOBJ[0]] = load_newobj
 
     def load_global(self):
-        module = self.readline()[:-1]
-        name = self.readline()[:-1]
+        module = bytes2str(self.readline()[:-1])
+        name = bytes2str(self.readline()[:-1])
         self.append(Global(module, name, self.id_mapping))
-    dispatch[GLOBAL] = load_global
+    if six.PY2:
+        dispatch[GLOBAL] = load_global
+    dispatch[GLOBAL[0]] = load_global
 
     def load_reduce(self):
         stack = self.stack
@@ -609,38 +759,39 @@ class ToXMLUnpickler(Unpickler):
 
         value=Object(callable, arg_tup, self.id_mapping)
         self.append(value)
-    dispatch[REDUCE] = load_reduce
+    if six.PY2:
+        dispatch[REDUCE] = load_reduce
+    dispatch[REDUCE[0]] = load_reduce
 
     idprefix=''
 
-    def load_get(self):
-        self.append(Get(self.idprefix+self.readline()[:-1], self.id_mapping))
-    dispatch[GET] = load_get
-
     def load_binget(self):
-        i = mloads('i' + self.read(1) + '\000\000\000')
+        i = mloads(b'i' + self.read(1) + b'\000\000\000')
         self.append(Get(self.idprefix+repr(i), self.id_mapping))
-    dispatch[BINGET] = load_binget
+    if six.PY2:
+        dispatch[BINGET] = load_binget
+    dispatch[BINGET[0]] = load_binget
 
     def load_long_binget(self):
-        i = mloads('i' + self.read(4))
+        i = mloads(b'i' + self.read(4))
         self.append(Get(self.idprefix+repr(i), self.id_mapping))
-    dispatch[LONG_BINGET] = load_long_binget
-
-    def load_put(self):
-        self.stack[-1].id=self.idprefix+self.readline()[:-1]
-    dispatch[PUT] = load_put
+    if six.PY2:
+        dispatch[LONG_BINGET] = load_long_binget
+    dispatch[LONG_BINGET[0]] = load_long_binget
 
     def load_binput(self):
-        i = mloads('i' + self.read(1) + '\000\000\000')
-        #LOG('load_binput', 0, 'self.stack = %r, self.idprefix+`i` = %r' % (self.stack, self.idprefix+`i`))
+        i = mloads(b'i' + self.read(1) + b'\000\000\000')
         self.stack[-1].id=self.idprefix+repr(i)
-    dispatch[BINPUT] = load_binput
+    if six.PY2:
+        dispatch[BINPUT] = load_binput
+    dispatch[BINPUT[0]] = load_binput
 
     def load_long_binput(self):
-        i = mloads('i' + self.read(4))
+        i = mloads(b'i' + self.read(4))
         self.stack[-1].id=self.idprefix+repr(i)
-    dispatch[LONG_BINPUT] = load_long_binput
+    if six.PY2:
+        dispatch[LONG_BINPUT] = load_long_binput
+    dispatch[LONG_BINPUT[0]] = load_long_binput
 
     class LogCall:
       def __init__(self, func):
@@ -650,8 +801,19 @@ class ToXMLUnpickler(Unpickler):
         #LOG('LogCall', 0, 'self.stack = %r, func = %s' % (context.stack, self.func.__name__))
         return self.func(context)
 
-    #for code in dispatch.keys():
-    #  dispatch[code] = LogCall(dispatch[code])
+    # for code in dispatch.keys():
+    #   dispatch[code] = LogCall(dispatch[code])
+
+    for opcode, name in (
+            (STRING, 'STRING'),
+            (UNICODE, 'UNICODE'),
+            (GET, 'GET'),
+            (PUT, 'PUT'),
+        ):
+        if six.PY2:
+            dispatch[opcode] = unsupported_opcode(name)
+        dispatch[opcode[0]] = unsupported_opcode(name)
+
 
 def ToXMLload(file):
     return ToXMLUnpickler(file).load()
@@ -669,23 +831,19 @@ def start_pickle(self, tag, attrs):
     return [tag, attrs]
 
 def save_int(self, tag, data):
-    if self.binary:
-        v = int(name(self, tag, data))
-        if v >= 0:
-            if v <= 0xff:
-                return BININT1 + six.int2byte(v)
-            if v <= 0xffff:
-                return BININT2 + b'%c%c' % (v & 0xff, v >> 8)
-        hb = v >> 31
-        if hb == 0 or hb == -1:
-            return BININT + struct.pack('<i', v)
+    v = int(name(self, tag, data))
+    if v >= 0:
+        if v <= 0xff:
+            return BININT1 + six.int2byte(v)
+        if v <= 0xffff:
+            return BININT2 + b'%c%c' % (v & 0xff, v >> 8)
+    hb = v >> 31
+    if hb == 0 or hb == -1:
+        return BININT + struct.pack('<i', v)
     return INT + name(self, tag, data) + b'\n'
 
 def save_float(self, tag, data):
-    if self.binary:
-        return BINFLOAT + struct.pack('>d', float(name(self, tag, data)))
-    else:
-        return FLOAT + name(self, tag, data) + b'\n'
+    return BINFLOAT + struct.pack('>d', float(name(self, tag, data)))
 
 def save_put(self, v, attrs):
     id = attrs.get('id', '')
@@ -695,51 +853,96 @@ def save_put(self, v, attrs):
             id = id[prefix + 1:]
         elif id[0] == 'i':
             id = id[1:]
-        if self.binary:
-            id = int(id)
-            if id < 256:
-                id = BINPUT + six.int2byte(id)
-            else:
-                id = LONG_BINPUT + struct.pack('<i', id)
+        id = int(id)
+        if id < 256:
+            id = BINPUT + six.int2byte(id)
         else:
-            id = PUT + repr(id) + b'\n'
+            id = LONG_BINPUT + struct.pack('<i', id)
         return v + id
     return v
 
 def save_string(self, tag, data):
     a = data[1]
     v = b''.join(data[2:])
-    encoding = a.get('encoding', 'repr')
-    is_bytes = a.get('binary') == 'true' # XXX zope4py2: we don't use binary yet
-    if encoding is not '':
+    encoding = a.get('encoding', 'repr') # JPS: repr is default encoding
+    if encoding != '':
         v = unconvert(encoding, v)
-    if self.binary:
-        l = len(v)
-        if l < 256:
-            op = SHORT_BINBYTES if is_bytes else SHORT_BINSTRING
-            v = op + six.int2byte(l) + v
+    l = len(v)
+    if l < 256:
+        if encoding == 'base64':
+            # We can be here for two reasons:
+            # - the input was a string with \n or similar control characters
+            # that are not allowed in XML, so the str was exported as base64.
+            # - the input was a persistent id exported from python2, in that case
+            # we want to get a zodbpickle.binary back
+            if len(v) == 8 and self._stack[-1][0] in ('persistent', ):
+                # looks like a persistent id, assume it is a persistent_id -> bytes
+                op = SHORT_BINBYTES
+            else:
+                # if it's a valid UTF-8 string -> str
+                try:
+                    v.decode('utf-8')
+                    # XXX maybe check with repr_re ?
+                    op = BINUNICODE if six.PY3 else BINSTRING
+                    v = op + struct.pack('<i', l) + v
+                    return save_put(self, v, a)
+                except UnicodeDecodeError:
+                    # not valid utf-8 -> bytes
+                    op = SHORT_BINBYTES
         else:
-            op = BINBYTES if is_bytes else BINSTRING
-            v = op + struct.pack('<i', l) + v
+            op = SHORT_BINSTRING
+            try:
+                v.decode('ascii')
+            except UnicodeDecodeError:
+                op = BINUNICODE if six.PY3 else BINSTRING
+                v = op + struct.pack('<i', l) + v
+                return save_put(self, v, a)
+
+        v = op + six.int2byte(l) + v
     else:
-        v = STRING + repr(v) + '\n'
+        if encoding == 'base64':
+            op = BINBYTES
+            # if it's a valid UTF-8 string -> str
+            try:
+                v.decode('utf-8')
+                op = BINUNICODE if six.PY3 else BINSTRING
+            except UnicodeDecodeError:
+                # not valid utf-8 -> bytes
+                pass
+        else:
+            op = BINSTRING if six.PY2 else BINUNICODE
+
+        v = op + struct.pack('<i', l) + v
     return save_put(self, v, a)
 
+def save_bytes(self, tag, data):
+    a = data[1]
+    v = b''.join(data[2:])
+    encoding = a.get('encoding', 'repr')
+    if encoding:
+        v = unconvert(encoding, v)
+    l = len(v)
+    if l < 256:
+        op = SHORT_BINBYTES
+        v = op + six.int2byte(l) + v
+    else:
+        op = BINBYTES
+        v = op + struct.pack('<i', l) + v
+    return save_put(self, v, a)
+
+
 def save_unicode(self, tag, data):
-    binary=self.binary
     v=b''
     a=data[1]
     if len(data)>2:
         for x in data[2:]:
             v=v+x
     encoding=a.get('encoding','repr') # JPS: repr is default encoding
-    if encoding is not '':
+    if encoding != '':
         v=unconvert(encoding,v)
-    if binary:
-        l=len(v)
-        s=mdumps(l)[1:]
-        v=BINUNICODE+s+v
-    else: v=UNICODE+"'"+v+"'\012"
+    l=len(v)
+    s=mdumps(l)[1:]
+    v=BINUNICODE+s+v
     return save_put(self, v, a)
 
 def save_tuple(self, tag, data):
@@ -750,26 +953,16 @@ def save_tuple(self, tag, data):
 
 def save_list(self, tag, data):
     L = data[2:]
-    if self.binary:
-        v = save_put(self, EMPTY_LIST, data[1])
-        if L:
-            v = v + MARK + b''.join(L) + APPENDS
-    else:
-        v = save_put(self, MARK + LIST, data[1])
-        if L:
-            v = APPEND.join(L) + APPEND
+    v = save_put(self, EMPTY_LIST, data[1])
+    if L:
+        v = v + MARK + b''.join(L) + APPENDS
     return v
 
 def save_dict(self, tag, data):
     D = data[2:]
-    if self.binary:
-        v = save_put(self, EMPTY_DICT, data[1])
-        if D:
-            v = v + MARK + b''.join(D) + SETITEMS
-    else:
-        v = save_put(self, MARK + DICT, data[1])
-        if D:
-            v = v + SETITEM.join(D) + SETITEM
+    v = save_put(self, EMPTY_DICT, data[1])
+    if D:
+        v = v + MARK + b''.join(D) + SETITEMS
     return v
 
 def save_reference(self, tag, data):
@@ -778,14 +971,11 @@ def save_reference(self, tag, data):
     prefix = id.rfind('.')
     if prefix >= 0:
         id = id[prefix + 1:]
-    if self.binary:
-        id = int(id)
-        if id < 256:
-            return BINGET + six.int2byte(id)
-        else:
-            return LONG_BINGET + struct.pack('<i', i)
+    id = int(id)
+    if id < 256:
+        return BINGET + six.int2byte(id)
     else:
-        return GET + repr(id) + b'\n'
+        return LONG_BINGET + struct.pack('<i', id)
 
 def save_object(self, tag, data):
     if len(data)==5:
@@ -813,10 +1003,7 @@ def save_global(self, tag, data):
 
 def save_persis(self, tag, data):
     v = data[2]
-    if self.binary:
-        return v + BINPERSID
-    else:
-        return PERSID + v
+    return v + BINPERSID
 
 def save_pickle_start(self, tag, attrs):
     return [tag, attrs]
@@ -825,7 +1012,14 @@ def save_pickle(self, tag, data):
     return data[2] + b'.'
 
 def save_none(self, tag, data):
-    return b'N'
+    return NONE
+
+def save_bool(self, tag, data):
+    if data[2] == b'True':
+        return TRUE
+    else:
+        assert data[2] == b'False', data
+        return FALSE
 
 def save_long(self, tag, data):
     return b'L'+data[2]+b'L\012'
@@ -857,7 +1051,9 @@ class xmlPickler(NoBlanks, xyap):
         'none': save_none,
         'int': save_int,
         'long': save_long,
+        'bool': save_bool,
         'float': save_float,
+        'bytes': save_bytes,
         'string': save_string,
         'unicode': save_unicode,
         'reference': save_reference,
