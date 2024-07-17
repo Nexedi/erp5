@@ -1,3 +1,4 @@
+import six
 translateString = context.Base_translateString
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences
@@ -61,9 +62,11 @@ def getPrototype():
   return None
 
 def unicodeDict(d):
-  for k, v in d.items():
+  if six.PY3:
+    return d
+  for k, v in six.iteritems(d):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k: unicode(v, 'utf8')})
   return d
 
 data_dict = {

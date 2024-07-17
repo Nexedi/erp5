@@ -28,11 +28,11 @@ from __future__ import print_function
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
-from SimpleHTTPServer import SimpleHTTPRequestHandler
+from six.moves.SimpleHTTPServer import SimpleHTTPRequestHandler
 from threading import Thread
 from datetime import datetime
 
-import SocketServer
+import six.moves.socketserver
 import tempfile
 import shutil
 import time
@@ -74,7 +74,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
   root_title = "TEST Instance Tree"
 
   def start_httpd_server(self, root_folder):
-    self.httpd = SocketServer.TCPServer(('localhost', 5378), CustomHTTPRequestHandler)
+    self.httpd = six.moves.socketserver.TCPServer(('localhost', 5378), CustomHTTPRequestHandler)
     self.httpd.timeout = 2
     os.chdir(root_folder)
     #self.httpd.serve_forever()

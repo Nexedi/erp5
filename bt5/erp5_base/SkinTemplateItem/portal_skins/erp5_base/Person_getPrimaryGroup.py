@@ -33,7 +33,7 @@ for assignment in context.contentValues(portal_type='Assignment'):
 # If we have multiple groups defined on assignments, this scripts does not
 # try to guess, and fallback to the default career's group
 if len(existing_group_set.keys()) == 1:
-  return existing_group_set.keys()[0]
+  return list(existing_group_set.keys())[0]
 
 # no group found on open assignments, returns the default group
 # (on a person document this is acquired on the default career's subordination)

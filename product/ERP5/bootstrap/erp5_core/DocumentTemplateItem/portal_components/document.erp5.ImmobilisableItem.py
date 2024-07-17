@@ -26,14 +26,13 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Utils import ensure_list
-
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from DateTime import DateTime
 
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import ensure_list
 from erp5.component.interface.IImmobilisationItem import IImmobilisationItem
 from erp5.component.module.DateUtils import addToDate, getClosestDate, roundDate
 from erp5.component.module.DateUtils import getRoundedMonthBetween, millis
@@ -318,8 +317,7 @@ class ImmobilisableItem(Item, Amount):
       Returns a list of dictionaries representing immobilisation periods for the object
       from_date is included, to_date is excluded
     """
-    kw_key_list = kw.keys()
-    kw_key_list.sort()
+    kw_key_list = sorted(kw.keys())
     if kw_key_list.count('immo_cache_dict'):
       kw_key_list.remove('immo_cache_dict')
     immo_cache_dict = kw.get('immo_cache_dict', {'period':{},
@@ -569,7 +567,7 @@ class ImmobilisableItem(Item, Amount):
               extra_cost_price = current_immo_period.get('start_extra_cost_price')
               main_price = current_immo_period.get('start_main_price')
               current_immo_period['start_price'] = (main_price or 0.) + (extra_cost_price or 0.)
-            key_list = current_immo_period.keys()
+            key_list = ensure_list(current_immo_period.keys())
             for key in key_list:
               value = current_immo_period[key]
               if key.find('_') != -1:
@@ -578,7 +576,7 @@ class ImmobilisableItem(Item, Amount):
           else:
             # A period wich is alone only copies start values to initial ones
             # So it may be invalid later
-            key_list = current_immo_period.keys()
+            key_list = ensure_list(current_immo_period.keys())
             for key in key_list:
               value = current_immo_period[key]
               if key.find('_') != -1:
@@ -779,8 +777,7 @@ class ImmobilisableItem(Item, Amount):
     """
     if at_date is None:
       at_date = DateTime()
-    kw_key_list = ensure_list(kw.keys())
-    kw_key_list.sort()
+    kw_key_list = sorted(kw.keys())
 
     if kw_key_list.count('immo_cache_dict'):
       kw_key_list.remove('immo_cache_dict')

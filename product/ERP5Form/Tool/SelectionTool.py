@@ -32,12 +32,14 @@
 """
 
 from OFS.SimpleItem import SimpleItem
+from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from AccessControl import ClassSecurityInfo
 from ZTUtils import make_query
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Utils import str2bytes
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
@@ -434,7 +436,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             selection_uid_dict[int(uid)] = 1
           except (ValueError, TypeError):
             selection_uid_dict[uid] = 1
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, ensure_list(selection_uid_dict.keys()), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -455,7 +457,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             if int(uid) in selection_uid_dict: del selection_uid_dict[int(uid)]
           except (ValueError, TypeError):
             if uid in selection_uid_dict: del selection_uid_dict[uid]
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, ensure_list(selection_uid_dict.keys()), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -682,7 +684,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         # qdsqdsq/Base_view/qsdsqd --> matches
         # qdsqdsq/Base_viewAaa --> doesn't match
         # qdsqdsq/Umpa_view --> doesn't match
-        if re.search('/%s($|\W+)' % form_id, url):
+        if re.search(r'/%s($|\W+)' % form_id, url):
           return form_id
       return 'view'
 
@@ -1224,10 +1226,7 @@ class SelectionTool( BaseTool, SimpleItem ):
           return None
       # XXX To avoid the difference of the string representations of int and long,
       # convert each element to a string.
-      if six.PY3:
-          return md5(str(sorted(uid_list)).encode()).hexdigest()
-      else:
-          return md5(str(sorted(map(str, uid_list)))).hexdigest()
+      return md5(str2bytes(repr(sorted(str(e) for e in uid_list)))).hexdigest()
 
     # Related document searching
     security.declarePublic('viewSearchRelatedDocumentDialog')
@@ -1404,7 +1403,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                  viewSearchRelatedDocumentDialog1,... if necessary
       """
       aq_base_name = getattr(aq_base(self), name, None)
-      if aq_base_name == None:
+      if aq_base_name is None:
         DYNAMIC_METHOD_NAME = 'viewSearchRelatedDocumentDialog'
         method_name_length = len(DYNAMIC_METHOD_NAME)
 
@@ -1415,15 +1414,15 @@ class SelectionTool( BaseTool, SimpleItem ):
           method_count_string = method_count_string_list[0]
           # be sure that method name is correct
           try:
-            method_count = string.atoi(method_count_string)
-          except TypeError:
+            method_count = int(method_count_string)
+          except (TypeError, ValueError):
             return aq_base_name
           else:
             if len(method_count_string_list) > 1:
               # be sure that method name is correct
               try:
-                sub_index = string.atoi(method_count_string_list[1])
-              except TypeError:
+                sub_index = int(method_count_string_list[1])
+              except (TypeError, ValueError):
                 return aq_base_name
             else:
               sub_index = None
@@ -1540,7 +1539,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def _getSelectionNameListFromContainer(self):
       user_id = self._getUserId()
       return list(set(self._getContainer().getSelectionNameList(user_id) +
-                      self.getTemporarySelectionDict().keys()))
+                      ensure_list(self.getTemporarySelectionDict().keys())))
 
     def isAnonymous(self):
       return self._getUserId() == 'Anonymous User'
@@ -1605,7 +1604,7 @@ class TransactionalCacheContainer(MemcachedContainer):
 class PersistentMappingContainer(BaseContainer):
   def getSelectionNameList(self, user_id):
     try:
-      return self._container[user_id].keys()
+      return ensure_list(self._container[user_id].keys())
     except KeyError:
       return []
 
