@@ -2129,7 +2129,7 @@ class Catalog(Folder,
     if len(empty_value_dict):
       LOG('SQLCatalog', WARNING, 'Discarding columns with empty values: %r' % (empty_value_dict, ))
     if len(unknown_column_dict):
-      message = 'Unknown columns ' + repr(unknown_column_dict.keys())
+      message = 'Unknown columns ' + repr(ensure_list(unknown_column_dict.keys()))
       if ignore_unknown_columns:
         LOG('SQLCatalog', WARNING, message)
       else:

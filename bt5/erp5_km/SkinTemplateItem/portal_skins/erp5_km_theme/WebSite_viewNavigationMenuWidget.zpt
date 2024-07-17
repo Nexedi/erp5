@@ -76,7 +76,7 @@
   <tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);
                          ordered_global_actions python: [x for x in getattr(here, 'portal_workflow').listActionInfos()];
                          absolute_url  context/absolute_url;
-                         count python: reduce(lambda x, y: x+(y.has_key('count') and y['count'] or 0), ordered_global_actions, 0);
+                         count python: reduce(lambda x, y: x+(y.get('count') or 0), ordered_global_actions, 0);
                          portal_url python: context.portal_url();">
     <li class="collapse-menu"
         tal:condition="not:is_anonymous">
@@ -85,10 +85,10 @@
       </a>
       <ul tal:condition="ordered_global_actions">
         <li tal:repeat="action ordered_global_actions">
-          <tal:block tal:condition="python: action.get('disabled') == 1 and action.has_key('workflow_id')">
+          <tal:block tal:condition="python: action.get('disabled') == 1 and 'workflow_id' in action">
             <a class="workflow_title" href='#'>-- <tal:bock i18n:translate="" i18n:domain="ui" tal:content="action/title"/> --</a>
           </tal:block>
-          <tal:block tal:condition="python: action.get('disabled') != 1 and action.has_key('workflow_id')"
+          <tal:block tal:condition="python: action.get('disabled') != 1 and 'workflow_id' in action"
                         tal:define="name python: action.get('name', '');
                         index python: name.find(' (');">
             <a href="#" tal:condition="python: index &gt;= 0"

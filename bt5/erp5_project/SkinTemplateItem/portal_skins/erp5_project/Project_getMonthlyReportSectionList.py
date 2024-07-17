@@ -1,3 +1,4 @@
+from Products.ERP5Form.Report import ReportSection
 from six.moves import range
 
 request = context.REQUEST
@@ -195,7 +196,6 @@ portal.portal_selections.setListboxDisplayMode(request, 'ReportTreeMode',
                                               selection_name=selection_name)
 
 result = []
-from Products.ERP5Form.Report import ReportSection
 
 project_dict = {}
 for project_relative_url in project_relative_url_dict.keys():

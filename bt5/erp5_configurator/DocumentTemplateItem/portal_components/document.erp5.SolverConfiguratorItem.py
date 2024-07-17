@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+import six
 
 
 @zope.interface.implementer(IConfiguratorItem)
@@ -66,7 +67,7 @@ class SolverConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         property_dict = solver_property_dict.get(self.getId())
         argument_dict = {}
 
-        for k, v in property_dict.iteritems():
+        for k, v in six.iteritems(property_dict):
           if k not in ("content_list",) and k in self.showDict():
             argument_dict[k] = v
 

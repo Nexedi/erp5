@@ -196,7 +196,7 @@
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td tal:content="python: '//div[@id=\'group_lane_%s\']//a' % (str((DateTime().day()/3)+1)) " ></td>
+  <td tal:content="python: '//div[@id=\'group_lane_%s\']//a' % (str((DateTime().day() //3 ) + 1))"></td>
   <td></td>
 </tr>
 <tr>
@@ -211,7 +211,7 @@
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td tal:content="python: '//div[@id=\'group_lane_%s\']//a' % (str(DateTime().dow()+1)) " ></td>
+  <td tal:content="python: '//div[@id=\'group_lane_%s\']//a' % (str(DateTime().dow() + 1))"></td>
   <td></td>
 </tr>
 <tr>

@@ -29,13 +29,13 @@
 
 import unittest
 import logging
-from unittest import expectedFailure, skip
+from unittest import expectedFailure, skip, skipIf
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
-from urllib import pathname2url
+from six.moves.urllib.request import pathname2url
 from Testing import ZopeTestCase
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
@@ -49,6 +49,7 @@ import glob
 import sys
 from OFS.Image import Pdata
 from six.moves import range
+import six
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -1004,8 +1005,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertIsNotNone(form)
     group_dict = sequence.get('group_dict')
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
-                      sorted(group_dict.iterkeys()))
-    for group in group_dict.iterkeys():
+                      sorted(six.iterkeys(group_dict)))
+    for group in six.iterkeys(group_dict):
       id_list = []
       for field in form.get_fields_in_group(group):
         id_list.append(field.getId())
@@ -2745,7 +2746,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     for item_name in item_list:
       item = getattr(bt, item_name)
       if item is not None:
-        for data in item._objects.itervalues():
+        for data in six.itervalues(item._objects):
           if hasattr(data, '__ac_local_roles__'):
             self.assertTrue(data.__ac_local_roles__ is None)
           if hasattr(data, '_owner'):
@@ -3338,7 +3339,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     copied, = template_tool.manage_pasteObjects(cb_data)
     current = current_bt._property_sheet_item._objects.copy()
     current_bt._property_sheet_item._objects = PersistentMapping()
-    for k,v in current.iteritems():
+    for k,v in six.iteritems(current):
       k = k.lstrip('portal_property_sheets/')
       current_bt._property_sheet_item._objects[k] = v
     sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
@@ -7344,7 +7345,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     skin_folder = skin_tool._getOb(sequence.get('skin_folder_id'))
 
     file_id = 'fake_js_file'
-    file_content = """
+    file_content = b"""
    var
 
         debug =  [42
@@ -7555,6 +7556,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         email = organisation['email%d' % (j+1)]
         self.assertTrue(email.getTitle().startswith('my email'))
 
+  @skipIf(six.PY3, 'Unsupported scenario on python3')
   def test_UpgradeBrokenObject(self):
     """
       Test a case that there is an broken object and upgrade the path.
