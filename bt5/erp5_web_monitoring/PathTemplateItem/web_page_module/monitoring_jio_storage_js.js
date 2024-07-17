@@ -143,20 +143,15 @@
   };
 
   ReplicatedOPMLStorage.prototype.hasCapacity = function (capacity) {
+    var this_storage_not_capacity_list = ['post', 'getAttachment', 'putAttachment', 'allAttachments'];
+    if (this_storage_not_capacity_list.indexOf(capacity) !== -1) {
+      return false;
+    }
     if (capacity === 'include') {
       return true;
     }
-    if (capacity in ['post', 'getAttachment', 'putAttachment'/*, 'allAttachments'*/]) {
-      return false;
-    }
     return this._local_sub_storage.hasCapacity.apply(this._local_sub_storage,
                                                      arguments);
-  };
-
-  //TODO check
-  ReplicatedOPMLStorage.prototype.allAttachments = function () {
-    return this._local_sub_storage.allAttachments.apply(this._local_sub_storage,
-                                                    arguments);
   };
 
   ReplicatedOPMLStorage.prototype.remove = function (id) {
