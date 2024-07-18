@@ -148,7 +148,7 @@ for attachment in attachment_list:
   for key, value in attachment.get("add_header_list", []):
     part.add_header(key, value)
   if attachment.get("filename", None) is not None:
-    part.add_header("Content-Disposition", "attachment", attachment["filename"])
+    part.add_header("Content-Disposition", "attachment", filename=attachment["filename"])
   outer.attach(part)
 
 #return outer.as_string()
