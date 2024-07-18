@@ -1042,19 +1042,6 @@
         if (has_failed) {
           throw "Failed to import Configurations";
         }
-        //TODO move this to sync gadget?
-          /*return context.notifySubmitted({
-            message: "Failed to import Configurations",
-            status: "error"
-          });
-        }
-        return RSVP.all([
-          context.setSetting("latest_import_date", new Date().getTime()),
-          context.notifySubmitted({
-            message: "Configuration Saved!",
-            status: "success"
-          })
-        ]);*/
         return push_queue;
       })
       .push(function () {
@@ -1064,7 +1051,6 @@
           return syncOpmlStorage(context);
         }
       });
-      //TODO update latest_import_date setting
   };
 
   jIO.addStorage('replicatedopml', ReplicatedOPMLStorage);
