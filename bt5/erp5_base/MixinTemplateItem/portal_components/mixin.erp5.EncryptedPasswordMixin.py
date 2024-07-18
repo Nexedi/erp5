@@ -113,8 +113,6 @@ class EncryptedPasswordMixin(object):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPassword')
   def getPassword(self, *args, **kw):
-    """
-    """
     marker = []
     if len(args):
       default_password = args[0]

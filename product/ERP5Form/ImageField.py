@@ -215,8 +215,8 @@ class ImageFieldWidget(Widget.TextWidget):
     def _getPictureSize(self, picture_width, picture_height, target_width,
         target_height):
       # if not match causes exception
-      width_tuple = re.match("(\d[\d\.]*)(.*)", target_width).groups()
-      height_tuple = re.match("(\d[\d\.]*)(.*)", target_height).groups()
+      width_tuple = re.match(r"(\d[\d\.]*)(.*)", target_width).groups()
+      height_tuple = re.match(r"(\d[\d\.]*)(.*)", target_height).groups()
       unit = width_tuple[1]
       w = float(width_tuple[0])
       h = float(height_tuple[0])
