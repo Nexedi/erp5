@@ -269,8 +269,6 @@ class ZoomifyBase:
 
   def ZoomifyProcess(self, imageNames):
     """ the method the client calls to generate zoomify metadata """
-
-    pass
     return
 
   def preProcess(self):
