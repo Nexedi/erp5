@@ -55,7 +55,7 @@
                      "url": options.url,
                      "username": options.username,
                      "password": options.password,
-                     "slapos_master_url": options.slapos_master_url || "not-provided",
+                     "slapos_master_url": options.slapos_master_url || "",
                      "page": "ojsm_opml_add"
                    }
                   });
@@ -74,7 +74,7 @@
              "url": options.url,
              "username": options.username,
              "password": options.password,
-             "slapos_master_url": options.slapos_master_url || "not-provided",
+             "slapos_master_url": options.slapos_master_url || "",
              "page": "ojsm_opml_add"
            }
           });
