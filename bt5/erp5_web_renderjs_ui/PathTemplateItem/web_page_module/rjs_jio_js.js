@@ -13042,6 +13042,7 @@ return new Parser;
       sub_storage;
     if ((name === "list") ||
             (name === "query") ||
+            (name === "limit") ||
             (name === "select")) {
       result = true;
       len = this._storage_list.length;
