@@ -617,8 +617,8 @@ class ODFStrategy(Implicit):
     if svg_width is None or svg_height is None:
       return ('0cm', '0cm')
     # if not match causes exception
-    width_tuple = re.match("(\d[\d\.]*)(.*)", svg_width).groups()
-    height_tuple = re.match("(\d[\d\.]*)(.*)", svg_height).groups()
+    width_tuple = re.match(r"(\d[\d\.]*)(.*)", svg_width).groups()
+    height_tuple = re.match(r"(\d[\d\.]*)(.*)", svg_height).groups()
     unit = width_tuple[1]
     w = Decimal(width_tuple[0])
     h = Decimal(height_tuple[0])
