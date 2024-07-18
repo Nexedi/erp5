@@ -640,7 +640,7 @@ class TestInvoice(TestInvoiceMixin):
     parser = OOoParser()
     parser.openFromBytes(odt)
     style_xml = parser.oo_files['styles.xml']
-    self.assertNotIn('<draw:image', style_xml)
+    self.assertNotIn(b'<draw:image', style_xml)
 
   def test_Invoice_viewAsODT_invalid_image(self):
     resource = self.portal.getDefaultModule(
