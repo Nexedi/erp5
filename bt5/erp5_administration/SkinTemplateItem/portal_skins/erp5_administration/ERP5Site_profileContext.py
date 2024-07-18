@@ -47,4 +47,4 @@ else:
 response.setHeader('content-type', content_type)
 response.setHeader('content-disposition', 'attachment; filename="' + filename + '"')
 response.write(data)
-raise Exception('profiling')
+raise RuntimeError('profiling')
