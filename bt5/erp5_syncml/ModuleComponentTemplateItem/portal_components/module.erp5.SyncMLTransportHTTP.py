@@ -31,7 +31,7 @@ from requests import post
 
 syncml_logger = getLogger('ERP5SyncML')
 
-class ConnectionError(Exception):
+class ConnectionError(Exception):  # pylint:disable=redefined-builtin
   pass
 
 
