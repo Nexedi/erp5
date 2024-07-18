@@ -157,6 +157,8 @@
     if (doc.slapos_master_url && doc.slapos_master_url !== undefined &&
       doc.slapos_master_url !== "") {
       opml_dict.slapos_master_url = doc.slapos_master_url;
+    } else {
+      opml_dict.slapos_master_url = "";
     }
     gadget.state.message.textContent = "";
 
