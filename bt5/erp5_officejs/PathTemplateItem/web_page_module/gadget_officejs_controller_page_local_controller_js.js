@@ -104,7 +104,9 @@
             form_definition: form_definition,
             form_type: form_definition.form_type,
             view: options.view || app_view,
-            view_action_dict: view_action_dict
+            view_action_dict: view_action_dict,
+            notify_type: options.notify_type,
+            notify_msg: options.notify_msg
           });
         }, function (error) {
           // jio not found error
@@ -144,6 +146,14 @@
           return gadget.updatePanel({
             view_action_dict: gadget.state.view_action_dict
           });
+        })
+        .push(function () {
+          if (gadget.state.notify_msg && gadget.state.notify_type) {
+            return gadget.notifySubmitted({
+              message: gadget.state.notify_msg,
+              status: gadget.state.notify_type
+            });
+          }
         });
     })
 
