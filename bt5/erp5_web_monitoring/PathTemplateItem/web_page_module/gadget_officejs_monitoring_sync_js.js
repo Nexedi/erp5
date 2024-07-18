@@ -47,7 +47,9 @@
 
       function syncAllStorage() {
         var has_error = false,
-          last_sync_time;
+          last_sync_time,
+          classname = "success",
+          message = "Synchronisation finished.";
         gadget.props.started = true;
         return new RSVP.Queue()
           .push(function () {
@@ -81,9 +83,6 @@
             ]);
           })
           .push(function () {
-            var classname = "success",
-              message = "Synchronisation finished.";
-
             if (has_error) {
               classname = "error";
               message = "Synchronisation finished with error(s).";
@@ -96,15 +95,7 @@
           })
           .push(function () {
             gadget.props.started = false;
-            /*return $.notify(
-              "Last Sync: " + formatDate(new Date(last_sync_time)),
-              {
-                position: "bottom right",
-                autoHide: true,
-                className: "success",
-                autoHideDelay: 30000
-              }
-            );*/
+            return {msg: message, type: classname};
           });
       }
 
