@@ -259,7 +259,8 @@ class TestCRM(BaseTestCRM):
 
     if direction == "outgoing":
       getter_id = "getDestinationRelatedValue"
-    elif direction == "incoming":
+    else:
+      assert direction == "incoming"
       getter_id = "getSourceRelatedValue"
     related_event = getattr(pers1, getter_id)(portal_type='Mail Message')
     self.assertNotEqual(None, related_event)
@@ -1672,9 +1673,11 @@ class TestCRMMailSend(BaseTestCRM):
 
     # answer event must have been created
     self.assertEqual(len(self.portal.event_module), 2)
+    answer_event = None
     for ev in self.portal.event_module.objectValues():
       if ev.getId() != first_event_id:
         answer_event = ev
+    self.assertIsNotNone(answer_event)
 
     # check properties of answer event
     self.assertEqual(answer_event.getSimulationState(), "started")
