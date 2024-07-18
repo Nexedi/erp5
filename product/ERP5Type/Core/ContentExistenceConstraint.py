@@ -76,7 +76,7 @@ class ContentExistenceConstraint(ConstraintMixin):
 
     # Otherwise, generate an error message
     mapping = {}
-    if portal_type is ():
+    if not portal_type:
       message_id = 'message_no_subobject'
     else:
       message_id = 'message_no_subobject_portal_type'
