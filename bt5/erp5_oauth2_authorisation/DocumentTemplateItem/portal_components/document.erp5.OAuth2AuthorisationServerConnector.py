@@ -544,7 +544,7 @@ class _ERP5RequestValidator(RequestValidator):
         return token_callable(**kw)
       except jwt.InvalidTokenError:
         pass
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def client_authentication_required(self, request, *args, **kwargs):
     # Use this method, which is called early on most endpoints, to setup request.client .
@@ -1278,7 +1278,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
           token_dict[JWT_PAYLOAD_KEY].encode('ascii'),
         )
         return token_dict
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def _getRefreshTokenDict(self, value, request):
     for _, algorithm, symetric_key in self.__getRefreshTokenKeyList():
@@ -1300,7 +1300,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         return token_dict
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def _checkCustomTokenPolicy(self, token, request):
     """
@@ -1360,7 +1360,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         return token_dict['iss']
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   security.declarePrivate('getRefreshTokenClientId')
   def getRefreshTokenClientId(self, value, request):
@@ -1386,7 +1386,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         return token_dict['iss']
-    raise
+    raise  # pylint:disable=misplaced-bare-raise
 
   def _getSessionValueFromTokenDict(self, token_dict):
     session_value = self._getSessionValue(
