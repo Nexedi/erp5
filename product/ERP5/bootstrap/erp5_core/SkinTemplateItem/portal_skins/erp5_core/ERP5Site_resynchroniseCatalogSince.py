@@ -116,6 +116,6 @@ if dry:
   if six.PY3:
     result = result.encode()
   RESPONSE.write(result)
-  raise Exception('dry run')
+  raise RuntimeError('dry run')
 log(result)
 return result
