@@ -28,12 +28,12 @@
 ##############################################################################
 
 import six
-# pylint:disable=import-error,no-name-in-module
+# pylint:disable=import-error,no-name-in-module,deprecated-class
 if six.PY3:
   from collections.abc import Set
 else:
   from collections import Set
-# pylint:enable=import-error,no-name-in-module
+# pylint:enable=import-error,no-name-in-module,deprecated-class
 import difflib
 import warnings
 try:

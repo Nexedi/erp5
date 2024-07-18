@@ -97,7 +97,7 @@ def checkField(folder, form, field):
       if a not in (None, "portal_catalog", "searchFolder", "objectValues",
                    "contentValues", "ListBox_initializeFastInput"):
         if not a.endswith('List'):
-          if 0:
+          if 0:  # pylint:disable=using-constant-test
             error_message += "%s : %s : %r Bad Naming Convention\n" % (path, id_, a)
   return error_message
 
