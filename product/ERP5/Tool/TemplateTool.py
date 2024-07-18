@@ -1101,7 +1101,7 @@ class TemplateTool (BaseTool):
         - 1.1 < 2.0
         - 1.0.0 = 1.0
       """
-      r = re.compile('(\d+|[a-zA-Z])')
+      r = re.compile(r'(\d+|[a-zA-Z])')
       v1 = r.findall(version1)
       v2 = r.findall(version2)
 
