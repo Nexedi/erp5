@@ -87,7 +87,7 @@ class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
 
     # This is bad XXX-JPS - use use
     """
-    return None
+    return ()
 
   def _getInputMovementList(self, movement_list=None, rounding=None):
     """Input movement list comes from delivery"""
