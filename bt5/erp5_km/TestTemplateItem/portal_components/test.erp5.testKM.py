@@ -178,6 +178,7 @@ class TestKM(TestKMMixIn):
     self.tic()
     pads = knowledge_pad_module.ERP5Site_getKnowledgePadListForUser()
     self.assertEqual(2, len(pads))
+    new_pad = None
     for pad in pads:
       pad = pad.getObject()
       if pad == default_pad:
