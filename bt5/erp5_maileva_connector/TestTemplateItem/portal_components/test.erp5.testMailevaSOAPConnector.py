@@ -121,7 +121,7 @@ def submitRequestWithFailure(**kw):
 
 class ServiceWithException:
   def submit(self, **kw):
-    raise Exception('exception')
+    raise RuntimeError('exception')
 
 class ClientWithException:
   def __init__(self):
