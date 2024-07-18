@@ -150,7 +150,6 @@ class StateError(Exception):
   """
   Must call only an available transition
   """
-  pass
 def executeTransition(state, transition, document, form_kw=None):
   """
   Execute transition on the object.
