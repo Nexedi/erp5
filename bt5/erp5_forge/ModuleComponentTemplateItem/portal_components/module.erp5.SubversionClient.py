@@ -64,17 +64,14 @@ class getTransactionalDirectory(str):
 class SubversionError(Exception):
   """The base exception class for the Subversion interface.
   """
-  pass
 
 class SubversionInstallationError(SubversionError):
   """Raised when an installation is broken.
   """
-  pass
 
 class SubversionTimeoutError(SubversionError):
   """Raised when a Subversion transaction is too long.
   """
-  pass
 
 class SubversionLoginError(SubversionError):
   """Raised when an authentication is required.

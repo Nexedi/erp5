@@ -175,7 +175,7 @@ def hasScript(s):
 def decode_htmlentities(s):
    """ XSS code can be hidden with htmlentities """
 
-   entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
+   entity_pattern = re.compile(r"&#(?P<htmlentity>x?\w+)?;?")
    s = entity_pattern.sub(decode_htmlentity,s)
    return s
 
@@ -190,7 +190,7 @@ def decode_htmlentity(m):
    except ValueError:
       return entity_value
 
-charset_parser = re.compile('charset="?(?P<charset>[^"]*)"?[\S/]?',
+charset_parser = re.compile(r'charset="?(?P<charset>[^"]*)"?[\S/]?',
                             re.IGNORECASE)
 class CharsetReplacer:
   def __init__(self, encoding):
