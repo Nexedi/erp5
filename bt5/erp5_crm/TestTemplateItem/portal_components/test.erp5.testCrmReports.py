@@ -546,7 +546,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_out2
         direction='Outgoing'
         campaign=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_inc1
         direction='Incoming'
@@ -856,7 +857,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_out2
         direction='Outgoing'
         meeting=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_inc1
         direction='Incoming'
@@ -1166,7 +1168,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_inc2
         direction='Incoming'
         support_request=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_out1
         direction='Outgoing'
@@ -1476,7 +1479,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_out2
         direction='Outgoing'
         sale_opportunity=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_inc1
         direction='Incoming'
@@ -1745,7 +1749,8 @@ class TestCrmReports(CrmTestCase):
         pSupportRequest = 0
         punassigned = 1
         ptotal = 5
-      elif i==5:
+      else:
+        assert i == 5
         pvalidation_state = 'Responded'
         pCampaign = 2
         pMeeting = 0
@@ -2109,7 +2114,8 @@ class TestCrmReports(CrmTestCase):
         pexpired = 1
         presponded = 0
         ptotal = 2
-      elif i==4:
+      else:
+        assert i == 4
         pticket_title = ''
         pticket_type = 'Unassigned'
         pdelivered = 1

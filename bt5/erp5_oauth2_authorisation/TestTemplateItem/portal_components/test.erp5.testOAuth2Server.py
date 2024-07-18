@@ -89,7 +89,12 @@ class FormExtractor(HTMLParser):
     if tag == 'form':
       self.__in_form = False
 
+  def error(self, message):
+    raise ValueError(message)
+
+
 class TestOAuth2(ERP5TypeTestCase):
+  # pylint:disable=unused-private-member
   __cleanup_list = None
   __port = None
   __query_trace = None
