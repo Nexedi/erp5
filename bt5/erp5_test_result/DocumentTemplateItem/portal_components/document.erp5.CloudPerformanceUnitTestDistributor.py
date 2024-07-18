@@ -42,7 +42,6 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     all test nodes runs all test suites, this is not a problem to keep
     configuration
     """
-    pass
 
   security.declarePublic("optimizeConfiguration")
   def optimizeConfiguration(self):
