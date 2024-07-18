@@ -490,9 +490,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         first_object = False
       elif sub_context is not None:
         context = sub_context
-      else:
+      # else:
         # Ignore non existing objects
-        pass
         #LOG('ERP5Conduit', INFO, 'sub document of %s not found with id:%r'%\
                                          #(context.getPath(), sub_context_id))
       xpath = xpath.replace(object_block, '', 1)
@@ -695,7 +694,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   def afterNewObject(self, object): # pylint: disable=redefined-builtin
     """Overloadable method
     """
-    pass
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                             'getStatusFromXml')

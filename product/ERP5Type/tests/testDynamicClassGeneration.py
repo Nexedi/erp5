@@ -3219,13 +3219,11 @@ class Test(ERP5TypeTestCase):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def _restoreMailHost(self):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def test_01_sampleTest(self):
     self.assertEqual(0, 0)
