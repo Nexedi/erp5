@@ -57,7 +57,7 @@ class VirtualFolderMixin:
     if method is not None:
       return method(name, typ, body)
 
-    return Folder.PUT_factory(self, name, typ, body)
+    return Folder.PUT_factory(self, name, typ, body)  # pylint:disable=not-callable
 
   security.declarePrivate('_setObject')
   def _setObject(self, id, ob, **kw): # pylint: disable=redefined-builtin

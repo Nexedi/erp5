@@ -147,6 +147,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
     """start_count: number of test line to start
        stop_count: number of test line to stop
     """
+    # pylint:disable=possibly-used-before-assignment
     status_dict = {}
     test_result_path, revision = self._createTestResult(revision=revision,
       test_list=['testFoo', 'testBar'], test_title=test_title, node_title=node_title)
@@ -168,6 +169,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
       self.assertEqual(test_result.getSimulationState(), "stopped")
     else:
       self.assertEqual(test_result.getSimulationState(), "started")
+    # pylint:enable=possibly-used-before-assignment
 
   def _cleanupTestResult(self):
     self.tic()
