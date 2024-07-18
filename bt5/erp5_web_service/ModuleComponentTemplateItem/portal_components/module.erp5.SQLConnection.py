@@ -54,10 +54,6 @@ class SQLConnection:
   """
   __allow_access_to_unprotected_subobjects__ = 1
 
-  def __init__(self, *args, **kw):
-    """ Do nothing """
-    pass
-
   def connect(self):
     """Get a handle to a remote connection."""
     return self

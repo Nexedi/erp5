@@ -141,6 +141,8 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
                                 reference='individual_aspect',
                                 id='individual_aspect',
                                 category_type=category_type)
+    else:
+      aspect = self.portal_categories['individual_aspect']
 
     aspect.newContent(portal_type='Category', title='Aspect 1',
                       reference='A1',id='a1')
