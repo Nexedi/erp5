@@ -1625,7 +1625,7 @@ class SimulationTool(BaseTool):
           try:
             result = cmp(line_a[key], line_b[key])
           except KeyError:
-            raise Exception('Impossible to sort result since columns sort '
+            raise ValueError('Impossible to sort result since columns sort '
               'happens on are not available in result: %r' % (key, ))
           if result:
             if not sort_direction.upper().startswith('A'):
@@ -2523,7 +2523,7 @@ class SimulationTool(BaseTool):
                 simulation_movement.expand(expand_policy='immediate')
 
               # activate builder
-              movement_portal_type, = movement_portal_type_set
+              movement_portal_type, = movement_portal_type_set  # pylint:disable=unbalanced-tuple-unpacking
               merged_builder = self._findBuilderForDelivery(main_delivery, movement_portal_type)
               if merged_builder is None:
                 error_list.append(translateString("Unable to find builder"))
