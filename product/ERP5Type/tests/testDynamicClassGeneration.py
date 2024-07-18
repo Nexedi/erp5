@@ -3219,13 +3219,11 @@ class Test(ERP5TypeTestCase):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def _restoreMailHost(self):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def test_01_sampleTest(self):
     self.assertEqual(0, 0)
@@ -3321,7 +3319,7 @@ class Test(ERP5TypeTestCase):
                                reset_portal_type_at_transaction_boundary=True)
 
     output = runLiveTest('testRunLiveTest')
-    expected_msg_re = re.compile('Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
+    expected_msg_re = re.compile(r'Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
     # Now try addCleanup
