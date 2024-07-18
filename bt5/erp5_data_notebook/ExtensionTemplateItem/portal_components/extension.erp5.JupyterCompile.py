@@ -846,20 +846,20 @@ class ImportFixer(ast.NodeTransformer):
         test_import_string = "from %s import " %(node.module)
         for i in range(0, len(original_names)):
           test_import_string = test_import_string + original_names[i]
-          if as_names[i]!=None:
+          if as_names[i] is not None:
             test_import_string = test_import_string + ' as %s' %(as_names[i])
           test_import_string = test_import_string + ', '
         test_import_string = test_import_string[:-2]
 
         module_names = []
         for i in range(0, len(original_names)):
-          if as_names[i]!=None:
+          if as_names[i] is not None:
             module_names.append(as_names[i])
           else:
             module_names.append(original_names[i])
 
         for i in range(0, len(original_names)):
-          if as_names[i]!=None:
+          if as_names[i] is not None:
             result_name = result_name + '%s_' %(as_names[i])
           else:
             result_name = result_name + '%s_' %(original_names[i])
