@@ -51,7 +51,9 @@ from zLOG import LOG
 from six.moves import range
 
 if six.PY3:
-  long = int  # pylint:disable=redefined-builtin
+  long_type = int  # pylint:disable=redefined-builtin
+else:
+  long_type = long # pylint:disable=undefined-variable
 
 def format_stack(thread=None):
   frame_dict = sys._current_frames()
@@ -105,8 +107,8 @@ class TransactionThread(threading.Thread):
       # Login
       newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
       self.payload(portal_value=portal_value)
-    except Exception as e: # pylint: disable=redefine-in-handler
-      self.exception = e # pylint: disable=redefine-in-handler
+    except Exception as e:
+      self.exception = e
       if six.PY2:
         self.exception.__traceback__ = sys.exc_info()[2]
 
@@ -595,7 +597,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uid_dict = {}
     for _ in range(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
-      self.assertIsInstance(uid, long)
+      self.assertIsInstance(uid, long_type)
       self.assertNotIn(uid, uid_dict)
       uid_dict[uid] = None
 
@@ -1671,7 +1673,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation',)
     # Ensure that the new uid is long.
     uid = organisation.uid
-    self.assertTrue(isinstance(uid, long))
+    self.assertTrue(isinstance(uid, long_type))
     self.tic()
 
     # Ensure that the uid did not change after the indexing.
@@ -1683,7 +1685,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # After the indexing, the uid must be converted to long automatically,
     # and the value must be equivalent.
-    self.assertTrue(isinstance(uid, long))
+    self.assertTrue(isinstance(uid, long_type))
     self.assertEqual(organisation.uid, uid)
 
   def test_55_FloatFormat(self):
