@@ -89,7 +89,7 @@ class ContributionTool(BaseTool):
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   @fill_args_from_request('data', 'filename', 'portal_type', 'container_path',
                           'discover_metadata', 'temp_object', 'reference')
-  def newContent(self, REQUEST=None, **kw):
+  def newContent(self, REQUEST=None, **kw):  # pylint:disable=arguments-differ
     """
       The newContent method is overriden to implement smart content
       creation by detecting the portal type based on whatever information
@@ -282,7 +282,6 @@ class ContributionTool(BaseTool):
       Create a new content based on XML data. This is intended for contributing
       to ERP5 from another application.
     """
-    pass
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getMatchedFilenamePatternDict')

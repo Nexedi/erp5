@@ -213,12 +213,12 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           kw.setdefault("ignore_unknown_columns", True)
         # Always remove '-C'-named parameter.
         kw.pop('-C', None)
-        if self.invert_mode is not 0:
+        if self.invert_mode:
           kw['uid'] = self.uids
         if method is None or isinstance(method, str):
           method_path = method or self.method_path
           method = context.unrestrictedTraverse(method_path)
-        if type(method) is type('a'):
+        if isinstance(method, str):
           method = context.unrestrictedTraverse(self.method_path)
         sort_on = getattr(self, 'sort_on', [])
         if len(sort_on) == 0:
@@ -338,7 +338,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def getZoom(self):
       try:
         current_zoom=self.params['zoom']
-        if current_zoom != None:
+        if current_zoom is not None:
           return current_zoom
         else:
           return 1
