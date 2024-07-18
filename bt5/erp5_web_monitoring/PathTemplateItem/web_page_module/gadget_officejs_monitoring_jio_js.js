@@ -90,21 +90,19 @@
       var gadget = this, current_version, index, appcache_storage,
         monitoring_jio, appcache_jio, migration_version, manifest,
         origin_url = window.location.href, i, master_url_list,
-        storage_definition_list = [];
+        storage_definition_list;
       return gadget.getSettingList(['configuration_manifest',
                                     'migration_version',
                                     'default_view_reference',
                                     'master_url_list'])
         .push(function (result_list) {
-          if (result_list[3]) {
-            master_url_list = result_list[3];
-            for (i = 0; i < master_url_list.length; i += 1) {
-              storage_definition_list.push({
-                type: "erp5",
-                url: master_url_list[i],
-                default_view_reference: result_list[2]
-              });
-            }
+          master_url_list = result_list[3];
+          for (i = 0; i < master_url_list.length; i += 1) {
+            storage_definition_list.push({
+              type: "erp5",
+              url: master_url_list[i],
+              default_view_reference: result_list[2]
+            });
           }
           //TODO fix missing router setting (it's set but get returns undefined)
           migration_version = result_list[1];
@@ -112,8 +110,7 @@
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
           manifest = "gadget_officejs_monitoring.configuration";
-          monitoring_jio =
-          {
+          monitoring_jio = /*{
             type: "replicatedopml",
             remote_storage_unreachable_status: "WARNING",
             remote_opml_check_time_interval: 86400000,
@@ -125,6 +122,22 @@
                 sub_storage: {
                   type: "indexeddb",
                   database: "monitoring_local.db"
+                }
+              }
+            }
+          };*/
+          {
+            type: "replicatedopml",
+            remote_storage_unreachable_status: "WARNING",
+            remote_opml_check_time_interval: 86400000,
+            request_timeout: 25000, // timeout is to 25 second
+            local_sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "monitoring_local_roque.db"
                 }
               }
             },
