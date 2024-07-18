@@ -99,6 +99,9 @@
                           "is not defined");
     }
     this._local_sub_storage = jIO.createJIO(spec.local_sub_storage);
+    if (spec.remote_sub_storage !== undefined) {
+      this._remote_sub_storage = jIO.createJIO(spec.remote_sub_storage);
+    }
     this._remote_storage_unreachable_status =
       spec.remote_storage_unreachable_status;
     this._remote_storage_dict = {};
@@ -140,14 +143,20 @@
   };
 
   ReplicatedOPMLStorage.prototype.hasCapacity = function (capacity) {
+    var this_storage_not_capacity_list = ['post', 'getAttachment', 'putAttachment'];
+    if (this_storage_not_capacity_list.indexOf(capacity) !== -1) {
+      return false;
+    }
     if (capacity === 'include') {
       return true;
     }
-    if (capacity in ['post', 'getAttachment', 'putAttachment', 'allAttachments']) {
-      return false;
-    }
     return this._local_sub_storage.hasCapacity.apply(this._local_sub_storage,
                                                      arguments);
+  };
+
+  ReplicatedOPMLStorage.prototype.allAttachments = function () {
+    return this._local_sub_storage.allAttachments.apply(this._local_sub_storage,
+                                                    arguments);
   };
 
   ReplicatedOPMLStorage.prototype.remove = function (id) {
@@ -919,6 +928,7 @@
     }
 
     function getInstanceOPMLList(storage, limit) {
+      if (!storage) return [];
       var instance_tree_list = [],
         opml_list = [],
         uid_dict = {};
@@ -1004,17 +1014,15 @@
         );
       })
       .push(function () {
-        return context._remote_sub_storage.repair.apply(
-          context._remote_sub_storage,
-          argument_list
-        );
+        if (context._remote_sub_storage) {
+          return context._remote_sub_storage.repair.apply(
+            context._remote_sub_storage,
+            argument_list
+          );
+        }
       })
       .push(function () {
-        if (!context._remote_sub_storage) {
-          return [];
-        } else {
-          return getInstanceOPMLList(context._remote_sub_storage);
-        }
+        return getInstanceOPMLList(context._remote_sub_storage);
       })
       .push(undefined, function () {
         has_failed = true;
@@ -1037,19 +1045,9 @@
           pushOPML(opml_list[i]);
         }
         if (has_failed) {
-          return context.notifySubmitted({
-            message: "Failed to import Configurations",
-            status: "error"
-          });
+          throw "Failed to import Configurations";
         }
-        return RSVP.all([
-          context.setSetting("latest_import_date", new Date().getTime()),
-          context.notifySubmitted({
-            message: "Configuration Saved!",
-            status: "success"
-          }),
-          push_queue //TODO CHECK
-        ]);
+        return push_queue;
       })
       .push(function () {
       })
@@ -1058,7 +1056,6 @@
           return syncOpmlStorage(context);
         }
       });
-      //TODO update latest_import_date setting
   };
 
   jIO.addStorage('replicatedopml', ReplicatedOPMLStorage);
