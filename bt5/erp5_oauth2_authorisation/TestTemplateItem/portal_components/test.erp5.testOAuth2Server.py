@@ -85,6 +85,7 @@ class FormExtractor(HTMLParser.HTMLParser):
       self.__in_form = False
 
 class TestOAuth2(ERP5TypeTestCase):
+  # pylint:disable=unused-private-member
   __cleanup_list = None
   __port = None
   __query_trace = None
