@@ -2,7 +2,7 @@ simulation_method = getattr(delivery, 'getSimulationState', None)
 if simulation_method is None:
   return '#D1E8FF'
 
-simulation_state = simulation_method()
+simulation_state = simulation_method()  # pylint:disable=not-callable
 
 color_dict = {
   'draft': '#a7d7ae',
