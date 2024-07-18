@@ -112,22 +112,7 @@
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
           manifest = "gadget_officejs_monitoring.configuration";
-          monitoring_jio = /*{
-            type: "replicatedopml",
-            remote_storage_unreachable_status: "WARNING",
-            remote_opml_check_time_interval: 86400000,
-            request_timeout: 25000, // timeout is to 25 second
-            local_sub_storage: {
-              type: "query",
-              sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: "monitoring_local.db"
-                }
-              }
-            }
-          };*/
+          monitoring_jio =
           {
             type: "replicatedopml",
             remote_storage_unreachable_status: "WARNING",
