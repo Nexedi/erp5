@@ -107,6 +107,8 @@
           return gadget.setSettingList({'master_url_list': master_url_list,
                                         'latest_master_url_list': master_url_list});
         }
+      })
+      .push(function () {
         return monitoring_jio;
       });
   }
