@@ -5,7 +5,7 @@
 
   rJS(window)
     .setState({
-      erp5_url_list: "https://panel.rapid.space/hateoas/"
+      erp5_url_list: ["https://panel.rapid.space/hateoas/"]
     })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -64,7 +64,7 @@
                 "my_erp5_url_list": {
                   "description": "",
                   "title": "Connection Url List",
-                  "default": gadget.state.erp5_url_list,
+                  "default": gadget.state.erp5_url_list.join('\r\n'),
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
