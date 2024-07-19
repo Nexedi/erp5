@@ -1,4 +1,5 @@
 from DateTime import DateTime
+from zExceptions import NotFound
 
 now = DateTime()
 today_string = now.strftime('%Y%m%d')
@@ -116,16 +117,23 @@ if modify and data_ingestion is None:
 
 
 # find ingestion line for current resource
+input_line = None
+operation_line = None
 for line in data_ingestion.objectValues(portal_type="Data Ingestion Line"):
   if line.getResourceReference() == resource_reference:
     input_line = line
   elif line.getResourceValue().getPortalType() == "Data Operation":
     operation_line = line
 
+if input_line is None:
+  raise NotFound('No relevant data ingestion line found.')
 if modify and input_line.getQuantity() == 0:
   init_input_line(input_line, operation_line)
 
+if operation_line is None:
+  raise NotFound('No relevant data operation found.')
 data_operation = operation_line.getResourceValue()
+
 parameter_dict = {
    input_line.getReference(): \
      {v.getPortalType(): v for v in input_line.getAggregateValueList()}}
