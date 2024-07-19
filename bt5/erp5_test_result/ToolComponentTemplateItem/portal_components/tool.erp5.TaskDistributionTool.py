@@ -32,7 +32,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 from zLOG import LOG, DEBUG
-from xmlrpclib import Binary
+from six.moves.xmlrpc_client import Binary
 import six
 
 class TaskDistributionTool(BaseTool):

@@ -30,6 +30,7 @@
 import mock
 from collections import deque
 import unittest
+import warnings
 
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -38,6 +39,9 @@ from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 import six
+if six.PY3:
+  def cmp(a, b):
+      return (a > b) - (a < b)
 
 class TestCMFCategory(ERP5TypeTestCase):
 
@@ -785,31 +789,31 @@ class TestCMFCategory(ERP5TypeTestCase):
         base_cat.getCategoryChildIndentedTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['\xc2\xa0\xc2\xa0The Sub Title', 'the_id/the_sub_id']],
+            [NBSP_UTF8 * 2 + 'The Sub Title', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedIndentedTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['\xc2\xa0\xc2\xa0The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            [NBSP_UTF8 * 2 + 'The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedCompactTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedLogicalPathItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Title/The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedCompactLogicalPathItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Title/The Süb Tïtle', 'the_id/the_sub_id']],
       )
 
   def test_CategoryChildTitleItemListFilterNodeFilterLeave(self):
@@ -949,8 +953,8 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertSameSet(c1.getCategoryChildValueList(is_self_excluded=0),
                                                     (c1, c11, c111))
 
-  def test_24_getCategoryChildValueListLocalSortMethod(self):
-    '''Test getCategoryChildValueList local sort method'''
+  def test_24_getCategoryChildValueListLocalSort(self):
+    '''Test getCategoryChildValueList local sort'''
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='child_test')
     c1 = bc.newContent(portal_type='Category', id='1', int_index=10, title='C')
@@ -971,17 +975,54 @@ class TestCMFCategory(ERP5TypeTestCase):
     # sort_order which sort the whole list regardless of the original
     # structure).
 
-    # This can be done either with a function (like cmp argument to python
-    # list sort)
+    sort_key_calls = []
+    def sort_key(c):
+      sort_key_calls.append(c)
+      return c.getTitle()
+
+    # here c1, c2, c3 are sorted by their titles
+    self.assertEqual(list(bc.getCategoryChildValueList(
+                                        local_sort_key=sort_key)),
+                      [c3, c2, c1, c11, c111, c12])
+    self.assertTrue(sort_key_calls)
+    # here c11 & c12 are sorted by their titles
+    self.assertEqual(list(c1.getCategoryChildValueList(
+                              local_sort_key=sort_key)), [c11, c111, c12])
+    self.assertTrue(sort_key_calls)
+
+    # This can be done with a function, using `local_sort_key` or
+    # `local_sort_method` (with is like cmp argument to python2 list sort)
+    sort_func_calls = []
     def sort_func(a, b):
+      sort_func_calls.append((a, b))
       return cmp(a.getTitle(), b.getTitle())
+    # `local_sort_method` is deprecated, so using it cause a warning to be
+    # emitted. Because the method exists on both category and base category
+    # there can be two warnings.
+    with warnings.catch_warnings(record=True) as warning_list:
+      warnings.simplefilter("always")
+      c1.getCategoryChildValueList(local_sort_method=sort_func)
+    self.assertEqual(
+      {str(w.message) for w in warning_list},
+      {'`local_sort_method` argument is deprecated, use `local_sort_key` instead'})
+    with warnings.catch_warnings(record=True) as warning_list:
+      warnings.simplefilter("always")
+      bc.getCategoryChildValueList(local_sort_method=sort_func)
+    self.assertEqual(
+      {str(w.message) for w in warning_list},
+      {'`local_sort_method` argument is deprecated, use `local_sort_key` instead'})
+
+    del sort_func_calls[:]
     # here c1, c2, c3 are sorted by their titles
     self.assertEqual(list(bc.getCategoryChildValueList(
                                         local_sort_method=sort_func)),
                       [c3, c2, c1, c11, c111, c12])
+    self.assertTrue(sort_func_calls)
+    del sort_func_calls[:]
     # here c11 & c12 are sorted by their titles
     self.assertEqual(list(c1.getCategoryChildValueList(
                               local_sort_method=sort_func)), [c11, c111, c12])
+    self.assertTrue(sort_func_calls)
 
     # This can also be done with a local_sort_id, then objects are sorted by
     # comparing this 'sort_id' property (using getProperty())
@@ -1363,9 +1404,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(get(bc.id), list('aa'))
     _set(bc.id, list('baa'))
     self.assertEqual(get(bc.id), list('aba'))
-    _set(bc.id, map(base, 'bb'), 1)
+    _set(bc.id, [base(e) for e in 'bb'], 1)
     self.assertEqual(get(bc.id), list('bb'))
-    _set(bc.id, map(base, 'abb'), 1)
+    _set(bc.id, [base(e) for e in 'abb'], 1)
     self.assertEqual(get(bc.id), list('bab'))
     _set(bc.id, ())
 

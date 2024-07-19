@@ -57,8 +57,6 @@ if active_process_path:
 else:
   raise ValueError("No active process found to process report")
 
-def sortProduct(a, b):
-  return cmp(a['product'], b['product'])
 
 period_counter_dict = {}
 line_list = []
@@ -132,7 +130,7 @@ if len(client_dict):
 
           product_lines_list.append(obj)
       # sort product list
-      product_lines_list.sort(sortProduct)
+      product_lines_list.sort(key=lambda p: p['product'])
       extend(product_lines_list)
 else:
   # products
@@ -169,7 +167,8 @@ else:
         period_counter_dict['total amount'] = line_total_amount
       append(obj)
 
-    line_list.sort(sortProduct)
+    line_list.sort(key=lambda p: p['product'])
+
 
 obj = Object(uid="new_")
 obj["client"] = 'Total'

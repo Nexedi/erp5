@@ -123,7 +123,8 @@ class PDFDocument(Image):
     """
     if format == 'html':
       try:
-        return self.getConversion(format=format)
+        mime, data = self.getConversion(format=format)
+        return mime, bytes2str(data)
       except KeyError:
         mime = 'text/html'
         data = self._convertToHTML()
@@ -131,7 +132,8 @@ class PDFDocument(Image):
         return (mime, data)
     elif format in ('txt', 'text'):
       try:
-        return self.getConversion(format='txt')
+        mime, data = self.getConversion(format='txt')
+        return mime, bytes2str(data)
       except KeyError:
         mime = 'text/plain'
         data = self._convertToText()
@@ -194,7 +196,7 @@ class PDFDocument(Image):
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())
     if result:
-      return result
+      return bytes2str(result)
     else:
       # Try to use OCR from ghostscript, but tolerate that the command might
       # not be available.
@@ -215,7 +217,7 @@ class PDFDocument(Image):
         if process.returncode:
           raise ConversionError(
               "Error invoking ghostscript.\noutput:%s\nerror:%s" % (output, error))
-        return output.strip()
+        return bytes2str(output).strip()
       except OSError as e:
         if e.errno != errno.ENOENT:
           raise
@@ -240,7 +242,7 @@ class PDFDocument(Image):
             frame=page_number, display='identical')
         if not src_mimetype.endswith('png'):
           continue
-        content = str(png_data)
+        content = bytes(png_data)
         if content is not None:
           filename = self.getStandardFilename(format='png')
           result = portal_transforms.convertToData(mime_type, content,
@@ -282,7 +284,7 @@ class PDFDocument(Image):
       command = ['pdftohtml', '-enc', 'UTF-8', '-stdout',
                  '-noframes', '-i', tmp.name]
       try:
-        command_result = Popen(command, stdout=PIPE).communicate()[0]
+        command_result = bytes2str(Popen(command, stdout=PIPE).communicate()[0])
       except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdftohtml was not found')

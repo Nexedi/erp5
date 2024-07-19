@@ -12,16 +12,17 @@ from ZPublisher.HTTPResponse import HTTPResponse
 
 import base64
 import DateTime
-import StringIO
+from six.moves import cStringIO as StringIO
 import json
 import re
 from six.moves.urllib.parse import quote, quote_plus
+import six
 
 import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
 from Acquisition import aq_base
 from Products.ERP5Form.Selection import Selection, DomainSelection
-from Products.ERP5Type.Utils import str2unicode, unicode2str
+from Products.ERP5Type.Utils import bytes2str, str2unicode, unicode2str
 
 
 def changeSkin(skin_name):
@@ -118,7 +119,7 @@ def do_fake_request(request_method, headers=None, data=()):
   env['GATEWAY_INTERFACE']='CGI/1.1 '
   env['SCRIPT_NAME']='Main'
   env.update(headers)
-  body_stream = StringIO.StringIO()
+  body_stream = StringIO()
 
   # for some mysterious reason QUERY_STRING does not get parsed into data fields
   if data and request_method.upper() == 'GET':
@@ -1324,7 +1325,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasDocument_property_corrupted_encoding(self):
     document = self._makeDocument()
     # this sequence of bytes does not encode to UTF-8
-    document.setTitle('\xe9\xcf\xf3\xaf')
+    document.setTitle(b'\xe9\xcf\xf3\xaf')
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
     self.assertEqual(fake_request.RESPONSE.status, 200)
@@ -1332,9 +1333,10 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       "application/hal+json"
     )
     result_dict = json.loads(result)
-    self.assertEqual(result_dict['_embedded']['_view']['my_title']['default'], u'\ufffd\ufffd\ufffd')
-    self.assertEqual(result_dict['title'], u'\ufffd\ufffd\ufffd')
-    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], u'\ufffd\ufffd\ufffd')
+    expected = u'\ufffd\ufffd\ufffd' if six.PY2 else u'\udce9\udccf\udcf3\udcaf'
+    self.assertEqual(result_dict['_embedded']['_view']['my_title']['default'], expected)
+    self.assertEqual(result_dict['title'], expected)
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], expected)
 
 
 class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -1682,10 +1684,12 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_default_param_json_param(self):
     fake_request = do_fake_request("GET")
 
+    unknown_columns_re = re.escape("Unknown columns ['ê']")
+    if six.PY2:
+      unknown_columns_re = "Unknown columns.*\\\\xc3\\\\xaa.*"
     self.assertRaisesRegex(
       TypeError,
-      # "Unknown columns.*'\\xc3\\xaa'.",
-      "Unknown columns.*\\\\xc3\\\\xaa.*",
+      unknown_columns_re,
       self.portal.web_site_module.hateoas.ERP5Document_getHateoas,
       REQUEST=fake_request,
       mode="search",
@@ -1725,7 +1729,7 @@ return context.getPortalObject().foo_module.contentValues()
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
     )
     result_dict = json.loads(result)
-    #editalble creation date is defined at proxy form
+    # editable creation date is defined at proxy form
     # Test the listbox_uid parameter
     self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
     self.assertEqual(result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'], 'StringField')
@@ -2422,7 +2426,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
   @changeSkin('Hal')
   def test_getHateoas_property_corrupted_encoding(self, document):
     # this sequence of bytes does not encode to UTF-8
-    document.setTitle('\xe9\xcf\xf3\xaf')
+    document.setTitle(b'\xe9\xcf\xf3\xaf')
     # self.tic()
 
     fake_request = do_fake_request("GET")
@@ -2439,7 +2443,9 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     result_dict = json.loads(result)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
-    self.assertEqual(result_dict['_embedded']['contents'][0]["title"], u'\ufffd\ufffd\ufffd')
+    self.assertEqual(
+      result_dict['_embedded']['contents'][0]["title"],
+      u'\ufffd\ufffd\ufffd' if six.PY2 else u'\udce9\udccf\udcf3\udcaf')
 
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -3183,11 +3189,11 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     ))
     fake_portal = replace_request(fake_request, self.portal)
 
-    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+    result = bytes2str(fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    )
+    ))
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
@@ -3247,21 +3253,21 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     ))
     fake_portal = replace_request(fake_request, self.portal)
 
-    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+    result = bytes2str(fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-    )
+    ))
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     if IS_ZOPE2:
       self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv')
     else:
       self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv; charset=utf-8')
-    self.assertTrue('foook1' in result, result)
-    self.assertTrue('foook2' in result, result)
-    self.assertTrue('foonotok' not in result, result)
+    self.assertIn('foook1', result)
+    self.assertIn('foook2', result)
+    self.assertNotIn('foonotok', result)
     # Check one of the field name
-    self.assertTrue('Read-Only Quantity' in result, result)
+    self.assertIn('Read-Only Quantity', result)
     # Ensure it is not the list mode rendering
     self.assertTrue(len(result.split('\n')) > 50, result)

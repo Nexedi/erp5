@@ -644,7 +644,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     _, (to,), message = self.portal.MailHost._last_message
     self.assertEqual(to, 'user@example.com')
-    self.assertIn('Password Recovery', message)
+    self.assertIn(b'Password Recovery', message)
 
   def test_HttpRequest(self):
     """
@@ -669,7 +669,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       basic='test-05:used_ALREADY_1234',
     )
-    self.assertIn('Welcome to ERP5', response.getBody())
+    self.assertIn(b'Welcome to ERP5', response.getBody())
     self.assertFalse(login.isLoginBlocked())
 
     publish = partial(
@@ -740,7 +740,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       basic='test-05:used_ALREADY_1234',
     )
-    self.assertIn('Welcome to ERP5', response.getBody())
+    self.assertIn(b'Welcome to ERP5', response.getBody())
 
     # test external redirection prevention
     response = self.publish(
@@ -817,15 +817,15 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
           'field_your_password': new_password,
           'field_password_confirm': new_password,
           'field_your_password_key': reset_key,
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
 
     ret = submit_reset_password_dialog('alice')
     self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     self.assertIn(
-      '<span class="error">You can not use any parts of your '
-      'first and last name in password.</span>',
+      b'<span class="error">You can not use any parts of your '
+      b'first and last name in password.</span>',
       ret.getBody())
 
     # the messages are translated
@@ -840,21 +840,21 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_reset_password_dialog('alice')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        '<span class="error">Yöü can not ... translated</span>',
+        u'<span class="error">Yöü can not ... translated</span>'.encode('utf-8'),
         ret.getBody())
 
     # now with a password complying to the policy
     ret = submit_reset_password_dialog('ok')
-    self.assertEqual(httplib.FOUND, ret.getStatus())
-    redirect_url = urlparse.urlparse(ret.getHeader("Location"))
+    self.assertEqual(six.moves.http_client.FOUND, ret.getStatus())
+    redirect_url = six.moves.urllib.parse.urlparse(ret.getHeader("Location"))
     self.assertEqual(redirect_url.path, '{}/login_form'.format(self.portal.absolute_url_path()))
-    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    redirect_url_params = six.moves.urllib.parse.parse_qsl(redirect_url.query)
     self.assertIn(('portal_status_message', 'Password changed.'), redirect_url_params)
     self.assertIn(('portal_status_level', 'success'), redirect_url_params)
 
   def test_PreferenceTool_changePassword_checks_policy(self):
     person = self.createUser(self.id(), password='current')
-    person.newContent(portal_type = 'Assignment').open()
+    person.newContent(portal_type='Assignment').open()
     login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = self.portal.portal_catalog.getResultValue(
       portal_type='System Preference',
@@ -882,7 +882,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     ret = submit_change_password_dialog('short')
     self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     self.assertIn(
-      '<span class="error">Too short.</span>',
+      b'<span class="error">Too short.</span>',
       ret.getBody())
 
     # the messages are translated
@@ -897,7 +897,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_change_password_dialog('short')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        '<span class="error">Töü short ... translated</span>',
+        u'<span class="error">Töü short ... translated</span>'.encode('utf-8'),
         ret.getBody())
 
     # if for some reason, PreferenceTool_setNewPassword is called directly,
