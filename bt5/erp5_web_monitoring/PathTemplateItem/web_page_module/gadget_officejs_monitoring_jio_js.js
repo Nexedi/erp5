@@ -279,7 +279,7 @@
       var gadget = this, storage_definition_list = [],
         argument_list = arguments;
       return promiseLock(LOCK_NAME, {}, function () {
-        return gadget.getUpdatedMonitoringStorageSpec(gadget, true)
+        return getUpdatedMonitoringStorageSpec(gadget, true)
           .push(function (monitoring_jio) {
             if (monitoring_jio) {
               return gadget.createStorage(undefined, monitoring_jio);
