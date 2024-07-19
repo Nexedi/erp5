@@ -563,7 +563,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     XXX name of method is not good, because content is not necessarily XML
     return a xml with id replaced by a new id
     """
-    if isinstance(xml, bytes):
+    if isinstance(xml, (str, bytes)):
       xml = etree.XML(xml, parser=parser)
     else:
       # copy of xml object for modification
@@ -854,7 +854,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if xupdated_node_list:
           xupdated_node = xupdated_node_list[0]
         else:
-          ValueError('Wrong xpath expression:%r' % base_xpath_expression)
+          raise ValueError('Wrong xpath expression:%r' % base_xpath_expression)
         if base_xpath_expression not in xpath_expression_update_dict:
           xpath_expression_update_dict[base_xpath_expression] = \
                                    dict(xml=xupdated_node,
@@ -874,7 +874,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if xupdated_node_list:
           xupdated_node = xupdated_node_list[0]
         else:
-          ValueError('Wrong xpath expression:%r' % base_xpath_expression)
+          raise ValueError('Wrong xpath expression:%r' % base_xpath_expression)
         if base_xpath_expression not in xpath_expression_update_dict:
           xpath_expression_update_dict[base_xpath_expression] = \
                                    dict(xml=xupdated_node,

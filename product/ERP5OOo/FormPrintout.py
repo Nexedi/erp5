@@ -617,8 +617,8 @@ class ODFStrategy(Implicit):
     if svg_width is None or svg_height is None:
       return ('0cm', '0cm')
     # if not match causes exception
-    width_tuple = re.match("(\d[\d\.]*)(.*)", svg_width).groups()
-    height_tuple = re.match("(\d[\d\.]*)(.*)", svg_height).groups()
+    width_tuple = re.match(r"(\d[\d\.]*)(.*)", svg_width).groups()
+    height_tuple = re.match(r"(\d[\d\.]*)(.*)", svg_height).groups()
     unit = width_tuple[1]
     w = Decimal(width_tuple[0])
     h = Decimal(height_tuple[0])
@@ -896,7 +896,9 @@ class ODFStrategy(Implicit):
     if isinstance(field_value, six.text_type):
       value = field_value
     elif field_value is not None:
-      value = unicode(str(field_value), 'utf-8')
+      value = str(field_value)
+      if six.PY2:
+        value = value.decode('utf-8')
     return value
 
 class ODTStrategy(ODFStrategy):
@@ -1105,8 +1107,12 @@ class ODGStrategy(ODFStrategy):
       text_xpath = '//draw:frame[@draw:name="%s"]' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
       value = field.get_value('default')
-      if isinstance(value, str):
-        value = value.decode('utf-8')
+      if six.PY2:
+        if isinstance(value, str):
+          value = value.decode('utf-8')
+      else:
+        if isinstance(value, bytes):
+          value = value.decode('utf-8')
       for target_node in node_list:
         # render the field in odg xml node format
         attr_dict = {}

@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>
+  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1&amp;portal_type=Bar</td>
   <td></td>
 </tr>
 <tr>
