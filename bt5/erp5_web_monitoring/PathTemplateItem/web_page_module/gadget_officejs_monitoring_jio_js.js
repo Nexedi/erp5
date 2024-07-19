@@ -135,7 +135,9 @@
           return jio_storage.repair();
         })
         .push(function () {
-          return gadget.setSetting("migration_version", current_version);
+          return gadget.setSettingList({'migration_version': current_version,
+                                        'master_url_list': undefined,
+                                        'latest_master_url_list': undefined});
         });
     })
 
