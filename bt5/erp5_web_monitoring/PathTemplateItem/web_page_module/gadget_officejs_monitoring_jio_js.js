@@ -60,6 +60,7 @@
     })
 
     .declareAcquiredMethod("getSettingList", "getSettingList")
+    .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
 
     .declareMethod('updateConfiguration', function (appcache_storage, migration_version, current_version, jio_storage) {
@@ -261,7 +262,7 @@
     })
     .declareMethod('repair', function () {
       var gadget = this, storage_definition_list = [],
-        argument_list = arguments, master_url_list, i;
+        argument_list = arguments, master_url_list, i, update_settings = false;
       return promiseLock(LOCK_NAME, {}, function () {
         return gadget.getSettingList(['latest_master_url_list',
                                       'master_url_list'])
@@ -272,8 +273,7 @@
               if (!result_list[1] ||
                   result_list[0].toString() !== result_list[1].toString()) {
                 master_url_list = result_list[0];
-                gadget.setSetting('master_url_list', master_url_list);
-                gadget.setSetting('latest_master_url_list', master_url_list);
+                update_settings = true;
                 for (i = 0; i < master_url_list.length; i += 1) {
                   storage_definition_list.push({
                     type: "erp5",
@@ -305,6 +305,12 @@
                 return gadget.createStorage(undefined, monitoring_jio);
                 //TODO remove objects of previous masters?
               }
+            }
+          })
+          .push(function () {
+            if (update_settings) {
+              return gadget.setSettingList({'master_url_list': master_url_list,
+                                            'latest_master_url_list': master_url_list});
             }
           })
           .push(function () {
