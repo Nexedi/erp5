@@ -5,6 +5,7 @@
 
   rJS(window)
     .setState({
+      // TODO use global setting if present, hardcoded url as default
       erp5_url_list: "https://panel.rapid.space/hateoas/"
     })
     /////////////////////////////////////////////////////////////////
