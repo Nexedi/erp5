@@ -184,7 +184,14 @@
             return RSVP.hash({
               url_list: gadget.getUrlForList([
                 {command: 'display'},
-                {command: 'display', options: {jio_key: "support_request_module"}},
+                {
+                  command: 'display_stored_state',
+                  options: {
+                    jio_key: "support_request_module",
+                    page: "form",
+                    view: "view"
+                  }
+                },
                 {command: 'display', options: {page: "supportrequest_preference"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
