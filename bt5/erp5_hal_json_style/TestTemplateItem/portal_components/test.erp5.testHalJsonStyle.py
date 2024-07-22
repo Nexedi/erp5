@@ -1725,7 +1725,7 @@ return context.getPortalObject().foo_module.contentValues()
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
     )
     result_dict = json.loads(result)
-    #editalble creation date is defined at proxy form
+    # editable creation date is defined at proxy form
     # Test the listbox_uid parameter
     self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
     self.assertEqual(result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'], 'StringField')
