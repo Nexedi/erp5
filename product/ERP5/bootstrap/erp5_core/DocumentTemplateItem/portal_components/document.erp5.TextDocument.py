@@ -366,8 +366,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
   def getTextContent(self, default=_MARKER):
-    """Overriden method to check
-    permission to access content in raw format
+    """Overridden method to check permission to access content in raw format
     """
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
