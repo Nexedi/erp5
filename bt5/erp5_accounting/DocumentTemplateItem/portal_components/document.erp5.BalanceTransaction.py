@@ -429,7 +429,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
 
     return factory
 
-  def _immediateReindexObject(self, **kw):
+  def _immediateReindexObject(self, *args, **kw):
     """Reindexes the object.
     This is different indexing that the default Inventory indexing, because
     we want to take into account that lines in this balance transaction to

@@ -27,10 +27,10 @@ kw['where_expression'] = " section.portal_type = 'Organisation' "
 ledger = kwd.get('ledger', request.get("ledger", None))
 if ledger is not None:
   portal_categories = context.getPortalObject().portal_categories
-  if isinstance(ledger, list) or isinstance(ledger, tuple):
+  if isinstance(ledger, (tuple, list)):
     kw['ledger_uid'] = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
   else:
-    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(item).getUid()
+    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(ledger).getUid()
 
 
 # Find accounts that can be expanded according category membership
@@ -47,7 +47,7 @@ accounts_to_expand_by_tp = rec_cat.getAccountTypeRelatedValueList(**params) + \
 
 total_balance = 0.0
 for account_gap_number in accounts:
-  # We get all acounts strict member of this GAP category
+  # We get all accounts strict member of this GAP category
   gap = context.restrictedTraverse('portal_categories/' + getURL(account_gap_number))
 
   for account in gap.getGapRelatedValueList(portal_type='Account'):
