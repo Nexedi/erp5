@@ -36,8 +36,7 @@ def formToXML(form, prologue=1):
 
         fields.append(field_element)
         values_element = SubElement(field_element, 'values')
-        items = field.values.items()
-        items.sort()
+        items = sorted(field.values.items())
         for key, value in items:
           if value is None:
             continue
@@ -60,8 +59,7 @@ def formToXML(form, prologue=1):
           value_element.text = str(value).decode(encoding)
 
         tales_element = SubElement(field_element, 'tales')
-        items = field.tales.items()
-        items.sort()
+        items = sorted(field.tales.items())
         for key, value in items:
           if value:
             tale_element = SubElement(tales_element, key)
