@@ -28,6 +28,7 @@ from __future__ import division
 #
 ##############################################################################
 
+import functools
 from past.builtins import cmp
 from six import string_types as basestring
 from Products.CMFCore.utils import getToolByName
@@ -1636,7 +1637,10 @@ class SimulationTool(BaseTool):
               result *= -1
             break
         return result
-      sorted_inventory_list.sort(cmp_inventory_line)
+      if six.PY2:
+        sorted_inventory_list.sort(cmp_inventory_line)
+      else:
+        sorted_inventory_list.sort(key=functools.cmp_to_key(cmp_inventory_line))
     # Brain is rebuild properly using tuple not r instance
     column_list = first_result._searchable_result_columns()
     column_name_list = [x['name'] for x in column_list]
