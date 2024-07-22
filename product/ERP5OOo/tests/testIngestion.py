@@ -792,10 +792,10 @@ class TestIngestion(IngestionTestCase):
     document.edit(file=f)
     mime, text = document.convert('text')
     self.assertIn('magic', text)
-    self.assertTrue(mime == 'text/plain')
+    self.assertEqual(mime, 'text/plain')
     mime, html = document.convert('html')
     self.assertIn('magic', html)
-    self.assertTrue(mime == 'text/html')
+    self.assertEqual(mime, 'text/html')
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
     """
