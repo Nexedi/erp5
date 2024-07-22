@@ -1,4 +1,5 @@
 ##############################################################################
+# coding: utf-8
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                     Rafael Monnerat <rafael@nexedi.com>
 #                     Ivan Tyagov <ivan@nexedi.com>
