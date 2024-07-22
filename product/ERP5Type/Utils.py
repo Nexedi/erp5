@@ -29,11 +29,12 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
-from past.builtins import cmp
 from six import int2byte as chr
 from six import string_types as basestring
 from six.moves import xrange
 import six
+if six.PY3:
+  from functools import cmp_to_key, total_ordering
 import os
 import re
 import string
@@ -123,9 +124,46 @@ from Products.ERP5Type.Globals import get_request
 from .Accessor.TypeDefinition import type_definition
 from .Accessor.TypeDefinition import list_types
 
+if six.PY3:
+  def cmp(a, b):
+    try:
+      return (a > b) - (a < b)
+    except TypeError:
+      if a is None:
+          return -1
+      elif b is None:
+          return 1
+      type_a = '' if isinstance(a, (int, float)) else type(a).__name__
+      type_b = '' if isinstance(b, (int, float)) else type(b).__name__
+      return (type_a > type_b) - (type_a < type_b)
+else:
+  import __builtin__
+  cmp = __builtin__.cmp
+
 #####################################################
 # Generic sort method
 #####################################################
+
+if six.PY2:
+  OrderableKey = lambda x: x
+else:
+  @total_ordering
+  class OrderableKey(object):
+    def __init__(self, value):
+      self.value = value
+
+    def __lt__(self, other):
+      if not isinstance(other, OrderableKey):
+        raise TypeError
+      return cmp(self.value, other.value) != 1
+
+    def __eq__(self, other):
+      if not isinstance(other, OrderableKey):
+        raise TypeError
+      return self.value == other.value
+
+    def __repr__(self):
+      return 'OrderableKey(%r)' % self.value
 
 sort_kw_cache = {}
 
@@ -184,7 +222,10 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
               except TypeError:
                 pass
             value_list.append(x)
-          return value_list
+          if six.PY2:
+            return value_list
+          else:
+            return [OrderableKey(e) for e in value_list]
         sort_kw = {'key':sortValue, 'reverse':reverse}
         sort_kw_cache[(sort_on, sort_order)] = sort_kw
       else:
@@ -206,7 +247,10 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
             if result != 0:
               break
           return result
-        sort_kw = {'cmp':sortValues}
+        if six.PY2:
+          sort_kw = {'cmp':sortValues}
+        else:
+          sort_kw = {'key': cmp_to_key(sortValues)}
         sort_kw_cache[(sort_on, sort_order)] = sort_kw
 
     if isinstance(value_list, LazyMap):
