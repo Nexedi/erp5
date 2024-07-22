@@ -45,7 +45,6 @@ class ShaDirMixin(object):
       Initialize the ERP5 site.
     """
     self.login()
-    self.portal = self.getPortal()
 
     self.key = 'mykey' + str(random.random())
     self.file_content = 'This is the content.'
