@@ -28,7 +28,6 @@ try:
 except ImportError: # BBB Zope2
   from Globals import package_home
 import PIL.Image as PIL_Image
-import thread
 import random
 import base64
 from OFS.Folder import Folder
@@ -176,7 +175,6 @@ class ZoomifyBase:
         lr_y = ul_y + self.tileSize
       else:
         lr_y = self.originalHeight
-      print("Going to open image")
       imageRow = image.crop([0, ul_y, self.originalWidth, lr_y])
       saveFilename = root + str(tier) + '-' + str(row) +  ext
       if imageRow.mode != 'RGB':
@@ -192,7 +190,6 @@ class ZoomifyBase:
   def processRowImage(self, tier=0, row=0):
     """ for an image, create and save tiles """
 
-    print('*** processing tier: ' + str(tier) + ' row: ' + str(row))
     tierWidth, tierHeight = self._v_scaleInfo[tier]
     rowsForTier = tierHeight/self.tileSize
     if tierHeight % self.tileSize > 0:
@@ -335,7 +332,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
   def openImage(self):
     """ load the image data """
 
-    return PIL_Image.open(self._v_imageObject.name)
+    return PIL_Image.open(self._v_imageObject)
 
   def createDefaultViewer(self):
     """ add the default Zoomify viewer to the Zoomify metadata """
