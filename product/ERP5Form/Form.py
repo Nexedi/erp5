@@ -994,8 +994,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         # for skin_folder_id in self.getSimilarSkinFolderIdList():
         for skin_folder_id in self.getPortalObject().portal_skins.objectIds():
           iterate(getattr(skins_tool, skin_folder_id))
-        proxy_dict_list = proxy_dict.values()
-        proxy_dict_list.sort(key=lambda x: x['short_path'])
+        proxy_dict_list = sorted(proxy_dict.values(), key=lambda x: x['short_path'])
         for item in proxy_dict_list:
           item['related_proxy_list'].sort(key=lambda x: x['short_path'])
 
