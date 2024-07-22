@@ -281,7 +281,7 @@ class TestIdTool(ERP5TypeTestCase):
     query = 'select last_id from portal_ids where id_group="foo_bar"'
     self.assertRaises(ProgrammingError, sql_connection.manage_test, query)
     generator.rebuildSqlTable()
-    result =  sql_connection.manage_test(query)
+    result = sql_connection.manage_test(query)
     self.assertEqual(result[0].last_id, 4)
 
   def checkExportImportDict(self, id_generator):
