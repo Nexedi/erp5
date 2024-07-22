@@ -38,10 +38,10 @@ inventory_param_dict = {
 }
 
 employee_param_dict = inventory_param_dict.copy()
-employee_param_dict['contribution_share_uid'] = context.portal_categories.contribution_share.employee.getUid()
+employee_param_dict['contribution_share_uid'] = portal.portal_categories.contribution_share.employee.getUid()
 
 employer_param_dict = inventory_param_dict.copy()
-employer_param_dict['contribution_share_uid'] = context.portal_categories.contribution_share.employer.getUid()
+employer_param_dict['contribution_share_uid'] = portal.portal_categories.contribution_share.employer.getUid()
 
 if request.get('mirror_section'):
   mirror_section = request['mirror_section']
