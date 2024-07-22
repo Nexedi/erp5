@@ -9,7 +9,7 @@ __version__ = '0.3.0'
 
 import base64
 import errno
-import httplib
+from six.moves import http_client
 import os
 import random
 import re
@@ -18,7 +18,6 @@ import string
 import sys
 import time
 import traceback
-import urllib
 from six.moves import configparser
 from contextlib import contextmanager
 from io import BytesIO
@@ -32,7 +31,6 @@ from DateTime import DateTime
 import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
-from zope.globalrequest import clearRequest
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
