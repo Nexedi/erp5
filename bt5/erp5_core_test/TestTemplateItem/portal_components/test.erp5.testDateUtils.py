@@ -348,7 +348,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestTimeZoneContext))
   suite.addTest(unittest.makeSuite(TestDateTimePatch))
 
-  # also run original tests from DateTime module
+  # also run original tests from DateTime module BBB ZOPE2
   # pylint:disable=no-name-in-module
   try:
     import DateTime.tests.testDateTime as test_datetime

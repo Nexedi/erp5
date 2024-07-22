@@ -767,7 +767,7 @@ class Environment(object):
 
 class ImportFixer(ast.NodeTransformer):
   """
-   The ImportFixer class is responsivle for fixing "normal" imports that users
+   The ImportFixer class is responsible for fixing "normal" imports that users
    might try to execute.
 
    It will automatically replace them with the proper usage of the environment
@@ -780,7 +780,7 @@ class ImportFixer(ast.NodeTransformer):
 
   def visit_FunctionDef(self, node):
     """
-      Processes funcion definition nodes. We want to store a list of all the
+      Processes function definition nodes. We want to store a list of all the
       import that are inside functions, because they do not affect the outter
       user context, thus do not imply in any un-pickleable variable being added
       there.
@@ -876,7 +876,7 @@ class ImportFixer(ast.NodeTransformer):
     else:
       # case when "import <module_name>"
       module_names = [(node.names[0].name), ]
-      test_import_string = "import %s" %node.names[0].name
+      test_import_string = "import %s" % node.names[0].name
       result_name = node.names[0].name
       root_module_name = node.names[0].name
 
