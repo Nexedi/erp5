@@ -21,7 +21,6 @@ from __future__ import print_function
 import BaseHTTPServer
 import CGIHTTPServer
 import time
-import httplib
 import sys
 
 PORT = 8000

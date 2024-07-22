@@ -259,6 +259,7 @@ class TestERP5Web(ERP5TypeTestCase):
     page.edit(text_content='<p>Hé Hé Hé!</p>', content_type='text/html')
     self.tic()
     self.assertEqual('Hé Hé Hé!', page.asText().strip())
+    self.assertIn('Hé Hé Hé!', page.getSearchableText())
 
   def test_WebPageAsTextHTMLEntities(self):
     """Check if Web Page's asText() converts html entities properly

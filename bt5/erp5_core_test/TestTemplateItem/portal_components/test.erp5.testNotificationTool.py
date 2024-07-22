@@ -37,7 +37,7 @@ import email
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 
-# Copied from ERP5Type/patches/CMFMailIn.py
+# Copied from bt5/erp5_egov/TestTemplateItem/testEGovMixin.py
 def decode_email(file_):
   # Prepare result
   theMail = {
@@ -77,7 +77,7 @@ def decode_email(file_):
     elif content_type == 'message/rfc822':
       continue
     elif content_type in ("text/plain", "text/html"):
-      charset = part.get_content_charset()
+      charset = part.get_content_charset() or 'utf-8'
       payload = part.get_payload(decode=True)
       #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
       if charset:
