@@ -24,8 +24,5 @@ else:
              or career.getStopDate() < to_date :
         career_list.append(career)
 
-def date_cmp(a, b):
-  return cmp(a.getStartDate(), b.getStartDate())
-
-career_list.sort(date_cmp)
+career_list.sort(key=lambda a: a.getStartDate())
 return career_list
