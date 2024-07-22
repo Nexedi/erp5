@@ -50,9 +50,6 @@ def display(x):
     display_cache[x] = display_funct(x)
   return display_cache[x]
 
-def sort(x,y):
-  return cmp(display(x), display(y))
-
 def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,
                 simulation_state=None):
   """Returns a list of Account path items. """
@@ -71,7 +68,7 @@ def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,
                               portal_type='Account',
                               base=0,
                               display_method=display,
-                              sort_method=sort,
+                              sort_key=display,
                               filter=filter_dict)
   return item_list
 

@@ -140,5 +140,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     document_list = self.portal.portal_catalog(reference=self.key)
 
     self.assertEqual(2, len(document_list))
-    expectedFailure(self.assertEqual)(sorted(['archived', 'published']),
-        sorted(q.getValidationState() for q in document_list))
+    # this is the expected failure
+    self.assertEqual(
+      sorted(['archived', 'published']),
+      sorted(q.getValidationState() for q in document_list))
