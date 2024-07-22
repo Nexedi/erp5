@@ -1605,7 +1605,7 @@ class TestCRMMailSend(BaseTestCRM):
 
   def test_testValidatorForAttachmentField(self):
     """
-    If an Event Type doesn't allow Emebedded Files in its sub portal types,
+    If an Event Type doesn't allow Embedded Files in its sub portal types,
     then the dialog should tell the user that attachment can't be uploaded
     """
     # Add a document which will be attached.
@@ -1794,7 +1794,7 @@ class TestCRMMailSend(BaseTestCRM):
 
   def test_cloneEvent(self):
     """
-      All events uses after script and interaciton
+      All events uses after script and interaction
       workflow add a test for clone
     """
     # XXX in the case of title, getTitle ignores the title attribute,
@@ -1827,7 +1827,7 @@ class TestCRMMailSend(BaseTestCRM):
 
   def test_cloneTicketAndEventList(self):
     """
-      All events uses after script and interaciton
+      All events uses after script and interaction
       workflow add a test for clone
     """
     portal = self.portal
