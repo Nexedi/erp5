@@ -865,7 +865,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     erp5_test = self.portal.portal_skins['erp5_test']
     self.assertTrue(erp5_test.hasObject('test_file'))
 
-  def test_ownerhsip(self):
+  def test_ownership(self):
     self.assertEqual(
       self.portal.portal_skins.erp5_core.getOwnerTuple(),
       ([self.portal.getId(), 'acl_users'], 'System Processes'),
