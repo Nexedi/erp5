@@ -40,21 +40,25 @@ from DateTime import DateTime
 
 from lxml import etree
 from six.moves import range
+from Products.ERP5Type.Utils import unicode2str
 
 def makeFilePath(name):
   import Products.ERP5.tests
   return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
                       'test_data', name)
 
-def makeFileUpload(name, as_name=None):
-  if as_name is None:
-    as_name = name
-  path = makeFilePath(name)
-  return FileUpload(path, as_name)
 
 class TestWebDavSupport(ERP5TypeTestCase):
   """Test for WEBDAV access.
   """
+  def makeFileUpload(self, name, as_name=None):
+    if as_name is None:
+      as_name = name
+    path = makeFilePath(name)
+    fu = FileUpload(path, as_name)
+    self.addCleanup(fu.close)
+    return fu
+
   def getTitle(self):
     return "Test WebDav Support"
 
@@ -91,12 +95,14 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     person = self.portal.person_module.newContent()
     self.tic()
-    file_object = makeFileUpload('images/erp5_logo.png')
-    response = self.publish(person.getPath() + '/erp5_logo.png',
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    file_object = self.makeFileUpload('images/erp5_logo.png')
+    response = self.publish(
+      person.getPath() + '/erp5_logo.png',
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'image/png'},
+      basic=self.authentication)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     image = person['erp5_logo.png']
     self.assertEqual(image.getPortalType(), 'Embedded File')
     self.assertEqual(image.getContentType(), 'image/png')
@@ -110,13 +116,15 @@ class TestWebDavSupport(ERP5TypeTestCase):
     # Create a new document via FTP/DAV
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    file_object = self.makeFileUpload(filename)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     document_module = self.getDocumentModule()
     self.assertIn(filename, document_module.objectIds())
     self.assertEqual(document_module[filename].getPortalType(), 'Presentation')
@@ -132,13 +140,15 @@ class TestWebDavSupport(ERP5TypeTestCase):
     # Create a new document via FTP/DAV
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    file_object = self.makeFileUpload(filename)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     self.tic()
 
     # check Document fetching
@@ -172,7 +182,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     self.assertEqual(web_page_module[filename].getPortalType(), 'Web Page')
 
     # Edit a new document via FTP/DAV
-    text_content= """<html>
+    text_content = u"""<html>
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
       </head>
@@ -182,21 +192,21 @@ class TestWebDavSupport(ERP5TypeTestCase):
       </body>
     </html>
     """
-    iso_text_content = text_content.decode('utf-8').encode('iso-8859-1')
+    iso_text_content = text_content.encode('iso-8859-1')
     path = web_page_module.getPath()
     # Run twice to check the code that compares old & new data
     # when setting file attribute.
     for _ in range(2):
       response = self.publish('%s/%s' % (path, filename),
                               request_method='PUT',
-                              stdin=StringIO(iso_text_content),
+                              stdin=BytesIO(iso_text_content),
                               basic=self.authentication)
-      self.assertEqual(response.getStatus(), httplib.NO_CONTENT)
+      self.assertEqual(response.getStatus(), six.moves.http_client.NO_CONTENT)
       self.assertEqual(web_page_module[filename].getData(), iso_text_content)
     # Convert to base format and run conversion into utf-8
     self.tic()
-    # Content-Type header is replaced if sonversion encoding succeed
-    new_text_content = text_content.replace('charset=iso-8859-1', 'charset=utf-8')
+    # Content-Type header is replaced if conversion encoding succeed
+    new_text_content = unicode2str(text_content).replace('charset=iso-8859-1', 'charset=utf-8')
     self.assertEqual(web_page_module[filename].getTextContent(), new_text_content)
 
   def test_GET_on_document(self):
@@ -204,11 +214,13 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    file_object = self.makeFileUpload(filename)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
     # Convert to base format and run conversion into utf-8
     self.tic()
 
@@ -217,12 +229,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
     # This is HTTPServer.zhttp_server not HTTPServer.zwebdav_server
     # force usage of manage_FTPget like zwebdav_server does
-    response = self.publish(document.getPath()+'/manage_FTPget',
+    response = self.publish(document.getPath() + '/manage_FTPget',
                             request_method='GET',
-                            stdin=StringIO(),
+                            stdin=BytesIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), six.moves.http_client.OK)
     self.assertEqual(response.getBody(), document.getData(),
              'Error in getting data, get:%r' % response.getHeader('content-type'))
 
@@ -231,11 +243,13 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    file_object = self.makeFileUpload(filename)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
     document_module = self.getDocumentModule()
     document = document_module[filename]
 
@@ -243,10 +257,10 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish(document.getPath(),
                             request_method='PROPFIND',
                             env={'HTTP_DEPTH': '0'},
-                            stdin=StringIO(),
+                            stdin=BytesIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), six.moves.http_client.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
     self.assertEqual(xml_metadata.find('{DAV:}response/{DAV:}href').text,
@@ -269,11 +283,13 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    file_object = self.makeFileUpload(filename)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
     document_module = self.getDocumentModule()
     document = document_module[filename]
 

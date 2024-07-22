@@ -99,7 +99,7 @@ def DA_PUT(self, REQUEST, RESPONSE):
     if RESPONSE is not None: self.dav__init(REQUEST, RESPONSE)
     if RESPONSE is not None: self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
     body = REQUEST.get('BODY', '')
-    m = re.match('\s*<dtml-comment>(.*?)</dtml-comment>\s*\n', body, re.I | re.S)
+    m = re.match(r'\s*<dtml-comment>(.*?)</dtml-comment>\s*\n', body, re.I | re.S)
     if m:
         property_src = m.group(1)
         parameters = {}
@@ -120,7 +120,7 @@ def DA_PUT(self, REQUEST, RESPONSE):
         self.title = str(title)
         self.connection_id = str(connection_id)
         body = body[m.end():]
-    m = re.match('\s*<params>(.*)</params>\s*\n', body, re.I | re.S)
+    m = re.match(r'\s*<params>(.*)</params>\s*\n', body, re.I | re.S)
     if m:
         self.arguments_src = m.group(1)
         self._arg=parse(self.arguments_src)
@@ -219,7 +219,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     if src__: return query
 
     if self.cache_time_ > 0 and self.max_cache_ > 0:
-        result=self._cached_result(DB__, query, self.max_rows_, c)
+        result=self._cached_result(DB__, str2bytes(query), self.max_rows_, c)
     else:
       try:
         result=DB__.query(query, self.max_rows_)
