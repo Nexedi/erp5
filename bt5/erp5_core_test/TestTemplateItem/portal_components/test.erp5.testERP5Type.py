@@ -464,11 +464,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     modified_title = getTitleFromCatalog() + '_not_reindexed'
     catalog_connection = self.getSQLConnection()()
     catalog_connection.query(
-      'UPDATE catalog SET title=%s WHERE uid=%i' % (
+      b'UPDATE catalog SET title=%s WHERE uid=%i' % (
         catalog_connection.string_literal(modified_title),
         person_object.getUid(),
-      ),
-    )
+      ))
     self.commit()
     # sanity check
     self.assertEqual(getTitleFromCatalog(), modified_title)
