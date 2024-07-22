@@ -618,7 +618,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Monkey patch Queue to induce conflict errors artificially.
     def query(self, query_string,*args, **kw):
       # Not so nice, this is specific to zsql method
-      if "REPLACE INTO" in query_string:
+      if b"REPLACE INTO" in query_string:
         raise OperationalError
       return self.original_query(query_string,*args, **kw)
 
@@ -1236,7 +1236,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Check that cmf_activity SQL connection still works
       connection_da = self.portal.cmf_activity_sql_connection()
       self.assertFalse(connection_da._registered)
-      connection_da.query('select 1')
+      connection_da.query(b'select 1')
       self.assertTrue(connection_da._registered)
       self.commit()
       self.assertFalse(connection_da._registered)
@@ -1893,7 +1893,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       """
     original_query = six.get_unbound_function(DB.query)
     def query(self, query_string, *args, **kw):
-      if query_string.startswith('INSERT'):
+      if query_string.startswith(b'INSERT'):
         insert_list.append(len(query_string))
         if not n:
           raise Skip
@@ -2502,7 +2502,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           self.assertEqual(1, activity_tool.countMessage())
           self.flushAllActivities()
           sender, recipients, mail = message_list.pop()
-          self.assertIn('UID mismatch', mail)
+          self.assertIn(b'UID mismatch', mail)
           m, = activity_tool.getMessageList()
           self.assertEqual(m.processing_node, INVOKE_ERROR_STATE)
           obj.flushActivity()
