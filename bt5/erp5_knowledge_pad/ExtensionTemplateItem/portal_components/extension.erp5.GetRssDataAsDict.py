@@ -58,7 +58,7 @@ def getRssDataAsDict(context, url, username=None, password=None):
     entry_dict['updated_parsed'] = entry.get('updated_parsed', None)
     result['items'].append(entry_dict)
   # sort by date
-  result['items'] = sorted(result['items'], key=lambda k: k['updated_parsed'])
+  result['items'] = sorted(result['items'], key=lambda k: k['updated_parsed'] or ())
   result['items'].reverse()
   result['status'] = 0
   return result

@@ -42,9 +42,7 @@ from OFS.Image import Pdata, Image as OFSImage
 from DateTime import DateTime
 
 def makeSortedTuple(kw):
-  items = kw.items()
-  items.sort()
-  return tuple(items)
+  return tuple(sorted(kw.items()))
 
 def hashPdataObject(pdata_object):
   """Pdata objects are iterable, use this feature strongly
