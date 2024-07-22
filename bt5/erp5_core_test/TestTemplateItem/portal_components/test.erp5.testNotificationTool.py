@@ -37,7 +37,7 @@ import email
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 
-# Copied from ERP5Type/patches/CMFMailIn.py
+# Copied from bt5/erp5_egov/TestTemplateItem/testEGovMixin.py
 def decode_email(file_):
   # Prepare result
   theMail = {
