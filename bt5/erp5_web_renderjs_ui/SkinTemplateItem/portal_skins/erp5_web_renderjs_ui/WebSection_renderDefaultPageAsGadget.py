@@ -15,7 +15,7 @@ portal = context.getPortalObject()
 default_language = web_section.getLayoutProperty("default_available_language", default='en')
 website_url_set = {}
 
-#simplify code of Base_doLanguage, can't ues Base_doLanguage directly
+# simplify code of Base_doLanguage, can't use Base_doLanguage directly
 root_website_url = web_section.getOriginalDocument().absolute_url()
 website_url_pattern = r'^%s(?:%s)*(/|$)' % (
   re.escape(root_website_url),

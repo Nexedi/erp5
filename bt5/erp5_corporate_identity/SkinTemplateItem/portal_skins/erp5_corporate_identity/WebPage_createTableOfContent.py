@@ -15,7 +15,7 @@ import re
 from Products.PythonScripts.standard import html_quote
 
 blank = ""
-header_current = 1
+header_current = '0'
 header_initial = None
 table_of_content = blank
 index = 0

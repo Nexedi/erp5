@@ -33,7 +33,7 @@
 <!-- XXX bug compatibility; all_columns are used for sortable columns. -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_sort_columns=id%0Atitle;field_all_columns=id%0Atitle</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_sort_columns=id%0Atitle&amp;field_all_columns=id%0Atitle</td>
   <td></td>
 </tr>
 <tr>

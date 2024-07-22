@@ -21,7 +21,6 @@ from __future__ import print_function
 import six.moves.BaseHTTPServer
 import six.moves.CGIHTTPServer
 import time
-import httplib
 import sys
 
 PORT = 8000
