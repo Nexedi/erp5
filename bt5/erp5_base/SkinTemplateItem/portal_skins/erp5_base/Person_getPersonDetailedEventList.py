@@ -31,9 +31,6 @@ dest_event_list = portal.portal_catalog(portal_type=event_type_list, default_des
 
 event_list = list(source_event_list)+list(dest_event_list)
 
-def sortDate(a, b):
-  return cmp(a.getStartDate(), b.getStartDate())
-
-event_list.sort(sortDate)
+event_list.sort(key=lambda a: a.getStartDate())
 
 return event_list
