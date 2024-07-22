@@ -69,13 +69,16 @@ class PALOETLConnection(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  _ignore_ssl_certificate_check = True
+  _fix_service_location = True
+
   def _getSudsClient(self):
     # maybe client can be cached as a _v_ attribute. For now, we do not care about performance.
-    if "ignore ssl certificate check":
+    if self._ignore_ssl_certificate_check:
       client = suds.client.Client(self.getUrlString(), transport=HTTPAuthenticatedUnverifiedSSL())
     else:
       client = suds.client.Client(self.getUrlString())
-    if "fix service location":
+    if self._fix_service_location:
       # XXX The axis2 generated webservice only supports http on port 8080.
       # It seems to be using an old and buggy version of axis2.
       # Easiest workaround is to force the port (in WSDL terminology) location.
