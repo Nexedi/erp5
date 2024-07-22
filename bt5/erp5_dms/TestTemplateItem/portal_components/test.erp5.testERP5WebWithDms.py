@@ -105,8 +105,6 @@ def customScript(script_id, script_param, script_code):
 class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Test for erp5_web business template.
   """
-  run_all_test = 1
-  quiet = 0
   website_id = 'test'
 
   def getTitle(self):
@@ -214,28 +212,24 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     return webpage_list
 
-  def test_01_WebPageVersioning(self, quiet=quiet, run=run_all_test):
+  def test_01_WebPageVersioning(self):
     """
       Simple Case of showing the proper most recent public Web Page based on
       (language, version)
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_01_WebPageVersioning'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     self.setupWebSite()
     websection = self.setupWebSection()
     page_reference = 'default-webpage-versionning'
-    self.setupWebSitePages(prefix = page_reference)
+    self.setupWebSitePages(prefix=page_reference)
 
     # set default web page for section
-    found_by_reference = portal.portal_catalog(reference = page_reference,
-                                               language = 'en',
-                                               portal_type = 'Web Page')
-    en_01 =  found_by_reference[0].getObject()
+    found_by_reference = portal.portal_catalog(reference=page_reference,
+                                               language='en',
+                                               portal_type='Web Page')
+    en_01 = found_by_reference[0].getObject()
     # set it as default web page for section
-    websection.edit(categories_list = ['aggregate/%s' %en_01.getRelativeUrl(),])
+    websection.edit(categories_list=['aggregate/%s' % en_01.getRelativeUrl(),])
     self.assertEqual([en_01.getReference(),],
                       websection.getAggregateReferenceList())
 
@@ -260,15 +254,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('0.2', default_document.getVersion())
     self.assertEqual('published', default_document.getValidationState())
 
-  def test_02_WebSectionAuthorizationForced(self, quiet=quiet, run=run_all_test):
+  def test_02_WebSectionAuthorizationForced(self):
     """ Check that when a document is requested within a Web Section we have a chance to
         require user to login.
         Whether or not an user will login is controlled by a property on Web Section (authorization_forced).
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_02_WebSectionAuthorizationForced'
-      ZopeTestCase._print(message)
     request = self.app.REQUEST
     website = self.setupWebSite()
     websection = self.setupWebSection()
@@ -285,12 +275,12 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # make sure that _getExtensibleContent will return the same document
     # there's not other way to test otherwise URL traversal
     self.assertEqual(document.getUid(),
-                           websection._getExtensibleContent(request,  document_reference).getUid())
+                           websection._getExtensibleContent(request, document_reference).getUid())
 
     # Anonymous User should have in the request header for not found when
     # viewing non available document in Web Section (with no authorization_forced)
     self.logout()
-    self.assertEqual(None,  websection._getExtensibleContent(request,  document_reference))
+    self.assertEqual(None, websection._getExtensibleContent(request, document_reference))
     path = websection.absolute_url_path() + '/' + document_reference
     response = self.publish(path)
     self.assertEqual(404, response.getStatus())
@@ -302,38 +292,32 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # check Unauthorized exception is raised for anonymous
     # this exception is usually caught and user is redirecetd to login form
     self.logout()
-    self.assertRaises(Unauthorized,  websection._getExtensibleContent,  request,  document_reference)
+    self.assertRaises(Unauthorized, websection._getExtensibleContent, request, document_reference)
 
-  def test_03_LatestContent(self, quiet=quiet, run=run_all_test):
+  def test_03_LatestContent(self):
     """ Test latest content for a Web Section. Test different use case like languaeg, workflow state.
    """
-    if not run: return
-    if not quiet:
-      message = '\ntest_03_LatestContent'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     self.setupWebSite()
     websection = self.setupWebSection()
     portal_categories = portal.portal_categories
-    publication_section_category_id_list = ['documentation',  'administration']
+    publication_section_category_id_list = ['documentation', 'administration']
     for category_id in publication_section_category_id_list:
-      portal_categories.publication_section.newContent(portal_type = 'Category',
-                                                                             id = category_id)
-    #set predicate on web section using 'publication_section'
-    websection.edit(membership_criterion_base_category = ['publication_section'],
-                            membership_criterion_category=['publication_section/%s'
-                                                                              %publication_section_category_id_list[0]])
+      portal_categories.publication_section.newContent(portal_type='Category', id=category_id)
+    # set predicate on web section using 'publication_section'
+    websection.edit(membership_criterion_base_category=['publication_section'],
+                    membership_criterion_category=['publication_section/%s' % publication_section_category_id_list[0]])
     self.tic()
 
-    self.assertEqual(0,  len(websection.getDocumentValueList()))
+    self.assertEqual(0, len(websection.getDocumentValueList()))
     # create pages belonging to this publication_section 'documentation'
     web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page',
                                                  language = 'en',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_en.publish()
     self.tic()
-    self.assertEqual(1,  len(websection.getDocumentValueList(language='en')))
-    self.assertEqual(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
+    self.assertEqual(1, len(websection.getDocumentValueList(language='en')))
+    self.assertEqual(web_page_en, websection.getDocumentValueList(language='en')[0].getObject())
 
     # create pages belonging to this publication_section 'documentation' but for 'bg' language
     web_page_bg = portal.web_page_module.newContent(portal_type = 'Web Page',
@@ -341,29 +325,25 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_bg.publish()
     self.tic()
-    self.assertEqual(1,  len(websection.getDocumentValueList(language='bg')))
-    self.assertEqual(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
+    self.assertEqual(1, len(websection.getDocumentValueList(language='bg')))
+    self.assertEqual(web_page_bg, websection.getDocumentValueList(language='bg')[0].getObject())
 
     # reject page
     web_page_bg.reject()
     self.tic()
-    self.assertEqual(0,  len(websection.getDocumentValueList(language='bg')))
+    self.assertEqual(0, len(websection.getDocumentValueList(language='bg')))
 
     # publish page and search without a language (by default system should return 'en' docs only)
     web_page_bg.publish()
     self.tic()
-    self.assertEqual(1,  len(websection.getDocumentValueList()))
-    self.assertEqual(web_page_en,  websection.getDocumentValueList()[0].getObject())
+    self.assertEqual(1, len(websection.getDocumentValueList()))
+    self.assertEqual(web_page_en, websection.getDocumentValueList()[0].getObject())
 
-  def test_04_WebSectionAuthorizationForcedForDefaultDocument(self, quiet=quiet, run=run_all_test):
+  def test_04_WebSectionAuthorizationForcedForDefaultDocument(self):
     """ Check that when a Web Section contains a default document not accessible by user we have a chance to
         require user to login.
         Whether or not an user will login is controlled by a property on Web Section (authorization_forced).
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_04_WebSectionAuthorizationForcedForDefaultDocument'
-      ZopeTestCase._print(message)
     self.setupWebSite()
     websection = self.setupWebSection()
     web_page_reference = 'default-document-reference'
@@ -414,15 +394,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.commit()
     self.assertEqual(5, len(websection.getDocumentValueList(limit=5)))
 
-  def test_05_deadProxyFields(self, quiet=quiet, run=run_all_test):
+  def test_05_deadProxyFields(self):
     """
     check that all proxy fields defined in business templates have a valid
      target
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_05_deadProxyFields'
-      ZopeTestCase._print(message)
     skins_tool = self.portal.portal_skins
     for field_path, field in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ProxyField'], search_sub=1):
@@ -936,12 +912,10 @@ return True
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    portal = self.portal
-    module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = self.makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
-    background_image = module.newContent(portal_type=portal_type,
-                                    file=upload_file,
-                                    reference="NXD-BACKGROUND")
+    background_image = self.portal.image_module.newContent(
+      portal_type='Image',
+      file=self.makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png'),
+      reference="NXD-BACKGROUND")
     background_image.publish()
     self.tic()
 
