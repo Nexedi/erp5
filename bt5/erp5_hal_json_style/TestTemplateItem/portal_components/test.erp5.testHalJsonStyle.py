@@ -1725,7 +1725,7 @@ return context.getPortalObject().foo_module.contentValues()
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
     )
     result_dict = json.loads(result)
-    #editalble creation date is defined at proxy form
+    # editable creation date is defined at proxy form
     # Test the listbox_uid parameter
     self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
     self.assertEqual(result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'], 'StringField')
@@ -3258,10 +3258,10 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv')
     else:
       self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv; charset=utf-8')
-    self.assertTrue('foook1' in result, result)
-    self.assertTrue('foook2' in result, result)
-    self.assertTrue('foonotok' not in result, result)
+    self.assertIn('foook1', result)
+    self.assertIn('foook2', result)
+    self.assertNotIn('foonotok', result)
     # Check one of the field name
-    self.assertTrue('Read-Only Quantity' in result, result)
+    self.assertIn('Read-Only Quantity', result)
     # Ensure it is not the list mode rendering
     self.assertTrue(len(result.split('\n')) > 50, result)

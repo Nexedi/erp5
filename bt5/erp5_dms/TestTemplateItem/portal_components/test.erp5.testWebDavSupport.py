@@ -185,7 +185,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
       self.assertEqual(web_page_module[filename].getData(), iso_text_content)
     # Convert to base format and run conversion into utf-8
     self.tic()
-    # Content-Type header is replaced if sonversion encoding succeed
+    # Content-Type header is replaced if conversion encoding succeed
     new_text_content = text_content.replace('charset=iso-8859-1', 'charset=utf-8')
     self.assertEqual(web_page_module[filename].getTextContent(), new_text_content)
 
@@ -207,7 +207,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
     # This is HTTPServer.zhttp_server not HTTPServer.zwebdav_server
     # force usage of manage_FTPget like zwebdav_server does
-    response = self.publish(document.getPath()+'/manage_FTPget',
+    response = self.publish(document.getPath() + '/manage_FTPget',
                             request_method='GET',
                             stdin=StringIO(),
                             basic=self.authentication)

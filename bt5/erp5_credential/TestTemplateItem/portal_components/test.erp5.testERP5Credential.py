@@ -1097,15 +1097,14 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_follow_up_uid=credential_request.getUid())
     last_message = self.portal.MailHost._last_message
     self.assertNotEqual((), last_message)
-    mfrom, mto, message_text = last_message
+    mfrom, mto, _ = last_message
     self.assertEqual(mfrom, 'Portal Administrator <postmaster@localhost>')
     self.assertEqual(['Vifib Test <barney@duff.com>'], mto)
-    self.assertNotEqual(re.search(r"Subject\:.*Welcome", message_text), None)
-    self.assertNotEqual(re.search(r"Hello\ Vifib\ Test\,", message_text), None)
     decoded_message = self.decode_email(last_message[2])
+    self.assertEqual(decoded_message["headers"]["subject"], "Welcome")
     body_message = decoded_message['body']
-    self.assertNotEqual(re.search("key=%s" % mail_message.getReference(),
-                                   body_message), None)
+    self.assertRegex(body_message, r"Hello\ Vifib\ Test\,")
+    self.assertRegex(body_message, "key=%s" % mail_message.getReference())
 
   def testAssignmentCreationUsingSystemPreferenceProperty(self):
     """
