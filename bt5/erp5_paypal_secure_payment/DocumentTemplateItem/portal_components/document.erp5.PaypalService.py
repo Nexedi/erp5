@@ -29,6 +29,7 @@
 import zope
 from urllib import urlencode
 from urllib2 import urlopen, Request
+import contextlib
 from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -100,8 +101,8 @@ class PaypalService(XMLObject):
     paypal_url = self.getLinkUrlString()
     request = Request(paypal_url, param_list)
     request.add_header("Content-type", "application/x-www-form-urlencoded")
-    response = urlopen(request)
-    status = response.read()
+    with contextlib.closing(urlopen(request)) as response:
+      status = response.read()
     LOG("PaypalService status", DEBUG, status)
     method_id = self._getTypeBasedMethod("reportPaymentStatus").id
     getattr(self.activate(), method_id)(response_dict=REQUEST.form)
