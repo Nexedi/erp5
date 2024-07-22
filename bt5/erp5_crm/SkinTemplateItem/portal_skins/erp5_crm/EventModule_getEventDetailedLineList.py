@@ -92,11 +92,7 @@ for r_event in event_list:
           unassigned_dic[event.getSimulationState()]=unassigned_dic[event.getSimulationState()]+1
           unassigned_dic['total']=unassigned_dic['total']+1
 #Sort the result and add unassigned
-def comparator(x, y):
-  if x['ticket_type'] == y['ticket_type']:
-    return cmp(x['ticket_title'], y['ticket_title'])
-  return cmp(x['ticket_type'], y['ticket_type'])
-column_list.sort(comparator)
+column_list.sort(key=lambda x: (x['ticket_type'], x['ticket_title']))
 if unassigned_dic['total']>0: column_list.append(unassigned_dic)
 #fill line_list that is returned to report
 line_list = []
