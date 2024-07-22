@@ -91,9 +91,7 @@ class WebServiceTool(BaseTool):
     """
     Return list of available connection plugins
     """
-    plugin_list = connection_plugin_registry.keys()
-    plugin_list.sort()
-    return plugin_list
+    return sorted(connection_plugin_registry.keys())
 
   security.declareProtected(Permissions.ManagePortal, 'connect')
   def connect(self, url, user_name=None, password=None, transport=None, transport_kw=None):
