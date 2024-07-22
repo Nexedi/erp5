@@ -2064,6 +2064,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     web_page = module.newContent(portal_type=web_page_portal_type,
                                  file=upload_file)
     self.tic()
+    self.assertEqual(web_page.getContentType(), 'text/plain')
     text_content = web_page.getTextContent()
     my_utf_eight_token = 'ùééàçèîà'
     text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)

@@ -103,7 +103,8 @@ class CertificateAuthorityTool(BaseTool):
        Raises CertificateAuthorityBusy"""
     if os.path.exists(self.lock):
       raise CertificateAuthorityBusy
-    open(self.lock, 'w').write('locked')
+    with open(self.lock, 'w') as f:
+      f.write('locked')
 
   def _unlockCertificateAuthority(self):
     """Checks lock and locks Certificate Authority tool"""
@@ -192,7 +193,8 @@ class CertificateAuthorityTool(BaseTool):
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
 
-    index = open(self.index).read().splitlines()
+    with open(self.index) as f:
+      index = f.read().splitlines()
     valid_line_list = [q for q in index if q.startswith('V') and
       ('CN=%s/' % common_name in q)]
     if len(valid_line_list) >= 1:
@@ -201,7 +203,8 @@ class CertificateAuthorityTool(BaseTool):
                        'please revoke it before request a new one..' % common_name)
 
     try:
-      new_id = open(self.serial, 'r').read().strip().lower()
+      with open(self.serial, 'r') as f:
+        new_id = f.read().strip().lower()
       key = os.path.join(self.certificate_authority_path, 'private',
           new_id+'.key')
       csr = os.path.join(self.certificate_authority_path, new_id + '.csr')
@@ -216,9 +219,13 @@ class CertificateAuthorityTool(BaseTool):
           '-batch', '-config', self.openssl_config, '-out', cert, '-infiles',
           csr])
         os.unlink(csr)
+        with open(key) as f:
+          key = f.read()
+        with open(cert) as f:
+          cert = f.read()
         return dict(
-          key=open(key).read(),
-          certificate=open(cert).read(),
+          key=key,
+          certificate=cert,
           id=new_id,
           common_name=common_name)
       except Exception:
@@ -242,7 +249,8 @@ class CertificateAuthorityTool(BaseTool):
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
     try:
-      new_id = open(self.crl, 'r').read().strip().lower()
+      with open(self.crl, 'r') as f:
+        new_id = f.read().strip().lower()
       crl_path = os.path.join(self.certificate_authority_path, 'crl')
       crl = os.path.join(crl_path, new_id + '.crl')
       cert = os.path.join(self.certificate_authority_path, 'certs',
@@ -260,7 +268,9 @@ class CertificateAuthorityTool(BaseTool):
         alias += str(len(glob.glob(alias + '*')))
         created.append(alias)
         os.symlink(os.path.basename(crl), alias)
-        return dict(crl=open(crl).read())
+        with open(crl) as f:
+          crl = f.read()
+        return dict(crl=crl)
       except Exception:
         e = sys.exc_info()
         try:
@@ -278,7 +288,8 @@ class CertificateAuthorityTool(BaseTool):
       self._unlockCertificateAuthority()
 
   def _getValidSerial(self, common_name):
-    index = open(self.index).read().splitlines()
+    with open(self.index) as f:
+      index = f.read().splitlines()
     valid_line_list = [q for q in index if q.startswith('V') and
       ('CN=%s/' % common_name in q)]
     if len(valid_line_list) < 1:
