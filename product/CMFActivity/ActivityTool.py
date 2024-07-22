@@ -1825,7 +1825,7 @@ class ActivityTool (BaseTool):
       """
       db = self.getSQLConnection()
       quote = db.string_literal
-      return sum(x for x, in db.query("(%s)" % ") UNION ALL (".join(
+      return sum(x for x, in db.query(b"(%s)" % b") UNION ALL (".join(
         activity.countMessageSQL(quote, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 
