@@ -34,7 +34,8 @@ class commandtransform:
         os.mkdir(tmpdir)
         filename = kwargs.get("filename", '')
         fullname = join(tmpdir, basename(filename))
-        filedest = open(fullname , "wb").write(data)
+        with open(fullname , "wb") as f:
+          f.write(data)
         return tmpdir, fullname
 
     def subObjects(self, tmpdir):
@@ -50,7 +51,8 @@ class commandtransform:
 
     def fixImages(self, path, images, objects):
         for image in images:
-            objects[image] = open(join(path, image), 'rb').read()
+            with  open(join(path, image), 'rb') as f:
+                objects[image] = f.read()
 
     def cleanDir(self, tmpdir):
         shutil.rmtree(tmpdir)
@@ -151,7 +153,7 @@ class subprocesstransform:
         try:
             if not self.useStdin:
               stdin_file = tempfile.NamedTemporaryFile()
-              stdin_file.write( data)
+              stdin_file.write(data)
               stdin_file.seek(0)
               command = command % {'infile': stdin_file.name} # apply tmp name to command
               data = None
