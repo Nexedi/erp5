@@ -4074,7 +4074,8 @@ VALUES
     def doSomething(self, message_list):
       r = []
       for m in message_list:
-        m.result = r.append(m.object.getPath())
+        r.append(m.object.getPath())
+        m.result = None
       r.sort()
       group_method_call_list.append(r)
     self.portal.portal_activities.__class__.doSomething = doSomething
