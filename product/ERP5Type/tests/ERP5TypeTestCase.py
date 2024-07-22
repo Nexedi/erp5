@@ -9,7 +9,6 @@ __version__ = '0.3.0'
 
 import base64
 import errno
-import httplib
 import os
 import random
 import re
@@ -18,7 +17,6 @@ import string
 import sys
 import time
 import traceback
-import urllib
 import ConfigParser
 from contextlib import contextmanager
 from io import BytesIO
@@ -32,7 +30,6 @@ from DateTime import DateTime
 import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
-from zope.globalrequest import clearRequest
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
@@ -171,7 +168,8 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
     promise_config.set('portal_certificate_authority', 'certificate_authority_path',
                                            os.environ['TEST_CA_PATH'])
 
-  promise_config.write(open(promise_path, 'w'))
+  with open(promise_path, 'w') as f:
+    promise_config.write(f)
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
