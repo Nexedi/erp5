@@ -101,8 +101,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       if solver is None:
         continue
       solver_conviguration_dict = decision.getConfigurationPropertyDict()
-      configuration_mapping = solver_conviguration_dict.items()
-      configuration_mapping.sort() # Make sure the list is sorted in canonical way
+      configuration_mapping = sorted(solver_conviguration_dict.items()) # Make sure the list is sorted in canonical way
       configuration_mapping = tuple(configuration_mapping)
       for movement in decision.getDeliveryValueList():
         # Detect incompatibilities
