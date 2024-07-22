@@ -218,7 +218,7 @@ class TestBug(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEqual('dummy <loggedperson@localhost>', mfrom)
     self.assertEqual(['person1@localhost'], mto)
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
     self.assertTrue(decode_header(message['Subject'])[0][0].endswith(bug.getTitle()))
 
   def stepCheckBugMessageNotification(self, sequence=None,
@@ -232,7 +232,7 @@ class TestBug(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEqual('person2@localhost', mfrom)
     self.assertEqual(['person1@localhost'], mto)
-    message = message_from_string(messageText)
+    message = message_from_string(messageText.decode())
     self.assertTrue(decode_header(message['Subject'])[0][0].endswith(bug.getTitle()))
 
   def stepSetSourceProject(self, sequence=None, sequence_list=None, **kw):
@@ -315,8 +315,8 @@ class TestBug(ERP5TypeTestCase):
     _, _, messageText = last_message
     from email.parser import Parser
     p = Parser()
-    m = p.parsestr(messageText)
-    self.assertIn('Re-assign!', m.get_payload()[0].get_payload(decode=True))
+    m = p.parsestr(messageText.decode())
+    self.assertIn(b'Re-assign!', m.get_payload()[0].get_payload(decode=True))
 
 
   def stepCheckBugInit(self, sequence=None, sequence_list=None, **kw):

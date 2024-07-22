@@ -5,9 +5,9 @@ except KeyError:
   # not found
   return None
 
-key = context.getPortalObject().portal_preferences.getPreferredBearerTokenKey()
+key = context.getPortalObject().portal_preferences.getPreferredBearerTokenKey().encode()
 
-if context.Base_getHMAC(key, str(token_dict)) != token:
+if context.Base_getHMAC(key, str(token_dict).encode('utf-8')) != token:
   # bizzare, not valid
   return None
 

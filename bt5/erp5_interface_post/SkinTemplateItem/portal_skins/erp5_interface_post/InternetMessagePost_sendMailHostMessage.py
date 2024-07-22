@@ -5,5 +5,4 @@
 # spawned with parameters :
 #     conflict_retry=False,
 #     max_retry=0,
-
-context.getPortalObject().MailHost.send(context.getData())
+context.getPortalObject().MailHost.send(context.getData().decode())

@@ -1,5 +1,6 @@
 # coding: utf-8
 import unicodedata
+import six
 from io import BytesIO
 import zipfile
 from Products.ERP5Type.Message import translateString
@@ -20,7 +21,9 @@ if test_compta_demat_compatibility:
   # https://github.com/DGFiP/Test-Compta-Demat/issues/39
   fec_file = unicodedata.normalize(
     'NFKD', fec_file.replace(u"€", "EUR")
-  ).encode('ascii', 'ignore')
+  ).encode(
+    'ascii', 'ignore'
+  ).decode('ascii')
 
 zipbuffer = BytesIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')
@@ -42,9 +45,12 @@ attachment_list = (
      'content': zipbuffer.getvalue(),
      'name': zipfilename, }, )
 
+subject = six.text_type(
+  translateString('French Accounting Transaction File'))
+
 portal.ERP5Site_notifyReportComplete(
     user_name=user_name,
-    subject=unicode(translateString('French Accounting Transaction File')),
+    subject=subject,
     message='',
     attachment_list=attachment_list)
 
