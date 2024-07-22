@@ -31,7 +31,7 @@
 TODO: test variation
       test selection_report
 """
-
+from __future__ import division
 import os
 import random
 import unittest
@@ -894,7 +894,7 @@ class TestInventoryList(InventoryAPITestCase):
     getInventoryList = self.getSimulationTool().getInventoryList
     inventory_list = getInventoryList()
     self.assertEqual(str(inventory_list.__class__),
-                    'Shared.DC.ZRDB.Results.Results')
+                    'Shared.DC.ZRDB.Results.Results' if six.PY2 else "<class 'Shared.DC.ZRDB.Results.Results'>")
     # the brain is InventoryListBrain
     self.assertIn('InventoryListBrain',
           [c.__name__ for c in inventory_list._class.__bases__])
@@ -1705,7 +1705,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt_history_list = getMovementHistoryList()
     self.assertEqual(str(mvt_history_list.__class__),
-                    'Shared.DC.ZRDB.Results.Results')
+                    'Shared.DC.ZRDB.Results.Results' if six.PY2 else "<class 'Shared.DC.ZRDB.Results.Results'>")
     # default is an empty list
     self.assertEqual(0, len(mvt_history_list))
 
@@ -2967,7 +2967,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
   def afterSetUp(self):
     InventoryAPITestCase.afterSetUp(self)
     self.CACHE_LAG = cache_lag = self.getSimulationTool().getInventoryCacheLag()
-    min_lag = cache_lag / 2
+    min_lag = cache_lag // 2
     self.NOW = now = DateTime(DateTime().strftime("%Y-%m-%d %H:%M:%S UTC"))
     self.CACHE_DATE = cache_date = now - min_lag
     from erp5.component.tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION

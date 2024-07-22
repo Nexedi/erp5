@@ -793,7 +793,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt_dir = "%s/%s/bt" % (repository, kw['title'])
       if not os.path.exists(bt_dir):
         os.makedirs(bt_dir)
-      with open("%s/title" % bt_dir, "wb") as f:
+      with open("%s/title" % bt_dir, "w") as f:
         f.write(kw['title'])
       template = xml.createElement('template')
       template.setAttribute('id', kw['title'])
@@ -834,7 +834,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     createBtAndAddToRepository(repository, repo_xml, title='bt3')
     createBtAndAddToRepository(repository, repo_xml, title='bt4')
     createBtAndAddToRepository(repository, repo_xml, title='bt5')
-    with open("%s/bt5list" % repository,"wb") as repo_xml_fd:
+    with open("%s/bt5list" % repository, "w") as repo_xml_fd:
       repo_xml.writexml(repo_xml_fd)
       repo_xml_fd.close()
 
@@ -865,7 +865,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     erp5_test = self.portal.portal_skins['erp5_test']
     self.assertTrue(erp5_test.hasObject('test_file'))
 
-  def test_ownerhsip(self):
+  def test_ownership(self):
     self.assertEqual(
       self.portal.portal_skins.erp5_core.getOwnerTuple(),
       ([self.portal.getId(), 'acl_users'], 'System Processes'),

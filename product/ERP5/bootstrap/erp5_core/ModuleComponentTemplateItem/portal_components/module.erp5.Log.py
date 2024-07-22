@@ -33,7 +33,6 @@ from zLOG import (
   TRACE,
   DEBUG,
   BLATHER,
-  INFO,
   PROBLEM,
   WARNING,
   ERROR,

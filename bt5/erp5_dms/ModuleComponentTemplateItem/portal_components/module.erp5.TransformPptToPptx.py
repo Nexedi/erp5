@@ -27,7 +27,7 @@ class PptToPptx:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     ppt = OOOdCommandTransform(context, filename, data, self.inputs[0])
     pptx = ppt.convertTo('pptx')
     if cache is not None:
