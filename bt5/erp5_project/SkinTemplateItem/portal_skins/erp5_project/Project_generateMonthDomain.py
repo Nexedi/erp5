@@ -41,9 +41,7 @@ if depth == 0:
 
     category_list = []
     #i = 1
-    month_dict_list = month_dict.keys()
-    month_dict_list.sort()
-    for year, month in month_dict_list:
+    for year, month in sorted(month_dict.keys()):
       category_list.append(here.getObject().asContext(title="%s - %s" % (year, month),
                                                       string_index="%s-%s" % (year, month),
                                                       ))
