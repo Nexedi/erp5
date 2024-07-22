@@ -111,9 +111,6 @@ class MailMessageMixin:
     """
     Returns the content information from the header information.
     This is used by the metadata discovery system.
-
-    Header information is converted in UTF-8 since this is the standard
-    way of representing strings in ERP5.
     """
     result = {}
     for (name, value) in self._getMessage().items():

@@ -603,11 +603,11 @@ class TestKM(TestKMMixIn):
     # add some documents to this web section
     presentation = portal.document_module.newContent(
                           title='My presentation',
-                          portal_type = 'Presentation',
-                          reference = 'Presentation-12456_',
+                          portal_type='Presentation',
+                          reference='Presentation-12456_',
                           version='001',
                           language='en',
-                          publication_section_list = publication_section_category_id_list[:1])
+                          publication_section_list=publication_section_category_id_list[:1])
     presentation.publish()
     self.tic()
     self.changeSkin('KM')
@@ -742,7 +742,7 @@ class TestKM(TestKMMixIn):
     portal = self.getPortal()
     portal_gadgets = portal.portal_gadgets
 
-    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
+    url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' % self.web_site_url
     response = self.publish(url, self.auth)
     self.assertIn(self.web_front_knowledge_pad.getTitle(), response.getBody())
 

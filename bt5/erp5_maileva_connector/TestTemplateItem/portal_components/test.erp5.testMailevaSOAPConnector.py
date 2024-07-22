@@ -416,8 +416,8 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
   def test_maileva_request_validation(self):
     xml = self.maileva_connector.generateRequestXML(self.recipient, self.sender, self.document, 'test_track_id', 'maileva_connection_for_test')
     # lxml doesn't support https in schemaLocation, download locally
-    src = open(os.path.join(os.path.dirname(Products.ERP5.tests.__file__), 'test_data', "MailevaPJSSchema.xsd"))
-    xsd = etree.parse(src)
+    with open(os.path.join(os.path.dirname(Products.ERP5.tests.__file__), 'test_data', "MailevaPJSSchema.xsd")) as f:
+      xsd = etree.parse(f)
     schema_validator = etree.XMLSchema(xsd)
     schema_validator.assertValid(etree.fromstring(xml.encode("UTF-8")))
 
