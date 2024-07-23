@@ -422,7 +422,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     quantity = self.getQuantity()
     if quantity :
       source_asset_price = self.getSourceAssetPrice()
-      if source_asset_price :
+      if source_asset_price is not None:
         return source_asset_price * - quantity
     return None
 
@@ -466,7 +466,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     quantity = self.getQuantity()
     if quantity :
       destination_asset_price = self.getDestinationAssetPrice()
-      if destination_asset_price :
+      if destination_asset_price is not None:
         return destination_asset_price * quantity
     return None
 
@@ -520,7 +520,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
   def _getAssetPrice(self,section,date):
     price = self.getPrice()
-    if section is None or not price or getattr(
+    if section is None or price is None or getattr(
       section.aq_base, 'getPriceCurrencyValue', None
     ) is None:
       return price

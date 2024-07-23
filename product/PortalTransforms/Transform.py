@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from zLOG import ERROR
 from six.moves import UserDict
+from importlib import import_module
 
 from zope.interface import implementer
 
@@ -21,7 +22,7 @@ from Products.PortalTransforms.transforms.broken import BrokenTransform
 
 def import_from_name(module_name):
     """ import and return a module by its name """
-    return __import__(module_name, {}, {}, module_name)
+    return import_module(module_name)
 
 def make_config_persistent(kwargs):
     """ iterates on the given dictionnary and replace list by persistent list,

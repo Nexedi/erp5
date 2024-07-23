@@ -28,6 +28,7 @@
 # 02110-1301, USA.
 #
 ##############################################################################
+from __future__ import absolute_import
 
 import gc
 import os
@@ -37,6 +38,7 @@ import unittest
 import warnings
 import re
 import sys
+from importlib import import_module
 
 import transaction
 from persistent import Persistent
@@ -1449,8 +1451,7 @@ class TestZodbModuleComponent(SecurityTestCase):
 
   def afterSetUp(self):
     self._component_tool = self.portal.portal_components
-    self._module = __import__(self._document_class._getDynamicModuleNamespace(),
-                              fromlist=['erp5.component'])
+    self._module = import_module(self._document_class._getDynamicModuleNamespace())
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
@@ -1520,7 +1521,7 @@ class TestZodbModuleComponent(SecurityTestCase):
 
     if expected_default_version is not None:
       top_module_name = self._document_class._getDynamicModuleNamespace()
-      top_module = __import__(top_module_name, level=0, fromlist=[top_module_name])
+      top_module = import_module(top_module_name)
 
       # The module must be available in its default version
       self.assertHasAttribute(top_module, expected_default_version)
@@ -1549,10 +1550,7 @@ class TestZodbModuleComponent(SecurityTestCase):
 
   def _importModule(self, module_name):
     module_name = self._getComponentFullModuleName(module_name)
-    module = __import__(
-      module_name,
-      fromlist=[self._document_class._getDynamicModuleNamespace()],
-      level=0)
+    module = import_module(module_name)
     self.assertIn(module_name, sys.modules)
     return module
 
@@ -2043,8 +2041,7 @@ def bar(*args, **kwargs):
     # later that the module has not been added to the top-level package
     self.assertModuleImportable('erp5_version.%s' % imported_reference)
 
-    top_module = __import__(top_module_name, level=0,
-                            fromlist=[top_module_name])
+    top_module = import_module(top_module_name)
 
     self._importModule('erp5_version.%s' % imported_reference)
 
@@ -2106,8 +2103,7 @@ def function_foo(*args, **kwargs):
       self.failIfModuleImportable('foo_version.%s' % reference)
 
       top_module_name = self._document_class._getDynamicModuleNamespace()
-      top_module = __import__(top_module_name, level=0,
-                              fromlist=[top_module_name])
+      top_module = import_module(top_module_name)
 
       self._importModule(reference)
       module = getattr(top_module, reference)
@@ -3401,13 +3397,18 @@ break_at_import()
       return self._component_tool.readTestOutput()
 
     output = runLiveTest('testRunLiveTestImportError')
+    relative_url = 'portal_components/test.erp5.testRunLiveTestImportError'
+    if six.PY2:
+      module_file = '<' + relative_url + '>'
+    else:
+      module_file = 'erp5://' + relative_url
     self.assertIn('''
-  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 4, in <module>
+  File "%(module_file)s", line 4, in <module>
     break_at_import()
-  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 3, in break_at_import
+  File "%(module_file)s", line 3, in break_at_import
     import non.existing.module # pylint:disable=import-error
 ImportError: No module named non.existing.module
-''', output)
+''' % dict(module_file=module_file), output)
 
     output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
     self.assertIn(

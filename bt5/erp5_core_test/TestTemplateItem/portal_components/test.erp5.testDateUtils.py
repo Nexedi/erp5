@@ -208,6 +208,7 @@ class TestPinDateTime(ERP5TypeTestCase):
 
     self.pinDateTime(datetime)
     self.assertEqual(DateTime(), datetime)
+    self.assertEqual(DateTime(None), datetime)
     self.assertEqual(DateTime('2002/02/02 02:02:02 GMT+2'), fixed_date_with_timezone)
 
     self.unpinDateTime()
@@ -220,6 +221,24 @@ class TestPinDateTime(ERP5TypeTestCase):
     with self.pinDateTime(datetime):
       self.assertEqual(DateTime(), datetime)
     self.assertGreaterEqual(DateTime(), actual_begin_date)
+
+  def test_pinDateTime_date_time_methods(self):
+    with self.pinDateTime(DateTime('2001/01/01 01:01:01')):
+      self.assertTrue(DateTime('2000').isPast())
+      self.assertTrue(DateTime('2002').isFuture())
+      self.assertTrue(DateTime('2001').isCurrentYear())
+      self.assertTrue(DateTime('2001/01/02 01:01:01').isCurrentMonth())
+      self.assertTrue(DateTime('2001/01/01 02:01:01').isCurrentDay())
+      self.assertTrue(DateTime().strftime('%Y'), '2001')
+      self.assertTrue(DateTime('2002').strftime('%Y'), '2001')
+
+  def test_pinDateTime_timezone(self):
+    with self.pinDateTime(DateTime('2001/01/01 01:01:01 GMT+9')):
+      self.assertEqual(DateTime().timezone(), 'GMT+9')
+      self.assertEqual(DateTime('2001/01/01 01:01:01 GMT+4').timezone(), 'GMT+4')
+    with self.pinDateTime(DateTime('2001/01/01 01:01:01 Europe/Paris')):
+      self.assertEqual(DateTime().timezone(), 'Europe/Paris')
+      self.assertEqual(DateTime('2001/01/01 01:01:01 GMT+4').timezone(), 'GMT+4')
 
 
 class TestTimeZoneContext(ERP5TypeTestCase):

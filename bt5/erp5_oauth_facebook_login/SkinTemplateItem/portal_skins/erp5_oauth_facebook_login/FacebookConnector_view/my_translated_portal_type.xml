@@ -10,14 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_translated_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -65,27 +64,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_module_listbox</string> </value>
+                    <value> <string>my_translated_workflow_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -93,7 +73,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>OAuth Connectors</string> </value>
+                    <value> <string>Type</string> </value>
                 </item>
               </dictionary>
             </value>

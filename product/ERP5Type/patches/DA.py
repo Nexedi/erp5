@@ -277,11 +277,9 @@ def getObjectMeta(original_function):
   def getObject(module, name, reload=0):
     # Modified version that ignore errors as long as the module can be be
     # imported, which is enough to use a ZODB Extension as a brain.
+    from importlib import import_module
     try:
-      m = __import__('erp5.component.extension.%s' % module, globals(),
-                     {}, 'erp5.component.extension')
-
-      o = getattr(m, name, None)
+      o = getattr(import_module('erp5.component.extension.%s' % module), name, None)
       if o is None:
         raise ImportError(
           "Cannot get %s from erp5.component.extension.%s" % (name, module))

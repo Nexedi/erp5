@@ -124,26 +124,37 @@ class TypeAccessChecker:
     as "a method which returing a method" because we can not know what is the
     type until it is actually called. So the three ways are simulated the
     function returned by this method.
+
+    We don't return a simple function, but a class instance with a __bool__ method
+    to accomodate the two cases where this is called by SecurityManager.validate when
+    checking access on the class (then only the bool is used) or by guarded_getattr
+    when checking access on the instance (the __call__ is used).
     """
-    def factory(inst, name):
-      """
-      Check function used with ContainerAssertions checked by cAccessControl.
-      """
-      access = _safe_class_attribute_dict.get(inst, 0)
-      # The next 'dict' only checks the access configuration type
-      if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
-        pass
-      elif isinstance(access, dict) and callable(access.get(name, 0)):
-        guarded_method = access.get(name)
-        return guarded_method(inst, name)
-      elif callable(access):
-        # Only check whether the access configuration raise error or not
-        access(inst, name)
-      else:
-        # fallback to default security
-        aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
-      return v
-    return factory
+    class _AccessChecker:
+      def __call__(self, inst, name):
+        """
+        Check function used with ContainerAssertions checked by cAccessControl.
+        """
+        access = _safe_class_attribute_dict.get(inst, 0)
+        # The next 'dict' only checks the access configuration type
+        if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
+          pass
+        elif isinstance(access, dict) and callable(access.get(name, 0)):
+          guarded_method = access.get(name)
+          return guarded_method(inst, name)
+        elif callable(access):
+          # Only check whether the access configuration raise error or not
+          access(inst, name)
+        else:
+          # fallback to default security
+          aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
+        return v
+
+      def __bool__(self):
+        return False
+      __nonzero__ = __bool__ # six.PY2
+
+    return _AccessChecker()
 
   def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
@@ -177,16 +188,21 @@ import past.builtins # six.PY2
 allow_module('past.builtins')
 ModuleSecurityInfo('past.builtins').declarePublic('cmp')
 
-def guarded_sorted(seq, cmp=None, key=None, reverse=False):
-    if cmp is not None: # six.PY2
-        from functools import cmp_to_key
-        key = cmp_to_key(cmp)
+if six.PY2:
+    def guarded_sorted(seq, cmp=None, key=None, reverse=False):
+        if cmp is not None:
+            from functools import cmp_to_key
+            key = cmp_to_key(cmp)
 
-    if not isinstance(seq, SafeIter):
-        for i, x in enumerate(seq):
-            guard(seq, x, i)
-    return sorted(seq, key=key, reverse=reverse)
-safe_builtins['sorted'] = guarded_sorted
+        if not isinstance(seq, SafeIter):
+            for i, x in enumerate(seq):
+                guard(seq, x, i)
+        return sorted(seq, key=key, reverse=reverse)
+    safe_builtins['sorted'] = guarded_sorted
+
+def guarded_enumerate(seq, start=0):
+    return NullIter(enumerate(guarded_iter(seq), start=start))
+safe_builtins['enumerate'] = guarded_enumerate
 
 def guarded_reversed(seq):
     return SafeIter(reversed(seq))
@@ -195,9 +211,6 @@ ContainerAssertions[reversed] = 1
 # listreverseiterator is a special type, returned by list.__reversed__
 ContainerAssertions[type(reversed([]))] = 1
 
-def guarded_enumerate(seq, start=0):
-    return NullIter(enumerate(guarded_iter(seq), start=start))
-safe_builtins['enumerate'] = guarded_enumerate
 
 def get_set_pop(s, name):
     def guarded_pop():
@@ -357,6 +370,8 @@ allow_class_attribute(datetime.tzinfo)
 # This prevents both importing _strptime with level=0, and accessing __doc__,
 # when calling datetime.datetime.strptime().
 import _strptime
+# on python3 it seems we actually need to call strptime for this.
+datetime.datetime.strptime('', '')
 
 # Allow dict.fromkeys, Only this method is a class method in dict module.
 allow_class_attribute(dict, {'fromkeys': 1})
@@ -432,6 +447,9 @@ except ImportError:
   import_default_level = -1
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
     level=import_default_level):
+  # XXX workaround C-code calling PyImport_Import
+  if mname in ('numpy.core._dtype',):
+    return __import__(mname, globals, locals, fromlist)
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
@@ -494,6 +512,7 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
               'uint8', 'uint16', 'uint32', 'uint64', \
               'float16', 'float32', 'float64', \
               'complex64', 'complex128'):
+  allow_type(type(np.dtype(dtype)))
   z = np.array([0,], dtype = dtype)
   allow_type(type(z[0]))
   allow_type(type(z))
@@ -509,7 +528,6 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
 allow_type(np.dtype)
 allow_type(np.timedelta64)
 allow_type(type(np.c_))
-allow_type(type(np.dtype('int16')))
 sz = np.array([('2017-07-12T12:30:20',)], dtype=[('date', 'M8[s]')])
 allow_type(type(sz[0]['date']))
 
@@ -556,20 +574,26 @@ else:
 
   allow_class(pd.DataFrame)
 
-  # Note: These black_list methods are for pandas 0.19.2
+  # Note: These black_list methods are for pandas 0.19.2 on PY2 and 1.4.0 on PY3
   series_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
-                       'to_sql', 'to_msgpack')
+                       'to_sql',)
+  if six.PY2:
+    series_black_list += ('to_msgpack', )
   ContainerAssertions[pd.Series] = _check_access_wrapper(
     pd.Series, dict.fromkeys(series_black_list, restrictedMethod))
 
   pandas_black_list = ('read_pickle', 'read_hdf',
-                       'read_excel', 'read_html', 'read_msgpack',
+                       'read_excel', 'read_html',
                        'read_gbq', 'read_sas', 'read_stata')
+  if six.PY2:
+    pandas_black_list += ('read_msgpack', )
   ModuleSecurityInfo(MNAME_MAP['pandas']).declarePrivate(*pandas_black_list)
 
   dataframe_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
-                          'to_excel', 'to_html', 'to_sql', 'to_msgpack',
+                          'to_excel', 'to_html', 'to_sql',
                           'to_latex', 'to_gbq', 'to_stata')
+  if six.PY2:
+    dataframe_black_list += ('to_msgpack', )
   ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
     pd.DataFrame, dict.fromkeys(dataframe_black_list, restrictedMethod))
 

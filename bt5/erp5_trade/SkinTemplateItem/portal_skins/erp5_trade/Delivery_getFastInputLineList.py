@@ -21,7 +21,7 @@ if line_portal_type in portal.getPortalSaleTypeList():
   section_uid = context.getSourceSectionUid()
 elif line_portal_type in portal.getPortalPurchaseTypeList():
   section_uid = context.getDestinationSectionUid()
-elif line_portal_type in portal.getPortalInternalTypeList() + portal.getPortalInventoryMovementTypeList():
+else:
   section_uid = None
 len_line_list = len(line_list)
 used_id = [] # list use to make sure we do not generate two line with same id/uid
