@@ -52,12 +52,12 @@ class DocumentConversionServerTransform:
     destination_format = self._getFormatFromMimetype(self.output)
 
     data.setData(dec(server_proxy.convertFile(
-      enc(orig),
+      enc(orig).decode(),
       source_format,
       destination_format,
       # Default values are ConversionServer default ones
       kwargs.get('zip', False),
       kwargs.get('refresh', False),
-      kwargs.get('conversion_kw', {}))))
+      kwargs.get('conversion_kw', {})).encode()))
 
     return data

@@ -60,6 +60,9 @@ class HtmlParseHelper(HTMLParser):
     self.result.append(("pi", data))
   def unknown_decl(self, data):
     self.result.append(("unknown_decl", data))
+  def error(self, message):
+    raise ValueError(message)
+
 
 def parseHtml(text):
   """
