@@ -1,7 +1,7 @@
 import requests
 from json import loads
 from socket import timeout
-from requests import ConnectionError, Timeout
+from requests import ConnectionError as _ConnectionError, Timeout
 from Products.ERP5Type.XMLObject import XMLObject
 from six.moves import urllib
 from zLOG import LOG, INFO
@@ -23,7 +23,7 @@ class DQEDataValidatorClientConnector(XMLObject):
     try:
       base_url = self.getServerUrl() + method_name + '/'
       response = requests.get(base_url, params=params, timeout=self.getTimeout())
-    except (Timeout, timeout, ConnectionError):
+    except (Timeout, timeout, _ConnectionError):
       raw_response = 'TIMEOUT'
       result_dict = {}
     else:

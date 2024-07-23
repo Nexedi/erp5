@@ -64,6 +64,7 @@ class Git(WorkingCopy):
 
   def _git(self, *args, **kw):
     kw.setdefault('cwd', self.working_copy)
+    kw.setdefault('universal_newlines', True)
     argv = ['git']
     try:
       return subprocess.Popen(argv + list(args), **kw)
@@ -210,7 +211,7 @@ class Git(WorkingCopy):
     diff_dict = {}
     if out:
       out = iter(out.split('\ndiff --git '))
-      for stat in out.next().splitlines():
+      for stat in next(out).splitlines():
         stat, path = stat.split()[4:]
         stat_dict[path] = stat
       # Emulate svn output for compatibility with erp5.component.module.DiffUtils
@@ -362,7 +363,6 @@ class Git(WorkingCopy):
             raise
           # try to update our working copy
           # TODO: find a solution if there are other local changes
-          # TODO: solve conflicts on */bt/revision automatically
           try:
             self.git(merge, '@{u}', env=env)
           except GitError as e2:

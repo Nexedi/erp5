@@ -26,9 +26,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import zope
-from urllib import urlencode
-from urllib2 import urlopen, Request
+import contextlib
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.request import urlopen, Request
+import zope.interface
+
 from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -94,13 +96,13 @@ class PaypalService(XMLObject):
     param_dict["cmd"] = "_notify-validate"
     if "service" in param_dict:
       param_dict.pop("service")
-    param_list = urlencode(param_dict)
+    param_list = urlencode(param_dict).encode()
     paypal_url = self.getLinkUrlString()
     request = Request(paypal_url, param_list)
     request.add_header("Content-type", "application/x-www-form-urlencoded")
-    response = urlopen(request)
-    status = response.read()
+    with contextlib.closing(urlopen(request)) as response:
+      status = response.read()
     LOG("PaypalService status", DEBUG, status)
     method_id = self._getTypeBasedMethod("reportPaymentStatus").id
     getattr(self.activate(), method_id)(response_dict=REQUEST.form)
-    return status == "VERIFIED"
+    return status == b"VERIFIED"

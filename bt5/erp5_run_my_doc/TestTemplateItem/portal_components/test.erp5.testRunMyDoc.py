@@ -26,12 +26,12 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from erp5.component.test.testDms import makeFileUpload
+from erp5.component.test.testDms import DocumentUploadTestCase
 from time import time
 import base64
 
-class TestRunMyDoc(ERP5TypeTestCase):
+
+class TestRunMyDoc(DocumentUploadTestCase):
   """
    Basic Test for internal implementation of RunMyDocs
   """
@@ -96,7 +96,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
       Test Screeshot upload script used by Zelenium to
       update screenshots of the documents.
     """
-    image_upload = makeFileUpload('TEST-en-002.png')
+    image_upload = self.makeFileUpload('TEST-en-002.png')
     self.assertNotEqual(None, image_upload)
 
     # Create a web page, and check if the content is not overwriten
@@ -135,7 +135,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     image_upload.seek(0)
     self.assertEqual(image_page_2.getData(), base64.b64decode(image_upload.read()))
     self.assertEqual(image_page_2.getFilename(), image_reference + '.png')
-    self.assertEqual(image_page.getData(), '')
+    self.assertEqual(image_page.getData(), b'')
 
   def test_viewSeleniumTest(self):
     """
