@@ -143,7 +143,7 @@ class OOOdCommandTransform(commandtransform):
             image = OFSImage(image.getId(), image.getTitle(), image_data)
 
           # image should be OFSImage
-          data = str(image.data)
+          data = bytes(image.data)
           width = image.width
           height = image.height
           if height:
@@ -228,11 +228,11 @@ class OOOdCommandTransform(commandtransform):
 
       response_code, response_dict, message = server_proxy.run_generate(
                                                                 '',
-                                                                enc(self.data),
+                                                                enc(self.data).decode(),
                                                                 None,
                                                                 format,
                                                                 self.mimetype)
-      data = dec(response_dict['data'])
+      data = dec(response_dict['data'].encode())
       if self.mimetype == 'text/html':
         data = self.includeImageList(data)
       return data

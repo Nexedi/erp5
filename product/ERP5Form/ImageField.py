@@ -34,6 +34,7 @@ from OFS.Image import Image as OFSImage
 from lxml.etree import Element
 from lxml import etree
 import re
+import six
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
@@ -145,7 +146,8 @@ class ImageFieldWidget(Widget.TextWidget):
       if value in ('', None):
         return None
       path = '/'.join(REQUEST.physicalPathFromURL(value))
-      path = path.encode()
+      if six.PY2:
+        path = path.encode()
       image_object = field.getPortalObject().restrictedTraverse(path)
       display = field.get_value('image_display')
       format = field.get_value('image_format')
@@ -167,7 +169,7 @@ class ImageFieldWidget(Widget.TextWidget):
 
       # Big images are cut into smaller chunks, so it's required to cast to
       # str. See OFS/Image -> _read_data method for more information
-      image_data = str(image_data)
+      image_data = bytes(image_data)
 
       format = content_type.split('/')[-1]
       # add the image to the odg document
@@ -213,8 +215,8 @@ class ImageFieldWidget(Widget.TextWidget):
     def _getPictureSize(self, picture_width, picture_height, target_width,
         target_height):
       # if not match causes exception
-      width_tuple = re.match("(\d[\d\.]*)(.*)", target_width).groups()
-      height_tuple = re.match("(\d[\d\.]*)(.*)", target_height).groups()
+      width_tuple = re.match(r"(\d[\d\.]*)(.*)", target_width).groups()
+      height_tuple = re.match(r"(\d[\d\.]*)(.*)", target_height).groups()
       unit = width_tuple[1]
       w = float(width_tuple[0])
       h = float(height_tuple[0])
