@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import textwrap
 import unittest
 import textwrap
@@ -36,7 +37,11 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from Products.ERP5OOo.tests.utils import Validator
 from lxml import html
-import email, six.moves.urllib.parse, six.moves.http_client
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
+import six.moves.urllib.parse, six.moves.http_client
 from Products.Formulator.MethodField import Method
 
 
@@ -133,7 +138,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = message_from_bytes(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
@@ -198,7 +203,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = message_from_bytes(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
       if content_type == "text/html":
@@ -236,7 +241,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = message_from_bytes(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
       if content_type == "text/html":
@@ -260,7 +265,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = message_from_bytes(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
       if content_type == "text/html":
@@ -285,7 +290,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = message_from_bytes(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
       if content_type == self.content_type:
@@ -315,7 +320,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
           'HTTP_ACCEPT_LANGUAGE': 'fr;q=0.9,en;q=0.8',
           })
     self.tic()
-    mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
+    mail_message = message_from_bytes(self.portal.MailHost._last_message[2])
     # mail subject is translated
     self.assertEqual('Historique', mail_message['subject'])
     # content is translated
@@ -345,11 +350,11 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
           'HTTP_COOKIE': 'LOCALIZER_LANGUAGE="fr"',
           })
     self.tic()
-    mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
+    mail_message = message_from_bytes(self.portal.MailHost._last_message[2])
     # mail subject is translated
     self.assertEqual('Historique', mail_message['subject'])
     # content is translated
-    mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
+    mail_message = message_from_string(self.portal.MailHost._last_message[2])
     part, = [x for x in mail_message.walk() if x.get_content_type() == self.content_type]
     self.assertIn(
         'Historique',
@@ -450,7 +455,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
 
     # inspect the report as text and check the selection was initialized from
     # request parameter.
-    mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
+    mail_message = message_from_bytes(self.portal.MailHost._last_message[2])
     part, = [x for x in mail_message.walk() if x.get_content_type() == self.content_type]
 
     doc = self.portal.document_module.newContent(
@@ -487,7 +492,7 @@ class TestODSDeferredStyle(TestDeferredStyleBase):
     self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = message_from_bytes(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
