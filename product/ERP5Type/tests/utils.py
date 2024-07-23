@@ -49,7 +49,6 @@ from Zope2.Startup.datatypes import ZopeDatabase
 from Testing import ZopeTestCase
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
-from email import message_from_string
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
@@ -59,9 +58,11 @@ import lxml.html
 
 if six.PY2:
   FileIO = file
+  from email import message_from_string as message_from_bytes
 else:
   from io import FileIO
   from importlib import reload
+  from email import message_from_bytes
 
 
 def canonical_html(html):
@@ -106,12 +107,15 @@ class DummyMailHostMixin(object):
 
   @staticmethod
   def _decodeMessage(messageText):
+    # type: (bytes) -> str
     """ Decode message"""
     message_text = messageText
-    for part in message_from_string(messageText).walk():
+    for part in message_from_bytes(messageText).walk():
       if part.get_content_type() in ['text/plain', 'text/html' ] \
                   and not part.is_multipart():
-        message_text = part.get_payload(decode=1)
+        message_text = part.get_payload(decode=True)
+        if six.PY3:
+          message_text = message_text.decode(part.get_content_charset('ascii'))
     return message_text
 
   security.declarePrivate('getMessageList')
