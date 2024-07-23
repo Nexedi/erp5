@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -33,7 +34,11 @@ from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Utils import unicode2str
 from DateTime import DateTime
-import email, re
+import re
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 import six.moves.urllib.parse
@@ -173,7 +178,7 @@ class TestERP5Credential(ERP5TypeTestCase):
       'headers': {}
     }
     # Get Message
-    msg = email.message_from_string(file_)
+    msg = message_from_bytes(file_)
     # Back up original file
     theMail['__original__'] = file_
     for key, value in msg.items():
