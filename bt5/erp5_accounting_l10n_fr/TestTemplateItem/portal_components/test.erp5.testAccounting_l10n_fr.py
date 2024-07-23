@@ -30,9 +30,13 @@
 """Test suite for erp5_accounting_l10n_fr
 """
 
+import six
 import unittest
 import zipfile
-import email
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 import os.path
 import io
 from DateTime import DateTime
@@ -118,7 +122,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertNotEqual((), last_message)
     _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = message_from_bytes(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
