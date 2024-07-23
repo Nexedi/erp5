@@ -750,6 +750,13 @@ class TestInventory(InventoryAPITestCase):
     self.assertEqual(0, getInventoryAssetPrice(precision=2,
                                                 node_uid=self.node.getUid()))
 
+  def testFifoAssetPriceWithZeroMovement(self):
+    getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
+    self._makeMovement( quantity=1, price=1 )
+    self._makeMovement( quantity=1, price=0 )
+    self.assertEqual(1.0, getInventoryAssetPrice(node_uid=self.node.getUid(),
+                                                  valuation_method="Fifo"))
+
   def test_OmitInputOmitOutput(self):
     self._makeMovement(quantity=1, price=1)
     self._makeMovement(quantity=-1, price=1)
