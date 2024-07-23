@@ -2043,7 +2043,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     self.assertEqual(5, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
-      self.assertIn(mail_text_content, message_info[-1])
+      self.assertIn(mail_text_content, message_info[-1].decode())
       message = message_from_bytes(message_info[-1])
       self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
 
@@ -2061,7 +2061,7 @@ class TestCRMMailSend(BaseTestCRM):
                       attachment_list=[])
     self.tic()
     (from_url, to_url, last_message,), = self.portal.MailHost._message_list
-    self.assertIn("Body Simple Case", last_message)
+    self.assertIn(b"Body Simple Case", last_message)
     self.assertEqual('FG ER <eee@eee.com>', from_url)
     self.assertEqual(['Expert User <expert@in24.test>'], to_url)
 
