@@ -1141,6 +1141,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.flushAllActivities(silent=1, loop_size=100)
       # Check there is a traceback in the email notification
       sender, recipients, mail = message_list.pop()
+      mail = bytes2str(mail)
       self.assertIn("Module %s, line %s, in failingMethod" % (
         __name__, inspect.getsourcelines(failingMethod)[1]), mail)
       self.assertIn("ValueError:", mail)

@@ -29,13 +29,17 @@
 ##############################################################################
 
 
+import six
 import unittest
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.Utils import bytes2str
-from email import message_from_string
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 from email.header import decode_header
 
 
@@ -219,7 +223,7 @@ class TestBug(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEqual('dummy <loggedperson@localhost>', mfrom)
     self.assertEqual(['person1@localhost'], mto)
-    message = message_from_string(messageText)
+    message = message_from_bytes(messageText)
     self.assertTrue(decode_header(message['Subject'])[0][0].endswith(bug.getTitle()))
 
   def stepCheckBugMessageNotification(self, sequence=None,
@@ -233,7 +237,7 @@ class TestBug(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEqual('person2@localhost', mfrom)
     self.assertEqual(['person1@localhost'], mto)
-    message = message_from_string(messageText)
+    message = message_from_bytes(messageText)
     self.assertTrue(decode_header(message['Subject'])[0][0].endswith(bug.getTitle()))
 
   def stepSetSourceProject(self, sequence=None, sequence_list=None, **kw):
