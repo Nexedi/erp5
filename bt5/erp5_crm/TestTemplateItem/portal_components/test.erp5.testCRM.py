@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import unittest
 import six.moves.urllib.parse
 import os
@@ -41,6 +42,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders, message_from_string
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else
+  from email import message_from_bytes
 from DateTime import DateTime
 
 import Products.ERP5.tests
@@ -1152,7 +1157,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
     self.assertEqual(event.getTextContent(), text_content)
-    message = message_from_string(messageText)
+    message = message_from_bytes(messageText)
 
     self.assertEqual('A Mail', decode_header(message['Subject'])[0][0])
     part = None
@@ -1236,7 +1241,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
 
-    message = message_from_string(messageText)
+    message = message_from_bytes(messageText)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/html':
@@ -1259,7 +1264,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('=?utf-8?q?Me=2C_=F0=9F=90=88_fan?= <me@erp5.org>', mfrom)
     self.assertEqual(['=?utf-8?q?Recipient=2C_=F0=9F=90=88_fan?= <recipient@example.com>'], mto)
 
-    message = message_from_string(messageText)
+    message = message_from_bytes(messageText)
 
     self.assertEqual('Héhé', decode_header(message['Subject'])[0][0])
     self.assertEqual('Me, 🐈 fan', decode_header(message['From'])[0][0])
@@ -2035,8 +2040,8 @@ class TestCRMMailSend(BaseTestCRM):
 
     self.assertEqual(5, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
-      self.assertIn(mail_text_content, message_info[-1])
-      message = message_from_string(message_info[-1])
+      self.assertIn(mail_text_content, message_info[-1].decode())
+      message = message_from_bytes(message_info[-1])
       self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
 
   def test_MailMessage_send_simple_case(self):
@@ -2053,7 +2058,7 @@ class TestCRMMailSend(BaseTestCRM):
                       attachment_list=[])
     self.tic()
     (from_url, to_url, last_message,), = self.portal.MailHost._message_list
-    self.assertIn("Body Simple Case", last_message)
+    self.assertIn(b"Body Simple Case", last_message)
     self.assertEqual('FG ER <eee@eee.com>', from_url)
     self.assertEqual(['Expert User <expert@in24.test>'], to_url)
 
@@ -2068,7 +2073,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_message.send(extra_header_dict={"X-test-header": "test"})
     self.tic()
     (_, _, last_message,), = self.portal.MailHost._message_list
-    message = message_from_string(last_message)
+    message = message_from_bytes(last_message)
     self.assertEqual("test", message.get("X-test-header"))
 
 

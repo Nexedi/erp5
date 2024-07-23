@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -33,7 +34,10 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
-import email
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 
@@ -47,7 +51,7 @@ def decode_email(file_):
     'headers': {}
   }
   # Get Message
-  msg = email.message_from_string(file_)
+  msg = message_from_bytes(file_)
   # Back up original file
   theMail['__original__'] = file_
   for key, value in msg.items():
