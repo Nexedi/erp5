@@ -16,9 +16,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##############################################################################
 
-from __future__ import print_function
+import contextlib
+import io
 import os, sys, shutil, tempfile
-from cStringIO import StringIO
 from zLOG import LOG,ERROR,INFO,WARNING
 from OFS.Image import File, Image
 import os, transaction
@@ -32,6 +32,29 @@ import random
 import base64
 from OFS.Folder import Folder
 
+
+import six
+# XXX zope4py3, we patch builtin round to keep python2 behavior
+# but this interfers with PIL, because python2 round sometimes
+# returns an int where python3 round is supposed to return a float.
+# This context manager swaps the implementation with the native
+# float on python3, which is NOT THREAD SAFE. Don't use it in
+# production, for now this makes the test pass 🤐.
+import Products.ERP5Type.patches.python
+@contextlib.contextmanager
+def native_round():
+  if six.PY3:
+    round_original = __builtins__['round']
+    try:
+      __builtins__['round'] = Products.ERP5Type.patches.python.round_native
+      yield
+    finally:
+      __builtins__['round'] = round_original
+  else:
+    # on python2 do nothing
+    yield
+
+
 class ZoomifyBase:
 
   _v_imageFilename = ''
@@ -43,7 +66,7 @@ class ZoomifyBase:
   _v_tileGroupMappings = {}
   qualitySetting = 80
   tileSize = 256
-  my_file = StringIO()
+  my_file = io.BytesIO()
 
   def openImage(self):
     """ load the image data """
@@ -61,15 +84,15 @@ class ZoomifyBase:
     width, height = (self.originalWidth, self.originalHeight)
     self._v_scaleInfo = [(width, height)]
     while (width > self.tileSize) or (height > self.tileSize):
-      width, height = (width / 2, height / 2)
+      width, height = (width // 2, height // 2)
       self._v_scaleInfo.insert(0, (width, height))
     totalTiles=0
     tier, rows, columns = (0,0,0)
     for tierInfo in self._v_scaleInfo:
-      rows = height/self.tileSize
+      rows = height // self.tileSize
       if height % self.tileSize > 0:
         rows +=1
-      columns = width/self.tileSize
+      columns = width // self.tileSize
       if width%self.tileSize > 0:
         columns += 1
       totalTiles += rows * columns
@@ -86,7 +109,7 @@ class ZoomifyBase:
     width, height = (self.originalWidth, self.originalHeight)
     self._v_scaleInfo = [(width, height)]
     while (width > self.tileSize) or (height > self.tileSize):
-      width, height = (width / 2, height / 2)
+      width, height = (width // 2, height // 2)
       self._v_scaleInfo.insert(0, (width, height))
     # tile and tile group information
     self.preProcess()
@@ -145,7 +168,7 @@ class ZoomifyBase:
     xmlOutput = '<IMAGE_PROPERTIES WIDTH="%s" HEIGHT="%s" NUMTILES="%s" NUMIMAGES="1" VERSION="1.8" TILESIZE="%s" />'
     xmlOutput = xmlOutput % (str(self.originalWidth),
             str(self.originalHeight), str(numberOfTiles), str(self.tileSize))
-    return xmlOutput
+    return xmlOutput.encode()
 
   def saveXMLOutput(self):
     """ save xml metadata about the tiles """
@@ -175,15 +198,15 @@ class ZoomifyBase:
         lr_y = ul_y + self.tileSize
       else:
         lr_y = self.originalHeight
-      print("Going to open image")
       imageRow = image.crop([0, ul_y, self.originalWidth, lr_y])
       saveFilename = root + str(tier) + '-' + str(row) +  ext
       if imageRow.mode != 'RGB':
         imageRow = imageRow.convert('RGB')
-      imageRow.save(os.path.join(tempfile.gettempdir(), saveFilename),
-                                                        'JPEG', quality=100)
-      print("os path exist : %r" % os.path.exists(os.path.join(
-                                        tempfile.gettempdir(), saveFilename)))
+      with native_round():
+        imageRow.save(os.path.join(tempfile.gettempdir(), saveFilename),
+        # see https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#jpeg-saving
+        # for quality, Values above 95 should be avoided;
+                                                        'JPEG', quality=95)
       if os.path.exists(os.path.join(tempfile.gettempdir(), saveFilename)):
         self.processRowImage(tier=tier, row=row)
       row += 1
@@ -191,9 +214,8 @@ class ZoomifyBase:
   def processRowImage(self, tier=0, row=0):
     """ for an image, create and save tiles """
 
-    print('*** processing tier: ' + str(tier) + ' row: ' + str(row))
     tierWidth, tierHeight = self._v_scaleInfo[tier]
-    rowsForTier = tierHeight/self.tileSize
+    rowsForTier = tierHeight // self.tileSize
     if tierHeight % self.tileSize > 0:
       rowsForTier +=1
     root, ext = os.path.splitext(self._v_imageFilename)
@@ -260,17 +282,20 @@ class ZoomifyBase:
         # a bug was discovered when a row was exactly 1 pixel in height
         # this extra checking accounts for that
         if imageHeight > 1:
-          tempImage = imageRow.resize((imageWidth/2, imageHeight/2),
-                                                     PIL_Image.ANTIALIAS)
-          tempImage.save(os.path.join(tempfile.gettempdir(), root + str(tier)
+          tempImage = imageRow.resize(
+            (imageWidth//2, imageHeight//2),
+            PIL_Image.LANCZOS if six.PY3 else PIL_Image.ANTIALIAS,
+          )
+          with native_round():
+            tempImage.save(os.path.join(tempfile.gettempdir(), root + str(tier)
                                        + '-' + str(row) + ext))
           tempImage = None
       rowImage = None
       if tier > 0:
         if row % 2 != 0:
-          self.processRowImage(tier=(tier-1), row=((row-1)/2))
+          self.processRowImage(tier=(tier-1), row=((row-1)//2))
         elif row == rowsForTier-1:
-          self.processRowImage(tier=(tier-1), row=(row/2))
+          self.processRowImage(tier=(tier-1), row=(row//2))
 
   def ZoomifyProcess(self, imageNames):
     """ the method the client calls to generate zoomify metadata """
@@ -332,7 +357,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
   def openImage(self):
     """ load the image data """
 
-    return PIL_Image.open(self._v_imageObject.name)
+    return PIL_Image.open(self._v_imageObject)
 
   def createDefaultViewer(self):
     """ add the default Zoomify viewer to the Zoomify metadata """
@@ -408,7 +433,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
       tileFileName = self.getTileFileName(scaleNumber, column, row)
       tileContainerName = self.getAssignedTileContainerName(
                                           tileFileName=tileFileName)
-      tileImageData = StringIO()
+      tileImageData = io.BytesIO()
       image.save(tileImageData, 'JPEG', quality=self.qualitySetting)
       tileImageData.seek(0)
       if hasattr(self._v_saveFolderObject, tileContainerName):
@@ -526,7 +551,7 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
         param2 = 0
       my_text = '%s %s %s %s %s %s \n' %(tile_group_id, tile_title,
                                     algorithm, param1, param2, num)
-      self.my_file.write(my_text)
+      self.my_file.write(my_text.encode())
       num = num - 1
 
 
@@ -540,8 +565,9 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
     if w != 0 and h !=0:
       tile_group_id = self.getAssignedTileContainerName()
       tile_group=self.document[tile_group_id]
-      tileImageData= StringIO()
-      image.save(tileImageData, 'JPEG', quality=self.qualitySetting)
+      tileImageData= io.BytesIO()
+      with native_round():
+        image.save(tileImageData, 'JPEG', quality=self.qualitySetting)
       tileImageData.seek(0)
       if tile_group is None:
         raise AttributeError('unable to fine tile group %r' % tile_group_id)
@@ -553,11 +579,11 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
 
   def saveXMLOutput(self):
     """save the xml file"""
-    my_string = StringIO()
-    my_string.write(self.getXMLOutput())
-    my_string.seek(0)
+    my_file = io.BytesIO()
+    my_file.write(self.getXMLOutput())
+    my_file.seek(0)
     self.document.newContent(portal_type='Embedded File',
-                             id='ImageProperties.xml', file=my_string,
+                             id='ImageProperties.xml', file=my_file,
                              filename='ImageProperties.xml')
     return
 

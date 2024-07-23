@@ -226,7 +226,7 @@ class StrippingParser(HTMLParser):
     def handle_data(self, data):
         if self.suppress: return
         data = html_quote(data)
-        if self.original_charset and isinstance(data, str):
+        if self.original_charset and isinstance(data, bytes):
             data = data.decode(self.original_charset)
         self.result.append(data)
 
@@ -332,7 +332,7 @@ class StrippingParser(HTMLParser):
                  k = len(self.rawdata)
              data = self.rawdata[i+9:k]
              j = k+3
-             if self.original_charset and isinstance(data, str):
+             if self.original_charset and isinstance(data, bytes):
                  data = data.decode(self.original_charset)
              self.result.append("<![CDATA[%s]]>" % data)
         else:
@@ -378,7 +378,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
     parser.feed(html)
     parser.close()
     result = parser.getResult()
-    if parser.original_charset and isinstance(result, str):
+    if parser.original_charset and isinstance(result, bytes):
         result = result.decode(parser.original_charset).encode(default_encoding)
     return result
 
@@ -540,7 +540,7 @@ class SafeHTML:
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:
-                if isinstance(orig, unicode):
+                if isinstance(orig, six.text_type):
                   orig = orig.encode('utf-8')
                 data.setData(orig)
                 break
