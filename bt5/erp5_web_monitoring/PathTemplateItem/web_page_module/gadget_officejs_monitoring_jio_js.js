@@ -287,8 +287,6 @@
           .push(function (monitoring_jio) {
             if (monitoring_jio) {
               return gadget.createStorage(undefined, monitoring_jio);
-              //TODO remove objects of previous masters?
-              // not here, should be done by storage repair
             }
           })
           .push(function () {
