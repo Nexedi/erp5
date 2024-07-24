@@ -99,7 +99,9 @@
                           "is not defined");
     }
     this._local_sub_storage = jIO.createJIO(spec.local_sub_storage);
+    this._local_sub_storage_spec = spec.local_sub_storage;
     if (spec.remote_sub_storage !== undefined) {
+      this._remote_sub_storage_spec = spec.remote_sub_storage;
       this._remote_sub_storage = jIO.createJIO(spec.remote_sub_storage);
     }
     this._remote_storage_unreachable_status =
@@ -1018,6 +1020,51 @@
           return opml_list;
         });
     }
+
+    function cleanOpmlStorage(context) {
+      //TODO use slapos_master_url in the query instead of iterate later
+      return context._local_sub_storage.allDocs({
+        query: '(portal_type:"' + OPML_PORTAL_TYPE + '")',// AND (slapos_master_url:"https://%")',
+        select_list: ["title", "url", "basic_login", "slapos_master_url"]
+      })
+      .push(function (result) {
+        function removeAllOPML(remove_opml_list, jio) {
+          var remove_queue = new RSVP.Queue(), i;
+          function remove_opml(id) {
+            remove_queue
+              .push(function () {
+                return jio.remove(id);
+              });
+          }
+          for (i = 0; i < remove_opml_list.length; i += 1) {
+            remove_opml(remove_opml_list[i].id);
+          }
+          return remove_queue;
+        }
+        // XXX too attached to union storage?
+        var slapos_master_url_list = [], spec_list = context._remote_sub_storage_spec.storage_list,
+          i, remove_opml_list = [], opml_list = result.data.rows;
+        if (spec_list) {
+          for (i = 0; i < spec_list.length; i += 1) {
+            slapos_master_url_list.push(spec_list[i].url);
+          }
+        }
+        if (slapos_master_url_list.length > 0) {
+          for (i = 0; i < opml_list.length; i += 1) {
+            if (opml_list[i].value.slapos_master_url &&
+              opml_list[i].value.slapos_master_url !== "") {
+              if (!slapos_master_url_list.includes(opml_list[i].value.slapos_master_url)) {
+                remove_opml_list.push(opml_list[i]);
+              }
+            }
+          }
+        }
+        return RSVP.all([
+          removeAllOPML(remove_opml_list, context)
+        ]);
+      });
+    }
+
     return new RSVP.Queue()
       .push(function () {
         return context._local_sub_storage.repair.apply(
@@ -1034,6 +1081,11 @@
         }
       })
       .push(function () {
+        //delete all opmls trees of no longer present slapos masters
+        return cleanOpmlStorage(context);
+      })
+      .push(function () {
+        //get opml list from remote slapos master(s)
         return getInstanceOPMLList(context._remote_sub_storage);
       })
       .push(undefined, function () {
@@ -1041,21 +1093,22 @@
         return [];
       })
       .push(function (opml_list) {
+        //store opmls
         var i, push_queue = new RSVP.Queue();
-
         function pushOPML(opml_dict) {
           push_queue
             .push(function () {
               return context._local_sub_storage.put(opml_dict.url, opml_dict);
             })
+            //TODO why store an opml would raise an error? check and delete this
             .push(undefined, function (error) {
               throw error;
             });
         }
-
         for (i = 0; i < opml_list.length; i += 1) {
           pushOPML(opml_list[i]);
         }
+        //TODO check and fail before iterate pushOplm
         if (has_failed) {
           throw "Failed to import Configurations";
         }
@@ -1065,6 +1118,7 @@
       })
       .push(function () {
         if (!has_failed) {
+          //sync storage using updated opml list
           return syncOpmlStorage(context);
         }
       });
