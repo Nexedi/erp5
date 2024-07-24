@@ -1,0 +1,38 @@
+<workflow_chain>
+ <chain>
+  <type>Clammit Connector</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Drawing</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Embedded File</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>File</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>PDF</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Presentation</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Spreadsheet</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Text</type>
+  <workflow>clammit_antivirus_scan_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>
