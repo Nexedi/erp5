@@ -149,16 +149,14 @@
         password: doc.password,
         active: (doc.active === "on") ? true : false,
         has_monitor: true,
-        state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
+        state: doc.state || (doc.active === "on" ? "Started" : "Stopped"),
+        slapos_master_url: ""
       },
       update_password_list = [],
       allow_force = false,
       return_dict;
-    if (doc.slapos_master_url && doc.slapos_master_url !== undefined &&
-      doc.slapos_master_url !== "") {
+    if (doc.slapos_master_url !== undefined) {
       opml_dict.slapos_master_url = doc.slapos_master_url;
-    } else {
-      opml_dict.slapos_master_url = "";
     }
     gadget.state.message.textContent = "";
 
