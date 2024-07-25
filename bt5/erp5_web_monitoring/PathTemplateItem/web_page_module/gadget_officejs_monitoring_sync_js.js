@@ -70,8 +70,7 @@
           })
           .push(undefined, function (error) {
             // should include error message in error
-            has_error = true;
-            console.error(error);
+            has_error = error;
             // return false so it will trigger the next run
             return false;
           })
@@ -86,7 +85,7 @@
             if (has_error) {
               classname = "error";
               message = "Synchronisation finished with error(s).";
-              message += " \nYou can retry with manual sync.";
+              message += " \n" + has_error;
             }
             return gadget.notifySubmitted({
               message: message,

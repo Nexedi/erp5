@@ -865,6 +865,7 @@
   ReplicatedOPMLStorage.prototype.repair = function () {
     var context = this,
       has_failed = false,
+      error_msg = "",
       argument_list = arguments;
 
     function getParameterDictFromUrl(uri_param) {
@@ -1088,14 +1089,24 @@
         //get opml list from remote slapos master(s)
         return getInstanceOPMLList(context._remote_sub_storage);
       })
-      .push(undefined, function () {
+      .push(undefined, function (error) {
         has_failed = true;
-        return [];
+        if (error.target) {
+          if (error.target.status == 401) {
+            error_msg = ": unauthorized access to slapos master";
+          }
+          if (error.target.status == 404) {
+            error_msg = ": slapos master url not found";
+          }
+          if (error.target.status - 500 > 0) {
+            error_msg = ": server error on slapos master side - " + error.target.status;
+          }
+        } else {
+          console.log(error);
+        }
+        throw "Failed to import remote configurations" + error_msg;
       })
       .push(function (opml_list) {
-        if (has_failed) {
-          throw "Failed to import Configurations";
-        }
         //store opmls
         var i, push_queue = new RSVP.Queue();
         function pushOPML(opml_dict) {
