@@ -1093,28 +1093,21 @@
         return [];
       })
       .push(function (opml_list) {
+        if (has_failed) {
+          throw "Failed to import Configurations";
+        }
         //store opmls
         var i, push_queue = new RSVP.Queue();
         function pushOPML(opml_dict) {
           push_queue
             .push(function () {
               return context._local_sub_storage.put(opml_dict.url, opml_dict);
-            })
-            //TODO why store an opml would raise an error? check and delete this
-            .push(undefined, function (error) {
-              throw error;
             });
         }
         for (i = 0; i < opml_list.length; i += 1) {
           pushOPML(opml_list[i]);
         }
-        //TODO check and fail before iterate pushOplm
-        if (has_failed) {
-          throw "Failed to import Configurations";
-        }
         return push_queue;
-      })
-      .push(function () {
       })
       .push(function () {
         if (!has_failed) {
