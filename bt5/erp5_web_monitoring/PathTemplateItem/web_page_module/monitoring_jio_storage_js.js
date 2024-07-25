@@ -1101,6 +1101,9 @@
           if (error.target.status - 500 > 0) {
             error_msg = ": server error on slapos master side - " + error.target.status;
           }
+          if (error.target.responseURL) {
+            error_msg += ". URL: " + error.target.responseURL
+          }
         } else {
           console.log(error);
         }
