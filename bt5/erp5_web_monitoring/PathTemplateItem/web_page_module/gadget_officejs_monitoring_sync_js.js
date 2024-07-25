@@ -87,12 +87,6 @@
               message = "Synchronisation finished with error(s).";
               message += " \n" + has_error;
             }
-            return gadget.notifySubmitted({
-              message: message,
-              status: classname
-            });
-          })
-          .push(function () {
             gadget.props.started = false;
             return {msg: message, type: classname};
           });
