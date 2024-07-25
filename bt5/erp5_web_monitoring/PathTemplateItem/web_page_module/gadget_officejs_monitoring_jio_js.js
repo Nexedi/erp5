@@ -59,14 +59,16 @@
                                   'master_url_list',
                                   'default_view_reference'])
       .push(function (result_list) {
+        // TODO sets should be used to compare elements are different
         if (result_list[0] || result_list[1]) {
-          // TODO sets should be used to compare elements are different
+          // if no previous master list or latest list is different (new configuration set), update
           if (!result_list[1] ||
               result_list[0].toString() !== result_list[1].toString()) {
             master_url_list = result_list[0];
             update_settings = true;
           }
           else {
+            // if no new configuration, do not re create storage on repair
             if (check_update) {
               return;
             }
