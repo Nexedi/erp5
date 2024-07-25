@@ -165,6 +165,12 @@
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
           manifest = "gadget_officejs_monitoring.configuration";
+          if (migration_version !== current_version) {
+            return gadget.setSettingList({'master_url_list': undefined,
+                                          'latest_master_url_list': undefined});
+          }
+        })
+        .push(function () {
           return getUpdatedMonitoringStorageSpec(gadget);
         })
         .push(function (spec) {
