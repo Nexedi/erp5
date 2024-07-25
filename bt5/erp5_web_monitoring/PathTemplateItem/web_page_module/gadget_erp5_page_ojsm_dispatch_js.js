@@ -98,6 +98,8 @@
           // default front page (list of promises)
           return gadget.redirect({command: 'display',
                                   options: {page: "ojs_local_controller",
+                                            notify_msg: options.notify_msg,
+                                            notify_type: options.notify_type,
                                             portal_type: "Promise Module"}
                                  });
         });
