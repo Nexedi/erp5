@@ -30,7 +30,7 @@ if ledger is not None:
   if isinstance(ledger, (tuple, list)):
     kw['ledger_uid'] = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
   else:
-    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(item).getUid()
+    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(ledger).getUid()
 
 
 # Find accounts that can be expanded according category membership
