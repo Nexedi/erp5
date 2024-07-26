@@ -35,21 +35,14 @@ import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 
 from Products.ERP5Type.tests.runUnitTest import tests_home
-from Products.ERP5Type.tests.utils import FileUpload
 from erp5.component.tool import SynchronizationTool
 from erp5.component.test.testERP5SyncML import TestERP5SyncMLMixin
 from erp5.component.document import SyncMLSubscription
 
-import Products.ERP5.tests
-test_files = os.path.join(os.path.dirname(Products.ERP5.tests.__file__), 'test_data')
 FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-\
 (?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-\
 (?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
-
-def makeFileUpload(name):
-  path = os.path.join(test_files, name)
-  return FileUpload(path, name)
 
 class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
 
@@ -63,13 +56,21 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
   #for documents (encoding in unicode for utf-8)
   #files
   filename_text = 'TEST-en-002.txt'
-  size_filename_text = len(makeFileUpload(filename_text).read())
+  @property
+  def size_filename_text(self):
+    return len(self.makeFileUpload(filename_text).read())
   filename_odt = 'TEST-en-002.odt'
-  size_filename_odt = len(makeFileUpload(filename_odt).read())
+  @property
+  def size_filename_odt(self):
+    return len(self.makeFileUpload(filename_odt).read())
   filename_ppt = 'TEST-en-002.ppt'
-  size_filename_ppt = len(makeFileUpload(filename_ppt).read())
+  @property
+  def size_filename_ppt(self):
+    return len(self.makeFileUpload(filename_ppt).read())
   filename_pdf = 'TEST-en-002.pdf'
-  size_filename_pdf = len(makeFileUpload(filename_pdf).read())
+  @property
+  def size_filename_pdf(self):
+    return len(self.makeFileUpload(filename_pdf).read())
   #properties
   reference1 = 'P-SYNCML.Text'
   version1 = '001'
@@ -135,6 +136,9 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     self.clearDocumentModules()
     self.clearPublicationsAndSubscriptions()
 
+  def _getTestDataPath(self):
+    import Products.ERP5.tests
+    return os.path.join(os.path.dirname(Products.ERP5.tests.__file__), 'test_data')
 
   def clearFiles(self):
     # reset files, because we do sync by files
@@ -280,7 +284,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     kw = {'reference': self.reference1, 'Version': self.version1,
           'Language': self.language1, 'Description': self.description1}
     document_text.edit(**kw)
-    file_ = makeFileUpload(self.filename_text)
+    file_ = self.makeFileUpload(self.filename_text)
     document_text.edit(file=file_)
     self.tic()
     document_pdf = document_server.newContent(id=self.id2,
@@ -288,7 +292,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     kw = {'reference': self.reference2, 'Version': self.version2,
           'Language': self.language2, 'Description': self.description2}
     document_pdf.edit(**kw)
-    file_ = makeFileUpload(self.filename_pdf)
+    file_ = self.makeFileUpload(self.filename_pdf)
     document_pdf.edit(file=file_)
     self.tic()
     nb_document = len(document_server)
@@ -305,7 +309,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     kw = {'reference': reference, 'version': version, 'language': language}
     doc_text.edit(**kw)
     if file_name is not None:
-      file_ = makeFileUpload(file_name)
+      file_ = self.makeFileUpload(file_name)
       doc_text.edit(file=file_)
     return doc_text
 
@@ -480,7 +484,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     # Then we do only modification on a client (the gid) of client => add a object
     kw = {'reference':self.reference1,'version':self.version3}
     document_c.edit(**kw)
-    file_ = makeFileUpload(self.filename_odt)
+    file_ = self.makeFileUpload(self.filename_odt)
     document_c.edit(file=file_)
     self.tic()
     self.synchronize(self.sub_id1)
@@ -591,14 +595,14 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     doc_s = document_server._getOb(id_text)
     kw = {'description':self.description1}
     doc_s.edit(**kw)
-    file_ = makeFileUpload(self.filename_odt)
+    file_ = self.makeFileUpload(self.filename_odt)
     doc_s.edit(file=file_)
     # Side client modification gid of a odt document
     id_odt = str(self.ids[self.id_max_text+1])
     doc_c = document_client1._getOb(id_odt)
     kw = {'description':self.description3}
     doc_c.edit(**kw)
-    file_ = makeFileUpload(self.filename_text)
+    file_ = self.makeFileUpload(self.filename_text)
     doc_c.edit(file=file_)
     self.tic()
     self.synchronize(self.sub_id1)
@@ -692,7 +696,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     document_s = document_server._getOb(self.id1)
     kw = {'description': self.description2, 'short_title': self.short_title2 }
     document_s.edit(**kw)
-    file_ = makeFileUpload(self.filename_ppt)
+    file_ = self.makeFileUpload(self.filename_ppt)
     document_s.edit(file=file_)
     self.tic()
 
@@ -701,7 +705,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     document_c1 = document_client1._getOb(self.id1)
     kw = {'description': self.description3, 'short_title': self.short_title3 }
     document_c1.edit(**kw)
-    file_ = makeFileUpload(self.filename_odt)
+    file_ = self.makeFileUpload(self.filename_odt)
     document_c1.edit(file=file_)
     self.tic()
 
@@ -822,7 +826,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertXMLViewIsEqual(self.sub_id_from_server, document_s, document_c, force=1)
     # Then we change things on both sides and we look if there
     # is synchronization from only one way
-    file_ = makeFileUpload(self.filename_odt)
+    file_ = self.makeFileUpload(self.filename_odt)
     document_c.edit(file=file_)
 
     kw = {'short_title' : self.short_title2}

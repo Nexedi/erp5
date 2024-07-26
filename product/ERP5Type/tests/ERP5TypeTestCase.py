@@ -52,6 +52,7 @@ from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
 from Products.ERP5Type.tests.utils import timeZoneContext
+from Products.ERP5Type.tests.utils import FileUpload
 
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
@@ -927,6 +928,28 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
           user=user,
         ),
       )
+
+    def _getTestDataPath(self):
+      """
+      Where the tests data resides, to be overriden in children classes. By
+      default returns the current directory.
+      """
+      return ''
+
+    def makeFileUploadPath(self, filename):
+      return os.path.join(self._getTestDataPath(), filename)
+
+    def makeFileUpload(self, filename, as_filename=None, path=None):
+      """
+      Upload the given `filename` as `as_filename
+      """
+      if as_filename is None:
+        as_filename = filename
+      if path is None:
+        path = self._getTestDataPath()
+      file_upload = FileUpload(os.path.join(path, filename), as_filename)
+      self.addCleanup(file_upload.close)
+      return file_upload
 
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     __original_ZMySQLDA_connect = None

@@ -32,22 +32,17 @@ import os
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
 from DateTime import DateTime
 import six
 
-def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_document', name)
-
-def makeFileUpload(name):
-  path = makeFilePath(name)
-  return FileUpload(path, name)
-
 class TestOOoImportMixin(ERP5TypeTestCase):
   gender_base_cat_id    = 'gender'
   function_base_cat_id  = 'function'
+
+  def _getTestDataPath(self):
+    return os.path.join(os.path.dirname(__file__), 'test_document')
 
   def afterSetUp(self):
     """
@@ -119,7 +114,7 @@ class TestOOoImport(TestOOoImportMixin):
   ##  Basic steps
   ##################################
   def stepImportRawDataFile(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_list.ods')
+    f = self.makeFileUpload('import_data_list.ods')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -285,7 +280,7 @@ class TestOOoImport(TestOOoImportMixin):
       sorted([organisation_list[i].getEmailText() for i in range(num)]))
 
   def stepImportFileNoMapping(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_list.ods')
+    f = self.makeFileUpload('import_data_list.ods')
 
     person_module = self.getPortal().person_module
     listbox = (
@@ -302,7 +297,7 @@ class TestOOoImport(TestOOoImportMixin):
       'portal_status_message=Please%20Define%20a%20mapping.'))
 
   def stepImportFileWithBlankLine(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_list_blank_line.ods')
+    f = self.makeFileUpload('import_data_list_blank_line.ods')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -317,7 +312,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportFileWithCategory(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_with_categories.ods')
+    f = self.makeFileUpload('import_data_with_categories.ods')
     # create some regions
     region = self.portal.portal_categories.region
     europe = region.newContent(portal_type='Category',
@@ -343,7 +338,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportFileWithDates(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_with_dates.ods')
+    f = self.makeFileUpload('import_data_with_dates.ods')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -362,7 +357,7 @@ class TestOOoImport(TestOOoImportMixin):
       This test make sure that either floats (1000,9), sientific numbers (1,00E+003)
       or percentage (19%) are correctly imported .
     """
-    f = makeFileUpload('import_float_and_percentage.ods')
+    f = self.makeFileUpload('import_float_and_percentage.ods')
     currency_module = self.getPortal().currency_module
     listbox=(
     { 'listbox_key': '001',
@@ -373,7 +368,7 @@ class TestOOoImport(TestOOoImportMixin):
     currency_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportOrganisation(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_organisation_list.ods')
+    f = self.makeFileUpload('import_organisation_list.ods')
     organisation_module = self.getPortal().organisation_module
     listbox=(
     { 'listbox_key': '001',
@@ -403,7 +398,7 @@ class TestOOoImport(TestOOoImportMixin):
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
-    f = makeFileUpload('import_data_with_categories.ods')
+    f = self.makeFileUpload('import_data_with_categories.ods')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -420,7 +415,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportFileWithFreeText(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_with_categories.ods')
+    f = self.makeFileUpload('import_data_with_categories.ods')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -435,7 +430,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportFileWithAccentuatedText(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_accentuated_text.ods')
+    f = self.makeFileUpload('import_data_accentuated_text.ods')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -450,7 +445,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportXLSFile(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_list.xls')
+    f = self.makeFileUpload('import_data_list.xls')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -465,7 +460,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportBigFile_1(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_big_file_1.ods')
+    f = self.makeFileUpload('import_data_big_file_1.ods')
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -480,7 +475,7 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepImportBigFile_2(self, sequence=None, sequence_list=None, **kw):
-    f = makeFileUpload('import_data_big_file_2.ods')
+    f = self.makeFileUpload('import_data_big_file_2.ods')
     person_module = self.getPortal().person_module
     listbox=(
      { 'listbox_key': '001',
@@ -631,7 +626,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_CategoryTool_importCategoryFile(self):
     # tests simple use of CategoryTool_importCategoryFile script
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category.sxc'))
+        import_file=self.makeFileUpload('import_region_category.sxc'))
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -651,7 +646,7 @@ class TestOOoImport(TestOOoImportMixin):
     region.newContent(id='dummy_region')
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category.sxc'),
+        import_file=self.makeFileUpload('import_region_category.sxc'),
         existing_category_list='delete')
     self.tic()
     self.assertEqual(2, len(region))
@@ -674,7 +669,7 @@ class TestOOoImport(TestOOoImportMixin):
     )
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category.sxc'),
+        import_file=self.makeFileUpload('import_region_category.sxc'),
         existing_category_list='delete')
     self.tic()
     self.assertEqual(3, len(region))
@@ -690,7 +685,7 @@ class TestOOoImport(TestOOoImportMixin):
     )
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category.sxc'),
+        import_file=self.makeFileUpload('import_region_category.sxc'),
         existing_category_list='force_delete')
     self.tic()
     self.assertEqual(2, len(region))
@@ -702,7 +697,7 @@ class TestOOoImport(TestOOoImportMixin):
     region.newContent(id='dummy_region')
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category.sxc'),
+        import_file=self.makeFileUpload('import_region_category.sxc'),
         existing_category_list='expire')
     self.tic()
     self.assertEqual(3, len(region))
@@ -720,7 +715,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_CategoryTool_importCategoryFileXLS(self):
     # tests that CategoryTool_importCategoryFile supports .xls files
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category.xls'))
+        import_file=self.makeFileUpload('import_region_category.xls'))
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -736,7 +731,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_CategoryTool_importCategoryFile_PathStars(self):
     # tests CategoryTool_importCategoryFile with * in the paths columns
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category_path_stars.sxc'))
+        import_file=self.makeFileUpload('import_region_category_path_stars.sxc'))
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -753,7 +748,7 @@ class TestOOoImport(TestOOoImportMixin):
     # tests CategoryTool_importCategoryFile with * in the paths columns, and no
     # ID column, and non ascii titles
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-            import_file=makeFileUpload(
+            import_file=self.makeFileUpload(
               'import_region_category_path_stars_non_ascii.sxc'))
     self.tic()
     region = self.portal.portal_categories.region
@@ -772,7 +767,7 @@ class TestOOoImport(TestOOoImportMixin):
     # categories ID at different level (a good candidate for an acquisition
     # bug)
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category_duplicate_ids.sxc'))
+        import_file=self.makeFileUpload('import_region_category_duplicate_ids.sxc'))
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(1, len(region))
@@ -786,7 +781,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_Base_getCategoriesSpreadSheetMapping(self):
     # test structure returned by Base_getCategoriesSpreadSheetMapping
     mapping = self.portal.Base_getCategoriesSpreadSheetMapping(
-        import_file=makeFileUpload('import_region_category.sxc'))
+        import_file=self.makeFileUpload('import_region_category.sxc'))
     self.assertTrue(isinstance(mapping, dict))
     self.assertEqual(['region'], list(mapping.keys()))
     region = mapping['region']
@@ -816,7 +811,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_Base_getCategoriesSpreadSheetMapping_DuplicateIdsAtSameLevel(self):
     # tests Base_getCategoriesSpreadSheetMapping when a document contain same
     # categories ID at the same level, in that case, a ValueError is raised
-    import_file = makeFileUpload(
+    import_file = self.makeFileUpload(
         'import_region_category_duplicate_ids_same_level.sxc')
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
@@ -834,7 +829,7 @@ class TestOOoImport(TestOOoImportMixin):
     def on_invalid_spreadsheet(message):
       message_list.append(message)
 
-    import_file = makeFileUpload(
+    import_file = self.makeFileUpload(
         'import_region_category_duplicate_ids_same_level.sxc')
     self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(import_file,
          invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
@@ -845,7 +840,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_Base_getCategoriesSpreadSheetMapping_WrongHierarchy(self):
     # tests Base_getCategoriesSpreadSheetMapping when the spreadsheet has an
     # invalid hierarchy (#788)
-    import_file = makeFileUpload(
+    import_file = self.makeFileUpload(
         'import_region_category_wrong_hierarchy.sxc')
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
@@ -859,7 +854,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_Base_getCategoriesSpreadSheetMapping_MultiplePaths(self):
     # If multiple paths is defined (for instance more than one * in paths
     # columns), then it should be an error and the error must be reported
-    import_file = makeFileUpload(
+    import_file = self.makeFileUpload(
         'import_region_category_multiple_paths.ods')
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
@@ -871,7 +866,7 @@ class TestOOoImport(TestOOoImportMixin):
 
   def test_Base_getCategoriesSpreadSheetMapping_Id_is_reserved_property_name(self):
     # tests Base_getCategoriesSpreadSheetMapping reserved property name are only test for path column, not all.
-    import_file = makeFileUpload(
+    import_file = self.makeFileUpload(
         'import_region_category_with_reserved_id_in_title.sxc')
     mapping = self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
@@ -897,7 +892,7 @@ class TestOOoImport(TestOOoImportMixin):
       return True
 
     self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
-      import_file=makeFileUpload('import_category_with_reserved_id_in_id.sxc'),
+      import_file=self.makeFileUpload('import_category_with_reserved_id_in_id.sxc'),
       invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
 
     self.assertEqual(message_set, {
@@ -947,7 +942,7 @@ class TestOOoImportWeb(TestOOoImportMixin):
     dummy_expired_region.expire()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
-        import_file=makeFileUpload('import_region_category.sxc'),
+        import_file=self.makeFileUpload('import_region_category.sxc'),
         existing_category_list='expire')
     self.tic()
     self.assertEqual(4, len(region))
