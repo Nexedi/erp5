@@ -33,7 +33,6 @@ import textwrap
 from unittest import expectedFailure
 
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
@@ -45,14 +44,6 @@ from email import encoders, message_from_string
 from DateTime import DateTime
 
 import Products.ERP5.tests
-
-def makeFilePath(name):
-  return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-                      'test_data', 'crm_emails', name)
-
-def makeFileUpload(name):
-  path = makeFilePath(name)
-  return FileUpload(path, name)
 
 clear_module_name_list = """
 campaign_module
@@ -79,6 +70,11 @@ class BaseTestCRM(ERP5TypeTestCase):
       module.manage_delObjects(list(module.objectIds()))
     self.tic()
     super(BaseTestCRM, self).beforeTearDown()
+
+  def _getTestDataPath(self):
+    return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+                        'test_data',
+                        'crm_emails')
 
 class TestCRM(BaseTestCRM):
   def getTitle(self):
@@ -709,14 +705,10 @@ class TestCRMMailIngestion(BaseTestCRM):
     # make sure customers are available to catalog
     self.tic()
 
-  def _readTestData(self, filename):
-    """read test data from data directory."""
-    return open(makeFilePath(filename)).read()
-
   def _ingestMail(self, filename=None, data=None):
     """ingest an email from the mail in data dir named `filename`"""
     if data is None:
-      data=self._readTestData(filename)
+      data = self.makeFileUpload(filename).read()
     return self.portal.portal_contributions.newContent(
                     container_path='event_module',
                     filename='postfix_mail.eml',
@@ -889,7 +881,9 @@ class TestCRMMailIngestion(BaseTestCRM):
       return object_list[-1]
 
     portal = self.portal
-    message = message_from_string(self._readTestData('simple'))
+    message_string = self.makeFileUpload('simple').read()
+
+    message = message_from_string(message_string)
     message.replace_header('subject', 'Visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -897,7 +891,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(message_string)
     message.replace_header('subject', 'Fax:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -905,7 +899,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Fax Message')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(message_string)
     message.replace_header('subject', 'TEST:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -913,7 +907,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Mail Message')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(message_string)
     message.replace_header('subject', 'visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -921,7 +915,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(message_string)
     message.replace_header('subject', 'phone:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -929,7 +923,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = portal.event_module[portal.event_module.objectIds()[-1]]
     self.assertEqual(document.getPortalType(), 'Phone Call')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(message_string)
     message.replace_header('subject', 'LETTER:Company C')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -937,7 +931,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Letter')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(message_string)
     body = message.get_payload()
     message.set_payload('Visit:%s' % body)
     data = message.as_string()
@@ -946,7 +940,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = message_from_string(self._readTestData('simple'))
+    message = message_from_string(message_string)
     body = message.get_payload()
     message.set_payload('PHONE CALL:%s' % body)
     data = message.as_string()
@@ -1281,7 +1275,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
     # pdf
     filename = 'sample_attachment.pdf'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
     self.tic()
@@ -1328,7 +1322,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.odt'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
     self.tic()
@@ -1375,7 +1369,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.zip'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
     self.tic()
 
@@ -1420,7 +1414,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.gif'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
     self.tic()
@@ -1517,7 +1511,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
     # pdf
     filename = 'sample_attachment.pdf'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
@@ -1565,7 +1559,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.zip'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
@@ -1614,7 +1608,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # Add a document which will be attached.
     filename = 'sample_attachment.zip'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
 
     # Add a ticket
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
@@ -1691,7 +1685,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document on a person which will be attached.
 
     def add_document(filename, container, portal_type):
-      f = makeFileUpload(filename)
+      f = self.makeFileUpload(filename)
       document = container.newContent(portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -1748,7 +1742,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document on a person which will be attached.
 
     def add_document(filename, container, portal_type):
-      f = makeFileUpload(filename)
+      f = self.makeFileUpload(filename)
       document = container.newContent(portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
