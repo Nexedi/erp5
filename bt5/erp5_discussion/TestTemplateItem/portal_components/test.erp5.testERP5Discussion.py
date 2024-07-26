@@ -31,11 +31,10 @@
 
 import unittest
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from erp5.component.test.testDms import makeFileUpload
+from erp5.component.test.testDms import DocumentUploadTestCase
 
 
-class TestERP5Discussion(ERP5TypeTestCase):
+class TestERP5Discussion(DocumentUploadTestCase):
   """Test for erp5_discussion business template.
   """
   def getTitle(self):
@@ -128,7 +127,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertEqual(0, len(attachment_list))
 
     # check attachment creation
-    file_ = makeFileUpload('TEST-en-002.doc')
+    file_ = self.makeFileUpload('TEST-en-002.doc')
     web_section1.WebSection_createNewDiscussionThread('test1-new-with-attachment', 'test1 body', file=file_)
     discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
                           if x.getId() not in discussion_thread_id_set]
@@ -225,7 +224,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
 
     web_site_value = self.portal.web_site_module.newContent(portal_type='Web Site')
     web_section_value = web_site_value.newContent(portal_type='Web Section')
-    file_ = makeFileUpload('simple.csv')
+    file_ = self.makeFileUpload('simple.csv')
     web_section_value.WebSection_createNewDiscussionThread(
       "Thread Title",
       "Post Content",
