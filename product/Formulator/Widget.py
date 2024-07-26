@@ -2123,7 +2123,7 @@ class FloatWidget(TextWidget):
       # field.
       for x in xrange(0, precision):
         format += '0'
-    if isinstance(value, six.text_type):
+    if six.PY2 and isinstance(value, six.text_type):
       value = value.encode(field.get_form_encoding())
     return {'query': value,
             'format': format,
