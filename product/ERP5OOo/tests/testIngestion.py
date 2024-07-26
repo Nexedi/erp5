@@ -1514,6 +1514,7 @@ class TestIngestion(IngestionTestCase):
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1522,7 +1523,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1595,6 +1596,7 @@ return result
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1603,7 +1605,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1735,6 +1737,7 @@ context.setReference(reference)
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1826,6 +1829,7 @@ return result
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1834,7 +1838,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
