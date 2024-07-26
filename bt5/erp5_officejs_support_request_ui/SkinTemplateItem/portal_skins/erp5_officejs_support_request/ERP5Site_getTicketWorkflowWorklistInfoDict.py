@@ -28,9 +28,9 @@ for worklist in workflow.getWorklistValueList():
       # so that it looks good in the module view.
       key = 'translated_%s_title' % key
       state_title = workflow.getStateValueByReference(value[0]).title_or_id()
-      value = unicode(translateString(
+      value = six.text_type(translateString(
         '%s [state in %s]' % (state_title, workflow.getId()),
-        default=unicode(translateString(state_title))))
+        default=six.text_type(translateString(state_title))))
 
     if isinstance(value, (tuple, list)):
       query_list.extend([{
