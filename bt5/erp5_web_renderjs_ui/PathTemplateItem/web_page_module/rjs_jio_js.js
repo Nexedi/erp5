@@ -12893,7 +12893,9 @@ return new Parser;
     }
     var i;
     this._storage_list = [];
+    this._storage_definition_list = [];
     for (i = 0; i < spec.storage_list.length; i += 1) {
+      this._storage_definition_list.push(spec.storage_list[i]);
       this._storage_list.push(jIO.createJIO(spec.storage_list[i]));
     }
   }
@@ -13006,6 +13008,7 @@ return new Parser;
       i,
       id_dict = {},
       len = this._storage_list.length,
+      storage_definition_list = this._storage_definition_list,
       sub_storage;
     for (i = 0; i < len; i += 1) {
       sub_storage = this._storage_list[i];
@@ -13027,6 +13030,7 @@ return new Parser;
           for (j = 0; j < sub_result_len; j += 1) {
             if (!id_dict.hasOwnProperty(sub_result[j].id)) {
               id_dict[sub_result[j].id] = null;
+              sub_result[j].storage = storage_definition_list[i];
               result.push(sub_result[j]);
             }
           }
