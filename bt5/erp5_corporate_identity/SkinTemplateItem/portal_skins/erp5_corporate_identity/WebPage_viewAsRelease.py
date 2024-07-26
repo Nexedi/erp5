@@ -21,6 +21,7 @@ MAIN FILE: render press release in different output formats
 # document_save:            save file in document module (default None)
 
 import re
+import six
 from base64 import b64encode
 
 blank = ''
@@ -137,10 +138,11 @@ if release_display_about:
     release_relative_url=release_relative_url,
   )
   #release_content = release_content.decode() + release_about.decode()
-  if isinstance(release_content, unicode):
-    release_content = release_content.encode("UTF-8")
-  if isinstance(release_about, unicode):
-    release_about = release_about.encode("UTF-8")
+  if six.PY2:
+    if isinstance(release_content, six.text_type):
+      release_content = release_content.encode("UTF-8")
+    if isinstance(release_about, six.text_type):
+      release_about = release_about.encode("UTF-8")
 
   release_content = release_content + release_about
 

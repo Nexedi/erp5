@@ -1,5 +1,6 @@
 # coding: utf-8
 import unicodedata
+import six
 from io import BytesIO
 import zipfile
 from Products.ERP5Type.Message import translateString
@@ -44,9 +45,12 @@ attachment_list = (
      'content': zipbuffer.getvalue(),
      'name': zipfilename, }, )
 
+subject = six.text_type(
+  translateString('French Accounting Transaction File'))
+
 portal.ERP5Site_notifyReportComplete(
     user_name=user_name,
-    subject=unicode(translateString('French Accounting Transaction File')),
+    subject=subject,
     message='',
     attachment_list=attachment_list)
 
