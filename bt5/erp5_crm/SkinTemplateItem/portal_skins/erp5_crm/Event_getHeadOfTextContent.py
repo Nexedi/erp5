@@ -1,3 +1,4 @@
+import six
 text = context.asText()
 LENGTH = 25
 
@@ -8,6 +9,6 @@ if six.PY3:
 
 # But in PY2, this must be converted to unicode() first...
 try:
-  return unicode(text, 'utf-8')[:LENGTH].encode('utf-8')
+  return six.text_type(text, 'utf-8')[:LENGTH].encode('utf-8')
 except UnicodeDecodeError:
   return text[:LENGTH]
