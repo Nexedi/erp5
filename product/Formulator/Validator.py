@@ -517,7 +517,7 @@ class SelectionValidator(StringBaseValidator):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and isinstance(item_value, six.text_type):
+        if six.PY2 and field.get_value('unicode') and isinstance(item_value, six.text_type):
           str_value = item_value.encode(field.get_form_encoding())
         else:
           str_value = str(item_value)
