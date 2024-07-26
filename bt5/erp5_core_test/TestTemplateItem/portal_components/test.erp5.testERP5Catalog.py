@@ -644,7 +644,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(['5'],folder_object_list)
     if six.PY2:
       folder_object_list = [x.getObject().getId() for x in
-                              person_module.searchFolder(title=unicode(title, 'utf-8'))]
+                              person_module.searchFolder(title=six.text_type(title, 'utf-8'))]
       self.assertEqual(['5'],folder_object_list)
 
   def test_Collation(self):
