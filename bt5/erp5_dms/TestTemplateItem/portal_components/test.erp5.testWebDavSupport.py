@@ -31,7 +31,6 @@
 import unittest
 import os
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload
 from unittest import expectedFailure
 
 import httplib
@@ -40,20 +39,13 @@ from DateTime import DateTime
 
 from lxml import etree
 
-def makeFilePath(name):
-  import Products.ERP5.tests
-  return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-                      'test_data', name)
-
-def makeFileUpload(name, as_name=None):
-  if as_name is None:
-    as_name = name
-  path = makeFilePath(name)
-  return FileUpload(path, as_name)
-
 class TestWebDavSupport(ERP5TypeTestCase):
   """Test for WEBDAV access.
   """
+  def _getTestDataPath(self):
+    import Products.ERP5.tests
+    return os.path.join(os.path.dirname(Products.ERP5.tests.__file__), 'test_data')
+
   def getTitle(self):
     return "Test WebDav Support"
 
@@ -90,7 +82,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     person = self.portal.person_module.newContent()
     self.tic()
-    file_object = makeFileUpload('images/erp5_logo.png')
+    file_object = self.makeFileUpload('images/erp5_logo.png')
     response = self.publish(person.getPath() + '/erp5_logo.png',
                             request_method='PUT',
                             stdin=file_object,
@@ -109,7 +101,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     # Create a new document via FTP/DAV
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
@@ -131,7 +123,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     # Create a new document via FTP/DAV
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
@@ -202,7 +194,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
@@ -229,7 +221,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
@@ -267,7 +259,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
-    file_object = makeFileUpload(filename)
+    file_object = self.makeFileUpload(filename)
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
