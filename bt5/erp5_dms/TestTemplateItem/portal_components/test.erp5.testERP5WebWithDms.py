@@ -41,7 +41,7 @@ import transaction
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Utils import bytes2str, str2bytes
 from erp5.component.document.Document import ConversionError
 
@@ -67,17 +67,6 @@ D6a5EGAqRpTROANk68PPRHocFxiaJd+o0WQaffbR8jUX8kgymqgyBNncEINJRBpN2NXI5pLkdgJG
 Y5pFvE34AgSXzrOPljMwMCgKWeIPJZxG43fR2UfLIRbAbfJjcERTgz1ASE0PcGsIGE1GOsMK0APk
 /6e3ek9E9ERmk2rQv49vGHgkcBotISHBQDbglkDTzjjaCKab0QBziJyFukqO6AAAAABJRU5ErkJg
 gg==''')
-
-
-def makeFilePath(name):
-  from Products.ERP5 import tests
-  return os.path.join(tests.__path__[0], 'test_data', name)
-
-def makeFileUpload(name, as_name=None):
-  if as_name is None:
-    as_name = name
-  path = makeFilePath(name)
-  return FileUpload(path, as_name)
 
 def process_image(image, size=(40, 40)):
   # open the images to compare, resize them, and convert to grayscale
@@ -151,6 +140,10 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   def beforeTearDown(self):
     self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.web_page_module)
+
+  def _getTestDataPath(self):
+    from Products.ERP5 import tests
+    return os.path.join(tests.__path__[0], 'test_data')
 
   def setupWebSite(self, **kw):
     """
@@ -473,7 +466,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(modification_date, last_modified_header)
 
     # Upload a presentation with 3 pages.
-    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    upload_file = self.makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
     document = document_module.newContent(portal_type='Presentation',
                                           file=upload_file)
     reference = 'P-DMS-Presentation.3.Pages'
@@ -530,7 +523,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     document_reference = 'NXD-Presentation'
     document_module = portal.getDefaultModule(portal_type='Presentation')
-    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    upload_file = self.makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
     document = document_module.newContent(portal_type='Presentation',
                                           reference=document_reference,
                                           file=upload_file)
@@ -538,7 +531,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     image_reference = 'NXD-IMAGE'
     image_module = portal.getDefaultModule(portal_type='Image')
-    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
+    upload_file = self.makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
     image = image_module.newContent(portal_type='Image',
                                     file=upload_file,
                                     reference=image_reference)
@@ -636,7 +629,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(modification_date, last_modified_header)
 
     # Upload a presentation with 3 pages.
-    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    upload_file = self.makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
     document = document_module.newContent(portal_type='Presentation',
                                           file=upload_file)
     reference = 'P-DMS-Presentation-001-.3.Pages'
@@ -711,7 +704,7 @@ return True
     website.newContent(portal_type=web_section_portal_type)
 
     document_reference = 'tiolive-ERP5.Freedom.TioLive'
-    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive-001-en.odp')
+    upload_file = self.makeFileUpload('tiolive-ERP5.Freedom.TioLive-001-en.odp')
     document = self.portal.document_module.newContent(
                                           portal_type='Presentation',
                                           reference=document_reference,
@@ -809,7 +802,7 @@ return True
 
     image_reference = 'NXD-IMAGE'
     module = portal.getDefaultModule(portal_type=image_portal_type)
-    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
+    upload_file = self.makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
     image = module.newContent(portal_type=image_portal_type,
                                     file=upload_file,
                                     reference=image_reference)
@@ -879,7 +872,7 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('%s.svg' % filename)
+    upload_file = self.makeFileUpload('%s.svg' % filename)
     image = module.newContent(portal_type=portal_type,
                                     file=upload_file,
                                     reference="NXD-DOCUMENT")
@@ -888,7 +881,7 @@ return True
     self.assertEqual(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
     self.assertEqual(mime, 'image/png')
-    expected_image = makeFileUpload('%s.png' % filename)
+    expected_image = self.makeFileUpload('%s.png' % filename)
 
     # Compare images and accept some minimal difference,
     difference_value = compare_image(StringIO(converted_data), expected_image)
@@ -903,7 +896,7 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
     svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE", image_url)
 
     # Add image using data instead file this time as it is not the goal of
@@ -918,7 +911,7 @@ return True
     self.assertEqual(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
     self.assertEqual(mime, 'image/png')
-    expected_image = makeFileUpload('user-TESTSVG-CASE-URL.png')
+    expected_image = self.makeFileUpload('user-TESTSVG-CASE-URL.png')
 
     # Compare images and accept some minimal difference,
     difference_value = compare_image(StringIO(converted_data), expected_image)
@@ -935,7 +928,7 @@ return True
         This is not used by ERP5 in production, but this is way that
         prooves that conversion from SVG to PNG can use external images.
     """
-    image_url = "file://" + makeFilePath("user-TESTSVG-BACKGROUND-IMAGE.png")
+    image_url = "file://" + self.makeFileUploadPath("user-TESTSVG-BACKGROUND-IMAGE.png")
     self._testImageConversionFromSVGToPNG_url(image_url, portal_type)
 
   def _testImageConversionFromSVGToPNG_http_url(self, portal_type="Image"):
@@ -945,7 +938,7 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
+    upload_file = self.makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
     background_image = module.newContent(portal_type=portal_type,
                                     file=upload_file,
                                     reference="NXD-BACKGROUND")
@@ -966,11 +959,11 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
     svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
                            "http://soidjsoidjqsoijdqsoidjqsdoijsqd.idjsijds/../user-XXX-XXX")
 
-    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    upload_file = self.makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
     svg2_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
                            "https://www.erp5.com/usXXX-XXX")
 
