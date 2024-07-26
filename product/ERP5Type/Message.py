@@ -154,17 +154,8 @@ class Message(Persistent):
     Return the translated message as a string object.
     """
     message = self.translate()
-    if isinstance(message, six.text_type):
+    if six.PY2 and isinstance(message, six.text_type):
       message = message.encode('utf-8')
-    return message
-
-  def __unicode__(self):
-    """
-    Return the translated message as a unicode object.
-    """
-    message = self.translate()
-    if isinstance(message, str):
-      message = message.decode('utf-8')
     return message
 
   def __len__(self):
@@ -175,6 +166,17 @@ class Message(Persistent):
 
   def __getslice__(self, i, j):
     return str(self)[i:j]
+
+if six.PY2:
+  def __unicode__(self):
+    """
+    Return the translated message as a unicode object.
+    """
+    message = self.translate()
+    if isinstance(message, str):
+      message = message.decode('utf-8')
+    return message
+  Message.__unicode__ = __unicode__
 
 InitializeClass(Message)
 allow_class(Message)
