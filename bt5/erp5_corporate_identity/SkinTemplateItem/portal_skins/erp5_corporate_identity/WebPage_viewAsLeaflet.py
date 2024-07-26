@@ -22,6 +22,7 @@ MAIN FILE: render two pager in different output formats
 # document_save:            save file in document module (default None)
 
 import re
+import six
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
@@ -146,10 +147,11 @@ if leaflet_display_side:
   )
   #leaflet_content = leaflet_legalese.decode() + leaflet_content.decode()
 
-  if isinstance(leaflet_legalese, unicode):
-    leaflet_legalese = leaflet_legalese.encode("UTF-8")
-  if isinstance(leaflet_content, unicode):
-    leaflet_content = leaflet_content.encode("UTF-8")
+  if six.PY2:
+    if isinstance(leaflet_legalese, six.text_type):
+      leaflet_legalese = leaflet_legalese.encode("UTF-8")
+    if isinstance(leaflet_content, six.text_type):
+      leaflet_content = leaflet_content.encode("UTF-8")
 
   leaflet_content = leaflet_legalese + leaflet_content
 
