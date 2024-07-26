@@ -3,16 +3,7 @@ import PIL.Image as PIL_Image
 import os
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-
-
-class FileUpload(file):
-  """Act as an uploaded file.
-  """
-  __allow_access_to_unprotected_subobjects__ = 1
-  def __init__(self, path, name):
-    self.filename = name
-    file.__init__(self, path)
-    self.headers = {}
+from Products.ERP5Type.tests.utils import FileUpload
 
 def makeFilePath(name):
  # return os.path.join(os.path.dirname(__file__), 'tmp', name)
