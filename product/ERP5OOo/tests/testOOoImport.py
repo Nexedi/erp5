@@ -86,6 +86,7 @@ class TestOOoImportMixin(ERP5TypeTestCase):
         self.portal.portal_categories.gender,
         self.portal.portal_categories.region,
         ]:
+      parent.setLastId('0')
       parent.deleteContent(list(parent.objectIds()))
     self.tic()
 
@@ -911,7 +912,8 @@ class TestOOoImport(TestOOoImportMixin):
     """Test than OOoimport can parse a file with more than 40000 lines
     """
     parser = OOoParser()
-    parser.openFile(open(makeFilePath('import_big_spreadsheet.ods'), 'rb'))
+    with open(makeFilePath('import_big_spreadsheet.ods'), 'rb') as f:
+      parser.openFile(f)
     mapping = parser.getSpreadsheetsMapping()
     not_ok = 1
     for spread, values in six.iteritems(mapping):

@@ -112,9 +112,9 @@ class ZuiteTests( unittest.TestCase ):
         return old
 
     def _verifyArchive( self, bits, contents ):
-        import StringIO
+        from io import BytesIO
         import zipfile
-        stream = StringIO.StringIO( bits )
+        stream = BytesIO( bits )
         archive = zipfile.ZipFile( stream, 'r' )
 
         names = list( archive.namelist() )
@@ -139,9 +139,9 @@ class ZuiteTests( unittest.TestCase ):
 
     def _verifyManifest( self, bits, name, contents ):
 
-        import StringIO
+        from io import BytesIO
         import zipfile
-        stream = StringIO.StringIO( bits )
+        stream = BytesIO( bits )
         archive = zipfile.ZipFile( stream, 'r' )
 
         manifest = filter( None, archive.read( name ).split( '\n' ) )

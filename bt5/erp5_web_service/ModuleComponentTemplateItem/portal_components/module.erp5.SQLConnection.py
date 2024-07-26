@@ -27,6 +27,8 @@
 ##############################################################################
 
 from Products.ERP5.ERP5Site import getSite
+from erp5.component.tool.WebServiceTool import WebServiceConnectionError
+
 
 class MethodWrapper(object):
 
@@ -42,8 +44,8 @@ class MethodWrapper(object):
       response = method(*args, **kw)
       return method.absolute_url(), response
     else:
-      from erp5.component.tool.WebServiceTool import ConnectionError
-      raise ConnectionError("Method %s does not exist" %(method_name))
+      raise WebServiceConnectionError("Method %s does not exist" %(method_name))
+
 
 class SQLConnection:
   """

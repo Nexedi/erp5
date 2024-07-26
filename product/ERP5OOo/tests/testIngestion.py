@@ -38,6 +38,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
 from Products.ERP5Type.Utils import bytes2str, convertToUpperCase, str2bytes
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -51,6 +52,8 @@ import ZPublisher.HTTPRequest
 from unittest import expectedFailure
 import six.moves.http_client
 import six.moves.urllib.parse, six.moves.urllib.request
+import six
+
 import base64
 import mock
 
@@ -753,33 +756,50 @@ class TestIngestion(IngestionTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'doc',
                                  ['pdf', 'doc', 'rtf', 'txt', 'odt'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'doc',
-                                                 ['writer.html'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'doc',
+                                                   ['writer.html'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'doc', ['writer.html'])
 
   def stepCheckSpreadsheetDocumentExportList(self, sequence=None,
                                              sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'xls', ['csv', 'xls', 'ods', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'xls',
-                                 ['calc.html', 'calc.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'xls',
+                                   ['calc.html', 'calc.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'xls', ['calc.html', 'calc.pdf'])
 
   def stepCheckPresentationDocumentExportList(self, sequence=None,
                                               sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'ppt', ['ppt', 'odp', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
-                                                 'ppt', ['impr.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
+                                                   'ppt', ['impr.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'ppt', ['impr.pdf'])
 
   def stepCheckDrawingDocumentExportList(self, sequence=None,
                                          sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'sxd', ['jpg', 'svg', 'pdf', 'odg'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
                                                  'sxd', ['draw.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'sxd', ['draw.pdf'])
+
 
   def stepExportPDF(self, sequence=None, sequence_list=None, **kw):
     """
@@ -790,10 +810,10 @@ class TestIngestion(IngestionTestCase):
     document.edit(file=f)
     mime, text = document.convert('text')
     self.assertIn('magic', text)
-    self.assertTrue(mime == 'text/plain')
+    self.assertEqual(mime, 'text/plain')
     mime, html = document.convert('html')
     self.assertIn('magic', html)
-    self.assertTrue(mime == 'text/html')
+    self.assertEqual(mime, 'text/html')
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
     """
@@ -929,8 +949,8 @@ class TestIngestion(IngestionTestCase):
     """
       Email was sent in by someone to ERP5.
     """
-    f = open(makeFilePath('email_from.txt'))
-    document = self.receiveEmail(f.read())
+    with open(self.makeFilePath('email_from.txt'), "rb") as f:
+      self.receiveEmail(f.read())
     self.tic()
 
   def stepReceiveMultipleAttachmentsEmail(self, sequence=None,
@@ -938,8 +958,8 @@ class TestIngestion(IngestionTestCase):
     """
       Email was sent in by someone to ERP5.
     """
-    f = open(makeFilePath('email_multiple_attachments.eml'))
-    document = self.receiveEmail(f.read())
+    with open(self.makeFilePath('email_multiple_attachments.eml'), "rb") as f:
+      self.receiveEmail(f.read())
     self.tic()
 
   def stepVerifyEmailedMultipleDocumentsInitialContribution(self, sequence=None, sequence_list=None, **kw):
@@ -1538,7 +1558,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1560,7 +1580,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
@@ -1617,7 +1637,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1639,7 +1659,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
@@ -1675,7 +1695,7 @@ context.setReference(reference)
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1697,7 +1717,7 @@ context.setReference(reference)
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1736,7 +1756,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, six.text_type):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1767,7 +1787,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1789,7 +1809,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1857,7 +1877,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
 
@@ -1880,7 +1900,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1907,8 +1927,8 @@ return result
     as a application/octet-stream without explicit extension, become
     a Spreadsheet ?
     """
-    path = makeFilePath('import_region_category.ods')
-    data = open(path, 'r').read()
+    with open(self.makeFilePath('import_region_category.ods'), 'rb') as f:
+      data = f.read()
 
     document = self.portal.portal_contributions.newContent(filename='toto',
                                                   data=data,
@@ -1927,7 +1947,7 @@ return result
     module = self.portal.document_module
     document = module.newContent(portal_type='File',
                                  property_which_doesnot_exists='Foo',
-                                 data='Hello World!',
+                                 data=b'Hello World!',
                                  filename='toto.txt')
     document.publish()
     self.tic()
@@ -1942,7 +1962,7 @@ return result
     self.assertEqual(new_doc.getTitle(), 'One title')
     self.assertEqual(new_doc.getReference(), 'EFAA')
     self.assertEqual(new_doc.getValidationState(), 'published')
-    self.assertEqual(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getData(), b'Hello World!')
 
     # Migrate a document with url property
     url = new_doc.absolute_url() + '/getData'
@@ -1954,7 +1974,7 @@ return result
     new_doc = document.migratePortalType('File')
     self.assertEqual(new_doc.getPortalType(), 'File')
     self.assertEqual(new_doc.asURL(), url)
-    self.assertEqual(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getData(), b'Hello World!')
     self.assertEqual(new_doc.getValidationState(), 'submitted')
 
   def test_ContributionTool_isURLIngestionPermitted(self):
@@ -1988,8 +2008,8 @@ return result
   def test_User_Portal_Type_parameter_is_honoured(self):
     """Check that given portal_type is always honoured
     """
-    path = makeFilePath('import_region_category.xls')
-    data = open(path, 'r').read()
+    with open(self.makeFilePath('import_region_category.xls'), 'rb') as f:
+      data = f.read()
 
     document = self.portal.portal_contributions.newContent(
                                       filename='import_region_category.xls',
@@ -2006,8 +2026,8 @@ return result
   def test_User_ID_parameter_is_honoured(self):
     """Check that given id is always honoured
     """
-    path = makeFilePath('import_region_category.xls')
-    data = open(path, 'r').read()
+    with open(self.makeFilePath('import_region_category.xls'), 'rb') as f:
+      data = f.read()
 
     document = self.portal.portal_contributions.newContent(
                                       id='this_id',
@@ -2031,8 +2051,8 @@ return result
 
   def test_newContent_trough_http(self):
     filename = 'import_region_category.xls'
-    path = makeFilePath(filename)
-    data = open(path, 'r').read()
+    with open(self.makeFilePath(filename), 'rb') as f:
+      data = f.read()
     reference = 'ITISAREFERENCE'
 
     portal_url = self.portal.absolute_url()
@@ -2142,11 +2162,10 @@ class Base_contributeMixin:
       Test contributing an empty file and attaching it to context.
     """
     person = self.portal.person_module.newContent(portal_type='Person')
-    empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=io.BytesIO(),
-                            environ=dict(REQUEST_METHOD='PUT'),
-                            headers={"content-disposition":
-                              "attachment; filename=empty;"}))
+    class FileUpload(io.BytesIO):
+      filename = "empty"
+      headers = {}
+    empty_file_upload = FileUpload(b"")
 
     contributed_document = person.Base_contribute(
                                     portal_type=None,

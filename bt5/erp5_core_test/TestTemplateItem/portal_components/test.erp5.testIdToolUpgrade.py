@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Globals import PersistentMapping
@@ -60,7 +59,9 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
+    self.portal.portal_caches.clearAllCache()
     self.id_tool.clearGenerator(all=True)
+    self.tic()
 
   def createGenerators(self):
     """

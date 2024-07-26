@@ -31,6 +31,8 @@ def sqlquote(value):
   # (ex: ZMySQLDA.DA.Connection.sql_quote__).
   # Duplicating such code is error-prone, and makes us rely on a specific SQL
   # dialect...
+  if str != bytes and isinstance(value, bytes): # six.PY3
+    value = value.decode()
   return "'" + (value
     .replace('\x5c', r'\\')
     .replace('\x00', r'\0')
