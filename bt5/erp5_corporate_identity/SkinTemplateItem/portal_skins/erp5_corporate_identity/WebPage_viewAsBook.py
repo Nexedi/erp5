@@ -33,6 +33,7 @@ MAIN FILE: generate book in different output formats
 # display_svg                           format for svg images (svg, png*)
 
 import re
+import six
 
 from Products.PythonScripts.standard import html_quote
 from Products.ERP5Type.Utils import str2bytes, bytes2str
@@ -84,8 +85,7 @@ book_version = html_quote(override_document_version) if override_document_versio
 book_description = html_quote(override_document_description) if override_document_description else book.getDescription()
 book_title = html_quote(override_document_title) if override_document_title else book.getTitle()
 
-# unicode
-if isinstance(book_content, unicode):
+if six.PY2 and isinstance(book_content, six.text_type):
   book_content = book_content.encode("UTF-8")
 
 # backcompat
