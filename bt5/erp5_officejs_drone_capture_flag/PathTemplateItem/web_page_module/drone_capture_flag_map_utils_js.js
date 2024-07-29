@@ -1,3 +1,5 @@
+/*jslint nomen: true, indent: 2, maxlen: 80, todo: true, unparam: true */
+
 /******************************* MAP UTILS ************************************/
 
 var MapUtils = /** @class */ (function () {
@@ -7,13 +9,7 @@ var MapUtils = /** @class */ (function () {
 
   //** CONSTRUCTOR
   function MapUtils(map_param) {
-    var _this = this, max_width = _this.latLonDistance(
-      [map_param.min_lat, map_param.min_lon],
-      [map_param.min_lat, map_param.max_lon]),
-      max_depth = _this.latLonDistance(
-        [map_param.min_lat, map_param.min_lon],
-        [map_param.max_lat, map_param.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_depth));
+    var _this = this;
     _this.map_param = {};
     _this.map_param.height = map_param.height;
     _this.map_param.start_AMSL = map_param.start_AMSL;
@@ -21,15 +17,19 @@ var MapUtils = /** @class */ (function () {
     _this.map_param.max_lat = map_param.max_lat;
     _this.map_param.min_lon = map_param.min_lon;
     _this.map_param.max_lon = map_param.max_lon;
-    _this.map_param.depth = map_size;
-    _this.map_param.width = map_size;
-    _this.map_param.map_size = map_size;
+    _this.map_param.depth = _this.latLonDistance(
+      [map_param.min_lat, map_param.min_lon],
+      [map_param.max_lat, map_param.min_lon]
+    );
+    _this.map_param.width = _this.latLonDistance(
+      [map_param.min_lat, map_param.min_lon],
+      [map_param.min_lat, map_param.max_lon]
+    );
     _this.map_info = {
       "depth": _this.map_param.depth,
       "width": _this.map_param.width,
       "flag_distance_epsilon": map_param.flag_distance_epsilon || FLAG_EPSILON
     };
-    _this.map_info.map_size = _this.map_param.map_size;
     _this.map_info.height = _this.map_param.height;
     _this.map_info.start_AMSL = _this.map_param.start_AMSL;
     _this.map_info.min_x = _this.longitudToX(map_param.min_lon);
@@ -50,10 +50,10 @@ var MapUtils = /** @class */ (function () {
     return R * c;
   };
   MapUtils.prototype.longitudToX = function (lon) {
-    return (this.map_info.map_size / 360.0) * (180 + lon);
+    return (this.map_info.width / 360.0) * (180 + lon);
   };
   MapUtils.prototype.latitudeToY = function (lat) {
-    return (this.map_info.map_size / 180.0) * (90 - lat);
+    return (this.map_info.depth / 180.0) * (90 - lat);
   };
   MapUtils.prototype.convertToLocalCoordinates =
     function (latitude, longitude, altitude) {
@@ -61,24 +61,22 @@ var MapUtils = /** @class */ (function () {
         x = this.longitudToX(longitude),
         y = this.latitudeToY(latitude);
       return {
-        x: ((x - map_info.min_x) / (map_info.max_x - map_info.min_x)) *
-          1000 - map_info.width / 2,
-        y: ((y - map_info.min_y) / (map_info.max_y - map_info.min_y)) *
-          1000 - map_info.depth / 2,
+        x: (((x - map_info.min_x) / (map_info.max_x - map_info.min_x)) - 0.5)
+            * map_info.width,
+        y: (((y - map_info.min_y) / (map_info.max_y - map_info.min_y)) - 0.5)
+            * map_info.depth,
         z: altitude
       };
     };
   MapUtils.prototype.convertToGeoCoordinates = function (x, y, z) {
-    var lon = x + this.map_info.width / 2,
-      lat = y + this.map_info.depth / 2;
-    lon = lon / 1000;
+    var lon = (x / this.map_info.width) + 0.5,
+      lat = (y / this.map_info.depth) + 0.5;
     lon = lon * (this.map_info.max_x - this.map_info.min_x) +
       this.map_info.min_x;
-    lon = lon / (this.map_info.map_size / 360.0) - 180;
-    lat = lat / 1000;
+    lon = lon / (this.map_info.width / 360.0) - 180;
     lat = lat * (this.map_info.max_y - this.map_info.min_y) +
       this.map_info.min_y;
-    lat = 90 - lat / (this.map_info.map_size / 180.0);
+    lat = 90 - lat / (this.map_info.depth / 180.0);
     return {
       latitude: lat,
       longitude: lon,
@@ -127,11 +125,11 @@ var MapUtils = /** @class */ (function () {
       function fillObstacleList(list, min_x, min_y, max_x, max_y) {
         var i, el, result_list = [];
         for (i = 0; i < list.length; i += 1) {
-          el = {"position":
-                {"x": 0, "y": 0, "z": 0},
-                "scale":
-                {"x": 0, "y": 0, "z": 0},
-                "type": list[i].type};
+          el = {
+            "position": {"x": 0, "y": 0, "z": 0},
+            "scale": {"x": 0, "y": 0, "z": 0},
+            "type": list[i].type
+          };
           if (list[i].rotation) {
             el.rotation = {"x": list[i].rotation.x, "y": list[i].rotation.y,
                            "z": list[i].rotation.z};
@@ -149,133 +147,142 @@ var MapUtils = /** @class */ (function () {
         return result_list;
       }
       return {
-        "flag_list": fillFlagList(template.flag_list, min_x, min_y, max_x, max_y),
-        "obstacle_list": fillObstacleList(template.obstacle_list, min_x, min_y, max_x, max_y),
-        "enemy_list": fillEnemyList(template.enemy_list, min_x, min_y, max_x, max_y)
+        "flag_list":
+          fillFlagList(template.flag_list, min_x, min_y, max_x, max_y),
+        "obstacle_list":
+          fillObstacleList(template.obstacle_list, min_x, min_y, max_x, max_y),
+        "enemy_list":
+          fillEnemyList(template.enemy_list, min_x, min_y, max_x, max_y)
       };
     }
     // 4x4 grid
-    var GRID = 4, i, j, map_size = this.map_info.map_size, initial_block,
-      x1, y1, x2, y2, block_result, index, block_size = map_size / GRID,
+    var GRID = 4, i, j, max_width = this.map_info.width,
+      max_depth = this.map_info.depth, initial_block, x1, y1, x2, y2,
+      block_result, index, block_size = Math.max(max_width, max_depth) / GRID,
       result_map,
       BLOCK_TEMPLATE_LIST = [{
-      "flag_list": [{"position":
-                     {"x": 50, "y": 50, "z": 10},
-                     "score": 1, "weight": 1}],
-      "obstacle_list": [{"type": "box",
-                         "position": {"x": 50, "y": 70, "z": 20},
-                         "scale": {"x": 80, "y": 4, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 30, "z": 10}}
-                    ]
-    }, {
-      "flag_list": [],
-      "obstacle_list": [{"type": "box",
-                         "position": {"x": 20, "y": 65, "z": 20},
-                         "scale": {"x": 4, "y": 70, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
+        "flag_list": [{"position":
+                      {"x": 50, "y": 50, "z": 10},
+                      "score": 1, "weight": 1}],
+        "obstacle_list": [{"type": "box",
+                          "position": {"x": 50, "y": 70, "z": 20},
+                          "scale": {"x": 80, "y": 4, "z": 40},
+                          "rotation": {"x": 0, "y": 0, "z": 0}}],
+        "enemy_list": [{"type": "EnemyDroneAPI",
+                        "position": {"x": 50, "y": 30, "z": 10}}
+                      ]
+      }, {
+        "flag_list": [],
+        "obstacle_list": [{"type": "box",
+                          "position": {"x": 20, "y": 65, "z": 20},
+                          "scale": {"x": 4, "y": 70, "z": 40},
+                          "rotation": {"x": 0, "y": 0, "z": 0}},
+                          {"type": "box",
+                          "position": {"x": 50, "y": 35, "z": 20},
+                          "scale": {"x": 4, "y": 70, "z": 40},
+                          "rotation": {"x": 0, "y": 0, "z": 0}},
+                          {"type": "box",
+                          "position": {"x": 80, "y": 65, "z": 20},
+                          "scale": {"x": 4, "y": 70, "z": 40},
+                          "rotation": {"x": 0, "y": 0, "z": 0}}],
+        "enemy_list": []
+      }, {
+        "flag_list": [],
+        "obstacle_list": [{"type": "mountain",
+                          "position": {"x": 50, "y": 50, "z": 200},
+                          "scale": {"x": 80, "y": 80,
+                                    "z": 400} //this.map_info.height?
+                          }],
+        "enemy_list": []
+      }, {
+        "flag_list": [],
+        "obstacle_list": [],
+        "enemy_list": [{"type": "EnemyDroneAPI",
+                        "position": {"x": 20, "y": 20, "z": 10}},
+                      {"type": "EnemyDroneAPI",
+                        "position": {"x": 20, "y": 80, "z": 10}},
+                      {"type": "EnemyDroneAPI",
+                        "position": {"x": 80, "y": 20, "z": 10}},
+                      {"type": "EnemyDroneAPI",
+                        "position": {"x": 80, "y": 80, "z": 10}}]
+      }, {
+        "flag_list": [{"position":
+                      {"x": 50, "y": 50, "z": 10},
+                      "score": 1, "weight": 1}],
+        "obstacle_list": [],
+        "enemy_list": []
+      }, {
+        "flag_list": [{"position":
+                      {"x": 50, "y": 50, "z": 10},
+                      "score": 1, "weight": 1}],
+        "obstacle_list": [],
+        "enemy_list": [{"type": "EnemyDroneAPI",
+                        "position": {"x": 50, "y": 20, "z": 10}},
+                      {"type": "EnemyDroneAPI",
+                        "position": {"x": 50, "y": 80, "z": 10}}]
+      }, {
+        "flag_list": [{"position":
+                      {"x": 50, "y": 50, "z": 10},
+                      "score": 1, "weight": 1}],
+        "obstacle_list": [{"type": "box",
+                          "position": {"x": 50, "y": 10, "z": 25},
+                          "scale": {"x": 80, "y": 2, "z": 50},
+                          "rotation": {"x": 0, "y": 0, "z": 0}},
                         {"type": "box",
-                         "position": {"x": 50, "y": 35, "z": 20},
-                         "scale": {"x": 4, "y": 70, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
+                          "position": {"x": 10, "y": 50, "z": 25},
+                          "scale": {"x": 2, "y": 80, "z": 50},
+                          "rotation": {"x": 0, "y": 0, "z": 0}},
                         {"type": "box",
-                         "position": {"x": 80, "y": 65, "z": 20},
-                         "scale": {"x": 4, "y": 70, "z": 40},
-                         "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "enemy_list": []
-    }, {
-      "flag_list": [],
-      "obstacle_list": [{"type": "mountain",
-                         "position": {"x": 50, "y": 50, "z": 200},
-                         "scale": {"x": 80, "y": 80,
-                                   "z": 400} //this.map_info.height?
-                        }],
-      "enemy_list": []
-    }, {
-      "flag_list": [],
-      "obstacle_list": [],
-      "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 20, "z": 10}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 20, "y": 80, "z": 10}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 20, "z": 10}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 80, "y": 80, "z": 10}}]
-    }, {
-      "flag_list": [{"position":
-                     {"x": 50, "y": 50, "z": 10},
-                     "score": 1, "weight": 1}],
-      "obstacle_list": [],
-      "enemy_list": []
-    }, {
-      "flag_list": [{"position":
-                     {"x": 50, "y": 50, "z": 10},
-                     "score": 1, "weight": 1}],
-      "obstacle_list": [],
-      "enemy_list": [{"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 20, "z": 10}},
-                     {"type": "EnemyDroneAPI",
-                      "position": {"x": 50, "y": 80, "z": 10}}]
-    }, {
-      "flag_list": [{"position":
-                     {"x": 50, "y": 50, "z": 10},
-                     "score": 1, "weight": 1}],
-      "obstacle_list": [{"type": "box",
-                         "position": {"x": 50, "y": 10, "z": 25},
-                         "scale": {"x": 80, "y": 2, "z": 50},
-                         "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 10, "y": 50, "z": 25},
-                        "scale": {"x": 2, "y": 80, "z": 50},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 50, "y": 90, "z": 25},
-                        "scale": {"x": 80, "y": 2, "z": 50},
-                        "rotation": {"x": 0, "y": 0, "z": 0}},
-                       {"type": "box",
-                        "position": {"x": 90, "y": 50, "z": 25},
-                        "scale": {"x": 2, "y": 80, "z": 50},
-                        "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "enemy_list": []
-    }, {
-      "flag_list": [],
-      "obstacle_list": [],
-      "enemy_list": []
-    }];
+                          "position": {"x": 50, "y": 90, "z": 25},
+                          "scale": {"x": 80, "y": 2, "z": 50},
+                          "rotation": {"x": 0, "y": 0, "z": 0}},
+                        {"type": "box",
+                          "position": {"x": 90, "y": 50, "z": 25},
+                          "scale": {"x": 2, "y": 80, "z": 50},
+                          "rotation": {"x": 0, "y": 0, "z": 0}}],
+        "enemy_list": []
+      }, {
+        "flag_list": [],
+        "obstacle_list": [],
+        "enemy_list": []
+      }];
     function getInitialBlock(GRID) {
       var x, y;
       do {
         x = Math.floor(seed.quick() * GRID);
         y = Math.floor(seed.quick() * GRID);
         //ensure intial block is in the edge of map
-      } while (x !== 0 && x !== GRID-1 && y !== 0 && y !== GRID-1);
+      } while (x !== 0 && x !== GRID - 1 && y !== 0 && y !== GRID - 1);
       return {x: x, y: y};
     }
     initial_block = getInitialBlock(GRID);
     function checkConditions(json_map, GRID) {
-      if (!json_map) return false;
+      var f, flag, g, n_mountains = 0;
+
+      if (!json_map) {
+        return false;
+      }
       // set ~20% of the blocks with flags
-      if (json_map.flag_list.length !== Math.round(GRID * GRID * 0.2)) return false;
+      if (json_map.flag_list.length !== Math.round(GRID * GRID * 0.2)) {
+        return false;
+      }
       // limit n_mountains
       if (json_map.obstacle_list.length > 3) {
-        var i, n_mountains = 0;
-        for (i = 0; i < json_map.obstacle_list.length; i += 1) {
-          if (json_map.obstacle_list[i].type === "mountain") {
+        for (g = 0; g < json_map.obstacle_list.length; g += 1) {
+          if (json_map.obstacle_list[g].type === "mountain") {
             n_mountains += 1;
             if (n_mountains > 3) {
               return false;
             }
-            json_map.obstacle_list[i].type = "box";
+            json_map.obstacle_list[g].type = "box";
           }
         }
       }
-      var f;
       // at least one flag in the oposite side of drones initial position
       for (f = 0; f < json_map.flag_list.length; f += 1) {
-        if ((json_map.flag_list[f].position.x * json_map.initial_position.x) < 0 ||
-            (json_map.flag_list[f].position.y * json_map.initial_position.y) < 0) {
+        flag = json_map.flag_list[f];
+        if ((flag.position.x * json_map.initial_position.x) < 0 ||
+            (flag.position.y * json_map.initial_position.y) < 0) {
           return true;
         }
       }
@@ -284,25 +291,30 @@ var MapUtils = /** @class */ (function () {
     do {
       result_map = {
         "flag_list": [],
+        "initial_position": null,
         "obstacle_list": [],
         "enemy_list": []
       };
       for (i = 0; i < GRID; i += 1) {
         for (j = 0; j < GRID; j += 1) {
           index = Math.floor(seed.quick() * BLOCK_TEMPLATE_LIST.length);
-          x1 = block_size * i - map_size / 2;
-          y1 = block_size * j - map_size / 2;
-          x2 = block_size * i + block_size - map_size / 2;
-          y2 = block_size * j + block_size - map_size / 2;
+          x1 = block_size * i - max_width / 2;
+          y1 = block_size * j - max_depth / 2;
+          x2 = block_size * i + block_size - max_width / 2;
+          y2 = block_size * j + block_size - max_depth / 2;
           if (initial_block.x === i && initial_block.y === j) {
             result_map.initial_position = {x: normalize(50, x1, x2),
                                            y: normalize(50, y1, y2),
                                            z: 15 };
           } else {
-            block_result = fillTemplate(BLOCK_TEMPLATE_LIST[index], x1, y1, x2, y2);
-            result_map.flag_list = result_map.flag_list.concat(block_result.flag_list);
-            result_map.obstacle_list = result_map.obstacle_list.concat(block_result.obstacle_list);
-            result_map.enemy_list = result_map.enemy_list.concat(block_result.enemy_list);
+            block_result =
+              fillTemplate(BLOCK_TEMPLATE_LIST[index], x1, y1, x2, y2);
+            result_map.flag_list =
+              result_map.flag_list.concat(block_result.flag_list);
+            result_map.obstacle_list =
+              result_map.obstacle_list.concat(block_result.obstacle_list);
+            result_map.enemy_list =
+              result_map.enemy_list.concat(block_result.enemy_list);
           }
         }
       }
@@ -316,7 +328,7 @@ var MapUtils = /** @class */ (function () {
   MapUtils.prototype.randomize = function (seed) {
     //TODO randomize start_ASML, map height, depth and width?
     var _this = this, flag_list, obstacle_list, enemy_list,
-      geo_flag_info, geo_obstacle, geo_enemy, coordinates,
+      geo_flag_info, geo_obstacle, geo_enemy,
       random_seed = new Math.seedrandom(seed),
       randomized_map = _this.randomizeByBlockTemplates(random_seed);
     obstacle_list = randomized_map.obstacle_list;
@@ -346,7 +358,7 @@ var MapUtils = /** @class */ (function () {
       _this.map_info.flag_list.push(geo_flag_info);
     });
     obstacle_list.forEach(function (obstacle_info, index) {
-      geo_obstacle = {};
+      geo_obstacle = {position: null};
       Object.assign(geo_obstacle, obstacle_info);
       geo_obstacle.position = _this.convertToGeoCoordinates(
         obstacle_info.position.x,
@@ -356,7 +368,7 @@ var MapUtils = /** @class */ (function () {
       _this.map_info.obstacle_list.push(geo_obstacle);
     });
     enemy_list.forEach(function (enemy_info, index) {
-      geo_enemy = {};
+      geo_enemy = {position: null};
       Object.assign(geo_enemy, enemy_info);
       geo_enemy.position = _this.convertToGeoCoordinates(
         enemy_info.position.x,
