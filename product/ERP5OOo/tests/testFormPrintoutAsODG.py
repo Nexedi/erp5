@@ -161,7 +161,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
-    #foo_form.my_title.set_value('default', "Changed Title!")
     odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
