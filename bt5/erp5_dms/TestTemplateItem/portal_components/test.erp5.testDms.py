@@ -653,12 +653,8 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.getHeader('content-disposition'))
     response_body = response.getBody()
-    conversion = str(doc.convert('pdf')[1])
-    diff = '\n'+'\n'.join(difflib.unified_diff(response_body.splitlines(),
-                                          conversion.splitlines(),
-                                          fromfile='first_call.pdf',
-                                          tofile='second_call.pdf'))
-    self.assertEqual(response_body, conversion, diff)
+    conversion = doc.convert('pdf')[1]
+    self.assertEqual(response_body, conversion)
 
     # test Print icon works on OOoDocument
     response = self.publish('%s/OOoDocument_print' % doc.getPath())
