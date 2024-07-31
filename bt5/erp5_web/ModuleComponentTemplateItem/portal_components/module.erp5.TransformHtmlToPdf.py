@@ -23,8 +23,6 @@ class TransformHtmlToPdf(DocumentConversionServerTransform):
     # wkhtmltopdf handler currently requires conversion_kw (hack in convertFile())...
     if 'conversion_kw' not in kwargs:
       kwargs['conversion_kw'] = {'encoding': 'utf-8'}
-
-#    raise RuntimeError
     return DocumentConversionServerTransform.convert(self, *args, **kwargs)
 
 def register():
