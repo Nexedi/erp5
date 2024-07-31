@@ -71,24 +71,8 @@ if portal_type == 'Web Page':
 if portal_type == 'Web Section':
   websection = context
   return generateOpenGraphParamaters(websection)
-  """
-  default_document = websection.getDefaultDocumentValue()
-
-  if default_document is not None:
-    return generateOpenGraphParamaters(default_document, True)
-  else:
-    return generateOpenGraphParamaters(websection)
-  """
 
 if portal_type == 'Web Site':
   return generateOpenGraphParamaters(website)
-  """
-  default_document = website.getDefaultDocumentValue()
-
-  if default_document is not None:
-    return generateOpenGraphParamaters(default_document, True)
-  else:
-    return generateOpenGraphParamaters(website)
-  """
 
 return ''
