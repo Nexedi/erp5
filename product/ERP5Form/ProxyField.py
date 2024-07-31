@@ -249,7 +249,7 @@ class ProxyField(ZMIField):
       for key, value in six.iteritems(result):
         if isinstance(value, six.binary_type):
           # in unicode mode, Formulator UI always uses UTF-8
-          value = six.text_type(message, 'utf-8')
+          value = six.text_type(value, 'utf-8')
         new_result[key] = value
       result = new_result
 
