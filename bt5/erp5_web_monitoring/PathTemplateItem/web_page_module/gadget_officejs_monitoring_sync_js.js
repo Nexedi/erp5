@@ -78,7 +78,7 @@
             last_sync_time = new Date().getTime();
             return RSVP.all([
               gadget.setSetting('latest_sync_time', last_sync_time),
-              gadget.notifySubmitting()
+              gadget.notifySubmitted()
             ]);
           })
           .push(function () {
