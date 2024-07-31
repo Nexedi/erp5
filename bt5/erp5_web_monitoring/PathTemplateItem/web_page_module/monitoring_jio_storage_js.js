@@ -5,9 +5,9 @@
  */
 
 /*jslint nomen: true */
-/*global jIO, RSVP, Rusha, Blob, console, btoa, DOMParser, URLSearchParams */
+/*global jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams */
 
-(function (jIO, RSVP, Rusha, Blob, console, btoa, DOMParser, URLSearchParams) {
+(function (jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams) {
   "use strict";
 
   /**
@@ -893,8 +893,7 @@
     }
 
     function readMonitoringParameter(parmeter_xml) {
-      var parser = new DOMParser(),
-        xml_doc = parser.parseFromString(parmeter_xml, "text/xml"),
+      var xml_doc = rJS.parseDocumentStringOrFail(parmeter_xml, "text/xml"),
         parameter,
         uri_param,
         json_parameter,
@@ -1133,4 +1132,4 @@
 
   jIO.addStorage('replicatedopml', ReplicatedOPMLStorage);
 
-}(jIO, RSVP, Rusha, Blob, console, btoa, DOMParser, URLSearchParams));
+}(jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams));
