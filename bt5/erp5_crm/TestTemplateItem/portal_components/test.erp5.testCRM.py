@@ -758,10 +758,11 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEqual('text/plain', event.getContentType())
     self.assertEqual('message/rfc822', event._baseGetContentType())
     # check if parsing of metadata from content is working
-    content_dict = {'source_list': ['person_module/sender'],
-                    'destination_list': ['person_module/me',
-                                         'person_module/he']}
-    self.assertEqual(event.getPropertyDictFromContent(), content_dict)
+    content_dict = event.getPropertyDictFromContent()
+    self.assertEqual(sorted(list(content_dict)), ['destination_list', 'source_list'])
+    self.assertEqual(content_dict['source_list'], ['person_module/sender'])
+    self.assertEqual(sorted(content_dict['destination_list']),
+                     ['person_module/he', 'person_module/me'])
 
   def test_title(self):
     # title is found automatically, based on the Subject: header in the mail
@@ -802,10 +803,11 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEqual('text/plain', event.getContentType())
     self.assertEqual('message/rfc822', event._baseGetContentType())
     # check if parsing of metadata from content is working
-    content_dict = {'source_list': ['person_module/sender'],
-                    'destination_list': ['person_module/me',
-                                         'person_module/he']}
-    self.assertEqual(event.getPropertyDictFromContent(), content_dict)
+    content_dict = event.getPropertyDictFromContent()
+    self.assertEqual(sorted(list(content_dict)), ['destination_list', 'source_list'])
+    self.assertEqual(content_dict['source_list'], ['person_module/sender'])
+    self.assertEqual(sorted(content_dict['destination_list']),
+                     ['person_module/he', 'person_module/me'])
     new_event = event.Base_createCloneDocument(batch_mode=1)
     self.tic()
     self.assertEqual('Simple Mail Test', new_event.getTitle())
@@ -817,8 +819,8 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     # check that metadatas read from data are copied on cloned event
     self.assertEqual(new_event.getSourceList(), ['person_module/sender'])
-    self.assertEqual(new_event.getDestinationList(), ['person_module/me',
-                                                       'person_module/he'])
+    self.assertEqual(sorted(new_event.getDestinationList()),
+                     ['person_module/he', 'person_module/me'])
 
     # cloned event got a new reference
     self.assertNotEqual(new_event.getReference(), event.getReference())
