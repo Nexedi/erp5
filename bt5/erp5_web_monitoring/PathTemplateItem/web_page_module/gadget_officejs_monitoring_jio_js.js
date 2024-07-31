@@ -60,15 +60,14 @@
                                   'default_view_reference'])
       .push(function (result_list) {
         // TODO sets should be used to compare elements are different
+        // or replace latest_master_url_list by an update flag?
         if (result_list[0] || result_list[1]) {
           // if no previous master list or latest list is different (new configuration set), update
           if (!result_list[1] ||
               result_list[0].toString() !== result_list[1].toString()) {
             master_url_list = result_list[0];
             update_settings = true;
-          }
-          else {
-            // if no new configuration, do not re create storage on repair
+          } else {
             if (check_update) {
               return;
             }
@@ -82,8 +81,7 @@
             });
           }
         }
-        monitoring_jio =
-        {
+        monitoring_jio = {
           type: "replicatedopml",
           remote_storage_unreachable_status: "WARNING",
           remote_opml_check_time_interval: 86400000,
@@ -126,7 +124,7 @@
     .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
 
-    .declareMethod('updateConfiguration', function (appcache_storage, migration_version, current_version, jio_storage) {
+    .declareMethod('updateConfiguration', function (appcache_storage, current_version, jio_storage) {
       var gadget = this;
       if (!appcache_storage) { return; }
       return RSVP.Queue()
@@ -221,15 +219,15 @@
           }
         })
         .push(function (all_docs) {
+          var remove_queue = new RSVP.Queue(), i;
+          function remove_doc(id) {
+            remove_queue
+              .push(function () {
+                return gadget.props.jio_storage.remove(id);
+              });
+          }
           if (all_docs && all_docs.data.total_rows) {
             //iterate all docs, jio_remove, and recreate
-            var remove_queue = new RSVP.Queue(), i;
-            function remove_doc(id) {
-              remove_queue
-                .push(function () {
-                  return gadget.props.jio_storage.remove(id);
-                });
-            }
             for (i = 0; i < all_docs.data.total_rows; i += 1) {
               remove_doc(all_docs.data.rows[i].id);
             }
@@ -243,7 +241,7 @@
         .push(function () {
           if (migration_version !== current_version) {
             appcache_storage = jIO.createJIO(appcache_jio);
-            return gadget.updateConfiguration(appcache_storage, migration_version, current_version, gadget.props.jio_storage);
+            return gadget.updateConfiguration(appcache_storage, current_version, gadget.props.jio_storage);
           }
         })
         .push(function () {
@@ -288,8 +286,7 @@
       });
     })
     .declareMethod('repair', function () {
-      var gadget = this, storage_definition_list = [],
-        argument_list = arguments;
+      var gadget = this, argument_list = arguments;
       return promiseLock(LOCK_NAME, {}, function () {
         return getUpdatedMonitoringStorageSpec(gadget, true)
           .push(function (monitoring_jio) {

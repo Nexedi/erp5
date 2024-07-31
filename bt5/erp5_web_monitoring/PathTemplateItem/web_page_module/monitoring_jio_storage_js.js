@@ -1,10 +1,10 @@
 /*
- * Copyright 2016, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
- */
+* Copyright 2016, Nexedi SA
+* Released under the LGPL license.
+* http://www.gnu.org/licenses/lgpl.html
+*/
 
-/*jslint nomen: true */
+/*jslint indent: 2 nomen: true */
 /*global jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams */
 
 (function (jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams) {
@@ -411,6 +411,15 @@
       });
   }
 
+  function fixDateTimezone(date_string) {
+    // set default timezone offset to UTC
+    // XXX should be removed later
+    if (ZONE_LIST.indexOf(date_string.slice(-5)) === -1) {
+      return date_string + "+0000";
+    }
+    return date_string;
+  }
+
   function updateInstanceTreeState(hosting, element) {
     var status = element.status.toUpperCase();
 
@@ -423,18 +432,10 @@
       hosting.status = status;
     } else if (status === "WARNING") {
       hosting.status = status;
-    } if (status === "OK" && hosting.status !== status) {
+    }
+    if (status === "OK" && hosting.status !== status) {
       hosting.status = status;
     }
-  }
-
-  function fixDateTimezone(date_string) {
-    // set default timezone offset to UTC
-    // XXX should be removed later
-    if (ZONE_LIST.indexOf(date_string.slice(-5)) === -1) {
-      return date_string + "+0000";
-    }
-    return date_string;
   }
 
   function getOpmlTree(context, opml_url, opml_spec, basic_login, opml_title, slapos_master_url) {
@@ -687,8 +688,8 @@
             if (result_list[i].type === PROMISE_TYPE) {
               // the first element of rss is the header
               extra_dict = {
-                lastBuildDate: fixDateTimezone(result_list[i].result.data.
-                  rows[0].doc.lastBuildDate),
+                lastBuildDate: fixDateTimezone(result_list[i].result.data
+                                               .rows[0].doc.lastBuildDate),
                 channel: result_list[i].result.data.rows[0].doc.description,
                 channel_item: result_list[i].result.data.rows[0].doc.title
               };
@@ -714,8 +715,7 @@
               name: result_list[i].url,
               doc: result_list[i].current_signature
             });
-          }
-          else if (context._remote_storage_unreachable_status !== undefined) {
+          } else if (context._remote_storage_unreachable_status !== undefined) {
             if (result_list[i].type === "webhttp") {
               // In case it was impossible to get software Instance
               // Add an empty Software Instance with unreachable status
@@ -934,7 +934,9 @@
     }
 
     function getInstanceOPMLList(storage, limit) {
-      if (!storage) return [];
+      if (!storage) {
+        return [];
+      }
       var instance_tree_list = [],
         opml_list = [],
         uid_dict = {};
@@ -1027,42 +1029,42 @@
         query: '(portal_type:"' + OPML_PORTAL_TYPE + '")',// AND (slapos_master_url:"https://%")',
         select_list: ["title", "url", "basic_login", "slapos_master_url"]
       })
-      .push(function (result) {
-        function removeAllOPML(remove_opml_list, jio) {
-          var remove_queue = new RSVP.Queue(), i;
-          function remove_opml(id) {
-            remove_queue
-              .push(function () {
-                return jio.remove(id);
-              });
+        .push(function (result) {
+          function removeAllOPML(remove_opml_list, jio) {
+            var remove_queue = new RSVP.Queue(), i;
+            function remove_opml(id) {
+              remove_queue
+                .push(function () {
+                  return jio.remove(id);
+                });
+            }
+            for (i = 0; i < remove_opml_list.length; i += 1) {
+              remove_opml(remove_opml_list[i].id);
+            }
+            return remove_queue;
           }
-          for (i = 0; i < remove_opml_list.length; i += 1) {
-            remove_opml(remove_opml_list[i].id);
+          // XXX too attached to union storage?
+          var slapos_master_url_list = [], spec_list = context._remote_sub_storage_spec.storage_list,
+            i, remove_opml_list = [], opml_list = result.data.rows;
+          if (spec_list) {
+            for (i = 0; i < spec_list.length; i += 1) {
+              slapos_master_url_list.push(spec_list[i].url);
+            }
           }
-          return remove_queue;
-        }
-        // XXX too attached to union storage?
-        var slapos_master_url_list = [], spec_list = context._remote_sub_storage_spec.storage_list,
-          i, remove_opml_list = [], opml_list = result.data.rows;
-        if (spec_list) {
-          for (i = 0; i < spec_list.length; i += 1) {
-            slapos_master_url_list.push(spec_list[i].url);
-          }
-        }
-        if (slapos_master_url_list.length > 0) {
-          for (i = 0; i < opml_list.length; i += 1) {
-            if (opml_list[i].value.slapos_master_url &&
-              opml_list[i].value.slapos_master_url !== "") {
-              if (!slapos_master_url_list.includes(opml_list[i].value.slapos_master_url)) {
-                remove_opml_list.push(opml_list[i]);
+          if (slapos_master_url_list.length > 0) {
+            for (i = 0; i < opml_list.length; i += 1) {
+              if (opml_list[i].value.slapos_master_url &&
+                  opml_list[i].value.slapos_master_url !== "") {
+                if (!slapos_master_url_list.includes(opml_list[i].value.slapos_master_url)) {
+                  remove_opml_list.push(opml_list[i]);
+                }
               }
             }
           }
-        }
-        return RSVP.all([
-          removeAllOPML(remove_opml_list, context)
-        ]);
-      });
+          return RSVP.all([
+            removeAllOPML(remove_opml_list, context)
+          ]);
+        });
     }
 
     return new RSVP.Queue()
@@ -1091,17 +1093,17 @@
       .push(undefined, function (error) {
         has_failed = true;
         if (error.target) {
-          if (error.target.status == 401) {
+          if (error.target.status === 401) {
             error_msg = ": unauthorized access to slapos master";
           }
-          if (error.target.status == 404) {
+          if (error.target.status === 404) {
             error_msg = ": slapos master url not found";
           }
           if (error.target.status - 500 > 0) {
             error_msg = ": server error on slapos master side - " + error.target.status;
           }
           if (error.target.responseURL) {
-            error_msg += ". URL: " + error.target.responseURL
+            error_msg += ". URL: " + error.target.responseURL;
           }
         } else {
           console.log(error);

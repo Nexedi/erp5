@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, console, XMLHttpRequest, document */
+/*global window, rJS, RSVP, XMLHttpRequest, document */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, console, XMLHttpRequest, document) {
+(function (window, rJS, RSVP, XMLHttpRequest, document) {
   "use strict";
 
   var gadget_klass = rJS(window);
@@ -207,4 +207,4 @@
         });
     });
 
-}(window, rJS, RSVP, console, XMLHttpRequest, document));
+}(window, rJS, RSVP, XMLHttpRequest, document));
