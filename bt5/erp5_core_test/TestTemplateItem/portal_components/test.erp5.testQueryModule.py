@@ -129,7 +129,7 @@ class TestQueryModule(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEqual('owner_user@example.invalid', mfrom)
     self.assertEqual(['question_user@example.invalid'], mto)
-    self.assertTrue('Query' in messageText, messageText)
+    self.assertIn(b'Query', messageText)
 
 
 def test_suite():

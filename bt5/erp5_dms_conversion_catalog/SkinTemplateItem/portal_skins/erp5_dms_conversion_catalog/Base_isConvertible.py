@@ -1,7 +1,7 @@
 """
   Return true or false based on if document is convertible or not.
 """
-MARKER = (None, '',)
+MARKER = (None, b'',)
 portal = context.getPortalObject()
 
 portal_type = context.getPortalType()

@@ -343,11 +343,11 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           except StopIteration:
             break
           except Exception as e:
-            result.append(repr(e))
+            result.append(str(type(e)))
         return result
         ''',
         kwargs={'generator': generator_with_not_allowed_objects()},
-        expected=["one", "Unauthorized()", 2],
+        expected=["one", str(Unauthorized), 2],
     )
 
   def test_json(self):
@@ -449,6 +449,8 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     )
 
   def test_StringIO(self):
+    if six.PY3:
+      return # Python 3's StringIO is cStringIO, thus we just test in test_cStringIO.
     self.createAndRunScript('''
         import StringIO
         s = StringIO.StringIO()
@@ -986,14 +988,22 @@ def test_suite():
     self.assertUnauth('subprocess', ())
   AccessControl.tests.testModuleSecurity.ModuleSecurityTests.test_unprotected_module = test_unprotected_module
   add_tests(suite, AccessControl.tests.testModuleSecurity)
-  import AccessControl.tests.testOwned
-  add_tests(suite, AccessControl.tests.testOwned)
+  if six.PY2:
+    import AccessControl.tests.testOwned  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.testOwned)
+  else:
+    import AccessControl.tests.test_owner  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.test_owner)
   import AccessControl.tests.testPermissionMapping
   add_tests(suite, AccessControl.tests.testPermissionMapping)
   import AccessControl.tests.testPermissionRole
   add_tests(suite, AccessControl.tests.testPermissionRole)
-  import AccessControl.tests.testRole
-  add_tests(suite, AccessControl.tests.testRole)
+  if six.PY2:
+    import AccessControl.tests.testRole  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.testRole)
+  else:
+    import AccessControl.tests.test_rolemanager  # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.test_rolemanager)
   import AccessControl.tests.testSecurityManager
   add_tests(suite, AccessControl.tests.testSecurityManager)
   import AccessControl.tests.testZCML

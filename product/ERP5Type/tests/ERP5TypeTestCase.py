@@ -33,6 +33,8 @@ from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
+if six.PY3:
+  StandardError = Exception
 
 from zope.component.hooks import setSite
 
@@ -44,7 +46,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
-from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
+from Products.ERP5Type.Utils import convertToUpperCase, bytes2str, str2bytes
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
@@ -168,7 +170,8 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
     promise_config.set('portal_certificate_authority', 'certificate_authority_path',
                                            os.environ['TEST_CA_PATH'])
 
-  promise_config.write(open(promise_path, 'w'))
+  with open(promise_path, 'w') as f:
+    promise_config.write(f)
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
@@ -962,7 +965,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       forced_portal_id = os.environ.get('erp5_tests_portal_id')
       if forced_portal_id:
         return str(forced_portal_id)
-      m = md5(repr(self.getBusinessTemplateList()) + self.getTitle())
+      m = md5(str2bytes(repr(self.getBusinessTemplateList()) + self.getTitle()))
       return portal_name + '_' + m.hexdigest()
 
     def getPortal(self):
@@ -1531,7 +1534,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
-      os.write(zeo_client, repr(host_port))
+      os.write(zeo_client, str2bytes(repr(host_port)))
       os.close(zeo_client)
     ZopeTestCase._print("\nZEO Storage started at %s:%s ... " % host_port)
 
