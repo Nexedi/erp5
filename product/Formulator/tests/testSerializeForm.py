@@ -36,8 +36,10 @@ class FakeRequest:
     def clear(self):
         self.dict.clear()
 
-    def __nonzero__(self):
-        return 0
+    def __bool__(self):
+        return False
+    if six.PY2:
+      __nonzero__ = __bool__
 
 class SerializeTestCase(unittest.TestCase):
     def test_simpleSerialize(self):

@@ -644,7 +644,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     _, (to,), message = self.portal.MailHost._last_message
     self.assertEqual(to, 'user@example.com')
-    self.assertIn('Password Recovery', message)
+    self.assertIn(b'Password Recovery', message)
 
   def test_HttpRequest(self):
     """
