@@ -894,14 +894,14 @@
 
     function readMonitoringParameter(parmeter_xml) {
       var parser = new DOMParser(),
-        xmlDoc = parser.parseFromString(parmeter_xml, "text/xml"),
+        xml_doc = parser.parseFromString(parmeter_xml, "text/xml"),
         parameter,
         uri_param,
         json_parameter,
         parameter_dict,
         monitor_dict = {};
 
-      json_parameter = xmlDoc.getElementById("_");
+      json_parameter = xml_doc.getElementById("_");
       if (json_parameter !== undefined && json_parameter !== null) {
         parameter_dict = JSON.parse(json_parameter.textContent);
         if (parameter_dict.hasOwnProperty("monitor-setup-url")) {
@@ -911,21 +911,21 @@
         }
         return getParameterFromconnectionDict(parameter_dict);
       }
-      parameter = xmlDoc.getElementById("monitor-setup-url");
+      parameter = xml_doc.getElementById("monitor-setup-url");
       if (parameter !== undefined && parameter !== null) {
         // monitor-setup-url exists
         uri_param = new URLSearchParams(parameter.textContent);
         return getParameterDictFromUrl(uri_param);
       }
-      parameter = xmlDoc.getElementById("monitor-url");
+      parameter = xml_doc.getElementById("monitor-url");
       if (parameter !== undefined && parameter !== null) {
         monitor_dict.url = parameter.textContent.trim();
-        parameter = xmlDoc.getElementById("monitor-user");
+        parameter = xml_doc.getElementById("monitor-user");
         if (parameter === undefined && parameter !== null) {
           return;
         }
         monitor_dict.username = parameter.textContent.trim();
-        parameter = xmlDoc.getElementById("monitor-password");
+        parameter = xml_doc.getElementById("monitor-password");
         if (parameter === undefined && parameter !== null) {
           return;
         }
