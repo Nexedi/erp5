@@ -148,24 +148,12 @@ class CrmTestCase(ERP5ReportTestCase):
       ev.delete()
     elif simulation_state == 'expired':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.receive()
-      ev.expire()
-      """
     elif simulation_state == 'responded':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.receive()
-      ev.respond()
-      """
     elif simulation_state == 'started':
       ev.start()
     elif simulation_state == 'ordered':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.plan()
-      ev.order()
-      """
     elif simulation_state == 'stopped':
       ev.stop()
     # sanity check
