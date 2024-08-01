@@ -162,6 +162,8 @@
   };
 
   ReplicatedOPMLStorage.prototype.remove = function (id) {
+    //the removal of an opml involves to remove the full opml tree asociated
+    //note: if the opml belongs to a slapos master, next sync will restore it
     var storage = this._local_sub_storage;
     return storage.get(id)
       .push(function (doc) {
@@ -1026,7 +1028,7 @@
     function cleanOpmlStorage(context) {
       //TODO use slapos_master_url in the query instead of iterate later
       return context._local_sub_storage.allDocs({
-        query: '(portal_type:"' + OPML_PORTAL_TYPE + '")',// AND (slapos_master_url:"https://%")',
+        query: '(portal_type:"' + OPML_PORTAL_TYPE + '")',
         select_list: ["title", "url", "basic_login", "slapos_master_url"]
       })
         .push(function (result) {
@@ -1068,6 +1070,7 @@
     }
 
     return new RSVP.Queue()
+      //repair sub storage layers (local and remote)
       .push(function () {
         return context._local_sub_storage.repair.apply(
           context._local_sub_storage,
@@ -1084,6 +1087,7 @@
       })
       .push(function () {
         //delete all opmls trees of no longer present slapos masters
+        //(in case master url list was updated)
         return cleanOpmlStorage(context);
       })
       .push(function () {
@@ -1111,7 +1115,7 @@
         throw "Failed to import remote configurations" + error_msg;
       })
       .push(function (opml_list) {
-        //store opmls
+        //store opmls in local sub storage
         var i, push_queue = new RSVP.Queue();
         function pushOPML(opml_dict) {
           push_queue
