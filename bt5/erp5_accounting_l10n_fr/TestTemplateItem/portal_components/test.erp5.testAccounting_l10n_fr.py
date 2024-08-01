@@ -118,7 +118,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertNotEqual((), last_message)
     _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
+    mail_message = email.message_from_string(message_text.decode())
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
