@@ -34,8 +34,10 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 import six
 
-class ConnectionError(Exception):
-  pass
+
+class WebServiceConnectionError(Exception):
+  """Error when connecting
+  """
 
 
 connection_plugin_registry = {}

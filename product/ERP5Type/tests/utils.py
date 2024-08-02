@@ -86,7 +86,6 @@ class FileUpload(FileIO):
     FileIO.__init__(self, path)
     self.headers = {}
 
-
 # dummy objects
 class DummyMailHostMixin(object):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
