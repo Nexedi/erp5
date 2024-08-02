@@ -528,6 +528,9 @@ class CopyContainer:
       if not set_owner:
         # try to make ownership implicit if possible
         new_ob.manage_changeOwnershipType(explicit=0)
+      if aq_parent(ob) != self:
+        # acquired security can be different if parents are different.
+        new_ob.updateLocalRolesOnSecurityGroups()
       method = new_ob.immediateReindexObject
       if reindex_kw is not None:
         method = partial(method, **reindex_kw)
