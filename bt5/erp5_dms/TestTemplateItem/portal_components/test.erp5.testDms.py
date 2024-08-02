@@ -1319,6 +1319,17 @@ class TestDocument(TestDocumentMixin):
     self.assertIn('I use reference to look up TEST',
                  document.SearchableText())
 
+  def test_PDFToHTML(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    for _ in ('empty_cache', 'cache'):
+      mime, html = document.convert(format='html')
+      self.assertEqual(mime, 'text/html')
+      self.assertIn('TEST', html)
+      self.tic()
+
   def test_PDFToPng(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
@@ -1689,6 +1700,30 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(builder.extract('Pictures/%s.png' % image_count),
                       converted_image, failure_message)
 
+  def test_HTML_to_PDF(self):
+    web_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      text_content='<p>héhé</p>'
+    )
+    # ERP5 convert API
+    _, pdf_data = web_page.convert('pdf')
+    pdf = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=pdf_data
+    )
+    self.assertEqual(pdf.asText().strip(), 'héhé')
+
+    # portal_transforms convert API
+    pdf_data = self.portal.portal_transforms.convertTo(
+      'application/pdf',
+      orig='<p>héhé</p>',
+      context=self.portal,
+      mimetype='test/html').getData()
+    pdf = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=pdf_data
+    )
+    self.assertEqual(pdf.asText().strip(), 'héhé')
 
   def test_addContributorToDocument(self):
     """
