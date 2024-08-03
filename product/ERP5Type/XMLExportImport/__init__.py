@@ -270,7 +270,6 @@ def reorderPickle(jar, p, pickle_protocol):
                         new_oid=storage.new_oid):
 
         "Remap a persistent id to an existing ID and create a ghost for it."
-
         if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
 

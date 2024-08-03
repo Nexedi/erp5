@@ -20,7 +20,7 @@ def getSkinHash(skin, skin_container):
   elif skin.meta_type in ('ERP5 Form', ):
     try:
       content = skin.formXML()
-      if not isinstance(content, six.text_type):
+      if isinstance(content, six.text_type):
         content = content.encode('utf8', 'repr')
     except AttributeError as e:
       # This can happen with dead proxy fields.
