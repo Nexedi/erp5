@@ -3,6 +3,7 @@ from BTrees.LOBTree import LOBTree
 from persistent import Persistent
 import itertools
 from six.moves import range
+import six
 
 # Maximum memory to allocate for sparse-induced padding.
 MAX_PADDING_CHUNK = 2 ** 20
@@ -11,11 +12,13 @@ class PersistentString(Persistent):
   def __init__(self, value):
     self.value = value
 
-  def __str__(self):
+  def __bytes__(self):
     return self.value
+  if six.PY2:
+    __str__ = __bytes__
 
   # Save place when storing this data in zodb
-  __getstate__ = __str__
+  __getstate__ = __bytes__
   __setstate__ = __init__
 
 negative_offset_error = ValueError('Negative offset')
@@ -110,7 +113,7 @@ class BTreeData(Persistent):
         chunk = tree[lower_key]
         chunk_end = lower_key + len(chunk.value)
         if chunk_end > offset or (
-              len(chunk.value) < self._chunk_size and
+              len(chunk.value) < (self._chunk_size or 0) and
               chunk_end == offset
             ):
           key = lower_key

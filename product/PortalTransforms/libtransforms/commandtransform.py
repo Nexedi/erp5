@@ -5,6 +5,7 @@ import tempfile
 import re
 import shutil
 from os.path import join, basename
+import six
 
 from zope.interface import implementer
 
@@ -41,7 +42,7 @@ class commandtransform:
     def subObjects(self, tmpdir):
         imgs = []
         for f in os.listdir(tmpdir):
-            result = re.match("^.+\.(?P<ext>.+)$", f)
+            result = re.match(r"^.+\.(?P<ext>.+)$", f)
             if result is not None:
                 ext = result.group('ext')
                 if ext in ('png', 'jpg', 'gif'):
@@ -100,7 +101,7 @@ class popentransform:
             cin, couterr = os.popen4(command, 'b')
 
             if self.useStdin:
-                cin.write(str(data))
+                cin.write(bytes(data))
 
             status = cin.close()
 
@@ -161,6 +162,8 @@ class subprocesstransform:
             argument_list = shlex.split(command)
             process = Popen(argument_list, stdin=stdin_file, stdout=PIPE,
                             stderr=PIPE, close_fds=True)
+            if six.PY3 and isinstance(data, str):
+              data = data.encode()
             data_out, data_err = process.communicate(input=data)
             if process.returncode:
               raise OSError(data_err) # XXX
@@ -168,5 +171,5 @@ class subprocesstransform:
             return cache
 
         finally:
-            if isinstance(stdin_file, file):
+            if hasattr(stdin_file, 'close'):
                 stdin_file.close()

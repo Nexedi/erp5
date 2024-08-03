@@ -465,7 +465,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     """
       Split a list and return tuple with the 2 half
     """
-    middle = len(l)/2 + len(l)%2
+    middle = int(len(l)//2 + len(l)%2)
     return ( l[:middle] , l[middle:] )
 
   def stepSetOrderLineHalfVCL(self,sequence=None, sequence_list=None, **kw):
@@ -2839,11 +2839,11 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Organisation', title='Client',
                               default_image_file=image)
     from OFS.Image import Pdata
-    self.assertTrue(isinstance(client.getDefaultImageValue().data, Pdata))
+    self.assertIsInstance(client.getDefaultImageValue().data, Pdata)
     vendor = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Vendor',
                               default_image_file=image)
-    self.assertTrue(isinstance(vendor.getDefaultImageValue().data, Pdata))
+    self.assertIsInstance(vendor.getDefaultImageValue().data, Pdata)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,

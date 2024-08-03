@@ -1695,7 +1695,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       rsps.add(
           responses.POST,
           self.post_commit_status_url,
-          {})
+          b'{}')
       self.test_result.start()
       self.tic()
 

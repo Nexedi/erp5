@@ -3340,7 +3340,7 @@ VALUES
   def test_reindexWithGroupId(self):
     CatalogTool = type(self.getCatalogTool().aq_base)
     counts = []
-    orig_catalogObjectList = CatalogTool.catalogObjectList.__func__
+    orig_catalogObjectList = CatalogTool.catalogObjectList
     def catalogObjectList(self, object_list, *args, **kw):
       counts.append(len(object_list))
       return orig_catalogObjectList(self, object_list, *args, **kw)
@@ -4077,7 +4077,8 @@ VALUES
     def doSomething(self, message_list):
       r = []
       for m in message_list:
-        m.result = r.append(m.object.getPath())
+        r.append(m.object.getPath())
+        m.result = None
       r.sort()
       group_method_call_list.append(r)
     self.portal.portal_activities.__class__.doSomething = doSomething

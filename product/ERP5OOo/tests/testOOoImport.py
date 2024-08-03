@@ -86,6 +86,7 @@ class TestOOoImportMixin(ERP5TypeTestCase):
         self.portal.portal_categories.gender,
         self.portal.portal_categories.region,
         ]:
+      parent.setLastId('0')
       parent.deleteContent(list(parent.objectIds()))
     self.tic()
 

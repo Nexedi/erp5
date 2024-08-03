@@ -30,7 +30,7 @@
 
 from __future__ import print_function
 from __future__ import absolute_import
-from six.moves import input, xrange
+from six.moves import range
 import threading
 from .AdvancedSearchTextDetector import AdvancedSearchTextDetector
 from .AdvancedSearchTextParser import AdvancedSearchTextParser
