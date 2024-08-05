@@ -838,12 +838,12 @@ class Workflow(XMLObject):
     if not self._checkTransitionGuard(tdef, ob):
       raise Unauthorized(method_id)
     self._changeStateOf(ob, tdef, kw)
-    if getattr(ob, 'reindexObject', None) is not None:
+    if getattr(ob, 'reindexObjectSecurity', None) is not None:
       if kw is not None:
         activate_kw = kw.get('activate_kw', {})
       else:
         activate_kw = {}
-      ob.reindexObject(activate_kw=activate_kw)
+      ob.reindexObjectSecurity(activate_kw=activate_kw)
 
   security.declarePrivate('notifyBefore')
   def notifyBefore(self, ob, transition_list, args=None, kw=None):
