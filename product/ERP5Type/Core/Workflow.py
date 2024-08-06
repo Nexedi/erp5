@@ -853,7 +853,18 @@ class Workflow(XMLObject):
     a notifySuccess() or notifyException() can be expected later on.
     The action usually corresponds to a method name.
     """
-    pass
+    if 'delete' in transition_list:
+      tool = self.getParentValue()
+      for ob_ in ob.objectValues():
+        for workflow in tool.getWorkflowValueListFor(ob_):
+          state = workflow.getWorkflowStateOf(ob_)
+          if state is not None and state.getReference() == 'deleted':
+            break
+        else:
+          if hasattr(aq_base(ob_), 'delete'):
+            ob_.delete()
+          else:
+            ob._delOb(ob_.getId())
 
   security.declarePrivate('notifySuccess')
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
