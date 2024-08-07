@@ -315,7 +315,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                       immediate_reindex=True,
     )
     path_list = [person.getRelativeUrl()]
-    self.checkRelativeUrlInSQLPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id='erp5_sql_read_committed_connection')
+    self.checkRelativeUrlNotInSQLPathList(path_list)
     self.tic()
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('2')
@@ -329,7 +330,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.deleteContent('3')
     # Now delete things is made with activities
-    self.checkRelativeUrlNotInSQLPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id='erp5_sql_read_committed_connection')
+    self.checkRelativeUrlInSQLPathList(path_list)
     self.tic()
     self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now delete document while its indexation is running
@@ -841,7 +843,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # We will delete the connector
     # in order to make sure it will not work any more
     portal = self.getPortal()
-    portal.manage_delObjects('erp5_sql_connection')
+    portal.manage_delObjects('erp5_sql_read_committed_connection')
     # Then it must be impossible to delete an object
     unindex = portal_catalog.unindexObject
     self.assertRaises(AttributeError,unindex,person,uid=person.getUid())

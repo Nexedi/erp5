@@ -126,6 +126,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     """Clear everything for next test."""
+    self.commit()
     for module in [ 'organisation_module',
                     'person_module',
                     'product_module',
