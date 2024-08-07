@@ -29,11 +29,12 @@
 
 import os
 import unittest
-from six.moves import cStringIO as StringIO
+from io import BytesIO
 from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 
@@ -124,7 +125,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     self.assertEqual(200, response.getStatus())
 
     ooo_builder = OOoBuilder(response.getBody())
-    styles_xml_body = ooo_builder.extract('styles.xml')
+    styles_xml_body = bytes2str(ooo_builder.extract('styles.xml'))
     self.assertTrue(len(styles_xml_body) > 0)
     # 'Style sheet ja' text is in the odt document header,
     # and the header is in the 'styles.xml'.
@@ -137,7 +138,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     response = self.publish('/' + self.getPortal().Dynamic_viewAsOdt.absolute_url(1))
     self._validate(response.getBody())
     ooo_builder = OOoBuilder(response.getBody())
-    styles_xml_body = ooo_builder.extract('styles.xml')
+    styles_xml_body = bytes2str(ooo_builder.extract('styles.xml'))
     self.assertTrue(styles_xml_body.find('Style sheet en') > 0)
 
     # 3. test a fail case, reset a not existed stylesheet
@@ -177,7 +178,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
                      response.getHeader('content-disposition'))
     self._validate(response.getBody())
     ooo_builder = OOoBuilder(response.getBody())
-    styles_xml_body = ooo_builder.extract('styles.xml')
+    styles_xml_body = bytes2str(ooo_builder.extract('styles.xml'))
     self.assertTrue(len(styles_xml_body) > 0)
     self.assertTrue(styles_xml_body.find('Style sheet ja') > 0)
 
@@ -189,7 +190,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     self.assertEqual(200, response.getStatus())
     self._validate(response.getBody())
     ooo_builder = OOoBuilder(response.getBody())
-    styles_xml_body = ooo_builder.extract('styles.xml')
+    styles_xml_body = bytes2str(ooo_builder.extract('styles.xml'))
     self.assertTrue(len(styles_xml_body) > 0)
     self.assertTrue(styles_xml_body.find('Style sheet en') > 0)
 
@@ -235,14 +236,14 @@ return getattr(context, "%s_%s" % (parameter, current_language))
                      response.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="Base_viewIncludeImageAsOdt.odt"',
                      response.getHeader('content-disposition'))
-    cs = StringIO()
+    cs = BytesIO()
     cs.write(body)
     zip_document = ZipFile(cs)
     picture_list = filter(lambda x: "Pictures" in x.filename,
         zip_document.infolist())
     self.assertNotEqual([], picture_list)
-    manifest = zip_document.read('META-INF/manifest.xml')
-    content = zip_document.read('content.xml')
+    manifest = bytes2str(zip_document.read('META-INF/manifest.xml'))
+    content = bytes2str(zip_document.read('content.xml'))
     for picture in picture_list:
       self.assertIn(picture.filename, manifest)
       self.assertIn(picture.filename, content)

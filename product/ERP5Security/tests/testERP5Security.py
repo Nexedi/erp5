@@ -34,6 +34,7 @@ import mock
 import itertools
 import transaction
 import unittest
+import six
 from six.moves.urllib.parse import urlparse, parse_qs
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -58,8 +59,10 @@ class UserManagementTestCase(ERP5TypeTestCase):
   """TestCase for user manement, with utilities to create users and helpers
   assertion methods.
   """
-  _login_generator = itertools.count().next
-
+  if six.PY2:
+    _login_generator = itertools.count().next
+  else:
+    _login_generator = itertools.count().__next__
 
   def getBusinessTemplateList(self):
     """List of BT to install. """

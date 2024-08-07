@@ -60,8 +60,8 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
 
     # Define POST headers with Authentication
     self.content_type =  'application/json'
-    authentication_string = 'lucas:lucas'
-    base64string = base64.encodestring(authentication_string).strip()
+    authentication_string = b'lucas:lucas'
+    base64string = base64.b64encode(authentication_string).decode().strip()
     self.header_dict = {'Authorization': 'Basic %s' % base64string,
                         'Content-Type': self.content_type}
 
@@ -83,7 +83,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual('', data)
+    self.assertEqual(b'', data)
     self.assertEqual(201, result.status)
 
     # Check Data Set
@@ -121,7 +121,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(json.dumps([json.loads(self.data)]), data)
+    self.assertEqual(json.dumps([json.loads(self.data)]), data.decode())
     self.assertEqual(200, result.status)
     self.assertEqual(self.content_type, result.getheader("content-type"))
 
