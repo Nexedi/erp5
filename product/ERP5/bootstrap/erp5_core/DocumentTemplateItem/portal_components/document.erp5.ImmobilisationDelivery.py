@@ -119,7 +119,7 @@ class ImmobilisationDelivery(XMLObject):
     sub_movement_list = self.contentValues()
     for movement in self.getImmobilisationMovementList(**kw):
       for item in movement.getAggregateValueList():
-        if IImmobilisationItem.providedBy(item):
+        if IImmobilisationItem.providedBy(item):  # pylint:disable=no-value-for-parameter
           future_movement_list = item.getFutureImmobilisationMovementValueList(
                                        at_date = self.getStopDate(),
                                        from_movement = self,

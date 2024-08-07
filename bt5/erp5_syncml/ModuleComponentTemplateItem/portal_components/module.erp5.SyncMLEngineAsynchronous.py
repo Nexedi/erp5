@@ -145,7 +145,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
     """
     Process the package 4 of the SyncML DS exchange
     """
-    if False:
+    if False:  # pylint:disable=using-constant-test
       pass
       # not subscriber.checkCorrectRemoteMessageId(
       #   syncml_request.header['message_id']):

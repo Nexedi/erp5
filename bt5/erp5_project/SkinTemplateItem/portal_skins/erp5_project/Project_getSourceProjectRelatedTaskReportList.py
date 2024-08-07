@@ -40,12 +40,6 @@ for task in task_list:
   task_line_list.extend(task.objectValues(portal_type=('Task Line', 'Task Report Line')))
 
 
-def sortTaskLine(a, b):
-  result = cmp(a.getStartDate(), b.getStartDate())
-  if result == 0:
-    result = cmp(a.getTitle(), b.getTitle())
-  return result
-
-task_line_list.sort(sortTaskLine)
-
-return task_line_list
+return sorted(
+  task_line_list,
+  key=lambda tl: (tl.getStartDate() is not None, tl.getStartDate(), tl.getTitle()))

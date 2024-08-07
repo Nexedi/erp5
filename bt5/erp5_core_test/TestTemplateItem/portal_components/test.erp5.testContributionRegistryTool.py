@@ -150,7 +150,7 @@ return predicate.getDestinationPortalType()
                      'Mail Message')
 
     # Test test script
-    data = """\
+    data = b"""\
 Subject: Fax
 """
     self.assertEqual(tool.findPortalTypeName(filename='message.eml',

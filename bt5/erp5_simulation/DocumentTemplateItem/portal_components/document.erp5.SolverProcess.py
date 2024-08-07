@@ -36,6 +36,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from erp5.component.interface.IMovement import IMovement
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
+import six
 
 @zope.interface.implementer(ISolver,
                             IConfigurable,)
@@ -100,8 +101,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       if solver is None:
         continue
       solver_conviguration_dict = decision.getConfigurationPropertyDict()
-      configuration_mapping = solver_conviguration_dict.items()
-      configuration_mapping.sort() # Make sure the list is sorted in canonical way
+      configuration_mapping = sorted(solver_conviguration_dict.items()) # Make sure the list is sorted in canonical way
       configuration_mapping = tuple(configuration_mapping)
       for movement in decision.getDeliveryValueList():
         # Detect incompatibilities
@@ -164,8 +164,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     for solver, solver_key_dict in grouped_solver_dict.items():
       for solver_key, solver_movement_dict in solver_key_dict.items():
         solver_instance = self.newContent(portal_type=solver.getId())
-        solver_instance._setDeliveryValueList(solver_movement_dict.keys())
-        for movement, configuration_list in solver_movement_dict.iteritems():
+        solver_instance._setDeliveryValueList(list(solver_movement_dict))
+        for movement, configuration_list in six.iteritems(solver_movement_dict):
           for configuration_mapping in configuration_list:
             if len(configuration_mapping):
               solver_instance.updateConfiguration(**dict(configuration_mapping))
@@ -230,7 +230,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     movement_list = []
     isMovement = IMovement.providedBy
     for x in delivery_or_movement:
-      if isMovement(x):
+      if isMovement(x):  # pylint:disable=no-value-for-parameter
         movement_list.append(x)
       else:
         movement_list.extend(x.getMovementList())

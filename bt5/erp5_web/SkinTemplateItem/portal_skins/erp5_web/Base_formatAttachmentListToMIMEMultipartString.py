@@ -36,7 +36,7 @@ To send specific encoded data, please make your attachment dict look like:
   "mime_type": "text/html",
   "encode": "noop",
   "add_header_list": [("Content-Transfer-Encoding", "my-encoding")],
-  "data": encodestring(html_data),
+  "data": encodebytes(html_data),
 }
 """
 
@@ -80,7 +80,7 @@ def encode_quopri(msg):
   when necessary.
   """
   orig = msg.get_payload()
-  encdata = quopri.encodestring(orig).replace("=\n", "=\r\n")
+  encdata = quopri.encodestring(orig.encode()).replace(b"=\n", b"=\r\n")
   msg.set_payload(encdata)
   msg.add_header("Content-Transfer-Encoding", "quoted-printable")
 
@@ -148,7 +148,9 @@ for attachment in attachment_list:
   for key, value in attachment.get("add_header_list", []):
     part.add_header(key, value)
   if attachment.get("filename", None) is not None:
-    part.add_header("Content-Disposition", "attachment", attachment["filename"])
+    # XXX disable too-many-function-args because there is no error with this code,
+    # but it might just be not tested.
+    part.add_header("Content-Disposition", "attachment", attachment["filename"])  # pylint:disable=too-many-function-args
   outer.attach(part)
 
 #return outer.as_string()

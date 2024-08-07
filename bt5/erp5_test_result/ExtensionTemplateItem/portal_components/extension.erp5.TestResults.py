@@ -1,3 +1,4 @@
+import six
 import difflib
 import zipfile
 import os
@@ -301,7 +302,7 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
                     " %s lines" % max_line_count)
       traceback_attachment[max_line_count:] = '', '', '(truncated) ...'
     content = '\n'.join(traceback_attachment)
-    if isinstance(content, unicode):
+    if isinstance(content, six.text_type):
       content = content.encode('utf8')
     attachment_list.append(dict(name='traceback.txt',
                                 mime_type='text/plain',

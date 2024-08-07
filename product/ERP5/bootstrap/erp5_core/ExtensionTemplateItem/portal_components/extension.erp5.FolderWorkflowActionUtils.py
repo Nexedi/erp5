@@ -29,7 +29,6 @@
 
 import six
 
-from past.builtins import cmp
 from hashlib import md5
 
 # Some workflow does not make sense in the context of mass transition and are
@@ -37,7 +36,7 @@ from hashlib import md5
 skipped_workflow_id_list = ['delivery_causality_workflow',]
 
 def generateUid(portal_type, workflow_id, workflow_state):
-  return 'new_' + md5('%s/%s/%s' % (portal_type, workflow_id, workflow_state)).hexdigest()
+  return 'new_' + md5(('%s/%s/%s' % (portal_type, workflow_id, workflow_state)).encode()).hexdigest()
 
 def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same
@@ -148,14 +147,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
                 workflow_state=current_workflow_state,
                 ))
 
-  # Let us sort this list by translated title of workflow state and workflow
-  def compareState(a, b):
-    return cmp((a.workflow_title, a.translated_workflow_state_title),
-               (b.workflow_title, b.translated_workflow_state_title))
-  document_list.sort(compareState)
-
-  # Return result
-  return document_list
+  return sorted(document_list, key=lambda b: (b.workflow_title, b.translated_workflow_state_title))
 
 
 

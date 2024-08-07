@@ -42,6 +42,8 @@ from erp5.component.module.WorkingCopy import \
   NotAWorkingCopyError, NotVersionedError, VcsConflictError
 from erp5.component.module.SubversionClient import newSubversionClient
 from six import string_types as basestring
+from six.moves import range
+import six
 
 # XXX This does not work with concurrent processes/threads accessing the
 # same working copy...
@@ -390,7 +392,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     prefix_length = len(os.path.join('.', ''))
     for dirpath, dirnames, filenames in os.walk('.'):
       dirpath = dirpath[prefix_length:]
-      for i in xrange(len(dirnames) - 1, -1, -1):
+      for i in range(len(dirnames) - 1, -1, -1):
         d = dirnames[i]
         if d[0] == '.':
           # Ignore hidden directories (in particular '.svn')
@@ -414,7 +416,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
         shutil.rmtree(x)
 
     # Remove deleted files/dirs
-    self.client.remove([k for k, v in self.versioned_dict.iteritems()
+    self.client.remove([k for k, v in six.iteritems(self.versioned_dict)
         if v is not None and self.versioned_dict[os.path.dirname(k)] is None])
     # Add new files/dirs
     self.client.add([x for x in self.added_set

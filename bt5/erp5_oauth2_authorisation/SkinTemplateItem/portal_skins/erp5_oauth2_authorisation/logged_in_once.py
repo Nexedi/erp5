@@ -3,7 +3,7 @@
 Similar to logged_in, but user authentication will only last for current request if nothing else is done.
 So came_from must be honoured within the current request, and not redirected to.
 """
-import urlparse
+from six.moves.urllib.parse import parse_qsl, urlsplit
 from erp5.component.document.OAuth2AuthorisationServerConnector import substituteRequest
 portal = context.getPortalObject()
 if portal.portal_skins.updateSkinCookie():
@@ -28,7 +28,7 @@ if not came_from or not context.ERP5Site_isOAuth2CameFrom(came_from):
   # came_from is broken, there is no way to call authorize, so escape to wherever.
   context.Base_redirect()
   return
-parsed_came_from = urlparse.urlsplit(came_from)
+parsed_came_from = urlsplit(came_from)
 # Turn the ZODB path from came_from into a relative URL and base it on context (and not portal) to
 # work as expected from within Web Sites without Virtual Host Monster relocating them above portal.
 connector_value = context.restrictedTraverse(parsed_came_from.path.lstrip('/'))
@@ -40,7 +40,7 @@ if (
   return
 # Note: query string generation should not have produce any duplicate
 # entries, so directly use to update form dict for code simplicity.
-form = dict(urlparse.parse_qsl(parsed_came_from.query))
+form = dict(parse_qsl(parsed_came_from.query))
 login_retry_url = REQUEST.form.get('login_retry_url')
 if login_retry_url is not None:
   form['login_retry_url'] = login_retry_url

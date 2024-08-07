@@ -49,7 +49,7 @@ for r_ticket in ticket_list:
     for r_event_causality in event_causality_list:
       event_causality = r_event_causality.getObject()
       #check that one event it isn't related by causality and follow-up with the same ticket
-      if ticket.getUid() <> event_causality.getFollowUpUid():
+      if ticket.getUid() != event_causality.getFollowUpUid():
         line_list.append(Object(uid='new_',
                                 ticket='',
                                 type=event_causality.getTranslatedPortalType(),

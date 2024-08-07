@@ -28,6 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
+import six
 
 class TestRealTimeInventoryAccountingMixin:
   def assertIterableLen(self, iterable, expected_len):
@@ -163,7 +164,7 @@ class TestRealTimeInventoryAccountingMixin:
                      delivery_property_dict=None,
                      movement_property_dict_tuple=()):
     if delivery_property_dict is not None:
-      for property_id, property_value in delivery_property_dict.iteritems():
+      for property_id, property_value in six.iteritems(delivery_property_dict):
         self.assertEqual(delivery.getProperty(property_id), property_value)
 
     if not movement_property_dict_tuple:

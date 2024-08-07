@@ -4,7 +4,8 @@ import json
 from time import sleep
 from DateTime import DateTime
 import responses
-import httplib
+import six.moves.http_client
+from six.moves import range
 
 
 class TaskDistributionTestCase(ERP5TypeTestCase):
@@ -146,6 +147,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
     """start_count: number of test line to start
        stop_count: number of test line to stop
     """
+    # pylint:disable=possibly-used-before-assignment
     status_dict = {}
     test_result_path, revision = self._createTestResult(revision=revision,
       test_list=['testFoo', 'testBar'], test_title=test_title, node_title=node_title)
@@ -167,6 +169,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
       self.assertEqual(test_result.getSimulationState(), "stopped")
     else:
       self.assertEqual(test_result.getSimulationState(), "started")
+    # pylint:enable=possibly-used-before-assignment
 
   def _cleanupTestResult(self):
     self.tic()
@@ -1348,7 +1351,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       zope_partition_dict += "{% endif %}\n"
     cluster_configuration += zope_partition_dict + '\n}}'
     # -Generate graph coordinate
-    graph_coordinate = range(1, len(node_list)+1)
+    graph_coordinate = list(range(1, len(node_list)+1))
     # -Create the test suite
     self._createTestSuite(quantity=1,priority=1, reference_correction=0,
                        specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite",
@@ -1675,7 +1678,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           self.id(),
           body['name'])
-      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, b'{}')
     return _callback
 
   def test_start_test(self):
@@ -1692,7 +1695,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       rsps.add(
           responses.POST,
           self.post_commit_status_url,
-          {})
+          b'{}')
       self.test_result.start()
       self.tic()
 
@@ -1830,7 +1833,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           'https://erp5js.example.com/#%s' % self.test_result.getRelativeUrl(),
           body['target_url'])
-      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, b'{}')
 
     with responses.RequestsMock() as rsps:
       rsps.add_callback(
@@ -1912,7 +1915,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
           responses.POST,
           self.post_commit_status_url,
           json={"message": 'Cannot transition status via :run from :running (Reason(s): Status cannot transition via "run")'},
-          status=httplib.BAD_REQUEST,
+          status=six.moves.http_client.BAD_REQUEST,
       )
       self.test_result.start()
       self.tic()

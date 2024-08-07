@@ -28,6 +28,7 @@
 ##############################################################################
 
 import re
+import six
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -47,7 +48,11 @@ except ImportError:
     not installed yet.
     """
 
-from email import message_from_string
+if six.PY3:
+  from email import message_from_bytes
+else:
+  from email import message_from_string as message_from_bytes
+
 from email.utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
@@ -170,7 +175,9 @@ class EmailDocument(TextDocument, MailMessageMixin):
           content_type=self.getContentType(),
           embedded_file_list=self.getAggregateValueList(portal_type=document_type_list),
         )
-      result = message_from_string(data)
+        if six.PY3:
+          data = data.encode()
+      result = message_from_bytes(data)
       self._v_message = result
     return result
 
@@ -300,7 +307,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
       to extract content information from this mail
       message.
     """
-    pass
 
   security.declareProtected(Permissions.View, 'index_html')
   index_html = TextDocument.index_html

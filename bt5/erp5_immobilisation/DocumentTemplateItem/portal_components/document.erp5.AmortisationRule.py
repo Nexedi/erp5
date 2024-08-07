@@ -659,8 +659,8 @@ class AmortisationRule(RuleMixin):
       # according to these ratio : the highest ratio gets the priority, then the next
       # highest is taken into account if corresponding resources are free, and so on
       matching_ratio_list.sort(key=lambda x: x['ratio'], reverse=True)
-      calculated_to_match = calculated_period_dict.keys()
-      aggregated_to_match = aggregated_period_dict.keys()
+      calculated_to_match = list(calculated_period_dict)
+      aggregated_to_match = list(aggregated_period_dict)
       match_dict = {}
       for matching_ratio in matching_ratio_list:
         calculated  = matching_ratio['calculated_period']

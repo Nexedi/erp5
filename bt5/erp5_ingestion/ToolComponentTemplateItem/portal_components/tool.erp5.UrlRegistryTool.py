@@ -34,6 +34,8 @@ from Products.ERP5Type import Permissions
 from Acquisition import Implicit
 from BTrees.OOBTree import OOBTree
 from warnings import warn
+from six.moves import range
+import six
 
 ACTIVITY_GROUPING_COUNT = 200
 
@@ -150,7 +152,7 @@ class UrlRegistryTool(BaseTool):
       warn('context argument ignored', DeprecationWarning)
     mapping = self._getMappingDict()
     url_list = []
-    for url, stored_reference in mapping.iteritems():
+    for url, stored_reference in six.iteritems(mapping):
       if reference == stored_reference:
         url_list.append(url)
     return url_list
@@ -172,7 +174,7 @@ class UrlRegistryTool(BaseTool):
       object_list_len = len(object_list)
       portal_activities = portal.portal_activities
       object_path_list = [x.path for x in object_list]
-      for i in xrange(0, object_list_len, ACTIVITY_GROUPING_COUNT):
+      for i in range(0, object_list_len, ACTIVITY_GROUPING_COUNT):
         current_path_list = object_path_list[i:i+ACTIVITY_GROUPING_COUNT]
         portal_activities.activate(activity='SQLQueue', priority=3)\
                                     .callMethodOnObjectList(current_path_list,

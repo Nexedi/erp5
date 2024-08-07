@@ -153,7 +153,7 @@ class File(Document, OFS_File):
   security.declarePrivate('update_data')
   def update_data(self, *args, **kw):
     super(File, self).update_data(*args, **kw)
-    if six.PY2 and isinstance(self.size, long):
+    if six.PY2 and isinstance(self.size, long):  # pylint:disable=access-member-before-definition,undefined-variable
       self.size = int(self.size)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
@@ -198,9 +198,9 @@ class File(Document, OFS_File):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
   def getMimeTypeAndContent(self):
+    # type: () -> tuple[str, bytes]
     """This method returns a tuple which contains mimetype and content."""
     from erp5.component.document.EmailDocument import MimeTypeException
-    # return a tuple (mime_type, data)
     content = None
     mime_type = self.getContentType()
 
@@ -222,6 +222,8 @@ class File(Document, OFS_File):
       elif getattr(self, 'getBaseData', None) is not None:
         content = self.getBaseData()
 
+    if isinstance(content, six.text_type):
+      content = content.encode('utf-8')
     if content and not isinstance(content, bytes):
       content = bytes(content)
 

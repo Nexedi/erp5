@@ -90,17 +90,17 @@ class TestERP5WechatSecurePayment(TestERP5WechatSecurePaymentMixin):
   def test_calculateSign_dict_simple(self):
     self.assertEqual(
       self.service.calculateSign({'key': 'value'}, 'mysecretkey'),
-      hashlib.md5("key=value&key=mysecretkey").hexdigest().upper()
+      hashlib.md5(b"key=value&key=mysecretkey").hexdigest().upper()
     )
 
   def test_calculateSign_dict_key_sort(self):
     self.assertEqual(
       self.service.calculateSign({'key0': 'value0', 'key1': 'value1'}, 'mysecretkey'),
-      hashlib.md5("key0=value0&key1=value1&key=mysecretkey").hexdigest().upper()
+      hashlib.md5(b"key0=value0&key1=value1&key=mysecretkey").hexdigest().upper()
     )
     self.assertEqual(
       self.service.calculateSign({'key1': 'value1', 'key0': 'value0'}, 'mysecretkey'),
-      hashlib.md5("key0=value0&key1=value1&key=mysecretkey").hexdigest().upper()
+      hashlib.md5(b"key0=value0&key1=value1&key=mysecretkey").hexdigest().upper()
     )
 
   def test_navigate(self):

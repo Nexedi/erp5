@@ -69,26 +69,26 @@ class ContributionPredicate(Predicate, XMLObject):
 
       This method returns portal type name if test success, else returns False.
     """
-    self = self.asPredicate()
+    self_as_predicate = self.asPredicate()
     result = 1
-    if getattr(aq_base(self), '_identity_criterion', None) is None:
-      self._identity_criterion = {}
-      self._range_criterion = {}
-    for property_, value in six.iteritems(self._identity_criterion):
+    if getattr(aq_base(self_as_predicate), '_identity_criterion', None) is None:
+      self_as_predicate._identity_criterion = {}
+      self_as_predicate._range_criterion = {}
+    for property_, value in six.iteritems(self_as_predicate._identity_criterion):
       result = result and (context.getProperty(property_) in value)
-    for property_, (min_, max_) in six.iteritems(self._range_criterion):
+    for property_, (min_, max_) in six.iteritems(self_as_predicate._range_criterion):
       value = context.getProperty(property_)
       if min_ is not None:
         result = result and (value >= min_)
       if max_ is not None:
         result = result and (value < max_)
     multimembership_criterion_base_category_list = \
-        self.getMultimembershipCriterionBaseCategoryList()
+        self_as_predicate.getMultimembershipCriterionBaseCategoryList()
     membership_criterion_base_category_list = \
-        self.getMembershipCriterionBaseCategoryList()
+        self_as_predicate.getMembershipCriterionBaseCategoryList()
     tested_base_category = {}
     membership_criterion_category_list = \
-                            self.getMembershipCriterionCategoryList()
+                            self_as_predicate.getMembershipCriterionCategoryList()
     if tested_base_category_list is not None:
       membership_criterion_category_list = [x for x in \
           membership_criterion_category_list if x.split('/', 1)[0] in \
@@ -115,14 +115,14 @@ class ContributionPredicate(Predicate, XMLObject):
 
     result = result and (0 not in tested_base_category.values())
     # Test method calls
-    test_method_id_list = self.getTestMethodIdList()
+    test_method_id_list = self_as_predicate.getTestMethodIdList()
     if test_method_id_list:
       for test_method_id in test_method_id_list:
         if (test_method_id is not None) and result:
           method = getattr(context, test_method_id)
-          result = result and method(self)
+          result = result and method(self_as_predicate)
     else:
-      result = result and self.getDestinationPortalType()
+      result = result and self_as_predicate.getDestinationPortalType()
     return result
 
   def asQuery(self, *args, **kw):

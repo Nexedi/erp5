@@ -13,6 +13,7 @@
 #
 ##############################################################################
 
+import six
 from Products.ERP5Type.Workflow import WorkflowHistoryList as NewWorkflowHistoryList
 
 class WorkflowHistoryList(NewWorkflowHistoryList):
@@ -22,12 +23,15 @@ class WorkflowHistoryList(NewWorkflowHistoryList):
   def __getstate__(self):
     return self._prev, self._log
 
-  def __nonzero__(self):
+  def __bool__(self):
     # not faster than __len__ but avoids migration
     if self._log:
       return True
     assert self._prev is None
     return False
+
+  if six.PY2:
+    __nonzero__ = __bool__
 
   @property
   def _rotate(self):

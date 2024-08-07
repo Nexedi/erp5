@@ -1391,10 +1391,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     with self.assertRaises(TypeError):
       person.setSocialTitle(social_title_value)
 
-    # Passing a unicode object to a not-Value setter should raise
     with self.assertRaises(TypeError):
       organisation = self.portal.organisation_module.newContent()
-      person.setSubordination(unicode(organisation.getRelativeUrl()))
+      if six.PY2:
+        # Passing a unicode object to a not-Value setter should raise
+        person.setSubordination(six.text_type(organisation.getRelativeUrl()))
+      else:
+        # Passing a bytes object to a not-Value setter should raise
+        person.setSubordination(organisation.getRelativeUrl().encode())
 
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool
@@ -2728,7 +2732,7 @@ foobar = foobar().f
     base = self.portal.getPath()
     for query in 'x:int=-24&y:int=66', 'x:int=41':
       path = '%s/TestExternalMethod?%s' % (base, query)
-      self.assertEqual(self.publish(path).getBody(), '42')
+      self.assertEqual(self.publish(path).getBody(), b'42')
 
     # Test from a Python Script
     createZODBPythonScript(self.portal.portal_skins.custom,
@@ -2773,7 +2777,7 @@ def foobar(self, a, b="portal_type"):
     cfg.extensions = tempfile.mkdtemp()
     try:
       with open(os.path.join(cfg.extensions, module + '.py'), "w") as f:
-        f.write("foobar = lambda **kw: sorted(kw.iteritems())")
+        f.write("foobar = lambda **kw: sorted(kw.items())")
       self.assertEqual(external_method(z=1, a=0), [('a', 0), ('z', 1)])
     finally:
       shutil.rmtree(cfg.extensions)
@@ -2864,8 +2868,8 @@ class TestWithImport(TestImported):
 from ITestGC import ITestGC
 import zope.interface
 
+@zope.interface.implementer(ITestGC)
 class TestGC(XMLObject):
-  zope.interface.implements(ITestGC)
   def foo(self):
       pass
 """)
@@ -2896,12 +2900,15 @@ class TestGC(XMLObject):
       self.assertEqual(gc.garbage, [])
 
       import erp5.component
-      gc.set_debug(
-        gc.DEBUG_STATS |
-        gc.DEBUG_UNCOLLECTABLE |
-        gc.DEBUG_COLLECTABLE |
-        gc.DEBUG_OBJECTS |
-        gc.DEBUG_INSTANCES)
+      debug_flags = (
+        gc.DEBUG_STATS
+        | gc.DEBUG_UNCOLLECTABLE
+        | gc.DEBUG_COLLECTABLE )
+      if six.PY2:
+        debug_flags |= (
+          gc.DEBUG_OBJECTS
+          | gc.DEBUG_INSTANCES)
+      gc.set_debug(debug_flags)
       sys.stderr = stderr
       # Still not garbage collectable as RefManager still keeps a reference
       erp5.component.ref_manager.clear()
@@ -2984,11 +2991,11 @@ from erp5.component.document.Person import Person
 from ITestPortalType import ITestPortalType
 import zope.interface
 
+@zope.interface.implementer(ITestPortalType)
 class TestPortalType(Person):
   def test42(self):
     return 42
 
-  zope.interface.implements(ITestPortalType)
   def foo(self):
     pass
 """)
@@ -3180,7 +3187,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
-    self.assertNotIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertNotIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
     component.validate()
     self.tic()
@@ -3192,7 +3199,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       '%s:%s' % (self.manager_username, self.manager_password))
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
@@ -3219,13 +3226,11 @@ class Test(ERP5TypeTestCase):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def _restoreMailHost(self):
     """
     Dummy mail host has already been set up when running tests
     """
-    pass
 
   def test_01_sampleTest(self):
     self.assertEqual(0, 0)
@@ -3321,7 +3326,7 @@ class Test(ERP5TypeTestCase):
                                reset_portal_type_at_transaction_boundary=True)
 
     output = runLiveTest('testRunLiveTest')
-    expected_msg_re = re.compile('Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
+    expected_msg_re = re.compile(r'Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
     # Now try addCleanup
@@ -3411,9 +3416,11 @@ ImportError: No module named non.existing.module
 ''' % dict(module_file=module_file), output)
 
     output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
-    self.assertIn(
-      "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist",
-      output)
+    if six.PY2:
+      expected_output = "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist"
+    else:
+      expected_output = "ModuleNotFoundError: No module named 'testDoesNotExist_import_error_because_module_does_not_exist'"
+    self.assertIn(expected_output, output)
 
   def testERP5Broken(self):
     # Create a broken ghost object
@@ -3421,9 +3428,9 @@ ImportError: No module named non.existing.module
     name = self._testMethodName
     types_tool = self.portal.portal_types
     ptype = types_tool.newContent(name, type_class="File", portal_type='Base Type')
-    file = ptype.constructInstance(self.portal, name, data="foo")
+    file = ptype.constructInstance(self.portal, name, data=b"foo")
     file_uid = file.getUid()
-    self.assertEqual(file.size, len("foo"))
+    self.assertEqual(file.size, len(b"foo"))
     self.commit()
     try:
       self.portal._p_jar.cacheMinimize()
@@ -3439,7 +3446,7 @@ ImportError: No module named non.existing.module
       # Check that the class is unghosted before resolving __setattr__
       self.assertRaises(BrokenModified, setattr, file, "size", 0)
       self.assertIsInstance(file, ERP5BaseBroken)
-      self.assertEqual(file.size, len("foo"))
+      self.assertEqual(file.size, len(b"foo"))
 
       # Now if we repair the portal type definition, instances will
       # no longer be broken and be modifiable again.
@@ -3449,9 +3456,9 @@ ImportError: No module named non.existing.module
       file = self.portal[name]
       self.assertNotIsInstance(file, ERP5BaseBroken)
       self.assertEqual(file.getUid(), file_uid)
-      self.assertEqual(file.getData(), "foo")
-      file.setData("something else")
-      self.assertEqual(file.getData(), "something else")
+      self.assertEqual(file.getData(), b"foo")
+      file.setData(b"something else")
+      self.assertEqual(file.getData(), b"something else")
       self.assertNotIn("__Broken_state__", file.__dict__)
     finally:
       self.portal._delObject(name)
@@ -3651,6 +3658,8 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
     component.setTextContent(value)
     self.tic()
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getValidationState(), 'validated')
 
   def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
     component = self.portal.portal_components['document.erp5.BusinessProcess']

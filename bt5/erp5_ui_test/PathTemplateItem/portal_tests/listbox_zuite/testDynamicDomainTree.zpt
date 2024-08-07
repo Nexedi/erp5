@@ -36,7 +36,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked;field_domain_root_list=foo_domain%7CFoo%20Domain</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked&amp;field_domain_root_list=foo_domain%7CFoo%20Domain</td>
   <td></td>
 </tr>
 <tr>

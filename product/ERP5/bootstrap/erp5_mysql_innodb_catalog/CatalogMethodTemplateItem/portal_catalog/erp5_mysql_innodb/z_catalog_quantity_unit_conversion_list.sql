@@ -13,7 +13,7 @@
 
 <dtml-if quantity_unit_conversion_dict>
 DELETE FROM `quantity_unit_conversion` WHERE
-  <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple>
+  <dtml-sqltest expr="set(quantity_unit_conversion_dict.keys())" column="resource_uid" type="int" multiple>
 
   <dtml-var sql_delimiter>
 

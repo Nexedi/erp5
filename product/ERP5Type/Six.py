@@ -48,5 +48,6 @@ from AccessControl.ZopeGuards import SafeIter
 iterkeys = lambda d: SafeIter(_six.iterkeys(d), d)
 itervalues = lambda d: SafeIter(_six.itervalues(d), d)
 
-from AccessControl.ZopeGuards import safe_builtins as _safe_builtins
-_safe_builtins['xrange'] = _six.moves.xrange
+if PY2:
+  from AccessControl.ZopeGuards import safe_builtins as _safe_builtins
+  _safe_builtins['xrange'] = _six.moves.xrange

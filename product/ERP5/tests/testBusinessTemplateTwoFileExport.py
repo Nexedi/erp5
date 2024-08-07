@@ -28,6 +28,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCase, immediateCompilation
+from Products.ERP5Type.Utils import ensure_list
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from runUnitTest import tests_home
 import base64
@@ -121,7 +122,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
         pass
       file_document_path = document_path + extension
       self.assertEqual([os.path.basename(file_document_path)],
-                       map(os.path.basename, exported))
+                       ensure_list(map(os.path.basename, exported)))
       with open(file_document_path, 'rb') as test_file:
         self.assertEqual(test_file.read(), data)
     else:
@@ -129,7 +130,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     with open(xml_document_path, 'rb') as xml_file:
       xml_file_content = xml_file.read()
     for exported_property in removed_property_list:
-      self.assertNotIn('<string>'+exported_property+'</string>',
+      self.assertNotIn(('<string>%s</string>' % exported_property).encode(),
                        xml_file_content)
 
     import_template = self._importBusinessTemplate()
@@ -152,7 +153,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     import_template = self._exportAndReImport(
                                   test_component_path,
                                   ".py",
-                                  test_component_kw["text_content"],
+                                  test_component_kw["text_content"].encode(),
                                   ['text_content'])
 
     self.portal.portal_components.manage_delObjects([test_component_id])
@@ -242,7 +243,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
       import_template = self._exportAndReImport(
                                   python_script_path,
                                   ".py",
-                                  python_script_kw["_body"],
+                                  python_script_kw["_body"].encode(),
                                   ['_body','_code'])
 
       skin_folder.manage_delObjects(python_script_id)
@@ -315,7 +316,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForImageInImageModule(dict(
       title = "foo",
-      data = "malformed data",
+      data = b"malformed data",
       portal_type = "Image",
     ), '.bin')
 
@@ -332,7 +333,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                       file_id)
 
     try:
-      args = file_document_kw['data'], ('data',) if extension else ()
+      args = file_document_kw['data'], (b'data',) if extension else ()
     except KeyError:
       args = None, ('data',)
     import_template = self._exportAndReImport(
@@ -356,7 +357,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "text/javascript",
       portal_type = "File",
     ), '.js')
@@ -368,7 +369,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "application/octet-stream",
       portal_type = "File",
     ), '.bin')
@@ -380,7 +381,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "application/epub+zip",
       portal_type = "File",
     ), '.epub')
@@ -392,7 +393,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo.js",
-      data = "a test file",
+      data = b"a test file",
       portal_type = "File",
     ), '.js')
 
@@ -403,7 +404,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "<script> ... </script>",
+      data = b"<script> ... </script>",
       default_reference = "foo.js",
       portal_type = "File",
     ), '.js')
@@ -415,7 +416,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = None,
       portal_type = "File",
     ), '.bin')
@@ -429,7 +430,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "video/wavelet",
       portal_type = "File",
     ), '.bin')
@@ -443,7 +444,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "text/x-uri",
       portal_type = "File",
     ), '.txt')
@@ -454,7 +455,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       where extension (.xml, exported as ._xml to avoid conflict with the meta-data file)
       is identified by the title
     """
-    file_content = """<person>
+    file_content = b"""<person>
 <name>John</name>
 <surname>Doe</surname>
 </person>
@@ -472,7 +473,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       where extension (.xml, exported as ._xml to avoid conflict with the meta-data file)
       is identified by the title
     """
-    file_content = """<person>
+    file_content = b"""<person>
 <name>John</name>
 <surname>Doe</surname>
 </person>
@@ -524,7 +525,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """Test Business Template Import And Export With A PDF Document"""
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo.pdf",
-      data ="pdf content, maybe should update for base64 sample" ,
+      data =b"pdf content, maybe should update for base64 sample" ,
       portal_type = "PDF",
     ), '.pdf')
 
@@ -563,7 +564,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   method_document_path,
                                   ".sql",
-                                  'dummy_method_template',
+                                  b'dummy_method_template',
                                   ['src'])
 
     catalog.manage_delObjects([method_id])
@@ -611,7 +612,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   method_document_path,
                                   ".sql",
-                                  'dummy_method_template',
+                                  b'dummy_method_template',
                                   ['src'])
 
     catalog.manage_delObjects([method_id])
@@ -657,7 +658,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   method_document_path,
                                   ".sql",
-                                  'dummy_method_template',
+                                  b'dummy_method_template',
                                   ['src'])
 
     self.portal.portal_skins[skin_folder_id].manage_delObjects([method_id])
@@ -696,7 +697,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   page_template_path,
                                   ".zpt",
-                                  page_template_kw['_text'],
+                                  page_template_kw['_text'].encode(),
                                   ['_text'])
 
     self.portal.portal_skins[skin_folder_id].manage_delObjects([page_template_id])
@@ -747,7 +748,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   dtml_method_path,
                                   ".js",
-                                  dtml_method_kw['raw'],
+                                  dtml_method_kw['raw'].encode(),
                                   ['raw'])
 
     self.portal.portal_skins[skin_folder_id].manage_delObjects([dtml_method_id])
@@ -798,7 +799,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   dtml_method_path,
                                   ".txt",
-                                  dtml_method_kw['raw'],
+                                  dtml_method_kw['raw'].encode(),
                                   ['raw'])
 
     self.portal.portal_skins[skin_folder_id].manage_delObjects([dtml_method_id])
@@ -862,7 +863,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "", # XXX a dummy string in data leads to 'NotConvertedError'
+      data = b"", # XXX dummy data in data leads to 'NotConvertedError'
       portal_type = "Spreadsheet",
     ), '.bin')
 
@@ -873,7 +874,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "", # XXX a dummy string in data leads to 'NotConvertedError'
+      data = b"", # XXX dummy data in data leads to 'NotConvertedError'
       content_type = "application/vnd.oasis.opendocument.spreadsheet",
       portal_type = "Spreadsheet",
     ), '.ods')
@@ -885,7 +886,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo.xlsx",
-      data = "", # XXX a dummy string in data leads to 'NotConvertedError'
+      data = b"", # XXX dummy data in data leads to 'NotConvertedError'
       portal_type = "Spreadsheet",
     ), '.xlsx')
 
@@ -910,7 +911,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   test_page_document_path,
                                   ".html",
-                                  test_page_data_kw["text_content"],
+                                  test_page_data_kw["text_content"].encode(),
                                   ["text_content"])
 
     self.portal.test_page_module.manage_delObjects([test_page_id])
@@ -954,7 +955,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   python_script_path,
                                   ".py",
-                                  python_script_kw["_body"],
+                                  python_script_kw["_body"].encode(),
                                   ['_body','_code'])
 
     self.portal.portal_skins[skin_folder_id].manage_delObjects([python_script_id])

@@ -55,5 +55,5 @@ class ShaCacheMixin(object):
     }
     self.shacache_url = self.shacache.absolute_url()
     self.tic()
-    self.data = 'Random Content. %s' % str(random.random())
+    self.data = ('Random Content. %s' % random.random()).encode()
     self.key = hashlib.sha512(self.data).hexdigest()

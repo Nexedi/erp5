@@ -26,6 +26,8 @@
 ##############################################################################
 
 import re
+
+
 def getLastWorkflowDate(self, state_name='simulation_state', state=('released','public')):
   '''we can make something more generic out of it
   or JP says "there is an API for it" and we trash this one'''

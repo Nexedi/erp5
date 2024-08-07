@@ -128,7 +128,7 @@ class PersistentContainer(Persistent):
         self.value = state
 
 global registered_workflow_method_set
-wildcard_interaction_method_id_match = re.compile(r'[[.?*+{(\\]').search
+wildcard_interaction_method_id_match = re.compile(r'[\[.?*+{(\\]').search
 workflow_method_registry = [] # XXX A set() would be better but would require a hash in WorkflowMethod class
 
 def resetRegisteredWorkflowMethod(portal_type=None):
@@ -1014,10 +1014,10 @@ class Base(
               result = None
             else:
               if isinstance(value, (list, tuple)):
-                if len(value) is 0:
-                  result = None
-                else:
+                if len(value):
                   result = value[0]
+                else:
+                  result = None
               else:
                 result = value
           else:
@@ -1048,10 +1048,10 @@ class Base(
             result = None
           else:
             if isinstance(value, (list, tuple)):
-              if len(value) is 0:
-                result = None
-              else:
+              if len(value):
                 result = value[0]
+              else:
+                result = None
             else:
               result = value
         else:
@@ -1092,10 +1092,10 @@ class Base(
             result = None
           else:
             if isinstance(value, (list, tuple)):
-              if len(value) is 0:
-                result = None
-              else:
+              if len(value):
                 result = value[0]
+              else:
+                result = None
             else:
               result = value
         else:

@@ -18,14 +18,18 @@ from __future__ import absolute_import
 
 from copy import deepcopy
 from collections import defaultdict
-from base64 import encodestring
+
+import six
+if six.PY2:
+  from base64 import encodestring as encodebytes
+else:
+  from base64 import encodebytes
 
 from Acquisition import aq_inner, aq_parent
 from AccessControl.Permissions import manage_users as ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.ERP5Type import IS_ZOPE2
-import six
 
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'
@@ -62,24 +66,24 @@ if IS_ZOPE2: # BBB
   def _setUserNameForAccessLog(username, REQUEST):
     """Make the current user look as `username` in Zope's Z2.log
 
-    Taken from Products.CMFCore.CookieCrumbler._setAuthHeader
-    """
-    # Set the authorization header in the medusa http request
-    # so that the username can be logged to the Z2.log
-    # Put the full-arm latex glove on now...
+  Taken from Products.CMFCore.CookieCrumbler._setAuthHeader
+  """
+  # Set the authorization header in the medusa http request
+  # so that the username can be logged to the Z2.log
+  # Put the full-arm latex glove on now...
+  try:
+    # Is this WSGI ?
+    REQUEST._orig_env['wsgi.input']
+  except KeyError:
+    # Not WSGI, maybe Medusa
     try:
-      # Is this WSGI ?
-      REQUEST._orig_env['wsgi.input']
-    except KeyError:
-      # Not WSGI, maybe Medusa
-      try:
-        medusa_headers = REQUEST.RESPONSE.stdout._request._header_cache
-      except AttributeError:
-        pass
-      else:
-        medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
+      medusa_headers = REQUEST.RESPONSE.stdout._request._header_cache
+    except AttributeError:
+      pass
     else:
-      REQUEST._orig_env['REMOTE_USER'] = username
+      medusa_headers['authorization'] = 'Basic %s' % encodebytes(('%s:' % username).encode()).decode().rstrip()
+  else:
+    REQUEST._orig_env['REMOTE_USER'] = username
 else: # zope4
   def _setUserNameForAccessLog(username, REQUEST):
     """
