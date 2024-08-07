@@ -66,7 +66,7 @@ from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 import subprocess
 import time
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 import json
 
 WIN = os.name == 'nt'
@@ -345,7 +345,9 @@ class TemplateTool (BaseTool):
       try:
         os.close(tempid) # Close the opened fd as soon as possible.
         file_path, headers = urlretrieve(url, temppath)
-        if re.search(r'<title>.*Revision \d+:', open(file_path, 'r').read()):
+        with open(file_path, 'rb') as f:
+          content = f.read()
+        if re.search(br'<title>.*Revision \d+:', content):
           # this looks like a subversion repository, try to check it out
           LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
           return self._download_svn(url, bt_id)
@@ -703,7 +705,7 @@ class TemplateTool (BaseTool):
       """
         Get the list of repositories.
       """
-      return self.repository_dict.keys()
+      return list(self.repository_dict.keys())
 
     security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
     def decodeRepositoryBusinessTemplateUid(self, uid):
@@ -712,7 +714,7 @@ class TemplateTool (BaseTool):
         Return a repository and an id.
       """
       repository, id = json.loads(b64decode(uid))
-      return repository.encode('utf-8'), id.encode('utf-8')
+      return unicode2str(repository), unicode2str(id)
 
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
@@ -720,7 +722,7 @@ class TemplateTool (BaseTool):
         encode the repository and the id of a business template.
         Return an uid.
       """
-      return b64encode(json.dumps((repository, id)))
+      return b64encode(str2bytes(json.dumps((repository, id))))
 
     security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
@@ -1066,7 +1068,7 @@ class TemplateTool (BaseTool):
                               installed_revision=installed_revision,
                               repository=repository,
                               **property_dict)
-        obj.setUid(uid)
+        obj.setUid(bytes2str(uid))
         result_list.append(obj)
       result_list.sort(key=lambda x: x.getTitle())
       return result_list
@@ -1099,7 +1101,7 @@ class TemplateTool (BaseTool):
         - 1.1 < 2.0
         - 1.0.0 = 1.0
       """
-      r = re.compile('(\d+|[a-zA-Z])')
+      r = re.compile(r'(\d+|[a-zA-Z])')
       v1 = r.findall(version1)
       v2 = r.findall(version2)
 
@@ -1113,7 +1115,7 @@ class TemplateTool (BaseTool):
             e = int(e)
           except ValueError:
             # ASCII code is one byte, so this produces negative.
-            e = struct.unpack('b', e)[0] - 0x200
+            e = struct.unpack('b', e.encode())[0] - 0x200
         except IndexError:
           e = 0
         return e

@@ -29,7 +29,7 @@
 
 import six
 from six import string_types as basestring
-from Products.ERP5Type.Utils import ensure_list, bytes2str
+from Products.ERP5Type.Utils import ensure_list, bytes2str, str2bytes
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
@@ -79,6 +79,7 @@ from OFS import SimpleItem
 from OFS.Image import Pdata
 import coverage
 from io import BytesIO
+from six.moves import StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
 from Products.ERP5Type.XMLExportImport import exportXML, customImporters
@@ -94,6 +95,10 @@ from importlib import import_module
 import posixpath
 import transaction
 import inspect
+if six.PY2:
+  BufferedReader = file
+else:
+  from io import BufferedReader
 
 import threading
 from ZODB.broken import Broken, BrokenModified
@@ -344,13 +349,17 @@ class BusinessTemplateArchive(object):
     try:
       write = self._writeFile
     except AttributeError:
-      if not isinstance(obj, str):
+      if hasattr(obj, 'read'):
         obj.seek(0)
         obj = obj.read()
+      if not isinstance(obj, bytes):
+        obj = obj.encode('utf-8')
       self.revision.hash(path, obj)
       self._writeString(obj, path)
     else:
       if isinstance(obj, str):
+        obj = str2bytes(obj)
+      if isinstance(obj, bytes):
         self.revision.hash(path, obj)
         obj = BytesIO(obj)
       else:
@@ -372,11 +381,8 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     object_path = os.path.join(self.path, path)
     path = os.path.dirname(object_path)
     os.path.exists(path) or os.makedirs(path)
-    f = open(object_path, 'wb')
-    try:
+    with open(object_path, 'wb') as f:
       f.write(obj)
-    finally:
-      f.close()
 
   def importFiles(self, item):
     """
@@ -717,7 +723,7 @@ class ObjectTemplateItem(BaseTemplateItem):
   def __init__(self, id_list, tool_id=None, **kw):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     if tool_id is not None:
-      id_list = self._archive.keys()
+      id_list = ensure_list(self._archive.keys())
       self._archive.clear()
       for id in id_list :
         if id != '':
@@ -789,7 +795,10 @@ class ObjectTemplateItem(BaseTemplateItem):
         return mime.extensions[0]
       for ext in mime.globs:
         if ext[0] == "*" and ext.count(".") == 1:
-          return ext[2:].encode("utf-8")
+          ext = ext[2:]
+          if six.PY2:
+            return ext.encode("utf-8")
+          return ext
 
     # in case we could not read binary flag from mimetypes_registry then return
     # '.bin' for all the Portal Types where exported_property_type is data
@@ -833,9 +842,12 @@ class ObjectTemplateItem(BaseTemplateItem):
               except (AttributeError, UnicodeEncodeError):
                 break
             elif type(data) is not bytes:
-              if not isinstance(data, Pdata):
+              if isinstance(data, str):
+                data = data.encode()
+              elif not isinstance(data, Pdata):
                 break
-              data = bytes(data)
+              else:
+                data = bytes(data)
             try:
               # Delete this attribute from the object.
               # in case the related Portal Type does not exist, the object may be broken.
@@ -861,9 +873,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj = self.removeProperties(obj, 1, keep_workflow_history = True)
           transaction.savepoint(optimistic=True)
 
-        f = BytesIO()
+        f = StringIO()
         exportXML(obj._p_jar, obj._p_oid, f)
-        bta.addObject(f, key, path=path)
+        bta.addObject(str2bytes(f.getvalue()), key, path=path)
 
       if catalog_method_template_item:
         # add all datas specific to catalog inside one file
@@ -917,7 +929,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     else:
       connection = self.getConnection(self.aq_parent)
       __traceback_info__ = 'Importing %s' % file_name
-      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+      if hasattr(cache_database, 'db') and isinstance(file_obj, BufferedReader):
         obj = connection.importFile(self._compileXML(file_obj))
       else:
         # FIXME: Why not use the importXML function directly? Are there any BT5s
@@ -1079,8 +1091,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     for path, old_object in upgrade_list:
       # compare object to see it there is changes
       new_object = self._objects[path]
-      new_io = BytesIO()
-      old_io = BytesIO()
+      new_io = StringIO()
+      old_io = StringIO()
       exportXML(new_object._p_jar, new_object._p_oid, new_io)
       new_obj_xml = new_io.getvalue()
       try:
@@ -1516,6 +1528,12 @@ class ObjectTemplateItem(BaseTemplateItem):
           container.getParentValue().updateCache()
         elif obj.__class__.__name__ in ('File', 'Image'):
           if "data" in obj.__dict__:
+            # XXX when installing very old business templates without the data stored
+            # in a separate file (such as the one from
+            # testTemplateTool.TestTemplateTool.test_updateBusinessTemplateFromUrl_keep_list)
+            # data might be loaded as a string, fix this here.
+            if obj.data is not None and not isinstance(obj.data, (bytes, Pdata)):
+              obj.data = obj.data.encode()
             # XXX Calling obj._setData() would call Interaction Workflow such
             # as document_conversion_interaction_workflow which would update
             # mime_type too...
@@ -3504,14 +3522,14 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         prop_value = role.get(property)
         if prop_value:
           if isinstance(prop_value, str):
-            prop_value = escape(prop_value.decode('utf-8'))
+            prop_value = escape(prop_value)
           xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
       for property in ('categories', 'category', 'base_category'):
         for prop_value in role.get(property, []):
           if isinstance(prop_value, str):
-            prop_value = escape(prop_value.decode('utf-8'))
+            prop_value = escape(prop_value)
           xml_data += "\n   <multi_property "\
           "id='%s'>%s</multi_property>" % (property, prop_value)
       xml_data += "\n  </role>"
@@ -3524,7 +3542,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     path = self.__class__.__name__
     for key in self._objects:
       xml_data = self.generateXml(key)
-      if isinstance(xml_data, six.text_type):
+      if six.PY2 and isinstance(xml_data, six.text_type):
         xml_data = xml_data.encode('utf-8')
       name = key.split('/', 1)[1]
       bta.addObject(xml_data, name=name, path=path)
@@ -3538,7 +3556,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     xml_type_roles_list = xml.findall('role')
     for role in xml_type_roles_list:
       id = role.get('id')
-      if isinstance(id, six.text_type):
+      if six.PY2 and isinstance(id, six.text_type):
         id = id.encode('utf_8', 'backslashreplace')
       type_role_property_dict = {'id': id}
       # uniq
@@ -3547,7 +3565,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         property_id = property_node.get('id')
         if property_node.text:
           value = property_node.text
-          if isinstance(value, six.text_type):
+          if six.PY2 and isinstance(value, six.text_type):
             value = value.encode('utf_8', 'backslashreplace')
           type_role_property_dict[property_id] = value
       # multi
@@ -3556,7 +3574,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         property_id = property_node.get('id')
         if property_node.text:
           value = property_node.text
-          if isinstance(value, six.text_type):
+          if six.PY2 and isinstance(value, six.text_type):
             value = value.encode('utf_8', 'backslashreplace')
           type_role_property_dict.setdefault(property_id, []).append(value)
       type_roles_list.append(type_role_property_dict)
@@ -3964,7 +3982,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.py'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    text = file.read()
+    text = file.read().decode('utf-8')
     self._objects[file_name[:-3]] = text
 
 class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
@@ -4965,7 +4983,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       xml_data += '\n </local_role_group_ids>'
 
     xml_data += '\n</local_roles_item>'
-    if isinstance(xml_data, six.text_type):
+    if six.PY2 and isinstance(xml_data, six.text_type):
       xml_data = xml_data.encode('utf8')
     return xml_data
 
@@ -6096,8 +6114,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_test_item', '_message_translation_item',]
 
       if item_name in item_list_1:
-        f1 = BytesIO() # for XML export of New Object
-        f2 = BytesIO() # For XML export of Installed Object
+        f1 = StringIO() # for XML export of New Object
+        f2 = StringIO() # For XML export of Installed Object
         # Remove unneeded properties
         new_object = new_item.removeProperties(new_object, 1)
         installed_object = installed_item.removeProperties(installed_object, 1)
@@ -6741,7 +6759,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       from base64 import b64encode
       def __newTempComponent(portal_type, reference, source_reference, migrate=False):
-        uid = b64encode("%s|%s|%s" % (portal_type, reference, source_reference))
+        uid = b64encode(("%s|%s|%s" % (portal_type, reference, source_reference)).encode())
+        if six.PY3:
+          uid = uid.decode()
         if migrate:
           bt_migratable_uid_list.append(uid)
 
