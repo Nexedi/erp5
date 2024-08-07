@@ -857,7 +857,7 @@ class Workflow(XMLObject):
       tool = self.getParentValue()
       for ob_ in ob.objectValues():
         for workflow in tool.getWorkflowValueListFor(ob_):
-          state = workflow.getWorkflowStateOf(ob_)
+          state = workflow._getWorkflowStateOf(ob_)
           if state is not None and state.getReference() == 'deleted':
             break
         else:
