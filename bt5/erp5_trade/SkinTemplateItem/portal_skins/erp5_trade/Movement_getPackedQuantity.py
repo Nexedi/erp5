@@ -1,10 +1,12 @@
 movement = context
 delivery_uid = movement.getExplanationUid()
+destination_uid = movement.getDestinationUid()
 resource_uid = movement.getResourceUid()
 variation_text = movement.getVariationText()
 packed_quantity = 0
 
 sql_list = movement.Movement_zGetPackedQuantity(
+                       node_uid=destination_uid,
                        explanation_uid=delivery_uid,
                        resource_uid=resource_uid,
                        variation_text=variation_text)
