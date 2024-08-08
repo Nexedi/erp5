@@ -36,7 +36,6 @@
     SOFTWARE_INSTANCE_TYPE = "Software Instance",
     INSTANCE_TREE_TYPE = "Instance Tree",
     OPML_PORTAL_TYPE = "Opml",
-    LIMIT = 300,
     ZONE_LIST = [
       "-1200",
       "-1100",
@@ -935,20 +934,16 @@
       }
     }
 
-    function getInstanceOPMLList(storage, limit) {
+    function getInstanceOPMLList(storage) {
       if (!storage) {
         return [];
       }
       var instance_tree_list = [],
         opml_list = [],
         uid_dict = {};
-      if (limit === undefined) {
-        limit = LIMIT;
-      }
       return storage.allDocs({
         query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
-        select_list: ['title', 'default_successor_uid', 'uid', 'slap_state', 'id'],
-        limit: [0, limit]
+        select_list: ['title', 'default_successor_uid', 'uid', 'slap_state', 'id']
       })
         .push(function (result) {
           var i, slapos_id, slapos_master_url = "",
@@ -958,8 +953,8 @@
               //TODO could slapos_id be used to desambiguate identic title
               //instances trees between different storages?
               slapos_id = result.data.rows[i].value.title;
-              if (result.data.rows[i].storage && result.data.rows[i].storage.url) {
-                slapos_master_url = result.data.rows[i].storage.url;
+              if (result.data.rows[i].master_url) {
+                slapos_master_url = result.data.rows[i].master_url;
               }
               instance_tree_list.push({
                 title: result.data.rows[i].value.title,
@@ -980,8 +975,7 @@
           return storage.allDocs({
             query: '(portal_type:"Software Instance") AND ' +
               '(successor_related_uid:("' + uid_search_list.join('","') + '"))',
-            select_list: ['uid', 'successor_related_uid', 'connection_xml'],
-            limit: [0, limit]
+            select_list: ['uid', 'successor_related_uid', 'connection_xml']
           });
         })
         .push(function (result) {
@@ -998,8 +992,8 @@
                 tmp_parameter = {username: "", password: "", opml_url: undefined};
               }
               if (instance_tree_list[uid_dict[tmp_uid]]) {
-                if (result.data.rows[i].storage && result.data.rows[i].storage.url) {
-                  slapos_master_url = result.data.rows[i].storage.url;
+                if (result.data.rows[i].master_url) {
+                  slapos_master_url = result.data.rows[i].master_url;
                 }
                 opml_list.push({
                   portal_type: OPML_PORTAL_TYPE,
@@ -1045,18 +1039,19 @@
             }
             return remove_queue;
           }
-          // XXX too attached to union storage?
           var slapos_master_url_list = [], spec_list = context._remote_sub_storage_spec.storage_list,
             i, remove_opml_list = [], opml_list = result.data.rows;
           if (spec_list) {
             for (i = 0; i < spec_list.length; i += 1) {
-              slapos_master_url_list.push(spec_list[i].url);
+              if (spec_list[i].sub_storage && spec_list[i].sub_storage.url) {
+                slapos_master_url_list.push(spec_list[i].sub_storage.url);
+              }
             }
           }
           if (slapos_master_url_list.length > 0) {
             for (i = 0; i < opml_list.length; i += 1) {
               if (opml_list[i].value.slapos_master_url &&
-                  opml_list[i].value.slapos_master_url !== "") {
+                opml_list[i].value.slapos_master_url !== "") {
                 if (!slapos_master_url_list.includes(opml_list[i].value.slapos_master_url)) {
                   remove_opml_list.push(opml_list[i]);
                 }

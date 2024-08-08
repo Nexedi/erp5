@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -24,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -56,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -64,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>classification/collaborative/public</string>
               </tuple>
             </value>
         </item>
@@ -76,19 +77,23 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_monitoring_jio.html</string> </value>
+            <value> <string>monitoring_jio_erp5monitor_storage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Jio access</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_monitoring_jio_html</string> </value>
+            <value> <string>monitoring_jio_erp5monitor_storage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -96,7 +101,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -106,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs Monitoring Jio Gadget</string> </value>
+            <value> <string>Monitoring Jio Erp5 Monitor Storage</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -168,11 +173,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -196,7 +201,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1452875306.6</float>
+                              <float>1723124663.84</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -205,7 +210,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -245,7 +250,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1017.35894.43518.51251</string> </value>
+                      <value> <string>1018.32056.61390.27579</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -265,7 +270,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1723154487.39</float>
+                              <float>1723153156.08</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -296,7 +301,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -328,7 +333,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1452874965.12</float>
+                              <float>1723124587.09</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
