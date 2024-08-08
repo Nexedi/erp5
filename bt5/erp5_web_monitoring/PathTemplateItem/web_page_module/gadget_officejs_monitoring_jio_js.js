@@ -3,7 +3,7 @@
 (function (window, rJS, jIO) {
   "use strict";
 
-  var LOCK_NAME = "sync_lock";
+  var LOCK_NAME = "sync_lock", LIMIT = 300;
 
   function promiseLock(name, options, callback) {
     var callback_promise = null,
@@ -74,12 +74,14 @@
             master_url_list = result_list[1];
           }
           for (i = 0; i < master_url_list.length; i += 1) {
-            //TODO add wrapper layer erp5monitor, with limit
-            //LIMIT will be decided here
             storage_definition_list.push({
-              type: "erp5",
-              url: master_url_list[i],
-              default_view_reference: result_list[2]
+              type: "erp5monitor",
+              limit: LIMIT,
+              sub_storage: {
+                type: "erp5",
+                url: master_url_list[i],
+                default_view_reference: result_list[2]
+              }
             });
           }
         }
