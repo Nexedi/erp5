@@ -1,13 +1,13 @@
 /*
- * Copyright 2016, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
- */
+* Copyright 2016, Nexedi SA
+* Released under the LGPL license.
+* http://www.gnu.org/licenses/lgpl.html
+*/
 
-/*jslint nomen: true */
-/*global jIO, RSVP, Rusha, console, Blob */
+/*jslint indent: 2 nomen: true */
+/*global jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams */
 
-(function (jIO, RSVP, Rusha, Blob, console) {
+(function (jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams) {
   "use strict";
 
   /**
@@ -36,6 +36,7 @@
     SOFTWARE_INSTANCE_TYPE = "Software Instance",
     INSTANCE_TREE_TYPE = "Instance Tree",
     OPML_PORTAL_TYPE = "Opml",
+    LIMIT = 300,
     ZONE_LIST = [
       "-1200",
       "-1100",
@@ -98,6 +99,11 @@
                           "is not defined");
     }
     this._local_sub_storage = jIO.createJIO(spec.local_sub_storage);
+    this._local_sub_storage_spec = spec.local_sub_storage;
+    if (spec.remote_sub_storage !== undefined) {
+      this._remote_sub_storage_spec = spec.remote_sub_storage;
+      this._remote_sub_storage = jIO.createJIO(spec.remote_sub_storage);
+    }
     this._remote_storage_unreachable_status =
       spec.remote_storage_unreachable_status;
     this._remote_storage_dict = {};
@@ -139,6 +145,10 @@
   };
 
   ReplicatedOPMLStorage.prototype.hasCapacity = function (capacity) {
+    var this_storage_not_capacity_list = ['post', 'getAttachment', 'putAttachment'];
+    if (this_storage_not_capacity_list.indexOf(capacity) !== -1) {
+      return false;
+    }
     if (capacity === 'include') {
       return true;
     }
@@ -146,12 +156,14 @@
                                                      arguments);
   };
 
-  ReplicatedOPMLStorage.prototype.getAttachment = function () {
-    return this._local_sub_storage.getAttachment.apply(this._local_sub_storage,
-                                                   arguments);
+  ReplicatedOPMLStorage.prototype.allAttachments = function () {
+    return this._local_sub_storage.allAttachments.apply(this._local_sub_storage,
+                                                    arguments);
   };
 
   ReplicatedOPMLStorage.prototype.remove = function (id) {
+    //the removal of an opml involves to remove the full opml tree asociated
+    //note: if the opml belongs to a slapos master, next sync will restore it
     var storage = this._local_sub_storage;
     return storage.get(id)
       .push(function (doc) {
@@ -247,11 +259,6 @@
         }
         return removeOPMLTree(id);
       });
-  };
-
-  ReplicatedOPMLStorage.prototype.allAttachments = function () {
-    return this._local_sub_storage.allAttachments.apply(this._local_sub_storage,
-                                                    arguments);
   };
 
   function getStorageUrl(storage_spec) {
@@ -406,6 +413,15 @@
       });
   }
 
+  function fixDateTimezone(date_string) {
+    // set default timezone offset to UTC
+    // XXX should be removed later
+    if (ZONE_LIST.indexOf(date_string.slice(-5)) === -1) {
+      return date_string + "+0000";
+    }
+    return date_string;
+  }
+
   function updateInstanceTreeState(hosting, element) {
     var status = element.status.toUpperCase();
 
@@ -418,21 +434,13 @@
       hosting.status = status;
     } else if (status === "WARNING") {
       hosting.status = status;
-    } if (status === "OK" && hosting.status !== status) {
+    }
+    if (status === "OK" && hosting.status !== status) {
       hosting.status = status;
     }
   }
 
-  function fixDateTimezone(date_string) {
-    // set default timezone offset to UTC
-    // XXX should be removed later
-    if (ZONE_LIST.indexOf(date_string.slice(-5)) === -1) {
-      return date_string + "+0000";
-    }
-    return date_string;
-  }
-
-  function getOpmlTree(context, opml_url, opml_spec, basic_login, opml_title) {
+  function getOpmlTree(context, opml_url, opml_spec, basic_login, opml_title, slapos_master_url) {
     var opml_storage,
       opml_document_list = [],
       delete_key_list = [],
@@ -453,7 +461,8 @@
       opml_url: opml_url,
       status: "WARNING",
       instance_amount: 0,
-      status_date: (new Date()).toUTCString() + "+0000"
+      status_date: (new Date()).toUTCString() + "+0000",
+      slapos_master_url: slapos_master_url
     };
     return getDocumentAsAttachment(context, opml_url, OPML_ATTACHMENT_NAME)
       .push(function (opml_doc) {
@@ -578,7 +587,8 @@
                 parent_id: id,
                 parent_url: opml_url,
                 reference: id_hash,
-                active: true
+                active: true,
+                slapos_master_url: slapos_master_url
               });
               Object.assign(item.doc, header_dict);
               if (!skip_add) {
@@ -659,7 +669,8 @@
               item_result.type,
             status: status,
             reference: element.reference || id_hash,
-            active: true
+            active: true,
+            slapos_master_url: slapos_master_url
           });
           opml_document_list.push({
             id: id_hash,
@@ -679,8 +690,8 @@
             if (result_list[i].type === PROMISE_TYPE) {
               // the first element of rss is the header
               extra_dict = {
-                lastBuildDate: fixDateTimezone(result_list[i].result.data.
-                  rows[0].doc.lastBuildDate),
+                lastBuildDate: fixDateTimezone(result_list[i].result.data
+                                               .rows[0].doc.lastBuildDate),
                 channel: result_list[i].result.data.rows[0].doc.description,
                 channel_item: result_list[i].result.data.rows[0].doc.title
               };
@@ -706,8 +717,7 @@
               name: result_list[i].url,
               doc: result_list[i].current_signature
             });
-          }
-          else if (context._remote_storage_unreachable_status !== undefined) {
+          } else if (context._remote_storage_unreachable_status !== undefined) {
             if (result_list[i].type === "webhttp") {
               // In case it was impossible to get software Instance
               // Add an empty Software Instance with unreachable status
@@ -811,7 +821,7 @@
   function syncOpmlStorage(context) {
     return context._local_sub_storage.allDocs({
       query: '(portal_type:"' + OPML_PORTAL_TYPE + '") AND (active:true) AND (url:"https://%")',
-      select_list: ["title", "url", "basic_login"]
+      select_list: ["title", "url", "basic_login", "slapos_master_url"]
     })
       .push(function (storage_result) {
         var i,
@@ -834,7 +844,8 @@
                   }
                 },
                 storage_spec.basic_login,
-                storage_spec.title
+                storage_spec.title,
+                storage_spec.slapos_master_url
               );
             })
             .push(function (result_list) {
@@ -855,9 +866,211 @@
 
   ReplicatedOPMLStorage.prototype.repair = function () {
     var context = this,
+      has_failed = false,
+      error_msg = "",
       argument_list = arguments;
 
+    function getParameterDictFromUrl(uri_param) {
+      if (uri_param.has('url') && uri_param.has('password') &&
+          uri_param.has('username') && uri_param.get('url').startsWith('http')) {
+        return {
+          opml_url: uri_param.get('url').trim(),
+          username: uri_param.get('username').trim(),
+          password: uri_param.get('password').trim()
+        };
+      }
+    }
+
+    function getParameterFromconnectionDict(connection_dict) {
+      if (connection_dict["monitor-url"] &&
+          connection_dict["monitor-url"].startsWith('http') &&
+          connection_dict["monitor-user"] &&
+          connection_dict["monitor-password"]) {
+        return {
+          opml_url: connection_dict["monitor-url"].trim(),
+          username: connection_dict["monitor-user"].trim(),
+          password: connection_dict["monitor-password"].trim()
+        };
+      }
+    }
+
+    function readMonitoringParameter(parmeter_xml) {
+      var xml_doc = rJS.parseDocumentStringOrFail(parmeter_xml, "text/xml"),
+        parameter,
+        uri_param,
+        json_parameter,
+        parameter_dict,
+        monitor_dict = {};
+
+      json_parameter = xml_doc.getElementById("_");
+      if (json_parameter !== undefined && json_parameter !== null) {
+        parameter_dict = JSON.parse(json_parameter.textContent);
+        if (parameter_dict.hasOwnProperty("monitor-setup-url")) {
+          return getParameterDictFromUrl(
+            new URLSearchParams(parameter_dict["monitor-setup-url"])
+          );
+        }
+        return getParameterFromconnectionDict(parameter_dict);
+      }
+      parameter = xml_doc.getElementById("monitor-setup-url");
+      if (parameter !== undefined && parameter !== null) {
+        // monitor-setup-url exists
+        uri_param = new URLSearchParams(parameter.textContent);
+        return getParameterDictFromUrl(uri_param);
+      }
+      parameter = xml_doc.getElementById("monitor-url");
+      if (parameter !== undefined && parameter !== null) {
+        monitor_dict.url = parameter.textContent.trim();
+        parameter = xml_doc.getElementById("monitor-user");
+        if (parameter === undefined && parameter !== null) {
+          return;
+        }
+        monitor_dict.username = parameter.textContent.trim();
+        parameter = xml_doc.getElementById("monitor-password");
+        if (parameter === undefined && parameter !== null) {
+          return;
+        }
+        monitor_dict.password = parameter.textContent.trim();
+        return monitor_dict;
+      }
+    }
+
+    function getInstanceOPMLList(storage, limit) {
+      if (!storage) {
+        return [];
+      }
+      var instance_tree_list = [],
+        opml_list = [],
+        uid_dict = {};
+      if (limit === undefined) {
+        limit = LIMIT;
+      }
+      return storage.allDocs({
+        query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
+        select_list: ['title', 'default_successor_uid', 'uid', 'slap_state', 'id'],
+        limit: [0, limit]
+      })
+        .push(function (result) {
+          var i, slapos_id, slapos_master_url = "",
+            uid_search_list = [];
+          for (i = 0; i < result.data.total_rows; i += 1) {
+            if (result.data.rows[i].value.slap_state !== "destroy_requested") {
+              //TODO could slapos_id be used to desambiguate identic title
+              //instances trees between different storages?
+              slapos_id = result.data.rows[i].value.title;
+              if (result.data.rows[i].storage && result.data.rows[i].storage.url) {
+                slapos_master_url = result.data.rows[i].storage.url;
+              }
+              instance_tree_list.push({
+                title: result.data.rows[i].value.title,
+                relative_url: result.data.rows[i].id,
+                slapos_id: slapos_id,
+                slapos_master_url: slapos_master_url,
+                active: (result.data.rows[i].value.slap_state ===
+                         "start_requested") ? true : false,
+                state: (result.data.rows[i].value.slap_state ===
+                         "start_requested") ? "Started" : "Stopped"
+              });
+              uid_search_list.push(result.data.rows[i].value.uid);
+              if (result.data.rows[i].value.default_successor_uid) {
+                uid_dict[result.data.rows[i].value.default_successor_uid] = i;
+              }
+            }
+          }
+          return storage.allDocs({
+            query: '(portal_type:"Software Instance") AND ' +
+              '(successor_related_uid:("' + uid_search_list.join('","') + '"))',
+            select_list: ['uid', 'successor_related_uid', 'connection_xml'],
+            limit: [0, limit]
+          });
+        })
+        .push(function (result) {
+          var i,
+            tmp_parameter,
+            tmp_uid,
+            slapos_master_url = "";
+
+          for (i = 0; i < result.data.total_rows; i += 1) {
+            tmp_uid = result.data.rows[i].value.uid;
+            if (uid_dict.hasOwnProperty(tmp_uid)) {
+              tmp_parameter = readMonitoringParameter(result.data.rows[i].value.connection_xml);
+              if (tmp_parameter === undefined) {
+                tmp_parameter = {username: "", password: "", opml_url: undefined};
+              }
+              if (instance_tree_list[uid_dict[tmp_uid]]) {
+                if (result.data.rows[i].storage && result.data.rows[i].storage.url) {
+                  slapos_master_url = result.data.rows[i].storage.url;
+                }
+                opml_list.push({
+                  portal_type: OPML_PORTAL_TYPE,
+                  title: instance_tree_list[uid_dict[tmp_uid]]
+                    .title,
+                  relative_url: instance_tree_list[uid_dict[tmp_uid]]
+                    .relative_url,
+                  url: tmp_parameter.opml_url || String(tmp_uid) + " NO MONITOR",
+                  has_monitor: tmp_parameter.opml_url !== undefined,
+                  username: tmp_parameter.username,
+                  password: tmp_parameter.password,
+                  basic_login: btoa(tmp_parameter.username + ':' +
+                                    tmp_parameter.password),
+                  active: tmp_parameter.opml_url !== undefined &&
+                    instance_tree_list[uid_dict[tmp_uid]].active,
+                  state: instance_tree_list[uid_dict[tmp_uid]].state,
+                  slapos_master_url: slapos_master_url
+                });
+              }
+            }
+          }
+          return opml_list;
+        });
+    }
+
+    function cleanOpmlStorage(context) {
+      //TODO use slapos_master_url in the query instead of iterate later
+      return context._local_sub_storage.allDocs({
+        query: '(portal_type:"' + OPML_PORTAL_TYPE + '")',
+        select_list: ["title", "url", "basic_login", "slapos_master_url"]
+      })
+        .push(function (result) {
+          function removeAllOPML(remove_opml_list, jio) {
+            var remove_queue = new RSVP.Queue(), i;
+            function remove_opml(id) {
+              remove_queue
+                .push(function () {
+                  return jio.remove(id);
+                });
+            }
+            for (i = 0; i < remove_opml_list.length; i += 1) {
+              remove_opml(remove_opml_list[i].id);
+            }
+            return remove_queue;
+          }
+          // XXX too attached to union storage?
+          var slapos_master_url_list = [], spec_list = context._remote_sub_storage_spec.storage_list,
+            i, remove_opml_list = [], opml_list = result.data.rows;
+          if (spec_list) {
+            for (i = 0; i < spec_list.length; i += 1) {
+              slapos_master_url_list.push(spec_list[i].url);
+            }
+          }
+          if (slapos_master_url_list.length > 0) {
+            for (i = 0; i < opml_list.length; i += 1) {
+              if (opml_list[i].value.slapos_master_url &&
+                  opml_list[i].value.slapos_master_url !== "") {
+                if (!slapos_master_url_list.includes(opml_list[i].value.slapos_master_url)) {
+                  remove_opml_list.push(opml_list[i]);
+                }
+              }
+            }
+          }
+          return RSVP.all([
+            removeAllOPML(remove_opml_list, context)
+          ]);
+        });
+    }
+
     return new RSVP.Queue()
+      //repair sub storage layers (local and remote)
       .push(function () {
         return context._local_sub_storage.repair.apply(
           context._local_sub_storage,
@@ -865,10 +1078,64 @@
         );
       })
       .push(function () {
-        return syncOpmlStorage(context);
+        if (context._remote_sub_storage) {
+          return context._remote_sub_storage.repair.apply(
+            context._remote_sub_storage,
+            argument_list
+          );
+        }
+      })
+      .push(function () {
+        //delete all opmls trees of no longer present slapos masters
+        //(in case master url list was updated)
+        return cleanOpmlStorage(context);
+      })
+      .push(function () {
+        //get opml list from remote slapos master(s)
+        return getInstanceOPMLList(context._remote_sub_storage);
+      })
+      .push(undefined, function (error) {
+        has_failed = true;
+        if (error.target) {
+          if (error.target.status === 401) {
+            error_msg = ": unauthorized access to slapos master";
+          }
+          if (error.target.status === 404) {
+            error_msg = ": slapos master url not found";
+          }
+          if (error.target.status - 500 > 0) {
+            error_msg = ": server error on slapos master side - " + error.target.status;
+          }
+          if (error.target.responseURL) {
+            error_msg += ". URL: " + error.target.responseURL;
+          }
+        } else {
+          console.log(error);
+        }
+        throw "Failed to import remote configurations" + error_msg;
+      })
+      .push(function (opml_list) {
+        //store opmls in local sub storage
+        var i, push_queue = new RSVP.Queue();
+        function pushOPML(opml_dict) {
+          push_queue
+            .push(function () {
+              return context._local_sub_storage.put(opml_dict.url, opml_dict);
+            });
+        }
+        for (i = 0; i < opml_list.length; i += 1) {
+          pushOPML(opml_list[i]);
+        }
+        return push_queue;
+      })
+      .push(function () {
+        if (!has_failed) {
+          //sync storage using updated opml list
+          return syncOpmlStorage(context);
+        }
       });
   };
 
   jIO.addStorage('replicatedopml', ReplicatedOPMLStorage);
 
-}(jIO, RSVP, Rusha, Blob, console));
+}(jIO, RSVP, rJS, Rusha, Blob, console, btoa, URLSearchParams));

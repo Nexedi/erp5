@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, console, XMLHttpRequest, document */
+/*global window, rJS, RSVP, XMLHttpRequest, document */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, console, XMLHttpRequest, document) {
+(function (window, rJS, RSVP, XMLHttpRequest, document) {
   "use strict";
 
   var gadget_klass = rJS(window);
@@ -47,7 +47,9 @@
 
       function syncAllStorage() {
         var has_error = false,
-          last_sync_time;
+          last_sync_time,
+          classname = "success",
+          message = "Synchronisation finished.";
         gadget.props.started = true;
         return new RSVP.Queue()
           .push(function () {
@@ -68,8 +70,7 @@
           })
           .push(undefined, function (error) {
             // should include error message in error
-            has_error = true;
-            console.error(error);
+            has_error = error;
             // return false so it will trigger the next run
             return false;
           })
@@ -77,34 +78,17 @@
             last_sync_time = new Date().getTime();
             return RSVP.all([
               gadget.setSetting('latest_sync_time', last_sync_time),
-              gadget.notifySubmitting()
+              gadget.notifySubmitted()
             ]);
           })
           .push(function () {
-            var classname = "success",
-              message = "Synchronisation finished.";
-
             if (has_error) {
               classname = "error";
               message = "Synchronisation finished with error(s).";
-              message += " \nYou can retry with manual sync.";
+              message += " \n" + has_error;
             }
-            return gadget.notifySubmitted({
-              message: message,
-              status: classname
-            });
-          })
-          .push(function () {
             gadget.props.started = false;
-            /*return $.notify(
-              "Last Sync: " + formatDate(new Date(last_sync_time)),
-              {
-                position: "bottom right",
-                autoHide: true,
-                className: "success",
-                autoHideDelay: 30000
-              }
-            );*/
+            return {msg: message, type: classname};
           });
       }
 
@@ -223,4 +207,4 @@
         });
     });
 
-}(window, rJS, RSVP, console, XMLHttpRequest, document));
+}(window, rJS, RSVP, XMLHttpRequest, document));

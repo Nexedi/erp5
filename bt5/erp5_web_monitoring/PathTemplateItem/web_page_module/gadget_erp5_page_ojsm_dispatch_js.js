@@ -55,7 +55,7 @@
                      "url": options.url,
                      "username": options.username,
                      "password": options.password,
-                     "slapos_master_url": options.slapos_master_url || "not-provided",
+                     "slapos_master_url": options.slapos_master_url || "",
                      "page": "ojsm_opml_add"
                    }
                   });
@@ -74,7 +74,7 @@
              "url": options.url,
              "username": options.username,
              "password": options.password,
-             "slapos_master_url": options.slapos_master_url || "not-provided",
+             "slapos_master_url": options.slapos_master_url || "",
              "page": "ojsm_opml_add"
            }
           });
@@ -98,6 +98,8 @@
           // default front page (list of promises)
           return gadget.redirect({command: 'display',
                                   options: {page: "ojs_local_controller",
+                                            notify_msg: options.notify_msg,
+                                            notify_type: options.notify_type,
                                             portal_type: "Promise Module"}
                                  });
         });

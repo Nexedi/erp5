@@ -434,16 +434,16 @@
               }
             }
           }
-          return gadget.declareGadget(portal_type_dict.custom_header);
+          if (portal_type_dict.custom_header) {
+            return gadget.declareGadget(portal_type_dict.custom_header);
+          }
+          return;
         })
         .push(function (header_gadget) {
-          return header_gadget.getOptions(portal_type_dict, options, header_dict);
-        }, function (error) {
-          if (!portal_type_dict.custom_header) {
-            return header_dict;
-          } else {
-            throw error;
+          if (header_gadget) {
+            return header_gadget.getOptions(portal_type_dict, options, header_dict);
           }
+          return header_dict;
         })
         .push(function (header_options) {
           return gadget.updateHeader(header_options);
