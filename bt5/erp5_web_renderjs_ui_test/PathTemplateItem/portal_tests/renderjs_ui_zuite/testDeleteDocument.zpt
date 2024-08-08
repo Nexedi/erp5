@@ -159,105 +159,10 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
-<!-- Change the listbox sort, to ensure all custom search/sort parameters are kept after deleting a subobject -->
-<tr>
-  <td>click</td>
-  <td>//th/a[text()='Quantity']</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tr>
-  <td>assertElementPresent</td><!-- verification -->
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Quantity']</td>
-  <td></td>
-</tr>
-
-<tr>
- 	<td>click</td>
- 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//tbody//a</td>
- 	<td></td>
-</tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
-
-<!-- Wait for the action page and click on the delete link -->
-<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
-</tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tal:block tal:define="click_configuration python: {'text': 'Delete Document'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
-</tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Document deleted'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Quantity']</td>
-  <td></td>
-</tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//tbody//a</td>
- 	<td></td>
-</tr>
- 
-<tr>
- 	<td>click</td>
- 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//tbody//a</td>
- 	<td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<!-- Wait for the action page and click on the delete link -->
-<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
-</tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tal:block tal:define="click_configuration python: {'text': 'Delete Document'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
-</tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Document deleted'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-
+<!-- Subobjects having no workflow are automatically permanently deleted -->
 <tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Quantity']</td>
-  <td></td>
-</tr>
 
 <!-- Wait for the action page and check no delete link is here-->
 <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
