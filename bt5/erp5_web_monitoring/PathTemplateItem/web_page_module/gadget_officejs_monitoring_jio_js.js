@@ -74,6 +74,8 @@
             master_url_list = result_list[1];
           }
           for (i = 0; i < master_url_list.length; i += 1) {
+            //TODO add wrapper layer erp5monitor, with limit
+            //LIMIT will be decided here
             storage_definition_list.push({
               type: "erp5",
               url: master_url_list[i],
