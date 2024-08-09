@@ -1495,7 +1495,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 subobject_data.seek(0)
                 subobject = connection.importFile(subobject_data)
                 obj._setObject(subobject_id, subobject)
-            except AttributeError:
+            except (AttributeError, KeyError):
               # XXX this may happen when an object which can contain
               # sub-objects (e.g. ERP5 Form) has been replaced with
               # an object which cannot (e.g. External Method).
@@ -1690,7 +1690,7 @@ class PathTemplateItem(ObjectTemplateItem):
     for path in sorted(object_keys, reverse=True):
       try:
         path_list = self._resolvePath(p, [], path.split('/'))
-      except AttributeError:
+      except (AttributeError, KeyError):
         # path seems to not exist anymore
         continue
       path_list.sort()
