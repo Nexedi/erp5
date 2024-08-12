@@ -1023,7 +1023,7 @@
       //TODO use slapos_master_url in the query instead of iterate later
       return context._local_sub_storage.allDocs({
         query: '(portal_type:"' + OPML_PORTAL_TYPE + '")',
-        select_list: ["title", "url", "basic_login", "slapos_master_url"]
+        select_list: ["title", "url", "basic_login", "slapos_master_url", "slapos_master_url"]
       })
         .push(function (result) {
           function removeAllOPML(remove_opml_list, jio) {
@@ -1050,8 +1050,7 @@
           }
           if (slapos_master_url_list.length > 0) {
             for (i = 0; i < opml_list.length; i += 1) {
-              if (opml_list[i].value.slapos_master_url &&
-                opml_list[i].value.slapos_master_url !== "") {
+              if (!opml_list[i].value.manually_added) {
                 if (!slapos_master_url_list.includes(opml_list[i].value.slapos_master_url)) {
                   remove_opml_list.push(opml_list[i]);
                 }
