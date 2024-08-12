@@ -29,7 +29,6 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
-from six import int2byte as chr
 from six import string_types as basestring
 from six.moves import xrange
 import six
@@ -419,7 +418,7 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
    result = localizer.erp5_ui.gettext(msg_id_context, default='')
    if result == '':
      result = localizer.erp5_ui.gettext(msg_id)
-   return result.encode('utf8')
+   return unicode2str(result)
 
 def Email_parseAddressHeader(text):
   """
@@ -441,7 +440,11 @@ def fill_args_from_request(*optional_args):
   required by the method.
   """
   def decorator(wrapped):
-    names = inspect.getargspec(wrapped)[0]
+    if six.PY3:
+      getfullargspec = inspect.getfullargspec
+    else:
+      getfullargspec = inspect.getargspec
+    names = getfullargspec(wrapped)[0]
     assert names[:2] == ['self', 'REQUEST']
     del names[:2]
     names += optional_args
@@ -1744,13 +1747,11 @@ class ScalarMaxConflictResolver(persistent.Persistent):
 #  URL Normaliser #
 ###################
 from Products.PythonScripts.standard import url_unquote
-# No new release of urlnorm since 2016 and no py3 support
 urlnorm = None
-if six.PY2:
-  try:
-    import urlnorm
-  except ImportError:
-    warnings.warn("urlnorm lib is not installed", DeprecationWarning)
+try:
+  import urlnorm
+except ImportError:
+  warnings.warn("urlnorm lib is not installed", DeprecationWarning)
 from six.moves.urllib.parse import urlsplit, urlunsplit, urljoin
 
 # Regular expressions
@@ -1865,11 +1866,11 @@ def guessEncodingFromText(data, content_type='text/html'):
 
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe
-    str2bytes("!'()*-." "0123456789" "_~"
-              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-              "abcdefghijklmnopqrstuvwxyz"
-              # reserved (maybe unsafe)
-              "#$&+,/:;=?@[]")
+    "!'()*-." "0123456789" "_~"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    # reserved (maybe unsafe)
+    "#$&+,/:;=?@[]"
   else "%%%02X" % x
   for x in xrange(256)}
 

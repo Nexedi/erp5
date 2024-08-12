@@ -2078,9 +2078,11 @@ class TestImage(ERP5TypeTestCase):
   """
   def makeImageFileUpload(self, filename):
     import Products.ERP5.tests
-    return FileUpload(
+    fu = FileUpload(
             os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
             'test_data', 'images', filename))
+    self.addCleanup(fu.close)
+    return fu
 
   def test_CreateImage(self):
     # We can add Images inside Persons and Organisation

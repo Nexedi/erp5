@@ -16,4 +16,6 @@ payload = message_from_bytes(context.getData()).get_payload()
 while isinstance(payload, list):
   payload = payload[0].get_payload(decode=True)
 
+if six.PY3:
+  payload = payload.decode()
 return payload

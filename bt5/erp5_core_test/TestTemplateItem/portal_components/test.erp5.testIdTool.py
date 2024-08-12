@@ -29,11 +29,14 @@
 ##############################################################################
 
 import unittest
+import warnings
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from MySQLdb import ProgrammingError
 from six.moves import range
+import six
+
 
 class TestIdTool(ERP5TypeTestCase):
 
@@ -146,6 +149,38 @@ class TestIdTool(ERP5TypeTestCase):
     self.assertEqual(21, self.id_tool.generateNewId(id_generator=id_generator,
                                       id_group='d02', default=3))
 
+    # generateNewId expect str, but convert id_group when passed a wrong type
+    with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
+      self.assertEqual(
+        self.id_tool.generateNewId(
+          id_generator=id_generator,
+          id_group=('d', 1),
+        ), 0)
+    self.assertEqual(
+      [(type(w.message), str(w.message)) for w in recorded],
+      [(DeprecationWarning, 'id_group must be a string, other types are deprecated.')],
+    )
+
+    # on python3, it understands bytes and converts to string
+    self.assertEqual(
+      self.id_tool.generateNewId(
+        id_generator=id_generator,
+        id_group='bytes',
+      ), 0)
+    with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
+      self.assertEqual(
+        self.id_tool.generateNewId(
+          id_generator=id_generator,
+          id_group=b'bytes',
+        ), 1)
+      if six.PY3:
+        self.assertEqual(
+          [(type(w.message), str(w.message)) for w in recorded],
+          [(BytesWarning, 'id_group must be a string, not bytes.')],
+        )
+
   def test_02a_generateNewIdWithZODBGenerator(self):
     """
       Check the generateNewId with a zodb id generator
@@ -233,6 +268,40 @@ class TestIdTool(ERP5TypeTestCase):
     self.assertEqual([23, 24], self.id_tool.generateNewIdList(\
                                       id_generator=id_generator,
                                       id_group='d03', default=3, id_count=2))
+
+    # generateNewIdList expect str, but convert id_group when passed a wrong type
+    with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
+      self.assertEqual(
+        self.id_tool.generateNewIdList(
+          id_generator=id_generator,
+          id_group=('d', 1),
+          id_count=1,), [0])
+    self.assertEqual(
+      [(type(w.message), str(w.message)) for w in recorded],
+      [(DeprecationWarning, 'id_group must be a string, other types are deprecated.')],
+    )
+
+    # on python3, it understands bytes and converts to string
+    self.assertEqual(
+      self.id_tool.generateNewIdList(
+        id_generator=id_generator,
+        id_group='bytes',
+        id_count=1,
+        ), [0])
+    with warnings.catch_warnings(record=True) as recorded:
+      warnings.simplefilter("always")
+      self.assertEqual(
+        self.id_tool.generateNewIdList(
+          id_generator=id_generator,
+          id_group=b'bytes',
+          id_count=1,
+        ), [1])
+      if six.PY3:
+        self.assertEqual(
+          [(type(w.message), str(w.message)) for w in recorded],
+          [(BytesWarning, 'id_group must be a string, not bytes.')],
+        )
 
   def test_03a_generateNewIdListWithZODBGenerator(self):
     """
