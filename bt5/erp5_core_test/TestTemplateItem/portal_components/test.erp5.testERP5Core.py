@@ -788,3 +788,15 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       len(self.portal.z_get_deleted_path_list(timestamp=DateTime() - 1)),
       len(person_list),
     )
+    # make some rows in deleted_catalog older.
+    query = self.portal.erp5_sql_connection().query
+    query('UPDATE deleted_catalog SET deletion_timestamp="%s" LIMIT 5' % \
+      (DateTime() - 10).strftime('%Y-%m-%d')
+    )
+    self.portal.portal_alarms.alarm_garbage_collect_deleted_catalog.activeSense()
+    self.tic()
+    # check if old raws are removed from deleted_catalog.
+    self.assertEqual(
+      len(self.portal.z_get_deleted_path_list(timestamp=DateTime() - 1)),
+      len(person_list) - 5,
+    )
