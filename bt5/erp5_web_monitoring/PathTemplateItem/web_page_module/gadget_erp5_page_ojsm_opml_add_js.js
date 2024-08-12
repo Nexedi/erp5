@@ -163,7 +163,7 @@
                   "default": options.slapos_master_url || "",
                   "css_class": "",
                   "required": 1,
-                  "editable": 0,
+                  "editable": 1,
                   "key": "slapos_master_url",
                   "hidden": 0,
                   "type": "StringField"
