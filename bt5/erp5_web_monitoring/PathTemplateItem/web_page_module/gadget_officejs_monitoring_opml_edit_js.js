@@ -150,7 +150,8 @@
         active: (doc.active === "on") ? true : false,
         has_monitor: true,
         state: doc.state || (doc.active === "on" ? "Started" : "Stopped"),
-        slapos_master_url: ""
+        slapos_master_url: doc.slapos_master_url,
+        manually_added: true
       },
       update_password_list = [],
       allow_force = false,
