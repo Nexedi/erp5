@@ -338,7 +338,7 @@ class CopyContainer:
       if aq_base(container) is not aq_base(self):
           self.__recurse('manage_beforeDelete', item, container)
           if self.isIndexable:
-            self.unindexObject()
+            self.unindexObject(item.getPath())
 
   def __recurse(self, name, *args):
       """
