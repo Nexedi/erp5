@@ -1023,7 +1023,7 @@
       //TODO use slapos_master_url in the query instead of iterate later
       return context._local_sub_storage.allDocs({
         query: '(portal_type:"' + OPML_PORTAL_TYPE + '")',
-        select_list: ["title", "url", "basic_login", "slapos_master_url", "slapos_master_url"]
+        select_list: ["title", "url", "basic_login", "slapos_master_url", "manually_added"]
       })
         .push(function (result) {
           function removeAllOPML(remove_opml_list, jio) {
