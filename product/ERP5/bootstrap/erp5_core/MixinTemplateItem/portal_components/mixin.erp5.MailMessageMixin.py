@@ -218,6 +218,8 @@ class MailMessageMixin:
                                        encoding=part_encoding,
                                        index=index) # add index to generate
                                        # a unique cache key per attachment
+          if six.PY3:
+            content = content.encode()
         else:
           content = part.get_payload(decode=1)
         return content

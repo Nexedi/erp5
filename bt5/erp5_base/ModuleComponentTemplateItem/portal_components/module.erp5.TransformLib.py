@@ -3,6 +3,7 @@
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 from erp5.component.document.Document import DocumentConversionServerProxy, ConversionError, enc, dec
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 @implementer(ITransform)
 class DocumentConversionServerTransform:
   """
@@ -51,13 +52,13 @@ class DocumentConversionServerTransform:
     source_format = self._getFormatFromMimetype(source_mimetype)
     destination_format = self._getFormatFromMimetype(self.output)
 
-    data.setData(dec(server_proxy.convertFile(
-      enc(orig),
+    data.setData(dec(str2bytes(server_proxy.convertFile(
+      bytes2str(enc(orig)),
       source_format,
       destination_format,
       # Default values are ConversionServer default ones
       kwargs.get('zip', False),
       kwargs.get('refresh', False),
-      kwargs.get('conversion_kw', {}))))
+      kwargs.get('conversion_kw', {})))))
 
     return data
