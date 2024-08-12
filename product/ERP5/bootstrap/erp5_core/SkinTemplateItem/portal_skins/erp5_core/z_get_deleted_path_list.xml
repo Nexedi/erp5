@@ -14,8 +14,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\n
-path</string> </value>
+            <value> <string>timestamp</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -31,9 +30,7 @@ path</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -41,7 +38,7 @@ path</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_delete_uid</string> </value>
+            <value> <string>z_get_deleted_path_list</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>

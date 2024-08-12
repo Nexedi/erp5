@@ -1488,7 +1488,10 @@ class Catalog(Folder,
       LOG('ZSQLCatalog.beforeUncatalogObject', INFO, 'The sql_catalog_delete_uid method is not defined')
       return self.uncatalogObject(path=path,uid=uid)
     method = self._getOb(method_name)
-    method(uid = uid)
+    try:
+      method(uid=uid, path=path)
+    except ValueError: # BBB
+      method(uid=uid)
 
   def getSqlUncatalogObjectList(self):
     return self.sql_uncatalog_object

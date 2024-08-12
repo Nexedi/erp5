@@ -35,6 +35,7 @@ import urllib
 import lxml.html
 
 from AccessControl.SecurityManagement import newSecurityManager
+from DateTime import DateTime
 from Testing import ZopeTestCase
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -770,3 +771,20 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
           uid=old.getUid(),
         )
       ], [old_indexation_timestamp])
+
+  def test_deleted_catalog(self):
+    query = self.portal.erp5_sql_connection().query
+    query('DELETE FROM deleted_catalog')
+    person_list = [
+      self.portal.person_module.newContent(portal_type='Person')
+      for _ in range(10)
+    ]
+    self.tic()
+    self.portal.person_module.manage_delObjects(
+      ids=[e.getId() for e in person_list],
+    )
+    # check if deleted_catalog is immediately updated after deletion.
+    self.assertEqual(
+      len(self.portal.z_get_deleted_path_list(timestamp=DateTime() - 1)),
+      len(person_list),
+    )
