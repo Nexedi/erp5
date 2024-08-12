@@ -49,7 +49,9 @@
 
   ERP55Monitor.prototype.buildQuery = function () {
     var sub_storage = this._sub_storage, args = arguments, master_url = this._storage_definition.url, i;
-    arguments[0].limit = [0, LIMIT];
+    if (!arguments[0].limit) {
+      arguments[0].limit = [0, LIMIT];
+    }
     return new RSVP.Queue()
       .push(function () {
         return sub_storage.buildQuery.apply(sub_storage, args);
