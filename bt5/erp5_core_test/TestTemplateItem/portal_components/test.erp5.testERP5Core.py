@@ -28,6 +28,7 @@
 ##############################################################################
 
 import collections
+import csv
 import httplib
 import urlparse
 import base64
@@ -38,9 +39,11 @@ from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Testing import ZopeTestCase
 
+from Products.ERP5Type.Utils import bytes2str, str2unicode
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
 
+from io import StringIO
 from zExceptions import Unauthorized
 
 if 1: # BBB
@@ -120,6 +123,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     if 'test_folder' in self.portal.objectIds():
       self.portal.manage_delObjects(['test_folder'])
     self.portal.portal_selections.setSelectionFor('test_selection', None)
+    person_module = self.portal.person_module
+    person_id_list = list(person_module.objectIds())
+    if person_id_list:
+      person_module.manage_delObjects(ids=person_id_list)
+    self.portal.portal_caches.clearCache()
     self.tic()
 
   def test_01_ERP5Site_createModule(self, quiet=quiet, run=run_all_test):
@@ -799,4 +807,62 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(
       len(self.portal.z_get_deleted_path_list(timestamp=DateTime() - 1)),
       len(person_list) - 5,
+    )
+
+  def test_ERP5Site_resynchroniseCatalogSince(self):
+    person = self.portal.person_module.newContent(
+      portal_type='Person',
+      title='test1',
+    )
+    person2 = self.portal.person_module.newContent(
+      portal_type='Person',
+      title='test2',
+    )
+    self.tic()
+    query = self.portal.erp5_sql_connection().query
+    query('UPDATE catalog SET title="test1bis" WHERE uid=%s' % person.getUid())
+    self.assertEqual(
+      0,
+      len(self.portal.portal_catalog(portal_type='Person', title='test1')),
+    )
+    # simulate a document being deleted and then the database being
+    # truncated before that deletion.
+    self.portal.portal_catalog.beforeUncatalogObject(
+      uid=person2.getUid(),
+      path=person2.getPath(),
+    )
+    self.assertEqual(
+      0,
+      len(self.portal.portal_catalog(uid=person2.getUid())),
+    )
+    response = self.publish(
+      '/%s/ERP5Site_resynchroniseCatalogSince?from_date=%s' % (
+        self.portal.getId(), DateTime() - 1
+      ),
+      self.auth,
+    )
+    self.assertEqual(response.getStatus(), 200)
+    io_ = StringIO(str2unicode(bytes2str(response.getBody())))
+    response_dict = {x['path']:x for x in csv.DictReader(io_)}
+    person_row = response_dict[person.getPath()]
+    self.assertEqual(person_row['status'], 'present')
+    self.assertEqual(person_row['catalog title'], 'test1bis')
+    self.assertEqual(person_row['zodb title'], 'test1')
+    person2_row = response_dict[person2.getPath()]
+    self.assertEqual(person2_row['status'], 'present')
+    self.assertEqual(person2_row['catalog title'], '')
+    self.assertEqual(person2_row['zodb title'], 'test2')
+    self.portal.ERP5Site_resynchroniseCatalogSince(
+      RESPONSE=self.portal.REQUEST.RESPONSE,
+      from_date=DateTime() - 1,
+      dry=False,
+    )
+    self.tic()
+    self.assertEqual(
+      1,
+      len(self.portal.portal_catalog(portal_type='Person', title='test1')),
+    )
+    self.assertEqual(
+      1,
+      len(self.portal.portal_catalog(uid=person2.getUid())),
     )
