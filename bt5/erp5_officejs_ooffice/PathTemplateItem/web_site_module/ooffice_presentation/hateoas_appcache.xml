@@ -69,7 +69,7 @@
                   <dictionary>
                     <item>
                         <key> <string>_defined_in_class</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <bool>True</bool> </value>
                     </item>
                     <item>
                         <key> <string>_hookname</string> </key>
