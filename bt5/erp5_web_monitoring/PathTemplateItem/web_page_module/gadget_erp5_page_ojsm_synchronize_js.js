@@ -28,13 +28,6 @@
           redirect_options = {"page": "ojsm_dispatch", "notify_msg": result.msg, "notify_type": result.type};
           notify.msg = result.msg;
           notify.type = result.type;
-          if (notify.type === "error") {
-            // drop master url list settings if sync failed
-            return gadget.setSetting('latest_master_url_list', undefined)
-              .push(function () {
-                return gadget.setSetting('master_url_list', undefined);
-              });
-          }
         })
         .push(function () {
           if (options.reset === "1") {
