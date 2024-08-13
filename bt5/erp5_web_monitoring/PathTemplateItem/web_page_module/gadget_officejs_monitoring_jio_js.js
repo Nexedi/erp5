@@ -52,26 +52,21 @@
     return new RSVP.Promise(resolver, canceller);
   }
 
-  function getUpdatedMonitoringStorageSpec(gadget, check_update) {
+  function getUpdatedMonitoringStorageSpec(gadget, checking_update_on_repair) {
     var storage_definition_list = [], i, master_url_list,
       update_settings, monitoring_jio;
-    return gadget.getSettingList(['latest_master_url_list',
-                                  'master_url_list',
+    return gadget.getSettingList(['master_url_list',
+                                  'master_url_list_updated',
                                   'default_view_reference'])
       .push(function (result_list) {
-        // TODO sets should be used to compare elements are different
-        // or replace latest_master_url_list by an update flag?
-        if (result_list[0] || result_list[1]) {
-          // if no previous master list or latest list is different (new configuration set), update
-          if (!result_list[1] ||
-              result_list[0].toString() !== result_list[1].toString()) {
-            master_url_list = result_list[0];
+        if (result_list[0]) {
+          master_url_list = result_list[0];
+          if (result_list[1]) {
             update_settings = true;
           } else {
-            if (check_update) {
+            if (checking_update_on_repair) {
               return;
             }
-            master_url_list = result_list[1];
           }
           for (i = 0; i < master_url_list.length; i += 1) {
             storage_definition_list.push({
@@ -108,8 +103,7 @@
       })
       .push(function () {
         if (update_settings) {
-          return gadget.setSettingList({'master_url_list': master_url_list,
-                                        'latest_master_url_list': master_url_list});
+          return gadget.setSetting('master_url_list_updated', false);
         }
       })
       .push(function () {
@@ -141,7 +135,7 @@
         .push(function () {
           return gadget.setSettingList({'migration_version': current_version,
                                         'master_url_list': undefined,
-                                        'latest_master_url_list': undefined});
+                                        'master_url_list_updated': false});
         });
     })
 
@@ -169,7 +163,7 @@
           manifest = "gadget_officejs_monitoring.configuration";
           if (migration_version !== current_version) {
             return gadget.setSettingList({'master_url_list': undefined,
-                                          'latest_master_url_list': undefined});
+                                          'master_url_list_updated': false});
           }
         })
         .push(function () {

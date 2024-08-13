@@ -14,7 +14,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("setSettingList", "setSettingList")
 
     /////////////////////////////////////////
     // Form submit
@@ -31,10 +31,10 @@
           for (i = 0; i < master_url_list.length; i += 1) {
             master_url_list[i] = master_url_list[i].trim();
           }
-          return gadget.setSetting('latest_master_url_list', master_url_list);
+          return gadget.setSettingList({'master_url_list': master_url_list,
+                                        'master_url_list_updated': true});
         })
         .push(function () {
-          //TODO redirect to sync directly? drop import_export?
           return gadget.redirect({command: "display", options: {
             page: "ojsm_import_export",
             auto_sync: "erp5",
