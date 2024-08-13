@@ -800,3 +800,41 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       len(self.portal.z_get_deleted_path_list(timestamp=DateTime() - 1)),
       len(person_list) - 5,
     )
+
+  def test_ERP5Site_resynchroniseCatalogSince(self):
+    person = self.portal.person_module.newContent(
+      portal_type='Person',
+      title='test1',
+    )
+    person2 = self.portal.person_module.newContent(
+      portal_type='Person',
+      title='test1',
+    )
+    self.tic()
+    query('UPDATE catalog SET title="test2" WHERE uid=%s' % person.getUid())
+    self.assertEqual(
+      0,
+      len(self.portal.portal_catalog(portal_type='Person', title='test1')),
+    )
+    self.portal.portal_catalog.unindexObject(
+      uid=person2.getUid(),
+      path=person2.getPath(),
+    )
+    self.assertEqual(
+      0,
+      len(self.portal.portal_catalog(uid=person2.getUid())),
+    )
+    self.portal.ERP5Site_resynchroniseCatalogSince(
+      RESPONSE=self.portal.REQUEST.RESPONSE,
+      from_date=DateTime() - 1,
+      dry=False,
+    )
+    self.tic()
+    self.assertEqual(
+      1,
+      len(self.portal.portal_catalog(portal_type='Person', title='test1')),
+    )
+    self.assertEqual(
+      1,
+      len(self.portal.portal_catalog(uid=person2.getUid())),
+    )
