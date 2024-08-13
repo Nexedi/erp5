@@ -2076,11 +2076,11 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
 class TestImage(ERP5TypeTestCase):
   """Tests for images support.
   """
-  def makeImageFileUpload(self, filename):
+  def _getTestDataPath(self):
     import Products.ERP5.tests
-    return FileUpload(
-            os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-            'test_data', 'images', filename))
+    return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+                        'test_data',
+                        'images')
 
   def test_CreateImage(self):
     # We can add Images inside Persons and Organisation
@@ -2092,7 +2092,7 @@ class TestImage(ERP5TypeTestCase):
 
   def test_ConvertImage(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
+    image.edit(file=self.makeFileUpload('erp5_logo.png'))
     self.assertEqual('image/png', image.getContentType())
     self.assertEqual((320, 250), (image.getWidth(), image.getHeight()))
 
@@ -2109,7 +2109,7 @@ class TestImage(ERP5TypeTestCase):
 
   def test_ConvertImagePdata(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))
+    image.edit(file=self.makeFileUpload('erp5_logo.bmp'))
     from OFS.Image import Pdata
     self.assertTrue(isinstance(image.data, Pdata))
 
@@ -2131,7 +2131,7 @@ class TestImage(ERP5TypeTestCase):
         ('../broken_html.html', (-1, -1)),
       ):
       image = self.portal.newContent(portal_type='Image', id=self.id())
-      image.edit(file=self.makeImageFileUpload(filename))
+      image.edit(file=self.makeFileUpload(filename))
       self.assertEqual(
           (image.getWidth(), image.getHeight()),
           size,
@@ -2151,7 +2151,7 @@ class TestImage(ERP5TypeTestCase):
         ('../broken_html.html', 'application/unknown'),
       ):
       image = self.portal.newContent(portal_type='Image', id=self.id())
-      image.edit(data=self.makeImageFileUpload(filename).read())
+      image.edit(data=self.makeFileUpload(filename).read())
       self.assertEqual(
           image.getContentType(),
           content_type,
@@ -2171,7 +2171,7 @@ class TestImage(ERP5TypeTestCase):
         ('empty.png', 'application/unknown'),
       ):
       image = self.portal.newContent(portal_type='Image', id=self.id())
-      image.edit(file=self.makeImageFileUpload(filename))
+      image.edit(file=self.makeFileUpload(filename))
       self.assertEqual(
           image.getContentType(),
           content_type,
