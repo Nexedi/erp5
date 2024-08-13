@@ -1106,6 +1106,9 @@
         } else {
           console.log(error);
         }
+        if (!error_msg) {
+          error_msg = ". Check remote storages.";
+        }
         throw "Failed to import remote configurations" + error_msg;
       })
       .push(function (opml_list) {
