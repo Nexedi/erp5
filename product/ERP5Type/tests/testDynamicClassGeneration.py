@@ -2868,8 +2868,8 @@ class TestWithImport(TestImported):
 from ITestGC import ITestGC
 import zope.interface
 
+@zope.interface.implementer(ITestGC)
 class TestGC(XMLObject):
-  zope.interface.implements(ITestGC)
   def foo(self):
       pass
 """)
@@ -2900,12 +2900,15 @@ class TestGC(XMLObject):
       self.assertEqual(gc.garbage, [])
 
       import erp5.component
-      gc.set_debug(
-        gc.DEBUG_STATS |
-        gc.DEBUG_UNCOLLECTABLE |
-        gc.DEBUG_COLLECTABLE |
-        gc.DEBUG_OBJECTS |
-        gc.DEBUG_INSTANCES)
+      debug_flags = (
+        gc.DEBUG_STATS
+        | gc.DEBUG_UNCOLLECTABLE
+        | gc.DEBUG_COLLECTABLE )
+      if six.PY2:
+        debug_flags |= (
+          gc.DEBUG_OBJECTS
+          | gc.DEBUG_INSTANCES)
+      gc.set_debug(debug_flags)
       sys.stderr = stderr
       # Still not garbage collectable as RefManager still keeps a reference
       erp5.component.ref_manager.clear()
@@ -2988,11 +2991,11 @@ from erp5.component.document.Person import Person
 from ITestPortalType import ITestPortalType
 import zope.interface
 
+@zope.interface.implementer(ITestPortalType)
 class TestPortalType(Person):
   def test42(self):
     return 42
 
-  zope.interface.implements(ITestPortalType)
   def foo(self):
     pass
 """)
@@ -3655,6 +3658,8 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
     component.setTextContent(value)
     self.tic()
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getValidationState(), 'validated')
 
   def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
