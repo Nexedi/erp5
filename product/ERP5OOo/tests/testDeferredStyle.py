@@ -326,7 +326,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     # content is translated
     part, = [x for x in mail_message.walk() if x.get_content_type() == self.content_type]
     self.assertIn(
-        'Historique',
+        b'Historique',
         self.portal.portal_transforms.convertTo(
           'text/plain',
           part.get_payload(decode=True),
@@ -357,7 +357,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     mail_message = message_from_string(self.portal.MailHost._last_message[2])
     part, = [x for x in mail_message.walk() if x.get_content_type() == self.content_type]
     self.assertIn(
-        'Historique',
+        b'Historique',
         self.portal.portal_transforms.convertTo(
           'text/plain',
           part.get_payload(decode=True),
@@ -391,7 +391,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     # after they are saved to DB and automatically migrated. The getProperty
     # above, which is also what ods_style does, only work after the report
     # state is updated.
-    report.__setstate__(aq_base(getattr(skin_folder, report_form_name)).__getstate__())
+    aq_base(report).__setstate__(aq_base(getattr(skin_folder, report_form_name)).__getstate__())
     self.assertEqual(report.getProperty('title'), self.id())
 
     # Report section method

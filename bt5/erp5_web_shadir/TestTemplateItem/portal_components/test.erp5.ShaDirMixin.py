@@ -62,9 +62,9 @@ class ShaDirMixin(object):
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      b64encode("User SIGNATURE goes here.")]
+                      b64encode(b"User SIGNATURE goes here.").decode()]
 
-    self.data = json.dumps(self.data_list)
+    self.data = json.dumps(self.data_list).encode()
     self.sha512sum = hashlib.sha512(self.data).hexdigest()
 
     self.header_dict = {

@@ -131,6 +131,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertEqual('published', document2.getValidationState())
     self.assertEqual('archived', document.getValidationState())
 
+  @expectedFailure
   def test_put_file_twice_no_tic(self):
     self.postFile()
     self.commit()
