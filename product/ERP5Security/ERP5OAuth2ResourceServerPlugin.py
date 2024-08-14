@@ -48,6 +48,7 @@ from Products.PluggableAuthService.interfaces.plugins import (
 )
 from Products.ERP5Security import _setUserNameForAccessLog
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str
 
 # Public constants. Must not change once deployed.
 
@@ -109,11 +110,11 @@ def encodeAccessTokenPayload(payload):
   Encode given json-safe value into a format suitable for
   decodeAccessTokenPayload.
   """
-  return base64.urlsafe_b64encode(
+  return bytes2str(base64.urlsafe_b64encode(
     zlib.compress(
-      json.dumps(payload),
+      str2bytes(json.dumps(payload)),
     ),
-  )
+  ))
 
 def decodeAccessTokenPayload(encoded_payload):
   """
@@ -353,7 +354,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     if client_id is None:
       # Peek into token (without checking its signature) to guess the client_id
       # to look for.
-      client_id = jwt.decode(
+      client_id = unicode2str(jwt.decode(
         raw_token,
         # no key.
         # any algorithm is fine.
@@ -361,7 +362,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
           'verify_signature': False,
           'verify_exp': False,
         },
-      )['iss'].encode('utf-8')
+      )['iss'])
     assert client_id is not None
     web_service_value_list = list(self.__iterClientConnectorValue(
       client_id=client_id,
@@ -425,7 +426,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     The schema of this dictionary is purely an internal implementation detail
     of this plugin.
     """
-    client_address = request.getClientAddr().decode('utf-8')
+    client_address = str2unicode(request.getClientAddr())
     token = self.__checkTokenSignature(access_token)
     if token is None and can_update_key:
       self.__updateAccessTokenSignatureKeyList(request=request)
@@ -440,9 +441,9 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
       return
     # JWT is known valid. Access its content.
     token_payload = decodeAccessTokenPayload(
-      token[JWT_PAYLOAD_KEY].encode('ascii'),
+      bytes2str(token[JWT_PAYLOAD_KEY].encode('ascii')),
     )
-    client_id = token['iss'].encode('utf-8')
+    client_id = unicode2str(token['iss'])
     if self.__getWebServiceValue(
       client_id=client_id,
     ).getSessionVersion(
@@ -452,8 +453,8 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
       return
     return {
       _PRIVATE_EXTRACTED_KEY: (
-        token_payload[JWT_PAYLOAD_USER_ID_KEY].encode('utf-8'),
-        token_payload[JWT_PAYLOAD_USER_CAPTION_KEY].encode('utf-8'),
+        unicode2str(token_payload[JWT_PAYLOAD_USER_ID_KEY]),
+        unicode2str(token_payload[JWT_PAYLOAD_USER_CAPTION_KEY]),
       ),
       _PRIVATE_TOKEN_KEY: (access_token, refresh_token),
       _PRIVATE_CLIENT_ID: client_id,
@@ -467,10 +468,10 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
         ] or '',
       },
       _PRIVATE_GROUP_LIST_KEY: tuple(
-        x.encode('utf-8') for x in token_payload[JWT_PAYLOAD_GROUP_LIST_KEY]
+        unicode2str(x) for x in token_payload[JWT_PAYLOAD_GROUP_LIST_KEY]
       ),
       _PRIVATE_ROLE_LIST_KEY: tuple(
-        x.encode('utf-8') for x in token_payload[JWT_PAYLOAD_ROLE_LIST_KEY]
+        unicode2str(x) for x in token_payload[JWT_PAYLOAD_ROLE_LIST_KEY]
       ),
     }
 

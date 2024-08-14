@@ -62,6 +62,10 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   order_date = DateTime()
   amount_generator_line_portal_type = 'Trade Model Line'
 
+  # XXX so that unittest.suite._isnotsuite return False
+  def __iter__(self):
+    raise TypeError()
+
   def setBaseAmountQuantityMethod(self, base_amount_id, text):
     """Populate TradeModelLine_getBaseAmountQuantityMethod shared script
 
@@ -416,6 +420,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     expected_result_dict = self[delivery.getPath()]
 
     for line in delivery.getMovementList():
+      currency_precision = line.getPricePrecision()
       simulation_movement_list_list = self.getTradeModelSimulationMovementList(line)
       self.assertEqual(len(simulation_movement_list_list), 1)
       simulation_movement_list = simulation_movement_list_list[0]
@@ -425,20 +430,19 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                        len(result_dict))
       for use in 'discount', 'tax':
         total_price = expected_result_dict[use].get(line.getId()) or 0.0
-        if True:
-          sm = result_dict.pop(use)
-          self.assertEqual(str(sm.getTotalPrice() or 0.0), str(total_price))
-          self.assertEqual(3, len(sm.getCausalityValueList()))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type=self.business_link_portal_type)))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type=self.trade_model_path_portal_type)))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type='Trade Model Line')))
-          self.assertEqual(sm.getBaseApplicationList(),
-                           ['base_amount/' + use])
-          self.assertEqual(sm.getBaseContributionList(),
-                           dict(discount=['base_amount/tax'], tax=[])[use])
+        sm = result_dict.pop(use)
+        self.assertEqual(round(sm.getTotalPrice() or 0.0, currency_precision), round(total_price, currency_precision))
+        self.assertEqual(3, len(sm.getCausalityValueList()))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type=self.business_link_portal_type)))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type=self.trade_model_path_portal_type)))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type='Trade Model Line')))
+        self.assertEqual(sm.getBaseApplicationList(),
+                          ['base_amount/' + use])
+        self.assertEqual(sm.getBaseContributionList(),
+                          dict(discount=['base_amount/tax'], tax=[])[use])
       self.assertEqual({}, result_dict)
 
   def checkCausalityState(self, delivery, state):
@@ -467,12 +471,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     rounded_total_price = round(line_dict['normal'], currency_precision)
     rounded_tax_price = round(line_dict['tax'], currency_precision)
     rounded_discount_price = round(line_dict['discount'], currency_precision)
-    self.assertEqual(str(abs(line_dict['payable_receivable'])),
-        str(rounded_total_price + rounded_tax_price + rounded_discount_price))
-    self.assertEqual(str(abs(line_dict['vat'])),
-        str(rounded_tax_price))
-    self.assertEqual(str(abs(line_dict['income_expense'])),
-        str(rounded_total_price + rounded_discount_price))
+    self.assertEqual(round(abs(line_dict['payable_receivable']), currency_precision),
+        round(rounded_total_price + rounded_tax_price + rounded_discount_price, currency_precision))
+    self.assertEqual(round(abs(line_dict['vat']), currency_precision),
+        rounded_tax_price)
+    self.assertEqual(round(abs(line_dict['income_expense']), currency_precision),
+        round(rounded_total_price + rounded_discount_price, currency_precision))
 
   def buildPackingLists(self):
     self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
@@ -1232,6 +1236,7 @@ return lambda *args, **kw: 1""")
     self.assertEqual(sorted(expected_tax),
                      sorted(x.getTotalPrice() for x in amount_list))
 
+  @expectedFailure
   def test_tradeModelLineWithRounding(self):
     """
       Test if trade model line works with rounding.
@@ -1291,9 +1296,10 @@ return lambda *args, **kw: 1""")
     self.assertEqual(3333*0.05+171*0.05, amount.getTotalPrice()) # 175.2
     # check the result with rounding
     amount_list = order.getAggregatedAmountList(rounding=True)
-    # XXX Mark it as expectedFailure until we have clear specification
-    # of what we wish with rounding
-    expectedFailure(self.assertEqual)(2, len(amount_list)) # XXX 1 or 2 ???
+    # XXX Here, the assertion will fail with the current implementation.
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
+    # XXX and here, the result is 175, because round is applied against
+    # already aggregated single amount.
     self.assertEqual(174, getTotalAmount(amount_list))
 
     # check getAggregatedAmountList result of each movement

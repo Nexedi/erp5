@@ -1693,7 +1693,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # This is a one-shot method, revert after execution
       SQLDict.dequeueMessage = original_dequeue
       result = self.dequeueMessage(activity_tool, processing_node, node_family_id_set)
-      queue_tic_test_dict['isAlive'] = process_shutdown_thread.isAlive()
+      queue_tic_test_dict['is_alive'] = process_shutdown_thread.is_alive()
       return result
     SQLDict.dequeueMessage = dequeueMessage
     Organisation.waitingActivity = waitingActivity
@@ -1717,7 +1717,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           activity_tool.tic()
       activity_thread = ActivityThread()
       # Do not try to outlive main thread.
-      activity_thread.setDaemon(True)
+      activity_thread.daemon = True
       # Call process_shutdown in yet another thread because it will wait for
       # running activity to complete before returning, and we need to unlock
       # activity *after* calling process_shutdown to make sure the next
@@ -1727,7 +1727,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           activity_tool.process_shutdown(3, 0)
       process_shutdown_thread = ProcessShutdownThread()
       # Do not try to outlive main thread.
-      process_shutdown_thread.setDaemon(True)
+      process_shutdown_thread.daemon = True
 
       activity_thread.start()
       # Wait at rendez-vous for activity to arrive.
@@ -1746,7 +1746,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.assertEqual(len(message_list), 1)
         self.assertEqual(message_list[0].method_id, 'getTitle')
         # Check that process_shutdown_thread was still runing when Queue_tic returned.
-        self.assertTrue(queue_tic_test_dict.get('isAlive'), repr(queue_tic_test_dict))
+        self.assertTrue(queue_tic_test_dict.get('is_alive'), repr(queue_tic_test_dict))
         # Call tic in foreground. This must not lead to activity execution.
         activity_tool.tic()
         self.assertEqual(len(activity_tool.getMessageList()), 1)
