@@ -51,6 +51,7 @@ from OFS.Traversable import NotFound
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Timeout import getTimeLeft
+from Products.ERP5Type.Utils import bytes2str, unicode2str, str2bytes, str2unicode
 from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
   OAuth2AuthorisationClientConnectorMixIn,
   ERP5OAuth2ResourceServerPlugin,
@@ -156,9 +157,9 @@ class _SimpleHTTPRequest(object):
 
   def _authUserPW(self):
     if self._auth.lower().startswith('basic '):
-      return base64.decodestring(
+      return bytes2str(base64.decodebytes(
         self._auth.split(None, 1)[1],
-      ).split(':', 1)
+      )).split(':', 1)
 
   def get(self, name):
     if name == 'BODY':
@@ -200,7 +201,7 @@ class _OAuth2AuthorisationServerProxy(object):
     self._bind_address = (bind_address, 0) if bind_address else None
     if ca_certificate_pem is not None:
       # On python2 cadata is expected as an unicode object only.
-      ca_certificate_pem = ca_certificate_pem.decode('utf-8')
+      ca_certificate_pem = str2unicode(ca_certificate_pem)
     self._ca_certificate_pem = ca_certificate_pem
 
   #
@@ -315,7 +316,7 @@ class _OAuth2AuthorisationServerProxy(object):
 
   def getAccessTokenSignatureAlgorithmAndPublicKeyList(self):
     return tuple(
-      (signature_algorithm.encode('ascii'), public_key.encode('ascii'))
+      (unicode2str(signature_algorithm), unicode2str(public_key))
       for signature_algorithm, public_key in self._queryERP5(
         'getAccessTokenSignatureAlgorithmAndPublicKeyList',
       )
@@ -755,8 +756,8 @@ class OAuth2AuthorisationClientConnector(
       )))
     except StopIteration:
       name = None
-      identifier = base64.urlsafe_b64encode(urandom(32))
-    code_verifier = base64.urlsafe_b64encode(urandom(32))
+      identifier = bytes2str(base64.urlsafe_b64encode(urandom(32)))
+    code_verifier = bytes2str(base64.urlsafe_b64encode(urandom(32)))
     _, state_key = self.__getStateFernetKeyList()[0]
     encrypt = fernet.Fernet(state_key).encrypt
     query_list = [
@@ -768,7 +769,7 @@ class OAuth2AuthorisationClientConnector(
         # Note: fernet both signs and encrypts the content.
         # It uses on AES128-CBC, PKCS7 padding, and SHA256 HMAC, with
         # independent keys for encryption and authentication.
-        encrypt(json.dumps({
+        bytes2str(encrypt(str2bytes(json.dumps({
           # Identifier is also stored in User-Agent as a cookie.
           # This is used to prevent an attacker from tricking a user into
           # giving us an Authorisation Code under the control of the attacker.
@@ -790,7 +791,7 @@ class OAuth2AuthorisationClientConnector(
           # done above), this means the key may be attacked using (partially)
           # chosen-cleartext (if AES128 is found vulnerable to such attack).
           _STATE_CAME_FROM_NAME: (
-            came_from.decode('utf-8')
+            str2unicode(came_from)
             if came_from else
             came_from
           ),
@@ -798,7 +799,7 @@ class OAuth2AuthorisationClientConnector(
           # Authorisation Code converted into tokens. To be kept secret from
           # everyone other than this server.
           _STATE_CODE_VERIFIER_NAME: code_verifier,
-        })),
+        })))),
       ),
       ('code_challenge_method', 'S256'),
       (
@@ -866,7 +867,7 @@ class OAuth2AuthorisationClientConnector(
     try:
       state_dict = json.loads(
         self.__getMultiFernet().decrypt(
-          state,
+          str2bytes(state),
           ttl=self._SESSION_STATE_VALIDITY,
         ),
       )
@@ -884,7 +885,7 @@ class OAuth2AuthorisationClientConnector(
       came_from = state_dict.get(_STATE_CAME_FROM_NAME)
       if came_from:
         context = self # whatever
-        kw['redirect_url'] = came_from.encode('utf-8')
+        kw['redirect_url'] = unicode2str(came_from)
       else:
         context = self._getNeutralContextValue()
       context.Base_redirect(**kw)
@@ -932,7 +933,7 @@ class OAuth2AuthorisationClientConnector(
       REQUEST=REQUEST,
       RESPONSE=RESPONSE,
     )
-    identifier_from_state = state_dict[_STATE_IDENTIFIER_NAME].encode('ascii')
+    identifier_from_state = unicode2str(state_dict[_STATE_IDENTIFIER_NAME])
     for (
       state_cookie_name,
       identifier_from_cookie,
@@ -967,7 +968,7 @@ class OAuth2AuthorisationClientConnector(
         'code': code,
         'redirect_uri': self.getRedirectUri(),
         'client_id': self.getReference(),
-        'code_verifier': state_dict[_STATE_CODE_VERIFIER_NAME].encode('ascii'),
+        'code_verifier': unicode2str(state_dict[_STATE_CODE_VERIFIER_NAME])
       },
     )
     access_token, _, error_message = self._setCookieFromTokenResponse(

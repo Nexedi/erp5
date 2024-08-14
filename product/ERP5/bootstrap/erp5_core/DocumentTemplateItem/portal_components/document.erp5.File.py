@@ -222,6 +222,8 @@ class File(Document, OFS_File):
       elif getattr(self, 'getBaseData', None) is not None:
         content = self.getBaseData()
 
+    if isinstance(content, six.text_type):
+      content = content.encode('utf-8')
     if content and not isinstance(content, bytes):
       content = bytes(content)
 
