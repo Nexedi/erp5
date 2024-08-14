@@ -789,31 +789,31 @@ class TestCMFCategory(ERP5TypeTestCase):
         base_cat.getCategoryChildIndentedTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['\xc2\xa0\xc2\xa0The Sub Title', 'the_id/the_sub_id']],
+            [NBSP_UTF8 * 2 + 'The Sub Title', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedIndentedTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['\xc2\xa0\xc2\xa0The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            [NBSP_UTF8 * 2 + 'The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedCompactTitleItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedLogicalPathItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Title/The Süb Tïtle', 'the_id/the_sub_id']],
       )
       self.assertEqual(
         base_cat.getCategoryChildTranslatedCompactLogicalPathItemList(),
           [['', ''],
             ['The Title', 'the_id'],
-            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+            ['The Title/The Süb Tïtle', 'the_id/the_sub_id']],
       )
 
   def test_CategoryChildTitleItemListFilterNodeFilterLeave(self):

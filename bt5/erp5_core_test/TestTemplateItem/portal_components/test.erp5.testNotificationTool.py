@@ -54,18 +54,19 @@ def decode_email(file_):
   msg = message_from_bytes(file_)
   # Back up original file
   theMail['__original__'] = file_
-  # Recode headers to UTF-8 if needed
   for key, value in msg.items():
     decoded_value_list = decode_header(value)
-    unicode_value = make_header(decoded_value_list)
-    new_value = unicode_value.__unicode__().encode('utf-8')
+    new_value = make_header(decoded_value_list)
+    if six.PY2:
+      # Recode headers to UTF-8 if needed
+      new_value = new_value.__unicode__().encode('utf-8')
     theMail['headers'][key.lower()] = new_value
   # Filter mail addresses
   for header in ('resent-to', 'resent-from', 'resent-cc', 'resent-sender',
                  'to', 'from', 'cc', 'sender', 'reply-to'):
     header_field = theMail['headers'].get(header)
     if header_field:
-      theMail['headers'][header] = parseaddr(header_field)[1]
+      theMail['headers'][header] = parseaddr(header_field.encode())[1]
   # Get attachments
   body_found = 0
   for part in msg.walk():
@@ -81,11 +82,13 @@ def decode_email(file_):
     elif content_type == 'message/rfc822':
       continue
     elif content_type in ("text/plain", "text/html"):
-      charset = part.get_content_charset()
+      charset = part.get_content_charset() or 'utf-8'
       payload = part.get_payload(decode=True)
       #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
       if charset:
-        payload = unicode(payload, charset).encode('utf-8')
+        payload = payload.decode(charset)
+      if six.PY2:
+        payload = payload.encode('utf-8')
       if body_found:
         # Keep the content type
         theMail['attachment_list'].append((file_name,

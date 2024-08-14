@@ -26,6 +26,13 @@
 ##############################################################################
 from __future__ import print_function
 import base64
+import six
+# pylint:disable=no-name-in-module
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
+# pylint:enable=no-name-in-module
 from collections import defaultdict
 from functools import partial, wraps
 import hashlib
@@ -41,6 +48,7 @@ from six.moves.urllib.parse import parse_qsl, quote, urlencode, urlsplit, urluns
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5.ERP5Site import (
   ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME,
   ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME,
@@ -76,12 +84,16 @@ class FormExtractor(HTMLParser):
     elif self.__in_form and tag in _HTML_FIELD_TAG_SET:
       self.form_list[-1][1].append((
         attr_dict['name'],
-        attr_dict.get('value', '').encode('utf-8'),
+        unicode2str(attr_dict.get('value', ''))
       ))
 
   def handle_endtag(self, tag):
     if tag == 'form':
       self.__in_form = False
+
+  def error(self, message):
+    raise ValueError(message)
+
 
 class TestOAuth2(ERP5TypeTestCase):
   # pylint:disable=unused-private-member
@@ -293,7 +305,7 @@ class TestOAuth2(ERP5TypeTestCase):
     cleanup_list = self.__cleanup_list
     # XXX: imperfect cleanup if indexation did not complete
     cleanup_list.extend(
-      x.getObject() for x in self.__searchOAuth2Session(),
+      x.getObject() for x in self.__searchOAuth2Session()
     )
     parent_dict = defaultdict(list)
     for document_value in cleanup_list:
@@ -814,9 +826,9 @@ class TestOAuth2(ERP5TypeTestCase):
         'client_id': client_id,
         'state': reference_state,
         'code_challenge_method': 'S256',
-        'code_challenge': base64.urlsafe_b64encode(
+        'code_challenge': bytes2str(base64.urlsafe_b64encode(
           hashlib.sha256(code_verifier).digest(),
-        ).rstrip('='),
+        )).rstrip('='),
         'redirect_uri': _EXTERNAL_CLIENT_REDIRECT_URI,
       }),
       redirect_uri=_EXTERNAL_CLIENT_REDIRECT_URI,

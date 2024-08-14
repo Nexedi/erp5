@@ -38,6 +38,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
 from Products.ERP5Type.Utils import bytes2str, convertToUpperCase, str2bytes
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -51,6 +52,8 @@ import ZPublisher.HTTPRequest
 from unittest import expectedFailure
 import six.moves.http_client
 import six.moves.urllib.parse, six.moves.urllib.request
+import six
+
 import base64
 import mock
 
@@ -753,33 +756,50 @@ class TestIngestion(IngestionTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'doc',
                                  ['pdf', 'doc', 'rtf', 'txt', 'odt'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'doc',
-                                                 ['writer.html'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'doc',
+                                                   ['writer.html'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'doc', ['writer.html'])
 
   def stepCheckSpreadsheetDocumentExportList(self, sequence=None,
                                              sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'xls', ['csv', 'xls', 'ods', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'xls',
-                                 ['calc.html', 'calc.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'xls',
+                                   ['calc.html', 'calc.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'xls', ['calc.html', 'calc.pdf'])
 
   def stepCheckPresentationDocumentExportList(self, sequence=None,
                                               sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'ppt', ['ppt', 'odp', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
-                                                 'ppt', ['impr.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
+                                                   'ppt', ['impr.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'ppt', ['impr.pdf'])
 
   def stepCheckDrawingDocumentExportList(self, sequence=None,
                                          sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'sxd', ['jpg', 'svg', 'pdf', 'odg'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
                                                  'sxd', ['draw.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'sxd', ['draw.pdf'])
+
 
   def stepExportPDF(self, sequence=None, sequence_list=None, **kw):
     """
