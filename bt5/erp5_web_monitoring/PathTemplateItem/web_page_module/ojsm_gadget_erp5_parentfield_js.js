@@ -112,7 +112,7 @@
           case "public_url":
             state_dict.content = link_template({
               url: options.link.replace('private', 'public'),
-              title: "Public Logs Url",
+              title: "Access Public files",
               target: "_blank"
             });
             return gadget.changeState(state_dict);
