@@ -109,6 +109,13 @@
               target: "_blank"
             });
             return gadget.changeState(state_dict);
+          case "public_url":
+            state_dict.content = link_template({
+              url: options.link.replace('private', 'public'),
+              title: "Public Logs Url",
+              target: "_blank"
+            });
+            return gadget.changeState(state_dict);
           case "private_url":
             return new RSVP.Queue()
               .push(function () {
