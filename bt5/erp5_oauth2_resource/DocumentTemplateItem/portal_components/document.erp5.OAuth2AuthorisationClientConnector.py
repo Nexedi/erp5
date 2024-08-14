@@ -583,7 +583,7 @@ class OAuth2AuthorisationClientConnector(
       )
     RESPONSE.setCookie(
       name=name,
-      value=base64.urlsafe_b64encode(content),
+      value=bytes2str(base64.urlsafe_b64encode(str2bytes(content))),
       # prevent this cookie from being read over the network
       # (assuming an uncompromised SSL setup, but if it is compromised
       # then the attacker may just as well impersonate the victim using
@@ -618,10 +618,10 @@ class OAuth2AuthorisationClientConnector(
     ttl = self._SESSION_STATE_VALIDITY
     for name, value in six.iteritems(self._getRawStateCookieDict(REQUEST)):
       try:
-        result[name] = decrypt(
+        result[name] = bytes2str(decrypt(
           base64.urlsafe_b64decode(value),
           ttl=ttl,
-        )
+        ))
       except (fernet.InvalidToken, TypeError):
         self._expireStateCookie(RESPONSE, name)
     return result
@@ -804,9 +804,9 @@ class OAuth2AuthorisationClientConnector(
       (
         'code_challenge',
         # S256 standard PKCE encoding
-        base64.urlsafe_b64encode(
-          hashlib.sha256(code_verifier).digest(),
-        ).rstrip('='),
+        bytes2str(base64.urlsafe_b64encode(
+          hashlib.sha256(str2bytes(code_verifier)).digest(),
+        )).rstrip('='),
       ),
     ]
     if scope_list:
@@ -820,7 +820,7 @@ class OAuth2AuthorisationClientConnector(
     self._setStateCookie(
       RESPONSE=RESPONSE,
       name=name,
-      content=encrypt(identifier),
+      content=bytes2str(encrypt(str2bytes(identifier))),
     )
     if (
       self.isAuthorisationServerRemote() or
@@ -831,7 +831,7 @@ class OAuth2AuthorisationClientConnector(
         'Location',
         self._getAuthorisationServerValue(
           REQUEST=REQUEST,
-        ).absolute_url() + '/authorize?' + urllib.urlencode(query_list),
+        ).absolute_url() + '/authorize?' + urlencode(query_list),
       )
     else:
       # Provide the current URL to authorize, so that it can redirect the

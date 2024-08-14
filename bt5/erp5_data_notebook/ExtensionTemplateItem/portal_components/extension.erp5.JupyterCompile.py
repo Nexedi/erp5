@@ -1050,7 +1050,7 @@ class ERP5ImageProcessor(ObjectProcessor):
 
   def process(self):
     from base64 import b64encode
-    figure_data = b64encode(self.subject.getData())
+    figure_data = b64encode(self.subject.getData()).decode()
     mime_type = self.subject.getContentType()
     return '<img src="data:%s;base64,%s" /><br />' % (mime_type, figure_data), 'text/html'
 
@@ -1193,7 +1193,7 @@ def erp5PivotTableUI(self, df):
   """
   html_string = template % df.to_csv()
   from hashlib import sha512
-  key = sha512(html_string).hexdigest()
+  key = sha512(str2bytes(html_string)).hexdigest()
   storeIFrame(self, html_string, key)
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)

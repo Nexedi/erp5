@@ -8,7 +8,7 @@ from six.moves.urllib.request import Request, urlopen
 from six.moves.urllib.parse import urlparse
 from six import string_types as basestring
 try:
-  import xml.etree.cElementTree as ET
+  import xml.etree.cElementTree as ET # six.PY2: pylint:disable=deprecated-module
 except ImportError:
   import xml.etree.ElementTree as ET
 
