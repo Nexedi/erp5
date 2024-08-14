@@ -1,3 +1,6 @@
+# TODO: this module was not ported to python3, it's not clear if this
+# is still useful
+# pylint:disable=import-error
 import compiler
 import compiler.ast
 import compiler.visitor

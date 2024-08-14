@@ -209,8 +209,10 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     # zope.i18n.translate and sets 'default' to 'message' before passing it to
     # MessageCatalog (Localizer.erp5_ui.translate)
     self.assertEqual(message, self.portal.Base_translateString(message))
-    self.assertEqual(message,
-                      self.portal.Localizer.translate('ui', message).encode('utf-8'))
+    translated = self.portal.Localizer.translate('ui', message)
+    if six.PY2:
+      translated = translated.encode('utf-8')
+    self.assertEqual(message, translated)
 
     # default=None, thus 'message' was previously stripped before being set as
     # 'default' value (MessageCatalog.gettext)
