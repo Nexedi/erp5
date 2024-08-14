@@ -31,8 +31,6 @@
 import os
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.runUnitTest import tests_home
-from Products.ERP5Type.tests.utils import FileUpload
 from erp5.component.module.ConfiguratorTestMixin import \
     TestLiveConfiguratorWorkflowMixin
 
@@ -1978,26 +1976,21 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
       stepCheckInstanceIsConfigured%(country)s
       """
 
-  def uploadFile(self, file_id):
-    file_obj = getattr(self.portal, file_id)
-    file_path = tests_home + '/%s' % file_id
-    temp_file = open(file_path, 'w+b')
-    try:
-      temp_file.write(str(file_obj))
-    finally:
-      temp_file.close()
+  def makeFileUpload(self, filename, *_, **__):
+    from Products.ERP5Type.tests.runUnitTest import tests_home
 
-    return (file_path, FileUpload(file_path, file_id))
+    with open(os.path.join(tests_home, filename), 'w+b') as temp_file:
+      temp_file.write(bytes(getattr(self.portal, filename)))
+
+    return super(TestConsultingConfiguratorWorkflow,
+                 self).makeFileUpload(filename, path=tests_home)
 
   def afterSetUp(self):
     TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
-    categories_file_id = 'consulting_configurator_sample_categories.ods'
-    self.categories_file_path, self.categories_file_upload = \
-                                           self.uploadFile(categories_file_id)
-
-    roles_file_id = 'standard_portal_types_roles.ods'
-    self.roles_file_path, self.roles_file_upload = \
-                                           self.uploadFile(roles_file_id)
+    self.categories_file_upload = self.makeFileUpload(
+      'consulting_configurator_sample_categories.ods')
+    self.roles_file_upload = self.makeFileUpload(
+      'standard_portal_types_roles.ods')
     # set the company employees number
     self.company_employees_number = '3'
 
@@ -2064,10 +2057,6 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
     # login as manager
     self.login()
-
-  def beforeTearDown(self):
-    os.remove(self.categories_file_path)
-    os.remove(self.roles_file_path)
 
   def stepCheckConfigureCategoriesForm(self, sequence=None, sequence_list=None, **kw):
     """ Check if Confire Categories step was showed """
