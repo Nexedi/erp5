@@ -178,6 +178,7 @@ class TestKM(TestKMMixIn):
     self.tic()
     pads = knowledge_pad_module.ERP5Site_getKnowledgePadListForUser()
     self.assertEqual(2, len(pads))
+    new_pad = None
     for pad in pads:
       pad = pad.getObject()
       if pad == default_pad:
@@ -582,22 +583,24 @@ class TestKM(TestKMMixIn):
                                uids=[km_latest_documents_gadget.getUid()])
 
     # "Latest Content" gadget
-    gadget_view_form_id  = km_latest_documents_gadget.view_form_id
-    publication_section_category_id_list = ['documentation',  'administration']
+    gadget_view_form_id = km_latest_documents_gadget.view_form_id
+    publication_section_category_id_list = ['documentation', 'administration']
     for category_id in publication_section_category_id_list:
-      portal.portal_categories.publication_section.newContent(portal_type = 'Category',
-                                                              id = category_id)
+      if category_id not in portal.portal_categories.publication_section.objectIds():
+        portal.portal_categories.publication_section.newContent(
+          portal_type='Category',
+          id=category_id)
     latest_docs_subsection = self.websection.newContent(portal_type='Web Section')
-    latest_docs_subsection.edit(membership_criterion_base_category = ['publication_section'],
+    latest_docs_subsection.edit(membership_criterion_base_category=['publication_section'],
                                 membership_criterion_category=['publication_section/%s'
-                                              %publication_section_category_id_list[0]])
+                                              % publication_section_category_id_list[0]])
     self.tic()
     km_latest_documents_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad(
                                            self.web_section_knowledge_pad,
                                            km_latest_documents_gadget)
     self.changeSkin('KM')
     # set here to prevent  failing to render a form's field which reads directly requets
-    request.set('box_relative_url',  km_latest_documents_gadget_box_url)
+    request.set('box_relative_url', km_latest_documents_gadget_box_url)
 
     # add some documents to this web section
     presentation = portal.document_module.newContent(
@@ -610,9 +613,9 @@ class TestKM(TestKMMixIn):
     presentation.publish()
     self.tic()
     self.changeSkin('KM')
-    self.assertIn(presentation.getTitle(),
-          self.publish(self.base_url_pattern
-                    %(self.web_section_url+'/%s' %latest_docs_subsection.getId(),
+    self.assertIn(str2bytes(presentation.getTitle()),
+          self.publish(self.base_url_pattern %
+                     (self.web_section_url + '/%s' % latest_docs_subsection.getId(),
                       gadget_view_form_id,
                       latest_docs_subsection.getRelativeUrl(),
                       km_latest_documents_gadget_box_url)

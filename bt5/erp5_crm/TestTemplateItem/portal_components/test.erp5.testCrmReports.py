@@ -551,6 +551,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_inc1
         direction='Incoming'
         campaign=ticket.getTitle()
+      else:
+        raise AssertionError(i)
       self.checkLineProperties(data_line_list[i],
                    campaign = campaign,
                    direction = direction,
@@ -861,6 +863,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_inc1
         direction='Incoming'
         meeting=ticket.getTitle()
+      else:
+        raise AssertionError(i)
       self.checkLineProperties(data_line_list[i],
                    meeting = meeting,
                    direction = direction,
@@ -1171,6 +1175,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_out1
         direction='Outgoing'
         support_request=ticket.getTitle()
+      else:
+        raise AssertionError(i)
       self.checkLineProperties(data_line_list[i],
                    support_request = support_request,
                    direction = direction,
@@ -1481,6 +1487,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_inc1
         direction='Incoming'
         sale_opportunity=ticket.getTitle()
+      else:
+        raise AssertionError(i)
       self.checkLineProperties(data_line_list[i],
                    sale_opportunity = sale_opportunity,
                    direction = direction,
@@ -1753,6 +1761,8 @@ class TestCrmReports(CrmTestCase):
         pSupportRequest = 0
         punassigned = 0
         ptotal = 2
+      else:
+        raise AssertionError(i)
       self.checkLineProperties(data_line_list[i],
                          validation_state = pvalidation_state,
                          Campaign = pCampaign,
@@ -1816,6 +1826,8 @@ class TestCrmReports(CrmTestCase):
         pSupportRequest = 0
         punassigned = 0
         ptotal = 1
+      else:
+        raise AssertionError(i)
       self.checkLineProperties(data_line_list[i],
                          validation_state = pvalidation_state,
                          Campaign = pCampaign,
@@ -2124,6 +2136,8 @@ class TestCrmReports(CrmTestCase):
         pexpired = 0
         presponded = 0
         ptotal = 2
+      else:
+        raise AssertionError(i)
       self.checkLineProperties(data_line_list[i],
                         ticket_title = pticket_title,
                         ticket_type = pticket_type,

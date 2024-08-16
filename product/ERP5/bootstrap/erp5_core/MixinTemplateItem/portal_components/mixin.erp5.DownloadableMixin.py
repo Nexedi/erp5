@@ -57,6 +57,7 @@ except ImportError:
       if six.PY2:
         quoted_file_name = quote(file_name.encode('utf-8'))
       else:
+        encoded_file_name = encoded_file_name.decode('us-ascii')
         quoted_file_name = quote(file_name)
 
       return '{disposition}; '\
@@ -145,7 +146,6 @@ class DownloadableMixin:
     if output_format is None:
       output_format = format
 
-    RESPONSE.setHeader('Content-Length', len(data))
     if output_format in VALID_TEXT_FORMAT_LIST:
       RESPONSE.setHeader('Content-Type', '%s; charset=utf-8' % mime)
     else:
@@ -167,7 +167,12 @@ class DownloadableMixin:
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
     else:
       RESPONSE.setHeader('Content-Disposition', 'inline')
-    return str(data)
+    if isinstance(data, six.text_type):
+      data = data.encode('utf-8')
+    else:
+      data = bytes(data)
+    RESPONSE.setHeader('Content-Length', len(data))
+    return data
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStandardFilename')
