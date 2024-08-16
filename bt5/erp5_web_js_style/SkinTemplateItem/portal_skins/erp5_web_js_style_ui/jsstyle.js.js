@@ -12,7 +12,7 @@
 
   function showPage() {
     document.documentElement.hidden = false;
-    document.documentElement.style.display = 'unset';
+    document.documentElement.style.removeProperty('display');
   }
 
   // XXX Copy/paste from renderjs
