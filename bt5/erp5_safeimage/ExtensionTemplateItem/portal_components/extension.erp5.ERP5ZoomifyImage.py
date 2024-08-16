@@ -16,6 +16,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##############################################################################
 
+import contextlib
 import os, sys, shutil, tempfile
 import io
 from zLOG import LOG,ERROR,INFO,WARNING
@@ -30,6 +31,29 @@ import PIL.Image as PIL_Image
 import random
 import base64
 from OFS.Folder import Folder
+
+
+import six
+# XXX zope4py3, we patch builtin round to keep python2 behavior
+# but this interfers with PIL, because python2 round sometimes
+# returns an int where python3 round is supposed to return a float.
+# This context manager swaps the implementation with the native
+# float on python3, which is NOT THREAD SAFE. Don't use it in
+# production, for now this makes the test pass 🤐.
+import Products.ERP5Type.patches.python
+@contextlib.contextmanager
+def native_round():
+  if six.PY3:
+    round_original = __builtins__['round']
+    try:
+      __builtins__['round'] = Products.ERP5Type.patches.python.round_native
+      yield
+    finally:
+      __builtins__['round'] = round_original
+  else:
+    # on python2 do nothing
+    yield
+
 
 class ZoomifyBase:
 
@@ -178,8 +202,11 @@ class ZoomifyBase:
       saveFilename = root + str(tier) + '-' + str(row) +  ext
       if imageRow.mode != 'RGB':
         imageRow = imageRow.convert('RGB')
-      imageRow.save(os.path.join(tempfile.gettempdir(), saveFilename),
-                                                        'JPEG', quality=100)
+      with native_round():
+        imageRow.save(os.path.join(tempfile.gettempdir(), saveFilename),
+        # see https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#jpeg-saving
+        # for quality, Values above 95 should be avoided;
+                                                        'JPEG', quality=95)
       if os.path.exists(os.path.join(tempfile.gettempdir(), saveFilename)):
         self.processRowImage(tier=tier, row=row)
       row += 1
@@ -255,9 +282,12 @@ class ZoomifyBase:
         # a bug was discovered when a row was exactly 1 pixel in height
         # this extra checking accounts for that
         if imageHeight > 1:
-          tempImage = imageRow.resize((imageWidth/2, imageHeight/2),
-                                                     PIL_Image.ANTIALIAS)
-          tempImage.save(os.path.join(tempfile.gettempdir(), root + str(tier)
+          tempImage = imageRow.resize(
+            (imageWidth//2, imageHeight//2),
+            PIL_Image.LANCZOS if six.PY3 else PIL_Image.ANTIALIAS,
+          )
+          with native_round():
+            tempImage.save(os.path.join(tempfile.gettempdir(), root + str(tier)
                                        + '-' + str(row) + ext))
           tempImage = None
       rowImage = None
@@ -536,7 +566,8 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
       tile_group_id = self.getAssignedTileContainerName()
       tile_group=self.document[tile_group_id]
       tileImageData= io.BytesIO()
-      image.save(tileImageData, 'JPEG', quality=self.qualitySetting)
+      with native_round():
+        image.save(tileImageData, 'JPEG', quality=self.qualitySetting)
       tileImageData.seek(0)
       if tile_group is None:
         raise AttributeError('unable to fine tile group %r' % tile_group_id)
