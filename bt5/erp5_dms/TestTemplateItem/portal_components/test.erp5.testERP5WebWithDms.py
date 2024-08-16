@@ -1656,6 +1656,10 @@ return True
       document_object.getId())
     response_a = self.publish(path)
     action.setVisible(0)
+    def cleanup():
+      action.setVisible(1)
+      self.tic()
+    self.addCleanup(cleanup)
     self.tic()
     response_b = self.publish(path)
     self.assertNotEqual(response_a.getBody(), response_b.getBody())
@@ -1726,6 +1730,7 @@ return True
     response = requests.get(
       self.portal.absolute_url(),
       cookies=auth_cookie,
+      timeout=10,
     )
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.headers['Cache-Control'], 'private')
@@ -1734,6 +1739,7 @@ return True
     response = requests.get(
       '%s/%s' % (website.absolute_url(), 'released_page'),
       cookies=auth_cookie,
+      timeout=10,
     )
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
@@ -1742,6 +1748,7 @@ return True
     response = requests.get(
       '%s/%s?format=txt' % (website.absolute_url(), 'released_page'),
       cookies=auth_cookie,
+      timeout=10,
     )
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
@@ -1749,12 +1756,14 @@ return True
     # published page
     response = requests.get(
       '%s/%s' % (website.absolute_url(), 'published_page'),
+      timeout=10,
     )
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
     response = requests.get(
       '%s/%s' % (website.absolute_url(), 'published_page'),
       cookies=auth_cookie,
+      timeout=10,
     )
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
@@ -1762,12 +1771,14 @@ return True
     # converted published page
     response = requests.get(
       '%s/%s?format=txt' % (website.absolute_url(), 'published_page'),
+      timeout=10,
     )
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
     response = requests.get(
       '%s/%s?format=txt' % (website.absolute_url(), 'published_page'),
       cookies=auth_cookie,
+      timeout=10,
     )
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')

@@ -231,6 +231,7 @@ class TestDocument(TestDocumentMixin):
       image_size = image.size
     except ImportError:
       identify_output = Popen(['identify', filename],
+                              universal_newlines=True,
                               stdout=PIPE).communicate()[0]
       image_size = tuple([int(x) for x in identify_output.split()[2].split('x')])
     os.remove(filename)
