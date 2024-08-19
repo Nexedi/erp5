@@ -31,6 +31,11 @@
   <td>${base_url}/web_site_module/erp5_web_js_style_test_site/</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>waitForElementPresent</td>
@@ -40,19 +45,19 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/']</td>
   <td></td>
 </tr>
 
  <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/']</td>
   <td></td>
 </tr>
 
@@ -133,6 +138,11 @@
   <td>${base_url}/web_site_module/erp5_web_js_style_test_site/fr</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/fr/</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>waitForElementPresent</td>
@@ -142,19 +152,19 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
+  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr/']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
+  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr/']</td>
   <td></td>
 </tr>
 
  <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
+  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr/']</td>
   <td></td>
 </tr>
 
@@ -235,7 +245,11 @@
   <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section_1</td>
   <td></td>
 </tr>
-
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//h1[text()='Demo Section 1']</td>
@@ -244,19 +258,19 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/']</td>
   <td></td>
 </tr>
 
  <tr>
   <td>assertElementPresent</td>
-  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/']</td>
   <td></td>
 </tr>
 
