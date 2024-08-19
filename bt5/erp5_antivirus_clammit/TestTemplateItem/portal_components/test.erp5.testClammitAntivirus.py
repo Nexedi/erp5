@@ -32,10 +32,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestClammitAntivirus(ERP5TypeTestCase):
   """
-  When the bt5 erp5_antivirus_clammit is installed, documents
-  that are marked suspect (workflow state, provided by erp5_antivirus)
-  will be automatically submited to an antivirus scan, and then marked
-  safe or infected.
+  TODO: Update me !
   """
 
   _SANE_HTTP_STATUS_CODE = ClammitConnector._SANE_HTTP_STATUS_CODE
@@ -79,7 +76,7 @@ class TestClammitAntivirus(ERP5TypeTestCase):
     requests_post_mock.side_effect = self.getResponseMock(self._INFECTED_HTTP_STATUS_CODE)
     document_value = self.portal.document_module.newContent(
       portal_type="File",
-      data=b'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*',
+      data=b'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*',
     )
     document_value.setSuspect()
     self.tic()

@@ -35,9 +35,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 82,  0: Anomalous backslash in string: \'\\P\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
