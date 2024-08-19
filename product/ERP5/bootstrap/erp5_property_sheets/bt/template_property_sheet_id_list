@@ -194,4 +194,5 @@ Workflow
 WorkflowState
 WorkflowTransition
 WorkflowVariable
+X509
 XMLObject
