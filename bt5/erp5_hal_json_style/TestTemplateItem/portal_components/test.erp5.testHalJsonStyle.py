@@ -15,6 +15,7 @@ import DateTime
 import StringIO
 import json
 import re
+import io
 from six.moves.urllib.parse import quote, quote_plus
 
 import mock
@@ -3265,3 +3266,104 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     self.assertTrue('Read-Only Quantity' in result, result)
     # Ensure it is not the list mode rendering
     self.assertTrue(len(result.split('\n')) > 50, result)
+
+
+class TestERP5Document_getHateoas_cache(ERP5HALJSONStyleSkinsMixin):
+
+  def testCache_root_authenticated(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/',
+      user='ERP5TypeTestCase'
+    )
+    self.assertEqual(ret.getStatus(), 200)
+    self.assertEqual(ret.getHeader('content-type'), 'application/hal+json')
+    self.assertEqual(ret.getHeader('cache-control'), 'max-age=1800, private')
+
+  def testCache_root_authenticatedWrongPath(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath(),
+      user='ERP5TypeTestCase'
+    )
+    self.assertEqual(ret.getStatus(), 200)
+    self.assertEqual(ret.getHeader('content-type'), 'application/hal+json')
+    self.assertEqual(ret.getHeader('cache-control'), 'max-age=0, no-cache, private')
+
+  def testCache_root_authenticatedWrongQueryString(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/?foo=bar',
+      user='ERP5TypeTestCase'
+    )
+    self.assertEqual(ret.getStatus(), 200)
+    self.assertEqual(ret.getHeader('content-type'), 'application/hal+json')
+    self.assertEqual(ret.getHeader('cache-control'), 'max-age=0, no-cache, private')
+
+  def testCache_root_authenticatedWrongMethod(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/',
+      user='ERP5TypeTestCase',
+      request_method='POST'
+    )
+    self.assertEqual(ret.getStatus(), 405)
+    self.assertEqual(ret.getHeader('content-type'), None)
+    self.assertEqual(ret.getHeader('cache-control'), 'max-age=0, no-cache, private')
+
+  def testCache_root_anonymous(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/',
+    )
+    self.assertEqual(ret.getStatus(), 401)
+    self.assertEqual(ret.getHeader('content-type'), None)
+    self.assertEqual(ret.getHeader('cache-control'), 'max-age=0, no-cache, private')
+
+  def testCache_traverse_authenticatedAndWrongTraverse(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/ERP5Document_getHateoas?mode=traverse&relative_url=unexisting_module&view=view',
+      user='ERP5TypeTestCase'
+    )
+    self.assertEqual(ret.getStatus(), 404)
+    self.assertEqual(ret.getHeader('content-type'), None)
+    self.assertEqual(ret.getHeader('cache-control'), 'private')
+
+  def testCache_traverse_authenticatedAndTraverse(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/ERP5Document_getHateoas?mode=traverse&relative_url=foo_module&view=view',
+      user='ERP5TypeTestCase'
+    )
+    self.assertEqual(ret.getStatus(), 200)
+    self.assertEqual(ret.getHeader('content-type'), 'application/hal+json')
+    self.assertEqual(ret.getHeader('cache-control'), 'private')
+
+  def testCache_traverse_authenticatedAndTraverseWrongView(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/ERP5Document_getHateoas?mode=traverse&relative_url=foo_module&view=foobarview',
+      user='ERP5TypeTestCase'
+    )
+    self.assertEqual(ret.getStatus(), 404)
+    self.assertEqual(ret.getHeader('content-type'), None)
+    self.assertEqual(ret.getHeader('cache-control'), 'private')
+
+  def testCache_traverse_authenticatedAndSearch(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/ERP5Document_getHateoas?mode=search',
+      user='ERP5TypeTestCase'
+    )
+    self.assertEqual(ret.getStatus(), 200)
+    self.assertEqual(ret.getHeader('content-type'), 'application/hal+json')
+    self.assertEqual(ret.getHeader('cache-control'), 'private')
+
+  def testCache_traverse_authenticatedAndDoAction(self):
+    ret = self.publish(
+      self.portal.web_site_module.hateoas.getPath() + '/foo_module/Base_callDialogMethod',
+      user='ERP5TypeTestCase',
+      request_method='POST',
+      stdin=io.BytesIO(
+        'field_your_select_action=add Foo&' +
+        'form_id=FooModule_viewFooList&' +
+        'dialog_id=Base_viewNewContentDialog&' +
+        'dialog_method=Base_doAction'
+      ),
+      env={'CONTENT_TYPE': 'application/x-www-form-urlencoded'}
+    )
+    self.assertEqual(ret.getStatus(), 201)
+    self.assertEqual(ret.getHeader('content-type'), 'application/json; charset=utf-8')
+    self.assertEqual(ret.getHeader('cache-control'), 'private')
