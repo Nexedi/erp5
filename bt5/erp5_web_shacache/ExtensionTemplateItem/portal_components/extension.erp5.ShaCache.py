@@ -86,7 +86,9 @@ def File_viewAsWeb(self):
 
   # For Pdata type, we must iterate and send chunk by chunk.
   # And no need to continue if the client closed the connection.
-  while data and not RESPONSE.stdout._channel.closed:
+  while data:
+    if six.PY2 and RESPONSE.stdout._channel.closed:
+      break
     # Send data to the client.
     RESPONSE.write(data.data)
     # Load next object without keeping previous chunks in memory.
