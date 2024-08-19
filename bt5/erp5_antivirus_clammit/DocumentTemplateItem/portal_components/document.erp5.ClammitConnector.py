@@ -31,6 +31,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
 
 import requests
+import tempfile
 
 class ClammitConnector(XMLObject):
   # CMF Type Definition
@@ -45,12 +46,27 @@ class ClammitConnector(XMLObject):
   _INFECTED_HTTP_STATUS_CODE = 418
   _DEFAULT_TIMEOUT = 30 # In seconds
 
+  def _query(self, *args, **kw):
+    def _request(*args, **kw):
+      return requests.request(*args, **kw)
+
+    kw.setdefault("timeout", self.getTimeout(self._DEFAULT_TIMEOUT))
+
+    ssl_ca_certificate = self.getSslCertificateAuthorityCertificate()
+    if ssl_ca_certificate:
+      with tempfile.NamedTemporaryFile() as certificate_authoritity_certificate:
+        certificate_authoritity_certificate.write(ssl_ca_certificate)
+        certificate_authoritity_certificate.seek(0)
+        kw["verify"] = certificate_authoritity_certificate.name
+        return _request(*args, **kw)
+
+    return _request(*args, **kw)
+
   def isSafe(self, data):
-    response = requests.post(
-      self.getUrlString() + '/scan',
-      files={'file': data},
-      timeout=self.getTimeout(self._DEFAULT_TIMEOUT),
-      verify=False, # TODO: how to do self-certs correctly ?
+    response = self._query(
+      "POST",
+      self.getUrlString() + "/scan",
+      files={"file": data},
     )
     if response.status_code == self._SANE_HTTP_STATUS_CODE:
       return True
@@ -60,10 +76,10 @@ class ClammitConnector(XMLObject):
       raise ValueError("Unknown status code")
 
   def isReady(self):
-    response = requests.get(
-      self.getUrlString() + '/readyz',
-      timeout=self.getTimeout(self._DEFAULT_TIMEOUT),
-      verify=False, # TODO: how to do self-certs correctly ?
+    response = self._query(
+      "GET",
+      self.getUrlString() + "/readyz",
+      timeout=3, # The timeout is much shorter as it is a light query
     )
     if response.status_code == 200:
       return True

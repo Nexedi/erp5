@@ -9,12 +9,14 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_description</string> </value>
+            <value> <string>my_ssl_certificate_authority_certificate</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -39,10 +41,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -58,10 +56,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -71,15 +65,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_description</string> </value>
+                    <value> <string>my_text_area_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>CA Certificate</string> </value>
                 </item>
               </dictionary>
             </value>
