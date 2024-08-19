@@ -146,8 +146,8 @@ class SyncMLSubscription(XMLObject):
                         activate_kw=activate_kw,
                         **method_kw)
       else:
-        syncml_logger.info("getAndIndex : got %d, %r result, limit = %r, packet %r",
-                           result_count, r, limit, packet_size)
+        syncml_logger.info("getAndIndex : got %d result, limit = %r, packet %r",
+                           result_count, limit, packet_size)
         generated_other_activity = False
         if result_count == limit:
           # Recursive call to prevent too many activity generation
