@@ -43,13 +43,13 @@ class ClammitConnector(XMLObject):
 
   _SANE_HTTP_STATUS_CODE = 200
   _INFECTED_HTTP_STATUS_CODE = 418
-  _TIMEOUT = 30 # In seconds
+  _DEFAULT_TIMEOUT = 30 # In seconds
 
   def isSafe(self, data):
     response = requests.post(
       self.getUrlString() + '/scan',
       files={'file': data},
-      timeout=self._TIMEOUT,
+      timeout=self.getTimeout(self._DEFAULT_TIMEOUT),
       verify=False, # TODO: how to do self-certs correctly ?
     )
     if response.status_code == self._SANE_HTTP_STATUS_CODE:
@@ -62,7 +62,7 @@ class ClammitConnector(XMLObject):
   def isReady(self):
     response = requests.get(
       self.getUrlString() + '/readyz',
-      timeout=3,
+      timeout=self.getTimeout(self._DEFAULT_TIMEOUT),
       verify=False, # TODO: how to do self-certs correctly ?
     )
     if response.status_code == 200:

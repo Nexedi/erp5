@@ -113,6 +113,7 @@
                       <list>
                         <string>my_url_string</string>
                         <string>my_bind_address</string>
+                        <string>my_timeout</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>

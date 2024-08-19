@@ -61,6 +61,7 @@ class TestClammitAntivirus(ERP5TypeTestCase):
         portal_type="Clammit Connector",
         reference="clammit_test_connector",
         url_string="https://localhost:3000/clammit",
+        timeout=30,
       )
 
   @mock.patch("requests.post")
