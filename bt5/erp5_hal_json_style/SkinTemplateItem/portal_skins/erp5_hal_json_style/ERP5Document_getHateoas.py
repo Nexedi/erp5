@@ -1615,7 +1615,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if is_site_root:
 
       result_dict['default_view'] = 'view'
-      REQUEST.set("X-HATEOAS-CACHE", 1)
 
       # Global action users for the jIO plugin
       # XXX Would be better to not hardcode them but put them as portal type
