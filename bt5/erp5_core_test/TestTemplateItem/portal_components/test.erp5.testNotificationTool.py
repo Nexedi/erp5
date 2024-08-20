@@ -82,11 +82,13 @@ def decode_email(file_):
     elif content_type == 'message/rfc822':
       continue
     elif content_type in ("text/plain", "text/html"):
-      charset = part.get_content_charset()
+      charset = part.get_content_charset() or 'utf-8'
       payload = part.get_payload(decode=True)
       #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
       if charset:
-        payload = unicode(payload, charset).encode('utf-8')
+        payload = payload.decode(charset)
+      if six.PY2:
+        payload = payload.encode('utf-8')
       if body_found:
         # Keep the content type
         theMail['attachment_list'].append((file_name,

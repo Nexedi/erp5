@@ -863,9 +863,7 @@ class DateTimeValidator(Validator):
                             int(day),
                             hour,
                             minute, timezone))
-      # ugh, a host of string based exceptions (not since Zope 2.7)
-    except ('DateTimeError', 'Invalid Date Components', 'TimeError',
-            DateError, TimeError) :
+    except (DateError, TimeError):
       self.raise_error('not_datetime', field)
     # pass value through request in order to be restored in case if validation fail
     if getattr(REQUEST, 'form', None):
@@ -908,10 +906,15 @@ fullwidth_minus_character_list = (
     )
 def normalizeFullWidthNumber(value):
   try:
-    value = unicodedata.normalize('NFKD', value.decode('UTF8'))
+    if six.PY2:
+      value = unicodedata.normalize('NFKD', value.decode('UTF8'))
+    else:
+      value = unicodedata.normalize('NFKD', value)
     if value[0] in fullwidth_minus_character_list:
       value = u'-' + value[1:]
     value = value.encode('ASCII', 'ignore')
+    if six.PY3:
+      value = value.decode()
   except UnicodeDecodeError:
     pass
   return value

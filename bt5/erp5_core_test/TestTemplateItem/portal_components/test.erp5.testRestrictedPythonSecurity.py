@@ -343,11 +343,11 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           except StopIteration:
             break
           except Exception as e:
-            result.append(repr(e))
+            result.append(str(type(e)))
         return result
         ''',
         kwargs={'generator': generator_with_not_allowed_objects()},
-        expected=["one", "Unauthorized()", 2],
+        expected=["one", str(Unauthorized), 2],
     )
 
   def test_json(self):

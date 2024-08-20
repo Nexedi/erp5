@@ -31,6 +31,9 @@ from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.Base import Base
 import six
+import zope.component
+import zope.interface
+from ZPublisher.interfaces import IXmlrpcChecker
 try:
   from spyne import MethodContext
 except ImportError:
@@ -40,6 +43,20 @@ else:
   from spyne.interface.wsdl import Wsdl11
   from spyne.protocol.soap import Soap11
   from spyne.server.http import HttpBase
+
+
+_default_xmrpc_checker = zope.component.queryUtility(IXmlrpcChecker)
+
+
+@zope.interface.implementer(IXmlrpcChecker)
+def soap_xmlrpc_checker(request):
+  if request.getHeader('SOAPACTION'):
+    return False
+  return _default_xmrpc_checker is None or _default_xmrpc_checker(request)
+
+
+zope.component.getGlobalSiteManager().registerUtility(
+  soap_xmlrpc_checker, IXmlrpcChecker)
 
 
 class SOAPBinding(Base):
