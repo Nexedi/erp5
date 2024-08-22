@@ -781,8 +781,8 @@ class SyncMLSubscription(XMLObject):
       document_data = result.data
       signature = self.getSignatureFromGid(gid)
       if signature:
-        syncml_logger.info("signature is %s = %s", signature.getRelativeUrl(),
-                                                   signature.getValidationState())
+        syncml_logger.debug("signature is %s = %s", signature.getRelativeUrl(),
+                                                    signature.getValidationState())
 
       if not document_data:
         raise ValueError("No data for %s / %s" %(gid, document_path))
@@ -847,8 +847,8 @@ class SyncMLSubscription(XMLObject):
             sync_code='conflict_resolved_with_merge',
             command='Replace')
 
-        syncml_logger.info("\tMD5 is %s for %s", signature.checkMD5(document_data),
-                                                 signature.getReference())
+        syncml_logger.debug("\tMD5 is %s for %s", signature.checkMD5(document_data),
+                                                  signature.getReference())
         if not signature.checkMD5(document_data):
           # MD5 checksum tell there is a modification of the object
           # XXX this diff generation must managed by the conduit

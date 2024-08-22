@@ -188,7 +188,7 @@ class SynchronizationTool(BaseTool):
     """We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    syncml_logger.info('readResponse sync_id %s, text %s', sync_id, text)
+    syncml_logger.debug('readResponse sync_id %s, text %s', sync_id, text)
     if text:
       # we are still anonymous at this time, use unrestrictedSearchResults
       # to fetch the Subcribers
