@@ -172,6 +172,7 @@ class SyncMLSubscription(XMLObject):
               syncml_logger.info("-- getAndIndex : i %s, call, generating for %s : %s",
                                  i, r[i:i+packet_size], activate_kw)
               callback_method(path_list=r[i:i+packet_size],
+                              activate_kw=activate_kw,
                               **method_kw)
             final_min = i +  packet_size
           else:
