@@ -64,6 +64,7 @@ class Git(WorkingCopy):
 
   def _git(self, *args, **kw):
     kw.setdefault('cwd', self.working_copy)
+    kw.setdefault('universal_newlines', True)
     argv = ['git']
     try:
       return subprocess.Popen(argv + list(args), **kw)
@@ -362,7 +363,6 @@ class Git(WorkingCopy):
             raise
           # try to update our working copy
           # TODO: find a solution if there are other local changes
-          # TODO: solve conflicts on */bt/revision automatically
           try:
             self.git(merge, '@{u}', env=env)
           except GitError as e2:

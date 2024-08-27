@@ -196,7 +196,7 @@ class PDFDocument(Image):
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())
     if result:
-      return result
+      return bytes2str(result)
     else:
       # Try to use OCR from ghostscript, but tolerate that the command might
       # not be available.
