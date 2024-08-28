@@ -1,7 +1,6 @@
 import re
 import os
 import sys
-from sgmllib import SGMLParser, SGMLParseError
 
 try:
     # Need to be imported before win32api to avoid dll loading
@@ -142,95 +141,4 @@ NASTY_TAGS = { 'script'     : 1
 class IllegalHTML( ValueError ):
     pass
 
-class StrippingParser( SGMLParser ):
-    """ Pass only allowed tags;  raise exception for known-bad.  """
-
-    from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
-
-    def __init__( self ):
-
-        SGMLParser.__init__( self )
-        self.result = ""
-
-    def handle_data( self, data ):
-
-        if data:
-            self.result = self.result + data
-
-    def handle_charref( self, name ):
-
-        self.result = "%s&#%s;" % ( self.result, name )
-
-    def handle_entityref(self, name):
-
-        if name in self.entitydefs:
-            x = ';'
-        else:
-            # this breaks unstandard entities that end with ';'
-            x = ''
-
-        self.result = "%s&%s%s" % (self.result, name, x)
-
-    def unknown_starttag(self, tag, attrs):
-
-        """ Delete all tags except for legal ones.
-        """
-        if tag in VALID_TAGS:
-
-            self.result = self.result + '<' + tag
-
-            for k, v in attrs:
-
-                if k.lower().startswith( 'on' ):
-                    raise IllegalHTML('Javascipt event "%s" not allowed.' % k)
-
-                if v.lower().startswith( 'javascript:' ):
-                    raise IllegalHTML('Javascipt URI "%s" not allowed.' % v)
-
-                self.result = '%s %s="%s"' % (self.result, k, v)
-
-            endTag = '</%s>' % tag
-            if VALID_TAGS.get(tag):
-                self.result = self.result + '>'
-            else:
-                self.result = self.result + ' />'
-
-        elif NASTY_TAGS.get( tag ):
-            raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
-
-        else:
-            pass    # omit tag
-
-    def unknown_endtag(self, tag):
-
-        if VALID_TAGS.get( tag ):
-
-            self.result = "%s</%s>" % (self.result, tag)
-            remTag = '</%s>' % tag
-
-    def parse_declaration(self, i):
-        """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
-        """
-        j = None
-        if self.rawdata[i:i+9] == '<![CDATA[':
-             k = self.rawdata.find(']]>', i)
-             if k == -1:
-                 k = len(self.rawdata)
-             data = self.rawdata[i+9:k]
-             j = k+3
-             self.result.append("<![CDATA[%s]]>" % data)
-        else:
-            try:
-                j = SGMLParser.parse_declaration(self, i)
-            except SGMLParseError:
-                toHandle = self.rawdata[i:]
-                self.result.append(toHandle)
-                j = i + len(toHandle)
-        return j
-
-def scrubHTML( html ):
-    """ Strip illegal HTML tags from string text.  """
-    parser = StrippingParser()
-    parser.feed( html )
-    parser.close()
-    return parser.result
+from Products.PortalTransforms.transforms.safe_html import scrubHTML
