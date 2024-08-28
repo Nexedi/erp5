@@ -586,8 +586,10 @@ class TestKM(TestKMMixIn):
     gadget_view_form_id  = km_latest_documents_gadget.view_form_id
     publication_section_category_id_list = ['documentation',  'administration']
     for category_id in publication_section_category_id_list:
-      portal.portal_categories.publication_section.newContent(portal_type = 'Category',
-                                                              id = category_id)
+      if category_id not in portal.portal_categories.publication_section.objectIds():
+        portal.portal_categories.publication_section.newContent(
+          portal_type='Category',
+          id=category_id)
     latest_docs_subsection = self.websection.newContent(portal_type='Web Section')
     latest_docs_subsection.edit(membership_criterion_base_category = ['publication_section'],
                                 membership_criterion_category=['publication_section/%s'
