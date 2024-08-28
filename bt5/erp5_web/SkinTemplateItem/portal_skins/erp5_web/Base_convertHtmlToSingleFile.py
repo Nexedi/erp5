@@ -15,6 +15,7 @@ TODO: export same components into one mhtml attachment if possible.
 # ERP5 web uses format= argument, which is also a python builtin
 # pylint: disable=redefined-builtin
 
+from Products.PythonScripts.standard import html_quote
 from zExceptions import Unauthorized
 from base64 import b64encode, b64decode
 portal = context.getPortalObject()
@@ -75,7 +76,7 @@ def strHtmlPart(part):
   part_type = part[0]
   if part_type in ("starttag", "startendtag"):
     tag, attrs = handleHtmlTag(part[1], part[2])
-    attrs_str = " ".join(["%s=\"%s\"" % (escapeHtml(k), escapeHtml(v or "")) for k, v in attrs])
+    attrs_str = " ".join(["%s=\"%s\"" % (html_quote(k), html_quote(v or "")) for k, v in attrs])
     return "<%s%s%s>" % (tag, " " + attrs_str if attrs_str else "", " /" if part_type == "startendtag" else "")
   if part_type == "endtag":
     return "</%s>" % part[1]
@@ -346,9 +347,6 @@ def parseUrlSearch(search):
 
 def parseHtml(text):
   return context.Base_parseHtml(text)
-
-def escapeHtml(text):
-  return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
 
 def anny(iterable, key=None):
   for i in iterable:
