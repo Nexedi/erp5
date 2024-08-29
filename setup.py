@@ -79,7 +79,6 @@ setup(name=name,
             'erp5.util.scalability.requestUrl:main',
           'generate_erp5_tester_report = '\
             'erp5.util.benchmark.report:generateReport [benchmark-report]',
-          'web_checker_utility = erp5.util.webchecker:web_checker_utility'
         ],
       },
     )
