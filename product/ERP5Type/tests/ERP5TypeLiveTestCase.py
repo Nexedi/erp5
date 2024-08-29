@@ -151,9 +151,13 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def _setup(self):
         '''Change some site properties in order to be ready for live test
         '''
+        # force a random password for ERP5TypeTestCase user for each test run
+        self.manager_password = self.newPassword()
+        self.setUpManagerUser(quiet=True)
+        self.login()
+
         # Disabling portal_activities is required in order to avoid
         # conflict with other threads doing tic in the same time
-        self.login()
         self.activity_tool_subscribed = self.getPortalObject()\
                 .portal_activities.isSubscribed()
         self.portal.portal_activities.unsubscribe()
