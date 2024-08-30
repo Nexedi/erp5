@@ -30,6 +30,8 @@
 
 from hashlib import md5
 import random
+from Products.ERP5Type.Utils import str2bytes
+import six
 
 class CaptchasDotNet:
     def __init__ (self, client, secret,

@@ -906,10 +906,15 @@ fullwidth_minus_character_list = (
     )
 def normalizeFullWidthNumber(value):
   try:
-    value = unicodedata.normalize('NFKD', value.decode('UTF8'))
+    if six.PY2:
+      value = unicodedata.normalize('NFKD', value.decode('UTF8'))
+    else:
+      value = unicodedata.normalize('NFKD', value)
     if value[0] in fullwidth_minus_character_list:
       value = u'-' + value[1:]
     value = value.encode('ASCII', 'ignore')
+    if six.PY3:
+      value = value.decode()
   except UnicodeDecodeError:
     pass
   return value

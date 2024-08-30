@@ -58,7 +58,7 @@ class Aspell(object):
     command = 'echo %s | aspell -l %s -a' % (word, language)
     subprocess = Popen(command, shell=True, stdin=PIPE,
                                      stdout=PIPE, stderr=PIPE, close_fds=True)
-    return subprocess.communicate()[0].split('\n')[1:]
+    return subprocess.communicate()[0].decode('utf-8').split('\n')[1:]
 
 class TestSpellChecking(ERP5TypeTestCase):
 

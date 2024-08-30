@@ -26,10 +26,11 @@
 #
 ##############################################################################
 
+import six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import guessEncodingFromText
+from Products.ERP5Type.Utils import guessEncodingFromText # TODO: guessEncodingFromBytes
 from zLOG import LOG, INFO
 
 from email.header import decode_header, HeaderParseError
@@ -39,20 +40,24 @@ import re
 filename_regexp = 'name="([^"]*)"'
 
 def testCharsetAndConvert(text_content, content_type, encoding):
-  try:
-    if encoding is not None:
-      text_content = text_content.decode(encoding).encode('utf-8')
-    else:
-      text_content = text_content.decode().encode('utf-8')
-  except (UnicodeDecodeError, LookupError):
-    encoding = guessEncodingFromText(text_content, content_type)
-    if encoding is not None:
-      try:
-        text_content = text_content.decode(encoding).encode('utf-8')
-      except (UnicodeDecodeError, LookupError):
+  if not isinstance(text_content, six.text_type):
+    try:
+      if encoding is not None:
+        text_content = text_content.decode(encoding)
+      else:
+        text_content = text_content.decode()
+      if six.PY2:
+        text_content = text_content.encode('utf-8')
+    except (UnicodeDecodeError, LookupError):
+      encoding = guessEncodingFromText(text_content, content_type)
+      if encoding is not None:
+        try:
+          text_content = text_content.decode(encoding)
+        except (UnicodeDecodeError, LookupError):
+          # TODO: errors= repr ?
+          text_content = repr(text_content)[1:-1]
+      else:
         text_content = repr(text_content)[1:-1]
-    else:
-      text_content = repr(text_content)[1:-1]
   return text_content, encoding
 
 
@@ -111,25 +116,25 @@ class MailMessageMixin:
     """
     Returns the content information from the header information.
     This is used by the metadata discovery system.
-
-    Header information is converted in UTF-8 since this is the standard
-    way of representing strings in ERP5.
     """
     result = {}
     for (name, value) in self._getMessage().items():
       try:
-        decoded_header = decode_header(value)
+        decoded_header_parts = decode_header(value)
       except HeaderParseError as error_message:
-        decoded_header = ()
+        decoded_header_parts = ()
         LOG('MailMessageMixin.getContentInformation', INFO,
             'Failed to decode %s header of %s with error: %s' %
             (name, self.getPath(), error_message))
-      for text, encoding in decoded_header:
-        text, encoding = testCharsetAndConvert(text, 'text/plain', encoding)
-        if name in result:
-          result[name] = '%s %s' % (result[name], text)
-        else:
-          result[name] = text
+      header_parts = []
+      for text, encoding in decoded_header_parts:
+        text, _ = testCharsetAndConvert(text, 'text/plain', encoding)
+        header_parts.append(text)
+      if six.PY3:
+        result[name] = ''.join(header_parts)
+      else:
+        # https://bugs.python.org/issue1079
+        result[name] = ' '.join(header_parts)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentInformationList')
@@ -215,6 +220,8 @@ class MailMessageMixin:
                                        encoding=part_encoding,
                                        index=index) # add index to generate
                                        # a unique cache key per attachment
+          if six.PY3:
+            content = content.encode()
         else:
           content = part.get_payload(decode=1)
         return content

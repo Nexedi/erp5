@@ -39,6 +39,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
 from Products.ERP5Type.Utils import bytes2str, convertToUpperCase, str2bytes
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.CMFCore.WorkflowCore import WorkflowException

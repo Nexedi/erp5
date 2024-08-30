@@ -3658,6 +3658,8 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
     component.setTextContent(value)
     self.tic()
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getValidationState(), 'validated')
 
   def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
     component = self.portal.portal_components['document.erp5.BusinessProcess']

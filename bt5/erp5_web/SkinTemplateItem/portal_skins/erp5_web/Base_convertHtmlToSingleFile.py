@@ -182,7 +182,7 @@ def handleImageSourceObject(obj, src):
         format_kw["display"] = str(value)
     if format_kw:
       mime, data = obj.convert(**format_kw)
-      return handleLinkedData(mime, str(data), src)
+      return handleLinkedData(mime, data, src)
 
   return handleHrefObject(obj, src, default_mimetype=bad_image_mime_type, default_data=bad_image_data)
 
