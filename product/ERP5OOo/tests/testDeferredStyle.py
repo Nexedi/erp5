@@ -391,7 +391,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
     # after they are saved to DB and automatically migrated. The getProperty
     # above, which is also what ods_style does, only work after the report
     # state is updated.
-    report.__setstate__(aq_base(getattr(skin_folder, report_form_name)).__getstate__())
+    aq_base(report).__setstate__(aq_base(getattr(skin_folder, report_form_name)).__getstate__())
     self.assertEqual(report.getProperty('title'), self.id())
 
     # Report section method
