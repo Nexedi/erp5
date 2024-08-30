@@ -419,8 +419,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
     with open(os.path.join(os.path.dirname(Products.ERP5.tests.__file__), 'test_data', "MailevaPJSSchema.xsd")) as f:
       xsd = etree.parse(f)
     schema_validator = etree.XMLSchema(xsd)
-    schema_validator.assertValid(etree.fromstring(xml.encode("UTF-8")))
-
+    schema_validator.assertValid(etree.fromstring(xml))
 
   def test_send_state_workflow(self):
     pdf = self.portal.document_module.newContent(portal_type='PDF')

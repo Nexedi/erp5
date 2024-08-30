@@ -5,10 +5,7 @@ if brain.getValidationState() == 'embedded':
 else:
   reference = brain.getReference()
 
-return unicode(
-    "javascript:SelectFile('%s?format=%s')" % (
-        reference.replace("'", "\\'"),
-        context.getPortalObject().portal_preferences.getPreferredImageFormat()
-    ),
-    'utf-8',
+return "javascript:SelectFile('%s?format=%s')" % (
+  reference.replace("'", "\\'"),
+  context.getPortalObject().portal_preferences.getPreferredImageFormat()
 )
