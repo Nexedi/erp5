@@ -85,11 +85,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
     person = self.portal.person_module.newContent()
     self.tic()
     file_object = self.makeFileUpload('images/erp5_logo.png')
-    response = self.publish(person.getPath() + '/erp5_logo.png',
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    response = self.publish(
+      person.getPath() + '/erp5_logo.png',
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'image/png'},
+      basic=self.authentication)
     self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     image = person['erp5_logo.png']
     self.assertEqual(image.getPortalType(), 'Embedded File')
@@ -105,10 +106,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
     file_object = self.makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
 
     self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     document_module = self.getDocumentModule()
@@ -127,10 +130,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
     file_object = self.makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
 
     self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     self.tic()
@@ -199,10 +204,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
     file_object = self.makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
     # Convert to base format and run conversion into utf-8
     self.tic()
 
@@ -226,10 +233,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
     file_object = self.makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
     document_module = self.getDocumentModule()
     document = document_module[filename]
 
@@ -264,10 +273,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
     path = self.portal.portal_contributions.getPath()
     filename = 'P-DMS-Presentation.3.Pages-001-en.odp'
     file_object = self.makeFileUpload(filename)
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=file_object,
-                            basic=self.authentication)
+    response = self.publish(
+      '%s/%s' % (path, filename),
+      request_method='PUT',
+      stdin=file_object,
+      env={"CONTENT_TYPE": 'application/vnd.oasis.opendocument.presentation'},
+      basic=self.authentication)
     document_module = self.getDocumentModule()
     document = document_module[filename]
 
