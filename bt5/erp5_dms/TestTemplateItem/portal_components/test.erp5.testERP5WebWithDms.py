@@ -1683,6 +1683,10 @@ return True
       document_object.getId())
     response_a = self.publish(path)
     action.setVisible(0)
+    def cleanup():
+      action.setVisible(1)
+      self.tic()
+    self.addCleanup(cleanup)
     self.tic()
     response_b = self.publish(path)
     self.assertNotEqual(response_a.getBody(), response_b.getBody())
