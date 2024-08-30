@@ -58,7 +58,9 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
+    self.portal.portal_caches.clearAllCache()
     self.id_tool.clearGenerator(all=True)
+    self.tic()
 
   def createGenerators(self):
     """
