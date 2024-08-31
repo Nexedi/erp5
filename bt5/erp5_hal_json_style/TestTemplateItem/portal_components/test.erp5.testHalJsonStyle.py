@@ -1684,10 +1684,12 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_default_param_json_param(self):
     fake_request = do_fake_request("GET")
 
+    unknown_columns_re = re.escape("Unknown columns ['ê']")
+    if six.PY2:
+      unknown_columns_re = "Unknown columns.*\\\\xc3\\\\xaa.*"
     self.assertRaisesRegex(
       TypeError,
-      # "Unknown columns.*'\\xc3\\xaa'.",
-      "Unknown columns.*\\\\xc3\\\\xaa.*",
+      unknown_columns_re,
       self.portal.web_site_module.hateoas.ERP5Document_getHateoas,
       REQUEST=fake_request,
       mode="search",
