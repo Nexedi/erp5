@@ -8,8 +8,8 @@ if array is None:
 
 else:
   if context.getArrayDtypeNames() is not None:
-    return [('index', 'Index')] + [(str(i), str(i)) for i in context.getArrayDtypeNames()]
+    return [('index', 'Index')] + [(str(i).replace(" ", "_"), str(i).replace(" ", "_")) for i in context.getArrayDtypeNames()]
   elif len(context.getArrayShape()) < 2:
     return [('index', 'Index'), ('1', '1')]
   else:
-    return [('index', 'Index')] + [(str(i), str(i)) for i in range(min(context.getArrayShape()[1], 100))]
+    return [('index', 'Index')] + [(str(i).replace(" ", "_"), str(i).replace(" ", "_")) for i in range(min(context.getArrayShape()[1], 100))]
