@@ -29,7 +29,7 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
-from six import int2byte as chr
+#from six import int2byte as chr
 from six import string_types as basestring
 from six.moves import xrange
 import six
