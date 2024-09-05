@@ -7,7 +7,8 @@ if not clammit_connector:
   raise ValueError("A Clammit Connector must be configured in order to run antivirus scans")
 else:
   clammit_connector_value = clammit_connector[0].getObject()
+comment = "Checked by ClamAV Antivirus"
 if clammit_connector_value.isSafe(object_value.getData()):
-  object_value.setSafe()
+  object_value.setSafe(comment=comment)
 else:
-  object_value.setInfected()
+  object_value.setInfected(comment=comment)
