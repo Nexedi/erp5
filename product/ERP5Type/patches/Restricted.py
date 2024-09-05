@@ -345,6 +345,12 @@ if six.PY2:
   allow_type(cStringIO.OutputType)
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
+import csv
+allow_module('csv')
+temp_io = io.StringIO()
+allow_type(type(csv.reader(temp_io)))
+allow_type(type(csv.writer(temp_io)))
+del temp_io
 allow_module('datetime')
 import datetime
 ContainerAssertions[datetime.datetime] = 1
