@@ -164,18 +164,22 @@ class Alarm(XMLObject, PeriodicityMixin):
           activate_kw['tag'] = '%s_%x' % (self.getRelativeUrl(), getrandbits(32))
         tag = activate_kw['tag']
         method = getattr(self, method_id)
-        func_code = getattr(method, '__code__', None)
-        if func_code is None: # BBB Zope2
-          func_code = method.func_code
-        try:
-          has_kw = func_code.co_flags & CO_VARKEYWORDS
-        except AttributeError:
-          # XXX guess presence of *args and **kw
-          name_list = func_code.co_varnames[func_code.co_argcount:]
-          has_args = bool(name_list and name_list[0] == 'args')
-          has_kw = bool(len(name_list) > has_args and
-                       name_list[has_args] == 'kw')
-        name_list = func_code.co_varnames[:func_code.co_argcount]
+        if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method'):
+          name_list = [e['name'] for e in method.argument_list()]
+          has_kw = False
+        else:
+          func_code = getattr(method, '__code__', None)
+          if func_code is None: # BBB Zope2
+            func_code = method.func_code
+          try:
+            has_kw = func_code.co_flags & CO_VARKEYWORDS
+          except AttributeError:
+            # XXX guess presence of *args and **kw
+            name_list = func_code.co_varnames[func_code.co_argcount:]
+            has_args = bool(name_list and name_list[0] == 'args')
+            has_kw = bool(len(name_list) > has_args and
+                         name_list[has_args] == 'kw')
+          name_list = func_code.co_varnames[:func_code.co_argcount]
         if 'params' in name_list or has_kw:
           # New New API
           getattr(self.activate(**activate_kw), method_id)(fixit=fixit, tag=tag, params=params)
