@@ -20,6 +20,7 @@
               <tuple>
                 <string>action_type/workflow</string>
                 <string>after_script/portal_workflow/assignment_workflow/transition_open</string>
+                <string>before_script/portal_workflow/assignment_workflow/script_Assignment_checkConsistency</string>
               </tuple>
             </value>
         </item>
