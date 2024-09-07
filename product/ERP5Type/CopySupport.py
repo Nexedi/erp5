@@ -369,6 +369,8 @@ class CopyContainer:
           uid = getattr(self,'uid',None)
           if uid is None:
             return
+          if path is None:
+            path = self.getPath()
           # Set the path as deleted, sql wich generate no locks
           # Set also many columns in order to make sure lines
           # marked as deleted will not be selected
