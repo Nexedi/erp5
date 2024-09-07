@@ -120,6 +120,10 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     if 'test_folder' in self.portal.objectIds():
       self.portal.manage_delObjects(['test_folder'])
     self.portal.portal_selections.setSelectionFor('test_selection', None)
+    person_module = self.portal.person_module
+    person_id_list = list(person_module.objectIds())
+    if person_id_list:
+      person_module.manage_delObjects(ids=person_id_list)
     self.tic()
 
   def test_01_ERP5Site_createModule(self, quiet=quiet, run=run_all_test):
@@ -808,15 +812,18 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     )
     person2 = self.portal.person_module.newContent(
       portal_type='Person',
-      title='test1',
+      title='test2',
     )
     self.tic()
+    query = self.portal.erp5_sql_connection().query
     query('UPDATE catalog SET title="test2" WHERE uid=%s' % person.getUid())
     self.assertEqual(
       0,
       len(self.portal.portal_catalog(portal_type='Person', title='test1')),
     )
-    self.portal.portal_catalog.unindexObject(
+    # simulate a document being deleted and then the database being
+    # truncated before that deletion.
+    self.portal.portal_catalog.beforeUncatalogObject(
       uid=person2.getUid(),
       path=person2.getPath(),
     )
