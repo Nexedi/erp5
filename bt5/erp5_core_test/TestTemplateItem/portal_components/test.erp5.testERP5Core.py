@@ -38,6 +38,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Testing import ZopeTestCase
 
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
 
@@ -835,10 +836,10 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       '/%s/ERP5Site_resynchroniseCatalogSince?from_date=%s' % (
         self.portal.getId(), DateTime() - 1
       ),
-      'ERP5TypeTestCase:',
+      self.auth,
     )
     self.assertEqual(response.getStatus(), 200)
-    response_dict = {x.split(',')[2]:x.split(',') for x in response.getBody().splitlines()[:-1]}
+    response_dict = {x.split(',')[2]:x.split(',') for x in bytes2str(response.getBody()).splitlines()[:-1]}
     person_row = response_dict[person.getPath()]
     self.assertEqual(person_row[0], 'present')
     self.assertEqual(person_row[7], 'test1bis')
