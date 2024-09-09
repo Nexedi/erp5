@@ -433,7 +433,7 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=[("a", 1), ("b", 2)]
     )
 
-  def test_collections_OrderedDict(self):
+  def test_csv(self):
     self.createAndRunScript('''
         import csv
         import six
