@@ -36,6 +36,12 @@
             </value>
         </item>
         <item>
+            <key> <string>guard_role</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>icon</string> </key>
             <value>
               <none/>

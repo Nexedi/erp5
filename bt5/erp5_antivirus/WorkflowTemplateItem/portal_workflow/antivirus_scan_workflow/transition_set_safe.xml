@@ -30,8 +30,14 @@
         <item>
             <key> <string>guard_permission</string> </key>
             <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_role</string> </key>
+            <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>

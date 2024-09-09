@@ -9,9 +9,7 @@
         <item>
             <key> <string>acquire_permission</string> </key>
             <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -59,16 +57,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>Modify portal content</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
-                    </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

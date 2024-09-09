@@ -9,9 +9,7 @@
         <item>
             <key> <string>acquire_permission</string> </key>
             <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -58,25 +56,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>Modify portal content</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
-                        <string>Authenticated</string>
-                        <string>Author</string>
-                        <string>Manager</string>
-                        <string>Member</string>
-                        <string>Owner</string>
-                        <string>Reviewer</string>
-                      </tuple>
-                    </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
