@@ -70,7 +70,7 @@ from DateTime import DateTime
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.UnrestrictedMethod import super_user
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str, str2unicode
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Security.ERP5GroupManager import (
   disableCache as ERP5GroupManager_disableCache,
@@ -91,6 +91,14 @@ from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
   JWT_CLAIM_NETWORK_LIST_KEY,
 )
 from ZPublisher.HTTPResponse import HTTPResponse
+
+def ensure_ascii(s):
+  if six.PY2:
+    return s.encode('ascii')
+  else:
+    if isinstance(s, str):
+      s = bytes(s, 'ascii')
+    return s.decode('ascii')
 
 _DEFAULT_BACKEND = default_backend()
 _SIGNATURE_ALGORITHM_TO_KEY_BYTE_LENGTH_DICT = {
@@ -440,7 +448,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
             }
             for x in (
               portal.portal_categories.resolveCategory(
-                'oauth2_scope/' + y.encode('utf-8'),
+                'oauth2_scope/' + unicode2str(y),
               )
               for y in scope_list
             )
@@ -528,7 +536,7 @@ class _ERP5RequestValidator(RequestValidator):
 
   def _getClientValue(self, client_id):
     try:
-      result = self._authorisation_server_connector_value[client_id.encode('utf-8')]
+      result = self._authorisation_server_connector_value[unicode2str(client_id)]
     except KeyError:
       return
     if result.getValidationState() == 'validated':
@@ -691,7 +699,7 @@ class _ERP5RequestValidator(RequestValidator):
       client_value=request.client.erp5_client_value,
       redirect_uri=request.redirect_uri,
       scope_list=[
-        x.encode('utf-8')
+        unicode2str(x)
         for x in request.scopes
       ],
       code_challenge=request.code_challenge,
@@ -1276,7 +1284,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         token_dict[JWT_PAYLOAD_KEY] = decodeAccessTokenPayload(
-          token_dict[JWT_PAYLOAD_KEY].encode('ascii'),
+          ensure_ascii(token_dict[JWT_PAYLOAD_KEY]),
         )
         return token_dict
     raise  # pylint:disable=misplaced-bare-raise
@@ -1308,7 +1316,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     Validate non-standard jwt claims against request.
     """
     if not isAddressInNetworkList(
-      address=request.headers['X_FORWARDED_FOR'].decode('utf-8'),
+      address=str2unicode(request.headers['X_FORWARDED_FOR']),
       network_list=token[JWT_CLAIM_NETWORK_LIST_KEY],
     ):
       raise jwt.InvalidTokenError
@@ -1391,9 +1399,9 @@ class OAuth2AuthorisationServerConnector(XMLObject):
 
   def _getSessionValueFromTokenDict(self, token_dict):
     session_value = self._getSessionValue(
-      token_dict[JWT_PAYLOAD_KEY][
+      unicode2str(token_dict[JWT_PAYLOAD_KEY][
         JWT_PAYLOAD_AUTHORISATION_SESSION_ID_KEY
-      ].encode('utf-8'),
+      ]),
       'validated',
     )
     if session_value is not None:
@@ -1680,15 +1688,15 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       (
         now,
         access_token_signature_algorithm,
-        private_key.private_bytes(
+        ensure_ascii(private_key.private_bytes(
           encoding=Encoding.PEM,
           format=PrivateFormat.PKCS8,
           encryption_algorithm=NoEncryption(),
-        ).encode('ascii'),
-        private_key.public_key().public_bytes(
+        )),
+        ensure_ascii(private_key.public_key().public_bytes(
           encoding=Encoding.PEM,
           format=PublicFormat.SubjectPublicKeyInfo,
-        ).encode('ascii'),
+        )),
       ),
     ) + tuple(
       x
