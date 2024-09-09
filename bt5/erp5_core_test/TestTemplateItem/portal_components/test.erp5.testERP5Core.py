@@ -816,7 +816,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     )
     self.tic()
     query = self.portal.erp5_sql_connection().query
-    query('UPDATE catalog SET title="test2" WHERE uid=%s' % person.getUid())
+    query('UPDATE catalog SET title="test1bis" WHERE uid=%s' % person.getUid())
     self.assertEqual(
       0,
       len(self.portal.portal_catalog(portal_type='Person', title='test1')),
@@ -831,6 +831,22 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       0,
       len(self.portal.portal_catalog(uid=person2.getUid())),
     )
+    response = self.publish(
+      '/%s/ERP5Site_resynchroniseCatalogSince?from_date=%s' % (
+        self.portal.getId(), DateTime() - 1
+      ),
+      'ERP5TypeTestCase:',
+    )
+    self.assertEqual(response.getStatus(), 200)
+    response_dict = {x.split(',')[2]:x.split(',') for x in response.getBody().splitlines()[:-1]}
+    person_row = response_dict[person.getPath()]
+    self.assertEqual(person_row[0], 'present')
+    self.assertEqual(person_row[7], 'test1bis')
+    self.assertEqual(person_row[8], 'test1')
+    person2_row = response_dict[person2.getPath()]
+    self.assertEqual(person2_row[0], 'present')
+    self.assertEqual(person2_row[7], '')
+    self.assertEqual(person2_row[8], 'test2')
     self.portal.ERP5Site_resynchroniseCatalogSince(
       RESPONSE=self.portal.REQUEST.RESPONSE,
       from_date=DateTime() - 1,

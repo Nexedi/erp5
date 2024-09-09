@@ -4,6 +4,8 @@ import six
 from io import BytesIO, StringIO
 from erp5.component.module.Log import log
 
+if not isinstance(from_date, DateTime):
+  from_date = DateTime(from_date)
 assert from_date < DateTime(), from_date
 def always(document_value):
   return True
