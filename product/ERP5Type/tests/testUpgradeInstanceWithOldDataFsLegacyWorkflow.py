@@ -72,15 +72,6 @@ class TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow(ERP5TypeTestCase):
             'erp5_upgrader')
 
   def testUpgrade(self):
-    if 'deleted_catalog' not in self.portal.portal_catalog.getSQLCatalog().getTableIds():
-      self.portal.erp5_sql_connection().query('''
-CREATE TABLE `deleted_catalog` (
-  `uid` BIGINT UNSIGNED NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `deletion_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`deletion_timestamp`, `path`, `uid`)
-) ENGINE=InnoDB
-      ''')
     if not self.portal.portal_templates.getRepositoryList():
       self.setupAutomaticBusinessTemplateRepository(
         searchable_business_template_list=["erp5_core", "erp5_base", "erp5_notebook"])
