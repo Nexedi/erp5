@@ -56,7 +56,7 @@
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
