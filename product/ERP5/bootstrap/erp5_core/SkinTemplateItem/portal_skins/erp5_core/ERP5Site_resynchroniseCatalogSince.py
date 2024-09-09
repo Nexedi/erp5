@@ -1,6 +1,7 @@
 # Guards: role: Manager, as it is meaningless (and potentially very expensive) to use this script when one cannot typically see all documents.
 import csv
 import six
+from collections import OrderedDict
 from io import BytesIO, StringIO
 from erp5.component.module.Log import log
 
@@ -26,16 +27,16 @@ def strftime(value):
     int(value.second()),
     'UTC'
   )
-select_dict = {
-  # column               getter                only if getter present ?  convert zodb  test zodb
-  'uid':               ('getUid',              False,                    unity,        always),
-  'title':             ('getTitle',            False,                    unity,        always),
-  'portal_type':       ('getPortalType',       False,                    unity,        always),
-  'creation_date':     ('getCreationDate',     False,                    strftime,     always),
-  'modification_date': ('getModificationDate', False,                    strftime,     if_has_workflow),
-  'validation_state':  ('getValidationState',  True,                     unity,        always),
-  'simulation_state':  ('getSimulationState',  True,                     unity,        always),
-}
+select_dict = OrderedDict((
+  # column                getter                only if getter present ?  convert zodb  test zodb
+  ('uid',               ('getUid',              False,                    unity,        always)),
+  ('title',             ('getTitle',            False,                    unity,        always)),
+  ('portal_type',       ('getPortalType',       False,                    unity,        always)),
+  ('creation_date',     ('getCreationDate',     False,                    strftime,     always)),
+  ('modification_date', ('getModificationDate', False,                    strftime,     if_has_workflow)),
+  ('validation_state',  ('getValidationState',  True,                     unity,        always)),
+  ('simulation_state',  ('getSimulationState',  True,                     unity,        always)),
+))
 column_list = select_dict.keys()
 
 portal = context.getPortalObject()

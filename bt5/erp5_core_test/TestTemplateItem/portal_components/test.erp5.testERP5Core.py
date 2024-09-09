@@ -125,6 +125,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_id_list = list(person_module.objectIds())
     if person_id_list:
       person_module.manage_delObjects(ids=person_id_list)
+    self.portal.portal_caches.clearCache()
     self.tic()
 
   def test_01_ERP5Site_createModule(self, quiet=quiet, run=run_all_test):
@@ -842,12 +843,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response_dict = {x.split(',')[2]:x.split(',') for x in bytes2str(response.getBody()).splitlines()[:-1]}
     person_row = response_dict[person.getPath()]
     self.assertEqual(person_row[0], 'present')
-    self.assertEqual(person_row[7], 'test1bis')
-    self.assertEqual(person_row[8], 'test1')
+    self.assertEqual(person_row[5], 'test1bis')
+    self.assertEqual(person_row[6], 'test1')
     person2_row = response_dict[person2.getPath()]
     self.assertEqual(person2_row[0], 'present')
-    self.assertEqual(person2_row[7], '')
-    self.assertEqual(person2_row[8], 'test2')
+    self.assertEqual(person2_row[5], '')
+    self.assertEqual(person2_row[6], 'test2')
     self.portal.ERP5Site_resynchroniseCatalogSince(
       RESPONSE=self.portal.REQUEST.RESPONSE,
       from_date=DateTime() - 1,
