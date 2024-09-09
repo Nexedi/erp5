@@ -122,7 +122,6 @@ $script.onload = function() {
     {
       value: $textarea.value,
       language: mode,
-      autoIndent: true,
       experimental: {
         stickyScroll: {
           enabled: true,
