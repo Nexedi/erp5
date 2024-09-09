@@ -433,6 +433,23 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=[("a", 1), ("b", 2)]
     )
 
+  def test_collections_OrderedDict(self):
+    self.createAndRunScript('''
+        import csv
+        import six
+        from io import BytesIO, StringIO
+        if six.PY2:
+          io_ = BytesIO()
+        else:
+          io_ = StringIO()
+        csv_writer = csv.writer(io_)
+        csv_writer.writerow([1, None, 'a'])
+        io_.seek(0)
+        return io_.getvalue()
+        ''',
+        expected='1,,a\r\n',
+    )
+
   def test_lax_name(self):
     self.createAndRunScript('''
         def _function():
