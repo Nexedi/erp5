@@ -1,3 +1,4 @@
+portal_alarms/alarm_garbage_collect_deleted_catalog
 portal_alarms/expired_password_alarm
 portal_caches/erp5_content_long
 portal_caches/erp5_content_long/default_ram_cache
