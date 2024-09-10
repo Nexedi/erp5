@@ -88,6 +88,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish(person.getPath() + '/erp5_logo.png',
                             request_method='PUT',
                             stdin=file_object,
+                            env={"CONTENT_TYPE": 'image/png'},
                             basic=self.authentication)
     self.assertEqual(response.getStatus(), httplib.CREATED)
     self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
@@ -108,6 +109,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
+                            env={"CONTENT_TYPE":
+                                 'application/vnd.oasis.opendocument.presentation'},
                             basic=self.authentication)
 
     self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
@@ -130,6 +133,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
+                            env={"CONTENT_TYPE":
+                                 'application/vnd.oasis.opendocument.presentation'},
                             basic=self.authentication)
 
     self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
@@ -202,6 +207,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
+                            env={"CONTENT_TYPE":
+                                 'application/vnd.oasis.opendocument.presentation'},
                             basic=self.authentication)
     # Convert to base format and run conversion into utf-8
     self.tic()
@@ -229,6 +236,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
+                            env={"CONTENT_TYPE":
+                                 'application/vnd.oasis.opendocument.presentation'},
                             basic=self.authentication)
     document_module = self.getDocumentModule()
     document = document_module[filename]
@@ -267,6 +276,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
     response = self.publish('%s/%s' % (path, filename),
                             request_method='PUT',
                             stdin=file_object,
+                            env={"CONTENT_TYPE":
+                                 'application/vnd.oasis.opendocument.presentation'},
                             basic=self.authentication)
     document_module = self.getDocumentModule()
     document = document_module[filename]
