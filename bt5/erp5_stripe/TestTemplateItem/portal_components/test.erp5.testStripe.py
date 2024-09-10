@@ -477,6 +477,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
           })
         }).encode()),
         request_method="POST",
+        env={'CONTENT_TYPE': 'application/json'},
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
       self.tic()
@@ -673,6 +674,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
           })
         }).encode()),
         request_method="POST",
+        env={'CONTENT_TYPE': 'application/json'},
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
       self.tic()
