@@ -338,7 +338,7 @@ class CopyContainer:
       if aq_base(container) is not aq_base(self):
           self.__recurse('manage_beforeDelete', item, container)
           if self.isIndexable:
-            self.unindexObject(item.getPath())
+            self.unindexObject()
 
   def __recurse(self, name, *args):
       """
@@ -354,7 +354,7 @@ class CopyContainer:
               if s is None: ob._p_deactivate()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'unindexObject')
-  def unindexObject(self, path=None):
+  def unindexObject(self):
       """
           Unindex the object from the portal catalog.
       """
@@ -369,12 +369,10 @@ class CopyContainer:
           uid = getattr(self,'uid',None)
           if uid is None:
             return
-          if path is None:
-            path = self.getPath()
           # Set the path as deleted, sql wich generate no locks
           # Set also many columns in order to make sure lines
           # marked as deleted will not be selected
-          catalog.beforeUnindexObject(None,path=path,uid=uid)
+          catalog.beforeUnindexObject(None, path=self.getPath(), uid=uid)
           # Then start activity in order to remove lines in catalog,
           # sql wich generate locks
           # - serialization_tag is used in order to prevent unindexation to
