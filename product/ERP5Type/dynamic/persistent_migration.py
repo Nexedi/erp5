@@ -34,6 +34,7 @@
 # class may be copied in the pickle of the container, and we can't access it
 # from __setstate__.
 
+import six
 import logging, re
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -97,7 +98,6 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
         if _setOb:
           if isinstance(_setOb, WorkflowMethod):
             _setOb = _setOb._m
-          import six
           if six.get_unbound_function(_setOb) is six.get_unbound_function(OFS_Folder._setOb):
             self.lazy = Ghost
         elif klass.__module__[:7] == 'BTrees.' and klass.__name__ != 'Length':
@@ -114,8 +114,12 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
         self.do_migrate = args != (klass.__module__, klass.__name__) and \
                           not isOldBTree('%s.%s' % args)
         unpickler.find_global = self._get_class
+        if six.PY3:
+          unpickler.find_class = self._get_class
         return self._get_class(*args)
       unpickler.find_global = find_global
+      if six.PY3:
+        unpickler.find_class = find_global
       unpickler.load() # class
       state = unpickler.load()
       if isinstance(self.lazy, LazyPersistent):
