@@ -22,6 +22,7 @@ from Products.PortalTransforms.transforms.broken import BrokenTransform
 
 def import_from_name(module_name):
     """ import and return a module by its name """
+    __traceback_info__ = (module_name,)
     return import_module(module_name)
 
 def make_config_persistent(kwargs):
