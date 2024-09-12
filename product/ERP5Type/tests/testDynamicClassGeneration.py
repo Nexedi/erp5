@@ -2902,7 +2902,7 @@ class TestGC(XMLObject):
       import erp5.component
       debug_flags = (
         gc.DEBUG_STATS |
-        gc.DEBUG_UNCOLLECTABLE
+        gc.DEBUG_UNCOLLECTABLE |
         gc.DEBUG_COLLECTABLE)
       if six.PY2:
         debug_flags |= (
