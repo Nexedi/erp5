@@ -1380,7 +1380,7 @@ class CategoryTool(BaseTool):
         }
         if portal_type is not None:
           catalog_kw['portal_type'] = portal_type
-        return portal_catalog.unrestrictedSearchResults(
+        return portal_catalog(
           select_list=['relative_url', 'portal_type'],
           inner_join_list=inner_join_list,
           **catalog_kw
@@ -1488,7 +1488,7 @@ class CategoryTool(BaseTool):
           }
           if portal_type is not None:
             catalog_kw['portal_type'] = portal_type
-          from_catalog_result_list = portal_catalog.unrestrictedSearchResults(
+          from_catalog_result_list = portal_catalog(
             select_list=['relative_url', 'portal_type'],
             **catalog_kw
           )
