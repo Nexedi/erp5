@@ -214,7 +214,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self._validate(odf_document)
 
     # 6. Normal case: unicode string
-    test1.setTitle(u'Fran\xc3\xa7ais test2')
+    test1.setTitle(u'Français test2')
     odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
