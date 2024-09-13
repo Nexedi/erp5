@@ -30,6 +30,7 @@
               gadget.state.doc.source + ".history"
             )
               .push(undefined, function (error) {
+                //check if json error
                 if (error.name === "cancel") {
                   return undefined;
                 }
