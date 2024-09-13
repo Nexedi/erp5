@@ -303,7 +303,7 @@ class TestOAuth2(ERP5TypeTestCase):
     cleanup_list = self.__cleanup_list
     # XXX: imperfect cleanup if indexation did not complete
     cleanup_list.extend(
-      x.getObject() for x in self.__searchOAuth2Session(),
+      x.getObject() for x in self.__searchOAuth2Session()
     )
     parent_dict = defaultdict(list)
     for document_value in cleanup_list:
