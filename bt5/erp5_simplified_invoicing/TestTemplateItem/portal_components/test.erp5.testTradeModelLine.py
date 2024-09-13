@@ -62,6 +62,10 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   order_date = DateTime()
   amount_generator_line_portal_type = 'Trade Model Line'
 
+  # XXX so that unittest.suite._isnotsuite return False
+  def __iter__(self):
+    raise TypeError()
+
   def setBaseAmountQuantityMethod(self, base_amount_id, text):
     """Populate TradeModelLine_getBaseAmountQuantityMethod shared script
 
