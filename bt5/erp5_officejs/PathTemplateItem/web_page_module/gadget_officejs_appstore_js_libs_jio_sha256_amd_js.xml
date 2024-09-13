@@ -66,7 +66,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/js</string> </value>
+            <value> <string>text/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
