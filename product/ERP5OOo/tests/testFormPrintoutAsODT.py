@@ -210,16 +210,16 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertIn(b"Français", content_xml))
+    self.assertIn(b"Fran\xc3\xa7ais", content_xml)
     self._validate(odf_document)
 
     # 6. Normal case: unicode string
-    test1.setTitle(u'Français test2')
+    test1.setTitle(u'Fran\xc3\xa7ais test2')
     odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertIn(b"Français test2", content_xml)
+    self.assertIn(b"Fran\xc3\xa7ais test2", content_xml)
     self._validate(odf_document)
 
     # 7. Change Filename of downloadable file

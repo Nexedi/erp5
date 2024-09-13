@@ -43,7 +43,7 @@ class TestOOoParser(unittest.TestCase):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('import_data_list.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Person'], list(mapping)))
+    self.assertEqual(['Person'], list(mapping))
     person_mapping = mapping['Person']
     self.assertTrue(isinstance(person_mapping, list))
     self.assertTrue(102, len(person_mapping))
@@ -57,7 +57,7 @@ class TestOOoParser(unittest.TestCase):
     with open(makeFilePath('import_data_list.ods'), 'rb') as f:
       parser.openFromBytes(f.read())
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEqual(['Person'], list(mapping)))
+    self.assertEqual(['Person'], list(mapping))
 
   def test_getSpreadSheetMappingStyle(self):
     parser = OOoParser()
