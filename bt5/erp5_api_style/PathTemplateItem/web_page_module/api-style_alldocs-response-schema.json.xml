@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/json</string> </value>
+            <value> <string>application/schema+json</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
