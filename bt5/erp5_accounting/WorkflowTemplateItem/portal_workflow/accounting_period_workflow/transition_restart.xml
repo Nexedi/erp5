@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Restarts the accounting period in order to input transactions.\r\n
+            <value> <string>Restarts the accounting period in order to input transactions.\n
 This removes existing balance transactions.</string> </value>
         </item>
         <item>
@@ -49,6 +49,7 @@ This removes existing balance transactions.</string> </value>
             <key> <string>guard_role</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Assignee</string>
               </tuple>
             </value>
