@@ -1506,7 +1506,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is not None and (lambda x: x is not None and x.getCachingPolicy() =="hateoas")(object.getWebSectionValue()) and request.get("X-HATEOAS-CACHE")</string> </value>
+            <value> <string>python: (member is not None) and (request.other[\'method\'] == "GET") and (request.environ[\'QUERY_STRING\'] == "") and (lambda x: (x is not None) and (request.other[\'PUBLISHED\'] == x) and (x.getCachingPolicy() == "hateoas"))(object.getWebSectionValue())</string> </value>
         </item>
       </dictionary>
     </pickle>
