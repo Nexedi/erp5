@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>font/truetype</string> </value>
+            <value> <string>font/ttf</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>

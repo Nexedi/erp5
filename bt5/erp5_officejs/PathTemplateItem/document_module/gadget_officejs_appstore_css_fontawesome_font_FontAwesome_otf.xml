@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>font/opentype</string> </value>
+            <value> <string>font/otf</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
