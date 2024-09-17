@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>output</string> </key>
-            <value> <string>image/x-ms-bmp</string> </value>
+            <value> <string>image/bmp</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

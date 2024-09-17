@@ -3,7 +3,7 @@ from Products.PortalTransforms.libtransforms.imagemagick_transform import ImageM
 class image_to_pcx(ImageMagickTransforms):
   __name__  = "image_to_pcx"
   inputs    = ('image/*', )
-  output    = 'image/pcx' # image/vnd.zbrush.pcx image/x-pcx
+  output    = 'image/vnd.zbrush.pcx'
   format    = 'pcx'
 
 def register():
