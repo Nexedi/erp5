@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/x-icon</string> </value>
+            <value> <string>image/vnd.microsoft.icon</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
