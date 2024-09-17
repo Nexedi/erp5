@@ -9,7 +9,7 @@ class PdfToBmp:
 
   __name__ = 'pdf_to_bmp'
   inputs   = ('application/pdf',)
-  output = 'image/x-ms-bmp'  # image/bmp
+  output = 'image/bmp'
 
   tranform_engine = OOOdCommandTransform.__module__
 
