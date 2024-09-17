@@ -82,7 +82,7 @@
             <key> <string>inputs</string> </key>
             <value>
               <list>
-                <string>application/x-httpd-php</string>
+                <string>application/x-php</string>
               </list>
             </value>
         </item>
@@ -117,7 +117,7 @@
             <key> <string>data</string> </key>
             <value>
               <list>
-                <string>application/x-httpd-php</string>
+                <string>application/x-php</string>
               </list>
             </value>
         </item>
