@@ -4,6 +4,9 @@ import six
 preferred_extension_dict = {
   "bin": "application/octet-stream",
   "jpg": "image/jpeg",
+  "js": "application/javascript",
+  "swf": "application/vnd.adobe.flash.movie",
+  "tar": "application/x-tar",
 }
 
 def initialize(registry):
