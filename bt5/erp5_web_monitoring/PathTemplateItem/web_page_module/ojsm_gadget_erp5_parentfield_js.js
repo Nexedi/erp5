@@ -117,10 +117,7 @@
             });
             return gadget.changeState(state_dict);
           case "private_url":
-            return new RSVP.Queue()
-              .push(function () {
-                return gadget.jio_get(options.parent_id);
-              })
+            return gadget.jio_get(options.parent_id)
               .push(function (outline_doc) {
                 return RSVP.all([outline_doc.parent_id,
                                  gadget.jio_get(outline_doc.parent_url)]);
