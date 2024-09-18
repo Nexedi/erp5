@@ -1103,13 +1103,16 @@
           if (error.target.responseURL) {
             error_msg += ". URL: " + error.target.responseURL;
           }
+          if (error.target.status === 0) {
+            error_msg = ". Check remote storages.";
+          }
         } else {
           console.log(error);
         }
         if (!error_msg) {
-          error_msg = ". Check remote storages.";
+          throw error;
         }
-        throw "Failed to import remote configurations" + error_msg;
+        throw new Error("Failed to import remote configurations" + error_msg);
       })
       .push(function (opml_list) {
         //store opmls in local sub storage
