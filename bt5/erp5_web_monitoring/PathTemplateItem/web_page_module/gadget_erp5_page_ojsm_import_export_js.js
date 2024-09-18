@@ -600,7 +600,7 @@
         .push(function () {
           var has_failed = false, i;
           if (gadget.state.sync === "erp5" && gadget.state.storage_url_list) {
-            gadget.setSetting("latest_import_date", new Date().getTime())
+            return gadget.setSetting("latest_import_date", new Date().getTime())
               .push(function () {
                 if (!has_failed) {
                   return gadget.redirect({
