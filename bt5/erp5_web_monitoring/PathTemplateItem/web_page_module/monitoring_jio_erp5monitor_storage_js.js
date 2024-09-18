@@ -54,13 +54,13 @@
     }
     return new RSVP.Queue()
       .push(function () {
-        return sub_storage.buildQuery.apply(sub_storage, args);
+        return sub_storage.allDocs.apply(sub_storage, args);
       })
       .push(function (result) {
-        for (i = 0; i < result.length; i += 1) {
-          result[i].master_url = master_url;
+        for (i = 0; i < result.data.rows.length; i += 1) {
+          result.data.rows[i].master_url = master_url;
         }
-        return result;
+        return result.data.rows;
       });
   };
 
