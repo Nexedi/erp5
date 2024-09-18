@@ -28,8 +28,6 @@
           redirect_options = {"page": "ojsm_dispatch", "notify_msg": result.msg, "notify_type": result.type};
           notify.msg = result.msg;
           notify.type = result.type;
-        })
-        .push(function () {
           if (options.reset === "1") {
             // reset redirections
             return gadget.setSetting("sync_redirect_options", undefined)
