@@ -287,10 +287,8 @@
         return getUpdatedMonitoringStorageSpec(gadget, true)
           .push(function (monitoring_jio) {
             if (monitoring_jio) {
-              return gadget.createStorage(undefined, monitoring_jio);
+              gadget.createStorage(undefined, monitoring_jio);
             }
-          })
-          .push(function () {
             var storage = gadget.props.jio_storage;
             return storage.repair.apply(storage, argument_list);
           });
