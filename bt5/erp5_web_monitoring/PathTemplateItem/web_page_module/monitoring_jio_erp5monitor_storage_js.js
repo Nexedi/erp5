@@ -52,10 +52,7 @@
     if (!arguments[0].limit) {
       arguments[0].limit = [0, LIMIT];
     }
-    return new RSVP.Queue()
-      .push(function () {
-        return sub_storage.allDocs.apply(sub_storage, args);
-      })
+    return sub_storage.allDocs.apply(sub_storage, args)
       .push(function (result) {
         for (i = 0; i < result.data.rows.length; i += 1) {
           result.data.rows[i].master_url = master_url;
