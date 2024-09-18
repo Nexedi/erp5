@@ -100,8 +100,6 @@
             storage_list: storage_definition_list
           }
         };
-      })
-      .push(function () {
         if (update_settings) {
           return gadget.setSetting('master_url_list_updated', false);
         }
