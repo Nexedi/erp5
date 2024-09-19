@@ -86723,7 +86723,9 @@
         <item>
             <key> <string>globs</string> </key>
             <value>
-              <list/>
+              <list>
+                <unicode>*.json</unicode>
+              </list>
             </value>
         </item>
         <item>
