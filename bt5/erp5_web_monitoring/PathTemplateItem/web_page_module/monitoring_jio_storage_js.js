@@ -1057,9 +1057,7 @@
               }
             }
           }
-          return RSVP.all([
-            removeAllOPML(remove_opml_list, context)
-          ]);
+          return removeAllOPML(remove_opml_list, context);
         });
     }
 
