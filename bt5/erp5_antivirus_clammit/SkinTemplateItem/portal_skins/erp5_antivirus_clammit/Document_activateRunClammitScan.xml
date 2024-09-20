@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Workflow Script" module="erp5.portal_type"/>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -50,21 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>script_runClammitScan</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>runClammitScan</string> </value>
+            <value> <string>Document_activateRunClammitScan</string> </value>
         </item>
       </dictionary>
     </pickle>

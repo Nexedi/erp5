@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>activate_script/portal_workflow/clammit_antivirus_scan_interaction_workflow/script_runClammitScan</string>
+                <string>before_commit_script/portal_workflow/clammit_antivirus_scan_interaction_workflow/script_runClammitScan</string>
               </tuple>
             </value>
         </item>
