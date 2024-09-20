@@ -359,8 +359,6 @@ class Workflow(XMLObject):
     # Patch updateRoleMappingsFor so that if 2 workflows define security, then
     # we should do an AND operation between each roles list for a given
     # permission
-    # XXX(WORKFLOW): this is not tested: add a test with multiple workflows
-    # defining different permissions
     """
     Changes the object permissions according to the current
     state.
