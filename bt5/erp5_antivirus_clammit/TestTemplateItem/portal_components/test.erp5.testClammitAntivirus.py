@@ -67,21 +67,37 @@ class TestClammitAntivirus(ERP5TypeTestCase):
   @mock.patch("requests.request")
   def test_analyse_safe_document(self, requests_request_mock):
     requests_request_mock.side_effect = self.getResponseMock(self._SANE_HTTP_STATUS_CODE)
+
+    # Create a file as user
+    uf = self.getPortal().acl_users
+    user = "someuser"
+    uf._doAddUser(user, "", ["Author"], [])
+    self.loginByUserName(user)
     document_value = self.portal.document_module.newContent(
       portal_type="File",
       data="hello_world",
     )
     document_value.setSuspect()
+
+    self.login()
     self.tic()
     self.assertEqual(document_value.getScanState(), "safe")
 
   @mock.patch("requests.request")
   def test_analysed_infected_document(self, requests_request_mock):
     requests_request_mock.side_effect = self.getResponseMock(self._INFECTED_HTTP_STATUS_CODE)
+
+    # Create a file as user
+    uf = self.getPortal().acl_users
+    user = "someuser"
+    uf._doAddUser(user, "", ["Author"], [])
+    self.loginByUserName(user)
     document_value = self.portal.document_module.newContent(
       portal_type="File",
       data=b'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*',
     )
     document_value.setSuspect()
+
+    self.login()
     self.tic()
     self.assertEqual(document_value.getScanState(), "infected")
