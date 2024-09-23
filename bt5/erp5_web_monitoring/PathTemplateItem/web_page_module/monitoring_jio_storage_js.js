@@ -692,7 +692,8 @@
                 lastBuildDate: fixDateTimezone(result_list[i].result.data
                                                .rows[0].doc.lastBuildDate),
                 channel: result_list[i].result.data.rows[0].doc.description,
-                channel_item: result_list[i].result.data.rows[0].doc.title
+                channel_item: result_list[i].result.data.rows[0].doc.title,
+                description: ""
               };
               start = 1;
             }
