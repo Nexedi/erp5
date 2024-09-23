@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Timeout import getTimeLeft
 from Products.ERP5Type.XMLObject import XMLObject
 
 import requests
@@ -50,7 +51,11 @@ class ClammitConnector(XMLObject):
     def _request(*args, **kw):
       return requests.request(*args, **kw)
 
-    kw.setdefault("timeout", self.getTimeout(self._DEFAULT_TIMEOUT))
+    timeout = kw.get("timeout", self.getTimeout(self._DEFAULT_TIMEOUT))
+    kw['timeout'] = min(
+      getTimeLeft() or timeout,
+      timeout,
+    )
 
     ca_certificate = self.getCertificateAuthorityCertificate()
     if ca_certificate:
