@@ -16,11 +16,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>SSL certificate, PEM encoded</string> </value>
+            <value> <string>Private key of a x509 certificate</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ssl_certificate_property</string> </value>
+            <value> <string>key_property</string> </value>
         </item>
       </dictionary>
     </pickle>
