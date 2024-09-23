@@ -1,8 +1,8 @@
 <property_sheet_list>
  <portal_type id="Clammit Connector">
   <item>Reference</item>
-  <item>SSL</item>
   <item>SocketClient</item>
   <item>Url</item>
+  <item>X509</item>
  </portal_type>
 </property_sheet_list>
