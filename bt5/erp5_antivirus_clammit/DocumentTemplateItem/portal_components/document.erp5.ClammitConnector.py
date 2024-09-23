@@ -52,10 +52,10 @@ class ClammitConnector(XMLObject):
 
     kw.setdefault("timeout", self.getTimeout(self._DEFAULT_TIMEOUT))
 
-    ssl_ca_certificate = self.getSslCertificateAuthorityCertificate()
-    if ssl_ca_certificate:
+    ca_certificate = self.getCertificateAuthorityCertificate()
+    if ca_certificate:
       with tempfile.NamedTemporaryFile() as certificate_authoritity_certificate:
-        certificate_authoritity_certificate.write(ssl_ca_certificate)
+        certificate_authoritity_certificate.write(ca_certificate)
         certificate_authoritity_certificate.seek(0)
         kw["verify"] = certificate_authoritity_certificate.name
         return _request(*args, **kw)
