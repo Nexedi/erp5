@@ -697,6 +697,7 @@
               start = 1;
             }
             for (j = start; j < result_list[i].result.data.total_rows; j += 1) {
+              extra_dict.output_message = result_list[i].result.data.rows[j].doc.description;
               applyItemToTree(
                 result_list[i].result.data.rows[j],
                 result_list[i],
