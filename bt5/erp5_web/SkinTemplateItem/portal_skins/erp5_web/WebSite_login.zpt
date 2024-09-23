@@ -7,7 +7,7 @@
              came_from python: request.get('came_from') or request.get('field_came_from');
              isAnon here/portal_membership/isAnonymousUser | nothing;
              url_topmost_document python: here.Base_getURLTopmostDocumentValue();
-             came_from_valid python: not came_from or url_topmost_document.isURLAncestorOf(came_from);">
+             came_from_valid python: not came_from or url_topmost_document.getOriginalDocument().isURLAncestorOf(came_from);">
     <tal:block tal:condition="isAnon">
       <tal:block tal:define="dummy python: response.expireCookie('__ac', path='/');
                  url python: '%s/login_form?portal_status_message=%s' % (here.absolute_url(), here.Base_translateString('Login and/or password is incorrect.'));
