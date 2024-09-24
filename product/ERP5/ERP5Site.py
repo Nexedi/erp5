@@ -663,6 +663,11 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getOriginalDocument')
+  def getOriginalDocument(self):
+    return self
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalType')
   def getPortalType(self):
     return self.portal_type
