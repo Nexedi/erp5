@@ -1,0 +1,34 @@
+<workflow_chain>
+ <chain>
+  <type>Drawing</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Embedded File</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+ <chain>
+  <type>File</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+ <chain>
+  <type>PDF</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Presentation</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Spreadsheet</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Text</type>
+  <workflow>antivirus_scan_workflow</workflow>
+ </chain>
+</workflow_chain>

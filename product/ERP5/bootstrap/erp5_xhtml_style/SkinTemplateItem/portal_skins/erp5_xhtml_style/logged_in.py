@@ -40,7 +40,7 @@ if REQUEST.get('is_user_account_password_expired_expire_date'):
               hour_minute=1)})})
 
 topmost_url_document = context.Base_getURLTopmostDocumentValue()
-if not topmost_url_document.isURLAncestorOf(url):
+if not topmost_url_document.getOriginalDocument().isURLAncestorOf(url):
   return topmost_url_document.Base_redirect(
     keep_items={
       'portal_status_message': translateString('Redirection to an external site prevented.'),
