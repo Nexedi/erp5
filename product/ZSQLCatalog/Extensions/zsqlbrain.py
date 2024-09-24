@@ -46,7 +46,11 @@ class ZSQLBrain(Acquisition.Implicit):
     return self.path
 
   def getPath(self):
-    return self.path
+    path = self.path
+    # TODO py3: understand why this is bytes sometimes
+    if not isinstance(path, str):
+      path = path.decode()
+    return path
 
   def getUid(self):
     return self.uid
