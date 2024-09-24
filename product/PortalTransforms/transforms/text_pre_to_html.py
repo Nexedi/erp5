@@ -1,3 +1,4 @@
+import six
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 from DocumentTemplate.html_quote import html_quote
@@ -30,6 +31,7 @@ class TextPreToHTML:
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
+        orig = six.ensure_text(orig, errors='replace')
         data.setData('<pre class="data">%s</pre>' % html_quote(orig))
         return data
 

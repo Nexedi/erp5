@@ -1,3 +1,4 @@
+import six
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 from DocumentTemplate.html_quote import html_quote
@@ -30,6 +31,7 @@ class TextToHTML:
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
+        orig = six.ensure_text(orig, errors='replace')
         # Replaces all line breaks with a br tag, and wraps it in a p tag.
         data.setData('<p>%s</p>' % html_quote(orig.strip()).replace('\n', '<br />'))
         return data
