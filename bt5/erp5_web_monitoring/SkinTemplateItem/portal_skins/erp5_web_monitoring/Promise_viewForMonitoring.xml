@@ -90,7 +90,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_output_message</string>
+                      </list>
                     </value>
                 </item>
                 <item>
