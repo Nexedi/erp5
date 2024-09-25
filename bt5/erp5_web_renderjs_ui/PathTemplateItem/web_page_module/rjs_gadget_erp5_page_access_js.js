@@ -96,6 +96,7 @@
       }
       return this.changeState({
         display_step: options[URL_DISPLAY_PARAMETER] || undefined,
+        page: options.page,
         action_list: JSON.stringify(action_list),
         // Force display in any case to refresh the menus
         render_timestamp: new Date().getTime(),
@@ -128,9 +129,10 @@
             i;
           for (i = 0; i < action_list.length; i += 1) {
             url_for_list.push({
-              command: 'change',
+              command: 'display',
               options: {
-                view: i
+                view: i,
+                page: gadget.state.page
               }
             });
           }
