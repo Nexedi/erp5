@@ -207,7 +207,7 @@
                     <key> <string>extra</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-if (context_document && context_document.output_message) { result.default = "<p>" + context_document.output_message + "</p>"; result.default = result.default.replaceAll("\\n", "</p><p>"); }
+if (context_document && context_document.output_message) { result.default = "<p>" + context_document.output_message + "</p>"; result.default = result.default.replaceAll("\\n", "</p><p>"); result.default = result.default.replaceAll("\\\\n", "</p><p>"); }
 
 ]]></string> </value>
                 </item>
