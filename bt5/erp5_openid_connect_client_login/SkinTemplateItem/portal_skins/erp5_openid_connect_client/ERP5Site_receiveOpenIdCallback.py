@@ -1,3 +1,4 @@
+from Products.ERP5Type.Utils import unicode2str
 import time
 
 request = container.REQUEST
@@ -57,9 +58,7 @@ elif code is not None:
                                 response_dict,
                                 "openid_connect_server_auth_token_cache_factory")
     user_dict = context.ERP5Site_getOpenIdUserEntry(token=access_token)
-    user_reference = user_dict["sub"]
-    if six.PY2:
-      user_reference = user_reference.encode('utf-8')
+    user_reference = unicode2str(user_dict["sub"])
     context.Base_setBearerToken(access_token,
                                 {"reference": user_reference},
                                 "openid_connect_server_auth_token_cache_factory")
