@@ -1,3 +1,4 @@
+from Products.ERP5Type.Utils import ensure_list
 new_request = {}
 
 for k, v in ensure_list(request.other.items()) + ensure_list(request.form.items()):

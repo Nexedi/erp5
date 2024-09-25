@@ -7,6 +7,7 @@
 """
 
 from Products.ERP5Type.Utils import cartesianProduct
+from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.Message import translateString
 
 portal_type_list = ['Pay Sheet Model Line']

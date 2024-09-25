@@ -4,6 +4,7 @@
 # the key has the value of one 'input_data_name' of the corresponding level
 # a key is unique and required (in this version)
 ##################################################
+from Products.ERP5Type.Utils import ensure_list
 
 # some analysis of transformation rules
 

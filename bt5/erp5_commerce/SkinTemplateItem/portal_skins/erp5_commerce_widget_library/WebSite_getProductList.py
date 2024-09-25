@@ -2,6 +2,7 @@
 # The goal of this script is to get all the products from all the visible Web Sections
 # and it must select randomly which product must be displayed for a given context.
 from random import choice
+from Products.ERP5Type.Utils import ensure_list
 
 web_site = context.getWebSiteValue() or context.REQUEST.get('current_web_site')
 

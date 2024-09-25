@@ -29,6 +29,7 @@
 import unittest
 from subprocess import Popen, PIPE
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import ensure_list
 import six
 
 
