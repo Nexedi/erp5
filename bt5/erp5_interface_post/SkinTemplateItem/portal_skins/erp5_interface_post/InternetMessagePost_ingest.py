@@ -8,7 +8,7 @@ portal = context.getPortalObject()
 
 import six
 if six.PY2:
-  from email import email.message_from_string as message_from_bytes
+  from email import message_from_string as message_from_bytes
 else:
   from email import message_from_bytes
 email_object = message_from_bytes(context.getData())
