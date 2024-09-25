@@ -135,7 +135,7 @@
                             description: "The promise output message",
                             editable: 0,
                             hidden: 0,
-                            "default": status_history.data[i].message,
+                            "default": status_history.data[i].message.replaceAll("\n", "").replaceAll("\\n", ""),
                             key: "message",
                             required: 0,
                             title: "Promise Output",
