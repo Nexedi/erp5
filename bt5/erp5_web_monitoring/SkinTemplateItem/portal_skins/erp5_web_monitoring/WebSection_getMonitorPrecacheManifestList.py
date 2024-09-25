@@ -126,6 +126,7 @@ url_list = [
   "gadget_erp5_editor_panel.js",
   "gadget_officejs_monitoring_jio_alldocs.html",
   "gadget_officejs_monitoring_jio_alldocs.js",
+  "gadget_officejs_monitoring_jio_alldocs.css",
   "gadget_erp5_page_ojsm_parameters_view.html",
   "gadget_erp5_page_ojsm_parameters_view.js",
   "gadget_officejs_monitoring_options_header.html",
