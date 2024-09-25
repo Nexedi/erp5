@@ -50,7 +50,15 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>response, failed=False</string> </value>
+            <value> <string>response, failed=False, REQUEST=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
