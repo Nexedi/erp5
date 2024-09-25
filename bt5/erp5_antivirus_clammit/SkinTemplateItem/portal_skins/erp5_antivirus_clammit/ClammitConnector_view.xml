@@ -90,7 +90,7 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_ssl_certificate_authority_certificate</string>
+                        <string>my_certificate_authority_certificate</string>
                       </list>
                     </value>
                 </item>
