@@ -63,10 +63,14 @@
       .push(function () {
         return {status: 'OK'};
       }, function (error) {
-        //console.error(error);
+        console.log(error);
+        var code = error.status;
+        if (!code && error.target) {
+          code = error.target.status;
+        }
         return {
           status: 'ERROR',
-          code: error.status || error.target.status,
+          code: code,
           url: base_url,
           title: title
         };
