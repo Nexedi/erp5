@@ -4,8 +4,7 @@
 # with lots of content could mean hours of non-usable overloaded system.
 type_tool = context.getPortalObject().portal_types
 for portal_type_name in context.getTypeInfo().getTypeAllowedContentTypeList():
-  if getattr(type_tool, portal_type_name).getTypeAcquireLocalRole() and \
-      type_tool.getPortalTypeClass(portal_type_name).isIndexable():
+  if getattr(type_tool, portal_type_name).getTypeAcquireLocalRole():
     reindex = context.recursiveReindexObject
     break
 else:
