@@ -23,14 +23,10 @@
       case "Opml":
         var gadget = this,
           doc,
-          element = this.element,
           opml_gadget;
         return new RSVP.Queue()
           .push(function () {
-
-            var new_div = document.createElement('div');
-            element.appendChild(new_div);
-            return gadget.declareGadget("gadget_officejs_monitoring_opml_edit.html", {scope: 'sub', element: new_div});
+            return gadget.getDeclaredGadget('opml_gadget');
           })
           .push(function (g) {
             opml_gadget = g;
