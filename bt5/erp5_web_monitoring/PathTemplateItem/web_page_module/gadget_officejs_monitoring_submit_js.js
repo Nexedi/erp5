@@ -51,7 +51,7 @@
                   if (options.doc.active === false && doc.active === "on") {
                     verify_opml = true;
                   }
-                  doc.title = options.doc.opml_title;
+                  doc.title = options.doc.title;
                   return opml_gadget.saveOPML(doc, verify_opml);
                 })
                 .push(function (state) {
