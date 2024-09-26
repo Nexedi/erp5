@@ -360,6 +360,14 @@ class ERP5TypeInformation(XMLObject,
       permission = self.permission or 'Add portal content'
       return getSecurityManager().checkPermission(permission, container)
 
+    security.declarePublic('isIndexable')
+    def isIndexable(self):
+      """Test if an instance is indexable by default
+      """
+      portal = self.getPortalObject()
+      klass = portal.portal_types.getPortalTypeClass(self.getId())
+      return klass.isIndexable()
+
     security.declarePublic('constructTempInstance')
     def constructTempInstance(self, container, id, *args, **kw ):
       """
