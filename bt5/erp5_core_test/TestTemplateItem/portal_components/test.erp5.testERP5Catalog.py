@@ -1665,7 +1665,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def test_54_FixIntUid(self):
     if six.PY3:
-      return unittest.skipTest(
+      raise unittest.SkipTest(
         "Python3 does not have different types for int and long")
     portal = self.getPortal()
 

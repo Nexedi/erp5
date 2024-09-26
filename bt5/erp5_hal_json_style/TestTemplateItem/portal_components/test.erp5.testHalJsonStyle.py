@@ -3373,10 +3373,10 @@ class TestERP5Document_getHateoas_cache(ERP5HALJSONStyleSkinsMixin):
       user='ERP5TypeTestCase',
       request_method='POST',
       stdin=io.BytesIO(
-        'field_your_select_action=add Foo&' +
-        'form_id=FooModule_viewFooList&' +
-        'dialog_id=Base_viewNewContentDialog&' +
-        'dialog_method=Base_doAction'
+        b'field_your_select_action=add Foo&' +
+        b'form_id=FooModule_viewFooList&' +
+        b'dialog_id=Base_viewNewContentDialog&' +
+        b'dialog_method=Base_doAction'
       ),
       env={'CONTENT_TYPE': 'application/x-www-form-urlencoded'}
     )
