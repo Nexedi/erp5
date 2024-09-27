@@ -599,12 +599,12 @@ class DB(TM):
                 return create_sql
 
             name_new = '`_%s_new`' % name
-            self.query('CREATE TEMPORARY TABLE %s %s'
+            self.query('CREATE TABLE %s %s'
                 % (name_new, create_sql[m.end():]))
             try:
                 new_list, new_set, new_default = self._getTableSchema(name_new)
             finally:
-                self.query("DROP TEMPORARY TABLE " + name_new)
+                self.query("DROP TABLE " + name_new)
 
             src = []
             q = src.append
