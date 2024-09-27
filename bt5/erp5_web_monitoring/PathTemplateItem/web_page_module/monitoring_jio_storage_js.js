@@ -1105,9 +1105,6 @@
           if (error.target.responseURL) {
             error_msg += ". URL: " + error.target.responseURL;
           }
-          if (error.target.status === 0) {
-            error_msg = ". Check remote storages.";
-          }
         } else {
           console.log(error);
         }
