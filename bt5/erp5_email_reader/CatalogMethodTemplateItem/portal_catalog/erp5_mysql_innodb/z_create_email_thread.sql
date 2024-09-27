@@ -13,4 +13,4 @@ CREATE TABLE `email_thread` (
   KEY `bcc_recipient` (`bcc_recipient`),
   KEY `validation_state` (`validation_state`),
   KEY `start_date` (`start_date`, `validation_state`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

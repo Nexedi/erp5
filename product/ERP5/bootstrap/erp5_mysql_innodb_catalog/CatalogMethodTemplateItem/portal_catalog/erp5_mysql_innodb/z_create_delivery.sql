@@ -18,4 +18,4 @@ CREATE TABLE `delivery` (
   KEY `destination_section_uid` (`destination_section_uid`),
   KEY `resource_uid` (`resource_uid`),
   KEY `start_date` (`start_date`)
-) ENGINE=InnoDB
+) ENGINE=ROCKSDB

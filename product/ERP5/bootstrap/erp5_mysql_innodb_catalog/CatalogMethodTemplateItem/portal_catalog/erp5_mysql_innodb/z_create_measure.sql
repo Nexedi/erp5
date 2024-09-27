@@ -6,4 +6,4 @@ CREATE TABLE `measure` (
   `quantity` REAL NOT NULL,
   PRIMARY KEY (`uid`, `variation`),
   KEY (`metric_type_uid`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

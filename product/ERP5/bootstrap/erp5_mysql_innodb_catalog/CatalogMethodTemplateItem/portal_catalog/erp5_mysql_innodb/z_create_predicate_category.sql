@@ -10,4 +10,4 @@ CREATE TABLE `predicate_category` (
   PRIMARY KEY (`uid`, `category_uid`, `base_category_uid`, `category_strict_membership`),
   KEY `category_strict_membership` (`category_strict_membership`),
   KEY `Membership` (`category_uid`,`base_category_uid`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

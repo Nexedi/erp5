@@ -6,4 +6,4 @@ CREATE TABLE `alarm` (
   `uid` BIGINT UNSIGNED NOT NULL,
   `alarm_date` DATETIME,
   PRIMARY KEY  (`uid`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

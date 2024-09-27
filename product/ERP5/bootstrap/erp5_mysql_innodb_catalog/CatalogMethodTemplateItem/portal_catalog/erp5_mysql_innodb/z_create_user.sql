@@ -3,4 +3,4 @@ CREATE TABLE `user` (
   `user_id` varchar(255) binary default '',
   PRIMARY KEY (`uid`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

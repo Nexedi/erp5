@@ -16,4 +16,4 @@ CREATE TABLE `versioning` (
   KEY `effective_date` (`effective_date`),
   KEY `expiration_date` (`expiration_date`),
   KEY `frequency_index` (`creation_date_index`, `frequency_index`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

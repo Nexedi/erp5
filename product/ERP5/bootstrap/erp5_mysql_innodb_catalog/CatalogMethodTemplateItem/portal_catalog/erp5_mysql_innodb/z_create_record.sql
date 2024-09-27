@@ -11,4 +11,4 @@ CREATE TABLE `record` (
   PRIMARY KEY  (`uid`),
   KEY `played` (`played`),
   KEY `date` (`date`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

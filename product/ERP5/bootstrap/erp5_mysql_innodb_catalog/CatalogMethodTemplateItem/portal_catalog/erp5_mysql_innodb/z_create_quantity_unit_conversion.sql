@@ -5,4 +5,4 @@ CREATE TABLE `quantity_unit_conversion` (
   `quantity` REAL NOT NULL,
   PRIMARY KEY (`resource_uid`, `quantity_unit_uid`),
   KEY (`uid`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

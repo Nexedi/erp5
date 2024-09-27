@@ -7,4 +7,4 @@ CREATE TABLE predicate (
   `start_date_range_min` datetime ,
   `start_date_range_max` datetime ,
   PRIMARY KEY `uid` (`uid`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

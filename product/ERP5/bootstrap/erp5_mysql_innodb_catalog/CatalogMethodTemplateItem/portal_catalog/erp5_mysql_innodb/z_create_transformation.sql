@@ -6,4 +6,4 @@ CREATE TABLE `transformation` (
   `quantity` double,
   KEY `resource` (`uid`, `variation_text`),
   KEY `transformed_resource` (`transformed_uid`, `transformed_variation_text`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

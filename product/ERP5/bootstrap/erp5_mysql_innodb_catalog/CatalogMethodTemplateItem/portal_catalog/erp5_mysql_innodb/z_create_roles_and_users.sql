@@ -3,4 +3,4 @@ CREATE TABLE roles_and_users (
   allowedRolesAndUsers VARCHAR(255),
   KEY `uid` (`uid`),
   KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)
-)  ENGINE=InnoDB;
+)  ENGINE=ROCKSDB;

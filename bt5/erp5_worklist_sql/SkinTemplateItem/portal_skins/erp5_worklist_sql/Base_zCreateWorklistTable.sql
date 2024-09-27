@@ -30,4 +30,4 @@ CREATE TABLE `worklist_cache` (
   KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `viewable_owner`),
   KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),
   KEY `portal_validation_owner` (`portal_type`, `validation_state`, `viewable_owner`)
-) ENGINE=InnoDB
+) ENGINE=ROCKSDB

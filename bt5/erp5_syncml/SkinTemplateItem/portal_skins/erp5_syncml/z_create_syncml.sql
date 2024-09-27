@@ -4,4 +4,4 @@ CREATE TABLE `syncml` (
   `data` LONGBLOB NULL,
   PRIMARY KEY (`path`),
   KEY `gid` (`gid`,`path`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

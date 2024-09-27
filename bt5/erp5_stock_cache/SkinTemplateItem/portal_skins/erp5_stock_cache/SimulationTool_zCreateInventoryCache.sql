@@ -4,4 +4,4 @@ Create table `inventory_cache` (
       `result` LONGBLOB NOT NULL,
    PRIMARY KEY (`query`, `date`),
    KEY (`date`)
-) Engine=InnoDB
+) Engine=ROCKSDB

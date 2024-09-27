@@ -22,4 +22,4 @@ CREATE TABLE `movement` (
   KEY `resource_uid` (`resource_uid`),
   KEY `is_accountable` (`is_accountable`),
   KEY `variation_text` (`variation_text`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

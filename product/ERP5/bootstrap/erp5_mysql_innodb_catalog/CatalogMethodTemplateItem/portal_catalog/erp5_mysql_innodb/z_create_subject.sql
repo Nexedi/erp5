@@ -3,4 +3,4 @@ CREATE TABLE subject (
   subject VARCHAR(255),
   KEY `subject_set_uid` (`subject_set_uid`),
   KEY `subject` (`subject`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

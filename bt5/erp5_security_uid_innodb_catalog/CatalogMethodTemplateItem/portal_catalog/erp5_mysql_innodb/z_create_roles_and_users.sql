@@ -5,4 +5,4 @@ CREATE TABLE roles_and_users (
   KEY `uid` (`uid`),
   KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`),
   KEY `local_roles_group_id` (`local_roles_group_id`)
-)  ENGINE=InnoDB;
+)  ENGINE=ROCKSDB;

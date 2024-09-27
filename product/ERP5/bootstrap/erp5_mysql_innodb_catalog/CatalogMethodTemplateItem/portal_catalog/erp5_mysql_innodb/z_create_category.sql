@@ -9,4 +9,4 @@ CREATE TABLE `category` (
   `category_strict_membership` tinyint(1) default '0',
   PRIMARY KEY (`uid`, `category_uid`, `base_category_uid`, `category_strict_membership`),
   KEY `Membership` (`category_uid`,`base_category_uid`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

@@ -3,4 +3,4 @@ CREATE TABLE `email` (
   `url_string` varchar(255),
   PRIMARY KEY `uid` (`uid`),
   KEY `url_string` (`url_string`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;
