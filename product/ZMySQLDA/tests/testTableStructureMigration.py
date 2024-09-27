@@ -66,13 +66,13 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.query("SELECT a, b FROM X")
 
   def test_remove_column(self):
@@ -82,12 +82,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.query("SELECT b FROM X")
     with self.assertRaisesRegex(OperationalError,
                                  "Unknown column 'a' in 'field list'"):
@@ -99,12 +99,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.query("SELECT b FROM X")
     with self.assertRaisesRegex(OperationalError,
                                  "Unknown column 'a' in 'field list'"):
@@ -116,12 +116,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` varchar(10) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     # insterting '1' will be casted as int
     self.query("INSERT INTO X VALUES ('1')")
     self.assertEqual((1,), self.query("SELECT a FROM X")[1][0])
@@ -132,12 +132,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT 123
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.query("INSERT INTO X VALUES ()")
     self.assertEqual((123,), self.query("SELECT a FROM X")[1][0])
 
@@ -147,12 +147,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) NOT NULL COMMENT 'old comment'
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) NOT NULL COMMENT 'new comment'
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.assertEqual(
         ('a', 'new comment'),
         self.query(
@@ -170,13 +170,13 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         KEY `idx_a` (`a`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.query("SELECT * FROM X USE INDEX (`idx_a`)")
 
   def test_remove_index(self):
@@ -186,12 +186,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         KEY `idx_a` (`a`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     with self.assertRaisesRegex(OperationalError,
                                  "Key 'idx_a' doesn't exist in table 'X'"):
       self.query("SELECT * FROM X USE INDEX (`idx_a`)")
@@ -204,14 +204,14 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
         `drop` int(11) DEFAULT NULL,
         `alter` int(11) DEFAULT NULL,
         KEY `CASE` (`drop`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `table` (
         `and` int(11) DEFAULT NULL,
         `alter` varchar(255) CHARACTER SET cp1250 COLLATE cp1250_croatian_ci DEFAULT 'BETWEEN',
         KEY `use` (`alter`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         table_name='table')
     self.query(
         "SELECT `alter`, `and` FROM `table` USE INDEX (`use`)")
@@ -227,9 +227,9 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+            ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.assertEqual(
-        ('X', 'InnoDB'),
+        ('X', 'ROCKSDB'),
         self.query(
             dedent(
                 """\
@@ -245,12 +245,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='old comment'"""),
+            ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='old comment'"""),
         dedent(
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='new comment'"""))
+            ) ENGINE=ROCKSDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='new comment'"""))
     self.assertEqual(
         ('X', 'new comment'),
         self.query(

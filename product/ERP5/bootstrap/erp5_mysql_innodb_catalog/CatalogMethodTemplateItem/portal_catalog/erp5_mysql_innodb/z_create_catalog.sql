@@ -54,4 +54,4 @@ CREATE TABLE `catalog` (
   KEY `invoice_state` (`invoice_state`),
   KEY `payment_state` (`payment_state`),
   KEY `event_state` (`event_state`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

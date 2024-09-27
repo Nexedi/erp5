@@ -7,4 +7,4 @@ CREATE TABLE translation (
   KEY `message` (`translated_message`),
   KEY `original_message` (`original_message`),
   KEY `type_translated_message` (`portal_type`,`translated_message`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

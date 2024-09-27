@@ -44,4 +44,4 @@ CREATE TABLE `stock` (
   KEY `resource_node_uid` (`resource_uid`, `node_uid`),
   KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),
   KEY `date` (`date`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

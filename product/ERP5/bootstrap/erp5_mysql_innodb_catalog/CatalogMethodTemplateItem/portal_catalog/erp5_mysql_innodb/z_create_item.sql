@@ -18,4 +18,4 @@ CREATE TABLE `item` (
   KEY `variation_text` (`variation_text`),
   KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`),
   KEY `node_simulation_state_date` (`node_uid`,`simulation_state`,`date`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;

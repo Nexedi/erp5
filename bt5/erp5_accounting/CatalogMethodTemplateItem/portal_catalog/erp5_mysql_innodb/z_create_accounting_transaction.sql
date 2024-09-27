@@ -21,4 +21,4 @@ CREATE TABLE `accounting_transaction` (
   PRIMARY KEY (`uid`, `order_id`),
   KEY (`section_uid`, `mirror_section_uid`)
   -- TODO: keys
-) ENGINE=InnoDB
+) ENGINE=ROCKSDB

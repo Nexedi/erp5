@@ -1354,7 +1354,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     `uid` BIGINT UNSIGNED NOT NULL,
     `dummy_title` varchar(32) NOT NULL default '',
     PRIMARY KEY  (`uid`)
-    ) ENGINE=InnoDB;
+    ) ENGINE=ROCKSDB;
     """
     drop_summy_table_sql = """
     DROP TABLE IF EXISTS `dummy`
@@ -2272,7 +2272,7 @@ CREATE TABLE `%s` (
   `owner_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `version` (`owner_reference`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;
     """ % local_roles_table
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -2458,7 +2458,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;
     """ % local_roles_table
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -2629,7 +2629,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;
     """ % local_roles_table
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -2893,7 +2893,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;
     """ % local_roles_table
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -3127,7 +3127,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) ENGINE=InnoDB;
+) ENGINE=ROCKSDB;
     """ % local_roles_table
     sql_catalog.newContent(
           portal_type='SQL Method',
