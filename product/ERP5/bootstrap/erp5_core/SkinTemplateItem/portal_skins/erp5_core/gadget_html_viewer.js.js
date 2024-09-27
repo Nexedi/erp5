@@ -98,7 +98,8 @@
       scope: true,
       width: true,
       summary: true,
-      download: true
+      download: true,
+      open: true,
     },
     style_list: {
       background: true,

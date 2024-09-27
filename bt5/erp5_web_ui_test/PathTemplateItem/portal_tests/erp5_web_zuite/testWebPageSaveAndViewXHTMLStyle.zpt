@@ -107,6 +107,17 @@
           &lt;/tr&gt;
           &lt;/tbody&gt;
           &lt;/table&gt;
+
+          &lt;details open&gt;
+            This is open
+          &lt;/details&gt;
+          &lt;details&gt;
+            This is not open
+          &lt;/details&gt;
+          &lt;details&gt;
+            &lt;summary&gt;Details with summary&lt;/summary&gt;
+            This has a summary
+          &lt;/details&gt;
           `;
           return 'OK';
           })()
