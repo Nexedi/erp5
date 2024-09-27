@@ -91,7 +91,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
+                        <string>my_output_message</string>
                       </list>
                     </value>
                 </item>
@@ -109,8 +109,8 @@
                         <string>my_category</string>
                         <string>my_pubDate</string>
                         <string>my_lastBuildDate</string>
-                        <string>my_public_url</string>
-                        <string>my_private_url</string>
+                        <string>my_parent_public_url</string>
+                        <string>my_parent_private_url</string>
                       </list>
                     </value>
                 </item>

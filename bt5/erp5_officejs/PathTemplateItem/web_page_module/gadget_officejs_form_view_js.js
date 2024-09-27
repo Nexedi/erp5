@@ -254,10 +254,18 @@
     .declareMethod("triggerSubmit", function (argument_list) {
       var gadget = this, child_gadget, content_dict;
       if (gadget.state.form_definition.portal_type_dict.custom_submit) {
-        return gadget.declareGadget(gadget.state.form_definition
-                                    .portal_type_dict.custom_submit)
+        return gadget.getDeclaredGadget('erp5_pt_gadget')
+          .push(function (result) {
+            child_gadget = result;
+            return child_gadget.getContent();
+          })
+          .push(function (result) {
+            content_dict = result;
+            return gadget.declareGadget(gadget.state.form_definition
+                                        .portal_type_dict.custom_submit)
+          })
           .push(function (submit_gadget) {
-            return submit_gadget.handle_submit(argument_list, gadget.state);
+            return submit_gadget.handle_submit(argument_list, gadget.state, content_dict);
           });
       }
       return gadget.getDeclaredGadget('erp5_pt_gadget')
@@ -434,16 +442,16 @@
               }
             }
           }
-          return gadget.declareGadget(portal_type_dict.custom_header);
+          if (portal_type_dict.custom_header) {
+            return gadget.declareGadget(portal_type_dict.custom_header);
+          }
+          return;
         })
         .push(function (header_gadget) {
-          return header_gadget.getOptions(portal_type_dict, options, header_dict);
-        }, function (error) {
-          if (!portal_type_dict.custom_header) {
-            return header_dict;
-          } else {
-            throw error;
+          if (header_gadget) {
+            return header_gadget.getOptions(portal_type_dict, options, header_dict);
           }
+          return header_dict;
         })
         .push(function (header_options) {
           return gadget.updateHeader(header_options);
