@@ -71,7 +71,7 @@ CREATE TABLE %s (
   KEY (`active_process_uid`),
   KEY (`method_id`),
   KEY (`tag`)
-) ENGINE=InnoDB""" % self.sql_table
+) ENGINE=ROCKSDB""" % self.sql_table
 
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),

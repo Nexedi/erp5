@@ -277,7 +277,7 @@ CREATE TABLE %s (
   KEY (`active_process_uid`),
   KEY (`method_id`, `processing_node`),
   KEY (`tag`, `processing_node`)
-) ENGINE=InnoDB""" % self.sql_table
+) ENGINE=ROCKSDB""" % self.sql_table
 
   def initialize(self, activity_tool, clear):
     db = activity_tool.getSQLConnection()
