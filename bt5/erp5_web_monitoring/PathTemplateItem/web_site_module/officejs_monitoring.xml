@@ -104,7 +104,7 @@
                   <dictionary>
                     <item>
                         <key> <string>_defined_in_class</string> </key>
-                        <value> <bool>True</bool> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>_hookname</string> </key>
@@ -544,7 +544,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1015.32811.46439.54528</string> </value>
+                      <value> <string>1019.25707.33677.14080</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -564,7 +564,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1716562039.61</float>
+                              <float>1727370343.76</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
