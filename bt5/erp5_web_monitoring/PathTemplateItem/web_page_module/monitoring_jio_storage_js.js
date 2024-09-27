@@ -991,7 +991,15 @@
           for (i = 0; i < result.data.total_rows; i += 1) {
             tmp_uid = result.data.rows[i].value.uid;
             if (uid_dict.hasOwnProperty(tmp_uid)) {
-              tmp_parameter = readMonitoringParameter(result.data.rows[i].value.connection_xml);
+              try {
+                tmp_parameter = readMonitoringParameter(result.data.rows[i].value.connection_xml);
+              } catch (error) {
+                if (error.name == 'DOMParserError') {
+                  tmp_parameter = undefined;
+                } else {
+                  throw error;
+                }
+              }
               if (tmp_parameter === undefined) {
                 tmp_parameter = {username: "", password: "", opml_url: undefined};
               }
