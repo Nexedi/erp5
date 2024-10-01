@@ -54,7 +54,7 @@ class TestSimulationPerformance(TestTradeModelLineSale):
 
   def perf_00_setupAndFillCache(self):
     self.test_01_OrderWithSimpleTaxedAndDiscountedLines()
-    self.__class__._order = self['order'].getRelativeUrl()
+    self.__class__._order = self._storage['order'].getRelativeUrl()
     self.runAlarms()
 
   def perf_01_invoiceSimpleOrder(self, order_count=1):
