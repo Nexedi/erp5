@@ -765,6 +765,9 @@ class ListBoxRenderer:
     # we could hide rows only if missing in request or selection search criterions
     selection_params = self.getSelection().getParams()
 
+    if 'full_text' in selection_params:
+      return 0
+
     # Try to get workflow state parameter, in order to always allow worklist display
     # guess all column names from catalog schema
     possible_state_list = [column_name for column_name in
