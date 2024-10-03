@@ -220,3 +220,108 @@ if 1:
 
 else:
   __setstate__ = None
+
+
+def enable_zodbupdate_load_monkey_patch():
+    import six
+    assert six.PY3
+
+    import _compat_pickle
+    from io import BytesIO
+
+
+    from ZODB._compat import Unpickler
+    import zodbpickle.pickle
+
+
+    # Make ZODB._compat.Unpickler use ascii / bytes by defaut, which is
+    # fine for persistent ids, that are supposed to be bytes or ascii str.
+    # ObjectReader will use utf-8, which is correct most of the time
+    # and simplify the job of zodbupdate coverters
+    def _Unpickler__init__(self, f, encoding='ascii', errors='bytes'):
+        zodbpickle.pickle.Unpickler.__init__(self, f, encoding=encoding, errors=errors)
+    Unpickler.__init__ = _Unpickler__init__
+
+
+    # Unpickler converts the class names from python2 names to python3 names
+    # when loading a pickle from protocol < 3, with the assumtion that python2
+    # can not have produced pickle protocol 3, since it was never supported on
+    # python3, but zodbpickle backported protocol 3 support for python2, so we
+    # have prococl 3 pickle which needs to be decoded. This patch just applies
+    # the conversion regardless of the pickle protocol.
+    _orig_Unpickler_find_class = Unpickler.find_class
+    def _Unpickler_find_class(self, modulename, name):
+        if (modulename, name) in _compat_pickle.NAME_MAPPING:
+            modulename, name = _compat_pickle.NAME_MAPPING[(modulename, name)]
+        if modulename in _compat_pickle.IMPORT_MAPPING:
+            modulename = _compat_pickle.IMPORT_MAPPING[modulename]
+        return _orig_Unpickler_find_class(self, modulename, name)
+    Unpickler.find_class = _Unpickler_find_class
+
+    import zodbupdate.convert
+    _zodbupdate_convert_decoders = zodbupdate.convert.load_decoders()
+
+    from ZODB.serialize import ObjectReader
+    from ZODB._compat import PersistentUnpickler
+    def _ObjectReader_get_unpickler(self, pickle):
+        file = BytesIO(pickle)
+
+        factory = self._factory
+        conn = self._conn
+
+        def find_global(modulename, name):
+            return factory(conn, modulename, name)
+
+        def persistent_load(ooid):
+            if isinstance(ooid, str):
+                ooid = ooid.encode()
+            elif isinstance(ooid, tuple) and isinstance(ooid[0], str):
+                assert len(ooid) == 2
+                ooid = (ooid[0].encode(), ooid[1])
+            return self._persistent_load(ooid)
+
+        class PersistentUnpicklerWithMigration:
+            """A wrapper around PeristentUnpickler that converts the object
+            state using zodbupdate while loading.
+
+            This only support being called with `load` twice: once for the klass
+            and then once for the state. If the class is known by zodbupdate, the
+            state is returned convered.
+            """
+            def __init__(self):
+                self._unpickler = PersistentUnpickler(
+                    find_global,
+                    persistent_load,
+                    file,
+                    encoding='utf-8',
+                )
+                self._klass_modulename = None
+                self._klass_name = None
+
+            def load(self):
+                if self._klass_modulename is None:
+                    loaded_klass = self._unpickler.load()
+                    # first load the class and remember the module name
+                    # and class name. See ObjectWriter.serialize for the
+                    # three formats.
+                    if isinstance(loaded_klass, type):
+                        self._klass_modulename = loaded_klass.__module__
+                        self._klass_name = loaded_klass.__name__
+                    else:
+                        (klass, _newargs) = loaded_klass
+                        if isinstance(klass, type):
+                            self._klass_modulename = klass.__module__
+                            self._klass_name = klass.__name__
+                        else:
+                            self._klass_modulename, self._klass_name = klass
+                    return loaded_klass
+                # second, load state and convert it using zodbupdate
+                state = self._unpickler.load()
+                for decoder in _zodbupdate_convert_decoders.get(
+                        (self._klass_modulename, self._klass_name), ()):
+                    decoder(state)
+                return state
+
+        return PersistentUnpicklerWithMigration()
+
+    ObjectReader._get_unpickler = _ObjectReader_get_unpickler
