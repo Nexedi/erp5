@@ -2542,7 +2542,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       # import workflow chain for portal_type
       result_dict = {}
       xml = parse(file)
-      chain_list = xml.findall('//chain')
+      chain_list = xml.findall('.//chain')
       for chain in chain_list:
         portal_type = chain.find('type').text
         workflow = chain.find('workflow').text or ''
@@ -5000,7 +5000,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       return
     xml = parse(file)
     # local roles
-    local_roles_list = xml.findall('//role')
+    local_roles_list = xml.findall('.//role')
     local_roles_dict = {}
     for role in local_roles_list:
       id = role.get('id')
@@ -5009,7 +5009,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
     # local roles group id
     local_roles_group_id_dict = {}
-    for local_role_group_id in xml.findall('//local_role_group_id'):
+    for local_role_group_id in xml.findall('.//local_role_group_id'):
       role_set = set()
       for principal in local_role_group_id.findall('./principal'):
         role_set.add((principal.get('id'), principal.text))
