@@ -182,7 +182,10 @@ class String(Scalar):
                 # This is used when strings represent references which need to
                 # be converted.
                 encoding = 'base64'
-                v = base64_encodebytes(self._v)[:-1]
+                v = self._v
+                if not isinstance(v, bytes):
+                    v = v.encode()
+                v = base64_encodebytes(v)[:-1]
                 self._v = bytes2str(self.mapping.convertBase64(v))
             else:
                 encoding, self._v = convert(self._v)
