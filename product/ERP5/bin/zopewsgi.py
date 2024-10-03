@@ -198,6 +198,11 @@ def runwsgi():
       help='Set soft limit of file descriptors erp5 can open to hard limit',
       action="store_true")
     parser.add_argument('--enable-xml-rpc', help='Enable XML-RPC interface', action='store_true')
+    parser.add_argument(
+      '--zodbupdate',
+      help='Use zodbupdate to convert object states pickles on the fly. '
+      'Only makes sense when using a database created on python2 with python3',
+      action="store_true")
     args = parser.parse_args()
 
     if not sys.warnoptions:
@@ -243,6 +248,10 @@ def runwsgi():
       with open(args.pidfile, 'w') as f:
         f.write('%s\n' % os.getpid())
       atexit.register(os.unlink, args.pidfile)
+
+    if args.zodbupdate:
+      from Products.ERP5Type.dynamic.persistent_migration import enable_zodbupdate_load_monkey_patch
+      enable_zodbupdate_load_monkey_patch()
 
     startup = os.path.dirname(Zope2.Startup.__file__)
     if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
