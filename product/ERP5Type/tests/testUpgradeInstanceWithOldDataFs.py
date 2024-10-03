@@ -30,12 +30,23 @@ import io
 import six.moves.urllib as urllib
 import six.moves.http_client
 from DateTime import DateTime
+import six
+
+if six.PY3:
+  try:
+    "str" + b"bytes"  # type:ignore
+  except TypeError:
+    from Products.ERP5Type.dynamic.persistent_migration import enable_zodbupdate_load_monkey_patch
+    enable_zodbupdate_load_monkey_patch()
+  else:
+    print("Running with pygolang bstr+ustr")
 
 
 class OldDataFsSetup(ERP5TypeTestCase):
   """Set up of the "old" site, executed when saving.
   """
   def setUpOnce(self):
+    assert six.PY2
     self.tic()
     self.configure_security()
     self.create_person_with_login()
