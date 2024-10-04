@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from past.builtins import cmp
 from six import string_types as basestring
 from inspect import CO_VARKEYWORDS
 from random import getrandbits
