@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import re
 import threading
 import unittest
 import urllib
@@ -61,10 +62,12 @@ class TestInvalidationBug(ERP5TypeTestCase):
     organisation.immediateReindexObject() # modify catalog
     path = organisation.getPath()
     test_list = []
-    for connection_id, table in (('erp5_sql_connection', 'catalog'),
+    for connection_id, table in (('erp5_sql_read_committed_connection', 'catalog'),
                                  ('cmf_activity_sql_connection', 'message')):
       connection = self.portal[connection_id]
-      query = connection.factory()('-' + connection.connection_string).query
+      query = connection.factory()(
+        re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', connection.connection_string)
+      ).query
       sql = "rollback\0select * from %s where path='%s'" % (table, path)
       test_list.append(lambda query=query, sql=sql: len(query(sql)[1]))
     result_list = [map(apply, test_list)]
