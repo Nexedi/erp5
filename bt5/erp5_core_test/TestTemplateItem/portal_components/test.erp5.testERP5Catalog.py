@@ -30,6 +30,7 @@
 from functools import partial
 import httplib
 from random import randint
+import re
 import sys
 import threading
 import traceback
@@ -211,6 +212,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   # Different variables used for this test
   username = 'seb'
   new_erp5_sql_connection = 'erp5_sql_connection2'
+  new_erp5_sql_read_committed_connection = 'erp5_sql_read_committed_connection2'
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
   new_catalog_id = 'erp5_mysql_innodb2'
 
@@ -242,6 +244,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Remove copied sql_connector and catalog
     if self.new_erp5_sql_connection in self.portal.objectIds():
       self.portal.manage_delObjects([self.new_erp5_sql_connection])
+    if self.new_erp5_sql_read_committed_connection in self.portal.objectIds():
+      self.portal.manage_delObjects([self.new_erp5_sql_read_committed_connection])
     if self.new_erp5_deferred_sql_connection in self.portal.objectIds():
       self.portal.manage_delObjects([self.new_erp5_deferred_sql_connection])
     if self.new_catalog_id in self.portal.portal_catalog.objectIds():
@@ -1317,6 +1321,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """
     portal = self.portal
     original_connection_id = 'erp5_sql_connection'
+    original_read_committed_connection_id = 'erp5_sql_read_committed_connection'
     original_deferred_connection_id = 'erp5_sql_deferred_connection'
     new_connection_string = getExtraSqlConnectionStringList()[0]
 
@@ -1333,6 +1338,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       .manage_addZMySQLConnection
     addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)
     new_connection = portal[self.new_erp5_sql_connection]
+    new_connection.manage_open_connection()
+    addSQLConnection(self.new_erp5_sql_read_committed_connection, '',
+                     re.sub(
+                       r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', new_connection_string))
+    new_connection = portal[self.new_erp5_sql_read_committed_connection]
     new_connection.manage_open_connection()
     addSQLConnection(self.new_erp5_deferred_sql_connection,'',
                                       new_connection_string)
@@ -1404,8 +1414,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # prepare arguments for hot reindex
     source_sql_connection_id_list=list((original_connection_id,
+                                  original_read_committed_connection_id,
                                   original_deferred_connection_id))
     destination_sql_connection_id_list=list((self.new_erp5_sql_connection,
+                                       self.new_erp5_sql_read_committed_connection,
                                        self.new_erp5_deferred_sql_connection))
     # launch the full hot reindexing
     portal_catalog.manage_hotReindexAll(source_sql_catalog_id=original_catalog_id,
