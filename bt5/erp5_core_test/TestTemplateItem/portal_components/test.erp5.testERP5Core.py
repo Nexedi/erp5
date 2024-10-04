@@ -797,7 +797,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       len(person_list),
     )
     # make some rows in deleted_catalog older.
-    query = self.portal.erp5_sql_connection().query
+    query = self.portal.erp5_sql_read_committed_connection().query
     query('UPDATE deleted_catalog SET deletion_timestamp="%s" LIMIT 5' % \
       (DateTime() - 10).strftime('%Y-%m-%d')
     )
@@ -831,6 +831,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       uid=person2.getUid(),
       path=person2.getPath(),
     )
+    # commit to start new MariaDB transactions
+    self.commit()
     self.assertEqual(
       0,
       len(self.portal.portal_catalog(uid=person2.getUid())),
