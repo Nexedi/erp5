@@ -5,11 +5,7 @@ if brain.getValidationState() == 'embedded':
 else:
   reference = brain.getReference()
 
-import six
-return six.text_type(
-    "javascript:SelectFile('%s?format=%s')" % (
-        reference.replace("'", "\\'"),
-        context.getPortalObject().portal_preferences.getPreferredImageFormat()
-    ),
-    'utf-8',
+return u"javascript:SelectFile('%s?format=%s')" % (
+  reference.replace("'", "\\'"),
+  context.getPortalObject().portal_preferences.getPreferredImageFormat(),
 )
