@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import re
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import LogInterceptor, getExtraSqlConnectionStringList
@@ -48,6 +49,7 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   # Different variables used for this test
   username = 'seb'
   new_erp5_sql_connection = 'erp5_sql_connection2'
+  new_erp5_sql_read_committed_connection = 'erp5_sql_read_committed_connection2'
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
   original_catalog_id = 'erp5_mysql_innodb'
   new_catalog_id = 'erp5_mysql_innodb2'
@@ -69,6 +71,8 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Remove copied sql_connector and catalog
     if self.new_erp5_sql_connection in portal.objectIds():
       portal.manage_delObjects([self.new_erp5_sql_connection])
+    if self.new_erp5_sql_read_committed_connection in self.portal.objectIds():
+      self.portal.manage_delObjects([self.new_erp5_sql_read_committed_connection])
     if self.new_erp5_deferred_sql_connection in portal.objectIds():
       portal.manage_delObjects([self.new_erp5_deferred_sql_connection])
     if self.new_catalog_id in portal.portal_catalog.objectIds():
@@ -134,10 +138,12 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """
     portal = self.portal
     original_connection_id = 'erp5_sql_connection'
+    original_read_committed_connection_id = 'erp5_sql_read_committed_connection'
     extra_connection_string_list = getExtraSqlConnectionStringList()
     if not extra_connection_string_list or extra_connection_string_list[0] == getattr(portal, original_connection_id).connection_string:
       self.skipTest('default connection string is the same as the one for hot-reindex catalog')
     new_connection_string = extra_connection_string_list[0]
+    new_erp5_sql_read_committed_connection = 'erp5_sql_read_committed_connection2'
     new_deferred_connection_id = 'erp5_sql_deferred_connection2'
     module = portal.organisation_module
     organisation = module.newContent(portal_type='Organisation', title="GreatTitle2")
@@ -146,6 +152,10 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Create new connectors
     addSQLConnection(self.new_erp5_sql_connection, '', new_connection_string)
     portal[self.new_erp5_sql_connection].manage_open_connection()
+    addSQLConnection(self.new_erp5_sql_read_committed_connection, '',
+                     re.sub(
+                       r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', new_connection_string))
+    portal[self.new_erp5_sql_read_committed_connection].manage_open_connection()
     addSQLConnection(new_deferred_connection_id, '', new_connection_string)
     portal[new_deferred_connection_id].manage_open_connection()
     # Note: transactionless connector must not be changed because this one
@@ -159,8 +169,8 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       )[0]['new_id'],
       new_id=self.new_catalog_id,
     )
-    source_sql_connection_id_list = [original_connection_id, self.new_erp5_deferred_sql_connection]
-    destination_sql_connection_id_list = [self.new_erp5_sql_connection, new_deferred_connection_id]
+    source_sql_connection_id_list = [original_connection_id, original_read_committed_connection_id, self.new_erp5_deferred_sql_connection]
+    destination_sql_connection_id_list = [self.new_erp5_sql_connection, self.new_erp5_sql_read_committed_connection, new_deferred_connection_id]
     portal_catalog.manage_hotReindexAll(
       source_sql_catalog_id=self.original_catalog_id,
       destination_sql_catalog_id=self.new_catalog_id,
