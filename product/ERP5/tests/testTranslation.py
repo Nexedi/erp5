@@ -339,6 +339,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
                                                       'state',
                                                       workflow_id))
       # Update the translation table
+      self.commit()
       self.portal.ERP5Site_updateTranslationTable()
       self.tic()
 
