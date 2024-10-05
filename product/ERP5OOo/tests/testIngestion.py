@@ -1424,6 +1424,7 @@ class TestIngestion(IngestionTestCase):
 
     # Clear catalog
     portal_catalog = self.getCatalogTool()
+    self.commit()
     portal_catalog.manage_catalogClear()
     # Reindex all
     portal.ERP5Site_reindexAll()

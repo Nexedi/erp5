@@ -119,6 +119,7 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal.organisation_module.newContent(portal_type='Organisation', title="GreatTitle2")
     self.tic()
     original_path_list = self.getSQLPathList()
+    self.commit()
     self.getCatalogTool().manage_catalogClear()
     self.assertEqual([], self.getSQLPathList())
     portal.ERP5Site_reindexAll()
