@@ -30,6 +30,7 @@
 from functools import partial
 import httplib
 from random import randint
+import re
 import sys
 import threading
 import traceback
@@ -211,6 +212,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   # Different variables used for this test
   username = 'seb'
   new_erp5_sql_connection = 'erp5_sql_connection2'
+  new_erp5_sql_read_committed_connection = 'erp5_sql_read_committed_connection2'
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
   new_catalog_id = 'erp5_mysql_innodb2'
 
@@ -229,6 +231,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
 
   def beforeTearDown(self):
+    self.commit()
     # restore default_catalog
     self.portal.portal_catalog._setDefaultSqlCatalogId('erp5_mysql_innodb')
     self.portal.portal_catalog.hot_reindexing_state = None
@@ -242,6 +245,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Remove copied sql_connector and catalog
     if self.new_erp5_sql_connection in self.portal.objectIds():
       self.portal.manage_delObjects([self.new_erp5_sql_connection])
+    if self.new_erp5_sql_read_committed_connection in self.portal.objectIds():
+      self.portal.manage_delObjects([self.new_erp5_sql_read_committed_connection])
     if self.new_erp5_deferred_sql_connection in self.portal.objectIds():
       self.portal.manage_delObjects([self.new_erp5_deferred_sql_connection])
     if self.new_catalog_id in self.portal.portal_catalog.objectIds():
@@ -315,7 +320,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                       immediate_reindex=True,
     )
     path_list = [person.getRelativeUrl()]
-    self.checkRelativeUrlInSQLPathList(path_list)
+    self.checkRelativeUrlInSQLPathList(path_list, connection_id='erp5_sql_read_committed_connection')
+    self.checkRelativeUrlNotInSQLPathList(path_list)
     self.tic()
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('2')
@@ -329,7 +335,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.deleteContent('3')
     # Now delete things is made with activities
-    self.checkRelativeUrlNotInSQLPathList(path_list)
+    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id='erp5_sql_read_committed_connection')
+    self.checkRelativeUrlInSQLPathList(path_list)
     self.tic()
     self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now delete document while its indexation is running
@@ -841,7 +848,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # We will delete the connector
     # in order to make sure it will not work any more
     portal = self.getPortal()
-    portal.manage_delObjects('erp5_sql_connection')
+    portal.manage_delObjects('erp5_sql_read_committed_connection')
     # Then it must be impossible to delete an object
     unindex = portal_catalog.unindexObject
     self.assertRaises(AttributeError,unindex,person,uid=person.getUid())
@@ -1315,6 +1322,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """
     portal = self.portal
     original_connection_id = 'erp5_sql_connection'
+    original_read_committed_connection_id = 'erp5_sql_read_committed_connection'
     original_deferred_connection_id = 'erp5_sql_deferred_connection'
     new_connection_string = getExtraSqlConnectionStringList()[0]
 
@@ -1331,6 +1339,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       .manage_addZMySQLConnection
     addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)
     new_connection = portal[self.new_erp5_sql_connection]
+    new_connection.manage_open_connection()
+    addSQLConnection(self.new_erp5_sql_read_committed_connection, '',
+                     re.sub(
+                       r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', new_connection_string))
+    new_connection = portal[self.new_erp5_sql_read_committed_connection]
     new_connection.manage_open_connection()
     addSQLConnection(self.new_erp5_deferred_sql_connection,'',
                                       new_connection_string)
@@ -1402,8 +1415,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # prepare arguments for hot reindex
     source_sql_connection_id_list=list((original_connection_id,
+                                  original_read_committed_connection_id,
                                   original_deferred_connection_id))
     destination_sql_connection_id_list=list((self.new_erp5_sql_connection,
+                                       self.new_erp5_sql_read_committed_connection,
                                        self.new_erp5_deferred_sql_connection))
     # launch the full hot reindexing
     portal_catalog.manage_hotReindexAll(source_sql_catalog_id=original_catalog_id,
@@ -3682,6 +3697,7 @@ VALUES
   def test_IndexationContextIndependence(self):
     def doCatalog(catalog, document):
       catalog.catalogObjectList([document], check_uid=0)
+      self.commit()
       result = catalog(select_list=['reference'], uid=document.getUid())
       self.assertEqual(len(result), 1)
       return result[0].reference

@@ -105,6 +105,7 @@ class TestKM(TestKMMixIn):
     web_front_knowledge_pad_relative_url = self.website.ERP5Site_addNewKnowledgePad( \
                                                  pad_title =  'Web Front Knowledge Pad', \
                                                  mode='web_front')
+    self.commit()
     self.web_front_knowledge_pad = portal.restrictedTraverse(
                                      web_front_knowledge_pad_relative_url)
     self.base_url_pattern = '%s/%s?parent_web_section_url=%s&box_relative_url=%s&is_gadget_mode=1'
@@ -113,12 +114,14 @@ class TestKM(TestKMMixIn):
     web_section_knowledge_pad_relative_url = self.websection.ERP5Site_addNewKnowledgePad( \
                                                pad_title = 'Web Section Knowledge Pad', \
                                                mode = 'web_section')
+    self.commit()
     self.web_section_knowledge_pad = portal.restrictedTraverse(
                                        web_section_knowledge_pad_relative_url)
     # Web Section Content Pad
     self.web_section_content_knowledge_pad_relative_url = self.webpage.ERP5Site_addNewKnowledgePad(
                                                        pad_title =  'Web Section Knowledge Pad', \
                                                        mode = 'web_section')
+    self.commit()
     self.web_section_content_knowledge_pad = portal.restrictedTraverse(
                                           self.web_section_content_knowledge_pad_relative_url)
     self.web_front_knowledge_pad.visible()

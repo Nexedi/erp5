@@ -87,6 +87,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         self.portal.getDefaultModule('Person'))
     for module in module_list:
       module.manage_delObjects(list(module.objectIds()))
+    self.commit()
 
   @reindex
   def enableAlarm(self):

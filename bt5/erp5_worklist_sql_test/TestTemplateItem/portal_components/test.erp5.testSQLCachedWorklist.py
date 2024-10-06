@@ -39,8 +39,10 @@ class TestSQLCachedWorklist(TestWorklist):
     return TestWorklist.getBusinessTemplateList(self) + ('erp5_worklist_sql', )
 
   def clearCache(self):
+    self.commit()
     TestWorklist.clearCache(self)
     self.portal.portal_workflow.refreshWorklistCache()
+    self.commit()
 
   test_02_related_key = todo_erp5(TestWorklist.test_02_related_key)
   test_04_dynamic_variables = todo_erp5(TestWorklist.test_04_dynamic_variables)

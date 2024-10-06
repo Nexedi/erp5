@@ -198,6 +198,7 @@ class TestSecurityUidOptimizationWorklist(SecurityUidOptimizationTestCase):
   def assertWorklistCount(self, username, expected_count_by_worklist_id):
     self.loginByUserName(username)
     self.portal.portal_workflow.refreshWorklistCache()
+    self.commit()
     self.portal.portal_caches.clearAllCache()
     worklist_info_by_worklist_id = {
       r['worklist_id']: r
