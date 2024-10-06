@@ -266,6 +266,7 @@ class TestWorklist(TestWorkflowMixin):
     # edit reference first
     worklist_value = workflow_value.newContent(portal_type='Worklist')
     check_visible(worklist_value)
+    self.tic()
     worklist_value.setReference(self.worklist_assignor_id)
     check_visible(worklist_value)
     worklist_value.setActionName('Test (%(count)s)')
@@ -280,6 +281,7 @@ class TestWorklist(TestWorkflowMixin):
     worklist_value.setAction('/')
     worklist_value.setActionType('global')
     check_visible(worklist_value)
+    self.tic()
     worklist_value.setReference(self.worklist_owner_id)
     check_visible(worklist_value)
 
