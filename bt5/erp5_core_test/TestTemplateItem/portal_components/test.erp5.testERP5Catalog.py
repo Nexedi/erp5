@@ -231,6 +231,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
 
   def beforeTearDown(self):
+    self.commit()
     # restore default_catalog
     self.portal.portal_catalog._setDefaultSqlCatalogId('erp5_mysql_innodb')
     self.portal.portal_catalog.hot_reindexing_state = None
@@ -3696,6 +3697,7 @@ VALUES
   def test_IndexationContextIndependence(self):
     def doCatalog(catalog, document):
       catalog.catalogObjectList([document], check_uid=0)
+      self.commit()
       result = catalog(select_list=['reference'], uid=document.getUid())
       self.assertEqual(len(result), 1)
       return result[0].reference
