@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_sql_read_committed_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
