@@ -3103,6 +3103,17 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         new_obj  = method.aq_base
         self._objects[path] = new_obj
 
+    # Add a READ-COMMITTED connection if missing
+    erp5_sql_read_committed_connection = catalog.getConnectionId(read_committed=True)
+    if erp5_sql_read_committed_connection not in portal:
+      erp5_sql_connection = portal[catalog.getConnectionId()]
+      portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection(
+        erp5_sql_read_committed_connection,
+        'ERP5 SQL Server Isolated Connection',
+        re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3',
+               erp5_sql_connection.connection_string),
+      )
+
     if force: # get all objects
       values = six.itervalues(self._objects)
     else: # get only selected object
