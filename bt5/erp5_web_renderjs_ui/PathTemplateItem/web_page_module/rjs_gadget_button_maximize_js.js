@@ -1,4 +1,4 @@
-/*global window, rJS */
+/*global window, rJS, domsugar */
 /*jslint indent: 2, maxerr: 3 */
 (function (window, rJS, domsugar) {
   "use strict";
@@ -8,8 +8,7 @@
     .declareAcquiredMethod("translate", "translate")
 
     .declareMethod('render', function () {
-      var gadget = this,
-        button_element = gadget.element.querySelector("button");
+      var gadget = this;
 
       return gadget.translate("Maximize")
         .push(function (translation) {
