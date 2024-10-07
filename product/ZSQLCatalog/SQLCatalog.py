@@ -1278,9 +1278,6 @@ class Catalog(Folder,
                               check_uid=check_uid,
                               idxs=idxs)
 
-  def getSqlCatalogObjectListList(self):
-    return self.sql_catalog_object_list
-
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None):
     """This is the real method to catalog objects."""
@@ -2473,8 +2470,14 @@ class Catalog(Folder,
       return ()
 
   def getSqlCatalogObjectListList(self):
+    # put z_catalog_object_list first to guarantee non-SELECT query first.
     try:
-      return self.sql_catalog_object_list
+      return tuple(
+        sorted(
+          self.sql_catalog_object_list,
+          key=lambda e: e != 'z_catalog_object_list'
+        )
+      )
     except AttributeError:
       return ()
 
