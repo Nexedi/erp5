@@ -1,6 +1,6 @@
 /*global window, rJS */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, domsugar) {
   "use strict";
 
   rJS(window)
@@ -9,13 +9,18 @@
 
     .declareMethod('render', function () {
       var gadget = this,
-          button_element = gadget.element.querySelector("button");
+        button_element = gadget.element.querySelector("button");
 
-      return gadget.translate(
-        button_element.getAttribute("data-i18n")
-      ).then(function (translation) {
-        button_element.textContent = translation;
-      });
+      return gadget.translate("Maximize")
+        .push(function (translation) {
+          return gadget.element.appendChild(
+            domsugar("button", {
+              "class": "ui-icon-expand ui-btn-icon-notext",
+              "type": "button",
+              "text": translation
+            })
+          );
+        });
     })
 
     .onEvent('click', function (event) {
@@ -27,4 +32,4 @@
       return this.triggerMaximize(true);
     });
 
-}(window, rJS));
+}(window, rJS, domsugar));
