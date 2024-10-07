@@ -2282,8 +2282,10 @@ class ERP5Generator(PortalGenerator):
       # The only difference compared to activity connection is the
       # minus prepended to the connection string.
       if id == 'erp5_sql_transactionless_connection':
+        # omit isolation-level and add '-' sign in front of the database.
         connection_string = re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', p.cmf_activity_sql_connection_string)
       elif id == 'erp5_sql_read_committed_connection':
+        # force READ-COMMITTED isolation-level.
         connection_string = re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', p.erp5_sql_connection_string)
       else:
         connection_string = getattr(p, id + '_string')

@@ -107,12 +107,14 @@ def _getConnectionStringDict():
     if connection_string:
       connection_string_dict[connection] = connection_string
   connection = 'cmf_activity_sql_connection_string'
+  # force READ-COMMITTED isolation-level.
   connection_string_dict[connection] = \
     os.environ.get(connection, re.sub(
       r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1!READ-COMMITTED \3', connection_string_dict['erp5_sql_connection_string']))
   # default value for transactionless is derived from value
   # for cmf_activity, so process it last
   connection = 'erp5_sql_transactionless_connection_string'
+  # omit isolation-level and add '-' sign in front of the database.
   connection_string_dict[connection] = \
     os.environ.get(connection, re.sub(
       r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', connection_string_dict['cmf_activity_sql_connection_string']))
