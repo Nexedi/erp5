@@ -980,7 +980,7 @@ class Catalog(Folder,
             error=True,
           )
       return result
-    for row in method():
+    for row in method(isolation_level__=None):
       result.setdefault(row.TABLE_NAME, []).append(row.COLUMN_NAME)
     return result
 
