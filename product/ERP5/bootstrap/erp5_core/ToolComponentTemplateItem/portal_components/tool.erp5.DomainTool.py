@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import functools
 from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -242,7 +243,10 @@ class DomainTool(BaseTool):
       if sort_key_method is not None:
         result_list.sort(key=sort_key_method)
       elif sort_method is not None:
-        result_list.sort(cmp=sort_method)
+        if six.PY3:
+          result_list.sort(key=functools.cmp_to_key(sort_method))
+        else:
+          result_list.sort(cmp=sort_method)
     return result_list
 
   # XXX FIXME method should not be public
@@ -337,7 +341,7 @@ class DomainTool(BaseTool):
       mapped_value = self.getPortalObject().newContent(temp_object=True,
         portal_type='Supply Cell', id='multivalued_mapped_value')
       mapped_value._setMappedValuePropertyList(
-        mapped_value_property_dict.keys())
+        list(mapped_value_property_dict))
       mapped_value.__dict__.update(mapped_value_property_dict)
       return mapped_value
 

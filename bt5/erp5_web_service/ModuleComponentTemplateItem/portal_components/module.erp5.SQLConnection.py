@@ -27,6 +27,8 @@
 ##############################################################################
 
 from Products.ERP5.ERP5Site import getSite
+from erp5.component.tool.WebServiceTool import WebServiceConnectionError
+
 
 class MethodWrapper(object):
 
@@ -42,8 +44,8 @@ class MethodWrapper(object):
       response = method(*args, **kw)
       return method.absolute_url(), response
     else:
-      from erp5.component.tool.WebServiceTool import ConnectionError
-      raise ConnectionError("Method %s does not exist" %(method_name))
+      raise WebServiceConnectionError("Method %s does not exist" %(method_name))
+
 
 class SQLConnection:
   """
@@ -51,10 +53,6 @@ class SQLConnection:
     Nothing is managed here, this is just a method wrapper to Z SQL Methods
   """
   __allow_access_to_unprotected_subobjects__ = 1
-
-  def __init__(self, *args, **kw):
-    """ Do nothing """
-    pass
 
   def connect(self):
     """Get a handle to a remote connection."""

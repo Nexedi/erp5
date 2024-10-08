@@ -41,7 +41,7 @@ def toDateTime(time):
   elif hasattr(time, 'timeTime'):
     # assume that the time is persistent.TimeStamp
     return DateTime(time.timeTime())
-  raise ValueError('do not know the time type :%r', time)
+  raise ValueError('do not know the time type :%r' % time)
 
 def _getWorkflowHistory(document, initial_datetime):
   history = []

@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+import six
 import json
 from DateTime import DateTime
 
@@ -149,12 +150,17 @@ return json.dumps({
     self.fixJSONForm(method, schema, after_method)
     self.tic()
     self.assertRaises(ValueError, getattr(self.portal, method), json_data, list_error=True)
-    error = {"my-schema.json": [[u"Validation Error", u"'2' is not of type u'integer'"], [u"Validation Error", u"2 is not of type u'string'"]]}
     try:
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
     except ValueError as e:
-      self.assertEqual(error, json.loads(str(e)))
+      if six.PY2:
+        error_list = [[u"Validation Error", u"'2' is not of type u'integer'"],
+                      [u"Validation Error", u"2 is not of type u'string'"]]
+      else:
+        error_list = [["Validation Error", "'2' is not of type 'integer'"],
+                      ["Validation Error", "2 is not of type 'string'"]]
+      self.assertEqual({"my-schema.json": error_list}, json.loads(str(e)))
 
   def test_call_valid_datetime_format(self):
     """
@@ -203,14 +209,13 @@ return json.dumps({
     self.fixJSONForm(method, schema, after_method)
     self.tic()
     self.assertRaises(ValueError, getattr(self.portal, method), json_data, list_error=True)
-    error = {
-      "my-schema.json": [[
-        "Validation Error",  u"'2018-11-13T20:20:67' is not a u'date-time'"
-      ]]
-    }
     try:
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
     except ValueError as e:
-      self.assertEqual(error, json.loads(str(e)))
+      if six.PY2:
+        error_list = [[u"Validation Error", u"'2018-11-13T20:20:67' is not a u'date-time'"]]
+      else:
+        error_list = [["Validation Error", "'2018-11-13T20:20:67' is not a 'date-time'"]]
+      self.assertEqual({"my-schema.json": error_list}, json.loads(str(e)))
 

@@ -34,6 +34,7 @@ from erp5.component.mixin.RuleMixin import RuleMixin
 from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 from erp5.component.mixin.MovementCollectionUpdaterMixin import \
      MovementCollectionUpdaterMixin
+import six
 
 class TransformationSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
   """
@@ -138,7 +139,7 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
         # FIXME: Is it the right way to have source/destination and other
         #        non-Amount properties set on the generated movement ?
         movement = newMovement(amount.getCausality(), dict((k, v)
-            for k, v in amount.__dict__.iteritems()
+            for k, v in six.iteritems(amount.__dict__)
             if k[0] != '_' and k != 'categories'))
         base_category_set = set(amount.getBaseCategoryList())
         base_category_set.remove('price_currency') # XXX
@@ -162,7 +163,7 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
     # movement with an industrial_phase (other properties like reference
     # starting with "pr/" is possible). The drawback with such filter is that
     # Same Total Quantity check must be disabled.
-    if 1:
+    if 1:  # pylint:disable=using-constant-test
       cr_quantity = - parent_movement.getQuantity()
       def newIntermediateMovement(reference_prefix, industrial_phase, **kw):
         movement = newMovement(reference_prefix + phase, kw)

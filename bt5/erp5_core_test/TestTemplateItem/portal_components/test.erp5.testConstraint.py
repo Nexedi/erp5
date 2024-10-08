@@ -1490,15 +1490,14 @@ class TestConstraint(PropertySheetTestCase):
     # the error message.
     error_list = person.checkConsistency()
     self.assertEqual(1, len(error_list))
-    self.assertEqual("Attribute source_title should be of type string but is of type <type 'int'>",
-                      str(error_list[0].getMessage()))
+    self.assertEqual(str(error_list[0].getMessage()),
+                     "Attribute source_title should be of type string but is of type " + str(int))
     self.stepLoginAsAssignee()
     # Assignee cannot access testGroup3, so full information is not
     # included in the error message.
     error_list = person.checkConsistency()
     self.assertEqual(1, len(error_list))
-    self.assertNotEqual("Attribute source_title should be of type string but is of type <type 'int'>",
-                         str(error_list[0].getMessage()))
+    self.assertEqual(str(error_list[0].getMessage()), 'There is something wrong.')
 
   def test_PropertyTypeValidityForMultivaluedProperty(self):
     """

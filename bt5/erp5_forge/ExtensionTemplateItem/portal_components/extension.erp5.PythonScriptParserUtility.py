@@ -1,3 +1,7 @@
+# TODO: this module is not tested and has not been ported to python3, it's not
+# clear if this is still useful so disable pylint errors:
+#
+# pylint:disable=import-error
 import compiler
 import compiler.ast
 import compiler.visitor

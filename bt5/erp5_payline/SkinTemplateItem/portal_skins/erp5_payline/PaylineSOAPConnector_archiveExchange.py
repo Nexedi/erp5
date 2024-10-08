@@ -3,6 +3,7 @@ Called right after a Payline call is made, before response is returned to caller
 
 Archive exchange's raw data in system_event_module as an HTTP Exchange document.
 """
+from Products.ERP5Type.Utils import ensure_list
 # TODO: remove manaer proxy role
 portal = context.getPortalObject()
 
@@ -15,7 +16,7 @@ def getdoc(document, identifier):
           document.getPath(),
         )
       )
-    return document.values()[0]
+    return ensure_list(document.values())[0]
   return getattr(document, identifier)
 
 exchange = portal.system_event_module.newContent(

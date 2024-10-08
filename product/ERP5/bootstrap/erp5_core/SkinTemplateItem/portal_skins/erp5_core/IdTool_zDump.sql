@@ -1,1 +1,1 @@
-select id_group, last_id from portal_ids
+select id_group, cast(id_group as CHAR) id_group from portal_ids

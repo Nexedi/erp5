@@ -31,13 +31,12 @@ import email.utils
 import functools
 import hashlib
 import hmac
-import httplib
+from six.moves.http_client import HTTPConnection, HTTPSConnection
 import json
 from os import urandom
 import random
 from time import time
-import urllib
-import urlparse
+from six.moves.urllib.parse import urlencode, urljoin, urlparse, urlsplit
 import ssl
 from AccessControl import (
   ClassSecurityInfo,
@@ -52,6 +51,7 @@ from OFS.Traversable import NotFound
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Timeout import getTimeLeft
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str, str2unicode, ensure_ascii
 from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
   OAuth2AuthorisationClientConnectorMixIn,
   ERP5OAuth2ResourceServerPlugin,
@@ -157,9 +157,13 @@ class _SimpleHTTPRequest(object):
 
   def _authUserPW(self):
     if self._auth.lower().startswith('basic '):
-      return base64.decodestring(
+      if six.PY2:
+        from base64 import decodestring as decodebytes
+      else:
+        from base64 import decodebytes
+      return bytes2str(decodebytes(
         self._auth.split(None, 1)[1],
-      ).split(':', 1)
+      )).split(':', 1)
 
   def get(self, name):
     if name == 'BODY':
@@ -191,7 +195,7 @@ class _OAuth2AuthorisationServerProxy(object):
     ca_certificate_pem,
     insecure,
   ):
-    scheme = urlparse.urlsplit(authorisation_server_url).scheme
+    scheme = urlsplit(authorisation_server_url).scheme
     if scheme != 'https' and not insecure:
       raise ValueError('Only https access to Authorisation Server is allowed')
     self._scheme = scheme
@@ -201,7 +205,7 @@ class _OAuth2AuthorisationServerProxy(object):
     self._bind_address = (bind_address, 0) if bind_address else None
     if ca_certificate_pem is not None:
       # On python2 cadata is expected as an unicode object only.
-      ca_certificate_pem = ca_certificate_pem.decode('utf-8')
+      ca_certificate_pem = str2unicode(ca_certificate_pem)
     self._ca_certificate_pem = ca_certificate_pem
 
   #
@@ -210,7 +214,7 @@ class _OAuth2AuthorisationServerProxy(object):
 
   def _query(self, method_id, body, header_dict=()):
     plain_url = self._authorisation_server_url + '/' + method_id
-    parsed_url = urlparse.urlparse(plain_url)
+    parsed_url = urlparse(plain_url)
     if self._scheme == 'https':
       ssl_context = ssl.create_default_context(
         cadata=self._ca_certificate_pem,
@@ -222,18 +226,21 @@ class _OAuth2AuthorisationServerProxy(object):
         ssl_context.verify_mode = ssl.CERT_REQUIRED
         ssl_context.check_hostname = True
       Connection = functools.partial(
-        httplib.HTTPSConnection,
+        HTTPSConnection,
         context=ssl_context,
       )
     else:
-      Connection = httplib.HTTPConnection
+      Connection = HTTPConnection
+    if six.PY2:
+      # Changed in version 3.4: The strict parameter was removed.
+      # HTTP 0.9-style "Simple Responses" are no longer supported.
+      Connection = functools.partial(Connection, strict=True)
     timeout = getTimeLeft()
     if timeout is None or timeout > self._timeout:
       timeout = self._timeout
     http_connection = Connection(
       host=parsed_url.hostname,
       port=parsed_url.port,
-      strict=True,
       timeout=timeout,
       source_address=self._bind_address,
     )
@@ -256,7 +263,7 @@ class _OAuth2AuthorisationServerProxy(object):
   def _queryERP5(self, method_id, kw=()):
     header_dict, body, status = self._query(
       method_id=method_id,
-      body=urllib.urlencode(kw),
+      body=urlencode(kw),
       header_dict={
         'Accept': 'application/json;charset=UTF-8',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -274,7 +281,7 @@ class _OAuth2AuthorisationServerProxy(object):
   def _queryOAuth2(self, method, REQUEST, RESPONSE):
     header_dict, body, status = self._query(
       method,
-      body=urllib.urlencode(REQUEST.form.items()),
+      body=urlencode(REQUEST.form),
       header_dict={
         'CONTENT_TYPE': REQUEST.environ['CONTENT_TYPE'],
       },
@@ -313,7 +320,7 @@ class _OAuth2AuthorisationServerProxy(object):
 
   def getAccessTokenSignatureAlgorithmAndPublicKeyList(self):
     return tuple(
-      (signature_algorithm.encode('ascii'), public_key.encode('ascii'))
+      (ensure_ascii(signature_algorithm), ensure_ascii(public_key))
       for signature_algorithm, public_key in self._queryERP5(
         'getAccessTokenSignatureAlgorithmAndPublicKeyList',
       )
@@ -377,7 +384,7 @@ class OAuth2AuthorisationClientConnector(
     if '/' in authorisation_server_url:
       # Remote Authorisation Server
       return _OAuth2AuthorisationServerProxy(
-        authorisation_server_url=urlparse.urljoin(
+        authorisation_server_url=urljoin(
           # In case authorisation_server_url contains slashes but is still
           # relative (to the scheme or to the netloc - path-relative is not
           # supported by urljoin)
@@ -474,7 +481,7 @@ class OAuth2AuthorisationClientConnector(
     assert inner_response.status == 200
     access_token = oauth2_response['access_token']
     refresh_token = oauth2_response.get('refresh_token')
-    parsed_actual_url = urlparse.urlparse(request.other.get('ACTUAL_URL'))
+    parsed_actual_url = urlparse(request.other.get('ACTUAL_URL'))
     same_site = self.ERP5Site_getAuthCookieSameSite(
       scheme=parsed_actual_url.scheme,
       hostname=parsed_actual_url.hostname,
@@ -581,7 +588,7 @@ class OAuth2AuthorisationClientConnector(
       )
     RESPONSE.setCookie(
       name=name,
-      value=base64.urlsafe_b64encode(content),
+      value=bytes2str(base64.urlsafe_b64encode(str2bytes(content))),
       # prevent this cookie from being read over the network
       # (assuming an uncompromised SSL setup, but if it is compromised
       # then the attacker may just as well impersonate the victim using
@@ -616,10 +623,10 @@ class OAuth2AuthorisationClientConnector(
     ttl = self._SESSION_STATE_VALIDITY
     for name, value in six.iteritems(self._getRawStateCookieDict(REQUEST)):
       try:
-        result[name] = decrypt(
+        result[name] = bytes2str(decrypt(
           base64.urlsafe_b64decode(value),
           ttl=ttl,
-        )
+        ))
       except (fernet.InvalidToken, TypeError):
         self._expireStateCookie(RESPONSE, name)
     return result
@@ -712,8 +719,8 @@ class OAuth2AuthorisationClientConnector(
     # came_from is what the user was trying to do just before they ended up
     # here, so we can redirect them there once they are authenticated.
     if came_from:
-      parsed_came_from = urlparse.urlparse(came_from)
-      parsed_redirect_uri = urlparse.urlparse(redirect_uri)
+      parsed_came_from = urlparse(came_from)
+      parsed_redirect_uri = urlparse(redirect_uri)
       if (
         parsed_came_from.scheme != parsed_redirect_uri.scheme or
         parsed_came_from.netloc != parsed_redirect_uri.netloc
@@ -753,8 +760,8 @@ class OAuth2AuthorisationClientConnector(
       )))
     except StopIteration:
       name = None
-      identifier = base64.urlsafe_b64encode(urandom(32))
-    code_verifier = base64.urlsafe_b64encode(urandom(32))
+      identifier = bytes2str(base64.urlsafe_b64encode(urandom(32)))
+    code_verifier = bytes2str(base64.urlsafe_b64encode(urandom(32)))
     _, state_key = self.__getStateFernetKeyList()[0]
     encrypt = fernet.Fernet(state_key).encrypt
     query_list = [
@@ -766,7 +773,7 @@ class OAuth2AuthorisationClientConnector(
         # Note: fernet both signs and encrypts the content.
         # It uses on AES128-CBC, PKCS7 padding, and SHA256 HMAC, with
         # independent keys for encryption and authentication.
-        encrypt(json.dumps({
+        bytes2str(encrypt(str2bytes(json.dumps({
           # Identifier is also stored in User-Agent as a cookie.
           # This is used to prevent an attacker from tricking a user into
           # giving us an Authorisation Code under the control of the attacker.
@@ -788,7 +795,7 @@ class OAuth2AuthorisationClientConnector(
           # done above), this means the key may be attacked using (partially)
           # chosen-cleartext (if AES128 is found vulnerable to such attack).
           _STATE_CAME_FROM_NAME: (
-            came_from.decode('utf-8')
+            str2unicode(came_from)
             if came_from else
             came_from
           ),
@@ -796,15 +803,15 @@ class OAuth2AuthorisationClientConnector(
           # Authorisation Code converted into tokens. To be kept secret from
           # everyone other than this server.
           _STATE_CODE_VERIFIER_NAME: code_verifier,
-        })),
+        })))),
       ),
       ('code_challenge_method', 'S256'),
       (
         'code_challenge',
         # S256 standard PKCE encoding
-        base64.urlsafe_b64encode(
-          hashlib.sha256(code_verifier).digest(),
-        ).rstrip('='),
+        bytes2str(base64.urlsafe_b64encode(
+          hashlib.sha256(str2bytes(code_verifier)).digest(),
+        )).rstrip('='),
       ),
     ]
     if scope_list:
@@ -818,7 +825,7 @@ class OAuth2AuthorisationClientConnector(
     self._setStateCookie(
       RESPONSE=RESPONSE,
       name=name,
-      content=encrypt(identifier),
+      content=bytes2str(encrypt(str2bytes(identifier))),
     )
     if (
       self.isAuthorisationServerRemote() or
@@ -829,7 +836,7 @@ class OAuth2AuthorisationClientConnector(
         'Location',
         self._getAuthorisationServerValue(
           REQUEST=REQUEST,
-        ).absolute_url() + '/authorize?' + urllib.urlencode(query_list),
+        ).absolute_url() + '/authorize?' + urlencode(query_list),
       )
     else:
       # Provide the current URL to authorize, so that it can redirect the
@@ -864,7 +871,7 @@ class OAuth2AuthorisationClientConnector(
     try:
       state_dict = json.loads(
         self.__getMultiFernet().decrypt(
-          state,
+          str2bytes(state),
           ttl=self._SESSION_STATE_VALIDITY,
         ),
       )
@@ -882,7 +889,7 @@ class OAuth2AuthorisationClientConnector(
       came_from = state_dict.get(_STATE_CAME_FROM_NAME)
       if came_from:
         context = self # whatever
-        kw['redirect_url'] = came_from.encode('utf-8')
+        kw['redirect_url'] = unicode2str(came_from)
       else:
         context = self._getNeutralContextValue()
       context.Base_redirect(**kw)
@@ -930,7 +937,7 @@ class OAuth2AuthorisationClientConnector(
       REQUEST=REQUEST,
       RESPONSE=RESPONSE,
     )
-    identifier_from_state = state_dict[_STATE_IDENTIFIER_NAME].encode('ascii')
+    identifier_from_state = ensure_ascii(state_dict[_STATE_IDENTIFIER_NAME])
     for (
       state_cookie_name,
       identifier_from_cookie,
@@ -965,7 +972,7 @@ class OAuth2AuthorisationClientConnector(
         'code': code,
         'redirect_uri': self.getRedirectUri(),
         'client_id': self.getReference(),
-        'code_verifier': state_dict[_STATE_CODE_VERIFIER_NAME].encode('ascii'),
+        'code_verifier': ensure_ascii(state_dict[_STATE_CODE_VERIFIER_NAME])
       },
     )
     access_token, _, error_message = self._setCookieFromTokenResponse(

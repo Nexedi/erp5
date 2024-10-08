@@ -154,7 +154,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     """
     self._svn_setup_ssl()
     # we make this class a global so that it can be pickled
-    global PropertiesTool  # pylint:disable=global-variable-not-assigned
+    global PropertiesTool  # pylint:disable=global-variable-not-assigned,global-variable-undefined
     class PropertiesTool(ActionsTool):  # pylint:disable=redefined-outer-name
       id = 'portal_properties'
     cls = PropertiesTool
@@ -745,7 +745,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
     # add some entropy by disorder bt5list returned by
     # resolveBusinessTemplateListDependency
-    position_list = range(len(bt5list))
+    position_list = list(range(len(bt5list)))
     new_bt5_list = []
     while position_list:
       position = random.choice(position_list)
@@ -754,10 +754,10 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
-    first_group = range(0, 5)
-    second_group =  range(5, 12)
-    third_group = range(12, 14)
-    fourth_group = range(14, 15)
+    first_group = list(range(0, 5))
+    second_group =  list(range(5, 12))
+    third_group = list(range(12, 14))
+    fourth_group = list(range(14, 15))
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
@@ -865,7 +865,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     erp5_test = self.portal.portal_skins['erp5_test']
     self.assertTrue(erp5_test.hasObject('test_file'))
 
-  def test_ownerhsip(self):
+  def test_ownership(self):
     self.assertEqual(
       self.portal.portal_skins.erp5_core.getOwnerTuple(),
       ([self.portal.getId(), 'acl_users'], 'System Processes'),

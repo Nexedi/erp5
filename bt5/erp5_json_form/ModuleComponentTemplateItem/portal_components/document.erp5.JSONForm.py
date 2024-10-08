@@ -32,6 +32,7 @@ from erp5.component.document.TextDocument import TextDocument
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import unicode2str
 
 class JSONForm(JSONType, TextDocument):
   """
@@ -82,7 +83,7 @@ class JSONForm(JSONType, TextDocument):
       if list_error:
         validator = jsonschema.validators.validator_for(defined_schema)(defined_schema, format_checker=jsonschema.FormatChecker())
         return {
-          defined_schema["$id"].decode(): [
+          unicode2str(defined_schema["$id"]): [
             ("Validation Error", x.message) for x in sorted(validator.iter_errors(json_data), key=lambda e: e.path)
           ]
         }

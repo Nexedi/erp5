@@ -44,6 +44,7 @@ from ZODB.POSException import ConflictError
 from Products.ERP5Type.Utils import UpperCase
 
 from zLOG import LOG
+import six
 
 try:
     from zExceptions import ResourceLockedError
@@ -304,18 +305,16 @@ if ReportTool:
     #LOG('ReportTool_renderPDF', 0, 'encoding = %r' % encoding)
     rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
 
-    # if zope gives us the xml in unicode
-    # we need to encode it before it can be parsed
     template_xml = getattr(context, templatename)(*args, **kwargs)
-    if type(template_xml) is type(u''):
-      template_xml = self._encode(template_xml, encoding)
-    if type(document_xml) is type(u''):
-      document_xml = self._encode(document_xml, encoding)
+    if not isinstance(template_xml, six.text_type):
+      template_xml = template_xml.decode(encoding)
+    if not isinstance(document_xml, six.text_type):
+      document_xml = document_xml.decode(encoding)
     #LOG('ReportTool_renderPDF', 0, 'template_xml = %r, document_xml = %r' % (template_xml, document_xml))
 
     # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
-    template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
-    document_xml = unicode(document_xml,encoding).encode('iso-8859-1','replace')
+    template_xml = template_xml.encode('iso-8859-1')
+    document_xml = document_xml.encode('iso-8859-1', 'replace')
     encoding = 'iso-8859-1'
 
     # create the PDFTemplate from xml

@@ -51,7 +51,7 @@ if business_template is not None:
     # no need to update security on categories
     if obj is not None and obj.getPortalType() not in ('Category', 'Base Category',):
       obj.updateLocalRolesOnSecurityGroups()
-      context.log("Updated Role Mappings for: ", path, obj.getPortalType())
+      context.log("Updated Role Mappings for: ", "%s (%s)" % (path, obj.getPortalType()))
 
   # validate and open all objects
   for path in business_template.getTemplatePathList():

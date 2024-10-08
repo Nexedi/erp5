@@ -9,7 +9,7 @@ import glob
 import logging
 import os
 import re
-from six.moves.urllib.parse import unquote
+from six.moves.urllib.parse import unquote_to_bytes
 import zipfile
 import io
 import types
@@ -37,7 +37,7 @@ logger = logging.getLogger('event.Zelenium')
 
 _NOW = None   # set only for testing
 
-_PINK_BACKGROUND = re.compile('bgcolor="#ffcfcf"')
+_PINK_BACKGROUND = re.compile(b'bgcolor="#ffcfcf"')
 
 _EXCLUDE_NAMES = ( 'CVS', '.svn', '.objects' )
 
@@ -380,7 +380,7 @@ class Zuite( OrderedFolder ):
         result._setObject( 'suite.html'
                          , File( 'suite.html'
                                , 'Test Suite'
-                               , unquote( rfg( 'suite' ) )
+                               , unquote_to_bytes( rfg( 'suite' ) )
                                , 'text/html'
                                )
                          )
@@ -390,7 +390,7 @@ class Zuite( OrderedFolder ):
         test_ids.sort()
 
         for test_id in test_ids:
-            body = unquote( rfg( test_id ) )
+            body = unquote_to_bytes( rfg( test_id ) )
             result._setObject( test_id
                              , File( test_id
                                    , 'Test case: %s' % test_id

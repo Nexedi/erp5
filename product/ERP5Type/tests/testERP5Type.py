@@ -31,6 +31,7 @@ other Tests are in erp5_core_test:testERP5Type) which is deprecated in favor
 of Portal Type as Classes and ZODB Components
 """
 
+import six
 import pickle
 import unittest
 import warnings
@@ -38,6 +39,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript
+from Products.ERP5Type.Utils import OrderableKey, cmp
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
     """
@@ -189,7 +191,10 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
       not_ok = NotOk().__of__(doc)
       self.assertRaises(ValueError, getattr, not_ok, 'attr')
-      self.assertFalse(hasattr(not_ok, 'attr'))
+      if six.PY2:
+        self.assertFalse(hasattr(not_ok, 'attr'))
+      else:
+        self.assertRaises(ValueError, hasattr, not_ok, 'attr')
 
     def test_renameObjectsReindexSubobjects(self):
       """Test that renaming an object with subobjects causes them to be
@@ -279,6 +284,21 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       script = person['test_script']
       self.assertIn(script, person.objectValues())
       self.assertNotIn(script, person.objectValues(portal_type='Person'))
+
+    def test_cmp(self):
+      self.assertEqual(cmp(None, 0), -1)
+      self.assertEqual(cmp(None, ''), -1)
+      self.assertEqual(cmp(0, ''), -1)
+
+    def test_OrderableKey(self):
+      self.assertEqual(
+        sorted([1, '', None], key=lambda x: OrderableKey(x)),
+        [None, 1, '']
+      )
+      o1 = [OrderableKey(e) for e in (None, 1)]
+      o2 = [OrderableKey(e) for e in (0, 0)]
+      self.assertEqual(sorted([o1, o2]), [o1, o2])
+      self.assertEqual(sorted([o2, o1]), [o1, o2])
 
 def test_suite():
   suite = unittest.TestSuite()

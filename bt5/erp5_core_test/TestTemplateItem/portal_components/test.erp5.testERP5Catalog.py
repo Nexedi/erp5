@@ -28,7 +28,7 @@
 ##############################################################################
 
 from functools import partial
-import httplib
+import six.moves.http_client
 from random import randint
 import sys
 import threading
@@ -48,9 +48,12 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
+from six.moves import range
 
 if six.PY3:
-  long = int  # pylint:disable=redefined-builtin
+  long_type = int  # pylint:disable=redefined-builtin
+else:
+  long_type = long # pylint:disable=undefined-variable
 
 def format_stack(thread=None):
   frame_dict = sys._current_frames()
@@ -66,7 +69,7 @@ def format_stack(thread=None):
         thread_id,
         '     '.join(traceback.format_stack(frame)),
       )
-      for thread_id, frame in frame_dict.iteritems()
+      for thread_id, frame in six.iteritems(frame_dict)
     ))
   finally:
     del frame, frame_dict
@@ -104,8 +107,8 @@ class TransactionThread(threading.Thread):
       # Login
       newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
       self.payload(portal_value=portal_value)
-    except Exception as e: # pylint: disable=redefine-in-handler
-      self.exception = e # pylint: disable=redefine-in-handler
+    except Exception as e:
+      self.exception = e
       if six.PY2:
         self.exception.__traceback__ = sys.exc_info()[2]
 
@@ -350,7 +353,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       activity_tool.distribute()
       # XXX: duplicate ActivityTool.tic, without locking as we are being
       # multiple activity nodes in a single process.
-      for activity in ActivityTool.activity_dict.itervalues():
+      for activity in six.itervalues(ActivityTool.activity_dict):
         while activity.dequeueMessage(activity_tool, node_id, ()):
           pass
     # Monkey-patch catalog to synchronise between main thread and the
@@ -592,9 +595,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     from Products.ZSQLCatalog.SQLCatalog import UID_BUFFER_SIZE
     uid_dict = {}
-    for _ in xrange(UID_BUFFER_SIZE * 3):
+    for _ in range(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
-      self.assertIsInstance(uid, long)
+      self.assertIsInstance(uid, long_type)
       self.assertNotIn(uid, uid_dict)
       uid_dict[uid] = None
 
@@ -641,7 +644,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(['5'],folder_object_list)
     if six.PY2:
       folder_object_list = [x.getObject().getId() for x in
-                              person_module.searchFolder(title=unicode(title, 'utf-8'))]
+                              person_module.searchFolder(title=six.text_type(title, 'utf-8'))]
       self.assertEqual(['5'],folder_object_list)
 
   def test_Collation(self):
@@ -1299,7 +1302,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     old_default_result_limit = ctool.default_result_limit
     max_ = ctool.default_result_limit = 3
     #Create max + 2 Organisations
-    for i in xrange(max_ + 2):
+    for i in range(max_ + 2):
       self._makeOrganisation(title='abc%s' % (i), description='abc')
     self.assertEqual(max_,
                      len(self.getCatalogTool()(portal_type='Organisation')))
@@ -1662,7 +1665,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def test_54_FixIntUid(self):
     if six.PY3:
-      return unittest.skipTest(
+      raise unittest.SkipTest(
         "Python3 does not have different types for int and long")
     portal = self.getPortal()
 
@@ -1670,7 +1673,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation',)
     # Ensure that the new uid is long.
     uid = organisation.uid
-    self.assertTrue(isinstance(uid, long))
+    self.assertTrue(isinstance(uid, long_type))
     self.tic()
 
     # Ensure that the uid did not change after the indexing.
@@ -1682,7 +1685,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # After the indexing, the uid must be converted to long automatically,
     # and the value must be equivalent.
-    self.assertTrue(isinstance(uid, long))
+    self.assertTrue(isinstance(uid, long_type))
     self.assertEqual(organisation.uid, uid)
 
   def test_55_FloatFormat(self):
@@ -2106,7 +2109,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     def newContent(container, portal_type, acquire_view_permission, view_role_list, local_role_dict):
       document = container.newContent(portal_type=portal_type)
       document.manage_permission('View', roles=view_role_list, acquire=acquire_view_permission)
-      for user, role_list in local_role_dict.iteritems():
+      for user, role_list in six.iteritems(local_role_dict):
         document.manage_setLocalRoles(userid=user, roles=role_list)
       return document
 
@@ -2121,7 +2124,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       return (portal_type, acquire_view_permission,
               tuple(view_role_list),
               tuple([(x, tuple(y))
-                     for x, y in local_role_dict.iteritems()])
+                     for x, y in six.iteritems(local_role_dict)])
              )
 
     for container, portal_type in ((person_module, person),
@@ -2174,7 +2177,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         result = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers LIKE "%s:%%" AND uid = %i' % (line['allowedRolesAndUsers'], uid) )
         self.assertNotEqual(len(result), 0, 'No line found for allowedRolesAndUsers=%r and uid=%i' % (line['allowedRolesAndUsers'], uid))
       else:
-        raise Exception('Malformed allowedRolesAndUsers value: %(allowedRolesAndUsers)r' % line)
+        raise ValueError('Malformed allowedRolesAndUsers value: %(allowedRolesAndUsers)r' % line)
 
     # Check that object that 'bar' can view because of 'Author' role can *not*
     # be found when searching for his other 'Whatever' role.
@@ -3337,7 +3340,7 @@ VALUES
   def test_reindexWithGroupId(self):
     CatalogTool = type(self.getCatalogTool().aq_base)
     counts = []
-    orig_catalogObjectList = CatalogTool.catalogObjectList.__func__
+    orig_catalogObjectList = six.get_unbound_function(CatalogTool.catalogObjectList)
     def catalogObjectList(self, object_list, *args, **kw):
       counts.append(len(object_list))
       return orig_catalogObjectList(self, object_list, *args, **kw)
@@ -4074,14 +4077,15 @@ VALUES
     def doSomething(self, message_list):
       r = []
       for m in message_list:
-        m.result = r.append(m.object.getPath())
+        r.append(m.object.getPath())
+        m.result = None
       r.sort()
       group_method_call_list.append(r)
     self.portal.portal_activities.__class__.doSomething = doSomething
     now = DateTime()
     try:
       organisation_list = []
-      for _ in xrange(0,300):
+      for _ in range(0,300):
         organisation_list.append(
             self.portal.organisation_module.newContent().getPath())
       self.tic()
@@ -4138,10 +4142,10 @@ VALUES
     ret = self.publish(
         self.portal.portal_catalog.getPath(),
         basic='%s:%s' % (self.manager_username, self.manager_password))
-    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     # check if we did not just publish the result of `str(portal_catalog.__call__())`,
     # but a proper page
-    self.assertIn('<title>Catalog Tool - portal_catalog', ret.getBody())
+    self.assertIn(b'<title>Catalog Tool - portal_catalog', ret.getBody())
 
   def testSearchNonAsciiWithTheInitUser(self):
     """

@@ -97,7 +97,9 @@ def getReportSectionDictList(line_dict_list):
         line_to_group_list = []
 
     # add one line for gross salary
-    if previous_line_dict is not None and gross_category in previous_line_dict['base_contribution_list'] and gross_category not in current_line_dict['base_contribution_list']:
+    if (previous_line_dict is not None
+      and gross_category in previous_line_dict['base_contribution_list']  # pylint:disable=unsubscriptable-object
+      and gross_category not in current_line_dict['base_contribution_list']):
       new_line_dict_list.append(
         getFakeLineDictForNewSection(
           context.Base_translateString("Gross Salary"),

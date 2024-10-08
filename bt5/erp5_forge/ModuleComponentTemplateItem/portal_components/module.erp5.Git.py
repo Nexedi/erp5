@@ -41,7 +41,7 @@ GIT_ASKPASS = os.path.join(Products.ERP5.product_path, 'bin', 'git_askpass')
 
 class GitInstallationError(EnvironmentError):
   """Raised when an installation is broken"""
-  pass
+
 
 class GitError(EnvironmentError):
   def __init__(self, err, out, returncode):
@@ -64,6 +64,7 @@ class Git(WorkingCopy):
 
   def _git(self, *args, **kw):
     kw.setdefault('cwd', self.working_copy)
+    kw.setdefault('universal_newlines', True) # six.PY3: text=True
     argv = ['git']
     try:
       return subprocess.Popen(argv + list(args), **kw)
@@ -210,7 +211,7 @@ class Git(WorkingCopy):
     diff_dict = {}
     if out:
       out = iter(out.split('\ndiff --git '))
-      for stat in out.next().splitlines():
+      for stat in next(out).splitlines():
         stat, path = stat.split()[4:]
         stat_dict[path] = stat
       # Emulate svn output for compatibility with erp5.component.module.DiffUtils
@@ -229,7 +230,7 @@ class Git(WorkingCopy):
     path_dict = dict.fromkeys(self.git('ls-files').splitlines(), '')
     path_dict.update(self._patch_with_raw()[0])
     node_dict = {}
-    path_list = path_dict.keys()
+    path_list = list(path_dict)
     for path in path_list:
       status = path_dict[path]
       parent = os.path.dirname(path)
@@ -239,7 +240,7 @@ class Git(WorkingCopy):
         node_dict[parent] = [path]
         path_dict[parent] = status
         if parent:
-          path_list.append(parent)
+          path_list.append(parent)  # pylint:disable=modified-iterating-list
       else:
         while path_dict.get(parent, status) != status:
           path_dict[parent] = status = '*'
@@ -264,7 +265,7 @@ class Git(WorkingCopy):
           else:
             child = Dir(basename, dir_status(status))
             node.sub_dirs.append(child)
-            path_list.append((content, child))
+            path_list.append((content, child))  # pylint:disable=modified-iterating-list
     return (root.sub_dirs or root.sub_files) and root
 
   def update(self, keep=False):
@@ -274,7 +275,7 @@ class Git(WorkingCopy):
     if not keep:
       self.clean()
       self.remote_git('pull', '--ff-only')
-    elif 1: # elif local_changes:
+    elif 1: # elif local_changes:   # pylint:disable=using-constant-test
       raise NotImplementedError
       # addremove
       # write-tree | commit-tree -> A
@@ -362,16 +363,15 @@ class Git(WorkingCopy):
             raise
           # try to update our working copy
           # TODO: find a solution if there are other local changes
-          # TODO: solve conflicts on */bt/revision automatically
           try:
             self.git(merge, '@{u}', env=env)
-          except GitError as e:
+          except GitError as e2:
             # XXX: how to know how it failed ?
             try:
               self.git(merge, '--abort')
             except GitError:
               pass
-            raise e
+            raise e2
           # no need to keep a merge commit if push fails again
           if merge == 'merge':
             reset += 1

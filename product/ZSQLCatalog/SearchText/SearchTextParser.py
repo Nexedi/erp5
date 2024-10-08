@@ -137,7 +137,7 @@ if __name__ == '__main__':
           return False
         other_query_list = other.query_list[:]
         for my_query in self.query_list:
-          for other_index in xrange(len(other_query_list)):
+          for other_index in range(len(other_query_list)):
             other_query = other_query_list[other_index]
             if my_query == other_query:
               other_query_list.pop(other_index)

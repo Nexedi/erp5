@@ -106,7 +106,7 @@ class TestERP5Administration(InventoryAPITestCase):
                         'default', render_format='list')
     self.assertEqual(1, len([line for line in line_list if line.isDataLine()]))
     self.assertEqual(str(line_list[-1].getColumnProperty('getTranslatedMessage')),
-      "Attribute title should be of type string but is of type <type 'int'>")
+      "Attribute title should be of type string but is of type " + str(int))
 
     # this alarm can solve, as long as the constraints can solve, this is the
     # case of PropertyTypeValidity

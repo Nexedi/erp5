@@ -28,6 +28,8 @@
 #
 #---------------------------------------------------------------------
 
+import six
+from Products.ERP5Type.Utils import str2bytes
 from hashlib import md5
 import random
 
@@ -84,7 +86,7 @@ class CaptchasDotNet:
         return url
 
     def image (self, random, id = 'captchas.net'):
-        return '''
+        return r'''
         <img class="captchas_dot_net"
             id="%(id)s" src="%(source)s" width="%(width)d" height="%(height)d"
             alt="The CAPTCHA image" />
@@ -130,12 +132,13 @@ class CaptchasDotNet:
         encryption_base = self.__secret + random
         if (password_alphabet != "abcdefghijklmnopqrstuvwxyz") or (password_length != 6):
             encryption_base += ":" + password_alphabet + ":" + str(password_length)
-        digest = md5(encryption_base).digest()
+        digest = md5(str2bytes(encryption_base)).digest()
 
         # Compute password
         correct_password = ''
         for pos in range (password_length):
-            letter_num = ord (digest[pos]) % len (password_alphabet)
+            digest_char = ord(digest[pos]) if six.PY2 else digest[pos]
+            letter_num = digest_char % len (password_alphabet)
             correct_password += password_alphabet[letter_num]
 
         return correct_password

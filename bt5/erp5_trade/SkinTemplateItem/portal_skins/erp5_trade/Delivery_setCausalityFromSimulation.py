@@ -36,4 +36,4 @@ for simulation_movement in simulation_movement_list :
     causality_value_set[explanation_value] = 1
 
 LOG('setCausalityValueList %s'%causality_value_set.keys())
-delivery.setCausalityValueList(causality_value_set.keys() + delivery.getCausalityValueList())
+delivery.setCausalityValueList(list(causality_value_set) + delivery.getCausalityValueList())

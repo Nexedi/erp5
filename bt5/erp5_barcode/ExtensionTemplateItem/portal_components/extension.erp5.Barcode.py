@@ -26,7 +26,7 @@
 ##############################################################################
 
 import os
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 import tempfile
 from DateTime import DateTime
 from zLOG import LOG

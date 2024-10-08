@@ -48,11 +48,8 @@ class ClammitConnector(XMLObject):
   _DEFAULT_TIMEOUT = 30 # In seconds
 
   def _query(self, *args, **kw):
-    def _request(*args, **kw):
-      return requests.request(*args, **kw)
-
-    timeout = kw.get("timeout", self.getTimeout(self._DEFAULT_TIMEOUT))
-    kw['timeout'] = min(
+    timeout = kw.pop("timeout", self.getTimeout(self._DEFAULT_TIMEOUT))
+    timeout = min(
       getTimeLeft() or timeout,
       timeout,
     )
@@ -63,9 +60,9 @@ class ClammitConnector(XMLObject):
         certificate_authoritity_certificate.write(ca_certificate)
         certificate_authoritity_certificate.seek(0)
         kw["verify"] = certificate_authoritity_certificate.name
-        return _request(*args, **kw)
+        return requests.request(*args, timeout=timeout, **kw)
 
-    return _request(*args, **kw)
+    return requests.request(*args, timeout=timeout, **kw)
 
   def isSafe(self, data):
     response = self._query(

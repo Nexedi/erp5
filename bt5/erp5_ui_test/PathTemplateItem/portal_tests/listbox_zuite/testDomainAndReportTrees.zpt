@@ -36,7 +36,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked;field_domain_root_list=foo_category%7CFoo%20Category</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked&amp;field_domain_root_list=foo_category%7CFoo%20Category</td>
   <td></td>
 </tr>
 <tr>
@@ -153,7 +153,7 @@
 <!-- Click on report tree -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked;field_report_root_list=foo_category%7CFoo%20Category%0Afoo_empty_category%7CFoo%20Empty%20Category</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked&amp;field_report_root_list=foo_category%7CFoo%20Category%0Afoo_empty_category%7CFoo%20Empty%20Category</td>
   <td></td>
 </tr>
 <tr>

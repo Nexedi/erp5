@@ -30,7 +30,7 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import cartesianProduct, INFINITE_SET
+from Products.ERP5Type.Utils import cartesianProduct, ensure_list, INFINITE_SET
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG
@@ -163,7 +163,7 @@ class Matrix(object):
       else:
         delete = set()
         to_delete.append(delete)
-        for k, v in id_dict.items():
+        for k, v in ensure_list(id_dict.items()):
           try:
             axis.remove(k)
             if last_id < v:
@@ -264,7 +264,7 @@ class Matrix(object):
       else:
         if i >= current_len:
           self.index[base_id][i] = PersistentMapping()
-        for place in self.index[base_id][i].keys():
+        for place in list(self.index[base_id][i]):
           if place not in kw[i]:
             del self.index[base_id][i][place]
 
@@ -320,7 +320,7 @@ class Matrix(object):
       cell_range = aq_base(self).index[base_id]
     except (AttributeError, KeyError):
       return []
-    return [x.keys() for _, x in sorted(six.iteritems(cell_range))]
+    return [ensure_list(x.keys()) for _, x in sorted(six.iteritems(cell_range))]
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
   def newCell(self, *kw, **kwd):
@@ -449,7 +449,7 @@ class Matrix(object):
     """
     if getattr(aq_base(self), 'index', None) is None:
       return ()
-    return self.index.keys()
+    return ensure_list(self.index.keys())
 
   security.declareProtected( Permissions.ModifyPortalContent, 'delMatrix' )
   def delMatrix(self, base_id = 'cell'):

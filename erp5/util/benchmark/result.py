@@ -332,7 +332,7 @@ class CSVBenchmarkResult(BenchmarkResult):
       self.logger.error(logged_msg)
       raise RuntimeError(msg)
 
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 
 from six.moves import xmlrpc_client as xmlrpclib
 import datetime

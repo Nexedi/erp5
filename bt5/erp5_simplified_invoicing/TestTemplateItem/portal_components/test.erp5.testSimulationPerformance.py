@@ -54,13 +54,13 @@ class TestSimulationPerformance(TestTradeModelLineSale):
 
   def perf_00_setupAndFillCache(self):
     self.test_01_OrderWithSimpleTaxedAndDiscountedLines()
-    self.__class__._order = self['order'].getRelativeUrl()
+    self.__class__._order = self._storage['order'].getRelativeUrl()
     self.runAlarms()
 
   def perf_01_invoiceSimpleOrder(self, order_count=1):
     start = time()
     order = self.portal.unrestrictedTraverse(self._order)
-    order_list = [self.clone(order) for _ in xrange(order_count)]
+    order_list = [self.clone(order) for _ in range(order_count)]
     for order in order_list:
       for line in list(order.getMovementList()):
         self.clone(line)

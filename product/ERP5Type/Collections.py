@@ -33,7 +33,9 @@ from collections import (
     Counter, defaultdict, deque, OrderedDict, namedtuple as _namedtuple)
 
 
-def namedtuple(typename, field_names, verbose=False, rename=False):
-  ret = _namedtuple(typename, field_names, verbose, rename)
+# six.PY2: namedtuple(typename, field_names, verbose=False, rename=False)
+# six.PY3: namedtuple(typename, field_names, *, rename=False, defaults=None, module=None)
+def namedtuple(*args, **kw):
+  ret = _namedtuple(*args, **kw)
   ret.__allow_access_to_unprotected_subobjects__ = 1
   return ret

@@ -1,6 +1,7 @@
 # Copyright (c) 2012 Nexedi SA and Contributors. All Rights Reserved.
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import six
 
 class TestComputerWithComputerModel(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -116,7 +117,7 @@ class TestComputerWithComputerModel(ERP5TypeTestCase):
     model = self.newModel(**category_dict)
 
     category_list = []
-    for k, v in category_dict.iteritems():
+    for k, v in six.iteritems(category_dict):
       for l in v:
         category_list.append('%s/%s' % (k,l))
     category_list.append('specialise/%s' % model.getRelativeUrl())

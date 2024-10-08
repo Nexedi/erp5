@@ -1,3 +1,4 @@
+import six
 constraint_type_per_type, _ = context.Base_getConstraintTypeListPerPortalType()
 constraint_type = filter_dict.get("constraint_type")
 if not constraint_type:
@@ -12,7 +13,7 @@ if filter_dict is None:
 
 portal_type_list = []
 append = portal_type_list.append
-for portal_type, constraint_type_list in constraint_type_per_type.iteritems():
+for portal_type, constraint_type_list in six.iteritems(constraint_type_per_type):
   if constraint_type in constraint_type_list:
     append(portal_type)
 

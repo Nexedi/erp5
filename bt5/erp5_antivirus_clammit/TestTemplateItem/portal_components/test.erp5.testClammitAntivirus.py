@@ -75,7 +75,7 @@ class TestClammitAntivirus(ERP5TypeTestCase):
     self.loginByUserName(user)
     document_value = self.portal.document_module.newContent(
       portal_type="File",
-      data="hello_world",
+      data=b"hello_world",
     )
     document_value.setSuspect()
 

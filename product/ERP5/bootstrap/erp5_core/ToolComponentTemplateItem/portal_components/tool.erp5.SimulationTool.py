@@ -28,6 +28,7 @@ from __future__ import division
 #
 ##############################################################################
 
+import functools
 from past.builtins import cmp
 from six import string_types as basestring
 from Products.CMFCore.utils import getToolByName
@@ -37,7 +38,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import str2bytes, ensure_list
 
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
@@ -62,6 +63,7 @@ from hashlib import md5
 from warnings import warn
 from six.moves.cPickle import loads, dumps
 from copy import deepcopy
+import base64
 import six
 
 MYSQL_MIN_DATETIME_RESOLUTION = 1/86400.
@@ -1438,7 +1440,7 @@ class SimulationTool(BaseTool):
     if src__:
       sql_source_list.append(Resource_zGetInventoryCacheResult(src__=1, **inventory_cache_kw))
     if cached_sql_result:
-      brain_result = loads(cached_sql_result[0].result)
+      brain_result = loads(base64.b64decode(cached_sql_result[0].result))
       # Rebuild the brains
       cached_result = Results(
         (brain_result['items'], brain_result['data']),
@@ -1487,10 +1489,10 @@ class SimulationTool(BaseTool):
         self.Resource_zInsertInventoryCacheResult(
           query=sql_text_hash,
           date=cached_date,
-          result=dumps({
+          result=base64.b64encode(dumps({
             'items': result.__items__,
             'data': result._data,
-          }),
+          })),
         )
     else:
       # Cache miss and this getInventory() not specifying to_date,
@@ -1611,7 +1613,7 @@ class SimulationTool(BaseTool):
         line_key = getInventoryListKey(line)
         line_a = inventory_list_dict.get(line_key)
         inventory_list_dict[line_key] = addLineValues(line_a, line)
-    sorted_inventory_list = inventory_list_dict.values()
+    sorted_inventory_list = ensure_list(inventory_list_dict.values())
     # Sort results manually when required
     sort_on = new_kw.get('sort_on')
     if sort_on:
@@ -1625,7 +1627,7 @@ class SimulationTool(BaseTool):
           try:
             result = cmp(line_a[key], line_b[key])
           except KeyError:
-            raise Exception('Impossible to sort result since columns sort '
+            raise ValueError('Impossible to sort result since columns sort '
               'happens on are not available in result: %r' % (key, ))
           if result:
             if not sort_direction.upper().startswith('A'):
@@ -1636,7 +1638,10 @@ class SimulationTool(BaseTool):
               result *= -1
             break
         return result
-      sorted_inventory_list.sort(cmp_inventory_line)
+      if six.PY2:
+        sorted_inventory_list.sort(cmp_inventory_line)
+      else:
+        sorted_inventory_list.sort(key=functools.cmp_to_key(cmp_inventory_line))
     # Brain is rebuild properly using tuple not r instance
     column_list = first_result._searchable_result_columns()
     column_name_list = [x['name'] for x in column_list]
@@ -2523,7 +2528,7 @@ class SimulationTool(BaseTool):
                 simulation_movement.expand(expand_policy='immediate')
 
               # activate builder
-              movement_portal_type, = movement_portal_type_set
+              movement_portal_type, = movement_portal_type_set  # pylint:disable=unbalanced-tuple-unpacking
               merged_builder = self._findBuilderForDelivery(main_delivery, movement_portal_type)
               if merged_builder is None:
                 error_list.append(translateString("Unable to find builder"))

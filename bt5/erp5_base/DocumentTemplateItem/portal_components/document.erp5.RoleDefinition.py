@@ -28,6 +28,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.ERP5Type import (
   ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT,
@@ -55,7 +56,7 @@ class RoleDefinition(XMLObject):
 
   def _setRoleName(self, value):
     if value and value not in \
-       zip(*self.RoleDefinition_getRoleNameItemList())[1]:
+       ensure_list(zip(*self.RoleDefinition_getRoleNameItemList()))[1]:
       raise Unauthorized("You are not allowed to give %s role" % value)
     self._baseSetRoleName(value)
 

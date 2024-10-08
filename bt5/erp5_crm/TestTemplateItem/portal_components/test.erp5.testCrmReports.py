@@ -111,36 +111,17 @@ class CrmTestCase(ERP5ReportTestCase):
 
     if simulation_state == 'assigned':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ticket=self.portal.restrictedTraverse(ev.getFollowUp())
-      self._doWorkflowAction(ev,'assign_action',
-                         follow_up_ticket_type = ticket.getPortalType(),
-                         follow_up_ticket_title = ticket.getTitle())
-      """
     elif simulation_state == 'planned':
       ev.plan()
     elif simulation_state == 'posted':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.start()
-      """
     elif simulation_state == 'delivered':
       ev.start()
       ev.deliver()
     elif simulation_state == 'new':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.receive()
-      """
     elif simulation_state == 'acknowledged':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ticket=self.portal.restrictedTraverse(ev.getFollowUp())
-      self._doWorkflowAction(ev,'assign_action',
-                         follow_up_ticket_type = ticket.getPortalType(),
-                         follow_up_ticket_title = ticket.getTitle())
-      self._doWorkflowAction(ev, 'acknowledge_action')
-      """
     elif simulation_state == 'cancelled':
       ev.stop()
       ev.cancel()
@@ -148,24 +129,12 @@ class CrmTestCase(ERP5ReportTestCase):
       ev.delete()
     elif simulation_state == 'expired':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.receive()
-      ev.expire()
-      """
     elif simulation_state == 'responded':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.receive()
-      ev.respond()
-      """
     elif simulation_state == 'started':
       ev.start()
     elif simulation_state == 'ordered':
       raise NotImplementedError('%r state only exists in the old event workflow.' % simulation_state)
-      """
-      ev.plan()
-      ev.order()
-      """
     elif simulation_state == 'stopped':
       ev.stop()
     # sanity check
@@ -577,7 +546,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_out2
         direction='Outgoing'
         campaign=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_inc1
         direction='Incoming'
@@ -887,7 +857,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_out2
         direction='Outgoing'
         meeting=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_inc1
         direction='Incoming'
@@ -1197,7 +1168,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_inc2
         direction='Incoming'
         support_request=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_out1
         direction='Outgoing'
@@ -1507,7 +1479,8 @@ class TestCrmReports(CrmTestCase):
         event=second_event_out2
         direction='Outgoing'
         sale_opportunity=ticket.getTitle()
-      elif i==6:
+      else:
+        assert i == 6
         ticket=second
         event=second_event_inc1
         direction='Incoming'
@@ -1776,7 +1749,8 @@ class TestCrmReports(CrmTestCase):
         pSupportRequest = 0
         punassigned = 1
         ptotal = 5
-      elif i==5:
+      else:
+        assert i == 5
         pvalidation_state = 'Responded'
         pCampaign = 2
         pMeeting = 0
@@ -2140,7 +2114,8 @@ class TestCrmReports(CrmTestCase):
         pexpired = 1
         presponded = 0
         ptotal = 2
-      elif i==4:
+      else:
+        assert i == 4
         pticket_title = ''
         pticket_type = 'Unassigned'
         pdelivered = 1

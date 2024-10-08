@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from past.builtins import cmp
 from six import string_types as basestring
 from inspect import CO_VARKEYWORDS
 from random import getrandbits
@@ -41,6 +40,7 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import getActivityRuntimeEn
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import str2bytes
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
 class Alarm(XMLObject, PeriodicityMixin):
@@ -352,18 +352,14 @@ class Alarm(XMLObject, PeriodicityMixin):
     result_list = [x for x in active_process.getResultList() if x is not None]
     attachment_list = []
     if len(result_list):
-      def sort_result_list(a, b):
-        result = - cmp(a.severity, b.severity)
-        if result == 0:
-          result = cmp(a.summary, b.summary)
-        return result
-      result_list.sort(sort_result_list)
+      # Here we assume that severity type is int or float and summary type is same for all entries.
+      result_list.sort(key=lambda e: (-e.severity, e.summary))
       rendered_alarm_result_list = ['%02i summary: %s\n%s\n----' %
         (int(getattr(x, 'severity', 0)), getattr(x, 'summary', ''), getattr(x, 'detail', ''))
         for x in result_list]
       rendered_alarm_result = '\n'.join(rendered_alarm_result_list)
       attachment_list.append({'name': 'alarm_result.txt',
-                              'content': rendered_alarm_result,
+                              'content': str2bytes(rendered_alarm_result),
                               'mime_type': 'text/plain'})
 
     notification_tool.sendMessage(recipient=candidate_list,

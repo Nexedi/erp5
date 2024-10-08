@@ -29,7 +29,6 @@
 # pylint: disable=unused-import
 from zLOG import (
   LOG,
-  INFO,
   TRACE,
   DEBUG,
   BLATHER,

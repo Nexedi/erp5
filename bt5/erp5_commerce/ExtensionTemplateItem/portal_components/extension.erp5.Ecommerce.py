@@ -1,6 +1,6 @@
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
-import urllib
+from six.moves.urllib.parse import urlencode
 import mechanize
 
 def getProductPrice(product):
@@ -9,7 +9,7 @@ def getProductPrice(product):
 
 def submitPaypalNVPRequest(parameter_dict, nvp_url):
   request = mechanize.Request(nvp_url)
-  params = urllib.urlencode(parameter_dict)
+  params = urlencode(parameter_dict)
   try:
     response = mechanize.urlopen(request, data=params)
   except:

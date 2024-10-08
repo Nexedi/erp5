@@ -36,6 +36,7 @@ from zExceptions import BadRequest
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.ERP5Form.ProxyField import BrokenProxyField
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import str2bytes
 
 
 class TestProxyField(ERP5TypeTestCase):
@@ -333,7 +334,7 @@ return printed
 
     # Test xml serialisation of form.
     xml_string = formToXML(form)
-    xml_tree = etree.fromstring(xml_string)
+    xml_tree = etree.fromstring(str2bytes(xml_string))
     field_node = xml_tree.find('groups/group/fields/field')
     self.assertEqual(field_node.find('type').text, 'ProxyField')
     self.assertTrue(field_node.find('delegated_list/title') is not None)

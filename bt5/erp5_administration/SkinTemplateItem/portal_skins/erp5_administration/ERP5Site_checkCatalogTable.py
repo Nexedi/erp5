@@ -16,6 +16,7 @@
 """
 from DateTime import DateTime
 from Products.CMFActivity.ActiveResult import ActiveResult
+from six.moves import range
 active_result = ActiveResult()
 portal = context.getPortalObject()
 activate = portal.portal_activities.activate
@@ -54,7 +55,7 @@ if catalog_uid_list is None:
       'tag': tag,
       'fixit': fixit,
     }
-    for _ in xrange(activity_count):
+    for _ in range(activity_count):
       if len(catalog_uid_list) == 0:
         result_list.append('No more uids to check, stop spawning activities.')
         break

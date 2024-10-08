@@ -24,7 +24,7 @@ class OdpToHtml:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     odp = OOOdCommandTransform(context, filename, data, self.inputs[0])
     html = odp.convertTo('html')
     if cache is not None:

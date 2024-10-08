@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+import six
 from . import XMLObjects
 from Products.Formulator.TALESField import TALESMethod
 from Products.Formulator.MethodField import Method
@@ -127,7 +128,7 @@ def XMLToForm(s, form, override_encoding=None):
         form.remove_group('Default')
 
 def encode(text, encoding):
-    if encoding is None:
+    if six.PY3 or encoding is None:
         return text
     else:
         return text.encode(encoding)

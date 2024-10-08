@@ -216,7 +216,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     data_set = self.portal.data_set_module.newContent(portal_type='Data Set')
     document = self.portal.portal_contributions.newContent(
                                     filename='test.txt',
-                                    data='test content',
+                                    data=b'test content',
                                     reference='test-reference',
                                     discover_metadata=False,
                                     follow_up_list=[data_set.getRelativeUrl()])

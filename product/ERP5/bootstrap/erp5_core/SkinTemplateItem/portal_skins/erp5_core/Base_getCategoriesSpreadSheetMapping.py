@@ -104,9 +104,9 @@ for table_name in spreadsheet_list.keys():
   # 1 table = 1 base category
   base_category_name = table_name
   base_category_id = getIDFromString(base_category_name)
-  if six.PY2 and isinstance(base_category_name, unicode):
+  if six.PY2 and isinstance(base_category_name, six.text_type):
     base_category_name = base_category_name.encode('utf8')
-  if six.PY2 and isinstance(base_category_id, unicode):
+  if six.PY2 and isinstance(base_category_id, six.text_type):
     base_category_id = base_category_id.encode('utf8')
   category_list = category_list_spreadsheet_mapping.setdefault(base_category_id, [])
   category_list.append({ 'path' : base_category_id
