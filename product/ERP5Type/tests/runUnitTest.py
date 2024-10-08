@@ -65,7 +65,7 @@ Options:
   --cmf_activity_sql_connection_string=STRING
                              ZSQL Connection string for
                              cmf_activity_sql_connection (if unset, defaults to
-                             erp5_sql_connection_string)
+                             erp5_sql_connection_string with "!READ-COMMITTED")
   --extra_sql_connection_string_list=STRING
                              Used when 2 or more ZSQL connection strings are
                              needed. By defaut, it will take the last four

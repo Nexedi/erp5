@@ -50,6 +50,7 @@ from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGene
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
 import os
+import re
 import warnings
 import transaction
 from App.config import getConfiguration
@@ -84,7 +85,7 @@ def manage_addERP5Site(self,
                        validate_email=0,
                        erp5_catalog_storage='erp5_mysql_innodb_catalog',
                        erp5_sql_connection_string=default_sql_connection_string,
-                       cmf_activity_sql_connection_string=default_sql_connection_string,
+                       cmf_activity_sql_connection_string='!READ-COMMITTED %s' % default_sql_connection_string,
                        bt5_repository_url='',
                        bt5='',
                        id_store_interval='',
@@ -2281,7 +2282,8 @@ class ERP5Generator(PortalGenerator):
       # The only difference compared to activity connection is the
       # minus prepended to the connection string.
       if id == 'erp5_sql_transactionless_connection':
-        connection_string = '-' + p.cmf_activity_sql_connection_string
+        # omit isolation-level and add '-' sign in front of the database.
+        connection_string = re.sub(r'((?:[%*][^ ]+ )*)(![^ ]+ )?(.+)', r'\1-\3', p.cmf_activity_sql_connection_string)
       else:
         connection_string = getattr(p, id + '_string')
       manage_add(id, title, connection_string, **kw)

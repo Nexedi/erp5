@@ -134,7 +134,7 @@ def DA_PUT(self, REQUEST, RESPONSE):
     return RESPONSE
 
 
-def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
+def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, isolation_level__='', **kw):
     """Call the database method
 
     The arguments to the method should be passed via keyword
@@ -222,7 +222,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
         result=self._cached_result(DB__, query, self.max_rows_, c)
     else:
       try:
-        result=DB__.query(query, self.max_rows_)
+        result=DB__.query(query, self.max_rows_, isolation_level=isolation_level__)
       except:
         LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=True)
         raise

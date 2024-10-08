@@ -980,7 +980,7 @@ class Catalog(Folder,
             error=True,
           )
       return result
-    for row in method():
+    for row in method(isolation_level__=None):
       result.setdefault(row.TABLE_NAME, []).append(row.COLUMN_NAME)
     return result
 
@@ -1277,9 +1277,6 @@ class Catalog(Folder,
                               disable_cache=disable_cache,
                               check_uid=check_uid,
                               idxs=idxs)
-
-  def getSqlCatalogObjectListList(self):
-    return self.sql_catalog_object_list
 
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None):
@@ -1588,6 +1585,7 @@ class Catalog(Folder,
         path=None, # BBB
         path_list=path_list,
         uid_only=False, # BBB
+        isolation_level__='READ-COMMITTED',
       )
     }
 
@@ -1602,6 +1600,7 @@ class Catalog(Folder,
         uid=None, # BBB
         uid_list=uid_list,
         path_only=False, # BBB
+        isolation_level__='READ-COMMITTED',
       )
     }
 
@@ -2469,8 +2468,14 @@ class Catalog(Folder,
       return ()
 
   def getSqlCatalogObjectListList(self):
+    # put z_catalog_object_list first to guarantee non-SELECT query first.
     try:
-      return self.sql_catalog_object_list
+      return tuple(
+        sorted(
+          self.sql_catalog_object_list,
+          key=lambda e: e != 'z_catalog_object_list'
+        )
+      )
     except AttributeError:
       return ()
 
