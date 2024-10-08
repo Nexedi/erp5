@@ -62,7 +62,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
     organisation.immediateReindexObject() # modify catalog
     path = organisation.getPath()
     test_list = []
-    for connection_id, table in (('erp5_sql_read_committed_connection', 'catalog'),
+    for connection_id, table in (('erp5_sql_connection', 'catalog'),
                                  ('cmf_activity_sql_connection', 'message')):
       connection = self.portal[connection_id]
       query = connection.factory()(
