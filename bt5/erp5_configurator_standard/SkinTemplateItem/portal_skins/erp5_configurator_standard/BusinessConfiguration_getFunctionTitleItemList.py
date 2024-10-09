@@ -1,6 +1,7 @@
 # coding: utf-8
 import six
 from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Utils import unicode2str
 
 if context.getGlobalConfigurationAttr('categories_spreadsheet_configuration_save_relative_url'):
   item_list_from_spreadsheet = context.BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList('function')
@@ -57,7 +58,7 @@ function_item_list = [
 
 prefix = u"\N{NO-BREAK SPACE}" * 4
 if six.PY2:
-  prefix = prefix.encode('utf-8')
+  prefix = unicode2str(prefix)
 return [['', '']] + [[
     ( prefix * depth ) + str(translateString(title)),
     relative_url,

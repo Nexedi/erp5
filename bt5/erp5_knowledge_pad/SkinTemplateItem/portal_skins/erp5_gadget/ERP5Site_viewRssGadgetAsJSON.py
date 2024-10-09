@@ -15,7 +15,8 @@ gadget_title_dom_id = '%s_gadget_title' %box_dom_id
 gadget_title = request.get('rss_gadget_title', box.getSpecialiseValue().getTitle())
 if six.PY2:
   # Convert to unicode to not cut in the middle of a multibyte character
-  gadget_title = six.text_type(gadget_title).encode('utf-8')
+  from Products.ERP5Type.Utils import unicode2str
+  gadget_title = unicode2str(six.text_type(gadget_title))
 gadget_title = gadget_title[:40]
 javascript = '$("#%s").html("%s");' %(gadget_title_dom_id, gadget_title)
 

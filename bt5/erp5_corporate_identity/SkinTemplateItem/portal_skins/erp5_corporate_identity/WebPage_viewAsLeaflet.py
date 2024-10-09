@@ -26,7 +26,7 @@ import six
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
 blank = ''
 pref = context.getPortalObject().portal_preferences
@@ -150,9 +150,9 @@ if leaflet_display_side:
 
   if six.PY2:
     if isinstance(leaflet_legalese, six.text_type):
-      leaflet_legalese = leaflet_legalese.encode("UTF-8")
+      leaflet_legalese = unicode2str(leaflet_legalese)
     if isinstance(leaflet_content, six.text_type):
-      leaflet_content = leaflet_content.encode("UTF-8")
+      leaflet_content = unicode2str(leaflet_content)
 
   leaflet_content = leaflet_legalese + leaflet_content
 

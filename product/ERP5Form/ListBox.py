@@ -38,7 +38,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from .Selection import Selection, DomainSelection
 from .Tool.SelectionTool import createFolderMixInPageSelectionMethod
-from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath
+from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath, str2bytes, bytes2str
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
@@ -1753,8 +1753,8 @@ class ListBoxRenderer:
         if six.PY2:
           processed_value = six.text_type(str(processed_value), self.getEncoding(), 'replace')
         else:
-          processed_value = str(processed_value).encode(
-            self.getEncoding(), 'replace').decode()
+          processed_value = bytes2str(
+            str2bytes(str(processed_value), self.getEncoding(), 'replace'))
 
       value_list.append((original_value, processed_value))
 

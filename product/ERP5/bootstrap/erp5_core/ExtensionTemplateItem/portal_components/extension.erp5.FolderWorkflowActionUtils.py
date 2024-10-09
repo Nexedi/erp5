@@ -30,13 +30,14 @@
 import six
 
 from hashlib import md5
+from Products.ERP5Type.Utils import str2bytes
 
 # Some workflow does not make sense in the context of mass transition and are
 # not proposed.
 skipped_workflow_id_list = ['delivery_causality_workflow',]
 
 def generateUid(portal_type, workflow_id, workflow_state):
-  return 'new_' + md5(('%s/%s/%s' % (portal_type, workflow_id, workflow_state)).encode()).hexdigest()
+  return 'new_' + md5(str2bytes('%s/%s/%s' % (portal_type, workflow_id, workflow_state))).hexdigest()
 
 def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same

@@ -30,7 +30,7 @@ import six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import unicode2str, guessEncodingFromText # TODO: guessEncodingFromBytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, guessEncodingFromText # TODO: guessEncodingFromBytes
 from zLOG import LOG, INFO
 
 from email.header import decode_header, HeaderParseError
@@ -43,14 +43,14 @@ def testCharsetAndConvert(text_content, content_type, encoding):
   if not isinstance(text_content, six.text_type):
     try:
       if encoding is not None:
-        text_content = unicode2str(text_content.decode(encoding))
+        text_content = bytes2str(text_content, encoding)
       else:
-        text_content = unicode2str(text_content.decode())
+        text_content = bytes2str(text_content)
     except (UnicodeDecodeError, LookupError):
       encoding = guessEncodingFromText(text_content, content_type)
       if encoding is not None:
         try:
-          text_content = unicode2str(text_content.decode(encoding))
+          text_content = bytes2str(text_content, encoding)
         except (UnicodeDecodeError, LookupError):
           # TODO: errors => repr?
           text_content = repr(text_content)[1:-1]
@@ -219,7 +219,7 @@ class MailMessageMixin:
                                        index=index) # add index to generate
                                        # a unique cache key per attachment
           if six.PY3:
-            content = content.encode()
+            content = str2bytes(content)
         else:
           content = part.get_payload(decode=1)
         return content

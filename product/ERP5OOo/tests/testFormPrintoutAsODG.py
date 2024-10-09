@@ -32,6 +32,7 @@ from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.Utils import str2bytes
 from lxml import etree
 import os
 
@@ -211,7 +212,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertIn(u"Français".encode('utf-8'), content_xml)
+    self.assertIn(str2bytes(u"Français"), content_xml)
     self._validate(odf_document)
 
     # 6. Normal case: unicode string
@@ -220,7 +221,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertIn(u"Français test2".encode('utf-8'), content_xml)
+    self.assertIn(str2bytes(u"Français test2"), content_xml)
     # leave _validate() here not to forget the validation failure
     self._validate(odf_document)
 
@@ -459,7 +460,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertIn(u"Français".encode('utf-8'), content_xml)
+    self.assertIn(str2bytes(u"Français"), content_xml)
     self._validate(odf_document)
 
     # 6. Normal case: unicode string
@@ -468,7 +469,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertIn(u"Français test2".encode('utf-8'), content_xml)
+    self.assertIn(str2bytes(u"Français test2"), content_xml)
     self._validate(odf_document)
 
 def test_suite():

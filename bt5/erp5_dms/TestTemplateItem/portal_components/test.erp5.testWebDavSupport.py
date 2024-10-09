@@ -39,7 +39,7 @@ from DateTime import DateTime
 
 from lxml import etree
 from six.moves import range
-from Products.ERP5Type.Utils import unicode2str
+from Products.ERP5Type.Utils import str2unicode
 
 class TestWebDavSupport(ERP5TypeTestCase):
   """Test for WEBDAV access.
@@ -170,7 +170,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     self.assertEqual(web_page_module[filename].getPortalType(), 'Web Page')
 
     # Edit a new document via FTP/DAV
-    text_content = u"""<html>
+    text_content = """<html>
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
       </head>
@@ -180,7 +180,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
       </body>
     </html>
     """
-    iso_text_content = text_content.encode('iso-8859-1')
+    iso_text_content = str2unicode(text_content).encode('iso-8859-1')
     path = web_page_module.getPath()
     # Run twice to check the code that compares old & new data
     # when setting file attribute.
@@ -194,7 +194,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     # Convert to base format and run conversion into utf-8
     self.tic()
     # Content-Type header is replaced if conversion encoding succeed
-    new_text_content = unicode2str(text_content).replace('charset=iso-8859-1', 'charset=utf-8')
+    new_text_content = text_content.replace('charset=iso-8859-1', 'charset=utf-8')
     self.assertEqual(web_page_module[filename].getTextContent(), new_text_content)
 
   def test_GET_on_document(self):

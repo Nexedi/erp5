@@ -48,7 +48,7 @@ from io import BytesIO
 import re
 import itertools
 import six
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 try:
   from zExceptions import ResourceLockedError
@@ -103,7 +103,7 @@ class OOoTemplateStringIO(FasterStringIO):
   def write(self, s):
     return FasterStringIO.write(
         self,
-        convert_to_xml_compatible_string(s).encode('utf-8'))
+        str2bytes(convert_to_xml_compatible_string(s)))
 
 from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
 

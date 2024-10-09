@@ -1080,7 +1080,8 @@ class ERP5ImageProcessor(ObjectProcessor):
 
   def process(self):
     from base64 import b64encode
-    figure_data = b64encode(self.subject.getData()).decode()
+    from Products.ERP5Type.Utils import bytes2str
+    figure_data = bytes2str(b64encode(self.subject.getData()))
     mime_type = self.subject.getContentType()
     return '<img src="data:%s;base64,%s" /><br />' % (mime_type, figure_data), 'text/html'
 

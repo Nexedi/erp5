@@ -25,6 +25,7 @@
 #
 ##############################################################################
 import six
+from Products.ERP5Type.Utils import bytes2str
 
 def sqlquote(value):
   # See MySQL documentation of string literals.
@@ -33,7 +34,7 @@ def sqlquote(value):
   # Duplicating such code is error-prone, and makes us rely on a specific SQL
   # dialect...
   if six.PY3 and isinstance(value, bytes):
-    value = value.decode()
+    value = bytes2str(value)
   return "'" + (value
     .replace('\x5c', r'\\')
     .replace('\x00', r'\0')

@@ -29,7 +29,7 @@
 import unittest
 from subprocess import Popen, PIPE
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Utils import ensure_list
+from Products.ERP5Type.Utils import ensure_list, bytes2str
 import six
 
 
@@ -59,7 +59,7 @@ class Aspell(object):
     command = 'echo %s | aspell -l %s -a' % (word, language)
     subprocess = Popen(command, shell=True, stdin=PIPE,
                                      stdout=PIPE, stderr=PIPE, close_fds=True)
-    return subprocess.communicate()[0].decode('utf-8').split('\n')[1:]
+    return bytes2str(subprocess.communicate()[0]).split('\n')[1:]
 
 class TestSpellChecking(ERP5TypeTestCase):
 

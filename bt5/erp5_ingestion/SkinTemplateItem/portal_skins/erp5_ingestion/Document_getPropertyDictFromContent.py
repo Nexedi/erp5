@@ -8,6 +8,7 @@ to use re) that would analyze text content of the doc
 and return a dictionary of properties.
 """
 import six
+from Products.ERP5Type.Utils import unicode2str
 information = context.getContentInformation()
 
 result = {}
@@ -15,7 +16,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if six.PY2 and isinstance(v, six.text_type): v = v.encode('utf-8')
+    if six.PY2 and isinstance(v, six.text_type): v = unicode2str(v)
     if key in property_id_list:
       if key == 'reference':
         pass # XXX - We can not trust reference on getContentInformation
@@ -27,7 +28,7 @@ for k, v in information.items():
         result['contributor'] = p.getRelativeUrl()
     elif key == 'keywords':
       if isinstance(v, (list, tuple)):
-        v = [x.encode('utf-8') if six.PY2 and isinstance(x, six.text_type) else x for x in v]
+        v = [unicode2str(x) if six.PY2 and isinstance(x, six.text_type) else x for x in v]
       else:
         v = v.split()
       result['subject_list'] = v

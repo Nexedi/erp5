@@ -29,7 +29,7 @@ from __future__ import print_function
 
 import six
 from io import BytesIO
-
+from Products.ERP5Type.Utils import bytes2str
 from ply import lex, yacc
 import sys
 
@@ -60,7 +60,7 @@ class lexer(object):
     # Emit all logs with regular Zope logging
     value = output.getvalue()
     if six.PY3:
-      value = value.decode()
+      value = bytes2str(value)
     for line in value.split('\n'):
       if len(line):
         LOG('lexer', 0, line)

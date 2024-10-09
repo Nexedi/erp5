@@ -8,7 +8,8 @@ if six.PY3:
   return text[:LENGTH]
 
 # But in PY2, this must be converted to unicode() first...
+from Products.ERP5Type.Utils import unicode2str
 try:
-  return six.text_type(text, 'utf-8')[:LENGTH].encode('utf-8')
+  return unicode2str(six.text_type(text, 'utf-8')[:LENGTH])
 except UnicodeDecodeError:
   return text[:LENGTH]

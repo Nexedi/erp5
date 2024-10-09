@@ -14,7 +14,8 @@ token = {
   'remote-addr': context.REQUEST.get('REMOTE_ADDR')
 }
 
-hmac = context.Base_getHMAC(key, str(token).encode('utf-8'))
+from Products.ERP5Type.Utils import str2bytes
+hmac = context.Base_getHMAC(key, str2bytes(str(token)))
 
 context.Base_setBearerToken(hmac, token)
 

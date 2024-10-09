@@ -33,7 +33,7 @@ from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import non_publishable
+from Products.ERP5Type.Utils import non_publishable, str2bytes
 from erp5.component.document.TextDocument import TextDocument
 from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
@@ -177,7 +177,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
           embedded_file_list=self.getAggregateValueList(portal_type=document_type_list),
         )
         if six.PY3:
-          data = data.encode()
+          data = str2bytes(data)
       result = message_from_bytes(data)
       self._v_message = result
     return result

@@ -41,7 +41,7 @@ from App.config import getConfiguration # pylint:disable=no-name-in-module,impor
 from DateTime import DateTime
 from ZTUtils import make_query
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
-from Products.ERP5Type.Utils import simple_decorator
+from Products.ERP5Type.Utils import simple_decorator, bytes2str, str2bytes
 from six import string_types as basestring
 from six.moves import range
 
@@ -139,14 +139,14 @@ class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
 
   def _getCookie(self, name, default=None):
     try:
-      return json.loads(b64decode(self.REQUEST[name]).decode())
+      return json.loads(bytes2str(b64decode(self.REQUEST[name])))
     except Exception:
       return default
 
   def _setCookie(self, name, value, days=30):
     portal = self.getPortalObject()
     request = portal.REQUEST
-    value = b64encode(json.dumps(value).encode()).decode()
+    value = bytes2str(b64encode(str2bytes(json.dumps(value))))
     request.set(name, value)
     if days:
       expires = (DateTime() + days).toZone('GMT').rfc822()

@@ -37,6 +37,7 @@ import six.moves.http_client
 import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Document import newTempBase
+from Products.ERP5Type.Utils import str2bytes
 
 class TestAuthenticationPolicy(ERP5TypeTestCase):
   """
@@ -746,7 +747,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     response = self.publish(
       portal.absolute_url_path() + '/logged_in',
       basic='test-05:used_ALREADY_1234',
-      stdin=io.BytesIO(six.moves.urllib.parse.urlencode({'came_from': 'https://www.erp5.com'}).encode()),
+      stdin=io.BytesIO(str2bytes(six.moves.urllib.parse.urlencode({'came_from': 'https://www.erp5.com'}))),
       request_method='POST',
     )
     redirect_url = six.moves.urllib.parse.urlparse(response.getHeader("Location"))
@@ -809,7 +810,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     def submit_reset_password_dialog(new_password):
       return self.publish(
         '%s/portal_password' % self.portal.getPath(),
-        stdin=io.BytesIO(six.moves.urllib.parse.urlencode({
+        stdin=io.BytesIO(str2bytes(six.moves.urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PasswordTool_viewResetPassword',
           'dialog_method': 'PasswordTool_changeUserPassword',
@@ -817,7 +818,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
           'field_your_password': new_password,
           'field_password_confirm': new_password,
           'field_your_password_key': reset_key,
-        }).encode()),
+        }))),
         request_method="POST",
         handle_errors=False)
 
@@ -840,7 +841,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_reset_password_dialog('alice')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        u'<span class="error">Yöü can not ... translated</span>'.encode('utf-8'),
+        str2bytes('<span class="error">Yöü can not ... translated</span>'),
         ret.getBody())
 
     # now with a password complying to the policy
@@ -867,14 +868,14 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       return self.publish(
         '%s/portal_preferences' % self.portal.getPath(),
         basic='%s:current' % self.id(),
-        stdin=io.BytesIO(six.moves.urllib.parse.urlencode({
+        stdin=io.BytesIO(str2bytes(six.moves.urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
           'dialog_method': 'PreferenceTool_setNewPassword',
           'field_your_current_password': 'current',
           'field_your_new_password': new_password,
           'field_password_confirm': new_password,
-        }).encode()),
+        }))),
         request_method="POST",
         handle_errors=False)
 
@@ -897,7 +898,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       ret = submit_change_password_dialog('short')
       self.assertEqual(six.moves.http_client.OK, ret.getStatus())
       self.assertIn(
-        u'<span class="error">Töü short ... translated</span>'.encode('utf-8'),
+        str2bytes('<span class="error">Töü short ... translated</span>'),
         ret.getBody())
 
     # if for some reason, PreferenceTool_setNewPassword is called directly,

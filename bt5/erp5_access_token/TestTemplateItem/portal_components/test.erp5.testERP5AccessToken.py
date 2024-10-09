@@ -38,6 +38,7 @@ from six.moves import cStringIO as StringIO
 import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import ERP5DumbHTTPExtractionPlugin
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 
 
 class AccessTokenTestCase(ERP5TypeTestCase):
@@ -148,7 +149,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     # that's not ideal.
     self.assertEqual(
         response.getBody(),
-        ('erp5_access_token_plugin=%s' % access_token.getRelativeUrl()).encode())
+        str2bytes('erp5_access_token_plugin=%s' % access_token.getRelativeUrl()))
 
   def test_bad_token(self):
     person = self._createPerson(self.new_id)
@@ -441,7 +442,8 @@ class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
     return HTTPRequest(StringIO(), env, HTTPResponse())
 
   def test_working_authentication(self):
-    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode(b"login:password").decode()})
+    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " +
+                                           bytes2str(base64.b64encode(b"login:password"))})
     ret = ERP5DumbHTTPExtractionPlugin("default_extraction").extractCredentials(request)
     self.assertEqual(ret, {'login': 'login', 'password': 'password', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
 

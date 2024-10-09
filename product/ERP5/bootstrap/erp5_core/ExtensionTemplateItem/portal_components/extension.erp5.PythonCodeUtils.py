@@ -3,7 +3,7 @@ import re
 import json
 import sys
 from zExceptions import ExceptionFormatter
-from Products.ERP5Type.Utils import checkPythonSourceCode
+from Products.ERP5Type.Utils import checkPythonSourceCode, unicode2str
 
 
 match_PEP263 = re.compile(r'^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)').match
@@ -50,7 +50,7 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
     body = data['code']
 
   if six.PY2:
-    body = body.encode('utf8')
+    body = unicode2str(body)
   try:
     message_list = checkPythonSourceCode(body, data.get('portal_type'))
   except Exception:

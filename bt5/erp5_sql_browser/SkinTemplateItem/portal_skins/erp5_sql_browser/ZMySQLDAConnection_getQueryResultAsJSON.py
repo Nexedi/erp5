@@ -15,11 +15,12 @@ start = time.time()
 try:
   results = context.manage_test(query)
 except Exception as e:
+  from Products.ERP5Type.Utils import str2bytes
   response.setStatus(500)
   try:
-    response.write(str(e[1]).encode())
+    response.write(str2bytes(str(e[1])))
   except Exception:
-    response.write(str(e).encode())
+    response.write(str2bytes(str(e)))
   return
 
 # https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger

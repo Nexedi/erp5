@@ -31,7 +31,7 @@ import PIL.Image as PIL_Image
 import random
 import base64
 from OFS.Folder import Folder
-
+from Products.ERP5Type.Utils import str2bytes
 
 import six
 # XXX zope4py3, we patch builtin round to keep python2 behavior
@@ -168,7 +168,7 @@ class ZoomifyBase:
     xmlOutput = '<IMAGE_PROPERTIES WIDTH="%s" HEIGHT="%s" NUMTILES="%s" NUMIMAGES="1" VERSION="1.8" TILESIZE="%s" />'
     xmlOutput = xmlOutput % (str(self.originalWidth),
             str(self.originalHeight), str(numberOfTiles), str(self.tileSize))
-    return xmlOutput.encode()
+    return str2bytes(xmlOutput)
 
   def saveXMLOutput(self):
     """ save xml metadata about the tiles """
@@ -551,7 +551,7 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
         param2 = 0
       my_text = '%s %s %s %s %s %s \n' %(tile_group_id, tile_title,
                                     algorithm, param1, param2, num)
-      self.my_file.write(my_text.encode())
+      self.my_file.write(str2bytes(my_text))
       num = num - 1
 
 

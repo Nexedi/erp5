@@ -80,7 +80,8 @@ if IS_ZOPE2: # BBB
     except AttributeError:
       pass
     else:
-      medusa_headers['authorization'] = 'Basic %s' % encodebytes(('%s:' % username).encode()).decode().rstrip()
+      from Products.ERP5Type.Utils import str2bytes, bytes2str
+      medusa_headers['authorization'] = 'Basic %s' % bytes2str(encodebytes(str2bytes('%s:' % username))).rstrip()
   else:
     REQUEST._orig_env['REMOTE_USER'] = username
 else: # zope4

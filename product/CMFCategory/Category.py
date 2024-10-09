@@ -41,7 +41,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
-from Products.ERP5Type.Utils import sortValueList
+from Products.ERP5Type.Utils import sortValueList, unicode2str
 from Products.ERP5Type.Cache import CachingMethod
 import six
 if six.PY3:
@@ -54,7 +54,7 @@ DEFAULT_CACHE_FACTORY = 'erp5_ui_long'
 from zLOG import LOG
 
 if six.PY2:
-  NBSP_UTF8 = u'\xA0'.encode('utf-8')
+  NBSP_UTF8 = unicode2str(u'\xA0')
 else:
   NBSP_UTF8 = '\xA0'
 

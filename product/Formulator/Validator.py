@@ -10,6 +10,7 @@ from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urljoin
 from .Errors import ValidationError
 from DateTime.DateTime import DateError, TimeError
+from Products.ERP5Type.Utils import ensure_ascii, bytes2str, str2unicode, unicode2str
 import unicodedata
 
 class ValidatorBase:
@@ -518,7 +519,7 @@ class SelectionValidator(StringBaseValidator):
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
         if six.PY2 and field.get_value('unicode') and isinstance(item_value, six.text_type):
-          str_value = item_value.encode(field.get_form_encoding())
+          str_value = unicode2str(item_value, field.get_form_encoding())
         else:
           str_value = str(item_value)
 
@@ -907,13 +908,11 @@ fullwidth_minus_character_list = (
 def normalizeFullWidthNumber(value):
   try:
     if six.PY2:
-      value = value.decode('UTF8')
+      value = str2unicode(value)
     value = unicodedata.normalize('NFKD', value)
     if value[0] in fullwidth_minus_character_list:
       value = u'-' + value[1:]
-    value = value.encode('ASCII', 'ignore')
-    if six.PY3:
-      value = value.decode()
+    value = ensure_ascii(value, 'ignore')
   except UnicodeDecodeError:
     pass
   return value

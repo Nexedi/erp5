@@ -36,7 +36,7 @@ from base64 import b64encode
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 
 class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
@@ -223,7 +223,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.postInformation()
     self.tic()
 
-    sha512_2 = hashlib.sha512(str(random.random()).encode()).hexdigest()
+    sha512_2 = hashlib.sha512(str2bytes(str(random.random()))).hexdigest()
     key_2 = 'another_key' + str(random.random())
     data_list_2 = [json.dumps({
                       'sha512': sha512_2,
@@ -231,7 +231,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      b64encode(b"User SIGNATURE goes here.").decode()]
+                      bytes2str(b64encode(b"User SIGNATURE goes here."))]
     data_2 = json.dumps(data_list_2)
     self.postInformation(key_2, data_2)
     self.tic()

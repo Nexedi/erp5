@@ -33,6 +33,7 @@
 import six
 
 from io import BytesIO
+from Products.ERP5Type.Utils import unicode2str
 
 def read(self, filename, data):
   """
@@ -64,7 +65,7 @@ def getIdFromString(string):
   # because \u2013 does not exist in latin1
   string = string.replace(u'\u2013', '-')
   if six.PY2:
-    string = string.encode('utf-8')
+    string = unicode2str(string)
   for char in string:
     if char == '_' or char.isalnum():
       clean_id += char
@@ -124,14 +125,14 @@ def convert(self, filename, data=None):
           property_id = property_map[cell_index]
           # Convert the value to something like '\xc3\xa9' not '\xc3\xa9'
           if six.PY2:
-            cell = cell.encode('UTF-8')
+            cell = unicode2str(cell)
           object_property_dict[property_id] = cell
         cell_index += 1
 
       if len(object_property_dict) > 0:
         object_list.append(object_property_dict)
     if six.PY2:
-      table_name = table_name.encode('UTF-8')
+      table_name = unicode2str(table_name)
     table_dict[table_name] = object_list
 
   if len(table_dict.keys()) == 1:

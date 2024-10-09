@@ -12,6 +12,8 @@ Insert reports linked to in a document (including backcompat handling)
 import six
 import re
 
+from Products.ERP5Type.Utils import unicode2str
+
 document = context
 
 # backcompat, example: WebPage_insertFollowUpCostEffortReport
@@ -35,7 +37,7 @@ def getReportViaFancyName(my_report_name, follow_up):
     else:
       result = method_call(display_comment=True)[0]
     if six.PY2:
-      result = result.encode(encoding='UTF-8')
+      result = unicode2str(result)
     return result
 
 if doc_content.find('${WebPage_') != -1:
@@ -89,7 +91,7 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
             if target_caller is not None:
               substitution_content = target_caller(**link_param_dict)[0]
               if six.PY2:
-                substitution_content = substitution_content.encode("utf-8")
+                substitution_content = unicode2str(substitution_content)
               # Note: switched to report returning a tuple with (content, header-title, header-subtitle)
               doc_content = doc_content.replace(link, substitution_content.strip())
 

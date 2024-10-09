@@ -34,6 +34,7 @@
 
 import six
 from Products.PythonScripts.standard import html_quote
+from Products.ERP5Type.Utils import str2unicode
 
 items = []
 feed_data = {}
@@ -91,7 +92,7 @@ for line in line_list:
         if hasattr(line.getBrain(), 'Title'):
           title = line.getBrain().Title()
           if six.PY2:
-            title = title.decode('utf-8')
+            title = str2unicode(title)
           field_data = html_quote(title or '')
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data, required_field))
       elif required_field == 'link':
@@ -102,7 +103,7 @@ for line in line_list:
         if hasattr(line.getBrain(), 'getDescription'):
           description = line.getBrain().getDescription()
           if six.PY2:
-            description = description.decode('utf-8')
+            description = str2unicode(description)
           field_data = html_quote(description or '')
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data,required_field))
   items.append(rss_item_string)
