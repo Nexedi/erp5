@@ -32,6 +32,7 @@ import six
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Utils import unicode2str
 from Persistence import PersistentMapping
 from zope.component.hooks import setSite
 
@@ -211,7 +212,7 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     self.assertEqual(message, self.portal.Base_translateString(message))
     translated = self.portal.Localizer.translate('ui', message)
     if six.PY2:
-      translated = translated.encode('utf-8')
+      translated = unicode2str(translated)
     self.assertEqual(message, translated)
 
     # default=None, thus 'message' was previously stripped before being set as

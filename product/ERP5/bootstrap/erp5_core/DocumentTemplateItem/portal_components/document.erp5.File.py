@@ -36,7 +36,7 @@ from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
 from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from OFS.Image import File as OFS_File
-from Products.ERP5Type.Utils import deprecated
+from Products.ERP5Type.Utils import deprecated, str2bytes
 
 _MARKER = object()
 
@@ -224,7 +224,7 @@ class File(Document, OFS_File):
 
     if content is not None:
       if isinstance(content, six.text_type):
-        content = content.encode('utf-8')
+        content = str2bytes(content)
       elif not isinstance(content, bytes):
         content = bytes(content)
 

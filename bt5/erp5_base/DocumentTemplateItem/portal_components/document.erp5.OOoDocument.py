@@ -41,7 +41,11 @@ from Products.ERP5Type.Cache import CachingMethod
 from erp5.component.document.File import File
 from erp5.component.document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST, ConversionError, NotConvertedError
-from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, fill_args_from_request, str2bytes
+from Products.ERP5Type.Utils import (guessEncodingFromText,
+                                     bytes2str,
+                                     fill_args_from_request,
+                                     str2bytes,
+                                     unicode2str)
 
 # Mixin Import
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
@@ -343,7 +347,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # here mostly as a convenient way to decode with the encoding from BOM
       data = data.decode(guessEncodingFromText(data) or 'ascii')
       if six.PY2:
-        data = data.encode('utf-8')
+        data = unicode2str(data)
     return mime, data
 
   security.declareProtected(Permissions.ModifyPortalContent,

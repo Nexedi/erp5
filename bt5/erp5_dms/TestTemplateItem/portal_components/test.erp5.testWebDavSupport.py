@@ -39,7 +39,7 @@ from DateTime import DateTime
 
 from lxml import etree
 from six.moves import range
-from Products.ERP5Type.Utils import unicode2str
+from Products.ERP5Type.Utils import unicode2str, str2bytes
 
 class TestWebDavSupport(ERP5TypeTestCase):
   """Test for WEBDAV access.
@@ -180,7 +180,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
       </body>
     </html>
     """
-    iso_text_content = text_content.encode('iso-8859-1')
+    iso_text_content = str2bytes(text_content, 'iso-8859-1')
     path = web_page_module.getPath()
     # Run twice to check the code that compares old & new data
     # when setting file attribute.

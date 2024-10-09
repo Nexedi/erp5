@@ -3,6 +3,7 @@ from Products.PythonScripts.standard import Object
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
 from Products.ERP5Type.Document import newTempBase
+from Products.ERP5Type.Utils import bytes2str
 Base_translateString = context.Base_translateString
 
 try:
@@ -30,7 +31,7 @@ def get_value_as_text(value):
   if not isinstance(value, six.text_type):
     try:
       if isinstance(value, bytes):
-        value.decode('utf-8')
+        bytes2str(value)
       else:
         str(value)
     except UnicodeDecodeError:

@@ -48,7 +48,7 @@ from Products.PluggableAuthService.interfaces.plugins import (
 )
 from Products.ERP5Security import _setUserNameForAccessLog
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str, ensure_ascii
 
 # Public constants. Must not change once deployed.
 
@@ -441,7 +441,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
       return
     # JWT is known valid. Access its content.
     token_payload = decodeAccessTokenPayload(
-      bytes2str(token[JWT_PAYLOAD_KEY].encode('ascii')),
+      bytes2str(ensure_ascii(token[JWT_PAYLOAD_KEY])),
     )
     client_id = unicode2str(token['iss'])
     if self.__getWebServiceValue(

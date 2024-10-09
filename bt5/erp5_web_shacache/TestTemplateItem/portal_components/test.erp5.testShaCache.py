@@ -33,6 +33,7 @@ import six.moves.urllib.parse
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
+from Products.ERP5Type.Utils import str2bytes
 
 class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
   """
@@ -83,7 +84,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
     result, data = self.postFile()
     self.assertEqual(result, six.moves.http_client.CREATED)
-    self.assertEqual(data, self.key.encode())
+    self.assertEqual(data, str2bytes(self.key))
 
     self.tic()
 
@@ -101,7 +102,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
     result, data = self.postFile()
     self.assertEqual(result, six.moves.http_client.CREATED)
-    self.assertEqual(data, self.key.encode())
+    self.assertEqual(data, str2bytes(self.key))
 
     self.tic()
 

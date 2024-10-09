@@ -36,7 +36,7 @@ import re
 import six
 
 from Products.PythonScripts.standard import html_quote
-from Products.ERP5Type.Utils import str2bytes, bytes2str
+from Products.ERP5Type.Utils import str2bytes, bytes2str, unicode2str
 from base64 import b64encode
 
 blank = ''
@@ -86,7 +86,7 @@ book_description = html_quote(override_document_description) if override_documen
 book_title = html_quote(override_document_title) if override_document_title else book.getTitle()
 
 if six.PY2 and isinstance(book_content, six.text_type):
-  book_content = book_content.encode("UTF-8")
+  book_content = unicode2str(book_content)
 
 # backcompat
 book_history_section_list = re.findall('<section.+?>.+?</section>', book_content, re.S)

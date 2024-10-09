@@ -34,7 +34,7 @@ from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Utils import ensure_list
+from Products.ERP5Type.Utils import ensure_list, str2bytes
 from erp5.component.interface.IPaymentService import IPaymentService
 
 @zope.interface.implementer(IPaymentService)
@@ -95,7 +95,7 @@ class PaypalService(XMLObject):
     param_dict["cmd"] = "_notify-validate"
     if "service" in param_dict:
       param_dict.pop("service")
-    param_list = urlencode(param_dict).encode()
+    param_list = str2bytes(urlencode(param_dict))
     paypal_url = self.getLinkUrlString()
     request = Request(paypal_url, param_list)
     request.add_header("Content-type", "application/x-www-form-urlencoded")

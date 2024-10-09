@@ -35,6 +35,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
+from Products.ERP5Type.Utils import bytes2str
 if six.PY2:
   from email import message_from_string as message_from_bytes
 else:
@@ -319,7 +320,7 @@ class TestBug(ERP5TypeTestCase):
     _, _, messageText = last_message
     from email.parser import Parser
     p = Parser()
-    m = p.parsestr(messageText.decode())
+    m = p.parsestr(bytes2str(messageText))
     self.assertIn(b'Re-assign!', m.get_payload()[0].get_payload(decode=True))
 
 

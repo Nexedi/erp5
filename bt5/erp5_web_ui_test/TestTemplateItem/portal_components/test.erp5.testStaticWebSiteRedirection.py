@@ -26,6 +26,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import bytes2str
 
 import six.moves.urllib.parse
 import six.moves.http_client
@@ -135,7 +136,7 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
         self.assertEqual(response.status, status_to_assert, '%s: %s' % (response.status, url_to_check))
         self.assertEqual(response.getheader(LOCATION), redirect_location)
         self.assertEqual(response.getheader('Content-Type'), 'text/plain; charset=utf-8')
-        self.assertEqual(response_body.decode('utf-8'), redirect_location)
+        self.assertEqual(bytes2str(response_body), redirect_location)
 
   ##############################################################################
 

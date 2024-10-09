@@ -9,6 +9,7 @@ and return a dictionary of properties.
 """
 #Proxify to allow discover of metadata when publishing document
 import six
+from Products.ERP5Type.Utils import unicode2str
 
 information = context.getContentInformation()
 
@@ -18,7 +19,7 @@ for k, v in information.items():
   key = k.lower()
   if v:
     if six.PY2 and isinstance(v, six.text_type):
-      v = v.encode('utf-8')
+      v = unicode2str(v)
     if key in property_id_list:
       if key == 'reference':
         pass # XXX - We can not trust reference on getContentInformation

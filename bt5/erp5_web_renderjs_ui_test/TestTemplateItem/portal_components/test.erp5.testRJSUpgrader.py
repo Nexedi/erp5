@@ -31,6 +31,7 @@ import time
 
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import str2bytes
 
 
 class RenderJSUpgradeTestCase(ERP5TypeTestCase):
@@ -332,12 +333,12 @@ class TestRenderUpdateTranslationData(RenderJSUpgradeTestCase):
   def test_WebSite_getTranslationDataTextContent_extract_from_file(self):
     self.portal.portal_skins.custom.manage_addProduct['OFS'].manage_addFile(
         'test_portal_skins_gadget.html',
-        file=io.BytesIO(textwrap.dedent('''
+        file=io.BytesIO(str2bytes(textwrap.dedent('''
           <html>
           <!--
            data-i18n=Message from file
            -->
-          </html>''').encode()))
+          </html>'''))))
     self.portal.changeSkin(None) # refresh skin cache
     translation_data_text_content = self.web_site.WebSite_getTranslationDataTextContent()
     self.assertIn('"Message from file":', translation_data_text_content)

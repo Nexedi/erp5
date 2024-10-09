@@ -29,7 +29,7 @@ try:
   import pydot
 except ImportError:
   pydot = None
-
+from Products.ERP5Type.Utils import bytes2str
 
 def ERP5Site_getGraphEditorGraphLayout(self, graph_editor_dict):
   if pydot is None:
@@ -44,7 +44,7 @@ def ERP5Site_getGraphEditorGraphLayout(self, graph_editor_dict):
       edge['destination'],
     ))
 
-  new_graph, = pydot.graph_from_dot_data(graph.create_dot().decode())  # pylint:disable=unpacking-non-sequence
+  new_graph, = pydot.graph_from_dot_data(bytes2str(graph.create_dot()))  # pylint:disable=unpacking-non-sequence
 
   # calulate the ratio from the size of the bounding box
   origin_left, origin_top, max_left, max_top = [

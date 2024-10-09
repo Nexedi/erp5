@@ -1605,7 +1605,7 @@ class TestDocument(TestDocumentMixin):
                                           bytes(pdf_data),
                                           object=web_page, context=web_page,
                                           filename='test.pdf')
-    self.assertIn(string_to_test, text_content.decode('utf-8'))
+    self.assertIn(string_to_test, bytes2str(text_content))
 
   def test_HTML_to_ODT_conversion_keep_related_image_list(self):
     """This test create a Web Page and an Image.
@@ -1784,7 +1784,7 @@ class TestDocument(TestDocumentMixin):
       </body>
     </html>
     """
-    html_content = html_content.encode('iso-8859-1')
+    html_content = str2bytes(html_content, 'iso-8859-1')
     # content encoded into another codec
     # than utf-8 comes from necessarily an external file
     # (Ingestion, or FileField), not from user interface

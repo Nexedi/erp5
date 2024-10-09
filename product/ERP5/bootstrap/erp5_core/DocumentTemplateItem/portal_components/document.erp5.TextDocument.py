@@ -43,7 +43,7 @@ from string import Template
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
-from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes
+from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes, str2unicode, unicode2str
 
 from lxml import html as etree_html
 from lxml import etree
@@ -94,16 +94,16 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       # unicode()
       is_str = isinstance(text, str)
       if six.PY2 and is_str:
-        text = text.decode('utf-8')
+        text = str2unicode(text)
 
       class UnicodeMapping:
         def __getitem__(self, item):
           v = mapping[item]
           if six.PY2:
             if isinstance(v, str):
-              v = v.decode('utf-8')
+              v = str2unicode(v)
             elif not isinstance(v, six.text_type):
-              v = str(v).decode('utf-8')
+              v = str2unicode(str(v))
           else:
             if not isinstance(v, str):
               v = str(v)
@@ -117,7 +117,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
 
       # If the original was a str, convert it back from unicode() to str
       if six.PY2 and is_str:
-        text = text.encode('utf-8')
+        text = unicode2str(text)
 
     return text
 
@@ -342,10 +342,10 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       re_match = self.charset_parser.search(data)
       message = 'Conversion to base format succeeds'
       if re_match is not None:
-        charset = re_match.group('charset').decode('ascii')
+        charset = bytes2str(re_match.group('charset'), 'ascii')
         try:
           # Use encoding in html document
-          data = data.decode(charset).encode('utf-8')
+          data = str2bytes(bytes2str(data, charset))
         except (UnicodeDecodeError, LookupError):
           # Encoding read from document is wrong
           data, message = guessCharsetAndConvert(self, data, content_type)
@@ -372,7 +372,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       try:
         # if succeeds, not need to change encoding
         # it's already utf-8
-        data.decode('utf-8')
+        bytes2str(data)
       except (UnicodeDecodeError, LookupError):
         data, message = guessCharsetAndConvert(self, data, content_type)
       else:

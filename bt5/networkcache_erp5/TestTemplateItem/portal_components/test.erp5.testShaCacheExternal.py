@@ -39,6 +39,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
 from erp5.component.test.ShaSecurityMixin import ShaSecurityMixin
+from Products.ERP5Type.Utils import bytes2str
 
 class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
   """
@@ -64,7 +65,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # Define POST headers with Authentication
     self.content_type =  'application/json'
     authentication_string = b'lucas:lucas'
-    base64string = base64_encodebytes(authentication_string).decode().strip()
+    base64string = bytes2str(base64_encodebytes(authentication_string)).strip()
     self.header_dict = {'Authorization': 'Basic %s' % base64string,
                         'Content-Type': self.content_type}
 
@@ -86,7 +87,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(self.key, data.decode())
+    self.assertEqual(self.key, bytes2str(data))
     self.assertEqual(six.moves.http_client.CREATED, result.status)
 
     # Check Document

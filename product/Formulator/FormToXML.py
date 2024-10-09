@@ -4,6 +4,7 @@ import six
 from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import E
+from Products.ERP5Type.Utils import str2unicode, bytes2str
 
 def formToXML(form, prologue=1):
     """Takes a formulator form and serializes it to an XML representation.
@@ -22,7 +23,7 @@ def formToXML(form, prologue=1):
       sub_element = SubElement(form_as_xml, id)
       sub_element.text = str(value)
       if six.PY2:
-        sub_element.text = sub_element.text.decode(encoding)
+        sub_element.text = str2unicode(sub_element.text, encoding)
     groups = SubElement(form_as_xml, 'groups')
     # export form groups
     for group in form.get_groups(include_empty=1):
@@ -60,7 +61,7 @@ def formToXML(form, prologue=1):
             value_element = SubElement(values_element, key)
           value_element.text = str(value)
           if six.PY2:
-            value_element.text = value_element.text.decode(encoding)
+            value_element.text = str2unicode(value_element.text, encoding)
 
         tales_element = SubElement(field_element, 'tales')
         items = sorted(field.tales.items())
@@ -69,13 +70,13 @@ def formToXML(form, prologue=1):
             tale_element = SubElement(tales_element, key)
             tale_element.text = str(value._text)
             if six.PY2:
-              tale_element.text = tale_element.text.decode(encoding)
+              tale_element.text = str2unicode(tale_element.text, encoding)
         messages = SubElement(field_element, 'messages')
         for message_key in field.get_error_names():
           message_element = SubElement(messages, 'message', name=message_key)
           message_element.text = field.get_error_message(message_key)
           if six.PY2:
-            message_element.text = message_element.text.decode(encoding)
+            message_element.text = str2unicode(message_element.text, encoding)
         # Special attribute for ProxyFields *delegated_list*
         delegated_list = getattr(field, 'delegated_list', [])
         if delegated_list:
@@ -90,5 +91,5 @@ def formToXML(form, prologue=1):
       xml = etree.tostring(form_as_xml, encoding=form.stored_encoding,
                                     xml_declaration=True, pretty_print=True)
     if six.PY3:
-      xml = xml.decode()
+      xml = bytes2str(xml)
     return xml

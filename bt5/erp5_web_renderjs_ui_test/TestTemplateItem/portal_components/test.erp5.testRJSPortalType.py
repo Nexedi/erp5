@@ -25,6 +25,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import bytes2str
 
 class TestRenderJSPortalType(ERP5TypeTestCase):
   """Test Web Script & Web Style portal types added by Render JS.
@@ -42,7 +43,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       portal_type='Web Style',
       reference='test_web_style.css'
     )
-    web_style.setTextContent(b'/* cl\xc3\xa0sse */ .classe { background: red }'.decode('utf-8'))
+    web_style.setTextContent(bytes2str(b'/* cl\xc3\xa0sse */ .classe { background: red }'))
     web_style.publish()
     self.tic()
     self.assertEqual('text/css', web_style.getContentType())
@@ -65,7 +66,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       portal_type='Web Script',
       reference='test_web_script.js'
     )
-    web_script.setTextContent(b'alert("h\xc3\xa9h\xc3\xa9")'.decode('utf-8'))
+    web_script.setTextContent(bytes2str(b'alert("h\xc3\xa9h\xc3\xa9")'))
     web_script.publish()
     self.tic()
     self.assertEqual('application/javascript', web_script.getContentType())

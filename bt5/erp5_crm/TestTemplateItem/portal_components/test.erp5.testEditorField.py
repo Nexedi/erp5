@@ -36,6 +36,7 @@ import unittest
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DocumentTemplate.html_quote import html_quote
+from Products.ERP5Type.Utils import unicode2str
 
 class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
@@ -121,7 +122,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       text_content -- the embedded text content
     """
     if six.PY2:
-      html_text = html_text.encode('utf-8')
+      html_text = unicode2str(html_text)
     match_string1 = 'data-gadget-editable="field_%s"' % field_id
     match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) == -1:
@@ -147,7 +148,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       text_content -- the embedded text content
     """
     if six.PY2:
-      html_text = html_text.encode('utf-8')
+      html_text = unicode2str(html_text)
     match_string1 = 'data-gadget-editable="field_%s"' % field_id
     match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) == -1:
@@ -172,7 +173,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
                   read only mode
     """
     if six.PY2:
-      html_text = html_text.encode('utf-8')
+      html_text = unicode2str(html_text)
     match_string1 = "data-gadget-editable="
     match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) != -1:

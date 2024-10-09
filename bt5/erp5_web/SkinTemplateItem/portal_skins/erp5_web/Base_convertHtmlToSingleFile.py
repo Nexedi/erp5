@@ -16,7 +16,7 @@ TODO: export same components into one mhtml attachment if possible.
 # pylint: disable=redefined-builtin
 
 import six
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.PythonScripts.standard import html_quote
 from zExceptions import Unauthorized
 from base64 import b64encode, b64decode
@@ -33,10 +33,10 @@ def main(data):
   # type: (str) -> str
   # Preserves input type (unicode or bytes)
   if isinstance(data, bytes):
-    data = data.decode("utf-8")
+    data = bytes2str(data)
   data = u"".join([fn(p) for fn, p in handleHtmlPartList(parseHtml(data))])
   if six.PY2:
-    data = data.encode("utf-8")
+    data = unicode2str(data)
   if format == "mhtml":
     mhtml_message["attachment_list"].insert(0, {
       "mime_type": "text/html",
@@ -202,7 +202,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data=b"<p>L
       else:
         data = getattr(obj, "getData", lambda: bytes(obj))() or b""
       if six.PY2 and isinstance(data, six.text_type):
-        data = data.encode("utf-8")
+        data = unicode2str(data)
       return handleLinkedData(mime, data, src)
     return handleLinkedData(default_mimetype, default_data, src)
 
@@ -212,7 +212,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data=b"<p>L
   if not hasattr(obj, "getPortalType") and callable(obj):
     mime, data = "text/html", obj()
     if six.PY2 and isinstance(data, six.text_type):
-      data = data.encode("utf-8")
+      data = unicode2str(data)
     return handleLinkedData(mime, data, src)
 
   return handleLinkedData(default_mimetype, default_data, src)
@@ -282,10 +282,10 @@ def handleLinkedData(mime, data, href):
     return url
   else:
     if isinstance(data, six.text_type):
-      data = data.encode('utf-8')
+      data = unicode2str(data)
     else:
       data = bytes(data)
-    return "data:%s;base64,%s" % (mime, b64encode(data).decode())
+    return "data:%s;base64,%s" % (mime, bytes2str(b64encode(data)))
 
 def makeHrefAbsolute(href):
   if isHrefAnAbsoluteUrl(href) or not isHrefAUrl(href):

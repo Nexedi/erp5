@@ -44,6 +44,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import get_request
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 
 # XXX: these duplicate ones in ERP5.Document
 _MARKER = []
@@ -110,7 +111,7 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixin):
                 # this logic is copied from identify() in
                 # AccessControl.User.BasicUserFolder.
                 if auth and auth.lower().startswith('basic '):
-                  name = decodebytes(auth.split(' ')[-1].encode()).decode().split(':', 1)[0]
+                  name = bytes2str(decodebytes(str2bytes(auth.split(' ')[-1]))).split(':', 1)[0]
               if name is not None:
                 user = portal_membership._huntUser(name, self)
               else:

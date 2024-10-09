@@ -38,7 +38,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Testing import ZopeTestCase
 
-from Products.ERP5Type.Utils import bytes2str, str2unicode
+from Products.ERP5Type.Utils import bytes2str, str2unicode, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
 
@@ -641,7 +641,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
           self.portal.absolute_url(),
       headers={
        'Authorization': 'Basic %s' % \
-         base64.b64encode(self.auth.encode()).decode()
+         bytes2str(base64.b64encode(str2bytes(self.auth)))
       }
     )
     response = connection.getresponse()

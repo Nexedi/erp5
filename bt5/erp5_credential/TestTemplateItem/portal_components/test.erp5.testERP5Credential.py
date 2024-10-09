@@ -32,6 +32,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.Utils import unicode2str
 from DateTime import DateTime
 import re
 if six.PY2:
@@ -213,7 +214,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         if charset:
           payload = payload.decode(charset)
         if six.PY2:
-          payload = payload.encode('utf-8')
+          payload = unicode2str(payload)
         if body_found:
           # Keep the content type
           theMail['attachment_list'].append((file_name,

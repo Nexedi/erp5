@@ -2,6 +2,7 @@ import six
 from App.Management import Navigation
 from ZODB.POSException import ConflictError
 from Acquisition import aq_parent
+from Products.ERP5Type.Utils import unicode2str
 import json
 
 def manage_page_footer(self):
@@ -109,7 +110,7 @@ def manage_page_footer(self):
       bound_names=bound_names,
       mode=mode)
     if six.PY2:
-      monaco_editor_support = monaco_editor_support.encode('utf-8')
+      monaco_editor_support = unicode2str(monaco_editor_support)
     return '''%s
               </body>
             </html>''' % monaco_editor_support

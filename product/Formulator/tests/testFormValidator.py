@@ -2,6 +2,7 @@
 import unittest
 from Products.Formulator import Validator
 from Products.Formulator.StandardFields import DateTimeField
+from Products.ERP5Type.Utils import bytes2str
 from Testing import ZopeTestCase
 ZopeTestCase.installProduct('Formulator')
 
@@ -57,7 +58,7 @@ class StringValidatorTestCase(ValidatorTestCase):
 
     def test_encoding(self):
         utf8_bytes = b'M\303\274ller' # this is a M&uuml;ller
-        unicode_string = utf8_bytes.decode('utf-8')
+        unicode_string = bytes2str(utf8_bytes)
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0, required=0, unicode=1),
             'f', {'f' : utf8_bytes})

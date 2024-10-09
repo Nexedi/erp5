@@ -1,4 +1,5 @@
 from Products.ERP5OOo.OOoUtils import OOoParser
+from Products.ERP5Type.Utils import unicode2str
 import string
 import six
 
@@ -154,7 +155,7 @@ else:
             # Create a new property value
             property_id = column_mapping[line_property_index]
             if six.PY2:
-              property_value = property_value.encode('UTF-8')
+              property_value = unicode2str(property_value)
             imported_line_property_dict[property_id] = property_value
 
 

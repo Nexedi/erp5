@@ -9,7 +9,7 @@
               image_conversion_arguments python: '&'.join(['%s=%s' % (k, v) for k, v in image_conversion_dict.items()]);
               description python: here.getDescription();
               box_relative_url python: request.get('box_relative_url', '');
-              dom_id python: modules['base64'].urlsafe_b64encode(('%s-%s' %( box_relative_url, here.getUid())).encode()).decode().rstrip('=')">
+              dom_id python: modules['Products.ERP5Type.Utils'].bytes2str(modules['base64'].urlsafe_b64encode(modules['Products.ERP5Type.Utils'].str2bytes('%s-%s' %( box_relative_url, here.getUid())))).rstrip('=')">
   <div class="document-gadget-quick-preview">
   <div class="teaser"
        tal:attributes="onclick string:$('#${dom_id}').toggle();">

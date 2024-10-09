@@ -11,6 +11,7 @@ from zope.interface import implementer
 
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, getShortPathName
 from Products.PortalTransforms.interfaces import ITransform
+from Products.ERP5Type.Utils import str2bytes
 
 @implementer(ITransform)
 class commandtransform:
@@ -163,7 +164,7 @@ class subprocesstransform:
             process = Popen(argument_list, stdin=stdin_file, stdout=PIPE,
                             stderr=PIPE, close_fds=True)
             if six.PY3 and isinstance(data, str):
-              data = data.encode()
+              data = str2bytes(data)
             data_out, data_err = process.communicate(input=data)
             if process.returncode:
               raise OSError(data_err) # XXX

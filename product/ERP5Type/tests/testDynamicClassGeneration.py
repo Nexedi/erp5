@@ -50,6 +50,7 @@ from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModule
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Utils import UpperCase, str2bytes
 
 from zope.interface import Interface, implementedBy
 import six
@@ -333,7 +334,6 @@ class TestPortalTypeClass(ERP5TypeTestCase):
   def testWorkflowHistoryAccessor(self):
     person = self.portal.person_module.newContent(portal_type='Person')
 
-    from Products.ERP5Type.Utils import UpperCase
     for transition_id in ('delete',
                           'delete_action',
                           'invalidate',
@@ -1398,7 +1398,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         person.setSubordination(six.text_type(organisation.getRelativeUrl()))
       else:
         # Passing a bytes object to a not-Value setter should raise
-        person.setSubordination(organisation.getRelativeUrl().encode())
+        person.setSubordination(str2bytes(organisation.getRelativeUrl()))
 
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool

@@ -4,7 +4,8 @@ import six.moves.http_client
 connection =  six.moves.http_client.HTTPConnection('192.168.242.68:12001')
 
 import base64
-base64string = base64.encodebytes(b'zope:insecure').decode()[:-1]
+from Products.ERP5Type.Utils import bytes2str
+base64string = bytes2str(base64.encodebytes(b'zope:insecure'))[:-1]
 
 n = 1 << 20
 

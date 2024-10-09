@@ -37,6 +37,7 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from email.header import decode_header
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -847,13 +848,13 @@ class TestCRMMailIngestion(BaseTestCRM):
     event = self.portal.event_module.newContent(
         portal_type='Mail Message',
         destination_value=organisation,
-        data=('\r\n'.join(textwrap.dedent('''
+        data=str2bytes(('\r\n'.join(textwrap.dedent('''
         From: Source <source@example.com>
         To: destination <destination@example.com>
         Subject: mail subject
 
         content
-        ''').splitlines()[1:])).encode())
+        ''').splitlines()[1:]))))
 
     property_dict = event.getPropertyDictFromContent()
     # destination is set on the event. In this case it is kept as is.
@@ -891,7 +892,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     message = message_from_bytes(message_string)
     message.replace_header('subject', 'Visit:Company A')
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
@@ -899,7 +900,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     message = message_from_bytes(message_string)
     message.replace_header('subject', 'Fax:Company B')
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
@@ -907,7 +908,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     message = message_from_bytes(message_string)
     message.replace_header('subject', 'TEST:Company B')
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
@@ -915,7 +916,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     message = message_from_bytes(message_string)
     message.replace_header('subject', 'visit:Company A')
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
@@ -923,7 +924,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     message = message_from_bytes(message_string)
     message.replace_header('subject', 'phone:Company B')
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = portal.event_module[portal.event_module.objectIds()[-1]]
@@ -931,7 +932,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     message = message_from_bytes(message_string)
     message.replace_header('subject', 'LETTER:Company C')
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
@@ -940,7 +941,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     message = message_from_bytes(message_string)
     body = message.get_payload()
     message.set_payload('Visit:%s' % body)
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
@@ -949,7 +950,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     message = message_from_bytes(message_string)
     body = message.get_payload()
     message.set_payload('PHONE CALL:%s' % body)
-    data = message.as_string().encode()
+    data = str2bytes(message.as_string())
     self._ingestMail(data=data)
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
@@ -1020,13 +1021,13 @@ class TestCRMMailIngestion(BaseTestCRM):
                      b' bgcolor="#ffffff">\nThis is my content.<br />\n'\
                      b'<b>ERP5</b> is a Free <u>Software</u><br />'\
                      b'\n\n</body>\n</html>\n', document.getAttachmentData(3))
-    self.assertEqual(document.getAttachmentData(3), document.getTextContent().encode())
+    self.assertEqual(document.getAttachmentData(3), str2bytes(document.getTextContent()))
 
     # now check a message with multipart/mixed
     mixed_document = self._ingestMail(filename='sample_html_attachment')
     self.tic()
     self.assertEqual(mixed_document.getAttachmentData(1),
-                     mixed_document.getTextContent().encode())
+                     str2bytes(mixed_document.getTextContent()))
     self.assertEqual('Hi, this is the Message.\nERP5 is a free software.\n\n',
                       mixed_document.getTextContent())
     self.assertEqual('text/plain', mixed_document.getContentType())
@@ -1051,7 +1052,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     part.add_header('Content-ID', '<%s>' % \
                     ''.join(['%s' % ord(i) for i in html_filename]))
     message.attach(part)
-    event.setData(message.as_string().encode())
+    event.setData(str2bytes(message.as_string()))
     self.tic()
     self.assertIn('html', event.getTextContent())
     self.assertEqual(len(event.getAttachmentInformationList()), 2)
@@ -1165,7 +1166,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(text_content, part.get_payload(decode=True).decode())
+    self.assertEqual(text_content, bytes2str(part.get_payload(decode=True)))
 
     #
     # Test multiple recipients.
@@ -1248,7 +1249,7 @@ class TestCRMMailSend(BaseTestCRM):
       if i.get_content_type()=='text/html':
         part = i
     self.assertNotEqual(part, None)
-    self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True).decode())
+    self.assertEqual('<html><body>%s</body></html>' % text_content, bytes2str(part.get_payload(decode=True)))
 
   def test_MailMessageEncoding(self):
     # test sending a mail message with non ascii characters
@@ -1267,14 +1268,14 @@ class TestCRMMailSend(BaseTestCRM):
 
     message = message_from_bytes(messageText)
 
-    self.assertEqual(u'Héhé', decode_header(message['Subject'])[0][0].decode('utf-8'))
-    self.assertEqual(u'Me, 🐈 fan', decode_header(message['From'])[0][0].decode('utf-8'))
-    self.assertEqual(u'Recipient, 🐈 fan', decode_header(message['To'])[0][0].decode('utf-8'))
+    self.assertEqual('Héhé', bytes2str(decode_header(message['Subject'])[0][0]))
+    self.assertEqual('Me, 🐈 fan', bytes2str(message['From'])[0][0])
+    self.assertEqual('Recipient, 🐈 fan', bytes2str(decode_header(message['To'])[0][0]))
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(u'Hàhà', part.get_payload(decode=True).decode('utf-8'))
+    self.assertEqual('Hàhà', bytes2str(part.get_payload(decode=True)))
 
   def test_MailAttachmentPdf(self):
     """
@@ -1312,7 +1313,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # pdf
@@ -1359,7 +1360,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # odt
@@ -1404,7 +1405,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # zip
@@ -1451,7 +1452,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # gif
@@ -1498,7 +1499,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # html
@@ -1509,7 +1510,7 @@ class TestCRMMailSend(BaseTestCRM):
       if i.get_filename() == filename:
         part = i
     self.assertEqual(part.get_payload(decode=True),
-                     document.getTextContent().encode('utf-8'))
+                     str2bytes(document.getTextContent()))
     self.assertEqual(part.get_content_type(), 'text/html')
 
   def test_AttachPdfToMailUsingNewEventDialog(self):
@@ -1549,7 +1550,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # pdf
@@ -1597,7 +1598,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # zip
@@ -1731,7 +1732,7 @@ class TestCRMMailSend(BaseTestCRM):
       if i.get_content_type()=='text/plain':
         part = i
         break
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # txt
@@ -1788,7 +1789,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
+    self.assertEqual(bytes2str(part.get_payload(decode=True)), event.getTextContent())
 
     # Check attachment
     # gif
@@ -1820,7 +1821,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual(event.getTitle(), dummy_title)
     self.assertEqual(event.getTextContent(), dummy_content)
 
-    event.setData(('Subject: %s\r\n\r\n%s' % (real_title, real_content)).encode())
+    event.setData(str2bytes('Subject: %s\r\n\r\n%s' % (real_title, real_content)))
     self.assertTrue(event.hasFile(), '%r has no file' % (event,))
     self.assertEqual(event.getTitle(), real_title)
     self.assertEqual(event.getTextContent(), real_content)
@@ -2043,7 +2044,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     self.assertEqual(5, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
-      self.assertIn(mail_text_content, message_info[-1].decode())
+      self.assertIn(mail_text_content, bytes2str(message_info[-1]))
       message = message_from_bytes(message_info[-1])
       self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
 
