@@ -213,7 +213,7 @@ class CertificateAuthorityTool(BaseTool):
         os.close(os.open(key, os.O_CREAT | os.O_EXCL, 0o600))
         popenCommunicate([self.openssl_binary, 'req', '-utf8', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
-          '3650'], str2bytes(('%s\n' % common_name)) stdin=subprocess.PIPE)
+          '3650'], str2bytes(('%s\n' % common_name)), stdin=subprocess.PIPE)
         popenCommunicate([self.openssl_binary, 'ca', '-utf8', '-days', '3650',
           '-batch', '-config', self.openssl_config, '-out', cert, '-infiles',
           csr])

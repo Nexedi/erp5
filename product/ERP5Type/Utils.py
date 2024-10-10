@@ -636,7 +636,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 #####################################################
 
 if str is bytes:
-  bytes2str = str2bytes = lambda s: s
+  bytes2str = str2bytes = lambda s, *_, **__: s
   def str2unicode(s, encoding='utf-8', errors='strict'):
     return s.decode(encoding, errors)
   def unicode2str(s, encoding='utf-8', errors='strict'):
@@ -646,10 +646,7 @@ else:
     return s.decode(encoding, errors)
   def str2bytes(s, encoding='utf-8', errors='strict'):
     return s.encode(encoding, errors)
-  def str2unicode(s, *_, **__):
-    return s
-  def unicode2str(s, *_, **__):
-    return s
+  str2unicode = unicode2str = lambda s, *_, **__: s
 
 if six.PY3:
   def ensure_list(o):

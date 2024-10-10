@@ -38,7 +38,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from .Selection import Selection, DomainSelection
 from .Tool.SelectionTool import createFolderMixInPageSelectionMethod
-from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath, str2bytes
+from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath, str2bytes, bytes2str
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain

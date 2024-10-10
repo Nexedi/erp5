@@ -1269,7 +1269,7 @@ class TestCRMMailSend(BaseTestCRM):
     message = message_from_bytes(messageText)
 
     self.assertEqual('Héhé', bytes2str(decode_header(message['Subject'])[0][0]))
-    self.assertEqual('Me, 🐈 fan', bytes2str(message['From'])[0][0])
+    self.assertEqual('Me, 🐈 fan', bytes2str(decode_header(message['From'])[0][0]))
     self.assertEqual('Recipient, 🐈 fan', bytes2str(decode_header(message['To'])[0][0]))
     part = None
     for i in message.get_payload():
