@@ -913,8 +913,6 @@ def normalizeFullWidthNumber(value):
     if value[0] in fullwidth_minus_character_list:
       value = u'-' + value[1:]
     value = ensure_ascii(value, 'ignore')
-    if six.PY3:
-      value = bytes2str(value)
   except UnicodeDecodeError:
     pass
   return value
