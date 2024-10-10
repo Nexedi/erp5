@@ -9,17 +9,23 @@
 
     .declareMethod('render', function () {
       var gadget = this;
+      return gadget.changeState({'init': true});
+    })
 
-      return gadget.translate("Maximize")
-        .push(function (translation) {
-          return gadget.element.appendChild(
-            domsugar("button", {
+    .onStateChange(function (modification_dict) {
+      var gadget = this;
+      if (! gadget.state.button) {
+        return gadget.translate("Maximize")
+          .push(function (translation) {
+            var button = domsugar("button", {
               "class": "ui-icon-expand ui-btn-icon-notext",
               "type": "button",
               "text": translation
-            })
-          );
-        });
+            });
+            gadget.element.appendChild(button);
+            gadget.state.button = button;
+          });
+      }
     })
 
     .onEvent('click', function (event) {
