@@ -345,6 +345,11 @@ class DB(TM):
             )
       self.db = MySQLdb.connect(**self._kw_args)
       self._query(b"SET time_zone='+00:00'")
+      try:
+        self.innodb_locks_unsafe_for_binlog = bool(
+          self._query(b"SHOW VARIABLES LIKE 'innodb_locks_unsafe_for_binlog'").fetch_row()[0][1] == 'ON')
+      except IndexError:
+        self.innodb_locks_unsafe_for_binlog = False
       if self.isolation_level:
         self._query('SET SESSION TRANSACTION ISOLATION LEVEL ' + self.isolation_level)
       # BBB mysqlclient on python2 does not support sql_mode, check that
