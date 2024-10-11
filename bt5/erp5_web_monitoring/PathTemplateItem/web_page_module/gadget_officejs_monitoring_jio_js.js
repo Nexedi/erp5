@@ -120,7 +120,7 @@
     .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
 
-    .declareMethod('updateConfiguration', function (appcache_storage, current_version, jio_storage, force_config) {
+    .declareMethod('updateConfiguration', function (appcache_storage, current_version, jio_storage, force_re_config) {
       var gadget = this, setting_dict = {'migration_version': current_version};
       if (!appcache_storage) { return; }
       return RSVP.Queue()
@@ -131,7 +131,7 @@
           return jio_storage.repair();
         })
         .push(function () {
-          if (force_config) {
+          if (force_re_config) {
             setting_dict.master_url_list = undefined;
             setting_dict.master_url_list_updated = false;
           }
@@ -240,8 +240,8 @@
           if (migration_version !== current_version) {
             appcache_storage = jIO.createJIO(appcache_jio);
             //TODO make it true only if old config is present (e.g. 'promise' portal_type objects (instead of new 'Promise')
-            var force_config = true;
-            return gadget.updateConfiguration(appcache_storage, current_version, gadget.props.jio_storage, force_config);
+            var force_re_config = true;
+            return gadget.updateConfiguration(appcache_storage, current_version, gadget.props.jio_storage, force_re_config);
           }
         })
         .push(function () {
