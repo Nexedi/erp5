@@ -834,8 +834,8 @@ CREATE TABLE %s (
     """
       Put messages back in given processing_node.
     """
-    db.query(("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
-      self.sql_table, state, ','.join(map(str, uid_list)))).encode())
+    db.query(str2bytes("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+      self.sql_table, state, ','.join(map(str, uid_list)))))
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
@@ -1208,8 +1208,8 @@ CREATE TABLE %s (
       To simulate time shift, we simply substract delay from
       all dates in message(_queue) table
     """
-    activity_tool.getSQLConnection().query(("UPDATE %s SET"
+    activity_tool.getSQLConnection().query(str2bytes("UPDATE %s SET"
       " date = DATE_SUB(date, INTERVAL %s SECOND)"
       % (self.sql_table, delay)
       + ('' if processing_node is None else
-         "WHERE processing_node=%s" % processing_node)).encode())
+         "WHERE processing_node=%s" % processing_node)))

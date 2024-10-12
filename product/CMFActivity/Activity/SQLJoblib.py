@@ -36,6 +36,7 @@ from .SQLBase import (
   UID_SAFE_BITSIZE, UID_ALLOCATION_TRY_COUNT,
 )
 from Products.CMFActivity.ActivityTool import Message
+from Products.ERP5Type.Utils import str2bytes
 from .SQLDict import SQLDict
 from six.moves import xrange
 
@@ -92,9 +93,9 @@ CREATE TABLE %s (
         if reset_uid:
           reset_uid = False
           # Overflow will result into IntegrityError.
-          db.query(b"SET @uid := %s" % str(getrandbits(UID_SAFE_BITSIZE)).encode())
+          db.query(b"SET @uid := %s" % str2bytes(str(getrandbits(UID_SAFE_BITSIZE))))
         try:
-          db.query(self._insert_template % (self.sql_table.encode(), values))
+          db.query(self._insert_template % (str2bytes(self.sql_table), values))
         except MySQLdb.IntegrityError as e:
           if e.args[0] != DUP_ENTRY:
             raise
@@ -114,13 +115,13 @@ CREATE TABLE %s (
         active_process_uid = m.active_process_uid
         date = m.activity_kw.get('at_date')
         row = b','.join((
-          b'@uid+%s' % str(i).encode(),
+          b'@uid+%s' % str2bytes(str(i)),
           quote('/'.join(m.object_path)),
-          b'NULL' if active_process_uid is None else str(active_process_uid).encode(),
+          b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
           b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           b'-1' if hasDependency(m) else b'0',
-          str(m.activity_kw.get('priority', 1)).encode(),
+          str2bytes(str(m.activity_kw.get('priority', 1))),
           quote(m.getGroupId()),
           quote(m.activity_kw.get('tag', '')),
           quote(m.activity_kw.get('signature', '')),
