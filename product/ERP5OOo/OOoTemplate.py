@@ -48,7 +48,7 @@ from io import BytesIO
 import re
 import itertools
 import six
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
 try:
   from zExceptions import ResourceLockedError
@@ -103,7 +103,7 @@ class OOoTemplateStringIO(FasterStringIO):
   def write(self, s):
     return FasterStringIO.write(
         self,
-        str2bytes(convert_to_xml_compatible_string(s)))
+        str2bytes(unicode2str(convert_to_xml_compatible_string(s))))
 
 from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
 
@@ -346,10 +346,7 @@ class OOoTemplate(ZopePageTemplate):
                                       ('style', 'draw:style-name', 'fr1')):
         options_dict.setdefault(name, options_dict.pop(old_name, default))
 
-      if six.PY2:
-        picture = self._resolvePath(options_dict.pop('path').encode())
-      else:
-        picture = self._resolvePath(options_dict.pop('path'))
+      picture = self._resolvePath(options_dict.pop('path'))
 
       # If this is not a File, build a new file with this content
       if not isinstance(picture, File):

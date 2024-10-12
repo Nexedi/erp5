@@ -4,6 +4,7 @@ import six
 from io import BytesIO
 import zipfile
 from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Utils import ensure_ascii
 
 portal = context.getPortalObject()
 active_process = portal.restrictedTraverse(active_process)
@@ -19,11 +20,9 @@ if test_compta_demat_compatibility:
   # some "important" characters such as €
   # https://github.com/DGFiP/Test-Compta-Demat/issues/37
   # https://github.com/DGFiP/Test-Compta-Demat/issues/39
-  fec_file = unicodedata.normalize(
+  fec_file = ensure_ascii(unicodedata.normalize(
     'NFKD', fec_file.replace(u"€", "EUR")
-  ).encode(
-    'ascii', 'ignore'
-  ).decode('ascii')
+  ), 'ignore')
 
 zipbuffer = BytesIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')

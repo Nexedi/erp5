@@ -721,7 +721,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual("""Path,Id,Title,Short Title,Reference,Codification,Int Index,Description
 *,bar,Bar,SBar,,,3,desc
 *,foo,Foo,,Rfoo,CFoo,,
-""", csv_data.decode())
+""", bytes2str(csv_data))
 
   def test_ERP5Site_reindexLatestIndexedObjects(self):
     module = self.portal.newContent(portal_type='Folder', id='test_folder')

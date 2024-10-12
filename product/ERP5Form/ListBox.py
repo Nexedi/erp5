@@ -38,7 +38,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from .Selection import Selection, DomainSelection
 from .Tool.SelectionTool import createFolderMixInPageSelectionMethod
-from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath, str2bytes, bytes2str
+from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath, str2bytes, bytes2str, unicode2str
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
@@ -2716,10 +2716,7 @@ class ListBoxListRenderer(ListBoxRenderer):
     title_listboxline = ListBoxLine()
     title_listboxline.markTitleLine()
     for c in self.getSelectedColumnList():
-      if six.PY2:
-        title_listboxline.addColumn(c[0], c[1].encode(self.getEncoding()))
-      else:
-        title_listboxline.addColumn(c[0], c[1])
+      title_listboxline.addColumn(c[0], unicode2str(c[1], self.getEncoding()))
     listboxline_list.append(title_listboxline)
 
     # Obtain the list of lines.
