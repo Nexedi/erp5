@@ -82,7 +82,7 @@ def decode_email(file_):
       payload = part.get_payload(decode=True)
       #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
       if charset:
-        payload = payload.decode(charset)
+        payload = six.text_type(payload, charset)
       if six.PY2:
         payload = unicode2str(payload)
       if body_found:
