@@ -189,17 +189,17 @@ if book_include_reference_table:
     book_table_list=book_table_list
   )
   #if book_format == 'html' or book_format == 'mhtml':
-  #  book_references = book_references.encode('UTF-8').strip()
+  #  book_references = unicode2str(book_references).strip()
 
   # backcompat for manual history tables at the beginning of documents
   # NOTE: assumes <section>s are not used elsewhere!
   #if len(book_history_section_list) > 0:
-  #  book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
+  #  book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + unicode2str(book_references).strip()))
   #else:
-  #  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
+  #  book_content = book_content.replace("${WebPage_insertTableOfReferences}", unicode2str(book_references).strip())
   book_references = book.Base_unescape(book_references)
   if six.PY2:
-    book_references = book_references.encode('utf-8')
+    book_references = unicode2str(book_references)
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.strip())
 else:
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
@@ -371,7 +371,7 @@ elif book_format == "pdf":
     )
   #if book_include_reference_table:
   #  after_toc_data_list.append(
-  #    b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))).decode()
+  #    bytes2str(b64encode(str2bytes(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))))
   #  )
   xsl_style_sheet_data = str2bytes(book_table_of_content)
   embedded_html_data = str2bytes(book.Base_convertHtmlToSingleFile(book_content, allow_script=True))

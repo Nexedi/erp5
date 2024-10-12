@@ -31,7 +31,7 @@ from six.moves.urllib.parse import quote
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import fill_args_from_request, str2bytes, str2unicode, unicode2str
+from Products.ERP5Type.Utils import fill_args_from_request, str2bytes, bytes2str, str2unicode, unicode2str
 from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders,\
     _ViewEmulator
 import warnings
@@ -57,7 +57,7 @@ except ImportError:
       if six.PY2:
         quoted_file_name = quote(unicode2str(file_name))
       else:
-        encoded_file_name = encoded_file_name.decode('us-ascii')
+        encoded_file_name = bytes2str(encoded_file_name, 'us-ascii')
         quoted_file_name = quote(file_name)
 
       return '{disposition}; '\
