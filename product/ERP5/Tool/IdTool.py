@@ -36,6 +36,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMappi
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type.Utils import str2unicode, bytes2str
 from zLOG import LOG, WARNING, INFO, ERROR
 from Products.ERP5 import _dtmldir
 
@@ -120,14 +121,14 @@ class IdTool(BaseTool):
     # for compatibilty with sql data, must not use id_group as a list
     if six.PY3 and isinstance(id_group, bytes):
       warnings.warn('id_group must be a string, not bytes.', BytesWarning)
-      id_group = id_group.decode('utf-8')
+      id_group = bytes2str(id_group)
     if not isinstance(id_group, str):
       id_group = repr(id_group)
       warnings.warn('id_group must be a string, other types '
                     'are deprecated.', DeprecationWarning)
     if six.PY2:
       try:
-        id_group.decode('utf-8')
+        str2unicode(id_group)
       except UnicodeDecodeError:
         raise ValueError(
           '%r is not a valid id_group, only valid UTF-8 strings are allowed' % id_group)
@@ -188,7 +189,7 @@ class IdTool(BaseTool):
       raise ValueError('%r is not a valid id_group' % id_group)
     if six.PY3 and isinstance(id_group, bytes):
       warnings.warn('id_group must be a string, not bytes.', BytesWarning)
-      id_group = id_group.decode('utf-8')
+      id_group = bytes2str(id_group)
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
@@ -196,7 +197,7 @@ class IdTool(BaseTool):
                     'are deprecated.', DeprecationWarning)
     if six.PY2:
       try:
-        id_group.decode('utf-8')
+        str2unicode(id_group)
       except UnicodeDecodeError:
         raise ValueError(
           '%r is not a valid id_group, only valid UTF-8 strings are allowed' % id_group)

@@ -34,6 +34,7 @@ import warnings
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Utils import unicode2str
 from MySQLdb import ProgrammingError
 from six.moves import range
 
@@ -195,7 +196,7 @@ class TestIdTool(ERP5TypeTestCase):
         ValueError,
         self.id_tool.generateNewId,
         id_generator=id_generator,
-        id_group=u'hé'.encode('latin1'),
+        id_group=unicode2str(u'hé', 'latin1'),
       )
 
   def test_02a_generateNewIdWithZODBGenerator(self):
@@ -335,7 +336,7 @@ class TestIdTool(ERP5TypeTestCase):
         ValueError,
         self.id_tool.generateNewIdList,
         id_generator=id_generator,
-        id_group=u'hé'.encode('latin1'),
+        id_group=unicode2str(u'hé', 'latin1'),
         id_count=1,
       )
 
