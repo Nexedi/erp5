@@ -82,7 +82,8 @@ param_dict = [
   { 'message': 'Configure Editor', 'translation': 'peizhibianjiqi', 'language': 'wo'},
   { 'message': 'List', 'translation': 'liebiao', 'language': 'wo'},
   { 'message': 'This page contains unsaved changes, do you really want to leave the page ?', 'translation': 'querenlikai?', 'language': 'wo'},
-  { 'message': 'What are you looking for?', 'translation': 'Ni zai zhao shenme?', 'language': 'wo'}
+  { 'message': 'What are you looking for?', 'translation': 'Ni zai zhao shenme?', 'language': 'wo'},
+  { 'message': 'Maximize', 'translation': 'zuidahua', 'language': 'wo'},
 ]
 for tmp in param_dict:
   context.Base_addUITestTranslation(message = tmp['message'], translation = tmp['translation'], language = tmp['language'])

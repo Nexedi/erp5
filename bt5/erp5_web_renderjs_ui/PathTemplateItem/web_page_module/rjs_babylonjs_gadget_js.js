@@ -335,6 +335,9 @@
         scope: 'maximize',
         element: div_max,
         sandbox: 'public'
+      })
+      .push(function (button_maximize_gadget) {
+        return button_maximize_gadget.render();
       });
     })
     .declareMethod('getContent', function getContent() {
