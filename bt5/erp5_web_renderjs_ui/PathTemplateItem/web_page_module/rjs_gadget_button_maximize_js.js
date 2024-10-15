@@ -8,8 +8,7 @@
     .declareAcquiredMethod("translate", "translate")
 
     .declareMethod('render', function () {
-      var gadget = this;
-      return gadget.changeState({'init': true});
+      return this.changeState({'init': true});
     })
 
     .onStateChange(function (modification_dict) {
