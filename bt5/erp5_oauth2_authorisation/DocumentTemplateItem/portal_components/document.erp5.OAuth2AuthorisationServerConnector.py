@@ -687,7 +687,6 @@ class _ERP5RequestValidator(RequestValidator):
   def save_authorization_code(self, client_id, code, request, *args, **kwargs):
     self._authorisation_server_connector_value.createSession(
       authorisation_code=code['code'],
-      request=request,
       client_value=request.client.erp5_client_value,
       redirect_uri=request.redirect_uri,
       scope_list=[
@@ -1532,7 +1531,6 @@ class OAuth2AuthorisationServerConnector(XMLObject):
   def createSession(
     self,
     authorisation_code,
-    request,
     client_value,
     redirect_uri,
     scope_list,
@@ -1570,7 +1568,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       code_challenge_method=code_challenge_method,
       network_address=network_address,
       user_agent=user_agent,
-      network_list=request.client.erp5_client_value.getNetworkList(),
+      network_list=client_value.getNetworkList(),
       **kw
     )
     # XXX: use a non-draft state ?
