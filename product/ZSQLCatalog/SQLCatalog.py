@@ -1585,7 +1585,6 @@ class Catalog(Folder,
         path=None, # BBB
         path_list=path_list,
         uid_only=False, # BBB
-        isolation_level__='READ-COMMITTED',
       )
     }
 
@@ -1600,7 +1599,6 @@ class Catalog(Folder,
         uid=None, # BBB
         uid_list=uid_list,
         path_only=False, # BBB
-        isolation_level__='READ-COMMITTED',
       )
     }
 
