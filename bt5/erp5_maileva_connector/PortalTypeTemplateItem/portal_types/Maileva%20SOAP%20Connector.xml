@@ -39,6 +39,12 @@
             <value> <string>Base Type</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>type_class</string> </key>
             <value> <string>MailevaSOAPConnector</string> </value>
         </item>

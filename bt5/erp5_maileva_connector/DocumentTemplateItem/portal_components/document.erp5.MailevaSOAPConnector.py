@@ -46,13 +46,13 @@ class MailevaSOAPConnector(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Default Properties
-  property_sheets = ( PropertySheet.Base
+  property_sheets = (PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
-                      )
+                    )
   def processResponse(self, response, maileva_exchange, failed=False):
     maileva_exchange.edit(
-      response = response
+      response=response
     )
     maileva_exchange.confirm()
     # change state, no need to wait alarm check
@@ -61,28 +61,29 @@ class MailevaSOAPConnector(XMLObject):
       maileva_exchange.getFollowUpValue().fail()
 
   def submitRequest(self, maileva_exchange):
-    authenticated = HttpAuthenticated(username=self.getUserId(), password=self.getPassword())
+    authenticated = HttpAuthenticated(username=self.getUserId(),
+                                      password=self.getPassword())
     runtime_environment = self.getActivityRuntimeEnvironment()
     if runtime_environment:
       runtime_environment.edit(
         conflict_retry=False,
         max_retry=0)
     try:
-      response = suds.client.Client(url = self.getProperty('submit_url_string'), transport=authenticated).service.submit(__inject={'msg': maileva_exchange.getRequest()})
+      response = suds.client.Client(
+        url=self.getSubmitLinkUrlString(),
+        transport=authenticated
+      ).service.submit(__inject={'msg': maileva_exchange.getRequest()})
       maileva_exchange.activate().MailevaExchange_processResponse(response)
     except socket.error as e:
       if e.errno == socket.errno.ECONNREFUSED:
         if runtime_environment:
           runtime_environment.edit(max_retry=None)
     except Exception as e:
-      maileva_exchange.activate().MailevaExchange_processResponse(str(e), failed = True)
-
-
-
+      maileva_exchange.activate().MailevaExchange_processResponse(str(e), failed=True)
 
   def checkPendingNotifications(self):
     authenticated = HttpAuthenticated(username=self.getUserId(), password=self.getPassword())
-    client = suds.client.Client(url = self.getProperty("tracking_url_string"), transport=authenticated)
+    client = suds.client.Client(url=self.getTrackingLinkUrlString(), transport=authenticated)
     notification_dict = {}
     for notification in client.service.checkPendingNotifications("GENERAL"):
       notification_dict[notification.reqTrackId] = {
@@ -95,7 +96,8 @@ class MailevaSOAPConnector(XMLObject):
 
   def getPendingNotificationDetails(self, request_id, debug=False):
     authenticated = HttpAuthenticated(username=self.getUserId(), password=self.getPassword())
-    result = suds.client.Client(url = self.getProperty("tracking_url_string"), transport=authenticated).service.getPendingNotificationDetails(request_id)
+    result = suds.client.Client(url=self.getTrackingLinkUrlString(),
+      transport=authenticated).service.getPendingNotificationDetails(request_id)
     return {
       "status": str(result.status),
       "notification_status": str(result.notificationStatus),
