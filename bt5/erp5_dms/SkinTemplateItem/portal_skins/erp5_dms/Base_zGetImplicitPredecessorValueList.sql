@@ -18,7 +18,7 @@ sub.path,
 uid
 FROM
 ( SELECT
-    @current_path:=IF(@current_reference = reference, @current_path, path) AS path,
+    @current_path:=CAST(IF(@current_reference = reference, @current_path, path) AS CHAR) AS path,
     @current_reference:=reference AS reference
   FROM (
     SELECT
