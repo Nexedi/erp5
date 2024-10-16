@@ -395,6 +395,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     """Main loop using timer server.
     """
     import Products.TimerService
+    setRequest(self.app.REQUEST)
 
     # AlarmTool uses alarmNode='' as a way to bootstrap an alarm node, but
     # during these tests we don't want the first node to start executing
