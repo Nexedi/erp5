@@ -152,7 +152,8 @@ else:
       if zeo_server_pid:
         save_mysql = None
         os.close(zeo_client)
-        zeo_client = eval(os.fdopen(r).read())
+        with os.fdopen(r) as f:
+          zeo_client = eval(f.read())
         continue
       else:
         node_pid_list = activity_node = None
