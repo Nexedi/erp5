@@ -735,7 +735,7 @@ class TestCRMMailIngestion(BaseTestCRM):
       ('me@erp5.org, he@erp5.org', ['person_module/me', 'person_module/he']),
       ('Sender <sender@customer.com>', ['person_module/sender']),
       # title is also an email, it should return the person once, not twice
-      ('sender@customer.com <sender@customer.com>', ['person_module/sender']),
+      ('"sender@customer.com" <sender@customer.com>', ['person_module/sender']),
       # tricks to confuse the e-mail parser:
       # a comma in the name
       ('"Sender," <sender@customer.com>, he@erp5.org', ['person_module/sender',
