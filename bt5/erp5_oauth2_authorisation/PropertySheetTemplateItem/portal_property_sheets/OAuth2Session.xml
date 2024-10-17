@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An OAuth2 Session blongs to the standard Authorisation Server OAUth2 role,\n
+            <value> <string>An OAuth2 Session belongs to the standard Authorisation Server OAuth2 role,\n
 and allows tracking how a session was initiated, who it belongs to, allows issuing\n
 Refresh and Access Tokens, detecting when an Access Token needs to be\n
 regenerated, and controlling the session validity.</string> </value>
