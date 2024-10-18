@@ -191,6 +191,7 @@ from Products.CMFCore.Expression import Expression
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.DCWorkflow.utils import Message as _
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.ERP5Type import serializeRoles
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import convertToMixedCase
@@ -199,7 +200,7 @@ from Products.ERP5Type.Core.WorkflowTransition import (TRIGGER_AUTOMATIC,
                                                        TRIGGER_USER_ACTION,
                                                        TRIGGER_WORKFLOW_METHOD)
 
-_marker = ''
+_marker = '' # oh putain
 
 from Products.CMFCore.Expression import getEngine
 userGetIdOrUserNameExpression = Expression('user/getIdOrUserName')
@@ -410,7 +411,7 @@ class Workflow(XMLObject):
         p = Permission(name, old_roles, ob)
         old_roles = p.getRoles()
         if type(old_roles) != type(new_roles) or sorted(old_roles) != sorted(new_roles):
-          p.setRoles(new_roles)
+          p.setRoles(serializeRoles(new_roles))
           modified = True
       return modified
 
