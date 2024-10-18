@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<instance>
+    <parameter id="conf-text">
+        &lt;source&gt;
+            @type exec
+            tag sensor1.temp
+            command python3 /srv/slapgrid/kbme280-sim.py
+            run_interval 30s
+            &lt;parse&gt;
+                keys pressure, humidity, temperature
+            &lt;/parse&gt;
+        &lt;/source&gt;
+
+        &lt;match *.temp&gt;
+            @type forward
+            &lt;server&gt;
+                name fluentd-gw
+                host <IPv4>
+                port 24224
+            &lt;/server&gt;
+        &lt;/match&gt;
+    </parameter>
+</instance>
