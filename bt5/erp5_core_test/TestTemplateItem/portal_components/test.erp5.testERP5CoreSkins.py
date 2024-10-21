@@ -349,6 +349,41 @@ class TestBase_reindexAndSenseAlarm(ERP5TypeTestCase):
       alarm.workflow_history['edit_workflow'][-1]['comment']
     )
 
+  def test_reindexAndSenseAlarm_manyContextSameTransaction(self):
+    # Check that the script wait for the alarm to be not activate
+    # before triggering it again
+    alarm = self.portal.portal_alarms.invoice_builder_alarm
+    workflow_history_count = len(alarm.workflow_history['edit_workflow'])
+
+    document_list = []
+    for doc in self.portal.contentValues():
+      if doc.getId().endswith('_module'):
+        document_list.append((doc, self.getIndexationDate(doc)))
+        doc.Base_reindexAndSenseAlarm(['invoice_builder_alarm'])
+
+    # Sadly, catalog indexation timestamp has a second precision
+    # It is needed to wait this 1 second to be able to verify new indexation
+    sleep(1)
+    with TemporaryAlarmScript(alarm, 'Alarm_buildInvoice'):
+      self.tic()
+
+    edit_timestamp = alarm.getModificationDate()
+    for doc, previous_indexation_timestamp in document_list:
+      next_indexation_timestamp = self.getIndexationDate(doc)
+      # check that the document has been reindexed
+      self.assertLessThan(previous_indexation_timestamp, next_indexation_timestamp)
+      # check that alarm was called after the object was reindexed
+      self.assertLessThan(next_indexation_timestamp, edit_timestamp)
+
+    self.assertEqual(
+      len(alarm.workflow_history['edit_workflow']),
+      workflow_history_count + 1
+    )
+    self.assertEqual(
+      'Visited by Alarm_buildInvoice',
+      alarm.workflow_history['edit_workflow'][-1]['comment']
+    )
+
   def test_reindexAndSenseAlarm_twoContextDifferentTransaction(self):
     # Check that the script wait for the alarm to be not activate
     # before triggering it again
@@ -434,3 +469,91 @@ class TestBase_reindexAndSenseAlarm(ERP5TypeTestCase):
       'Visited by Alarm_buildPackingList',
       alarm2.workflow_history['edit_workflow'][-1]['comment']
     )
+
+  def test_reindexAndSenseAlarm_concurrentNode(self):
+    # No idea how to reproduce multiple zope nodes handling
+    # many activity, try to fake found problem
+    # Ensure Base_reindexAndSenseAlarm never completely drop itself
+    # from activities
+    alarm_tool = self.portal.portal_alarms
+    alarm = alarm_tool.invoice_builder_alarm
+    workflow_history_count = len(alarm.workflow_history['edit_workflow'])
+
+    deduplication_tag = 'Base_reindexAndSenseAlarm_%s' % alarm.getId()
+    wait_tag = 'wait_tag'
+    alarm_tool.activate(
+      activity='SQLQueue',
+      tag=wait_tag
+    ).getId()
+    alarm_tool.activate(
+      activity='SQLQueue',
+      tag=deduplication_tag,
+      after_tag=wait_tag
+    ).getId()
+    alarm_tool.activate(
+      tag=deduplication_tag
+    ).Base_reindexAndSenseAlarm([alarm.getId()], must_reindex_context=False)
+
+    with TemporaryAlarmScript(alarm, 'Alarm_buildInvoice'):
+      self.tic()
+
+    self.assertEqual(
+      len(alarm.workflow_history['edit_workflow']),
+      workflow_history_count + 1
+    )
+    self.assertEqual(
+      'Visited by Alarm_buildInvoice',
+      alarm.workflow_history['edit_workflow'][-1]['comment']
+    )
+
+
+  def test_reindexAndSenseAlarm_concurrentNodeAnd2Alarms(self):
+    # No idea how to reproduce multiple zope nodes handling
+    # many activity, try to fake found problem
+    # Ensure Base_reindexAndSenseAlarm never completely drop itself
+    # from activities
+    alarm_tool = self.portal.portal_alarms
+    alarm1 = self.portal.portal_alarms.invoice_builder_alarm
+    alarm2 = self.portal.portal_alarms.packing_list_builder_alarm
+
+    workflow_history_count1 = len(alarm1.workflow_history['edit_workflow'])
+    workflow_history_count2 = len(alarm2.workflow_history['edit_workflow'])
+
+    for alarm in [alarm1, alarm2]:
+      deduplication_tag = 'Base_reindexAndSenseAlarm_%s' % alarm.getId()
+      wait_tag = 'wait_tag'
+      alarm_tool.activate(
+        activity='SQLQueue',
+        tag=wait_tag
+      ).getId()
+      alarm_tool.activate(
+        activity='SQLQueue',
+        tag=deduplication_tag,
+        after_tag=wait_tag
+      ).getId()
+      alarm_tool.activate(
+        activity='SQLQueue',
+        tag=deduplication_tag
+      ).Base_reindexAndSenseAlarm([alarm.getId()], must_reindex_context=False)
+
+    with TemporaryAlarmScript(alarm1, 'Alarm_buildInvoice'):
+      with TemporaryAlarmScript(alarm2, 'Alarm_buildPackingList'):
+        self.tic()
+
+    for alarm, workflow_history_count, comment in [
+      (alarm1, workflow_history_count1, 'Visited by Alarm_buildInvoice'),
+      (alarm2, workflow_history_count2, 'Visited by Alarm_buildPackingList')
+    ]:
+      self.assertEqual(
+        len(alarm.workflow_history['edit_workflow']),
+        workflow_history_count + 1,
+        'alarm %s not called %s %s' % (
+          alarm.getId(),
+          len(alarm.workflow_history['edit_workflow']),
+          workflow_history_count + 1
+        )
+      )
+      self.assertEqual(
+        comment,
+        alarm.workflow_history['edit_workflow'][-1]['comment']
+      )
