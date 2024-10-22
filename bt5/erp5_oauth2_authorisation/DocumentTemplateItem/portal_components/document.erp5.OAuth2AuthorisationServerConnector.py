@@ -1093,9 +1093,6 @@ class OAuth2AuthorisationServerConnector(XMLObject):
 
     - authorization_code (standard)
     - refresh_token (standard)
-    - urn:uuid:15a68f81-dbce-4ddd-bfcb-a81f25359cf2
-      Zope-based request authentication (ex: "Authorization: Basic ..."
-      request header).
     """
     now = int(time())
     def getAccessTokenLifespan(request):
