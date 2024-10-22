@@ -108,7 +108,7 @@ class RuleMixin(Predicate):
     policy_dict[expand_policy](**kw).expand(self, applied_rule)
 
   def _expandNow(self, maybe_expand, applied_rule):
-    # Update moveme-nts
+    # Update movements
     #  NOTE-JPS: it is OK to make rounding a standard parameter of rules
     #            although rounding in simulation is not recommended at all
     self.updateMovementCollection(applied_rule,
