@@ -4,13 +4,13 @@
         &lt;source&gt;
             @type forward
             port 24224
-            bind <IPv4>
+            bind <FLUENTD-GATEWAY-IPv4>
         &lt;/source&gt;
 
         &lt;match *.temp&gt;
             @type wendelin
             streamtool_uri https://softinst<INSTANCE_ID>.host.vifib.net/erp5/portal_ingestion_policies/default
-            user      zope
+            user      <USERNAME>
             password  <PASSWORD>
             &lt;buffer&gt;
                 flush_mode interval
