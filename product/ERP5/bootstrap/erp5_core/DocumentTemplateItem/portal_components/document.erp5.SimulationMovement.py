@@ -128,13 +128,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   def getSimulationState(self, id_only=1):
     """Returns the current state in simulation
 
-      Inherit from delivery or parent (using a conversion table to make orders
-      planned when parent is confirmed).
+      Inherit from delivery when built, otherwise, let the rule decide.
 
-      In the case of simulation coming from an item, the simulation state is
-      delegated to the item.
-
-      XXX: movements in zero stock rule can not acquire simulation state
     """
     delivery = self.getDeliveryValue()
     if delivery is not None:
@@ -145,18 +140,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       return order.getSimulationState()
 
     applied_rule = self.getParentValue()
-    parent = applied_rule.getParentValue()
-    try:
-      if isinstance(parent, SimulationMovement):
-        return parent_to_movement_simulation_state[parent.getSimulationState()]
-      getState = applied_rule.getCausalityValue() \
-        .aq_explicit.getSimulationMovementSimulationState
-    except (AttributeError, KeyError):
-      LOG('SimulationMovement.getSimulationState', WARNING,
-          'Could not acquire simulation state from %s'
-          % self.getRelativeUrl(), error=True)
-    else:
-      return getState(self)
+    rule = applied_rule.getCausalityValue()
+    return rule.getSimulationMovementSimulationState(self)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTranslatedSimulationStateTitle')
