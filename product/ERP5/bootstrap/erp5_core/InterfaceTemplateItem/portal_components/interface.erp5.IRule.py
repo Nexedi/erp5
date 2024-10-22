@@ -41,7 +41,7 @@ class IRule(IMovementCollectionUpdater):
     """
     Create a new applied rule in the context.
 
-    An applied rule is an instanciation of a Rule. The applied rule is
+    An applied rule is an instantiation of a Rule. The applied rule is
     linked to the Rule through the `specialise` relation.
 
     context -- usually, a parent simulation movement of the
@@ -56,7 +56,7 @@ class IRule(IMovementCollectionUpdater):
     applied rule.
 
     At expand time, we must replace or compensate certain
-    properties. However, if some properties were overwriten
+    properties. However, if some properties were overwritten
     by a decision (ie. a resource if changed), then we
     should not try to compensate such a decision. The principles
     of compensation are implemented through
