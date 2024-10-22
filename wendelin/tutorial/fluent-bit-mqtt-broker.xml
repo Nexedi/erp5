@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance>
+    <parameter id="input">{"name": "mqtt", "tag": "ivan.mqtt", "port": 1883}</parameter>
+    <parameter id="output">{"name": "forward", "match": "ivan.mqtt", "host": "192.168.0.117", "port": 24224}</parameter>
+</instance>
