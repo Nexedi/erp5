@@ -73,3 +73,8 @@ class IRule(IMovementCollectionUpdater):
 
     Available policies: immediate, deferred, vertical_time_bound
     """
+
+  def getSimulationMovementSimulationState(simulation_movement):
+    """
+    Compute the simulation state of this simulation movement.
+    """

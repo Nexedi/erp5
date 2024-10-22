@@ -26,15 +26,21 @@
 #
 ##############################################################################
 
+import logging
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Predicate import Predicate
 from erp5.component.module.ExpandPolicy import policy_dict
+from erp5.component.document.SimulationMovement import SimulationMovement, parent_to_movement_simulation_state
 from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
+
+
+logger = logging.getLogger(__name__)
+
 
 def _compare(tester_list, prevision_movement, decision_movement):
   for tester in tester_list:
@@ -126,6 +132,36 @@ class RuleMixin(Predicate):
     Whenever delivery is there, delivery has priority
     """
     return not movement.getDelivery()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSimulationMovementSimulationState')
+  def getSimulationMovementSimulationState(self, simulation_movement):
+    """
+    Compute the simulation state of this simulation movement.
+
+    Inherit from parent movement, using a conversion table to make
+    orders planned when parent is confirmed.
+
+    In the case of simulation coming from an item, the simulation state is
+    delegated to the item.
+
+    This method can be overridden in custom rule class to generate movements
+    with a different simulation state.
+    """
+    applied_rule = simulation_movement.getParentValue()
+    parent_simulation_movement = applied_rule.getParentValue()
+    try:
+      if isinstance(parent_simulation_movement, SimulationMovement):
+        return parent_to_movement_simulation_state[parent_simulation_movement.getSimulationState()]
+      getSimulationMovementSimulationState = applied_rule.getCausalityValue() \
+        .aq_explicit.getSimulationMovementSimulationState
+    except (AttributeError, KeyError):
+      logger.warning(
+        'getSimulationState: Could not acquire simulation state from %s',
+        simulation_movement,
+        error=True)
+    else:
+      return getSimulationMovementSimulationState(simulation_movement)
 
   # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for
   security.declareProtected( Permissions.AccessContentsInformation,
