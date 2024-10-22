@@ -15,7 +15,7 @@
             @type forward
             &lt;server&gt;
                 name fluentd-gw
-                host <IPv4>
+                host <FLUENTD-GATEWAY-IPv4>
                 port 24224
             &lt;/server&gt;
         &lt;/match&gt;
