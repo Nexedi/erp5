@@ -82,22 +82,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
       - delivered (the movement is now archived in a delivery)
 
-      The simulation worklow uses some variables, which are
-      set by the template
-
-      - is_order_required
-
-      - is_delivery_required
-
-
-      XX
-      - is_problem_checking_required ?
-
-      Other flag
-      (forzen flag)
-
-      NEW: we do not use DCWorklow so that the simulation process
-      can be as much as possible independent of a Zope / CMF implementation.
   """
   meta_type = 'ERP5 Simulation Movement'
   portal_type = 'Simulation Movement'
