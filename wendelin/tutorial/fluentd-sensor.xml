@@ -4,7 +4,7 @@
         &lt;source&gt;
             @type exec
             tag sensor1.temp
-            command python3 /srv/slapgrid/kbme280-sim.py
+            command /usr/bin/python3 /srv/slapgrid/kbme280-sim.py
             run_interval 30s
             &lt;parse&gt;
                 keys pressure, humidity, temperature
