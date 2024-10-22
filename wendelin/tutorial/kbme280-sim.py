@@ -1,8 +1,14 @@
-#!/usr/bin/python3
-# simulate bme280 from https://wendelin.nexedi.com/wendelin-Tutorial.Setup.Fluentd.on.Sensor
-from random import gauss as g
+#!/usr/bin/python3 
+# -*- coding: utf-8 -*-
 
-Pm, Ps = 760, 30
-Hm, Hs =  80, 5
-Tm, Ts =  20, 2
-print('%.1f\t%.1f\t%.1f' % (g(Pm,Ps), g(Hm,Hs), g(Tm,Ts)))
+from bme280 import bme280
+from bme280 import bme280_i2c
+from bme280.bme280 import read_all
+
+bme280_i2c.set_default_i2c_address(int("0x77", 0)) # address of sensor 0x77
+bme280_i2c.set_default_bus(2) # depends on distro version
+bme280.setup() 
+
+data = bme280.read_all()
+
+print("{}\t{}\t{}".format(data.pressure, data.humidity, data.temperature))
