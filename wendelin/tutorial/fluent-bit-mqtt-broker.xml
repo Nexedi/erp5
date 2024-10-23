@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <instance>
     <parameter id="input">{"name": "mqtt", "tag": "<TAG>", "port": 1883}</parameter>
-    <parameter id="output">{"name": "forward", "match": "ivan.mqtt", "host": "<FLUENTD-GATEWAY-IPv4>", "port": 24224}</parameter>
+    <parameter id="output">{"name": "forward", "match": "<TAG>", "host": "<FLUENTD-GATEWAY-IPv4>", "port": 24224}</parameter>
 </instance>
