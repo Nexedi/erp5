@@ -50,7 +50,6 @@ This removes existing balance transactions.</string> </value>
             <value>
               <tuple>
                 <string>Assignor</string>
-                <string>Assignee</string>
               </tuple>
             </value>
         </item>
