@@ -83,6 +83,4 @@ def formToXML(form, prologue=1):
     else:
       xml = etree.tostring(form_as_xml, encoding=form.stored_encoding,
                                     xml_declaration=True, pretty_print=True)
-    if six.PY3:
-      xml = bytes2str(xml)
-    return xml
+    return bytes2str(xml)
