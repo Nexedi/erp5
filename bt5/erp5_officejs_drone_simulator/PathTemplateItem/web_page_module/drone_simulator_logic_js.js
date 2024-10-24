@@ -376,7 +376,7 @@ var DroneManager = /** @class */ (function () {
     return this._API.getClimbRate(this);
   };
   DroneManager.prototype.takeOff = function () {
-    return this._API.takeOff();
+    return this._API.takeOff(this);
   };
   DroneManager.prototype.land = function () {
     if (!this.isLanding()) {
@@ -671,6 +671,7 @@ var GameManager = /** @class */ (function () {
     }
     this.APIs_dict = {
       FixedWingDroneAPI: FixedWingDroneAPI,
+      MulticopterDroneAPI: MulticopterDroneAPI,
       DroneLogAPI: DroneLogAPI
     };
     if (this._game_parameters_json.debug_test_mode) {
@@ -844,11 +845,14 @@ var GameManager = /** @class */ (function () {
                   drone_position.z
                 );
                 game_manager._flight_log[index].push([
-                  current_time, geo_coordinates.latitude,
-                  geo_coordinates.longitude,
-                  map_info.start_AMSL + drone_position.z,
-                  drone_position.z, drone.getYaw(), drone.getSpeed(),
-                  drone.getClimbRate()
+                  current_time.toFixed(0),
+                  geo_coordinates.latitude.toFixed(4),
+                  geo_coordinates.longitude.toFixed(4),
+                  (map_info.start_AMSL + drone_position.z).toFixed(4),
+                  drone_position.z.toFixed(4),
+                  drone.getYaw().toFixed(0),
+                  drone.getSpeed().toFixed(2),
+                  drone.getClimbRate().toFixed(6)
                 ]);
               }
             }
