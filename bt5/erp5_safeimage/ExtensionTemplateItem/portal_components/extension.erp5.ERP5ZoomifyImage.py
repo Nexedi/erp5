@@ -256,8 +256,10 @@ class ZoomifyBase:
         # a bug was discovered when a row was exactly 1 pixel in height
         # this extra checking accounts for that
         if imageHeight > 1:
-          tempImage = imageRow.resize((imageWidth/2, imageHeight/2),
-                                                     PIL_Image.ANTIALIAS)
+          tempImage = imageRow.resize(
+            (imageWidth//2, imageHeight//2),
+            PIL_Image.LANCZOS if six.PY3 else PIL_Image.ANTIALIAS,
+          )
           tempImage.save(os.path.join(tempfile.gettempdir(), root + str(tier)
                                        + '-' + str(row) + ext))
           tempImage = None
