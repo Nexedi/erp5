@@ -26,7 +26,7 @@ def formToXML(form, prologue=1):
     # export form groups
     for group in form.get_groups(include_empty=1):
       group_element = SubElement(groups, 'group')
-      group_element.append(E.title(group))
+      group_element.append(E.title(str2unicode(group, encoding)))
 
       fields = SubElement(group_element, 'fields')
       for field in form.get_fields_in_group(group, include_disabled=1):
