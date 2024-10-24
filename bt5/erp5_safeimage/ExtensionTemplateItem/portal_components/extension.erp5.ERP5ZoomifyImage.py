@@ -16,6 +16,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##############################################################################
 
+import six
 import os, sys, shutil, tempfile
 import io
 from zLOG import LOG,ERROR,INFO,WARNING
@@ -256,8 +257,10 @@ class ZoomifyBase:
         # a bug was discovered when a row was exactly 1 pixel in height
         # this extra checking accounts for that
         if imageHeight > 1:
-          tempImage = imageRow.resize((imageWidth/2, imageHeight/2),
-                                                     PIL_Image.ANTIALIAS)
+          tempImage = imageRow.resize(
+            (imageWidth//2, imageHeight//2),
+            PIL_Image.LANCZOS if six.PY3 else PIL_Image.ANTIALIAS,
+          )
           tempImage.save(os.path.join(tempfile.gettempdir(), root + str(tier)
                                        + '-' + str(row) + ext))
           tempImage = None
