@@ -233,10 +233,12 @@ var MulticopterDroneAPI = /** @class */ (function () {
   };
 
   MulticopterDroneAPI.prototype.setSpeed = function (drone, speed) {
-    this._requestedSpeed = Math.max(
-      Math.min(speed, this.getMaxSpeed()),
-      this.getMinSpeed()
-    );
+    if (speed < this.getMinSpeed()) {
+      throw new Error('Requested speed must be greater than',
+                      this.getMinSpeed());
+    }
+
+    this._requestedSpeed = Math.min(speed, this.getMaxSpeed());
     this._setSpeedInternal(this._requestedSpeed * SPEED_FACTOR);
 
     drone._acceleration = (this._targetSpeed > drone.get3DSpeed())
