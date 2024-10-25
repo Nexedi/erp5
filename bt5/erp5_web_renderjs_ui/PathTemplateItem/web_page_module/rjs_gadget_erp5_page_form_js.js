@@ -384,7 +384,11 @@ and handling data send&receive.
         .push(function (attachment) {
           var response;
 
-          if (attachment.target.response.type === "application/json") {
+          if (
+            attachment.target.response.type.split(";")[0].trim() ===
+              "application/json" &&
+            attachment.target.getResponseHeader("X-Location")
+          ) {
             // successful form save returns simple redirect and an answer as JSON
             return new RSVP.Queue()
               .push(function () {
@@ -466,14 +470,14 @@ and handling data send&receive.
                   })
                   .push(function () {
                     // Make sure to return nothing (previous render can return
-                    // something) so the successfull handler does not receive
+                    // something) so the successful handler does not receive
                     // anything which it could consider as redirect jio key.
                     return result;
                   });
               });
           }
           // response status > 200 (e.g. 202 "Accepted" or 204 "No Content")
-          // means a sucessful execution of the action but does not carry any data
+          // means a successful execution of the action but does not carry any data
           // XMLHttpRequest automatically inserts Content-Type="text/xml" thus
           // we cannot test based on that
           if (attachment.target.response.size === 0 &&
