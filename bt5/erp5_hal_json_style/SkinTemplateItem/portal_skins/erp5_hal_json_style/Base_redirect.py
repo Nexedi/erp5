@@ -63,11 +63,11 @@ response = context.REQUEST.RESPONSE
 context.Base_prepareCorsResponse(RESPONSE=response)
 
 response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())
-# be explicit with the reponse content type because in case of reports - they
+# be explicit with the response content type because in case of reports - they
 # can be in text/plain, application/pdf ... so the RJS form needs to know what
 # is going exactly on. ERP5Document_getHateoas returns application/hal+json
 # therefor we don't need to be afraid of clashes
-response.setHeader("Content-type", "application/json; charset=utf-8")
+response.setHeader("Content-type", "application/json")
 
 result = json.dumps(result_dict, indent=2)
 # http://en.wikipedia.org/wiki/Post/Redirect/Get
