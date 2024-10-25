@@ -27,5 +27,5 @@ else:
 response = request.RESPONSE if request is not None else context.REQUEST.RESPONSE
 # Set the response code and header info in the response
 response.setStatus(response_code)
-response.setHeader("Content-type", "application/json; charset=utf-8")
+response.setHeader("Content-type", "application/json")
 return json.dumps({"portal_status_message": str(message)})

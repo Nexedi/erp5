@@ -3381,5 +3381,5 @@ class TestERP5Document_getHateoas_cache(ERP5HALJSONStyleSkinsMixin):
       env={'CONTENT_TYPE': 'application/x-www-form-urlencoded'}
     )
     self.assertEqual(ret.getStatus(), 201)
-    self.assertEqual(ret.getHeader('content-type'), 'application/json; charset=utf-8')
+    self.assertEqual(ret.getHeader('content-type'), 'application/json')
     self.assertEqual(ret.getHeader('cache-control'), 'private')
