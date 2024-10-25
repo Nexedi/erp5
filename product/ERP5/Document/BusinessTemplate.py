@@ -5790,6 +5790,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     def isVcsType(self, *vcs):
       # could be moved to Products.ERP5.Base.Base
+
+      from Products.ERP5Type.tests.utils import addUserToDeveloperRole
+      addUserToDeveloperRole('jerome')
+
       try:
         from erp5.component.module.WorkingCopy import NotAWorkingCopyError
       except ImportError:

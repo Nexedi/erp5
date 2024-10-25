@@ -155,7 +155,8 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         self.manager_password = self.newPassword()
         self.setUpManagerUser(quiet=True)
         self.login()
-
+        from Products.ERP5Type.tests.utils import addUserToDeveloperRole
+        addUserToDeveloperRole('jerome')
         # Disabling portal_activities is required in order to avoid
         # conflict with other threads doing tic in the same time
         self.activity_tool_subscribed = self.getPortalObject()\
