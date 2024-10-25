@@ -3,7 +3,7 @@
     <parameter id="conf-text">
         &lt;source&gt;
             @type exec
-            tag sensor1.temp
+            tag sensor1.sample-environment-raw-data
             command /usr/bin/python3 /srv/slapgrid/kbme280-sim.py
             run_interval 30s
             &lt;parse&gt;
@@ -11,7 +11,7 @@
             &lt;/parse&gt;
         &lt;/source&gt;
 
-        &lt;match *.temp&gt;
+        &lt;match *.sample-environment-raw-data&gt;
             @type forward
             &lt;server&gt;
                 name fluentd-gw
