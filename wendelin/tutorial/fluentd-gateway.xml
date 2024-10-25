@@ -7,7 +7,7 @@
             bind <FLUENTD-GATEWAY-IPv4>
         &lt;/source&gt;
 
-        &lt;match *.temp&gt;
+        &lt;match *.sample-environment-raw-data&gt;
             @type wendelin
             streamtool_uri https://softinst<INSTANCE_ID>.host.vifib.net/erp5/portal_ingestion_policies/default
             user      <USERNAME>
