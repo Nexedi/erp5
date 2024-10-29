@@ -151,7 +151,7 @@
     .declareMethod('createJio', function (options) {
       var gadget = this, current_version, index, appcache_storage,
         appcache_jio, migration_version, manifest, monitoring_jio,
-        origin_url = window.location.href;
+        origin_url = window.location.href, force_reconfig = false;
       return gadget.getSettingList(['configuration_manifest',
                                     'migration_version'])
         .push(function (result_list) {
@@ -209,38 +209,50 @@
           };
           return gadget.createStorage(options, monitoring_jio);
         })
+        //backward compatibility: old app versions had badnamed data
         .push(function () {
           if (migration_version !== current_version) {
             if (gadget.props.jio_storage) {
-              return gadget.props.jio_storage.allDocs();
+              return gadget.props.jio_storage.allDocs({
+                query: '(portal_type:promise)'
+              });
             }
           }
         })
-        .push(function (all_docs) {
-          var remove_queue = new RSVP.Queue(), i;
-          function remove_doc(id) {
-            remove_queue
-              .push(function () {
-                return gadget.props.jio_storage.remove(id);
+        .push(function (result) {
+          function remove_all() {
+            return gadget.props.jio_storage.allDocs()
+              .push(function (all_docs) {
+                var remove_queue = new RSVP.Queue(), i;
+                function remove_doc(id) {
+                  remove_queue
+                    .push(function () {
+                      return gadget.props.jio_storage.remove(id);
+                    });
+                }
+                if (all_docs && all_docs.data.total_rows) {
+                  //iterate all docs, jio_remove, and recreate
+                  for (i = 0; i < all_docs.data.total_rows; i += 1) {
+                    remove_doc(all_docs.data.rows[i].id);
+                  }
+                  return RSVP.all([
+                    remove_queue,
+                    gadget.createStorage(options, monitoring_jio),
+                    gadget.setSetting("latest_import_date", undefined)
+                  ]);
+                }
               });
           }
-          if (all_docs && all_docs.data.total_rows) {
-            //iterate all docs, jio_remove, and recreate
-            for (i = 0; i < all_docs.data.total_rows; i += 1) {
-              remove_doc(all_docs.data.rows[i].id);
+          if (result && result.data.rows.length > 0) {
+            force_reconfig = true;
+            if (gadget.props.jio_storage) {
+              return remove_all();
             }
-            return RSVP.all([
-              remove_queue,
-              gadget.createStorage(options, monitoring_jio),
-              gadget.setSetting("latest_import_date", undefined)
-            ]);
           }
         })
         .push(function () {
           if (migration_version !== current_version) {
             appcache_storage = jIO.createJIO(appcache_jio);
-            //TODO make it true only if old config is present (e.g. 'promise' portal_type objects (instead of new 'Promise')
-            var force_reconfig = true;
             return gadget.updateConfiguration(appcache_storage, current_version, gadget.props.jio_storage, force_reconfig);
           }
         })
