@@ -142,7 +142,8 @@ for line_dict in line_dict_list:
         }
       else:
         if base_contribution == contribution_relief:
-          total_contribution_relief += (line_dict['base'] * line_dict['employer_price']) #line_dict['employer_total_price']
+          if line_dict['employer_price']:
+            total_contribution_relief += (line_dict['base'] * line_dict['employer_price']) #line_dict['employer_total_price']
         elif base_contribution in (csg_crds_taxable_to_income_tax, csg_non_taxable_to_income_tax):
           csg_base = line_dict['base']
         line_dict['report_section'] = base_contribution
