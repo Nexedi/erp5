@@ -22,11 +22,11 @@
         })
         .push(function () {
           return gadget.notifySubmitted({message: "Document Deleted", status: "success"});
-        })
+        })/*
         .push(function () {
-          return gadget.redirect({command: 'change', options: {
-            page: options.return_url || 'settings_configurator'
+          return gadget.redirect({command: 'display', options: {
+            page: 'settings_configurator'
           }});
-        });
+        })*/;
     });
 }(window, rJS));
