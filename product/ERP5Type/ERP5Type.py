@@ -313,7 +313,7 @@ class ERP5TypeInformation(XMLObject,
       # Document related to a person's assignment or career step
       'personal_item',
       # Base
-      'entity', 'login',
+      'entity', 'login', 'user',
       # Core
       'domain',
       # Wendelin

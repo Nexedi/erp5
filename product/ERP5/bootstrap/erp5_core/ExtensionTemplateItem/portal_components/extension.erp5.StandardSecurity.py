@@ -175,7 +175,7 @@ def asSecurityGroupIdSet(category_dict, key_sort=sorted):
     except KeyError:
       continue
     for category_value, is_child_category in category_list:
-      if category_value.getPortalType() == 'Person':
+      if category_value.getPortalType() in self.getPortalUserTypeList():
         user_name = category_value.Person_getUserId()
         if user_name is not None:
           user_list.append(user_name)
