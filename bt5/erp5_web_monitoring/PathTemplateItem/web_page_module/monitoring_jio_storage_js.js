@@ -257,6 +257,13 @@
             });
         }
         return removeOPMLTree(id);
+      }, function (error) {
+        if (error && error.status_code === 404) {
+          //opml already removed
+          return;
+        } else {
+          throw error;
+        }
       });
   };
 
