@@ -86,3 +86,10 @@ def getWrappedOwner(self):
     return result
 
 AccessControl.owner.Owned.getWrappedOwner = getWrappedOwner
+
+
+# backported fix for GHSA-g5vw-3h65-2q3v
+import six
+if six.PY2:
+    import AccessControl.userfolder
+    AccessControl.userfolder.UserFolder.data__roles__ = ()
