@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, rJS, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, jIO) {
   "use strict";
 
   rJS(window)
@@ -16,9 +16,13 @@
       var gadget = this;
       return gadget.jio_remove(options.jio_key)
         .push(function () {
-          return gadget.notifySubmitted({message: "Document Deleted", status: "success"})
+          return gadget.notifySubmitted({message: "Document Deleted", status: "success"});
         }, function (error) {
-          return gadget.notifySubmitted({message: error.message, status: "error"})
+          if (error instanceof jIO.util.jIOError) {
+            return gadget.notifySubmitted({message: error.message, status: "error"});
+          } else {
+            throw error;
+          }
         })
         .push(function () {
           return gadget.redirect({command: 'change', options: {
@@ -26,4 +30,4 @@
           }});
         });
     }, {mutex: 'render'});
-}(window, rJS));
+}(window, rJS, jIO));
