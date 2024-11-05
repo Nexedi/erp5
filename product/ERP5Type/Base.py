@@ -914,6 +914,13 @@ class Base(
     # A method which does nothing (and can be used to build WorkflowMethods which trigger worklow transitions)
     pass
 
+  def getPropertySheetIdSet(self):
+    portal_type_value = getattr(
+      self._getTypesTool(), self.getPortalType(), None)
+    if portal_type_value is not None:
+       return set(portal_type_value.getTypePropertySheetList())
+    return set()
+
   # Generic accessor
   def _getDefaultAcquiredProperty(self, key, default_value, null_value,
         acquisition_object_id=None, base_category=None, portal_type=None,
