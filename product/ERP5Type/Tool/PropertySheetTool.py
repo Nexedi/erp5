@@ -200,5 +200,5 @@ class PropertySheetTool(BaseTool):
     Return a sorted set of all the permissions useful for read/write
     permissions for properties of ZODB Property Sheets
     """
-    return sorted({value for key, value in six.iteritems(Permissions.__dict__)
-                         if key[0].isupper()})
+    return sorted([value for key, value in six.iteritems(Permissions.__dict__)
+                         if key[0].isupper()] + ['View History'])

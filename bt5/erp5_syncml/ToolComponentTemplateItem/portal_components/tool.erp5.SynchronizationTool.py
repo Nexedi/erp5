@@ -27,6 +27,7 @@
 
 from logging import getLogger
 import six
+from six.moves.urllib.parse import urlparse
 
 from AccessControl import ClassSecurityInfo
 
@@ -39,6 +40,8 @@ from erp5.component.module.SyncMLMessage import SyncMLRequest
 from erp5.component.module.SyncMLEngineSynchronous import SyncMLSynchronousEngine
 from erp5.component.module.SyncMLEngineAsynchronous import SyncMLAsynchronousEngine
 from Products.ERP5.ERP5Site import getSite
+from zExceptions import Forbidden
+
 
 synchronous_engine = SyncMLSynchronousEngine()
 asynchronous_engine = SyncMLAsynchronousEngine()
@@ -188,7 +191,7 @@ class SynchronizationTool(BaseTool):
     """We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    syncml_logger.info('readResponse sync_id %s, text %s', sync_id, text)
+    syncml_logger.debug('readResponse sync_id %s, text %s', sync_id, text)
     if text:
       # we are still anonymous at this time, use unrestrictedSearchResults
       # to fetch the Subcribers
@@ -237,22 +240,20 @@ class SynchronizationTool(BaseTool):
 
     # we use from only if we have a file
     elif isinstance(from_url, six.string_types):
-      if from_url.startswith('file:'):
-        filename = from_url[len('file:'):]
-        xml = None
-        try:
-          stream = open(filename, 'rb')
-        except IOError:
-          # XXX-Aurel : Why raising here make unit tests to fail ?
-          # raise ValueError("Impossible to read file %s, error is %s"
-          #                  % (filename, msg))
-          pass
-        else:
-          xml = stream.read()
-          stream.close()
-        syncml_logger.debug('readResponse xml from file is %s', xml)
-        if xml:
-          return xml
+      parsed_url = urlparse(from_url)
+      if parsed_url.scheme == 'file':
+        if (any(
+              from_url.startswith(pub.getUrlString())
+              for pub in self.contentValues(portal_type='SyncML Publication'))
+            or any(
+              from_url.startswith(sub.getSubscriptionUrlString())
+              for sub in self.contentValues(portal_type='SyncML Subscription'))):
+          with open(parsed_url.path, 'rb') as f:
+            xml = f.read()
+          syncml_logger.debug('readResponse xml from file is %s', xml)
+          return xml or None
+      raise Forbidden
+
   #
   # End of part managing protocols
   #

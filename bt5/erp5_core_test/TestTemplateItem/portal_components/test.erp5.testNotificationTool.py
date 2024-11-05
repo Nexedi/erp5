@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -33,11 +34,15 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
-import email
+from Products.ERP5Type.Utils import unicode2str
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 
-# Copied from ERP5Type/patches/CMFMailIn.py
+# Copied from bt5/erp5_egov/TestTemplateItem/testEGovMixin.py
 def decode_email(file_):
   # Prepare result
   theMail = {
@@ -47,14 +52,14 @@ def decode_email(file_):
     'headers': {}
   }
   # Get Message
-  msg = email.message_from_string(file_)
+  msg = message_from_bytes(file_)
   # Back up original file
   theMail['__original__'] = file_
-  # Recode headers to UTF-8 if needed
   for key, value in msg.items():
     decoded_value_list = decode_header(value)
-    unicode_value = make_header(decoded_value_list)
-    new_value = unicode_value.__unicode__().encode('utf-8')
+    # Cast to unicode(py2)/str(py3) to convert Header() class to text with
+    # the specified Header charset (as returned by decode_header())
+    new_value = six.text_type(make_header(decoded_value_list))
     theMail['headers'][key.lower()] = new_value
   # Filter mail addresses
   for header in ('resent-to', 'resent-from', 'resent-cc', 'resent-sender',
@@ -77,11 +82,13 @@ def decode_email(file_):
     elif content_type == 'message/rfc822':
       continue
     elif content_type in ("text/plain", "text/html"):
-      charset = part.get_content_charset()
+      charset = part.get_content_charset() or 'utf-8'
       payload = part.get_payload(decode=True)
       #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
       if charset:
-        payload = unicode(payload, charset).encode('utf-8')
+        payload = six.text_type(payload, charset)
+      if six.PY2:
+        payload = unicode2str(payload)
       if body_found:
         # Keep the content type
         theMail['attachment_list'].append((file_name,
@@ -302,12 +309,12 @@ class TestNotificationTool(ERP5TypeTestCase):
         attachment_list=[
           {
             'name': 'Attachment 1',
-            'content': 'Text 1',
+            'content': b'Text 1',
             'mime_type': 'text/plain',
           },
           {
             'name': 'Attachment 2',
-            'content': 'Text 2',
+            'content': b'Text 2',
             'mime_type': 'application/octet-stream',
           },
         ])
@@ -322,8 +329,11 @@ class TestNotificationTool(ERP5TypeTestCase):
     mail_dict = decode_email(messageText)
     self.assertEqual(mail_dict['headers']['subject'], 'Subject')
     self.assertEqual(mail_dict['body'], 'Message')
+    # "Attachment 1" is decoded as str because there was a charset in the
+    # message, this is how this `decode_email` utility function from this
+    # test works.
     self.assertSameSet([('Attachment 1', 'text/plain', 'Text 1'),
-                        ('Attachment 2', 'application/octet-stream', 'Text 2')],
+                        ('Attachment 2', 'application/octet-stream', b'Text 2')],
                        mail_dict['attachment_list'])
 
   def test_07_AttachmentMessage(self):

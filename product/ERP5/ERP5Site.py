@@ -46,6 +46,7 @@ from Products.ERP5Type.TransactionalVariable import \
   getTransactionalVariable, TransactionalResource
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
@@ -248,10 +249,10 @@ class AutorisationExtractorBeforeTraverseHook(object):
       ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME in form_dict
     ):
       username = form_dict[ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME]
-      request._auth = 'Basic ' + base64.b64encode('%s:%s' % (
+      request._auth = 'Basic ' + bytes2str(base64.b64encode(str2bytes('%s:%s' % (
         username,
         form_dict[ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME],
-      ))
+      ))))
       request.response._auth = 1
       _setUserNameForAccessLog(username, request)
 
@@ -660,6 +661,11 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalObject')
   def getPortalObject(self):
+    return self
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getOriginalDocument')
+  def getOriginalDocument(self):
     return self
 
   security.declareProtected(Permissions.AccessContentsInformation,

@@ -757,7 +757,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     """
     This is a hack
     """
-    pass
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentExplanationValue')
@@ -777,7 +776,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     """
     This is a hack
     """
-    pass
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBuilderList')

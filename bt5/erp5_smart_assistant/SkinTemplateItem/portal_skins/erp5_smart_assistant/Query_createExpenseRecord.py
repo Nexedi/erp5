@@ -1,10 +1,16 @@
-import base64
+import six
+if six.PY2:
+  from base64 import encodestring as encodebytes
+else:
+  from base64 import encodebytes
+from Products.ERP5Type.Utils import bytes2str
+
 portal = context.getPortalObject()
 expense_record_module = portal.getDefaultModule('Expense Record')
 sender = portal.portal_membership.getAuthenticatedMember().getUserValue()
-data = context.getData()
-data64 = u''.join(base64.encodestring(data).splitlines())
-photo_data = u'data:%s;base64,%s' % ("image/*", data64)
+data = bytes(context.getData())
+data64 = ''.join(bytes2str(encodebytes(data)).splitlines())
+photo_data = 'data:%s;base64,%s' % ("image/*", data64)
 expense_record_module.newContent(
   comment=comment,
   resource_title=currency,

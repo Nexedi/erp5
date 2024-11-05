@@ -55,11 +55,6 @@
   <td></td>
 <tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(text(), 'Simulation finished')]</td>
-  <td></td>
-<tr>
-<tr>
   <td>assertElementPresent</td>
   <td>//div[contains(text(), 'Initial speed: OK')]</td>
   <td></td>
@@ -92,6 +87,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//div[contains(text(), 'Altitude: OK')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(text(), 'Timeout: OK')]</td>
   <td></td>
 <tr>
 </tbody></table>

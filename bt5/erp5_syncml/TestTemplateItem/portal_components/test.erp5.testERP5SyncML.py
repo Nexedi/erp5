@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import unittest
 from base64 import b64encode, b64decode, b16encode
 from lxml import etree
 from unittest import expectedFailure
@@ -44,7 +43,7 @@ from erp5.component.module.SyncMLConstant import MAX_LEN
 from erp5.component.document import SyncMLSubscription
 from erp5.component.module.testERP5SyncMLMixin import TestERP5SyncMLMixin \
      as TestMixin
-from six.moves import range
+from zExceptions import Forbidden
 
 class TestERP5SyncMLMixin(TestMixin):
 
@@ -103,9 +102,9 @@ class TestERP5SyncMLMixin(TestMixin):
     self._subscription_url1 = tests_home + '/sync_client1'
     self._subscription_url2 = tests_home + '/sync_client2'
     self._publication_url = tests_home + '/sync_server'
-    self.subscription_url1 = 'file:/' + self._subscription_url1
-    self.subscription_url2 = 'file:/' + self._subscription_url2
-    self.publication_url = 'file:/' + self._publication_url
+    self.subscription_url1 = 'file://' + self._subscription_url1
+    self.subscription_url2 = 'file://' + self._subscription_url2
+    self.publication_url = 'file://' + self._publication_url
 
   def beforeTearDown(self):
     """Clean up."""
@@ -196,15 +195,9 @@ class TestERP5SyncMLMixin(TestMixin):
 
   def clearFiles(self):
     # reset files, because we do sync by files
-    file_ = open(self._subscription_url1, 'w')
-    file_.write('')
-    file_.close()
-    file_ = open(self._subscription_url2, 'w')
-    file_.write('')
-    file_.close()
-    file_ = open(self._publication_url, 'w')
-    file_.write('')
-    file_.close()
+    for filename in self._subscription_url1, self._subscription_url2, self._publication_url:
+      with open(filename, 'w') as f:
+        f.write('')
 
   def synchronize(self, id): # pylint: disable=redefined-builtin
     """
@@ -1880,8 +1873,7 @@ return [context[%r]]
       self.assertXMLViewIsEqual(self.sub_id1, person_s, person_c1)
       self.assertXMLViewIsEqual(self.sub_id1, person_s, person_c2)
 
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5SyncML))
-  return suite
+  def test_readResponse_file(self):
+    self.assertRaises(Forbidden,
+      self.getSynchronizationTool().readResponse,
+      from_url='file:///etc/hosts')

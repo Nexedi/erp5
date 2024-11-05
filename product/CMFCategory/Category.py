@@ -28,6 +28,7 @@
 
 from past.builtins import cmp
 import string
+import warnings
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
@@ -40,14 +41,22 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
-from Products.ERP5Type.Utils import sortValueList
+from Products.ERP5Type.Utils import sortValueList, unicode2str
 from Products.ERP5Type.Cache import CachingMethod
+import six
+if six.PY3:
+  from functools import cmp_to_key
+  def cmp(a, b):
+      return (a > b) - (a < b)
 
 DEFAULT_CACHE_FACTORY = 'erp5_ui_long'
 
 from zLOG import LOG
 
-NBSP_UTF8 = u'\xA0'.encode('utf-8')
+if six.PY2:
+  NBSP_UTF8 = unicode2str(u'\xA0')
+else:
+  NBSP_UTF8 = '\xA0'
 
 manage_addCategoryForm=DTMLFile('dtml/category_add', globals())
 
@@ -274,6 +283,7 @@ class Category(Folder):
     def getCategoryChildValueList(self, recursive=1, include_if_child=1,
                                   is_self_excluded=1, sort_on=None,
                                   sort_order=None, local_sort_method=None,
+                                  local_sort_key=None,
                                   local_sort_id=None, checked_permission=None,
                                   **kw):
       """
@@ -297,8 +307,13 @@ class Category(Folder):
                               WARNING: using these parameters can slow down
                               significantly, because this is written in Python
 
+          local_sort_key    - When using the default preorder traversal, use
+                              this function as sort key for objects of the same
+                              depth.
+
           local_sort_method - When using the default preorder traversal, use
                               this function to sort objects of the same depth.
+                              DEPRECATED, use local_sort_key
 
           local_sort_id     - When using the default preorder traversal, sort
                               objects of the same depth by comparing their
@@ -317,21 +332,26 @@ class Category(Folder):
 
       child_value_list = self.objectValues(self.allowed_types)
       if local_sort_id:
-        if isinstance(local_sort_id, (tuple, list)):
-          def sort_method(a, b):
-            for sort_id in local_sort_id:
-              diff = cmp(a.getProperty(sort_id, 0), b.getProperty(sort_id, 0))
-              if diff != 0:
-                return diff
-            return 0
-          local_sort_method = sort_method
-        else:
-          local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id, 0),
-                                               b.getProperty(local_sort_id, 0))
+        if not isinstance(local_sort_id, (tuple, list)):
+          local_sort_id = (local_sort_id, )
+        def sort_key(c):
+          k = []
+          for sort_id in local_sort_id:
+            v = c.getProperty(sort_id)
+            k.extend([v is not None, v])
+          return k
+        local_sort_key = sort_key
       if local_sort_method:
-        # sort objects at the current level
+        warnings.warn(
+          "`local_sort_method` argument is deprecated, use `local_sort_key` instead",
+          DeprecationWarning)
         child_value_list = list(child_value_list)
-        child_value_list.sort(local_sort_method)
+        if six.PY2:
+          child_value_list.sort(local_sort_method)
+        else:
+          local_sort_key = cmp_to_key(local_sort_method)
+      if local_sort_key:
+        child_value_list = sorted(child_value_list, key=local_sort_key)
 
       if recursive:
         for c in child_value_list:
@@ -341,6 +361,7 @@ class Category(Folder):
                                        is_self_excluded=0,
                                        include_if_child=include_if_child,
                                        local_sort_method=local_sort_method,
+                                       local_sort_key=local_sort_key,
                                        local_sort_id=local_sort_id))
       else:
         for c in child_value_list:
@@ -828,7 +849,7 @@ class BaseCategory(Category):
                                                  'getCategoryChildValueList')
     def getCategoryChildValueList(self, is_self_excluded=1, recursive=1,
                      include_if_child=1, sort_on=None, sort_order=None,
-                     local_sort_method=None, local_sort_id=None,
+                     local_sort_method=None, local_sort_key=None, local_sort_id=None,
                      checked_permission=None, **kw):
       """
           List the child objects of this category and all its subcategories.
@@ -850,8 +871,13 @@ class BaseCategory(Category):
                   the 'sort_on' attribute. The default is to do a preorder tree
                   traversal on all subobjects.
 
+          local_sort_key    - When using the default preorder traversal, use
+                              this function as sort key for objects of the same
+                              depth.
+
           local_sort_method - When using the default preorder traversal, use
                               this function to sort objects of the same depth.
+                              DEPRECATED, use local_sort_key
 
           local_sort_id     - When using the default preorder traversal, sort
                               objects of the same depth by comparing their
@@ -869,29 +895,35 @@ class BaseCategory(Category):
 
       child_value_list = self.objectValues(self.allowed_types)
       if local_sort_id:
-        if isinstance(local_sort_id, (tuple, list)):
-          def sort_method(a, b):
-            for sort_id in local_sort_id:
-              diff = cmp(a.getProperty(sort_id, 0), b.getProperty(sort_id, 0))
-              if diff != 0:
-                return diff
-            return 0
-          local_sort_method = sort_method
-        else:
-          local_sort_method = lambda a, b: cmp(a.getProperty(local_sort_id, 0),
-                                             b.getProperty(local_sort_id, 0))
+        if not isinstance(local_sort_id, (tuple, list)):
+          local_sort_id = (local_sort_id, )
+        def sort_key(c):
+          k = []
+          for sort_id in local_sort_id:
+            v = c.getProperty(sort_id)
+            k.extend([v is not None, v])
+          return k
+        local_sort_key = sort_key
       if local_sort_method:
-        # sort objects at the current level
+        warnings.warn(
+          "`local_sort_method` argument is deprecated, use `local_sort_key` instead",
+          DeprecationWarning)
         child_value_list = list(child_value_list)
-        child_value_list.sort(local_sort_method)
+        if six.PY2:
+          child_value_list.sort(local_sort_method)
+        else:
+          local_sort_key = cmp_to_key(local_sort_method)
+      if local_sort_key:
+        child_value_list = sorted(child_value_list, key=local_sort_key)
 
       if recursive:
         for c in child_value_list:
           value_list.extend(c.getCategoryChildValueList(recursive=1,
                                         is_self_excluded=0,
                                         include_if_child=include_if_child,
-                                        local_sort_id=local_sort_id,
-                                        local_sort_method=local_sort_method))
+                                        local_sort_method=local_sort_method,
+                                        local_sort_key=local_sort_key,
+                                        local_sort_id=local_sort_id))
       else:
         for c in child_value_list:
           if include_if_child:

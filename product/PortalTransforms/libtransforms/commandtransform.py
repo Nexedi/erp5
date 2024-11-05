@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import six
 import os
 import sys
 import tempfile
@@ -10,6 +11,7 @@ from zope.interface import implementer
 
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, getShortPathName
 from Products.PortalTransforms.interfaces import ITransform
+from Products.ERP5Type.Utils import str2bytes
 
 @implementer(ITransform)
 class commandtransform:
@@ -34,13 +36,14 @@ class commandtransform:
         os.mkdir(tmpdir)
         filename = kwargs.get("filename", '')
         fullname = join(tmpdir, basename(filename))
-        filedest = open(fullname , "wb").write(data)
+        with open(fullname , "wb") as f:
+          f.write(data)
         return tmpdir, fullname
 
     def subObjects(self, tmpdir):
         imgs = []
         for f in os.listdir(tmpdir):
-            result = re.match("^.+\.(?P<ext>.+)$", f)
+            result = re.match(r"^.+\.(?P<ext>.+)$", f)
             if result is not None:
                 ext = result.group('ext')
                 if ext in ('png', 'jpg', 'gif'):
@@ -50,7 +53,8 @@ class commandtransform:
 
     def fixImages(self, path, images, objects):
         for image in images:
-            objects[image] = open(join(path, image), 'rb').read()
+            with  open(join(path, image), 'rb') as f:
+                objects[image] = f.read()
 
     def cleanDir(self, tmpdir):
         shutil.rmtree(tmpdir)
@@ -98,7 +102,7 @@ class popentransform:
             cin, couterr = os.popen4(command, 'b')
 
             if self.useStdin:
-                cin.write(str(data))
+                cin.write(bytes(data))
 
             status = cin.close()
 
@@ -151,7 +155,7 @@ class subprocesstransform:
         try:
             if not self.useStdin:
               stdin_file = tempfile.NamedTemporaryFile()
-              stdin_file.write( data)
+              stdin_file.write(data)
               stdin_file.seek(0)
               command = command % {'infile': stdin_file.name} # apply tmp name to command
               data = None
@@ -159,6 +163,8 @@ class subprocesstransform:
             argument_list = shlex.split(command)
             process = Popen(argument_list, stdin=stdin_file, stdout=PIPE,
                             stderr=PIPE, close_fds=True)
+            if six.PY3 and isinstance(data, str):
+              data = str2bytes(data)
             data_out, data_err = process.communicate(input=data)
             if process.returncode:
               raise OSError(data_err) # XXX
@@ -166,5 +172,5 @@ class subprocesstransform:
             return cache
 
         finally:
-            if isinstance(stdin_file, file):
+            if hasattr(stdin_file, 'close'):
                 stdin_file.close()

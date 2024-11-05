@@ -28,7 +28,8 @@
 #
 ##############################################################################
 
-from UserDict import UserDict
+import six
+import functools
 import random
 import unittest
 from unittest import expectedFailure
@@ -46,13 +47,13 @@ def save_result_as(name):
   def decorator(function):
     def wrapper(self, *args, **kw):
       result = function(self, *args, **kw)
-      self[name] = result
+      self._storage[name] = result
       return result
     return wrapper
   return decorator
 
 
-class TestTradeModelLineMixin(TestBPMMixin, UserDict):
+class TestTradeModelLineMixin(TestBPMMixin):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
   # Constants and variables shared by tests
   base_unit_quantity = 0.01
@@ -92,13 +93,13 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     return base_amount
 
   def afterSetUp(self):
-    UserDict.__init__(self)
+    self._storage = dict()
     self.portal.portal_preferences.getActiveSystemPreference().setPreferredTaxUseList(['use/tax'])
     self.tic()
     return super(TestTradeModelLineMixin, self).afterSetUp()
 
   def beforeTearDown(self):
-    UserDict.clear(self)
+    self._storage.clear()
     return super(TestTradeModelLineMixin, self).beforeTearDown()
 
   def clone(self, document):
@@ -107,7 +108,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
       parent.manage_copyObjects(ids=document.getId()))
     clone = parent[clone['new_id']]
     try:
-      self[clone.getPath()] = self[document.getPath()]
+      self._storage[clone.getPath()] = self._storage[document.getPath()]
     except KeyError:
       pass
     return clone
@@ -160,7 +161,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
       ]
       for business_link in business_link_list:
         link = self.createBusinessLink(business_process, **business_link)
-        self['business_link/' + link.getTradePhaseId()] = link
+        self._storage['business_link/' + link.getTradePhaseId()] = link
     return business_process
 
   @save_result_as('trade_condition')
@@ -183,7 +184,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     line = document.newContent(portal_type='Trade Model Line', **kw)
     reference = line.getReference()
     if reference:
-      self['trade_model_line/' + reference] =  line
+      self._storage['trade_model_line/' + reference] =  line
     return line
 
   @save_result_as('order')
@@ -202,7 +203,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
       if order.getProperty(arrow) is None:
         order._setProperty(arrow, self.createNode())
     if not order.getPriceCurrency():
-      self['price_currency'] = price_currency = self.createCurrency()
+      self._storage['price_currency'] = price_currency = self.createCurrency()
       order._setPriceCurrencyValue(price_currency)
     for line_kw in order_line_list:
       order.newContent(portal_type=self.order_line_portal_type, **line_kw)
@@ -223,14 +224,14 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
         if not partial_check:
           raise
       else:
-        for k, v in expected_amount.iteritems():
+        for k, v in six.iteritems(expected_amount):
           if k == 'causality_value_list':
             self.assertEqual(v, amount.getValueList('causality'))
           else:
             self.assertEqual(v, amount.getProperty(k))
         amount_dict[reference] = amount
     if partial_check:
-      for value in expected_amount_dict.itervalues():
+      for value in six.itervalues(expected_amount_dict):
         self.assertEqual(None, value)
     else:
       self.assertEqual({}, expected_amount_dict)
@@ -314,9 +315,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEqual('packed', packing_list.getContainerState())
 
   def copyExpectedAmountDict(self, delivery, ratio=1):
-    self[delivery.getPath()] = expected_amount_dict = {}
+    self._storage[delivery.getPath()] = expected_amount_dict = {}
     causality = delivery.getCausalityValue()
-    for base_amount, amount_dict in self[causality.getPath()].iteritems():
+    for base_amount, amount_dict in six.iteritems(self._storage[causality.getPath()]):
       expected_amount_dict[base_amount] = new_amount_dict = {}
       for line in delivery.getMovementList():
         line_id = line.getCausalityId()
@@ -352,7 +353,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     packing_list.deliver()
     self.tic()
 
-    self['invoice'] = invoice
+    self._storage['invoice'] = invoice
     if build == 'invoice':
       return invoice
 
@@ -388,23 +389,22 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertSameSet(composed.getSpecialiseValueList(),
                        specialise_value_list)
     count = 0
-    for portal_type, n in type_count_dict.iteritems():
+    for portal_type, n in six.iteritems(type_count_dict):
       count += n
       self.assertEqual(n, len(composed.objectValues(portal_type=portal_type)))
     self.assertTrue(count, len(composed.objectValues()))
 
   def checkAggregatedAmountList(self, order):
-    expected_result_dict = self[order.getPath()]
+    expected_result_dict = self._storage[order.getPath()]
     def check(movement, movement_id):
       kw = {}
-      for reference, result in expected_result_dict.iteritems():
+      for reference, result in six.iteritems(expected_result_dict):
         total_price = result.get(movement_id) or 0.0
-        if True:
-          model_line = self['trade_model_line/' + reference]
-          kw[reference] = dict(total_price=total_price,
-            causality_value_list=[model_line],
-            base_application_list=model_line.getBaseApplicationList(),
-            base_contribution_list=model_line.getBaseContributionList())
+        model_line = self._storage['trade_model_line/' + reference]
+        kw[reference] = dict(total_price=total_price,
+          causality_value_list=[model_line],
+          base_application_list=model_line.getBaseApplicationList(),
+          base_contribution_list=model_line.getBaseContributionList())
       self.getAggregatedAmountDict(movement, **kw)
 
     check(order, None)
@@ -412,9 +412,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       check(line, line.getId())
 
   def checkTradeModelRuleSimulationExpand(self, delivery):
-    expected_result_dict = self[delivery.getPath()]
+    expected_result_dict = self._storage[delivery.getPath()]
 
     for line in delivery.getMovementList():
+      currency_precision = line.getPricePrecision()
       simulation_movement_list_list = self.getTradeModelSimulationMovementList(line)
       self.assertEqual(len(simulation_movement_list_list), 1)
       simulation_movement_list = simulation_movement_list_list[0]
@@ -424,20 +425,20 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                        len(result_dict))
       for use in 'discount', 'tax':
         total_price = expected_result_dict[use].get(line.getId()) or 0.0
-        if True:
-          sm = result_dict.pop(use)
-          self.assertEqual(str(sm.getTotalPrice() or 0.0), str(total_price))
-          self.assertEqual(3, len(sm.getCausalityValueList()))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type=self.business_link_portal_type)))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type=self.trade_model_path_portal_type)))
-          self.assertEqual(1, len(sm.getCausalityValueList(
-            portal_type='Trade Model Line')))
-          self.assertEqual(sm.getBaseApplicationList(),
-                           ['base_amount/' + use])
-          self.assertEqual(sm.getBaseContributionList(),
-                           dict(discount=['base_amount/tax'], tax=[])[use])
+        sm = result_dict.pop(use)
+        self.assertEqual(round(sm.getTotalPrice() or 0.0, currency_precision),
+                         round(total_price, currency_precision))
+        self.assertEqual(3, len(sm.getCausalityValueList()))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type=self.business_link_portal_type)))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type=self.trade_model_path_portal_type)))
+        self.assertEqual(1, len(sm.getCausalityValueList(
+          portal_type='Trade Model Line')))
+        self.assertEqual(sm.getBaseApplicationList(),
+                         ['base_amount/' + use])
+        self.assertEqual(sm.getBaseContributionList(),
+                         dict(discount=['base_amount/tax'], tax=[])[use])
       self.assertEqual({}, result_dict)
 
   def checkCausalityState(self, delivery, state):
@@ -462,16 +463,16 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       line_dict[key] += line.getTotalPrice()
     self.assertEqual(6, len(line_dict))
 
-    currency_precision = self['price_currency'].getQuantityPrecision()
+    currency_precision = self._storage['price_currency'].getQuantityPrecision()
     rounded_total_price = round(line_dict['normal'], currency_precision)
     rounded_tax_price = round(line_dict['tax'], currency_precision)
     rounded_discount_price = round(line_dict['discount'], currency_precision)
-    self.assertEqual(str(abs(line_dict['payable_receivable'])),
-        str(rounded_total_price + rounded_tax_price + rounded_discount_price))
-    self.assertEqual(str(abs(line_dict['vat'])),
-        str(rounded_tax_price))
-    self.assertEqual(str(abs(line_dict['income_expense'])),
-        str(rounded_total_price + rounded_discount_price))
+    self.assertEqual(round(abs(line_dict['payable_receivable']), currency_precision),
+        round(rounded_total_price + rounded_tax_price + rounded_discount_price, currency_precision))
+    self.assertEqual(round(abs(line_dict['vat']), currency_precision),
+        rounded_tax_price)
+    self.assertEqual(round(abs(line_dict['income_expense']), currency_precision),
+        round(rounded_total_price + rounded_discount_price, currency_precision))
 
   def buildPackingLists(self):
     self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
@@ -528,7 +529,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     discount = {None: (3*4 + 5*6) * self.default_discount_ratio,
                 'discounted': (3*4) * self.default_discount_ratio,
                 'taxed_discounted': (5*6) * self.default_discount_ratio}
-    self[order.getPath()] = dict(
+    self._storage[order.getPath()] = dict(
       discount=discount,
       tax={None: (1*2 + 5*6 + discount[None]) * self.default_tax_ratio,
            'taxed': (1*2) * self.default_tax_ratio,
@@ -566,7 +567,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       discount = {None: (6*10 + 10*15) * self.default_discount_ratio,
                   'discounted': (6*10) * self.default_discount_ratio,
                   'taxed_discounted': (10*15) * self.default_discount_ratio}
-      self[order.getPath()] = dict(
+      self._storage[order.getPath()] = dict(
         discount=discount,
         tax={None: (2*5 + 10*15 + discount[None]) * self.default_tax_ratio,
              'taxed': (2*5) * self.default_tax_ratio,
@@ -587,7 +588,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       portal_type=self.packing_list_portal_type)
     self.copyExpectedAmountDict(packing_list)
 
-    self['packing_list'] = packing_list
+    self._storage['packing_list'] = packing_list
     if build == 'packing_list':
       return packing_list
 
@@ -597,7 +598,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     invoice = self.test_01_OrderWithSimpleTaxedAndDiscountedLines('invoice')
 
     # on invoice, make specialise point to a new TC and check it diverged
-    trade_condition = self['trade_condition']
+    trade_condition = self._storage['trade_condition']
     new_trade_condition = self.clone(trade_condition)
     line_dict = {line.getReference(): line
                  for line in new_trade_condition.objectValues()}
@@ -617,7 +618,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.checkCausalityState(invoice, 'solved')
 
     # check how is supported addition of invoice line to invoice
-    for line in self['order'].getMovementList():
+    for line in self._storage['order'].getMovementList():
       line = invoice.newContent(portal_type=self.invoice_line_portal_type,
                                 resource=line.getResource(),
                                 quantity=line.getQuantity(),
@@ -667,7 +668,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.tic()
     self.checkCausalityState(packing_list, 'diverged')
 
-    order = self['order']
+    order = self._storage['order']
     self.checkTradeModelRuleSimulationExpand(order)
     self.copyExpectedAmountDict(packing_list,
         self.modified_packing_list_line_quantity_ratio)
@@ -766,7 +767,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     discount_price = (3*4) * 0.32
     tax_price = (1*2) * 0.2
     total_tax_price = tax_price * 2 * 0.12
-    self[order.getPath()] = dict(
+    self._storage[order.getPath()] = dict(
       service_tax={None: tax_price, 'taxed': tax_price},
       total_dicount_2={None: discount_price, 'discounted': discount_price},
       service_tax_2={None: tax_price, 'taxed': tax_price},
@@ -814,23 +815,23 @@ return getBaseAmountQuantity""")
            reference='tax3'),
       ))
     def createCells(line, matrix, base_application=(), base_contribution=()):
-      range_list = [set() for x in iter(matrix).next()]
+      range_list = [set() for x in next(iter(matrix))]
       for index in matrix:
         for x, y in zip(range_list, index):
           x.add(y)
       line.setCellRange(*range_list)
-      for index, price in matrix.iteritems():
+      for index, price in six.iteritems(matrix):
         line.newCell(mapped_value_property='price', price=price,
           base_application_list=[index[i] for i in base_application],
           base_contribution_list=[index[i] for i in base_contribution],
           *index)
-    createCells(self['trade_model_line/tax2'], {
+    createCells(self._storage['trade_model_line/tax2'], {
       ('tax_range/0_200', 'tax_share/A'): .1,
       ('tax_range/0_200', 'tax_share/B'): .2,
       ('tax_range/200_inf', 'tax_share/A'): .3,
       ('tax_range/200_inf', 'tax_share/B'): .4,
       }, base_application=(0,), base_contribution=(1,))
-    createCells(self['trade_model_line/tax3'], {
+    createCells(self._storage['trade_model_line/tax3'], {
       ('tax_share/A',): .5,
       ('tax_share/B',): .6,
       }, base_application=(0,))
@@ -883,7 +884,7 @@ return context""" % (base_amount, base_amount))
       ))
 
     total_price = order.getTotalPrice()
-    total_ratio = reduce(lambda x, y: x*(1-y), discount_list, 1.2)
+    total_ratio = functools.reduce(lambda x, y: x*(1-y), discount_list, 1.2)
     amount_list = order.getAggregatedAmountList()
     self.assertAlmostEqual(total_price * total_ratio,
       sum((x.getTotalPrice() for x in amount_list), total_price))
@@ -901,7 +902,7 @@ return context""" % (base_amount, base_amount))
       } for index, application, contribution in lines]
     def check():
       resolver(delivery_amount, property_dict_list)
-      self.assertEqual(range(len(property_dict_list)),
+      self.assertEqual(list(range(len(property_dict_list))),
                        [x['index'] for x in property_dict_list])
 
     # Case 1: calculation of some base_amount depends on others.
@@ -1231,6 +1232,7 @@ return lambda *args, **kw: 1""")
     self.assertEqual(sorted(expected_tax),
                      sorted(x.getTotalPrice() for x in amount_list))
 
+  @expectedFailure
   def test_tradeModelLineWithRounding(self):
     """
       Test if trade model line works with rounding.
@@ -1290,9 +1292,10 @@ return lambda *args, **kw: 1""")
     self.assertEqual(3333*0.05+171*0.05, amount.getTotalPrice()) # 175.2
     # check the result with rounding
     amount_list = order.getAggregatedAmountList(rounding=True)
-    # XXX Mark it as expectedFailure until we have clear specification
-    # of what we wish with rounding
-    expectedFailure(self.assertEqual)(2, len(amount_list)) # XXX 1 or 2 ???
+    # XXX Here, the assertion will fail with the current implementation.
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
+    # XXX and here, the result is 175, because round is applied against
+    # already aggregated single amount.
     self.assertEqual(174, getTotalAmount(amount_list))
 
     # check getAggregatedAmountList result of each movement

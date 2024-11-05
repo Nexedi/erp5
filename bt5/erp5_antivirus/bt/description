@@ -1,0 +1,1 @@
+It provides generic functions for running antivirus scans on ERP5 documents. As this bt5 only provides a standard interface to be shared between different antivirus scan implementations, a proper antivirus client implementation bt5 needs to be installed alongside.

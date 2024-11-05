@@ -97,7 +97,9 @@ def getReportSectionDictList(line_dict_list):
         line_to_group_list = []
 
     # add one line for gross salary
-    if previous_line_dict is not None and gross_category in previous_line_dict['base_contribution_list'] and gross_category not in current_line_dict['base_contribution_list']:
+    if (previous_line_dict is not None
+      and gross_category in previous_line_dict['base_contribution_list']  # pylint:disable=unsubscriptable-object
+      and gross_category not in current_line_dict['base_contribution_list']):
       new_line_dict_list.append(
         getFakeLineDictForNewSection(
           context.Base_translateString("Gross Salary"),
@@ -140,7 +142,8 @@ for line_dict in line_dict_list:
         }
       else:
         if base_contribution == contribution_relief:
-          total_contribution_relief += (line_dict['base'] * line_dict['employer_price']) #line_dict['employer_total_price']
+          if line_dict['employer_price']:
+            total_contribution_relief += (line_dict['base'] * line_dict['employer_price']) #line_dict['employer_total_price']
         elif base_contribution in (csg_crds_taxable_to_income_tax, csg_non_taxable_to_income_tax):
           csg_base = line_dict['base']
         line_dict['report_section'] = base_contribution

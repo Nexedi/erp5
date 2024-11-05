@@ -49,7 +49,6 @@ from Zope2.Startup.datatypes import ZopeDatabase
 from Testing import ZopeTestCase
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
-from email import message_from_string
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
@@ -59,9 +58,11 @@ import lxml.html
 
 if six.PY2:
   FileIO = file
+  from email import message_from_string as message_from_bytes
 else:
   from io import FileIO
   from importlib import reload
+  from email import message_from_bytes
 
 
 def canonical_html(html):
@@ -106,12 +107,15 @@ class DummyMailHostMixin(object):
 
   @staticmethod
   def _decodeMessage(messageText):
+    # type: (bytes) -> str
     """ Decode message"""
     message_text = messageText
-    for part in message_from_string(messageText).walk():
+    for part in message_from_bytes(messageText).walk():
       if part.get_content_type() in ['text/plain', 'text/html' ] \
                   and not part.is_multipart():
-        message_text = part.get_payload(decode=1)
+        message_text = part.get_payload(decode=True)
+        if six.PY3:
+          message_text = message_text.decode(part.get_content_charset('ascii'))
     return message_text
 
   security.declarePrivate('getMessageList')
@@ -397,7 +401,7 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
   m = 499 # must be a prime number
   x = instance_random.randrange(0, m)
   c = instance_random.randrange(1, m)
-  for i in xrange(m):
+  for i in range(m):
     yield default_host, 55000 + x
     x = (x + c) % m
   raise RuntimeError("Can't find free port (tried ports %u to %u)\n"
@@ -591,7 +595,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
 
   def getSortedCategoryList(line, base_id, category_list):
     result = []
-    index_list = line.index[base_id].keys()
+    index_list = list(line.index[base_id])
     index_list.sort()
     for category in category_list:
       for index in index_list:
@@ -668,7 +672,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
                           *category_list)
 
       cell.edit(**mapped_value_dict)
-      cell.setMappedValuePropertyList(mapped_value_dict.keys())
+      cell.setMappedValuePropertyList(list(mapped_value_dict))
 
       base_category_list = [category_path
                             for category_path in category_list

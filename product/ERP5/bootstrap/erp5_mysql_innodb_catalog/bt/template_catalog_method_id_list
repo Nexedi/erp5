@@ -19,6 +19,7 @@ erp5_mysql_innodb/SQLCatalog_zSearchTranslation
 erp5_mysql_innodb/z0_drop_alarm
 erp5_mysql_innodb/z0_drop_catalog
 erp5_mysql_innodb/z0_drop_category
+erp5_mysql_innodb/z0_drop_deleted_catalog
 erp5_mysql_innodb/z0_drop_delivery
 erp5_mysql_innodb/z0_drop_item
 erp5_mysql_innodb/z0_drop_measure
@@ -68,6 +69,7 @@ erp5_mysql_innodb/z_count_results
 erp5_mysql_innodb/z_create_alarm
 erp5_mysql_innodb/z_create_catalog
 erp5_mysql_innodb/z_create_category
+erp5_mysql_innodb/z_create_deleted_catalog
 erp5_mysql_innodb/z_create_delivery
 erp5_mysql_innodb/z_create_item
 erp5_mysql_innodb/z_create_measure

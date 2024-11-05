@@ -82,7 +82,7 @@
             <key> <string>inputs</string> </key>
             <value>
               <list>
-                <string>text/comma-separated-values</string>
+                <string>text/csv</string>
               </list>
             </value>
         </item>
@@ -117,7 +117,7 @@
             <key> <string>data</string> </key>
             <value>
               <list>
-                <string>text/comma-separated-values</string>
+                <string>text/csv</string>
               </list>
             </value>
         </item>

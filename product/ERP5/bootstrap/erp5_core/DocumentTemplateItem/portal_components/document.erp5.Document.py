@@ -84,9 +84,15 @@ class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
+import six
 import base64
-enc = base64.encodestring
-dec = base64.decodestring
+if six.PY2:
+  enc = base64.encodestring
+  dec = base64.decodestring
+else:
+  enc = base64.encodebytes
+  dec = base64.decodebytes
+
 DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT = 360
 DOCUMENT_CONVERSION_SERVER_RETRY = 0
 # store time (as int) where we had last failure in order
@@ -424,7 +430,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   body_parser = re.compile(r'<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
   title_parser = re.compile(r'<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
   base_parser = re.compile(r'<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
-  charset_parser = re.compile(r'(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
+  charset_parser = re.compile(br'(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -491,8 +497,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     tmp = {}
     for match in rx_search.finditer(text):
       group = match.group()
-      group_item_list = match.groupdict().items()
-      group_item_list.sort()
+      group_item_list = sorted(match.groupdict().items())
       key = (group, tuple(group_item_list))
       tmp[key] = None
     for group, group_item_tuple in tmp.keys():

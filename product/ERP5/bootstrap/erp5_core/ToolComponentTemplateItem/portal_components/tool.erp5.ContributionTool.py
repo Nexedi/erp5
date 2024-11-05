@@ -27,8 +27,9 @@
 #
 ##############################################################################
 
+import six
 import re
-from six.moves import cStringIO as StringIO
+from io import BytesIO
 from six.moves import urllib
 from cgi import parse_header
 import os
@@ -89,7 +90,7 @@ class ContributionTool(BaseTool):
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   @fill_args_from_request('data', 'filename', 'portal_type', 'container_path',
                           'discover_metadata', 'temp_object', 'reference')
-  def newContent(self, REQUEST=None, **kw):
+  def newContent(self, REQUEST=None, **kw):  # pylint:disable=arguments-differ
     """
       The newContent method is overriden to implement smart content
       creation by detecting the portal type based on whatever information
@@ -167,7 +168,7 @@ class ContributionTool(BaseTool):
         except KeyError:
           raise ValueError('data must be provided')
         if data is not None:
-          file_object = StringIO()
+          file_object = BytesIO()
           file_object.write(data)
           file_object.seek(0)
           kw['file'] = file_object
@@ -282,7 +283,6 @@ class ContributionTool(BaseTool):
       Create a new content based on XML data. This is intended for contributing
       to ERP5 from another application.
     """
-    pass
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getMatchedFilenamePatternDict')
@@ -641,13 +641,13 @@ class ContributionTool(BaseTool):
     url_file = urllib.request.urlopen(urllib.request.Request(url,
                                                headers={'Accept':'*/*'}))
     data = url_file.read() # time out must be set or ... too long XXX
-    file_object = StringIO()
+    file_object = BytesIO()
     file_object.write(data)
     file_object.seek(0)
     # if a content-disposition header is present,
     # try first to read the suggested filename from it.
     header_info = url_file.info()
-    content_disposition = header_info.getheader('content-disposition', '')
+    content_disposition = header_info.get('content-disposition', '')
     filename = parse_header(content_disposition)[1].get('filename')
     if not filename:
       # Now read the filename from url.
@@ -661,7 +661,7 @@ class ContributionTool(BaseTool):
       filename = os.path.basename(filename)
       filename = urllib.parse.quote(filename, safe='') # pylint:disable=redundant-keyword-arg
       filename = filename.replace('%', '')
-    content_type = header_info.gettype()
+    content_type = header_info.gettype() if six.PY2 else header_info.get_content_type()
     return file_object, filename, content_type
 
 InitializeClass(ContributionTool)

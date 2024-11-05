@@ -1,16 +1,21 @@
+import six
 import zope
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 import hashlib
 from zLOG import LOG, WARNING
-import base64
+if six.PY2:
+  from base64 import encodestring as base64_encodebytes
+else:
+  from base64 import encodebytes as base64_encodebytes
 import datetime
 import os
 import time
 import six
 import requests
 from Products.ERP5Type.Core.Workflow import ValidationFailed
+from Products.ERP5Type.Utils import str2bytes, bytes2str
 
 present = False
 tz = None
@@ -54,10 +59,10 @@ class PayzenREST:
   """
 
   def callPayzenApi(self, URL, payzen_dict):
-    base64string = base64.encodestring(
-      '%s:%s' % (
+    base64string = bytes2str(base64_encodebytes(
+      str2bytes('%s:%s' % (
         self.getServiceUsername(),
-        self.getServiceApiKey())).replace('\n', '')
+        self.getServiceApiKey())))).replace('\n', '')
     header = {"Authorization": "Basic %s" % base64string}
     LOG('callPayzenApi', WARNING,
         "data = %s URL = %s" % (str(payzen_dict), URL), error=False)
@@ -141,7 +146,7 @@ class PayzenService(XMLObject, PayzenREST):
         v = str(v)
       signature += v + '+'
     signature += self.getServicePassword()
-    return hashlib.sha1(signature).hexdigest()
+    return hashlib.sha1(str2bytes(signature)).hexdigest()
 
   def _getFieldList(self, payzen_dict):
     payzen_dict.update(

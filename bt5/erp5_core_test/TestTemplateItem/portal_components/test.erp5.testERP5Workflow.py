@@ -173,6 +173,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
       state1.getStatePermissionRoleListDict(),
       {k: () for k in permission_list},
     )
+    state1.setAcquirePermissionList(['View'])
     state1.setStatePermissionRoleListDict(
       {k: ['Assignor', 'Manager'] for k in permission_list},
     )
@@ -180,10 +181,28 @@ class TestERP5Workflow(ERP5TypeTestCase):
       permission_list + ['Delete objects']
     )
     self.assertEqual(
+      state1.getAcquirePermissionList(),
+      ['View', 'Delete objects'],
+    )
+    self.assertEqual(
       state1.getStatePermissionRoleListDict(),
       {
         'Access contents information': ('Assignor', 'Manager'),
         'Delete objects': (),
+        'Modify portal content': ('Assignor', 'Manager'),
+        'View': ('Assignor', 'Manager'),
+      },
+    )
+
+    workflow.setWorkflowManagedPermissionList(permission_list)
+    self.assertEqual(
+      state1.getAcquirePermissionList(),
+      ['View'],
+    )
+    self.assertEqual(
+      state1.getStatePermissionRoleListDict(),
+      {
+        'Access contents information': ('Assignor', 'Manager'),
         'Modify portal content': ('Assignor', 'Manager'),
         'View': ('Assignor', 'Manager'),
       },

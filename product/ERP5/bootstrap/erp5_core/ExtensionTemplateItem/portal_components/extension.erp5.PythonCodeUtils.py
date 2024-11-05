@@ -1,9 +1,9 @@
-from six import string_types as basestring
+import six
 import re
 import json
 import sys
 from zExceptions import ExceptionFormatter
-from Products.ERP5Type.Utils import checkPythonSourceCode
+from Products.ERP5Type.Utils import checkPythonSourceCode, unicode2str
 
 
 match_PEP263 = re.compile(r'^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)').match
@@ -15,7 +15,7 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   """
 
   # XXX data is encoded as json, because jQuery serialize lists as []
-  if isinstance(data, basestring):
+  if isinstance(data, six.string_types):
     data = json.loads(data)
 
   # data contains the code, the bound names and the script params. From this
@@ -49,8 +49,10 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   else:
     body = data['code']
 
+  if six.PY2:
+    body = unicode2str(body)
   try:
-    message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
+    message_list = checkPythonSourceCode(body, data.get('portal_type'))
   except Exception:
     message_list = [{
       'type': 'E',

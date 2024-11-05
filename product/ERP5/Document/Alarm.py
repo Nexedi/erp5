@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from past.builtins import cmp
 from six import string_types as basestring
 from inspect import CO_VARKEYWORDS
 from random import getrandbits
@@ -41,6 +40,7 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import getActivityRuntimeEn
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import str2bytes
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
 class Alarm(XMLObject, PeriodicityMixin):
@@ -164,18 +164,22 @@ class Alarm(XMLObject, PeriodicityMixin):
           activate_kw['tag'] = '%s_%x' % (self.getRelativeUrl(), getrandbits(32))
         tag = activate_kw['tag']
         method = getattr(self, method_id)
-        func_code = getattr(method, '__code__', None)
-        if func_code is None: # BBB Zope2
-          func_code = method.func_code
-        try:
-          has_kw = func_code.co_flags & CO_VARKEYWORDS
-        except AttributeError:
-          # XXX guess presence of *args and **kw
-          name_list = func_code.co_varnames[func_code.co_argcount:]
-          has_args = bool(name_list and name_list[0] == 'args')
-          has_kw = bool(len(name_list) > has_args and
-                       name_list[has_args] == 'kw')
-        name_list = func_code.co_varnames[:func_code.co_argcount]
+        if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method'):
+          name_list = [e['name'] for e in method.argument_list()]
+          has_kw = False
+        else:
+          func_code = getattr(method, '__code__', None)
+          if func_code is None: # BBB Zope2
+            func_code = method.func_code
+          try:
+            has_kw = func_code.co_flags & CO_VARKEYWORDS
+          except AttributeError:
+            # XXX guess presence of *args and **kw
+            name_list = func_code.co_varnames[func_code.co_argcount:]
+            has_args = bool(name_list and name_list[0] == 'args')
+            has_kw = bool(len(name_list) > has_args and
+                         name_list[has_args] == 'kw')
+          name_list = func_code.co_varnames[:func_code.co_argcount]
         if 'params' in name_list or has_kw:
           # New New API
           getattr(self.activate(**activate_kw), method_id)(fixit=fixit, tag=tag, params=params)
@@ -348,18 +352,14 @@ class Alarm(XMLObject, PeriodicityMixin):
     result_list = [x for x in active_process.getResultList() if x is not None]
     attachment_list = []
     if len(result_list):
-      def sort_result_list(a, b):
-        result = - cmp(a.severity, b.severity)
-        if result == 0:
-          result = cmp(a.summary, b.summary)
-        return result
-      result_list.sort(sort_result_list)
+      # Here we assume that severity type is int or float and summary type is same for all entries.
+      result_list.sort(key=lambda e: (-e.severity, e.summary))
       rendered_alarm_result_list = ['%02i summary: %s\n%s\n----' %
         (int(getattr(x, 'severity', 0)), getattr(x, 'summary', ''), getattr(x, 'detail', ''))
         for x in result_list]
       rendered_alarm_result = '\n'.join(rendered_alarm_result_list)
       attachment_list.append({'name': 'alarm_result.txt',
-                              'content': rendered_alarm_result,
+                              'content': str2bytes(rendered_alarm_result),
                               'mime_type': 'text/plain'})
 
     notification_tool.sendMessage(recipient=candidate_list,

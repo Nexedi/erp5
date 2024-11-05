@@ -9,7 +9,7 @@ class PdfToBmp:
 
   __name__ = 'pdf_to_bmp'
   inputs   = ('application/pdf',)
-  output = 'image/x-ms-bmp'  # image/bmp
+  output = 'image/bmp'
 
   tranform_engine = OOOdCommandTransform.__module__
 
@@ -24,7 +24,7 @@ class PdfToBmp:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = str(orig)
+    data = bytes(orig)
     pdf = OOOdCommandTransform(context, filename, data, self.inputs[0])
     bmp = pdf.convertTo('bmp')
     if cache is not None:

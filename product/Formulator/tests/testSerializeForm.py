@@ -36,8 +36,10 @@ class FakeRequest:
     def clear(self):
         self.dict.clear()
 
-    def __nonzero__(self):
-        return 0
+    def __bool__(self):
+        return False
+    if six.PY2:
+      __nonzero__ = __bool__
 
 class SerializeTestCase(unittest.TestCase):
     def test_simpleSerialize(self):
@@ -174,6 +176,41 @@ class SerializeTestCase(unittest.TestCase):
             self.assertTrue(form2.has_field(field.getId()))
             field2 = getattr(form2, field.getId())
             # XXX test if values are the same
+            self.assertEqual(field.values, field2.values)
+            # test if default renderings are the same
+            self.assertEqual(field.render(), field2.render())
+
+        self.assertEqual(form.title, form2.title)
+        self.assertEqual(form.name, form2.name)
+        self.assertEqual(form.action, form2.action)
+        self.assertEqual(form.enctype, form2.enctype)
+        self.assertEqual(form.method, form2.method)
+
+        # if we have forgotten something, this will usually remind us ;-)
+        self.assertEqual(form.render(), form2.render())
+
+    def test_encoding(self):
+        """test a form with non ascii string
+        """
+        form = ZMIForm('test', '<EncodingTest>')
+        form.name = 'name'
+        form.add_group('àbcdé')
+
+        form.manage_addField('string_field', 'string Field héhé', 'StringField')
+        form.manage_addField('int_field', 'int Field héhé', 'IntegerField')
+        form.manage_addField('float_field', 'Float Field héhé', 'FloatField')
+        form.manage_addField('date_field', 'Date Field héhé', 'DateTimeField')
+        form.manage_addField('list_field', 'List Field héhé', 'ListField')
+        form.manage_addField('multi_field', 'Checkbox Field héhé', 'MultiCheckBoxField')
+
+        form2 = ZMIForm('test2', 'ValueTest')
+
+        xml = formToXML(form)
+        XMLToForm(xml, form2)
+
+        for field in form.get_fields():
+            self.assertTrue(form2.has_field(field.getId()))
+            field2 = getattr(form2, field.getId())
             self.assertEqual(field.values, field2.values)
             # test if default renderings are the same
             self.assertEqual(field.render(), field2.render())

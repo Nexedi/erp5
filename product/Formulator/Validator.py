@@ -10,6 +10,7 @@ from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urljoin
 from .Errors import ValidationError
 from DateTime.DateTime import DateError, TimeError
+from Products.ERP5Type.Utils import ensure_ascii, bytes2str, str2unicode, unicode2str
 import unicodedata
 
 class ValidatorBase:
@@ -184,7 +185,7 @@ class EmailValidator(StringValidator):
     # brackets around the address (we assume these would be added by
     # some custom script if needed), and of course no characters that
     # don't belong in an e-mail address.
-    pattern = re.compile('^[0-9a-zA-Z_\'&.%+-]+@([0-9a-zA-Z]([0-9a-zA-Z-]*[0-9a-zA-Z])?\.)+[a-zA-Z]{2,}$')
+    pattern = re.compile(r'^[0-9a-zA-Z_\'&.%+-]+@([0-9a-zA-Z]([0-9a-zA-Z-]*[0-9a-zA-Z])?\.)+[a-zA-Z]{2,}$')
 
     def validate(self, field, key, REQUEST):
         value = StringValidator.validate(self, field, key, REQUEST)
@@ -517,8 +518,8 @@ class SelectionValidator(StringBaseValidator):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and isinstance(item_value, six.text_type):
-          str_value = item_value.encode(field.get_form_encoding())
+        if six.PY2 and field.get_value('unicode') and isinstance(item_value, six.text_type):
+          str_value = unicode2str(item_value, field.get_form_encoding())
         else:
           str_value = str(item_value)
 
@@ -863,9 +864,7 @@ class DateTimeValidator(Validator):
                             int(day),
                             hour,
                             minute, timezone))
-      # ugh, a host of string based exceptions (not since Zope 2.7)
-    except ('DateTimeError', 'Invalid Date Components', 'TimeError',
-            DateError, TimeError) :
+    except (DateError, TimeError):
       self.raise_error('not_datetime', field)
     # pass value through request in order to be restored in case if validation fail
     if getattr(REQUEST, 'form', None):
@@ -908,10 +907,12 @@ fullwidth_minus_character_list = (
     )
 def normalizeFullWidthNumber(value):
   try:
-    value = unicodedata.normalize('NFKD', value.decode('UTF8'))
+    if six.PY2:
+      value = str2unicode(value)
+    value = unicodedata.normalize('NFKD', value)
     if value[0] in fullwidth_minus_character_list:
       value = u'-' + value[1:]
-    value = value.encode('ASCII', 'ignore')
+    value = ensure_ascii(value, 'ignore')
   except UnicodeDecodeError:
     pass
   return value

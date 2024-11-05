@@ -1,4 +1,3 @@
-# from ZTUtils import make_query
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 
@@ -8,7 +7,10 @@ if not same_type(portal_type, ''):
 
 query_params = {}
 
-related_list = portal.portal_catalog(portal_type=portal_type, limit=2, title=context.getTitle())
+related_list = portal.portal_catalog(
+  portal_type=portal_type,
+  limit=2,
+  title={'query': context.getTitle(), 'key': 'ExactMatch'})
 
 if len(related_list) == 0:
   redirect_context = context
@@ -29,13 +31,12 @@ else:
                "that_title": context.getTitleOrId() }),)
 
   if (len(related_list) > 1):
-
     # jump to the module if we can guess it
     module_id = portal.getDefaultModuleId(portal_type, None)
     if module_id is None:
       raise NotImplementedError('Can only search in module, not %s' % portal_type)
     redirect_context = portal.getDefaultModule(portal_type)
-    query_params['title'] = context.getTitle()
+    query_params['title'] = '="%s"' % context.getTitle()
     query_params['reset'] = True
 
 query_params['portal_status_message'] = message

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import six
 from Products.PortalTransforms.interfaces import ITransform
+from Products.ERP5Type.Utils import str2bytes
 from zope.interface import implementer
 from erp5.component.module.TransformLib import DocumentConversionServerTransform
 @implementer(ITransform)
@@ -19,13 +21,13 @@ class TransformHtmlToPdf(DocumentConversionServerTransform):
     # (https://lab.nexedi.com/nexedi/cloudooo/merge_requests/20)
     return 'html' if mimetype == 'text/html' else 'pdf'
 
-  def convert(self, *args, **kwargs):
+  def convert(self, orig, *args, **kwargs):
     # wkhtmltopdf handler currently requires conversion_kw (hack in convertFile())...
     if 'conversion_kw' not in kwargs:
       kwargs['conversion_kw'] = {'encoding': 'utf-8'}
-
-#    raise RuntimeError
-    return DocumentConversionServerTransform.convert(self, *args, **kwargs)
+    if six.PY3 and isinstance(orig, str):
+      orig = str2bytes(orig)
+    return DocumentConversionServerTransform.convert(self, orig, *args, **kwargs)
 
 def register():
   return TransformHtmlToPdf()

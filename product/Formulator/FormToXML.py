@@ -4,6 +4,7 @@ import six
 from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import E
+from Products.ERP5Type.Utils import str2unicode, bytes2str
 
 def formToXML(form, prologue=1):
     """Takes a formulator form and serializes it to an XML representation.
@@ -20,12 +21,12 @@ def formToXML(form, prologue=1):
         else:
           value = 'false'
       sub_element = SubElement(form_as_xml, id)
-      sub_element.text = str(value).decode(encoding)
+      sub_element.text = str2unicode(str(value), encoding)
     groups = SubElement(form_as_xml, 'groups')
     # export form groups
     for group in form.get_groups(include_empty=1):
       group_element = SubElement(groups, 'group')
-      group_element.append(E.title(group))
+      group_element.append(E.title(str2unicode(group, encoding)))
 
       fields = SubElement(group_element, 'fields')
       for field in form.get_fields_in_group(group, include_disabled=1):
@@ -36,8 +37,7 @@ def formToXML(form, prologue=1):
 
         fields.append(field_element)
         values_element = SubElement(field_element, 'values')
-        items = field.values.items()
-        items.sort()
+        items = sorted(field.values.items())
         for key, value in items:
           if value is None:
             continue
@@ -57,19 +57,19 @@ def formToXML(form, prologue=1):
             if not isinstance(value, six.string_types):
               value = str(value)
             value_element = SubElement(values_element, key)
-          value_element.text = str(value).decode(encoding)
+          value_element.text = str2unicode(str(value), encoding)
 
         tales_element = SubElement(field_element, 'tales')
-        items = field.tales.items()
-        items.sort()
+        items = sorted(field.tales.items())
         for key, value in items:
           if value:
             tale_element = SubElement(tales_element, key)
-            tale_element.text = str(value._text).decode(encoding)
+            tale_element.text = str2unicode(str(value._text), encoding)
+
         messages = SubElement(field_element, 'messages')
         for message_key in field.get_error_names():
           message_element = SubElement(messages, 'message', name=message_key)
-          message_element.text = field.get_error_message(message_key).decode(encoding)
+          message_element.text = str2unicode(field.get_error_message(message_key), encoding)
         # Special attribute for ProxyFields *delegated_list*
         delegated_list = getattr(field, 'delegated_list', [])
         if delegated_list:
@@ -78,8 +78,9 @@ def formToXML(form, prologue=1):
           [SubElement(delegated_list_element, delegated) for delegated in delegated_list]
 
     if form.unicode_mode:
-      return etree.tostring(form_as_xml, encoding='utf-8',
+      xml = etree.tostring(form_as_xml, encoding='utf-8',
                                     xml_declaration=True, pretty_print=True)
     else:
-      return etree.tostring(form_as_xml, encoding=form.stored_encoding,
+      xml = etree.tostring(form_as_xml, encoding=form.stored_encoding,
                                     xml_declaration=True, pretty_print=True)
+    return bytes2str(xml)

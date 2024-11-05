@@ -4,6 +4,7 @@
  </portal_type>
  <portal_type id="Integration Site">
   <item>Arrow</item>
+  <item>IntegrationSite</item>
   <item>Resource</item>
  </portal_type>
  <portal_type id="Synchronization Configurator Item">

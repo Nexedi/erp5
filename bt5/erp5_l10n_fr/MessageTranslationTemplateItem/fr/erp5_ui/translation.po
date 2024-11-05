@@ -6901,6 +6901,9 @@ msgstr "Délai max. (jours)"
 msgid "Max. delay (day)"
 msgstr "Délai Max (jours)"
 
+msgid "Maximize"
+msgstr "Agrandir"
+
 msgid "Maximum Date"
 msgstr "Date maximale"
 

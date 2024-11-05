@@ -782,8 +782,9 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     if list_method is not None:
       selectKwargsForCallable(list_method, list_method_query_dict, REQUEST)
 
-    if (True):  # editable_column_list (we need that template fields resolution
-                # (issued by existence of `form_relative_url`) always kicks in
+    if True:  # pylint:disable=using-constant-test
+      # editable_column_list (we need that template fields resolution
+      # (issued by existence of `form_relative_url`) always kicks in
       extra_param_dict = {
         # in case of a dialog the form_id points to previous form, otherwise current form
         "form_id": REQUEST.get('form_id', form.id)
@@ -1615,7 +1616,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if is_site_root:
 
       result_dict['default_view'] = 'view'
-      REQUEST.set("X-HATEOAS-CACHE", 1)
 
       # Global action users for the jIO plugin
       # XXX Would be better to not hardcode them but put them as portal type

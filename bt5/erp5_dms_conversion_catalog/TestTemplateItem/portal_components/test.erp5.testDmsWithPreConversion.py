@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-from erp5.component.test.testDms import TestDocument, makeFileUpload
+from erp5.component.test.testDms import TestDocument
 
 class TestDocumentWithPreConversion(TestDocument):
   """
@@ -40,7 +40,7 @@ class TestDocumentWithPreConversion(TestDocument):
 
   def test_preConvertedReferencedImageInWebPageContent(self):
     # create an image
-    upload_file = makeFileUpload('cmyk_sample.jpg')
+    upload_file = self.makeFileUpload('cmyk_sample.jpg')
     image = self.portal.image_module.newContent(portal_type='Image',
                                                reference='Embedded-XXX',
                                                version='001',
@@ -75,7 +75,7 @@ class TestDocumentWithPreConversion(TestDocument):
                                                language='en')
 
     # draft image is not convertible
-    upload_file = makeFileUpload('cmyk_sample.jpg')
+    upload_file = self.makeFileUpload('cmyk_sample.jpg')
     image.edit(file=upload_file)
     self.tic()
     self.assertEqual(False, image.Base_isConvertible())

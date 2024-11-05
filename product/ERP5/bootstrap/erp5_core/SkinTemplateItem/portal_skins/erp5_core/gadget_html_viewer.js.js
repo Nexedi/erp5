@@ -96,6 +96,7 @@
       rowspan: true,
       align: true,
       scope: true,
+      width: true,
       summary: true,
       download: true
     },
@@ -125,7 +126,10 @@
       width: true,
       'display': true,
       'list-style': true,
-      'text-align': true,
+      'line-height': true,
+      'font-size': true,
+      'font-family': true,
+      'text-decoration': true,
       'vertical-align': true,
       'border-radius': true
     },

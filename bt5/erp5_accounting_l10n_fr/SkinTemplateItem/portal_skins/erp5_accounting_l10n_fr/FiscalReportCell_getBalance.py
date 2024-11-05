@@ -23,10 +23,10 @@ kw['where_expression'] = " section.portal_type = 'Organisation' "
 ledger = kw.get('ledger', request.get("ledger", None))
 if ledger is not None:
   portal_categories = context.getPortalObject().portal_categories
-  if isinstance(ledger, list) or isinstance(ledger, tuple):
+  if isinstance(ledger, (tuple, list)):
     kw['ledger_uid'] = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
   else:
-    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(item).getUid()
+    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(ledger).getUid()
 
 sum_ = 0.0
 for accountNumber in accounts:

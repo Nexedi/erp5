@@ -29,7 +29,7 @@
 
 import six
 from six import string_types as basestring
-from Products.ERP5Type.Utils import ensure_list, bytes2str
+from Products.ERP5Type.Utils import ensure_list, bytes2str, str2bytes
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
@@ -79,6 +79,7 @@ from OFS import SimpleItem
 from OFS.Image import Pdata
 import coverage
 from io import BytesIO
+from six.moves import StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
 from Products.ERP5Type.XMLExportImport import exportXML, customImporters
@@ -94,6 +95,10 @@ from importlib import import_module
 import posixpath
 import transaction
 import inspect
+if six.PY2:
+  BufferedReader = file
+else:
+  from io import BufferedReader
 
 import threading
 from ZODB.broken import Broken, BrokenModified
@@ -344,13 +349,17 @@ class BusinessTemplateArchive(object):
     try:
       write = self._writeFile
     except AttributeError:
-      if not isinstance(obj, str):
+      if hasattr(obj, 'read'):
         obj.seek(0)
         obj = obj.read()
+      if not isinstance(obj, bytes):
+        obj = obj.encode('utf-8')
       self.revision.hash(path, obj)
       self._writeString(obj, path)
     else:
       if isinstance(obj, str):
+        obj = str2bytes(obj)
+      if isinstance(obj, bytes):
         self.revision.hash(path, obj)
         obj = BytesIO(obj)
       else:
@@ -372,11 +381,8 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     object_path = os.path.join(self.path, path)
     path = os.path.dirname(object_path)
     os.path.exists(path) or os.makedirs(path)
-    f = open(object_path, 'wb')
-    try:
+    with open(object_path, 'wb') as f:
       f.write(obj)
-    finally:
-      f.close()
 
   def importFiles(self, item):
     """
@@ -550,7 +556,7 @@ class BaseTemplateItem(Implicit, Persistent):
     pass
 
   def getKeys(self):
-    return ensure_list(self._objects.keys())
+    return list(self._objects)
 
   def importFile(self, bta, **kw):
     bta.importFiles(self)
@@ -559,7 +565,7 @@ class BaseTemplateItem(Implicit, Persistent):
     workflow_history = getattr(obj, 'workflow_history', None)
     if workflow_history is None:
       return
-    for workflow_id in ensure_list(workflow_history.keys()):
+    for workflow_id in list(workflow_history):
       workflow_history[workflow_id] = WorkflowHistoryList(
         [workflow_history[workflow_id][-1]])
 
@@ -618,7 +624,7 @@ class BaseTemplateItem(Implicit, Persistent):
       elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
         attr_set.add('type_provider_list')
 
-    for attr in ensure_list(obj.__dict__.keys()):
+    for attr in list(obj.__dict__):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
@@ -717,7 +723,7 @@ class ObjectTemplateItem(BaseTemplateItem):
   def __init__(self, id_list, tool_id=None, **kw):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     if tool_id is not None:
-      id_list = self._archive.keys()
+      id_list = list(self._archive)
       self._archive.clear()
       for id in id_list :
         if id != '':
@@ -789,7 +795,10 @@ class ObjectTemplateItem(BaseTemplateItem):
         return mime.extensions[0]
       for ext in mime.globs:
         if ext[0] == "*" and ext.count(".") == 1:
-          return ext[2:].encode("utf-8")
+          ext = ext[2:]
+          if six.PY2:
+            return ext.encode("utf-8")
+          return ext
 
     # in case we could not read binary flag from mimetypes_registry then return
     # '.bin' for all the Portal Types where exported_property_type is data
@@ -833,9 +842,12 @@ class ObjectTemplateItem(BaseTemplateItem):
               except (AttributeError, UnicodeEncodeError):
                 break
             elif type(data) is not bytes:
-              if not isinstance(data, Pdata):
+              if isinstance(data, str):
+                data = data.encode()
+              elif not isinstance(data, Pdata):
                 break
-              data = bytes(data)
+              else:
+                data = bytes(data)
             try:
               # Delete this attribute from the object.
               # in case the related Portal Type does not exist, the object may be broken.
@@ -861,9 +873,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj = self.removeProperties(obj, 1, keep_workflow_history = True)
           transaction.savepoint(optimistic=True)
 
-        f = BytesIO()
+        f = StringIO()
         exportXML(obj._p_jar, obj._p_oid, f)
-        bta.addObject(f, key, path=path)
+        bta.addObject(str2bytes(f.getvalue()), key, path=path)
 
       if catalog_method_template_item:
         # add all datas specific to catalog inside one file
@@ -917,7 +929,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     else:
       connection = self.getConnection(self.aq_parent)
       __traceback_info__ = 'Importing %s' % file_name
-      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+      if hasattr(cache_database, 'db') and isinstance(file_obj, BufferedReader):
         obj = connection.importFile(self._compileXML(file_obj))
       else:
         # FIXME: Why not use the importXML function directly? Are there any BT5s
@@ -1079,8 +1091,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     for path, old_object in upgrade_list:
       # compare object to see it there is changes
       new_object = self._objects[path]
-      new_io = BytesIO()
-      old_io = BytesIO()
+      new_io = StringIO()
+      old_io = StringIO()
       exportXML(new_object._p_jar, new_object._p_oid, new_io)
       new_obj_xml = new_io.getvalue()
       try:
@@ -1516,6 +1528,12 @@ class ObjectTemplateItem(BaseTemplateItem):
           container.getParentValue().updateCache()
         elif obj.__class__.__name__ in ('File', 'Image'):
           if "data" in obj.__dict__:
+            # XXX when installing very old business templates without the data stored
+            # in a separate file (such as the one from
+            # testTemplateTool.TestTemplateTool.test_updateBusinessTemplateFromUrl_keep_list)
+            # data might be loaded as a string, fix this here.
+            if obj.data is not None and not isinstance(obj.data, (bytes, Pdata)):
+              obj.data = obj.data.encode()
             # XXX Calling obj._setData() would call Interaction Workflow such
             # as document_conversion_interaction_workflow which would update
             # mime_type too...
@@ -1671,7 +1689,7 @@ class PathTemplateItem(ObjectTemplateItem):
   """
   def __init__(self, id_list, tool_id=None, **kw):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
-    id_list = ensure_list(self._archive.keys())
+    id_list = list(self._archive)
     self._archive.clear()
     self._path_archive = PersistentMapping()
     for id in id_list:
@@ -2030,7 +2048,7 @@ class SkinTemplateItem(ObjectTemplateItem):
     for (bt_obj_path, bt_obj) in six.iteritems(self._objects):
       if getattr(bt_obj, 'meta_type', None) == 'ERP5 Form':
         # search sub-objects of ERP5 Forms that are marked as "modified"
-        for upd_obj_path in ensure_list(modified_object_list.keys()):
+        for upd_obj_path in list(modified_object_list):
           if upd_obj_path.startswith(bt_obj_path):
             # a child of the ERP5 Form must be updated, so the form too
             if bt_obj_path not in modified_object_list:
@@ -2455,7 +2473,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
       obj = obj._getCopy(context)
       obj._p_activate()
-      for attr in ensure_list(obj.__dict__.keys()):
+      for attr in list(obj.__dict__):
         if attr == '_property_domain_dict':
           continue
         if attr[0] == '_' or attr in ('allowed_content_types',
@@ -2524,7 +2542,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       # import workflow chain for portal_type
       result_dict = {}
       xml = parse(file)
-      chain_list = xml.findall('//chain')
+      chain_list = xml.findall('.//chain')
       for chain in chain_list:
         portal_type = chain.find('type').text
         workflow = chain.find('workflow').text or ''
@@ -3255,7 +3273,7 @@ class ActionTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, **kw):
     # XXX It's look like ObjectTemplateItem __init__
     BaseTemplateItem.__init__(self, id_list, **kw)
-    id_list = ensure_list(self._archive.keys())
+    id_list = list(self._archive)
     self._archive.clear()
     for id in id_list:
       self._archive["%s/%s" % ('portal_types', id)] = None
@@ -3504,14 +3522,14 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         prop_value = role.get(property)
         if prop_value:
           if isinstance(prop_value, str):
-            prop_value = escape(prop_value.decode('utf-8'))
+            prop_value = escape(prop_value)
           xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
       for property in ('categories', 'category', 'base_category'):
         for prop_value in role.get(property, []):
           if isinstance(prop_value, str):
-            prop_value = escape(prop_value.decode('utf-8'))
+            prop_value = escape(prop_value)
           xml_data += "\n   <multi_property "\
           "id='%s'>%s</multi_property>" % (property, prop_value)
       xml_data += "\n  </role>"
@@ -3524,7 +3542,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     path = self.__class__.__name__
     for key in self._objects:
       xml_data = self.generateXml(key)
-      if isinstance(xml_data, six.text_type):
+      if six.PY2 and isinstance(xml_data, six.text_type):
         xml_data = xml_data.encode('utf-8')
       name = key.split('/', 1)[1]
       bta.addObject(xml_data, name=name, path=path)
@@ -3538,7 +3556,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     xml_type_roles_list = xml.findall('role')
     for role in xml_type_roles_list:
       id = role.get('id')
-      if isinstance(id, six.text_type):
+      if six.PY2 and isinstance(id, six.text_type):
         id = id.encode('utf_8', 'backslashreplace')
       type_role_property_dict = {'id': id}
       # uniq
@@ -3547,7 +3565,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         property_id = property_node.get('id')
         if property_node.text:
           value = property_node.text
-          if isinstance(value, six.text_type):
+          if six.PY2 and isinstance(value, six.text_type):
             value = value.encode('utf_8', 'backslashreplace')
           type_role_property_dict[property_id] = value
       # multi
@@ -3556,7 +3574,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         property_id = property_node.get('id')
         if property_node.text:
           value = property_node.text
-          if isinstance(value, six.text_type):
+          if six.PY2 and isinstance(value, six.text_type):
             value = value.encode('utf_8', 'backslashreplace')
           type_role_property_dict.setdefault(property_id, []).append(value)
       type_roles_list.append(type_role_property_dict)
@@ -3873,7 +3891,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     # fix key if necessary in installed bt for diff
     extra_prefix = self.__class__.__name__ + '/'
-    for key in ensure_list(installed_item._objects.keys()):
+    for key in list(installed_item._objects):
       if key.startswith(extra_prefix):
         new_key = key[len(extra_prefix):]
         installed_item._objects[new_key] = installed_item._objects[key]
@@ -3964,7 +3982,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.py'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    text = file.read()
+    text = file.read().decode('utf-8')
     self._objects[file_name[:-3]] = text
 
 class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
@@ -4019,7 +4037,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     backward-compatibility
     """
     def inner(self, *args, **kw):
-      if self._is_already_migrated(ensure_list(getattr(self, object_dict_name).keys())):
+      if self._is_already_migrated(list(getattr(self, object_dict_name))):
         result = getattr(ObjectTemplateItem, method_name)(self, *args, **kw)
       else:
         result = getattr(FilesystemDocumentTemplateItem,
@@ -4061,7 +4079,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = ensure_list(self._archive.keys())
+      object_keys = list(self._archive)
 
     if self._is_already_migrated(object_keys):
       ObjectTemplateItem.uninstall(self, *args, **kw)
@@ -4103,7 +4121,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     id_set = set(tool.objectIds())
 
     # careful, that dictionary will change
-    for class_id in ensure_list(migrate_object_dict.keys()):
+    for class_id in list(migrate_object_dict):
       # If the Property Sheet already exists in ZODB, then skip it,
       # otherwise it should not be needed anymore once the deletion
       # code of the filesystem Property Sheets is enabled
@@ -4168,7 +4186,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
         getattr(context.getPortalObject(), self._tool_id, None) is None):
       return FilesystemDocumentTemplateItem.install(self, context, **kw)
 
-    if not self._is_already_migrated(ensure_list(self._objects.keys())):
+    if not self._is_already_migrated(list(self._objects)):
       self._migrateAllFromFilesystem(context,
                                      self._objects,
                                      self._archive,
@@ -4270,7 +4288,7 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     the source code and its state to load it is necessary for ZODB Components
     and too much history would be exported (edit_workflow)
     """
-    for wf_id in ensure_list(obj.workflow_history.keys()):
+    for wf_id in list(obj.workflow_history):
       if wf_id != 'component_validation_workflow':
         del obj.workflow_history[wf_id]
         continue
@@ -4401,7 +4419,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
       return
 
     # After running the migration script, update bt5 property accordingly
-    if not self._is_already_migrated(ensure_list(self._archive.keys())):
+    if not self._is_already_migrated(list(self._archive)):
       document_id_list = self.getTemplateIdList()
       if document_id_list[0] not in getattr(context.getPortalObject(),
                                             'portal_components', ()):
@@ -4418,7 +4436,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
     automatically as the version must be set manually. This should not be an
     issue as there are not so many Documents in bt5...
     """
-    if self._is_already_migrated(ensure_list(self._objects.keys())):
+    if self._is_already_migrated(list(self._objects)):
       _ZodbComponentTemplateItem.install(self, context, **kw)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
@@ -4965,7 +4983,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       xml_data += '\n </local_role_group_ids>'
 
     xml_data += '\n</local_roles_item>'
-    if isinstance(xml_data, six.text_type):
+    if six.PY2 and isinstance(xml_data, six.text_type):
       xml_data = xml_data.encode('utf8')
     return xml_data
 
@@ -4982,7 +5000,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       return
     xml = parse(file)
     # local roles
-    local_roles_list = xml.findall('//role')
+    local_roles_list = xml.findall('.//role')
     local_roles_dict = {}
     for role in local_roles_list:
       id = role.get('id')
@@ -4991,7 +5009,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
     # local roles group id
     local_roles_group_id_dict = {}
-    for local_role_group_id in xml.findall('//local_role_group_id'):
+    for local_role_group_id in xml.findall('.//local_role_group_id'):
       role_set = set()
       for principal in local_role_group_id.findall('./principal'):
         role_set.add((principal.get('id'), principal.text))
@@ -6096,8 +6114,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_test_item', '_message_translation_item',]
 
       if item_name in item_list_1:
-        f1 = BytesIO() # for XML export of New Object
-        f2 = BytesIO() # For XML export of Installed Object
+        f1 = StringIO() # for XML export of New Object
+        f2 = StringIO() # For XML export of Installed Object
         # Remove unneeded properties
         new_object = new_item.removeProperties(new_object, 1)
         installed_object = installed_item.removeProperties(installed_object, 1)
@@ -6741,7 +6759,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       from base64 import b64encode
       def __newTempComponent(portal_type, reference, source_reference, migrate=False):
-        uid = b64encode("%s|%s|%s" % (portal_type, reference, source_reference))
+        uid = b64encode(("%s|%s|%s" % (portal_type, reference, source_reference)).encode())
+        if six.PY3:
+          uid = uid.decode()
         if migrate:
           bt_migratable_uid_list.append(uid)
 

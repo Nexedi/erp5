@@ -1,5 +1,7 @@
 from Products.ERP5OOo.OOoUtils import OOoParser
+from Products.ERP5Type.Utils import unicode2str
 import string
+import six
 
 request  = container.REQUEST
 
@@ -32,7 +34,7 @@ def getSpreadsheet(file):
 def cleanUid(uid):
   """method which clean an Uid"""
   clean = uid.strip(string.ascii_letters+'_')
-  return long(clean)
+  return int(clean) if six.PY3 else long(clean)
 
 # if listbox is empty, then we are in the first step
 if listbox is None:
@@ -152,7 +154,9 @@ else:
           if property_value:
             # Create a new property value
             property_id = column_mapping[line_property_index]
-            imported_line_property_dict[property_id] = property_value.encode('UTF-8')
+            if six.PY2:
+              property_value = unicode2str(property_value)
+            imported_line_property_dict[property_id] = property_value
 
 
       # If the line is not empty, activate an activity for it

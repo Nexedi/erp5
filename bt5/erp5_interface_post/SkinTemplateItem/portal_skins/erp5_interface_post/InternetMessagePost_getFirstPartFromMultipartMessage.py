@@ -5,13 +5,18 @@ multipart message). As for users don't want an accurate representation of
 the message, but a preview, we assume that rendering the first part
 of the multipart message is enough.
 """
-import email
+import six
+if six.PY2:
+  from email import message_from_string as message_from_bytes
+else:
+  from email import message_from_bytes
 
-message = email.message_from_string(context.getData())
-
-payload = message.get_payload()
+payload = message_from_bytes(context.getData()).get_payload()
 
 while isinstance(payload, list):
   payload = payload[0].get_payload(decode=True)
 
+if six.PY3:
+  from Products.ERP5Type.Utils import bytes2str
+  payload = bytes2str(payload)
 return payload

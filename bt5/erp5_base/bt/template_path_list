@@ -23,6 +23,7 @@ portal_transforms/image_to_ppm
 portal_transforms/image_to_svg
 portal_transforms/image_to_tiff
 portal_transforms/javascript_to_text
+portal_transforms/json_schema_to_text
 portal_transforms/pdf_to_html
 portal_transforms/pdf_to_png
 portal_transforms/pdf_to_text

@@ -29,6 +29,7 @@
 #
 ##############################################################################
 
+import six
 import errno, json, os, re, shutil
 from base64 import b64encode, b64decode
 from tempfile import gettempdir
@@ -40,8 +41,9 @@ from App.config import getConfiguration # pylint:disable=no-name-in-module,impor
 from DateTime import DateTime
 from ZTUtils import make_query
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
-from Products.ERP5Type.Utils import simple_decorator
+from Products.ERP5Type.Utils import simple_decorator, bytes2str, str2bytes
 from six import string_types as basestring
+from six.moves import range
 
 @simple_decorator
 def selfcached(func):
@@ -77,19 +79,18 @@ def issubdir(parent, child):
   return parent == child or child.startswith(parent + os.sep)
 
 ImplicitType = type(Implicit)
+class WorkingCopyMetaClass(ImplicitType):
+  def __init__(cls, name, bases, d): # pylint: disable=no-self-argument,super-init-not-called
+    ImplicitType.__init__(cls, name, bases, d) # pylint: disable=non-parent-init-called
+    if cls.reference:
+      cls._registry.append((cls.reference, cls))
 
-class WorkingCopy(Implicit):
+
+class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
 
   __allow_access_to_unprotected_subobjects__ = 1
   _registry = []
   reference = None
-
-  class __metaclass__(ImplicitType):
-
-    def __init__(cls, name, bases, d): # pylint: disable=no-self-argument,super-init-not-called
-      ImplicitType.__init__(cls, name, bases, d) # pylint: disable=non-parent-init-called
-      if cls.reference:
-        cls._registry.append((cls.reference, cls))
 
   def __init__(self, path=None, restricted=False):
     if path:
@@ -138,14 +139,14 @@ class WorkingCopy(Implicit):
 
   def _getCookie(self, name, default=None):
     try:
-      return json.loads(b64decode(self.REQUEST[name]))
-    except StandardError:
+      return json.loads(bytes2str(b64decode(self.REQUEST[name])))
+    except Exception:
       return default
 
   def _setCookie(self, name, value, days=30):
     portal = self.getPortalObject()
     request = portal.REQUEST
-    value = b64encode(json.dumps(value))
+    value = bytes2str(b64encode(str2bytes(json.dumps(value))))
     request.set(name, value)
     if days:
       expires = (DateTime() + days).toZone('GMT').rfc822()
@@ -216,7 +217,7 @@ class WorkingCopy(Implicit):
         hasDiff = lambda path: bool(getFilteredDiff(diff(path)))
       else:
         hasDiff = lambda path: True
-      self.__hasDiff = hasDiff
+      self.__hasDiff = hasDiff  # pylint:disable=unused-private-member
     return hasDiff(path)
 
   def treeToXML(self, item) :
@@ -406,7 +407,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     prefix_length = len(os.path.join(self.path, ''))
     for dirpath, dirnames, filenames in os.walk(self.path):
       dirpath = dirpath[prefix_length:]
-      for i in xrange(len(dirnames) - 1, -1, -1):
+      for i in range(len(dirnames) - 1, -1, -1):
         d = dirnames[i]
         if d[0] != '.':
           d = os.path.join(dirpath, d)

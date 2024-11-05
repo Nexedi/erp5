@@ -29,7 +29,6 @@
       context.editor = editor = monaco.editor.create(
         this.element.querySelector('.monaco-container'),
         {
-          autoIndent: true,
           automaticLayout: window.ResizeObserver ? true : false,
           stickyScroll: {
             enabled: true,

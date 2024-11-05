@@ -30,14 +30,13 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Permissions import ManagePortal
+from Products.ERP5Type.Utils import non_publishable
 
 #from Products.ERP5ShortMessage import _dtmldir
 
 class SMSTool(BaseTool):
   """
-    This tool manages gadgets.
-
-    It is used as a central point to manage gadgets (ERP5 or external ones)...
+    This tool takes care of sending SMS.
   """
   id = 'portal_sms'
   meta_type = 'ERP5 SMS Tool'
@@ -50,6 +49,7 @@ class SMSTool(BaseTool):
   #manage_overview = DTMLFile('explainSMSTool', _dtmldir )
 
   security.declareProtected(ManagePortal, 'send')
+  @non_publishable
   def send(self, text, recipient, sender, gateway_reference='default',
            document_relative_url=None, activate_kw=None):
     """Send the message

@@ -36,9 +36,11 @@ from erp5.component.document.Amount import Amount
 from erp5.component.module.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import OrderableKey
 from erp5.component.module.ExplanationCache import _getExplanationCache
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
+import six
 
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
@@ -334,7 +336,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     edit_order = []
     property_dict = {'edit_order': edit_order}
     for d in property_dict_list:
-      for k,v in d.iteritems():
+      for k,v in six.iteritems(d):
         if k in property_dict:
           raise DuplicatedPropertyDictKeysError(k)
         property_dict[k] = v
@@ -780,15 +782,16 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     for i in self.getPortalObject().portal_categories.collect_order_group.contentValues():
       category_index_dict[i.getId()] = i.getIntIndex()
 
-    def sort_movement_group(a, b):
-      return cmp(category_index_dict.get(a.getCollectOrderGroup()),
-                 category_index_dict.get(b.getCollectOrderGroup())) or \
-             cmp(a.getIntIndex(), b.getIntIndex())
+    def sort_movement_group_key(a):
+      return (
+        OrderableKey(category_index_dict.get(a.getCollectOrderGroup())),
+        OrderableKey(a.getIntIndex()),
+      )
     if portal_type is None:
       portal_type = self.getPortalMovementGroupTypeList()
     movement_group_list = [x for x in self.contentValues(filter={'portal_type': portal_type}) \
                            if collect_order_group is None or collect_order_group == x.getCollectOrderGroup()]
-    return sorted(movement_group_list, sort_movement_group)
+    return sorted(movement_group_list, key=sort_movement_group_key)
 
   # XXX category name is hardcoded.
   def getDeliveryMovementGroupList(self, **kw):

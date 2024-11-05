@@ -48,7 +48,7 @@ from io import BytesIO
 import re
 import itertools
 import six
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
 try:
   from zExceptions import ResourceLockedError
@@ -103,7 +103,7 @@ class OOoTemplateStringIO(FasterStringIO):
   def write(self, s):
     return FasterStringIO.write(
         self,
-        convert_to_xml_compatible_string(s).encode('utf-8'))
+        str2bytes(unicode2str(convert_to_xml_compatible_string(s))))
 
 from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
 
@@ -278,7 +278,7 @@ class OOoTemplate(ZopePageTemplate):
 
   def renderIncludes(self, here, text, extra_context, request, sub_document=None):
     attached_files_dict = {}
-    arguments_re = re.compile('''(\S+?)\s*=\s*('|")(.*?)\\2\s*''',re.DOTALL)
+    arguments_re = re.compile(r'''(\S+?)\s*=\s*('|")(.*?)\2\s*''',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
       ret = []
       for opt_name in opts_names:
@@ -346,7 +346,7 @@ class OOoTemplate(ZopePageTemplate):
                                       ('style', 'draw:style-name', 'fr1')):
         options_dict.setdefault(name, options_dict.pop(old_name, default))
 
-      picture = self._resolvePath(options_dict.pop('path').encode())
+      picture = self._resolvePath(options_dict.pop('path'))
 
       # If this is not a File, build a new file with this content
       if not isinstance(picture, File):
@@ -439,7 +439,7 @@ class OOoTemplate(ZopePageTemplate):
       office_include.getparent().replace(office_include, draw_object)
     text = bytes2str(etree.tostring(xml_doc, encoding='utf-8', xml_declaration=True,
                                     pretty_print=False))
-    text = re.sub('<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
+    text = re.sub(r'<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
 
     return (text, attached_files_dict)
   # Proxy method to PageTemplate

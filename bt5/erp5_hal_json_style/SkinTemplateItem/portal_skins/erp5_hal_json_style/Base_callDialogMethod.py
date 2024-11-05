@@ -182,10 +182,7 @@ if len(listbox_id_list):
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]
-    listbox_keys = listbox.keys()
-    listbox_keys.sort()
-    for key in listbox_keys:
-      listbox_line = listbox[key]
+    for key, listbox_line in sorted(six.iteritems(listbox)):
       listbox_line['listbox_key'] = key
       listbox_line_list.append(listbox_line)
     listbox_line_list = tuple(listbox_line_list)
@@ -219,7 +216,7 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
 # At this point the 'dialog_method' should point to a form (if we are in report)
 # if we are not in Deferred mode - then it points to `Base_activateSimpleView`
 
-if True:
+if True:  # pylint:disable=using-constant-test
   if dialog_method != update_method:
     # When we are not executing the update action, we have to change the skin
     # manually,

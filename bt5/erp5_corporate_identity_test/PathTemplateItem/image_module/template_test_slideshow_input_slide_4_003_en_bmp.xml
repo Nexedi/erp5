@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/x-bmp</string> </value>
+            <value> <string>image/bmp</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>

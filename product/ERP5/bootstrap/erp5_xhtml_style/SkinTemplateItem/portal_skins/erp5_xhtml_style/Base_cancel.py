@@ -1,5 +1,5 @@
 topmost_url_document = context.Base_getURLTopmostDocumentValue()
-if not topmost_url_document.isURLAncestorOf(cancel_url):
+if not topmost_url_document.getOriginalDocument().isURLAncestorOf(cancel_url):
   return context.ERP5Site_redirect(topmost_url_document.absolute_url(),
     keep_items={'portal_status_message': 'Redirection to an external site prevented.'},
     **kw)

@@ -359,8 +359,6 @@ class Workflow(XMLObject):
     # Patch updateRoleMappingsFor so that if 2 workflows define security, then
     # we should do an AND operation between each roles list for a given
     # permission
-    # XXX(WORKFLOW): this is not tested: add a test with multiple workflows
-    # defining different permissions
     """
     Changes the object permissions according to the current
     state.
@@ -1001,7 +999,7 @@ class Workflow(XMLObject):
       sci.setWorkflowVariable(error_message=before_script_error_message)
       if validation_exc :
         # reraise validation failed exception
-        reraise(validation_exc, None, validation_exc_traceback)
+        reraise(type(validation_exc), validation_exc, validation_exc_traceback)
       return new_state
 
     # update state
@@ -1442,12 +1440,15 @@ class Workflow(XMLObject):
     return res
 
   def _setWorkflowManagedPermissionList(self, permission_list):
+    added_permission_set = set(permission_list) - set(self.getWorkflowManagedPermissionList())
     self._baseSetWorkflowManagedPermission(permission_list)
-
     # Add/remove the added/removed Workflow permissions to each state
     for state in self.getStateValueList():
-      state.setAcquirePermissionList(permission_list)
-
+      current_acquire_permission_set_or_added_permission_set = \
+          set(state.getAcquirePermissionList()) | added_permission_set
+      state.setAcquirePermissionList(
+        [e for e in permission_list
+          if e in current_acquire_permission_set_or_added_permission_set])
       permission_role_list_dict = state.getStatePermissionRoleListDict()
       state.setStatePermissionRoleListDict({
         permission: permission_role_list_dict.get(permission, [])

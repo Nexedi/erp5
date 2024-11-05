@@ -345,6 +345,12 @@ if six.PY2:
   allow_type(cStringIO.OutputType)
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
+import csv
+allow_module('csv')
+temp_io = io.StringIO()
+allow_type(type(csv.reader(temp_io)))
+allow_type(type(csv.writer(temp_io)))
+del temp_io
 allow_module('datetime')
 import datetime
 ContainerAssertions[datetime.datetime] = 1
@@ -400,6 +406,8 @@ import six.moves.urllib.parse
 allow_module('six.moves.urllib.parse')
 allow_type(six.moves.urllib.parse.ParseResult)
 allow_type(six.moves.urllib.parse.SplitResult)
+# BBB this is different type on python3
+allow_type(type(six.moves.urllib.parse.urldefrag('')))
 ModuleSecurityInfo('six.moves.urllib.parse').declarePublic(
   'urlencode',
   'quote', 'unquote',

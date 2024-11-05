@@ -37,6 +37,13 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return 'erp5_full_text_mroonga_catalog',
 
+  def afterSetUp(self):
+    super(TestTableStructureMigrationTestCase, self).afterSetUp()
+    # The default is utf8mb3 (>= MariaDB 10.6), utf8 (<= MariaDB 10.5)
+    self.charset = self.portal.erp5_sql_connection().query(
+      "SHOW VARIABLES like 'character_set_system'"
+    )[1][0][1]
+
   def beforeTearDown(self):
     self.portal.erp5_sql_connection().query('DROP table if exists X')
     self.portal.erp5_sql_connection().query('DROP table if exists `table`')
@@ -66,13 +73,13 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.query("SELECT a, b FROM X")
 
   def test_remove_column(self):
@@ -82,12 +89,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.query("SELECT b FROM X")
     with self.assertRaisesRegex(OperationalError,
                                  "Unknown column 'a' in 'field list'"):
@@ -99,12 +106,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `b` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.query("SELECT b FROM X")
     with self.assertRaisesRegex(OperationalError,
                                  "Unknown column 'a' in 'field list'"):
@@ -116,12 +123,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` varchar(10) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     # insterting '1' will be casted as int
     self.query("INSERT INTO X VALUES ('1')")
     self.assertEqual((1,), self.query("SELECT a FROM X")[1][0])
@@ -132,12 +139,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT 123
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.query("INSERT INTO X VALUES ()")
     self.assertEqual((123,), self.query("SELECT a FROM X")[1][0])
 
@@ -147,12 +154,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) NOT NULL COMMENT 'old comment'
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) NOT NULL COMMENT 'new comment'
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.assertEqual(
         ('a', 'new comment'),
         self.query(
@@ -170,13 +177,13 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         KEY `idx_a` (`a`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.query("SELECT * FROM X USE INDEX (`idx_a`)")
 
   def test_remove_index(self):
@@ -186,12 +193,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL,
         KEY `idx_a` (`a`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     with self.assertRaisesRegex(OperationalError,
                                  "Key 'idx_a' doesn't exist in table 'X'"):
       self.query("SELECT * FROM X USE INDEX (`idx_a`)")
@@ -204,14 +211,14 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
         `drop` int(11) DEFAULT NULL,
         `alter` int(11) DEFAULT NULL,
         KEY `CASE` (`drop`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
       CREATE TABLE `table` (
         `and` int(11) DEFAULT NULL,
         `alter` varchar(255) CHARACTER SET cp1250 COLLATE cp1250_croatian_ci DEFAULT 'BETWEEN',
         KEY `use` (`alter`)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         table_name='table')
     self.query(
         "SELECT `alter`, `and` FROM `table` USE INDEX (`use`)")
@@ -222,12 +229,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+            ) ENGINE=MyISAM DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}),
         dedent(
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
+            ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.assertEqual(
         ('X', 'InnoDB'),
         self.query(
@@ -245,12 +252,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='old comment'"""),
+            ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci COMMENT='old comment'""" % {'c': self.charset}),
         dedent(
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='new comment'"""))
+            ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci COMMENT='new comment'"""% {'c': self.charset}))
     self.assertEqual(
         ('X', 'new comment'),
         self.query(

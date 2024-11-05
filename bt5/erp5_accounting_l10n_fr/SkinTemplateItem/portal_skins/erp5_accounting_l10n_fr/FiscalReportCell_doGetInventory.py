@@ -26,10 +26,10 @@ section_region = section.getRegion()
 ledger = request.get("ledger", None)
 if ledger is not None:
   portal_categories = context.getPortalObject().portal_categories
-  if isinstance(ledger, list) or isinstance(ledger, tuple):
+  if isinstance(ledger, (tuple, list)):
     ledger_uid = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
   else:
-    ledger_uid = portal_categories.ledger.restrictedTraverse(item).getUid()
+    ledger_uid = portal_categories.ledger.restrictedTraverse(ledger).getUid()
 else:
   ledger_uid = None
 

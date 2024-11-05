@@ -12,6 +12,7 @@ from six.moves.urllib.parse import urljoin
 from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import ElementMaker
+from Products.ERP5Type.Utils import unicode2str, str2unicode
 import re
 import sys
 import six
@@ -41,8 +42,8 @@ def convert_to_xml_compatible_string(value):
   """
   if not value:
     return ''
-  if isinstance(value, str):
-    value = value.decode('utf-8')
+  if six.PY2 and isinstance(value, str):
+    value = str2unicode(value)
 
   # remove control characters as described in the example from
   # https://bugs.python.org/issue5166#msg95689
@@ -266,9 +267,9 @@ class Widget(object):
     """
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     if value is None:
       value = ''
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
@@ -293,9 +294,9 @@ class Widget(object):
     if attr_dict is None:
       attr_dict = {}
     attr_dict['{%s}value-type' % OFFICE_URI] = 'string'
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     if value is None:
       value = ''
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
@@ -336,9 +337,9 @@ class Widget(object):
     """
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     if value is None:
       value = ''
     draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
@@ -624,9 +625,9 @@ class CheckBoxWidget(Widget):
       attr_dict = {}
     if isinstance(value, int):
       value = str(value)
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -729,9 +730,9 @@ class TextAreaWidget(Widget):
         render_prefix, attr_dict, local_name):
         if attr_dict is None:
             attr_dict = {}
-        if isinstance(value, str):
+        if six.PY2 and isinstance(value, str):
             #required by lxml
-            value = value.decode('utf-8')
+            value = str2unicode(value)
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
 
         RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
@@ -1001,9 +1002,9 @@ class SingleItemsWidget(ItemsWidget):
 
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
 
     RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
@@ -1152,7 +1153,9 @@ class MultiItemsWidget(ItemsWidget):
     if value is None:
       return None
     value_list = self.render_items_odf(field, value, REQUEST)
-    value = ', '.join(value_list).decode('utf-8')
+    value = ', '.join(value_list)
+    if six.PY2:
+      value = str2unicode(value)
     return Widget.render_odg(self, field, value, as_string, ooo_builder,
                              REQUEST, render_prefix, attr_dict, local_name)
 
@@ -1184,9 +1187,9 @@ class MultiItemsWidget(ItemsWidget):
 
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
 
     RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
@@ -1566,8 +1569,8 @@ class DateTimeWidget(Widget):
     format_dict = self.format_to_sql_format_dict
     input_order = format_dict.get(self.getInputOrder(field),
                                   self.sql_format_default)
-    if isinstance(value, six.text_type):
-      value = value.encode(field.get_form_encoding())
+    if six.PY2 and isinstance(value, six.text_type):
+      value = unicode2str(value, field.get_form_encoding())
     return {'query': value,
             'format': field.get_value('date_separator').join(input_order),
             'type': 'date'}
@@ -1718,7 +1721,9 @@ class DateTimeWidget(Widget):
     # get the field value
     if not value and field.get_value('default_now'):
       value = DateTime()
-    text_node.text = self.format_value(field, value, mode='pdf').decode('utf-8')
+    text_node.text = self.format_value(field, value, mode='pdf')
+    if six.PY2:
+      text_node.text = str2unicode(text_node.text)
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
@@ -1760,7 +1765,9 @@ class DateTimeWidget(Widget):
     """
     if not value and field.get_value('default_now'):
       value = DateTime()
-    value_as_text = self.format_value(field, value, mode='pdf').decode('utf-8')
+    value_as_text = self.format_value(field, value, mode='pdf')
+    if six.PY2:
+      value_as_text = str2unicode(value_as_text)
     return Widget.render_odg_view(self, field, value_as_text, as_string,
                                       ooo_builder, REQUEST, render_prefix,
                                       attr_dict, local_name)
@@ -1934,9 +1941,9 @@ class IntegerWidget(TextWidget) :
     if attr_dict is None:
       attr_dict = {}
     attr_dict['{%s}value-type' % OFFICE_URI] = 'float'
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = str(value)
     attr_dict['{%s}value' % OFFICE_URI] = str(value)
@@ -2123,8 +2130,8 @@ class FloatWidget(TextWidget):
       # field.
       for x in xrange(0, precision):
         format += '0'
-    if isinstance(value, six.text_type):
-      value = value.encode(field.get_form_encoding())
+    if six.PY2 and isinstance(value, six.text_type):
+      value = unicode2str(value, field.get_form_encoding())
     return {'query': value,
             'format': format,
             'type': 'float'}
@@ -2134,7 +2141,9 @@ class FloatWidget(TextWidget):
     if attr_dict is None:
       attr_dict = {}
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-    text_node.text = self.format_value(field, value).decode('utf-8')
+    text_node.text = self.format_value(field, value)
+    if six.PY2:
+      text_node.text = str2unicode(text_node.text, 'utf-8')
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
@@ -2152,9 +2161,9 @@ class FloatWidget(TextWidget):
     if attr_dict is None:
       attr_dict = {}
     attr_dict['{%s}value-type' % OFFICE_URI] = 'float'
-    if isinstance(value, str):
+    if six.PY2 and isinstance(value, str):
       #required by lxml
-      value = value.decode('utf-8')
+      value = str2unicode(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = str(value)
     attr_dict['{%s}value' % OFFICE_URI] = str(value)

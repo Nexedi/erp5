@@ -57,7 +57,7 @@ class DocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
     # in some cases user (like Anonymous) can not view document according to portal catalog
     # but we may ask him to login if such a document exists
     isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
-    if isAuthorizationForced is not None and isAuthorizationForced():
+    if isAuthorizationForced is not None and isAuthorizationForced():  # pylint:disable=not-callable
       if unrestricted_apply(self.getDocumentValue, (name, portal)) is not None:
         # force user to login as specified in Web Section
         raise Unauthorized

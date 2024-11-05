@@ -35,6 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.utils import todo_erp5
+import six
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""
@@ -172,7 +173,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       portal_type=self.trade_model_path_portal_type, **kw)
     if criterion_property_dict:
       trade_model_path._setCriterionPropertyList(tuple(criterion_property_dict))
-      for property_, identity in criterion_property_dict.iteritems():
+      for property_, identity in six.iteritems(criterion_property_dict):
         trade_model_path.setCriterion(property_, identity)
     reference = kw.get('reference', None)
     if reference is not None:
@@ -290,7 +291,10 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
 
     # first level rule with simulation movement
     self.applied_rule = self.portal.portal_simulation.newContent(
-        portal_type='Applied Rule', causality_value=order)
+      portal_type='Applied Rule',
+      causality_value=order,
+      specialise_value=self.portal.portal_rules.new_order_root_simulation_rule,
+    )
 
     def setTestClassProperty(prefix, property_name, document):
       if prefix:
@@ -315,7 +319,9 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
         # second level rule with simulation movement
         document = setTestClassProperty(prefix, 'delivery_rule',
           document.newContent(
-          portal_type='Applied Rule'))
+          portal_type='Applied Rule',
+          specialise_value=self.portal.portal_rules.new_delivery_simulation_rule,
+        ))
         document = setTestClassProperty(prefix, 'delivery_simulation_movement',
           document.newContent(
           portal_type='Simulation Movement',
@@ -328,7 +334,9 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
           # third level rule with simulation movement
           document = setTestClassProperty(prefix, 'invoicing_rule',
               document.newContent(
-              portal_type='Applied Rule'))
+                portal_type='Applied Rule',
+                specialise_value=self.portal.portal_rules.new_invoice_simulation_rule,
+          ))
           document = setTestClassProperty(prefix,
                         'invoicing_simulation_movement',
               document.newContent(

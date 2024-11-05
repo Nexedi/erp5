@@ -524,14 +524,11 @@ var MapManager = /** @class */ (function () {
       _this.map_info.initial_position.longitude,
       _this.map_info.initial_position.altitude
     );
-    max = _this.map_info.width;
-    if (_this.map_info.depth > max) {
-      max = _this.map_info.depth;
-    }
-    if (_this.map_info.height > max) {
-      max = _this.map_info.height;
-    }
-    max = max < _this.map_info.depth ? _this.map_info.depth : max;
+    max = Math.max(
+      _this.map_info.depth,
+      _this.map_info.height,
+      _this.map_info.width
+    );
     // Skybox
     max_sky =  (max * 15 < 20000) ? max * 15 : 20000; //skybox scene limit
     skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: max_sky }, scene);
@@ -558,13 +555,13 @@ var MapManager = /** @class */ (function () {
     largeGroundBottom.renderingGroupId = 1;
     // Terrain
     // Give map some margin from the flight limits
-    width = _this.map_info.width * 1.10;
-    depth = _this.map_info.depth * 1.10;
+    width = _this.map_info.width * 1.30;
+    depth = _this.map_info.depth * 1.30;
     //height = _this.map_info.height;
     terrain = scene.getMeshByName("terrain001");
     terrain.isVisible = true;
     terrain.position = BABYLON.Vector3.Zero();
-    terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
+    terrain.scaling = new BABYLON.Vector3(depth / 50000, _this.map_info.height / 50000,
                                           width / 50000);
     // Enemies
     _this._enemy_list = [];
@@ -696,12 +693,6 @@ var MapManager = /** @class */ (function () {
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
     return this.mapUtils.latLonDistance(c1, c2);
-  };
-  MapManager.prototype.longitudToX = function (lon) {
-    return this.mapUtils.longitudToX(lon);
-  };
-  MapManager.prototype.latitudeToY = function (lat) {
-    return this.mapUtils.latitudeToY(lat);
   };
   MapManager.prototype.convertToLocalCoordinates =
     function (latitude, longitude, altitude) {
@@ -862,12 +853,14 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._checkDroneOut = function (drone) {
     if (drone.position) {
-      var map_limit = this._mapManager.getMapInfo().map_size / 2;
-      return (drone.position.z > this._mapManager.getMapInfo().height) ||
-        (drone.position.x < -map_limit) ||
-        (drone.position.x > map_limit) ||
-        (drone.position.y < -map_limit) ||
-        (drone.position.y > map_limit);
+      var map_info = this._mapManager.getMapInfo(),
+        width_limit = map_info.width / 2,
+        depth_limit = map_info.depth / 2;
+      return (drone.position.z > map_info.height) ||
+        (drone.position.x < -width_limit) ||
+        (drone.position.x > width_limit) ||
+        (drone.position.y < -depth_limit) ||
+        (drone.position.y > depth_limit);
     }
   };
 
@@ -1159,7 +1152,12 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._init = function () {
     var _this = this, canvas, hemi_north, hemi_south, camera, cam_radius,
-      on3DmodelsReady, map_size = 900; //GAMEPARAMETERS.map.map_size
+      on3DmodelsReady, mapUtils = new MapUtils(GAMEPARAMETERS.map),
+      map_size = Math.max(
+        mapUtils.map_info.depth,
+        mapUtils.map_info.height,
+        mapUtils.map_info.width
+      );
     canvas = this._canvas;
     this._delayed_defer_list = [];
     this._dispose();
@@ -1196,9 +1194,11 @@ var GameManager = /** @class */ (function () {
       this._scene
     );
     hemi_south.intensity = 0.75;
-    //HARDCODE camera to a hardcoded map_size
      //skybox scene limit
-    cam_radius = (map_size * 1.10 < 6000) ? map_size * 1.10 : 6000;
+    cam_radius = Math.min(
+      1.10 * Math.sqrt(mapUtils.map_info.width * mapUtils.map_info.depth),
+      6000
+    );
     camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;

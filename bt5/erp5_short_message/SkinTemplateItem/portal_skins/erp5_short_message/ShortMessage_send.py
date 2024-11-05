@@ -2,6 +2,9 @@
   Send the current sms by using a SMS gateway.
   Use default mobile phone of source and destination
 """
+if REQUEST is not None:
+  from zExceptions import Unauthorized
+  raise Unauthorized
 
 #Get recipients
 recipient_phone_list = [

@@ -21,7 +21,9 @@ MAIN FILE: render press release in different output formats
 # document_save:            save file in document module (default None)
 
 import re
+import six
 from base64 import b64encode
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
 blank = ''
 pref = context.getPortalObject().portal_preferences
@@ -137,10 +139,11 @@ if release_display_about:
     release_relative_url=release_relative_url,
   )
   #release_content = release_content.decode() + release_about.decode()
-  if isinstance(release_content, unicode):
-    release_content = release_content.encode("UTF-8")
-  if isinstance(release_about, unicode):
-    release_about = release_about.encode("UTF-8")
+  if six.PY2:
+    if isinstance(release_content, six.text_type):
+      release_content = unicode2str(release_content)
+    if isinstance(release_about, six.text_type):
+      release_about = unicode2str(release_about)
 
   release_content = release_content + release_about
 
@@ -226,9 +229,9 @@ if release_format == "pdf":
   )
 
   # ================ encode and build cloudoo elements =========================
-  embedded_html_data = release.Base_convertHtmlToSingleFile(release_content, allow_script=True)
-  header_embedded_html_data = release.Base_convertHtmlToSingleFile(release_head, allow_script=True)
-  footer_embedded_html_data = release.Base_convertHtmlToSingleFile(release_foot, allow_script=True)
+  embedded_html_data = str2bytes(release.Base_convertHtmlToSingleFile(release_content, allow_script=True))
+  header_embedded_html_data = str2bytes(release.Base_convertHtmlToSingleFile(release_head, allow_script=True))
+  footer_embedded_html_data = str2bytes(release.Base_convertHtmlToSingleFile(release_foot, allow_script=True))
   pdf_file = release.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
       orientation="portrait",
@@ -236,9 +239,9 @@ if release_format == "pdf":
       margin_bottom=20,
       margin_left=0,
       margin_right=0,
-      header_html_data=b64encode(header_embedded_html_data),
+      header_html_data=bytes2str(b64encode(header_embedded_html_data)),
       header_spacing=10,
-      footer_html_data=b64encode(footer_embedded_html_data),
+      footer_html_data=bytes2str(b64encode(footer_embedded_html_data)),
       footer_spacing=3
     )
   )

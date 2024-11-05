@@ -137,17 +137,17 @@ class SyncMLSubscription(XMLObject):
     result_count = len(r_list)
     if result_count:
       r = [str(x.path) for x in r_list]
+      callback_method = getattr(self.activate(**activate_kw), callback)
       if not limit:
         # We do not split in activity so call the callback right now
         syncml_logger.info("getAndIndex : got %d result and no limit, calling callback...",
                            result_count)
-        callback_method = getattr(self, callback)
         callback_method(path_list=r[:],
                         activate_kw=activate_kw,
                         **method_kw)
       else:
-        syncml_logger.info("getAndIndex : got %d, %r result, limit = %r, packet %r",
-                           result_count, r, limit, packet_size)
+        syncml_logger.info("getAndIndex : got %d result, limit = %r, packet %r",
+                           result_count, limit, packet_size)
         generated_other_activity = False
         if result_count == limit:
           # Recursive call to prevent too many activity generation
@@ -159,8 +159,6 @@ class SyncMLSubscription(XMLObject):
             callback, method_kw, activate_kw, **kw)
           generated_other_activity = True
 
-        activate = self.activate
-        callback_method = getattr(activate(**activate_kw), callback)
         if generated_other_activity:
           for i in range(0, result_count, packet_size):
             syncml_logger.info("-- getAndIndex : recursive call, generating for %s",
@@ -174,6 +172,7 @@ class SyncMLSubscription(XMLObject):
               syncml_logger.info("-- getAndIndex : i %s, call, generating for %s : %s",
                                  i, r[i:i+packet_size], activate_kw)
               callback_method(path_list=r[i:i+packet_size],
+                              activate_kw=activate_kw,
                               **method_kw)
             final_min = i +  packet_size
           else:
@@ -541,7 +540,7 @@ class SyncMLSubscription(XMLObject):
           xml_document = etree.tostring(xml_document, encoding='utf-8',
                                         pretty_print=True)
 
-        if six.PY2 and isinstance(xml_document, unicode):
+        if six.PY2 and isinstance(xml_document, six.text_type):
           xml_document = xml_document.encode('utf-8')
         # Link the signature to the document
         if signature:
@@ -783,8 +782,8 @@ class SyncMLSubscription(XMLObject):
       document_data = result.data
       signature = self.getSignatureFromGid(gid)
       if signature:
-        syncml_logger.info("signature is %s = %s", signature.getRelativeUrl(),
-                                                   signature.getValidationState())
+        syncml_logger.debug("signature is %s = %s", signature.getRelativeUrl(),
+                                                    signature.getValidationState())
 
       if not document_data:
         raise ValueError("No data for %s / %s" %(gid, document_path))
@@ -849,8 +848,8 @@ class SyncMLSubscription(XMLObject):
             sync_code='conflict_resolved_with_merge',
             command='Replace')
 
-        syncml_logger.info("\tMD5 is %s for %s", signature.checkMD5(document_data),
-                                                 signature.getReference())
+        syncml_logger.debug("\tMD5 is %s for %s", signature.checkMD5(document_data),
+                                                  signature.getReference())
         if not signature.checkMD5(document_data):
           # MD5 checksum tell there is a modification of the object
           # XXX this diff generation must managed by the conduit

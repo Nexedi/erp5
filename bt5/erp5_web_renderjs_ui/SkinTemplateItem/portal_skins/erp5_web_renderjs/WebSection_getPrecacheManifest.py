@@ -191,7 +191,8 @@ url_list.extend([
 # Add all extra dependencies
 precache_manifest_url_list = web_section.getLayoutProperty("configuration_precache_manifest_script_list", default='').splitlines()
 for precache_manifest_script_id in precache_manifest_url_list:
-  url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
+  if precache_manifest_script_id:
+    url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
 
 if REQUEST is not None:
   import json
