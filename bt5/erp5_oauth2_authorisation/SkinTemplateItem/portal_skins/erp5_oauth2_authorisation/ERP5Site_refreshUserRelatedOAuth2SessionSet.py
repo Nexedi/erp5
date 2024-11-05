@@ -9,18 +9,9 @@ for user_value in user_value_list:
   portal_type_dict[user_value.getPortalType()].add(user_value)
 user_value_set = set()
 portal = context.getPortalObject()
-portal_types = portal.portal_types
-for portal_type, document_value_set in six.iteritems(portal_type_dict):
+for document_value_set in six.itervalues(portal_type_dict):
   # Ignore non-user documents
-  if 'ERP5User' in getattr(
-    getattr(
-      portal_types,
-      portal_type,
-      None,
-    ),
-    'getTypePropertySheetList',
-    lambda: (),
-  )():
+  if 'ERP5User' in document_value_set.getPropertySheetIdSet():
     user_value_set.update(document_value_set)
 if user_value_set:
   for oauth2_session_value in portal.portal_catalog(

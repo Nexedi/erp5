@@ -41,7 +41,7 @@ getUserId</string> </value>
         </item>
         <item>
             <key> <string>expression</string> </key>
-            <value> <string>python: \'ERP5User\' in getattr(getattr(context.getPortalObject().portal_types, context.getPortalType(),  None), \'getTypePropertySheetList\', lambda: ())()</string> </value>
+            <value> <string>python: \'ERP5User\' in context.getPropertySheetIdSet()</string> </value>
         </item>
         <item>
             <key> <string>expression_cache_key</string> </key>
