@@ -194,6 +194,21 @@ class TestERP5Workflow(ERP5TypeTestCase):
       },
     )
 
+    workflow.setWorkflowManagedPermissionList(permission_list)
+    self.assertEqual(
+      state1.getAcquirePermissionList(),
+      ['View'],
+    )
+    self.assertEqual(
+      state1.getStatePermissionRoleListDict(),
+      {
+        'Access contents information': ('Assignor', 'Manager'),
+        'Delete objects': (),
+        'Modify portal content': ('Assignor', 'Manager'),
+        'View': ('Assignor', 'Manager'),
+      },
+    )
+
 
   def test_afterScript(self):
     workflow = self.workflow_module.newContent(
