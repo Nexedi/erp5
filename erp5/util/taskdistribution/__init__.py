@@ -489,6 +489,12 @@ class TaskDistributor(RPCRetry):
       """
       return self._retryRPC('getSlaposHateoasUrl')
 
+    def getServiceList(self, test_suite_title):
+      """
+        Returns the list of services needed to run the test
+      """
+      return self._retryRPC('getServiceList', (test_suite_title,))
+
     def createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
         """
