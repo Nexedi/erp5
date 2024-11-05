@@ -1446,9 +1446,9 @@ class Workflow(XMLObject):
     # Add/remove the added/removed Workflow permissions to each state
     for state in self.getStateValueList():
       state.setAcquirePermissionList(
-        [e for e in state.getAcquirePermissionList() if e in permission_list] + \
-          list(set(permission_list) - set(current_permission_list))
-      )
+        list(
+          {e for e in state.getAcquirePermissionList() if e in permission_list}
+          | (set(permission_list) - set(current_permission_list))))
 
       permission_role_list_dict = state.getStatePermissionRoleListDict()
       state.setStatePermissionRoleListDict({
