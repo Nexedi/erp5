@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drone_simulator_fixedwingdrone_js</string> </value>
+            <value> <string>drone_simulator_fixed_wing_drone_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -240,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1015.64203.48820.61559</string> </value>
+                      <value> <string>1020.30338.10759.37171</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1713429850.09</float>
+                              <float>1730799505.92</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
