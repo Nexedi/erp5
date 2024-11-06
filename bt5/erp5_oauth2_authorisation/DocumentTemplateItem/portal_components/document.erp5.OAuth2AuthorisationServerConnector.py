@@ -1179,8 +1179,9 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         algorithm=algorithm,
       )
     def generateRefreshToken(request):
+      erp5_client_value = request.client.erp5_client_value
       session_value = request.user.erp5_session_value
-      expiration_timestamp = now + request.client.erp5_client_value.getRefreshTokenLifespan()
+      expiration_timestamp = now + erp5_client_value.getRefreshTokenLifespan()
       session_expiration_date = session_value.getPolicyExpirationDate()
       if session_expiration_date is not None:
         expiration_timestamp = min(
@@ -1192,7 +1193,9 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         session_refresh_token_expiration_date is None or
         session_refresh_token_expiration_date < DateTime(expiration_timestamp)
       ):
-        session_value.setRefreshTokenExpirationDate(DateTime(expiration_timestamp))
+        session_value.setRefreshTokenExpirationDate(DateTime(
+          expiration_timestamp + erp5_client_value.getRefreshTokenLifespanAccuracy(),
+        ))
       _, algorithm, symetric_key = self.__getRefreshTokenKeyList()[0]
       return jwt.encode(
         {
