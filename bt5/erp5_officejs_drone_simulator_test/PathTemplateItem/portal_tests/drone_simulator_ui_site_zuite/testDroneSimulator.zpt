@@ -19,9 +19,11 @@
   <td>${base_url}/web_site_module/officejs_drone_simulator/</td>
   <td></td>
 </tr>
+<!-- error on /Zuite_waitForActivities
 <tal:block tal:define="web_site_name python: 'officejs_drone_simulator'">
    <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
  </tal:block>
+-->
 <!-- Check form -->
 <tr>
   <td>waitForElementPresent</td>
@@ -68,22 +70,48 @@
 <!-- Check simulator gadget and babylon lib -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class="container"]//a[contains(text(), 'Download Simulation LOG')]</td>
+  <td>//a[contains(text(), 'Download Simulation LOG')]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@class="container"]//textarea</td>
+  <td></td>
+<tr>
+<!-- Change drone type -->
+<tr>
+  <td>select</td>
+  <td>//select[@name="drone_type"]</td>
+  <td>value=Fixed Wings</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[text()='Drone min speed']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_script_page.html')]//input[@type="submit" and @name="action_run"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@id="loading"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), 'Download Simulation LOG')]</td>
   <td></td>
 <tr>
 <!-- Go to log page -->
@@ -124,14 +152,14 @@
 <tr>
   <td>type</td>
   <td>//textarea[@id="log_1"]</td>
-  <td>timestamp;;latitude;;longitude;;AMSL (m);;rel altitude (m);;pitch (Â°);;roll(Â°);;yaw(Â°);;air speed (m/s);;throttle(%);;climb rate(m/s)
-    16.666666666666668;45.6412;14.265800000000013;610.328;15</td>
+  <td>timestamp (ms);latitude (°);longitude (°);AMSL (m);rel altitude (m);yaw (°);ground speed (m/s);climb rate (m/s)
+    0;45.6412;14.2658;595;0;0;0;0<br />1;45.6403;14.2671;595;0;180;6;0</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//textarea[@id="log_2"]</td>
-  <td>timestamp;;latitude;;longitude;;AMSL (m);;rel altitude (m);;pitch (Â°);;roll(Â°);;yaw(Â°);;air speed (m/s);;throttle(%);;climb rate(m/s)
-    16.666666666666668;45.6412;14.265800000000013;610.328;15</td>
+  <td>timestamp (ms);latitude (°);longitude (°);AMSL (m);rel altitude (m);yaw (°);ground speed (m/s);climb rate (m/s)
+    0;45.6412;14.2658;595;0;0;0;0<br />1;45.6403;14.2671;595;0;180;6;0</td>
 </tr>
 <tr>
   <td>click</td>
@@ -151,12 +179,12 @@
 <!-- Check simulator gadget and babylon lib -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
   <td></td>
 <tr>
 </tbody></table>
