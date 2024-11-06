@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document*/
-(function (window, rJS, domsugar, document) {
+/*global window, rJS, domsugar, document, FixedWingDroneAPI*/
+(function (window, rJS, domsugar, document, FixedWingDroneAPI) {
   "use strict";
 
   var SIMULATION_SPEED = 1,
@@ -17,17 +17,7 @@
     INIT_LAT = 45.6412,
     INIT_ALT = 15,
     DEFAULT_SPEED = 16,
-    MAX_ACCELERATION = 6,
-    MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
-    MAX_SPEED = 26,
-    MAX_ROLL = 35,
-    MIN_PITCH = -20,
-    MAX_PITCH = 25,
-    MAX_CLIMB_RATE = 8,
-    MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 1,
-    // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'function assert(a, b, msg) {\n' +
       '  if (a === b)\n' +
@@ -49,14 +39,14 @@
       '}\n' +
       '\n' +
       'function compare(coord1, coord2) {\n' +
-      '  assert(coord1.latitude, coord2.latitude, "Latitude")\n' +
-      '  assert(coord1.longitude, coord2.longitude, "Longitude")\n' +
-      '  assert(coord1.altitude, coord2.altitude, "Altitude")\n' +
+      '  assert(coord1.latitude, coord2.latitude, "Latitude");\n' +
+      '  assert(coord1.longitude, coord2.longitude, "Longitude");\n' +
+      '  assert(coord1.altitude, coord2.altitude, "Altitude");\n' +
       '}\n' +
       '\n' +
       'me.onStart = function (timestamp) {\n' +
       '  assert(me.getSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
-      '  assert(me.getYaw(), 0, "Yaw angle")\n' +
+      '  assert(me.getYaw(), 0, "Yaw angle");\n' +
       '  me.initialPosition = me.getCurrentPosition();\n' +
       '  me.start_time = timestamp;\n' +
       '  me.setTargetCoordinates(\n' +
@@ -95,8 +85,9 @@
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
       'gadget_erp5_page_drone_capture_map_utils.js',
-      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
-      'gadget_erp5_page_drone_capture_flag_enemydrone.js'
+      'gadget_erp5_page_drone_capture_flag_multicopterdrone.js',
+      'gadget_erp5_page_drone_capture_flag_enemydrone.js',
+      FixedWingDroneAPI.SCRIPT_NAME
     ];
 
   rJS(window)
@@ -118,7 +109,7 @@
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < NUMBER_OF_DRONES; i += 1) {
-        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
+        DRONE_LIST[i] = {"id": i, "type": FixedWingDroneAPI.name,
                          "script_content": DEFAULT_SCRIPT_CONTENT};
       }
       map_json = {
@@ -144,16 +135,6 @@
       game_parameters_json = {
         "debug_test_mode": true,
         "drone": {
-          "maxAcceleration": MAX_ACCELERATION,
-          "maxDeceleration": MAX_DECELERATION,
-          "minSpeed": MIN_SPEED,
-          "speed": DEFAULT_SPEED,
-          "maxSpeed": MAX_SPEED,
-          "maxRoll": MAX_ROLL,
-          "minPitchAngle": MIN_PITCH,
-          "maxPitchAngle": MAX_PITCH,
-          "maxSinkRate": MAX_SINK_RATE,
-          "maxClimbRate": MAX_CLIMB_RATE,
           "onUpdateInterval": ON_UPDATE_INTERVAL,
           "list": DRONE_LIST
         },
@@ -170,6 +151,10 @@
         "log_drone_flight": LOG,
         "log_interval_time": LOG_TIME
       };
+      Object.keys(FixedWingDroneAPI.FORM_VIEW).forEach(function (parameter) {
+        var field = FixedWingDroneAPI.FORM_VIEW[parameter];
+        game_parameters_json.drone[field.key] = field.default;
+      });
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
         .push(function () {
@@ -241,4 +226,4 @@
         });
     });
 
-}(window, rJS, domsugar, document));
+}(window, rJS, domsugar, document, FixedWingDroneAPI));
