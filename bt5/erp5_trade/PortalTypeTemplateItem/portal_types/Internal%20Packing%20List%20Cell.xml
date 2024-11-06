@@ -20,8 +20,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      A DeliveryCell allows to define specific quantities\r\n
-      for each variation of a resource in a delivery line.\r\n
+            <value> <string>      A DeliveryCell allows to define specific quantities\n
+      for each variation of a resource in a delivery line.\n
 </string> </value>
         </item>
         <item>
@@ -56,12 +56,24 @@
             </value>
         </item>
         <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>DeliveryCell</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

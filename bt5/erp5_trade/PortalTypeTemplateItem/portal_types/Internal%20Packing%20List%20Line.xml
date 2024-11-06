@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Product object holds the information about\r\n
+            <value> <string>A Product object holds the information about \n
 a manufactured product, like a pen, a bicycle...</string> </value>
         </item>
         <item>
@@ -86,11 +86,7 @@ a manufactured product, like a pen, a bicycle...</string> </value>
         <item>
             <key> <string>searchable_text_property_id</string> </key>
             <value>
-              <tuple>
-                <string>title</string>
-                <string>description</string>
-                <string>short_title</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
