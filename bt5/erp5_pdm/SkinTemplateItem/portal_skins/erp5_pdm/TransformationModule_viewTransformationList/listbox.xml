@@ -89,6 +89,10 @@
                           <string>Translated Description</string>
                         </tuple>
                         <tuple>
+                          <string>specialise_title</string>
+                          <string>Transformation Template</string>
+                        </tuple>
+                        <tuple>
                           <string>owner_title</string>
                           <string>Owner</string>
                         </tuple>
