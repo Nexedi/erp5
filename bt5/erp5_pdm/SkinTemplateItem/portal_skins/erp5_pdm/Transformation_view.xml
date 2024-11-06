@@ -112,6 +112,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_transformation_type</string>
                         <string>my_resource_title</string>
                         <string>my_template_transformation_title_list</string>
                       </list>
