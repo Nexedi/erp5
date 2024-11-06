@@ -63,6 +63,42 @@
   <td>//textarea[@id="log_result_0"]</td>
   <td></td>
 <tr>
+<!-- Change drone type -->
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_capture_flag_script_page.html')]//button[text()="Parameters"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[text()='Drone Type']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>select</td>
+  <td>//select[@name="drone_type"]</td>
+  <td>value=Fixed Wings</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[text()='Drone min speed']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_capture_flag_script_page.html')]//button[text()="Run"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@id="loading"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), 'Download Simulation LOG')]</td>
+  <td></td>
+<tr>
 </tbody></table>
 </body>
 </html>
