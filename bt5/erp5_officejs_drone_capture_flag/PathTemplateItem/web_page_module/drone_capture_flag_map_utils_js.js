@@ -5,7 +5,7 @@
 var MapUtils = /** @class */ (function () {
   "use strict";
 
-  var FLAG_EPSILON = 15, R = 6371e3, FLAG_WEIGHT = 5, FLAG_SCORE = 5;
+  var R = 6371e3, FLAG_WEIGHT = 5, FLAG_SCORE = 5;
 
   //** CONSTRUCTOR
   function MapUtils(map_param) {
@@ -27,8 +27,7 @@ var MapUtils = /** @class */ (function () {
     );
     _this.map_info = {
       "depth": _this.map_param.depth,
-      "width": _this.map_param.width,
-      "flag_distance_epsilon": map_param.flag_distance_epsilon || FLAG_EPSILON
+      "width": _this.map_param.width
     };
     _this.map_info.height = _this.map_param.height;
     _this.map_info.start_AMSL = _this.map_param.start_AMSL;
