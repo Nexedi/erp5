@@ -1,7 +1,7 @@
 /*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
 /*global window, rJS, RSVP, URI,
  SimpleQuery, ComplexQuery, Query, QueryFactory, document, XMLHttpRequest,
- console*/
+ console, MouseEvent */
 (function (window, rJS, RSVP, URI, document,
   SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console,
   MouseEvent) {
@@ -551,10 +551,10 @@
     }, false, false)
     .onEvent('keydown', function (evt) {
       var gadget = this,
-          i,
-          next_event,
-          active_index,
-          ul = gadget.element.querySelector(".search_ul");
+        i,
+        next_event,
+        active_index,
+        ul = gadget.element.querySelector(".search_ul");
       if (evt.key === "ArrowDown" || evt.key === "ArrowUp") {
         if (ul.childNodes.length > 0) {
           for (i = 0; i < ul.childNodes.length; i += 1) {
@@ -576,8 +576,7 @@
             }
             if (active_index >= ul.childNodes.length) {
               active_index = 0;
-            }
-            else if (active_index === -1) {
+            } else if (active_index === -1) {
               active_index = ul.childNodes.length - 1;
             }
           }
@@ -613,8 +612,8 @@
       // Do not use li:hover css syntax, since we have to disable manually
       // the highlightnment when keyboard is used
       var gadget = this,
-                   i,
-                   ul = gadget.element.querySelector(".search_ul");
+        i,
+        ul = gadget.element.querySelector(".search_ul");
       if (evt.target.tagName.toLowerCase() === 'li') {
         for (i = 0; i < ul.childNodes.length; i += 1) {
           ul.childNodes[i].classList.remove('active');
