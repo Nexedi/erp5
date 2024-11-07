@@ -555,6 +555,9 @@
         next_event,
         active_index,
         ul = gadget.element.querySelector(".search_ul");
+      if (ul === null) {
+        return;
+      }
       if (evt.key === "ArrowDown" || evt.key === "ArrowUp") {
         if (ul.childNodes.length > 0) {
           for (i = 0; i < ul.childNodes.length; i += 1) {
@@ -614,6 +617,9 @@
       var gadget = this,
         i,
         ul = gadget.element.querySelector(".search_ul");
+      if (ul === null) {
+        return;
+      }
       if (evt.target.tagName.toLowerCase() === 'li') {
         for (i = 0; i < ul.childNodes.length; i += 1) {
           ul.childNodes[i].classList.remove('active');
