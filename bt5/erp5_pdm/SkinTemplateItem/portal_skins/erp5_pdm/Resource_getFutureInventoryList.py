@@ -9,10 +9,33 @@ inventory_list_kw = {
     'resource_uid': context.getUid(),
 }
 
+# By passing node_uid and section_uid instead of node_category and
+# section_category, we bypass 2 joins on category tables, and can
+# directly use a good index:
+# `resource_section_node_uid` (`resource_uid`,`section_uid`,`node_uid`,`simulation_state`)
+# So it's better to run 2 catalog queries to retrieve the uid
+# of the Organisations beforehand instead of confusing the catalog
+# and making it go through huge joins (where no index can be used)
 if node_category:
-  inventory_list_kw['node_category'] = node_category
+  node_uid_list = [
+    x.uid for x in portal.portal_catalog(
+      portal_type=portal.getPortalNodeTypeList(),
+      default_site_uid=portal.portal_categories.resolveCategory(node_category).getUid(),
+    )
+  ]
+  if not node_uid_list:
+    return []
+  inventory_list_kw["node_uid"] = node_uid_list
 if section_category:
-  inventory_list_kw['section_category'] = section_category
+  section_uid_list = [
+    x.uid for x in portal.portal_catalog(
+      portal_type=portal.getPortalNodeTypeList(),
+      default_group_uid=portal.portal_categories.resolveCategory(section_category).getUid(),
+    )
+  ]
+  if not section_uid_list:
+    return []
+  inventory_list_kw['section_uid'] = section_uid_list
 if quantity_unit:
   inventory_list_kw['quantity_unit'] = quantity_unit
 if metric_type:
