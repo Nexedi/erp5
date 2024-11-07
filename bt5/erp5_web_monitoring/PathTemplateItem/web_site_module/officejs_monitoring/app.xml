@@ -579,7 +579,7 @@ WebSection_getMonitorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1015.45944.11619.35208</string> </value>
+                      <value> <string>1019.37281.53022.31078</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -599,7 +599,7 @@ WebSection_getMonitorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1716562039.61</float>
+                              <float>1730218556.13</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
