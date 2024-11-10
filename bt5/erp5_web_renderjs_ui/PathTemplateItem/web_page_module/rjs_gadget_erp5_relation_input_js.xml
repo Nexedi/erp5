@@ -69,7 +69,9 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/javascript</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -240,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>987.36268.43767.1126</string> </value>
+                      <value> <string>1020.33621.37473.62976</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1603726868.97</float>
+                              <float>1730996837.75</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
