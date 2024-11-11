@@ -77,10 +77,11 @@ def formToXML(form, prologue=1):
           delegated_list.sort()
           [SubElement(delegated_list_element, delegated) for delegated in delegated_list]
 
-    if form.unicode_mode:
-      xml = etree.tostring(form_as_xml, encoding='utf-8',
-                                    xml_declaration=True, pretty_print=True)
-    else:
-      xml = etree.tostring(form_as_xml, encoding=form.stored_encoding,
-                                    xml_declaration=True, pretty_print=True)
-    return bytes2str(xml)
+    encoding = 'utf-8' if form.unicode_mode else form.stored_encoding
+    xml = etree.tostring(
+      form_as_xml,
+      encoding=encoding,
+      xml_declaration=True,
+      pretty_print=True,
+    )
+    return bytes2str(xml, encoding=encoding)
