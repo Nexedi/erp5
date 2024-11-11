@@ -1883,7 +1883,7 @@ Hé Hé Hé!""", page.asText().strip())
     # Check cache control
     cache_control_header = response.getHeader('Cache-Control')
     self.assertEqual(cache_control_header,
-      'max-age=600, stale-while-revalidate=360000, stale-if-error=31536000, public')
+      'max-age=14400, stale-while-revalidate=360000, stale-if-error=31536000, public')
   
     # Check Vary
     cache_control_header = response.getHeader('Vary')
