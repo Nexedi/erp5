@@ -482,7 +482,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       parent.portal_catalog.default_erp5_catalog_id = self.default_sql_catalog_id
       del parent.portal_catalog.default_sql_catalog_id
 
-    security.declarePublic('getPreferredSQLCatalogId')
+    @security.public
     def getPreferredSQLCatalogId(self, id=None):
       """
       Get the SQL Catalog from preference.
@@ -535,7 +535,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         return result
 
     # Schema Management
-    security.declareProtected(Permissions.ManagePortal, 'editColumn')
+    @security.protected(Permissions.ManagePortal)
     def editColumn(self, column_id, sql_definition, method_id, default_value, REQUEST=None, RESPONSE=None):
       """
         Modifies a schema column of the catalog
@@ -549,20 +549,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         new_schema.append(new_c)
       self.setColumnList(new_schema)
 
-    security.declareProtected(Permissions.ManagePortal, 'setColumnList')
+    @security.protected(Permissions.ManagePortal)
     def setColumnList(self, column_list):
       """
       """
       self._sql_schema = column_list
 
-    security.declarePublic('getColumnList')
+    @security.public
     def getColumnList(self):
       """
       """
       if not hasattr(self, '_sql_schema'): self._sql_schema = []
       return self._sql_schema
 
-    security.declarePublic('getColumn')
+    @security.public
     def getColumn(self, column_id):
       """
       """
@@ -571,7 +571,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           return c
       return None
 
-    security.declareProtected(Permissions.ManagePortal, 'editIndex')
+    @security.protected(Permissions.ManagePortal)
     def editIndex(self, index_id, sql_definition, REQUEST=None, RESPONSE=None):
       """
         Modifies the schema of the catalog
@@ -585,20 +585,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         new_index.append(new_c)
       self.setIndexList(new_index)
 
-    security.declareProtected(Permissions.ManagePortal, 'setIndexList')
+    @security.protected(Permissions.ManagePortal)
     def setIndexList(self, index_list):
       """
       """
       self._sql_index = index_list
 
-    security.declarePublic('getIndexList')
+    @security.public
     def getIndexList(self):
       """
       """
       if not hasattr(self, '_sql_index'): self._sql_index = []
       return self._sql_index
 
-    security.declarePublic('getIndex')
+    @security.public
     def getIndex(self, index_id):
       """
       """
@@ -608,7 +608,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return None
 
 
-    security.declarePublic('getAllowedRolesAndUsers')
+    @security.public
     def getAllowedRolesAndUsers(self, sql_catalog_id=None, local_roles=None):
       """
         Return allowed roles and users.
@@ -690,7 +690,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers, role_column_dict, local_role_column_dict
 
-    security.declarePublic('getSecurityUidDictAndRoleColumnDict')
+    @security.public
     def getSecurityUidDictAndRoleColumnDict(self, sql_catalog_id=None, local_roles=None):
       """
         Return a dict of local_roles_group_id -> security Uids and a
@@ -742,7 +742,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         security_uid_dict = []
       return security_uid_dict, role_column_dict, local_role_column_dict
 
-    security.declarePublic('getSecurityQuery')
+    @security.public
     def getSecurityQuery(self, sql_catalog_id=None, local_roles=None, **kw):
       """
         Build a query based on allowed roles or on a list of security_uid
@@ -820,7 +820,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     __call__ = searchResults
 
-    security.declarePrivate('unrestrictedSearchResults')
+    @security.private
     def unrestrictedSearchResults(self, **kw):
         """Calls ZSQLCatalog.searchResults directly without restrictions.
         """
@@ -829,7 +829,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     # We use a string for permissions here due to circular reference in import
     # from ERP5Type.Permissions
-    security.declareProtected('Search ZCatalog', 'getResultValue')
+    @security.protected('Search ZCatalog')
     def getResultValue(self, **kw):
         """
         A method to factor common code used to search a single
@@ -842,7 +842,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         except IndexError:
           return None
 
-    security.declarePrivate('unrestrictedGetResultValue')
+    @security.private
     def unrestrictedGetResultValue(self, **kw):
         """
         A method to factor common code used to search a single
@@ -883,7 +883,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         kw.setdefault('limit', self.default_count_limit)
         return ZCatalog.countResults(self, sql_catalog_id=catalog_id, **kw)
 
-    security.declarePrivate('unrestrictedCountResults')
+    @security.private
     def unrestrictedCountResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.countResults directly without restrictions.
         """
@@ -959,7 +959,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         wrapped_object_list.append(ImplicitAcquisitionWrapper(w, aq_parent(document_object)))
       return wrapped_object_list
 
-    security.declarePrivate('reindexCatalogObject')
+    @security.private
     def reindexCatalogObject(self, object, idxs=None, sql_catalog_id=None,**kw):
         '''Update catalog after object data has changed.
         The optional idxs argument is a list of specific indexes
@@ -990,7 +990,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
-    security.declarePrivate('uncatalogObjectList')
+    @security.private
     def uncatalogObjectList(self, message_list):
       """Uncatalog a list of objects"""
       # TODO: this is currently only a placeholder for further optimization
@@ -1000,7 +1000,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       except Exception:
         m.raised()
 
-    security.declarePrivate('unindexObject')
+    @security.private
     def unindexObject(self, object=None, path=None, uid=None,sql_catalog_id=None):
         """
           Remove from catalog.
@@ -1013,7 +1013,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           raise TypeError("unindexObject supports only uid now")
         self.uncatalog_object(path=path, uid=uid, sql_catalog_id=sql_catalog_id)
 
-    security.declarePrivate('beforeUnindexObject')
+    @security.private
     def beforeUnindexObject(self, object, path=None, uid=None,sql_catalog_id=None):
         """
           Remove from catalog.
@@ -1022,11 +1022,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           path = self.__url(object)
         self.beforeUncatalogObject(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
 
-    security.declarePrivate('getUrl')
+    @security.private
     def getUrl(self, object):
       return self.__url(object)
 
-    security.declarePrivate('moveObject')
+    @security.private
     def moveObject(self, object, idxs=None):
         """
           Reindex in catalog, taking into account
@@ -1038,7 +1038,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, is_object_moved=1)
 
-    security.declarePublic('getPredicatePropertyDict')
+    @security.public
     def getPredicatePropertyDict(self, object):
       """
       Construct a dictionnary with a list of properties
@@ -1065,7 +1065,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       property_dict['membership_criterion_category_list'] = object.getMembershipCriterionCategoryList()
       return property_dict
 
-    security.declarePrivate('getDynamicRelatedKeyList')
+    @security.private
     def getDynamicRelatedKeyList(self, key_list, sql_catalog_id=None):
       """
       Return the list of dynamic related keys.
@@ -1170,7 +1170,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         )
       return related_key_list
 
-    security.declarePublic('getCategoryValueDictParameterDict')
+    @security.public
     def getCategoryValueDictParameterDict(self, base_category_dict, category_table='category', strict_membership=True, forward=True, onJoin=lambda x: None):
       """
       From a mapping from base category ids to lists of documents, produce a
@@ -1257,7 +1257,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           query_list.append(SimpleQuery(uid=parent_uid_set))
       return ComplexQuery(query_list)
 
-    security.declarePublic('getCategoryParameterDict')
+    @security.public
     def getCategoryParameterDict(self, category_list, onMissing=lambda category: True, **kw):
       """
       From a list of categories, produce a query tree testing (strict or not,
@@ -1415,12 +1415,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           for r in r:
             getattr(r.activate(**kw), method_id)(*method_args, **method_kw)
 
-    security.declarePublic('searchAndActivate')
+    @security.public
     def searchAndActivate(self, *args, **kw):
       """Restricted version of _searchAndActivate"""
       return self._searchAndActivate(restricted=True, *args, **kw)
 
-    security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
+    @security.protected(Permissions.ManagePortal)
     def upgradeSchema(self, sql_catalog_id=None, src__=0):
       """Upgrade all catalog tables, with ALTER or CREATE queries"""
       portal = self.getPortalObject()
@@ -1464,7 +1464,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return sum(queries_by_connection_id.values(), [])
 
-    security.declarePublic('getDocumentValueList')
+    @security.public
     def getDocumentValueList(self, sql_catalog_id=None,
                              search_context=None, language=None,
                              strict_language=True, all_languages=None,

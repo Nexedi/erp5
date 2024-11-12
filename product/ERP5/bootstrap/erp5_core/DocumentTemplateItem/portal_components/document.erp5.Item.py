@@ -58,7 +58,7 @@ class Item(XMLObject, Amount):
                     , PropertySheet.Reference
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPrice(self,context=None,**kw):
     """
     Get the Price in the context.
@@ -74,8 +74,7 @@ class Item(XMLObject, Amount):
         local_price = resource.getPrice(self.asContext( context=context, **kw))
     return local_price
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRemainingQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRemainingQuantity(self):
     """
     Computes the quantity of an item minus quantity of all sub_items

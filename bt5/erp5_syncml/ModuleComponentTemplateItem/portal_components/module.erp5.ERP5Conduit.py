@@ -142,7 +142,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   # Declarative security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getEncoding')
+  @security.protected(Permissions.AccessContentsInformation)
   def getEncoding(self):
     """
     return the string corresponding to the local encoding
@@ -154,7 +154,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   #def __init__(self):
     #self.args = {}
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def addNode(self, xml=None, object=None, sub_object=None, reset=None, # pylint: disable=redefined-builtin
               simulate=None, **kw):
     """
@@ -211,7 +211,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     # We must returns the object created
     return {'conflict_list':conflict_list, 'object': sub_object}
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def deleteNode(self, xml=None, object=None, object_id=None, **kw): # pylint: disable=redefined-builtin
     """
     This method manage the deletion of a node as well as the deletion
@@ -265,7 +265,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         object.manage_setLocalPermissions(permission)
     return []
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'deleteObject')
+  @security.protected(Permissions.ModifyPortalContent)
   def deleteObject(self, object, object_id, **kw): # pylint: disable=redefined-builtin
     try:
       object._delObject(object_id)
@@ -273,7 +273,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #LOG('ERP5Conduit.deleteObject', DEBUG, 'Unable to delete: %s' % str(object_id))
       pass
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateNode(self, xml=None, object=None, previous_xml=None, force=False, # pylint: disable=redefined-builtin
                  simulate=False, reset=False, xpath_expression=None, **kw):
     """
@@ -423,8 +423,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         syncml_logger.warning("UpdateNode : not a property %s", etree.tostring(xml, pretty_print=True))
     return conflict_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getFormatedArgs')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFormatedArgs(self, args=None):
     """
     This lookd inside the args dictionnary and then
@@ -447,7 +446,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       new_args[keyword] = data
     return new_args
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def isProperty(self, xml):
     """
     Check if it is a simple property
@@ -500,8 +499,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         result_list = result_list[:-1]
     return context
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                         'getSubObjectXupdate')
+  @security.protected(Permissions.AccessContentsInformation)
   @deprecated
   def getSubObjectXupdate(self, xml):
     """
@@ -512,8 +510,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     self.changeSubObjectSelect(xml_copy)
     return xml_copy
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isHistoryAdd')
+  @security.protected(Permissions.AccessContentsInformation)
   def isHistoryAdd(self, xml):
     bad_list = (HISTORY_EXP,)
     value = xml.get('select')
@@ -526,8 +523,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             return -1
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getHistoryIdFromSelect')
+  @security.protected(Permissions.AccessContentsInformation)
   def getHistoryIdFromSelect(self, xml):
     """
     Return the id of the subobject in an xupdate modification
@@ -543,8 +539,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         return object_id
     return object_id
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getSubObjectXml')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubObjectXml(self, object_id, xml):
     """
     Return the xml of the subobject which as the id object_id
@@ -556,8 +551,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           return subnode
     return None
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'replaceIdFromXML')
+  @security.protected(Permissions.ModifyPortalContent)
   def replaceIdFromXML(self, xml, attribute_name, new_id, as_string=True):
     """XXX argument old_attribute_name is missing
     XXX name of method is not good, because content is not necessarily XML
@@ -582,8 +576,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       return etree.tostring(xml, encoding="utf-8")
     return xml
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getXMLFromObjectWithId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getXMLFromObjectWithId(self, object, xml_mapping, context_document=None): # pylint: disable=redefined-builtin
     """
       return the xml with Id of Object
@@ -600,8 +593,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         xml = func()
     return xml
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getXMLFromObjectWithGid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getXMLFromObjectWithGid(self, object, gid, xml_mapping, as_string=True, context_document=None): # pylint: disable=redefined-builtin
     """
       return the xml with Gid of Object
@@ -610,8 +602,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return self.replaceIdFromXML(xml_with_id, 'gid', gid, as_string=as_string)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getXMLFromObjectWithRid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getXMLFromObjectWithRid(self, object, rid, xml_mapping, as_string=True, context_document=None): # pylint: disable=redefined-builtin
     """
       return the xml with Rid of Object
@@ -620,7 +611,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xml_rid = self.replaceIdFromXML(xml_id, 'rid', rid, as_string=as_string)
     return xml_rid
 
-  security.declareProtected(Permissions.AccessContentsInformation,'convertToXml')
+  @security.protected(Permissions.AccessContentsInformation)
   def convertToXml(self, xml):
     """
     if xml is a string, convert it to a node
@@ -636,23 +627,21 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       xml = xml[0]
     return xml
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                               'getObjectType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getObjectType(self, xml):
     """
     Retrieve the portal type from an xml
     """
     return xml.get('portal_type')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                             'getPropertyType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyType(self, xml):
     """
     Retrieve the portal type from an xml
     """
     return xml.get('type')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'newObject')
+  @security.protected(Permissions.ModifyPortalContent)
   def newObject(self, object=None, xml=None, simulate=False, # pylint: disable=redefined-builtin
                 reset_local_roles=True, reset_workflow=True):
     """
@@ -689,14 +678,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       object.manage_afterEdit()
     self.afterNewObject(object)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                              'afterNewObject')
+  @security.protected(Permissions.AccessContentsInformation)
   def afterNewObject(self, object): # pylint: disable=redefined-builtin
     """Overloadable method
     """
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                            'getStatusFromXml')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStatusFromXml(self, xml):
     """
     Return a worklow status from xml
@@ -708,8 +695,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       status[keyword] = value
     return status
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                       'getElementFromXupdate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getElementFromXupdate(self, xml):
     """
     return a fragment node with applied xupdate
@@ -752,8 +738,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       return self.convertToXml(result)
     return xml
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getWorkflowActionFromXml')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWorkflowActionFromXml(self, xml):
     """
     Return the list of workflow actions
@@ -768,8 +753,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         action_list.append(subnode)
     return action_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                             'convertXmlValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def convertXmlValue(self, node, data_type=None):
     """Cast xml information into appropriate python type
     """
@@ -808,7 +792,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return data
 
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyXupdate')
+  @security.protected(Permissions.ModifyPortalContent)
   def applyXupdate(self, object=None, xupdate=None, previous_xml=None, **kw): # pylint: disable=redefined-builtin
     """
     Parse the xupdate and then it will call the conduit
@@ -928,7 +912,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         break
     return addable
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'constructContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def constructContent(self, object, object_id, portal_type): # pylint: disable=redefined-builtin
     """
     This allows to specify how to construct a new content.
@@ -940,7 +924,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     subobject = object.newContent(portal_type=portal_type, id=object_id)
     return subobject, True, True
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addWorkflowNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def addWorkflowNode(self, object, xml, simulate): # pylint: disable=redefined-builtin
     """
     This allows to specify how to handle the workflow information.
@@ -973,7 +957,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
     return conflict_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addLocalRoleNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def addLocalRoleNode(self, object, xml): # pylint: disable=redefined-builtin
     """
     This allows to specify how to handle the local role information.
@@ -991,7 +975,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     elif xml.xpath('local-name()') == LOCAL_GROUP_TAG:
       object.manage_setLocalGroupRoles(user, roles)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addLocalPermissionNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def addLocalPermissionNode(self, object, xml): # pylint: disable=redefined-builtin
     """
     This allows to specify how to handle the local permision informations.
@@ -1010,14 +994,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       object.manage_setLocalPermissions(permission, roles)
     return conflict_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
-
   # XXX Ugly hack to avoid calling interaction workflow when synchronizing
   # objects with ERP5SyncML as it leads to unwanted side-effects on the object
   # being synchronized, such as undesirable workflow history being added (for
   # example edit_workflow) and double conversion for OOo documents (for
   # example document_conversion_interaction_workflow defined for _setData())
   # making the source and destination XML representation different.
+
+  @security.protected(Permissions.ModifyPortalContent)
   @WorkflowMethod.disable
   def editDocument(self, object=None, **kw): # pylint: disable=redefined-builtin
     """
@@ -1027,7 +1011,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     syncml_logger.debug("editing document %s with %s", object, kw)
     object._edit(**kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getProperty')
+  @security.protected(Permissions.ModifyPortalContent)
   def getProperty(self, object, kw): # pylint: disable=redefined-builtin
     """
     This is the default getProperty method. This method

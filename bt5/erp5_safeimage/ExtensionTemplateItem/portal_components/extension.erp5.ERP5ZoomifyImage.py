@@ -471,7 +471,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
     #del app
     return
 
-  security.declareProtected('Add Documents, Images, and Files', 'ZoomifyProcess')
+  @security.protected('Add Documents, Images, and Files')
   def ZoomifyProcess(self, id, imageObject=None):
     """ factored out threading of process (removed for now) """
     if imageObject:

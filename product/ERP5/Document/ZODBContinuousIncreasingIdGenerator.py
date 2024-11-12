@@ -74,16 +74,14 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     last_id_dict[id_group] = None if poison else new_id
     return new_id
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'generateNewId')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewId(self, id_group=None, default=None, poison=False):
     """
       Generate the next id in the sequence of ids of a particular group
     """
     return self._generateNewId(id_group=id_group, default=default, poison=poison)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'generateNewIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewIdList(self, id_group=None, id_count=1, default=None, poison=False):
     """
       Generate a list of next ids in the sequence of ids of a particular group
@@ -92,8 +90,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
                                      default=default, poison=poison)
     return ensure_list(range(new_id - id_count, new_id))
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'initializeGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def initializeGenerator(self):
     """
       Initialize generator. This is mostly used when a new ERP5 site
@@ -117,8 +114,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
           continue
         self.last_id_dict[id_group] = last_id
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'clearGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def clearGenerator(self):
     """
       Clear generators data. This can be usefull when working on a
@@ -132,16 +128,14 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     # Remove dictionary
     self.last_id_dict = OOBTree()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'exportGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def exportGeneratorIdDict(self):
     """
       Export last id values in a dictionnary in the form { group_id : last_id }
     """
     return dict(self.last_id_dict)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'importGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def importGeneratorIdDict(self, id_dict, clear=False):
     """
       Import data, this is usefull if we want to replace a generator by
@@ -158,8 +152,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
         raise TypeError('the value given in dictionary is not a integer')
     self.last_id_dict.update(id_dict)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-       'rebuildGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def rebuildGeneratorIdDict(self):
     """
       Rebuild generator id dict.

@@ -80,8 +80,7 @@ class UrlRegistryTool(BaseTool):
     namespace = reference_mapping_namespace + preferred_namespace
     return BTreeMappingDict(namespace).__of__(self)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLMappingContainerFromContext')
+  @security.protected(Permissions.AccessContentsInformation)
   def getURLMappingContainerFromContext(self, context):
     """
     Return the container of mapping according given context.
@@ -95,8 +94,7 @@ class UrlRegistryTool(BaseTool):
     return self
 
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'clearUrlRegistryTool')
+  @security.protected(Permissions.ManagePortal)
   def clearUrlRegistryTool(self, context=None):
     """
     Unregister all namespaces.
@@ -105,8 +103,7 @@ class UrlRegistryTool(BaseTool):
       warn('context argument ignored', DeprecationWarning)
     self._initBTree()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'registerURL')
+  @security.protected(Permissions.ModifyPortalContent)
   def registerURL(self, url, reference, context=None):
     """
     Compute namespace key.
@@ -121,8 +118,7 @@ class UrlRegistryTool(BaseTool):
       return
     mapping[url] = reference
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getReferenceFromURL')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReferenceFromURL(self, url, context=None):
     """
     Return reference according provided url,
@@ -132,8 +128,7 @@ class UrlRegistryTool(BaseTool):
       warn('context argument ignored', DeprecationWarning)
     return self._getMappingDict()[url]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getReferenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReferenceList(self, context=None):
     """
     Return all references according to the given context.
@@ -143,8 +138,7 @@ class UrlRegistryTool(BaseTool):
     return self._getMappingDict().values()
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLListFromReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getURLListFromReference(self, reference, context=None):
     """
     """
@@ -157,8 +151,7 @@ class UrlRegistryTool(BaseTool):
         url_list.append(url)
     return url_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateUrlRegistryTool')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateUrlRegistryTool(self):
     """
     Fetch all document path, then call in activities

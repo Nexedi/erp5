@@ -68,7 +68,7 @@ class MailMessage(Event):
                     , PropertySheet.MailMessage
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTextContent(self, default=_MARKER):
     """
     Overload EmailDocument method to add backward compatibility layer

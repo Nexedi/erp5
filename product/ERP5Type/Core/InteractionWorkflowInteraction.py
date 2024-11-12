@@ -60,16 +60,14 @@ class InteractionWorkflowInteraction(IdAsReferenceMixin('interaction_'),
   # they use the categories paths directly and string operations
   # instead of traversing from the portal to get the objects
   # in order to have their id or value
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBeforeCommitScriptIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBeforeCommitScriptIdList(self):
     """
     returns the list of before commit script ids
     """
     return [path.split('/')[-1] for path in self.getBeforeCommitScriptList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBeforeCommitScriptValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBeforeCommitScriptValueList(self):
     """
     returns the list of before commit script values
@@ -78,16 +76,14 @@ class InteractionWorkflowInteraction(IdAsReferenceMixin('interaction_'),
     return [parent._getOb(transition_id) for transition_id
             in self.getBeforeCommitScriptIdList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getActivateScriptIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getActivateScriptIdList(self):
     """
     returns the list of activate script ids
     """
     return [path.split('/')[-1] for path in self.getActivateScriptList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getActivateScriptValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getActivateScriptValueList(self):
     """
     returns the list of activate script values
@@ -97,8 +93,7 @@ class InteractionWorkflowInteraction(IdAsReferenceMixin('interaction_'),
             in self.getActivateScriptIdList()]
 
   # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getActivateScriptList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getActivateScriptList(self):
     """
     returns the list of activate script
@@ -108,8 +103,7 @@ class InteractionWorkflowInteraction(IdAsReferenceMixin('interaction_'),
             if path.startswith('activate_script/')]
 
   # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBeforeCommitScriptList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBeforeCommitScriptList(self):
     """
     returns the list of before commit script

@@ -35,14 +35,6 @@ from datetime import datetime
 import six
 
 security = ModuleSecurityInfo(__name__)
-security.declarePublic('addToDate', 'getClosestDate',
-    'getIntervalBetweenDates', 'getMonthAndDaysBetween',
-    'getCompletedMonthBetween', 'getRoundedMonthBetween',
-    'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
-    'getBissextilCompliantYearFraction', 'getIntervalListBetweenDates',
-    'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
-    'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth', 'atTheEndOfPeriod',
-    'copyDate')
 
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
@@ -58,6 +50,7 @@ accountable_days_in_month = 30.
 accountable_months_in_year = 12.
 number_of_hours_in_year  = 8760
 
+@security.public
 def addToDate(date, to_add=None, **kw):
   """
   Return a new DateTime object with the corresponding added values.

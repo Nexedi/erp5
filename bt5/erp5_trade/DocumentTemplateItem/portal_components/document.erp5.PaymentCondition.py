@@ -49,8 +49,7 @@ class PaymentCondition(TradeModelLine):
                     , PropertySheet.Chain
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCalculationScript')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCalculationScript(self, context):
     # In the case of Payment Condition, unlike Trade Model Line,
     # it is not realistic to share the same method, so do not acquire

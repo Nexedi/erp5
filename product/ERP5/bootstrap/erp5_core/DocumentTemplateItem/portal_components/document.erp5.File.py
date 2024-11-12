@@ -86,7 +86,7 @@ class File(Document, OFS_File):
   __str__ = object.__str__
 
   ### Special edit method
-  security.declarePrivate( '_edit' )
+  @security.private
   def _edit(self, **kw):
     """
       This is used to edit files
@@ -116,7 +116,7 @@ class File(Document, OFS_File):
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   edit = WorkflowMethod( _edit )
 
-  security.declareProtected(Permissions.View, 'get_size')
+  @security.protected(Permissions.View)
   def get_size(self):
     """
     has to be overwritten here, otherwise WebDAV fails
@@ -150,25 +150,25 @@ class File(Document, OFS_File):
       data.seek(0)
       self.manage_upload(data)
 
-  security.declarePrivate('update_data')
+  @security.private
   def update_data(self, *args, **kw):
     super(File, self).update_data(*args, **kw)
     if six.PY2 and isinstance(self.size, long):  # pylint:disable=access-member-before-definition,undefined-variable
       self.size = int(self.size)
 
-  security.declareProtected(Permissions.ModifyPortalContent,'setFile')
+  @security.protected(Permissions.ModifyPortalContent)
   def setFile(self, data, precondition=None):
     self._setFile(data, precondition=precondition)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasFile')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasFile(self):
     """
     Checks whether a file was uploaded into the document.
     """
     return self.hasData()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'guessMimeType')
+  @security.protected(Permissions.AccessContentsInformation)
   @deprecated
   def guessMimeType(self, fname=None):
     """
@@ -177,7 +177,7 @@ class File(Document, OFS_File):
     return self.getPortalObject().portal_contributions.\
       guessMimeTypeFromFilename(fname)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getData(self, default=None):
     """return Data as bytes."""
     self._checkConversionFormatPermission(None)
@@ -190,13 +190,13 @@ class File(Document, OFS_File):
       return bytes(data)
 
   # DAV Support
-  security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
+  @security.protected(Permissions.ModifyPortalContent)
   def PUT(self, REQUEST, RESPONSE):
     """from Products.CMFDefault.File"""
     OFS_File.PUT(self, REQUEST, RESPONSE)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMimeTypeAndContent(self):
     # type: () -> tuple[str, bytes]
     """This method returns a tuple which contains mimetype and content."""
@@ -258,7 +258,7 @@ class File(Document, OFS_File):
     raise NotImplementedError
 
   # backward compatibility
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFilename')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFilename(self, default=_MARKER):
     """Fallback on getSourceReference as it was used
     before to store filename property

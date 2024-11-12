@@ -118,7 +118,7 @@ class DummyMailHostMixin(object):
           message_text = message_text.decode(part.get_content_charset('ascii'))
     return message_text
 
-  security.declarePrivate('getMessageList')
+  @security.private
   @classmethod
   def getMessageList(cls, decode=True):
     """ Return message list"""
@@ -126,7 +126,7 @@ class DummyMailHostMixin(object):
       return [(m[0], m[1], cls._decodeMessage(m[2])) for m in cls._message_list]
     return cls._message_list
 
-  security.declarePrivate('getLastLog')
+  @security.private
   @classmethod
   def getLastLog(cls):
     """ Return last message """

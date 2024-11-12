@@ -48,7 +48,7 @@ class CacheBag(CacheFactory):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'get')
+  @security.protected(Permissions.AccessContentsInformation)
   def get(self, cache_id, default=None):
     """
       Get value or return default.
@@ -71,7 +71,7 @@ class CacheBag(CacheFactory):
         return value
     return default
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'set')
+  @security.protected(Permissions.AccessContentsInformation)
   def set(self, cache_id, value):
     """
       Set value.

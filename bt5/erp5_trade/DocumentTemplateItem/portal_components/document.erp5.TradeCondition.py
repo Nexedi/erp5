@@ -86,10 +86,9 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
 
   def getMappedValueBaseCategoryList(self): # pylint: disable=arguments-differ
     return ()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'findEffectiveSpecialiseValueList')
   #deprecated # XXX
+
+  @security.protected(Permissions.AccessContentsInformation)
   def findEffectiveSpecialiseValueList(self, context, portal_type_list=None):
     """Return a list of effective specialised objects that is the
     inheritance tree.
@@ -103,8 +102,7 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
     return [x for x in context._findEffectiveSpecialiseValueList()
               if x.getPortalType() in portal_type_set]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAggregatedAmountList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAggregatedAmountList(self, *args, **kw):
     """
     """
@@ -127,7 +125,6 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
     return context.getAggregatedAmountList(*args, **kw)
 
   #deprecated # XXX
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getEffectiveModel')
+  @security.protected(Permissions.AccessContentsInformation)
   def getEffectiveModel(self, start_date=None, stop_date=None):
     return _getEffectiveModel(self, start_date, stop_date)

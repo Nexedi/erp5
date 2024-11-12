@@ -44,7 +44,7 @@ class LoginAccountProviderMixin:
   # Declarative security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.SetOwnPassword, 'notifyLoginFailure')
+  @security.protected(Permissions.SetOwnPassword)
   def notifyLoginFailure(self, **kw):
     """
     Notify an authentication failure.
@@ -53,7 +53,7 @@ class LoginAccountProviderMixin:
     if method is not None:
       return method(**kw)
 
-  security.declareProtected(Permissions.SetOwnPassword, 'notifyPasswordExpire')
+  @security.protected(Permissions.SetOwnPassword)
   def notifyPasswordExpire(self, **kw):
     """
     Notify a password expire event.
@@ -62,7 +62,7 @@ class LoginAccountProviderMixin:
     if method is not None:
       return method(**kw)
 
-  security.declareProtected(Permissions.SetOwnPassword, 'isLoginBlocked')
+  @security.protected(Permissions.SetOwnPassword)
   def isLoginBlocked(self, **kw):
     """
     Is this login blocked?
@@ -72,7 +72,7 @@ class LoginAccountProviderMixin:
       return method(**kw)
     return False
 
-  security.declareProtected(Permissions.SetOwnPassword, 'isPasswordExpired')
+  @security.protected(Permissions.SetOwnPassword)
   def isPasswordExpired(self, **kw):
     """
     Is password expired?
@@ -82,14 +82,14 @@ class LoginAccountProviderMixin:
       return method(**kw)
     return False
 
-  security.declareProtected(Permissions.SetOwnPassword, 'isPasswordValid')
+  @security.protected(Permissions.SetOwnPassword)
   def isPasswordValid(self, password, **kw):
     """
     Is password valid?
     """
     return not len(self.analyzePassword(password, **kw))
 
-  security.declareProtected(Permissions.SetOwnPassword, 'analyzePassword')
+  @security.protected(Permissions.SetOwnPassword)
   def analyzePassword(self, password, **kw):
     """
     Analyze password validity.
@@ -105,7 +105,7 @@ class LoginAccountProviderMixin:
       return []
     return method(password, **kw)
 
-  security.declareProtected(Permissions.SetOwnPassword, 'isPasswordAlreadyUsed')
+  @security.protected(Permissions.SetOwnPassword)
   def isPasswordAlreadyUsed(self, password):
     """
       Return if password has already been used.

@@ -44,7 +44,7 @@ class CacheProviderMixIn:
      """
      return self.getParentValue().getRamCacheFactory().getCachePluginById(self.getCacheId())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'get')
+  @security.protected(Permissions.AccessContentsInformation)
   def get(self, cache_id, default=None):
     """
       Get value from cache plugin.
@@ -55,7 +55,7 @@ class CacheProviderMixIn:
       value = value.getValue()
     return value
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'set')
+  @security.protected(Permissions.AccessContentsInformation)
   def set(self, cache_id, value):
     """
       Set value to cache plugin.

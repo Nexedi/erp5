@@ -258,7 +258,7 @@ class CaptchaField(ZMIField):
                             'manage_main')
   manage_main = DTMLFile('dtml/captchaFieldEdit', globals())
 
-  security.declareProtected('Change Formulator Forms', 'manage_edit')
+  @security.protected('Change Formulator Forms')
   def manage_edit(self, REQUEST):
     """
     Surcharged values for the captcha provider custom fields.
@@ -307,7 +307,7 @@ class CaptchaField(ZMIField):
       return self.manage_main(self, REQUEST,
                               manage_tabs_message=message)
 
-  security.declareProtected('Access contents information', 'get_value')
+  @security.protected('Access contents information')
   def get_value(self, id, **kw):
     if id in self.getCaptchaCustomPropertyList():
       return self.values[id]
@@ -324,7 +324,7 @@ class CaptchaField(ZMIField):
   security.declareProtected('View management screens', 'manage_talesForm')
   manage_talesForm = DTMLFile('dtml/captchaFieldTales', globals())
 
-  security.declareProtected('Change Formulator Forms', 'manage_tales')
+  @security.protected('Change Formulator Forms')
   def manage_tales(self, REQUEST):
     """Change TALES expressions.
     """

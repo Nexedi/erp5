@@ -142,14 +142,14 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
     # means Catalog is going to be an ERP5 object, which is why we need these
     # functions to be declared public.
 
-    security.declarePublic('getERP5CatalogIdList')
+    @security.public
     def getERP5CatalogIdList(self):
       """
       Get ERP5 Catalog Ids
       """
       return list(self.objectIds(spec=('ERP5 Catalog',)))
 
-    security.declarePublic('getERP5Catalog')
+    @security.public
     def getERP5Catalog(self, id=None, default_value=None):
       """
       Get current ERP5 Catalog
@@ -168,7 +168,7 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
     security.declarePublic('getSQLCatalog')
     getSQLCatalog = getERP5Catalog # For compatibilty
 
-    security.declarePrivate('reindexCatalogObject')
+    @security.private
     def reindexCatalogObject(self, object, idxs=None, sql_catalog_id=None, **kw):
         '''Update catalog after object data has changed.
         The optional idxs argument is a list of specific indexes
@@ -184,14 +184,14 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
           **kw
         )
 
-    security.declareProtected(Permissions.View, 'index_html')
+    @security.protected(Permissions.View)
     def index_html(self):
       """
       Override index_html to display the view for Catalog Tool
       """
       return self.view()
 
-    security.declarePrivate('getCatalogUrl')
+    @security.private
     def getCatalogUrl(self, object):
       return self.__url(object)
 

@@ -59,8 +59,7 @@ class LeavePeriod(PresencePeriod):
                     , PropertySheet.SortIndex
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoriatedQuantity(self, default=None, *args, **kw):
     """
     Surcharged accessor to calculate the Quantity in second.

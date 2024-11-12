@@ -253,24 +253,24 @@ class ReportSection:
     self.method_id = method_id
     self.temporary_selection = temporary_selection
 
-  security.declarePublic('getTitle')
+  @security.public
   def getTitle(self):
     return self.title
 
-  security.declarePublic('getTranslatedTitle')
+  @security.public
   def getTranslatedTitle(self):
     # deprecated: use title instead (with a translated string)
     return self.translated_title
 
-  security.declarePublic('getLevel')
+  @security.public
   def getLevel(self):
     return self.level
 
-  security.declarePublic('getPath')
+  @security.public
   def getPath(self):
     return self.path
 
-  security.declarePublic('getObject')
+  @security.public
   def getObject(self, context):
     object = context.getPortalObject().restrictedTraverse(self.path)
     if self.method_id is not None:
@@ -278,7 +278,7 @@ class ReportSection:
       object = getattr(object, self.method_id)(*self.param_list, **self.param_dict)
     return object
 
-  security.declarePublic('getFormId')
+  @security.public
   def getFormId(self):
     return self.form_id
 
@@ -303,7 +303,7 @@ class ReportSection:
     REQUEST.other.update(self._REQUEST['other'])
     del self._REQUEST
 
-  security.declarePublic('pushReport')
+  @security.public
   def pushReport(self, context, render_prefix=None):
     self.pushRequest()
 
@@ -375,7 +375,7 @@ class ReportSection:
     for selection_parameter in (self.selection_params or ()):
       REQUEST.form.pop(selection_parameter, None)
 
-  security.declarePublic('popReport')
+  @security.public
   def popReport(self, context, render_prefix=None):
     self.popRequest()
 

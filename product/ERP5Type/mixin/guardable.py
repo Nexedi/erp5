@@ -30,7 +30,7 @@ class GuardableMixin(ExpressionMixin('guard_expression')):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.ManagePortal)
 
-  security.declarePrivate('isGuarded')
+  @security.private
   def isGuarded(self):
     """
     Returns True if object has at least one of the guard securities set among:
@@ -44,7 +44,7 @@ class GuardableMixin(ExpressionMixin('guard_expression')):
                 self.getGuardPermissionList() or
                 self.getGuardRoleList())
 
-  security.declarePrivate('checkGuard')
+  @security.private
   def checkGuard(self,
                  security_manager,
                  workflow,

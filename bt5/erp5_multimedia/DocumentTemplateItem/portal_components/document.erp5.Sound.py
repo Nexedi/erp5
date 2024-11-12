@@ -31,7 +31,7 @@ class Sound(File):
                     , PropertySheet.Periodicity
     )
 
-  security.declareProtected(Permissions.View, 'index_html')
+  @security.protected(Permissions.View)
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
     """XXXXXX"""
     range = REQUEST.get_header('Range', None)

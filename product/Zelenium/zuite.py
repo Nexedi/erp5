@@ -206,7 +206,7 @@ class Zuite( OrderedFolder ):
         raise KeyError(key)
 
 
-    security.declareProtected( View, 'listTestCases' )
+    @security.protected(View)
     def listTestCases( self, prefix=() ):
         """ Return a list of our contents which qualify as test cases.
         """
@@ -235,7 +235,7 @@ class Zuite( OrderedFolder ):
         _recurseFSTestCases( result, prefix, fsobjs )
 
 
-    security.declareProtected(ManageSeleniumTestCases, 'getZipFileName')
+    @security.protected(ManageSeleniumTestCases)
     def getZipFileName(self):
         """ Generate a suitable name for the zip file.
         """
@@ -244,7 +244,7 @@ class Zuite( OrderedFolder ):
         return '%s-%s.zip' % ( self.getId(), now_str )
 
 
-    security.declareProtected(ManageSeleniumTestCases, 'manage_getZipFile')
+    @security.protected(ManageSeleniumTestCases)
     def manage_getZipFile( self
                          , archive_name=None
                          , include_selenium=True
@@ -267,7 +267,7 @@ class Zuite( OrderedFolder ):
         RESPONSE.write(bits)
 
 
-    security.declareProtected(ManageSeleniumTestCases, 'manage_createSnapshot')
+    @security.protected(ManageSeleniumTestCases)
     def manage_createSnapshot( self
                              , archive_name=None
                              , include_selenium=True
@@ -291,7 +291,7 @@ class Zuite( OrderedFolder ):
                                 ) )
 
 
-    security.declarePublic('postResults')
+    @security.public
     def postResults(self, REQUEST):
         """ Record the results of a test run.
 
@@ -409,7 +409,7 @@ class Zuite( OrderedFolder ):
     #
     #   Helper methods
     #
-    security.declarePrivate('_listFilesystemObjects')
+    @security.private
     def _listFilesystemObjects( self ):
         """ Return a mapping of any filesystem objects we "hold".
         """
@@ -425,7 +425,7 @@ class Zuite( OrderedFolder ):
         self._v_filesystem_objects = self._grubFilesystem( path )
         return self._v_filesystem_objects
 
-    security.declarePrivate('_listSeleniumObjects')
+    @security.private
     def _listSeleniumObjects( self ):
         """ Return a mapping of any filesystem objects we "hold".
         """
@@ -436,7 +436,7 @@ class Zuite( OrderedFolder ):
         self._v_selenium_objects = self._grubFilesystem(_SUPPORT_DIR)
         return self._v_selenium_objects
 
-    security.declarePrivate('_grubFilesystem')
+    @security.private
     def _grubFilesystem( self, path ):
 
         info = { 'testcases' : (), 'subdirs' : {} }
@@ -480,7 +480,7 @@ class Zuite( OrderedFolder ):
         return info
 
 
-    security.declarePrivate('_getFilename')
+    @security.private
     def _getFilename(self, name):
         """ Convert 'name' to a suitable filename, if needed.
         """
@@ -490,7 +490,7 @@ class Zuite( OrderedFolder ):
         return name
 
 
-    security.declarePrivate( '_getZipFile' )
+    @security.private
     def _getZipFile( self, include_selenium=True ):
         """ Generate a zip file containing both tests and scaffolding.
         """
@@ -682,7 +682,7 @@ class _FilesystemProxy( Folder ):
     security.declareProtected( View, 'test_suite_html' )
     test_suite_html = PageTemplateFile( 'suiteTests', _WWW_DIR )
 
-    security.declareProtected( View, 'get' )
+    @security.protected(View)
     def get( self, key, default=_MARKER ):
 
         for tc in self._fsobjs[ 'testcases' ]:
@@ -702,7 +702,7 @@ class _FilesystemProxy( Folder ):
 
         return file.__of__(self)
 
-    security.declareProtected( View, 'listTestCases' )
+    @security.protected(View)
     def listTestCases( self, prefix=() ):
         """ Return a list of our contents which qualify as test cases.
         """

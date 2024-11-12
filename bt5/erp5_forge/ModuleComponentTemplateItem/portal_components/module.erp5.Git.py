@@ -78,7 +78,7 @@ class Git(WorkingCopy):
       raise GitInstallationError("git command cannot be executed: %s" % \
                                    e.strerror)
 
-  security.declarePrivate('git')
+  @security.private
   def git(self, *args, **kw):
     strip = kw.pop('strip', True)
     p = self._git(stdout=subprocess.PIPE, stderr=subprocess.PIPE, *args, **kw)
@@ -106,7 +106,7 @@ class Git(WorkingCopy):
     login_list.append((remote_url, user, password))
     self._setCookie(self._login_cookie_name, login_list)
 
-  security.declarePrivate('remote_git')
+  @security.private
   def remote_git(self, *args, **kw):
     try:
       env = kw['env']

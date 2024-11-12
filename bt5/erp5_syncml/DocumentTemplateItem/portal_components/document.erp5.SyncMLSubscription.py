@@ -91,7 +91,7 @@ class SyncMLSubscription(XMLObject):
                     , PropertySheet.SyncMLSubscription
                     , PropertySheet.SyncMLSubscriptionConstraint )
 
-  security.declarePrivate('finishSynchronization')
+  @security.private
   def finishSynchronization(self,):
     """
     Last method call that will make sure to finish the sync process
@@ -103,7 +103,7 @@ class SyncMLSubscription(XMLObject):
       self.logout()
     self._edit(authenticated_user=None)
 
-  security.declarePrivate('getAndIndex')
+  @security.private
   def getAndIndex(self, callback, method_kw, activate_kw, **kw):
     """
     This methods is called by the asynchronous engine to index source
@@ -184,7 +184,7 @@ class SyncMLSubscription(XMLObject):
                           **method_kw)
     return result_count
 
-  security.declarePrivate('generateBaseResponse')
+  @security.private
   def generateBaseResponse(self, message_id=None):
     """
     Return a message containing default headers
@@ -200,7 +200,7 @@ class SyncMLSubscription(XMLObject):
     syncml_response.addBody()
     return syncml_response
 
-  security.declarePrivate('getSearchableSourcePath')
+  @security.private
   def getSearchableSourcePath(self):
     """
     Return the path of the subscription that will be used in sql table
@@ -208,7 +208,7 @@ class SyncMLSubscription(XMLObject):
     """
     return "%s/%%" % (self.getSourceValue().getPath().replace("_", r"\_"),)
 
-  security.declarePrivate('sendSyncCommand')
+  @security.private
   def sendSyncCommand(self, min_gid, max_gid, message_id, activate_kw):
     """
     This methods is intented to be called by asynchronous engine in activity to
@@ -228,7 +228,7 @@ class SyncMLSubscription(XMLObject):
     # activate_kw["group_method_cost"] = .05
     self.activate(**activate_kw).sendMessage(xml=bytes(syncml_response))
 
-  security.declarePrivate('applySyncCommand')
+  @security.private
   def applySyncCommand(self, response_message_id, activate_kw, **kw):
     """
     This methods is intented to be called by asynchronous engine in activity to
@@ -254,7 +254,7 @@ class SyncMLSubscription(XMLObject):
                     tag=activate_kw).sendMessage(xml=bytes(syncml_response))
 
 
-  security.declarePrivate('getAndActivate')
+  @security.private
   def getAndActivate(self, callback, activate_kw, **kw):
     """
     This methods is called by the asynchronous engine to split activity
@@ -360,7 +360,7 @@ class SyncMLSubscription(XMLObject):
                         activate_kw=activate_kw)
     return result_count
 
-  security.declarePrivate('sendMessage')
+  @security.private
   def sendMessage(self, xml):
     """
     Send the syncml response according to the protocol defined for the target
@@ -416,7 +416,7 @@ class SyncMLSubscription(XMLObject):
         % (self.getRelativeUrl()))
 
 
-  security.declarePrivate('applyActionList')
+  @security.private
   def applyActionList(self, syncml_request, syncml_response, simulate=False):
     """
     Browse the list of sync command received, apply them and generate answer
@@ -427,8 +427,6 @@ class SyncMLSubscription(XMLObject):
         request_message_id=syncml_request.header["message_id"],
         syncml_response=syncml_response,
         simulate=simulate)
-
-  security.declarePrivate('applySyncCommand')
   def _applySyncCommand(self, action, request_message_id, syncml_response,
                        simulate=False):
     """
@@ -671,7 +669,7 @@ class SyncMLSubscription(XMLObject):
     self.activate(**final_activate_kw).sendMessage(xml=bytes(syncml_response))
 
 
-  security.declarePrivate('getDeletedSyncMLData')
+  @security.private
   def getDeletedSyncMLData(self, syncml_response=None):
     """
     Retrieve & generate the syncml message for messages that were deleted
@@ -914,8 +912,7 @@ class SyncMLSubscription(XMLObject):
                        more_data)
     return not more_data
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConduit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConduit(self):
     """
     Return the conduit object defined
@@ -923,7 +920,7 @@ class SyncMLSubscription(XMLObject):
     conduit_name = self.getConduitModuleId()
     return getConduitByName(conduit_name)
 
-  security.declarePrivate('checkCorrectRemoteMessageId')
+  @security.private
   def checkCorrectRemoteMessageId(self, message_id):
     """
     Check this is not an already processed message based on its id
@@ -935,8 +932,7 @@ class SyncMLSubscription(XMLObject):
     # XXX To be done
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getXmlBindingGeneratorMethodId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getXmlBindingGeneratorMethodId(self, default=_MARKER, force=False):
     """
     XXX force parameter must be removed
@@ -948,8 +944,7 @@ class SyncMLSubscription(XMLObject):
       return self._baseGetXmlBindingGeneratorMethodId(default=default)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDataFromDocument')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDataFromDocument(self, document):
     """
     Return the data (xml or other) for a given document
@@ -959,8 +954,7 @@ class SyncMLSubscription(XMLObject):
       xml_mapping=self.getXmlBindingGeneratorMethodId(),
       context_document=self.getPath())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getGidFromObject')
+  @security.protected(Permissions.AccessContentsInformation)
   def getGidFromObject(self, object, encoded=True): # pylint: disable=redefined-builtin
     """
       Returns the object gid
@@ -983,8 +977,7 @@ class SyncMLSubscription(XMLObject):
       gid = raw_gid
     return gid
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDocumentFromGid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDocumentFromGid(self, gid):
     """
     Return the document for a given GID
@@ -1010,16 +1003,14 @@ class SyncMLSubscription(XMLObject):
         return document
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDocumentIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDocumentIdList(self, limit, **search_kw):
     """
     Method called to return the id list sorted within the given limits
     """
     return self.getDocumentList(id_only=True, limit=limit, **search_kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDocumentList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDocumentList(self, **kw):
     """
     This returns the list of sub-object corresponding
@@ -1045,7 +1036,7 @@ class SyncMLSubscription(XMLObject):
         % (self.getPath(), list_method_id))
     return result_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'generateNewSessionId')
+  @security.protected(Permissions.ModifyPortalContent)
   def generateNewSessionId(self):
     """
     Generate new session using portal ids
@@ -1056,7 +1047,7 @@ class SyncMLSubscription(XMLObject):
       id_generator="mysql_non_continuous_increasing_non_zodb",
       default=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getNextMessageId')
+  @security.protected(Permissions.ModifyPortalContent)
   def getNextMessageId(self):
     """
     Generate new message id using portal ids
@@ -1064,7 +1055,7 @@ class SyncMLSubscription(XMLObject):
     """
     return self.getNextMessageIdList(id_count=1)[0]
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getNextMessageIdList')
+  @security.protected(Permissions.ModifyPortalContent)
   def getNextMessageIdList(self, id_count):
     """
     Generate new message id list using portal ids
@@ -1076,8 +1067,7 @@ class SyncMLSubscription(XMLObject):
       id_group=id_group, id_count=id_count, default=1)
 
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'createNewAnchor')
+  @security.protected(Permissions.ModifyPortalContent)
   def createNewAnchor(self):
     """
       set a new anchor
@@ -1085,8 +1075,7 @@ class SyncMLSubscription(XMLObject):
     self.setLastAnchor(self.getNextAnchor())
     self.setNextAnchor(buildAnchorFromDate(DateTime()))
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'resetAnchorList')
+  @security.protected(Permissions.ModifyPortalContent)
   def resetAnchorList(self):
     """
       reset both last and next anchors
@@ -1094,8 +1083,7 @@ class SyncMLSubscription(XMLObject):
     self.setLastAnchor(NULL_ANCHOR)
     self.setNextAnchor(NULL_ANCHOR)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSignatureFromObjectId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSignatureFromObjectId(self, id): # pylint: disable=redefined-builtin
     """
     return the signature corresponding to the id
@@ -1111,16 +1099,14 @@ class SyncMLSubscription(XMLObject):
     else: # XXX-Aurel : maybe none is expected # pylint: disable=useless-else-on-loop
       raise KeyError(id)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSignatureFromGid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSignatureFromGid(self, gid):
     """
     return the signature corresponding to the gid
     """
     return self._getOb(gid, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSignatureList')
+  @security.protected(Permissions.AccessContentsInformation)
   @deprecated
   def getSignatureList(self):
     """
@@ -1128,8 +1114,7 @@ class SyncMLSubscription(XMLObject):
     """
     return self.contentValues(portal_type='SyncML Signature')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasSignature')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasSignature(self, gid):
     """
       Check if there's a signature with this uid
@@ -1137,8 +1122,7 @@ class SyncMLSubscription(XMLObject):
     return self.getSignatureFromGid(gid) is not None
 
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'resetSignatureList')
+  @security.protected(Permissions.ModifyPortalContent)
   def resetSignatureList(self):
     """
     XXX Method must be renamed as it delete signature and do no
@@ -1153,8 +1137,7 @@ class SyncMLSubscription(XMLObject):
       self.activate(activity='SQLQueue',
                     priority=ACTIVITY_PRIORITY).manage_delObjects(current_id_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConflictList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConflictList(self, *args, **kw):
     """
     Return the list of all conflicts from all signatures
@@ -1164,8 +1147,7 @@ class SyncMLSubscription(XMLObject):
       conflict_list.extend(signature.getConflictList())
     return conflict_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'indexSourceData')
+  @security.protected(Permissions.ModifyPortalContent)
   def indexSourceData(self, client=False):
     """
     Index source data into mysql for ensemble comparison
@@ -1211,8 +1193,7 @@ class SyncMLSubscription(XMLObject):
           subscription_path=self.getRelativeUrl())
 
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getAndActivateResetSignature')
+  @security.protected(Permissions.ModifyPortalContent)
   def getAndActivateResetSignature(self, min_packet_id=0):
     """
     Reset signature by packet (i.e. getAndActivate)

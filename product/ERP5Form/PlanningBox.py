@@ -2780,7 +2780,7 @@ class AxisGroup:
 
   security = ClassSecurityInfo()
 
-  security.declarePublic('setTitle')
+  @security.public
   def setTitle(self, new_title=None):
     """Change Axis Group Title
     """
@@ -3025,7 +3025,7 @@ class Info:
     self.link = link
     self.title = title
 
-  security.declarePublic('edit')
+  @security.public
   def edit(self, info=None):
     """
     Special method allowing to update Info content from an external script
@@ -3042,7 +3042,7 @@ class PlanningBox(ZMIField):
   validator = PlanningBoxValidatorInstance
   security = ClassSecurityInfo()
 
-  security.declareProtected('Access contents information', 'get_value')
+  @security.protected('Access contents information')
   def get_value(self, id, render_format='html', **kw):
     """
     Surcharge get_value.

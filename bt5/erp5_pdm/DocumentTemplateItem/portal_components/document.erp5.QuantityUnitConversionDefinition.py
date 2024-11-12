@@ -52,8 +52,7 @@ class QuantityUnitConversionDefinition(XMLObject):
                     , PropertySheet.QuantityUnitConversionDefinition
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self):
     """
       Set a title that includes the Quantity Unit
@@ -67,8 +66,7 @@ class QuantityUnitConversionDefinition(XMLObject):
 
     return default_title
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConversionRatio')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConversionRatio(self):
     """
       Compute conversion ratio associated with this definition

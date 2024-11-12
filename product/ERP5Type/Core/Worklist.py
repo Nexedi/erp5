@@ -68,8 +68,7 @@ class Worklist(IdAsReferenceMixin("worklist_"), GuardableMixin, Predicate):
       'Predicate',
     )
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getIdentityCriterionDict')
+    @security.protected(Permissions.AccessContentsInformation)
     def getIdentityCriterionDict(self):
       """
       XXX: Move this to Predicate class?
@@ -80,8 +79,7 @@ class Worklist(IdAsReferenceMixin("worklist_"), GuardableMixin, Predicate):
         return {}
 
     # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getActionType')
+    @security.protected(Permissions.AccessContentsInformation)
     def getActionType(self):
       prefix_length = len('action_type/')
       action_type_list = [path[prefix_length:] for path in self.getCategoryList()

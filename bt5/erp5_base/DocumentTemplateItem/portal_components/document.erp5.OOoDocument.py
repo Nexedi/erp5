@@ -127,22 +127,20 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
   rx_strip = re.compile(r'<[^>]*?>', re.DOTALL|re.MULTILINE)
   rx_compr = re.compile(r'\s+')
 
-  security.declareProtected(Permissions.View, 'index_html')
+  @security.protected(Permissions.View)
   @fill_args_from_request('display', 'quality', 'resolution')
   def index_html(self, REQUEST, *args, **kw):
     """Return the document data."""
     return Document.index_html(self, REQUEST, *args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSupportBaseDataConversion')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSupportBaseDataConversion(self):
     """
     OOoDocument is needed to conversion to base format.
     """
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTargetFormatItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTargetFormatItemList(self):
     """
       Returns a list of acceptable formats for conversion
@@ -350,8 +348,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         data = unicode2str(data)
     return mime, data
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            '_populateConversionCacheWithHTML')
+  @security.protected(Permissions.ModifyPortalContent)
   def _populateConversionCacheWithHTML(self, zip_file=None):
     """
     Extract content from the ODF zip file and populate the document.
@@ -389,7 +386,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       zip_file.close()
       archive_file.close()
 
-  security.declarePrivate('_convertToBaseFormat')
+  @security.private
   def _convertToBaseFormat(self):
     """
       Converts the original document into ODF
@@ -423,8 +420,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     """
     return getattr(self, '_base_metadata', {})
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateBaseMetadata')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateBaseMetadata(self, **kw):
     """
       Updates metadata information in the converted OOo document

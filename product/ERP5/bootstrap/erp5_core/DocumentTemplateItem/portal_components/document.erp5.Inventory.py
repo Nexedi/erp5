@@ -59,7 +59,7 @@ class Inventory(Delivery):
                     , PropertySheet.Inventory
                     )
 
-  security.declarePublic('alternateReindexObject')
+  @security.public
   def alternateReindexObject(self, **kw):
     """
     This method is called when an inventory object is included in a

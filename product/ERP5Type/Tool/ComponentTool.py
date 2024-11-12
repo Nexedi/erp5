@@ -111,7 +111,7 @@ class ComponentTool(BaseTool):
     """
     pass
 
-  security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
+  @security.protected(Permissions.ResetDynamicClasses)
   def reset(self,
             force=False,
             reset_portal_type_at_transaction_boundary=False):
@@ -174,8 +174,7 @@ class ComponentTool(BaseTool):
 
     return True
 
-  security.declareProtected(Permissions.ResetDynamicClasses,
-                            'resetOnceAtTransactionBoundary')
+  @security.protected(Permissions.ResetDynamicClasses)
   def resetOnceAtTransactionBoundary(self):
     """
     Schedule a single reset at the end of the transaction. The idea behind
@@ -257,7 +256,7 @@ class Test(ERP5TypeTestCase):
 
     return super(ComponentTool, self).newContent(*args, **kwargs)
 
-  security.declarePrivate('_getCommaSeparatedParameterList')
+  @security.private
   def _getCommaSeparatedParameterList(self, parameter_list):
     # clean parameter_list and split it by commas if necessary
     if not parameter_list:
@@ -268,7 +267,7 @@ class Test(ERP5TypeTestCase):
                              if parameter_name.strip())
     return parameter_list
 
-  security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
+  @security.protected(Permissions.ManagePortal)
   def runLiveTest(self, test_list=None, run_only=None, debug=False,
                   verbose=False, warnings='default'):
     """
@@ -320,7 +319,7 @@ class Test(ERP5TypeTestCase):
     finally:
       live_test_running = False
 
-  security.declareProtected(Permissions.ManagePortal, 'readTestOutput')
+  @security.protected(Permissions.ManagePortal)
   def readTestOutput(self, position=0):
     """
     Return unread part of the test result

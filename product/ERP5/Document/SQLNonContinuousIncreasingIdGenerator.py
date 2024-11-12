@@ -149,16 +149,14 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       set_last_id_method(id_group=id_group,
           last_id=self.last_max_id_dict[id_group].value)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'generateNewId')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewId(self, id_group=None, default=None, poison=False):
     """
       Generate the next id in the sequence of ids of a particular group
     """
     return self._generateNewId(id_group=id_group, default=default, poison=poison)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'generateNewIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewIdList(self, id_group=None, id_count=1, default=None, poison=False):
     """
       Generate a list of next ids in the sequence of ids of a particular group
@@ -167,8 +165,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
                                      default=default, poison=poison)
     return ensure_list(range(new_id - id_count, new_id))
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'initializeGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def initializeGenerator(self):
     """
       Initialize generator. This is mostly used when a new ERP5 site
@@ -217,8 +214,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     if storage:
       self._updateSqlTable()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'clearGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def clearGenerator(self):
     """
       Clear generators data. This can be usefull when working on a
@@ -236,8 +232,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     portal.IdTool_zDropTable()
     portal.IdTool_zCreateEmptyTable()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'exportGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def exportGeneratorIdDict(self):
     """
       Export last id values in a dictionnary in the form { group_id : last_id }
@@ -250,8 +245,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     return {line['id_group']: int(line['last_id'])
             for line in self._getValueListFromTable()}
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'importGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def importGeneratorIdDict(self, id_dict=None, clear=False):
     """
       Import data, this is usefull if we want to replace a generator by
@@ -277,8 +271,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         self.last_max_id_dict = OOBTree()
       self.last_max_id_dict.update(new_id_dict)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-       'rebuildGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def rebuildGeneratorIdDict(self):
     """
       Rebuild generator id dict from SQL table.
@@ -292,8 +285,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     id_dict = self.exportGeneratorIdDict()
     self.importGeneratorIdDict(id_dict=id_dict, clear=True)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'rebuildSqlTable')
+  @security.protected(Permissions.ModifyPortalContent)
   def rebuildSqlTable(self):
     """
       After a mysql crash, it could be needed to restore values stored in
@@ -330,8 +322,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         break
     return value_dict_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-       'updateLastMaxIdDictFromTable')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateLastMaxIdDictFromTable(self, id_group=None):
     """
       Update the Persistent id_dict from portal_ids table

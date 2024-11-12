@@ -56,16 +56,14 @@ class Invoice(AccountingTransaction):
                     , PropertySheet.Folder
                     )
 
-  security.declareProtected(
-      Permissions.AccessContentsInformation, 'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self, **kw):
     """ Returns the total price for this invoice """
     kw.setdefault('portal_type',
                   self.getPortalInvoiceMovementTypeList())
     return Delivery.getTotalPrice(self, **kw)
 
-  security.declareProtected(
-      Permissions.AccessContentsInformation, 'getTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalQuantity(self, **kw):
     """ Returns the total quantity for this invoice """
     kw.setdefault('portal_type',

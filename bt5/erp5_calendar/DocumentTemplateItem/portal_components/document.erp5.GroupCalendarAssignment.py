@@ -43,8 +43,7 @@ class GroupCalendarAssignment(PresencePeriod):
   # to search them by date in the module.
   isDelivery = ConstantGetter('isDelivery', value=True)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'getPeriodList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPeriodList(self):
     """Returns the list of periods covered by this group calendar assignment.
 

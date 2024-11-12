@@ -33,11 +33,11 @@ else:
         security.declareObjectPublic()
         security.setDefaultAccess('allow')
 
-        security.declarePublic('getUserName')
+        @security.public
         def getUserName(self):
             return 'Test Member'
 
-        security.declarePublic('getProperty')
+        @security.public
         def getProperty(self,name):
             return 'member@example.com'
 
@@ -50,7 +50,7 @@ else:
         security.declareObjectPublic()
         security.setDefaultAccess('allow')
 
-        security.declarePublic('listMembers')
+        @security.public
         def listMembers(self):
             return (DummyMember(),)
 

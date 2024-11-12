@@ -110,21 +110,19 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """ show the content in the left pane of the ZMI """
     return self.objectValues()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPrice(self, default=None, context=None, REQUEST=None, **kw):
     """Get the price set locally, without lookup.
     """
     return self._baseGetPrice(default) # Call the price method
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseUnitPrice(self, context=None, **kw):
     """Get the base unit price set locally, without lookup.
     """
     return self._baseGetBaseUnitPrice()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationState')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSimulationState(self, id_only=1):
     """Returns the current state in simulation
 
@@ -158,8 +156,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     else:
       return getState(self)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getTranslatedSimulationStateTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTranslatedSimulationStateTitle(self):
     """Returns translated simulation state title, for user interface, such as
     stock browser.
@@ -177,8 +174,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     # nothing better to return.
     return self.getSimulationState()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isCompleted(self):
     """Lookup business path and, if any, return True whenever
     simulation_state is in of completed state list defined on business path
@@ -190,8 +186,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       return False
     return self.getSimulationState() in business_link.getCompletedStateList()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isFrozen')
+  @security.protected(Permissions.AccessContentsInformation)
   def isFrozen(self):
     """Lookup business path and, if any, return True whenever
     simulation_state is in one of the frozen states defined on business path
@@ -210,8 +205,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       return False
     return self.getSimulationState() in business_link.getFrozenStateList()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
       Returns 1 if this needs to be accounted
@@ -225,7 +219,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   #######################################################
   # Causality Workflow Methods
 
-  security.declarePrivate('_getApplicableRuleList')
+  @security.private
   def _getApplicableRuleList(self):
     """ Search rules that match this movement
     """
@@ -237,7 +231,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                                        sort_on='version',
                                        sort_order='descending')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+  @security.protected(Permissions.ModifyPortalContent)
   def expand(self, expand_policy=None, **kw):
     """Update applied rules inside this simulation movement and expand them
 
@@ -292,8 +286,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     for rule in applicable_rule_list:
       maybe_expand(rule, rule.constructNewAppliedRule(self))
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationValue(self):
     """Returns the delivery if any or the order related to the root
     applied rule if any.
@@ -321,30 +314,26 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     return explanation_value
 
   # Deliverability / orderability
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isOrderable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isOrderable(self):
     # the value of this method is no longer used.
     return True
 
   getOrderable = isOrderable
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isDeliverable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDeliverable(self):
     # the value of this method is no longer used.
     return True
 
   getDeliverable = isDeliverable
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isDeletable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDeletable(self, **kw):
     return not self.isFrozen() and not self._isTreeDelivered()
 
   # Simulation Dates - acquire target dates
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderStartDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getOrderStartDate(self):
     # 'order' category is deprecated. it is kept for compatibility.
     order_value = self.getOrderValue()
@@ -354,8 +343,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if delivery_value is not None:
       return delivery_value.getStartDate()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderStopDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getOrderStopDate(self):
     # 'order' category is deprecated. it is kept for compatibility.
     order_value = self.getOrderValue()
@@ -365,8 +353,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if delivery_value is not None:
       return delivery_value.getStopDate()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryStartDateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDeliveryStartDateList(self):
     """
       Returns the stop date of related delivery
@@ -377,8 +364,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       start_date_list.append(delivery_movement.getStartDate())
     return start_date_list
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryStopDateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDeliveryStopDateList(self):
     """
       Returns the stop date of related delivery
@@ -389,8 +375,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       stop_date_list.append(delivery_movement.getStopDate())
     return stop_date_list
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDeliveryQuantity(self):
     """
       Returns the quantity of related delivery
@@ -401,8 +386,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       quantity = delivery_movement.getQuantity()
     return quantity
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isConvergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isConvergent(self):
     """
       Returns true if the Simulation Movement is convergent with the
@@ -410,8 +394,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     return not self.isDivergent()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-      'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self):
     """
       Returns true if the Simulation Movement is divergent from the
@@ -419,16 +402,14 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     return self.getParentValue().isDivergent(self)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-      'getDivergenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDivergenceList(self):
     """
     Returns detailed information about the divergence
     """
     return self.getParentValue().getDivergenceList(self)
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setDefaultDeliveryProperties')
+  @security.protected(Permissions.ModifyPortalContent)
   def setDefaultDeliveryProperties(self):
     """
     Sets the delivery_ratio and delivery_error properties to the
@@ -438,8 +419,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if delivery is not None:
       delivery.updateSimulationDeliveryProperties(movement_list = [self])
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getCorrectedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCorrectedQuantity(self):
     """
     Returns the quantity property deducted by the possible profit_quantity and
@@ -455,8 +435,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     delivery_error = self.getDeliveryError() or 0
     return quantity - profit_quantity + delivery_error
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRootSimulationMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootSimulationMovement(self):
     """
       Return the root simulation movement in the simulation tree.
@@ -468,8 +447,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     else:
       return parent_applied_rule.getRootSimulationMovement()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRootSimulationMovementUid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootSimulationMovementUid(self):
     """
       Return the uid of the root simulation movement in the simulation tree.
@@ -479,8 +457,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       return root_simulation_movement.getUid()
     return None
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRootCausalityValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootCausalityValueList(self):
     """
       Returns the initial causality value for this movement.
@@ -516,8 +493,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       cache[rule_key] = result = getTreeDelivered()
       return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isBuildable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isBuildable(self):
     """Simulation Movement buildable logic"""
     if self.getDelivery():
@@ -687,8 +663,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSolverProcessValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSolverProcessValueList(self, movement=None, validation_state=None):
     """
     Returns the list of solver processes which are
@@ -703,8 +678,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSolverDecisionValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSolverDecisionValueList(self, movement=None, validation_state=None):
     """
     Returns the list of solver decisions which apply
@@ -717,8 +691,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSolvedPropertyApplicationValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSolvedPropertyApplicationValueList(self, movement=None, divergence_tester=None):
     """
     Returns the list of documents at which a given divergence resolution

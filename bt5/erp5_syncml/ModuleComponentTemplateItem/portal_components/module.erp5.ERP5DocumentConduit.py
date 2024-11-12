@@ -48,7 +48,7 @@ class ERP5DocumentConduit(ERP5Conduit):
   # Declarative security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getGidFromObject')
+  @security.protected(Permissions.AccessContentsInformation)
   def getGidFromObject(self, object): # pylint: disable=redefined-builtin
     """
     return the Gid generate with the reference, object, language of the object

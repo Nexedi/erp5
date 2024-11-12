@@ -2969,7 +2969,7 @@ class ListBox(ZMIField):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected('Access contents information', 'get_value')
+  @security.protected('Access contents information')
   def get_value(self, id, **kw):
     if id == 'default':
       render_format = kw.get('render_format')
@@ -2985,7 +2985,7 @@ class ListBox(ZMIField):
     else:
       return ZMIField.get_value(self, id, **kw)
 
-  security.declareProtected('Access contents information', 'getListMethodName')
+  @security.protected('Access contents information')
   def getListMethodName(self):
     """Return the name of the list method. If not defined, return None.
 
@@ -3036,7 +3036,7 @@ class ListBoxLine:
     self.column_id_list = []
     self.row_css_class_name = ''
 
-  security.declarePublic('__getitem__')
+  @security.public
   def __getitem__(self, column_id):
     return self.getColumnProperty(column_id)
 
@@ -3075,7 +3075,7 @@ class ListBoxLine:
     """
     self.setListboxLineContentMode('TitleLine')
 
-  security.declarePublic('isTitleLine')
+  @security.public
   def isTitleLine(self):
     """
       Returns 1 is this line contains no data but only title of columns
@@ -3089,7 +3089,7 @@ class ListBoxLine:
     """
     self.setListboxLineContentMode('StatLine')
 
-  security.declarePublic('isStatLine')
+  @security.public
   def isStatLine(self):
     """
       Returns 1 is this line contains no data but only stats
@@ -3103,7 +3103,7 @@ class ListBoxLine:
     """
     self.setListboxLineContentMode('DataLine')
 
-  security.declarePublic('isDataLine')
+  @security.public
   def isDataLine(self):
     """
       Returns 1 is this line contains data
@@ -3117,7 +3117,7 @@ class ListBoxLine:
     """
     self.setListboxLineContentMode('SummaryLine')
 
-  security.declarePublic('isSummaryLine')
+  @security.public
   def isSummaryLine(self):
     """
       Returns 1 is this line is a summary line
@@ -3132,7 +3132,7 @@ class ListBoxLine:
     """
     self.setConfigProperty('is_checked', is_checked)
 
-  security.declarePublic('isLineChecked')
+  @security.public
   def isLineChecked(self):
     """
       Returns 1 is this line is checked
@@ -3147,7 +3147,7 @@ class ListBoxLine:
     """
     self.setConfigProperty('uid', object_uid)
 
-  security.declarePublic('getObjectUid')
+  @security.public
   def getObjectUid(self):
     """
       Get the uid of the object related to the line
@@ -3162,7 +3162,7 @@ class ListBoxLine:
     """
     self.setConfigProperty('section_name', section_name)
 
-  security.declarePublic('getSectionName')
+  @security.public
   def getSectionName(self):
     """
       Returns the section name of this line
@@ -3178,7 +3178,7 @@ class ListBoxLine:
     """
     self.setConfigProperty('section_depth', depth)
 
-  security.declarePublic('getSectionDepth')
+  @security.public
   def getSectionDepth(self):
     """
       Returns the section depth of this line
@@ -3193,7 +3193,7 @@ class ListBoxLine:
     """
     self.is_section_folded = is_section_folded
 
-  security.declarePublic('isSectionFolded')
+  @security.public
   def isSectionFolded(self):
     """
       Returns 1 if section is in 'Folded' Mode
@@ -3208,14 +3208,14 @@ class ListBoxLine:
     self.column_dict[column_id] = column_value
     self.column_id_list.append(column_id)
 
-  security.declarePublic('getColumnProperty')
+  @security.public
   def getColumnProperty(self, column_id):
     """
       Returns the property of a column
     """
     return self.column_dict[column_id]
 
-  security.declarePublic('getColumnPropertyList')
+  @security.public
   def getColumnPropertyList(self, column_id_list = None):
     """
       Returns a list of the property
@@ -3232,7 +3232,7 @@ class ListBoxLine:
 
     return config_column + [self.column_dict[column_id] for column_id in column_id_list]
 
-  security.declarePublic('getColumnPropertyTypeName')
+  @security.public
   def getColumnPropertyTypeName(self, column_id):
     """
       Returns the type of a property of a column in
@@ -3242,7 +3242,7 @@ class ListBoxLine:
     """
     return type(self.column_dict[column_id]).__name__
 
-  security.declarePublic('getColumnItemList')
+  @security.public
   def getColumnItemList(self, column_id_list = None ):
     """
       Returns a list of property tuple
@@ -3262,7 +3262,7 @@ class ListBoxLine:
 
     return config_column + [(column_id , self.column_dict[column_id]) for column_id in column_id_list]
 
-  security.declarePublic('setListboxLineDisplayListMode')
+  @security.public
   def setListboxLineDisplayListMode(self, display_list):
     """
       Set the config columns displayable
@@ -3271,13 +3271,13 @@ class ListBoxLine:
     """
     self.config_display_list = display_list
 
-  security.declarePublic('setRowCSSClassName')
+  @security.public
   def setRowCSSClassName(self, row_css_class_name):
     """Set the CSS class name of a row
     """
     self.row_css_class_name = row_css_class_name
 
-  security.declarePublic('getRowCSSClassName')
+  @security.public
   def getRowCSSClassName(self):
     """Return the CSS class name of a row
     """

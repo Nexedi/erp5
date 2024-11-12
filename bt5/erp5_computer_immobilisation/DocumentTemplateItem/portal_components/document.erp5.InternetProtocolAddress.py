@@ -64,7 +64,7 @@ class InternetProtocolAddress(Coordinate):
         kw_dict[name] = value
     return kw_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asText(self):
     """
     Return the address as a complete formatted string.
@@ -87,7 +87,7 @@ class InternetProtocolAddress(Coordinate):
                                     self._splitCoordinateText(self.getCoordinateText())))
     return result
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @security.protected(Permissions.ModifyPortalContent)
   @deprecated
   def fromText(self, coordinate_text):
     """Save given data then continue parsing
@@ -116,7 +116,7 @@ dns_server_ip_address:192.168.0.1
 gateway_ip_address:192.168.0.1
 network_interface:eth0"""
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDetailed(self):
     for prop in self.portal_property_sheets.\
            InternetProtocolAddress.objectValues(

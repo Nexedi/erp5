@@ -95,8 +95,7 @@ class BigFile(File):
   # OFS.File has an overloaded __str__ that returns the file content
   __str__ = object.__str__
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getData(self, default=None):
     """Read the full btree
     """
@@ -106,7 +105,7 @@ class BigFile(File):
     else:
       return btree
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateContentMd5(self):
     """Update md5 checksum from the original file
     """
@@ -294,7 +293,7 @@ class BigFile(File):
           RESPONSE.write(b'\r\n--%s--\r\n' % boundary)
           return True
 
-  security.declareProtected(Permissions.View, 'index_html')
+  @security.protected(Permissions.View)
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw): # pylint: disable=redefined-builtin
     """
       Support streaming
@@ -340,7 +339,7 @@ class BigFile(File):
       RESPONSE.write(chunk)
     return b''
 
-  security.declareProtected(Permissions.ModifyPortalContent,'PUT')
+  @security.protected(Permissions.ModifyPortalContent)
   def PUT(self, REQUEST, RESPONSE):
     """Handle HTTP PUT requests"""
     self.dav__init(REQUEST, RESPONSE)
@@ -397,7 +396,7 @@ class BigFile(File):
     RESPONSE.setStatus(204)
     return RESPONSE
 
-  security.declareProtected(Permissions.ModifyPortalContent,'appendData')
+  @security.protected(Permissions.ModifyPortalContent)
   def appendData(self, data_chunk, content_type=None):
     """
     append data chunk to the end of the file, available in restricted environment.

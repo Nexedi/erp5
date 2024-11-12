@@ -52,8 +52,7 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
 
   _default_edit_order = Amount._default_edit_order
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCellAggregateKey')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellAggregateKey(self):
     """Define a key in order to aggregate amounts at cell level"""
     resource = self.getResource()
@@ -64,8 +63,7 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
     return frozenset(self.getBaseApplicationList() +
                      self.getBaseContributionList())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBaseAmountQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   @classmethod
   def getBaseAmountQuantity(cls, delivery_amount, base_application,
                             variation_category_list=(), **kw):

@@ -266,7 +266,7 @@ class ERP5Catalog(Folder, Catalog):
   def _setSqlSearchResultKeysList(self, value, **kw):
     self._baseSetSqlSearchResultKeysList(sorted(value), **kw)
 
-  security.declarePublic('getCatalogMethodIds')
+  @security.public
   def getCatalogMethodIds(self, valid_method_meta_type_list=
       HAS_ARGUMENT_SRC_METATYPE_SET + HAS_FUNC_CODE_METATYPE_SET):
     """Find ERP5 SQL methods in the current folder and above
@@ -275,7 +275,7 @@ class ERP5Catalog(Folder, Catalog):
     return super(ERP5Catalog, self).getCatalogMethodIds(
                                       valid_method_meta_type_list)
 
-  security.declarePublic('getPythonMethodIds')
+  @security.public
   def getPythonMethodIds(self):
     """
       Returns a list of all python scripts available in
@@ -308,7 +308,7 @@ class ERP5Catalog(Folder, Catalog):
   def _getCatalogMethod(self, method_name):
     return self._getOb(method_name)
 
-  security.declarePrivate('isMethodFiltered')
+  @security.private
   def isMethodFiltered(self, method_name):
     """
     Returns 1 if the mehtod is filtered,
@@ -320,7 +320,7 @@ class ERP5Catalog(Folder, Catalog):
       return 0
     return method.isFiltered()
 
-  security.declarePrivate('getExpression')
+  @security.private
   def getExpression(self, method_name):
     """ Get the filter expression text for this method.
     """
@@ -330,7 +330,7 @@ class ERP5Catalog(Folder, Catalog):
       return ""
     return method.getExpression()
 
-  security.declarePrivate('getExpressionCacheKey')
+  @security.private
   def getExpressionCacheKey(self, method_name):
     """ Get the key string which is used to cache results
         for the given expression.
@@ -341,7 +341,7 @@ class ERP5Catalog(Folder, Catalog):
       return ""
     return ' '.join(method.getExpressionCacheKeyList())
 
-  security.declarePrivate('getExpressionInstance')
+  @security.private
   def getExpressionInstance(self, method_name):
     """ Get the filter expression instance for this method.
     """
@@ -351,7 +351,7 @@ class ERP5Catalog(Folder, Catalog):
       return None
     return method.getExpressionInstance()
 
-  security.declarePrivate('setFilterExpression')
+  @security.private
   def setFilterExpression(self, method_name, expression):
     """ Set the Expression for a certain method name. This allow set
         expressions by scripts.

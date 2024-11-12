@@ -118,8 +118,7 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal, 'manage_overview')
     manage_overview = DTMLFile('explainTemplateTool', _dtmldir)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstalledBusinessTemplate')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstalledBusinessTemplate(self, title, strict=False, **kw):
       """Returns an installed version of business template of a given title.
 
@@ -155,8 +154,7 @@ class TemplateTool (BaseTool):
               last_time = t
       return last_bt
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstalledBusinessTemplatesList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstalledBusinessTemplatesList(self):
       """Deprecated.
       """
@@ -175,22 +173,19 @@ class TemplateTool (BaseTool):
           installed_bts.append(bt5)
       return installed_bts
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstalledBusinessTemplateList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstalledBusinessTemplateList(self):
       """Get the list of installed business templates.
       """
       return self._getInstalledBusinessTemplateList(only_title=0)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstalledBusinessTemplateTitleList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstalledBusinessTemplateTitleList(self):
       """Get the list of installed business templates.
       """
       return self._getInstalledBusinessTemplateList(only_title=1)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstalledBusinessTemplateRevision')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstalledBusinessTemplateRevision(self, title, **kw):
       """
         Return the revision of business template installed with the title
@@ -201,8 +196,7 @@ class TemplateTool (BaseTool):
         return bt.getRevision()
       return None
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBuiltBusinessTemplateList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBuiltBusinessTemplateList(self):
       """Get the list of built and not installed business templates.
       """
@@ -243,15 +237,14 @@ class TemplateTool (BaseTool):
             return self.aq_parent.manage_exportObject(bt.getId(), download=1)
       return asRepository().__of__(self)
 
-    security.declareProtected(Permissions.ManagePortal,
-                              'getDefaultBusinessTemplateDownloadURL')
+    @security.protected(Permissions.ManagePortal)
     def getDefaultBusinessTemplateDownloadURL(self):
       """Returns the default download URL for business templates.
       """
       return "file://%s/" % pathname2url(
                   os.path.join(getConfiguration().instancehome, 'bt5'))
 
-    security.declareProtected('Import/Export objects', 'save')
+    @security.protected('Import/Export objects')
     def save(self, business_template, REQUEST=None, RESPONSE=None):
       """
         Save the BusinessTemplate in the servers's filesystem.
@@ -271,7 +264,7 @@ class TemplateTool (BaseTool):
           RESPONSE = REQUEST.RESPONSE
         return REQUEST.RESPONSE.redirect( ret_url )
 
-    security.declareProtected( 'Import/Export objects', 'export' )
+    @security.protected('Import/Export objects')
     def export(self, business_template, REQUEST=None, RESPONSE=None):
       """
         Export the Business Template as a bt5 file and offer the user to
@@ -287,7 +280,7 @@ class TemplateTool (BaseTool):
       finally:
         export_string.close()
 
-    security.declareProtected( 'Import/Export objects', 'publish' )
+    @security.protected('Import/Export objects')
     def publish(self, business_template, url, username=None, password=None):
       """
         Publish the given business template at the given URL.
@@ -303,7 +296,7 @@ class TemplateTool (BaseTool):
              content_type='application/x-erp5-business-template')
       business_template.setPublicationUrl(url)
 
-    security.declareProtected(Permissions.ManagePortal, 'update')
+    @security.protected(Permissions.ManagePortal)
     def update(self, business_template):
       """
         Update an existing template from its publication URL.
@@ -318,7 +311,7 @@ class TemplateTool (BaseTool):
       self.deleteContent(id)
       self._importObjectFromFile(StringIO(export_string), id=id)
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_download' )
+    @security.protected(Permissions.ManagePortal)
     def manage_download(self, url, id=None, REQUEST=None):
       """The management interface for download.
       """
@@ -370,7 +363,7 @@ class TemplateTool (BaseTool):
       finally:
         shutil.rmtree(svn_checkout_tmp_dir)
 
-    security.declareProtected( 'Import/Export objects', 'download' )
+    @security.protected('Import/Export objects')
     def download(self, url, id=None, REQUEST=None):
       """
       Download Business Template from url, can be file or local directory
@@ -405,7 +398,7 @@ class TemplateTool (BaseTool):
       bt.setPublicationUrl(url)
       return bt
 
-    security.declareProtected('Import/Export objects', 'importFile')
+    @security.protected('Import/Export objects')
     def importFile(self, import_file=None, id=None, REQUEST=None,
                    batch_mode=False, **kw):
       """
@@ -447,7 +440,7 @@ class TemplateTool (BaseTool):
       elif batch_mode:
         return bt
 
-    security.declareProtected(Permissions.ManagePortal, 'getDiffFilterScriptList')
+    @security.protected(Permissions.ManagePortal)
     def getDiffFilterScriptList(self):
       """
       Return list of scripts usable to filter diff
@@ -465,7 +458,7 @@ class TemplateTool (BaseTool):
           LOG("TemplateTool", WARNING, "Unable to find %r script" % script_id)
       return script_list
 
-    security.declareProtected(Permissions.ManagePortal, 'getFilteredDiffAsHTML')
+    @security.protected(Permissions.ManagePortal)
     def getFilteredDiffAsHTML(self, diff):
       """
       Return the diff filtered by python scripts into html format
@@ -481,7 +474,7 @@ class TemplateTool (BaseTool):
         else:
           shutil.rmtree(file_object_path)
 
-    security.declareProtected( 'Import/Export objects', 'importAndReExportBusinessTemplateFromPath' )
+    @security.protected('Import/Export objects')
     def importAndReExportBusinessTemplateFromPath(self, template_path):
       """
         Imports the template that is in the template_path and exports it to the
@@ -515,7 +508,7 @@ class TemplateTool (BaseTool):
       finally:
         shutil.rmtree(export_dir)
 
-    security.declareProtected( 'Import/Export objects', 'importAndReExportBusinessTemplateListFromPath' )
+    @security.protected('Import/Export objects')
     def importAndReExportBusinessTemplateListFromPath(self, repository_list, REQUEST=None, **kw):
       """
         Migrate business templates to new format where files like .py or .html
@@ -545,7 +538,7 @@ class TemplateTool (BaseTool):
               self.activate(activity='SQLQueue').\
                 importAndReExportBusinessTemplateFromPath(template_path)
 
-    security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
+    @security.protected(Permissions.ManagePortal)
     def getFilteredDiff(self, diff):
       """
       Filter the diff using python scripts
@@ -564,7 +557,7 @@ class TemplateTool (BaseTool):
       # DiffFile does not provide yet such feature
       return diff_file_object
 
-    security.declareProtected(Permissions.ManagePortal, 'diffObjectAsHTML')
+    @security.protected(Permissions.ManagePortal)
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
@@ -574,7 +567,7 @@ class TemplateTool (BaseTool):
       from erp5.component.module.DiffUtils import DiffFile
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
-    security.declareProtected(Permissions.ManagePortal, 'diffObject')
+    @security.protected(Permissions.ManagePortal)
     def diffObject(self, REQUEST, **kw):
       """
         Make diff between two objects, whose paths are stored in values bt1
@@ -596,9 +589,8 @@ class TemplateTool (BaseTool):
         REQUEST.set('object_id', object_id.split('|')[1])
         return bt1.diffObject(REQUEST)
 
-    security.declareProtected( 'Import/Export objects',
-                               'updateRepositoryBusinessTemplateList' )
 
+    @security.protected('Import/Export objects')
     def updateRepositoryBusinessTemplateList(self, repository_list,
         REQUEST=None, RESPONSE=None, genbt5list=0, **kw):
       """
@@ -699,15 +691,14 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?cancel_url=%s&portal_status_message=%s&dialog_category=object_exchange&selection_name=business_template_selection"
                                   % (ret_url, REQUEST.form.get('cancel_url', ''), psm))
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getRepositoryList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getRepositoryList(self):
       """
         Get the list of repositories.
       """
       return list(self.repository_dict)
 
-    security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
+    @security.public
     def decodeRepositoryBusinessTemplateUid(self, uid):
       """
         Decode the uid of a business template from a repository.
@@ -716,7 +707,7 @@ class TemplateTool (BaseTool):
       repository, id = json.loads(b64decode(uid))
       return unicode2str(repository), unicode2str(id)
 
-    security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
+    @security.public
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
       """
         encode the repository and the id of a business template.
@@ -724,7 +715,7 @@ class TemplateTool (BaseTool):
       """
       return b64encode(str2bytes(json.dumps((repository, id))))
 
-    security.declarePublic('compareVersionStrings')
+    @security.public
     def compareVersionStrings(self, version, comparing_string):
       """
        comparing_string is like "<= 0.2" | "operator version"
@@ -754,8 +745,7 @@ class TemplateTool (BaseTool):
         return False;
       raise UnsupportedComparingOperator('Unsupported comparing operator: %s'%(operator,))
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'IsOneProviderInstalled')
+    @security.protected(Permissions.AccessContentsInformation)
     def IsOneProviderInstalled(self, title):
       """
         return true if a business template that
@@ -769,8 +759,7 @@ class TemplateTool (BaseTool):
           return True
       return False
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                               'getLastestBTOnRepos')
+    @security.protected(Permissions.AccessContentsInformation)
     def getLastestBTOnRepos(self, title, version_restriction=None):
       """
        It's possible we have different versions of the same BT
@@ -794,8 +783,7 @@ class TemplateTool (BaseTool):
       else:
         raise BusinessTemplateUnknownError('Business Template %s (%s) could not be found in the repositories'%(title, version_restriction or ''))
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getProviderList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getProviderList(self, title):
       """
        return a list of business templates that provides
@@ -809,8 +797,7 @@ class TemplateTool (BaseTool):
             result_list.append(property_dict['title'])
       return result_list
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                               'getDependencyList')
+    @security.protected(Permissions.AccessContentsInformation)
     @transactional_cached(lambda self, bt, with_test_dependency_list=False:
                           (bt, with_test_dependency_list))
     def getDependencyList(self, bt, with_test_dependency_list=False):
@@ -868,8 +855,7 @@ class TemplateTool (BaseTool):
         raise BusinessTemplateUnknownError('The Business Template %s could not be found on repository %s'%(bt[1], bt[0]))
       return []
 
-    security.declareProtected(Permissions.ManagePortal,
-                              'findProviderInBTList')
+    @security.protected(Permissions.ManagePortal)
     def findProviderInBTList(self, provider_list, bt_list):
       """
        Find one provider in provider_list which is present in
@@ -882,8 +868,7 @@ class TemplateTool (BaseTool):
             return (repository, id)
       raise BusinessTemplateUnknownError('Provider not found in bt_list')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'sortBusinessTemplateList')
+    @security.protected(Permissions.AccessContentsInformation)
     def sortBusinessTemplateList(self, bt_list):
       """
       Sort a list of business template in repositories according to
@@ -956,8 +941,7 @@ class TemplateTool (BaseTool):
       else:
         return sorted_bt_list
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'sortDownloadedBusinessTemplateList')
+    @security.protected(Permissions.AccessContentsInformation)
     def sortDownloadedBusinessTemplateList(self, id_list):
       """
       Sort a list of already downloaded business templates according to
@@ -986,8 +970,7 @@ class TemplateTool (BaseTool):
       sorted_bt_list = [bt.getId() for bt in sorted_bt_list]
       return sorted_bt_list
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getRepositoryBusinessTemplateList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getRepositoryBusinessTemplateList(self, update_only=False,
              template_list=None, **kw):
       """Get the list of Business Templates in repositories.
@@ -1073,15 +1056,14 @@ class TemplateTool (BaseTool):
       result_list.sort(key=lambda x: x.getTitle())
       return result_list
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getUpdatedRepositoryBusinessTemplateList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getUpdatedRepositoryBusinessTemplateList(self, **kw):
       """Get the list of updated Business Templates in repositories.
       """
       #LOG('getUpdatedRepositoryBusinessTemplateList', 0, 'kw = %r' % (kw,))
       return self.getRepositoryBusinessTemplateList(update_only=True, **kw)
 
-    security.declarePublic('compareVersions')
+    @security.public
     def compareVersions(self, version1, version2):
       """
         Return negative if version1 < version2, 0 if version1 == version2,
@@ -1141,16 +1123,14 @@ class TemplateTool (BaseTool):
           }
       return business_template_url_dict
 
-    security.declareProtected(Permissions.ManagePortal,
-        'installBusinessTemplatesFromRepositories')
+    @security.protected(Permissions.ManagePortal)
     def installBusinessTemplatesFromRepositories(self, *args, **kw):
       """Deprecated.
       """
       DeprecationWarning('installBusinessTemplatesFromRepositories is deprecated; Use self.installBusinessTemplateListFromRepository instead.', DeprecationWarning)
       return self.installBusinessTemplateListFromRepository(*args, **kw)
 
-    security.declareProtected(Permissions.ManagePortal,
-         'resolveBusinessTemplateListDependency')
+    @security.protected(Permissions.ManagePortal)
     def resolveBusinessTemplateListDependency(self,
                                               template_title_list,
                                               with_test_dependency_list=False):
@@ -1208,8 +1188,7 @@ class TemplateTool (BaseTool):
              (list(template_title_list), self.getRepositoryList()))
       return self.sortBusinessTemplateList(list(bt5_set))
 
-    security.declareProtected(Permissions.ManagePortal,
-        'installBusinessTemplateListFromRepository')
+    @security.protected(Permissions.ManagePortal)
     def installBusinessTemplateListFromRepository(self, template_list,
         only_different=True, update_catalog=False, activate=False,
         install_dependency=False):
@@ -1259,8 +1238,7 @@ class TemplateTool (BaseTool):
 
       return operation_log
 
-    security.declareProtected(Permissions.ManagePortal,
-            'updateBusinessTemplateFromUrl')
+    @security.protected(Permissions.ManagePortal)
     def updateBusinessTemplateFromUrl(self, download_url, id=None,
                                          keep_original_list=None,
                                          before_triggered_bt5_id_list=None,
@@ -1370,8 +1348,7 @@ class TemplateTool (BaseTool):
 
       return imported_bt5
 
-    security.declareProtected(Permissions.ManagePortal,
-            'getBusinessTemplateUrl')
+    @security.protected(Permissions.ManagePortal)
     def getBusinessTemplateUrl(self, base_url_list, bt5_title):
       """
         This method verify if the business template are available
@@ -1404,8 +1381,7 @@ class TemplateTool (BaseTool):
                         '%s.' % (bt5_title, base_url_list))
       return None
 
-    security.declareProtected(Permissions.ManagePortal,
-        'upgradeSite')
+    @security.protected(Permissions.ManagePortal)
     def upgradeSite(self, bt5_list, deprecated_after_script_dict=None,
                     deprecated_reinstall_set=None, dry_run=False,
                     delete_orphaned=False,

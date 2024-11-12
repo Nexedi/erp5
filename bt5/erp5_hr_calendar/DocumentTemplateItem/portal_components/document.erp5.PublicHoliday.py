@@ -38,7 +38,7 @@ class PublicHoliday(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declarePublic('reindexObject')
+  @security.public
   def reindexObject(self, *args, **kw):
     """
     We need to reindex lines also

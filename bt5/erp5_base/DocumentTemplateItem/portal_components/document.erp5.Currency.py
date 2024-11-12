@@ -55,19 +55,19 @@ class Currency(Resource):
                     )
 
   # Unit conversion
-  security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def convertQuantity(self, quantity, from_unit, to_unit, variation_list=(), transformed_resource=None, transformed_variation_list=()):
     # 'variation_list' parameter may be deprecated:
     # cf Measure.getConvertedQuantity
     return quantity
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'convertCurrency')
+  @security.protected(Permissions.AccessContentsInformation)
   def convertCurrency(self, quantity, to_currency):
     if to_currency is self:
       return quantity
     return quantity
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asNumericCode')
+  @security.protected(Permissions.AccessContentsInformation)
   def asNumericCode(self):
     """Return a numeric code defined in ISO 4217."""
     return self.Base_convertCurrencyCodeToNumericCode(self.getReference())

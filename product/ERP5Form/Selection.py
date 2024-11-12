@@ -157,7 +157,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         self.report = None
         self.report_opened = None
 
-    security.declarePrivate('edit')
+    @security.private
     def edit(self, params=None, **kw):
         setattr(self, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, True)
         if params is not None:
@@ -246,35 +246,35 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def __getitem__(self, index, REQUEST=None):
         return self(REQUEST)[index]
 
-    security.declarePublic('getName')
+    @security.public
     def getName(self):
         """
           Get the name of this selection.
         """
         return self.name
 
-    security.declarePublic('getIndex')
+    @security.public
     def getIndex(self):
         """
           Get the index of this selection.
         """
         return self.index
 
-    security.declarePublic('getDomain')
+    @security.public
     def getDomain(self):
         """
           Get the domain selection of this selection.
         """
         return self.domain
 
-    security.declarePublic('getReport')
+    @security.public
     def getReport(self):
         """
           Get the report selection of this selection.
         """
         return self.report
 
-    security.declarePublic('getParams')
+    @security.public
     def getParams(self):
         """
           Get a dictionary of parameters in this selection.
@@ -286,14 +286,14 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         params.setdefault("ignore_unknown_columns", True)
         return params
 
-    security.declarePublic('getSortOrder')
+    @security.public
     def getSortOrder(self):
         """
           Return sort order stored in selection
         """
         return self.sort_on
 
-    security.declarePublic('getListUrl')
+    @security.public
     def getListUrl(self):
         result = ''
         #LOG('getListUrl', 0, 'list_url = %s' % str(self.list_url))
@@ -303,7 +303,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           result = self.list_url
         return result
 
-    security.declarePublic('getCheckedUids')
+    @security.public
     def getCheckedUids(self):
         if not hasattr(self, 'checked_uids'):
           self.checked_uids = []
@@ -311,7 +311,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           self.checked_uids = []
         return self.checked_uids
 
-    security.declarePublic('getDomainPath')
+    @security.public
     def getDomainPath(self, default=None):
         if self.domain_path is None:
           if default is None:
@@ -320,13 +320,13 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
             self.domain_path = default
         return self.domain_path
 
-    security.declarePublic('getDomainList')
+    @security.public
     def getDomainList(self):
         if self.domain_list is None:
           self.domain_list = (('portal_categories',),)
         return self.domain_list
 
-    security.declarePublic('getReportPath')
+    @security.public
     def getReportPath(self, default=None):
         if self.report_path is None:
           if default is None:
@@ -335,7 +335,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
             self.report_path = default
         return self.report_path
 
-    security.declarePublic('getZoom')
+    @security.public
     def getZoom(self):
       try:
         current_zoom=self.params['zoom']
@@ -346,35 +346,35 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
       except KeyError:
         return 1
 
-    security.declarePublic('getReportList')
+    @security.public
     def getReportList(self):
         if self.report_list is None:
           self.report_list = (('portal_categories',),)
         return self.report_list
 
-    security.declarePublic('isReportOpened')
+    @security.public
     def isReportOpened(self):
         if self.report_opened is None:
           self.report_opened = 1
         return self.report_opened
 
-    security.declarePublic('isInvertMode')
+    @security.public
     def isInvertMode(self):
         return self.invert_mode
 
-    security.declarePublic('getInvertModeUidList')
+    @security.public
     def getInvertModeUidList(self):
         return self.uids
 
-    security.declarePublic('getDomainTreeMode')
+    @security.public
     def getDomainTreeMode(self):
         return getattr(self, 'domain_tree_mode', 0)
 
-    security.declarePublic('getReportTreeMode')
+    @security.public
     def getReportTreeMode(self):
         return getattr(self, 'report_tree_mode', 0)
 
-    security.declarePublic('getAnonymousSelectionKey')
+    @security.public
     def getAnonymousSelectionKey(self):
         return md5(str2bytes(repr({k: v for k, v in six.iteritems(self.__dict__)
                                         if k != 'index'}))).hexdigest()
@@ -405,7 +405,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   def __len__(self):
     return len(self.domain_dict)
 
-  security.declarePublic('getCategoryList')
+  @security.public
   def getCategoryList(self):
     return
 
@@ -433,11 +433,11 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
 
     return obj
 
-  security.declarePublic('asDomainDict')
+  @security.public
   def asDomainDict(self, domain_id=None, exclude_domain_id=None):
     return self.domain_dict
 
-  security.declarePublic('asDomainItemDict')
+  @security.public
   def asDomainItemDict(self, domain_id=None, exclude_domain_id=None):
     domain_item_dict = {}
     portal = self.getPortalObject()
@@ -445,7 +445,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
       domain_item_dict[k] = self._getDomainObject(portal,d)
     return domain_item_dict
 
-  security.declarePublic('updateDomain')
+  @security.public
   def updateDomain(self, domain):
     pass
 

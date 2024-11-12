@@ -123,7 +123,7 @@ class PropertySheetTool(BaseTool):
         template_tool.download(url).install()
     transaction.get().addBeforeCommitHook(unrestricted_apply, (install,))
 
-  security.declarePublic('getTranslationDomainNameList')
+  @security.public
   def getTranslationDomainNameList(self):
     return (['']+
             [object_.id
@@ -132,8 +132,7 @@ class PropertySheetTool(BaseTool):
             [Translation.TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
             )
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'createAllPropertySheetsFromFilesystem')
+  @security.protected(Permissions.ManagePortal)
   def createAllPropertySheetsFromFilesystem(self, erase_existing=False,
                                             REQUEST=None):
     """
@@ -193,8 +192,7 @@ class PropertySheetTool(BaseTool):
       return self.Base_redirect('view',
                                 keep_items={'portal_status_message': message})
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'getPropertyAvailablePermissionList')
+  @security.protected(Permissions.ManagePortal)
   def getPropertyAvailablePermissionList(self):
     """
     Return a sorted set of all the permissions useful for read/write

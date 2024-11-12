@@ -60,7 +60,7 @@ class AcknowledgementTool(BaseTool):
   # Declarative Security
   security = ClassSecurityInfo()
 
-  security.declarePublic('countUnread')
+  @security.public
   def countUnread(self, *args, **kw):
     """
       counts number of acknowledgements pending
@@ -74,7 +74,7 @@ class AcknowledgementTool(BaseTool):
     """
     return ('Acknowledgement',)
 
-  security.declarePublic('getUnreadAcknowledgementList')
+  @security.public
   def getUnreadAcknowledgementList(self, portal_type=None, user_name=None,
                                    url_list=None):
     """
@@ -107,7 +107,7 @@ class AcknowledgementTool(BaseTool):
           return_list.append(document)
     return return_list
 
-  security.declarePublic('getUnreadDocumentUrlList')
+  @security.public
   def getUnreadDocumentUrlList(self, portal_type=None, user_name=None, **kw):
     """
       returns document that needs to be acknowledged :
@@ -153,8 +153,7 @@ class AcknowledgementTool(BaseTool):
       raise ValueError('No user name given')
     return document_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'acknowledge')
+  @security.protected(Permissions.AccessContentsInformation)
   def acknowledge(self, uid=None, path=None, user_name=None, **kw):
     """
       Create an acknowledgement document for :

@@ -61,7 +61,7 @@ class BankAccount(Node, Coordinate):
                     )
 
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReference(self, *args, **kw):
     """reference depends on the site configuration.
     """

@@ -161,7 +161,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       request_stop_time - request_start_time,
     )
 
-  security.declarePrivate('call')
+  @security.private
   def call(
     self,
     archive_resource,

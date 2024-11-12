@@ -75,7 +75,7 @@ class GeographicAddress(Coordinate):
         city = ''.join(zip_city[1:])
     return street_address, zip_code, city
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asText(self):
     """
       Returns the address as a complete formatted string
@@ -94,7 +94,7 @@ class GeographicAddress(Coordinate):
       return ''
     return result
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @security.protected(Permissions.ModifyPortalContent)
   @deprecated
   def fromText(self, coordinate_text):
     """Save given data then continue parsing
@@ -106,8 +106,7 @@ class GeographicAddress(Coordinate):
     self.setZipCode(zip_code)
     self.setCity(city)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'standardTextFormat')
+  @security.protected(Permissions.AccessContentsInformation)
   def standardTextFormat(self):
     """
       Returns the standard text format for geographic addresses
@@ -119,6 +118,6 @@ c/o Jean-Paul Sartre
 """,
 )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDetailed(self):
     return self.hasStreetAddress() or self.hasZipCode() or self.hasCity()

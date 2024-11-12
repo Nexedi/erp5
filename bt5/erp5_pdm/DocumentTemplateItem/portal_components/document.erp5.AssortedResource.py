@@ -128,7 +128,7 @@ class AssortedResource(TransformedResource):
   )
 
   getCellAggregateKey = AmountGeneratorLine.getCellAggregateKey
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAssortedVariationCategoryList(self, cell_index):
     """
         Nice for A
@@ -143,14 +143,14 @@ class AssortedResource(TransformedResource):
     #LOG('getAssortedVariationCategoryList', 0, repr(variation_category_list))
     return variation_category_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAssortedVariationBaseCategoryList(self):
     """
         Nice for A
     """
     return self.getQVariationBaseCategoryList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortmentVariationCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAssortmentVariationCategoryList(self, cell_index):
     """
         Nice for C
@@ -165,7 +165,7 @@ class AssortedResource(TransformedResource):
     #LOG('getAssortmentVariationCategoryList', 0, repr(variation_category_list))
     return variation_category_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortmentVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAssortmentVariationBaseCategoryList(self):
     """
         Nice for C
@@ -231,7 +231,7 @@ class AssortedResource(TransformedResource):
 
   ### Variation matrix definition
   #
-  security.declareProtected(Permissions.ModifyPortalContent, '_setQVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setQVariationBaseCategoryList(self, value):
     """
         Defines the possible base categories which Quantity value (Q)
@@ -242,7 +242,7 @@ class AssortedResource(TransformedResource):
     # And fix it in case the cells are not renamed (XXX this will be removed in the future)
     self._checkConsistency(fixit=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setQVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setQVariationBaseCategoryList(self, value):
     """
         Defines the possible base categories which Quantity value (Q)
@@ -251,7 +251,7 @@ class AssortedResource(TransformedResource):
     self._setQVariationBaseCategoryList(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setVVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setVVariationBaseCategoryList(self, value):
     """
         Defines the possible base categories which Variation value (V)
@@ -281,7 +281,7 @@ class AssortedResource(TransformedResource):
     # And fix it in case the cells are not renamed (XXX this will be removed in the future)
     self._checkConsistency(fixit=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setVVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVVariationBaseCategoryList(self, value):
     """
         Defines the possible base categories which Variation value (V)
@@ -291,7 +291,7 @@ class AssortedResource(TransformedResource):
     self.reindexObject()
 
   # Methods for matrix UI widgets
-  security.declareProtected(Permissions.AccessContentsInformation, 'getQLineItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQLineItemList(self, display_id='getTitle', base=1, current_category=None):
     """
     """
@@ -307,7 +307,7 @@ class AssortedResource(TransformedResource):
     #LOG('getQLineItemList', 10, "%s" % str(result))
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getQColumnItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQColumnItemList(self, display_id='getTitle', base=1, current_category=None):
     """
     """
@@ -323,7 +323,7 @@ class AssortedResource(TransformedResource):
     #LOG('getQColumnItemList', 0, "%s" % str(result))
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getQTabItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQTabItemList(self, display_id='getTitle', base=1, current_category=None):
     """
         Returns a list of items which can be used as index for
@@ -357,7 +357,7 @@ class AssortedResource(TransformedResource):
       result = [(None,'')]
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVLineItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVLineItemList(self):
     base_category = self.getParentValue().getVariationBaseCategoryLine()
     if base_category in self.getVVariationBaseCategoryList():
@@ -369,7 +369,7 @@ class AssortedResource(TransformedResource):
       result += [(c,c)]
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVColumnItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVColumnItemList(self):
     base_category = self.getParentValue().getVariationBaseCategoryColumn()
     if base_category in self.getVVariationBaseCategoryList():
@@ -384,7 +384,7 @@ class AssortedResource(TransformedResource):
 
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVTabItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVTabItemList(self):
     transformation = self.getParentValue()
     line_id = transformation.getVariationBaseCategoryLine()
@@ -407,7 +407,7 @@ class AssortedResource(TransformedResource):
 
     return result
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
+  @security.protected(Permissions.ModifyPortalContent)
   def newCell(self, *kw, **kwd):
     result = XMLMatrix.newCell(self, *kw, **kwd)
     result._setPredicateOperator("SUPERSET_OF")
@@ -424,13 +424,13 @@ class AssortedResource(TransformedResource):
 
     return result
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def newCellContent(self, id, portal_type='Set Mapped Value', **kw): # pylint: disable=redefined-builtin
     """Overriden to specify default portal type
     """
     return self.newContent(id=id, portal_type=portal_type, **kw)
 
-  security.declarePrivate('_checkConsistency')
+  @security.private
   def _checkConsistency(self, fixit=0):
     """
         Check the constitency of transformation elements

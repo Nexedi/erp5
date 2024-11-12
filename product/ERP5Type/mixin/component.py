@@ -206,8 +206,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
   def _hookAfterLoad(self, module_obj):
     pass
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getValidationState')
+  @security.protected(Permissions.AccessContentsInformation)
   def getValidationState(self):
     """
     Needed for bootstrap when the WorkflowState Accessor is not defined yet
@@ -218,14 +217,13 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
     except (AttributeError, KeyError, IndexError):
       return 'draft'
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContentType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentType(self, default=None):
     """Returns the content type.
     """
     return "text/x-python"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'checkConsistency')
+  @security.protected(Permissions.AccessContentsInformation)
   def checkConsistency(self, *args, **kw):
     """
     Check the consistency of the Component upon validate or when being
@@ -304,8 +302,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
 
     return error_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'checkConsistencyAndValidate')
+  @security.protected(Permissions.ModifyPortalContent)
   def checkConsistencyAndValidate(self):
     """
     When a Component is in validated or modified validation state and it is
@@ -320,7 +317,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
 
       self.validate()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'checkSourceCode')
+  @security.protected(Permissions.ModifyPortalContent)
   def checkSourceCode(self):
     """
     Check Component source code through Pylint or compile() builtin if not
@@ -328,7 +325,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
     """
     return checkPythonSourceCode(self.getTextContent(), self.getPortalType())
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
+  @security.protected(Permissions.ModifyPortalContent)
   def PUT(self, REQUEST, RESPONSE):
     """
     Handle HTTP PUT requests for FTP/Webdav upload, which is object
@@ -351,8 +348,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_FTPput')
   manage_FTPput = PUT
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'manage_FTPget')
+  @security.protected(Permissions.AccessContentsInformation)
   def manage_FTPget(self):
     """
     Get source for FTP/Webdav. The default implementation of GET for Webdav,
@@ -362,8 +358,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
     """
     return self.getTextContent()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'importFromFilesystem')
+  @security.protected(Permissions.ModifyPortalContent)
   @classmethod
   def importFromFilesystem(cls,
                            context,

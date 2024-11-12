@@ -8,7 +8,7 @@ class TestNode(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setPingDate')
+  @security.protected(Permissions.ModifyPortalContent)
   def setPingDate(self):
     """
     Set a new date to now when the node was last alive
@@ -19,7 +19,7 @@ class TestNode(XMLObject):
     if self.getValidationState() == "invalidated":
       self.validate()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPingDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPingDate(self):
     """
     Set a new date to now when the node was last alive

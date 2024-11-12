@@ -44,7 +44,7 @@ class VirtualFolderMixin:
 
   security = ClassSecurityInfo()
 
-  security.declarePrivate('PUT_factory')
+  @security.private
   def PUT_factory(self, name, typ, body):
     """ Factory for PUT requests to objects which do not yet exist.
 
@@ -59,7 +59,7 @@ class VirtualFolderMixin:
 
     return Folder.PUT_factory(self, name, typ, body)  # pylint:disable=not-callable
 
-  security.declarePrivate('_setObject')
+  @security.private
   def _setObject(self, id, ob, **kw): # pylint: disable=redefined-builtin
     """
       XXX
@@ -74,7 +74,7 @@ class VirtualFolderMixin:
 
     return Folder._setObject(self, id, ob, **kw)
 
-  security.declarePrivate('_getOb')
+  @security.private
   def _getOb(self, id, default=_marker, **kw): # pylint: disable=redefined-builtin
     """
       XXX

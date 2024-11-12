@@ -49,7 +49,7 @@ class BaseConvertableFileMixin:
 
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
+  @security.protected(Permissions.ModifyPortalContent)
   def convertToBaseFormat(self):
     """
     1 - Check if convertable data is not empty.
@@ -71,14 +71,13 @@ class BaseConvertableFileMixin:
       self.convertFile(comment=message) # Invoke workflow method
     return message
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateBaseMetadata(self, **kw):
     """This Method must be defined explicitly.
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                                 'getBaseData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseData(self, default=_MARKER):
     """Serialise Pdata into bytes
     """
@@ -92,7 +91,7 @@ class BaseConvertableFileMixin:
     else:
       return bytes(base_data)
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setBaseData(self, data):
     """Wrap value into Pdata
     """

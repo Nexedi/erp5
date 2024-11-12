@@ -74,7 +74,7 @@ class Ticket(Project):
                     , PropertySheet.Ticket
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """Tickets are accountable.
     """

@@ -49,7 +49,7 @@ try:
     # Declarative Security
     security = ClassSecurityInfo()
 
-    security.declarePublic('getZeleniumVersion')
+    @security.public
     def getZeleniumVersion(self):
       """Returns the version of the zelenium product
       """

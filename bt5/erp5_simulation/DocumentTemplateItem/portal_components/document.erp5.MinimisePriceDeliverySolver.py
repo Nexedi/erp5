@@ -56,7 +56,7 @@ class MinimisePriceDeliverySolver(FIFODeliverySolver):
                     )
 
   # IDeliverySolver Implementation
-  security.declareProtected(Permissions.ModifyPortalContent, 'setTotalQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setTotalQuantity(self, new_quantity, activate_kw=None):
     """
     """

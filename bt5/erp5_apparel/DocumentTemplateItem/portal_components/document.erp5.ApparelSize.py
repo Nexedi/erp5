@@ -57,7 +57,7 @@ class ApparelSize(XMLObject, XMLMatrix):
                       )
 
     # XXX this should be done using an interraction workflow
-    security.declareProtected(Permissions.ModifyPortalContent, '_updateMatrixCellRange')
+    @security.protected(Permissions.ModifyPortalContent)
     def _updateMatrixCellRange(self):
       lines = self.ApparelSize_asCellRange()[0]
       columns = self.ApparelSize_asCellRange()[1]
@@ -68,12 +68,12 @@ class ApparelSize(XMLObject, XMLMatrix):
         self.setCellRange(lines, base_id='size')
 
     # XXX this should be done using an interraction workflow
-    security.declareProtected(Permissions.ModifyPortalContent, '_setSizeList')
+    @security.protected(Permissions.ModifyPortalContent)
     def _setSizeList(self,value):
       self._categorySetSizeList(value)
       self._updateMatrixCellRange()
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setApparelMorphoTypeList')
+    @security.protected(Permissions.ModifyPortalContent)
     def _setApparelMorphoTypeList(self,value):
       self._categorySetApparelMorphoTypeList(value)
       self._updateMatrixCellRange()

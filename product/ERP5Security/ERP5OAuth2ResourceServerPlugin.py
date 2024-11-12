@@ -222,7 +222,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
   #   Methods not in PAS plugin API
   #
 
-  security.declarePrivate('setCookie')
+  @security.private
   def setCookie(
     self,
     request,
@@ -585,7 +585,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
   #
   #   IExtractionPlugin implementation
   #
-  security.declarePrivate('extractCredentials')
+  @security.private
   def extractCredentials(self, request):
     """
     Extract Access Token from request.
@@ -627,7 +627,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
   #
   #   IAuthenticationPlugin implementation
   #
-  security.declarePrivate('authenticateCredentials')
+  @security.private
   def authenticateCredentials(self, credentials):
     try:
       return credentials[_ERP5_OAUTH2_ACCESS_TOKEN_NAME]
@@ -637,7 +637,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
   #
   #   IPropertiesPlugin implementation
   #
-  security.declarePrivate('getPropertiesForUser')
+  @security.private
   def getPropertiesForUser(self, user, request=None):
     try:
       return self.__getRequestPrivateDict(request)[
@@ -649,7 +649,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
   #
   #   IGroupsPlugin implementation
   #
-  security.declarePrivate('getGroupsForPrincipal')
+  @security.private
   def getGroupsForPrincipal(self, principal, request=None):
     try:
       return self.__getRequestPrivateDict(request)[_PRIVATE_GROUP_LIST_KEY]
@@ -659,7 +659,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
   #
   #   IRolesPlugin implementation
   #
-  security.declarePrivate('getRolesForPrincipal')
+  @security.private
   def getRolesForPrincipal(self, principal, request=None):
     try:
       return self.__getRequestPrivateDict(request)[_PRIVATE_ROLE_LIST_KEY]
@@ -669,7 +669,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
   #
   #   ICredentialsResetPlugin implementation
   #
-  security.declarePrivate('resetCredentials')
+  @security.private
   def resetCredentials(self, request, response):
     request_private_dict = self.__getRequestPrivateDict(request)
     try:

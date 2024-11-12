@@ -59,21 +59,18 @@ class TradeModelCell(TradeModelLine):
                   , PropertySheet.ItemAggregation
                   )
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'hasCellContent' )
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCellContent(self, base_id='movement'):
     """A cell cannot have cell content itself.
     """
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantity(self):
     """Overridden getter to return None instead 0 if undefined"""
     return self._baseGetQuantity(None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self):
     """
     Returns the totals price for this line

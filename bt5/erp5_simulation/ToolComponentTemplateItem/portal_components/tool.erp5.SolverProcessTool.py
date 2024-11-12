@@ -51,8 +51,7 @@ class SolverProcessTool(BaseTool):
   security = ClassSecurityInfo()
 
   # IDivergenceController implementation
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self, delivery_or_movement=None):
     """
     Returns True if any of the movements provided
@@ -68,8 +67,7 @@ class SolverProcessTool(BaseTool):
         return True
     return False
 
-  security.declareProtected(Permissions.AddPortalContent,
-                            'newSolverProcess')
+  @security.protected(Permissions.AddPortalContent)
   @UnrestrictedMethod
   def newSolverProcess(self, delivery_or_movement=None, temp_object=False):
     """

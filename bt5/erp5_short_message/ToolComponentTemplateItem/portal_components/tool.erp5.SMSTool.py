@@ -48,7 +48,7 @@ class SMSTool(BaseTool):
   security.declareProtected(ManagePortal, 'manage_overview')
   #manage_overview = DTMLFile('explainSMSTool', _dtmldir )
 
-  security.declareProtected(ManagePortal, 'send')
+  @security.protected(ManagePortal)
   @non_publishable
   def send(self, text, recipient, sender, gateway_reference='default',
            document_relative_url=None, activate_kw=None):
@@ -77,13 +77,13 @@ class SMSTool(BaseTool):
               document_relative_url=document_relative_url,
               gateway_relative_url=gateway.getRelativeUrl())
 
-  security.declareProtected(ManagePortal, 'getMessageStatus')
+  @security.protected(ManagePortal)
   def getMessageStatus(self,message_id, gateway_reference='default'):
 
     gateway = self._findGateway(gateway_reference)
     return gateway.getMessageStatus(message_id)
 
-  security.declarePublic('isSendByTitleAllowed')
+  @security.public
   def isSendByTitleAllowed(self, gateway_reference='default'):
     """Define the support or not to use the title of the telephone instead of
         the number when send a message."""

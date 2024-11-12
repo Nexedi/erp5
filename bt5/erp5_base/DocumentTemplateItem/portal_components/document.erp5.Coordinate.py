@@ -93,16 +93,14 @@ class Coordinate(Base):
                     )
 
   ### helper methods
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRegularExpressionFindAll')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRegularExpressionFindAll(self, regular_expression, string):
     """
     allows call of re.findall in a python script used for Coordinate
     """
     return re.findall(regular_expression, string)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRegularExpressionGroups')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRegularExpressionGroups(self, regular_expression, string):
     """
     allows call of re.search.groups in a python script used for Coordinate
@@ -113,8 +111,7 @@ class Coordinate(Base):
     return re.search(regular_expression, string).groups()
 
   ### Mix-in methods
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'asText' )
+  @security.protected(Permissions.AccessContentsInformation)
   def asText(self):
     """
     returns the coordinate as a text string
@@ -123,23 +120,21 @@ class Coordinate(Base):
     if script is not None:
       return script()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getText')
+  @security.protected(Permissions.AccessContentsInformation)
   def getText(self):
     """
     calls asText
     """
     return self.asText()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'hasText')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasText(self):
     """
     calls asText
     """
     return bool(self.asText())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCoordinateText')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCoordinateText(self, default=_marker):
     """Fallback on splitted values (old API)
     """
@@ -157,7 +152,7 @@ class Coordinate(Base):
       return self._baseGetCoordinateText()
     return self._baseGetCoordinateText(default)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
+  @security.protected(Permissions.ModifyPortalContent)
   @deprecated
   def fromText(self, coordinate_text):
     """
@@ -168,25 +163,24 @@ class Coordinate(Base):
     if script is not None:
       return script(text=coordinate_text)
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setText')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setText(self, value):
     """
     calls fromText
     """
     return self.fromText(value)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'standardTextFormat')
+  @security.protected(Permissions.AccessContentsInformation)
   def standardTextFormat(self):
     """
     Returns the standard text formats for telephone numbers
     """
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDetailed(self):
     return False
 
-  security.declareProtected( Permissions.View, 'manage_FTPget' )
+  @security.protected(Permissions.View)
   def manage_FTPget(self):
     """
     Get the coordinate as text for WebDAV src / FTP download.
@@ -197,7 +191,7 @@ class Coordinate(Base):
 
     return bodytext
 
-  security.declareProtected( Permissions.View, 'get_size' )
+  @security.protected(Permissions.View)
   def get_size( self ):
     """
     Used for FTP and apparently the ZMI now too

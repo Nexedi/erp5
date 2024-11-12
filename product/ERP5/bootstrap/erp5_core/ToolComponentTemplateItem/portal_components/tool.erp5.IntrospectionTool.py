@@ -68,7 +68,7 @@ class LogMixin:
   """
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.ManagePortal, 'getLogFile')
+  @security.protected(Permissions.ManagePortal)
   def getLogFile(self, file_name, account=None):
     """
       Returns the raw log file (as they are)
@@ -76,8 +76,7 @@ class LogMixin:
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'getLogFileNameList')
+  @security.protected(Permissions.ManagePortal)
   def getLogFileNameList(self, log_name, account=None,
                         domain=None, user_name=None,
                         from_line=None, to_line=None,
@@ -90,14 +89,14 @@ class LogMixin:
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.ManagePortal, 'getLogNameList')
+  @security.protected(Permissions.ManagePortal)
   def getLogNameList(self, account=None):
     """
       Returns the list of log names.
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.ManagePortal, 'parseLogLine')
+  @security.protected(Permissions.ManagePortal)
   def parseLogLine(self, log_name, log_line ):
     """
       Parses the line and returns a dict
@@ -121,8 +120,7 @@ class IntrospectionTool(LogMixin, BaseTool):
   #
   #   Remote menu management
   #
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFilteredActionDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFilteredActionDict(self, user_name=_MARKER):
     """
       Returns menu items for a given user
@@ -150,8 +148,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'getModuleItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getModuleItemList(self, user_name=_MARKER):
     """
       Returns module items for a given user
@@ -252,21 +249,21 @@ class IntrospectionTool(LogMixin, BaseTool):
     start = max(len(lines) - line_number - 1, 0)
     return "\n".join(lines[start:len(lines)])
 
-  security.declareProtected(Permissions.ManagePortal, 'tailEventLog')
+  @security.protected(Permissions.ManagePortal)
   def tailEventLog(self):
     """
     Tail the Event Log.
     """
     return html_quote(self._tailFile(self.__getEventLogPath(), 500))
 
-  security.declareProtected(Permissions.ManagePortal, 'tailAccessLog')
+  @security.protected(Permissions.ManagePortal)
   def tailAccessLog(self):
     """
     Tail the Event Log.
     """
     return html_quote(self._tailFile(self.__getAccessLogPath(), 50))
 
-  security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
+  @security.protected(Permissions.ManagePortal)
   def getAccessLog(self, compressed=1, REQUEST=None):
     """
       Get the Access Log.
@@ -280,7 +277,7 @@ class IntrospectionTool(LogMixin, BaseTool):
                                file_path=self.__getAccessLogPath(),
                                compressed=compressed)
 
-  security.declareProtected(Permissions.ManagePortal, 'getEventLog')
+  @security.protected(Permissions.ManagePortal)
   def getEventLog(self, compressed=1, REQUEST=None):
     """
       Get the Event Log.
@@ -294,7 +291,7 @@ class IntrospectionTool(LogMixin, BaseTool):
                                file_path=self.__getEventLogPath(),
                                compressed=compressed)
 
-  security.declareProtected(Permissions.ManagePortal, 'getDataFs')
+  @security.protected(Permissions.ManagePortal)
   def getDataFs(self, compressed=1, REQUEST=None):
     """
       Get the Data.fs.
@@ -311,7 +308,7 @@ class IntrospectionTool(LogMixin, BaseTool):
   #
   #   Instance variable definition access
   #
-  security.declareProtected(Permissions.ManagePortal, '_getSoftwareHome')
+  @security.protected(Permissions.ManagePortal)
   def _getSoftwareHome(self):
     """
       Get the value of SOFTWARE_HOME for zopectl startup script
@@ -319,7 +316,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     return getConfiguration().softwarehome
 
-  security.declareProtected(Permissions.ManagePortal, '_getPythonExecutable')
+  @security.protected(Permissions.ManagePortal)
   def _getPythonExecutable(self):
     """
       Get the value of PYTHON for zopectl startup script
@@ -327,7 +324,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     return sys.executable
 
-  security.declareProtected(Permissions.ManagePortal, '_getProductPathList')
+  @security.protected(Permissions.ManagePortal)
   def _getProductPathList(self):
     """
       Get the value of SOFTWARE_HOME for zopectl startup script
@@ -335,7 +332,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     return getConfiguration().products
 
-  security.declareProtected(Permissions.ManagePortal, '_getSystemVersionDict')
+  @security.protected(Permissions.ManagePortal)
   def _getSystemVersionDict(self):
     """
       Returns a dictionnary with all versions of installed libraries
@@ -370,8 +367,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return get_system_version_dict()
 
-  security.declareProtected(Permissions.ManagePortal,
-      '_getExternalConnectionDict')
+  @security.protected(Permissions.ManagePortal)
   def _getExternalConnectionDict(self):
     """ Return a dictionary with all connections from ERP5 to an External
         Service, this may include MySQL, Memcached, Kumofs, Ldap or any other.
@@ -428,8 +424,7 @@ class IntrospectionTool(LogMixin, BaseTool):
         'certificate_authority_path')
     return connection_dict
 
-  security.declareProtected(Permissions.ManagePortal,
-      '_getBusinessTemplateRevisionDict')
+  @security.protected(Permissions.ManagePortal)
   def _getBusinessTemplateRevisionDict(self):
     """ Return a Dictionary of installed business templates and their revisions
     """
@@ -438,8 +433,7 @@ class IntrospectionTool(LogMixin, BaseTool):
       business_template_dict[installed.getTitle()] = installed.getRevision()
     return business_template_dict
 
-  security.declareProtected(Permissions.ManagePortal,
-      '_getActivityDict')
+  @security.protected(Permissions.ManagePortal)
   def _getActivityDict(self):
     """ Return a Dictionary with the snapshot with the status of activities.
         failures (-2 and -3) and running.
@@ -451,7 +445,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     activity_dict['total'] = len(self.portal_activities.getMessageList())
     return activity_dict
 
-  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
+  @security.protected(Permissions.ManagePortal)
   def getSystemSignatureDict(self):
     """ Returns a dictionary with all information related to the instance.
     This information can report what resources (memcache, mysql, zope,
@@ -469,7 +463,7 @@ class IntrospectionTool(LogMixin, BaseTool):
            business_template_dict=self._getBusinessTemplateRevisionDict(),
            business_template_repository_list=business_template_repository_list)
 
-  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureAsJSON')
+  @security.protected(Permissions.ManagePortal)
   def getSystemSignatureAsJSON(self, REQUEST=None):
     """
       Returns the information as JSON.

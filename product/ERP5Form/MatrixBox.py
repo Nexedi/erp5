@@ -640,7 +640,7 @@ class MatrixBox(ZMIField):
 
     security = ClassSecurityInfo()
 
-    security.declareProtected('Access contents information', 'get_value')
+    @security.protected('Access contents information')
     def get_value(self, id, **kw):
       if id == 'default':
         render_format = kw.get('render_format')

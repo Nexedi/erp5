@@ -42,8 +42,7 @@ class UrlMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asURL')
+  @security.protected(Permissions.AccessContentsInformation)
   def asURL(self):
     """
     Returns a text representation of the Url if defined
@@ -70,7 +69,7 @@ class UrlMixin:
 
     return '%s://%s' % (protocol, url_string)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromURL')
+  @security.protected(Permissions.ModifyPortalContent)
   def fromURL(self, url):
     """
     Analyses a URL and splits it into two parts. URLs
@@ -88,8 +87,7 @@ class UrlMixin:
       url_string = url
     self.setUrlString(url_string)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLServer')
+  @security.protected(Permissions.AccessContentsInformation)
   def getURLServer(self):
     """
     Returns the server part of a URL
@@ -102,8 +100,7 @@ class UrlMixin:
     url_string = self.getUrlString()
     return url_string.split('/')[0].split(':')[0]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLPort')
+  @security.protected(Permissions.AccessContentsInformation)
   def getURLPort(self):
     """
     Returns the port part of a URL
@@ -119,8 +116,7 @@ class UrlMixin:
       return server_part_list[1]
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getURLPath')
+  @security.protected(Permissions.AccessContentsInformation)
   def getURLPath(self):
     """
     Returns the path part of a URL
@@ -133,8 +129,7 @@ class UrlMixin:
     url_string = self.getUrlString()
     return '/'.join(url_string.split('/')[1:])
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asNormalisedURL')
+  @security.protected(Permissions.AccessContentsInformation)
   def asNormalisedURL(self, base_url=None):
     """
     call normaliseUrl with raw url

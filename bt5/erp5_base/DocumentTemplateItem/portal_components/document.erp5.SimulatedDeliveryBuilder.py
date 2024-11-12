@@ -93,14 +93,14 @@ class SimulatedDeliveryBuilder(BuilderMixin):
                     , PropertySheet.DeliveryBuilder
                     )
 
-  security.declarePrivate('callBeforeBuildingScript')
+  @security.private
   def callBeforeBuildingScript(self):  # XXX-JPS
     """
       Redefine this method, because it seems nothing interesting can be
       done before building Delivery.
     """
 
-  security.declarePrivate('searchMovementList')
+  @security.private
   @UnrestrictedMethod
   def searchMovementList(self, applied_rule_uid=None, **kw):
     """
@@ -175,8 +175,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
           delivery.startBuilding()
 
   # Simulation consistency propagation
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateFromSimulation')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateFromSimulation(self, delivery_relative_url, **kw):
     """
       Update all lines of this transaction based on movements in the
@@ -190,8 +189,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       delivery_relative_url,
       divergence_to_adopt_list=divergence_to_adopt_list)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'solveDeliveryGroupDivergence')
+  @security.protected(Permissions.ModifyPortalContent)
   @UnrestrictedMethod
   def solveDeliveryGroupDivergence(self, delivery_relative_url,
                                    property_dict=None):

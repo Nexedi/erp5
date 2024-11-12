@@ -62,7 +62,7 @@ class WebSite(WebSection):
 
   web_section_key = WEBSITE_KEY
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWebSiteValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWebSiteValue(self):
     """
           Returns the current web site (ie. self) though containment acquisition
@@ -93,7 +93,7 @@ class WebSite(WebSection):
         return self.getOriginalDocument().asContext(id=name, __language_web_site=True)
     return WebSection.getExtensibleContent(self, request, name)
 
-  security.declarePublic('isSubtreeIndexable')
+  @security.public
   def isSubtreeIndexable(self):
     if self.isTempObject() and getattr(self, '__language_web_site', False):
       # temp Web Site used to select a language must not prevent
@@ -119,7 +119,7 @@ class WebSite(WebSection):
       raise Redirect(redirect_url)
     return super(WebSite, self).__before_publishing_traverse__(self2, request)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPermanentURLList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPermanentURLList(self, document):
     """
         Return a list of URLs which exist in the site for
@@ -131,7 +131,7 @@ class WebSite(WebSection):
     """
     return [x.getPermanentURL(document) for x in self.getWebSectionValueList(document)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWebSectionValueList(self, document):
     """
         Returns a list of sections which a given document is

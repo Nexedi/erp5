@@ -73,16 +73,14 @@ class Container(Movement, XMLObject):
                     , PropertySheet.SortIndex
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantity(self, default=1.0):
     """
     Returns 1 because only one container is shipped
     """
     return 1.0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
         Returns 1 if this needs to be accounted
@@ -92,23 +90,21 @@ class Container(Movement, XMLObject):
     # Always accountable - to account the containers which we use
     return 1
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                            'hasCellContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def hasCellContent(self, base_id='movement'):
     """
     This method can be overriden
     """
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self):
     """Return True if this movement diverges from the its simulation.
     Containers are never divergent.
     """
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContainerText')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContainerText(self):
     """
     Creates a unique string which allows to compare/hash two containers
@@ -135,24 +131,20 @@ class Container(Movement, XMLObject):
     return result
 
   # Used for optimization - requires reindexing using container_uid
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContainerUid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContainerUid(self):
     return self.getUid()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContainerValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContainerValue(self):
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContainer')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContainer(self):
     return self.getRelativeUrl()
 
   # Quantity methods
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContainedTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContainedTotalQuantity(self, recursive = 0):
     """
     The sum of quantities of contained lines
@@ -167,8 +159,7 @@ class Container(Movement, XMLObject):
         result += o.getContainedTotalQuantity()
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContainedTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContainedTotalPrice(self, recursive = 0):
     """
     The sum of price of contained lines
@@ -184,8 +175,7 @@ class Container(Movement, XMLObject):
     return result
 
   # Item Access
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTrackedItemUidList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTrackedItemUidList(self):
     """
     Return a list of uid for related items.

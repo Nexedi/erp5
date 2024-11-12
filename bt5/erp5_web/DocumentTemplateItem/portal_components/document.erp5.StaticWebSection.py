@@ -105,7 +105,7 @@ class StaticWebSection(WebSection):
   def _checkIfRenderDefaultDocument(self):
     return self.REQUEST.get('portal_skin', None) or super(StaticWebSection, self)._checkIfRenderDefaultDocument()
 
-  security.declareProtected(Permissions.View, '__bobo_traverse__')
+  @security.protected(Permissions.View)
   def __bobo_traverse__(self, request, name):
     """
       Taken from WebSection Bobo Traverse, the difference is that

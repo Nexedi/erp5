@@ -319,7 +319,7 @@ class ConfiguratorTool(BaseTool):
         business_configuration=business_configuration)
     return response
 
-  security.declarePublic('getInstallationStatusReport')
+  @security.public
   def getInstallationStatusReport(self,
                           active_process_id=None, REQUEST=None):
     """ Query local ERP5 instance for installation status.
@@ -341,7 +341,7 @@ class ConfiguratorTool(BaseTool):
         'text/html; charset=utf-8')
     return html
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'startInstallation')
+  @security.protected(Permissions.ModifyPortalContent)
   def startInstallation(self, business_configuration, REQUEST):
     """ Start installation process as an activity which will
         download/install bt5 template files and meanwhile offer

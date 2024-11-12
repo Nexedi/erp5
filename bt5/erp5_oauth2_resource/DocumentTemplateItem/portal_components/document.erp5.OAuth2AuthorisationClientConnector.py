@@ -366,7 +366,7 @@ class OAuth2AuthorisationClientConnector(
       for _, key in self.__getStateFernetKeyList()
     ])
 
-  security.declarePublic('isAuthorisationServerRemote')
+  @security.public
   def isAuthorisationServerRemote(self):
     """
     Whether the associated authorisation server is local or remote.
@@ -672,10 +672,7 @@ class OAuth2AuthorisationClientConnector(
   #   Local API.
   #
 
-  security.declareProtected(
-    Permissions.ModifyPortalContent,
-    'renewStateSecret',
-  )
+  @security.protected(Permissions.ModifyPortalContent)
   def renewStateSecret(self, revoke_until=0.0):
     """
     Start signing and encrypting state with a new key.
@@ -696,7 +693,7 @@ class OAuth2AuthorisationClientConnector(
       if x[0] > revoke_until
     )
 
-  security.declarePublic('login')
+  @security.public
   def login(
     self,
     REQUEST,
@@ -862,7 +859,7 @@ class OAuth2AuthorisationClientConnector(
         login_retry_url=login_retry_url,
       )
 
-  security.declarePublic('loggedIn')
+  @security.public
   def loggedIn(self, REQUEST, RESPONSE, code=None, state=None):
     """
     Using provided authorisation_code, request tokens from Authorisation
@@ -994,10 +991,7 @@ class OAuth2AuthorisationClientConnector(
     self._expireStateCookie(RESPONSE=RESPONSE, name=state_cookie_name)
     redirect()
 
-  security.declareProtected(
-    Permissions.AccessContentsInformation,
-    'getRedirectUri',
-  )
+  @security.protected(Permissions.AccessContentsInformation)
   def getRedirectUri(self):
     """
     Return the redirect URI which will allow the Authorisation Server to send
@@ -1011,19 +1005,19 @@ class OAuth2AuthorisationClientConnector(
   #   Local API used by PAS plugin.
   #
 
-  security.declarePrivate('getSessionVersion')
+  @security.private
   def getSessionVersion(self, session_id, REQUEST):
     return self._getAuthorisationServerValue(
       REQUEST=REQUEST,
     ).getSessionVersion(session_id)
 
-  security.declarePrivate('getAccessTokenSignatureAlgorithmAndPublicKeyList')
+  @security.private
   def getAccessTokenSignatureAlgorithmAndPublicKeyList(self, REQUEST):
     return self._getAuthorisationServerValue(
       REQUEST=REQUEST,
     ).getAccessTokenSignatureAlgorithmAndPublicKeyList()
 
-  security.declarePrivate('getNewAccessToken')
+  @security.private
   def getNewAccessToken(self, request, refresh_token):
     """
     Called by an ERP5OAuth2ResourceServerPlugin instance when if could find
@@ -1044,7 +1038,7 @@ class OAuth2AuthorisationClientConnector(
     )
     return access_token, refresh_token
 
-  security.declarePrivate('terminateSession')
+  @security.private
   def terminateSession(self, request, access_token, refresh_token):
     """
     Called by an ERP5OAuth2ResourceServerPlugin instance when logging out.
