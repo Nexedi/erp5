@@ -58,7 +58,7 @@ class MemcachedPlugin(XMLObject):
                     , PropertySheet.Url
                     )
 
-  security.declarePublic('getConnection')
+  @security.public
   def getConnection(self):
     try:
       key, connection = self._v_connection

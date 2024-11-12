@@ -171,7 +171,7 @@ class PeriodicityMixin:
     return DateTime(new_date.year(), new_date.month(), new_date.day(),
             new_date.hour(), new_date.minute(), 0, timezone)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNextPeriodicalDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNextPeriodicalDate(self, current_date, next_start_date=None):
     """
     Get the next date where this periodic event should start.
@@ -230,7 +230,7 @@ class PeriodicityMixin:
           next_start_date = next_start_date.toZone(timezone)
         return next_start_date
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWeekDayList(self):
     """
     returns something like ['Sunday','Monday',...]
@@ -239,7 +239,7 @@ class PeriodicityMixin:
       calendar.day_name[i]
       for i in calendar.Calendar(calendar.SUNDAY).iterweekdays()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWeekDayItemList(self):
     """
     returns something like [('Sunday', 'Sunday'), ('Monday', 'Monday'),...]
@@ -247,7 +247,7 @@ class PeriodicityMixin:
     return [(Message(domain='erp5_ui', message=x), x) \
             for x in self.getWeekDayList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMonthItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMonthItemList(self):
     """
     returns something like [('January', 1), ('February', 2),...]
@@ -257,7 +257,7 @@ class PeriodicityMixin:
     return [(Message(domain='erp5_ui', message=month_name[i]), i) \
             for i in range(1, len(month_name))]
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getPeriodicityWeekDayList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPeriodicityWeekDayList(self):
     """
     Make sure that the list of days is ordered

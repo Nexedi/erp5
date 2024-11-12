@@ -57,8 +57,7 @@ class BaseCategory(CMFBaseCategory, XMLObject):
                       , PropertySheet.Predicate)
 
     # Experimental - WebDAV browsing support - ask JPS
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'experimental_listDAVObjects')
+    @security.protected(Permissions.AccessContentsInformation)
     def experimental_listDAVObjects(self):
       from zLOG import LOG
       LOG("BaseCategory listDAVObjects" ,0, "listDAVObjects")
@@ -68,7 +67,7 @@ class BaseCategory(CMFBaseCategory, XMLObject):
       #result.extend(self.portal_catalog())
       return result
 
-    security.declarePrivate('manage_afterAdd')
+    @security.private
     def manage_afterAdd(self, item, container):
       """
          Reset Accessors

@@ -60,7 +60,7 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
   ####################################
   #ILoginPasswordHostExtractionPlugin#
   ####################################
-  security.declarePrivate('extractCredentials')
+  @security.private
   def extractCredentials(self, request):
     """ Extract credentials from the request header. """
     creds = {}
@@ -76,7 +76,7 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
   #######################
   #IAuthenticationPlugin#
   #######################
-  security.declarePrivate('authenticateCredentials')
+  @security.private
   @UnrestrictedMethod
   def authenticateCredentials(self, credentials):
     """ Map credentials to a user ID. """

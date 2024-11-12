@@ -45,7 +45,7 @@ class AcknowledgeableMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'acknowledge')
+  @security.protected(Permissions.AccessContentsInformation)
   def acknowledge(self, **kw):
     """
       Define what we want to do with acknowledgment.
@@ -64,8 +64,7 @@ class AcknowledgeableMixin:
       return method(**kw)
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasAcknowledgementActivity')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasAcknowledgementActivity(self, user_name=None):
     """
     We will check if there is some current activities running or not
@@ -78,7 +77,7 @@ class AcknowledgeableMixin:
       result = True
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isAcknowledged')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAcknowledged(self, user_name=None):
     """
     Say if this ticket is already acknowledged or not by this user.
@@ -133,29 +132,26 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
                     , PropertySheet.ItemAggregation
                    )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """Events are accountable
     """
     return 1
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantity(self, default=1.):
     """Quantity is by default 1.0 on events.
     """
     return self._baseGetQuantity(default)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                             'getExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationValue(self):
     """
       An event is it's own explanation
     """
     return self
 
-  security.declareProtected(Permissions.UseMailhostServices, 'send')
+  @security.protected(Permissions.UseMailhostServices)
   @non_publishable
   def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
            body=None, attachment_format=None, attachment_list=None,

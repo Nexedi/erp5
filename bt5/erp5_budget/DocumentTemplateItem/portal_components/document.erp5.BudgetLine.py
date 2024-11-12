@@ -89,16 +89,14 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConsumedBudgetDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConsumedBudgetDict(self, **kw):
     """Returns all the consumptions in a dict where the keys are the cells, and
     the value is the consumed budget.
     """
     return self._getBudgetDict(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getEngagedBudgetDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getEngagedBudgetDict(self, **kw):
     """Returns all the engagements in a dict where the keys are the cells, and
     the value is the engaged budget.
@@ -110,8 +108,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     kw['simulation_period'] = ''
     return self._getBudgetDict(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableBudgetDict')
+  @security.protected(Permissions.AccessContentsInformation)
   @transactional_cached(key_method=lambda self, *args, **kw:
     (self.getRelativeUrl(), tuple(kw.items())))
   def getAvailableBudgetDict(self, **kw):
@@ -164,22 +161,19 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
 
     return budget_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConsumedBudgetCell')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConsumedBudgetCell(self, *cell_index, **kw):
     consumed_budget_dict = self.getConsumedBudgetDict()
     return TempBudgetCell(consumed_budget_dict.get(cell_index),
       cell_index, self.absolute_url(), False)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableBudgetCell')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableBudgetCell(self, *cell_index, **kw):
     available_budget_dict = self.getAvailableBudgetDict()
     return TempBudgetCell(available_budget_dict.get(cell_index),
       cell_index, self.absolute_url(), True)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getEngagedBudgetCell')
+  @security.protected(Permissions.AccessContentsInformation)
   def getEngagedBudgetCell(self, *cell_index, **kw):
     engaged_budget_dict = self.getEngagedBudgetDict()
     return TempBudgetCell(engaged_budget_dict.get(cell_index),

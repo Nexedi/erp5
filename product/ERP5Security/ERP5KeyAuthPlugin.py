@@ -236,13 +236,13 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
   #    ILoginEncryptionPlugin    #
   ################################
-  security.declarePublic('encrypt')
+  @security.public
   def encrypt(self, login):
     """Encrypt the login"""
     cipher = globals()['%sCipher' % self._getCipher()](self.encryption_key)
     return bytes2str(cipher.encrypt(login))
 
-  security.declarePrivate('decrypt')
+  @security.private
   def decrypt(self, crypted_login):
     """Decrypt string and return the login"""
     cipher = globals()['%sCipher' % self._getCipher()](self.encryption_key)
@@ -251,7 +251,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ####################################
   #ILoginPasswordHostExtractionPlugin#
   ####################################
-  security.declarePrivate('extractCredentials')
+  @security.private
   def extractCredentials(self, request):
     """ Extract credentials from cookie or 'request'. """
     try:
@@ -308,7 +308,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
   #   ICredentialsUpdatePlugin   #
   ################################
-  security.declarePrivate('updateCredentials')
+  @security.private
   def updateCredentials(self, request, response, login, new_password):
     """ Respond to change of credentials"""
 
@@ -330,7 +330,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
   #    ICredentialsResetPlugin   #
   ################################
-  security.declarePrivate('resetCredentials')
+  @security.private
   def resetCredentials(self, request, response):
     """Expire cookies of authentication """
     response.expireCookie(self.cookie_name, path='/')
@@ -340,7 +340,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
   #     IAuthenticationPlugin    #
   ################################
-  security.declarePrivate('authenticateCredentials')
+  @security.private
   def authenticateCredentials( self, credentials ):
     """Authenticate with credentials"""
     key = credentials.get('key', None)
@@ -410,7 +410,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       globals(),
       __name__='manage_editERP5KeyAuthPluginForm' )
 
-  security.declareProtected( ManageUsers, 'manage_editKeyAuthPlugin' )
+  @security.protected(ManageUsers)
   def manage_editKeyAuthPlugin(self, encryption_key, cipher, cookie_name,
                                default_cookie_name, RESPONSE=None):
     """Edit the object"""

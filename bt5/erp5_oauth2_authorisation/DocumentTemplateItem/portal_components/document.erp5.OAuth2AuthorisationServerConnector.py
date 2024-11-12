@@ -1009,7 +1009,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
   #
   #   OAuth2 Endpoints: standard, implemented via oauthlib
   #
-  security.declarePublic('authorize')
+  @security.public
   @_wrapOAuth2HTMLEndpoint
   def authorize(self, request_validator, REQUEST):
     """
@@ -1058,7 +1058,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       },
     ).create_authorization_response
 
-  security.declarePrivate('authorizeLocal')
+  @security.private
   def authorizeLocal(self, REQUEST, RESPONSE, query_list, login_retry_url):
     """
     OAuth2 authorisation endpoint for a local resource server.
@@ -1084,7 +1084,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       )
       # pylint: enable=unexpected-keyword-arg, no-value-for-parameter
 
-  security.declarePublic('token')
+  @security.public
   @_wrapOAuth2Endpoint
   def token(self, request_validator, REQUEST):
     """
@@ -1224,7 +1224,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       },
     ).create_token_response
 
-  security.declarePublic('revoke')
+  @security.public
   @_wrapOAuth2Endpoint
   def revoke(self, request_validator, REQUEST):
     """
@@ -1237,7 +1237,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       enable_jsonp=False,
     ).create_revocation_response
 
-  security.declarePublic('introspect')
+  @security.public
   @_wrapOAuth2Endpoint
   def introspect(self, request_validator, REQUEST):
     """
@@ -1312,7 +1312,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     ):
       raise jwt.InvalidTokenError
 
-  security.declarePrivate('getAccessTokenIntrospectionDict')
+  @security.private
   def getAccessTokenIntrospectionDict(self, token, request):
     access_token_dict = self._getAccessTokenDict(token, request)
     access_token_payload_dict = access_token_dict[JWT_PAYLOAD_KEY]
@@ -1326,7 +1326,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       # XXX: More ? Like, group list and global role list ?
     }
 
-  security.declarePrivate('getRefreshTokenIntrospectionDict')
+  @security.private
   def getRefreshTokenIntrospectionDict(self, token, request):
     refresh_token_dict = self._getRefreshTokenDict(token, request)
     return {
@@ -1336,7 +1336,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       'iat': refresh_token_dict['iat'],
     }
 
-  security.declarePrivate('getAccessTokenClientId')
+  @security.private
   def getAccessTokenClientId(self, value, request):
     """
     Extracts client ID from given Access Token.
@@ -1362,7 +1362,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         return token_dict['iss']
     raise  # pylint:disable=misplaced-bare-raise
 
-  security.declarePrivate('getRefreshTokenClientId')
+  @security.private
   def getRefreshTokenClientId(self, value, request):
     """
     Extracts client ID from given Refresh Token.
@@ -1401,7 +1401,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       if source_id == token_dict['iss']:
         return session_value
 
-  security.declarePrivate('getSessionValueFromAccessToken')
+  @security.private
   def getSessionValueFromAccessToken(self, token, request):
     """
     Does not check access permission.
@@ -1412,7 +1412,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       return
     return self._getSessionValueFromTokenDict(token_dict=token_dict)
 
-  security.declarePrivate('getSessionValueFromRefreshToken')
+  @security.private
   def getSessionValueFromRefreshToken(self, token, request):
     """
     Does not check access permission.
@@ -1423,7 +1423,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       return
     return self._getSessionValueFromTokenDict(token_dict=token_dict)
 
-  security.declarePrivate('isRefreshTokenRotationNeeded')
+  @security.private
   def isRefreshTokenRotationNeeded(self, refresh_token, request):
     try:
       refresh_token_dict = self._getRefreshTokenDict(refresh_token, request)
@@ -1436,7 +1436,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
   #   Non-oauth2 methods, for use by ERP5 in the role of a resource server
   #
 
-  security.declarePublic('getSessionVersion')
+  @security.public
   def getSessionVersion(self, session_id, REQUEST=None, RESPONSE=None):
     """
     Returns the current version of the designated session, if this session exists and is valid.
@@ -1459,7 +1459,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     RESPONSE.setHeader('content-type', 'application/json;charset=UTF-8')
     return json.dumps(result)
 
-  security.declarePrivate('isRemote')
+  @security.private
   def isRemote(self):
     return False
 
@@ -1502,7 +1502,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         **kw
       )
 
-  security.declarePrivate('getSessionValueByAuthorisationCode')
+  @security.private
   def getSessionValueByAuthorisationCode(self, code):
     """
     Retrieve the session corresponding to given code.
@@ -1510,7 +1510,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     # XXX: use a non-draft state ?
     return self._getSessionValue(session_id=code, expected_state='draft')
 
-  security.declarePrivate('invalidateAuthorisationCode')
+  @security.private
   def invalidateAuthorisationCode(self, code):
     """
     Given session code has been used, make the session unusable (if it was still usable).
@@ -1524,7 +1524,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       with super_user():
         session_value.cancel()
 
-  security.declarePrivate('createSession')
+  @security.private
   def createSession(
     self,
     authorisation_code,
@@ -1611,7 +1611,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
   #   Key material API
   #
 
-  security.declarePublic('getSymetricSignatureAlgorithmList')
+  @security.public
   def getSymetricSignatureAlgorithmList(self):
     """
     For UI use.
@@ -1624,7 +1624,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       )
     ]
 
-  security.declarePublic('getAsymetricSignatureAlgorithmList')
+  @security.public
   def getAsymetricSignatureAlgorithmList(self):
     """
     For UI use.
@@ -1635,7 +1635,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       'RS512',
     ]
 
-  security.declarePublic('getAccessTokenSignatureAlgorithmAndPublicKeyList')
+  @security.public
   def getAccessTokenSignatureAlgorithmAndPublicKeyList(self, RESPONSE=None):
     """
     Return a tuple of 2-tuples:
@@ -1655,7 +1655,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     RESPONSE.setHeader('content-type', 'application/json;charset=UTF-8')
     return json.dumps(result)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'renewTokenSecret')
+  @security.protected(Permissions.ModifyPortalContent)
   def renewTokenSecret(self, revoke_until=0.0):
     """
     Start signing tokens with new keys.

@@ -55,8 +55,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.ManagePortal,
-                            "cleanupInvalidatedTestNode")
+  @security.protected(Permissions.ManagePortal)
   def cleanupInvalidatedTestNode(self, test_node):
     """
     When a test node is invalidated, the work will be distributed to
@@ -106,7 +105,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
           test_suite_list_to_remove.append(test_suite)
     return test_suite_list_to_remove
 
-  security.declareProtected(Permissions.ManagePortal, "optimizeConfiguration")
+  @security.protected(Permissions.ManagePortal)
   def optimizeConfiguration(self):
     """
     We are going to add test suites to test nodes.
@@ -242,14 +241,14 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
                             "task_distribution", "default_memcached_plugin")
     return memcached_dict
 
-  security.declarePublic("getTestType")
+  @security.public
   def getTestType(self, batch_mode=0):
     """
     getTestType : return a string defining the test type
     """
     return 'UnitTest'
 
-  security.declarePublic("subscribeNode")
+  @security.public
   def subscribeNode(self,title,computer_guid,batch_mode=0):
     """
     subscribeNode doc
@@ -335,7 +334,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite_list.sort(key=getTestSuiteSortKey)
     return test_suite_list
 
-  security.declarePublic("startTestSuite")
+  @security.public
   def startTestSuite(self,title, computer_guid=None, batch_mode=0):
     """
     startTestSuite doc
@@ -391,7 +390,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       return config_list
     return json.dumps(config_list)
 
-  security.declarePublic("createTestResult")
+  @security.public
   def createTestResult(self, name, revision, test_name_list, allow_restart,
                        test_title=None, node_title=None, project_title=None):
     """
@@ -444,7 +443,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       test_suite = test_suite_list[0].getObject()
     return test_suite
 
-  security.declarePublic("startUnitTest")
+  @security.public
   def startUnitTest(self, test_result_path, exclude_list=(), node_title=None):
     """
     Here this is only a proxy to the task distribution tool
@@ -454,7 +453,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list,
                   node_title=node_title)
 
-  security.declarePublic("stopUnitTest")
+  @security.public
   def stopUnitTest(self,test_path,status_dict, node_title=None):
     """
     Here this is only a proxy to the task distribution tool
@@ -464,7 +463,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     return portal.portal_task_distribution.stopUnitTest(test_path, status_dict,
                   node_title=node_title)
 
-  security.declarePublic("generateConfiguration")
+  @security.public
   def generateConfiguration(self, test_suite_title, batch_mode=0):
     """
     return the list of configuration to create instances, in the case of ERP5 unit tests,

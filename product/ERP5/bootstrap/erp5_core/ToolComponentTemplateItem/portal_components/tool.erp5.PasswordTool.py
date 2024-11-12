@@ -68,7 +68,7 @@ class PasswordTool(BaseTool):
     super(PasswordTool, self).__init__(id)
     self._password_request_dict = OOBTree()
 
-  security.declareProtected('Manage users', 'getResetPasswordKey')
+  @security.protected('Manage users')
   def getResetPasswordKey(self, user_login, expiration_date=None):
     if expiration_date is None:
       # generate expiration date
@@ -85,7 +85,7 @@ class PasswordTool(BaseTool):
     self._password_request_dict[key] = (user_login, expiration_date)
     return key
 
-  security.declareProtected('Manage users', 'getResetPasswordUrl')
+  @security.protected('Manage users')
   def getResetPasswordUrl(self, user_login=None, key=None, site_url=None):
     if user_login is not None:
       # XXX Backward compatibility
@@ -104,7 +104,7 @@ class PasswordTool(BaseTool):
   def _getExpirationDateForKey(self, key=None):
     return self._password_request_dict[key][1]
 
-  security.declarePublic('mailPasswordResetRequest')
+  @security.public
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None,
                                notification_message=None, sender=None,
                                store_as_event=False,
@@ -228,7 +228,7 @@ class PasswordTool(BaseTool):
     if not batch:
       return redirect(REQUEST, site_url, msg, 'success')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'removeExpiredRequests')
+  @security.protected(Permissions.ModifyPortalContent)
   def removeExpiredRequests(self):
     """
     Browse dict and remove expired request
@@ -239,7 +239,7 @@ class PasswordTool(BaseTool):
       if date < current_date:
         del password_request_dict[key]
 
-  security.declarePublic('analyzePassword')
+  @security.public
   def analyzePassword(self, password, password_key):
     """Analyze password validity in the context of the login.
 
@@ -264,7 +264,7 @@ class PasswordTool(BaseTool):
       return login.analyzePassword(password)
     return []
 
-  security.declarePublic('changeUserPassword')
+  @security.public
   def changeUserPassword(self, password, password_key, password_confirm=None,
                          user_login=None, REQUEST=None, **kw):
     """

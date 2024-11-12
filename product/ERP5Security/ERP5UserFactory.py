@@ -183,7 +183,7 @@ class ERP5UserFactory(BasePlugin):
     self._id = self.id = id
     self.title = title
 
-  security.declarePrivate('createUser')
+  @security.private
   def createUser( self, user_id, name ):
     """ See IUserFactoryPlugin
     """

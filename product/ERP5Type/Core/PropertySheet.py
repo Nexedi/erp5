@@ -49,7 +49,7 @@ class PropertySheet(Folder):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declarePrivate('createAccessorHolder')
+  @security.private
   def createAccessorHolder(self, expression_context, portal):
     """
     Create a new accessor holder from the Property Sheet
@@ -84,9 +84,8 @@ class PropertySheet(Folder):
     'CategoryAcquiredExistence': 'Category Existence Constraint',
     'CategoryAcquiredMembershipArity': 'Category Membership Arity Constraint'}
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'importFromFilesystemDefinition')
   @classmethod
+  @security.protected(Permissions.ModifyPortalContent)
   def importFromFilesystemDefinition(cls, context, definition_class):
     """
     Create a new Property Sheet in the given context from a given
@@ -163,8 +162,7 @@ class PropertySheet(Folder):
 
     return property_sheet
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'applyOnAccessorHolder')
+  @security.protected(Permissions.AccessContentsInformation)
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
     # Accessor generation used to first generate accessors for
     # properties, *then* accessors for categories only if the latter
@@ -197,8 +195,7 @@ class PropertySheet(Folder):
             "Invalid property '%s' for Property Sheet '%s': %s" % \
             (property_definition.getId(), self.getId(), str(e)))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRecursivePortalTypeValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRecursivePortalTypeValueList(self):
     """
     Get all the Portal Types where this Property Sheet is used

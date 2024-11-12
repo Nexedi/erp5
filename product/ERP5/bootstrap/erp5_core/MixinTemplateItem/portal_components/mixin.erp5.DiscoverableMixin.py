@@ -60,8 +60,7 @@ class DiscoverableMixin(CachedConvertableMixin):
   """
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPropertyDictFromUserLogin')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyDictFromUserLogin(self, user_login=None):
     """
     Based on the user_login, find out as many properties as needed.
@@ -75,8 +74,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       return method(user_login)
     return {}
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPropertyDictFromContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyDictFromContent(self):
     """
     Based on the document content, find out as many properties as needed.
@@ -93,8 +91,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       return method()
     return {}
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPropertyDictFromFilename')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyDictFromFilename(self, filename):
     """
     Based on the file name, find out as many properties as needed.
@@ -107,8 +104,7 @@ class DiscoverableMixin(CachedConvertableMixin):
                             'getPropertyDictFromFileName')
   getPropertyDictFromFileName = getPropertyDictFromFilename
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPropertyDictFromInput')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyDictFromInput(self, input_parameter_dict):
     """
     Fetch argument_dict, then filter pass this dictionary
@@ -175,8 +171,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       if portal_type != self.getPortalType():
         return self.migratePortalType(portal_type)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'discoverMetadata')
+  @security.protected(Permissions.ModifyPortalContent)
   def discoverMetadata(self, filename=None, user_login=None,
                        input_parameter_dict=None):
     """
@@ -222,7 +217,7 @@ class DiscoverableMixin(CachedConvertableMixin):
     maybeChangeState(merged_doc)
     return merged_doc # XXX - is this really the right place ?
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
+  @security.protected(Permissions.ModifyPortalContent)
   def finishIngestion(self):
     """
     Finish the ingestion process by calling the appropriate script. This
@@ -233,8 +228,7 @@ class DiscoverableMixin(CachedConvertableMixin):
                                  fallback_script_id='Document_finishIngestion')
     return method()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContentTypeFromContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentTypeFromContent(self):
     """
     Return content_type read from metadata extraction of content.
@@ -253,8 +247,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       mimedetector = magic.Magic(mime=True)
       return mimedetector.from_buffer(content)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getExtensionFromFilename')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExtensionFromFilename(self, filename=None):
     """
     Return extension read from filename in lower case.
@@ -266,8 +259,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       extension = extension[1:].lower() # remove first dot
     return extension
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContentInformation')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentInformation(self):
     """
     Call private implementation, then store the result in conversion

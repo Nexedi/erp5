@@ -26,15 +26,14 @@ class Person(ERP5Person):
     certificate_login.validate()
     return certificate_dict
 
-  security.declarePublic('generateCertificate')
+  @security.public
   def generateCertificate(self):
     """Returns new SSL certificate
        This API was kept for backward compatibility"""
     self.checkCertificateRequest()
     return self._generateCertificate()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self, **kw):
     """
       Returns the title if it exists or a combination of

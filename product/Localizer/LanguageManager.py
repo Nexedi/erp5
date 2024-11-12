@@ -110,19 +110,7 @@ class LanguageManager(Tabs):
         return self._default_language
 
 
-    ########################################################################
-    # Web API
-    ########################################################################
-
-    # Security settings
-    security.declarePublic('get_languages')
-    security.declareProtected('Manage languages', 'set_languages')
-    security.declareProtected('Manage languages', 'add_language')
-    security.declareProtected('Manage languages', 'del_language')
-    security.declarePublic('get_languages_mapping')
-
-
-    security.declarePublic('get_language_name')
+    @security.public
     def get_language_name(self, id=None):
         """
         Returns the name of the given language code.
@@ -138,12 +126,8 @@ class LanguageManager(Tabs):
             return language_name
 
 
-    security.declarePublic('get_available_languages')
-    security.declarePublic('get_default_language')
-
-
     # XXX Kept here temporarily, further refactoring needed
-    security.declarePublic('get_selected_language')
+    @security.public
     def get_selected_language(self, **kw):
         """
         Returns the selected language. Here the language negotiation takes
@@ -191,7 +175,7 @@ class LanguageManager(Tabs):
     manage_languages = LocalDTMLFile('ui/LM_languages', globals())
 
 
-    security.declarePublic('get_all_languages')
+    @security.public
     def get_all_languages(self):
         """
         Returns all ISO languages, used by 'manage_languages'.
@@ -199,7 +183,7 @@ class LanguageManager(Tabs):
         return get_languages() + self.get_user_defined_languages()
 
 
-    security.declareProtected('Manage languages', 'manage_addLanguage')
+    @security.protected('Manage languages')
     def manage_addLanguage(self, language, REQUEST=None, RESPONSE=None):
         """ """
         self.add_language(language)
@@ -208,7 +192,7 @@ class LanguageManager(Tabs):
             RESPONSE.redirect("%s/manage_languages" % REQUEST['URL1'])
 
 
-    security.declareProtected('Manage languages', 'manage_delLanguages')
+    @security.protected('Manage languages')
     def manage_delLanguages(self, languages, REQUEST, RESPONSE):
         """ """
         for language in languages:
@@ -217,7 +201,7 @@ class LanguageManager(Tabs):
         RESPONSE.redirect("%s/manage_languages" % REQUEST['URL1'])
 
 
-    security.declareProtected('Manage languages', 'manage_changeDefaultLang')
+    @security.protected('Manage languages')
     def manage_changeDefaultLang(self, language, REQUEST=None, RESPONSE=None):
         """ """
         self._default_language = language
@@ -236,7 +220,7 @@ class LanguageManager(Tabs):
         pass
 
 
-    security.declarePublic('need_upgrade')
+    @security.public
     def need_upgrade(self):
         """ """
         return self._needs_upgrade()
@@ -251,7 +235,7 @@ class LanguageManager(Tabs):
         RESPONSE.redirect('manage_main')
 
     # Add a feature which allows users to be able to add a new language.
-    security.declarePublic('get_user_defined_language_name')
+    @security.public
     def get_user_defined_language_name(self, id=None):
         """
         Returns the name of the given user defined language code.
@@ -260,7 +244,7 @@ class LanguageManager(Tabs):
             if language_dict['code']==id:
                 return language_dict['name']
 
-    security.declarePublic('get_user_defined_languages')
+    @security.public
     def get_user_defined_languages(self):
         user_define_language_dict_list = []
         localizer = getattr(self, 'Localizer', None)

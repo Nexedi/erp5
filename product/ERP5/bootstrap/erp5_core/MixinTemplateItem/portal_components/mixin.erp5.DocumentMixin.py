@@ -46,7 +46,7 @@ class DocumentMixin:
   """
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
+  @security.protected(Permissions.AccessContentsInformation)
   def convert(self, format, **kw): # pylint: disable=redefined-builtin
     """
       Main content conversion function, returns result which should
@@ -82,7 +82,7 @@ class DocumentMixin:
       del transaction_variable[LOCK_PERMISSION_KEY]
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFailsafeConversion')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFailsafeConversion(self, **kw):
     """
       Return a failure resistent conversion of a document
@@ -97,8 +97,7 @@ class DocumentMixin:
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                             'checkConversionFormatPermission')
+  @security.protected(Permissions.AccessContentsInformation)
   def checkConversionFormatPermission(self, format, **kw): # pylint: disable=redefined-builtin
     """Public version of _checkConversionFormatPermission
     Without raising return just True or False.
@@ -135,8 +134,7 @@ class DocumentMixin:
                                                         (format or 'original'))
     transaction_variable[LOCK_PERMISSION_KEY] = lock_checking
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                 'isSupportBaseDataConversion')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSupportBaseDataConversion(self):
     """Tell if document implement IBaseConvertable Interface.
     By default it doens't

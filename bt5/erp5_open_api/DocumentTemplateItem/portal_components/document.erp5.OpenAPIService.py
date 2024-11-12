@@ -130,9 +130,8 @@ class OpenAPIService(XMLObject):
     PropertySheet.Reference,
   )
 
-  security.declareProtected(
-    Permissions.AccessContentsInformation, 'viewOpenAPIAsJson')
 
+  @security.protected(Permissions.AccessContentsInformation)
   def viewOpenAPIAsJson(self):
     """Return the Open API as JSON, with the current endpoint added as first servers
     """
@@ -277,9 +276,8 @@ class OpenAPIService(XMLObject):
         raise SchemaDefinitionError('unable to bind requestBody')
     return parameter_dict
 
-  security.declareProtected(
-    Permissions.AccessContentsInformation, 'validateParameter')
 
+  @security.protected(Permissions.AccessContentsInformation)
   def validateParameter(
       self, parameter_name, parameter_value, parameter, schema):
     # type: (str, Any, dict, dict) -> Any
@@ -298,9 +296,8 @@ class OpenAPIService(XMLObject):
             parameter_name=parameter_name, e=e.message), str(e))
     return parameter_value
 
-  security.declareProtected(
-    Permissions.AccessContentsInformation, 'validateRequestBody')
 
+  @security.protected(Permissions.AccessContentsInformation)
   def validateRequestBody(self, parameter_value, schema):
     # type: (str, dict) -> Any
     """Validate the request body raising a ParameterValidationError

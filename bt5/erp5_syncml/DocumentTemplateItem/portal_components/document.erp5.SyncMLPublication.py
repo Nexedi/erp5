@@ -45,8 +45,7 @@ class SyncMLPublication(SyncMLSubscription):
   # Declarative security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSubscriber')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubscriber(self, subscription_url):
     """
     Return the subscriber corresponding the to subscription_url
@@ -55,16 +54,14 @@ class SyncMLPublication(SyncMLSubscription):
       if subscription.getUrlString() == subscription_url:
         return subscription
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSubscriberList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubscriberList(self):
     """
     Return the list of subscribers
     """
     return self.contentValues(portal_type='SyncML Subscription')
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'resetSubscriberList')
+  @security.protected(Permissions.ModifyPortalContent)
   def resetSubscriberList(self):
     """
       Reset all subscribers
@@ -73,8 +70,7 @@ class SyncMLPublication(SyncMLSubscription):
     self.activate(activity='SQLQueue',
                   priority=ACTIVITY_PRIORITY).manage_delObjects(ids=list(self.getObjectIds()))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConflictList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConflictList(self, *args, **kw):
     """
       Return the list of conflicts from all subscribers
@@ -84,7 +80,7 @@ class SyncMLPublication(SyncMLSubscription):
       conflict_list.extend(subscriber.getConflictList())
     return conflict_list
 
-  security.declarePrivate('createUnrestrictedSubscriber')
+  @security.private
   @UnrestrictedMethod
   def createUnrestrictedSubscriber(self, **kw):
     """Create a subscriber even if user is anonymous

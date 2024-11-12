@@ -101,7 +101,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
   #-- see active alarms
   #-- retrieve all alarms
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getAlarmList')
+  @security.protected(Permissions.ModifyPortalContent)
   def getAlarmList(self, to_active = 0):
     """
       We retrieve thanks to the catalog the full list of alarms
@@ -126,7 +126,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       alarm_list = [x.getObject() for x in catalog_search]
     return alarm_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'tic')
+  @security.protected(Permissions.ModifyPortalContent)
   def tic(self):
     """
       We will look at all alarms and see if they should be activated,
@@ -157,7 +157,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
     finally:
       setSecurityManager(security_manager)
 
-  security.declarePrivate('process_timer')
+  @security.private
   def process_timer(self, interval, tick, prev="", next=""):
     """
       Call tic() every x seconds. x is defined in self.interval
@@ -194,12 +194,12 @@ class AlarmTool(TimerServiceMixin, BaseTool):
     finally:
       last_tic_lock.release()
 
-  security.declarePublic('getAlarmNode')
+  @security.public
   def getAlarmNode(self):
       """ Return the alarmNode """
       return self.alarmNode
 
-  security.declareProtected(Permissions.ManageProperties, 'setAlarmNode')
+  @security.protected(Permissions.ManageProperties)
   def setAlarmNode(self, alarm_node):
     """
       When alarm_node evaluates to false, set a None value:
@@ -211,11 +211,11 @@ class AlarmTool(TimerServiceMixin, BaseTool):
     else:
       self.alarmNode = None
 
-  security.declarePublic('getNodeList')
+  @security.public
   def getNodeList(self):
     return self.getPortalObject().portal_activities.getNodeList()
 
-  security.declareProtected(Permissions.ManageProperties, 'manage_setAlarmNode')
+  @security.protected(Permissions.ManageProperties)
   def manage_setAlarmNode(self, alarmNode, REQUEST=None):
       """ set the alarm node """
       if not alarmNode or self._isValidNodeName(alarmNode):

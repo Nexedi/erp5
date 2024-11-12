@@ -145,7 +145,7 @@ class Connection(DABase.Connection):
 
     def factory(self): return DB
 
-    security.declarePrivate('manage_beforeDelete')
+    @security.private
     def manage_beforeDelete(self, item, container):
         database_connection_pool.get(self._p_oid, {}).pop(self._p_jar, None)
 

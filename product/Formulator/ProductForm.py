@@ -20,13 +20,13 @@ class ProductForm(BasicForm):
     security = ClassSecurityInfo()
     security.declareObjectPublic()
 
-    security.declareProtected('View', 'get_field')
+    @security.protected('View')
     def get_field(self, id):
         """Get a field of a certain id, wrapping in context of self
         """
         return self.fields[id].__of__(self)
 
-    security.declarePublic('addField')
+    @security.public
     def addField(self, field_id, fieldType, group=None, **kwargs):
         """
         Adds a Formulator Field to the wrapped BasicForm.
@@ -75,7 +75,7 @@ class ProductForm(BasicForm):
         BasicForm.add_field(self, fieldObject, group)
 
 
-    security.declarePublic('validate')
+    @security.public
     def validate(self, REQUEST, errors=None):
         """
         Executes the validator for each field in the wrapped BasicForm.add_field

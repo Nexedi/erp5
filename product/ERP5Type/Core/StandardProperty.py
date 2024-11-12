@@ -87,8 +87,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   getDescription = Base.Getter('getDescription', 'description', 'string',
                                default='')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getElementaryType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getElementaryType(self):
     """
     Define this getter manually as it is not possible to rely on
@@ -469,9 +468,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     '_baseGet%s': Translation.TranslatedPropertyGetter
   }
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'applyDefinitionOnAccessorHolder')
   @classmethod
+  @security.protected(Permissions.ModifyPortalContent)
   def applyDefinitionOnAccessorHolder(cls,
                                       property_dict,
                                       accessor_holder,
@@ -590,8 +588,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
       if property_map:
         accessor_holder._properties.append(property_map)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def asDict(self, expression_context=None):
     """
     Convert the current property to a dict, which is then applied on
@@ -624,8 +621,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
             'translation_domain': self.getTranslationDomain(),
             'select_variable': self.getSelectVariable()}
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'applyOnAccessorHolder')
+  @security.protected(Permissions.ModifyPortalContent)
   def applyOnAccessorHolder(self,
                             accessor_holder,
                             expression_context,
@@ -684,9 +680,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
 
     return zodb_property_dict
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'importFromFilesystemDefinition')
   @classmethod
+  @security.protected(Permissions.ModifyPortalContent)
   def importFromFilesystemDefinition(cls, context, filesystem_property_dict):
     """
     Create a new property on the given context from the given

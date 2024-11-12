@@ -51,8 +51,7 @@ class MovementCollectionUpdaterMixin:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Implementation of IMovementCollectionUpdater
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMovementCollectionDiff')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementCollectionDiff(self, context, rounding=False,
                                 movement_generator=None):
     """
@@ -148,8 +147,7 @@ class MovementCollectionUpdaterMixin:
 
     return movement_collection_diff
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateMovementCollection')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateMovementCollection(self, context, rounding=False,
                                movement_generator=None):
     """

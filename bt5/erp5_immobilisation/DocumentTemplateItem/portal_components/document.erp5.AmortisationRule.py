@@ -71,7 +71,7 @@ class AmortisationRule(RuleMixin):
 
 
     # Simulation workflow
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+    @security.protected(Permissions.ModifyPortalContent)
     def expand(self, applied_rule, expand_policy=None, activate_kw={}):
       """
         Expands the current movement downward.
@@ -692,7 +692,7 @@ class AmortisationRule(RuleMixin):
       movement_list.append( movement_dict )
 
 
-    security.declareProtected(Permissions.View, '_getAccountingMovement')
+    @security.protected(Permissions.View)
     def _getAccountingMovement(self, immo_period, previous_period, next_period, period_number=0, item=None, **kw):
       """
       Calculates the value of accounting movements during the given period

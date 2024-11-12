@@ -245,7 +245,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     #######################################################################
     # Public API
     #######################################################################
-    security.declarePublic('message_exists')
+    @security.public
     def message_exists(self, message):
         """ """
         # BBB call get_message_key to support both (old) str key and
@@ -253,7 +253,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         return bool(self.get_message_key(message))
 
 
-    security.declareProtected('Manage messages', 'message_edit')
+    @security.protected('Manage messages')
     def message_edit(self, message, language, translation, note):
         """ """
         # BBB call get_message_key to support both (old) str key and
@@ -263,7 +263,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         self._messages[message]['note'] = note
 
 
-    security.declareProtected('Manage messages', 'message_del')
+    @security.protected('Manage messages')
     def message_del(self, message):
         """ """
         # BBB call get_message_key to support both (old) str key and
@@ -272,7 +272,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         del self._messages[message]
 
 
-    security.declarePublic('gettext')
+    @security.public
     def gettext(self, message, lang=None, add=None, default=None):
         """Returns the message translation from the database if available.
 
@@ -354,7 +354,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     manage_messages = LocalDTMLFile('ui/MC_messages', globals())
 
 
-    security.declarePublic('get_namespace')
+    @security.public
     def get_namespace(self, REQUEST):
         """For the management interface, allows to filter the messages to
         show.
@@ -457,7 +457,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         return namespace
 
 
-    security.declareProtected('Manage messages', 'manage_editMessage')
+    @security.protected('Manage messages')
     def manage_editMessage(self, message, language, translation, note,
                            REQUEST, RESPONSE):
         """Modifies a message.
@@ -476,7 +476,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         RESPONSE.redirect(url)
 
 
-    security.declareProtected('Manage messages', 'manage_delMessage')
+    @security.protected('Manage messages')
     def manage_delMessage(self, message, REQUEST, RESPONSE):
         """ """
         message = message_decode(message)
@@ -501,7 +501,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     manage_propertiesForm = LocalDTMLFile('ui/MC_properties', globals())
 
 
-    security.declareProtected('View management screens', 'manage_properties')
+    @security.protected('View management screens')
     def manage_properties(self, title, policy, REQUEST=None, RESPONSE=None):
         """Change the Message Catalog properties.
         """
@@ -513,7 +513,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     # Properties management screen
-    security.declareProtected('View management screens', 'get_po_header')
+    @security.protected('View management screens')
     def get_po_header(self, lang):
         """ """
         # For backwards compatibility
@@ -523,7 +523,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         return self._po_headers.get(lang, empty_po_header)
 
 
-    security.declareProtected('View management screens', 'update_po_header')
+    @security.protected('View management screens')
     def update_po_header(self, lang,
                          last_translator_name=None,
                          last_translator_email=None,
@@ -561,7 +561,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     manage_Import_form = LocalDTMLFile('ui/MC_Import_form', globals())
 
 
-    security.declarePublic('get_policies')
+    @security.public
     def get_policies(self):
         """ """
         if not hasattr(self, 'policy'):
@@ -574,13 +574,13 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         return policies
 
 
-    security.declarePublic('get_charsets')
+    @security.public
     def get_charsets(self):
         """ """
         return charsets[:]
 
 
-    security.declarePublic('manage_export')
+    @security.public
     def manage_export(self, x, REQUEST=None, RESPONSE=None):
         """Exports the content of the message catalog either to a template
         file (locale.pot) or to an language specific PO file (<x>.po).
@@ -654,7 +654,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         return '\n'.join(r)
 
 
-    security.declareProtected('Manage messages', 'po_import')
+    @security.protected('Manage messages')
     def po_import(self, lang, data):
         """ """
         messages = self._messages
@@ -682,7 +682,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         self.update_po_header(lang, charset=encoding)
 
 
-    security.declareProtected('Manage messages', 'manage_import')
+    @security.protected('Manage messages')
     def manage_import(self, lang, file, REQUEST=None, RESPONSE=None):
         """ """
         # XXX For backwards compatibility only, use "po_import" instead.
@@ -734,13 +734,13 @@ class POFile(SimpleItem):
         self.id = id
 
 
-    security.declareProtected('FTP access', 'manage_FTPget')
+    @security.protected('FTP access')
     def manage_FTPget(self):
         """ """
         return self.manage_export(self.id)
 
 
-    security.declareProtected('Manage messages', 'PUT')
+    @security.protected('Manage messages')
     def PUT(self, REQUEST, RESPONSE):
         """ """
         if REQUEST.environ['REQUEST_METHOD'] != 'PUT':

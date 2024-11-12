@@ -52,7 +52,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
   # Initialize the random function
   random.seed()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'constructContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def constructContent(self, object, object_id, docid, portal_type): # pylint: disable=redefined-builtin,arguments-differ
     """
     This is a redefinition of the original ERP5Conduit.constructContent function to
@@ -94,7 +94,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('dom2str')
+  @security.private
   def dom2str(self, xml_root=None):
     """
     This function transform a DOM tree to string.
@@ -108,7 +108,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('str2id')
+  @security.private
   def str2id(self, string=None):
     """
     This function transform a string to a safe id.
@@ -138,7 +138,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('countrySearch')
+  @security.private
   def countrySearch(self, site_root, category_path=None, country=None):
     """
     This recursive function try to find the region category from the name of a country
@@ -167,7 +167,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('createOrFindProduct')
+  @security.private
   def createOrFindProduct(self, erp5_site, erp5_product_id):
     """
     This function try to find a previous product with the same id,
@@ -192,7 +192,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('setProductWorkflow')
+  @security.private
   def setProductWorkflow(self, product_object, product_title):
     """
     This function set the validation workflow to indicate if a product
@@ -236,7 +236,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('niceTitle')
+  @security.private
   def niceTitle(self, title):
     """
     This function create a nice title without the discontinued information
@@ -250,7 +250,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('getLastOrderLineNumber')
+  @security.private
   def getLastOrderLineNumber(self, order_object):
     """
     This function give the number of the last Storever Shop Order Line processed
@@ -281,7 +281,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declarePrivate('updateObjProperty')
+  @security.private
   def updateObjProperty(self, object, property, kw, key): # pylint: disable=redefined-builtin
     """
     This function update the property of an object with a given value stored in a dictionnary. This function help the Conduit to make decision about the synchronization of values.
@@ -318,7 +318,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
+  @security.protected(Permissions.ModifyPortalContent)
   def editDocument(self, object=None, **kw): # pylint: disable=redefined-builtin
     """
     This function use the properties of the object to convert a Storever ShopOrder to an ERP5 SaleOrder.

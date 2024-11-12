@@ -95,8 +95,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                              , 'manage_configure' )
     manage_configure = DTMLFile( 'SelectionTool_configure', _dtmldir )
 
-    security.declareProtected( ERP5Permissions.ManagePortal
-                             , 'manage_deleteSelectionForUser' )
+    @security.protected(ERP5Permissions.ManagePortal)
     def manage_deleteSelectionForUser(self, selection_name, user_id, REQUEST=None):
       """
         Delete a specified selection
@@ -106,8 +105,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return REQUEST.RESPONSE.redirect('%s/%s' %
                 (self.absolute_url(), 'manage_viewSelections'))
 
-    security.declareProtected( ERP5Permissions.ManagePortal
-                             , 'manage_deleteSelection' )
+    @security.protected(ERP5Permissions.ManagePortal)
     def manage_deleteSelection(self, selection_name, REQUEST=None):
       """
         Relete a specified selection
@@ -117,8 +115,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return REQUEST.RESPONSE.redirect('%s/%s' %
                 (self.absolute_url(), 'manage_viewSelections'))
 
-    security.declareProtected( ERP5Permissions.ManagePortal
-                             , 'manage_deleteGlobalSelection' )
+    @security.protected(ERP5Permissions.ManagePortal)
     def manage_deleteGlobalSelection(self, selection_name, REQUEST=None):
       """
         Relete a specified selection
@@ -129,8 +126,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                 (self.absolute_url(), 'manage_viewSelections'))
 
     # storages of SelectionTool
-    security.declareProtected(ERP5Permissions.ManagePortal
-                              , 'getStorageItemList')
+    @security.protected(ERP5Permissions.ManagePortal)
     def getStorageItemList(self):
       """Return the list of available storages
       """
@@ -141,7 +137,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       storage_item_list.extend([['/'.join((mp.getParentValue().getTitle(), mp.getTitle(),)), mp.getRelativeUrl()] for mp in memcached_plugin_list])
       return storage_item_list
 
-    security.declareProtected(ERP5Permissions.ModifyPortalContent, 'clearCachedContainer')
+    @security.protected(ERP5Permissions.ModifyPortalContent)
     def clearCachedContainer(self, is_anonymous=False):
       """
       Clear Container currently being used for Selection Tool because either the
@@ -155,7 +151,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if getattr(aq_base(self), container_id, None):
         delattr(self, container_id)
 
-    security.declareProtected( ERP5Permissions.ManagePortal, 'setStorage')
+    @security.protected(ERP5Permissions.ManagePortal)
     def setStorage(self, storage, anonymous_storage=None, RESPONSE=None):
       """
         Set the storage of Selection Tool.
@@ -174,7 +170,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if RESPONSE is not None:
         RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
 
-    security.declareProtected( ERP5Permissions.ManagePortal, 'getStorage')
+    @security.protected(ERP5Permissions.ManagePortal)
     def getStorage(self, default='selection_data'):
       """return the selected storage
       """
@@ -191,7 +187,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             storage = 'selection_data'
       return storage
 
-    security.declareProtected( ERP5Permissions.ManagePortal, 'getAnonymousStorage')
+    @security.protected(ERP5Permissions.ManagePortal)
     def getAnonymousStorage(self, default=None):
       """return the selected storage
       """
@@ -231,7 +227,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return context()
       return getattr(context, form_id)()
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionNameList')
+    @security.protected(ERP5Permissions.View)
     def getSelectionNameList(self, context=None, REQUEST=None):
       """
         Returns the selection names of the current user.
@@ -239,14 +235,14 @@ class SelectionTool( BaseTool, SimpleItem ):
       return sorted(self._getSelectionNameListFromContainer())
 
     # backward compatibility
-    security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
+    @security.protected(ERP5Permissions.View)
     def getSelectionNames(self, context=None, REQUEST=None):
       warnings.warn("getSelectionNames() is deprecated.\n"
                     "Please use getSelectionNameList() instead.",
                     DeprecationWarning)
       return self.getSelectionNameList(context, REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
+    @security.protected(ERP5Permissions.View)
     def callSelectionFor(self, selection_name, method=None, context=None,
                                                REQUEST=None, params=None):
       """
@@ -287,7 +283,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return REQUEST.get('%s_selection_key' % selection_name, None) or \
           REQUEST.get('selection_key', None)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionFor(self, selection_name, REQUEST=None):
       """
         Returns the selection instance for a given selection_name
@@ -308,7 +304,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def __getitem__(self, key):
         return self.getSelectionParamsFor(key)
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionFor')
+    @security.protected(ERP5Permissions.View)
     def setSelectionFor(self, selection_name, selection_object, REQUEST=None):
       """
         Sets the selection instance for a given selection_name
@@ -331,7 +327,7 @@ class SelectionTool( BaseTool, SimpleItem ):
           except KeyError:
             pass
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionParamsFor(self, selection_name, params=None, REQUEST=None):
       """
         Returns the params in the selection
@@ -348,7 +344,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'getSelectionParams')
     getSelectionParams = getSelectionParamsFor
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionParamsFor')
+    @security.protected(ERP5Permissions.View)
     def setSelectionParamsFor(self, selection_name, params, REQUEST=None):
       """
         Sets the selection params for a given selection_name
@@ -360,7 +356,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         selection_object = Selection(selection_name, params=params)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionDomainDictFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionDomainDictFor(self, selection_name, REQUEST=None):
       """
         Returns the Domain dict for a given selection_name
@@ -372,7 +368,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         except AttributeError:
           return {}
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionReportDictFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionReportDictFor(self, selection_name, REQUEST=None):
       """
         Returns the Report dict for a given selection_name
@@ -384,7 +380,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         except AttributeError:
           return {}
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionCheckedUidsFor')
+    @security.protected(ERP5Permissions.View)
     def setSelectionCheckedUidsFor(self, selection_name, checked_uids, REQUEST=None):
       """
         Sets the checked uids for a given selection_name
@@ -396,7 +392,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         selection_object = Selection(selection_name, checked_uids=checked_uids)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'updateSelectionCheckedUidList')
+    @security.protected(ERP5Permissions.View)
     def updateSelectionCheckedUidList(self, selection_name, listbox_uid, uids, REQUEST=None):
       """
         Updates the unchecked uids(listbox_uids) and checked uids (uids)
@@ -409,7 +405,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       self.uncheckAll(selection_name,listbox_uid,REQUEST=REQUEST)
       self.checkAll(selection_name,uids,REQUEST=REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedUidsFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionCheckedUidsFor(self, selection_name, REQUEST=None):
       """
         Returns the checked uids for a given selection_name
@@ -419,7 +415,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return selection_object.getCheckedUids()
       return []
 
-    security.declareProtected(ERP5Permissions.View, 'checkAll')
+    @security.protected(ERP5Permissions.View)
     def checkAll(self, list_selection_name, listbox_uid=[], REQUEST=None,
                  query_string=None, form_id=None):
       """
@@ -440,7 +436,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
 
-    security.declareProtected(ERP5Permissions.View, 'uncheckAll')
+    @security.protected(ERP5Permissions.View)
     def uncheckAll(self, list_selection_name, listbox_uid=[], REQUEST=None,
                    query_string=None, form_id=None):
       """
@@ -461,7 +457,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionListUrlFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionListUrlFor(self, selection_name, REQUEST=None):
       """
         Returns the URL of the list mode of selection instance
@@ -475,7 +471,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       else:
         return None
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionInvertModeFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionInvertModeFor(self, selection_name, REQUEST=None):
       """Get the 'invert_mode' parameter of a selection.
       """
@@ -484,7 +480,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return selection.isInvertMode()
       return 0
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionInvertModeFor')
+    @security.protected(ERP5Permissions.View)
     def setSelectionInvertModeFor(self, selection_name,
                                   invert_mode, REQUEST=None):
       """Change the 'invert_mode' parameter of a selection.
@@ -493,7 +489,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection is not None:
         selection.edit(invert_mode=invert_mode)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionInvertModeUidListFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionInvertModeUidListFor(self, selection_name, REQUEST=None):
       """Get the 'invert_mode' parameter of a selection.
       """
@@ -502,7 +498,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return selection.getInvertModeUidList()
       return 0
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionIndexFor')
+    @security.protected(ERP5Permissions.View)
     def getSelectionIndexFor(self, selection_name, REQUEST=None):
       """Get the 'index' parameter of a selection.
       """
@@ -511,7 +507,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return selection.getIndex()
       return None
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionToIds')
+    @security.protected(ERP5Permissions.View)
     def setSelectionToIds(self, selection_name, selection_uids, REQUEST=None):
       """
         Sets the selection to a small list of uids of documents
@@ -520,7 +516,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection is not None:
         selection.edit(invert_mode=1, uids=selection_uids, checked_uids=selection_uids)
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionToAll')
+    @security.protected(ERP5Permissions.View)
     def setSelectionToAll(self, selection_name, REQUEST=None,
                           reset_domain_tree=False, reset_report_tree=False):
       """
@@ -534,7 +530,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         if reset_report_tree:
           selection.edit(report=None, report_path=None, report_list=None)
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionSortOrder')
+    @security.protected(ERP5Permissions.View)
     def setSelectionSortOrder(self, selection_name, sort_on, REQUEST=None):
       """
         Defines the sort order of the selection
@@ -543,7 +539,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection is not None:
         selection.edit(sort_on=sort_on)
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionQuickSortOrder')
+    @security.protected(ERP5Permissions.View)
     def setSelectionQuickSortOrder(self, selection_name=None, sort_on=None, REQUEST=None,
                                    query_string=None, form_id=None):
       """
@@ -617,7 +613,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionSortOrder')
+    @security.protected(ERP5Permissions.View)
     def getSelectionSortOrder(self, selection_name, REQUEST=None):
       """
         Returns the sort order of the selection
@@ -626,7 +622,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection is None: return ()
       return selection.sort_on
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionColumns')
+    @security.protected(ERP5Permissions.View)
     def setSelectionColumns(self, selection_name, columns, REQUEST=None):
       """
         Defines the columns in the selection
@@ -634,7 +630,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       selection.edit(columns=columns)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionColumns')
+    @security.protected(ERP5Permissions.View)
     def getSelectionColumns(self, selection_name, columns=None, REQUEST=None):
       """
         Returns the columns in the selection if not empty, otherwise
@@ -648,7 +644,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       return columns
 
 
-    security.declareProtected(ERP5Permissions.View, 'setSelectionStats')
+    @security.protected(ERP5Permissions.View)
     def setSelectionStats(self, selection_name, stats, REQUEST=None):
       """
         Defines the stats in the selection
@@ -656,7 +652,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       selection.edit(stats=stats)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionStats')
+    @security.protected(ERP5Permissions.View)
     def getSelectionStats(self, selection_name, stats=_MARKER, REQUEST=None):
       """
         Returns the stats in the selection
@@ -687,28 +683,28 @@ class SelectionTool( BaseTool, SimpleItem ):
           return form_id
       return 'view'
 
-    security.declareProtected(ERP5Permissions.View, 'viewFirst')
+    @security.protected(ERP5Permissions.View)
     def viewFirst(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
         Access first item in a selection
       """
       return self._redirectToIndex(0, selection_name, form_id, REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'viewLast')
+    @security.protected(ERP5Permissions.View)
     def viewLast(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
         Access last item in a selection
       """
       return self._redirectToIndex(-1, selection_name, form_id, REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'viewNext')
+    @security.protected(ERP5Permissions.View)
     def viewNext(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
         Access next item in a selection
       """
       return self._redirectToIndex(int(selection_index) + 1, selection_name, form_id, REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'viewPrevious')
+    @security.protected(ERP5Permissions.View)
     def viewPrevious(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
         Access previous item in a selection
@@ -746,7 +742,7 @@ class SelectionTool( BaseTool, SimpleItem ):
 
     # ListBox related methods
 
-    security.declareProtected(ERP5Permissions.View, 'firstPage')
+    @security.protected(ERP5Permissions.View)
     def firstPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the first page of a list
@@ -760,7 +756,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'lastPage')
+    @security.protected(ERP5Permissions.View)
     def lastPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the last page of a list
@@ -790,7 +786,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'nextPage')
+    @security.protected(ERP5Permissions.View)
     def nextPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the next page of a list
@@ -813,7 +809,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'previousPage')
+    @security.protected(ERP5Permissions.View)
     def previousPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the previous page of a list
@@ -836,7 +832,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'setPage')
+    @security.protected(ERP5Permissions.View)
     def setPage(self, list_selection_name, listbox_uid, query_string=None, uids=None, REQUEST=None):
       """
          Sets the current displayed page in a selection
@@ -860,7 +856,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
     # PlanningBox related methods
-    security.declareProtected(ERP5Permissions.View, 'setLanePath')
+    @security.protected(ERP5Permissions.View)
     def setLanePath(self, uids=None, REQUEST=None, form_id=None,
                      query_string=None):
       """
@@ -889,7 +885,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                                             form_id=form_id,
                                             query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'nextLanePage')
+    @security.protected(ERP5Permissions.View)
     def nextLanePage(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set next graphic zoom start in PlanningBox
@@ -908,7 +904,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                                             form_id=form_id,
                                              query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'previousLanePage')
+    @security.protected(ERP5Permissions.View)
     def previousLanePage(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set previous graphic zoom in PlanningBox
@@ -927,7 +923,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                                             form_id=form_id,
                                              query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
+    @security.protected(ERP5Permissions.View)
     def setDomainRoot(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root domain for the current selection
@@ -941,14 +937,14 @@ class SelectionTool( BaseTool, SimpleItem ):
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'setDomainRootFromParam')
+    @security.protected(ERP5Permissions.View)
     def setDomainRootFromParam(self, REQUEST, selection_name, domain_root):
       if REQUEST is None:
         return
       selection = self.getSelectionFor(selection_name, REQUEST)
       selection.edit(domain_path=domain_root, domain_list=())
 
-    security.declareProtected(ERP5Permissions.View, 'setDomainDictFromParam')
+    @security.protected(ERP5Permissions.View)
     def setDomainDictFromParam(self, selection_name, domain_dict):
       domain_list = []
       domain_path = []
@@ -971,7 +967,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         report_tree_mode=0,
       )
 
-    security.declareProtected(ERP5Permissions.View, 'unfoldDomain')
+    @security.protected(ERP5Permissions.View)
     def unfoldDomain(self, REQUEST, form_id=None, query_string=None):
       """
         Unfold domain for the current selection
@@ -992,7 +988,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'foldDomain')
+    @security.protected(ERP5Permissions.View)
     def foldDomain(self, REQUEST, form_id=None, query_string=None):
       """
         Fold domain for the current selection
@@ -1013,7 +1009,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                                             query_string=query_string)
 
 
-    security.declareProtected(ERP5Permissions.View, 'setReportRoot')
+    @security.protected(ERP5Permissions.View)
     def setReportRoot(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root report for the current selection
@@ -1027,7 +1023,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string)
 
-    security.declareProtected(ERP5Permissions.View, 'unfoldReport')
+    @security.protected(ERP5Permissions.View)
     def unfoldReport(self, REQUEST, form_id=None, query_string=None):
       """
         Unfold report for the current selection
@@ -1042,7 +1038,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                                           query_string=query_string,
                                           no_report_depth=True)
 
-    security.declareProtected(ERP5Permissions.View, 'foldReport')
+    @security.protected(ERP5Permissions.View)
     def foldReport(self, REQUEST, form_id=None, query_string=None):
       """
         Fold domain for the current selection
@@ -1058,7 +1054,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                                           query_string=query_string,
                                           no_report_depth=True)
 
-    security.declareProtected(ERP5Permissions.View, 'getListboxDisplayMode')
+    @security.protected(ERP5Permissions.View)
     def getListboxDisplayMode(self, selection_name, REQUEST=None):
       if REQUEST is None:
         REQUEST = get_request()
@@ -1070,7 +1066,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return 'DomainTreeMode'
       return 'FlatListMode'
 
-    security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
+    @security.protected(ERP5Permissions.View)
     def setListboxDisplayMode(self, REQUEST, listbox_display_mode,
                               selection_name=None, redirect=0,
                               form_id=None, query_string=None):
@@ -1131,7 +1127,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                                             query_string=query_string,
                                             no_reset=True)
 
-    security.declareProtected(ERP5Permissions.View, 'setFlatListMode')
+    @security.protected(ERP5Permissions.View)
     def setFlatListMode(self, REQUEST, selection_name=None):
       """
         Set display of the listbox to FlatList mode
@@ -1140,7 +1136,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                        REQUEST=REQUEST, listbox_display_mode='FlatListMode',
                        selection_name=selection_name, redirect=1)
 
-    security.declareProtected(ERP5Permissions.View, 'setDomainTreeMode')
+    @security.protected(ERP5Permissions.View)
     def setDomainTreeMode(self, REQUEST, selection_name=None):
       """
          Set display of the listbox to DomainTree mode
@@ -1149,7 +1145,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                        REQUEST=REQUEST, listbox_display_mode='DomainTreeMode',
                        selection_name=selection_name, redirect=1)
 
-    security.declareProtected(ERP5Permissions.View, 'setReportTreeMode')
+    @security.protected(ERP5Permissions.View)
     def setReportTreeMode(self, REQUEST, selection_name=None):
       """
         Set display of the listbox to ReportTree mode
@@ -1158,7 +1154,7 @@ class SelectionTool( BaseTool, SimpleItem ):
                        REQUEST=REQUEST, listbox_display_mode='ReportTreeMode',
                        selection_name=selection_name, redirect=1)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionSelectedValueList')
+    @security.protected(ERP5Permissions.View)
     def getSelectionSelectedValueList(self, selection_name, REQUEST=None, selection_method=None, context=None):
       """
         Get the list of values selected for 'selection_name'
@@ -1168,7 +1164,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         return []
       return selection(method=selection_method, context=context, REQUEST=REQUEST)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedValueList')
+    @security.protected(ERP5Permissions.View)
     def getSelectionCheckedValueList(self, selection_name, REQUEST=None):
       """
         Get the list of values checked for 'selection_name'
@@ -1180,7 +1176,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       value_list = self.portal_catalog.getObjectList(uid_list)
       return value_list
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionValueList')
+    @security.protected(ERP5Permissions.View)
     def getSelectionValueList(self, selection_name, REQUEST=None, selection_method=None, context=None):
       """
         Get the list of values checked or selected for 'selection_name'
@@ -1194,21 +1190,21 @@ class SelectionTool( BaseTool, SimpleItem ):
                                             context=context)
       return value_list
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionUidList')
+    @security.protected(ERP5Permissions.View)
     def getSelectionUidList(self, selection_name, REQUEST=None, selection_method=None, context=None):
       """
         Get the list of uids checked or selected for 'selection_name'
       """
       return [x.getObject().getUid() for x in self.getSelectionValueList(selection_name, REQUEST=REQUEST, selection_method=selection_method, context=context)]
 
-    security.declareProtected(ERP5Permissions.View, 'selectionHasChanged')
+    @security.protected(ERP5Permissions.View)
     def selectionHasChanged(self, md5_string, object_uid_list):
       """
         We want to be sure that the selection did not change
       """
       return md5_string != self._getUIDListChecksum(object_uid_list)
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionChecksum')
+    @security.protected(ERP5Permissions.View)
     def getSelectionChecksum(self, selection_name, uid_list=None):
       """Generate an MD5 checksum against checked uids. This is used to confirm
       that selected values do not change between a display of a dialog and an
@@ -1228,7 +1224,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       return md5(str2bytes(repr(sorted(str(e) for e in uid_list)))).hexdigest()
 
     # Related document searching
-    security.declarePublic('viewSearchRelatedDocumentDialog')
+    @security.public
     def viewSearchRelatedDocumentDialog(self, index, form_id,
                                         REQUEST=None, sub_index=None, **kw):
       """
@@ -1364,7 +1360,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         # Return the search dialog
         return getattr(o, dialog_id)(REQUEST=REQUEST)
 
-    security.declarePublic('asDomainQuery')
+    @security.public
     def asDomainQuery(self, domain, strict_membership=False):
       if isinstance(domain, DomainSelection):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
@@ -1457,7 +1453,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       tv['_user_id'] = user_id
       return user_id
 
-    security.declarePrivate('getTemporarySelectionDict')
+    @security.private
     def getTemporarySelectionDict(self):
       """ Temporary selections are used in push/pop nested scope,
       to prevent from editting for stored selection in the scope.
@@ -1578,6 +1574,8 @@ class BaseContainer(object):
     self._container = container
 
 class MemcachedContainer(BaseContainer):
+
+  @security.protected(ERP5Permissions.View)
   def getSelectionNameList(self, user_id):
     return []
 
@@ -1601,6 +1599,8 @@ class TransactionalCacheContainer(MemcachedContainer):
     self._container.__setitem__('%s-%s' % (user_id, selection_name), aq_base(selection))
 
 class PersistentMappingContainer(BaseContainer):
+
+  @security.protected(ERP5Permissions.View)
   def getSelectionNameList(self, user_id):
     try:
       return list(self._container[user_id])

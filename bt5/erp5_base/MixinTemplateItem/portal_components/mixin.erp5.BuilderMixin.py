@@ -100,7 +100,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                     , PropertySheet.DeliveryBuilder
                     )
 
-  security.declarePublic('build')
+  @security.public
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
                   delivery_relative_url_list=None, movement_list=None,
                   explanation=None, business_link=None, activate_kw=None,
@@ -153,7 +153,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   def getRelatedBusinessLinkValueList(self):
     return self.getDeliveryBuilderRelatedValueList(portal_type='Business Link')
 
-  security.declarePrivate('callBeforeBuildingScript')
+  @security.private
   def callBeforeBuildingScript(self):
     """
       Call a script on the module, for example, to remove some
@@ -302,7 +302,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   security.declarePrivate('searchMovementList')
   searchMovementList = UnrestrictedMethod(_searchMovementList)
 
-  security.declarePrivate('collectMovement')
+  @security.private
   def collectMovement(self, movement_list, merge_delivery=False):
     """
       group movements in the way we want. Thanks to this method, we are able
@@ -372,7 +372,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       movement_group_node.getGroupEditDict()
       for movement_group_node in movement_group_node_list)
 
-  security.declarePrivate('buildDeliveryList')
+  @security.private
   @UnrestrictedMethod
   def buildDeliveryList(self, movement_group_node,
                         delivery_relative_url_list=None,
@@ -735,7 +735,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       # Update properties on object (quantity, price...)
       delivery_movement._edit(force_update=1, **property_dict)
 
-  security.declarePrivate('callAfterBuildingScript')
+  @security.private
   @UnrestrictedMethod
   def callAfterBuildingScript(self, delivery_list, movement_list=(), **kw):
     """
@@ -771,8 +771,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           script(related_simulation_movement_path_list=related_simulation_movement_path_list)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'getMovementGroupList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementGroupList(self, portal_type=None, collect_order_group=None,
                             **kw):
     """

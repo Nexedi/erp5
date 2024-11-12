@@ -257,8 +257,7 @@ class AmountGeneratorMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getGeneratedAmountList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getGeneratedAmountList(self, amount_list=None, rounding=False,
                              amount_generator_type_list=None,
                              generate_empty_amounts=True):
@@ -505,8 +504,7 @@ class AmountGeneratorMixin:
 
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAggregatedAmountList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAggregatedAmountList(self, *args, **kw):
     """
     Implementation of a generic transformation algorith which is

@@ -168,7 +168,7 @@ class FolderMixIn(ExtensionClass.Base):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declarePublic('allowedContentTypes')
+  @security.public
   def allowedContentTypes(self):
     """
     List portal_types which can be added in this folder / object.
@@ -204,7 +204,7 @@ class FolderMixIn(ExtensionClass.Base):
       if x.isConstructionAllowed(self)
     ]
 
-  security.declarePublic('newContent')
+  @security.public
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, container=None, temp_object=0, **kw):
     """Creates a new content.
@@ -262,8 +262,7 @@ class FolderMixIn(ExtensionClass.Base):
 
     return new_instance
 
-  security.declareProtected(
-            Permissions.DeletePortalContent, 'deleteContent')
+  @security.protected(Permissions.DeletePortalContent)
   def deleteContent(self, id):
     """ delete items in this folder.
       `id` can be a list or a string.
@@ -376,7 +375,7 @@ class FolderMixIn(ExtensionClass.Base):
   _setLastId = BaseAccessor.Setter('_setLastId', 'last_id', 'string')
 
   # Automatic ID Generation method
-  security.declareProtected(Permissions.View, 'generateNewId')
+  @security.protected(Permissions.View)
   def generateNewId(self,id_group=None,default=None,method=None):
     """
       Generate a new Id which has not been taken yet in this folder.
@@ -415,12 +414,12 @@ class FolderMixIn(ExtensionClass.Base):
                   id_group=id_group, default=default, **new_id_kw))
     return my_id
 
-  security.declareProtected(Permissions.View, 'hasContent')
+  @security.protected(Permissions.View)
   def hasContent(self, id):
     return self.hasObject(id)
 
   # Get the content
-  security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchFolder(self, **kw):
     """
       Search the content of a folder by calling
@@ -452,7 +451,7 @@ class FolderMixIn(ExtensionClass.Base):
 
     return self.portal_catalog.searchResults(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'countFolder')
+  @security.protected(Permissions.AccessContentsInformation)
   def countFolder(self, **kw):
     """
       Search the content of a folder by calling
@@ -485,15 +484,14 @@ class FolderMixIn(ExtensionClass.Base):
     return self.portal_catalog.countResults(**kw)
 
   # Count objects in the folder
-  security.declarePrivate('_count')
+  @security.private
   def _count(self, **kw):
     """
       Returns the number of items in the folder.
     """
     return self.countFolder(**kw)[0][0]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWebSiteValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWebSiteValue(self):
     """
     Since aq_dynamic will not work well to get Web Site for language
@@ -506,8 +504,7 @@ class FolderMixIn(ExtensionClass.Base):
     else:
       return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWebSectionValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWebSectionValue(self):
     """
     Since aq_dynamic will not work well to get Web Section for language
@@ -625,14 +622,14 @@ class FolderMixIn(ExtensionClass.Base):
       activate(self, **reactivate_kw)._recurseCallMethod(
         method_id, method_args, method_kw, restricted=restricted, **kw)
 
-  security.declarePublic('recurseCallMethod')
+  @security.public
   def recurseCallMethod(self, method_id, *args, **kw):
     """Restricted version of _recurseCallMethod"""
     if method_id[0] == '_':
         raise AccessControl_Unauthorized(method_id)
     return self._recurseCallMethod(method_id, restricted=True, *args, **kw)
 
-  security.declarePublic('isURLAncestorOf')
+  @security.public
   def isURLAncestorOf(self, given_url):
     """
       This method returns True if the given_url is child of the url of
@@ -765,20 +762,29 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
   def __init__(self, id):
     self.id = id
 
+
+  # Count objects in the folder
   @property
+  @security.private
   def _count(self):
     count = self.__dict__.get('_count')
     if isinstance(count, Length) and count() > FRAGMENTED_LENGTH_THRESHOLD:
       count = self._count = FragmentedLength(count)
     return count
 
+
+  # Count objects in the folder
   @_count.setter
+  @security.private
   def _count(self, value):
     if isinstance(value, Length) and value() > FRAGMENTED_LENGTH_THRESHOLD:
       value = FragmentedLength(value)
     self.__dict__['_count'] = value
     self._p_changed = 1
 
+
+  # Count objects in the folder
+  @security.private
   @_count.deleter
   def _count(self):
     del self.__dict__['_count']
@@ -798,21 +804,21 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
         return _HANDLER_LIST[BTREE_HANDLER]
       raise
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isBTree')
+  @security.protected(Permissions.AccessContentsInformation)
   def isBTree(self):
     """
     Tell if we are a BTree
     """
     return self._folder_handler in (BTREE_HANDLER, _BROKEN_BTREE_HANDLER)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isHBTree')
+  @security.protected(Permissions.AccessContentsInformation)
   def isHBTree(self):
     """
     Tell if we are a HBTree
     """
     return self._folder_handler == HBTREE_HANDLER
 
-  security.declareProtected( Permissions.ManagePortal, 'migrateToHBTree' )
+  @security.protected(Permissions.ManagePortal)
   def migrateToHBTree(self, migration_generate_id_method=None, new_generate_id_method='_generatePerDayId', bundle_count=10, REQUEST=None):
     """
     Function to migrate from a BTree folder to HBTree folder.
@@ -1153,7 +1159,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
   # Implementation
   hasContent = hasObject
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'recursiveApply')
+  @security.protected(Permissions.ModifyPortalContent)
   def recursiveApply(self, filter=dummyFilter, method=None,
                     test_after=dummyTestAfter, include=1, REQUEST=None, **kw):
     """
@@ -1203,7 +1209,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
 
     return update_list
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'updateAll' )
+  @security.protected(Permissions.ModifyPortalContent)
   def updateAll(self, filter=None, method=None, test_after=None, request=None, include=1,**kw):
     """
     update all objects inside this particular folder wich
@@ -1244,7 +1250,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
 
     return update_list
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'upgradeObjectClass' )
+  @security.protected(Permissions.ModifyPortalContent)
   def upgradeObjectClass(self, test_before, from_class, to_class, test_after,
                                test_only=0):
     """
@@ -1329,8 +1335,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
 
 
   # Catalog related
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'reindexObjectSecurity')
+  @security.protected(Permissions.ModifyPortalContent)
   def reindexObjectSecurity(self, *args, **kw):
     """
         Reindex security-related indexes on the object
@@ -1341,7 +1346,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       'recursiveReindexObject',
     )(*args, **kw)
 
-  security.declarePublic('recursiveReindexObject')
+  @security.public
   def recursiveReindexObject(self, activate_kw=None, **kw):
     if self.isAncestryIndexable():
       kw, activate_kw = self._getReindexAndActivateParameterDict(
@@ -1368,8 +1373,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     activate_kw['serialization_tag'] = document.getRootDocumentPath()
     return activate_kw
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getIndexableChildValueList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getIndexableChildValueList(self):
     """
       Get indexable childen recursively.
@@ -1397,7 +1401,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     for document in self.objectValues():
       getattr(document, '_reindexOnCreation', dummy)(**reindex_kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
+  @security.protected(Permissions.ModifyPortalContent)
   def moveObject(self, idxs=None):
       """
           Reindex the object in the portal catalog.
@@ -1419,8 +1423,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       if catalog is not None:
           catalog.moveObject(self, idxs=idxs)
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'recursiveMoveObject' )
+  @security.protected(Permissions.ModifyPortalContent)
   def recursiveMoveObject(self):
     """
       Called when the base of a hierarchy is renamed
@@ -1434,8 +1437,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
         c.recursiveMoveObject()
 
   # Special Relation keyword : 'content' and 'container'
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             '_getCategoryMembershipList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def _getCategoryMembershipList(self, category,
                                  spec=(), filter=None, portal_type=(), base=0,
                                  keep_default=None, checked_permission=None):
@@ -1449,8 +1451,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       base=base,
     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'checkConsistency')
+  @security.protected(Permissions.AccessContentsInformation)
   def checkConsistency(self, fixit=False, filter=None, **kw):
     """
     Check the consistency of this object, then
@@ -1490,7 +1491,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     # We should also return an error if any
     return error_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asXML')
+  @security.protected(Permissions.AccessContentsInformation)
   def asXML(self, omit_xml_declaration=True, root=None):
     """
         Generate an xml text corresponding to the content of this object
@@ -1498,7 +1499,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     return Folder_asXML(self, omit_xml_declaration=omit_xml_declaration, root=root)
 
   # Optimized Menu System
-  security.declarePublic('getVisibleAllowedContentTypeList')
+  @security.public
   def getVisibleAllowedContentTypeList(self):
     """
       List portal_types' names wich can be added in this folder / object.
@@ -1526,8 +1527,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
   getObjectIds = objectIds
 
   # Overloading
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'objectValues' )
+  @security.protected(Permissions.AccessContentsInformation)
   def objectValues(self, spec=None, meta_type=None, portal_type=None,
                    sort_on=None, sort_order=None, checked_permission=None,
                    **kw):
@@ -1559,8 +1559,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
                        if checkPermission(checked_permission, o)]
     return sortValueList(object_list, sort_on, sort_order, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'contentValues' )
+  @security.protected(Permissions.AccessContentsInformation)
   def contentValues(self, *args, **kw):
     # Returns a list of documents contained in this folder.
     # ( no docstring to prevent publishing )
@@ -1590,7 +1589,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
                              'manage_pasteObjects' )
 
   # Template Management
-  security.declareProtected(Permissions.View, 'getDocumentTemplateList')
+  @security.protected(Permissions.View)
   def getDocumentTemplateList(self) :
     """
       Returns the list of allowed templates for this folder
@@ -1599,7 +1598,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     return self.getPortalObject().portal_preferences\
                               .getDocumentTemplateList(self)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'makeTemplate')
+  @security.protected(Permissions.ModifyPortalContent)
   def makeTemplate(self):
     """
       Make document behave as a template.
@@ -1610,8 +1609,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       if getattr(aq_base(o), 'makeTemplate', None) is not None:
         o.makeTemplate()
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'makeTemplateInstance' )
+  @security.protected(Permissions.ModifyPortalContent)
   def makeTemplateInstance(self):
     """
       Make document behave as standard document (indexable)
@@ -1635,7 +1633,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       self._objects = tuple(i for i in self._objects if i['id'] != id)
     self._delOb(id)
 
-  security.declareProtected(Permissions.ManagePortal, 'callMethodOnObjectList')
+  @security.protected(Permissions.ManagePortal)
   def callMethodOnObjectList(self, object_path_list, method_id, *args, **kw):
     """
     Very useful if we want to activate the call of a method
@@ -1685,7 +1683,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     Folder.inheritedAttribute(
           '_verifyObjectPaste')(self, object, validate_src)
 
-  security.declarePublic('getIconURL')
+  @security.public
   def getIconURL(self):
     """ Get the absolute URL of the icon for the object.
         Patched, as ERP5 Type does not provide getExprContext which is used in

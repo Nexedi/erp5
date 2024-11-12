@@ -50,7 +50,6 @@ from AccessControl.SecurityInfo import allow_module
 allow_module(__name__)
 
 security = ModuleSecurityInfo(__name__)
-security.declarePublic('buildEmailMessage',)
 
 def buildAttachmentDictList(document_list, document_type_list=()):
   """return a list of dictionary which will be used by buildEmailMessage"""
@@ -100,6 +99,7 @@ def buildAttachmentDictList(document_list, document_type_list=()):
   return attachment_list
 
 
+@security.public
 def buildEmailMessage(from_url, to_url, msg=None,
                       subject=None, attachment_list=None,
                       extra_headers=None,
@@ -227,7 +227,7 @@ class NotificationTool(BaseTool):
     mailhost.send(messageText=message.as_string(), mto=to_url, mfrom=from_url)
 
   # high-level interface
-  security.declareProtected(Permissions.UseMailhostServices, 'sendMessage')
+  @security.protected(Permissions.UseMailhostServices)
   def sendMessage(self, sender=None, recipient=None, subject=None,
                   message=None,
                   attachment_list=None, attachment_document_list=None,
@@ -437,7 +437,7 @@ class NotificationTool(BaseTool):
     #  # a new workflow state to represent events which are waiting
     #  # for being sent automatically. (ie. scheduled sending)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNotifierList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNotifierList(self):
     """
       Returns the list of available notifiers. For now
@@ -446,7 +446,7 @@ class NotificationTool(BaseTool):
     """
     return self.getPortalEventTypeList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDocumentValue(self, **kw):
     """
       Returns the last version of a Notification Document in selected Language.

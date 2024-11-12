@@ -82,7 +82,7 @@ class XMLObject( Folder ):
     property_sheets = ( PropertySheet.XMLObject, )
 
     # Inheritance fixes
-    security.declareProtected( Permissions.ModifyPortalContent, 'setDescription' )
+    @security.protected(Permissions.ModifyPortalContent)
     def setDescription(self, value):
       """
           Sets the description by invoking the Accessor

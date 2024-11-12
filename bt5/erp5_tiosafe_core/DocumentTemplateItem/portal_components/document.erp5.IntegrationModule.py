@@ -90,8 +90,7 @@ class IntegrationModule(XMLObject):
     except ValueError as msg:
       raise KeyError(msg)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getGIDFor')
+  @security.protected(Permissions.AccessContentsInformation)
   def getGIDFor(self, item):
     """
     Return the gid for a given local id

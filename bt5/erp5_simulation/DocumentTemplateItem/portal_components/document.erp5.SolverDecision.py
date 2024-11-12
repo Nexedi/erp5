@@ -73,8 +73,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
                     , PropertySheet.Configurable
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultConfigurationPropertyDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultConfigurationPropertyDict(self):
     """
     Returns a dictionary of default properties for specified
@@ -87,8 +86,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     else:
       return solver_type.getDefaultConfigurationPropertyDict(self)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConfigurationPropertyListDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConfigurationPropertyListDict(self):
     """
     Returns a dictionary of possible values for specified
@@ -101,8 +99,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     else:
       return solver_type.getConfigurationPropertyListDict(self)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'searchDeliverySolverList')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchDeliverySolverList(self, **kw):
     """
     this method returns a list of delivery solvers, as predicates against
@@ -114,8 +111,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     solver_list = target_solver_type.getDeliverySolverValueList()
     return [x for x in solver_list if x.test(self)]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getExplanationMessage')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationMessage(self, all=False): # pylint: disable=redefined-builtin
     """
     Returns the HTML message that describes the detail of divergences to

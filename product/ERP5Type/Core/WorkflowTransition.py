@@ -69,16 +69,14 @@ class WorkflowTransition(IdAsReferenceMixin("transition_"),
   # in order to have their id or value
 
   # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getActionType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getActionType(self):
     for path in self.getCategoryList():
       if path.startswith('action_type/'):
         return path[12:] # 12 is len('action_type/')
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBeforeScriptList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBeforeScriptList(self):
     """
     returns the list of before script
@@ -87,8 +85,7 @@ class WorkflowTransition(IdAsReferenceMixin("transition_"),
     return [path[prefix_length:] for path in self.getCategoryList()
             if path.startswith('before_script/')]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAfterScriptList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAfterScriptList(self):
     """
     returns the list of after script
@@ -98,16 +95,14 @@ class WorkflowTransition(IdAsReferenceMixin("transition_"),
             if path.startswith('after_script/')]
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBeforeScriptIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBeforeScriptIdList(self):
     """
     returns the list of before script ids
     """
     return [path.split('/')[-1] for path in self.getBeforeScriptList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBeforeScriptValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBeforeScriptValueList(self):
     """
     returns the list of before script values
@@ -116,16 +111,14 @@ class WorkflowTransition(IdAsReferenceMixin("transition_"),
     return [parent._getOb(transition_id) for transition_id
             in self.getBeforeScriptIdList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAfterScriptIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAfterScriptIdList(self):
     """
     returns the list of after script ids
     """
     return [path.split('/')[-1] for path in self.getAfterScriptList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAfterScriptValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAfterScriptValueList(self):
     """
     returns the list of after script values
@@ -134,8 +127,7 @@ class WorkflowTransition(IdAsReferenceMixin("transition_"),
     return [parent._getOb(transition_id) for transition_id
             in self.getAfterScriptIdList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDestinationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationValue(self):
     """
     returns the destination object
@@ -149,8 +141,7 @@ class WorkflowTransition(IdAsReferenceMixin("transition_"),
       return parent._getOb(destination_id)
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionVariableValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionVariableValueList(self):
     """
     Return Transition Variables

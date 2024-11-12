@@ -32,7 +32,7 @@ class ValidationError(Exception):
           self.error_text = field.get_error_message(error_key)
           self.is_message_to_translate = True
 
-    security.declarePublic('getMessage')
+    @security.public
     def getMessage(self, translation_service=None):
       if not self.is_message_to_translate:
         return self.error_text

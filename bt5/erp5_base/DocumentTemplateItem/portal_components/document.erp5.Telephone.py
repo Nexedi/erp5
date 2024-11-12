@@ -289,7 +289,7 @@ class Telephone(Coordinate):
         number = number.replace(token, '')
     return country, area, city, number, extension
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @security.protected(Permissions.ModifyPortalContent)
   @deprecated
   def fromText(self, coordinate_text):
     """Save given data then continue parsing
@@ -312,7 +312,7 @@ class Telephone(Coordinate):
   security.declareProtected(Permissions.ModifyPortalContent, '_setText')
   _setText = fromText
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asText(self):
     """
       Returns the telephone number in standard format
@@ -351,8 +351,7 @@ class Telephone(Coordinate):
       return notation
     return ''
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asURL')
+  @security.protected(Permissions.AccessContentsInformation)
   def asURL(self):
     """Returns a text representation of the Url if defined
     or None else.
@@ -387,14 +386,14 @@ class Telephone(Coordinate):
   security.declareProtected(Permissions.AccessContentsInformation, 'getText')
   getText = asText
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'standardTextFormat')
+  @security.protected(Permissions.AccessContentsInformation)
   def standardTextFormat(self):
     """
       Returns the standard text formats for telephone numbers
     """
     return ("+33(0)6-62 05 76 14",)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDetailed(self):
     return self.hasTelephoneCountry() or\
           self.hasTelephoneArea() or\

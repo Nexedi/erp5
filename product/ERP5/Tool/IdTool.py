@@ -109,8 +109,7 @@ class IdTool(BaseTool):
     """
     return self._getOb(self._getLatestIdGenerator(id_generator))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'generateNewId')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewId(self, id_group=None, default=None, method=_marker,
                     id_generator=None, poison=False):
     """
@@ -178,8 +177,7 @@ class IdTool(BaseTool):
         dict_ids[id_group] = new_id
     return new_id
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'generateNewIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewIdList(self, id_group=None, id_count=1, default=None,
                         store=_marker, id_generator=None, poison=False):
     """
@@ -255,8 +253,7 @@ class IdTool(BaseTool):
           new_id_list = list(range(new_id - id_count, new_id))
     return new_id_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'initializeGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def initializeGenerator(self, id_generator=None, all=False):
     """
     Initialize generators. This is mostly used when a new ERP5 site
@@ -274,8 +271,7 @@ class IdTool(BaseTool):
                        portal_type='Application Id Generator'):
         generator.initializeGenerator()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'clearGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def clearGenerator(self, id_generator=None, all=False):
     """
     Clear generators data. This can be usefull when working on a
@@ -307,8 +303,7 @@ class IdTool(BaseTool):
                            'generateNewLengthIdList')
   generateNewLengthIdList = generateNewIdList
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getLastLengthGeneratedId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLastLengthGeneratedId(self, id_group, default=None):
     """
     Get the last length id generated
@@ -336,8 +331,7 @@ class IdTool(BaseTool):
         return result[0]['LAST_INSERT_ID()']
     return default
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getLastGeneratedId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLastGeneratedId(self, id_group=None, default=None):
     """
     Get the last id generated
@@ -350,8 +344,7 @@ class IdTool(BaseTool):
       last_id = self.dict_ids.get(id_group, default)
     return last_id
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setLastGeneratedId')
+  @security.protected(Permissions.ModifyPortalContent)
   def setLastGeneratedId(self, new_id, id_group=None):
     """
     Set a new last id. This is usefull in order to reset
@@ -362,8 +355,7 @@ class IdTool(BaseTool):
     if id_group is not None and id_group != 'None':
       self.dict_ids[id_group] = new_id
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'generateNewLengthId')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewLengthId(self, id_group=None, default=None, store=_marker):
      """Generates an Id using a conflict free id generator. Deprecated.
      """
@@ -376,8 +368,7 @@ class IdTool(BaseTool):
      return self.generateNewIdList(id_group=id_group,
                         id_count=1, default=default)[0]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDictLengthIdsItems')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDictLengthIdsItems(self):
     """
       Return a copy of dict_length_ids.
@@ -388,7 +379,7 @@ class IdTool(BaseTool):
       self.dict_length_ids = PersistentMapping()
     return self.dict_length_ids.items()
 
-  security.declarePrivate('dumpDictLengthIdsItems')
+  @security.private
   def dumpDictLengthIdsItems(self):
     """
       Store persistently data from SQL table portal_ids.

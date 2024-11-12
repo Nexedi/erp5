@@ -47,7 +47,7 @@ class EquivalenceTesterMixin:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Implementation of IEquivalenceTester
-  security.declarePrivate('testEquivalence')
+  @security.private
   def testEquivalence(self, simulation_movement):
     """
     Tests if simulation_movement is divergent. Returns False (0)
@@ -60,7 +60,7 @@ class EquivalenceTesterMixin:
     """
     return self.explain(simulation_movement) is not None
 
-  security.declarePrivate('explain')
+  @security.private
   def explain(self, simulation_movement):
     """
     Returns a single message which explain the nature of
@@ -101,7 +101,7 @@ class EquivalenceTesterMixin:
     """
     return movement.getProperty(property)
 
-  security.declarePrivate('generateHashKey')
+  @security.private
   def generateHashKey(self, movement):
     """
     Returns a hash key which can be used to optimise the
@@ -120,7 +120,7 @@ class EquivalenceTesterMixin:
       value = self._getTestedPropertyValue(movement, tested_property)
     return '%s/%r' % (tested_property, value)
 
-  security.declarePrivate('compare')
+  @security.private
   def compare(self, prevision_movement, decision_movement):
     """
     Returns True if prevision_movement and delivery_movement
@@ -140,7 +140,7 @@ class EquivalenceTesterMixin:
     """
     return (self._compare(prevision_movement, decision_movement) is None)
 
-  security.declarePrivate('update')
+  @security.private
   def update(self, prevision_movement, decision_movement):
     """
     Updates decision_movement with properties from
@@ -169,8 +169,7 @@ class EquivalenceTesterMixin:
     decision_movement.edit(
       **self.getUpdatablePropertyDict(prevision_movement, decision_movement))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getExplanationMessage')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationMessage(self, simulation_movement):
     """
     Returns the HTML message that describes the detail of the
@@ -211,8 +210,7 @@ class EquivalenceTesterMixin:
     """
     raise NotImplementedError
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getUpdatablePropertyDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
     Returns a mapping of properties to update on decision_movement so that next
@@ -228,8 +226,7 @@ class EquivalenceTesterMixin:
 
   # Temporary compatibility code that will fix existing data.
   # This Code must be removed in 2 years (end of 2017)
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTestedProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTestedProperty(self):
     """
     Override getTestedProperty to fix the way it is stored. Some time

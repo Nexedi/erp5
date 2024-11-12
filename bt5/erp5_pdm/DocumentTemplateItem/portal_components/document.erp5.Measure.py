@@ -53,7 +53,7 @@ class Measure(XMLMatrix):
                     , PropertySheet.Measure
                     )
 
-  security.declareProtected(AccessContentsInformation, 'getResourceValue')
+  @security.protected(AccessContentsInformation)
   def getResourceValue(self):
     """
     Gets the resource object described by this measure.
@@ -63,7 +63,7 @@ class Measure(XMLMatrix):
   ##
   #  Forms.
 
-  security.declareProtected(AccessContentsInformation, 'getVariationRangeCategoryItemList')
+  @security.protected(AccessContentsInformation)
   def getVariationRangeCategoryItemList(self, variation):
     """
     Returns possible variation category values for the selected variation.
@@ -80,7 +80,7 @@ class Measure(XMLMatrix):
       display_base_category=0,
       sort_id='id')
 
-  security.declareProtected(AccessContentsInformation, 'getQuantityUnitItemList')
+  @security.protected(AccessContentsInformation)
   def getQuantityUnitItemList(self):
     """
     Returns the list of possible quantity units for the current metric type.
@@ -98,7 +98,7 @@ class Measure(XMLMatrix):
         'getCategoryChildCompactLogicalPathItemList')
     )(recursive=0, local_sort_id='quantity', checked_permission='View')
 
-  security.declareProtected(AccessContentsInformation, 'getLocalQuantityUnit')
+  @security.protected(AccessContentsInformation)
   def getLocalQuantityUnit(self):
     """
     Returns the 'quantity_unit' category without acquisition.
@@ -113,7 +113,7 @@ class Measure(XMLMatrix):
   #  Measures associated to a quantity unit of the resource
   #  have a specific behaviour.
 
-  security.declareProtected(AccessContentsInformation, 'isDefaultMeasure')
+  @security.protected(AccessContentsInformation)
   def isDefaultMeasure(self, quantity_unit=None):
     """
     Checks if self is a default measure for the associated resource.
@@ -125,7 +125,7 @@ class Measure(XMLMatrix):
   ##
   #  Conversion.
 
-  security.declareProtected(AccessContentsInformation, 'getConvertedQuantityUnit')
+  @security.protected(AccessContentsInformation)
   def getConvertedQuantityUnit(self):
     """
     Gets the quantity unit ratio, in respect to the base quantity unit.
@@ -136,7 +136,7 @@ class Measure(XMLMatrix):
         quantity_unit.getParentId() == metric_type.split('/', 1)[0]:
       return self.getQuantityUnitDefinitionRatio(quantity_unit)
 
-  security.declareProtected(AccessContentsInformation, 'getConvertedQuantity')
+  @security.protected(AccessContentsInformation)
   def getConvertedQuantity(self, variation_list=()):
     """
     Gets the measure value for a specified variation,
@@ -162,7 +162,7 @@ class Measure(XMLMatrix):
   ##
   #  Cataloging.
 
-  security.declareProtected(AccessContentsInformation, 'asCatalogRowList')
+  @security.protected(AccessContentsInformation)
   def asCatalogRowList(self, quantity_unit_definition_dict):
     """
     Returns the list of rows to insert in the measure table of the catalog.

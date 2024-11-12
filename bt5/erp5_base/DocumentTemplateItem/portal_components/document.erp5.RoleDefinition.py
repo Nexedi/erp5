@@ -60,7 +60,7 @@ class RoleDefinition(XMLObject):
       raise Unauthorized("You are not allowed to give %s role" % value)
     self._baseSetRoleName(value)
 
-  security.declarePrivate("getLocalRolesFor")
+  @security.private
   def getLocalRolesFor(self, ob, user_name=None):
     group_id_generator = getattr(ob,
       ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)

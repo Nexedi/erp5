@@ -112,8 +112,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
     return ()
 
   # IVariationRange and IVariated Implementation
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'updateVariationCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def updateVariationCategoryList(self):
     """
     Check if variation category list of the resource has changed and update
@@ -124,8 +123,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
     for transformation_line in transformation_line_list:
       transformation_line.updateVariationCategoryList()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeBaseCategoryList(self):
     """
     Returns possible variation base_category ids of the
@@ -142,8 +140,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
       result = self.getPortalVariationBaseCategoryList()
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeBaseCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeBaseCategoryItemList(self, display_id='getTitleOrId', **kw):
     """
     Returns possible variations of the transformation
@@ -155,8 +152,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
                               self.getVariationRangeBaseCategoryList(),
                               display_id=display_id, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeCategoryItemList(self, base_category_list=(),
                                         omit_individual_variation=0,
                                         display_base_category=1, **kw):
@@ -186,8 +182,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
                          base_category_list, base=1, display_none_category=0)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'setVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def setVariationBaseCategoryList(self, value):
     """
     Define the possible base categories and reindex object
@@ -195,8 +190,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
     self._setVariationBaseCategoryList(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationCategoryItemList(self, base_category_list=(), base=1,
                                    display_id='title',
                                    current_category=None,

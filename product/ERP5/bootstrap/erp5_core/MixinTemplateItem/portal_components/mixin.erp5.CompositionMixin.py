@@ -188,9 +188,6 @@ class CompositionMixin:
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asComposedDocument')
   asComposedDocument = transactional_cached(
     lambda self, portal_type_list=None: (self, portal_type_list)
     )(asComposedDocument)  # pylint:disable=used-before-assignment
@@ -230,8 +227,7 @@ class CompositionMixin:
             effective_list.append(model)
     return effective_list, specialise_value_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInheritedSpecialiseValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInheritedSpecialiseValueList(self, specialise_type_list=None,
                                       exclude_specialise_type_list=()):
     """Get inherited specialise values

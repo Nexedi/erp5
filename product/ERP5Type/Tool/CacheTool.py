@@ -64,7 +64,7 @@ class CacheTool(BaseTool):
   security.declareProtected( Permissions.ManagePortal, 'cache_tool_statistics')
   cache_tool_statistics = DTMLFile('cache_tool_statistics', _dtmldir)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCacheFactoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCacheFactoryList(self):
     """ Return available cache factories """
 
@@ -122,12 +122,12 @@ class CacheTool(BaseTool):
   ##
   ## RAM cache structure
   ##
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheRoot')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRamCacheRoot(self):
     """ Return RAM based cache root """
     return CachingMethod.factories
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateCache')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateCache(self, REQUEST=None):
     """ Clear and update cache structure """
     for cf in CachingMethod.factories:
@@ -145,7 +145,7 @@ class CacheTool(BaseTool):
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache updated.')
 
-  security.declarePublic('clearAllCache')
+  @security.public
   def clearAllCache(self):
     # Clear all cache factories. This method is public to be called from
     # scripts, but without docstring to prevent calling it from the URL
@@ -154,14 +154,14 @@ class CacheTool(BaseTool):
       for cp in ram_cache_root[cf_key].getCachePluginList():
         cp.clearCache()
 
-  security.declareProtected(Permissions.ManagePortal, 'manage_clearAllCache')
+  @security.protected(Permissions.ManagePortal)
   def manage_clearAllCache(self, REQUEST=None):
     """Clear all cache factories."""
     self.clearAllCache()
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=All cache factories cleared.')
 
-  security.declarePublic('clearCacheFactory')
+  @security.public
   def clearCacheFactory(self, cache_factory_id):
     # Clear cache factory of given ID.
     # This method is public to be called from scripts, but without docstring to
@@ -170,14 +170,14 @@ class CacheTool(BaseTool):
     if cache_factory_id in ram_cache_root:
       ram_cache_root[cache_factory_id].clearCache()
 
-  security.declareProtected(Permissions.ManagePortal, 'manage_clearCacheFactory')
+  @security.protected(Permissions.ManagePortal)
   def manage_clearCacheFactory(self, cache_factory_id, REQUEST=None):
     """ Clear only cache factory. """
     self.clearCacheFactory(cache_factory_id)
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory %s cleared.' %cache_factory_id)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
+  @security.protected(Permissions.ModifyPortalContent)
   def clearCache(self, cache_factory_list=(DEFAULT_CACHE_FACTORY,),
                  REQUEST=None, before_commit=False):
     """ Clear specified or default cache factory. """
@@ -191,7 +191,7 @@ class CacheTool(BaseTool):
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache cleared.')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'clearCacheFactoryScope')
+  @security.protected(Permissions.ModifyPortalContent)
   def clearCacheFactoryScope(self, cache_factory_id, scope, REQUEST=None):
     """ Clear only cache factory. """
     ram_cache_root = self.getRamCacheRoot()
@@ -200,7 +200,7 @@ class CacheTool(BaseTool):
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory scope %s cleared.' %cache_factory_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCacheTotalMemorySize')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCacheTotalMemorySize(self, REQUEST=None):
     """ Calculate total size of memory used for cache.
 

@@ -65,8 +65,7 @@ class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
     PropertySheet.Rule
     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self, movement):
     """
     Tells whether generated movement needs to be accounted or not.

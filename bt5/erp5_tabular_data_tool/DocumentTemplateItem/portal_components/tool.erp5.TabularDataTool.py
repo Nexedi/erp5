@@ -34,7 +34,7 @@ class TabularDataTool(BaseTool):
   def _createEmptyDataFrame(self):
     return pd.DataFrame()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'fillna')
+  @security.protected(Permissions.AccessContentsInformation)
   def fillna(self, tabular, fillna_on_string=MARKER, fillna_on_number=MARKER, fillna_on_uid=MARKER):
     """
     Fill NA/NaN values on the given tabular (a dataframe).
@@ -71,7 +71,7 @@ class TabularDataTool(BaseTool):
       filled_tabular = filled_tabular.replace(replace_dict)
     return filled_tabular
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTabular')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTabular(self, data_list,
                  fillna_on_string=MARKER,
                  fillna_on_number=MARKER,
@@ -131,7 +131,7 @@ class TabularDataTool(BaseTool):
         property_dict[category_title] = document.getProperty(category_title)
     return property_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFromDocumentList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFromDocumentList(self, document_list,
                           property_name_list=MARKER,
                           fillna_on_string=MARKER,
@@ -167,7 +167,7 @@ class TabularDataTool(BaseTool):
                            fillna_on_number=fillna_on_number,
                            fillna_on_uid=fillna_on_uid)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchResults(self, select_dict=None,
                    fillna_on_string=MARKER,
                    fillna_on_number=MARKER,

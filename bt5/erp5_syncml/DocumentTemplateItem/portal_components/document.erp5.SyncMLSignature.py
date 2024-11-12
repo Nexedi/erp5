@@ -67,7 +67,7 @@ class SyncMLSignature(XMLObject):
                     , PropertySheet.Document
                     , PropertySheet.SyncMLSignature )
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'synchronize')
+  @security.protected(Permissions.ModifyPortalContent)
   def synchronize(self):
     """
     This is call when subscription get confirmation of the data synchronization
@@ -93,7 +93,7 @@ class SyncMLSignature(XMLObject):
       self.edit(**edit_kw)
 
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setData')
+  @security.protected(Permissions.ModifyPortalContent)
   def setData(self, value):
     """
     Set the XML corresponding to the object
@@ -109,7 +109,7 @@ class SyncMLSignature(XMLObject):
       self._setData(None)
       self.setContentMd5(None)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getData(self, default=_MARKER):
     """
     Get the XML corresponding to the object
@@ -121,8 +121,7 @@ class SyncMLSignature(XMLObject):
     else:
       return self._baseGetData(default)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setTemporaryData')
+  @security.protected(Permissions.ModifyPortalContent)
   def setTemporaryData(self, value):
     """
     This is the xml temporarily saved, it will
@@ -134,8 +133,7 @@ class SyncMLSignature(XMLObject):
     else:
       self._setTemporaryData(None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTemporaryData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTemporaryData(self, default=_MARKER):
     """
     Return the temp xml as string
@@ -147,7 +145,7 @@ class SyncMLSignature(XMLObject):
     else:
       return self._baseGetTemporaryData(default)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'checkMD5')
+  @security.protected(Permissions.AccessContentsInformation)
   def checkMD5(self, xml_string):
     """
     Check if the given md5_object returns the same things as the one stored in
@@ -159,7 +157,7 @@ class SyncMLSignature(XMLObject):
       xml_string = xml_string.encode('utf-8')
     return md5(xml_string).hexdigest() == self.getContentMd5()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setPartialData')
+  @security.protected(Permissions.ModifyPortalContent)
   def setPartialData(self, value):
     """
     Set the partial string we will have to deliver in the future
@@ -173,7 +171,7 @@ class SyncMLSignature(XMLObject):
       self._setPartialData(None)
       self.setLastDataPartialData(None)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setLastData')
+  @security.protected(Permissions.ModifyPortalContent)
   def setLastData(self, value):
     """
       This is the xml temporarily saved, it will be stored with setXML when we
@@ -184,8 +182,7 @@ class SyncMLSignature(XMLObject):
     else:
       self._setLastData(None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPartialData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPartialData(self, default=_MARKER):
     """
     Return the patial xml as string
@@ -197,8 +194,7 @@ class SyncMLSignature(XMLObject):
     else:
       return self._baseGetPartialData(default)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'appendPartialData')
+  @security.protected(Permissions.ModifyPortalContent)
   def appendPartialData(self, value):
     """
     Append the partial string we will have to deliver in the future
@@ -215,8 +211,7 @@ class SyncMLSignature(XMLObject):
         self.setPartialData(value)
       self.setLastDataPartialData(last_data)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getFirstPdataChunk')
+  @security.protected(Permissions.ModifyPortalContent)
   def getFirstPdataChunk(self, max_len):
     """
     """
@@ -227,8 +222,7 @@ class SyncMLSignature(XMLObject):
       self.setPartialData(rest_in_queue.encode('utf-8'))
     return chunk.encode('utf-8')
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setSubscriberXupdate')
+  @security.protected(Permissions.ModifyPortalContent)
   def setSubscriberXupdate(self, value):
     """
     This is the xml temporarily saved, it will be stored with setXML when we
@@ -239,8 +233,7 @@ class SyncMLSignature(XMLObject):
     else:
       self._setSubscriberXupdate(None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSubscriberXupdate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubscriberXupdate(self, default=_MARKER):
     """
     Return the patial xml as string
@@ -252,8 +245,7 @@ class SyncMLSignature(XMLObject):
     else:
       return self._baseGetSubscriberXupdate(default)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setPublisherXupdate')
+  @security.protected(Permissions.ModifyPortalContent)
   def setPublisherXupdate(self, value):
     """
     This is the xml temporarily saved, it will be stored with setXML when we
@@ -264,8 +256,7 @@ class SyncMLSignature(XMLObject):
     else:
       self._setPublisherXupdate(None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPublisherXupdate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPublisherXupdate(self, default=_MARKER):
     """
     Return the partial xml as string
@@ -277,16 +268,14 @@ class SyncMLSignature(XMLObject):
     else:
       return self._baseGetPublisherXupdate(default)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getConflictList')
+  @security.protected(Permissions.ModifyPortalContent)
   def getConflictList(self):
     """
     Return the actual action for a partial synchronization
     """
     return self.contentValues()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'delConflict')
+  @security.protected(Permissions.ModifyPortalContent)
   def delConflict(self, conflict):
     """
     Delete provided conflict object

@@ -42,7 +42,7 @@ class jIOWebSection(WebSection):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLayoutProperty(self, key, default=None):
     """
         A simple method to get a property of the current by
@@ -57,7 +57,7 @@ class jIOWebSection(WebSection):
       section = section.aq_parent
     return default
 
-  security.declareProtected(Permissions.View, 'get')
+  @security.protected(Permissions.View)
   def get(self): #pylint:disable=arguments-differ
     """
       Taken from WebSection Bobo Traverse, the difference is that
@@ -66,7 +66,7 @@ class jIOWebSection(WebSection):
     # Register current web site physical path for later URL generation
     return self.ERP5Site_asjIOStyle(mode="get", text_content=self.REQUEST.get('BODY'))
 
-  security.declareProtected(Permissions.View, 'post')
+  @security.protected(Permissions.View)
   def post(self):
     """
       Taken from WebSection Bobo Traverse, the difference is that
@@ -75,7 +75,7 @@ class jIOWebSection(WebSection):
     # Register current web site physical path for later URL generation
     return self.ERP5Site_asjIOStyle(mode="post", text_content=self.REQUEST.get('BODY'))
 
-  security.declareProtected(Permissions.View, 'put')
+  @security.protected(Permissions.View)
   def put(self):
     """
       Taken from WebSection Bobo Traverse, the difference is that
@@ -84,7 +84,7 @@ class jIOWebSection(WebSection):
     # Register current web site physical path for later URL generation
     return self.ERP5Site_asjIOStyle(mode="put", text_content=self.REQUEST.get('BODY'))
 
-  security.declareProtected(Permissions.View, 'allDocs')
+  @security.protected(Permissions.View)
   def allDocs(self):
     """
       Taken from WebSection Bobo Traverse, the difference is that

@@ -72,8 +72,7 @@ class NetConvertedQuantityEquivalenceTester(FloatEquivalenceTester):
                                                decision_movement,
                                                decision_value)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getUpdatablePropertyDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
     Returns a list of properties to update on decision_movement

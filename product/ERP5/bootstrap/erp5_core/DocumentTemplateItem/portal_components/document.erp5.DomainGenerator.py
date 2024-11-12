@@ -51,7 +51,7 @@ class DomainGenerator(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDomainGeneratorList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getDomainGeneratorList(self, depth=0, klass=None, script='', parent=None):
     """
     """

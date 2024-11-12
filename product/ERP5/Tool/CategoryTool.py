@@ -94,11 +94,11 @@ class CategoryTool(CMFCategoryTool, BaseTool):
 
     all_meta_types = BaseTool.all_meta_types
 
-    security.declareProtected(Permissions.View, 'hasContent')
+    @security.protected(Permissions.View)
     def hasContent(self,id):
       return id in self.objectIds()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryDict')
+    @security.protected(Permissions.AccessContentsInformation)
     @caching_instance_method(
       id='portal_categories.getBaseCategoryDict',
       cache_factory='erp5_content_long',

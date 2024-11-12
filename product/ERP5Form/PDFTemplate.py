@@ -127,7 +127,7 @@ class PDFTemplate(ZopePageTemplate):
     formSettings = PageTemplateFile('www/formSettings', globals(), __name__='formSettings')
     formSettings._owner = None
 
-    security.declareProtected('Change Page Templates', 'doSettings')
+    @security.protected('Change Page Templates')
     def doSettings(self, REQUEST, title, pdf_stylesheet):
       """
         Change title and pdf_stylesheet.

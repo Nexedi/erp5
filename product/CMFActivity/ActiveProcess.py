@@ -88,7 +88,7 @@ class ActiveProcess(Base):
     Base.__init__(self, *args, **kw)
     self.result_list = ConflictFreeLog()
 
-  security.declareProtected(CMFCorePermissions.ManagePortal, 'postResult')
+  @security.protected(CMFCorePermissions.ManagePortal)
   def postResult(self, result):
     try:
       result_id = result.id
@@ -115,11 +115,11 @@ class ActiveProcess(Base):
       except AttributeError:
         self.result_dict = OOBTree({result.id: result})
 
-  security.declareProtected(CMFCorePermissions.ManagePortal, 'postActiveResult')
+  @security.protected(CMFCorePermissions.ManagePortal)
   def postActiveResult(self, *args, **kw):
     return self.postResult(ActiveResult(*args, **kw))
 
-  security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
+  @security.protected(CMFCorePermissions.ManagePortal)
   def getResultList(self, **kw):
     """
       Returns the list of results
@@ -137,7 +137,7 @@ class ActiveProcess(Base):
       return ensure_list(result_list.values())
     return list(result_list)
 
-  security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultDict')
+  @security.protected(CMFCorePermissions.ManagePortal)
   def getResultDict(self, **kw):
     """
       Returns the result Dict
@@ -148,7 +148,7 @@ class ActiveProcess(Base):
       self.result_dict = result_dict = OOBTree()
       return result_dict
 
-  security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
+  @security.protected(CMFCorePermissions.View)
   def hasActivity(self, **kw):
     """
       Tells if there is still some activities not finished attached to this
@@ -160,7 +160,7 @@ class ActiveProcess(Base):
     return activity_tool.hasActivity(None, active_process_uid = self.getUid(),
       **kw)
 
-  security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
+  @security.protected(CMFCorePermissions.View)
   def hasErrorActivity(self, **kw):
     """
       Tells if some attached activities are in a error

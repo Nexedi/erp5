@@ -262,7 +262,7 @@ class BusinessConfiguration(Item):
                     , PropertySheet.Comment
                     )
 
-  security.declareProtected(Permissions.View, 'isInitialConfigurationState')
+  @security.protected(Permissions.View)
   def isInitialConfigurationState(self):
     """ Check if the Business Configuration is on initial workflow state
     """
@@ -271,20 +271,19 @@ class BusinessConfiguration(Item):
       return self.getCurrentState() == workflow.getSource()
     return None
 
-  security.declareProtected(Permissions.View, 'isDownloadConfigurationState')
+  @security.protected(Permissions.View)
   def isDownloadConfigurationState(self):
     """ Check if the Business Configuration is on Download State
     """
     return self.getCurrentStateTitle() == DOWNLOAD_STATE_TITLE
 
-  security.declareProtected(Permissions.View, 'isEndConfigurationState')
+  @security.protected(Permissions.View)
   def isEndConfigurationState(self):
     """ Check if the Business Configuration is on End State
     """
     return self.getCurrentStateTitle() == END_STATE_TITLE
 
-  security.declareProtected(Permissions.ModifyPortalContent, \
-      'initializeWorkflow')
+  @security.protected(Permissions.ModifyPortalContent)
   def initializeWorkflow(self):
     """ Initialize Related Workflow"""
     workflow = self.getResourceValue()
@@ -311,7 +310,7 @@ class BusinessConfiguration(Item):
 
       workflow.notifyCreated(self)
 
-  security.declareProtected(Permissions.View, 'getNextTransition')
+  @security.protected(Permissions.View)
   def getNextTransition(self):
     """ Return next transition. """
     current_state = self.getCurrentStateValue()
@@ -326,7 +325,7 @@ class BusinessConfiguration(Item):
 
     return transition_list[0]
 
-  security.declarePrivate('_executeTransition')
+  @security.private
   def _executeTransition(self, \
                         form_kw=None,
                         request_kw=None):
@@ -360,7 +359,7 @@ class BusinessConfiguration(Item):
     form_kw['transition'] = transition.getRelativeUrl()
     executeTransition(current_state, transition, self, form_kw=form_kw)
 
-  security.declarePrivate('_displayNextForm')
+  @security.private
   def _displayNextForm(self, \
                        validation_errors=None, \
                        context=None, \
@@ -394,7 +393,7 @@ class BusinessConfiguration(Item):
         return previous, form_html, form_title, \
                translate(transition.getTitle())
 
-  security.declarePrivate('_renderFormInContext')
+  @security.private
   def _renderFormInContext(self, form_id, context, validation_errors):
     html = ""
     html_forms = []
@@ -445,7 +444,7 @@ class BusinessConfiguration(Item):
     title = form.title
     return html, title
 
-  security.declarePrivate('_displayPreviousForm')
+  @security.private
   def _displayPreviousForm(self):
     """ Render previous form using workflow history. """
     workflow_history = getWorkflowHistory(self.getCurrentStateValue(), self, remove_undo=1)
@@ -463,14 +462,14 @@ class BusinessConfiguration(Item):
            transition.getTransitionFormId() is not None:
         return  self._displayNextForm(context=conf_save, transition=transition)
 
-  security.declarePrivate('_validateNextForm')
+  @security.private
   def _validateNextForm(self, **kw):
     """ Validate the form displayed to the user. """
     REQUEST = self.REQUEST
     form = getattr(self, self.getNextTransition().getTransitionFormId())
     return _validateFormToRequest(form, REQUEST, **kw)
 
-  security.declarePrivate('_getConfSaveForStateFromWorkflowHistory')
+  @security.private
   def _getConfSaveForStateFromWorkflowHistory(self):
     """ Get from workflow history configuration save for this state """
     configuration_save = None
@@ -483,7 +482,7 @@ class BusinessConfiguration(Item):
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
 
-  security.declarePrivate('_isAlreadyConfSaveInWorkflowHistory')
+  @security.private
   def _isAlreadyConfSaveInWorkflowHistory(self, transition):
     """ check if we have an entry in worklow history for this state """
     current_state = self.getCurrentStateValue()
@@ -498,7 +497,7 @@ class BusinessConfiguration(Item):
           return True
     return False
 
-  security.declarePrivate('_isMultiEntryTransition')
+  @security.private
   def _isMultiEntryTransition(self):
     """ Return number of multiple forms to show for a transition. """
     next_transition = self.getNextTransition()
@@ -515,7 +514,7 @@ class BusinessConfiguration(Item):
       ## no transitions available
       return 0
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setMultiEntryTransition')
+  @security.protected(Permissions.ModifyPortalContent)
   def setMultiEntryTransition(self, transition_url, max_entry_number):
     """ Set a transition as multiple - i.e max_entry_number of forms
         which will be rendered. This method is called in after scripts
@@ -524,7 +523,7 @@ class BusinessConfiguration(Item):
       self._multi_entry_transitions = PersistentMapping()
     self._multi_entry_transitions[transition_url] = max_entry_number
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setGlobalConfigurationAttr')
+  @security.protected(Permissions.ModifyPortalContent)
   def setGlobalConfigurationAttr(self, **kw):
     """ Set global business configuration attribute. """
     if getattr(aq_base(self),
@@ -533,13 +532,13 @@ class BusinessConfiguration(Item):
     for key, value in kw.items():
       self._global_configuration_attributes[key] = value
 
-  security.declareProtected(Permissions.View, 'getGlobalConfigurationAttr')
+  @security.protected(Permissions.View)
   def getGlobalConfigurationAttr(self, key, default=None):
     """ Get global business configuration attribute. """
     return getattr(self, '_global_configuration_attributes', {}).get(key, default)
 
   ############# Instance and Business Configuration ########################
-  security.declareProtected(Permissions.ModifyPortalContent, 'buildConfiguration')
+  @security.protected(Permissions.ModifyPortalContent)
   def buildConfiguration(self):
     """
       Build list of business templates according to already saved
@@ -576,19 +575,19 @@ class BusinessConfiguration(Item):
   # Business Configuration are Item, which inherits from Amount and expect the
   # resource category document to be an actual resource, but in the case of
   # Business Configuration it is a Workflow.
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPrice(self, *args, **kw):
     """Business Configuration have no price
     """
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseUnitPrice(self, *args, **kw):
     """Business Configuration have no base unit price
     """
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationBaseCategoryList(self, *args, **kw):
     """Business Configuration have no variation base category list
     """

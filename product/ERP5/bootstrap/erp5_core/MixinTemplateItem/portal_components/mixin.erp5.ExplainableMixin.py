@@ -46,7 +46,7 @@ class ExplainableMixin:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # IExplainable implementation
-  security.declareProtected(Permissions.AccessContentsInformation,'getExplanationValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationValueList(self):
     """Returns the list of deliveries of parent simulation
     movements. The first item in the list is the immediate
@@ -100,21 +100,21 @@ class ExplainableMixin:
 
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getRootExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootExplanationValue(self):
     """Returns the delivery of the root simulation
     movement.
     """
     return self._getExplanationValueList(root=True)[-1]
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getImmediateExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImmediateExplanationValue(self):
     """Returns the delivery of the first parent simulation
     which has a delivery.
     """
     return self._getExplanationValueList(immediate=True)[0]
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getExplanationLineValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationLineValueList(self):
     """Returns the list of delivery lines of parent simulation
     movements. The first item in the list is the immediate
@@ -123,14 +123,14 @@ class ExplainableMixin:
     """
     return self._getExplanationValueList(line=True)
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getRootExplanationLineValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootExplanationLineValue(self):
     """Returns the delivery line of the root simulation
     movement.
     """
     return self._getExplanationValueList(root=True, line=True)[-1]
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getImmediateExplanationLineValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImmediateExplanationLineValue(self):
     """Returns the delivery line of the first parent simulation
     which has a delivery.
@@ -138,7 +138,7 @@ class ExplainableMixin:
     return self._getExplanationValueList(immediate=True, line=True)[0]
 
   # Compatibility API
-  security.declareProtected(Permissions.AccessContentsInformation,'getExplanationUid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationUid(self):
     """Returns the UID of the root explanation
     """
