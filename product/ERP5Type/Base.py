@@ -2871,7 +2871,8 @@ class Base(
     return related_count
 
   # Workflow Related Method
-  security.declarePublic('getWorkflowStateItemList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWorkflowStateItemList')
   def getWorkflowStateItemList(self):
     """
       Returns a list of tuples {id:workflow_id, state:workflow_state}
