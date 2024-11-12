@@ -63,8 +63,8 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
     return frozenset(self.getBaseApplicationList() +
                      self.getBaseContributionList())
 
-  @security.protected(Permissions.AccessContentsInformation)
   @classmethod
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseAmountQuantity(cls, delivery_amount, base_application,
                             variation_category_list=(), **kw):
     """Default method to compute quantity for the given base_application"""

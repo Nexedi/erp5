@@ -53,8 +53,8 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.Reference)
 
-  @security.protected(Permissions.AccessContentsInformation)
   @classmethod
+  @security.protected(Permissions.AccessContentsInformation)
   def importFromFilesystemDefinition(cls, context, category_name):
     """
     Set the Reference from a filesystem definition of a property

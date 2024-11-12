@@ -84,8 +84,8 @@ class PropertySheet(Folder):
     'CategoryAcquiredExistence': 'Category Existence Constraint',
     'CategoryAcquiredMembershipArity': 'Category Membership Arity Constraint'}
 
-  @security.protected(Permissions.ModifyPortalContent)
   @classmethod
+  @security.protected(Permissions.ModifyPortalContent)
   def importFromFilesystemDefinition(cls, context, definition_class):
     """
     Create a new Property Sheet in the given context from a given

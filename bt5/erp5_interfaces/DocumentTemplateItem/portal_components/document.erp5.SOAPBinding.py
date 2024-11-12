@@ -74,8 +74,8 @@ class SOAPBinding(Base):
 
   _service_class_dict = {}
 
-  @security.private
   @classmethod
+  @security.private
   def registerServiceClass(cls, service_class):
     path = '%s.%s' % (service_class.__module__, service_class.__name__)
     cls._service_class_dict[path] = service_class

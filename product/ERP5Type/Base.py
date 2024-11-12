@@ -805,8 +805,8 @@ class Base(
     self._setTitle(value)
     self.reindexObject()
 
-  @security.public
   @classmethod
+  @security.public
   def provides(cls, interface_name):
     """
     Check if the current class provides a particular interface from Interface

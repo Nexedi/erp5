@@ -50,8 +50,8 @@ class DynamicCategoryProperty(CategoryProperty):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.DynamicCategoryProperty)
 
-  @security.protected(Permissions.AccessContentsInformation)
   @classmethod
+  @security.protected(Permissions.AccessContentsInformation)
   def importFromFilesystemDefinition(cls, context, category_expression):
     """
     Set the Expression text from a filesystem definition of a property

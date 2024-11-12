@@ -468,8 +468,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     '_baseGet%s': Translation.TranslatedPropertyGetter
   }
 
-  @security.protected(Permissions.ModifyPortalContent)
   @classmethod
+  @security.protected(Permissions.ModifyPortalContent)
   def applyDefinitionOnAccessorHolder(cls,
                                       property_dict,
                                       accessor_holder,
@@ -680,8 +680,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
 
     return zodb_property_dict
 
-  @security.protected(Permissions.ModifyPortalContent)
   @classmethod
+  @security.protected(Permissions.ModifyPortalContent)
   def importFromFilesystemDefinition(cls, context, filesystem_property_dict):
     """
     Create a new property on the given context from the given

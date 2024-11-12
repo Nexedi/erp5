@@ -138,8 +138,8 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
     """
     yield {}
 
-  @security.protected(Permissions.AccessContentsInformation)
   @classmethod
+  @security.protected(Permissions.AccessContentsInformation)
   def importFromFilesystemDefinition(cls, context, filesystem_definition_dict):
     """
     Import the filesystem definition to a ZODB Constraint, without its
