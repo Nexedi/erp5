@@ -255,9 +255,10 @@
       var gadget = this, child_gadget, content_dict;
       if (gadget.state.form_definition.portal_type_dict.custom_submit) {
         return gadget.getDeclaredGadget('erp5_pt_gadget')
-          .push(function (result) {
-            child_gadget = result;
-            return child_gadget.getContent();
+          .push(function (child_gadget) {
+            if (child_gadget.state.editable)
+              return child_gadget.getContent();
+            return {};
           })
           .push(function (result) {
             content_dict = result;
