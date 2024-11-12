@@ -59,7 +59,7 @@ class ERP5RoleManager( BasePlugin ):
   #
   #   IRolesPlugin implementation
   #
-  security.declarePrivate( 'getRolesForPrincipal' )
+  @security.private
   def getRolesForPrincipal( self, principal, request=None ):
     """ See IRolesPlugin.
     We only ever return Member for every principal

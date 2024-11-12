@@ -65,11 +65,11 @@ class InteractionWorkflow(Workflow):
   # (GuardMixin.checkGuard())
   isManagerBypass = ConstantGetter('isManagerBypass', value=False)
 
-  security.declarePrivate('notifyCreated')
+  @security.private
   def notifyCreated(self, ob):
     pass
 
-  security.declareProtected(Permissions.View, 'getChainedPortalTypeList')
+  @security.protected(Permissions.View)
   def getChainedPortalTypeList(self):
     """
     Returns the list of portal types that are chained to this
@@ -82,18 +82,18 @@ class InteractionWorkflow(Workflow):
         portal_type_list.append(portal_type.getId())
     return portal_type_list
 
-  security.declarePrivate('listObjectActions')
+  @security.private
   def listObjectActions(self, info):
     return []
 
-  security.declarePrivate('_changeStateOf')
+  @security.private
   def _changeStateOf(self, ob, tdef=None, kwargs=None) :
     """
     InteractionWorkflow is stateless. Thus, this function should do nothing.
     """
     return
 
-  security.declarePrivate('isInfoSupported')
+  @security.private
   def isInfoSupported(self, ob, name):
     '''
     Returns a true value if the given info name is supported.
@@ -103,7 +103,7 @@ class InteractionWorkflow(Workflow):
         return 0
     return 1
 
-  security.declarePrivate('getInfoFor')
+  @security.private
   def getInfoFor(self, ob, name, default):
     '''
     Allows the user to request information provided by the
@@ -131,7 +131,7 @@ class InteractionWorkflow(Workflow):
 
     return value
 
-  security.declarePrivate('isWorkflowMethodSupported')
+  @security.private
   def isWorkflowMethodSupported(self, ob, tid):
     '''
     Returns a true value if the given workflow method
@@ -148,7 +148,7 @@ class InteractionWorkflow(Workflow):
           return 0
     return Workflow._checkTransitionGuard(self, tdef, ob, **kw)
 
-  security.declarePrivate('getValidRoleList')
+  @security.private
   def getValidRoleList(self):
     return sorted(self.getPortalObject().acl_users.valid_roles())
 
@@ -159,37 +159,37 @@ class InteractionWorkflow(Workflow):
   def _getWorkflowStateOf(self, ob, id_only=0):
     return None
 
-  security.declarePrivate('getScriptValueList')
+  @security.private
   def getScriptValueList(self):
     return self.objectValues(portal_type='Workflow Script')
 
-  security.declarePrivate('getTransitionValueByReference')
+  @security.private
   def getTransitionValueByReference(self, transition_id):
       return self._getOb('interaction_' + transition_id, default=None)
 
-  security.declarePrivate('getTransitionValueList')
+  @security.private
   def getTransitionValueList(self):
     return self.objectValues(portal_type="Interaction Workflow Interaction")
 
-  security.declarePrivate('getTransitionValueByReference')
+  @security.private
   def getTransitionValueByReference(self, transition_id):
       return self._getOb('interaction_' + transition_id, default=None)
 
-  security.declarePrivate('getTransitionValueList')
+  @security.private
   def getTransitionValueList(self):
     return self.objectValues(portal_type="Interaction Workflow Interaction")
 
-  security.declarePrivate('getTransitionReferenceList')
+  @security.private
   def getTransitionReferenceList(self):
     return [ob.getReference() for ob in self.objectValues(portal_type="Interaction Workflow Interaction")]
 
-  security.declarePrivate('notifyWorkflowMethod')
+  @security.private
   def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     """ InteractionWorkflow is stateless. Thus, this function should do nothing.
     """
     pass
 
-  security.declarePrivate('notifyBefore')
+  @security.private
   def notifyBefore(self, ob, transition_list, args=None, kw=None):
     '''
     Notifies this workflow of an action before it happens,
@@ -220,7 +220,7 @@ class InteractionWorkflow(Workflow):
         script(sci)  # May throw an exception.
     return filtered_transition_list
 
-  security.declarePrivate('notifySuccess')
+  @security.private
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     """
     Notifies this workflow that an action has taken place.
@@ -311,7 +311,7 @@ class InteractionWorkflow(Workflow):
       finally:
         setSecurityManager(current_security_manager)
 
-  security.declarePrivate('activeScript')
+  @security.private
   def activeScript(self, script_name, ob_url, status, tdef_id):
     # BBB for when an upgrade to callInterationScript still has unexecuted
     # activeScript activities leftover from the previous code.
@@ -322,7 +322,7 @@ class InteractionWorkflow(Workflow):
       tdef_id=tdef_id,
     )
 
-  security.declarePrivate('callInterationScript')
+  @security.private
   def callInterationScript(self, script_name, ob, status, tdef_id):
     self._getOb(script_name)(
       StateChangeInfo(
@@ -332,7 +332,7 @@ class InteractionWorkflow(Workflow):
       ),
     )
 
-  security.declarePrivate('isActionSupported')
+  @security.private
   def isActionSupported(self, ob, action, **kw):
     '''
     Returns a true value if the given action name
@@ -350,20 +350,18 @@ class InteractionWorkflow(Workflow):
         return 1
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-    'getStateValueByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStateValueByReference(self, reference):
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-    'getStateValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStateValueList(self):
     return []
 
   def _checkConsistency(self, fixit=False):
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')
+  @security.protected(Permissions.AccessContentsInformation)
   def showAsXML(self, root=None):
     from lxml import etree
     from lxml.etree import Element, SubElement

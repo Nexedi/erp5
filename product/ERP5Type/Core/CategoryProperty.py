@@ -53,9 +53,8 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.Reference)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'importFromFilesystemDefinition')
   @classmethod
+  @security.protected(Permissions.AccessContentsInformation)
   def importFromFilesystemDefinition(cls, context, category_name):
     """
     Set the Reference from a filesystem definition of a property
@@ -241,8 +240,7 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
     if category_id not in accessor_holder._categories:
       accessor_holder._categories.append(category_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'applyOnAccessorHolder')
+  @security.protected(Permissions.AccessContentsInformation)
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
     self.applyDefinitionOnAccessorHolder(accessor_holder,
                                          self.getReference(),

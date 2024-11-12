@@ -121,7 +121,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
 
     return text
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asSubjectText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asSubjectText(self, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
     """
       Converts the subject of the document to a textual representation.
@@ -208,7 +208,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       # text_content is not set, return empty string instead of None
       return original_mime_type, ''
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentBaseURL(self):
     """
         Returns the content base URL based on the actual content
@@ -225,7 +225,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
           return str(base_list[0])
     return Document.getContentBaseURL(self)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBaseData')
+  @security.protected(Permissions.ModifyPortalContent)
   def setBaseData(self, value):
     """Store base_data into text_content
     """
@@ -237,7 +237,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
   security.declareProtected(Permissions.ModifyPortalContent, '_baseSetBaseData')
   _baseSetBaseData = _setBaseData
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBaseContentType')
+  @security.protected(Permissions.ModifyPortalContent)
   def setBaseContentType(self, value):
     """store value into content_type
     """
@@ -249,7 +249,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
   security.declareProtected(Permissions.ModifyPortalContent, '_baseSetBaseContentType')
   _baseSetBaseContentType = _setBaseContentType
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseData(self, default=_MARKER):
     """
     """
@@ -262,13 +262,13 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       text_content = str2bytes(text_content)
     return text_content
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasBaseData(self):
     """
     """
     return self.hasTextContent()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentType(self, default=_MARKER): # pylint: disable=arguments-differ
     """Backward compatibility, read content_type
     from text_format property
@@ -287,7 +287,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         return self._baseGetContentType(default)
 
   # base_convertable support
-  security.declareProtected(Permissions.AccessContentsInformation, 'isSupportBaseDataConversion')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSupportBaseDataConversion(self):
     """
     """
@@ -381,7 +381,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     self._setBaseContentType(content_type)
     return message
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTextContent(self, default=_MARKER):
     """Overridden method to check permission to access content in raw format
     """
@@ -392,7 +392,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       return self._baseGetTextContent(default)
 
   # Backward compatibility for replacement of text_format by content_type
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTextFormat(self, default=_MARKER):
     """
     """
@@ -400,7 +400,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
               'Usage of text_format is deprecated, use content_type instead')
     return self.getContentType(default)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setTextFormat')
+  @security.protected(Permissions.ModifyPortalContent)
   def setTextFormat(self, value):
     """
     """
@@ -408,7 +408,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
               'Usage of text_format is deprecated, use content_type instead')
     return self.setContentType(value)
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setTextFormat')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setTextFormat(self, value):
     """
     """

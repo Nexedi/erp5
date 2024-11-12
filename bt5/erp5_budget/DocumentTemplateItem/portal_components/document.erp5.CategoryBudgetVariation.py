@@ -55,14 +55,12 @@ class CategoryBudgetVariation(BudgetVariation):
 
   # zope.interface.implements(BudgetVariation, )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asBudgetPredicate')
+  @security.protected(Permissions.AccessContentsInformation)
   def asBudgetPredicate(self):
     """This budget variation in a predicate
     """
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCellRangeForBudgetLine')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
     """The cell range added by this variation
     """
@@ -72,8 +70,7 @@ class CategoryBudgetVariation(BudgetVariation):
       return [[(i[1], i[0]) for i in item_list if i[1] in variation_category_list]]
     return [[i[1] for i in item_list if i[1] in variation_category_list]]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConsumptionCellRangeForBudgetLine')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConsumptionCellRangeForBudgetLine(self, budget_line, matrixbox=0, engaged_budget=False):
     """The cell range added by this variation for consumption
     """
@@ -106,8 +103,7 @@ class CategoryBudgetVariation(BudgetVariation):
       return [[(i[1], i[0]) for i in item_list if i[0] in used_node_item_set]]
     return [[i[1] for i in item_list if i[1] in used_node_item_set]]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryQueryDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
@@ -151,8 +147,7 @@ class CategoryBudgetVariation(BudgetVariation):
 
     return query_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryListQueryDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryListQueryDict(self, budget_line):
     """Returns the query dict to pass to simulation query for a budget line
     """
@@ -205,8 +200,7 @@ class CategoryBudgetVariation(BudgetVariation):
       return query_dict
     return {}
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBudgetVariationRangeCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBudgetVariationRangeCategoryList(self, _):
     """Returns the Variation Range Category List that can be applied to this
     budget.
@@ -228,8 +222,7 @@ class CategoryBudgetVariation(BudgetVariation):
                                 checked_permission='View')
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBudgetLineVariationRangeCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBudgetLineVariationRangeCategoryList(self, budget_line):
     """Returns the Variation Range Category List that can be applied to this
     budget line.
@@ -260,8 +253,7 @@ class CategoryBudgetVariation(BudgetVariation):
     return getattr(portal.portal_categories.unrestrictedTraverse(base_category),
                         item_list_method)(**item_list_method_parameter_dict)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'initializeBudgetLine')
+  @security.protected(Permissions.ModifyPortalContent)
   def initializeBudgetLine(self, budget_line):
     """Initialize a budget line
     """
@@ -279,8 +271,7 @@ class CategoryBudgetVariation(BudgetVariation):
       budget_line.setMembershipCriterionBaseCategoryList(
           budget_line_membership_criterion_base_category_list)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'initializeBudget')
+  @security.protected(Permissions.ModifyPortalContent)
   def initializeBudget(self, budget):
     """Initialize a budget.
     """

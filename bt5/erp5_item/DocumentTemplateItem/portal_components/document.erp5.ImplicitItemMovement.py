@@ -15,8 +15,7 @@ class ImplicitItemMovement(DeliveryLine):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
       Returns 1 if this needs to be accounted
@@ -25,8 +24,7 @@ class ImplicitItemMovement(DeliveryLine):
     """
     return not self.hasCellContent()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRootDeliveryValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootDeliveryValue(self):
     """
     Returns the root delivery responsible of this line

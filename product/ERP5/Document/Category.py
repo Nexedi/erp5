@@ -145,8 +145,7 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
       return None
 
     # Experimental - WebDAV browsing support - ask JPS
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'experimental_listDAVObjects')
+    @security.protected(Permissions.AccessContentsInformation)
     def experimental_listDAVObjects(self):
       """
       """

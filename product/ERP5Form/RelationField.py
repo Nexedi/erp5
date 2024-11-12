@@ -147,7 +147,7 @@ class RelationStringField(ZMIField):
   widget = RelationStringFieldWidgetInstance
   validator = RelationStringFieldValidatorInstance
 
-  security.declareProtected('Access contents information', 'get_orig_value')
+  @security.protected('Access contents information')
   def get_orig_value(self, id):
     """
     Get value for id; don't do any override calculation.
@@ -160,7 +160,7 @@ class RelationStringField(ZMIField):
       result = ZMIField.get_orig_value(self, id)
     return result
 
-  security.declareProtected('Access contents information', 'get_value')
+  @security.protected('Access contents information')
   def get_value(self, id, REQUEST=None, **kw):
     """Get value for id.
 

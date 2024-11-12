@@ -51,8 +51,7 @@ class QuantityUnitConversionGroup(XMLObject):
                     , PropertySheet.Amount
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self):
     """
       Set a title that includes the Quantity Unit

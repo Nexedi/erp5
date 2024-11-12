@@ -84,7 +84,7 @@ class ApparelMeasurement(XMLObject, XMLMatrix, Image):
     def manage_beforeDelete(self, item, container):
       Image.manage_beforeDelete(self, item, container)
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setMeasureList')
+    @security.protected(Permissions.ModifyPortalContent)
     def _setMeasureList(self,value):
       self._categorySetMeasureList(value)
       # XXX Use interaction workflow instead

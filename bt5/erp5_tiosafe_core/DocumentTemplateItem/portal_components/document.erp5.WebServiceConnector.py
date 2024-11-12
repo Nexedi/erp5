@@ -50,14 +50,14 @@ class WebServiceConnector(XMLObject):
                       , PropertySheet.WebServiceConnector
                       )
 
-  security.declarePublic('reset')
+  @security.public
   def reset(self):
     """ Reset volatile variable
     """
     if getattr(self, '_v_conn', None) is not None:
       delattr(self, '_v_conn')
 
-  security.declarePublic('getConnection')
+  @security.public
   def getConnection(self):
     """ Return a connection to a web service
     """

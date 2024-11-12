@@ -95,8 +95,7 @@ class ImmobilisableItem(Item, Amount):
         return 'planned'
     return 'draft'
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getImmobilisationRelatedMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImmobilisationRelatedMovementList(self,
                                            from_date = None,
                                            to_date = None,
@@ -225,8 +224,7 @@ class ImmobilisableItem(Item, Amount):
         return None
     return organisation
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getImmobilisationMovementValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImmobilisationMovementValueList(self,
                                          from_date=None,
                                          to_date=None,
@@ -242,8 +240,7 @@ class ImmobilisableItem(Item, Amount):
                                                      filter_valid=filter_valid,
                                                      **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getUnfilteredImmobilisationMovementValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUnfilteredImmobilisationMovementValueList(self, from_date=None, to_date=None, **kw):
     """
       Returns a list of immobilisation applied to the current item from date to date
@@ -253,8 +250,7 @@ class ImmobilisableItem(Item, Amount):
                                                    to_date=to_date,
                                                    filter_valid=0, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPastImmobilisationMovementValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPastImmobilisationMovementValueList(self, from_date=None, at_date=None, **kw):
     """
        Returns a list of immobilisation movements applied to current item
@@ -265,8 +261,7 @@ class ImmobilisableItem(Item, Amount):
                                                      to_date=at_date, **kw )
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureImmobilisationMovementValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureImmobilisationMovementValueList(self, to_date=None, at_date=None, from_movement=None, **kw):
     """
       Returns a list of immobilisation movements applied to current item
@@ -282,8 +277,7 @@ class ImmobilisableItem(Item, Amount):
     return result
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getLastImmobilisationMovementValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLastImmobilisationMovementValue(self, at_date=None, **kw):
     """
       Returns the last immobilisation movement before the given date, or now
@@ -293,8 +287,7 @@ class ImmobilisableItem(Item, Amount):
       return past_list[-1]
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getNextImmobilisationMovementValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNextImmobilisationMovementValue(self, at_date=None, from_movement=None, **kw):
     """
       Returns the first immobilisation movement after the given date, or now
@@ -309,8 +302,7 @@ class ImmobilisableItem(Item, Amount):
       return future_list[0]
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getImmobilisationPeriodList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImmobilisationPeriodList(self, from_date=None, to_date=None, **kw):
     """
       Returns a list of dictionaries representing immobilisation periods for the object
@@ -603,8 +595,7 @@ class ImmobilisableItem(Item, Amount):
             tuple([(key,kw[key]) for key in kw_key_list]) ] = immo_period_list
     return immo_period_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getLastImmobilisationPeriod')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLastImmobilisationPeriod(self, to_date=None, **kw):
     """
       Returns the current immobilisation period, or the last one if the
@@ -616,21 +607,18 @@ class ImmobilisableItem(Item, Amount):
       return None
     return period_list[-1]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isCurrentlyImmobilised')
+  @security.protected(Permissions.AccessContentsInformation)
   def isCurrentlyImmobilised(self, **kw):
     """ Returns true if the item is immobilised at this time """
     return self.isImmobilised(at_date = DateTime(), **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isNotCurrentlyImmobilised')
+  @security.protected(Permissions.AccessContentsInformation)
   def isNotCurrentlyImmobilised(self, **kw):
     """ Returns true if the item is not immobilised at this time """
     return not self.isCurrentlyImmobilised(**kw)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isImmobilised')
+  @security.protected(Permissions.AccessContentsInformation)
   def isImmobilised(self, at_date=None, **kw):
     """
       Returns true if the item is immobilised at the given date.
@@ -647,16 +635,14 @@ class ImmobilisableItem(Item, Amount):
       return 0
     return 1
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentRemainingAmortisationDuration')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentRemainingAmortisationDuration(self, **kw):
     """ Returns the calculated remaining amortisation duration for this item
           at the current time.
     """
     return self.getRemainingAmortisationDuration(at_date=DateTime(), **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRemainingAmortisationDuration')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRemainingAmortisationDuration(self, at_date=None, immo_period_list=None, **kw):
     """
       Returns the calculated remaining amortisation duration for the item.
@@ -683,8 +669,7 @@ class ImmobilisableItem(Item, Amount):
       return int(remaining_duration)
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRemainingDurability')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRemainingDurability(self, at_date=None, immo_period_list=None, **kw):
     """
       Returns the durability of the item at the given date, or now.
@@ -757,8 +742,7 @@ class ImmobilisableItem(Item, Amount):
       return start_durability - consumpted_durability * current_consumpted_time / consumpted_time
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentRemainingDurability')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentRemainingDurability(self, **kw):
     """
       Returns the remaining durability at the current date
@@ -766,8 +750,7 @@ class ImmobilisableItem(Item, Amount):
     return self.getRemainingDurability(at_date=DateTime(), **kw)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAmortisationPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAmortisationPrice(self, at_date=None, with_currency=0, **kw):
     """
       Returns the deprecated value of item at given date, or now.
@@ -1017,8 +1000,7 @@ class ImmobilisableItem(Item, Amount):
       return '%0.2f %s' % (returned_price, currency)
     return returned_price
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentAmortisationPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentAmortisationPrice(self, with_currency=0, **kw):
     """ Returns the deprecated value of item at current time """
     return self.getAmortisationPrice(at_date=DateTime(),
@@ -1058,8 +1040,7 @@ class ImmobilisableItem(Item, Amount):
     # It is time to expand it
     my_applied_rule.expand('immediate') # XXX: can it be done by activity ?
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'expandAmortisation')
+  @security.protected(Permissions.AccessContentsInformation)
   def expandAmortisation(self,**kw):
     """
       Calculate the amortisation annuities for the item
@@ -1084,8 +1065,7 @@ class ImmobilisableItem(Item, Amount):
       after_tag='expand_amortisation'
     ).immediateExpandAmortisation()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'immediateExpandAmortisation')
+  @security.protected(Permissions.AccessContentsInformation)
   def immediateExpandAmortisation(self):
     """
       Calculate the amortisation annuities for the item
@@ -1101,7 +1081,7 @@ class ImmobilisableItem(Item, Amount):
           delivery.updateImmobilisationState()
       self.activate().expandAmortisation(activate_kw=activate_kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionMovementValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSectionMovementValueList(self, include_to_date=0, **kw):
     """
       Return the list of successive movements affecting
@@ -1135,7 +1115,7 @@ class ImmobilisableItem(Item, Amount):
             movement_list.append(movement)
     return movement_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionChangeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSectionChangeList(self, at_date=None, **kw):
     """
       Return the list of successive owners of the item with
@@ -1167,7 +1147,7 @@ class ImmobilisableItem(Item, Amount):
                           'movement' : movement } )
     return owner_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSectionValue(self, at_date=None, **kw):
     """
       Return the owner of the item at the given date
@@ -1178,7 +1158,7 @@ class ImmobilisableItem(Item, Amount):
       return owner_list[-1]['owner']
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentSectionValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentSectionValue(self, **kw):
     """
       Return the current owner of the item

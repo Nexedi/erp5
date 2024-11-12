@@ -240,8 +240,7 @@ class Workflow(XMLObject):
     'Workflow',
   )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReference(self):
     """
     For a Workflow, 'reference' is the same as ID. This getter is defined here
@@ -259,7 +258,7 @@ class Workflow(XMLObject):
   def cb_isMoveable(self):
     return self.cb_userHasCopyOrMovePermission()
 
-  security.declarePrivate('notifyCreated')
+  @security.private
   def notifyCreated(self, ob):
     """
     Notifies this workflow after an object has been created and added.
@@ -269,15 +268,14 @@ class Workflow(XMLObject):
     except (ObjectDeleted,ObjectMoved):
       pass
 
-  security.declarePublic('getDateTime')
+  @security.public
   def getDateTime(self):
     """
     Return current date time.
     """
     return DateTime()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateChangeInformation')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStateChangeInformation(self, ob, state, transition=None):
     """
     Return an object used for variable tales expression.
@@ -291,7 +289,7 @@ class Workflow(XMLObject):
                           transition_url=transition_url,
                           state=state)
 
-  security.declarePrivate('isWorkflowMethodSupported')
+  @security.private
   def isWorkflowMethodSupported(self, ob, transition_reference, state=None):
     """
     Returns a true value if the given workflow method
@@ -312,7 +310,7 @@ class Workflow(XMLObject):
         return True
     return False
 
-  security.declarePrivate('isActionSupported')
+  @security.private
   def isActionSupported(self, ob, action, state=None, **kw):
     """
     Returns a true value if the given action name
@@ -332,7 +330,7 @@ class Workflow(XMLObject):
         return 1
     return 0
 
-  security.declarePrivate('isInfoSupported')
+  @security.private
   def isInfoSupported(self, ob, name):
     """
     Returns a true value if the given info name is supported
@@ -354,7 +352,7 @@ class Workflow(XMLObject):
           break
     return transition
 
-  security.declarePrivate('updateRoleMappingsFor')
+  @security.private
   def updateRoleMappingsFor(self, ob, **kw):
     # Patch updateRoleMappingsFor so that if 2 workflows define security, then
     # we should do an AND operation between each roles list for a given
@@ -480,7 +478,7 @@ class Workflow(XMLObject):
   def getManagedRoleList(self):
     return sorted(self.getPortalObject().acl_users.valid_roles())
 
-  security.declarePrivate('doActionFor')
+  @security.private
   def doActionFor(self, ob, action, comment='', **kw):
     """
     Allows the user to request a workflow action.  This method
@@ -534,7 +532,7 @@ class Workflow(XMLObject):
       # Re-raise.
       raise moved_exc
 
-  security.declarePrivate('listObjectActions')
+  @security.private
   def listObjectActions(self, info):
     """
     Allows this workflow to
@@ -574,7 +572,7 @@ class Workflow(XMLObject):
     result.sort(key=lambda x: x['id'])
     return result
 
-  security.declarePrivate('getWorklistVariableMatchDict')
+  @security.private
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     """
       Return a dict which has an entry per worklist definition
@@ -655,7 +653,7 @@ class Workflow(XMLObject):
       return variable_match_dict
     return None
 
-  security.declarePrivate('getInfoFor')
+  @security.private
   def getInfoFor(self, ob, name, default):
     """
     Allows the user to request information provided by the
@@ -680,8 +678,7 @@ class Workflow(XMLObject):
 
     return value
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentStatusDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentStatusDict(self, document):
     """
     Get the current status dict. It's the same as _getStatusOf.
@@ -721,98 +718,81 @@ class Workflow(XMLObject):
     else:
       return state
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableValueDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariableValueDict(self):
     return {variable.getReference(): variable
             for variable in self.objectValues(portal_type="Workflow Variable")}
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariableValueList(self):
     return self.objectValues(portal_type="Workflow Variable")
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableReferenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariableReferenceList(self):
     return [variable.getReference()
             for variable in self.objectValues(portal_type="Workflow Variable")]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableValueByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariableValueByReference(self, reference):
     return self._getOb('variable_' + reference, default=None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateValueByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStateValueByReference(self, reference):
     return self._getOb('state_' + reference, default=None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStateValueList(self):
     return self.objectValues(portal_type="Workflow State")
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateReferenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStateReferenceList(self):
     return [state.getReference()
             for state in self.objectValues(portal_type="Workflow State")]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorklistValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWorklistValueList(self):
     return self.objectValues(portal_type="Worklist")
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorklistReferenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWorklistReferenceList(self):
     return [w.getReference() for w in self.objectValues(portal_type="Worklist")]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionIdByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionIdByReference(self, reference):
     return 'transition_' + reference
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getScriptIdByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getScriptIdByReference(self, reference):
     from Products.ERP5Type.Core.WorkflowScript import SCRIPT_PREFIX
     return SCRIPT_PREFIX + reference
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getScriptValueByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getScriptValueByReference(self, reference):
     from Products.ERP5Type.Core.WorkflowScript import SCRIPT_PREFIX
     return self._getOb(SCRIPT_PREFIX + reference, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorklistValueByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWorklistValueByReference(self, reference):
     return self._getOb('worklist_' + reference, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionValueByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionValueByReference(self, reference):
     return self._getOb('transition_' + reference, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionValueList(self):
     return self.objectValues(portal_type="Workflow Transition")
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionReferenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionReferenceList(self):
     return [transition.getReference() for transition
             in self.objectValues(portal_type="Workflow Transition")]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getScriptValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getScriptValueList(self):
     return self.objectValues(portal_type='Workflow Script')
 
-  security.declarePrivate('notifyWorkflowMethod')
+  @security.private
   def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     """ Execute workflow methods.
     """
@@ -843,7 +823,7 @@ class Workflow(XMLObject):
         activate_kw = {}
       ob.reindexObject(activate_kw=activate_kw)
 
-  security.declarePrivate('notifyBefore')
+  @security.private
   def notifyBefore(self, ob, transition_list, args=None, kw=None):
     """
     Notifies this workflow of an action before it happens,
@@ -853,14 +833,14 @@ class Workflow(XMLObject):
     """
     pass
 
-  security.declarePrivate('notifySuccess')
+  @security.private
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     """
     Notifies this workflow that an action has taken place.
     """
     pass
 
-  security.declarePrivate('notifyException')
+  @security.private
   def notifyException(self, ob, action, exc):
     """
     Notifies this workflow that an action failed.
@@ -1034,7 +1014,7 @@ class Workflow(XMLObject):
     else:
       return new_state
 
-  security.declarePrivate('wrapWorkflowMethod')
+  @security.private
   def wrapWorkflowMethod(self, ob, method_id, func, args, kw):
     """
     Allows the user to request a workflow action.  This method
@@ -1083,7 +1063,7 @@ class Workflow(XMLObject):
                 format(variable_reference=variable_reference)))
     return consistency_message_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')
+  @security.protected(Permissions.AccessContentsInformation)
   def showAsXML(self, root=None):
     from lxml import etree
     from lxml.etree import Element, SubElement
@@ -1326,10 +1306,9 @@ class Workflow(XMLObject):
       return root
     return etree.tostring(root, encoding='utf-8',
                           xml_declaration=True, pretty_print=True)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTypeListForWorkflow')
   # Get list of portal types for workflow
+
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTypeListForWorkflow(self):
     """
       Get list of portal types for workflow.
@@ -1401,8 +1380,7 @@ class Workflow(XMLObject):
     self.updateRoleMappingsFor(ob)
     return new_sdef
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCatalogVariablesFor')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCatalogVariablesFor(self, ob):
     """
     Allows this workflow to make workflow-specific variables
@@ -1454,8 +1432,7 @@ class Workflow(XMLObject):
         permission: permission_role_list_dict.get(permission, [])
         for permission in permission_list})
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSourceValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceValue(self):
     """
     returns the source object

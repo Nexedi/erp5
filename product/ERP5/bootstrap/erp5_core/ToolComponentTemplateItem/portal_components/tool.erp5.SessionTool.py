@@ -255,7 +255,7 @@ class SessionTool(BaseTool):
     session._updatecontext(self)
     return session
 
-  security.declarePrivate('getSession')
+  @security.private
   def getSession(self, session_id, session_duration=None):
     """ Return session object. """
     storage_plugin_ = self._getStoragePlugin()
@@ -281,7 +281,7 @@ class SessionTool(BaseTool):
       session = session.getValue()
     return session
 
-  security.declarePublic('newContent')
+  @security.public
   def newContent(self, id, **kw): # pylint: disable=redefined-builtin
     """ Create new session object. """
     session =  self.getSession(id)
@@ -289,7 +289,7 @@ class SessionTool(BaseTool):
     session.update(**kw)
     return session
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'manage_delObjects')
+  @security.protected(Permissions.AccessContentsInformation)
   def manage_delObjects(self, ids=(), REQUEST=None, *args, **kw):
     """ Delete session object. """
     storage_plugin_ = self._getStoragePlugin()

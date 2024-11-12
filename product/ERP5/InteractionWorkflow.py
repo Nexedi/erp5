@@ -142,7 +142,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       finally:
         setSecurityManager(current_security_manager)
 
-  security.declarePrivate('activeScript')
+  @security.private
   def activeScript(self, script_name, ob_url, status, tdef_id):
     # BBB for when an upgrade to callInterationScript still has unexecuted
     # activeScript activities leftover from the previous code.
@@ -153,7 +153,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       tdef_id=tdef_id,
     )
 
-  security.declarePrivate('callInterationScript')
+  @security.private
   def callInterationScript(self, script_name, ob, status, tdef_id):
     self.scripts[script_name](
       StateChangeInfo(
@@ -181,51 +181,51 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       return {}
     return self.variables
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getId(self):
     return self.id
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReference(self):
     return self.id
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self):
     return self.title
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDescription(self):
     return self.description
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionValueByReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionValueByReference(self, transition_id):
     if self.interactions is not None:
       return self.interactions.get(transition_id, None)
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionValueList(self):
     if self.interactions is not None:
       return self.interactions.values()
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionReferenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTransitionReferenceList(self):
     if self.interactions is not None:
       return self.interactions.objectIds()
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVariableValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariableValueList(self):
     if self.variables is not None:
       return self.variables.values()
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalType(self):
     return self.__class__.__name__
 
-  security.declarePrivate('showAsXML')
+  @security.private
   def showAsXML(self, root=None):
     from lxml.etree import Element, SubElement, tostring
     if root is None:

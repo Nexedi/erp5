@@ -37,12 +37,12 @@ class MTMultipart(MIMEMultipart):
         self.mto = mto
         self.mt = mt
 
-    security.declarePublic('send')
+    @security.public
     def send(self):
         "send ourselves using our MailTemplate's send method"
         return self.mt._send(self.mfrom,self.mto,self)
 
-    security.declarePublic('add_file')
+    @security.public
     def add_file(self,theFile=None,data=None,filename=None,content_type=None):
         "add a Zope file or Image to ourselves as an attachment"
         if theFile and data is not None:

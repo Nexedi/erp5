@@ -71,8 +71,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
   #############################################
   # Pricing methods
   #############################################
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPrice(self):
     # FIXME: this have to be done in an interaction wf
     if getattr(self, 'price', None) is None:
@@ -80,8 +79,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
     # Return the price
     return self.price
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self):
     """
       Returns the totals price for this line
@@ -96,8 +94,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
   def _getTotalPrice(self, context):
     return 0.0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """Supply Line are not accounted.
     """
@@ -112,23 +109,21 @@ class SupplyLine(Path, Amount, XMLMatrix):
   # XMLMatrix methods
   # XXX to be removed if possible
   #############################################
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasCellContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCellContent(self, base_id='path'):
     """
         This method can be overriden
     """
     return XMLMatrix.hasCellContent(self, base_id=base_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCellValueList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellValueList(self, base_id='path'):
     """
         This method can be overriden
     """
     return XMLMatrix.getCellValueList(self, base_id=base_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCell')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCell(self, *kw , **kwd):
     """
         This method can be overriden
@@ -136,7 +131,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
     kwd.setdefault('base_id', 'path')
     return XMLMatrix.getCell(self, *kw, **kwd)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'newCell')
+  @security.protected(Permissions.ModifyPortalContent)
   def newCell(self, *kw, **kwd):
     """
         This method creates a new cell
@@ -147,8 +142,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
   ############################################################
   # Quantity predicate API
   ############################################################
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantityPredicateIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityPredicateIdList(self, price_parameter):
     """
       Return predicate id related to a price parameter.
@@ -166,8 +160,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
               if x.startswith(predicate_id_start_with)]
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantityPredicateValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityPredicateValueList(self, price_parameter):
     """
       Return predicate related to a price parameter.
@@ -176,8 +169,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
             self.getQuantityPredicateIdList(price_parameter)]
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantityStepList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityStepList(self, *args, **kw):
     """
       Return predicate step related to a price_parameter
@@ -191,8 +183,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
                    convertToUpperCase("%s_quantity_step" % price_parameter)
     return getattr(self, method_name)() or []
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateQuantityPredicate')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateQuantityPredicate(self, price_parameter):
     """
       Update the quantity predicate for this price parameter

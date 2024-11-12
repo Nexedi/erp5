@@ -43,8 +43,7 @@ class TimerServiceMixin(object):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSubscribed')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSubscribed(self):
     """Return True if we are subscribed to TimerService, otherwise return False
     """
@@ -52,7 +51,7 @@ class TimerServiceMixin(object):
     return service and \
       '/'.join(self.getPhysicalPath()) in service.lisSubscriptions()
 
-  security.declareProtected(Permissions.ManageProperties, 'subscribe')
+  @security.protected(Permissions.ManageProperties)
   def subscribe(self):
     """Subscribe to the global Timer Service"""
     service = getTimerService(self)
@@ -61,7 +60,7 @@ class TimerServiceMixin(object):
       return "Subscribed to Timer Service"
     return "TimerService not available"
 
-  security.declareProtected(Permissions.ManageProperties, 'unsubscribe')
+  @security.protected(Permissions.ManageProperties)
   def unsubscribe(self):
     """Unsubscribe from the global Timer Service"""
     service = getTimerService(self)
@@ -70,12 +69,12 @@ class TimerServiceMixin(object):
       return "Usubscribed from Timer Service"
     return "TimerService not available"
 
-  security.declarePrivate('manage_beforeDelete')
+  @security.private
   def manage_beforeDelete(self, *args, **kw):
     self.unsubscribe()
     super(TimerServiceMixin, self).manage_beforeDelete(*args, **kw)
 
-  security.declarePrivate('manage_afterAdd')
+  @security.private
   def manage_afterAdd(self, *args, **kw):
     self.subscribe()
     super(TimerServiceMixin, self).manage_afterAdd(*args, **kw)

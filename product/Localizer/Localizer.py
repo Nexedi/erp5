@@ -110,7 +110,7 @@ class Localizer(LanguageManager, Folder):
     #######################################################################
 
     # Get some data
-    security.declarePublic('get_supported_languages')
+    @security.public
     def get_supported_languages(self):
         """
         Get the supported languages, that is the languages that the
@@ -119,7 +119,7 @@ class Localizer(LanguageManager, Folder):
         return self._languages
 
 
-    security.declarePublic('get_selected_language')
+    @security.public
     def get_selected_language(self):
         """ """
         return lang_negotiator(self._languages) \
@@ -131,7 +131,7 @@ class Localizer(LanguageManager, Folder):
 ##    security.declareProtected('View management screens', 'manage_hookForm')
 ##    manage_hookForm = LocalDTMLFile('ui/Localizer_hook', globals())
 ##    security.declareProtected('Manage properties', 'manage_hook')
-    security.declarePrivate('manage_hook')
+    @security.private
     def manage_hook(self, hook=0):
         """ """
         if hook != self.hooked():
@@ -142,7 +142,7 @@ class Localizer(LanguageManager, Folder):
                 unregisterBeforeTraverse(aq_parent(self), self.meta_type)
 
 
-    security.declarePublic('hooked')
+    @security.public
     def hooked(self):
         """ """
         if queryBeforeTraverse(aq_parent(self), self.meta_type):
@@ -151,7 +151,7 @@ class Localizer(LanguageManager, Folder):
 
 
     # New code to control the language policy
-    security.declarePrivate('accept_cookie')
+    @security.private
     def accept_cookie(self, accept_language):
         """Add the language from a cookie."""
         lang = self.REQUEST.cookies.get('LOCALIZER_LANGUAGE', None)
@@ -159,7 +159,7 @@ class Localizer(LanguageManager, Folder):
             accept_language.set(lang, 2.0)
 
 
-    security.declarePrivate('accept_path')
+    @security.private
     def accept_path(self, accept_language):
         """Add the language from the path."""
         stack = self.REQUEST['TraversalRequestNameStack']
@@ -168,7 +168,7 @@ class Localizer(LanguageManager, Folder):
             accept_language.set(lang, 3.0)
 
 
-    security.declarePrivate('accept_url')
+    @security.private
     def accept_url(self, accept_language):
         """Add the language from the URL."""
         lang = self.REQUEST.form.get('LOCALIZER_LANGUAGE')
@@ -193,7 +193,7 @@ class Localizer(LanguageManager, Folder):
 
 
     # Changing the language, useful snippets
-    security.declarePublic('get_languages_map')
+    @security.public
     def get_languages_map(self):
         """
         Return a list of dictionaries, each dictionary has the language
@@ -220,10 +220,10 @@ class Localizer(LanguageManager, Folder):
                           'selected': x == ob_language})
 
         return langs
-
-
-    security.declarePublic('changeLanguage')
     changeLanguageForm = LocalDTMLFile('ui/changeLanguageForm', globals())
+
+
+    @security.public
     def changeLanguage(self, lang, goto=None, expires=None):
         """Change the user language to `lang`.
 
@@ -246,7 +246,7 @@ class Localizer(LanguageManager, Folder):
 
         response.redirect(goto)
 
-    security.declarePublic('translationContext')
+    @security.public
     @contextmanager
     def translationContext(self, lang):
       """Context manager to temporarily change the current language.
@@ -273,7 +273,7 @@ class Localizer(LanguageManager, Folder):
         if old_accept_language is not MARKER:
           request.set('AcceptLanguage', old_accept_language)
 
-    security.declarePublic('translate')
+    @security.public
     def translate(self, domain, msgid, lang=None, *args, **kw):
         """
         backward compatibility shim over zope.i18n.translate. Please avoid.

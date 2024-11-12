@@ -42,8 +42,7 @@ class HolidayAcquisition(Event):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoriatedQuantity(self, default=None, *args, **kw):
     default_quantity = self.getQuantity()
     if self.getProperty('is_total_holiday', False):

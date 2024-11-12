@@ -96,7 +96,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
   web_section_key = WEBSECTION_KEY
 
-  security.declareProtected(Permissions.View, '__bobo_traverse__')
+  @security.protected(Permissions.View)
   def __bobo_traverse__(self, request, name):
     """
         If no subobject is found through Folder API
@@ -130,21 +130,21 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
           '404.error.page')
     return document
 
-  security.declarePrivate( 'manage_beforeDelete' )
+  @security.private
   def manage_beforeDelete(self, item, container):
     if item is self:
       handle = self.meta_type + '/' + self.getId()
       BeforeTraverse.unregisterBeforeTraverse(item, handle)
     super(WebSection, self).manage_beforeDelete(item, container)
 
-  security.declarePrivate( 'manage_afterAdd' )
+  @security.private
   def manage_afterAdd(self, item, container):
     if item is self:
       handle = self.meta_type + '/' + self.getId()
       BeforeTraverse.registerBeforeTraverse(item, self._getTraversalHookClass()(), handle)
     super(WebSection, self).manage_afterAdd(item, container)
 
-  security.declarePrivate( 'manage_afterClone' )
+  @security.private
   def manage_afterClone(self, item):
     self._cleanupBeforeTraverseHooks()
     super(WebSection, self).manage_afterClone(item)
@@ -164,7 +164,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     for handle in handle_to_unregister_list:
       BeforeTraverse.unregisterBeforeTraverse(self, handle)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLayoutProperty(self, key, default=None):
     """
         A simple method to get a property of the current by
@@ -178,7 +178,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       section = section.aq_parent
     return default
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWebSectionValue(self):
     """
         Returns the current web section (ie. self) though containment acquisition.
@@ -193,7 +193,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     return not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout')
 
   # Default view display
-  security.declareProtected(Permissions.View, '__call__')
+  @security.protected(Permissions.View)
   def __call__(self):
     """
         If a Web Section has a default document, we render
@@ -269,7 +269,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     return Domain.__call__(self)
 
   # Layout Selection API
-  security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
+  @security.protected(Permissions.AccessContentsInformation)
   def getApplicableLayout(self):
     """
         The applicable layout on a section is the container layout.
@@ -277,7 +277,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     return self.getContainerLayout()
 
   # WebSection API
-  security.declareProtected(Permissions.View, 'getDefaultDocumentValue')
+  @security.protected(Permissions.View)
   def getDefaultDocumentValue(self):
     """
         Return the default document of the current
@@ -306,7 +306,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
     return result
 
-  security.declareProtected(Permissions.View, 'getDocumentValueList')
+  @security.protected(Permissions.View)
   def getDocumentValueList(self, **kw):
     """
         Return the list of documents which belong to the
@@ -338,7 +338,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
     return result
 
-  security.declareProtected(Permissions.View, 'getPermanentURL')
+  @security.protected(Permissions.View)
   def getPermanentURL(self, document, view=True):
     """
         Return a permanent URL of document in the context
@@ -369,7 +369,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
     return result
 
-  security.declareProtected(Permissions.View, 'getBreadcrumbItemList')
+  @security.protected(Permissions.View)
   def getBreadcrumbItemList(self, document=None):
     """
         Return a section dependent breadcrumb in the form
@@ -397,7 +397,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
     return result
 
-  security.declareProtected(Permissions.View, 'getSiteMapTree')
+  @security.protected(Permissions.View)
   def getSiteMapTree(self, **kw):
     """
         Return a site map tree section dependent breadcrumb in the

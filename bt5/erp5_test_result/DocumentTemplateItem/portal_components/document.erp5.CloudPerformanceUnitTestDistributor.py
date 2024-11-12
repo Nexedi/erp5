@@ -34,8 +34,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.ManagePortal,
-                            "cleanupInvalidatedTestNode")
+  @security.protected(Permissions.ManagePortal)
   def cleanupInvalidatedTestNode(self, test_node):
     """
     When a test node is invalidated, we keep current configuration. Since
@@ -43,7 +42,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     configuration
     """
 
-  security.declarePublic("optimizeConfiguration")
+  @security.public
   def optimizeConfiguration(self):
     """
     We are going to add test suites to test nodes.
@@ -65,7 +64,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     for test_node in test_node_list:
       test_node.setAggregateList(test_suite_list)
 
-  security.declarePublic("startTestSuite")
+  @security.public
   def startTestSuite(self,title, computer_guid=None, **kw):
     """
     give the list of test suite to start. We will take all test suites
@@ -80,7 +79,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
       config["test_suite_title"] = config["test_suite_title"] + "|%s" % title
     return json.dumps(config_list)
 
-  security.declarePublic("generateConfiguration")
+  @security.public
   def generateConfiguration(self, test_suite_title, batch_mode=0):
     """
     return the list of configuration to create instances, in the case of ERP5 unit tests,

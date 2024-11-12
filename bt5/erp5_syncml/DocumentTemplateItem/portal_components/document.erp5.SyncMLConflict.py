@@ -56,8 +56,7 @@ class SyncMLConflict(Base):
   def _getPortalSynchronizationTool(self):
     return self.getPortalObject().portal_synchronizations
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'applyPublisherValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def applyPublisherValue(self):
     """
     XXX-AUREL : Comment to be fixed
@@ -70,8 +69,7 @@ class SyncMLConflict(Base):
     if not signature.getConflictList():
       signature.resolveConflictWithMerge()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'applyPublisherDocument')
+  @security.protected(Permissions.AccessContentsInformation)
   def applyPublisherDocument(self):
     """
     XXX-AUREL : Comment to be fixed
@@ -82,24 +80,21 @@ class SyncMLConflict(Base):
       if c.getSubscriber() == subscriber:
         c.applyPublisherValue()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPublisherDocument')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPublisherDocument(self):
     """
     XXX-AUREL : Comment to be fixed
     """
     return self.getOriginValue()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPublisherDocumentPath')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPublisherDocumentPath(self):
     """
     XXX-AUREL : Comment to be fixed
     """
     return self.getOrigin()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSubscriberDocument')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubscriberDocument(self):
     """
     XXX-AUREL : Comment to be fixed
@@ -107,8 +102,7 @@ class SyncMLConflict(Base):
     return self.unrestrictedTraverse(
       self.getSubscriberDocumentPath())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSubscriberDocumentPath')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubscriberDocumentPath(self):
     """
     XXX-AUREL : Comment to be fixed
@@ -132,8 +126,7 @@ class SyncMLConflict(Base):
     copy_path = subscriber_document.getPhysicalPath()
     return copy_path
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'applySubscriberDocument')
+  @security.protected(Permissions.ModifyPortalContent)
   def applySubscriberDocument(self):
     """
     XXX Comment to be fixed
@@ -146,8 +139,7 @@ class SyncMLConflict(Base):
       if c.getSubscriber() == subscriber:
         c.applySubscriberValue()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'applySubscriberValue')
+  @security.protected(Permissions.ModifyPortalContent)
   def applySubscriberValue(self, document=None):
     """
     XXX Comment to be fixed

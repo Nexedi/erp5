@@ -206,7 +206,7 @@ class TypesTool(TypeProvider):
           return ob
     return None
 
-  security.declarePrivate('getActionListFor')
+  @security.private
   def getActionListFor(self, ob=None):
     """Return all actions applicable to the object"""
     if ob is not None:
@@ -226,7 +226,7 @@ class TypesTool(TypeProvider):
         return None
     return getattr(self, portal_type, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeClass')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTypeClass(self, context, temp=False):
     """
     Infer a portal type class from the context.
@@ -276,7 +276,7 @@ class TypesTool(TypeProvider):
 
     return sorted(type_set)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDocumentTypeList(self):
     """
     Return a list of Document types (including filesystem and ZODB Component
@@ -286,7 +286,7 @@ class TypesTool(TypeProvider):
     return self._getTypeList(('Document Component', 'Tool Component'),
                              document_class_registry)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMixinTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMixinTypeList(self):
     """
     Return a list of class names that can be used as Mixins
@@ -294,7 +294,7 @@ class TypesTool(TypeProvider):
     from Products.ERP5Type import mixin_class_registry
     return self._getTypeList('Mixin Component', mixin_class_registry)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getInterfaceTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInterfaceTypeList(self):
     """
     Return a list of class names that can be used as Interfaces
@@ -306,8 +306,7 @@ class TypesTool(TypeProvider):
       [name for name, _ in inspect.getmembers(interfaces,
                                               lambda x: isinstance(x, InterfaceClass))])
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'resetDynamicDocumentsOnceAtTransactionBoundary')
+  @security.protected(Permissions.ModifyPortalContent)
   def resetDynamicDocumentsOnceAtTransactionBoundary(self):
     """
     Schedule a single reset at the end of the transaction, only once.
@@ -327,8 +326,7 @@ class TypesTool(TypeProvider):
       tv[key] = None
       transaction.get().addBeforeCommitHook(self.resetDynamicDocuments)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'resetDynamicDocuments')
+  @security.protected(Permissions.ModifyPortalContent)
   def resetDynamicDocuments(self):
     """Resets all dynamic documents: force reloading erp.* classes
 

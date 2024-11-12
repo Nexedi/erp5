@@ -51,7 +51,7 @@ class RoundingTool(BaseTool):
 
   security = ClassSecurityInfo()
 
-  security.declarePublic('findRoundingModelValueList')
+  @security.public
   def findRoundingModelValueList(self, document, property_id=None, context=None):
     """
     Return a list of matched rounding models for `document` which is ordered
@@ -95,7 +95,7 @@ class RoundingTool(BaseTool):
           return [rounding_model]
     return result
 
-  security.declarePublic('getRoundingProxy')
+  @security.public
   def getRoundingProxy(self, document, context=None):
     """
     Return a rounding proxy object which getter methods returns rounded
@@ -106,7 +106,7 @@ class RoundingTool(BaseTool):
       target_object = rounding_model.getRoundingProxy(target_object)
     return target_object
 
-  security.declarePublic('getDecimalRoundingOptionItemList')
+  @security.public
   def getDecimalRoundingOptionItemList(self):
     """
     Return the possible decimal rounding option item list which is provided

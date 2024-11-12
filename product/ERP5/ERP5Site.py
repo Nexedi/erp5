@@ -338,7 +338,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     PortalObjectBase.__init__(self, id)
     self.creation_date = DateTime()
 
-  security.declarePublic('getCoreBusinessTemplateList')
+  @security.public
   def getCoreBusinessTemplateList(self):
     # Return the list of business templates expected to be installed when this
     # class is instanciated. Allows including these business templates in the
@@ -352,12 +352,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       'erp5_xhtml_style',
     ]
 
-  security.declarePrivate('reindexObject')
+  @security.private
   def reindexObject(self, idxs=[]):
     """from Products.CMFDefault.Portal"""
     pass
 
-  security.declarePublic('isSubtreeIndexable')
+  @security.public
   def isSubtreeIndexable(self):
     """
     Allow a container to preempt indexability of its content, without having
@@ -501,7 +501,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
 
     return _components
 
-  security.declareProtected(Permissions.View, 'view')
+  @security.protected(Permissions.View)
   def view(self):
     """
       Returns the default view.
@@ -533,7 +533,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
 
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
+  @security.protected(Permissions.AccessContentsInformation)
   def skinSuper(self, skin, id):
     if id[:1] != '_' and id[:3] != 'aq_':
       skin_info = SKINDATA.get(_thread.get_ident())
@@ -547,12 +547,11 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
           return skin_value.__of__(self)
     raise AttributeError(id)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isDeletable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDeletable(self, check_relation):
     return False
 
-  security.declarePrivate('manage_beforeDelete')
+  @security.private
   def manage_beforeDelete(self, item, container):
     # skin is setup during __before_publishing_traverse__, which
     # doesn't happen when the object is being deleted from the management
@@ -563,7 +562,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
                                                               item,
                                                               container)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
+  @security.protected(Permissions.ModifyPortalContent)
   def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
     """manage renaming an object while keeping coherency for contained
     and linked to objects inside the renamed object.
@@ -605,7 +604,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
     return False
 
-  security.declareProtected(Permissions.ManagePortal, 'enableRefererCheck')
+  @security.protected(Permissions.ManagePortal)
   def enableRefererCheck(self):
     """Enable a ReferCheckerBeforeTraverseHook to check users have valid
     HTTP_REFERER
@@ -621,7 +620,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     BeforeTraverse.unregisterBeforeTraverse(self,
                                         ReferCheckerBeforeTraverseHook.handle)
 
-  security.declareProtected(Permissions.ManagePortal, 'enableAuthorisationExtractor')
+  @security.protected(Permissions.ManagePortal)
   def enableAuthorisationExtractor(self):
     """
     Enable AutorisationExtractorBeforeTraverseHook.
@@ -632,7 +631,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       AutorisationExtractorBeforeTraverseHook.handle,
     )
 
-  security.declareProtected(Permissions.ManagePortal, 'disableAuthorisationExtractor')
+  @security.protected(Permissions.ManagePortal)
   def disableAuthorisationExtractor(self):
     """
     Disable AutorisationExtractorBeforeTraverseHook.
@@ -642,7 +641,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       AutorisationExtractorBeforeTraverseHook.handle,
     )
 
-  security.declareProtected(Permissions.ManagePortal, 'isAuthorisationExtractorEnabled')
+  @security.protected(Permissions.ManagePortal)
   def isAuthorisationExtractorEnabled(self):
     """
     Returns whether AutorisationExtractorBeforeTraverseHook is enabled.
@@ -658,31 +657,26 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
     return id in self.objectIds()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalObject')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalObject(self):
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getOriginalDocument')
+  @security.protected(Permissions.AccessContentsInformation)
   def getOriginalDocument(self):
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalType(self):
     return self.portal_type
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self):
     """
       Return the title.
     """
     return self.title
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVersionPriorityList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVersionPriorityList(self):
     """
     Return the Component version priorities defined on the site in descending
@@ -691,8 +685,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
     return getattr(self, '_version_priority_list', None) or ('erp5 | 0.0',)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVersionPriorityList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setVersionPriorityList(self, version_priority_tuple):
     """
     Set Version Priority List and make sure that erp5 version is always
@@ -731,8 +724,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   version_priority_list = property(getVersionPriorityList,
                                    setVersionPriorityList)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVersionPriorityNameList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVersionPriorityNameList(self):
     """
     Get only the version names ordered by priority and cache it as it is used
@@ -750,7 +742,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   # on an ERP5 Site, we can just use getProperty instead.
   _getProperty = PortalObjectBase.getProperty
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUid(self):
     """
       Returns the UID of the object. Eventually reindexes
@@ -761,8 +753,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
     return getattr(self, 'uid', 0)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getParentUid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentUid(self):
     """
       A portal has no parent
@@ -770,23 +761,23 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self.getUid()
 
   # Required to allow content creation outside folders
-  security.declareProtected(Permissions.View, 'getIdGroup')
+  @security.protected(Permissions.View)
   def getIdGroup(self):
     return None
 
   # Required to allow content creation outside folders
-  security.declareProtected(Permissions.ModifyPortalContent, 'setLastId')
+  @security.protected(Permissions.ModifyPortalContent)
   def setLastId(self, id):
     self.last_id = id
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getUrl')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUrl(self, REQUEST=None):
     """
       Returns the absolute path of an object
     """
     return '/'.join(self.getPhysicalPath())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRelativeUrl(self):
     """
       Returns the url of an object relative to the portal site.
@@ -797,13 +788,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
   getPath = getUrl
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'opaqueValues')
+  @security.protected(Permissions.AccessContentsInformation)
   def opaqueValues(self, *args, **kw):
     # XXX nonsense of inheriting from CMFSite that calls __before_traversal__
     # and tries to load subobjects of the portal too early
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchFolder(self, **kw):
     """
       Search the content of a folder by calling
@@ -813,7 +804,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       kw['parent_uid'] = self.uid
     return self.portal_catalog.searchResults(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'countFolder')
+  @security.protected(Permissions.AccessContentsInformation)
   def countFolder(self, **kw):
     """
       Count the content of a folder by calling
@@ -827,7 +818,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   def getOwnerInfo(self):
     return self.owner_info()
 
-  security.declarePublic('getOrderedGlobalActionList')
+  @security.public
   def getOrderedGlobalActionList(self, action_list):
     """
     Returns a dictionnary of actions, sorted by type of object
@@ -887,7 +878,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     # Fall back to the default.
     return getattr(ERP5Defaults, id, None)
 
-  security.declareProtected(Permissions.ManagePortal, 'getPromiseParameter')
+  @security.protected(Permissions.ManagePortal)
   def getPromiseParameter(self, section, option):
     """
     Read external promise parameters.
@@ -1001,8 +992,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
                                  cache_factory='erp5_content_medium')
     return getStateList(group)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDefaultSectionCategory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDefaultSectionCategory(self):
     """
     Return a default section category. This method is deprecated.
@@ -1018,8 +1008,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
 
     return section_category
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalResourceTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalResourceTypeList(self):
     """
       Return resource types.
@@ -1027,40 +1016,35 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('resource') or \
            self._getPortalConfiguration('portal_resource_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalSubVariationTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalSubVariationTypeList(self):
     """
       Return resource types.
     """
     return self._getPortalGroupedTypeList('sub_variation')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalSubVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalSubVariationBaseCategoryList(self):
     """
       Return variation base categories.
     """
     return self._getPortalGroupedCategoryList('sub_variation')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalSourceArrowBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalSourceArrowBaseCategoryList(self):
     """
       Return source arrow base categories.
     """
     return self._getPortalGroupedCategoryList('source_arrow')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDestinationArrowBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDestinationArrowBaseCategoryList(self):
     """
       Return destination arrow base categories.
     """
     return self._getPortalGroupedCategoryList('destination_arrow')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalVariationTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalVariationTypeList(self):
     """
       Return variation types.
@@ -1068,8 +1052,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('variation') or \
            self._getPortalConfiguration('portal_variation_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalNodeTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalNodeTypeList(self):
     """
       Return node types.
@@ -1077,8 +1060,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('node') or \
            self._getPortalConfiguration('portal_node_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalPaymentNodeTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPaymentNodeTypeList(self):
     """
       Return payment node types.
@@ -1086,8 +1068,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('payment_node') or \
            self._getPortalConfiguration('portal_payment_node_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalInvoiceTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalInvoiceTypeList(self):
     """
       Return invoice types.
@@ -1095,8 +1076,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('invoice') or \
            self._getPortalConfiguration('portal_invoice_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalOrderTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalOrderTypeList(self):
     """
       Return order types.
@@ -1104,8 +1084,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('order') or \
            self._getPortalConfiguration('portal_order_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalOpenOrderTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalOpenOrderTypeList(self):
     """
       Return open order types.
@@ -1113,8 +1092,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('open_order') or \
            self._getPortalConfiguration('portal_open_order_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDeliveryTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDeliveryTypeList(self):
     """
       Return delivery types.
@@ -1122,8 +1100,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('delivery') or \
            self._getPortalConfiguration('portal_delivery_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTransformationTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTransformationTypeList(self):
     """
       Return transformation types.
@@ -1131,8 +1108,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('transformation') or \
            self._getPortalConfiguration('portal_transformation_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalModelPathTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalModelPathTypeList(self):
     """
       Return model_path types.
@@ -1140,8 +1116,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('model_path') or \
            self._getPortalConfiguration('portal_model_path_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalVariationBaseCategoryList(self):
     """
       Return variation base categories.
@@ -1149,8 +1124,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('variation') or \
            self._getPortalConfiguration('portal_variation_base_category_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalOptionBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalOptionBaseCategoryList(self):
     """
       Return option base categories.
@@ -1158,8 +1132,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('option') or \
            self._getPortalConfiguration('portal_option_base_category_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalInvoiceMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalInvoiceMovementTypeList(self):
     """
       Return invoice movement types.
@@ -1167,8 +1140,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('invoice_movement') or \
            self._getPortalConfiguration('portal_invoice_movement_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTaxMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTaxMovementTypeList(self):
     """
       Return tax movement types.
@@ -1177,8 +1149,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
            self._getPortalConfiguration('portal_tax_movement_type_list')
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalOrderMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalOrderMovementTypeList(self):
     """
       Return order movement types.
@@ -1186,8 +1157,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('order_movement') or \
            self._getPortalConfiguration('portal_order_movement_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDeliveryMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDeliveryMovementTypeList(self):
     """
       Return delivery movement types.
@@ -1195,8 +1165,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('delivery_movement') or \
            self._getPortalConfiguration('portal_delivery_movement_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalSupplyTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalSupplyTypeList(self):
     """
       Return supply types.
@@ -1204,112 +1173,98 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('supply') or \
            self._getPortalConfiguration('portal_supply_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalConstraintTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalConstraintTypeList(self):
     """
       Return constraint types.
     """
     return self._getPortalGroupedTypeList('constraint')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalPropertyTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPropertyTypeList(self):
     """
       Return property types.
     """
     return self._getPortalGroupedTypeList('property')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalRuleTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalRuleTypeList(self):
     """
       Return rule types.
     """
     return self._getPortalGroupedTypeList('rule')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalProjectTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalProjectTypeList(self):
     """
       Return project types.
     """
     return self._getPortalGroupedTypeList('project')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDocumentTypeList(self):
     """
       Return document types.
     """
     return self._getPortalGroupedTypeList('document')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalEmbeddedDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalEmbeddedDocumentTypeList(self):
     """
       Return embedded document types.
     """
     return self._getPortalGroupedTypeList('embedded_document')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalWebDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalWebDocumentTypeList(self):
     """
       Return web page types.
     """
     return self._getPortalGroupedTypeList('web_document')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalFileDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalFileDocumentTypeList(self):
     """
       Return file document types.
     """
     return self._getPortalGroupedTypeList('file_document')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalRecentDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalRecentDocumentTypeList(self):
     """
       Return recent document types.
     """
     return self._getPortalGroupedTypeList('recent_document')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTemplateDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTemplateDocumentTypeList(self):
     """
       Return template document types.
     """
     return self._getPortalGroupedTypeList('template_document')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalMyDocumentTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalMyDocumentTypeList(self):
     """
       Return my document types.
     """
     return self._getPortalGroupedTypeList('my_document')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalCrawlerIndexTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalCrawlerIndexTypeList(self):
     """
       Return crawler index types.
     """
     return self._getPortalGroupedTypeList('crawler_index')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBudgetVariationTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalBudgetVariationTypeList(self):
     """
       Return budget variation types.
     """
     return self._getPortalGroupedTypeList('budget_variation')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalSupplyPathTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalSupplyPathTypeList(self):
     """
       Return supply path types.
@@ -1317,8 +1272,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('supply_path') or \
            self._getPortalConfiguration('portal_supply_path_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalAcquisitionMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalAcquisitionMovementTypeList(self):
     """
       Return acquisition movement types.
@@ -1329,8 +1283,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     r += self.getPortalInvoiceMovementTypeList()
     return tuple(r)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalMovementTypeList(self):
     """
       Return movement types.
@@ -1343,8 +1296,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     r.append('Simulation Movement')
     return tuple(r)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalSimulatedMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalSimulatedMovementTypeList(self):
     """
       Return simulated movement types.
@@ -1353,8 +1305,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     r.difference_update(self.getPortalContainerTypeList())
     return tuple(r)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalContainerTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalContainerTypeList(self):
     """
       Return container types.
@@ -1362,8 +1313,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('container') or \
            self._getPortalConfiguration('portal_container_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalContainerLineTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalContainerLineTypeList(self):
     """
       Return container line types.
@@ -1371,8 +1321,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('container_line') or \
            self._getPortalConfiguration('portal_container_line_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalItemTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalItemTypeList(self):
     """
       Return item types.
@@ -1380,8 +1329,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('item') or \
            self._getPortalConfiguration('portal_item_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDiscountTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDiscountTypeList(self):
     """
       Return discount types.
@@ -1389,8 +1337,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('discount') or \
            self._getPortalConfiguration('portal_discount_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalProductTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalProductTypeList(self):
     """
       Return physical goods types.
@@ -1398,8 +1345,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('product') or \
            self._getPortalConfiguration('portal_product_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalServiceTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalServiceTypeList(self):
     """
       Return immaterial services types.
@@ -1407,32 +1353,28 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('service') or \
            self._getPortalConfiguration('portal_service_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalSaleTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalSaleTypeList(self):
     """
     Return sale types.
     """
     return self._getPortalGroupedTypeList('sale')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalPurchaseTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPurchaseTypeList(self):
     """
     Return purchase types.
     """
     return self._getPortalGroupedTypeList('purchase')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalInternalTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalInternalTypeList(self):
     """
     Return internal types.
     """
     return self._getPortalGroupedTypeList('internal')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalAlarmTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalAlarmTypeList(self):
     """
       Return alarm types.
@@ -1440,8 +1382,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('alarm') or \
            self._getPortalConfiguration('portal_alarm_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalPaymentConditionTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPaymentConditionTypeList(self):
     """
       Return payment condition types.
@@ -1449,8 +1390,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('payment_condition') or \
            self._getPortalConfiguration('portal_payment_condition_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBalanceTransactionLineTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalBalanceTransactionLineTypeList(self):
     """
       Return balance transaction line types.
@@ -1459,24 +1399,21 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
            self._getPortalConfiguration(
                   'portal_balance_transaction_line_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDomainTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDomainTypeList(self):
     """
       Return domain types.
     """
     return self._getPortalGroupedTypeList('domain')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalPostTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPostTypeList(self):
     """
       Return post types.
     """
     return self._getPortalGroupedTypeList('post')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalCurrentInventoryStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalCurrentInventoryStateList(self):
     """
       Return current inventory states.
@@ -1484,8 +1421,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedStateList('current_inventory') or \
            self._getPortalConfiguration('portal_current_inventory_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTransitInventoryStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTransitInventoryStateList(self):
     """
       Return transit inventory states.
@@ -1493,8 +1429,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedStateList('transit_inventory') or \
            self._getPortalConfiguration('portal_transit_inventory_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDraftOrderStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDraftOrderStateList(self):
     """
       Return draft order states.
@@ -1502,8 +1437,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedStateList('draft_order') or \
            self._getPortalConfiguration('portal_draft_order_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalPlannedOrderStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPlannedOrderStateList(self):
     """
       Return planned order states.
@@ -1511,8 +1445,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedStateList('planned_order') or \
            self._getPortalConfiguration('portal_planned_order_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalReservedInventoryStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalReservedInventoryStateList(self):
     """
       Return reserved inventory states.
@@ -1520,8 +1453,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedStateList('reserved_inventory') or \
         self._getPortalConfiguration('portal_reserved_inventory_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalFutureInventoryStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalFutureInventoryStateList(self):
     """
       Return future inventory states.
@@ -1529,8 +1461,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedStateList('future_inventory') or \
            self._getPortalConfiguration('portal_future_inventory_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                          'getPortalUpdatableAmortisationTransactionStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalUpdatableAmortisationTransactionStateList(self):
     """
       Return states when Amortisation Transaction can be updated
@@ -1539,8 +1470,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalConfiguration(
         'portal_updatable_amortisation_transaction_state_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalGroupedSimulationStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalGroupedSimulationStateList(self):
     """
       Return all states which is related to simulation state workflow and state type
@@ -1559,8 +1489,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
                                  cache_factory='erp5_content_medium')
     return getStateList()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalColumnBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalColumnBaseCategoryList(self):
     """
       Return column base categories.
@@ -1568,8 +1497,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('column') or \
            self._getPortalConfiguration('portal_column_base_category_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalLineBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalLineBaseCategoryList(self):
     """
       Return line base categories.
@@ -1577,8 +1505,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('line') or \
            self._getPortalConfiguration('portal_line_base_category_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTabBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTabBaseCategoryList(self):
     """
       Return tab base categories.
@@ -1628,80 +1555,68 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       lambda: (),
     )()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTicketTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTicketTypeList(self):
     """
     Return ticket types.
     """
     return self._getPortalGroupedTypeList('ticket')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalEventTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalEventTypeList(self):
     """
     Return event types.
     """
     return self._getPortalGroupedTypeList('event')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalInterfacePostTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalInterfacePostTypeList(self):
     """
     Return interface_post types.
     """
     return self._getPortalGroupedTypeList('interface_post')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDivergenceTesterTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDivergenceTesterTypeList(self):
     """
     Return divergence tester types.
     """
     return self._getPortalGroupedTypeList('divergence_tester')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTargetSolverTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTargetSolverTypeList(self):
     """
     Return target solver types.
     """
     return self._getPortalGroupedTypeList('target_solver')
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTargetSolverTypeList')
   def getPortalDeliverySolverTypeList(self):
     """
     Return delivery solver types.
     """
     return self._getPortalGroupedTypeList('delivery_solver')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalAmountGeneratorTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalAmountGeneratorTypeList(self):
     """
     Return amount generator types.
     """
     return self._getPortalGroupedTypeList('amount_generator')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalAmountGeneratorLineTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalAmountGeneratorLineTypeList(self):
     """
     Return amount generator line types.
     """
     return self._getPortalGroupedTypeList('amount_generator_line')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalAmountGeneratorCellTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalAmountGeneratorCellTypeList(self):
     """
     Return amount generator cell types.
     """
     return self._getPortalGroupedTypeList('amount_generator_cell')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalAmountGeneratorAllTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalAmountGeneratorAllTypeList(self, transformation):
     """
     Return amount generator types, including lines & cells,
@@ -1714,8 +1629,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       return tuple(x for x in result if x.startswith('Transformation'))
     return tuple(x for x in result if not x.startswith('Transformation'))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessProcessTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalBusinessProcessTypeList(self):
     """
     Return amount generator types.
@@ -1723,80 +1637,70 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('business_process')
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessLinkTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalBusinessLinkTypeList(self):
     """
       Return business link types.
     """
     return self._getPortalGroupedTypeList('business_link')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTradeModelPathTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalTradeModelPathTypeList(self):
     """
       Return trade model path types.
     """
     return self._getPortalGroupedTypeList('trade_model_path')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalCalendarTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalCalendarTypeList(self):
     """
     Return calendar types.
     """
     return self._getPortalGroupedTypeList('calendar')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalCalendarPeriodTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalCalendarPeriodTypeList(self):
     """
     Return calendar period types.
     """
     return self._getPortalGroupedTypeList('calendar_period')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalModuleTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalModuleTypeList(self):
     """
     Return module types.
     """
     return self._getPortalGroupedTypeList('module')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalPersonalItemTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPersonalItemTypeList(self) :
     """
       Return personal item types.
     """
     return self._getPortalGroupedTypeList('personal_item')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalInventoryMovementTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalInventoryMovementTypeList(self):
     """
     Return inventory movement types.
     """
     return self._getPortalGroupedTypeList('inventory_movement')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalInventoryTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalInventoryTypeList(self):
     """
     Return inventory types.
     """
     return self._getPortalGroupedTypeList('inventory')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalMovementGroupTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalMovementGroupTypeList(self):
     """
     Return movement group types.
     """
     return self._getPortalGroupedTypeList('movement_group')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalEntityTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalEntityTypeList(self):
     """
     Returns Entity types.
@@ -1804,16 +1708,14 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('entity') or\
            self._getPortalConfiguration('portal_entity_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalLoginTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalLoginTypeList(self):
     """
     Returns Login types.
     """
     return self._getPortalGroupedTypeList('login')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDataDescriptorTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDataDescriptorTypeList(self):
     """
     Returns Data Descriptor types.
@@ -1821,8 +1723,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('data_descriptor') or\
            self._getPortalConfiguration('portal_data_descriptor_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDataSinkTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDataSinkTypeList(self):
     """
     Returns Data Sink types.
@@ -1830,8 +1731,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('data_sink') or\
            self._getPortalConfiguration('portal_data_sink_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDeviceTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDeviceTypeList(self):
     """
     Returns Device types.
@@ -1839,8 +1739,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('device') or\
            self._getPortalConfiguration('portal_device_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDeviceConfigurationTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDeviceConfigurationTypeList(self):
     """
     Returns Device Configuration types.
@@ -1848,24 +1747,21 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('device_configuration') or\
            self._getPortalConfiguration('portal_device_configuration_type_list')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalPaymentRequestTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalPaymentRequestTypeList(self):
     """
     Returns Payment Request types.
     """
     return self._getPortalGroupedTypeList('payment_request')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalDataConfigurationTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalDataConfigurationTypeList(self):
     """
     Returns Data Configuration types.
     """
     return self._getPortalGroupedTypeList('data_configuration')
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultModuleId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultModuleId(self, portal_type, default=MARKER, only_visible=False):
     """
     Return default module id where a object with portal_type can
@@ -1880,8 +1776,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     else:
       return module.getId()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultModuleValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultModuleValue(self, portal_type, default=MARKER, only_visible=False):
     """
     Return default module where a object with portal_type can be created
@@ -1924,10 +1819,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return default
 
   # BBB
-  security.declareProtected(
-    Permissions.AccessContentsInformation,
-    'getDefaultModule',
-  )
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultModule(self, portal_type, default=MARKER):
     """
     For backward-compatibility.
@@ -1937,7 +1829,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     if module_id:
       return getattr(self, module_id, None)
 
-  security.declarePublic('getVisibleAllowedContentTypeList')
+  @security.public
   def getVisibleAllowedContentTypeList(self):
     """Users cannot add anything in an ERP5Site using standard interface.
     """
@@ -1955,7 +1847,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     from erp5.component.module.Log import log as unrestrictedLog
     unrestrictedLog(*args, **kw)
 
-  security.declarePublic('setPlacelessDefaultReindexParameters')
+  @security.public
   def setPlacelessDefaultReindexParameters(self, **kw):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
@@ -1964,7 +1856,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     key = ('default_reindex_parameter', )
     tv[key] = kw
 
-  security.declarePublic('getPlacelessDefaultReindexParameters')
+  @security.public
   def getPlacelessDefaultReindexParameters(self):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
@@ -1972,8 +1864,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     key = ('default_reindex_parameter', )
     return tv.get(key)
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'migrateToPortalTypeClass')
+  @security.protected(Permissions.ManagePortal)
   def migrateToPortalTypeClass(self):
     # PickleUpdater() will load objects from ZODB, but any objects created
     # before must have been committed (otherwise POSKeyError is raised)
@@ -1995,7 +1886,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
-  security.declarePublic('isTempObject')
+  @security.public
   def isTempObject(self):
     """Return true if self is an instance of a temporary document class.
     """

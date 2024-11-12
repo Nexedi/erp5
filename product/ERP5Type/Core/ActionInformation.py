@@ -87,43 +87,43 @@ class ActionInformation(XMLObject):
   # XXX Following getAction/getCondition/getIcon are problably not useful
   #     because properties should already be cleaned up during migration
   #     or installation from BT.
-  security.declareProtected(AccessContentsInformation, 'getAction')
+  @security.protected(AccessContentsInformation)
   def getAction(self):
     """Overridden getter for 'action' to clean null values"""
     if getattr(aq_base(self), 'action', None) == '':
       del self.action
     return self._baseGetAction()
 
-  security.declareProtected(AccessContentsInformation, 'getCondition')
+  @security.protected(AccessContentsInformation)
   def getCondition(self):
     """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':
       del self.condition
     return self._baseGetCondition()
 
-  security.declareProtected(AccessContentsInformation, 'getIcon')
+  @security.protected(AccessContentsInformation)
   def getIcon(self):
     """Overridden getter for 'icon' to clean null values"""
     if getattr(aq_base(self), 'icon', None) == '':
       del self.icon
     return self._baseGetIcon()
 
-  security.declareProtected(AccessContentsInformation, 'getActionText')
+  @security.protected(AccessContentsInformation)
   def getActionText(self):
     """Return the text of the action expression"""
     return getattr(self.getAction(), 'text', None)
 
-  security.declareProtected(AccessContentsInformation, 'getConditionText')
+  @security.protected(AccessContentsInformation)
   def getConditionText(self):
     """Return the text of the condition expression"""
     return getattr(self.getCondition(), 'text', None)
 
-  security.declareProtected(AccessContentsInformation, 'getIconText')
+  @security.protected(AccessContentsInformation)
   def getIconText(self):
     """Return the text of the icon expression"""
     return getattr(self.getIcon(), 'text', None)
 
-  security.declareProtected(AccessContentsInformation, 'PrincipiaSearchSource')
+  @security.protected(AccessContentsInformation)
   def PrincipiaSearchSource(self):
     """Return keywords for "Find" tab in ZMI"""
     search_source_list = [self.getReference(),
@@ -133,7 +133,7 @@ class ActionInformation(XMLObject):
                           self.getConditionText()]
     return ' '.join([_f for _f in search_source_list if _f])
 
-  security.declarePrivate('getCacheableAction')
+  @security.private
   def getCacheableAction(self):
     """Return an action object that is not persistent and is cacheable"""
     return CacheableAction(id=self.getReference(),

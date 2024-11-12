@@ -5180,7 +5180,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       XMLObject.__init__(self, *args, **kw)
       self._clean()
 
-    security.declarePrivate('manage_afterAdd')
+    @security.private
     def manage_afterAdd(self, item, container):
       """
         This is called when a new business template is added or imported.
@@ -5195,14 +5195,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
           self.workflow_history[
                             'business_template_installation_workflow'] = None
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getShortRevision')
+    @security.protected(Permissions.AccessContentsInformation)
     def getShortRevision(self):
       """Returned a shortened revision"""
       r = self.getRevision()
       return r and r[:5]
 
-    security.declareProtected(Permissions.ManagePortal, 'storeTemplateItemData')
+    @security.protected(Permissions.ManagePortal)
     def storeTemplateItemData(self):
       """
         Instanciate and Store Template items into properties.
@@ -5338,7 +5337,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         self._portal_type_type_mixin_item = PortalTypeTypeMixinTemplateItem(())
 
 
-    security.declareProtected(Permissions.ManagePortal, 'build')
+    @security.protected(Permissions.ManagePortal)
     def build(self, no_action=0, update_revision=True):
       """
         Copy existing portal objects to self
@@ -5371,14 +5370,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return self.portal_templates.publish(self, url, username=username,
                                            password=password)
 
-    security.declareProtected(Permissions.ManagePortal, 'update')
+    @security.protected(Permissions.ManagePortal)
     def update(self):
       """
         Update template: download new template definition
       """
       return self.portal_templates.update(self)
 
-    security.declareProtected(Permissions.ManagePortal, 'isCatalogUpdatable')
+    @security.protected(Permissions.ManagePortal)
     def isCatalogUpdatable(self):
       """
       Return if catalog will be updated or not by business template installation
@@ -5396,7 +5395,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               return True
       return False
 
-    security.declareProtected(Permissions.ManagePortal, 'preinstall')
+    @security.protected(Permissions.ManagePortal)
     def preinstall(self, check_dependencies=1, **kw):
       """
         Return the list of modified/new/removed object between a Business Template
@@ -5544,7 +5543,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Clear cache to avoid reusing cached values with replaced objects.
       site.portal_caches.clearAllCache()
 
-    security.declareProtected(Permissions.ManagePortal, 'install')
+    @security.protected(Permissions.ManagePortal)
     def install(self, *args, **kw):
       # switch to nobody temporarily so that unrestricted _install
       # is always invoked by system user.
@@ -5560,7 +5559,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     security.declareProtected(Permissions.ManagePortal, 'reinstall')
     reinstall = install
 
-    security.declareProtected(Permissions.ManagePortal, 'trash')
+    @security.protected(Permissions.ManagePortal)
     def trash(self, new_bt, **kw):
       """
         Trash unnecessary items before upgrading to a new business
@@ -5589,8 +5588,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # It is better to clear cache because the uninstallation of a
       # template deletes many things from the portal.
       self.getPortalObject().portal_caches.clearAllCache()
-
-    security.declareProtected(Permissions.ManagePortal, 'uninstall')
     uninstall = _uninstall
 
     def _clean(self):
@@ -5616,8 +5613,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     security.declareProtected(Permissions.ManagePortal, 'clean')
     clean = _clean
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBuildingState')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBuildingState(self, default=None, id_only=1):
       """
         Returns the current state in building
@@ -5626,8 +5622,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       wf = portal_workflow._getOb('business_template_building_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstallationState')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstallationState(self, default=None, id_only=1):
       """
         Returns the current state in installation
@@ -5636,7 +5631,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       wf = portal_workflow._getOb('business_template_installation_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'toxml')
+    @security.protected(Permissions.AccessContentsInformation)
     def toxml(self):
       """
         Return this Business Template in XML
@@ -5734,21 +5729,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       return False
 
-    security.declarePrivate('isKeepObject')
+    @security.private
     def isKeepObject(self, path):
       """
       Return True if path is included in keep object list.
       """
       return self._isInKeepList(self.getTemplateKeepPathList(), path)
 
-    security.declarePrivate('isKeepWorkflowObject')
+    @security.private
     def isKeepWorkflowObject(self, path):
       """
       Return True if path is included in keep workflow object list.
       """
       return self._isInKeepList(self.getTemplateKeepWorkflowPathList(), path)
 
-    security.declarePrivate('isKeepWorkflowObjectLastHistoryOnly')
+    @security.private
     def isKeepWorkflowObjectLastHistoryOnly(self, path):
       """
       Return True if path is included in keep workflow last state only list
@@ -5756,7 +5751,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return self._isInKeepList(self.getTemplateKeepLastWorkflowHistoryOnlyPathList(),
                                 path)
 
-    security.declarePrivate('getExportPath')
+    @security.private
     def getExportPath(self):
       preferences = self.getPortalObject().portal_preferences
       bt_name = self.getTitle()
@@ -5798,7 +5793,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       except NotAWorkingCopyError:
         return None in vcs
 
-    security.declareProtected(Permissions.ManagePortal, 'export')
+    @security.protected(Permissions.ManagePortal)
     def export(self, path=None, local=0, bta=None, **kw):
       """
         Export this Business Template
@@ -5845,7 +5840,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._setRevision(bta.getRevision())
       return bta.finishCreation()
 
-    security.declareProtected(Permissions.ManagePortal, 'importFile')
+    @security.protected(Permissions.ManagePortal)
     def importFile(self, path):
       """
         Import all xml files in Business Template
@@ -5917,7 +5912,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       self._setRevision(bta.getRevision())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getItemsList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getItemsList(self):
       """Return list of items in business template
       """
@@ -5928,7 +5923,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           items_list.extend(item.getKeys())
       return items_list
 
-    security.declareProtected(Permissions.ManagePortal, 'checkDependencies')
+    @security.protected(Permissions.ManagePortal)
     def checkDependencies(self):
       """
        Check if all the dependencies of the business template
@@ -5941,7 +5936,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           'Impossible to install %s, please install the following dependencies before: %r'
           % (self.getTitle(), missing_dep_list))
 
-    security.declareProtected(Permissions.ManagePortal, 'getMissingDependencyList')
+    @security.protected(Permissions.ManagePortal)
     def getMissingDependencyList(self):
       """
       Retuns a list of missing dependencies.
@@ -5968,7 +5963,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             missing_dep_list.append((dependency, version_restriction or ''))
       return [' '.join([y for y in x if y]) for x in missing_dep_list]
 
-    security.declareProtected(Permissions.ManagePortal, 'diffObjectAsHTML')
+    @security.protected(Permissions.ManagePortal)
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
@@ -5978,7 +5973,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       from erp5.component.module.DiffUtils import DiffFile
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
-    security.declareProtected(Permissions.ManagePortal, 'diffObject')
+    @security.protected(Permissions.ManagePortal)
     def diffObject(self, REQUEST, **kw):
       """
         Make a diff between an object in the Business Template
@@ -6179,7 +6174,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return diff_msg
 
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypesProperties')
+    @security.protected(Permissions.AccessContentsInformation)
     def getPortalTypesProperties(self, **kw):
       """
       Fill field about properties for each portal type
@@ -6281,8 +6276,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.setTemplateActionPathList(bt_action_list)
       self.setTemplatePortalTypeTypeMixin(bt_type_mixin_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'guessPortalTypes')
+    @security.protected(Permissions.AccessContentsInformation)
     def guessPortalTypes(self, **kw):
       """
       This method guesses portal types based on modules define in the Business Template
@@ -6353,7 +6347,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       setattr(self, 'template_portal_type_id', bt_portal_types_id_list)
       return
 
-    security.declarePrivate('clearPortalTypes')
+    @security.private
     def clearPortalTypes(self, **kw):
       """
       clear id list register for portal types
@@ -6741,8 +6735,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5OOo.tests.testOOoDynamicStyle',
     }
 
-    security.declareProtected(Permissions.ManagePortal,
-                              'getMigratableSourceCodeFromFilesystemList')
+    @security.protected(Permissions.ManagePortal)
     def getMigratableSourceCodeFromFilesystemList(self,
                                                   *args,
                                                   **kwargs):
@@ -6986,8 +6979,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                    o.getPortalType(),
                                    o.getReference()))
 
-    security.declareProtected(Permissions.ManagePortal,
-                              'migrateSourceCodeFromFilesystem')
+    @security.protected(Permissions.ManagePortal)
     def migrateSourceCodeFromFilesystem(self,
                                         version,
                                         list_selection_name=None):

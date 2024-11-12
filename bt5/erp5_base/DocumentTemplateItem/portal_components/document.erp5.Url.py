@@ -58,8 +58,7 @@ class Url(Coordinate, UrlMixin):
                       , PropertySheet.SortIndex
                       )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asText(self):
     """
     Returns a text representation of the url_string a.k.a. scheme-specific-part
@@ -72,7 +71,7 @@ class Url(Coordinate, UrlMixin):
       return self.getUrlString('')
     return self.getCoordinateText('')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @security.protected(Permissions.ModifyPortalContent)
   @deprecated
   def fromText(self, text):
     """
@@ -81,8 +80,7 @@ class Url(Coordinate, UrlMixin):
     self._setCoordinateText(text)
     self.setUrlString(text)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'standardTextFormat')
+  @security.protected(Permissions.AccessContentsInformation)
   def standardTextFormat(self):
     """
     Returns the standard text formats for urls. The purpose
@@ -91,8 +89,7 @@ class Url(Coordinate, UrlMixin):
     return ("http://www.erp5.org", "mailto:info@erp5.org")
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getUrlString')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUrlString(self, default=_marker):
     """Fallback on coordinate_text
     """
@@ -107,13 +104,13 @@ class Url(Coordinate, UrlMixin):
       else:
         return self._baseGetUrlString(default)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDetailed(self):
     """
     """
     return self.hasUrlString()
 
-  security.declareProtected(Permissions.UseMailhostServices, 'send')
+  @security.protected(Permissions.UseMailhostServices)
   @deprecated
   def send(self, from_url=None, to_url=None, msg=None,
            subject=None, attachment_list=None, extra_headers=None):

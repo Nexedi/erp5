@@ -86,8 +86,7 @@ class RuleTool(BaseTool):
   # Declarative Security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'searchRuleList')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchRuleList(self, movement, tested_base_category_list=None, **kw):
     """
     this method searches for rules, as predicates against movement
@@ -137,7 +136,7 @@ class RuleTool(BaseTool):
 
     return rule_list
 
-  security.declarePrivate('updateSimulation')
+  @security.private
   @UnrestrictedMethod
   def updateSimulation(self, message_list):
     expandable_dict = defaultdict(list)

@@ -60,7 +60,7 @@ class LocalRoleAssignorMixIn(object):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    security.declarePrivate('updateLocalRolesOnDocument')
+    @security.private
     @UnrestrictedMethod
     def updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True, activate_kw=()):
       """
@@ -122,7 +122,7 @@ class LocalRoleAssignorMixIn(object):
       if reindex and ob._p_changed:
         ob.reindexObjectSecurity(activate_kw=dict(activate_kw))
 
-    security.declarePrivate('getFilteredRoleListFor')
+    @security.private
     def getFilteredRoleListFor(self, ob=None):
       """Return all role generators applicable to the object."""
       ec = None # createExpressionContext is slow so we call it only if needed
@@ -139,14 +139,12 @@ class LocalRoleAssignorMixIn(object):
           if role.getRoleName():
             yield role
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getRoleInformationList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getRoleInformationList(self):
       """Return all Role Information objects stored on this portal type"""
       return self.objectValues(meta_type='ERP5 Role Information')
 
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'updateRoleMapping')
+    @security.protected(Permissions.ModifyPortalContent)
     def updateRoleMapping(self, REQUEST=None, form_id='', priority=3):
       """Update the local roles in existing objects.
       """
@@ -327,7 +325,7 @@ class ERP5TypeInformation(XMLObject,
     )
     group_list = ()
 
-    security.declarePublic('allowType')
+    @security.public
     def allowType(self, contentType):
       """Test if objects of 'self' can contain objects of 'contentType'
       """
@@ -338,7 +336,7 @@ class ERP5TypeInformation(XMLObject,
     #   Acquisition editing interface
     #
 
-    security.declarePrivate('_guessMethodAliases')
+    @security.private
     def _guessMethodAliases(self):
         """ Override this method to disable Method Aliases in ERP5.
         """
@@ -353,14 +351,14 @@ class ERP5TypeInformation(XMLObject,
         """
         return default
 
-    security.declarePublic('isConstructionAllowed')
+    @security.public
     def isConstructionAllowed(self, container):
       """Test if user is allowed to create an instance in the given container
       """
       permission = self.permission or 'Add portal content'
       return getSecurityManager().checkPermission(permission, container)
 
-    security.declarePublic('isIndexable')
+    @security.public
     def isIndexable(self):
       """Test if an instance is indexable by default
       """
@@ -368,14 +366,14 @@ class ERP5TypeInformation(XMLObject,
       klass = portal.portal_types.getPortalTypeClass(self.getId())
       return klass.isIndexable()
 
-    security.declarePublic('constructTempInstance')
+    @security.public
     def constructTempInstance(self, container, id, *args, **kw ):
       """
       All ERP5Type.Document.newTempXXXX are constructTempInstance methods
       """
       return self.constructInstance(container, id, temp_object=1, *args, **kw)
 
-    security.declarePublic('constructInstance')
+    @security.public
     def constructInstance(self, container, id, created_by_builder=0,
                           temp_object=0, compute_local_role=None,
                           notify_workflow=True, is_indexable=None,
@@ -487,20 +485,17 @@ class ERP5TypeInformation(XMLObject,
 
     # The following methods are needed before there are generated.
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypePropertySheetList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypePropertySheetList(self):
       """Getter for 'type_property_sheet' property"""
       return list(self.property_sheet_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeBaseCategoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypeBaseCategoryList(self):
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeWorkflowList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypeWorkflowList(self):
       """Getter for 'type_workflow' property"""
       return list(self.workflow_list)
@@ -508,8 +503,7 @@ class ERP5TypeInformation(XMLObject,
     def _setTypeWorkflowList(self, type_workflow_list):
       self.workflow_list = type_workflow_list
 
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'setTypeWorkflowList')
+    @security.protected(Permissions.ModifyPortalContent)
     def setTypeWorkflowList(self, type_workflow_list):
       """Setter for 'type_workflow' property"""
       # We use 'sorted' below to keep an order in the workflow list. Without
@@ -538,8 +532,7 @@ class ERP5TypeInformation(XMLObject,
                                    self.getPortalType(),
                                    type_property_sheet_value_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getRecursivePropertySheetValueList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getRecursivePropertySheetValueList(self):
       """
       Get all the Property Sheets for this Portal Type, not only the one set on
@@ -575,28 +568,23 @@ class ERP5TypeInformation(XMLObject,
     def _baseGetTypeClass(self):
       return getattr(aq_base(self), 'type_class', None)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeFactoryMethodId')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypeFactoryMethodId(self):
       return getattr(aq_base(self), 'factory', ())
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeMixinList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypeMixinList(self):
       return getattr(aq_base(self), 'type_mixin', ())
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeAcquireLocalRole')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypeAcquireLocalRole(self):
       return getattr(aq_base(self), 'acquire_local_roles', None)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeInterfaceList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypeInterfaceList(self):
       return getattr(aq_base(self), 'type_interface', ())
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeClass')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTypeClass(self):
       """Getter for type_class"""
       base = self._baseGetTypeClass()
@@ -611,14 +599,12 @@ class ERP5TypeInformation(XMLObject,
           self.type_class = base
       return base
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstanceBaseCategoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstanceBaseCategoryList(self):
       """ Return all base categories of the portal type """
       return list(self._getPropertyHolder()._categories)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstancePropertySet')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstancePropertySet(self):
       """
       Return all the properties of the Portal Type
@@ -649,8 +635,7 @@ class ERP5TypeInformation(XMLObject,
 
       return return_set
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstancePropertyAndBaseCategorySet')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstancePropertyAndBaseCategorySet(self):
       """Return all the properties and base categories of the portal type. """
       # XXX: Hack until introspection methods are defined. At least, this works
@@ -664,24 +649,21 @@ class ERP5TypeInformation(XMLObject,
         return_set.add(category + '_free_text')
       return return_set
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstancePropertyAndBaseCategoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     @deprecated('getInstancePropertyAndBaseCategoryList is deprecated '
                 'in favor of getInstancePropertyAndBaseCategorySet')
     def getInstancePropertyAndBaseCategoryList(self):
       """Return all the properties and base categories of the portal type"""
       return list(self.getInstancePropertyAndBaseCategorySet())
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstancePropertyMap')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInstancePropertyMap(self):
       """
       Returns the list of properties which are specific to the portal type.
       """
       return self.__class__.propertyMap()
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'PrincipiaSearchSource')
+    @security.protected(Permissions.AccessContentsInformation)
     def PrincipiaSearchSource(self):
       """Return keywords for "Find" tab in ZMI"""
       search_source_list = [self.getId(),
@@ -693,8 +675,7 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypeWorkflowList()
       return ' '.join([_f for _f in search_source_list if _f])
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getDefaultViewFor')
+    @security.protected(Permissions.AccessContentsInformation)
     def getDefaultViewFor(self, ob, view='view'):
       """Return the object that renders the default view for the given object
       """
@@ -722,7 +703,7 @@ class ERP5TypeInformation(XMLObject,
       __traceback_info__ = self.getId(), target
       return ob.restrictedTraverse(target)
 
-    security.declarePrivate('getCacheableActionList')
+    @security.private
     def getCacheableActionList(self):
       """Return a cacheable list of enabled actions"""
       return [action.getCacheableAction()
@@ -743,19 +724,17 @@ class ERP5TypeInformation(XMLObject,
       cache_factory='erp5_content_long',
       cache_id_generator=lambda method_id, *args: method_id)
 
-    security.declarePrivate('getActionList')
+    @security.private
     def getActionList(self):
       """Return the list of enabled actions from cache, sorted by priority"""
       return self._getActionList(self, scope=self.id)
 
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'clearGetActionListCache')
+    @security.protected(Permissions.ModifyPortalContent)
     def clearGetActionListCache(self):
       """Clear a cache of _getRawActionInformationList."""
       self._getActionList.delete(scope=self.id)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getActionInformationList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getActionInformationList(self):
       """Return all Action Information objects stored on this portal type"""
       return self.objectValues(meta_type='ERP5 Action Information')
@@ -773,8 +752,7 @@ class ERP5TypeInformation(XMLObject,
         return self.getParentValue().getTypeInfo(*args)
       return XMLObject.getTypeInfo(self)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailablePropertySheetList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailablePropertySheetList(self):
       property_sheet_set = {k for k in PropertySheet.__dict__
                               if not k.startswith('_')}
@@ -784,19 +762,16 @@ class ERP5TypeInformation(XMLObject,
 
       return sorted(property_sheet_set)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailableConstraintList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailableConstraintList(self):
       return sorted(k for k in Constraint.__dict__
                       if k != 'Constraint' and not k.startswith('_'))
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailableGroupList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailableGroupList(self):
       return sorted(self.defined_group_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailableBaseCategoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailableBaseCategoryList(self):
         return sorted(self._getCategoryTool().getBaseCategoryList())
 
@@ -804,21 +779,19 @@ class ERP5TypeInformation(XMLObject,
     # XXX CMF compatibility
     #
 
-    security.declareProtected(Permissions.ManagePortal,
-                              'setPropertySheetList')
+    @security.protected(Permissions.ManagePortal)
     @deprecated
     def setPropertySheetList(self, property_sheet_list):
       self._setTypePropertySheetList(property_sheet_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getHiddenContentTypeList')
+    @security.protected(Permissions.AccessContentsInformation)
     @deprecated
     def getHiddenContentTypeList(self):
       return self.getTypeHiddenContentTypeList(())
 
     # Compatibitility code for actions
 
-    security.declareProtected(Permissions.AddPortalContent, 'addAction')
+    @security.protected(Permissions.AddPortalContent)
     @deprecated
     def addAction(self, id, name, action, condition, permission, category,
                   icon=None, visible=1, priority=1.0, REQUEST=None,
@@ -839,13 +812,13 @@ class ERP5TypeInformation(XMLObject,
                       float_index=priority,
                       description=description)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'deleteActions')
+    @security.protected(Permissions.ModifyPortalContent)
     @deprecated
     def deleteActions(self, selections=(), REQUEST=None):
       action_list = self.listActions()
       self.manage_delObjects([action_list[x].id for x in selections])
 
-    security.declarePrivate('listActions')
+    @security.private
     @deprecated
     def listActions(self, info=None, object=None):
       """ List all the actions defined by a provider."""

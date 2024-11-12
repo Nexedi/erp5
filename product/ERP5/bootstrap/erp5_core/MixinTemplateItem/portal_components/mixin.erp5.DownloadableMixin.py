@@ -79,7 +79,7 @@ class DownloadableMixin:
   security = ClassSecurityInfo()
 
   ### Content processing methods
-  security.declareProtected(Permissions.View, 'index_html')
+  @security.protected(Permissions.View)
   @fill_args_from_request('display', 'quality', 'resolution', 'frame', 'pre_converted_only')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw): # pylint: disable=redefined-builtin
     """
@@ -174,8 +174,7 @@ class DownloadableMixin:
     RESPONSE.setHeader('Content-Length', len(data))
     return data
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStandardFilename')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStandardFilename(self, format=None): # pylint: disable=redefined-builtin
     """Returns the document coordinates as a standard file name. This
     method is the reverse of getPropertyDictFromFileName.
@@ -194,8 +193,7 @@ class DownloadableMixin:
       return method()
 
   # backward compatibility
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStandardFileName')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStandardFileName(self, format=None): # pylint: disable=redefined-builtin
     """(deprecated) use getStandardFilename() instead."""
     warnings.warn('getStandardFileName() is deprecated. '

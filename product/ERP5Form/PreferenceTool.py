@@ -110,7 +110,7 @@ class PreferenceTool(BaseTool):
        Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainPreferenceTool', _dtmldir )
 
-  security.declarePrivate('manage_afterAdd')
+  @security.private
   def manage_afterAdd(self, item, container) :
     """ init the permissions right after creation """
     item.manage_permission(Permissions.AddPortalContent,
@@ -127,7 +127,7 @@ class PreferenceTool(BaseTool):
           ['Member', 'Author', 'Manager'])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-  security.declarePublic('getPreference')
+  @security.public
   def getPreference(self, pref_name, default=_marker) :
     """ get the preference on the most appropriate Preference object. """
     method = guarded_getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
@@ -137,7 +137,7 @@ class PreferenceTool(BaseTool):
       return None
     return default
 
-  security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
+  @security.protected(Permissions.ModifyPortalContent)
   def setPreference(self, pref_name, value) :
     """ set the preference on the active Preference object"""
     self.getActivePreference()._edit(**{pref_name:value})
@@ -196,13 +196,13 @@ class PreferenceTool(BaseTool):
         pass
     return None
 
-  security.declareProtected(Permissions.View, 'getActivePreference')
+  @security.protected(Permissions.View)
   def getActivePreference(self) :
     """ returns the current preference for the user.
        Note that this preference may be read only. """
     return self._getActivePreferenceByPortalType('Preference')
 
-  security.declareProtected(Permissions.View, 'clearCache')
+  @security.protected(Permissions.View)
   def clearCache(self, preference):
     """ clear cache when a preference is modified.
     This is called by an interaction workflow on preferences.
@@ -231,7 +231,7 @@ class PreferenceTool(BaseTool):
       self._preference_cache = OIBTree()
     return self._preference_cache.get(None), self._preference_cache.get(user_id), user_id
 
-  security.declareProtected(Permissions.View, 'getActiveUserPreference')
+  @security.protected(Permissions.View)
   def getActiveUserPreference(self) :
     """ returns the current user preference for the user.
     If no preference exists, then try to create one with `createUserPreference`
@@ -252,13 +252,13 @@ class PreferenceTool(BaseTool):
           active_preference = createUserPreference()
     return active_preference
 
-  security.declareProtected(Permissions.View, 'getActiveSystemPreference')
+  @security.protected(Permissions.View)
   def getActiveSystemPreference(self) :
     """ returns the current system preference for the user.
        Note that this preference may be read only. """
     return self._getActivePreferenceByPortalType('System Preference')
 
-  security.declareProtected(Permissions.View, 'getDocumentTemplateList')
+  @security.protected(Permissions.View)
   def getDocumentTemplateList(self, folder=None) :
     """ returns all document templates that are in acceptable Preferences
         based on different criteria such as folder, portal_type, etc.
@@ -291,8 +291,7 @@ class PreferenceTool(BaseTool):
           template_list.append(template)
     return template_list
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'createActiveSystemPreference')
+  @security.protected(Permissions.ManagePortal)
   def createActiveSystemPreference(self):
     """ Create a System Preference and enable it if there is no other
         enabled System Preference in present.
@@ -302,8 +301,7 @@ class PreferenceTool(BaseTool):
     system_preference = self.newContent(portal_type='System Preference')
     system_preference.enable()
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'createPreferenceForUser')
+  @security.protected(Permissions.ManagePortal)
   def createPreferenceForUser(self, user_id, enable=True):
     """Creates a preference for a given user, and optionnally enable the
     preference.
@@ -322,7 +320,7 @@ class PreferenceTool(BaseTool):
     finally:
       setSecurityManager(security_manager)
 
-  security.declarePublic('isAuthenticationPolicyEnabled')
+  @security.public
   def isAuthenticationPolicyEnabled(self) :
     """
     Return True if authentication policy is enabled.

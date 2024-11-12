@@ -75,8 +75,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
     # Is it OK now ?
     # The same method is at about 3 different places
     # Some genericity is needed
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                           'getVariationRangeCategoryItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getVariationRangeCategoryItemList(self, base_category_list=(), base=1,
                                           root=1, display_id='title',
                                           display_base_category=1,
@@ -147,8 +146,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         # Return result
         return result
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                           'getVariationCategoryItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getVariationCategoryItemList(self, base_category_list=(),
                                      omit_optional_variation=0,
                                      omit_individual_variation=1, base=1,
@@ -211,8 +209,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                   **kw).render([variation]))
       return result
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVariationCategoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getVariationCategoryList(self, default=[], base_category_list=(),
                                  omit_individual_variation=1, **kw):
       """
@@ -249,8 +246,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       return [x[1] for x in vcil]
 
 # This patch is temporary and allows to circumvent name conflict in ZSQLCatalog process for Coramy
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                              'getDefaultDestinationAmountBis')
+    @security.protected(Permissions.AccessContentsInformation)
     def getDefaultDestinationAmountBis(self, unit=None, variation=None, REQUEST=None):
       try:
         return self.getDestinationReference()
@@ -258,8 +254,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         return None
 
 # This patch is temporary and allows to circumvent name conflict in ZSQLCatalog process for Coramy
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                              'getDefaultSourceAmountBis')
+    @security.protected(Permissions.AccessContentsInformation)
     def getDefaultSourceAmountBis(self, unit=None, variation=None, REQUEST=None):
       try:
         return self.getSourceReference()
@@ -268,14 +263,12 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
 
     # This patch allows variations to find a resource
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                              'getDefaultResourceValue')
+    @security.protected(Permissions.AccessContentsInformation)
     def getDefaultResourceValue(self):
       return self
 
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getDefaultTransformationValue')
+    @security.protected(Permissions.AccessContentsInformation)
     def getDefaultTransformationValue(self, context=None):
       """
       If context is None, returns the first available transformation that
@@ -312,8 +305,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       if len(transformation_list) > 0:
         return transformation_list[0]
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getDefaultConversionTransformationValue')
+    @security.protected(Permissions.AccessContentsInformation)
     def getDefaultConversionTransformationValue(self):
       """
       Return a Transformation object that should be used to compute
@@ -335,8 +327,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       return self.getDefaultTransformationValue(context=None)
 
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                           'getTransformationVariationCategoryCartesianProduct')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTransformationVariationCategoryCartesianProduct(self):
       """
       Defines which variations are of interest when indexing
@@ -369,8 +360,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
     ####################################################
     # Stock Management
     ####################################################
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInventory')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInventory(self, **kw):
       """
       Returns inventory
@@ -379,8 +369,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCurrentInventory')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCurrentInventory(self, **kw):
       """
       Returns current inventory
@@ -389,8 +378,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailableInventory')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailableInventory(self, **kw):
       """
       Returns available inventory
@@ -400,8 +388,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getFutureInventory')
+    @security.protected(Permissions.AccessContentsInformation)
     def getFutureInventory(self, **kw):
       """
       Returns inventory at infinite
@@ -410,8 +397,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInventoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInventoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -420,8 +406,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCurrentInventoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCurrentInventoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -430,8 +415,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailableInventoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailableInventoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -440,8 +424,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getFutureInventoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getFutureInventoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -450,8 +433,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInventoryStat')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInventoryStat(self, **kw):
       """
       Returns statistics of inventory grouped by section or site
@@ -460,8 +442,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCurrentInventoryStat')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCurrentInventoryStat(self, **kw):
       """
       Returns statistics of inventory grouped by section or site
@@ -470,8 +451,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailableInventoryStat')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailableInventoryStat(self, **kw):
       """
       Returns statistics of inventory grouped by section or site
@@ -480,8 +460,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getFutureInventoryStat')
+    @security.protected(Permissions.AccessContentsInformation)
     def getFutureInventoryStat(self, **kw):
       """
       Returns statistics of inventory grouped by section or site
@@ -490,8 +469,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInventoryChart')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInventoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -500,8 +478,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCurrentInventoryChart')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCurrentInventoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -510,8 +487,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getFutureInventoryChart')
+    @security.protected(Permissions.AccessContentsInformation)
     def getFutureInventoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -520,8 +496,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInventoryHistoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInventoryHistoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -530,8 +505,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInventoryHistoryChart')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInventoryHistoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -544,8 +518,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
     # Method getCurrentMovementHistoryList,
     # getAvailableMovementHistoryList, getFutureMovementHistoryList
     # can be added
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getMovementHistoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getMovementHistoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -554,8 +527,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getMovementHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getMovementHistoryStat')
+    @security.protected(Permissions.AccessContentsInformation)
     def getMovementHistoryStat(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -564,8 +536,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getMovementHistoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getNextNegativeInventoryDate')
+    @security.protected(Permissions.AccessContentsInformation)
     def getNextNegativeInventoryDate(self, **kw):
       """
       Returns next date where the inventory will be negative
@@ -573,8 +544,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       return self.getNextAlertInventoryDate(
                   reference_quantity=0, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getNextAlertInventoryDate')
+    @security.protected(Permissions.AccessContentsInformation)
     def getNextAlertInventoryDate(self, reference_quantity=0, **kw):
       """
       Returns next date where the inventory will be below reference
@@ -586,8 +556,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                           reference_quantity=reference_quantity, **kw)
 
     # Asset Price API
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getInventoryAssetPrice')
+    @security.protected(Permissions.AccessContentsInformation)
     def getInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -596,8 +565,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getCurrentInventoryAssetPrice')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCurrentInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -606,8 +574,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getAvailableInventoryAssetPrice')
+    @security.protected(Permissions.AccessContentsInformation)
     def getAvailableInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -616,8 +583,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getFutureInventoryAssetPrice')
+    @security.protected(Permissions.AccessContentsInformation)
     def getFutureInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -628,8 +594,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
 
     # Industrial price API
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getIndustrialPrice')
+    @security.protected(Permissions.AccessContentsInformation)
     def getIndustrialPrice(self, context=None, REQUEST=None, **kw):
       """
         Returns industrial price
@@ -648,8 +613,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         return -1 # a defines a destination section and wins
       return 1 # a defines no destination section and loses
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPriceParameterDict')
+    @security.protected(Permissions.AccessContentsInformation)
     def getPriceParameterDict(self, context=None, REQUEST=None,
                               supply_path_type=None, **kw):
       """
@@ -732,8 +696,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
           price_parameter_dict[mapped_value_property] = value
       return price_parameter_dict
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPriceCalculationOperandDict')
+    @security.protected(Permissions.AccessContentsInformation)
     def getPriceCalculationOperandDict(self, default=None, context=None,
             REQUEST=None, **kw):
       """Return a dictionary which contains operands for price calculation.
@@ -744,8 +707,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       return unrestricted_apply(
         self._getTypeBasedMethod('getPriceCalculationOperandDict'), kw=kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPrice')
+    @security.protected(Permissions.AccessContentsInformation)
     def getPrice(self, default=None, context=None, REQUEST=None, **kw):
       """
       Return the unit price of a resource in a specific context.
@@ -766,8 +728,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         return operand_dict['price']
       return default
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getQuantityPrecision')
+    @security.protected(Permissions.AccessContentsInformation)
     def getQuantityPrecision(self):
       """Return the floating point precision of a quantity.
       """
@@ -801,7 +762,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       return quantity
 
     # Unit conversion
-    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
+    @security.protected(Permissions.AccessContentsInformation)
     def convertQuantity(self, quantity, from_unit, to_unit, variation_list=(),
       transformed_resource=None, transformed_variation_list=()):
       # 'variation_list' parameter may be deprecated:
@@ -838,16 +799,14 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       return result
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getMeasureList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getMeasureList(self):
       """
       Gets the list of Measure objects describing this resource.
       """
       return self.objectValues(portal_type='Measure')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getDefaultMeasure')
+    @security.protected(Permissions.AccessContentsInformation)
     def getDefaultMeasure(self, quantity_unit=None):
       """
       Returns the measure object associated to quantity_unit.
@@ -931,8 +890,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       return result
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getQuantityUnitConversionDefinitionRowList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getQuantityUnitConversionDefinitionRowList(self):
       """
       Returns a list rows to insert in the quantity_unit_conversion table.
@@ -957,8 +915,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       return row_list
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getMeasureRowList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getMeasureRowList(self):
       """
       Returns a list rows to insert in the measure table.
@@ -1012,8 +969,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       return insert_list
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getQuantityUnitDefinitionRatio')
+    @security.protected(Permissions.AccessContentsInformation)
     def getQuantityUnitDefinitionRatio(self, quantity_unit_value):
       """
       get the ratio used to define the quantity unit quantity_unit_value.

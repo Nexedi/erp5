@@ -93,8 +93,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
                     , PropertySheet.Task
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self, **kw):
     """
     Returns the title if it exists or a combination of
@@ -107,8 +106,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
       return title
     return super(Person, self).getTitle(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTranslatedTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTranslatedTitle(self, **kw):
     """
     Returns the title if it exists or a combination of
@@ -121,13 +119,11 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
       return title
     return super(Person, self).getTranslatedTitle(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'title_or_id')
+  @security.protected(Permissions.AccessContentsInformation)
   def title_or_id(self):
     return self.getTitleOrId()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasTitle(self):
     return self.hasFirstName() or \
         self.hasLastName() or \
@@ -223,7 +219,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
         raise AccessControl_Unauthorized('setUserId')
       self._baseSetUserId(value)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'initUserId')
+  @security.protected(Permissions.ModifyPortalContent)
   def initUserId(self):
     """Initialize user id.
 
@@ -271,8 +267,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
       self.reindexObject()
 
   # Time management
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableTime')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableTime(self, *args, **kw):
     """
     Calculate available time for a person
@@ -284,8 +279,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
     portal_simulation = self.getPortalObject().portal_simulation
     return portal_simulation.getAvailableTime(*args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableTimeSequence')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableTimeSequence(self, *args, **kw):
     """
     Calculate available time for a person in a sequence
@@ -298,8 +292,7 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
     return portal_simulation.getAvailableTimeSequence(*args, **kw)
 
   # Notifiation API
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'notifyMessage')
+  @security.protected(Permissions.AccessContentsInformation)
   def notifyMessage(self, message):
     """
     This method can only be called with proxy roles.

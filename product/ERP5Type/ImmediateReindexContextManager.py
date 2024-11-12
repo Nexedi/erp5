@@ -68,7 +68,7 @@ class ImmediateReindexContextManager(object):
   #   should become an empty subclass), only used for indexation-related
   #   methods upon document creation.
   # Otherwise, misuse will happen.
-  security.declarePrivate('append')
+  @security.private
   def append(self, method):
     """
     Queue indexation method for execution upon context exit.

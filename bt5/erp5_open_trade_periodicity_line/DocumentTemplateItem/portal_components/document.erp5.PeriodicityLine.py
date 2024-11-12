@@ -42,7 +42,7 @@ class PeriodicityLineMixin(PeriodicityMixin):
   property_sheets = ( PropertySheet.PeriodicityTerm,
                       PropertySheet.CategoryCore, )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPeriodicityTermStopDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPeriodicityTermStopDate(self, start_date, default=None):
     """Return periodicity term's stop_date by calculating periodicity term
     length with a start_date argument and other own properties.
@@ -82,7 +82,7 @@ class PeriodicityLine(Path, PeriodicityLineMixin):
                                           PropertySheet.PeriodicityTerm,
                                           )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDatePeriodList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDatePeriodList(self, from_date, to_date):
     """
     Returns a list of a tuple of start_date and stop_date.

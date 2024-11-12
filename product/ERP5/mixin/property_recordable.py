@@ -53,7 +53,7 @@ class PropertyRecordableMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'recordProperty')
+  @security.protected(Permissions.ModifyPortalContent)
   def recordProperty(self, id):
     """
     Records the current value of a property.
@@ -77,8 +77,7 @@ class PropertyRecordableMixin:
     except AttributeError:
       self._recorded_property_dict = PersistentMapping({id: value})
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'clearRecordedProperty')
+  @security.protected(Permissions.ModifyPortalContent)
   def clearRecordedProperty(self, id):
     """
     Clears a previously recorded property from
@@ -88,8 +87,7 @@ class PropertyRecordableMixin:
     if not self._getRecordedPropertyDict(True):
       del self._recorded_property_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRecordedPropertyIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRecordedPropertyIdList(self):
     """
     Returns the list of property IDs which have
@@ -97,8 +95,7 @@ class PropertyRecordableMixin:
     """
     return list(self._getRecordedPropertyDict({}))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isPropertyRecorded')
+  @security.protected(Permissions.AccessContentsInformation)
   def isPropertyRecorded(self, id):
     """
     Returns True if property with given ID has been
@@ -108,8 +105,7 @@ class PropertyRecordableMixin:
     """
     return id in self._getRecordedPropertyDict(())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRecordedProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRecordedProperty(self, id):
     """
     Returns recorded value of property with given ID
@@ -118,8 +114,7 @@ class PropertyRecordableMixin:
     """
     return self._getRecordedPropertyDict()[id]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asRecordedContext')
+  @security.protected(Permissions.AccessContentsInformation)
   def asRecordedContext(self):
     """
     Returns current document as a temp document

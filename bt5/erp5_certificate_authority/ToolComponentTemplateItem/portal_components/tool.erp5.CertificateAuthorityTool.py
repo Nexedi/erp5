@@ -134,7 +134,7 @@ class CertificateAuthorityTool(BaseTool):
       if not os.path.isfile(f):
         raise CertificateAuthorityDamaged('File %r does not exists.' % f)
 
-  security.declarePrivate('manage_afterAdd')
+  @security.private
   def manage_afterAdd(self, item, container) :
     """Init permissions right after creation.
 
@@ -157,8 +157,7 @@ class CertificateAuthorityTool(BaseTool):
                    'CertificateAuthorityTool_editPropertyList'),
       __name__='manage_editCertificateAuthorityToolForm')
 
-  security.declareProtected(Permissions.ManageProperties,
-      'manage_editCertificateAuthorityTool')
+  @security.protected(Permissions.ManageProperties)
   def manage_editCertificateAuthorityTool(self, certificate_authority_path,
       RESPONSE=None):
     """Edit the object"""
@@ -181,8 +180,7 @@ class CertificateAuthorityTool(BaseTool):
                           % (self.absolute_url(), message)
                           )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getNewCertificate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNewCertificate(self, common_name):
     # No docstring in order to make this method non publishable
     # Returns certificate for passed common name, as dictionary of
@@ -240,8 +238,7 @@ class CertificateAuthorityTool(BaseTool):
     finally:
       self._unlockCertificateAuthority()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'revokeCertificate')
+  @security.protected(Permissions.AccessContentsInformation)
   def revokeCertificate(self, serial):
     # No docstring in order to make this method non publishable
     # Revokes certificate with serial, returns dictionary {crl}
@@ -295,8 +292,7 @@ class CertificateAuthorityTool(BaseTool):
       raise ValueError('No certificate for %r' % common_name)
     return [l.split('\t')[3] for l in valid_line_list]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-    'revokeCertificateByCommonName')
+  @security.protected(Permissions.AccessContentsInformation)
   def revokeCertificateByCommonName(self, common_name):
     self._checkCertificateAuthority()
     for serial in self._getValidSerial(common_name):

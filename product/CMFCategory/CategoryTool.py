@@ -167,7 +167,7 @@ class CategoryTool(BaseTool):
       return ContentFilter(**self._buildFilter(spec, filter, kw))
 
     # Category accessors
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseCategoryList(self, context=None, sort=False):
       """
         Returns the ids of base categories of the portal_categories tool
@@ -193,7 +193,7 @@ class CategoryTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'baseCategoryIds')
     baseCategoryIds = getBaseCategoryIds
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryValueList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseCategoryValueList(self, context=None):
       """
         Returns the base categories of the portal_categories tool
@@ -218,7 +218,7 @@ class CategoryTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'baseCategoryValues')
     baseCategoryValues = getBaseCategoryValues
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryValue')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryValue(self, relative_url, base_category = None):
       """
         Returns a Category object from a given category url
@@ -262,7 +262,7 @@ class CategoryTool(BaseTool):
 #       except:
 #         return None
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryUid')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryUid(self, relative_url, base_category = None):
       """
         Returns the uid of a Category from a given base category
@@ -274,7 +274,7 @@ class CategoryTool(BaseTool):
       else:
         return None
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryValueFromUid')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryValueFromUid(self, uid):
       """
         Returns the a Category object from its uid by looking up in a
@@ -282,7 +282,7 @@ class CategoryTool(BaseTool):
       """
       return self.portal_catalog.getobject(uid)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryId')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseCategoryId(self, relative_url, base_category = None):
       """
         Returns the id of the base category from a given relative url
@@ -292,10 +292,10 @@ class CategoryTool(BaseTool):
         return base_category
       try:
         return relative_url.split('/', 1)[0]
-      except KeyError :
+      except KeyError:
         return None
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryUid')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseCategoryUid(self, relative_url, base_category = None):
       """
         Returns the uid of the base category from a given relative_url
@@ -307,7 +307,7 @@ class CategoryTool(BaseTool):
       except (AttributeError, KeyError):
         return None
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
       """
         Returns the uids of all categories provided in categorie. This
@@ -350,7 +350,7 @@ class CategoryTool(BaseTool):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
       return list(uid_set) # cast to list for <dtml-in>
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryChildUidList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildUidList(self, relative_url, base_category = None, strict=0):
       """
         Returns the uids of all categories provided in categories
@@ -364,8 +364,7 @@ class CategoryTool(BaseTool):
       ## TBD
 
     # Recursive listing API
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                  'getCategoryChildRelativeUrlList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildRelativeUrlList(self, base_category=None, base=0, recursive=1):
       """
       Returns a list of relative urls by parsing recursively all categories in a
@@ -401,8 +400,7 @@ class CategoryTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryChildList')
     getCategoryChildList = getCategoryChildRelativeUrlList # This is more consistent
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                      'getCategoryChildTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTitleItemList(self, base_category=None, *args, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -410,8 +408,7 @@ class CategoryTool(BaseTool):
       """
       return self.getCategoryChildItemList(base_category, 'title', *args, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryChildIdItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildIdItemList(self, base_category=None, *args, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -419,8 +416,7 @@ class CategoryTool(BaseTool):
       """
       return self.getCategoryChildItemList(base_category, 'id', *args, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryChildItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildItemList(self, base_category=None, display_id = None,
           recursive=1, base=0, display_none_category=1, **kw):
       """
@@ -470,7 +466,7 @@ class CategoryTool(BaseTool):
     getBaseItemList = getCategoryChildItemList
 
     # Category to Tuple Conversion
-    security.declareProtected(Permissions.View, 'asItemList')
+    @security.protected(Permissions.View)
     def asItemList(self, relative_url, base_category=None,**kw):
       """
       Returns a list of tuples, each tuple is calculated by applying
@@ -513,7 +509,7 @@ class CategoryTool(BaseTool):
     getItemList = asItemList
 
     # Convert a list of membership to path
-    security.declareProtected(Permissions.View, 'asPathList')
+    @security.protected(Permissions.View)
     def asPathList(self, base_category, category_list):
       if isinstance(category_list, str):
         category_list = [category_list]
@@ -530,8 +526,7 @@ class CategoryTool(BaseTool):
 
 
     # Category implementation
-    security.declareProtected( Permissions.AccessContentsInformation,
-                                                  'getCategoryMembershipList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryMembershipList(self, context, base_category, base=0,
                                   spec=(), filter=None, **kw  ):
       """
@@ -598,7 +593,7 @@ class CategoryTool(BaseTool):
         membership.append(parent)
       return membership
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'setCategoryMembership' )
+    @security.protected(Permissions.AccessContentsInformation)
     def setCategoryMembership(self, context, *args, **kw):
       self._setCategoryMembership(context, *args, **kw)
       context.reindexObject()
@@ -700,7 +695,7 @@ class CategoryTool(BaseTool):
       self._setCategoryList(context, new_category_list)
 
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'setDefaultCategoryMembership' )
+    @security.protected(Permissions.AccessContentsInformation)
     def setDefaultCategoryMembership(self, context, base_category, default_category,
                                               spec=(), filter=None,
                                               portal_type=(), base=0,
@@ -739,8 +734,7 @@ class CategoryTool(BaseTool):
       self.setCategoryMembership(context, base_category, new_category_list,
            spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default = 0)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getSingleCategoryMembershipList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getSingleCategoryMembershipList(self, context, base_category, base=0,
                                          spec=(), filter=None,
                                          checked_permission=None, **kw):
@@ -833,8 +827,7 @@ class CategoryTool(BaseTool):
                       append(category_url[len(my_base_category)+1:])
       return result
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                                      'getSingleCategoryAcquiredMembershipList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
                                          spec=(), filter=None, _acquired_object_set=None, **kw ):
       # XXX: This cache is rarely useful, and the overhead quite important.
@@ -1105,8 +1098,7 @@ class CategoryTool(BaseTool):
       #LOG("Get Acquired Category Result ",0,str(result))
       return self._filterCategoryListByPermission(base_category, base, result, checked_permission)
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                                               'getAcquiredCategoryMembershipList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getAcquiredCategoryMembershipList(self, context, base_category = None, base=1,
                                           spec=(), filter=None, _acquired_object_set=None, **kw):
       """
@@ -1129,7 +1121,7 @@ class CategoryTool(BaseTool):
         #LOG('CT.getAcquiredCategoryMembershipList new result',0,result)
       return result
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
+    @security.protected(Permissions.AccessContentsInformation)
     def isMemberOf(self, context, category, **kw):
       """
         Tests if an object if member of a given category
@@ -1159,7 +1151,7 @@ class CategoryTool(BaseTool):
             return 1
       return 0
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
+    @security.protected(Permissions.AccessContentsInformation)
     def isAcquiredMemberOf(self, context, category):
       """
         Tests if an object if member of a given category
@@ -1174,7 +1166,7 @@ class CategoryTool(BaseTool):
           return 1
       return 0
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryList(self, context):
       result = getattr(aq_base(context), 'categories', None)
       if result is not None:
@@ -1191,12 +1183,12 @@ class CategoryTool(BaseTool):
 
     _getCategoryList = getCategoryList
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
+    @security.protected(Permissions.ModifyPortalContent)
     def setCategoryList(self, context, value):
        self._setCategoryList(context, value)
        context.reindexObject()
 
-    security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
+    @security.protected(Permissions.ModifyPortalContent)
     def _setCategoryList(self, context, value):
       old = set(getattr(aq_base(context), 'categories', ()))
       relative_url = context.getRelativeUrl()
@@ -1229,7 +1221,7 @@ class CategoryTool(BaseTool):
           except KeyError:
             pass
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getAcquiredCategoryList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getAcquiredCategoryList(self, context):
       result = self.getAcquiredCategoryMembershipList(context,
                      base_category = self.getBaseCategoryList(context=context))
@@ -1328,8 +1320,7 @@ class CategoryTool(BaseTool):
           self.updateRelatedContent(o, previous_o_category_url,
                                     new_o_category_url)
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getRelatedValueList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getRelatedValueList(self, context, base_category_list=None,
                             checked_permission=None, **kw):
       """
@@ -1516,8 +1507,7 @@ class CategoryTool(BaseTool):
             return True
       return [r for r in result if check(r)]
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getRelatedPropertyList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getRelatedPropertyList(self, context, base_category_list=None,
                                property_name=None,
                                checked_permission=None, **kw):
@@ -1533,7 +1523,7 @@ class CategoryTool(BaseTool):
         result.append(o.getProperty(property_name, None))
       return result
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryMemberValueList(self, context, base_category=None,
                                          portal_type=(), strict_membership=False, strict=False, **kw):
       """
@@ -1562,7 +1552,7 @@ class CategoryTool(BaseTool):
         sql_kw['portal_type'] = portal_type
       return self.getPortalObject().portal_catalog(**sql_kw)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryMemberItemList(self, context, **kw):
       """
       This returns a list of items belonging to a category.
@@ -1579,8 +1569,7 @@ class CategoryTool(BaseTool):
         strict=kw.get('strict'),
       ))
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                                                                'getCategoryMemberTitleItemList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryMemberTitleItemList(self, context, base_category = None,
                                       spec = (), filter=None, portal_type=(), strict_membership = 0,
                                       strict="DEPRECATED"):
@@ -1593,7 +1582,7 @@ class CategoryTool(BaseTool):
                                 strict_membership = strict_membership, strict = strict,
                                 display_id = 'title')
 
-    security.declarePublic('resolveCategory')
+    @security.public
     def resolveCategory(self, relative_url):
         """
           Finds an object from a relative_url

@@ -50,7 +50,7 @@ class TimerService(SimpleItem):
         self._subscribers = []
         self._version = 1
 
-    security.declarePublic('process_shutdown')
+    @security.public
     def process_shutdown(self, phase, time_in_phase):
         """ """
         subscriptions = []
@@ -71,7 +71,7 @@ class TimerService(SimpleItem):
                         error = sys.exc_info())
                     raise
 
-    security.declarePublic('process_timer')
+    @security.public
     def process_timer(self, interval):
         """ """
         # Try to acquire a lock, to make sure we only run one processing at a
@@ -117,8 +117,7 @@ class TimerService(SimpleItem):
             subscribers.append(path)
             self._subscribers = subscribers
 
-    security.declareProtected(
-        Permissions.view_management_screens, 'unsubscribeByPath')
+    @security.protected(Permissions.view_management_screens)
     def unsubscribeByPath(self, path):
         subscribers = self._subscribers
         if path in subscribers:
@@ -134,14 +133,12 @@ class TimerService(SimpleItem):
             subscribers.remove(path)
             self._subscribers = subscribers
 
-    security.declareProtected(
-        Permissions.view_management_screens, 'lisSubscriptions')
+    @security.protected(Permissions.view_management_screens)
     def lisSubscriptions(self):
         """ """
         return self._subscribers
 
-    security.declareProtected(
-        Permissions.view_management_screens, 'manage_removeSubscriptions')
+    @security.protected(Permissions.view_management_screens)
     def manage_removeSubscriptions(self, no, REQUEST=None):
         """ """
         subs = self.lisSubscriptions()

@@ -247,7 +247,7 @@ class OOoTemplate(ZopePageTemplate):
     # PageTemplate. If method is defined on ZopePageTemplate
     # means we are under 2.12.
     # Delete me when we drop support of 2.8
-    security.declareProtected('Change Page Templates', 'pt_edit')
+    @security.protected('Change Page Templates')
     def pt_edit(self, text, content_type):
       if content_type:
         self.content_type = str(content_type)
@@ -255,7 +255,7 @@ class OOoTemplate(ZopePageTemplate):
         text = text.read()
       self.write(text)
 
-  security.declareProtected('Change Page Templates', 'doSettings')
+  @security.protected('Change Page Templates')
   def doSettings(self, REQUEST, title, xml_file_id, ooo_stylesheet, script_name=None):
     """
       Change title, xml_file_id and ooo_stylesheet.

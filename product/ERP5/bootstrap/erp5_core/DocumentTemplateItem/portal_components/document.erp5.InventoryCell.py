@@ -61,14 +61,14 @@ class InventoryCell(DeliveryCell):
                     , PropertySheet.ItemAggregation
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalInventory(self):
     """
     Returns the inventory, as cells are not supposed to contain more cells.
     """
     return self.getInventory()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantity(self):
     """
     Computes a quantity which allows to reach inventory
@@ -86,7 +86,7 @@ class InventoryCell(DeliveryCell):
       return None
 
   # Inventory cataloging
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConvertedInventory(self):
     """
     provides a default inventory value - None since

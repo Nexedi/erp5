@@ -194,11 +194,11 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     self.template = template
     self.filename = filename
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'SearchableText')
+  @security.protected(Permissions.AccessContentsInformation)
   def SearchableText(self):
     return ' '.join((self.id, self.title, self.form_name, self.template, self.filename))
 
-  security.declareProtected('View', 'index_html')
+  @security.protected('View')
   def index_html(self, REQUEST, RESPONSE=None, template_relative_url=None,
                  format=None, batch_mode=False):
     """Render and view a printout document.
@@ -246,7 +246,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
   security.declareProtected('View', '__call__')
   __call__ = index_html
 
-  security.declareProtected('Manage properties', 'doSettings')
+  @security.protected('Manage properties')
   def doSettings(self, REQUEST, title='', form_name='', template='', filename='object/title_or_id'):
     """Change title, form_name, template, filename."""
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():

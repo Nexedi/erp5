@@ -136,7 +136,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
   ####################################
   #ILoginPasswordHostExtractionPlugin#
   ####################################
-  security.declarePrivate('extractCredentials')
+  @security.private
   def extractCredentials(self, request):
     """ Extract Oauth2 credentials from cookie.
 

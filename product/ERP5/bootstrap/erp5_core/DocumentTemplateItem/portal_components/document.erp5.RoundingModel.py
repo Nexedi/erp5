@@ -56,7 +56,7 @@ class RoundingModel(Predicate):
                      PropertySheet.RoundingModel,
                      )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'roundValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def roundValue(self, value):
     if not value:
       return value
@@ -93,7 +93,7 @@ class RoundingModel(Predicate):
 
     return rounding_method(value, self.getPrecision())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRoundingProxy')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRoundingProxy(self, document):
     """
     Return a rounding proxy object which getter methods returns rounded

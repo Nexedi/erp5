@@ -84,7 +84,7 @@ class Predicate(XMLObject):
                     , PropertySheet.SortIndex
                     )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'test' )
+  @security.protected(Permissions.AccessContentsInformation)
   def test(self, context, tested_base_category_list=None,
            strict_membership=0, isMemberOf=None, **kw):
     """
@@ -203,7 +203,7 @@ class Predicate(XMLObject):
       result = expression(createExpressionContext(context))
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asQuery')
+  @security.protected(Permissions.AccessContentsInformation)
   def asQuery(self, strict_membership=False):
     """
     A Predicate can be rendered as a set of catalog conditions. This
@@ -288,7 +288,7 @@ class Predicate(XMLObject):
       return SimpleQuery(uid=0)
     return SimpleQuery(uid=0, comparison_operator='>')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchResults(self, **kw):
     """
     """
@@ -297,7 +297,7 @@ class Predicate(XMLObject):
       **kw
     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'countResults')
+  @security.protected(Permissions.AccessContentsInformation)
   def countResults(self, REQUEST=None, used=None, **kw):
     """
     """
@@ -306,7 +306,7 @@ class Predicate(XMLObject):
       **kw
     )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCriterionList(self, **kw):
     """
       Returns the list of criteria which are defined by the Predicate.
@@ -334,7 +334,7 @@ class Predicate(XMLObject):
       criterion_dict[p].max = self._range_criterion.get(p, (None, None))[1]
     return sorted(criterion_dict.values())
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setCriterion' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setCriterion(self, property, identity=None, min=None, max=None, **kw):
     """
       This methods sets parameters of a criterion. There is at most one
@@ -369,7 +369,7 @@ class Predicate(XMLObject):
       self._range_criterion[property] = (min, max)
     self.reindexObject()
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
+  @security.protected(Permissions.ModifyPortalContent)
   def edit(self, **kwd):
     """
       The edit method is overriden so that any time a
@@ -395,7 +395,7 @@ class Predicate(XMLObject):
     return self._edit(**kwd)
 
   # Predicate fusion method
-  security.declareProtected( Permissions.ModifyPortalContent, 'setPredicateCategoryList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setPredicateCategoryList(self, category_list):
     """
       This method updates a Predicate by implementing an
@@ -444,7 +444,7 @@ class Predicate(XMLObject):
     self._setTestMethodIdList(test_method_id_list)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'generatePredicate')
+  @security.protected(Permissions.AccessContentsInformation)
   def generatePredicate(self, multimembership_criterion_base_category_list=(),
                         membership_criterion_base_category_list=(),
                         criterion_property_list=(),
@@ -518,8 +518,7 @@ class Predicate(XMLObject):
 
     return new_self
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asPredicate')
+  @security.protected(Permissions.AccessContentsInformation)
   def asPredicate(self):
     """
       This method tries to convert the current Document into a predicate
@@ -537,7 +536,7 @@ class Predicate(XMLObject):
   def _asPredicate(self):
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'searchPredicate')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchPredicate(self, **kw):
     """
       Returns a list of documents matching the predicate
@@ -546,8 +545,7 @@ class Predicate(XMLObject):
     """
     pass
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMembershipCriterionCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMembershipCriterionCategoryList(self, filter=None, **kw):
     """
     If filter is specified, return category only or document only
@@ -570,8 +568,7 @@ class Predicate(XMLObject):
     else:
       return all_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setMembershipCriterionDocumentList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setMembershipCriterionDocumentList(self, document_list):
     """
     Appends to membership_criterion_category values.

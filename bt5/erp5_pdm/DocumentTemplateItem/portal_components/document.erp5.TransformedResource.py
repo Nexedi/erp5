@@ -103,15 +103,13 @@ class TransformedResource(AmountGeneratorLine):
       value += delivery_amount.getConvertedQuantity()
     return value
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBaseApplication')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseApplication(self):
     """
     """
     return self.getBaseApplicationList()[0]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBaseApplicationList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseApplicationList(self):
     """
     """
@@ -121,8 +119,7 @@ class TransformedResource(AmountGeneratorLine):
 
   ### Variation matrix definition
   # XXX-JPS Some explanation needed
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'updateVariationCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def updateVariationCategoryList(self):
     """
         Check if variation category list of the resource changed and
@@ -131,8 +128,7 @@ class TransformedResource(AmountGeneratorLine):
     self.setQVariationBaseCategoryList(self.getQVariationBaseCategoryList())
     self.setVVariationBaseCategoryList(self.getVVariationBaseCategoryList())
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            '_setQVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setQVariationBaseCategoryList(self, value):
     """
         Defines the possible base categories which Quantity value (Q)
@@ -141,8 +137,7 @@ class TransformedResource(AmountGeneratorLine):
     self._baseSetQVariationBaseCategoryList(value)
     self._updateCellRange('quantity')
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            '_setVVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setVVariationBaseCategoryList(self, value):
     """
         Defines the possible base categories which Variation value (V)
@@ -154,8 +149,7 @@ class TransformedResource(AmountGeneratorLine):
     # XXX-JPS This should be handled by interaction workflow or interactor
     # XXX-JPS SO many cases are not handled well...
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVVariationBaseCategoryList(self, value):
     """
         Defines the possible base categories which Variation value (V)

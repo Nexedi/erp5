@@ -81,7 +81,7 @@ class SubversionLoginError(SubversionError):
   def __init__(self, realm = None):  # pylint:disable=super-init-not-called
     self._realm = realm
 
-  security.declarePublic('getRealm')
+  @security.public
   def getRealm(self):
     return self._realm
 
@@ -97,7 +97,7 @@ class SubversionSSLTrustError(SubversionError):
   def __init__(self, trust_dict = None):  # pylint:disable=super-init-not-called
     self._trust_dict = trust_dict
 
-  security.declarePublic('getTrustDict')
+  @security.public
   def getTrustDict(self):
     return self._trust_dict
 

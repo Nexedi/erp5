@@ -61,7 +61,7 @@ class CacheFactory(XMLObject):
                     , PropertySheet.SortIndex
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCacheId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCacheId(self):
     """
       Get a common Cache Factory / Cache Bag ID in this
@@ -73,7 +73,7 @@ class CacheFactory(XMLObject):
     assert relative_url[:14] == 'portal_caches/'
     return relative_url[14:]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'get')
+  @security.protected(Permissions.AccessContentsInformation)
   def get(self, cache_id, default=None):
     """
       Get value or return default from all contained Cache Bag
@@ -86,7 +86,7 @@ class CacheFactory(XMLObject):
         return value
     return default
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'set')
+  @security.protected(Permissions.AccessContentsInformation)
   def set(self, cache_id, value):
     """
       Set value to all contained cache plugin or cache bag.
@@ -95,7 +95,7 @@ class CacheFactory(XMLObject):
     for cache_plugin in cache_plugin_list:
       cache_plugin.set(cache_id, value)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCachePluginList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCachePluginList(self, allowed_type_list=None):
     """ get ordered list of installed cache plugins in ZODB """
     if allowed_type_list is None:
@@ -106,7 +106,7 @@ class CacheFactory(XMLObject):
     cache_plugins.sort(key=lambda x: x.getIntIndex(0))
     return cache_plugins
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRamCacheFactory(self):
     """ Return RAM based cache factory """
     cache_factory_name =  self.getCacheId()
@@ -120,7 +120,7 @@ class CacheFactory(XMLObject):
       cache_tool.updateCache()
     return CachingMethod.factories[cache_factory_name]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactoryPluginList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRamCacheFactoryPluginList(self):
     """ Return RAM based list of cache plugins for this factory """
     return self.getRamCacheFactory().getCachePluginList()

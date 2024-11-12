@@ -42,7 +42,7 @@ class CrawlableMixin:
   # Declarative security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFrequencyIndex')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFrequencyIndex(self):
     """
       Returns the document update frequency as an integer
@@ -56,7 +56,7 @@ class CrawlableMixin:
       # Catch Attribute error or Key error - XXX not beautiful
       return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDateIndex')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCreationDateIndex(self, at_date = None):
     """
     Returns the document Creation Date Index which is the creation
@@ -77,7 +77,7 @@ class CrawlableMixin:
 
     return creation_date_index
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isUpdatable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isUpdatable(self):
     """
       This method is used to decide which document can be updated
@@ -89,8 +89,7 @@ class CrawlableMixin:
         fallback_script_id = 'Document_isUpdatable')
     return method()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContentURLList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentURLList(self):
     """
     Returns a list of URLs referenced by the content of this document.
@@ -116,8 +115,7 @@ class CrawlableMixin:
       href_list.append(link)
     return href_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContentBaseURL')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentBaseURL(self):
     """
     Returns the content base URL based on the actual content or
@@ -134,8 +132,7 @@ class CrawlableMixin:
     return base_url
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContentNormalisedURLList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentNormalisedURLList(self):
     """
     Call url normalizer for each url returned by getContentURLList

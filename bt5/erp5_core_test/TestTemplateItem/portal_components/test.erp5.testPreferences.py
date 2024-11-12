@@ -267,7 +267,7 @@ class TestPreferences(PropertySheetTestCase):
     try :
       pref_tool.getPreferredNotExistingPreference()
       self.fail('Attribute error should be raised for dummy methods')
-    except AttributeError :
+    except AttributeError:
       pass
 
   def test_SetPreference(self):

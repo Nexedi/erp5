@@ -50,7 +50,7 @@ class EncryptedPasswordMixin(object):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.SetOwnPassword, 'checkPassword')
+  @security.protected(Permissions.SetOwnPassword)
   def checkPassword(self, value) :
     """
     """
@@ -58,7 +58,7 @@ class EncryptedPasswordMixin(object):
       return pw_validate(self.getPassword(), value)
     return False
 
-  security.declareProtected(Permissions.SetOwnPassword, 'checkPasswordValueAcceptable')
+  @security.protected(Permissions.SetOwnPassword)
   def checkPasswordValueAcceptable(self, value):
     """Check the password.
 
@@ -89,7 +89,7 @@ class EncryptedPasswordMixin(object):
       password = self.password = PersistentMapping()
     self.password[format] = value
 
-  security.declareProtected(Permissions.SetOwnPassword, 'setEncodedPassword')
+  @security.protected(Permissions.SetOwnPassword)
   def setEncodedPassword(
       self,
       value,
@@ -111,7 +111,7 @@ class EncryptedPasswordMixin(object):
     self.checkPasswordValueAcceptable(value)
     self._forceSetPassword(value)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPassword')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPassword(self, *args, **kw):
     marker = []
     if len(args):
@@ -133,7 +133,7 @@ class EncryptedPasswordMixin(object):
           password = default_password
     return password
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'edit')
+  @security.protected(Permissions.ModifyPortalContent)
   def edit(self, *args, **kw):
     """edit, with support for empty password for the user interface.
 

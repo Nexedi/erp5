@@ -114,7 +114,7 @@ class SimulationTool(BaseTool):
     """ show the content in the left pane of the ZMI """
     return self.objectValues()
 
-  security.declarePrivate('manage_afterAdd')
+  @security.private
   def manage_afterAdd(self, item, container) :
     """Init permissions right after creation.
 
@@ -131,8 +131,7 @@ class SimulationTool(BaseTool):
           ['Manager',])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'solveDelivery')
+  @security.protected(Permissions.AccessContentsInformation)
   def solveDelivery(self, delivery, delivery_solver_name, target_solver_name,
                     additional_parameters=None, **kw):
     """
@@ -144,8 +143,7 @@ class SimulationTool(BaseTool):
         target_solver_name, delivery=1,
         additional_parameters=additional_parameters, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'solveMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def solveMovement(self, movement, delivery_solver_name, target_solver_name,
                     additional_parameters=None, **kw):
     """
@@ -991,8 +989,7 @@ class SimulationTool(BaseTool):
 
   #######################################################
   # Inventory management
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventory(self, src__=0, simulation_period='', **kw):
     """
     Returns an inventory of a single or multiple resources on a single or
@@ -1159,16 +1156,14 @@ class SimulationTool(BaseTool):
 
     return total_result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventory(self, **kw):
     """
     Returns current inventory
     """
     return self.getInventory(simulation_period='Current', **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableInventory(self, **kw):
     """
     Returns available inventory
@@ -1176,8 +1171,7 @@ class SimulationTool(BaseTool):
     """
     return self.getInventory(simulation_period='Available', **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventory(self, **kw):
     """
     Returns future inventory
@@ -1223,8 +1217,7 @@ class SimulationTool(BaseTool):
         new_group_by_dict['group_by_resource'] = 1
     return new_group_by_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryList(self, src__=0, optimisation__=True,
                        ignore_variation=0, standardise=0,
                        omit_simulation=0,
@@ -1375,8 +1368,7 @@ class SimulationTool(BaseTool):
         result = delta_result
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryCacheLag')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryCacheLag(self):
     """
     Returns a duration, in days, for stock cache management.
@@ -1657,8 +1649,7 @@ class SimulationTool(BaseTool):
       ),
     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAllInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAllInventoryList(self, src__=0, **kw):
     """
     Returns list of inventory, for all periods.
@@ -1696,8 +1687,7 @@ class SimulationTool(BaseTool):
     return mergeZRDBResults(results, group_by_list, edit_result)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventoryList(self, omit_transit=1,
                               transit_simulation_state=None, **kw):
     """
@@ -1714,8 +1704,7 @@ class SimulationTool(BaseTool):
                           transit_simulation_state=transit_simulation_state,
                           **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableInventoryList(self, omit_transit=1, transit_simulation_state=None, **kw):
     """
       Returns list of current inventory grouped by section or site
@@ -1731,8 +1720,7 @@ class SimulationTool(BaseTool):
     return self.getInventoryList(reserved_kw=reserved_kw, omit_transit=omit_transit,
                    transit_simulation_state=transit_simulation_state, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventoryList(self, **kw):
     """
       Returns list of future inventory grouped by section or site
@@ -1744,8 +1732,7 @@ class SimulationTool(BaseTool):
                              portal.getPortalCurrentInventoryStateList()
     return self.getInventoryList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryStat(self, simulation_period='', **kw):
     """
     getInventoryStat is the pending to getInventoryList in order to
@@ -1758,32 +1745,28 @@ class SimulationTool(BaseTool):
     return method(statistic=1, inventory_list=0, optimisation__=False,
                                  ignore_group_by=1, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventoryStat(self, **kw):
     """
     Returns statistics of current inventory grouped by section or site
     """
     return self.getInventoryStat(simulation_period='Current', **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableInventoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableInventoryStat(self, **kw):
     """
     Returns statistics of available inventory grouped by section or site
     """
     return self.getInventoryStat(simulation_period='Available', **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventoryStat(self, **kw):
     """
     Returns statistics of future inventory grouped by section or site
     """
     return self.getInventoryStat(simulation_period='Future', **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryChart(self, src__=0, **kw):
     """
     Returns a list of couples derived from getInventoryList in order
@@ -1799,8 +1782,7 @@ class SimulationTool(BaseTool):
 
     return [(r.node_title, r.total_quantity) for r in result]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventoryChart(self, **kw):
     """
     Returns list of current inventory grouped by section or site
@@ -1809,8 +1791,7 @@ class SimulationTool(BaseTool):
       .getPortalCurrentInventoryStateList()
     return self.getInventoryChart(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventoryChart(self, **kw):
     """
     Returns list of future inventory grouped by section or site
@@ -1822,8 +1803,7 @@ class SimulationTool(BaseTool):
                              portal.getPortalCurrentInventoryStateList()
     return self.getInventoryChart(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryAssetPrice(self, src__=0,
                              simulation_period='',
                              valuation_method=None,
@@ -1895,8 +1875,7 @@ class SimulationTool(BaseTool):
         asset_price = float(asset_price)
       return asset_price
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventoryAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventoryAssetPrice(self, **kw):
     """
     Returns list of current inventory grouped by section or site
@@ -1904,8 +1883,7 @@ class SimulationTool(BaseTool):
     kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
     return self.getInventoryAssetPrice(simulation_period='Current',**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableInventoryAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableInventoryAssetPrice(self, **kw):
     """
     Returns list of available inventory grouped by section or site
@@ -1916,8 +1894,7 @@ class SimulationTool(BaseTool):
                              portal.getPortalCurrentInventoryStateList()
     return self.getInventoryAssetPrice(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventoryAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventoryAssetPrice(self, **kw):
     """
     Returns list of future inventory grouped by section or site
@@ -1928,8 +1905,7 @@ class SimulationTool(BaseTool):
                              portal.getPortalCurrentInventoryStateList()
     return self.getInventoryAssetPrice(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryHistoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryHistoryList(self, src__=0, ignore_variation=0,
                               standardise=0, omit_simulation=0,
                               only_accountable=True, omit_input=0,
@@ -1952,8 +1928,7 @@ class SimulationTool(BaseTool):
                     precision=precision,
                     **sql_kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryHistoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryHistoryChart(self, src__=0, ignore_variation=0,
                                standardise=0, omit_simulation=0,
                                only_accountable=True,
@@ -1976,8 +1951,7 @@ class SimulationTool(BaseTool):
                   precision=precision,
                   **sql_kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMovementHistoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementHistoryList(self, src__=0, ignore_variation=0,
                              standardise=0, omit_simulation=0,
                              omit_input=0, omit_output=0,
@@ -2016,8 +1990,7 @@ class SimulationTool(BaseTool):
                                 initial_running_total_price,
                        precision=precision, **sql_kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMovementHistoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementHistoryStat(self, src__=0, **kw):
     """
     getMovementHistoryStat is the pending to getMovementHistoryList
@@ -2030,8 +2003,7 @@ class SimulationTool(BaseTool):
     assert len(inventory_list) == 1
     return inventory_list[0]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getNextAlertInventoryDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNextAlertInventoryDate(self, reference_quantity=0, src__=0,
                      simulation_period='Future', from_date=None,
                      range='min', # pylint: disable=redefined-builtin
@@ -2094,8 +2066,7 @@ class SimulationTool(BaseTool):
             break
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getNextNegativeInventoryDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNextNegativeInventoryDate(self, **kw):
     """
     Deficient Inventory with a reference_quantity of 0, so when the
@@ -2105,7 +2076,7 @@ class SimulationTool(BaseTool):
 
   #######################################################
   # Traceability management
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTrackingList(self, src__=0,
       strict_simulation_state=1, history=0, **kw) :
     """
@@ -2210,7 +2181,7 @@ class SimulationTool(BaseTool):
     return self.Resource_zGetTrackingList(src__=src__,
                                           **new_kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentTrackingList(self, **kw):
     """
     Returns list of current inventory grouped by section or site
@@ -2223,7 +2194,7 @@ class SimulationTool(BaseTool):
       .getPortalTransitInventoryStateList()
     return self.getTrackingList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingHistoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentTrackingHistoryList(self, **kw):
     """
     Returns list of current inventory grouped by section or site
@@ -2232,7 +2203,7 @@ class SimulationTool(BaseTool):
       .getPortalCurrentInventoryStateList()
     return self.getTrackingHistoryList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingHistoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTrackingHistoryList(self, **kw):
     """
     Returns history list of inventory grouped by section or site
@@ -2240,7 +2211,7 @@ class SimulationTool(BaseTool):
     kw['history'] = 1
     return self.getTrackingList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFutureTrackingList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureTrackingList(self, **kw):
     """
     Returns list of future inventory grouped by section or site
@@ -2254,7 +2225,7 @@ class SimulationTool(BaseTool):
 
   #######################################################
   # Capacity Management
-  security.declareProtected( Permissions.ModifyPortalContent, 'updateCapacity' )
+  @security.protected(Permissions.ModifyPortalContent)
   def updateCapacity(self, node):
     capacity_item_list = []
     for o in node.contentValues():
@@ -2452,7 +2423,7 @@ class SimulationTool(BaseTool):
         break
     return builder
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'mergeDeliveryList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def mergeDeliveryList(self, delivery_list):
     """
       Merge multiple deliveries into one delivery.
@@ -2564,8 +2535,7 @@ class SimulationTool(BaseTool):
 
   #######################################################
   # Sequence
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSequence')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSequence(self, **kw):
     """
     getSequence is take the same parameters as Sequence constructor,
@@ -2575,8 +2545,7 @@ class SimulationTool(BaseTool):
 
   #######################################################
   # Time Management
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableTime')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableTime(self, from_date=None, to_date=None,
                        portal_type=(), node=(),
                        resource=(), src__=0, **kw):
@@ -2626,8 +2595,7 @@ class SimulationTool(BaseTool):
       result = sql_result
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableTimeSequence')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableTimeSequence(self, from_date, to_date,
                                portal_type=(), node=(),
                                resource=(),
@@ -2671,8 +2639,7 @@ class SimulationTool(BaseTool):
                         src__=src__))
     return sequence
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableTimeMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableTimeMovementList(self, from_date, to_date,
                                **kw):
     """

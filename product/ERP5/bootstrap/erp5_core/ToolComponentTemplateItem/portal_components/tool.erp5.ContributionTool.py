@@ -87,7 +87,7 @@ class ContributionTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainContributionTool', _dtmldir )
 
-  security.declareProtected(Permissions.AddPortalContent, 'newContent')
+  @security.protected(Permissions.AddPortalContent)
   @fill_args_from_request('data', 'filename', 'portal_type', 'container_path',
                           'discover_metadata', 'temp_object', 'reference')
   def newContent(self, REQUEST=None, **kw):  # pylint:disable=arguments-differ
@@ -277,15 +277,14 @@ class ContributionTool(BaseTool):
       return REQUEST.RESPONSE.redirect(self.absolute_url())
     return document
 
-  security.declareProtected( Permissions.AddPortalContent, 'newXML' )
+  @security.protected(Permissions.AddPortalContent)
   def newXML(self, xml):
     """
       Create a new content based on XML data. This is intended for contributing
       to ERP5 from another application.
     """
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getMatchedFilenamePatternDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def getMatchedFilenamePatternDict(self, filename):
     """
       Get matched group dict of file name parsing regular expression.
@@ -310,8 +309,7 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # backward compatibility
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getMatchedFileNamePatternDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def getMatchedFileNamePatternDict(self, filename):
     """
     (deprecated) use getMatchedFilenamePatternDict() instead.
@@ -320,8 +318,7 @@ class ContributionTool(BaseTool):
                   'use getMatchedFilenamePatternDict() instead.')
     return self.getMatchedFilenamePatternDict(filename)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getPropertyDictFromFilename')
+  @security.protected(Permissions.ModifyPortalContent)
   def getPropertyDictFromFilename(self, filename):
     """
       Gets properties from filename. File name is parsed with a regular expression
@@ -340,8 +337,7 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # backward compatibility
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getPropertyDictFromFileName')
+  @security.protected(Permissions.ModifyPortalContent)
   def getPropertyDictFromFileName(self, filename):
     """
     (deprecated) use getPropertyDictFromFilename() instead.
@@ -483,7 +479,7 @@ class ContributionTool(BaseTool):
 
     return wrapper(object_list)
 
-  security.declareProtected(Permissions.AddPortalContent, 'crawlContent')
+  @security.protected(Permissions.AddPortalContent)
   def crawlContent(self, content, container=None):
     """
       Analyses content and download linked pages
@@ -533,7 +529,7 @@ class ContributionTool(BaseTool):
       # An activity will later setup the good reference for it.
       url_registry_tool.registerURL(url, None, context=container)
 
-  security.declareProtected(Permissions.AddPortalContent, 'updateContentFromURL')
+  @security.protected(Permissions.AddPortalContent)
   def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0,
                            repeat_interval=1, batch_mode=True):
     """
@@ -575,7 +571,7 @@ class ContributionTool(BaseTool):
       if depth > 0:
         content.activate().crawlContent()
 
-  security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
+  @security.protected(Permissions.AddPortalContent)
   def newContentFromURL(self, url, container_path=None, id=None, repeat=MAX_REPEAT,
                         repeat_interval=1, batch_mode=True, **kw):
     """
@@ -613,8 +609,7 @@ class ContributionTool(BaseTool):
                         repeat_interval=repeat_interval, **kw)
     return document
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'guessMimeTypeFromFilename')
+  @security.protected(Permissions.AccessContentsInformation)
   def guessMimeTypeFromFilename(self, filename):
     """
       get mime type from file name

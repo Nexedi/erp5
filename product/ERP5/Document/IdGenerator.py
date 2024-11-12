@@ -54,8 +54,7 @@ class IdGenerator(Base):
                       PropertySheet.Version,
                       PropertySheet.Reference)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getLatestVersionValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLatestVersionValue(self):
     """
       Return the last generator with the reference
@@ -70,8 +69,7 @@ class IdGenerator(Base):
                        %  self.getReference())
     return specialise.getLatestVersionValue()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'generateNewId')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewId(self, *args, **kw):
     """
      Generate the next id in the sequence of ids of a particular group
@@ -80,8 +78,7 @@ class IdGenerator(Base):
     """
     return self._getLatestSpecialiseValue().generateNewId(*args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'generateNewIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateNewIdList(self, id_group=None, id_count=1, default=None,
                         poison=False):
     """
@@ -99,8 +96,7 @@ class IdGenerator(Base):
                                                               default=default,
                                                               poison=poison)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'initializeGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def initializeGenerator(self):
     """
       Initialize generator. This is mostly used when a new ERP5 site
@@ -109,8 +105,7 @@ class IdGenerator(Base):
     """
     self._getLatestSpecialiseValue().initializeGenerator()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'clearGenerator')
+  @security.protected(Permissions.ModifyPortalContent)
   def clearGenerator(self):
     """
       Clear generators data. This can be usefull when working on a
@@ -123,16 +118,14 @@ class IdGenerator(Base):
     """
     self._getLatestSpecialiseValue().clearGenerator()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'exportGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def exportGeneratorIdDict(self):
     """
       Export last id values in a dictionnary in the form { group_id : last_id }
     """
     return self._getLatestSpecialiseValue().exportGeneratorIdDict()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'importGeneratorIdDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def importGeneratorIdDict(self, *args, **kw):
     """
       Import data, this is usefull if we want to replace a generator by
