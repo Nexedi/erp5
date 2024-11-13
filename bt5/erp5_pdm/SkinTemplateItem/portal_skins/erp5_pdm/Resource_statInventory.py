@@ -1,4 +1,6 @@
 from Products.PythonScripts.standard import Object
+portal = context.getPortalObject()
+
 inventory_kw = {
   'selection_domain': selection_domain
 }
