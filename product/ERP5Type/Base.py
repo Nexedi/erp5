@@ -2871,7 +2871,8 @@ class Base(
     return related_count
 
   # Workflow Related Method
-  security.declarePublic('getWorkflowStateItemList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWorkflowStateItemList')
   def getWorkflowStateItemList(self):
     """
       Returns a list of tuples {id:workflow_id, state:workflow_state}
@@ -2880,14 +2881,6 @@ class Base(
     for wf in self.portal_workflow.getWorkflowValueListFor(self.getPortalType()):
       result += [(wf.getId(), wf._getWorkflowStateOf(self, id_only=1))]
     return result
-
-  security.declarePublic('getWorkflowInfo')
-  def getWorkflowInfo(self, name='state', wf_id=None):
-    """
-      Returns a list of tuples {id:workflow_id, state:workflow_state}
-    """
-    portal_workflow = self.portal_workflow
-    return portal_workflow.getInfoFor(self, name, wf_id=wf_id)
 
   # Hide Acquisition to prevent loops (ex. in cells)
   # Another approach is to use XMLObject everywhere
