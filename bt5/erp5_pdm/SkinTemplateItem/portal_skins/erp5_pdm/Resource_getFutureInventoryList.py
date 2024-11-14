@@ -3,7 +3,7 @@ portal = context.getPortalObject()
 
 inventory_list_kw = {
     'selection_domain': selection_domain,
-    'group_by_section': False,
+    'group_by_section': True,
     'group_by_node': True,
     'group_by_variation': True,
     'resource_uid': context.getUid(),
@@ -24,6 +24,7 @@ def makeResultLine(brain):
   """
   inventory_kw = {
       'node_uid': brain.node_uid,
+      'section_uid': brain.section_uid,
       'resource_uid': brain.resource_uid,
       'variation_text': brain.variation_text,
   }
@@ -43,6 +44,7 @@ def makeResultLine(brain):
   return Object(
       uid='new_',
       node_title=brain.node_title,
+      section_title=brain.section_title,
       inventory=getattr(brain, 'converted_quantity', brain.inventory),
       getCurrentInventory=getCurrentInventory,
       getAvailableInventory=getAvailableInventory,
