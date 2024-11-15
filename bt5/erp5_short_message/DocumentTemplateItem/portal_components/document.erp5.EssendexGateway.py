@@ -119,7 +119,7 @@ class EssendexGateway(XMLObject):
     """Convert phone number for erp5 compliance"""
     return "+%s(%s)-%s" % (number[0:2],0,number[2:])
 
-  security.declarePrivate("_parsePhoneNumber")
+  security.declarePrivate("_parseDate")
   def _parseDate(self, string):
     """Convert a string (like 2011-05-03 10:23:16Z) to a DateTime"""
     return DateTime(string.replace('Z', ' GTM+2'))

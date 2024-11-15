@@ -428,7 +428,7 @@ class SyncMLSubscription(XMLObject):
         syncml_response=syncml_response,
         simulate=simulate)
 
-  security.declarePrivate('applySyncCommand')
+  security.declarePrivate('_applySyncCommand')
   def _applySyncCommand(self, action, request_message_id, syncml_response,
                        simulate=False):
     """

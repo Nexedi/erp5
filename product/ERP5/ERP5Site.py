@@ -1669,7 +1669,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('target_solver')
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTargetSolverTypeList')
+                            'getPortalDeliverySolverTypeList')
   def getPortalDeliverySolverTypeList(self):
     """
     Return delivery solver types.

@@ -523,7 +523,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
+    security.declareProtected(ManagePortal, 'manage_addTransformsChain')
     def manage_addTransformsChain(self, id, description, REQUEST=None):
         """ add a new transform to the tool """
         transform = TransformsChain(id, description)
@@ -532,7 +532,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
+    security.declareProtected(ManagePortal, 'manage_setCacheValidityTime')
     def manage_setCacheValidityTime(self, seconds, REQUEST=None):
         """set  the lifetime of cached data in seconds"""
         self.max_sec_in_cache = int(seconds)
