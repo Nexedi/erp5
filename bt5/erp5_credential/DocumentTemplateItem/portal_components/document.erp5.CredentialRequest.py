@@ -58,8 +58,7 @@ class CredentialRequest(EncryptedPasswordMixin, Ticket):
     # all passwords are acceptable on Credential Request
     pass
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self, **kw):
     """
       Returns the title if it exists or a combination of
@@ -77,8 +76,7 @@ class CredentialRequest(EncryptedPasswordMixin, Ticket):
     else:
       return self.title
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasTitle(self):
     return self.title or self.hasFirstName() or self.hasLastName()
 

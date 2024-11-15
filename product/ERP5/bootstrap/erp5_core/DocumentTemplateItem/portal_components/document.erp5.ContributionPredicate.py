@@ -57,7 +57,7 @@ class ContributionPredicate(Predicate, XMLObject):
                     , PropertySheet.ContributionPredicate
                     )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'test')
+  @security.protected(Permissions.AccessContentsInformation)
   def test(self, context, tested_base_category_list=None, **kw):
     """
       A Predicate can be tested on a given context.

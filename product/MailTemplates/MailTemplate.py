@@ -38,7 +38,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
                                    __name__='pt_editForm')
     manage = manage_main = pt_editForm
 
-    security.declareProtected('Change Page Templates','pt_editAction')
+    @security.protected('Change Page Templates')
     def pt_editAction(self, REQUEST, mailhost, text, content_type, expand):
         """Change the mailhost and document."""
         if self.wl_isLocked():

@@ -72,8 +72,7 @@ class PDFDocument(Image):
                     , PropertySheet.Periodicity
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWatermarkedData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWatermarkedData(self, watermark_data, repeat_watermark=True,
                          watermark_start_page=0, **kw):
     """See interface
@@ -158,7 +157,7 @@ class PDFDocument(Image):
         kw['frame'] = 0
       return Image._convert(self, format, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def populateContent(self):
     """
       Convert each page to an Image and populate the
@@ -167,7 +166,7 @@ class PDFDocument(Image):
     """
     raise NotImplementedError
 
-  security.declarePrivate('_convertToText')
+  @security.private
   def _convertToText(self, format='txt'):  # pylint: disable=redefined-builtin
     """Convert the PDF to text
 
@@ -255,7 +254,7 @@ class PDFDocument(Image):
           text += result
       return text
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSizeFromImageDisplay')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSizeFromImageDisplay(self, image_display):
     """
     Return the size for this image display, or None if this image display name
@@ -269,7 +268,7 @@ class PDFDocument(Image):
     else:
       return Image.getSizeFromImageDisplay(self, image_display)
 
-  security.declarePrivate('_convertToHTML')
+  @security.private
   def _convertToHTML(self):
     """Convert the PDF text content to HTML with pdftohtml
     """
@@ -299,7 +298,7 @@ class PDFDocument(Image):
                                                           'href="asEntireHTML')
     return h
 
-  security.declarePrivate('_convertToDJVU')
+  @security.private
   def _convertToDJVU(self):
     """Convert the PDF text content to DJVU with pdf2djvu
     """
@@ -323,7 +322,7 @@ class PDFDocument(Image):
       tmp.close()
     return command_result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentInformation(self):
     """Returns the information about the PDF document with pdfinfo.
     """

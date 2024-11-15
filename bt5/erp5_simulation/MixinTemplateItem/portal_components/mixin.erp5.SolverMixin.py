@@ -48,7 +48,7 @@ class SolverMixin(object):
     raise NotImplementedError
 
   # Implementation of ISolver
-  security.declarePrivate('solve')
+  @security.private
   def solve(self, activate_kw=None):
     with super_user():
       self._solve(activate_kw=activate_kw)
@@ -56,8 +56,7 @@ class SolverMixin(object):
   def getPortalTypeValue(self):
     return self.getPortalObject().portal_solvers._getOb(self.getPortalType())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'searchDeliverySolverList')
+  @security.protected(Permissions.AccessContentsInformation)
   def searchDeliverySolverList(self, **kw):
     """
     this method returns a list of delivery solvers

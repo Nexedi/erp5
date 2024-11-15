@@ -58,8 +58,7 @@ class RuleMixin(Predicate):
   movement_type = 'Simulation Movement'
 
   # Implementation of IRule
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'constructNewAppliedRule')
+  @security.protected(Permissions.ModifyPortalContent)
   def constructNewAppliedRule(self, context, **kw):
     """
     Create a new applied rule in the context.
@@ -93,8 +92,7 @@ class RuleMixin(Predicate):
         return False
       return super(RuleMixin, self).test(*args, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'expand')
+  @security.protected(Permissions.ModifyPortalContent)
   def expand(self, applied_rule, expand_policy=None, **kw):
     """
     Expand this applied rule to create new documents inside the
@@ -117,8 +115,7 @@ class RuleMixin(Predicate):
     for movement in applied_rule.getMovementList():
       maybe_expand(movement)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self, movement):
     """Tells wether generated movement needs to be accounted or not.
 
@@ -128,8 +125,7 @@ class RuleMixin(Predicate):
     return not movement.getDelivery()
 
   # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for
-  security.declareProtected( Permissions.AccessContentsInformation,
-                            'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self, movement, ignore_list=()):
     """
     Returns true if the Simulation Movement is divergent comparing to
@@ -139,7 +135,7 @@ class RuleMixin(Predicate):
       return False
     return bool(self.getDivergenceList(movement))
 
-  security.declareProtected(Permissions.View, 'getDivergenceList')
+  @security.protected(Permissions.View)
   def getDivergenceList(self, movement):
     """
     Returns a list of divergences of the movements provided

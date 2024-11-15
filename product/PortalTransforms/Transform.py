@@ -163,7 +163,7 @@ class Transform(SimpleItem):
         self._v_transform = transform
         return transform
 
-    security.declarePrivate('manage_beforeDelete')
+    @security.private
     def manage_beforeDelete(self, item, container):
         SimpleItem.manage_beforeDelete(self, item, container)
         if self is item:
@@ -174,27 +174,27 @@ class Transform(SimpleItem):
             tr_tool = self.aq_parent
             tr_tool._unmapTransform(self)
 
-    security.declarePublic('get_documentation')
+    @security.public
     def get_documentation(self):
         """ return transform documentation """
         return self._load_transform().__doc__
 
-    security.declarePrivate('convert')
+    @security.private
     def convert(self, *args, **kwargs):
         """ return apply the transform and return the result """
         return self._load_transform().convert(*args, **kwargs)
 
-    security.declarePublic('name')
+    @security.public
     def name(self):
         """return the name of the transform instance"""
         return self.id
 
-    security.declareProtected(ManagePortal, 'get_parameters')
+    @security.protected(ManagePortal)
     def get_parameters(self):
         """ get transform's parameters names """
         return sorted(self._load_transform().config.keys())
 
-    security.declareProtected(ManagePortal, 'get_parameter_value')
+    @security.protected(ManagePortal)
     def get_parameter_value(self, key):
         """ get value of a transform's parameter """
         value = self._config[key]
@@ -209,7 +209,7 @@ class Transform(SimpleItem):
             result = value
         return result
 
-    security.declareProtected(ManagePortal, 'get_parameter_infos')
+    @security.protected(ManagePortal)
     def get_parameter_infos(self, key):
         """ get informations about a parameter
 
@@ -224,7 +224,7 @@ class Transform(SimpleItem):
         except KeyError:
             return 'string', '', ''
 
-    security.declareProtected(ManagePortal, 'set_parameters')
+    @security.protected(ManagePortal)
     def set_parameters(self, REQUEST=None, **kwargs):
         """ set transform's parameters """
         if not kwargs:
@@ -254,7 +254,7 @@ class Transform(SimpleItem):
             REQUEST['RESPONSE'].redirect(tr_tool.absolute_url()+'/manage_main')
 
 
-    security.declareProtected(ManagePortal, 'reload')
+    @security.protected(ManagePortal)
     def reload(self):
         """ reload the module where the transformation class is defined """
         log('Reloading transform %s' % self.module)
@@ -262,7 +262,7 @@ class Transform(SimpleItem):
             reload(import_from_name(self.module))
         self._tr_init()
 
-    security.declarePrivate('preprocess_param')
+    @security.private
     def preprocess_param(self, kwargs):
         """ preprocess param fetched from an http post to handle optional dictionary
         """

@@ -60,7 +60,7 @@ class InventoryLine(DeliveryLine):
                     , PropertySheet.ItemAggregation
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalInventory(self):
     """
     Returns the inventory if no cell or the total inventory if cells
@@ -74,8 +74,7 @@ class InventoryLine(DeliveryLine):
           total_quantity += cell.getInventory()
       return total_quantity
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantity(self):
     """
     Computes a quantity which allows to reach inventory
@@ -94,8 +93,7 @@ class InventoryLine(DeliveryLine):
       return None
 
   # Inventory cataloging
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConvertedInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConvertedInventory(self):
     """
     provides a default inventory value - None since
@@ -104,8 +102,7 @@ class InventoryLine(DeliveryLine):
     return self.getInventory() # XXX quantity unit is missing
 
   # Required for indexing
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoriatedQuantity(self):
     """
     Take into account efficiency in converted target quantity

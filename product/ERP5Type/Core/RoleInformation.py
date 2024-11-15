@@ -81,7 +81,7 @@ class RoleInformation(XMLObject):
                     , PropertySheet.RoleInformation
                     )
 
-  security.declarePrivate('testCondition')
+  @security.private
   def testCondition(self, ec):
     """Evaluate condition using context, 'ec', and return 0 or 1"""
     condition = self.getCondition()
@@ -94,19 +94,19 @@ class RoleInformation(XMLObject):
       value = value and Expression(value) or None
     self._baseSetCondition(value)
 
-  security.declareProtected(AccessContentsInformation, 'getCondition')
+  @security.protected(AccessContentsInformation)
   def getCondition(self):
     """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':
       del self.condition
     return self._baseGetCondition()
 
-  security.declareProtected(AccessContentsInformation, 'getConditionText')
+  @security.protected(AccessContentsInformation)
   def getConditionText(self):
     """Return the text of the condition"""
     return getattr(self.getCondition(), 'text', None)
 
-  security.declareProtected(AccessContentsInformation, 'PrincipiaSearchSource')
+  @security.protected(AccessContentsInformation)
   def PrincipiaSearchSource(self):
     """Return keywords for "Find" tab in ZMI"""
     search_source_list = [self.getTitle(),
@@ -115,7 +115,7 @@ class RoleInformation(XMLObject):
                          self.getRoleBaseCategoryScriptId()]
     return ' '.join([_f for _f in search_source_list if _f])
 
-  security.declarePrivate("getLocalRolesFor")
+  @security.private
   def getLocalRolesFor(self, ob, user_name=None):
     """Compute the security that should be applied on an object
 

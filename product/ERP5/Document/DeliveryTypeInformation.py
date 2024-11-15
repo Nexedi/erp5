@@ -45,7 +45,7 @@ class DeliveryTypeInformation(ERP5TypeInformation):
   portal_type = "Delivery Type"
   meta_type = "ERP5 Delivery Type"
 
-  security.declarePublic('constructInstance')
+  @security.public
   def constructInstance(self, *args, **kw):
     "Creates a new delivery with a default ledger found on the portal type"
     delivery = super(DeliveryTypeInformation, self).constructInstance(*args, **kw)

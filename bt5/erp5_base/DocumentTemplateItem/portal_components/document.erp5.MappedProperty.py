@@ -81,7 +81,7 @@ class MappedProperty(XMLObject):
 
   # Security should be handled by the target document not by the mapped
   # property document.
-  security.declarePublic('getMappedProperty')
+  @security.public
   def getMappedProperty(self, document, property): #  pylint: disable=redefined-builtin
     if property.endswith('_list'):
       property = property[:-5]
@@ -97,7 +97,7 @@ class MappedProperty(XMLObject):
 
   # Security should be handled by the target document not by the mapped
   # property document.
-  security.declarePublic('setMappedProperty')
+  @security.public
   def setMappedProperty(self, document, property, value): #  pylint: disable=redefined-builtin
     if property.endswith('_list'):
       property = property[:-5]

@@ -52,7 +52,7 @@ class ERP5DumbHTTPExtractionPlugin(BasePlugin):
     self._setId(id)
     self.title = title
 
-  security.declarePrivate('extractCredentials')
+  @security.private
   @UnrestrictedMethod
   def extractCredentials(self, request):
     # BBB Zope2

@@ -71,7 +71,7 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
     """
     security = ClassSecurityInfo() # We create a new security info object
 
-    security.declareProtected(Permissions.ManagePortal, 'getResponseHeaderRuleDict')
+    @security.protected(Permissions.ManagePortal)
     def getResponseHeaderRuleDict(self):
       """
       Return a mapping describing currently-defined response header rules.
@@ -136,7 +136,7 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
         self._response_header_rule_dict = rule_dict = PersistentMapping()
         return rule_dict
 
-    security.declareProtected(Permissions.ManagePortal, 'setResponseHeaderRule')
+    @security.protected(Permissions.ManagePortal)
     def setResponseHeaderRule(
       self,
       header_name,
@@ -169,7 +169,7 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
         bool(fallback_value_replace),
       )
 
-    security.declareProtected(Permissions.ManagePortal, 'deleteResponseHeaderRule')
+    @security.protected(Permissions.ManagePortal)
     def deleteResponseHeaderRule(self, header_name):
       """
       Delete an existing header rule.

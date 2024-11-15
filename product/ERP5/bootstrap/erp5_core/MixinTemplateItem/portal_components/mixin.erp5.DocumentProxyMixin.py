@@ -43,13 +43,12 @@ class DocumentProxyMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'index_html')
+  @security.protected(Permissions.AccessContentsInformation)
   def index_html(self, REQUEST, *args, **kw):
     """ Only a proxy method """
     return self.getProxiedDocument().index_html(REQUEST, *args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, \
-                            'getProxiedDocument' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getProxiedDocument(self):
     """
     Try to retrieve the original document
@@ -58,8 +57,7 @@ class DocumentProxyMixin:
           DeprecationWarning, stacklevel=2)
     return self.getProxiedDocumentValue()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getProxiedDocumentValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getProxiedDocumentValue(self):
     """
     Try to retrieve the original document

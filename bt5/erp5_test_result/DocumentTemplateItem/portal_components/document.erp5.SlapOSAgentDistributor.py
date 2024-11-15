@@ -35,7 +35,7 @@ class SlapOSAgentDistributor(ERP5ProjectUnitTestDistributor):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declarePublic("optimizeConfiguration")
+  @security.public
   def optimizeConfiguration(self):
     """
     We are going to add test suites to test nodes.
@@ -58,14 +58,14 @@ class SlapOSAgentDistributor(ERP5ProjectUnitTestDistributor):
       test_node.setAggregateList(test_suite_list)
 
 
-  security.declarePublic("getTestType")
+  @security.public
   def getTestType(self, batch_mode=0):
     """
     getTestType : return a string defining the type of tests
     """
     return 'SlapOSAgentTest'
 
-  security.declarePublic("generateConfiguration")
+  @security.public
   def generateConfiguration(self, test_suite_title, batch_mode=0):
     """
     generateConfiguration : this is just a proxy to an external method

@@ -76,7 +76,7 @@ class MobytGateway(XMLObject):
   # for documentation of this old API
   api_url = "https://multilevel.mobyt.fr/sms"
 
-  security.declarePrivate("_fetchSendResponseAsDict")
+  @security.private
   def _fetchSendResponseAsDict(self,page):
     """Page result is like Key=value in text format.
        We transform it to a more powerfull dictionnary"""
@@ -91,7 +91,7 @@ class MobytGateway(XMLObject):
 
     return result
 
-  security.declarePrivate("_fetchStatusResponseAsDict")
+  @security.private
   def _fetchStatusResponseAsDict(self,page):
     """Page result is like Key=value in text format.
        We transform it to a more powerfull dictionnary"""
@@ -128,7 +128,7 @@ class MobytGateway(XMLObject):
 
     return result
 
-  security.declarePrivate("_transformPhoneUrlToGatewayNumber")
+  @security.private
   def _transformPhoneUrlToGatewayNumber(self,phone):
     """Transform url of phone number to a valid phone number (gateway side)"""
     phone = phone.replace('tel:', '').replace('(0)','').replace('-','')
@@ -136,7 +136,7 @@ class MobytGateway(XMLObject):
     assert not(phone.startswith('99000'))
     return phone
 
-  security.declareProtected(Permissions.ManagePortal, 'send')
+  @security.protected(Permissions.ManagePortal)
   def send(self, text, recipient, sender):
     """Send a message.
     """
@@ -196,7 +196,7 @@ class MobytGateway(XMLObject):
     else:
       raise ValueError("Unknown result", 0, result)
 
-  security.declareProtected(Permissions.ManagePortal, 'getMessageStatus')
+  @security.protected(Permissions.ManagePortal)
   def getMessageStatus(self, message_id):
     """Retrive the status of a message"""
     base_url = self.api_url + "/batch-status.php"
@@ -226,7 +226,7 @@ class MobytGateway(XMLObject):
       #we get an error when call the gateway
       raise SMSGatewayError(unquote(result.get('status_info', "Impossible to get the message status")))
 
-  security.declarePublic('receive')
+  @security.public
   def receive(self,REQUEST):
     """Receive push notification from the gateway"""
 
@@ -245,7 +245,7 @@ class MobytGateway(XMLObject):
       #Restore orinal user
       setSecurityManager(sm)
 
-  security.declareProtected(Permissions.ManagePortal, 'notifyReception')
+  @security.protected(Permissions.ManagePortal)
   def notifyReception(self, sender, text, message_id):
     """The gateway inform what we ha a new message.
     """

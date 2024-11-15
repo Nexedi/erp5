@@ -39,7 +39,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.ManagePortal, "optimizeConfiguration")
+  @security.protected(Permissions.ManagePortal)
   def optimizeConfiguration(self):
     """
     Do master testnode selection and associate testsuites.
@@ -96,7 +96,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
     for test_node in test_node_list:
       test_node.setAggregateList(test_suite_list)
 
-  security.declarePublic("getInvolvedNodeList")
+  @security.public
   def getInvolvedNodeList(self):
     """
     getInvolvedNodeList doc
@@ -108,7 +108,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
                        if ( x.getSpecialiseTitle() == distributor_title ) ]
     return involved_nodes
 
-  security.declarePublic("getTestNode")
+  @security.public
   def getTestNode(self,title,batch_mode=0):
     """
     getTestNode doc
@@ -134,7 +134,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
       return test_node
     return None
 
-  security.declarePublic("isMasterTestnode")
+  @security.public
   def isMasterTestnode(self,title, batch_mode=0):
     """
     isMasterTestnode : return True if the node given in
@@ -151,14 +151,14 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
     else:
       return False
 
-  security.declarePublic("getTestType")
+  @security.public
   def getTestType(self, batch_mode=0):
     """
     getTestType : return a string defining the type of tests
     """
     return 'ScalabilityTest'
 
-  security.declarePublic("createTestResult")
+  @security.public
   def createTestResult(self, name, revision, test_name_list, allow_restart,
                        test_title=None, node_title=None, project_title=None):
     """
@@ -179,7 +179,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
 
       return created_test_result_tuple
 
-  security.declarePublic("startTestSuite")
+  @security.public
   def startTestSuite(self,title, computer_guid='unknown', batch_mode=0):
     """
     startTestSuite : subscribe node + return testsuite list to the master
@@ -203,7 +203,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
         return []
       return json.dumps([])
 
-  security.declarePublic("generateConfiguration")
+  @security.public
   def generateConfiguration(self, test_suite_title, batch_mode=0):
     """
     generateConfiguration : this is just a proxy to an external method
@@ -241,7 +241,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
       return next_test
     return json.dumps(next_test)
 
-  security.declarePublic("isTestCaseAlive")
+  @security.public
   def isTestCaseAlive(self, test_result_line_path, batch_mode=0):
     """
     Is a test result line alive or not.
@@ -250,7 +250,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
     test_result_line = portal.restrictedTraverse(test_result_line_path)
     return test_result_line.getSimulationState() == "started"
 
-  security.declarePublic("_unvalidateConfig")
+  @security.public
   def _unvalidateConfig(self, my_dict):
     my_dict['launchable'] = False
     if 'launcher_nodes_computer_guid' in my_dict:
@@ -260,7 +260,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
     if 'configuration_list' in my_dict:
       my_dict['configuration_list'] = []
 
-  security.declarePublic("_getInvolvedNodes")
+  @security.public
   def _getInvolvedNodes(self, available_nodes, return_dict):
     """
     Get the list of all nodes involved in the test
@@ -288,7 +288,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
         involved_nodes_computer_guid.append(node)
     return involved_nodes_computer_guid
 
-  security.declarePublic("_getAvailableNodes")
+  @security.public
   def _getAvailableNodes(self, test_suite_specialise_title, portal):
     """
     gets testnodes available for this distributor
@@ -301,7 +301,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
     available_nodes = [ node.getComputerGuid() for node in available_nodes ]
     return available_nodes
 
-  security.declarePublic("_generateConfigurationList")
+  @security.public
   def _generateConfigurationList(self, test_suite_title, portal):
     """
     generateConfigurationList : generate a dict wich contains a list

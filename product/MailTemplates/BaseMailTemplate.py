@@ -40,7 +40,7 @@ class BaseMailTemplate:
 
     mailhost = None
 
-    security.declarePrivate('_process')
+    @security.private
     def _process(self,kw):
         # sort out what encoding we're going to use
         encoding = kw.get('encoding',
@@ -120,7 +120,7 @@ class BaseMailTemplate:
         # turn headers into an ordered list for predictable header order
         return msg, values, [(key, value) for key, value in sorted(six.iteritems(headers))]
 
-    security.declarePrivate('_send')
+    @security.private
     def _send(self,mfrom,mto,msg):
 
         mailhost = self.restrictedTraverse(self.mailhost,None)
@@ -133,7 +133,7 @@ class BaseMailTemplate:
 
         mailhost._send(mfrom,mto,msg.as_string())
 
-    security.declareProtected('View', 'send')
+    @security.protected('View')
     def send(self,**kw):
 
         msg,values,headers = self._process(kw)
@@ -154,7 +154,7 @@ class BaseMailTemplate:
     security.declareProtected('View', '__call__')
     __call__ = send
 
-    security.declareProtected('View', 'as_message')
+    @security.protected('View')
     def as_message(self,**kw):
         msg,values,headers = self._process(kw)
         multipart_kw = {}

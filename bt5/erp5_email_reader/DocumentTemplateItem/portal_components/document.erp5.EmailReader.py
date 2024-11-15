@@ -279,7 +279,7 @@ class EmailReader(ExternalSource):
   MAX_UID_LIST_SIZE = 100 # The number of messages to ingest at once
 
   ### Implementation - generic part - IMAP independent
-  security.declareProtected(Permissions.ModifyPortalContent, 'crawlContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def crawlContent(self):
     """
       Starts the reading process by invoking ingestMessageList on every
@@ -307,7 +307,7 @@ class EmailReader(ExternalSource):
                   after_tag=list_activity_tag).crawlMessageFolderList(folder_list)
     # XXX - Start with default one and only use filtered mailboxes if defined
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'crawlMessageFolderList')
+  @security.protected(Permissions.ModifyPortalContent)
   def crawlMessageFolderList(self, message_folder_list):
     """
       Take the first folder in the message_folder_list and start
@@ -354,7 +354,7 @@ class EmailReader(ExternalSource):
       self.activate(activity='SQLQueue', priority=2,
                   after_tag=list_activity_tag).crawlMessageFolderList(message_folder_list)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'ingestMessage')
+  @security.protected(Permissions.ModifyPortalContent)
   def ingestMessage(self, uid, message_folder=None):
     """
       Ingest a single message
@@ -381,7 +381,7 @@ class EmailReader(ExternalSource):
                                    portal_type='Email Thread') # It would be good to make this implicit
       LOG('ingestMessage in folder: %s' % message_folder, INFO, str(uid))
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'ingestMessageList')
+  @security.protected(Permissions.ModifyPortalContent)
   def ingestMessageList(self, uid_list, message_folder=None):
     """
       Ingest a collection of messages defined by uid_list and stored
@@ -417,14 +417,14 @@ class EmailReader(ExternalSource):
                     tag=list_activity_tag).ingestMessageList(
                 uid_list[self.MAX_UID_LIST_SIZE:], message_folder=message_folder)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'resetMessageIngestionCache')
+  @security.protected(Permissions.ModifyPortalContent)
   def resetMessageIngestionCache(self):
     """
     Reset the caches related to message ingestion.
     """
     self._latest_uid = {} # Keeps track of latest ingested
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMessageID')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMessageID(self, uid, message_folder=None):
     """
       Returns the ID of a message based on the UID and
@@ -434,7 +434,7 @@ class EmailReader(ExternalSource):
       return str(uid)
     return "%s-%s" % (message_folder.replace('/','.'), uid) # Can this be configurable, based on what ? date?
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMessageFolderList')
+  @security.protected(Permissions.AccessContentsInformation)
   @transactional_cached()
   def getMessageFolderList(self):
     """

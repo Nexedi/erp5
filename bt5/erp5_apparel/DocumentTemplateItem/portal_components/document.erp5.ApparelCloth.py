@@ -58,13 +58,13 @@ class ApparelCloth(Resource, XMLMatrix):
                       , PropertySheet.VariationRange
                       )
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setSizeList')
+    @security.protected(Permissions.ModifyPortalContent)
     def _setSizeList(self,value):
       self._categorySetSizeList(value)
       # XXX Use interaction workflow instead
       self.updateCellRange(base_id='measure')
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setMeasureList')
+    @security.protected(Permissions.ModifyPortalContent)
     def _setMeasureList(self,value):
       self._categorySetMeasureList(value)
       # XXX Use interaction workflow instead

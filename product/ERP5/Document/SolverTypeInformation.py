@@ -49,8 +49,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
                     , PropertySheet.Configurable
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSolverConflictMessageList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSolverConflictMessageList(self, movement, configuration_mapping, solver_dict, movement_dict):
     """
     Returns the list of conflictings messgaes if the solver and configuration_mapping
@@ -89,8 +88,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     # Return emtpty message list
     return ()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSolverProcessGroupingKey')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSolverProcessGroupingKey(self, movement, configuration_mapping, solver_dict, movement_dict):
     """
     Returns a key which can be used to group solvers during the
@@ -142,8 +140,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
     return movement.getRelativeUrl()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultConfigurationPropertyDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultConfigurationPropertyDict(self, configurable):
     """
     Returns a dictionary of default properties for specified
@@ -159,8 +156,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     else:
       return {}
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultConfigurationProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultConfigurationProperty(self, property, configurable):
     """
     Returns the default value for a given property
@@ -173,8 +169,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     """
     return self.getDefaultConfigurationPropertyDict().get(property, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConfigurationPropertyListDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConfigurationPropertyListDict(self, configurable):
     """
     Returns a dictionary of possible values for specified
@@ -190,8 +185,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     else:
       return {}
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConfigurationPropertyList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConfigurationPropertyList(self, property, configurable):
     """
     Returns a list of possible values for a given property
@@ -226,7 +220,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     method = getattr(solver, method_id)
     return method()
 
-  security.declarePrivate('solve')
+  @security.private
   @UnrestrictedMethod
   def solve(self, delivery_list=None, configuration_dict=None,
             activate_kw=None, **kw):

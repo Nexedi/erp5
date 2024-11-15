@@ -84,7 +84,7 @@ class Alarm(XMLObject, PeriodicityMixin):
                     , PropertySheet.Alarm
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isActive')
+  @security.protected(Permissions.AccessContentsInformation)
   def isActive(self):
     """
     This method returns only True or False.
@@ -96,7 +96,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     return self.hasActivity(only_valid=1)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'activeSense')
+  @security.protected(Permissions.AccessContentsInformation)
   def activeSense(self, fixit=0, activate_kw=(), params=None):
     """
     This method launches the sensing process as activities.
@@ -203,7 +203,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       # Restore the original user.
       setSecurityManager(sm)
 
-  security.declareProtected(Permissions.ManagePortal, 'sense')
+  @security.protected(Permissions.ManagePortal)
   def sense(self, process=None):
     """
     This method returns True or False. False for no problem, True for problem.
@@ -264,7 +264,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     # a new cache plugin which uses ZODB to store values
     # for a long time.
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'report')
+  @security.protected(Permissions.AccessContentsInformation)
   def report(self, reset=0, process=None):
     """
     This methods produces a report (HTML) to display
@@ -286,7 +286,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       process = process.getRelativeUrl()
     return self._renderDefaultView('report', process=process, reset=reset)
 
-  security.declareProtected(Permissions.ManagePortal, 'solve')
+  @security.protected(Permissions.ManagePortal)
   def solve(self):
     """
     This method tries resolve a problems detected by an Alarm
@@ -302,7 +302,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       return method()
     return self.activeSense(fixit=1)
 
-  security.declareProtected(Permissions.ManagePortal, 'notify')
+  @security.protected(Permissions.ManagePortal)
   def notify(self, include_active=False, params=None):
     """
     This method is called to notify people that some alarm has
@@ -376,7 +376,7 @@ Alarm Tool Node: %s
        portal.portal_alarms.getAlarmNode()),
                 attachment_list=attachment_list)
 
-  security.declareProtected(Permissions.ManagePortal, 'getLastActiveProcess')
+  @security.protected(Permissions.ManagePortal)
   def getLastActiveProcess(self, include_active=False):
     """
     This returns the last active process finished. So it will
@@ -397,8 +397,7 @@ Alarm Tool Node: %s
       process = active_process_list[-1].getObject()
     return process
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'newActiveProcess')
+  @security.protected(Permissions.ManagePortal)
   def newActiveProcess(self, **kw):
     """
     We will create a new active process in order to store
@@ -419,7 +418,7 @@ Alarm Tool Node: %s
       **kw
     )
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setNextAlarmDate')
+  @security.protected(Permissions.ModifyPortalContent)
   def setNextAlarmDate(self, current_date=None):
     """Save the next alarm date.
     """
@@ -433,7 +432,7 @@ Alarm Tool Node: %s
                                               next_start_date=alarm_date)
     self.Alarm_zUpdateAlarmDate(uid=self.getUid(), alarm_date=alarm_date)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAlarmDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAlarmDate(self):
     """Obtain the next alarm date.
 
@@ -474,7 +473,7 @@ Alarm Tool Node: %s
 
   # XXX there seem to be something which wants to call setters against
   # alarm_date, but alarms do not want to store a date in ZODB.
-  security.declareProtected(Permissions.ModifyPortalContent, 'setAlarmDate')
+  @security.protected(Permissions.ModifyPortalContent)
   def setAlarmDate(self, *args, **kw):
     pass
 

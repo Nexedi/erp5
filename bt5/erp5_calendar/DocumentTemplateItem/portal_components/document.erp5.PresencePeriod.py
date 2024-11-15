@@ -65,16 +65,14 @@ class PresencePeriod(Movement, PeriodicityMixin):
                     , PropertySheet.SortIndex
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
     For now, consider that it's always accountable
     """
     return 1
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoriatedQuantity(self, default=None, *args, **kw):
     """
     Surcharged accessor to calculate the Quantity in second
@@ -91,8 +89,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
         quantity = default
     return quantity
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'asMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def asMovementList(self):
     """
     Generate multiple movement from a single one.
@@ -114,8 +111,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
         result.append(self.asContext(self, **period_data))
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCalendarPeriodExceptionValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCalendarPeriodExceptionValueList(self):
     """
     Return a list of objects that allows te define exception to the

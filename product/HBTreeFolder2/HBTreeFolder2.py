@@ -187,7 +187,7 @@ class HBTreeFolder2Base (Persistent):
         for name, value in source.objectItems():
             self._setOb(name, aq_base(value))
 
-    security.declareProtected(view_management_screens, 'manage_fixCount')
+    @security.protected(view_management_screens)
     def manage_fixCount(self, dry_run=0):
         """Calls self._fixCount() and reports the result as text.
         """
@@ -283,7 +283,7 @@ class HBTreeFolder2Base (Persistent):
           htree, sub_id = h.pop()
           del htree[sub_id]
 
-    security.declareProtected(view_management_screens, 'getBatchObjectListing')
+    @security.protected(view_management_screens)
     def getBatchObjectListing(self, REQUEST=None):
         """Return a structure for a page template to show the list of objects.
         """
@@ -318,8 +318,7 @@ class HBTreeFolder2Base (Persistent):
                 'formatted_list': ''.join(formatted)}
 
 
-    security.declareProtected(view_management_screens,
-                              'manage_object_workspace')
+    @security.protected(view_management_screens)
     def manage_object_workspace(self, ids=(), REQUEST=None):
         '''Redirects to the workspace of the first object in
         the list.'''
@@ -331,22 +330,20 @@ class HBTreeFolder2Base (Persistent):
             return self.manage_main(self, REQUEST)
 
 
-    security.declareProtected(access_contents_information,
-                              'tpValues')
+    @security.protected(access_contents_information)
     def tpValues(self):
         """Ensures the items don't show up in the left pane.
         """
         return ()
 
 
-    security.declareProtected(access_contents_information,
-                              'objectCount')
+    @security.protected(access_contents_information)
     def objectCount(self):
         """Returns the number of items in the folder."""
         return self._count()
 
 
-    security.declareProtected(access_contents_information, 'has_key')
+    @security.protected(access_contents_information)
     def has_key(self, id):
         """Indicates whether the folder has an item by ID.
         """
@@ -396,8 +393,7 @@ class HBTreeFolder2Base (Persistent):
           except StopIteration:
             pass
 
-    security.declareProtected(access_contents_information,
-                              'getTreeIdList')
+    @security.protected(access_contents_information)
     def getTreeIdList(self, htree=None):
         """ Return list of all tree ids
         """
@@ -429,18 +425,15 @@ class HBTreeFolder2Base (Persistent):
           r.sort(key=lambda e: '' if e is None else e)
         return r
 
-    security.declareProtected(access_contents_information,
-                              'objectValues')
+    @security.protected(access_contents_information)
     def objectValues(self, base_id=_marker):
         return HBTreeObjectValues(self, base_id)
 
-    security.declareProtected(access_contents_information,
-                              'objectIds')
+    @security.protected(access_contents_information)
     def objectIds(self, base_id=_marker):
         return HBTreeObjectIds(self, base_id)
 
-    security.declareProtected(access_contents_information,
-                              'objectItems')
+    @security.protected(access_contents_information)
     def objectItems(self, base_id=_marker):
         # Returns a list of (id, subobject) tuples of the current object.
         return HBTreeObjectItems(self, base_id)
@@ -450,8 +443,7 @@ class HBTreeFolder2Base (Persistent):
     _objects = ()
 
 
-    security.declareProtected(access_contents_information,
-                              'objectIds_d')
+    @security.protected(access_contents_information)
     def objectIds_d(self, t=None):
         return dict.fromkeys(self.objectIds(t), 1)
 
@@ -512,7 +504,7 @@ class HBTreeFolder2Base (Persistent):
     # backward compatibility
     hasObject = has_key
 
-    security.declareProtected(access_contents_information, 'get')
+    @security.protected(access_contents_information)
     def get(self, name, default=None):
         try:
           return self._htree_get(name).__of__(self)
@@ -521,7 +513,7 @@ class HBTreeFolder2Base (Persistent):
 
     # Utility for generating unique IDs.
 
-    security.declareProtected(access_contents_information, 'generateId')
+    @security.protected(access_contents_information)
     def generateId(self, prefix='item', suffix='', rand_ceiling=999999999):
         """Returns an ID not used yet by this folder.
 

@@ -53,7 +53,7 @@ class JSONType(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'validateLocalJSONSchema')
+  @security.protected(Permissions.AccessContentsInformation)
   def validateLocalJSONSchema(self, list_error=False):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
@@ -75,19 +75,19 @@ class JSONType(XMLObject):
       return err
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'validateJSONSchema')
+  @security.protected(Permissions.AccessContentsInformation)
   def validateJSONSchema(self, list_error=False):
     return self.validateLocalJSONSchema(list_error=list_error)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'validateJsonSchema')
+  @security.protected(Permissions.AccessContentsInformation)
   def validateJsonSchema(self, list_error=False):
     # Deprecated, please use validateJSONSchema
     return self.validateJSONSchema(list_error=list_error)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'asJSONText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asJSONText(self):
     return self.getTextContent()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromJSONText')
+  @security.protected(Permissions.ModifyPortalContent)
   def fromJSONText(self, json_text):
     return self.setTextContent(json_text)

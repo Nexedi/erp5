@@ -26,7 +26,7 @@ class FSMailTemplate(BaseMailTemplate,FSPageTemplate):
         FSPageTemplate.__init__(self,id,filepath,fullname,properties)
         self._properties = properties
 
-    security.declarePrivate('_createZODBClone')
+    @security.private
     def _createZODBClone(self):
         """Create a ZODB (editable) equivalent of this object."""
         obj = MailTemplate(self.getId(), self._text, self.content_type)
@@ -41,7 +41,7 @@ class FSMailTemplate(BaseMailTemplate,FSPageTemplate):
                     obj.manage_addProperty(id,self._properties[id],'string')
         return obj
 
-    security.declarePrivate('_readFile')
+    @security.private
     def _readFile(self, reparse):
         fp = self._filepath
         file = open(fp, 'r')    # not 'rb', as this is a text file!

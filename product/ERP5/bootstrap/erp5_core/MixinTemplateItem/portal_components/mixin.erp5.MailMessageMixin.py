@@ -109,7 +109,7 @@ class MailMessageMixin:
     if found_part_list:
       return found_part_list[0]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentInformation(self):
     """
     Returns the content information from the header information.
@@ -135,7 +135,7 @@ class MailMessageMixin:
         result[name] = ' '.join(header_list)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentInformationList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAttachmentInformationList(self, **kw):
     """
     Returns a list of dictionnaries for every attachment. Each dictionnary
@@ -176,7 +176,7 @@ class MailMessageMixin:
         result.append(kw)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentData')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAttachmentData(self, index, REQUEST=None):
     """
     Returns the decoded data of an attachment.
@@ -226,7 +226,7 @@ class MailMessageMixin:
     return KeyError, "No attachment with index %s" % index
 
   # Helper methods which override header property sheet
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSender')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSender(self, *args):
     """
     """
@@ -234,7 +234,7 @@ class MailMessageMixin:
       return self._baseGetSender(*args)
     return self.getContentInformation().get('From', *args)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRecipient')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRecipient(self, *args):
     """
     """
@@ -242,7 +242,7 @@ class MailMessageMixin:
       return self._baseGetRecipient(*args)
     return self.getContentInformation().get('To', *args)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCcRecipient')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCcRecipient(self, *args):
     """
     """
@@ -250,7 +250,7 @@ class MailMessageMixin:
       return self._baseGetCcRecipient(*args)
     return self.getContentInformation().get('Cc', *args)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getGroupingReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getGroupingReference(self, *args):
     """
       The reference refers here to the Thread of messages.
@@ -269,8 +269,7 @@ class MailMessageMixin:
       return result
     return self.getFilename(*args)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSourceReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceReference(self, *args):
     """
       The Message-ID is considered here as the source reference
@@ -283,7 +282,7 @@ class MailMessageMixin:
     content_information = self.getContentInformation()
     return content_information.get('Message-ID') or content_information.get('Message-Id', *args)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationReference(self, *args):
     """
       The In-Reply-To is considered here as the reference

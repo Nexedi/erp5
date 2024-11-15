@@ -64,24 +64,21 @@ class OrderCell(DeliveryCell):
     """
     self.recursiveReindexObject(*k,**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovement(self):
     """
     should be considered as a movement if the parent does not have sub lines
     """
     return not self.getParentValue().hasLineContent()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-        'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self, default=0.0, *args, **kw):
     "only return a value if self is a movement"
     if not self.isMovement():
       return default
     return DeliveryCell.getTotalPrice(self, default=default, *args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalQuantity(self, default=0.0, *args, **kw):
     "only return a value if self is a movement"
     if not self.isMovement():

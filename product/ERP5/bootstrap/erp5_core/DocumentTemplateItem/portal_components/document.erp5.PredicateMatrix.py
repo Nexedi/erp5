@@ -68,7 +68,7 @@ class PredicateMatrix(XMLMatrix):
                              'getMatchingCell' )
   getMatchingCell = _getMatchingCell
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateMatrix')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateMatrix(self) :
     """
       This methods updates the matrix so that cells are consistent

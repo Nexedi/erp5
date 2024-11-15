@@ -227,8 +227,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return errors
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'checkImmobilisationConsistency')
+  @security.protected(Permissions.AccessContentsInformation)
   def checkImmobilisationConsistency(self, *args, **kw):
     """
     Checks the consistency about immobilisation values
@@ -236,8 +235,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return self._checkImmobilisationConsistency(*args, **kw)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAmortisationMethodParameter')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAmortisationMethodParameter(self, parameter_list, **kw):
     """
     Returns a dictionary containing the value of each parameter
@@ -250,8 +248,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return self.getAmortisationMethodParameterForItem(None, parameter_list, **kw)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAmortisationMethodParameterForItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAmortisationMethodParameterForItem(self, item, parameter_list, split_char=None, split_qty=3, **kw):
     """
     Returns a dictionary containing the value of each parameter
@@ -299,8 +296,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return parameter_dict
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getActualAmortisationMethodForItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def getActualAmortisationMethodForItem(self, item, **kw):
     """
     Returns the actual amortisation method by getting the previous
@@ -323,8 +319,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     return None
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getNeededSpecificParameterListForItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNeededSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -337,8 +332,7 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["needed_specific_parameter_list"]
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getUncontinuousNeededSpecificParameterListForItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUncontinuousNeededSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -352,8 +346,7 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["uncontinuous_needed_specific_parameter_list"]
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFacultativeSpecificParameterListForItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFacultativeSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -366,16 +359,14 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["facultative_specific_parameter_list"]
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isUsingAmortisationMethod')
+  @security.protected(Permissions.AccessContentsInformation)
   def isUsingAmortisationMethod(self, method):
     """
     Return true if this item is using the given method
     """
     return self.getAmortisationMethod() == method
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getImmobilisationState')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImmobilisationState(self):
     """
     Return root delivery immobilisation state, or None if this is not chained

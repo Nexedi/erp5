@@ -49,7 +49,7 @@ class InternetMessagePost(Item, MailMessageMixin):
   def _getMessage(self):
     return message_from_bytes(self.getData())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'stripMessageId')
+  @security.protected(Permissions.AccessContentsInformation)
   def stripMessageId(self, message_id):
     """
     In rfc5322 headers, message-ids may follow the syntax "<msg-id>" in
@@ -63,7 +63,7 @@ class InternetMessagePost(Item, MailMessageMixin):
         message_id = message_id[:-1]
     return message_id
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReference(self):
     return self.stripMessageId(self.getSourceReference())
 

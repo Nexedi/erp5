@@ -71,7 +71,7 @@ class DummyGateway(XMLObject):
                     , PropertySheet.SMSGateway
                     )
 
-  security.declareProtected(Permissions.ManagePortal, 'send')
+  @security.protected(Permissions.ManagePortal)
   def send(self, text, recipient, sender):
     """Send a short message.
     """
@@ -80,12 +80,12 @@ class DummyGateway(XMLObject):
       return None
     return self._generateRandomMessageId()
 
-  security.declareProtected(Permissions.ManagePortal, 'getMessageStatus')
+  @security.protected(Permissions.ManagePortal)
   def getMessageStatus(self, message_id):
     """Retrive the status of a message"""
     return "delivered"
 
-  security.declarePublic('receive')
+  @security.public
   def receive(self,REQUEST):
     """Receive push notification from the gateway"""
 
@@ -106,7 +106,7 @@ class DummyGateway(XMLObject):
 
 
 
-  security.declareProtected(Permissions.ManagePortal, 'notifyReception')
+  @security.protected(Permissions.ManagePortal)
   def notifyReception(self, sender, text, message_id):
     """The gateway inform what we ha a new message.
     """

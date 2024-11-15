@@ -48,29 +48,25 @@ class ConfigurableMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConfigurationProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConfigurationProperty(self, key, default=None):
     """
     """
     return self._getConfigurationPropertyDict().get(key, default)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConfigurationPropertyIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConfigurationPropertyIdList(self):
     """
     """
     return self._getConfigurationPropertyDict().keys()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConfigurationPropertyDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConfigurationPropertyDict(self):
     """
     """
     return dict(self._getConfigurationPropertyDict())
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateConfiguration')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateConfiguration(self, **kw):
     """
     """

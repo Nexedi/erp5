@@ -795,18 +795,18 @@ class Base(
                    )
 
   # Place for all is... method
-  security.declareProtected(Permissions.AccessContentsInformation, 'isMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovement(self):
     return 0
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setTitle(self, value):
     """ sets the title. (and then reindexObject)"""
     self._setTitle(value)
     self.reindexObject()
 
-  security.declarePublic('provides')
   @classmethod
+  @security.public
   def provides(cls, interface_name):
     """
     Check if the current class provides a particular interface from Interface
@@ -874,16 +874,14 @@ class Base(
   content_type = None # content_type is a property in ERP5, but a method in CMF
 
   # Debug
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getOid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getOid(self):
     """
       Return ODB oid
     """
     return self._p_oid
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getOidRepr')
+  @security.protected(Permissions.AccessContentsInformation)
   def getOidRepr(self):
     """
       Return ODB oid, in an 'human' readable form.
@@ -891,14 +889,12 @@ class Base(
     from ZODB.utils import oid_repr
     return oid_repr(self._p_oid)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSerial')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSerial(self):
     """Return ODB Serial."""
     return self._p_serial
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getHistorySerial')
+  @security.protected(Permissions.AccessContentsInformation)
   def getHistorySerial(self):
     """Return ODB Serial, in the same format used for history keys"""
     return '.'.join([str(x) for x in unpack('>HHHH', self._p_serial)])
@@ -1231,7 +1227,7 @@ class Base(
       except KeyError:
         pass
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getProperty(self, key, d=_MARKER, **kw):
     """getProperty is the generic accessor to all properties and categories
     defined on this object.
@@ -1298,19 +1294,19 @@ class Base(
     return PropertyManager.getProperty(self, key,
                 local_properties=True, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyList(self, key, d=_MARKER):
     """Same as getProperty, but for list properties.
     """
     return self.getProperty('%s_list' % key, d=d)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setPropertyList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setPropertyList(self, key, value, **kw):
     """Same as setProperty, but for list properties.
     """
     return self.setProperty('%s_list' % key, value, **kw)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setProperty' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setProperty(self, key, value, type='string', **kw):
     """
       Previous Name: setValue
@@ -1414,8 +1410,7 @@ class Base(
     #  # This should be removed if we want strict property checking
     #  setattr(self, key, value)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasProperty(self, key):
     """
       Previous Name: hasValue
@@ -1451,8 +1446,7 @@ class Base(
     except:
       return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasCategory')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCategory(self, key):
     """
       Previous Name: hasValue
@@ -1465,8 +1459,7 @@ class Base(
   # Accessors are not workflow methods by default
   # Ping provides a dummy method to trigger automatic methods
   # XXX : maybe an empty edit is enough (self.edit())
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'ping')
+  @security.protected(Permissions.AccessContentsInformation)
   def ping(self):
     pass
 
@@ -1562,7 +1555,7 @@ class Base(
       for o in six.itervalues(modified_object_dict):
         o.reindexObject(activate_kw=activate_kw)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setId(self, id, reindex = 1):
     """
         changes id of an object by calling the Zope machine
@@ -1571,8 +1564,7 @@ class Base(
         self.aq_inner.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
     # Do not flush any more, because it generates locks
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'updateRelatedContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def updateRelatedContent(self, previous_category_url, new_category_url):
     """
         updateRelatedContent is implemented by portal_categories
@@ -1580,7 +1572,7 @@ class Base(
     self._getCategoryTool().updateRelatedContent(self,
                                 previous_category_url, new_category_url)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'edit')
+  @security.protected(Permissions.ModifyPortalContent)
   def edit(self, REQUEST=None, force_update=0, reindex_object=1, **kw):
     """
       Generic edit Method for all ERP5 object
@@ -1596,24 +1588,24 @@ class Base(
   edit = WorkflowMethod(edit)
 
   # Accessing object property through ERP5ish interface
-  security.declareProtected( Permissions.View, 'getPropertyIdList' )
+  @security.protected(Permissions.View)
   def getPropertyIdList(self):
     return self.propertyIds()
 
-  security.declareProtected( Permissions.View, 'getPropertyValueList' )
+  @security.protected(Permissions.View)
   def getPropertyValueList(self):
     return self.propertyValues()
 
-  security.declareProtected( Permissions.View, 'getPropertyItemList' )
+  @security.protected(Permissions.View)
   def getPropertyItemList(self):
     return self.propertyItems()
 
-  security.declareProtected( Permissions.View, 'getPropertyMap' )
+  @security.protected(Permissions.View)
   def getPropertyMap(self):
     return self.propertyMap()
 
   # ERP5 content properties interface
-  security.declareProtected( Permissions.View, 'getContentPropertyIdList' )
+  @security.protected(Permissions.View)
   def getContentPropertyIdList(self):
     """
       Return content properties of the current instance.
@@ -1627,7 +1619,7 @@ class Base(
           result.add(property['id'])
     return list(result)
 
-  security.declareProtected( Permissions.View, 'getStandardPropertyIdList' )
+  @security.protected(Permissions.View)
   def getStandardPropertyIdList(self):
     """
       Return standard properties of the current instance.
@@ -1641,7 +1633,7 @@ class Base(
     return list(result)
 
   # Catalog Related
-  security.declareProtected( Permissions.AccessContentsInformation, 'getObject' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getObject(self, relative_url = None, REQUEST=None):
     """
       Returns self - useful for ListBox when we do not know
@@ -1649,7 +1641,7 @@ class Base(
     """
     return self
 
-  security.declarePrivate('activeInteractionScript')
+  @security.private
   def activeInteractionScript(
     self,
     interaction_workflow_path,
@@ -1672,8 +1664,7 @@ class Base(
       tdef_id=tdef_id,
     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDocumentInstance')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDocumentInstance(self):
     """
       Returns self
@@ -1681,7 +1672,7 @@ class Base(
     """
     return self
 
-  security.declareProtected(Permissions.ManagePortal, 'getMountedObject')
+  @security.protected(Permissions.ManagePortal)
   def getMountedObject(self):
       """
       If self is a mount-point, return the mounted object in its own storage
@@ -1693,8 +1684,7 @@ class Base(
         assert mount_point._getMountedConnection(connection) is connection
         return mount_point._traverseToMountedRoot(connection.root(), None)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentUid' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentUid(self):
     """
       Returns the UID of the parent of the current object. Used
@@ -1703,47 +1693,42 @@ class Base(
     """
     return self.aq_inner.aq_parent.getUid()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentTitleOrId' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentTitleOrId(self):
     """
       Returns the title or the id of the parent
     """
     return self.aq_inner.aq_parent.getTitleOrId()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentRelativeUrl' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentRelativeUrl(self):
     """
       Returns the title or the id of the parent
     """
     return self.aq_inner.aq_parent.getRelativeUrl()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentId' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentId(self):
     """
       Returns the id of the parent
     """
     return self.aq_inner.aq_parent.getId()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentTitle' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentTitle(self):
     """
       Returns the title or of the parent
     """
     return self.aq_inner.aq_parent.getTitle()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentValue' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentValue(self):
     """
       Returns the parent of the current object.
     """
     return self.aq_inner.aq_parent
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getParent(self):
     """Returns the parent of the current object (whereas it should return the
     relative_url of the parent for consistency with CMFCategory.
@@ -1756,7 +1741,7 @@ class Base(
                   "Use getParentValue instead", FutureWarning)
     return self.getParentValue() # Compatibility
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getUid' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getUid(self):
     """
       Returns the UID of the object. Eventually reindexes
@@ -1773,7 +1758,7 @@ class Base(
         raise DeferredCatalogError('Could neither access uid nor generate it', self)
     return uid
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getLogicalPath')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLogicalPath(self, REQUEST=None, **kw) :
     """
       Returns the absolute path of an object, using titles when available
@@ -1784,7 +1769,7 @@ class Base(
       objectlist.append(objectlist[-1][element])
     return '/' + '/'.join(object.getTitle() for object in objectlist[1:])
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCompactLogicalPath')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCompactLogicalPath(self, REQUEST=None) :
     """
       Returns a compact representation of the absolute path of an object
@@ -1796,7 +1781,7 @@ class Base(
       objectlist.append(objectlist[-1][element])
     return '/' + '/'.join(object.getCompactTitle() for object in objectlist[1:])
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getUrl')
+  @security.protected(Permissions.AccessContentsInformation)
   def getUrl(self, REQUEST=None):
     """
       Returns the absolute path of an object
@@ -1807,29 +1792,28 @@ class Base(
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
   getPath = getUrl
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRelativeUrl(self):
     """
       Returns the url of an object relative to the portal site.
     """
     return self.getPortalObject().portal_url.getRelativeUrl(self)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAbsoluteUrl')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAbsoluteUrl(self):
     """
       Returns the absolute url of an object.
     """
     return self.absolute_url()
 
-  security.declarePublic('getPortalObject')
+  @security.public
   def getPortalObject(self):
     """
       Returns the portal object
     """
     return self.aq_inner.aq_parent.getPortalObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
+  @security.protected(Permissions.AccessContentsInformation)
   @deprecated
   def getWorkflowIds(self):
     """
@@ -1838,7 +1822,7 @@ class Base(
     return self.portal_workflow.objectIds()
 
   # Object Database Management
-  security.declareProtected( Permissions.ManagePortal, 'upgrade' )
+  @security.protected(Permissions.ManagePortal)
   def upgrade(self, REQUEST=None):
     """
       Upgrade an object and do whatever necessary
@@ -1848,7 +1832,7 @@ class Base(
     pass
 
   # For Debugging
-  security.declareProtected( Permissions.ManagePortal, 'showDict' )
+  @security.protected(Permissions.ManagePortal)
   def showDict(self):
     """
       Returns the dictionnary of the object
@@ -1859,7 +1843,7 @@ class Base(
     d['__class__'] = '%s.%s' % (klass.__module__, klass.__name__)
     return d
 
-  security.declareProtected( Permissions.ManagePortal, 'showPermissions' )
+  @security.protected(Permissions.ManagePortal)
   def showPermissions(self, all=1):
     """
       Return the tuple of permissions
@@ -1873,7 +1857,7 @@ class Base(
 
     return tuple(permission_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getViewPermissionOwner' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getViewPermissionOwner(self):
     """Returns the user ID of the user with 'Owner' local role on this
     document, if the Owner role has View permission.
@@ -1934,7 +1918,7 @@ class Base(
   security.declareProtected( Permissions.ModifyPortalContent, '_setValueList' )
   _setValueList = _setValue
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setValue' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1, checked_permission=None):
     self._setValue(id, target, spec=spec, filter=filter, portal_type=portal_type, keep_default=keep_default,
                        checked_permission=checked_permission)
@@ -1961,7 +1945,7 @@ class Base(
                                        portal_type=portal_type, base=0,
                                        checked_permission=checked_permission)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultValue' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setDefaultValue(self, id, target, spec=(), filter=None, portal_type=()):
     self._setDefaultValue(id, target, spec=spec, filter=filter, portal_type=portal_type,
                               checked_permission=None)
@@ -2017,8 +2001,7 @@ class Base(
 
   # Restricted category value getters
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultValue(self, id, spec=(), filter=None, default=_MARKER, **kw):
     path = self._getDefaultCategoryMembership(id, base=1, spec=spec,
                                               filter=filter, **kw)
@@ -2027,8 +2010,7 @@ class Base(
     if default is not _MARKER:
       return default
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getValueList(self, id, spec=(), filter=None, default=_MARKER, **kw):
     ref_list = self._getCategoryMembershipList(id, base=1, spec=spec,
                                                filter=filter, **kw)
@@ -2042,8 +2024,7 @@ class Base(
       return value_list if value_list or default is _MARKER else default
     return ref_list if default is _MARKER else default
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultAcquiredValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
                               evaluate=1, checked_permission=None,
                               default=None, **kw):
@@ -2055,8 +2036,7 @@ class Base(
     if default is not _MARKER:
       return default
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAcquiredValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAcquiredValueList(self, id, spec=(), filter=None, default=_MARKER,
                             **kw):
     ref_list = self._getAcquiredCategoryMembershipList(id, base=1, spec=spec,
@@ -2136,8 +2116,7 @@ class Base(
                              'getRelatedPropertyList' )
   getRelatedPropertyList = _getRelatedPropertyList
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getValueUidList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getValueUidList(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
     uid_list = []
     for o in self._getValueList(id, spec=spec, filter=filter, portal_type=portal_type,
@@ -2148,7 +2127,7 @@ class Base(
   security.declareProtected( Permissions.View, 'getValueUids' )
   getValueUids = getValueUidList # DEPRECATED
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def _setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1,
                                        checked_permission=None):
     # We must do an ordered list so we can not use the previous method
@@ -2160,13 +2139,13 @@ class Base(
 
   _setValueUids = _setValueUidList # DEPRECATED
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1, checked_permission=None):
     self._setValueUidList(id, uids, spec=spec, filter=filter, portal_type=portal_type,
                                  keep_default=keep_default, checked_permission=checked_permission)
     self.reindexObject()
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setValueUids' )
+  @security.protected(Permissions.ModifyPortalContent)
   @deprecated
   def setValueUids(self, *args, **kw):
     return self.setValueUidList(*args, **kw)
@@ -2179,7 +2158,7 @@ class Base(
     self._setDefaultValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
                                           checked_permission=checked_permission)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setDefaultValueUid' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setDefaultValueUid(self, id, uid, spec=(), filter=None, portal_type=(), checked_permission=None):
     self._setDefaultValueUid(id, uid, spec=spec, filter=filter, portal_type=portal_type,
                                       checked_permission=checked_permission)
@@ -2191,7 +2170,7 @@ class Base(
     #self.activate().edit() # Do nothing except call workflow method
     # XXX This is a problem - it is used to circumvent a lack of edit
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryMembership' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setCategoryMembership(self, *args, **kw):
     self._setCategoryMembership(*args, **kw)
     self.reindexObject()
@@ -2203,7 +2182,7 @@ class Base(
                      node_list, spec=spec, filter=filter, portal_type=portal_type, base=base,
                                 checked_permission=checked_permission)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setDefaultCategoryMembership' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setDefaultCategoryMembership(self, category, node_list,
                                            spec=(), filter=None, portal_type=(), base=0,
                                            checked_permission=None):
@@ -2289,8 +2268,7 @@ class Base(
                             'getDefaultAcquiredCategoryMembership')
   getDefaultAcquiredCategoryMembership = _getDefaultAcquiredCategoryMembership
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCategoryList(self):
     """
       Returns the list of local categories
@@ -2300,23 +2278,21 @@ class Base(
   def _getCategoryList(self):
     return self._getCategoryTool()._getCategoryList(self)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAcquiredCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAcquiredCategoryList(self):
     """
       Returns the list of acquired categories
     """
     return self._getCategoryTool().getAcquiredCategoryList(self)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setCategoryList(self, path_list):
     self.portal_categories.setCategoryList(self, path_list)
 
   def _setCategoryList(self, path_list):
     self.portal_categories._setCategoryList(self, path_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseCategoryList(self):
     """
       Lists the base_category ids which apply to this instance
@@ -2326,8 +2302,7 @@ class Base(
   security.declareProtected( Permissions.View, 'getBaseCategoryIds' )
   getBaseCategoryIds = getBaseCategoryList
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBaseCategoryValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseCategoryValueList(self):
     return self._getCategoryTool().getBaseCategoryValues(context=self)
 
@@ -2335,14 +2310,14 @@ class Base(
   getBaseCategoryValues = getBaseCategoryValueList
 
   # Category testing
-  security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
+  @security.protected(Permissions.AccessContentsInformation)
   def isMemberOf(self, category, **kw):
     """
       Tests if an object if member of a given category
     """
     return self._getCategoryTool().isMemberOf(self, category, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
+  @security.protected(Permissions.AccessContentsInformation)
   def isAcquiredMemberOf(self, category):
     """
       Tests if an object if member of a given category
@@ -2350,8 +2325,7 @@ class Base(
     return self._getCategoryTool().isAcquiredMemberOf(self, category)
 
   # Aliases
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitleOrId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitleOrId(self):
     """
       Returns the title or the id if the id is empty
@@ -2372,16 +2346,14 @@ class Base(
   security.declareProtected(Permissions.AccessContentsInformation, 'title_or_id' )
   title_or_id = getTitleOrId
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTitleAndId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitleAndId(self):
     """
       Returns the title and the id in parenthesis
     """
     return self.title_and_id()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTranslatedShortTitleOrId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTranslatedShortTitleOrId(self):
     """
     Returns the translated short title or the id if the id is empty
@@ -2395,8 +2367,7 @@ class Base(
         return title
     return self.getId()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTranslatedTitleOrId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTranslatedTitleOrId(self):
     """
     Returns the translated title or the id if the title is empty
@@ -2410,7 +2381,7 @@ class Base(
         return title
     return self.getId()
 
-  security.declarePublic('getIdTranslationDict')
+  @security.public
   def getIdTranslationDict(self):
     """Returns the mapping which is used to translate IDs.
     """
@@ -2456,8 +2427,7 @@ class Base(
     return property_dict
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTranslatedId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTranslatedId(self):
     """Returns the translated ID, if the ID of the current document has a
     special meaning, otherwise returns None.
@@ -2470,8 +2440,7 @@ class Base(
       if id_ in ptype_translation_dict:
         return str(Message('erp5_ui', ptype_translation_dict[id_]))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCompactTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCompactTitle(self):
     """
     Returns the first non-null value from the following:
@@ -2492,8 +2461,7 @@ class Base(
             self.getProperty('reference') or
             self.getId())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCompactTranslatedTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCompactTranslatedTitle(self):
     """
     Returns the first non-null value from the following:
@@ -2526,7 +2494,7 @@ class Base(
             self.getId())
 
   # This method allows to sort objects in list is a more reasonable way
-  security.declareProtected(Permissions.AccessContentsInformation, 'getIntId')
+  @security.protected(Permissions.AccessContentsInformation)
   def getIntId(self):
     try:
       id_string = self.getId()
@@ -2547,7 +2515,7 @@ class Base(
     else:
         return method(**kw)
 
-  security.declareProtected(Permissions.View, 'view')
+  @security.protected(Permissions.View)
   def view(self):
     """Returns the default view even if index_html is overridden"""
     view = _ViewEmulator().__of__(self)
@@ -2576,13 +2544,13 @@ class Base(
   # index_html to make sure this value here is not used so that they're
   # downloadable by their naked URL.
 
-  security.declareProtected(Permissions.View, 'list')
+  @security.protected(Permissions.View)
   def list(self, reset=0):
     """Returns the default list even if folder_contents is overridden"""
     return self._renderDefaultView('list', reset=reset)
 
   # Proxy methods for security reasons
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOwnerInfo')
+  @security.protected(Permissions.AccessContentsInformation)
   def getOwnerInfo(self):
     """
     this returns the Owner Info
@@ -2590,15 +2558,14 @@ class Base(
     return self.owner_info()
 
   # Missing attributes
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPortalType(self):
     """
     This returns the portal_type
     """
     return self.portal_type
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTranslatedPortalType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTranslatedPortalType(self):
     """
       This returns the translated portal_type
@@ -2609,7 +2576,7 @@ class Base(
       translated_portal_type = translated_portal_type.encode('utf8')
     return translated_portal_type
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMetaType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMetaType(self):
     """
     This returns the Meta Type
@@ -2657,7 +2624,7 @@ class Base(
     """
     return self._checkConsistency(fixit=True)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'checkConsistency')
+  @security.protected(Permissions.AccessContentsInformation)
   def checkConsistency(self, fixit=False, filter=None, **kw):
     """
     Check the constitency of objects.
@@ -2708,7 +2675,7 @@ class Base(
 
     return error_list
 
-  security.declareProtected(Permissions.ManagePortal, 'fixConsistency')
+  @security.protected(Permissions.ManagePortal)
   def fixConsistency(self, filter=None, **kw):
     """
     Fix the constitency of objects.
@@ -2744,7 +2711,7 @@ class Base(
     return constraints
 
   # Context related methods
-  security.declarePublic('asContext')
+  @security.public
   def asContext(self, context=None, REQUEST=None, **kw):
     """
     The purpose of asContext is to allow users overloading easily the properties and categories of
@@ -2788,7 +2755,7 @@ class Base(
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
 
-  security.declarePublic('getOriginalDocument')
+  @security.public
   def getOriginalDocument(self, context=None, REQUEST=None, **kw):
     """
     This method returns:
@@ -2809,7 +2776,7 @@ class Base(
       else:
         return None
 
-  security.declarePublic('isTempObject')
+  @security.public
   def isTempObject(self):
     """Return true if self is an instance of a temporary document class.
     """
@@ -2819,8 +2786,7 @@ class Base(
     else:
       return False
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isDeletable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDeletable(self, check_relation=True):
     """Test if object can be delete"""
     container = self.getParentValue()
@@ -2833,8 +2799,7 @@ class Base(
         'Delete objects', container)
       ) and not (check_relation and self.getRelationCountForDeletion())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isDeleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDeleted(self):
     """Test if the context is in 'deleted' state"""
     for wf in self.getPortalObject().portal_workflow.getWorkflowValueListFor(self):
@@ -2843,8 +2808,7 @@ class Base(
         return True
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRelationCountForDeletion')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRelationCountForDeletion(self):
     """Count number of related objects preventing deletion"""
     portal = self.getPortalObject()
@@ -2873,8 +2837,7 @@ class Base(
     return related_count
 
   # Workflow Related Method
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorkflowStateItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWorkflowStateItemList(self):
     """
       Returns a list of tuples {id:workflow_id, state:workflow_state}
@@ -2899,7 +2862,7 @@ class Base(
 #   def contentIds(self, *args, **kw):
 #     return []
 
-  security.declarePrivate('isSubtreeIndexable')
+  @security.private
   def isSubtreeIndexable(self):
     """
     Allow a container to preempt indexability of its content, without having
@@ -2910,7 +2873,7 @@ class Base(
     """
     return self.isIndexable
 
-  security.declarePrivate('isAncestryIndexable')
+  @security.private
   def isAncestryIndexable(self):
     """
     Tells whether this document is indexable, taking into account its entire
@@ -2925,7 +2888,7 @@ class Base(
       is_indexable = node.isSubtreeIndexable()
     return is_indexable
 
-  security.declarePrivate('immediateReindexObject')
+  @security.private
   def immediateReindexObject(self, *args, **kw):
     if self.isAncestryIndexable():
       with super_user():
@@ -2935,7 +2898,7 @@ class Base(
   def _immediateReindexObject(self, *args, **kw):
     self.getPortalObject().portal_catalog.reindexCatalogObject(self, *args, **kw)
 
-  security.declarePublic('reindexObject')
+  @security.public
   def reindexObject(self, *args, **kw):
     """
       Reindexes an object
@@ -2993,7 +2956,7 @@ class Base(
     portal_depth = len(self.getPortalObject().getPhysicalPath())
     return '/'.join(self_path_list[:portal_depth+2])
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getIndexableChildValueList(self):
     """
       Get indexable childen recursively.
@@ -3002,7 +2965,7 @@ class Base(
       return [self]
     return []
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
+  @security.protected(Permissions.ModifyPortalContent)
   def reindexObjectSecurity(self, *args, **kw):
     """
         Reindex security-related indexes on the object
@@ -3012,7 +2975,7 @@ class Base(
     #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
     self.reindexObject(*args, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'asXML' )
+  @security.protected(Permissions.AccessContentsInformation)
   def asXML(self, root=None):
     """
         Generate an xml text corresponding to the content of this object
@@ -3020,29 +2983,28 @@ class Base(
     return Base_asXML(self, root=root)
 
   # Optimized Menu System
-  security.declarePublic('allowedContentTypes')
+  @security.public
   def allowedContentTypes( self ):
     """
       List portal_types which can be added in this folder / object.
     """
     return []
 
-  security.declarePublic('getVisibleAllowedContentTypeList')
+  @security.public
   def getVisibleAllowedContentTypeList(self):
     """
     List portal_types which can be added in this folder / object.
     """
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-          'getRedirectParameterDictAfterAdd')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRedirectParameterDictAfterAdd(self, container, **kw):
     """Return a dict of parameters to specify where the user is redirected
     to after a new object is added in the UI."""
     method = self._getTypeBasedMethod('getRedirectParameterDictAfterAdd')
     return method(container, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setGuid')
+  @security.protected(Permissions.ModifyPortalContent)
   def setGuid(self):
     """
     This generate a global and unique id
@@ -3059,14 +3021,14 @@ class Base(
       guid += '_' + str(random.randrange(1,2147483600))
       setattr(self, 'guid', guid)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getGuid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getGuid(self):
     """
     Get the global and unique id
     """
     return getattr(aq_base(self), 'guid', None)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTypeBasedMethod')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTypeBasedMethod(self, *args, **kw):
     return self._getTypeBasedMethod(*args, **kw)
 
@@ -3115,12 +3077,11 @@ class Base(
     if fallback_script_id is not None:
       return getattr(self, fallback_script_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
+  @security.protected(Permissions.AccessContentsInformation)
   def skinSuper(self, skin, id):
     return self.getPortalObject().skinSuper(skin, id).__of__(self)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'get_local_permissions')
+  @security.protected(Permissions.AccessContentsInformation)
   def get_local_permissions(self):
     """
     This works like get_local_roles. It allows to get all
@@ -3133,7 +3094,7 @@ class Base(
         local_permission_list += ((permission,permission_role),)
     return local_permission_list
 
-  security.declareProtected(Permissions.ManagePortal, 'manage_setLocalPermissions')
+  @security.protected(Permissions.ManagePortal)
   def manage_setLocalPermissions(self,permission,local_permission_list=None):
     """
     This works like manage_setLocalRoles. It allows to set all
@@ -3149,7 +3110,7 @@ class Base(
       setattr(self,permission_name,tuple(local_permission_list))
 
   ### Content accessor methods
-  security.declareProtected(Permissions.View, 'getSearchableText')
+  @security.protected(Permissions.View)
   def getSearchableText(self, md=None):
       """
       Used by the catalog for basic full text indexing.
@@ -3194,7 +3155,7 @@ class Base(
   # Compatibility with CMF Catalog / CPS sites
   SearchableText = getSearchableText
 
-  security.declareProtected(Permissions.View, 'newError')
+  @security.protected(Permissions.View)
   def newError(self, **kw):
     """
     Create a new Error object
@@ -3202,7 +3163,7 @@ class Base(
     from Products.ERP5Type.Error import Error
     return Error(**kw)
 
-  security.declarePublic('log')
+  @security.public
   def log(self, *args, **kw):
     """Put a log message
 
@@ -3242,7 +3203,7 @@ class Base(
     return self.getRight('')
 
   # Creation and modification date support through workflow
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCreationDate(self):
     """
       Returns the creation date of the document based on workflow information
@@ -3264,7 +3225,7 @@ class Base(
     if getattr(aq_base(self), 'creation_date', None):
       return self.creation_date.toZone(DateTime().timezone())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getModificationDate(self):
     """
       Returns the modification date of the document based on workflow information
@@ -3293,14 +3254,14 @@ class Base(
     if self._p_serial:
       return DateTime(self._p_mtime)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'modified')
+  @security.protected(Permissions.AccessContentsInformation)
   def modified(self):
     warnings.warn('modified is a deprecated alias to getModificationDate.',
                   DeprecationWarning)
     return self.getModificationDate()
 
   # Layout management
-  security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
+  @security.protected(Permissions.AccessContentsInformation)
   def getApplicableLayout(self):
     """
       The applicable layout of a standard document in the content layout.
@@ -3321,7 +3282,7 @@ class Base(
     except AttributeError:
       return None
 
-  security.declarePublic('isWebMode')
+  @security.public
   def isWebMode(self):
     """
       return True if we are in web mode
@@ -3332,7 +3293,7 @@ class Base(
       return False
     return True
 
-  security.declarePublic('isEditableWebMode')
+  @security.public
   def isEditableWebMode(self):
     """
       return True if we are in editable mode
@@ -3343,8 +3304,7 @@ class Base(
   isEditableMode = isEditableWebMode # for backwards compatability
 
 
-  security.declareProtected(Permissions.ChangeLocalRoles,
-                            'updateLocalRolesOnSecurityGroups')
+  @security.protected(Permissions.ChangeLocalRoles)
   def updateLocalRolesOnSecurityGroups(self, **kw):
     """Assign Local Roles to Groups on self, based on Portal Type Role
     Definitions and "ERP5 Role Definition" objects contained inside self.
@@ -3352,8 +3312,7 @@ class Base(
     self._getTypesTool().getTypeInfo(self) \
     .updateLocalRolesOnDocument(self, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'assignRoleToSecurityGroup')
+  @security.protected(Permissions.ModifyPortalContent)
   def assignRoleToSecurityGroup(self, **kw):
     """DEPRECATED. This is basically the same as
     `updateLocalRolesOnSecurityGroups`, but with a different permission.
@@ -3364,8 +3323,7 @@ class Base(
                   DeprecationWarning)
     self.updateLocalRolesOnSecurityGroups(**kw)
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'updateRoleMappingsFor')
+  @security.protected(Permissions.ManagePortal)
   def updateRoleMappingsFor(self, wf_id, **kw):
     """
     Update security policy according to workflow settings given by wf_id
@@ -3380,7 +3338,7 @@ class Base(
         self.reindexObjectSecurity(activate_kw={'priority':4})
 
   # Template Management
-  security.declareProtected(Permissions.View, 'getDocumentTemplateList')
+  @security.protected(Permissions.View)
   def getDocumentTemplateList(self) :
     """
       Returns an empty list of allowed templates
@@ -3388,7 +3346,7 @@ class Base(
     """
     return []
 
-  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplate')
+  @security.protected(Permissions.ModifyPortalContent)
   def makeTemplate(self):
     """
       Make document behave as a template.
@@ -3405,7 +3363,7 @@ class Base(
     self.isTemplate = ConstantGetter('isTemplate', value=True)
     # XXX reset security here
 
-  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplateInstance')
+  @security.protected(Permissions.ModifyPortalContent)
   def makeTemplateInstance(self):
     """
       Make document behave as standard document (indexable)
@@ -3422,15 +3380,14 @@ class Base(
     self.reindexObject()
 
   # ZODB Transaction Management
-  security.declarePublic('serialize')
+  @security.public
   def serialize(self):
     """Make the transaction accessing to this object atomic
     """
     self._p_changed = 1
 
   # Helpers
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantityPrecisionFromResource')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityPrecisionFromResource(self, resource, d=2):
     """
       Provides a quick access to precision without accessing the resource
@@ -3454,13 +3411,13 @@ class Base(
       precision = d
     return precision
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultReindexParameters' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setDefaultReindexParameters(self, **kw):
     warnings.warn('setDefaultReindexParameters is deprecated in favour of '
       'setDefaultReindexParameterDict.', DeprecationWarning)
     self.setDefaultReindexParameterDict(kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultReindexParameterDict' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setDefaultReindexParameterDict(self, kw):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
@@ -3468,8 +3425,7 @@ class Base(
     key = ('default_reindex_parameter', id(aq_base(self)))
     tv[key] = kw
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultReindexParameterDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDefaultReindexParameterDict(self, inherit_placeless=True):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
@@ -3493,12 +3449,11 @@ class Base(
         result.update(local)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def isItem(self):
     return self.portal_type in self.getPortalItemTypeList()
 
-  security.declareProtected(Permissions.DeletePortalContent,
-                            'migratePortalType')
+  @security.protected(Permissions.DeletePortalContent)
   def migratePortalType(self, portal_type):
     """
     Recreate document by recomputing inputted parameters with help of
@@ -3575,7 +3530,7 @@ class Base(
       except AttributeError:
         pass
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'generateIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateIdList(self, group, count=1, default=1, onMissing=None, poison=False):
     """
     Manages multiple independent sequences of unique numbers.

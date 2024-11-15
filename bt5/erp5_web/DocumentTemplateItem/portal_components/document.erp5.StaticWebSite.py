@@ -52,7 +52,7 @@ class StaticWebSite(StaticWebSection.StaticWebSection):
                     , PropertySheet.Predicate
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWebSiteValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWebSiteValue(self):
     """
       Returns the current web site (ie. self) though containment acquisition

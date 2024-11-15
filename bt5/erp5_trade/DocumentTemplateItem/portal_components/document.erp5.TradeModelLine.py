@@ -51,8 +51,7 @@ class TradeModelLine(AmountGeneratorLine):
   ### Mapped Value Definition
   # Provide default mapped value properties and categories if
   # not defined
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMappedValuePropertyList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMappedValuePropertyList(self):
     """
     """

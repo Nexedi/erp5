@@ -59,7 +59,7 @@ class InvoiceCell(DeliveryCell):
                     , PropertySheet.MappedValue
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
     Returns 1 if this needs to be accounted

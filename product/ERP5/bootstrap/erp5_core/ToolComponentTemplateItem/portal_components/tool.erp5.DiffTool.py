@@ -71,8 +71,7 @@ class DiffTool(BaseTool):
   # Declarative Security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'diffPortalObject')
+  @security.protected(Permissions.AccessContentsInformation)
   def diffPortalObject(self, old_value, new_value, path=None, patch_format="deepdiff"):
     """
       Returns a PortalPatch instance with the appropriate format
@@ -81,7 +80,7 @@ class DiffTool(BaseTool):
     """
     return PortalPatch(old_value, new_value, path, patch_format).__of__(self)
 
-  security.declarePrivate('patchPortalObject')
+  @security.private
   def patchPortalObject(self, old, diff_list):
     """
     Receives the dict with old object, diff value and returns a new object from
@@ -128,8 +127,7 @@ class PortalPatch(Explicit):
     self.new_value = new_value
     self.patch_format = patch_format
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asBeautifiedJSONDiff')
+  @security.protected(Permissions.AccessContentsInformation)
   def asBeautifiedJSONDiff(self):
     """
     Returns beautified JSON diff in format:
@@ -228,7 +226,7 @@ class PortalPatch(Explicit):
 
     return sorted_diff_list
 
-  security.declarePrivate('removePropertyList')
+  @security.private
   def removePropertyList(self,
                          obj,
                          export,

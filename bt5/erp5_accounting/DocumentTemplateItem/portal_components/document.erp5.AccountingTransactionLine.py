@@ -59,8 +59,7 @@ class AccountingTransactionLine(DeliveryLine):
                     )
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoriatedQuantity(self):
     """
       Redefine this method here, because AccountingTransactionLine does
@@ -69,7 +68,7 @@ class AccountingTransactionLine(DeliveryLine):
     return Amount.getInventoriatedQuantity(self)
 
   # Pricing in standard currency
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPrice(self, context=None): # pylint: disable=arguments-differ
     """
       On accounting transaction lines, the price is always set to 1.
@@ -79,8 +78,7 @@ class AccountingTransactionLine(DeliveryLine):
     """
     return 1.0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSourceAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceAssetPrice(self):
     """
       The price is set to 1.0 because we do not want to implement
@@ -90,8 +88,7 @@ class AccountingTransactionLine(DeliveryLine):
     """
     return 1.0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDestinationAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationAssetPrice(self):
     """
       The price is set to 1.0 because we do not want to implement
@@ -101,8 +98,7 @@ class AccountingTransactionLine(DeliveryLine):
     """
     return 1.0
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'setGroupingReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def setGroupingReference(self, value):
     # Sets the grouping reference.
     # This method is redefined here to override security definition.
@@ -113,16 +109,14 @@ class AccountingTransactionLine(DeliveryLine):
     self._baseSetGroupingReference(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'setGroupingDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def setGroupingDate(self, value):
     # Sets the grouping date.
     # See also setGroupingReference.
     self._baseSetGroupingDate(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isMovingItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovingItem(self, item):
     """
       We often like to aggregate items to Accounting Transaction Line

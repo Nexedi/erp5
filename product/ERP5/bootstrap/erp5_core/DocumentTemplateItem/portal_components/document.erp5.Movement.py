@@ -227,23 +227,22 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   def isPropertyRecorded(self, k): # XXX-JPS method should be moved to GeneratedMovement class
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovement(self):
     return 1
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                      'isMovingItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovingItem(self, item):
     type_based_script = self._getTypeBasedMethod('isMovingItem')
     if type_based_script is not None:
       return type_based_script(item)
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMovedItemUidList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovedItemUidList(self):
     """This method returns an uid list of items
     """
@@ -282,8 +281,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       base_unit_price = operand_dict.get('base_unit_price', None)
       return base_unit_price
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-          'getPriceCalculationOperandDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPriceCalculationOperandDict(self, default=None, context=None, **kw):
     """Return a dict object which contains operands used for price
     calculation. The returned items depend on a site configuration,
@@ -315,7 +313,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return operand_dict
     return {'price': context.Movement_lookupPrice()}
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPrice(self, default=None, context=None, evaluate=1, **kw):
     """
       Get the Price in the context.
@@ -351,8 +349,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       local_price = self._getPrice(context=self)
     return local_price
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self, default=0.0, context=None, REQUEST=None, fast=None,
                     **kw):
     """Return the total price in the context.
@@ -376,8 +373,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return result
     return method(result)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalQuantity(self, default=0.0):
     """
       Returns the quantity if no cell or the total quantity if cells
@@ -385,8 +381,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return self.getQuantity(default=default)
 
   # Industrial price API
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getIndustrialPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getIndustrialPrice(self):
     """
       Calculates industrial price in context of this movement
@@ -397,8 +392,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return None
 
   # Asset price calculation
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceInventoriatedTotalAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceInventoriatedTotalAssetPrice(self):
     """
       Returns a price which can be used to calculate stock value (asset)
@@ -426,8 +420,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return source_asset_price * - quantity
     return None
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceInventoriatedTotalAssetDebit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceInventoriatedTotalAssetDebit(self) :
     """
       Returns the debit part of inventoriated source total asset price.
@@ -438,8 +431,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return result
     return 0.0
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceInventoriatedTotalAssetCredit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceInventoriatedTotalAssetCredit(self) :
     """
       Returns the credit part of inventoriated source total asset price.
@@ -450,8 +442,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return -result
     return 0.0
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationInventoriatedTotalAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationInventoriatedTotalAssetPrice(self):
     """
       Returns a price which can be used to calculate stock value (asset)
@@ -470,8 +461,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return destination_asset_price * quantity
     return None
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationInventoriatedTotalAssetDebit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationInventoriatedTotalAssetDebit(self) :
     """
       Returns the debit part of inventoriated destination total asset price.
@@ -482,8 +472,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return result
     return 0.0
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationInventoriatedTotalAssetCredit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationInventoriatedTotalAssetCredit(self) :
     """
       Returns the credit part of inventoriated destination total asset price.
@@ -494,8 +483,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return -result
     return 0.0
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceAssetPrice(self):
     """
       Returns the price converted to the currency of the source section
@@ -507,8 +495,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return type_based_script()
     return self._getAssetPrice(section = self.getSourceSectionValue(), date = self.getStartDate())
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationAssetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationAssetPrice(self):
     """
       Returns the price converted to the currency of the destination section
@@ -535,16 +522,14 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return price
 
   # Causality computation
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isConvergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isConvergent(self):
     """
       Returns true if movement is not divergent
     """
     return bool(not self.isDivergent())
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self):
     """Return True if this movement diverges from the its simulation.
     """
@@ -553,8 +538,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return True
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDivergenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDivergenceList(self):
     """
     Return a list of messages that contains the divergences
@@ -565,8 +549,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
     return divergence_list
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanation')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanation(self):
     """
       Returns the relative_url of the explanation of this movement.
@@ -575,8 +558,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     if explanation is not None:
       return explanation.getRelativeUrl()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanationUid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationUid(self):
     """
       Returns the uid of the explanation of this movement.
@@ -585,8 +567,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     if explanation is not None:
       return explanation.getUid()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationValue(self):
     """
       Returns the object explanation of this movement.
@@ -596,8 +577,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     except AttributeError:
       return None
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanationTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationTitle(self, default=''):
     """
       Returns the title of the explanation of this movement.
@@ -607,8 +587,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return explanation_value.getTitle()
     return default
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getExplanationReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationReference(self, default=''):
     """
       Returns the reference of the explanation of this movement.
@@ -618,8 +597,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return explanation_value.getReference()
     return default
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRootCausalityValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootCausalityValueList(self):
     """
       Returns the initial causality value for this movement.
@@ -630,15 +608,13 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
 
   # Simulation
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isSimulated')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSimulated(self):
     # 'order' category is deprecated. it is kept for compatibility.
     return (len(self.getDeliveryRelatedValueList()) > 0) or\
            (len(self.getOrderRelatedValueList()) > 0)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isGeneratedBySimulation')
+  @security.protected(Permissions.AccessContentsInformation)
   def isGeneratedBySimulation(self):
     """
       Returns true if the movement is linked to a simulation movement whose
@@ -651,16 +627,14 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return simulation_movement is not None and \
        not simulation_movement.getParentValue().isRootAppliedRule()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSimulationQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSimulationQuantity(self):
     """Computes the quantities in the simulation.
     """
     return sum(m.getQuantity() for m in self.getDeliveryRelatedValueList())
 
   # Debit and credit methods
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceDebit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceDebit(self):
     """
       Return the quantity
@@ -674,8 +648,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return - quantity
     return 0.0
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceCredit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceCredit(self):
     """
       Return the quantity
@@ -694,7 +667,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   getDestinationDebit = getSourceCredit
   getDestinationCredit = getSourceDebit
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setSourceDebit')
+  @security.protected(Permissions.ModifyPortalContent)
   def setSourceDebit(self, source_debit):
     """
       Set the quantity
@@ -708,7 +681,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     self.setCancellationAmount(source_debit < 0)
     self.setQuantity(- source_debit)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setSourceCredit')
+  @security.protected(Permissions.ModifyPortalContent)
   def setSourceCredit(self, source_credit):
     """
       Set the quantity
@@ -727,7 +700,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   setDestinationDebit = setSourceCredit
   setDestinationCredit = setSourceDebit
 
-  security.declarePrivate('_edit')
+  @security.private
   def _edit(self, edit_order=(), **kw):
     """Overloaded _edit to support setting debit and credit at the same time,
     which is required for the GUI.
@@ -762,8 +735,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return super(Movement, self)._edit(edit_order=edit_order, **kw)
 
   # Debit and credit methods for asset
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceAssetDebit' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceAssetDebit(self):
     """
       Return the debit part of the source total asset price.
@@ -781,8 +753,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return 0.0
     return quantity
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSourceAssetCredit' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceAssetCredit(self):
     """
       Return the credit part of the source total asset price.
@@ -800,8 +771,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return - quantity
     return 0.0
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationAssetDebit' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationAssetDebit(self):
     """
       Return the debit part of the destination total asset price.
@@ -819,8 +789,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return 0.0
     return quantity
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationAssetCredit' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationAssetCredit(self):
     """
       Return the credit part of the destination total asset price.
@@ -838,8 +807,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return - quantity
     return 0.0
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setSourceAssetDebit' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setSourceAssetDebit(self, source_debit):
     """
       Set the source total asset price
@@ -854,8 +822,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     self.setCancellationAmount(source_debit < 0)
     self.setSourceTotalAssetPrice(source_debit)
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setSourceAssetCredit' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setSourceAssetCredit(self, source_credit):
     """
       Set the source total asset price
@@ -870,8 +837,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     self.setCancellationAmount(source_credit < 0)
     self.setSourceTotalAssetPrice( - source_credit)
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setDestinationAssetDebit' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setDestinationAssetDebit(self, destination_debit):
     """
       Set the destination total asset price
@@ -886,8 +852,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     self.setCancellationAmount(destination_debit < 0)
     self.setDestinationTotalAssetPrice(destination_debit)
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setDestinationAssetCredit' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setDestinationAssetCredit(self, destination_credit):
     """
       Set the destination total asset price
@@ -903,8 +868,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     self.setDestinationTotalAssetPrice( - destination_credit)
 
   # Item Access (tracking)
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getTrackedItemUidList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTrackedItemUidList(self):
     """
       Return a list of uid for related items
@@ -913,8 +877,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return self.getAggregateUidList()
 
   # Helper methods to display total quantities as produced / consumed
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getProductionTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getProductionTotalQuantity(self):
     """
       Return the produced quantity
@@ -922,8 +885,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     quantity = self.getTotalQuantity()
     return self.getProductionQuantity(quantity=quantity)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getConsumptionTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConsumptionTotalQuantity(self):
     """
       Return the produced quantity
@@ -931,8 +893,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     quantity = self.getTotalQuantity()
     return self.getConsumptionQuantity(quantity=quantity)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getSubVariationText')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubVariationText(self,**kw):
     """
     Provide a string representation of XXX
@@ -946,8 +907,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return_list.extend(variation_list)
     return "\n".join(return_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentExplanationValue(self):
     """
       This method should be removed as soon as movement groups
@@ -981,8 +941,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 #     """
 #     return self.getStandardInventoriatedQuantity()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'asMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def asMovementList(self):
     """
     Placeholder method called when indexing a movement.

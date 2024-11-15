@@ -59,8 +59,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
   )
 
   # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDestinationList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationList(self):
     """
     this getter is redefined to improve performance:
@@ -72,8 +71,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
             if path.startswith('destination/')]
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDestinationIdList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationIdList(self):
     """
     this getter is redefined to improve performance:
@@ -83,8 +81,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     return [path.split('/')[-1] for path in self.getCategoryList()
             if path.startswith('destination/')]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDestinationValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationValueList(self):
     """
     this getter is redefined to improve performance:
@@ -95,8 +92,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     return [parent._getOb(destination_id) for destination_id in
             self.getDestinationIdList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAcquirePermissionList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAcquirePermissionList(self):
     """
     acquire all permissions if not yet configured, like DCWorkflow
@@ -106,8 +102,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     else:
       return self._baseGetAcquirePermissionList()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setStatePermissionRoleListDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def setStatePermissionRoleListDict(self, permission_roles):
     """
     create a dict containing the state's permission (as key) and its
@@ -118,8 +113,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     self.state_permission_role_list_dict = PersistentMapping(
         {k: tuple(v) for (k, v) in permission_roles.items()})
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStatePermissionRoleListDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStatePermissionRoleListDict(self):
     """
     return the permission/roles dict
@@ -128,8 +122,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     return {k: state_permission_role_list_dict_get(k, ())
             for k in self.getWorkflowManagedPermissionList()}
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setPermission')
+  @security.protected(Permissions.ModifyPortalContent)
   def setPermission(self, permission, roles, REQUEST=None):
     """
     Set a permission for this State.
@@ -138,8 +131,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
       self.state_permission_role_list_dict = PersistentMapping()
     self.state_permission_role_list_dict[permission] = tuple(sorted(roles))
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableTypeList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableTypeList(self):
     """
     This is a method specific to ERP5. This returns a list of state types,

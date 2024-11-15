@@ -48,7 +48,7 @@ class VCardConduit(ERP5Conduit):
   security = ClassSecurityInfo()
 
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def addNode(self, xml=None, object=None, previous_xml=None, # pylint: disable=redefined-builtin
       object_id=None, sub_object=None, force=0, simulate=0, **kw):
     """
@@ -74,7 +74,7 @@ class VCardConduit(ERP5Conduit):
     #in a first time, conflict are not used
     return {'conflict_list':[], 'object': new_object}
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def deleteNode(self, xml=None, object=None, object_id=None, force=None, # pylint: disable=redefined-builtin
       simulate=0, **kw):
     """
@@ -87,7 +87,7 @@ class VCardConduit(ERP5Conduit):
       LOG('VCardConduit',0,'deleteNode, Unable to delete: %s' % str(object_id))
     return []
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateNode(self, xml=None, object=None, previous_xml=None, force=0, # pylint: disable=redefined-builtin
       simulate=0,  **kw):
     """
@@ -213,8 +213,7 @@ class VCardConduit(ERP5Conduit):
     #LOG('edit_dict =',0,edit_dict)
     return edit_dict
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'replaceIdFromXML')
+  @security.protected(Permissions.ModifyPortalContent)
   def replaceIdFromXML(self, xml, attribute_name, new_id, as_string=True):
     """
       Return the Same vlue

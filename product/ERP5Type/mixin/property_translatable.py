@@ -55,20 +55,17 @@ class PropertyTranslatableBuiltInDictMixIn:
         self._p_changed = True
       return dict_
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPropertyTranslation')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyTranslation(self, property_id, language):
     return self._getTranslationDict()[(property_id, language)][1]
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setPropertyTranslation')
+  @security.protected(Permissions.ModifyPortalContent)
   def setPropertyTranslation(self, property_id, language, original_text, translation):
     self._getTranslationDict(create_if_missing=True)[(property_id, language)] = \
           (original_text, translation)
     self._p_changed = True
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'deletePropertyTranslation')
+  @security.protected(Permissions.ModifyPortalContent)
   def deletePropertyTranslation(self, property_id, language):
     try:
       del self._getTranslationDict()[(property_id, language)]
@@ -76,13 +73,11 @@ class PropertyTranslatableBuiltInDictMixIn:
     except KeyError:
       pass
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPropertyTranslationOriginalText')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPropertyTranslationOriginalText(self, property_id, language):
     return self._getTranslationDict()[(property_id, language)][0]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                          'isPropertyTranslated')
+  @security.protected(Permissions.AccessContentsInformation)
   def isPropertyTranslated(self, property_id, language):
     try:
       self._getTranslationDict()[(property_id, language)]

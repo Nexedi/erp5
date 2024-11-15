@@ -198,7 +198,7 @@ class TALESValue(StaticValue):
     kw['container'] = container
     try :
       kw['preferences'] = obj.getPortalObject().portal_preferences
-    except AttributeError :
+    except AttributeError:
       LOG('ERP5Form', PROBLEM,
           'portal_preferences not put in TALES context (not installed?)')
     # This allows to pass some pointer to the local object
@@ -712,7 +712,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       return ret
 
     # Utilities
-    security.declareProtected('View', 'ErrorFields')
+    @security.protected('View')
     def ErrorFields(self, validation_errors):
         """
             Create a dictionnary of validation_errors
@@ -730,7 +730,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         return icons
 
     # Pached validate_all to support ListBox validation
-    security.declareProtected('View', 'validate_all')
+    @security.protected('View')
     def validate_all(self, REQUEST, key_prefix=None):
         """Validate all enabled fields in this form, catch any ValidationErrors
         if they occur and raise a FormValidationError in the end if any
@@ -771,7 +771,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     manage_FTPget = ZMIForm.get_xml
 
     #Methods for Proxify tab.
-    security.declareProtected('View management screens', 'getFormFieldList')
+    @security.protected('View management screens')
     def getFormFieldList(self):
         """
         find fields and forms which name ends with 'FieldLibrary' in
@@ -808,7 +808,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         iterate(skins_tool.erp5_core)
         return form_list
 
-    security.declareProtected('View management screens', 'getProxyableFieldList')
+    @security.protected('View management screens')
     def getProxyableFieldList(self, field, form_field_list=None):
         """"""
         def extract_keyword(name):
@@ -952,7 +952,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         add_default_field_library()
         return form_order, matched
 
-    security.declareProtected('View management screens', 'getUnProxyableFieldList')
+    @security.protected('View management screens')
     def getUnProxyableFieldList(self):
       """
       Return ProxyFields
@@ -960,8 +960,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       return sorted([f for f in self.objectValues() \
           if f.meta_type == 'ProxyField'], key = lambda x: x.id)
 
-    security.declareProtected('View management screens',
-        'getRelatedProxyFieldDictList')
+    @security.protected('View management screens')
     def getRelatedProxyFieldDictList(self, **kw):
       """
       Retrieve all proxy using proxy in this form
@@ -1003,7 +1002,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     _proxy_copy_type_list = (bytes, six.text_type, float, bool, list,
                              tuple, dict, DateTime) + six.integer_types
 
-    security.declareProtected('Change Formulator Forms', 'proxifyField')
+    @security.protected('Change Formulator Forms')
     def proxifyField(self, field_dict=None, force_delegate=False,
                      keep_empty_value=False, REQUEST=None):
         """Convert fields to proxy fields
@@ -1129,7 +1128,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     psyco.bind(__call__)
     psyco.bind(_exec)
 
-    security.declareProtected('Change Formulator Forms', 'unProxifyField')
+    @security.protected('Change Formulator Forms')
     def unProxifyField(self, field_dict=None, copy_delegated_values=False,
                        REQUEST=None):
         """
@@ -1213,7 +1212,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     #   we should consider all fields to render the group tab
     #   moreoever, listbox rendering fails whenever enabled
     #   is based on the cell parameter.
-    security.declareProtected('View', 'get_largest_group_length')
+    @security.protected('View')
     def get_largest_group_length(self):
         """Get the largest group length available; necessary for
         'order' screen user interface.
@@ -1226,7 +1225,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                 max = len(fields)
         return max
 
-    security.declareProtected('View', 'get_groups')
+    @security.protected('View')
     def get_groups(self, include_empty=0):
         """Get a list of all groups, in display order.
 

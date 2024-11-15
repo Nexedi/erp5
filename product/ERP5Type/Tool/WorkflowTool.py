@@ -142,7 +142,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           return True
     return False
 
-  security.declarePrivate('getCatalogVariablesFor')
+  @security.private
   def getCatalogVariablesFor(self, ob):
     """ Get a mapping of "workflow-relevant" attributes.
         original code from zope CMFCore/WorkflowTool.py
@@ -201,7 +201,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       self._reindexWorkflowVariables(ob)
     return res
 
-  security.declarePublic('doActionFor')
+  @security.public
   def doActionFor(self, ob, action, wf_id=None, *args, **kw):
     workflow_id = wf_id
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
@@ -228,8 +228,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       action,
       workflow.doActionFor, (ob, action) + tuple(args), kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorkflowValueListFor')
+  @security.protected(Permissions.AccessContentsInformation)
   def getWorkflowValueListFor(self, ob):
     """ Return a list of workflows bound to selected object, this workflow
         list may contain both DC Workflow and Workflow.
@@ -302,7 +301,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   _reindexWorkflowVariables = lambda self, ob: \
   hasattr(aq_base(ob), 'reindexObjectSecurity') and ob.reindexObjectSecurity()
 
-  security.declarePublic('isTransitionPossible')
+  @security.public
   def isTransitionPossible(self, ob, transition_id, wf_id=None):
     """Test if the given transition exist from the current state.
     """
@@ -315,7 +314,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   getFutureStateSetFor = lambda self, wf_id, *args, **kw: \
     self[wf_id].getFutureStateSet(*args, **kw)
 
-  security.declarePrivate('getStatusOf')
+  @security.private
   def getStatusOf(self, workflow_id, current_object):
     # code taken from CMFCore
     """ Get the last element of a workflow history for a given workflow.
@@ -348,7 +347,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         ob.workflow_history[wf_id] = wfh
     wfh.append(status)
 
-  security.declareProtected(Permissions.ManagePortal, 'refreshWorklistCache')
+  @security.protected(Permissions.ManagePortal)
   def refreshWorklistCache(self):
     """
       Refresh worklist cache table.

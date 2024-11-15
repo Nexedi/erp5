@@ -56,7 +56,7 @@ class ProductionReportLine(DeliveryLine):
                     , PropertySheet.ItemAggregation
                     )
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def newCellContent(self, id, portal_type='Production Report Cell', **kw):
     """Overriden to specify default portal type
     """

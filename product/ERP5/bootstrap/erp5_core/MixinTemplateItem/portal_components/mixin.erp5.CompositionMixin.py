@@ -228,8 +228,7 @@ class CompositionMixin:
             effective_list.append(model)
     return effective_list, specialise_value_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInheritedSpecialiseValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInheritedSpecialiseValueList(self, specialise_type_list=None,
                                       exclude_specialise_type_list=()):
     """Get inherited specialise values

@@ -72,7 +72,7 @@ class ERP5BearerExtractionPlugin(BasePlugin):
   ####################################
   #ILoginPasswordHostExtractionPlugin#
   ####################################
-  security.declarePrivate('extractCredentials')
+  @security.private
   def extractCredentials(self, request):
     """ Extract credentials from the request header. """
     creds = {}

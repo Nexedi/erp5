@@ -62,15 +62,13 @@ class InvoiceLine(DeliveryLine):
                     )
 
   # Cell Related
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'newCellContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def newCellContent(self, id, portal_type='Invoice Cell', **kw): # pylint: disable=redefined-builtin
     """Overriden to specify default portal type
     """
     return self.newContent(id=id, portal_type=portal_type, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isAccountable' )
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
     Invoice movements are never accountable, because they have no

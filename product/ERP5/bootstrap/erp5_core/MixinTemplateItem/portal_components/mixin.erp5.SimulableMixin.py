@@ -119,8 +119,7 @@ class SimulableMixin(Base):
         if not movement.aq_inContextOf(applied_rule):
           movement.recursiveReindexObject(activate_kw=activate_kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRuleReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRuleReference(self):
     """Returns an appropriate rule reference
 
@@ -170,7 +169,7 @@ class SimulableMixin(Base):
         return applied_rule
       raise SimulationError("No such rule as %r is found" % rule_reference)
 
-  security.declarePrivate('manage_beforeDelete')
+  @security.private
   def manage_beforeDelete(self, item, container):
     """Delete related Applied Rule"""
     for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):

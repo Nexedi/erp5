@@ -128,7 +128,7 @@ class BusinessProcess(Path, XMLObject):
   asComposedDocument__class_cache = {}
 
   # ITradeModelPathProcess implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTradeModelPathValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTradeModelPathValueList(self, trade_phase=None, context=None, **kw):
     """Returns all Trade Model Path of the current Business Process which
     are matching the given trade_phase and the optional context.
@@ -161,7 +161,7 @@ class BusinessProcess(Path, XMLObject):
     # support the condition above without scripting?
     return [path for path in path_list if path.test(context)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExpectedTradeModelPathStartAndStopDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExpectedTradeModelPathStartAndStopDate(self, explanation, trade_model_path,
                                                       delay_mode=None):
     """Returns the expected start and stop dates of given Trade Model Path
@@ -201,7 +201,7 @@ class BusinessProcess(Path, XMLObject):
     return start_date, stop_date
 
   # IBusinessLinkProcess implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessLinkValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBusinessLinkValueList(self, trade_phase=None, context=None,
                                predecessor=_marker, successor=_marker, **kw):
     """Returns all Business Links of the current BusinessProcess which
@@ -250,7 +250,7 @@ class BusinessProcess(Path, XMLObject):
     return [business_link for business_link in business_link_list
                 if business_link.test(context)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isBusinessLinkCompleted(self, explanation, business_link):
     """Returns True if given Business Link document
     is completed in the context of provided explanation.
@@ -283,7 +283,7 @@ class BusinessProcess(Path, XMLObject):
     closure_process = _getBusinessLinkClosure(self, explanation, business_link)
     return closure_process.isTradeStateCompleted(explanation, predecessor_state)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkPartiallyCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isBusinessLinkPartiallyCompleted(self, explanation, business_link):
     """Returns True if given Business Link document
     is partially completed in the context of provided explanation.
@@ -318,7 +318,7 @@ class BusinessProcess(Path, XMLObject):
                                                            predecessor_state)
 
   # IBuildableBusinessLinkProcess implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBuildableBusinessLinkValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBuildableBusinessLinkValueList(self, explanation):
     """Returns the list of Business Link which are buildable
     by taking into account trade state dependencies between
@@ -333,7 +333,7 @@ class BusinessProcess(Path, XMLObject):
         result.append(business_link)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyBuildableBusinessLinkValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPartiallyBuildableBusinessLinkValueList(self, explanation):
     """Returns the list of Business Link which are partially buildable
     by taking into account trade state dependencies between
@@ -348,7 +348,7 @@ class BusinessProcess(Path, XMLObject):
         result.append(business_link)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkBuildable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isBusinessLinkBuildable(self, explanation, business_link):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is completed.
@@ -366,7 +366,7 @@ class BusinessProcess(Path, XMLObject):
     predecessor = business_link.getPredecessor()
     return closure_process.isTradeStateCompleted(explanation, predecessor)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkPartiallyBuildable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isBusinessLinkPartiallyBuildable(self, explanation, business_link):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is partially completed.
@@ -385,7 +385,7 @@ class BusinessProcess(Path, XMLObject):
     return closure_process.isTradeStatePartiallyCompleted(predecessor)
 
   # ITradeStateProcess implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTradeStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTradeStateList(self):
     """Returns list of all trade_state of this Business Process
     by looking at successor and predecessor values of contained
@@ -400,7 +400,7 @@ class BusinessProcess(Path, XMLObject):
       result.add(business_link.getSuccessor())
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isInitialTradeState')
+  @security.protected(Permissions.AccessContentsInformation)
   def isInitialTradeState(self, trade_state):
     """Returns True if given 'trade_state' has no successor related
     Business Link.
@@ -409,7 +409,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return not self.getBusinessLinkValueList(successor=trade_state)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isFinalTradeState')
+  @security.protected(Permissions.AccessContentsInformation)
   def isFinalTradeState(self, trade_state):
     """Returns True if given 'trade_state' has no predecessor related
     Business Link.
@@ -418,7 +418,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return not self.getBusinessLinkValueList(predecessor=trade_state)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSuccessorTradeStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSuccessorTradeStateList(self, explanation, trade_state):
     """Returns the list of successor states in the
     context of given explanation. This list is built by looking
@@ -436,7 +436,7 @@ class BusinessProcess(Path, XMLObject):
         result.add(business_link.getSuccessor())
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPredecessorTradeStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPredecessorTradeStateList(self, explanation, trade_state):
     """Returns the list of predecessor states in the
     context of given explanation. This list is built by looking
@@ -454,7 +454,7 @@ class BusinessProcess(Path, XMLObject):
         result.add(business_link.getPredecessor())
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCompletedTradeStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCompletedTradeStateList(self, explanation):
     """Returns the list of Trade States which are completed
     in the context of given explanation.
@@ -464,7 +464,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return [x for x in self.getTradeStateList() if self.isTradeStateCompleted(explanation, x)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradeStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPartiallyCompletedTradeStateList(self, explanation):
     """Returns the list of Trade States which are partially
     completed in the context of given explanation.
@@ -474,7 +474,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return [x for x in self.getTradeStateList() if self.isTradeStatePartiallyCompleted(explanation, x)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getLatestCompletedTradeStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLatestCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
     states are completed and for which no successor state
@@ -490,7 +490,7 @@ class BusinessProcess(Path, XMLObject):
           result.add(state)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getLatestPartiallyCompletedTradeStateList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLatestPartiallyCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
     states are completed and for which no successor state
@@ -506,7 +506,7 @@ class BusinessProcess(Path, XMLObject):
           result.add(state)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isTradeStateCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isTradeStateCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
     completed in the context of given explanation.
@@ -521,7 +521,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isTradeStatePartiallyCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isTradeStatePartiallyCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
     completed and if no successor trade state is partially completed
@@ -538,7 +538,7 @@ class BusinessProcess(Path, XMLObject):
     return True
 
   # ITradePhaseProcess implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTradePhaseList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTradePhaseList(self):
     """Returns list of all trade_phase of this Business Process
     by looking at trade_phase values of contained Business Link.
@@ -548,7 +548,7 @@ class BusinessProcess(Path, XMLObject):
       result = result.union(business_link.getTradePhaseList())
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCompletedTradePhaseList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCompletedTradePhaseList(self, explanation):
     """Returns the list of Trade Phases which are completed
     in the context of given explanation.
@@ -558,7 +558,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return [x for x in self.getTradePhaseList() if self.isTradePhaseCompleted(explanation, x)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradePhaseList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPartiallyCompletedTradePhaseList(self, explanation):
     """Returns the list of Trade Phases which are partially completed
     in the context of given explanation.
@@ -568,7 +568,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return [x for x in self.getTradePhaseList() if self.isTradePhasePartiallyCompleted(explanation, x)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isTradePhaseCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isTradePhaseCompleted(self, explanation, trade_phase):
     """Returns True all business link with given trade_phase
     applicable to given explanation are completed.
@@ -583,7 +583,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isTradePhasePartiallyCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isTradePhasePartiallyCompleted(self, explanation, trade_phase):
     """Returns True at least one business link with given trade_phase
     applicable to given explanation is partially completed
@@ -599,8 +599,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRemainingTradePhaseList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRemainingTradePhaseList(self, business_link):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing
@@ -659,7 +658,7 @@ class BusinessProcess(Path, XMLObject):
 
     return remaining_trade_phase_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTradePhaseMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTradePhaseMovementList(self, explanation, amount, trade_phase=None, delay_mode=None,
                                       update_property_dict=None):
     """Returns a list of movement with appropriate arrow and dates,
@@ -811,7 +810,7 @@ class BusinessProcess(Path, XMLObject):
     return property_dict
 
   # IBusinessProcess global API
-  security.declareProtected(Permissions.AccessContentsInformation, 'isCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isCompleted(self, explanation):
     """Returns True is all applicable Trade States and Trade Phases
     are completed in the context of given explanation.
@@ -824,7 +823,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isBuildable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isBuildable(self, explanation):
     """Returns True is one Business Link of this Business Process
     is buildable in the context of given explanation.
@@ -834,7 +833,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return not not self.getBuildableBusinessLinkValueList(explanation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isPartiallyBuildable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isPartiallyBuildable(self, explanation):
     """Returns True is one Business Link of this Business Process
     is partially buildable in the context of given explanation.
@@ -844,7 +843,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return not not self.getPartiallyBuildableBusinessLinkValueList(explanation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'build')
+  @security.protected(Permissions.AccessContentsInformation)
   def build(self, explanation):
     """
       Build whatever is buildable
@@ -852,8 +851,7 @@ class BusinessProcess(Path, XMLObject):
     for business_link in self.getBuildableBusinessLinkValueList(explanation):
       business_link.build(explanation=explanation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPreviousTradePhaseDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPreviousTradePhaseDict(self, trade_phase_list=None):
     """Return a dict mapping each phase to a set of previous ones
 

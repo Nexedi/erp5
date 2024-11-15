@@ -60,8 +60,7 @@ class SupplyCell(Path):
                     , PropertySheet.Reference
                     )
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'hasCellContent' )
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCellContent(self, base_id='movement'):
     """A cell cannot have cell content itself.
     """
@@ -70,12 +69,10 @@ class SupplyCell(Path):
   # Override getQuantityUnitXXX to negate same methods defined in
   # Amount class. Because cell must acquire quantity unit from line
   # not from resource.
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getQuantityUnitValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityUnitValue(self):
     return self.getParentValue().getQuantityUnitValue()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getQuantityUnit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityUnit(self, checked_permission=None):
     return self.getParentValue().getQuantityUnit(checked_permission=checked_permission)

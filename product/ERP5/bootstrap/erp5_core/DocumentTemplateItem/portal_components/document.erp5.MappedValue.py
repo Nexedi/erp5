@@ -57,8 +57,7 @@ class MappedValue(Predicate):
                       , PropertySheet.MappedValue
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMappedValueBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMappedValueBaseCategoryList(self, d=_MARKER):
     if TRANSFORMATION_FIX:
       # Fix Mapped Value Objects which forgot to define their Mapped Base Categories

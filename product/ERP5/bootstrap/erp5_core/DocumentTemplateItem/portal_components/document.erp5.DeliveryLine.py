@@ -73,14 +73,12 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
   updateRelatedContent = XMLMatrix.updateRelatedContent
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """To avoid duplicate docstring. Please read movement interface."""
     return self.getParentValue().isAccountable() and (not self.hasCellContent())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'isMovingItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovingItem(self, item):
     type_based_script = self._getTypeBasedMethod('isMovingItem')
     if type_based_script is not None:
@@ -114,8 +112,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
     return sum(cell.getTotalPrice(default=0.0, context=context)
                for cell in self.getCellValueList())
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalQuantity(self, fast=0):
     """
     Returns the quantity if no cell or the total quantity if cells
@@ -144,8 +141,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
       return sum([cell.getQuantity() for cell in self.getCellValueList()])
     return self.getQuantity()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasLineContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasLineContent(self):
     """Return true if the object contains lines.
 
@@ -155,8 +151,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
     """
     return len(self) != 0 and self.objectValues()[0].meta_type == self.meta_type
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'hasCellContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCellContent(self, base_id='movement'):
     """Return true if the object contains cells.
     """
@@ -178,8 +173,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
     # cell, which define the same variated resource.
 #       return XMLMatrix.hasCellContent(self, base_id=base_id)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-      'isMovement' )
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovement(self):
     """
     returns true is the object contains no submovement (line or cell)
@@ -192,21 +186,21 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
           return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMovedItemUidList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovedItemUidList(self):
     """This method returns an uid list of items
     """
     return [item.getUid() for item in self.getAggregateValueList() \
         if self.isMovingItem(item)]
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellValueList(self, base_id='movement'):
     """
     This method can be overriden
     """
     return XMLMatrix.getCellValueList(self, base_id=base_id)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getCell' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCell(self, *kw , **kwd):
     """
     This method can be overriden
@@ -216,7 +210,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
 
     return XMLMatrix.getCell(self, *kw, **kwd)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
+  @security.protected(Permissions.ModifyPortalContent)
   def newCell(self, *kw, **kwd):
     """
     This method creates a new cell
@@ -242,7 +236,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
     """Reindex children"""
     self.recursiveReindexObject(*k, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoriatedQuantity(self):
     """
     """
@@ -283,16 +277,14 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
 #
 #       return error_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRootDeliveryValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootDeliveryValue(self):
     """
     Returns the root delivery responsible of this line
     """
     return self.getParentValue().getRootDeliveryValue()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateSimulationDeliveryProperties')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateSimulationDeliveryProperties(self, movement_list = None):
     """
     Set properties delivery_ratio and delivery_error for each
@@ -303,14 +295,14 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
     if parent is not None:
       parent.updateSimulationDeliveryProperties(movement_list, self)
 
-  security.declarePrivate('manage_afterAdd')
+  @security.private
   def manage_afterAdd(self, item, container):
     "if the container is a line too, reindex it"
     if self.meta_type == container.meta_type:
       container.activate(activity="SQLDict").reindexObject()
     return Movement.manage_afterAdd(self, item, container)
 
-  security.declarePrivate('manage_beforeDelete')
+  @security.private
   def manage_beforeDelete(self, item, container):
     "if the container is a line too, reindex it"
     if self.meta_type == container.meta_type:
@@ -319,14 +311,14 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
 
 # divergence support with solving
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self):
     """Returns true if the delivery line is divergent, or if any contained
     cell is divergent.
     """
     return bool(self.getDivergenceList())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDivergenceList(self):
     """Returns a list of messages that contains the divergences for that line
     and the cells it may contain.
@@ -440,7 +432,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
           delivery_ratio = 1.0 / len(s_m_list_per_movement)
           s_m.edit(delivery_ratio=delivery_ratio)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'solve')
+  @security.protected(Permissions.ModifyPortalContent)
   def solve(self, decision_list):
     """Solves line according to decision list
     """

@@ -85,7 +85,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     'start_date',
   )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
     Returns 1 if this needs to be accounted
@@ -94,8 +94,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     """
     return 1
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self, fast=0, src__=0, base_contribution=None, rounding=False, **kw):
     """ Returns the total price for this order
 
@@ -154,8 +153,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       return method(result)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTotalNetPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalNetPrice(self, fast=0, src__=0, **kw):
     """
     Same as getTotalPrice, but including Tax and Discount (from legacy
@@ -168,8 +166,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['portal_type'] = self.getPortalObject().getPortalTaxMovementTypeList()
     return total_price + self.getTotalPrice(fast=fast, src__=src__, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalQuantity(self, fast=0, src__=0, **kw):
     """ Returns the total quantity of this order.
 
@@ -188,21 +185,18 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       return self.getPortalObject().portal_simulation.getInventory(**kw)
     return sum([ line.getTotalQuantity(fast=0) for line in self.objectValues(**kw) ])
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDeliveryUid')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDeliveryUid(self):
     return self.getUid()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDeliveryValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDeliveryValue(self):
     """
     Deprecated, we should use getRootDeliveryValue instead
     """
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRootDeliveryValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootDeliveryValue(self):
     """
     This method returns the delivery, it is usefull to retrieve the delivery
@@ -210,13 +204,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     """
     return self
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDelivery')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDelivery(self):
     return self.getRelativeUrl()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           '_getMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def _getMovementList(self, portal_type=None, **kw):
     """
     Return a list of movements
@@ -258,16 +250,14 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
     return movement_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementList(self, portal_type=None, **kw):
     """
     Return a list of movements.
     """
     return self._getMovementList(portal_type=portal_type, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSimulatedMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSimulatedMovementList(self):
     """
     Return a list of simulated movements.
@@ -276,8 +266,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     return self.getMovementList(portal_type=
       self.getPortalObject().getPortalSimulatedMovementTypeList())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInvoiceMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInvoiceMovementList(self):
     """
     Return a list of simulated movements.
@@ -286,8 +275,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     return self.getMovementList(portal_type=
       self.getPortalObject().getPortalInvoiceMovementTypeList())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getContainerList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContainerList(self):
     """
     Return a list of root containers.
@@ -298,14 +286,14 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
   #######################################################
   # Causality computation
-  security.declareProtected(Permissions.AccessContentsInformation, 'isConvergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isConvergent(self,**kw):
     """
     Returns 0 if the target is not met
     """
     return bool(not self.isDivergent(**kw))
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isSimulated')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSimulated(self):
     """
     Returns 1 if all non-null movements have a delivery counterpart
@@ -316,7 +304,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         return 0
     return 1
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self, fast=0, **kw):
     """Return True if this movement diverges from the its simulation.
     """
@@ -328,7 +316,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         return True
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDivergenceList(self, **kw):
     """
     Return a list of messages that contains the divergences
@@ -338,7 +326,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       divergence_list.extend(simulation_movement.getDivergenceList())
     return divergence_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'updateCausalityState')
+  @security.protected(Permissions.AccessContentsInformation)
   @UnrestrictedMethod
   def updateCausalityState(self, solve_automatically=True, **kw):
     """
@@ -369,8 +357,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     if kw:
       super(Delivery, self).updateSimulation(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'splitAndDeferMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def splitAndDeferMovementList(self, start_date=None, stop_date=None,
       movement_uid_list=(), delivery_solver=None,
       target_solver='CopyToTarget', delivery_builder=None):
@@ -465,8 +452,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     resource_set.discard(None)
     return list(resource_set)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventory(self, **kw):
     """
     Returns inventory
@@ -474,8 +460,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getInventory(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventory(self, **kw):
     """
     Returns current inventory
@@ -483,8 +468,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getCurrentInventory(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAvailableInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableInventory(self, **kw):
     """
     Returns available inventory
@@ -493,8 +477,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getAvailableInventory(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventory(self, **kw):
     """
     Returns inventory at infinite
@@ -502,8 +485,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getFutureInventory(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryList(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -511,8 +493,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getInventoryList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventoryList(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -520,8 +501,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getCurrentInventoryList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventoryList(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -529,8 +509,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getFutureInventoryList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryStat(self, **kw):
     """
     Returns statistics of inventory grouped by section or site
@@ -538,8 +517,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getInventoryStat(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventoryStat(self, **kw):
     """
     Returns statistics of inventory grouped by section or site
@@ -547,8 +525,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getCurrentInventoryStat(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventoryStat(self, **kw):
     """
     Returns statistics of inventory grouped by section or site
@@ -556,8 +533,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getFutureInventoryStat(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryChart(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -565,8 +541,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getInventoryChart(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCurrentInventoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventoryChart(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -574,8 +549,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getCurrentInventoryChart(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getFutureInventoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getFutureInventoryChart(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -583,8 +557,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getFutureInventoryChart(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryHistoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryHistoryList(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -592,8 +565,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getInventoryHistoryList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoryHistoryChart')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoryHistoryChart(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -601,8 +573,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getInventoryHistoryChart(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMovementHistoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementHistoryList(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -610,8 +581,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     kw['resource'] = self._getMovementResourceList()
     return self.portal_simulation.getMovementHistoryList(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMovementHistoryStat')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementHistoryStat(self, **kw):
     """
     Returns list of inventory grouped by section or site
@@ -660,8 +630,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
   ##########################################################################
   # Applied Rule stuff
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'localBuild')
+  @security.protected(Permissions.AccessContentsInformation)
   def localBuild(self, activity_kw=()):
     """Activate builders for this delivery
 
@@ -701,8 +670,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         state not in self.getPortalObject().getPortalDraftOrderStateList()):
       return super(Delivery, self)._createRootAppliedRule()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRootCausalityValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootCausalityValueList(self):
     """
     Returns the initial causality value for this movement.
@@ -735,15 +703,13 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
   # XXX Temp hack, should be removed has soon as the structure of
   # the order/delivery builder will be reviewed. It might
   # be reviewed if we plan to configure movement groups in the zmi
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setRootCausalityValueList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setRootCausalityValueList(self,value):
     """
     This is a hack
     """
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getParentExplanationValue(self):
     """
     This method should be removed as soon as movement groups
@@ -754,15 +720,13 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
   # XXX Temp hack, should be removed has soon as the structure of
   # the order/delivery builder will be reviewed. It might
   # be reviewed if we plan to configure movement groups in the zmi
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setParentExplanationValue')
+  @security.protected(Permissions.ModifyPortalContent)
   def setParentExplanationValue(self,value):
     """
     This is a hack
     """
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBuilderList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBuilderList(self):
     """Returns appropriate builder list."""
     return self._getTypeBasedMethod('getBuilderList')()
@@ -772,8 +736,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     #       since the main purpose of this method is superceded
     #       by IDivergenceController
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getRootSpecialiseValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootSpecialiseValue(self, portal_type_list):
     """Returns first specialise value matching portal type"""
     def findSpecialiseValue(context):
@@ -787,8 +750,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       return None
     return findSpecialiseValue(self)
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'disconnectSimulationMovementList')
+  @security.protected(Permissions.ModifyPortalContent)
   def disconnectSimulationMovementList(self, movement_list=None):
     """Disconnects simulation movements from delivery's lines
 
@@ -838,8 +800,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       result += movement.getDeliveryRelatedValueList()
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDivergentTesterAndSimulationMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDivergentTesterAndSimulationMovementList(self):
     """
     This method returns a list of (tester, simulation_movement) for each divergence.

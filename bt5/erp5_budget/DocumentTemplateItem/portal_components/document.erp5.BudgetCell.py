@@ -66,7 +66,7 @@ class BudgetCell(Predicate, MetaNode, Movement):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self):
     """
     Return a calculated title.
@@ -78,13 +78,13 @@ class BudgetCell(Predicate, MetaNode, Movement):
               "Did not find title script for portal type: %r" %
               self.getPortalType())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasCellContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCellContent(self, base_id='cell'):
     """Budget Cells do not contain cells.
     """
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentInventory(self, at_date=None, **kw):
     """ Returns current inventory.
 
@@ -100,7 +100,7 @@ class BudgetCell(Predicate, MetaNode, Movement):
     sign = self.getParentValue().BudgetLine_getConsumptionSign()
     return sign * self.portal_simulation.getCurrentInventory(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCurrentBalance(self, at_date=None):
     """
     Returns current balance
@@ -108,7 +108,7 @@ class BudgetCell(Predicate, MetaNode, Movement):
     sign = self.getParentValue().BudgetLine_getConsumptionSign()
     return sign * self.getQuantity(0.0) + self.getCurrentInventory(at_date=at_date)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConsumedBudget')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConsumedBudget(self, src__=0):
     """
     Return consumed budget.
@@ -120,14 +120,14 @@ class BudgetCell(Predicate, MetaNode, Movement):
               "Did not find consumed budget script for portal type: %r" %
               self.getPortalType())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableBudget')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAvailableBudget(self, at_date=None):
     """
     Return available budget.
     """
     return self.getCurrentBalance(at_date=at_date) - self.getEngagedBudget()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getEngagedBudget')
+  @security.protected(Permissions.AccessContentsInformation)
   def getEngagedBudget(self, src__=0):
     """
     Return Engaged budget.
@@ -139,14 +139,12 @@ class BudgetCell(Predicate, MetaNode, Movement):
               "Did not find engaged budget script for portal type: %r" %
               self.getPortalType())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getExplanationValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExplanationValue(self):
     """Explanation has no meaning for a budget cell"""
     return None
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setSourceCredit')
+  @security.protected(Permissions.ModifyPortalContent)
   def setSourceCredit(self, source_credit):
     """Set the quantity.
     Overloaded from movement, we always set the quantity, even if not passed

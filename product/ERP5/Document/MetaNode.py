@@ -52,8 +52,7 @@ class MetaNode(Node):
                       , PropertySheet.DublinCore
                       )
 
-    security.declareProtected( Permissions.ModifyPortalContent,
-                               'immediateUpdateCapacity' )
+    @security.protected(Permissions.ModifyPortalContent)
     def immediateUpdateCapacity(self):
       """
         Lookup for capacities children of self and update capacity attributes
@@ -62,8 +61,7 @@ class MetaNode(Node):
       portal_simulation =  getToolByName(self, 'portal_simulation')
       portal_simulation.updateCapacity(self)
 
-    security.declareProtected( Permissions.ModifyPortalContent,
-                               'updateCapacity' )
+    @security.protected(Permissions.ModifyPortalContent)
     def updateCapacity(self):
       """
         Lookup for capacities children of self and update capacity attributes

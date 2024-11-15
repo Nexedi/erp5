@@ -56,9 +56,7 @@ class GitlabRESTConnector(XMLObject):
       username_repo = username_repo[:-4]
     return quote_plus(username_repo)
 
-  security.declareProtected(
-      Permissions.AccessContentsInformation,
-      'postCommitStatus')
+  @security.protected(Permissions.AccessContentsInformation)
   def postCommitStatus(self, repository_url, commit_sha, state, target_url, name):
     """Post the build status of a commit.
 
