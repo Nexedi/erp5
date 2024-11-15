@@ -74,8 +74,8 @@ class SOAPBinding(Base):
 
   _service_class_dict = {}
 
-  security.declarePrivate('registerServiceClass')
   @classmethod
+  @security.private
   def registerServiceClass(cls, service_class):
     path = '%s.%s' % (service_class.__module__, service_class.__name__)
     cls._service_class_dict[path] = service_class
@@ -85,7 +85,7 @@ class SOAPBinding(Base):
     return sorted(('%s (%s)' % (v.__name__, v.__module__), k)
                   for k, v in six.iteritems(cls._service_class_dict))
 
-  security.declarePrivate('getListItemUrl')
+  @security.private
   def getListItemUrl(self, *args):
     return self.getId() + '/view'
 

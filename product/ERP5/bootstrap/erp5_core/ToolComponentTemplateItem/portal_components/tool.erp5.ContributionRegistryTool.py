@@ -41,8 +41,7 @@ class ContributionRegistryTool(BaseTool):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'findPortalTypeName')
+  @security.protected(Permissions.AccessContentsInformation)
   def findPortalTypeName(self, context=None, **kw):
     # if a context is passed, ignore other arguments
     if context is None:

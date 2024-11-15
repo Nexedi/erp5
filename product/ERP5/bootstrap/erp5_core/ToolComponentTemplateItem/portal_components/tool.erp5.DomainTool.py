@@ -54,7 +54,7 @@ class DomainTool(BaseTool):
 
   # XXX FIXME method should not be public
   # (some users are not able to see resource's price)
-  security.declarePublic('searchPredicateList')
+  @security.public
   def searchPredicateList(self, *args, **kw):
     return self._searchPredicateList(restricted=True, *args, **kw)
 
@@ -251,7 +251,7 @@ class DomainTool(BaseTool):
 
   # XXX FIXME method should not be public
   # (some users are not able to see resource's price)
-  security.declarePublic('generateMappedValue')
+  @security.public
   def generateMappedValue(self, context, test=1, predicate_list=None, **kw):
     """
       We will generate a mapped value with the list of all predicates
@@ -300,7 +300,7 @@ class DomainTool(BaseTool):
 
   # XXX FIXME method should not be public
   # (some users are not able to see resource's price)
-  security.declarePublic('generateMultivaluedMappedValue')
+  @security.public
   def generateMultivaluedMappedValue(self, context, test=1,
       predicate_list=None, **kw):
     """
@@ -345,8 +345,7 @@ class DomainTool(BaseTool):
       mapped_value.__dict__.update(mapped_value_property_dict)
       return mapped_value
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getChildDomainValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getChildDomainValueList(self, parent, **kw):
     """
     Return child domain objects already present adn thois generetaded dynamically
@@ -357,8 +356,7 @@ class DomainTool(BaseTool):
     object_list.extend(parent.getDomainGeneratorList(**kw))
     return object_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDomainByPath')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDomainByPath(self, path, default=_MARKER):
     """
     Return the domain object for a given path

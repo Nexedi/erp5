@@ -115,8 +115,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       aq_self._category_cache = self.Base_getCategoriesSpreadSheetMapping(
                     io.BytesIO(self.getDefaultConfigurationSpreadsheetData()))
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                           'setDefaultConfigurationSpreadsheetFile')
+  @security.protected(Permissions.ModifyPortalContent)
   def setDefaultConfigurationSpreadsheetFile(self, *args, **kw):
     """Reset the spreadsheet cache."""
     self._setDefaultConfigurationSpreadsheetFile(*args, **kw)
@@ -127,8 +126,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                            'setConfigurationSpreadsheetFile')
   setConfigurationSpreadsheetFile = setDefaultConfigurationSpreadsheetFile
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'getCategoryTitleItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCategoryTitleItemList(self, base_category_id, base=0):
     """Returns title item list for a base category contained in this
     spreadsheet.

@@ -40,14 +40,14 @@ class ERP5UserMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReference(self, default=None):
     """
     Fallback on user id
     """
     return self._baseGetReference() or self.getUserId(default)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasReference(self):
     """
     Fallback on user id

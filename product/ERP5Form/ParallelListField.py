@@ -218,7 +218,7 @@ class ParallelListField(ZMIField):
   widget = ParallelListWidgetInstance
   validator = ParallelListFieldValidatorInstance
 
-  security.declareProtected('Access contents information', 'get_value')
+  @security.protected('Access contents information')
   def get_value(self, id, REQUEST=None, **kw):
     """
     Get value for id.

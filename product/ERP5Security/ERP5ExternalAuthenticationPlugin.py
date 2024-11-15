@@ -101,7 +101,7 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
   ####################################
   #ILoginPasswordHostExtractionPlugin#
   ####################################
-  security.declarePrivate('extractCredentials')
+  @security.private
   def extractCredentials(self, request):
     """ Extract credentials from the request header. """
     creds = {}
@@ -137,7 +137,7 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
       globals(),
       __name__='manage_editERP5ExternalAuthenticationPluginForm')
 
-  security.declareProtected(ManageUsers, 'manage_editERP5ExternalAuthenticationPlugin')
+  @security.protected(ManageUsers)
   def manage_editERP5ExternalAuthenticationPlugin(self, user_id_key, login_portal_type_list, RESPONSE=None):
     """Edit the object"""
     error_message = ''

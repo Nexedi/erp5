@@ -64,8 +64,7 @@ class BuilderTool(BaseTool):
   title = 'Builders'
   meta_type = 'ERP5 Builder Tool'
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBuilderValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBuilderValueList(self, business_process_list=None,
         trade_phase_list=None):
     """Returns sorted builder list with proper condition"""
@@ -89,7 +88,7 @@ class BuilderTool(BaseTool):
     # FIXME: what kind of sorting to use?
     return sorted(builder_value_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'build')
+  @security.protected(Permissions.AccessContentsInformation)
   def build(self, input_movement_list=None, existing_delivery_list=None,
       business_process_list=None, trade_phase_list=None):
     """Informs all builders to be build or invoke building

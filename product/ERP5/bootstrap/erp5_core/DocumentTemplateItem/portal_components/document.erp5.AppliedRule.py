@@ -90,49 +90,44 @@ class AppliedRule(XMLObject, ExplainableMixin):
     """ show the content in the left pane of the ZMI """
     return self.objectValues()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self, movement):
     """Tells whether generated movement needs to be accounted or not."""
     return self.getSpecialiseValue().isAccountable(movement)
 
-  security.declarePrivate("getSimulationState")
+  @security.private
   def getSimulationState(self):
     return
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+  @security.protected(Permissions.ModifyPortalContent)
   def expand(self, *args, **kw):
     """Expand this applied rule to create new documents inside the applied rule
     """
     self.getSpecialiseValue().expand(self, *args, **kw)
 
   # Solvers
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self, sim_mvt):
     """
     Tells whether generated sim_mvt is divergent or not.
     """
     return self.getSpecialiseValue().isDivergent(sim_mvt)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getDivergenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDivergenceList(self, sim_mvt):
     """
     Returns a list Divergence descriptors
     """
     return self.getSpecialiseValue().getDivergenceList(sim_mvt)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isRootAppliedRule')
+  @security.protected(Permissions.AccessContentsInformation)
   def isRootAppliedRule(self):
     """
       Returns 1 is this is a root applied rule
     """
     return self.getParentValue().getMetaType() == "ERP5 Simulation Tool"
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getRootAppliedRule')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootAppliedRule(self):
     """Return the root applied rule.
     useful if some reindexing is needed from inside
@@ -165,8 +160,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
       cache[rule_key] = result = getTreeDelivered()
       return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementList(self, portal_type=None, **kw):
     """
      Return a list of movements.

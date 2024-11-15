@@ -56,7 +56,7 @@ class ImmobilisationDelivery(XMLObject):
                     , PropertySheet.Reference
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'updateImmobilisationState')
+  @security.protected(Permissions.AccessContentsInformation)
   def updateImmobilisationState(self, **kw):
     """
     This is often called as an activity, it will check if the
@@ -74,7 +74,7 @@ class ImmobilisationDelivery(XMLObject):
       except ImmobilisationValidityError:
         self.calculateImmobilisationValidity()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getImmobilisationMovementList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImmobilisationMovementList(self, **kw):
     """
     Return regular movements + immobilisation movements like
@@ -83,7 +83,7 @@ class ImmobilisationDelivery(XMLObject):
     return self.getMovementList(self.getPortalMovementTypeList() +
                ('Immobilisation Line', 'Immobilisation Cell'), **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'checkImmobilisationConsistency')
+  @security.protected(Permissions.AccessContentsInformation)
   def checkImmobilisationConsistency(self, *args, **kw):
     """
     Check the consistency about immobilisation values
@@ -93,7 +93,7 @@ class ImmobilisationDelivery(XMLObject):
       return_list.extend(movement.checkImmobilisationConsistency())
     return return_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isValidImmobilisationMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def isValidImmobilisationMovement(self, *args, **kw):
     """
     Return true if all submovements are valid in terms of immobilisation
@@ -101,15 +101,14 @@ class ImmobilisationDelivery(XMLObject):
     error_list = self.checkImmobilisationConsistency(*args, **kw)
     return len(error_list) == 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isInvalidImmobilisationMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def isInvalidImmobilisationMovement(self, *args, **kw):
     """
     Return false if all submovements are valid in terms of immobilisation
     """
     return not self.isValidImmobilisationMovement(*args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getAggregatedItemsNextImmobilisationMovementValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getAggregatedItemsNextImmobilisationMovementValueList(self, **kw):
     """
     Return the list of each next immobilisation movement for each aggregated item

@@ -719,7 +719,7 @@ class ActivityTool (BaseTool):
                                                 sql_connection.connection_string)
         parent._setObject(connection_id, new_sql_connection)
 
-    security.declarePrivate('initialize')
+    @security.private
     def initialize(self):
       self.maybeMigrateConnectionClass()
       for activity in six.itervalues(activity_dict):
@@ -742,7 +742,7 @@ class ActivityTool (BaseTool):
     def _callSafeFunction(self, batch_function):
       return batch_function()
 
-    security.declareProtected(Permissions.manage_properties, 'isSubscribed')
+    @security.protected(Permissions.manage_properties)
     def isSubscribed(self):
       """
       return True, if we are subscribed to TimerService.
@@ -755,7 +755,7 @@ class ActivityTool (BaseTool):
       LOG('ActivityTool', INFO, 'TimerService not available')
       return False
 
-    security.declareProtected(Permissions.manage_properties, 'subscribe')
+    @security.protected(Permissions.manage_properties)
     def subscribe(self, REQUEST=None, RESPONSE=None):
         """ subscribe to the global Timer Service """
         service = getTimerService(self)
@@ -769,7 +769,7 @@ class ActivityTool (BaseTool):
         if RESPONSE is not None:
             RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'unsubscribe')
+    @security.protected(Permissions.manage_properties)
     def unsubscribe(self, REQUEST=None, RESPONSE=None):
         """ unsubscribe from the global Timer Service """
         service = getTimerService(self)
@@ -783,11 +783,11 @@ class ActivityTool (BaseTool):
         if RESPONSE is not None:
             RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'isActivityTrackingEnabled')
+    @security.protected(Permissions.manage_properties)
     def isActivityTrackingEnabled(self):
       return self.activity_tracking
 
-    security.declareProtected(Permissions.manage_properties, 'manage_enableActivityTracking')
+    @security.protected(Permissions.manage_properties)
     def manage_enableActivityTracking(self, REQUEST=None, RESPONSE=None):
         """
           Enable activity tracing.
@@ -798,7 +798,7 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Tracking log enabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'manage_disableActivityTracking')
+    @security.protected(Permissions.manage_properties)
     def manage_disableActivityTracking(self, REQUEST=None, RESPONSE=None):
         """
           Disable activity tracing.
@@ -809,11 +809,11 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Tracking log disabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'isActivityMailNotificationEnabled')
+    @security.protected(Permissions.manage_properties)
     def isActivityMailNotificationEnabled(self):
       return self.activity_failure_mail_notification
 
-    security.declareProtected(Permissions.manage_properties, 'manage_enableMailNotification')
+    @security.protected(Permissions.manage_properties)
     def manage_enableMailNotification(self, REQUEST=None, RESPONSE=None):
         """
           Enable mail notification when activity fails.
@@ -824,7 +824,7 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Mail notification enabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'manage_disableMailNotification')
+    @security.protected(Permissions.manage_properties)
     def manage_disableMailNotification(self, REQUEST=None, RESPONSE=None):
         """
           Disable mail notification when activity fails.
@@ -835,11 +835,11 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Mail notification disabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'isActivityTimingLoggingEnabled')
+    @security.protected(Permissions.manage_properties)
     def isActivityTimingLoggingEnabled(self):
       return self.activity_timing_log
 
-    security.declareProtected(Permissions.manage_properties, 'manage_enableActivityTimingLogging')
+    @security.protected(Permissions.manage_properties)
     def manage_enableActivityTimingLogging(self, REQUEST=None, RESPONSE=None):
         """
           Enable activity timing logging.
@@ -850,7 +850,7 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Timing log enabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'manage_disableActivityTimingLogging')
+    @security.protected(Permissions.manage_properties)
     def manage_disableActivityTimingLogging(self, REQUEST=None, RESPONSE=None):
         """
           Disable activity timing logging.
@@ -861,11 +861,11 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Timing log disabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'isActivityCreationTraceEnabled')
+    @security.protected(Permissions.manage_properties)
     def isActivityCreationTraceEnabled(self):
       return self.activity_creation_trace
 
-    security.declareProtected(Permissions.manage_properties, 'manage_enableActivityCreationTrace')
+    @security.protected(Permissions.manage_properties)
     def manage_enableActivityCreationTrace(self, REQUEST=None, RESPONSE=None):
         """
           Enable activity creation trace.
@@ -876,7 +876,7 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Activity creation trace enabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'manage_disableActivityCreationTrace')
+    @security.protected(Permissions.manage_properties)
     def manage_disableActivityCreationTrace(self, REQUEST=None, RESPONSE=None):
         """
           Disable activity creation trace.
@@ -887,11 +887,11 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Activity creation trace disabled')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'isCancelAndInvokeLinksHidden')
+    @security.protected(Permissions.manage_properties)
     def isCancelAndInvokeLinksHidden(self):
       return self.cancel_and_invoke_links_hidden
 
-    security.declareProtected(Permissions.manage_properties, 'manage_hideCancelAndInvokeLinks')
+    @security.protected(Permissions.manage_properties)
     def manage_hideCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
         """
         """
@@ -901,7 +901,7 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Cancel and invoke links hidden')
           RESPONSE.redirect(url)
 
-    security.declareProtected(Permissions.manage_properties, 'manage_showCancelAndInvokeLinks')
+    @security.protected(Permissions.manage_properties)
     def manage_showCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
         """
         """
@@ -911,17 +911,17 @@ class ActivityTool (BaseTool):
           url += urllib.parse.quote('Cancel and invoke links visible')
           RESPONSE.redirect(url)
 
-    security.declarePrivate('manage_beforeDelete')
+    @security.private
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
         BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
 
-    security.declarePrivate('manage_afterAdd')
+    @security.private
     def manage_afterAdd(self, item, container):
         self.subscribe()
         BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getServerAddress')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getServerAddress(self):
         """
         Backward-compatibility code only.
@@ -933,7 +933,7 @@ class ActivityTool (BaseTool):
         )
         return getServerAddress()
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNode')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getCurrentNode(self):
         """
         Backward-compatibility code only.
@@ -945,7 +945,7 @@ class ActivityTool (BaseTool):
         )
         return getCurrentNode()
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getDistributingNode')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getDistributingNode(self):
         """ Return the distributingNode """
         return self.distributingNode
@@ -973,14 +973,14 @@ class ActivityTool (BaseTool):
         result = self._node_family_dict = OOBTree()
       return result
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNodeFamilyIdSet')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getCurrentNodeFamilyIdSet(self):
       """
       Returns the tuple of family ids current node is member of.
       """
       return self._getNodeFamilyIdDict().get(getCurrentNode(), ())
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNodeFamilyNameSet')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getCurrentNodeFamilyNameSet(self):
       """
       Returns the tuple of family names current node is member of.
@@ -990,7 +990,7 @@ class ActivityTool (BaseTool):
         for x in self._getNodeFamilyIdDict().get(getCurrentNode(), ())
       ]
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFamilyId')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getFamilyId(self, name):
       """
       Raises ValueError for unknown family names.
@@ -998,7 +998,7 @@ class ActivityTool (BaseTool):
       # First family is -1, second is -2, etc.
       return -self._family_list.index(name) - 1
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'addNodeToFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def addNodeToFamily(self, node_id, family_name):
       """
       Silently does nothing if node is already a member of family_name.
@@ -1009,7 +1009,7 @@ class ActivityTool (BaseTool):
       if family_id not in family_id_list:
         node_family_id_dict[node_id] = family_id_list + (family_id, )
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_addNodeSetToFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_addNodeSetToFamily(self, family_new_node_list, REQUEST):
       """
       Add selected nodes to family.
@@ -1024,7 +1024,7 @@ class ActivityTool (BaseTool):
         urllib.parse.quote('Nodes added to family.'),
       )
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'removeNodeFromFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def removeNodeFromFamily(self, node_id, family_name):
       """
       Silently does nothing if node is not member of family_name.
@@ -1039,7 +1039,7 @@ class ActivityTool (BaseTool):
           if x != family_id
         )
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_removeNodeSetFromFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_removeNodeSetFromFamily(self, REQUEST):
       """
       Remove selected nodes from family.
@@ -1063,7 +1063,7 @@ class ActivityTool (BaseTool):
       if name in ('', 'same'):
         raise ValueError('Reserved family name')
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'createFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def createFamily(self, name):
       """
       Raises ValueError if family already exists.
@@ -1083,7 +1083,7 @@ class ActivityTool (BaseTool):
         # No free spot, append.
         self._family_list += (name, )
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_createFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_createFamily(self, new_family_name, REQUEST, family_new_node_list=None):
       """Create a family"""
       redirect_url = REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message='
@@ -1099,7 +1099,7 @@ class ActivityTool (BaseTool):
         raise Redirect(redirect_url + urllib.parse.quote(str(exc)))
       REQUEST.RESPONSE.redirect(redirect_url + urllib.parse.quote('Family created.'))
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'renameFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def renameFamily(self, old_name, new_name):
       """
       Raises ValueError if old_name does not exist.
@@ -1113,7 +1113,7 @@ class ActivityTool (BaseTool):
         for x in family_list
       )
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_renameFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_renameFamily(self, REQUEST):
       """Rename a family"""
       redirect_url = REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message='
@@ -1125,7 +1125,7 @@ class ActivityTool (BaseTool):
         raise Redirect(redirect_url + urllib.parse.quote(str(exc)))
       REQUEST.RESPONSE.redirect(redirect_url + urllib.parse.quote('Family renamed.'))
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'deleteFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def deleteFamily(self, name):
       """
       Raises ValueError if name does not exist.
@@ -1137,7 +1137,7 @@ class ActivityTool (BaseTool):
         for x in self._family_list
       )
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_deleteFamily')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_deleteFamily(self, REQUEST):
       """Delete families"""
       redirect_url = REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message='
@@ -1148,14 +1148,14 @@ class ActivityTool (BaseTool):
         raise Redirect(redirect_url + urllib.parse.quote(str(exc)))
       REQUEST.RESPONSE.redirect(redirect_url + urllib.parse.quote('Family deleted'))
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFamilyNameList')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getFamilyNameList(self):
       """
       Return the list of existing family names.
       """
       return [x for x in self._family_list if x is not None]
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFamilyNodeList')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getFamilyNodeList(self, family_name):
       """
       Return the list of node names in given family.
@@ -1188,11 +1188,11 @@ class ActivityTool (BaseTool):
       node_dict = self.getNodeDict()
       node_dict[node] = role
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getProcessingNodeList')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getProcessingNodeList(self):
       return self.getNodeList(role=ROLE_PROCESSING)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getIdleNodeList')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def getIdleNodeList(self):
       return self.getNodeList(role=ROLE_IDLE)
 
@@ -1200,7 +1200,7 @@ class ActivityTool (BaseTool):
       """Check we have been provided a good node name"""
       return isinstance(node_name, str)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_setDistributingNode')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_setDistributingNode(self, distributingNode, REQUEST=None):
         """ set the distributing node """
         if not distributingNode or self._isValidNodeName(distributingNode):
@@ -1217,7 +1217,7 @@ class ActivityTool (BaseTool):
                   '/manageLoadBalancing?manage_tabs_message=' +
                   urllib.parse.quote("Malformed Distributing Node."))
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_delNode')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_delNode(self, unused_node_list=None, REQUEST=None):
       """ delete selected unused nodes """
       processing_node = self.getDistributingNode()
@@ -1242,7 +1242,7 @@ class ActivityTool (BaseTool):
           '/manageLoadBalancing?manage_tabs_message=' +
           urllib.parse.quote(message))
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_addToProcessingList')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_addToProcessingList(self, unused_node_list=None, REQUEST=None):
       """ Change one or more idle nodes into processing nodes """
       if unused_node_list is not None:
@@ -1258,7 +1258,7 @@ class ActivityTool (BaseTool):
           '/manageLoadBalancing?manage_tabs_message=' +
           urllib.parse.quote(message))
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_removeFromProcessingList')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manage_removeFromProcessingList(self, processing_node_list=None, REQUEST=None):
       """ Change one or more procesing nodes into idle nodes """
       if processing_node_list is not None:
@@ -1274,7 +1274,7 @@ class ActivityTool (BaseTool):
           '/manageLoadBalancing?manage_tabs_message=' +
           urllib.parse.quote(message))
 
-    security.declarePrivate('process_shutdown')
+    @security.private
     def process_shutdown(self, phase, time_in_phase):
         """
           Prevent shutdown from happening while an activity queue is
@@ -1287,7 +1287,7 @@ class ActivityTool (BaseTool):
           is_running_lock.acquire()
           LOG('CMFActivity', INFO, "Shutdown: Activities finished.")
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'process_timer')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def process_timer(self, tick, interval, prev="", next=""):
       """
       Call distribute() if we are the Distributing Node and call tic()
@@ -1342,7 +1342,7 @@ class ActivityTool (BaseTool):
         finally:
           timerservice_lock.release()
 
-    security.declarePublic('distribute')
+    @security.public
     def distribute(self, node_count=1):
       """
         Distribute load
@@ -1362,7 +1362,7 @@ class ActivityTool (BaseTool):
         finally:
           is_running_lock.release()
 
-    security.declarePublic('tic')
+    @security.public
     def tic(self, processing_node=1, force=0):
       """
         Starts again an activity
@@ -1425,7 +1425,7 @@ class ActivityTool (BaseTool):
         activity.hasActivitySQL(quote, path=path, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 
-    security.declarePrivate('getActivityBuffer')
+    @security.private
     def getActivityBuffer(self, create_if_not_found=True):
       """
         Get activtity buffer for this thread for this activity tool.
@@ -1709,7 +1709,7 @@ class ActivityTool (BaseTool):
         Message(path, active_process, activity_kw, method_id, args, kw,
           portal_activities=self))
 
-    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageInvoke' )
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manageInvoke(self, object_path, method_id, REQUEST=None):
       """
         Invokes all methods for object "object_path"
@@ -1721,7 +1721,7 @@ class ActivityTool (BaseTool):
         return REQUEST.RESPONSE.redirect('%s/%s' %
                 (self.absolute_url(), 'manageActivities'))
 
-    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageRestart')
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manageRestart(self, message_uid_list, activity, REQUEST=None):
       """
         Restart one or several messages
@@ -1735,7 +1735,7 @@ class ActivityTool (BaseTool):
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
 
-    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageCancel' )
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manageCancel(self, object_path, method_id, REQUEST=None):
       """
         Cancel all methods for object "object_path"
@@ -1749,7 +1749,7 @@ class ActivityTool (BaseTool):
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'manageActivities'))
 
-    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageDelete' )
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manageDelete(self, message_uid_list, activity, REQUEST=None):
       """
         Delete one or several messages
@@ -1762,8 +1762,7 @@ class ActivityTool (BaseTool):
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
 
-    security.declareProtected( CMFCorePermissions.ManagePortal,
-                               'manageClearActivities' )
+    @security.protected(CMFCorePermissions.ManagePortal)
     def manageClearActivities(self, keep=1, RESPONSE=None):
       """
         Recreate tables, clearing all activities
@@ -1775,7 +1774,7 @@ class ActivityTool (BaseTool):
         return RESPONSE.redirect(self.absolute_url_path() +
           '/manageActivitiesAdvanced?manage_tabs_message=Activities%20Cleared')
 
-    security.declarePublic('getMessageTempObjectList')
+    @security.public
     def getMessageTempObjectList(self, **kw):
       """
         Get object list of messages waiting in queues
@@ -1788,7 +1787,7 @@ class ActivityTool (BaseTool):
         object_list.append(message)
       return object_list
 
-    security.declarePublic('getMessageList')
+    @security.public
     def getMessageList(self, activity=None, **kw):
       """
         List messages waiting in queues
@@ -1804,14 +1803,14 @@ class ActivityTool (BaseTool):
           LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list
 
-    security.declarePublic('countMessageWithTag')
+    @security.public
     def countMessageWithTag(self, value):
       """
         Return the number of messages which match the given tag.
       """
       return self.countMessage(tag=value)
 
-    security.declarePublic('countMessage')
+    @security.public
     def countMessage(self, **kw):
       """
         Return the number of messages which match the given parameter.
@@ -1829,7 +1828,7 @@ class ActivityTool (BaseTool):
         activity.countMessageSQL(quote, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 
-    security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
+    @security.protected(CMFCorePermissions.ManagePortal)
     def newActiveProcess(self, REQUEST=None, **kw):
       # note: if one wants to create an Actice Process without ERP5 products,
       # she can call ActiveProcess.addActiveProcess
@@ -1838,7 +1837,7 @@ class ActivityTool (BaseTool):
         REQUEST['RESPONSE'].redirect( 'manage_main' )
       return obj
 
-    security.declarePrivate('getSQLTableNameSet')
+    @security.private
     def getSQLTableNameSet(self):
       return [x.sql_table for x in six.itervalues(activity_dict)]
 

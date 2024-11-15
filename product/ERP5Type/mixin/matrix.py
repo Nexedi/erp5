@@ -50,8 +50,7 @@ class Matrix(object):
   security = ClassSecurityInfo()
 
   # Matrix Methods
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getCell' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCell(self, *kw , **kwd):
     """Access a cell by its coordinates and base_id.
     """
@@ -67,8 +66,7 @@ class Matrix(object):
       return None
     return self.get(cell_id)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getCellProperty' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellProperty(self, *kw , **kwd):
     """Get a property of a cell by its coordinates and base_id.
     """
@@ -79,16 +77,14 @@ class Matrix(object):
 
     return cell.getProperty(base_id)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'hasCell' )
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCell(self, *kw , **kwd):
     """Checks if matrix corresponding to base_id contains cell specified by
     *kw coordinates.
     """
     return self.getCell(*kw, **kwd) is not None
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'hasCellContent' )
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCellContent(self, base_id='cell'):
     """
         Checks if matrix corresponding to base_id contains cells.
@@ -107,8 +103,7 @@ class Matrix(object):
 
     return 0
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'hasInRange' )
+  @security.protected(Permissions.AccessContentsInformation)
   def hasInRange(self, *kw , **kwd):
     """Checks if coordinates are in the range of the matrix for this base_id
     """
@@ -125,8 +120,7 @@ class Matrix(object):
 
     return 1
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             '_setCellRange' )
+  @security.protected(Permissions.ModifyPortalContent)
   def _setCellRange(self, *args, **kw):
     """Set a new range for a matrix
 
@@ -186,15 +180,14 @@ class Matrix(object):
               self._delObject(cell_id)
               break
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setCellRange' )
+  @security.protected(Permissions.ModifyPortalContent)
   def setCellRange(self, *kw, **kwd):
     """Update the matrix ranges using provided lists of indexes (kw).
     """
     self._setCellRange(*kw, **kwd)
     self.reindexObject()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            '_updateCellRange')
+  @security.protected(Permissions.ModifyPortalContent)
   def _updateCellRange(self, base_id, **kw):
     """Update cell range based on asCellRange type based method.
     """
@@ -205,16 +198,14 @@ class Matrix(object):
     cell_range = script(base_id=base_id, matrixbox=0, **kw)
     self._setCellRange(base_id=base_id, *cell_range)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateCellRange')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateCellRange(self, base_id='cell', **kw):
     """ same as _updateCellRange, but reindex the object. """
     self._updateCellRange(base_id=base_id, **kw)
     self.reindexObject()
 
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             '_renameCellRange' )
+  @security.protected(Permissions.ModifyPortalContent)
   def _renameCellRange(self, *kw, **kwd):
     """Rename a range for a matrix, this method can also handle a change in
     the size of a matrix
@@ -301,8 +292,7 @@ class Matrix(object):
           cell.reindexObject()
           #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'renameCellRange' )
+  @security.protected(Permissions.ModifyPortalContent)
   def renameCellRange(self, *kw, **kwd):
     """Update the matrix ranges using provided lists of indexes (kw).
     This keep cell values when dimensions are added or removed.
@@ -310,8 +300,7 @@ class Matrix(object):
     self._renameCellRange(*kw, **kwd)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCellRange')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellRange(self, base_id='cell'):
     """
         Returns the cell range as a list of index ids
@@ -322,7 +311,7 @@ class Matrix(object):
       return []
     return [ensure_list(x.keys()) for _, x in sorted(six.iteritems(cell_range))]
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
+  @security.protected(Permissions.ModifyPortalContent)
   def newCell(self, *kw, **kwd):
     """
         This method creates a new cell
@@ -343,7 +332,7 @@ class Matrix(object):
     else:
       return self.newCellContent(cell_id,**kwd)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def newCellContent(self, cell_id, portal_type=None, **kw):
     """Creates a new content as a cell.
     This method is meant to be overriden by subclasses.
@@ -357,8 +346,7 @@ class Matrix(object):
 
     return self.newContent(id=cell_id, portal_type=portal_type, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getCellKeyList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellKeyList(self, base_id = 'cell'):
     """Returns a list of possible keys as tuples
     """
@@ -381,7 +369,7 @@ class Matrix(object):
                              'getCellRangeKeyList' )
   getCellRangeKeyList = getCellKeyList
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'keyToId' )
+  @security.protected(Permissions.AccessContentsInformation)
   def keyToId(self, kw, base_id = 'cell'):
     """Converts a key into a cell id
     """
@@ -395,8 +383,7 @@ class Matrix(object):
         return None
     return '_'.join(cell_id_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getCellIdList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellIdList(self, base_id = 'cell'):
     """Returns a list of possible ids as tuples
     """
@@ -425,8 +412,7 @@ class Matrix(object):
                              'getCellRangeIdList' )
   getCellRangeIdList = getCellIdList
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getCellValueList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getCellValueList(self, base_id = 'cell'):
     """Returns a list of cell values as tuples
     """
@@ -442,8 +428,7 @@ class Matrix(object):
                              'cellValues' )
   cellValues = getCellValueList
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getMatrixList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getMatrixList(self):
     """Return possible base_id values
     """
@@ -451,7 +436,7 @@ class Matrix(object):
       return ()
     return ensure_list(self.index.keys())
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'delMatrix' )
+  @security.protected(Permissions.ModifyPortalContent)
   def delMatrix(self, base_id = 'cell'):
     """Delete all cells for a given base_id
 
@@ -471,8 +456,7 @@ class Matrix(object):
                              'delCells' )
   delCells = delMatrix
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             '_checkConsistency' )
+  @security.protected(Permissions.AccessContentsInformation)
   def _checkConsistency(self, fixit=0):
     """Constraint API.
     """
@@ -562,7 +546,7 @@ class Matrix(object):
 
     return error_list
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
     """Hook called when a category is renamed.
 

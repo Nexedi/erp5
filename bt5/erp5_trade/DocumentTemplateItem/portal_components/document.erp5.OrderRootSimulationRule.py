@@ -68,8 +68,7 @@ class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
     PropertySheet.Rule
     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self, movement):
     """Tells wether generated movement needs to be accounted or not.
 

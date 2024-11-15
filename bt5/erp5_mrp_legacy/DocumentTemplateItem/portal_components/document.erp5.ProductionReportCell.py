@@ -59,8 +59,7 @@ class ProductionReportCell(DeliveryCell):
                       )
 
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'hasCellContent')
+    @security.protected(Permissions.AccessContentsInformation)
     def hasCellContent(self, base_id='movement'):
       """A cell cannot have cell content itself.
       """

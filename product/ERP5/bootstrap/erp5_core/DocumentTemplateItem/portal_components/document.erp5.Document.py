@@ -451,7 +451,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
 
   index_html = DownloadableMixin.index_html
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isExternalDocument')
+  @security.protected(Permissions.AccessContentsInformation)
   def isExternalDocument(self):
     """
     Return true if this document was obtained from an external source
@@ -459,7 +459,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     return bool(self.getUrlString())
 
   ### Relation getters
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSearchableReferenceList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSearchableReferenceList(self):
     """
       This method returns a list of dictionaries which can
@@ -470,7 +470,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     text = self.getSearchableText() # XXX getSearchableText or asText ?
     return self._getSearchableReferenceList(text)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isSearchableReference')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSearchableReference(self):
     """
       Determine if current document's reference can be used for searching - i.e. follows
@@ -504,7 +504,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       result.append((group, dict(group_item_tuple)))
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSuccessorValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImplicitSuccessorValueList(self):
     """
       Find objects which we are referencing (if our text_content contains
@@ -542,7 +542,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     tv[cache_key] = result
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitPredecessorValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImplicitPredecessorValueList(self):
     """
       This function tries to find document which are referencing us - by reference only, or
@@ -564,7 +564,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     return self._getTypeBasedMethod('getImplicitPredecessorValueList')()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSimilarValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getImplicitSimilarValueList(self):
     """
       Analyses content of documents to find out by the content which documents
@@ -574,7 +574,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimilarCloudValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSimilarCloudValueList(self, depth=0):
     """
       Returns all documents which are similar to us, directly or indirectly, and
@@ -612,7 +612,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     return lista_latest.keys()
 
   ### Version and language getters - might be moved one day to a mixin class in base
-  security.declareProtected(Permissions.View, 'getLatestVersionValue')
+  @security.protected(Permissions.View)
   def getLatestVersionValue(self, language=None):
     """
       Tries to find the latest version with the latest revision
@@ -663,7 +663,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     # this is the only doc in this version
     return self
 
-  security.declareProtected(Permissions.View, 'getVersionValueList')
+  @security.protected(Permissions.View)
   def getVersionValueList(self, version=None, language=None):
     """
       Returns a list of documents with same reference, same portal_type
@@ -680,7 +680,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       kw['language'] = language
     return catalog(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isVersionUnique')
+  @security.protected(Permissions.AccessContentsInformation)
   def isVersionUnique(self):
     """
       Returns true if no other document exists with the same
@@ -700,7 +700,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     # If self is not indexed yet, then if count == 1, version is not unique
     return count <= self_count
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRevision')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRevision(self):
     """
       Returns the current revision by analysing the change log
@@ -716,7 +716,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
                  if history_item.get('action') == 'edit'])
     return str(revision)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRevisionList(self):
     """
       Returns the list of revision numbers of the current document
@@ -724,7 +724,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     return [str(r) for r in range(1, 1 + int(self.getRevision()))]
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'mergeRevision')
+  @security.protected(Permissions.ModifyPortalContent)
   def mergeRevision(self):
     """
       Merge the current document with any previous revision
@@ -788,7 +788,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
           self.getParentValue().manage_delObjects([self.getId(),])
     return document
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getLanguageList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLanguageList(self, version=None):
     """
       Returns a list of languages which this document is available in
@@ -803,7 +803,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       kw['version'] = version
     return [o.getLanguage() for o in catalog(**kw)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOriginalLanguage')
+  @security.protected(Permissions.AccessContentsInformation)
   def getOriginalLanguage(self):
     """
       Returns the original language of this document.
@@ -826,7 +826,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       return result_list[0].getLanguage()
     return
 
-  security.declareProtected(Permissions.View, 'asSubjectText')
+  @security.protected(Permissions.View)
   def asSubjectText(self, **kw):
     """
       Converts the subject of the document to a textual representation.
@@ -837,7 +837,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       subject = self.getTitle('')
     return str(subject)
 
-  security.declareProtected(Permissions.View, 'asEntireHTML')
+  @security.protected(Permissions.View)
   def asEntireHTML(self, REQUEST=None, **kw):
     """
       Returns a complete HTML representation of the document
@@ -860,7 +860,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
     return html
 
-  security.declarePrivate('_asHTML')
+  @security.private
   def _asHTML(self, **kw):
     """
       A private method which converts to HTML. This method
@@ -870,7 +870,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     _, html = self.convert(**kw)
     return html
 
-  security.declareProtected(Permissions.View, 'asStrippedHTML')
+  @security.protected(Permissions.View)
   def asStrippedHTML(self, **kw):
     """
       Returns a stripped HTML representation of the document
@@ -879,7 +879,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     return self._stripHTML(self._asHTML(**kw))
 
-  security.declarePrivate('_guessEncoding')
+  @security.private
   @deprecated
   def _guessEncoding(self, string, mime='text/html'):
     """
@@ -899,8 +899,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       stripped_html = html
     return stripped_html
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMetadataMappingDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMetadataMappingDict(self):
     """
     Return a dict of metadata mapping used to update base metadata of the
@@ -916,7 +915,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       return {}
 
   # Transformation API
-  security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def populateContent(self):
     """
       Populates the Document with subcontent based on the
@@ -935,7 +934,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       method = None
     if method is not None: method()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateContentFromURL')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateContentFromURL(self, repeat=MAX_REPEAT, crawling_depth=0,
                            repeat_interval=1, batch_mode=True):
     """
@@ -944,14 +943,14 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     self.portal_contributions.updateContentFromURL(self, repeat=repeat, crawling_depth=crawling_depth)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'crawlContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def crawlContent(self):
     """
       Initialises the crawling process on the current document.
     """
     self.portal_contributions.crawlContent(self)
 
-  security.declareProtected(Permissions.View, 'isIndexContent')
+  @security.protected(Permissions.View)
   def isIndexContent(self, container=None):
     """
       Ask container if we are and index, or a content.

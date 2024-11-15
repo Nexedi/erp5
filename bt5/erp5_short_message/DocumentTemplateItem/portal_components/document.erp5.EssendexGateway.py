@@ -77,7 +77,7 @@ class EssendexGateway(XMLObject):
 
   api_url = "https://www.esendex.com/secure/messenger/formpost"
 
-  security.declarePrivate("_fetchPageAsDict")
+  @security.private
   def _fetchPageAsDict(self,page):
     """Page result is like Key=value in text format.
        We transform it to a more powerfull dictionnary"""
@@ -106,7 +106,7 @@ class EssendexGateway(XMLObject):
 
     return result
 
-  security.declarePrivate("_transformPhoneUrlToGatewayNumber")
+  @security.private
   def _transformPhoneUrlToGatewayNumber(self,phone):
     """Transform url of phone number to a valid phone number (gateway side)"""
     phone = phone.replace('tel:', '').replace('+','').replace('(0)','').replace('-','')
@@ -114,12 +114,12 @@ class EssendexGateway(XMLObject):
     assert not(phone.startswith('99000'))
     return phone
 
-  security.declarePrivate("_parsePhoneNumber")
+  @security.private
   def _parsePhoneNumber(self,number):
     """Convert phone number for erp5 compliance"""
     return "+%s(%s)-%s" % (number[0:2],0,number[2:])
 
-  security.declarePrivate("_parseDate")
+  @security.private
   def _parseDate(self, string):
     """Convert a string (like 2011-05-03 10:23:16Z) to a DateTime"""
     return DateTime(string.replace('Z', ' GTM+2'))
@@ -128,7 +128,7 @@ class EssendexGateway(XMLObject):
     """ Convert a timedelta to seconds """
     return timedelta.seconds + (timedelta.days * 24 * 60 * 60)
 
-  security.declareProtected(Permissions.ManagePortal, 'send')
+  @security.protected(Permissions.ManagePortal)
   def send(self, text, recipient, sender):
     """Send a message.
     """
@@ -179,7 +179,7 @@ class EssendexGateway(XMLObject):
     else:
       raise ValueError("Unknown result", 0, result)
 
-  security.declareProtected(Permissions.ManagePortal, 'getMessageStatus')
+  @security.protected(Permissions.ManagePortal)
   def getMessageStatus(self, message_id):
     """Retrive the status of a message"""
     base_url = self.api_url + "/QueryStatus.aspx"
@@ -201,7 +201,7 @@ class EssendexGateway(XMLObject):
       #we get an error when call the gateway
       raise SMSGatewayError(unquote(result.get('Message', "Impossible to get the message status")))
 
-  security.declarePublic('receive')
+  @security.public
   def receive(self, REQUEST, **kw):
     """Receive push notification"""
 
@@ -248,7 +248,7 @@ class EssendexGateway(XMLObject):
       setSecurityManager(sm)
 
 
-  security.declareProtected(Permissions.ManagePortal, 'notifyReception')
+  @security.protected(Permissions.ManagePortal)
   def notifyReception(self, xml):
     """The gateway inform what we ha a new message.
        root: lxml Element"""
@@ -274,7 +274,7 @@ class EssendexGateway(XMLObject):
                               reception_date=DateTime(),
                               mode="push")
 
-  security.declareProtected(Permissions.ManagePortal, 'notifyDelivery')
+  @security.protected(Permissions.ManagePortal)
   def notifyDelivery(self, xml):
     """Handle delivery info
         xml: lxml Element"""

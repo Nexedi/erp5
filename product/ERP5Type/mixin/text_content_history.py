@@ -38,8 +38,7 @@ class TextContentHistoryMixin:
   """
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getTextContentHistoryRevisionDictList')
+  @security.protected(Permissions.ModifyPortalContent)
   def getTextContentHistoryRevisionDictList(self, limit=100):
     """Returns the history of edition as a list of dictionnaries.
     """
@@ -67,8 +66,7 @@ class TextContentHistoryMixin:
 
     return result
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getTextContentHistory')
+  @security.protected(Permissions.ModifyPortalContent)
   def getTextContentHistory(self, key):
     """Returns the text content of a previous version of the document.
     """

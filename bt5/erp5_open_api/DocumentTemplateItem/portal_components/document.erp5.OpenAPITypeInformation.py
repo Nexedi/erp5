@@ -361,9 +361,8 @@ class OpenAPITypeInformation(ERP5TypeInformation):
     else:
       return json.load(stream)
 
-  security.declareProtected(
-    Permissions.AccessContentsInformation, 'getOpenAPIOperationIterator')
 
+  @security.protected(Permissions.AccessContentsInformation)
   def getOpenAPIOperationIterator(self):
     # type: () -> typing.Iterator[OpenAPIOperation]
     """Iterator over the operations defined in the schema

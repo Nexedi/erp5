@@ -53,11 +53,11 @@ class ActivityRuntimeEnvironment(object):
     assert _activity_runtime_environment.value is self
     del _activity_runtime_environment.value
 
-  security.declarePublic('getTag')
+  @security.public
   def getTag(self, default=None):
     return self._message.activity_kw.get('tag', default)
 
-  security.declarePublic('getPriority')
+  @security.public
   def getPriority(self):
     result = self._priority
     if result is None:
@@ -68,7 +68,7 @@ class ActivityRuntimeEnvironment(object):
       return line.priority
     return result
 
-  security.declarePublic('edit')
+  @security.public
   def edit(self, **kw):
     # There is no point allowing to modify other attributes from a message
     for k in kw:

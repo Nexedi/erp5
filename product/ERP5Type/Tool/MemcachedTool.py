@@ -283,7 +283,7 @@ if memcache is not None:
     memcached_tool_configure = DTMLFile('memcached_tool_configure', _dtmldir)
     erp5_site_global_id = ''
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
+    @security.protected(Permissions.AccessContentsInformation)
     def getMemcachedDict(self, key_prefix, plugin_path):
       """
         Returns an object which can be used as a dict and which gets from/stores

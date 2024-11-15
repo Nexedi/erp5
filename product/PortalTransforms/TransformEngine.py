@@ -74,7 +74,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
-    security.declarePrivate('unregisterTransform')
+    @security.private
     def unregisterTransform(self, name):
         """ unregister a transform
         name is the name of a registered transform
@@ -84,7 +84,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._delObject(name)
 
 
-    security.declarePrivate('convertTo')
+    @security.private
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
@@ -186,7 +186,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # return IDataStream object
         return result
 
-    security.declarePrivate('getRequirementListByMimetype')
+    @security.private
     def getRequirementListByMimetype(self, origin_mimetype, target_mimetype):
       """Return requirements only if origin_mimetype
       and target_mimetype are matching transform policy
@@ -210,7 +210,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
           result_list.append(candidate_requirement)
       return result_list
 
-    security.declarePublic('convertToData')
+    @security.public
     def convertToData(self, target_mimetype, orig, data=None, object=None,
                       usedby=None, context=None, **kwargs):
         """Convert to a given mimetype and return the raw data
@@ -222,7 +222,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return data.getData()
         return None
 
-    security.declarePublic('convert')
+    @security.public
     def convert(self, name, orig, data=None, context=None, **kwargs):
         """run a tranform of a given name on data
 
@@ -502,7 +502,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         return result
 
-    security.declarePrivate('manage_afterAdd')
+    @security.private
     def manage_afterAdd(self, item, container):
         """ overload manage_afterAdd to finish initialization when the
         transform tool is added
@@ -514,7 +514,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             # may fail on copy or zexp import
             pass
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
+    @security.protected(ManagePortal)
     def manage_addTransform(self, id, module, REQUEST=None):
         """ add a new transform to the tool """
         transform = Transform(id, module)
@@ -523,7 +523,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_addTransformsChain')
+    @security.protected(ManagePortal)
     def manage_addTransformsChain(self, id, description, REQUEST=None):
         """ add a new transform to the tool """
         transform = TransformsChain(id, description)
@@ -532,14 +532,14 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_setCacheValidityTime')
+    @security.protected(ManagePortal)
     def manage_setCacheValidityTime(self, seconds, REQUEST=None):
         """set  the lifetime of cached data in seconds"""
         self.max_sec_in_cache = int(seconds)
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
 
-    security.declareProtected(ManagePortal, 'reloadTransforms')
+    @security.protected(ManagePortal)
     def reloadTransforms(self, ids=()):
         """ reload transforms with the given ids
         if no ids, reload all registered transforms
@@ -590,7 +590,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             REQUEST['RESPONSE'].redirect(self.absolute_url() +
                 '/manage_editTransformationPolicyForm')
 
-    security.declareProtected(View, 'listPolicies')
+    @security.protected(View)
     def listPolicies(self):
         """ return the list of defined policies
 
@@ -603,7 +603,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
-    security.declarePrivate('registerTransform')
+    @security.private
     def registerTransform(self, transform):
         """register a new transform
 
@@ -623,7 +623,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._setObject(name, transform)
             self._mapTransform(transform)
 
-    security.declareProtected(ManagePortal, 'ZopeFind')
+    @security.protected(ManagePortal)
     def ZopeFind(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """
@@ -632,7 +632,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         except MissingBinary:
             log('ZopeFind: catched MissingBinary exception')
 
-    security.declareProtected(View, 'objectItems')
+    @security.protected(View)
     def objectItems(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """
@@ -643,7 +643,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return []
 
     # available mimetypes ####################################################
-    security.declarePrivate('listAvailableTextInputs')
+    @security.private
     def listAvailableTextInputs(self):
         """Returns a list of mimetypes that can be used as input for textfields
         by building a list of the inputs beginning with "text/" of all
@@ -657,7 +657,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                     available_types.append(input)
         return available_types
 
-    security.declarePublic('getAvailableTargetMimetypeList')
+    @security.public
     def getAvailableTargetMimetypeList(self, source_mimetype):
         """
           Returns a list of mimetypes that can be used as target for

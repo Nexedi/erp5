@@ -64,8 +64,7 @@ class PaySheetModelLine(TradeModelLine):
                     , PropertySheet.Reference
                     )
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'newCellContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def newCellContent(self, id, portal_type='Pay Sheet Model Cell', **kw): # pylint:disable=redefined-builtin
     """Overriden to specify default portal type
     """

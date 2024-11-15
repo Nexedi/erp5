@@ -101,8 +101,7 @@ class SynchronizationTool(BaseTool):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConflictList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConflictList(self, context=None):
     """
     Retrieve the list of all conflicts
@@ -128,8 +127,7 @@ class SynchronizationTool(BaseTool):
           conflict_list.append(conflict.__of__(subscription))
     return conflict_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                             'getDocumentConflictList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDocumentConflictList(self, context=None):
     """
     Retrieve the list of all conflicts for a given document
@@ -137,8 +135,7 @@ class SynchronizationTool(BaseTool):
     """
     return self.getConflictList(context)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSubscriberDocumentVersion')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSubscriberDocumentVersion(self, conflict, docid):
     """
     Given a 'conflict' and a 'docid' refering to a new version of a
@@ -186,7 +183,7 @@ class SynchronizationTool(BaseTool):
   # XXX-Aurel : the following methods must be moved to a specific part that
   # manages protocols to send/receive messages
   #
-  security.declarePublic('readResponse')
+  @security.public
   def readResponse(self, text='', sync_id=None, from_url=None):
     """We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
@@ -261,7 +258,7 @@ class SynchronizationTool(BaseTool):
   #
   # Following methods are related to server (Publication)
   #
-  security.declarePrivate('processServerSynchronization')
+  @security.private
   def processServerSynchronization(self, publication_path, msg=None):
     """
       This is the synchronization method for the server
@@ -322,8 +319,7 @@ class SynchronizationTool(BaseTool):
   #
   # Following methods are related to client (subscription)
   #
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'processClientSynchronization')
+  @security.protected(Permissions.ModifyPortalContent)
   def processClientSynchronization(self, subscription_path, msg=None):
     """
       This is the synchronization method for the client

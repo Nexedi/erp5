@@ -142,7 +142,7 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixin):
 
     return old_manager, user
 
-  security.declareProtected(Permissions.View, 'getDocumentValue')
+  @security.protected(Permissions.View)
   def getDocumentValue(self, name=None, portal=None, **kw):
     """
       Return the default document with the given

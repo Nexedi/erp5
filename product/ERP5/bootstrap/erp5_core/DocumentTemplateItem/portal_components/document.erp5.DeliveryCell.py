@@ -66,21 +66,20 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
                     , PropertySheet.ItemAggregation
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isPredicate')
+  @security.protected(Permissions.AccessContentsInformation)
   def isPredicate(self):
     """Movements are not predicates.
     """
     return False
 
   # MatrixBox methods
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'hasCellContent' )
+  @security.protected(Permissions.AccessContentsInformation)
   def hasCellContent(self, base_id='movement'):
     """A cell cannot have cell content itself.
     """
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
     Returns 1 if this needs to be accounted
@@ -89,30 +88,28 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     """
     return self.getParentValue().getParentValue().isAccountable()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPrice(self, *args, **kw):
     """
     call Movement.getPrice
     """
     return Movement.getPrice(self, *args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self, default=0.0, *args, **kw):
     """
     call Movement.getTotalPrice
     """
     return Movement.getTotalPrice(self, default=default, *args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getRootDeliveryValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getRootDeliveryValue(self):
     """
     Returns the root delivery responsible of this cell
     """
     return self.getParentValue().getRootDeliveryValue()
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'notifyAfterUpdateRelatedContent' )
+  @security.protected(Permissions.ModifyPortalContent)
   def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
     """
     Membership Crirerions and Category List are same in DeliveryCell
@@ -125,8 +122,7 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     # No reindex needed since uid stable
 
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateSimulationDeliveryProperties')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateSimulationDeliveryProperties(self, movement_list = None):
     """
     Set properties delivery_ratio and delivery_error for each
@@ -139,12 +135,11 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       if parent is not None:
         parent.updateSimulationDeliveryProperties(movement_list, self)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isMovement')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovement(self):
     return 1
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'isMovingItem')
+  @security.protected(Permissions.AccessContentsInformation)
   def isMovingItem(self, item):
     type_based_script = self._getTypeBasedMethod('isMovingItem')
     if type_based_script is not None:
@@ -154,12 +149,10 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
   # Override getQuantityUnitXXX to negate same methods defined in
   # Amount class. Because cell must acquire quantity unit from line
   # not from resource.
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getQuantityUnitValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityUnitValue(self):
     return self.getParentValue().getQuantityUnitValue()
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getQuantityUnit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityUnit(self, checked_permission=None):
     return self.getParentValue().getQuantityUnit(checked_permission=checked_permission)

@@ -87,7 +87,7 @@ class Domain(Predicate, MetaNode, MetaResource):
                     , PropertySheet.CategoryCore
                     )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getRelativeUrl' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getRelativeUrl(self):
     """
       We must eliminate portal_categories in the RelativeUrl
@@ -101,7 +101,7 @@ class Domain(Predicate, MetaNode, MetaResource):
   # Generator API
 
   # How to define a generated subdomain
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDomainGeneratorList' )
+  @security.protected(Permissions.AccessContentsInformation)
   def getDomainGeneratorList(self, depth=0):
     """
     We call a script which builds for us a list DomainGenerator instances
@@ -112,7 +112,7 @@ class Domain(Predicate, MetaNode, MetaResource):
     script = self.getDomainGeneratorMethodId('')
     return tmp_domain_generator.getDomainGeneratorList(depth=depth, klass=klass, script=script, parent=self)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'generateTempDomain' )
+  @security.protected(Permissions.AccessContentsInformation)
   def generateTempDomain(self, id): # pylint: disable=redefined-builtin
     """
     We generate temp domain here because we must set an aquisition wrapper
@@ -120,8 +120,7 @@ class Domain(Predicate, MetaNode, MetaResource):
     domain = self.newContent(id=id, portal_type='Domain', temp_object=1)
     return domain.__of__(self)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getChildDomainValueList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getChildDomainValueList(self, parent = None, **kw):
     """
     Return child domain objects already present or me may generate
@@ -132,8 +131,7 @@ class Domain(Predicate, MetaNode, MetaResource):
     return self.portal_domains.getChildDomainValueList(parent, **kw)
 
   # Experimental - WebDAV browsing support - ask JPS
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'experimental_listDAVObjects')
+  @security.protected(Permissions.AccessContentsInformation)
   def experimental_listDAVObjects(self):
     result = self.objectValues(portal_type = self.getPortalType())
     result.extend(self.portal_catalog(selection_domain = self))

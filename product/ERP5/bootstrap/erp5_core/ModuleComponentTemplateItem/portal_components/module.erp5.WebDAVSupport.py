@@ -44,7 +44,7 @@ class TextContent:
 
   security = ClassSecurityInfo()
 
-  security.declarePrivate('parseHeadersFromText')
+  @security.private
   def parseHeadersFromText(self, text):
     """ Handles the raw text, returning headers """
     try:
@@ -68,7 +68,7 @@ class TextContent:
     return {k: v if len(v) > 1 else v[0] for k, v in six.iteritems(headers)}
 
   ## FTP handlers
-  security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
+  @security.protected(Permissions.ModifyPortalContent)
   def PUT(self, REQUEST, RESPONSE):
     """ Handle HTTP (and presumably FTP?) PUT requests """
     self.dav__init(REQUEST, RESPONSE)
@@ -101,7 +101,7 @@ class TextContent:
       '</html>\n'
       )
 
-  security.declareProtected(Permissions.View, 'getMetadataHeaderList')
+  @security.protected(Permissions.View)
   def getMetadataHeaderList(self):
     hdrlist = []
     for p in self.getPropertyMap():
@@ -110,7 +110,7 @@ class TextContent:
         hdrlist.append((pid, self.getProperty(p['id'])))
     return hdrlist
 
-  security.declareProtected(Permissions.View, 'manage_FTPget')
+  @security.protected(Permissions.View)
   def manage_FTPget(self):
     "Get the document body for FTP download (also used for the WebDAV SRC)"
     hdrlist = self.getMetadataHeaderList()
@@ -140,7 +140,7 @@ class TextContent:
 
     return bodytext
 
-  security.declareProtected(Permissions.View, 'get_size')
+  @security.protected(Permissions.View)
   def get_size( self ):
     """ Used for FTP and apparently the ZMI now too """
     return len(self.manage_FTPget())

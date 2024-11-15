@@ -44,8 +44,7 @@ class InvoiceRootSimulationRule(DeliveryRootSimulationRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self, movement):
     """
     Tells whether generated movement needs to be accounted or not.

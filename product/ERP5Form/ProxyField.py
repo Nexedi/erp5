@@ -168,7 +168,7 @@ class ProxyField(ZMIField):
   security.declareProtected('View management screens', 'proxyFieldListHeader')
   proxyFieldListHeader = DTMLFile('dtml/proxyFieldListHeader', globals())
 
-  security.declareProtected('Change Formulator Forms', 'manage_edit')
+  @security.protected('Change Formulator Forms')
   def manage_edit(self, REQUEST):
     """
     Surcharged values from proxied field.
@@ -279,7 +279,7 @@ class ProxyField(ZMIField):
       if hasattr(self, method_name):
         getattr(self, method_name)(values[key])
 
-  security.declareProtected('Change Formulator Forms', 'manage_tales')
+  @security.protected('Change Formulator Forms')
   def manage_tales(self, REQUEST):
     """
     Surcharged talesfrom proxied field.
@@ -356,7 +356,7 @@ class ProxyField(ZMIField):
       if key not in self.values:
         self.values[key] = self.get_recursive_orig_value(key, include=0)
 
-  security.declareProtected('Change Formulator Fields', 'manage_messages')
+  @security.protected('Change Formulator Fields')
   def manage_messages(self, REQUEST):
     """Change message texts.
     """
@@ -381,7 +381,7 @@ class ProxyField(ZMIField):
       return self.manage_messagesForm(self,REQUEST,
                                       manage_tabs_message=message)
 
-  security.declareProtected('View management screens', 'get_error_message')
+  @security.protected('View management screens')
   def get_error_message(self, name):
     if not self.is_message_delegated(name):
       try:
@@ -394,13 +394,13 @@ class ProxyField(ZMIField):
     else:
       return self.getTemplateField().get_error_message(name)
 
-  security.declareProtected('View management screens', 'get_error_names')
+  @security.protected('View management screens')
   def get_error_names(self):
     """Get error messages.
     """
     return self.getTemplateField().get_error_names()
 
-  security.declareProtected('Access contents information', 'getTemplateField')
+  @security.protected('Access contents information')
   def getTemplateField(self, cache=True):
     """
     Return template field of the proxy field.
@@ -475,7 +475,7 @@ class ProxyField(ZMIField):
       self._setTemplateFieldCache(proxy_field)
     return proxy_field
 
-  security.declareProtected('Access contents information', 'getRecursiveTemplateField')
+  @security.protected('Access contents information')
   def getRecursiveTemplateField(self, delegated_id=None):
     """
     Return template field of the proxy field.
@@ -506,8 +506,7 @@ class ProxyField(ZMIField):
       field = self
     return self.getTemplateField()._get_sub_form(field=field)
 
-  security.declareProtected('Access contents information',
-                            'is_delegated')
+  @security.protected('Access contents information')
   def is_delegated(self, id):
     """
     Return true if we get the value from the proxied field.
@@ -515,8 +514,7 @@ class ProxyField(ZMIField):
     """
     return id not in self.delegated_list
 
-  security.declareProtected('Access contents information',
-                            'is_message_delegated')
+  @security.protected('Access contents information')
   def is_message_delegated(self, id):
     """
     Return true if we get the message from the proxied field.
@@ -524,8 +522,7 @@ class ProxyField(ZMIField):
     """
     return id not in self.delegated_message_list
 
-  security.declareProtected('Access contents information',
-                            'get_recursive_orig_value')
+  @security.protected('Access contents information')
   def get_recursive_orig_value(self, id, include=1):
     """
     Get value for id recursively.
@@ -542,7 +539,7 @@ class ProxyField(ZMIField):
       else:
         return proxied_field.get_orig_value(id)
 
-  security.declareProtected('View management screens', 'get_recursive_tales')
+  @security.protected('View management screens')
   def get_recursive_tales(self, id):
     """
     Get tales expression method for id.
@@ -554,14 +551,14 @@ class ProxyField(ZMIField):
       return TALESMethod(tales._text)
 
   # XXX Not implemented
-  security.declareProtected('View management screens', 'get_recursive_override')
+  @security.protected('View management screens')
   def get_recursive_override(self, id):
     """
     Get override method for id (not wrapped).
     """
     return self.overrides.get(id, "")
 
-  security.declareProtected('Edit target', 'manage_edit_target')
+  @security.protected('Edit target')
   def manage_edit_target(self, RESPONSE):
     """
     Edit target field of this proxy
@@ -574,7 +571,7 @@ class ProxyField(ZMIField):
       # ("form_id and field_id don't define a valid template")
       pass
 
-  security.declareProtected('Edit target', 'manage_tales_target')
+  @security.protected('Edit target')
   def manage_tales_target(self, RESPONSE):
     """
     Edit target field of this proxy
@@ -587,7 +584,7 @@ class ProxyField(ZMIField):
       # ("form_id and field_id don't define a valid template")
       pass
 
-  security.declareProtected('View', 'title')
+  @security.protected('View')
   def title(self):
     """The title of this field."""
     try:
@@ -595,7 +592,7 @@ class ProxyField(ZMIField):
     except BrokenProxyField:
       return 'broken'
 
-  security.declareProtected('Access contents information', 'has_value')
+  @security.protected('Access contents information')
   def has_value(self, id):
     """
     Return true if the field defines such a value.
@@ -610,7 +607,7 @@ class ProxyField(ZMIField):
         result = proxy_field.has_value(id)
     return result
 
-  security.declareProtected('Access contents information', '_get_user_input_value')
+  @security.protected('Access contents information')
   def _get_user_input_value(self, key, REQUEST):
     """
     Try to get a value of the field from the REQUEST
@@ -622,7 +619,7 @@ class ProxyField(ZMIField):
       result = ZMIField._get_user_input_value(self, key, REQUEST)
     return result
 
-  security.declareProtected('Access contents information', 'get_orig_value')
+  @security.protected('Access contents information')
   def get_orig_value(self, id):
     """Get value for id; don't do any override calculation.
     """
@@ -630,7 +627,7 @@ class ProxyField(ZMIField):
       return self.getTemplateField().get_orig_value(id)
     return ZMIField.get_orig_value(self, id)
 
-  security.declareProtected('Access contents information', 'get_value')
+  @security.protected('Access contents information')
   def get_value(self, id, **kw):
     if id in self.widget.property_names:
       return ZMIField.get_value(self, id, **kw)
@@ -671,7 +668,7 @@ class ProxyField(ZMIField):
         return cache.__of__(parent)
     raise KeyError
 
-  security.declareProtected('Change Formulator Fields', 'checkConsistency')
+  @security.protected('Change Formulator Fields')
   def checkConsistency(self, fixit=False):
     """Check the proxy field internal data structures are consistent
     """

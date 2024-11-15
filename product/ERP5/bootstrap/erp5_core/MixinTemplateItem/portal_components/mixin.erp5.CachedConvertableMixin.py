@@ -85,8 +85,7 @@ class CachedConvertableMixin:
       return getattr(portal.portal_caches, cache_factory_name, None)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                             'generateCacheId')
+  @security.protected(Permissions.AccessContentsInformation)
   def generateCacheId(self, **kw):
     """
     """
@@ -110,7 +109,7 @@ class CachedConvertableMixin:
     return '%s:%s:%s' % (aq_base(self).getUid(), self.getRevision(),
                          format_cache_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasConversion')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasConversion(self, **kw):
     """
     """
@@ -120,7 +119,7 @@ class CachedConvertableMixin:
     except KeyError:
       return False
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setConversion')
+  @security.protected(Permissions.ModifyPortalContent)
   def setConversion(self, data, mime=None, date=None, **kw):
     """
     """
@@ -218,7 +217,7 @@ class CachedConvertableMixin:
 
     raise KeyError('Conversion cache key does not exists for %r' % cache_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConversion')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConversion(self, **kw):
     """
     """
@@ -231,25 +230,25 @@ class CachedConvertableMixin:
       data = bytes(data)
     return mime, data
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConversionSize')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConversionSize(self, **kw):
     """
     """
     return self._getConversionDataDict(**kw)['size']
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConversionDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConversionDate(self, **kw):
     """
     """
     return self._getConversionDataDict(**kw)['date']
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConversionMd5')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConversionMd5(self, **kw):
     """
     """
     return self._getConversionDataDict(**kw)['conversion_md5']
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
+  @security.protected(Permissions.ModifyPortalContent)
   def updateContentMd5(self):
     """Update md5 checksum from the original file
     """
@@ -262,8 +261,7 @@ class CachedConvertableMixin:
     else:
       self._setContentMd5(None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTargetFormatItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTargetFormatItemList(self):
     """
       Returns a list of acceptable formats for conversion
@@ -276,24 +274,21 @@ class CachedConvertableMixin:
               fallback_script_id='Base_getTargetFormatItemList')
     return method()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTargetFormatTitleList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTargetFormatTitleList(self):
     """
       Returns a list of acceptable formats for conversion
     """
     return [x[0] for x in self.getTargetFormatItemList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTargetFormatList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTargetFormatList(self):
     """
       Returns a list of acceptable formats for conversion
     """
     return [x[1] for x in self.getTargetFormatItemList()]
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'isTargetFormatAllowed')
+  @security.protected(Permissions.ModifyPortalContent)
   def isTargetFormatAllowed(self, format): # pylint: disable=redefined-builtin
     """
       Checks if the current document can be converted

@@ -29,8 +29,7 @@ class TranslationProviderBase(object):
   """
   security = ClassSecurityInfo()
 
-  security.declareProtected(AccessContentsInformation,
-                            'getPropertyTranslationDomainDict')
+  @security.protected(AccessContentsInformation)
   def getPropertyTranslationDomainDict(self):
     """
     Return all translations defined by a provider.
@@ -51,12 +50,12 @@ class TranslationProviderBase(object):
       property_domain_dict.update(my_property_domain_dict)
     return {k: v.__of__(self) for k, v in six.iteritems(property_domain_dict)}
 
-  security.declarePublic('getContentTranslationDomainPropertyNameList')
+  @security.public
   def getContentTranslationDomainPropertyNameList(self):
     return [x for x, y in six.iteritems(self.getPropertyTranslationDomainDict())
       if y.getDomainName() == TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
 
-  security.declareProtected(ManagePortal, 'setTranslationDomain')
+  @security.protected(ManagePortal)
   def setTranslationDomain(self, prop_name, domain):
     """
     Set a translation domain for given property.
@@ -95,21 +94,21 @@ class TranslationInformation(SimpleItem):
     self.property_name = property_name
     self.domain_name = domain_name
 
-  security.declareProtected(AccessContentsInformation, 'getPropertyName')
+  @security.protected(AccessContentsInformation)
   def getPropertyName(self):
     """
     Return the property name
     """
     return self.property_name
 
-  security.declareProtected(AccessContentsInformation, 'getDomainName')
+  @security.protected(AccessContentsInformation)
   def getDomainName(self):
     """
     Return the domain name
     """
     return self.domain_name
 
-  security.declareProtected(ModifyPortalContent, 'edit')
+  @security.protected(ModifyPortalContent)
   def edit(self, edit_order=(), **kw):
     self._p_changed = 1
     self.__dict__.update((k, v or None) for k, v in six.iteritems(kw))

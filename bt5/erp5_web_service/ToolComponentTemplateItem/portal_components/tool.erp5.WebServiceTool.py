@@ -87,15 +87,14 @@ class WebServiceTool(BaseTool):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConnectionPluginList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConnectionPluginList(self):
     """
     Return list of available connection plugins
     """
     return sorted(connection_plugin_registry.keys())
 
-  security.declareProtected(Permissions.ManagePortal, 'connect')
+  @security.protected(Permissions.ManagePortal)
   def connect(self, url, user_name=None, password=None, transport=None, transport_kw=None):
     """
     Connect to remote instances

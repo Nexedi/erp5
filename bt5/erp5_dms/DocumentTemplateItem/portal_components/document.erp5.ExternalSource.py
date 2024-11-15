@@ -110,28 +110,28 @@ class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
                     )
 
   # Crawling API
-  security.declareProtected(Permissions.ModifyPortalContent, 'crawlContent')
+  @security.protected(Permissions.ModifyPortalContent)
   def crawlContent(self):
     """
     Creates the initial content from the URL by crawling the root
     """
     self.portal_contributions.crawlContent(self, container=self)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentURLList(self):
     """
     Returns the root of the crawling process
     """
     return [self.asURL()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentBaseURL(self):
     """
     Returns None to force crawler to ignore this parameter
     """
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isIndexContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isIndexContent(self, content=None):
     """
       This method is able to tell if content object is an index or
@@ -149,7 +149,7 @@ class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
       return False
     return method(content)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isExternalDocument')
+  @security.protected(Permissions.AccessContentsInformation)
   def isExternalDocument(self):
     """
     Return true if this document was obtained from an external source
@@ -158,7 +158,7 @@ class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
     return 1
 
   # Search API
-  security.declareProtected(Permissions.SearchCatalog, 'searchResults')
+  @security.protected(Permissions.SearchCatalog)
   def searchResults(self, **kw):
     """
     Search results. There is no notion of security here since
@@ -176,7 +176,7 @@ class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
     method = self._getTypeBasedMethod('searchResults')
     return method(**kw)
 
-  security.declareProtected(Permissions.SearchCatalog, 'countResults')
+  @security.protected(Permissions.SearchCatalog)
   def countResults(self, **kw):
     """
     Count results. There is no notion of security here since

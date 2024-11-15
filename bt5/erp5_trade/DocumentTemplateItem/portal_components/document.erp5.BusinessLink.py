@@ -105,8 +105,7 @@ class BusinessLink(Path, Predicate):
     return explanation_cache.getBusinessLinkRelatedMovementValueList(self)
 
   # IBusinessLink implementation
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                            'getMovementCompletionDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMovementCompletionDate(self, movement):
     """Returns the date of completion of the movemnet
     based on paremeters of the business path. This complete date can be
@@ -119,8 +118,7 @@ class BusinessLink(Path, Predicate):
     method = getattr(movement, method_id) # We wish to raise if it does not exist
     return method()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCompletionDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCompletionDate(self, explanation):
     """Returns the date of completion of business path in the
     context of the explanation. The completion date of the Business
@@ -146,8 +144,7 @@ class BusinessLink(Path, Predicate):
 
     return max(date_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isCompleted(self, explanation):
     """returns True if all related simulation movements for this explanation
     document are in a simulation state which is considered as completed
@@ -171,8 +168,7 @@ class BusinessLink(Path, Predicate):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isPartiallyCompleted')
+  @security.protected(Permissions.AccessContentsInformation)
   def isPartiallyCompleted(self, explanation):
     """returns True if some related simulation movements for this explanation
     document are in a simulation state which is considered as completed
@@ -193,7 +189,7 @@ class BusinessLink(Path, Predicate):
         return True
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isFrozen')
+  @security.protected(Permissions.AccessContentsInformation)
   def isFrozen(self, explanation):
     """returns True if all related simulation movements for this explanation
     document are in a simulation state which is considered as frozen
@@ -220,7 +216,7 @@ class BusinessLink(Path, Predicate):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDelivered')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDelivered(self, explanation):
     """Returns True is all simulation movements related to this
     Business Link in the context of given explanation are built

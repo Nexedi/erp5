@@ -64,8 +64,7 @@ class VariatedMixin:
     'variation_category_list',
   )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationBaseCategoryList(self, omit_optional_variation=0,
       omit_option_base_category=None, omit_individual_variation=0):
     """
@@ -94,16 +93,14 @@ class VariatedMixin:
 
     return vbcl
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            '_getVariationCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def _getVariationCategoryList(self, base_category_list = ()):
     if base_category_list is ():
       base_category_list = self.getVariationBaseCategoryList()
 #       base_category_list = self.getVariationRangeBaseCategoryList()
     return self.getAcquiredCategoryMembershipList(base_category_list, base=1)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationCategoryList(self, base_category_list=(),
       omit_optional_variation=0, omit_option_base_category=None):
     """
@@ -118,8 +115,7 @@ class VariatedMixin:
     return self._getVariationCategoryList(
                                   base_category_list=base_category_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationCategoryItemList(self, base_category_list=(), base=1,
       display_id='logical_path', display_base_category=1,
       current_category=None, omit_optional_variation=0,
@@ -191,23 +187,20 @@ class VariatedMixin:
 #                    display_id='title_or_id',
 #                    base_category_list=base_category_list, base=base, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            '_setVariationCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setVariationCategoryList(self, node_list, base_category_list=()):
     if base_category_list is ():
       base_category_list = self.getVariationBaseCategoryList()
     self._setCategoryMembership(base_category_list,node_list,base=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVariationCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVariationCategoryList(self, node_list, base_category_list=()):
     self._setVariationCategoryList(node_list,
                                    base_category_list=base_category_list)
     self.reindexObject()
 
   # Range
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeBaseCategoryList(self):
       """
       Returns possible variation base_category ids.
@@ -216,8 +209,7 @@ class VariatedMixin:
       # variation base category
       return self.getPortalVariationBaseCategoryList()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeBaseCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeBaseCategoryItemList(self, base=1,
                                             display_id='getTitle',
                                             current_category=None):
@@ -230,8 +222,7 @@ class VariatedMixin:
       return self.portal_categories.getItemList(
                             self.getVariationBaseCategoryList())
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                    'getVariationBaseCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationBaseCategoryItemList(self, display_id='title_or_id',
         omit_optional_variation=0, omit_option_base_category=None,
         omit_individual_variation=0):
@@ -258,8 +249,7 @@ class VariatedMixin:
                                display_id=display_id).render([bc]))
       return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationPropertyList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationPropertyList(self, default=None):
     """A list of properties which define variations
     """
@@ -274,8 +264,7 @@ class VariatedMixin:
   # Methods for matrix UI widgets
   # XXX FIXME Those method are depreciated.
   # We now use _asCellRange scripts.
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getLineVariationRangeCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLineVariationRangeCategoryItemList(self):
     """
       Returns possible variations in line
@@ -292,8 +281,7 @@ class VariatedMixin:
       clist = [(None,None)]
     return clist
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                       'getColumnVariationRangeCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getColumnVariationRangeCategoryItemList(self):
     """
       Returns possible variations in column
@@ -309,8 +297,7 @@ class VariatedMixin:
       clist = [(None,None)]
     return clist
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                               'getTabVariationRangeCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTabVariationRangeCategoryItemList(self):
     """
       Returns possible variations in tab
@@ -327,8 +314,7 @@ class VariatedMixin:
     return clist
 
   # Help
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                        'getMatrixVariationRangeBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMatrixVariationRangeBaseCategoryList(self):
     """
       Return base categories used in the matrix
@@ -344,8 +330,7 @@ class VariatedMixin:
       result += [column_bc]
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeCategoryItemList(self, base_category_list=(), base=1,
                                         root=1,
                                         display_method_id='getCategoryChildLogicalPathItemList',
@@ -371,8 +356,7 @@ class VariatedMixin:
     # Return result
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeCategoryList(self, base_category_list=(), base=1,
                                     root=1, current_category=None,
                                     omit_individual_variation=0, **kw):
@@ -387,7 +371,7 @@ class VariatedMixin:
     return [x[1] for x in vrcil]
 
   # Provide a string representation of variations
-  security.declarePublic('getVariationText')
+  @security.public
   def getVariationText(self):
     """
       Provide a string representation of variation
@@ -396,8 +380,7 @@ class VariatedMixin:
     category_list.sort()
     return '\n'.join(category_list)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVariationText')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVariationText(self, variation_text):
     variation_category_list = []
     if variation_text is not None and variation_text != "":

@@ -87,8 +87,7 @@ class CacheCookieMixin:
   """
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCacheCookie')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCacheCookie(self, cache_name='default'):
     """Get key of valid cache for this object"""
     cache_name = '_cache_cookie_' + cache_name
@@ -98,7 +97,7 @@ class CacheCookieMixin:
       setattr(self, cache_name, ZODBCookie())
       return ZODBCookie.value
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'newCacheCookie')
+  @security.protected(Permissions.ModifyPortalContent)
   def newCacheCookie(self, cache_name):
     """Invalidate cache for this object"""
     cache_name = '_cache_cookie_' + cache_name

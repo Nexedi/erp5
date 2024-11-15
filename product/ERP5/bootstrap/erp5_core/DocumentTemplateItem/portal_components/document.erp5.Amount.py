@@ -91,8 +91,7 @@ class Amount(Base, VariatedMixin):
 
   # A few more mix-in methods which should be relocated
   # THIS MUST BE UPDATE WITH CATEGORY ACQUISITION
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationCategoryList(self, default=None, base_category_list=(), # pylint: disable=arguments-differ
       omit_optional_variation=0, omit_option_base_category=None):
     """
@@ -120,8 +119,7 @@ class Amount(Base, VariatedMixin):
       variation_list = [v for v in variation_list if v in base_category_list]
     return self.getAcquiredCategoryMembershipList(variation_list, base=1)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationCategoryItemList(self, base_category_list=(), base=1,
                                    display_id='logical_path',
                                    current_category=None,**kw):
@@ -160,14 +158,12 @@ class Amount(Base, VariatedMixin):
       variation_list.append('industrial_phase')
       self._setCategoryMembership(variation_list, value, base=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVariationCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVariationCategoryList(self, value): # pylint: disable=arguments-differ
     self._setVariationCategoryList(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationBaseCategoryList(self, default=None,
       omit_optional_variation=0, omit_option_base_category=None):
     """
@@ -189,15 +185,13 @@ class Amount(Base, VariatedMixin):
         base_category_list.append(base_category)
     return base_category_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVariationBaseCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVariationBaseCategoryList(self, node_list):
     """Do nothing in the case of an amount, because variation base category
     list are set on the resource.
     """
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationBaseCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationBaseCategoryItemList(self,display_id='getTitleOrId',**kw):
     """
     Returns a list of base_category tuples.
@@ -206,8 +200,7 @@ class Amount(Base, VariatedMixin):
                                     self.getVariationBaseCategoryList(),
                                     display_id=display_id,**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, \
-                            'getVariationRangeCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeCategoryItemList(self, *args, **kw):
     """
       Returns possible variation category values for the
@@ -223,8 +216,7 @@ class Amount(Base, VariatedMixin):
     kw['omit_individual_variation'] = 0
     return resource.getVariationCategoryItemList(*args, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, \
-                            'getVariationRangeCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeCategoryList(self, default=None, base_category_list=(),
       base=1, **kw):
     """
@@ -235,8 +227,7 @@ class Amount(Base, VariatedMixin):
                                      base_category_list=base_category_list,
                                      base=base, **kw)]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeBaseCategoryList(self, default=None, # pylint: disable=arguments-differ
       omit_optional_variation=0, omit_option_base_category=None):
     """
@@ -263,8 +254,7 @@ class Amount(Base, VariatedMixin):
       result = super(Amount, self).getVariationRangeBaseCategoryList()
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationRangeBaseCategoryItemList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationRangeBaseCategoryItemList(self, omit_optional_variation=0, # pylint: disable=arguments-differ
       omit_option_base_category=None, display_id="title",
       display_none_category=0):
@@ -288,8 +278,7 @@ class Amount(Base, VariatedMixin):
   #####################################################################
   #  Variation property API
   #####################################################################
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationPropertyDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getVariationPropertyDict(self):
     """
       Return a dictionary of:
@@ -307,8 +296,7 @@ class Amount(Base, VariatedMixin):
             self.getProperty(variation_property)
     return property_dict
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVariationPropertyDict')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVariationPropertyDict(self, property_dict):
     """
       Take a parameter a property dict like:
@@ -333,7 +321,7 @@ class Amount(Base, VariatedMixin):
                     (property_id, property_value, self.getRelativeUrl()))
           raise
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getResourceDefaultQuantityUnit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getResourceDefaultQuantityUnit(self):
     """
       Return default quantity unit of the resource
@@ -345,7 +333,7 @@ class Amount(Base, VariatedMixin):
       #LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
     return  resource_quantity_unit
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getResourcePrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getResourcePrice(self):
     """
       Return price of the resource in the current context
@@ -357,7 +345,7 @@ class Amount(Base, VariatedMixin):
       return resource.getPrice(context=self)
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDuration')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDuration(self):
     """
       Return duration in minute
@@ -373,7 +361,7 @@ class Amount(Base, VariatedMixin):
       duration = None
     return duration
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalPrice(self, **kw):
     """
       Return total price for the number of items
@@ -407,7 +395,7 @@ class Amount(Base, VariatedMixin):
     finally:
       del tv[key]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
+  @security.protected(Permissions.AccessContentsInformation)
   def getBaseUnitPrice(self, context=None, **kw):
     """
       Get the base unit price.
@@ -422,8 +410,7 @@ class Amount(Base, VariatedMixin):
       local_base_unit_price = self._getBaseUnitPrice(context=context)
     return local_base_unit_price
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPricePrecision')
+  @security.protected(Permissions.AccessContentsInformation)
   def getPricePrecision(self):
     """Return the floating point precision of a price.
     """
@@ -435,7 +422,7 @@ class Amount(Base, VariatedMixin):
       return self.getQuantityPrecisionFromResource(self.getPriceCurrency())
 
   # Conversion to standard unit
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConvertedQuantity(self):
     """
       Converts quantity to default unit
@@ -452,7 +439,7 @@ class Amount(Base, VariatedMixin):
         return converted
     return quantity
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setConvertedQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setConvertedQuantity(self, value):
     resource = self.getResourceValue()
     quantity_unit = self.getQuantityUnit()
@@ -466,7 +453,7 @@ class Amount(Base, VariatedMixin):
     if quantity is not None:
       return self.setQuantity(quantity)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNetQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNetQuantity(self):
     """
       Take into account efficiency in quantity
@@ -477,7 +464,7 @@ class Amount(Base, VariatedMixin):
       efficiency = 1.0
     return float(quantity) / efficiency
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNetTargetQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNetTargetQuantity(self):
     """
       Take into account efficiency in target quantity
@@ -489,7 +476,7 @@ class Amount(Base, VariatedMixin):
       efficiency = 1.0
     return float(quantity) / efficiency
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNetConvertedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNetConvertedQuantity(self):
     """
       Take into account efficiency in converted quantity
@@ -503,7 +490,7 @@ class Amount(Base, VariatedMixin):
     else:
       return None
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setNetConvertedQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setNetConvertedQuantity(self, value):
     """
       Take into account efficiency in converted quantity
@@ -517,7 +504,7 @@ class Amount(Base, VariatedMixin):
       quantity = value
     self.setConvertedQuantity(quantity)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNetConvertedTargetQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getNetConvertedTargetQuantity(self):
     """
       Take into account efficiency in converted target quantity
@@ -531,7 +518,7 @@ class Amount(Base, VariatedMixin):
     else:
       return None
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setNetConvertedTargetQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setNetConvertedTargetQuantity(self, value):
     """
       Take into account efficiency in converted quantity
@@ -545,7 +532,7 @@ class Amount(Base, VariatedMixin):
       quantity = value
     self.setConvertedTargetQuantity(quantity)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInventoriatedQuantity(self):
     """
       Take into account efficiency in converted target quantity
@@ -553,7 +540,7 @@ class Amount(Base, VariatedMixin):
     return self.getNetConvertedQuantity()
 
   # Helper methods to display quantities as produced / consumed
-  security.declareProtected(Permissions.AccessContentsInformation, 'getProductionQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getProductionQuantity(self,quantity=None):
     """
       Return the produced quantity
@@ -580,7 +567,7 @@ class Amount(Base, VariatedMixin):
       else:
         return 0.0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConsumptionQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConsumptionQuantity(self,quantity=None):
     """
       Return the consumption quantity
@@ -607,7 +594,7 @@ class Amount(Base, VariatedMixin):
       else:
         return 0.0
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setProductionQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setProductionQuantity(self, value):
     """
       Return the produced quantity
@@ -629,7 +616,7 @@ class Amount(Base, VariatedMixin):
       if quantity >= 0:
         self.setQuantity(- quantity)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setConsumptionQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setConsumptionQuantity(self, value):
     """
       Return the produced quantity
@@ -652,7 +639,7 @@ class Amount(Base, VariatedMixin):
         self.setQuantity(- quantity)
 
   # Inventory
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
+  @security.protected(Permissions.AccessContentsInformation)
   def getConvertedInventory(self):
     """
       provides a default inventory value - None since
@@ -678,11 +665,11 @@ class Amount(Base, VariatedMixin):
 #     return result
 
   # Profit and Loss
-  security.declareProtected(Permissions.AccessContentsInformation, 'getLostQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getLostQuantity(self):
     return - self.getProfitQuantity()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setLostQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setLostQuantity(self, value):
     return self.setProfitQuantity(- value)
 
@@ -691,8 +678,7 @@ class Amount(Base, VariatedMixin):
 
   ## quantity_unit accessors for backward compatibility:
   ## (we used to acquire quantity_unit from the resources)
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getQuantityUnitValue')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityUnitValue(self):
     result = self.getDefaultValue('quantity_unit')
     if result is None:
@@ -701,8 +687,7 @@ class Amount(Base, VariatedMixin):
         result = resource.getQuantityUnitValue()
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getQuantityUnit')
+  @security.protected(Permissions.AccessContentsInformation)
   def getQuantityUnit(self, checked_permission=None):
     result = self._getDefaultCategoryMembership('quantity_unit', checked_permission=checked_permission)
     if result is None:

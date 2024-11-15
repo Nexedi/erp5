@@ -44,7 +44,7 @@ class Field:
                                                    message_name)
         self.message_values = message_values
 
-    security.declareProtected('Change Formulator Fields', 'initialize_values')
+    @security.protected('Change Formulator Fields')
     def initialize_values(self, dict):
         """Initialize values for properties, defined by fields in
         associated form.
@@ -56,8 +56,7 @@ class Field:
             values[id] = value
         self.values = values
 
-    security.declareProtected('Change Formulator Fields',
-                              'initialize_tales')
+    @security.protected('Change Formulator Fields')
     def initialize_tales(self):
         """Initialize tales expressions for properties (to nothing).
         """
@@ -67,8 +66,7 @@ class Field:
             tales[id] = ""
         self.tales = tales
 
-    security.declareProtected('Change Formulator Fields',
-                              'initialize_overrides')
+    @security.protected('Change Formulator Fields')
     def initialize_overrides(self):
         """Initialize overrides for properties (to nothing).
         """
@@ -78,7 +76,7 @@ class Field:
             overrides[id] = ""
         self.overrides = overrides
 
-    security.declareProtected('Access contents information', 'has_value')
+    @security.protected('Access contents information')
     def has_value(self, id):
         """Return true if the field defines such a value.
         """
@@ -87,7 +85,7 @@ class Field:
         else:
             return 0
 
-    security.declareProtected('Access contents information', 'get_orig_value')
+    @security.protected('Access contents information')
     def get_orig_value(self, id):
         """Get value for id; don't do any override calculation.
         """
@@ -96,7 +94,7 @@ class Field:
         else:
             return self.form.get_field(id).get_value('default')
 
-    security.declareProtected('Access contents information', 'get_value')
+    @security.protected('Access contents information')
     def get_value(self, id, **kw):
         """Get value for id.
 
@@ -133,30 +131,29 @@ class Field:
         else:
             return value
 
-    security.declareProtected('View management screens', 'get_override')
+    @security.protected('View management screens')
     def get_override(self, id):
         """Get override method for id (not wrapped)."""
         return self.overrides.get(id, "")
 
-    security.declareProtected('View management screens', 'get_tales')
+    @security.protected('View management screens')
     def get_tales(self, id):
         """Get tales expression method for id."""
         return self.tales.get(id, "")
 
-    security.declareProtected('Access contents information', 'is_required')
+    @security.protected('Access contents information')
     def is_required(self):
         """Check whether this field is required (utility function)
         """
         return self.has_value('required') and self.get_value('required')
 
-    security.declareProtected('View management screens', 'get_error_names')
+    @security.protected('View management screens')
     def get_error_names(self):
         """Get error messages.
         """
         return self.validator.message_names
 
-    security.declareProtected('Access contents information',
-                              'generate_field_key')
+    @security.protected('Access contents information')
     def generate_field_key(self, validation=0, key=None, key_prefix=None):
       """Generate the key Silva uses to render the field in the form.
       """
@@ -175,8 +172,7 @@ class Field:
       else:
         return '%s.%s:record' % (self.field_record, self.id)
 
-    security.declareProtected('Access contents information',
-                              'generate_subfield_key')
+    @security.protected('Access contents information')
     def generate_subfield_key(self, id, validation=0, key=None):
       """Generate the key Silva uses to render a sub field.
          Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
@@ -186,7 +182,7 @@ class Field:
           return 'subfield_%s_%s' % (key, id)
       return '%s.subfield_%s_%s:record' % (self.field_record, key, id)
 
-    security.declareProtected('View management screens', 'get_error_message')
+    @security.protected('View management screens')
     def get_error_message(self, name):
         try:
             return self.message_values[name]
@@ -196,7 +192,7 @@ class Field:
             else:
                 return "Unknown error: %s" % name
 
-    security.declarePrivate('_render_helper')
+    @security.private
     def _render_helper(self, key, value, REQUEST, render_prefix=None, editable=None, **kw):
       value = self._get_default(key, value, REQUEST)
       __traceback_info__ = ('key=%s value=%r' % (key, value))
@@ -212,7 +208,7 @@ class Field:
           return self.widget.render(self, key, value, REQUEST,
                                     render_prefix=render_prefix, **kw)
 
-    security.declarePrivate('_render_odt_helper')
+    @security.private
     def _render_odt_helper(self, key, value, as_string, ooo_builder,
                            REQUEST, render_prefix, attr_dict, local_name):
       value = self._get_default(key, value, REQUEST)
@@ -226,7 +222,7 @@ class Field:
                                       REQUEST, render_prefix, attr_dict,
                                       local_name)
 
-    security.declarePrivate('_render_odt_variable_helper')
+    @security.private
     def _render_odt_variable_helper(self, key, value, as_string, ooo_builder,
                            REQUEST, render_prefix, attr_dict, local_name):
       value = self._get_default(key, value, REQUEST)
@@ -236,7 +232,7 @@ class Field:
                                              render_prefix, attr_dict,
                                              local_name)
 
-    security.declarePrivate('_get_default')
+    @security.private
     def _get_default(self, key, value, REQUEST):
         if value is not None:
             return value
@@ -256,14 +252,14 @@ class Field:
         else:
             return value
 
-    security.declarePrivate('_get_user_input_value')
+    @security.private
     def _get_user_input_value(self, key, REQUEST):
       """
       Try to get a value of the field from the REQUEST
       """
       return REQUEST.form[key]
 
-    security.declareProtected('View', 'render')
+    @security.protected('View')
     def render(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None, editable=None, **kw):
       """Render the field widget.
       value -- the value the field should have (for instance
@@ -285,27 +281,27 @@ class Field:
         **kw
       )
 
-    security.declareProtected('View', 'render_view')
+    @security.protected('View')
     def render_view(self, value=None, REQUEST=None, render_prefix=None):
       """Render value to be viewed.
       """
       return self.widget.render_view(self, value, REQUEST=REQUEST)
 
-    security.declareProtected('View', 'render_pdf')
+    @security.protected('View')
     def render_pdf(self, value=None, REQUEST=None, key=None, **kw):
       """
       render_pdf renders the field for reportlab
       """
       return self.widget.render_pdf(self, value)
 
-    security.declareProtected('View', 'render_html')
+    @security.protected('View')
     def render_html(self, *args, **kw):
       """
       render_html is used to as definition of render method in Formulator.
       """
       return self.render(*args, **kw)
 
-    security.declareProtected('View', 'render_htmlgrid')
+    @security.protected('View')
     def render_htmlgrid(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None):
       """
       render_htmlgrid returns a list of tuple (title, html render)
@@ -316,13 +312,13 @@ class Field:
       __traceback_info__ = ('key=%s value=%r' % (key, value))
       return self.widget.render_htmlgrid(self, widget_key, value, REQUEST, render_prefix=render_prefix)
 
-    security.declareProtected('View', 'render_odf')
+    @security.protected('View')
     def render_odf(self, field=None, key=None, value=None, REQUEST=None,
                      render_format='ooo', render_prefix=None):
       return self.widget.render_odf(self, key, value, REQUEST, render_format,
                                 render_prefix)
 
-    security.declareProtected('View', 'render_odt')
+    @security.protected('View')
     def render_odt(self, key=None, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p',
         key_prefix=None):
@@ -331,7 +327,7 @@ class Field:
                                      ooo_builder, REQUEST, render_prefix,
                                      attr_dict, local_name)
 
-    security.declareProtected('View', 'render_odt_variable')
+    @security.protected('View')
     def render_odt_variable(self, key=None, value=None, as_string=True,
         ooo_builder=None, REQUEST=None, render_prefix=None, attr_dict=None,
         local_name='variable-set', key_prefix=None):
@@ -340,7 +336,7 @@ class Field:
                                      ooo_builder, REQUEST, render_prefix,
                                      attr_dict, local_name)
 
-    security.declareProtected('View', 'render_odt_view')
+    @security.protected('View')
     def render_odt_view(self, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
       """Call read-only renderer
@@ -349,7 +345,7 @@ class Field:
                                          REQUEST, render_prefix, attr_dict,
                                          local_name)
 
-    security.declareProtected('View', 'render_odg')
+    @security.protected('View')
     def render_odg(self, key=None, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p',
         key_prefix=None):
@@ -359,7 +355,7 @@ class Field:
                                     REQUEST, render_prefix, attr_dict,
                                     local_name)
 
-    security.declareProtected('View', 'render_css')
+    @security.protected('View')
     def render_css(self, REQUEST=None):
       """
       Generate css content which will be added inline.
@@ -368,7 +364,7 @@ class Field:
       """
       return self.widget.render_css(self, REQUEST)
 
-    security.declareProtected('View', 'get_css_list')
+    @security.protected('View')
     def get_css_list(self, REQUEST=None):
       """
         Returns list of css sheets needed by the field
@@ -376,7 +372,7 @@ class Field:
       """
       return self.widget.get_css_list(self, REQUEST)
 
-    security.declareProtected('View', 'get_javascript_list')
+    @security.protected('View')
     def get_javascript_list(self, REQUEST=None):
       """
         Returns list of javascript needed by the field
@@ -384,7 +380,7 @@ class Field:
       """
       return self.widget.get_javascript_list(self, REQUEST)
 
-    security.declareProtected('View', 'render_dict')
+    @security.protected('View')
     def render_dict(self, value=None, REQUEST=None, key=None, **kw):
       """
       This is yet another field rendering. It is designed to allow code to
@@ -393,14 +389,14 @@ class Field:
       """
       return self.widget.render_dict(self, value)
 
-    security.declareProtected('View', 'render_from_request')
+    @security.protected('View')
     def render_from_request(self, REQUEST, key_prefix=None):
         """Convenience method; render the field widget from REQUEST
         (unvalidated data), or default if no raw data is found.
         """
         return self._render_helper(self.generate_field_key(key_prefix=key_prefix), None, REQUEST)
 
-    security.declareProtected('View', 'render_sub_field')
+    @security.protected('View')
     def render_sub_field(self, id, value=None, REQUEST=None, key=None, render_prefix=None):
       """Render a sub field, as part of complete rendering of widget in
       a form. Works like render() but for sub field.
@@ -409,7 +405,7 @@ class Field:
       return self._get_sub_form().get_field(id)._render_helper(
           self.generate_subfield_key(id, key=key), value, REQUEST, render_prefix)
 
-    security.declareProtected('View', 'render_sub_field_from_request')
+    @security.protected('View')
     def render_sub_field_from_request(self, id, REQUEST):
         """Convenience method; render the field widget from REQUEST
         (unvalidated data), or default if no raw data is found.
@@ -417,7 +413,7 @@ class Field:
         return self._get_sub_form().get_field(id)._render_helper(
             self.generate_subfield_key(id), None, REQUEST)
 
-    security.declarePrivate('_validate_helper')
+    @security.private
     def _validate_helper(self, key, REQUEST):
         value = self.validator.validate(self, key, REQUEST)
         # now call external validator after all other validation
@@ -426,21 +422,21 @@ class Field:
             self.validator.raise_error('external_validator_failed', self)
         return value
 
-    security.declareProtected('View', 'validate')
+    @security.protected('View')
     def validate(self, REQUEST, key_prefix=None):
         """Validate/transform the field.
         """
         return self._validate_helper(
             self.generate_field_key(validation=1, key_prefix=key_prefix), REQUEST)
 
-    security.declareProtected('View', 'need_validate')
+    @security.protected('View')
     def need_validate(self, REQUEST, key_prefix=None):
         """Return true if validation is needed for this field.
         """
         return self.validator.need_validate(
             self, self.generate_field_key(validation=1, key_prefix=key_prefix), REQUEST)
 
-    security.declareProtected('View', 'validate_sub_field')
+    @security.protected('View')
     def validate_sub_field(self, id, REQUEST, key=None):
       """Validates a subfield (as part of field validation).
       """
@@ -493,7 +489,7 @@ class ZMIField(
          'help':('Formulator', 'fieldTest.txt')},
         ) + OFS.SimpleItem.SimpleItem.manage_options
 
-    security.declareProtected('View', 'title')
+    @security.protected('View')
     def title(self):
         """The title of this field."""
         return self.get_value('title')
@@ -502,7 +498,7 @@ class ZMIField(
     security.declareProtected('View management screens', 'manage_main')
     manage_main = DTMLFile('dtml/fieldEdit', globals())
 
-    security.declareProtected('Change Formulator Fields', 'manage_edit')
+    @security.protected('Change Formulator Fields')
     def manage_edit(self, REQUEST):
         """Submit Field edit form.
         """
@@ -525,7 +521,7 @@ class ZMIField(
             return self.manage_main(self,REQUEST,
                                     manage_tabs_message=message)
 
-    security.declareProtected('Change Formulator Fields', 'manage_edit_xmlrpc')
+    @security.protected('Change Formulator Fields')
     def manage_edit_xmlrpc(self, map):
         """Edit Field Properties through XMLRPC
         """
@@ -563,7 +559,7 @@ class ZMIField(
                 getattr(self, method_name)(values[key])
 
 
-    security.declarePrivate('manage_beforeDelete')
+    @security.private
     def manage_beforeDelete(self, item, container):
         """Remove name from list if object is deleted.
         """
@@ -571,7 +567,7 @@ class ZMIField(
         if hasattr(item.aq_explicit, 'is_field'):
             container.field_removed(item.id)
 
-    security.declarePrivate('manage_afterAdd')
+    @security.private
     def manage_afterAdd(self, item, container):
         """What happens when we add a field.
         """
@@ -584,7 +580,7 @@ class ZMIField(
                               'manage_overrideForm')
     manage_overrideForm = DTMLFile('dtml/fieldOverride', globals())
 
-    security.declareProtected('Change Formulator Forms', 'manage_override')
+    @security.protected('Change Formulator Forms')
     def manage_override(self, REQUEST):
         """Change override methods.
         """
@@ -617,7 +613,7 @@ class ZMIField(
                               'manage_talesForm')
     manage_talesForm = DTMLFile('dtml/fieldTales', globals())
 
-    security.declareProtected('Change Formulator Forms', 'manage_tales')
+    @security.protected('Change Formulator Forms')
     def manage_tales(self, REQUEST):
         """Change TALES expressions.
         """
@@ -647,7 +643,7 @@ class ZMIField(
             self.tales.update(result)
             self.tales = self.tales
 
-    security.declareProtected('Change Formulator Forms', 'manage_tales_xmlrpc')
+    @security.protected('Change Formulator Forms')
     def manage_tales_xmlrpc(self, map):
         """Change TALES expressions through XMLRPC.
         """
@@ -677,7 +673,7 @@ class ZMIField(
     security.declareProtected('View management screens', 'fieldDescription')
     fieldDescription = DTMLFile('dtml/fieldDescription', globals())
 
-    security.declareProtected('Change Formulator Fields', 'manage_messages')
+    @security.protected('Change Formulator Fields')
     def manage_messages(self, REQUEST):
         """Change message texts.
         """
@@ -695,17 +691,17 @@ class ZMIField(
             return self.manage_messagesForm(self,REQUEST,
                                             manage_tabs_message=message)
 
-    security.declareProtected('View', 'index_html')
+    @security.protected('View')
     def index_html(self, REQUEST):
         """Render this field.
         """
         return self.render(REQUEST=REQUEST)
 
-    security.declareProtected('Access contents information', '__getitem__')
+    @security.protected('Access contents information')
     def __getitem__(self, key):
         return self.get_value(key)
 
-    security.declareProtected('View management screens', 'isTALESAvailable')
+    @security.protected('View management screens')
     def isTALESAvailable(self):
         """Return true only if TALES is available.
         """

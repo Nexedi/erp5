@@ -164,8 +164,7 @@ class Category(Folder):
                 meta_types.append(meta_type)
         return meta_types
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getLogicalPath')
+    @security.protected(Permissions.AccessContentsInformation)
     def getLogicalPath(self, item_method = 'getTitle'):
       """
         Returns logical path, starting under base category.
@@ -186,32 +185,28 @@ class Category(Folder):
         logical_title_list.append(logical_title)
       return '/'.join(logical_title_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTranslatedLogicalPath')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTranslatedLogicalPath(self):
       """
         Returns translated logical path, started under base category.
       """
       return self.getLogicalPath(item_method='getTranslatedTitle')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCompactLogicalPath')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCompactLogicalPath(self):
       """
         Returns compact logical path, started under base category.
       """
       return self.getLogicalPath(item_method='getCompactTitle')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTranslatedCompactLogicalPath')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTranslatedCompactLogicalPath(self):
       """
         Returns translated compact logical path, started under base category.
       """
       return self.getLogicalPath(item_method='getCompactTranslatedTitle')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getIndentedTitle')
+    @security.protected(Permissions.AccessContentsInformation)
     def getIndentedTitle(self, item_method = 'getTitle'):
       """
         Returns title or id, indented from base_category.
@@ -238,48 +233,42 @@ class Category(Folder):
       logical_title_list.append(logical_title)
       return ''.join(logical_title_list)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getIndentedShortTitle')
+    @security.protected(Permissions.AccessContentsInformation)
     def getIndentedShortTitle(self):
       """
         Returns short_title or id, indented from base_category.
       """
       return self.getIndentedTitle(item_method='getShortTitle')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getIndentedTitleAndId')
+    @security.protected(Permissions.AccessContentsInformation)
     def getIndentedTitleAndId(self, item_method='getTitleAndId'):
       """
         Returns title or id, indented from base_category.
       """
       return self.getIndentedTitle(item_method=item_method)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getTranslatedIndentedTitle')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTranslatedIndentedTitle(self):
       """
         Returns translated indented title, started under base category.
       """
       return self.getIndentedTitle(item_method='getTranslatedTitle')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getIndentedCompactTitle')
+    @security.protected(Permissions.AccessContentsInformation)
     def getIndentedCompactTitle(self):
       """
         Returns indented compact title, started under base category.
       """
       return self.getIndentedTitle(item_method='getCompactTitle')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTranslatedIndentedCompactTitle')
+    @security.protected(Permissions.AccessContentsInformation)
     def getTranslatedIndentedCompactTitle(self):
       """
         Returns translated indented compact title, started under base category.
       """
       return self.getIndentedTitle(item_method='getCompactTranslatedTitle')
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getCategoryChildValueList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildValueList(self, recursive=1, include_if_child=1,
                                   is_self_excluded=1, sort_on=None,
                                   sort_order=None, local_sort_method=None,
@@ -376,8 +365,7 @@ class Category(Folder):
       return sortValueList(value_list, sort_on, sort_order, **kw)
 
     # List names recursively
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getCategoryChildRelativeUrlList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildRelativeUrlList(self, base='', recursive=1,
                                         checked_permission=None, **kw):
       """
@@ -404,8 +392,7 @@ class Category(Folder):
     security.declareProtected(Permissions.AccessContentsInformation, 'getPathList')
     getPathList = getCategoryChildRelativeUrlList
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                      'getCategoryChildTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -414,8 +401,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                                            display_id='title', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                    'getCategoryChildTranslatedTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTranslatedTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -424,8 +410,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                       display_id='translated_title', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                      'getCategoryChildTitleOrIdItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTitleOrIdItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -433,8 +418,7 @@ class Category(Folder):
       """
       return self.getCategoryChildItemList(recursive = recursive, display_id='title_or_id', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                       'getCategoryChildTitleAndIdItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTitleAndIdItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -443,8 +427,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                                     display_id='title_and_id', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                       'getCategoryChildCompactTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildCompactTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -454,8 +437,7 @@ class Category(Folder):
                                            display_id='compact_title',
                                            base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                        'getCategoryChildTranslatedCompactTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTranslatedCompactTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -465,8 +447,7 @@ class Category(Folder):
                                            display_id='compact_translated_title',
                                            base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                       'getCategoryChildLogicalPathItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildLogicalPathItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -476,8 +457,7 @@ class Category(Folder):
                                            display_id='logical_path',
                                            base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryChildTranslatedLogicalPathItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTranslatedLogicalPathItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -488,8 +468,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                        display_id='translated_logical_path', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                             'getCategoryChildTranslatedCompactLogicalPathItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTranslatedCompactLogicalPathItemList(self,
                                                              recursive=1, base=0, **kw):
       """
@@ -500,8 +479,7 @@ class Category(Folder):
                                            display_id='translated_compact_logical_path',
                                            base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                             'getCategoryChildCompactLogicalPathItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildCompactLogicalPathItemList(self,
                                                    recursive=1, base=0, **kw):
       """
@@ -512,8 +490,7 @@ class Category(Folder):
                                            display_id='compact_logical_path',
                                            base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                     'getCategoryChildIndentedTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildIndentedTitleItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -523,8 +500,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='indented_title', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                     'getCategoryChildIndentedTitleAndIdItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildIndentedTitleAndIdItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -534,8 +510,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='indented_title_and_id', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                     'getCategoryChildTranslatedIndentedTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTranslatedIndentedTitleItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -545,8 +520,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='translated_indented_title', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryChildIndentedCompactTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildIndentedCompactTitleItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -556,8 +530,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='indented_compact_title', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryChildTranslatedIndentedCompactTitleItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildTranslatedIndentedCompactTitleItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -567,8 +540,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
           display_id='translated_indented_compact_title', base=base, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                              'getCategoryChildIdItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildIdItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
@@ -578,8 +550,7 @@ class Category(Folder):
                                            display_id='id', base=base, **kw)
 
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryChildItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildItemList(self, recursive=1, base=0,
                                        cache=DEFAULT_CACHE_FACTORY,
                                        current_category_list=None, **kw):
@@ -639,7 +610,7 @@ class Category(Folder):
       return item_list
 
     # Alias for compatibility
-    security.declareProtected(Permissions.View, 'getFormItemList')
+    @security.protected(Permissions.View)
     def getFormItemList(self):
       """
         Alias for compatibility and accelation
@@ -649,15 +620,13 @@ class Category(Folder):
                                            recursive=1)
 
     # Alias for compatibility
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBaseItemList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseItemList(self, base=0, prefix=''):
       return self.getCategoryChildItemList(base=base,
                                            display_none_category=0,
                                            recursive=1)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getCategoryRelativeUrl')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryRelativeUrl(self, base=0, **kw):
       """
         Returns a relative_url of this category relative
@@ -689,7 +658,7 @@ class Category(Folder):
     # Predicate interface
     _operators = []
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'test')
+    @security.protected(Permissions.AccessContentsInformation)
     def test(self, context):
       """
         A Predicate can be tested on a given context
@@ -699,7 +668,7 @@ class Category(Folder):
     # A Category's categories is self
 
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getRelativeUrl' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getRelativeUrl(self):
       """
         We must eliminate portal_categories in the RelativeUrl
@@ -707,7 +676,7 @@ class Category(Folder):
       """
       return '/'.join(self.portal_url.getRelativeContentPath(self)[1:])
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
+    @security.protected(Permissions.AccessContentsInformation)
     def isMemberOf(self, category, **kw):
       """
         Tests if an object if member of a given category
@@ -728,7 +697,7 @@ class Category(Folder):
           return 1
       return 0
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryMemberValueList(self, base_category = None,
                             spec=(), filter=None, portal_type=(), **kw):
       """
@@ -741,15 +710,14 @@ class Category(Folder):
             base_category = base_category,
             spec=spec, filter=filter, portal_type=portal_type, strict_membership=strict_membership)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryMemberItemList(self, **kw):
       """
       Returns a list of objects or brains
       """
       return self.portal_categories.getCategoryMemberItemList(self, **kw)
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                                                               'getCategoryMemberTitleItemList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryMemberTitleItemList(self, **kw):
       """
       Returns a list of objects or brains
@@ -758,7 +726,7 @@ class Category(Folder):
       kw['display_method'] = None
       return self.portal_categories.getCategoryMemberItemList(self, **kw)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getBreadcrumbList' )
+    @security.protected(Permissions.AccessContentsInformation)
     def getBreadcrumbList(self):
       """
       Returns a list of objects or brains
@@ -810,13 +778,12 @@ class BaseCategory(Category):
     # BBB: Required to start instance with old
     #      version of erp5_property_sheets BT.
     related_locally_indexed = False
-    security.declarePrivate('isRelatedLocallyIndexed')
+    @security.private
     def isRelatedLocallyIndexed(self):
       """Determines if related values should be indexed on target documents"""
       return self.related_locally_indexed
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBaseCategoryId')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseCategoryId(self):
       """
         The base category of this object
@@ -825,8 +792,7 @@ class BaseCategory(Category):
       """
       return self.getBaseCategory().id
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBaseCategoryUid')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseCategoryUid(self):
       """
         The base category uid of this object
@@ -835,8 +801,7 @@ class BaseCategory(Category):
       """
       return self.getBaseCategory().getUid()
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBaseCategoryValue')
+    @security.protected(Permissions.AccessContentsInformation)
     def getBaseCategoryValue(self):
       """
         The base category of this object
@@ -845,8 +810,7 @@ class BaseCategory(Category):
       """
       return self
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                                 'getCategoryChildValueList')
+    @security.protected(Permissions.AccessContentsInformation)
     def getCategoryChildValueList(self, is_self_excluded=1, recursive=1,
                      include_if_child=1, sort_on=None, sort_order=None,
                      local_sort_method=None, local_sort_key=None, local_sort_id=None,

@@ -53,8 +53,7 @@ class CredentialRecovery(Ticket, EncryptedPasswordMixin):
                     , PropertySheet.Url
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAnswerCorrect')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAnswerCorrect(self):
     '''
     Check if the given answer match the real answer

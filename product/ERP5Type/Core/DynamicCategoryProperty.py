@@ -50,9 +50,8 @@ class DynamicCategoryProperty(CategoryProperty):
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.DynamicCategoryProperty)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'importFromFilesystemDefinition')
   @classmethod
+  @security.protected(Permissions.AccessContentsInformation)
   def importFromFilesystemDefinition(cls, context, category_expression):
     """
     Set the Expression text from a filesystem definition of a property
@@ -60,8 +59,7 @@ class DynamicCategoryProperty(CategoryProperty):
     return context.newContent(portal_type=cls.portal_type,
                               category_expression=category_expression.text)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'applyOnAccessorHolder')
+  @security.protected(Permissions.AccessContentsInformation)
   def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
     category_id_list = evaluateExpressionFromString(expression_context,
                                                     self.getCategoryExpression())

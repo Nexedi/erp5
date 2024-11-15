@@ -67,7 +67,7 @@ class PaySheetModel(TradeCondition, XMLMatrix):
                     , PropertySheet.DefaultAnnotationLine
                     )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
+  @security.protected(Permissions.AccessContentsInformation)
   def getCell(self, *args, **kw):
     '''Overload the function getCell to be able to search a cell on the
     inheritance model tree if the cell is not found on current one.
@@ -85,8 +85,7 @@ class PaySheetModel(TradeCondition, XMLMatrix):
       if cell is not None:
         return cell
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getReferenceDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReferenceDict(self, portal_type_list, property_list=None):
     """Return a dict containing all id's of the objects contained in
     this model and corresponding to the given portal_type. The key of the dict
@@ -107,8 +106,7 @@ class PaySheetModel(TradeCondition, XMLMatrix):
         reference_dict[obj.getProperty('reference', obj.getId())] = obj.getId()
     return reference_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInheritanceReferenceDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getInheritanceReferenceDict(self, context, portal_type_list,
                                   property_list=None):
     '''Returns a dict with the model url as key and a list of reference as
@@ -130,8 +128,7 @@ class PaySheetModel(TradeCondition, XMLMatrix):
         model_reference_dict[model.getRelativeUrl()]=id_list
     return model_reference_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getModelInheritanceEffectiveProperty')
+  @security.protected(Permissions.AccessContentsInformation)
   def getModelInheritanceEffectiveProperty(self, paysheet, property_name):
     """Get a property from an effective model
     """

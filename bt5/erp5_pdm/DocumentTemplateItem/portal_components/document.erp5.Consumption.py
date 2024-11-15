@@ -57,8 +57,7 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
                     , PropertySheet.VariationRange
                     )
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            '_setVariationCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def _setVariationCategoryList(self, value, base_category_list=()):
     """
       Set consumption variation category list.
@@ -72,8 +71,7 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
     # Kept for compatibility.
     self.updateCellRange(base_id='quantity')
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVariationCategoryList')
+  @security.protected(Permissions.ModifyPortalContent)
   def setVariationCategoryList(self, value, base_category_list=()):
     """
       Set consumption variation category list.
@@ -82,8 +80,7 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
     self._setVariationCategoryList(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getVariationRangeBaseCategoryItemList')
+  @security.protected(Permissions.ModifyPortalContent)
   def getVariationRangeBaseCategoryItemList(
       self,
       base=1,
@@ -96,8 +93,7 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
     # XXX get TitleOrId
     return [(x, x) for x in self.getVariationRangeBaseCategoryList()]
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'getQuantityRatio')
+  @security.protected(Permissions.ModifyPortalContent)
   def getQuantityRatio(self, variation_category_line,
                         variation_category_column):
     """

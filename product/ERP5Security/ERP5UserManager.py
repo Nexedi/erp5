@@ -123,7 +123,7 @@ class ERP5UserManager(BasePlugin):
   #
   #   IAuthenticationPlugin implementation
   #
-  security.declarePrivate( 'authenticateCredentials' )
+  @security.private
   def authenticateCredentials(self, credentials):
     """ See IAuthenticationPlugin.
 
@@ -210,7 +210,7 @@ class ERP5UserManager(BasePlugin):
   #
   #   IUserEnumerationPlugin implementation
   #
-  security.declarePrivate( 'enumerateUsers' )
+  @security.private
   def enumerateUsers(self, id=None, login=None, exact_match=False,
              sort_by=None, max_results=None, **kw):
     """ See IUserEnumerationPlugin.
@@ -281,12 +281,12 @@ class ERP5UserManager(BasePlugin):
       for user in user_list
     ])
 
-  security.declarePrivate( 'updateUser' )
+  @security.private
   def updateUser(self, user_id, login_name):
     # Operation not supported here
     return False
 
-  security.declarePrivate( 'updateEveryLoginName' )
+  @security.private
   def updateEveryLoginName(self, quit_on_first_error=True):
     # Operation not supported here
     raise NotImplementedError()

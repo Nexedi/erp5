@@ -107,8 +107,7 @@ class TradeModelPath(Path):
     return explanation_cache.getTradeModelPathRelatedMovementValueList(self)
 
   # IArrowBase implementation
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSourceArrowBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getSourceArrowBaseCategoryList(self):
     """
       Returns all categories which are used to define the source
@@ -116,8 +115,7 @@ class TradeModelPath(Path):
     """
     return self.getPortalObject().getPortalSourceArrowBaseCategoryList()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDestinationArrowBaseCategoryList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getDestinationArrowBaseCategoryList(self):
     """
       Returns all categories which are used to define the destination
@@ -126,8 +124,7 @@ class TradeModelPath(Path):
     return self.getPortalObject().getPortalDestinationArrowBaseCategoryList()
 
   # XXX-JPS UNkonwn ?
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getArrowCategoryDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getArrowCategoryDict(self, context=None, **kw):  # XXX-JPS do we need it in API ?
     # This method returns the dict like
     # {base_category_id:[category value url list], ...}
@@ -202,8 +199,7 @@ class TradeModelPath(Path):
       return method(context)
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                            'getExpectedQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getExpectedQuantity(self, amount):
     """Returns the new quantity for the provided amount taking
     into account the efficiency or the quantity defined on the business path.

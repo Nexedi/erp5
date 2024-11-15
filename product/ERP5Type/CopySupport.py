@@ -57,7 +57,7 @@ class CopyContainer:
   security = ClassSecurityInfo()
 
   # Copy / Paste support
-  security.declareProtected( Permissions.AccessContentsInformation, 'manage_copyObjects' )
+  @security.protected(Permissions.AccessContentsInformation)
   def manage_copyObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
       """
         Put a reference to the objects named in ids in the clip board
@@ -147,7 +147,7 @@ class CopyContainer:
       for sub_obj in obj.objectValues():
         self._recursiveSetActivityAfterTag(sub_obj, activate_kw)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
+  @security.protected(Permissions.ModifyPortalContent)
   def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
       """manage renaming an object while keeping coherency for contained
       and linked to objects inside the renamed object
@@ -173,7 +173,7 @@ class CopyContainer:
       # Rename the object
       return OriginalCopyContainer.manage_renameObject(self, id=id, new_id=new_id, REQUEST=REQUEST)
 
-  security.declareProtected( Permissions.DeletePortalContent, 'manage_cutObjects' )
+  @security.protected(Permissions.DeletePortalContent)
   def manage_cutObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
       """ manage cutting objects, ie objects will be copied ans deleted
 
@@ -206,7 +206,7 @@ class CopyContainer:
       return cp
 
 
-  security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
+  @security.protected(Permissions.DeletePortalContent)
   def manage_delObjects(self, ids=None, uids=None, REQUEST=None):
       """Delete a subordinate object
 
@@ -232,7 +232,7 @@ class CopyContainer:
               return self.manage_main(self, REQUEST, update_menu=1)
 
   # Copy and paste support
-  security.declarePrivate('manage_afterClone')
+  @security.private
   def manage_afterClone(self, item):
     """
         Add self to the workflow.
@@ -316,7 +316,7 @@ class CopyContainer:
       script()
 
 
-  security.declarePrivate('manage_afterAdd')
+  @security.private
   def manage_afterAdd(self, item, container):
       """
           Add self to the catalog.
@@ -329,7 +329,7 @@ class CopyContainer:
           if getattr(self, 'isIndexable', 1):
             self.__recurse('manage_afterAdd', item, container)
 
-  security.declarePrivate('manage_beforeDelete')
+  @security.private
   def manage_beforeDelete(self, item, container):
       """
           Remove self from the catalog.
@@ -353,7 +353,7 @@ class CopyContainer:
                 getattr(ob, name)(*args)
               if s is None: ob._p_deactivate()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'unindexObject')
+  @security.protected(Permissions.ModifyPortalContent)
   def unindexObject(self):
       """
           Unindex the object from the portal catalog.

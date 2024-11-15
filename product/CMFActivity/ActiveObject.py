@@ -56,7 +56,7 @@ class ActiveObject(ExtensionClass.Base):
 
   security = ClassSecurityInfo()
 
-  security.declarePublic('activate')
+  @security.public
   def activate(self, activity=DEFAULT_ACTIVITY, active_process=None,
                activate_kw=None, REQUEST=None, **kw):
     """Returns an active wrapper for this object.
@@ -132,7 +132,7 @@ class ActiveObject(ExtensionClass.Base):
     return activity_tool.activateObject(
       self, activity, active_process, **new_kw)
 
-  security.declareProtected( permissions.ModifyPortalContent, 'flushActivity' )
+  @security.protected(permissions.ModifyPortalContent)
   def flushActivity(self, invoke=0, **kw):
     try:
       activity_tool = self.getPortalObject().portal_activities
@@ -141,8 +141,7 @@ class ActiveObject(ExtensionClass.Base):
     # flush all activities related to this object
     activity_tool.flush(self, invoke=invoke, **kw)
 
-  security.declareProtected( permissions.ModifyPortalContent,
-                             'recursiveFlushActivity' )
+  @security.protected(permissions.ModifyPortalContent)
   def recursiveFlushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
     self.flushActivity(invoke=invoke, **kw)
@@ -151,7 +150,7 @@ class ActiveObject(ExtensionClass.Base):
         if getattr(aq_base(o), 'recursiveFlushActivity', None) is not None:
           o.recursiveFlushActivity(invoke=invoke, **kw)
 
-  security.declareProtected( permissions.View, 'hasActivity' )
+  @security.protected(permissions.View)
   def hasActivity(self, **kw):
     """Tells if there is pending activities for this object.
     """
@@ -161,7 +160,7 @@ class ActiveObject(ExtensionClass.Base):
       return 0 # Do nothing if no portal_activities
     return activity_tool.hasActivity(self, **kw)
 
-  security.declareProtected( permissions.View, 'hasErrorActivity' )
+  @security.protected(permissions.View)
   def hasErrorActivity(self, **kw):
     """Tells if there is failed activities for this object.
     """

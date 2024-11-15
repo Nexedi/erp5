@@ -63,14 +63,14 @@ class CertificateLoginMixin:
     else:
       raise ValueError("No certificate found to revoke!")
 
-  security.declarePublic('getCertificate')
+  @security.public
   def getCertificate(self):
     """Returns new SSL certificate"""
     if self.getDestinationReference() is not None:
       raise ValueError("Certificate was already issued, please revoke first.")
     return self._getCertificate()
 
-  security.declarePublic('revokeCertificate')
+  @security.public
   def revokeCertificate(self):
     """Revokes existing certificate"""
     self._revokeCertificate()

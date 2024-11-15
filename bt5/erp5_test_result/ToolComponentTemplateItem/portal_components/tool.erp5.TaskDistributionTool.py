@@ -49,7 +49,7 @@ class TaskDistributionTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declarePublic('getProtocolRevision')
+  @security.public
   def getProtocolRevision(self):
     """
     """
@@ -75,7 +75,7 @@ class TaskDistributionTool(BaseTool):
       node = node_list[0]
     return node
 
-  security.declarePublic('createTestResult')
+  @security.public
   def createTestResult(self, name, revision, test_name_list, allow_restart,
                        test_title=None, node_title=None, project_title=None):
     """(temporary)
@@ -218,7 +218,7 @@ class TaskDistributionTool(BaseTool):
     createNode(test_result, node_title)
     return test_result.getRelativeUrl(), revision
 
-  security.declarePublic('startUnitTest')
+  @security.public
   def startUnitTest(self, test_result_path, exclude_list=(), node_title=None):
     """(temporary)
       - test_result_path (string)
@@ -244,7 +244,7 @@ class TaskDistributionTool(BaseTool):
           line.start()
           return test
 
-  security.declarePublic('stopUnitTest')
+  @security.public
   def stopUnitTest(self, test_path, status_dict, node_title=None):
     """(temporary)
       - test_path (string)
@@ -269,7 +269,7 @@ class TaskDistributionTool(BaseTool):
     return {x: y.data if isinstance(y, Binary) else y
        for x, y in six.iteritems(xmlrpc_dict)}
 
-  security.declarePublic('reportTaskFailure')
+  @security.public
   def reportTaskFailure(self, test_result_path, status_dict, node_title):
     """report failure when a node can not handle task
     """
@@ -312,7 +312,7 @@ class TaskDistributionTool(BaseTool):
         if test_result.getSimulationState() not in ('failed', 'cancelled'):
           test_result.fail()
 
-  security.declarePublic('reportTaskStatus')
+  @security.public
   def reportTaskStatus(self, test_result_path, status_dict, node_title):
     """report status of node
     """
@@ -326,7 +326,7 @@ class TaskDistributionTool(BaseTool):
     node._edit(cmdline=status_dict['command'],
               stdout=status_dict['stdout'], stderr=status_dict['stderr'])
 
-  security.declarePublic('isTaskAlive')
+  @security.public
   def isTaskAlive(self, test_result_path):
     """check status of a test suite
     """
@@ -335,7 +335,7 @@ class TaskDistributionTool(BaseTool):
     test_result = portal.restrictedTraverse(test_result_path)
     return test_result.getSimulationState() == "started" and 1 or 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
+  @security.protected(Permissions.AccessContentsInformation)
   def getMemcachedDict(self):
     """ Return a dictionary used for non persistent data related to distribution
     """

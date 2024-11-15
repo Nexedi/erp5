@@ -40,8 +40,7 @@ class TextConvertableMixin:
   # Declarative security
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asText(self, **kw):
     """
     Converts the current document to plain text
@@ -50,8 +49,7 @@ class TextConvertableMixin:
     _, data = self.convert(**kw)
     return data
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asRawText')
+  @security.protected(Permissions.AccessContentsInformation)
   def asRawText(self, **kw):
     """
     Converts the current document to plain text without substitution
@@ -59,8 +57,7 @@ class TextConvertableMixin:
     kw['substitute'] = False
     return self.asText(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asTextContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def asTextContent(self, **kw):
     """
     Converts the current document to plain text

@@ -56,7 +56,7 @@ class FIFODeliverySolver(XMLObject):
                     )
 
   # IDeliverySolver Implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTotalQuantity(self):
     """
       Move this to mixin
@@ -66,7 +66,7 @@ class FIFODeliverySolver(XMLObject):
       total_quantity += movement.getQuantity()
     return total_quantity
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setTotalQuantity')
+  @security.protected(Permissions.ModifyPortalContent)
   def setTotalQuantity(self, new_quantity, activate_kw=None):
     """
     Affect the difference of quantity to different simulation movements

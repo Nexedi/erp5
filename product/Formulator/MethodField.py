@@ -33,7 +33,7 @@ class Method(Persistent, Acquisition.Implicit):
     def __init__(self, method_name):
         self.method_name = method_name
 
-    security.declarePublic('getMethodName')
+    @security.public
     def getMethodName(self):
       return self.method_name
 

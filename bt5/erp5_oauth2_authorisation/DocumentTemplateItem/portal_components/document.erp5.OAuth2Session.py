@@ -49,7 +49,7 @@ class OAuth2Session(XMLObject):
     """
     raise RuntimeError('This is a computed property')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'refreshAccessToken')
+  @security.protected(Permissions.ModifyPortalContent)
   def refreshAccessToken(self):
     """
     Force the expiration of any Access Token related to this session.

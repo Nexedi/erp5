@@ -59,8 +59,7 @@ class ContainerCell(DeliveryCell):
                     , PropertySheet.ItemAggregation
                     )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
+  @security.protected(Permissions.AccessContentsInformation)
   def isAccountable(self):
     """
     Returns 1 if this needs to be accounted
@@ -70,7 +69,7 @@ class ContainerCell(DeliveryCell):
     # Never accountable
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  @security.protected(Permissions.AccessContentsInformation)
   def isDivergent(self):
     """Return True if this movement diverges from the its simulation.
     Container Cells are never divergent.

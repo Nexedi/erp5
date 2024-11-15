@@ -661,7 +661,7 @@ class Catalog(Folder,
       pass
     super(Catalog, self).manage_afterClone(item)
 
-  security.declarePrivate('getCacheSequenceNumber')
+  @security.private
   def getCacheSequenceNumber(self):
     return self._cache_sequence_number
 
@@ -671,7 +671,7 @@ class Catalog(Folder,
   def _getFilterDict(self):
     return self.filter_dict
 
-  security.declarePrivate('getSQLCatalogRoleKeysList')
+  @security.private
   def getSQLCatalogRoleKeysList(self):
     """
     Return the list of role keys.
@@ -682,7 +682,7 @@ class Catalog(Folder,
       role_key_dict[role.strip()] = column.strip()
     return ensure_list(role_key_dict.items())
 
-  security.declareProtected(permissions.ManagePortal, 'getSQLCatalogSecurityUidGroupsColumnsDict')
+  @security.protected(permissions.ManagePortal)
   def getSQLCatalogSecurityUidGroupsColumnsDict(self):
     """
     Return a mapping of local_roles_group_id name to the name of the column
@@ -695,7 +695,7 @@ class Catalog(Folder,
       local_roles_group_id_dict[local_roles_group_id.strip()] = column.strip()
     return local_roles_group_id_dict
 
-  security.declarePrivate('getSQLCatalogLocalRoleKeysList')
+  @security.private
   def getSQLCatalogLocalRoleKeysList(self):
     """
     Return the list of local role keys.
@@ -706,7 +706,7 @@ class Catalog(Folder,
       local_role_key_dict[role.strip()] = column.strip()
     return ensure_list(local_role_key_dict.items())
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_historyCompare')
+  @security.protected(manage_zcatalog_entries)
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
     return Catalog.inheritedAttribute('manage_historyCompare')(
@@ -723,7 +723,7 @@ class Catalog(Folder,
     self.subject_set_uid_dict = OIBTree()
     self.subject_set_uid_index = None
 
-  security.declarePrivate('getSecurityUidDict')
+  @security.private
   def getSecurityUidDict(self, wrapped_object):
     """
     returns a tuple with a dict of security uid by local group id, and a tuple
@@ -775,7 +775,7 @@ class Catalog(Folder,
 
     return (local_roles_group_id_to_security_uid_mapping, optimised_roles_and_users)
 
-  security.declarePrivate('getRoleAndSecurityUidList')
+  @security.private
   def getRoleAndSecurityUidList(self):
     """
       Return a list of 3-tuples, suitable for direct use in a zsqlmethod.
@@ -793,7 +793,7 @@ class Catalog(Folder,
                   for role in role_list]
     return result
 
-  security.declarePrivate('getSubjectSetUid')
+  @security.private
   def getSubjectSetUid(self, wrapped_object):
     """
     Cache a uid for each unique subject tuple.
@@ -882,7 +882,7 @@ class Catalog(Folder,
   def getSqlGetitemByUid(self):
     return self.sql_getitem_by_uid
 
-  security.declarePrivate('getRecordForUid')
+  @security.private
   def getRecordForUid(self, uid):
     """
     Get an object by UID
@@ -902,7 +902,7 @@ class Catalog(Folder,
       return result
     raise KeyError(uid)
 
-  security.declarePrivate('editSchema')
+  @security.private
   def editSchema(self, names_list):
     """
     Builds a schema from a list of strings
@@ -925,7 +925,7 @@ class Catalog(Folder,
   def getSqlSearchTablesList(self):
     return list(self.sql_search_tables)
 
-  security.declarePrivate('getCatalogSearchTableIds')
+  @security.private
   def getCatalogSearchTableIds(self):
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
@@ -940,7 +940,7 @@ class Catalog(Folder,
   def getSqlSearchResultKeysList(self):
     return self.sql_search_result_keys
 
-  security.declarePublic('getCatalogSearchResultKeys')
+  @security.public
   def getCatalogSearchResultKeys(self):
     """Return search result keys.
     """
@@ -984,7 +984,7 @@ class Catalog(Folder,
       result.setdefault(row.TABLE_NAME, []).append(row.COLUMN_NAME)
     return result
 
-  security.declarePrivate('getTableColumnList')
+  @security.private
   def getTableColumnList(self, table):
     """
     Returns the list of columns in given table.
@@ -992,7 +992,7 @@ class Catalog(Folder,
     """
     return ensure_list(self._getCatalogSchema()[table])
 
-  security.declarePublic('getColumnIds')
+  @security.public
   @transactional_cache_decorator
   def getColumnIds(self):
     """
@@ -1014,7 +1014,7 @@ class Catalog(Folder,
       add_key(scriptable_tuple[0].strip())
     return sorted(keys)
 
-  security.declarePrivate('getColumnMap')
+  @security.private
   @transactional_cache_decorator
   def getColumnMap(self):
     """
@@ -1029,7 +1029,7 @@ class Catalog(Folder,
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
 
-  security.declarePublic('getResultColumnIds')
+  @security.public
   @transactional_cache_decorator
   def getResultColumnIds(self):
     """
@@ -1043,7 +1043,7 @@ class Catalog(Folder,
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
-  security.declarePublic('getSortColumnIds')
+  @security.public
   @transactional_cache_decorator
   def getSortColumnIds(self):
     """
@@ -1057,7 +1057,7 @@ class Catalog(Folder,
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
-  security.declarePublic('getTableIds')
+  @security.public
   def getTableIds(self):
     """
     Calls the show table method and returns dictionnary of
@@ -1065,7 +1065,7 @@ class Catalog(Folder,
     """
     return list(self._getCatalogSchema())
 
-  security.declarePrivate('getUIDBuffer')
+  @security.private
   def getUIDBuffer(self, force_new_buffer=False):
     assert global_reserved_uid_lock.locked()
     assert getattr(self, 'aq_base', None) is not None
@@ -1079,7 +1079,7 @@ class Catalog(Folder,
     return uid_buffer_dict[thread_key]
 
   # the cataloging API
-  security.declarePrivate('isIndexable')
+  @security.private
   def isIndexable(self):
     """
     This is required to check in many methods that
@@ -1094,7 +1094,7 @@ class Catalog(Folder,
       return False
     return True
 
-  security.declarePrivate('getSiteRoot')
+  @security.private
   def getSiteRoot(self):
     """
     Returns the root of the site
@@ -1105,7 +1105,7 @@ class Catalog(Folder,
       site_root = self.aq_parent
     return site_root
 
-  security.declarePrivate('getZopeRoot')
+  @security.private
   def getZopeRoot(self):
     """
     Returns the root of the zope
@@ -1116,7 +1116,7 @@ class Catalog(Folder,
       zope_root = self.getPhysicalRoot()
     return zope_root
 
-  security.declarePrivate('newUid')
+  @security.private
   def newUid(self):
     """
       This is where uid generation takes place. We should consider a multi-threaded environment
@@ -1162,7 +1162,7 @@ class Catalog(Folder,
         except IndexError:
           raise CatalogError("Could not retrieve new uid")
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_catalogObject')
+  @security.protected(manage_zcatalog_entries)
   def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
     """ index Zope object(s) that 'urls' point to """
     if urls:
@@ -1178,7 +1178,7 @@ class Catalog(Folder,
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Cataloged')
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_uncatalogObject')
+  @security.protected(manage_zcatalog_entries)
   def manage_uncatalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
     """ removes Zope object(s) 'urls' from catalog """
 
@@ -1191,7 +1191,7 @@ class Catalog(Folder,
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Uncataloged')
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_catalogClear')
+  @security.protected(manage_zcatalog_entries)
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None,
                           URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
@@ -1205,7 +1205,7 @@ class Catalog(Folder,
       )
 
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_catalogFoundItems')
+  @security.protected(manage_zcatalog_entries)
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,
                  obj_metatypes=None,
                  obj_ids=None, obj_searchterm=None,
@@ -1242,7 +1242,7 @@ class Catalog(Folder,
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
               urllib.parse.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (repr(elapse), repr(c_elapse))))
 
-  security.declarePrivate('catalogObject')
+  @security.private
   def catalogObject(self, object, path, is_object_moved=0):
     """Add an object to the Catalog by calling all SQL methods and
     providing needed arguments.
@@ -1250,7 +1250,7 @@ class Catalog(Folder,
     'object' is the object to be catalogged."""
     self._catalogObjectList([object])
 
-  security.declarePrivate('catalogObjectList')
+  @security.private
   def catalogObjectList(self, object_list, method_id_list=None,
                         disable_cache=0, check_uid=1, idxs=None):
     """Add objects to the Catalog by calling all SQL methods and
@@ -1470,7 +1470,7 @@ class Catalog(Folder,
   def getSqlCatalogDeleteUid(self):
      return self.sql_catalog_delete_uid
 
-  security.declarePrivate('beforeUncatalogObject')
+  @security.private
   def beforeUncatalogObject(self, path=None,uid=None):
     """
     Set the path as deleted
@@ -1496,7 +1496,7 @@ class Catalog(Folder,
   def getSqlUncatalogObjectList(self):
     return self.sql_uncatalog_object
 
-  security.declarePrivate('uncatalogObject')
+  @security.private
   def uncatalogObject(self, path=None, uid=None):
     """
     Uncatalog and object from the Catalog.
@@ -1527,7 +1527,7 @@ class Catalog(Folder,
   def getSqlCatalogTranslationList(self):
     return self.sql_catalog_translation_list
 
-  security.declarePrivate('catalogTranslationList')
+  @security.private
   def catalogTranslationList(self, object_list):
     """Catalog translations.
     """
@@ -1538,7 +1538,7 @@ class Catalog(Folder,
   def getSqlDeleteTranslationList(self):
     return self.sql_delete_translation_list
 
-  security.declarePrivate('deleteTranslationList')
+  @security.private
   def deleteTranslationList(self):
     """Delete translations.
     """
@@ -1554,7 +1554,7 @@ class Catalog(Folder,
   def getSqlUniqueValues(self):
     return self.sql_unique_values
 
-  security.declarePrivate('uniqueValuesFor')
+  @security.private
   def uniqueValuesFor(self, name):
     """ return unique values for FieldIndex name """
     method = self._getOb(self.getSqlUniqueValues())
@@ -1563,7 +1563,7 @@ class Catalog(Folder,
   def getSqlCatalogPaths(self):
     return self.sql_catalog_paths
 
-  security.declarePrivate('getPaths')
+  @security.private
   def getPaths(self):
     """ Returns all object paths stored inside catalog """
     method = self._getOb(self.getSqlCatalogPaths())
@@ -1572,12 +1572,12 @@ class Catalog(Folder,
   def getSqlGetitemByPath(self):
     return self.sql_getitem_by_path
 
-  security.declarePrivate('getUidForPath')
+  @security.private
   def getUidForPath(self, path):
     """ Looks up into catalog table to convert path into uid """
     return self.getUidDictForPathList([path]).get(path)
 
-  security.declarePrivate('getUidDictForPathList')
+  @security.private
   def getUidDictForPathList(self, path_list):
     """ Looks up into catalog table to convert path into uid """
     return {
@@ -1591,7 +1591,7 @@ class Catalog(Folder,
       )
     }
 
-  security.declarePrivate('getPathDictForUidList')
+  @security.private
   def getPathDictForUidList(self, uid_list):
     """ Looks up into catalog table to convert uid into path """
     return {
@@ -1605,17 +1605,17 @@ class Catalog(Folder,
       )
     }
 
-  security.declarePrivate('hasPath')
+  @security.private
   def hasPath(self, path):
     """ Checks if path is catalogued """
     return self.getUidForPath(path) is not None
 
-  security.declarePrivate('getPathForUid')
+  @security.private
   def getPathForUid(self, uid):
     """ Looks up into catalog table to convert uid into path """
     return self.getPathDictForUidList([uid]).get(uid)
 
-  security.declarePrivate('getMetadataForUid')
+  @security.private
   def getMetadataForUid(self, uid):
     """ Accesses a single record for a given uid """
     result = {}
@@ -1625,12 +1625,12 @@ class Catalog(Folder,
       result['uid'] = uid
     return result
 
-  security.declarePrivate('getIndexDataForUid')
+  @security.private
   def getIndexDataForUid(self, uid):
     """ Accesses a single record for a given uid """
     return self.getMetadataForUid(uid)
 
-  security.declarePrivate('getMetadataForPath')
+  @security.private
   def getMetadataForPath(self, path):
     """ Accesses a single record for a given path """
     result = {}
@@ -1640,12 +1640,12 @@ class Catalog(Folder,
       result['uid'] = uid
     return result
 
-  security.declarePrivate('getIndexDataForPath')
+  @security.private
   def getIndexDataForPath(self, path):
     """ Accesses a single record for a given path """
     return self.getMetadataForPath(path)
 
-  security.declarePrivate('getCatalogMethodIds')
+  @security.private
   def getCatalogMethodIds(self,
                           valid_method_meta_type_list=('Z SQL Method',
                                                        'LDIF Method',
@@ -1675,7 +1675,7 @@ class Catalog(Folder,
     ids.sort()
     return ids
 
-  security.declarePublic('getPythonMethodIds')
+  @security.public
   def getPythonMethodIds(self):
     """
       Returns a list of all python scripts available in
@@ -1702,7 +1702,7 @@ class Catalog(Folder,
       column_set.add(related_key_id)
     return column_set
 
-  security.declarePrivate('getSQLCatalogRelatedKeyList')
+  @security.private
   def getSQLCatalogRelatedKeyList(self, key_list=None):
     """
     Return the list of related keys.
@@ -1721,7 +1721,7 @@ class Catalog(Folder,
   security.declarePrivate('getSqlCatalogRelatedKeyList')
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
 
-  security.declarePrivate('getSQLCatalogScriptableKeyList')
+  @security.private
   def getSQLCatalogScriptableKeyList(self):
     """
     Return the list of scriptable keys.
@@ -1742,14 +1742,14 @@ class Catalog(Folder,
         table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
     return table_index
 
-  security.declarePrivate('getTableIndex')
+  @security.private
   def getTableIndex(self, table):
     """
     Return a map between index and column for a given table
     """
     return self._getTableIndex(table).copy()
 
-  security.declareProtected(access_contents_information, 'isValidColumn')
+  @security.protected(access_contents_information)
   def isValidColumn(self, column_id):
     """
       Tells wether given name is or not an existing column.
@@ -1764,7 +1764,7 @@ class Catalog(Folder,
         result = self.getRelatedKeyDefinition(column_id) is not None
     return result
 
-  security.declarePrivate('getRelatedKeyDefinition')
+  @security.private
   def getRelatedKeyDefinition(self, key):
     """
       Returns the definition of given related key name if found, None
@@ -1816,11 +1816,11 @@ class Catalog(Folder,
         result[key] = script
     return result
 
-  security.declarePrivate('getScriptableKeyScript')
+  @security.private
   def getScriptableKeyScript(self, key):
     return self._getgetScriptableKeyDict().get(key)
 
-  security.declarePrivate('getColumnSearchKey')
+  @security.private
   def getColumnSearchKey(self, key, search_key_name=None):
     """
       Return a SearchKey instance for given key, using search_key_name
@@ -1862,11 +1862,11 @@ class Catalog(Folder,
       related_key_definition = None
     return search_key, related_key_definition
 
-  security.declarePrivate('hasColumn')
+  @security.private
   def hasColumn(self, column):
     return self.getColumnSearchKey(column)[0] is not None
 
-  security.declarePrivate('getColumnDefaultSearchKey')
+  @security.private
   def getColumnDefaultSearchKey(self, key, search_key_name=None):
     """
       Return a SearchKey instance which would ultimately receive the value
@@ -1883,7 +1883,7 @@ class Catalog(Folder,
           search_key_name=search_key_name)
     return search_key
 
-  security.declareProtected(access_contents_information, 'buildSingleQuery')
+  @security.protected(access_contents_information)
   def buildSingleQuery(
     self,
     key,
@@ -1965,7 +1965,7 @@ class Catalog(Folder,
         result = None
     return result
 
-  security.declareProtected(access_contents_information, 'buildQueryFromAbstractSyntaxTreeNode')
+  @security.protected(access_contents_information)
   def buildQueryFromAbstractSyntaxTreeNode(self, node, key,
                                            search_key_name=None,
                                            wrap=lambda x: x,
@@ -2026,7 +2026,7 @@ class Catalog(Folder,
       is_valid = self.isValidColumn
     return search_key.parseSearchText(search_text, is_valid)
 
-  security.declareProtected(access_contents_information, 'parseSearchText')
+  @security.protected(access_contents_information)
   def parseSearchText(self, search_text, column=None, search_key=None,
                       is_valid=None):
     if column is None and search_key is None:
@@ -2034,7 +2034,7 @@ class Catalog(Folder,
     return self._parseSearchText(self.getSearchKey(
       column, search_key=search_key), search_text, is_valid=is_valid)
 
-  security.declareProtected(access_contents_information, 'buildQuery')
+  @security.protected(access_contents_information)
   def buildQuery(self, kw, ignore_empty_string=True, operator='and', ignore_unknown_columns=False):
     query_list = []
     append = query_list.append
@@ -2139,7 +2139,7 @@ class Catalog(Folder,
         raise TypeError(message)
     return ComplexQuery(query_list, logical_operator=operator)
 
-  security.declarePrivate('buildOrderByList')
+  @security.private
   def buildOrderByList(self, sort_on=None, sort_order=None):
     """
       Internal method. Should not be used by code outside buildSQLQuery.
@@ -2179,7 +2179,7 @@ class Catalog(Folder,
         append(item)
     return order_by_list
 
-  security.declarePrivate('buildEntireQuery')
+  @security.private
   def buildEntireQuery(self, kw,
                        query_table='catalog',
                        query_table_alias=None,
@@ -2213,7 +2213,7 @@ class Catalog(Folder,
       extra_column_list=extra_column_list,
     )
 
-  security.declarePublic('buildSQLQuery')
+  @security.public
   def buildSQLQuery(self, query_table='catalog',
                           query_table_alias=None,
                           REQUEST=None,
@@ -2238,7 +2238,7 @@ class Catalog(Folder,
   security.declarePrivate('buildSqlQuery')
   buildSqlQuery = buildSQLQuery
 
-  security.declareProtected(access_contents_information, 'getCannonicalArgumentDict')
+  @security.protected(access_contents_information)
   def getCannonicalArgumentDict(self, kw):
     """
     Convert some catalog arguments to generic arguments.
@@ -2297,7 +2297,7 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, 'Wrong configuration for sql_catalog_search_keys: %r' % line)
     return result
 
-  security.declarePrivate('getSearchKey')
+  @security.private
   def getSearchKey(self, column, search_key=None):
     """
       Return an instance of a SearchKey class.
@@ -2313,7 +2313,7 @@ class Catalog(Folder,
       search_key = self._getSearchKeyDict().get(column, 'DefaultKey')
     return getSearchKeyInstance(search_key, column)
 
-  security.declarePrivate('getComparisonOperator')
+  @security.private
   def getComparisonOperator(self, operator):
     """
       Return an instance of an Operator class.
@@ -2325,7 +2325,7 @@ class Catalog(Folder,
     return getComparisonOperatorInstance(operator)
 
 
-  security.declarePrivate('queryResults')
+  @security.private
   def queryResults(
         self,
         sql_method,
@@ -2363,11 +2363,11 @@ class Catalog(Folder,
   def getSqlSearchResults(self):
     return self.sql_search_results
 
-  security.declarePrivate('getSearchResultsMethod')
+  @security.private
   def getSearchResultsMethod(self):
     return self._getOb(self.getSqlSearchResults())
 
-  security.declarePrivate('searchResults')
+  @security.private
   def searchResults(self, REQUEST=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     if 'only_group_columns' in kw:
@@ -2387,11 +2387,11 @@ class Catalog(Folder,
   def getSqlCountResults(self):
     return self.sql_count_results
 
-  security.declarePrivate('getCountResultsMethod')
+  @security.private
   def getCountResultsMethod(self):
     return self._getOb(self.getSqlCountResults())
 
-  security.declarePrivate('countResults')
+  @security.private
   def countResults(self, REQUEST=None, **kw):
     """ Returns the number of items which satisfy the conditions """
     return self.queryResults(
@@ -2402,14 +2402,14 @@ class Catalog(Folder,
       **kw
     )
 
-  security.declarePrivate('isAdvancedSearchText')
+  @security.private
   def isAdvancedSearchText(self, search_text):
     return isAdvancedSearchText(search_text, self.isValidColumn)
 
   def getSqlRecordObjectList(self):
     return self.sql_record_object_list
 
-  security.declarePrivate('recordObjectList')
+  @security.private
   def recordObjectList(self, path_list, catalog=1):
     """
       Record the path of an object being catalogged or uncatalogged.
@@ -2420,7 +2420,7 @@ class Catalog(Folder,
   def getSqlDeleteRecordedObjectList(self):
     return self.sql_delete_recorded_object_list
 
-  security.declarePrivate('deleteRecordedObjectList')
+  @security.private
   def deleteRecordedObjectList(self, uid_list=()):
     """
       Delete all objects which contain any path.
@@ -2431,7 +2431,7 @@ class Catalog(Folder,
   def getSqlReadRecordedObjectList(self):
     return self.sql_read_recorded_object_list
 
-  security.declarePrivate('readRecordedObjectList')
+  @security.private
   def readRecordedObjectList(self, catalog=1):
     """
       Read objects. Note that this might not return all objects since ZMySQLDA limits the max rows.
@@ -2439,7 +2439,7 @@ class Catalog(Folder,
     method = self._getOb(self.getSqlReadRecordedObjectList())
     return method(catalog=catalog)
 
-  security.declarePublic('getConnectionId')
+  @security.public
   def getConnectionId(self, deferred=False):
     """
     Returns the 'normal' connection being used by the SQL Method(s) in this
@@ -2474,7 +2474,7 @@ class Catalog(Folder,
     except AttributeError:
       return ()
 
-  security.declarePrivate('getFilterableMethodList')
+  @security.private
   def getFilterableMethodList(self):
     """
     Returns only zsql methods wich catalog or uncatalog objets
@@ -2496,7 +2496,7 @@ class Catalog(Folder,
       if method is not None
     ]
 
-  security.declarePrivate('getExpressionContext')
+  @security.private
   def getExpressionContext(self, ob):
       '''
       An expression context provides names for TALES expressions.
@@ -2543,7 +2543,7 @@ class Catalog(Folder,
     )
     return ''
 
-  security.declarePublic('getOptimizerSwitchKeyList')
+  @security.public
   @transactional_cache_decorator
   def getOptimizerSwitchKeyList(self):
     return [
@@ -2633,7 +2633,7 @@ class AdvancedSearchKeyWrapperForScriptableKey(SearchKey.DefaultKey.DefaultKey):
     self.script = script
     super(AdvancedSearchKeyWrapperForScriptableKey, self).__init__(column)
 
-  security.declarePublic('processSearchValue')
+  @security.public
   def processSearchValue(
     self,
     default_comparison_operator='=',

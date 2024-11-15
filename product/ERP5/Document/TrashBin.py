@@ -34,7 +34,7 @@ class TrashBin(Folder):
     portal_type = 'Trash Bin'
     security = ClassSecurityInfo()
 
-    security.declarePublic('isSubtreeIndexable')
+    @security.public
     def isSubtreeIndexable(self):
       """
       Nothing is indexable inside a trash bin.

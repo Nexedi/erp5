@@ -82,8 +82,7 @@ class PackingList(Delivery):
 
   #######################################################
   # Container computation
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isPacked')
+  @security.protected(Permissions.AccessContentsInformation)
   def isPacked(self):
     """
         Returns true if all quantities for all variations of resources are in

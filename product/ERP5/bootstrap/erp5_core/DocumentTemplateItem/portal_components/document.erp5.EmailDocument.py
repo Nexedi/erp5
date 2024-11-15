@@ -71,7 +71,7 @@ class EmailDocumentProxyMixin(DocumentProxyMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasFile')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasFile(self):
     """
     hasFile is used in many parts of EmailDocument in order to know
@@ -87,7 +87,7 @@ class EmailDocumentProxyMixin(DocumentProxyMixin):
       pass
     return has_file
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTextContent(self, default=_MARKER):
     result = None
     try:
@@ -189,15 +189,14 @@ class EmailDocument(TextDocument, MailMessageMixin):
     except AttributeError:
       pass
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSupportBaseDataConversion')
+  @security.protected(Permissions.AccessContentsInformation)
   def isSupportBaseDataConversion(self):
     """
     """
     return False
 
   # Overriden methods
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTitle(self, default=_MARKER):
     """
     Returns the title from the mail subject
@@ -214,7 +213,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
     subject = subject.replace('\n', '')
     return subject
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
+  @security.protected(Permissions.AccessContentsInformation)
   def getStartDate(self, default=_MARKER):
     """
     Returns the date from the mail date
@@ -234,7 +233,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
           return DateTime(time)
     return self.getCreationDate()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
+  @security.protected(Permissions.AccessContentsInformation)
   def getTextContent(self, default=_MARKER):
     """
     Returns the content of the email as text. This is useful
@@ -268,7 +267,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
       return text_result
     return text_result or default
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentType(self, default=_MARKER):
     """
     Returns the format of the email (text or html).
@@ -289,7 +288,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
         return part.get_content_type()
 
   email_parser = re.compile(r'[ ;,<>\'"]*([^<> ;,\'"]+?\@[^<> ;,\'"]+)[ ;,<>\'"]*', re.IGNORECASE)
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
+  @security.protected(Permissions.AccessContentsInformation)
   def getContentURLList(self):
     """
       Overriden to include emails as URLs
@@ -315,7 +314,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   convert = TextDocument.convert
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @security.protected(Permissions.AccessContentsInformation)
   def hasBaseData(self):
     """
       Since there is no need to convert to a base format, we consider that
@@ -325,7 +324,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
     return self.hasFile() or self.hasTextContent()
 
   # Methods which can be useful to prepare a reply by email to an event
-  security.declareProtected(Permissions.AccessContentsInformation, 'getReplyBody')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReplyBody(self, content_type=None):
     """This is used in order to respond to a mail, this put a '> ' before each
     line of the body.
@@ -344,7 +343,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
 </blockquote><p>&nbsp;</p>''' % self.asStrippedHTML()
     return ''
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getReplySubject')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReplySubject(self):
     """
       This is used in order to respond to a mail,
@@ -357,7 +356,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
       reply_subject = 'Re: ' + reply_subject
     return reply_subject
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getReplyTo')
+  @security.protected(Permissions.AccessContentsInformation)
   def getReplyTo(self):
     """
       Returns the send of this message based on getContentInformation
@@ -365,7 +364,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
     content_information = self.getContentInformation()
     return content_information.get('Return-Path', content_information.get('From'))
 
-  security.declareProtected(Permissions.UseMailhostServices, 'sendMailHostMessage')
+  @security.protected(Permissions.UseMailhostServices)
   @non_publishable
   def sendMailHostMessage(self, message):
     """

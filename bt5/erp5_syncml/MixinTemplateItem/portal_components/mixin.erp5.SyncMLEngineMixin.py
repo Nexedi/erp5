@@ -48,7 +48,7 @@ class SyncMLEngineMixin(object):
   security = ClassSecurityInfo()
 
 
-  security.declarePrivate('_readStatusList')
+  @security.private
   def _readStatusList(self, syncml_request, domain, syncml_response=None,
                       generate_alert=False):
     """
