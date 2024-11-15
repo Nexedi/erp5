@@ -5576,7 +5576,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 self,
                 getattr(new_bt, item_name))
 
-    def _uninstall(self, **kw):
+    @security.protected(Permissions.ManagePortal)
+    def uninstall(self, **kw):
       """
         For uninstall based on paramaters provided in **kw
       """
@@ -5590,8 +5591,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # template deletes many things from the portal.
       self.getPortalObject().portal_caches.clearAllCache()
 
-    security.declareProtected(Permissions.ManagePortal, 'uninstall')
-    uninstall = _uninstall
+    _uninstall = uninstall
 
     def _clean(self):
       """
