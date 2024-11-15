@@ -189,11 +189,9 @@ class CompositionMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asComposedDocument')
-  asComposedDocument = transactional_cached(
+  asComposedDocument = security.protected(Permissions.AccessContentsInformation)(transactional_cached(
     lambda self, portal_type_list=None: (self, portal_type_list)
-    )(asComposedDocument)  # pylint:disable=used-before-assignment
+    )(asComposedDocument))  # pylint:disable=used-before-assignment
 
   # XXX add accessors to get properties from '_effective_model_list' ?
   #     (cf PaySheetModel)

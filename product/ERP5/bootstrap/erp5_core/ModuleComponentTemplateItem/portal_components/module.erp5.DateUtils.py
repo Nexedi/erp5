@@ -35,14 +35,6 @@ from datetime import datetime
 import six
 
 security = ModuleSecurityInfo(__name__)
-security.declarePublic('addToDate', 'getClosestDate',
-    'getIntervalBetweenDates', 'getMonthAndDaysBetween',
-    'getCompletedMonthBetween', 'getRoundedMonthBetween',
-    'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
-    'getBissextilCompliantYearFraction', 'getIntervalListBetweenDates',
-    'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
-    'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth', 'atTheEndOfPeriod',
-    'copyDate')
 
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
@@ -58,6 +50,7 @@ accountable_days_in_month = 30.
 accountable_months_in_year = 12.
 number_of_hours_in_year  = 8760
 
+@security.public
 def addToDate(date, to_add=None, **kw):
   """
   Return a new DateTime object with the corresponding added values.
@@ -147,6 +140,7 @@ def addToDate(date, to_add=None, **kw):
   return_date += day_to_add
   return return_date
 
+@security.public
 def getClosestDate(date=None, target_date=None,
                    precision='month', before=1, strict=1):
   """
@@ -186,9 +180,12 @@ def getClosestDate(date=None, target_date=None,
 
   return return_date
 
-# pylint: disable=dangerous-default-value
-def getIntervalBetweenDates(from_date=None, to_date=None,
-                            keys={'year':1, 'month':1, 'day':1}):
+@security.public
+def getIntervalBetweenDates(
+    from_date=None,
+    to_date=None,
+    keys={'year':1, 'month':1, 'day':1}  # pylint: disable=dangerous-default-value
+  ):
   """
   Return the number of entire years, months and days (if each is equal to 1 in keys)
   between the both given dates.
@@ -283,6 +280,7 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
       returned_value_dict[key] = value
   return returned_value_dict
 
+@security.public
 def getMonthAndDaysBetween(from_date=None, to_date=None):
   """
   Return the number of entire months and days between the both given dates.
@@ -290,6 +288,7 @@ def getMonthAndDaysBetween(from_date=None, to_date=None):
   return getIntervalBetweenDates(from_date=from_date, to_date=to_date, keys={'month':1, 'day':1} )
 
 
+@security.public
 def getCompletedMonthBetween(from_date=None, to_date=None,
                              reference_date=DateTime('2000/01/01')):
   """
@@ -310,6 +309,7 @@ def getCompletedMonthBetween(from_date=None, to_date=None,
   to_date = getClosestDate(target_date = to_date, date = reference_date, before = 0)
   return getIntervalBetweenDates(from_date = from_date, to_date = to_date, keys = {'month':1} )
 
+@security.public
 def getRoundedMonthBetween(from_date=None, to_date=None, rounded_day=False):
   """
   Return a rounded number of months between the both given dates.
@@ -330,6 +330,7 @@ def getRoundedMonthBetween(from_date=None, to_date=None, rounded_day=False):
     return_value += 1
   return return_value
 
+@security.public
 def getMonthFraction(date, days):
   """
   Return a ratio corresponding to the fraction of the month
@@ -344,6 +345,7 @@ def getMonthFraction(date, days):
   return days / number_of_days_in_month
 
 
+@security.public
 def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year):
   """
   Return a ratio corresponding to the fraction of the year
@@ -354,6 +356,7 @@ def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year)
   else:
     return days / days_in_year
 
+@security.public
 def getAccountableYearFraction(from_date=None, to_date=None):
   """
   Returns a year fraction according to accounting rules,
@@ -382,6 +385,7 @@ def getAccountableYearFraction(from_date=None, to_date=None):
   year_fraction += (1 / accountable_months_in_year) * ( days / accountable_days_in_month)
   return year_fraction
 
+@security.public
 def getBissextilCompliantYearFraction(from_date=None, to_date=None, reference_date=DateTime('2000/01/01')):
   """
   Returns a ratio corresponding to the fraction of the year
@@ -399,6 +403,7 @@ def getBissextilCompliantYearFraction(from_date=None, to_date=None, reference_da
   return_value = interval['year'] + getYearFraction(days=interval['day'], days_in_year=days_in_year)
   return return_value
 
+@security.public
 def getDecimalNumberOfYearsBetween(from_date, to_date, reference_date=DateTime('2000/01/01')):
   """
   Return a float representing the number of years between
@@ -419,6 +424,7 @@ def getDecimalNumberOfYearsBetween(from_date, to_date, reference_date=DateTime('
 
   return fraction
 
+@security.public
 def roundMonthToGreaterEntireYear(months_number):
   """
   Round the given number of months in order to have an entire
@@ -429,6 +435,7 @@ def roundMonthToGreaterEntireYear(months_number):
     years_number += 1
   return int(years_number) * 12
 
+@security.public
 def roundDate(date):
   """
   Returns a date at 0:00
@@ -437,6 +444,7 @@ def roundDate(date):
                 ' DateTime.earliestTime instead', DeprecationWarning)
   return date.earliestTime()
 
+@security.public
 def convertDateToHour(date=None):
   """
   converts the date passed as parameter into hours
@@ -461,6 +469,7 @@ def convertDateToHour(date=None):
   return int(hour_)
 
 
+@security.public
 def getNumberOfDayInMonth(date):
   month = date.month()
   mapping = {
@@ -483,6 +492,7 @@ def getNumberOfDayInMonth(date):
   else:
     return mapping[month]
 
+@security.public
 def atTheEndOfPeriod(date, period):
   """
   return the last time value for a given date
@@ -511,6 +521,7 @@ def atTheEndOfPeriod(date, period):
     raise NotImplementedError('Period "%s" not Handled yet' % period)
   return end
 
+@security.public
 def copyDate(date, year=None, month=None, day=None,
              hour=None, minute=None, second=None, timezone=None): # pylint: disable=redefined-outer-name
   if year is None:
