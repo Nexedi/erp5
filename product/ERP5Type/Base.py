@@ -773,7 +773,7 @@ class Base(
   # Declarative security - in ERP5 we use AccessContentsInformation to
   # define the right of accessing content properties as opposed
   # to view which is the right to view the object with a form
-  security = ClassSecurityInfo()
+  _security = security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
@@ -2148,6 +2148,7 @@ class Base(
   security.declareProtected( Permissions.View, 'getValueUids' )
   getValueUids = getValueUidList # DEPRECATED
 
+  security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' )
   def _setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1,
                                        checked_permission=None):
     # We must do an ordered list so we can not use the previous method
@@ -2157,17 +2158,18 @@ class Base(
     self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
                                    keep_default=keep_default, checked_permission=checked_permission)
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setValueUidList' )
   _setValueUids = _setValueUidList # DEPRECATED
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
   def setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1, checked_permission=None):
-    self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type,
+    self._setValueUidList(id, uids, spec=spec, filter=filter, portal_type=portal_type,
                                  keep_default=keep_default, checked_permission=checked_permission)
     self.reindexObject()
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
-  setValueUids = setValueUidList # DEPRECATED
+  security.declareProtected( Permissions.ModifyPortalContent, 'setValueUids' )
+  @deprecated
+  def setValueUids(self, *args, **kw):
+    return self.setValueUidList(*args, **kw)
 
   def _setDefaultValueUid(self, id, uid, spec=(), filter=None, portal_type=(),
                                          checked_permission=None):
@@ -2562,7 +2564,7 @@ class Base(
   # is View - however, security was not defined on
   # __call__ -  to be consistent, between view and
   # __call__ we have to define permission here to View
-  security.declareProtected(Permissions.View, '__call__')
+  _security.declareProtected(Permissions.View, '__call__')
   __call__ = view
 
   # This special value informs ZPublisher to use __call__. We define it here
@@ -3659,10 +3661,10 @@ class TempBase(TemporaryDocumentMixin, Base):
   preferable to use a temporary portal type instead.
   """
   # Declarative security
-  security = ClassSecurityInfo()
-  security.declarePublic('setProperty')
-  security.declarePublic('getProperty')
-  security.declarePublic('edit')
+  _security = ClassSecurityInfo()
+  _security.declarePublic('setProperty')
+  _security.declarePublic('getProperty')
+  _security.declarePublic('edit')
 
 # Persistence.Persistent is one of the superclasses of TempBase, and on Zope2.8
 # its __class_init__ method is InitializeClass. This is not the case on
