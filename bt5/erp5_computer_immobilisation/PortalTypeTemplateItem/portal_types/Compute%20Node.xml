@@ -27,6 +27,7 @@
             <value>
               <tuple>
                 <string>item</string>
+                <string>user</string>
               </tuple>
             </value>
         </item>
