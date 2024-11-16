@@ -119,8 +119,10 @@ def createSaleOrderLine(property_dict):
   try:
     resource_reference = property_dict.pop("resource_reference")
   except KeyError:
+    resource_reference = None
+  if not resource_reference:
     try:
-      reference = property_dict.pop('resource')['destination_reference']
+      reference = property_dict.pop('resource')['default_sale_supply_line_destination_reference']
     except KeyError:
       pass
     else:
@@ -225,15 +227,16 @@ for i, line in enumerate(line_list):
       ))
       break
 
-# for Sale Packing List also check that int_index is defined on related Sale Order Lines
-for i, line in enumerate(line_list):
-  if line.DeliveryLine_getOrderLineIntIndex() is None:
-    #if fixit:
-    #  line.setIntIndex(i)
-    #else:
-    error_list.append(translate(
-      "Sort Index must be defined on all lines the related Sale Order."
-    ))
+# for Sale Packing List and Sale Invoice also check that int_index is defined on related Sale Order Lines
+if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction"):
+  for i, line in enumerate(line_list):
+    if line.DeliveryLine_getOrderLineIntIndex() is None:
+      #if fixit:
+      #  line.setIntIndex(i)
+      #else:
+      error_list.append(translate(
+        "Sort Index must be defined on all lines of the related Sale Order."
+      ))
 
 if line_portal_type == "Sale Order Line":
   index_method = "getIntIndex"

@@ -18,7 +18,6 @@ if state_change.kwargs.get('create_sale_order'):
     if sale_order_value.getSimulationState() == "draft":
       sale_order_value.SaleOrder_checkCxmlOrderRequestConsistency(fixit=True, order_request_value=context)
       sale_order_value.SaleOrder_cxmlInit()
-      sale_order_value.plan()
 else:
   sale_order_value = context.getFollowUpValue()
   if sale_order_value is None:

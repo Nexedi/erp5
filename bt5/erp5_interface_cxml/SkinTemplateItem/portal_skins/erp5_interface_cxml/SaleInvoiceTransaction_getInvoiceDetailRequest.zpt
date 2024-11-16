@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE cXML SYSTEM "http://xml.cXML.org/schemas/cXML/1.2.060/InvoiceDetail.dtd">
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           tal:define="language string:de-DE;
+                       cxml_url python:'%s/ERP5Site_cml' %here.getPortalObject().absolute_url();
+                       source here/getSourceValue;
+                       source_address python:here.Delivery_getSourceAddressText()[0];
+                       source_telephone python: here.getSourceValue().getDefaultTelephoneValue();
+                       source_section here/getSourceSectionValue;
+                       source_section_address source_section/getDefaultAddressValue;
+                       destination here/getDestinationValue;
+                       destination_address python:here.Delivery_getDestinationAddressText()[0];
+                       destination_section here/getDestinationSectionValue;
+                       destination_section_address python: here.getPortalObject().restrictedTraverse(here.getDestinationSectionAddress());
+                       order python:here.getCausalityValue(portal_type='Sale Order');
+                       order_request order/Order_getRelatedOrderRequestValue;
+                       data_dict here/Invoice_getODTDataDict;
+                       connector here/Base_getCxmlConnectorValueForSale;">
+  <cXML tal:attributes="xml:lang language; payloadID connector/getPayloadId; timestamp python:DateTime().ISO8601(); version connector/getCxmlVersion">
+    <Header>
+      <From>
+        <Credential domain="NetworkID">
+          <Identity tal:content="order_request/getTo"></Identity>
+        </Credential>
+      </From>
+      <To>
+        <Credential domain="NetworkID">
+          <Identity tal:content="order_request/getFrom"></Identity>
+        </Credential>
+      </To>
+      <Sender>
+        <Credential domain="NetworkID">
+          <Identity tal:content="here/Base_getCxmlUserIdForSale"></Identity>
+          <SharedSecret>REPLACE_WITH_PASSWORD</SharedSecret>
+        </Credential>
+        <UserAgent tal:content="here/Base_getCxmlUserIdForSale"></UserAgent>
+      </Sender>
+    </Header>
+    <Request Id="cXMLData" tal:attributes="deploymentMode order_request/getDeploymentMode">
+      <InvoiceDetailRequest>
+        <InvoiceDetailRequestHeader invoiceOrigin="supplier" tal:attributes="invoiceID here/SaleInvoiceTransaction_getInvoiceId; invoiceDate python:here.getStartDate().ISO8601()" purpose="standard" operation="new">
+          <InvoiceDetailHeaderIndicator></InvoiceDetailHeaderIndicator>
+          <InvoiceDetailLineIndicator></InvoiceDetailLineIndicator>
+          <InvoicePartner>
+            <Contact tal:attributes="addressID destination_section_address/getReference" role="billTo">
+              <Name tal:attributes="xml:lang language" tal:content="destination_section/Entity_getTitle"></Name>
+              <PostalAddress>
+                <Street tal:content="destination_section_address/getStreetAddress"></Street>
+                <City tal:content="destination_section_address/getCity"></City>
+                <State tal:omit-tag=""></State>
+                <PostalCode tal:content="destination_section_address/getZipCode"></PostalCode>
+                <Country tal:attributes="isoCountryCode destination_section_address/getRegionReference" tal:content="destination_section_address/getRegionTitle"></Country>
+              </PostalAddress>
+            </Contact>
+          </InvoicePartner>
+          <InvoicePartner>
+            <Contact role="from">
+              <Name tal:attributes="xml:lang language" tal:content="source_section/Entity_getTitle"></Name>
+              <PostalAddress>
+                <Street tal:content="source_section/getDefaultAddressStreetAddress"></Street>
+                <City tal:content="source_section/getDefaultAddressCity"></City>
+                <State tal:omit-tag=""></State>
+                <PostalCode tal:content="source_section/getDefaultAddressZipCode"></PostalCode>
+                <Country tal:attributes="isoCountryCode source_section_address/getRegionReference" tal:content="source_section_address/getRegionTitle"></Country>
+              </PostalAddress>
+            </Contact>
+          </InvoicePartner>
+          <InvoicePartner>
+            <Contact tal:attributes="addressID destination_section_address/getReference" role="soldTo">
+              <Name tal:attributes="xml:lang language" tal:content="destination_section/Entity_getTitle"></Name>
+              <PostalAddress>
+                <Street tal:content="destination_section_address/getStreetAddress"></Street>
+                <City tal:content="destination_section_address/getCity"></City>
+                <State tal:omit-tag=""></State>
+                <PostalCode tal:content="destination_section_address/getZipCode"></PostalCode>
+                <Country tal:attributes="isoCountryCode destination_section_address/getRegionReference" tal:content="destination_section_address/getRegionTitle"></Country>
+              </PostalAddress>
+            </Contact>
+          </InvoicePartner>
+          <InvoicePartner tal:content="structure order_request/getContactSoldToXml" />
+          <InvoiceDetailShipping>
+            <Contact role="shipFrom">
+              <Name tal:attributes="xml:lang language" tal:content="source/Entity_getTitle"></Name>
+              <PostalAddress>
+                <Street tal:content="source_address/getStreetAddress"></Street>
+                <City tal:content="source_address/getCity"></City>
+                <State tal:omit-tag=""></State>
+                <PostalCode tal:content="source_address/getZipCode"></PostalCode>
+                <Country tal:attributes="isoCountryCode source_address/getRegionReference" tal:content="source_address/getRegionTitle"></Country>
+              </PostalAddress>
+            </Contact>
+            <Contact role="shipTo">
+              <Name tal:attributes="xml:lang language" tal:content="destination/Entity_getTitle"></Name>
+              <PostalAddress>
+                <Street tal:content="destination_address/getStreetAddress"></Street>
+                <City tal:content="destination_address/getCity"></City>
+                <State tal:omit-tag=""></State>
+                <PostalCode tal:content="destination_address/getZipCode"></PostalCode>
+                <Country tal:attributes="isoCountryCode destination_address/getRegionReference" tal:content="destination_address/getRegionTitle"></Country>
+              </PostalAddress>
+            </Contact>
+          </InvoiceDetailShipping>
+          <Extrinsic name="buyerVatID" tal:content="destination_section/getVatCode"></Extrinsic>
+          <Extrinsic name="supplierVatID" tal:content="here/SaleInvoice_getSourceSectionVatCode"></Extrinsic>
+          <Extrinsic name="invoiceSourceDocument">PurchaseOrder</Extrinsic>
+          <Extrinsic name="invoiceSubmissionMethod">cXML</Extrinsic>
+        </InvoiceDetailRequestHeader>
+        <InvoiceDetailOrder>
+          <InvoiceDetailOrderInfo>
+             <OrderReference tal:attributes="orderDate python:order.getOrderDate().ISO8601(); orderID order/getDestinationReference">
+               <DocumentReference tal:attributes="payloadID order/Order_getPayloadId"></DocumentReference>
+             </OrderReference>
+          </InvoiceDetailOrderInfo>
+          <span tal:omit-tag="" tal:repeat="line_dict data_dict/line_not_tax">
+          <InvoiceDetailItem tal:define="line python: here[line_dict['id']]"
+                             tal:attributes="invoiceLineNumber line_dict/int_index;
+                                             quantity line_dict/total_quantity">
+            <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
+            <UnitPrice>
+              <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getPrice"></Money>
+            </UnitPrice>
+            <InvoiceDetailItemReference tal:attributes="lineNumber line/DeliveryLine_getOrderLineIntIndex">
+              <ItemID>
+                <SupplierPartID tal:content="line/DeliveryLine_getSupplierPartIdIfProvidedInOrderRequest"></SupplierPartID>
+                <BuyerPartID tal:content="line/DeliveryLine_getResourceDestinationReference"></BuyerPartID>
+              </ItemID>
+              <Description tal:content="line/getDescription" xml:lang="de-DE"></Description>
+            </InvoiceDetailItemReference>
+            <SubtotalAmount>
+              <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getTotalPrice"></Money>
+            </SubtotalAmount>
+            <GrossAmount>
+               <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getTotalPrice"></Money>
+            </GrossAmount>
+            <NetAmount>
+               <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getTotalPrice"></Money>
+            </NetAmount>
+          </InvoiceDetailItem>
+          </span>
+        </InvoiceDetailOrder>
+        <InvoiceDetailSummary>
+          <SubtotalAmount>
+            <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="data_dict/total_price_novat"></Money>
+          </SubtotalAmount>
+          <span tal:omit-tag="" tal:repeat="line_tax python: here.SaleInvoiceTransaction_getTotalTaxData(data_dict['line_tax'])">
+          <Tax>
+            <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_price"></Money>
+            <Description xml:lang = "en-US"></Description>
+            <TaxDetail category="vat" tal:attributes="percentageRate python: float(line_tax['base_price'] or 0) *100; taxPointDate python:here.getStartDate().ISO8601()">
+              <TaxableAmount>
+                <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_quantity"></Money>
+              </TaxableAmount>
+              <TaxAmount>
+                <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_price"></Money>
+              </TaxAmount>
+              <Description xml:lang = "en-US"></Description>
+            </TaxDetail>
+          </Tax>
+          </span>
+          <GrossAmount>
+            <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="data_dict/total_price"></Money>
+          </GrossAmount>
+          <NetAmount>
+            <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="data_dict/total_price"></Money>
+          </NetAmount>
+          <DueAmount>
+            <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="data_dict/total_price"></Money>
+          </DueAmount>
+        </InvoiceDetailSummary>
+      </InvoiceDetailRequest>
+    </Request>
+  </cXML>
+</tal:block>
