@@ -456,6 +456,7 @@ def initializeForm(field_registry, form_class=None):
         # set up individual add dictionaries for meta_types
         dict = { 'name': field.meta_type,
                  'permission': 'Add Formulator Fields',
+                 'zmi_show_add_dialog': 'modal',
                  'action':
                  'manage_addProduct/Formulator/manage_add%sForm' % meta_type }
         meta_types.append(dict)

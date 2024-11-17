@@ -1053,6 +1053,7 @@ def initializeForm(field_registry):
 
         # set up individual add dictionaries for meta_types
         dict = { 'name': field.meta_type,
+                 'zmi_show_add_dialog': 'modal',
                  'action':
                  'manage_addProduct/Formulator/manage_add%sForm' % meta_type }
         meta_types.append(dict)
