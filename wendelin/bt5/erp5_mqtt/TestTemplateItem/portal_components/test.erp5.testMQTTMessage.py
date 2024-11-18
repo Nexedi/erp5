@@ -30,7 +30,7 @@ import random
 import urllib
 import msgpack
 
-from httplib import NO_CONTENT
+from six.moves.http_client import NO_CONTENT
 from io import BytesIO
 from App.version_txt import getZopeVersion
 from Products.ERP5Type.Utils import str2bytes
