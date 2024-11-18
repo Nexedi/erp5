@@ -1,5 +1,11 @@
 Releases
 ===
+1.0.372, 18.11.2024
+---
+  - new wendelin.core mode introduced which is more storage efficient for smaller chunks of data
+  - Data Bucket improvements
+  - bug fixes
+
 1.0.351, 31.01.2024
 ---
   - switch to Zope4
