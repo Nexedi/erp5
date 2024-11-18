@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from cStringIO import StringIO
+from io import BytesIO
 import base64
 import binascii
 from httplib import NO_CONTENT
@@ -105,7 +105,7 @@ class Test(ERP5TypeTestCase):
       env = {'CONTENT_TYPE': 'application/octet-stream'}
     path = ingestion_policy.getPath() + '/ingest?reference=' + reference
     publish_kw = dict(user='ERP5TypeTestCase', env=env,
-      request_method='POST', stdin=StringIO(body))
+      request_method='POST', stdin=BytesIO(body))
     response = self.publish(path, **publish_kw)
     self.assertEqual(NO_CONTENT, response.getStatus())
     # at every ingestion if no specialised Data Ingestion exists it is created
@@ -424,7 +424,7 @@ class Test(ERP5TypeTestCase):
 
     path = ingestion_policy.getPath() + '/ingest?reference=' + reference
     publish_kw = dict(user='ERP5TypeTestCase', env=env,
-      request_method='POST', stdin=StringIO(body))
+      request_method='POST', stdin=BytesIO(body))
     response = self.publish(path, **publish_kw)
 
     self.assertEqual(NO_CONTENT, response.getStatus())

@@ -31,8 +31,9 @@ import urllib
 import msgpack
 
 from httplib import NO_CONTENT
-from cStringIO import StringIO
+from io import BytesIO
 from App.version_txt import getZopeVersion
+from Products.ERP5Type.Utils import str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
@@ -65,7 +66,7 @@ class TestDataIngestion(ERP5TypeTestCase):
 
     body = msgpack.packb([0, data_chunk], use_bin_type=True)
     env = { "CONTENT_TYPE": "application/x-www-form-urlencoded" }
-    body = urllib.urlencode({ "data_chunk": body })
+    body = str2bytes(urllib.urlencode({ "data_chunk": body }))
 
     if not isinstance(ingestion_policy, str):
       ingestion_policy = ingestion_policy.getPath()
@@ -77,7 +78,7 @@ class TestDataIngestion(ERP5TypeTestCase):
       data_product = data_product.getReference()
 
     path = ingestion_policy + "/ingest?reference=" + data_supply + "." + data_product
-    publish_kw = dict(user="ERP5TypeTestCase", env=env, request_method="POST", stdin=StringIO(body))
+    publish_kw = dict(user="ERP5TypeTestCase", env=env, request_method="POST", stdin=BytesIO(body))
     response = self.publish(path, **publish_kw)
 
     return response
