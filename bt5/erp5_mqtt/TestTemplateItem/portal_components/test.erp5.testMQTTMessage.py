@@ -42,7 +42,7 @@ if getZopeVersion() < (4, ):
 
 
 def getRandomString():
-  return "test.%s" %"".join([random.choice(string.ascii_letters + string.digits) for _ in xrange(32)])
+  return "test.%s" %"".join([random.choice(string.ascii_letters + string.digits) for _ in range(32)])
 
 
 class TestDataIngestion(ERP5TypeTestCase):
