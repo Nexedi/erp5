@@ -5,6 +5,7 @@ from six.moves import range
 import transaction
 from DateTime import DateTime
 from wendelin.bigarray.array_zodb import ZBigArray
+import six
 
 
 class ZBigArrayConverter(object):
@@ -420,7 +421,7 @@ class InventoryDataFrameQuery(object):
   def _filterCategoryParameters(self, **kw):
     category_kw = {}
     keys_to_delete = []
-    for key, value in kw.iteritems():
+    for key, value in six.iteritems(kw):
       for field in self.FIELDS_WITH_CATEGORY:
         regex = re.compile(r'%s_.*_uid$' % field)
         if regex.match(key):
@@ -547,7 +548,7 @@ class InventoryDataFrameQuery(object):
   
   def _filterCategories(self):
     partial_filter = self._true_array()
-    for field, value in self.category_kw.iteritems():
+    for field, value in six.iteritems(self.category_kw):
       if self.duplicated_categories:
         partial_filter = (partial_filter) & (self.df[field] == value)
       else:
