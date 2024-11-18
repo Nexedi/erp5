@@ -25,4 +25,4 @@ r = requests.post(ingestion_policy_url,
                   headers=headers)
 
 if r.status_code >= 200 and r.status_code<=204:
-  print "Successfully uploaded %s bytes to Wendelin." %len(payload)
+  print("Successfully uploaded %s bytes to Wendelin." %len(payload))
