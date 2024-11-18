@@ -36,6 +36,7 @@ from zExceptions import BadRequest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
+from Products.ERP5Type.Utils import str2bytes
 from wendelin.bigarray.array_zodb import ZBigArray
 
 from App.version_txt import getZopeVersion
@@ -100,7 +101,7 @@ class Test(ERP5TypeTestCase):
     body = msgpack.packb([0, real_data], use_bin_type=True)
     if old_fluentd:
       env = {'CONTENT_TYPE': 'application/x-www-form-urlencoded'}
-      body = urllib.parse.urlencode({'data_chunk': body})
+      body = str2bytes(urllib.parse.urlencode({'data_chunk': body}))
     else:
       env = {'CONTENT_TYPE': 'application/octet-stream'}
     path = ingestion_policy.getPath() + '/ingest?reference=' + reference
