@@ -11,4 +11,4 @@ bme280.setup()
 
 data = bme280.read_all()
 
-print("{}\t{}\t{}".format(data.pressure, data.humidity, data.temperature))
+print(("{}\t{}\t{}".format(data.pressure, data.humidity, data.temperature)))
