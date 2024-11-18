@@ -77,7 +77,7 @@ property_title_dict = {
   "zip_code": "Postal Code",
   "default_sale_supply_line_destination_reference": "Customer Reference",
   "resource": "Product or Service",
-  "vat_code": "VAT Code",
+  "destination_section_vat_code": "Client VAT Code",
   "payment_condition_hs_payment_condition": "Payment Condition",
 }
 
@@ -161,7 +161,7 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
   # necessary in fixit case because we need to already know about the
   # organisation before we can find or create its address
   for key, value in sorted(property_dict.items()):
-    if document.getPortalType() == "Sale Order Line" and key == "quantity":
+    if document.getPortalType() in ("Sale Order Line", "Sale Packing List Line") and key == "quantity":
       if context.getCxmlChanges():
         continue
     if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction") and key in ('order_date', 'int_index'):

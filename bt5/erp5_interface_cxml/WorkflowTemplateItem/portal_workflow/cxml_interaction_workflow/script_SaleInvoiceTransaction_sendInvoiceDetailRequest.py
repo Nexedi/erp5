@@ -5,4 +5,10 @@ if not context.Base_isCxmlRelated():
   return
 text_content = context.SaleInvoiceTransaction_getInvoiceDetailRequest().encode('utf-8')
 connector = context.Base_getCxmlConnectorValueForSale()
-connector.sendOutgoingRequest(text_content, follow_up=context.getRelativeUrl())
+# calling sendOutgoingRequest should be done in an activity
+# which NEVER retries.
+connector.activate(
+  activity='SQLQueue',
+  conflict_retry=False,
+  max_retry=0,
+).sendOutgoingRequest(text_content, follow_up=context.getRelativeUrl())

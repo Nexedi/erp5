@@ -139,7 +139,7 @@ class CxmlOrderRequest(CxmlDocument):
     buyer_vat_id = ''.join(order_request_header.xpath('//Extrinsic[@name="buyerVatID"]/text()'))
     property_dict['destination_section'] = {'portal_type': 'Organisation', 'corporate_name': sold_to_name or bill_to_name}
     if buyer_vat_id:
-      property_dict['destination_section']['vat_code'] = buyer_vat_id
+      property_dict['destination_section_vat_code'] = buyer_vat_id
     property_dict['destination_section_address'] = self._getAddressPropertyDict(address, corporate_name=sold_to_name or bill_to_name, name_on_address=bill_to_name)
     property_dict['order_date'] = DateTime(order_request_header.get('orderDate'))
     ship_to = order_request_header.find('ShipTo')
@@ -175,10 +175,10 @@ class CxmlOrderRequest(CxmlDocument):
           short_name = description.find('ShortName')
           if short_name is not None:
             property_dict['title'] = s(short_name.text)
-            property_dict['description'] = s(short_name.tail)
+            #property_dict['description'] = s(short_name.tail)
           else:
             property_dict['title'] = s(description.text)
-            property_dict['description'] = s(description.text)
+            #property_dict['description'] = s(description.text)
         unit_of_measure_text = get_text(item_detail, 'UnitOfMeasure')
         assert unit_of_measure_text in ("EA", "PC")
       property_dict['quantity_unit'] = "unit/piece"

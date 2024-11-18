@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE cXML SYSTEM "http://xml.cXML.org/schemas/cXML/1.2.060/Fulfill.dtd">
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
-           tal:define="language string:de-DE;
+           tal:define="language here/Base_getCxmlLanguageCode;
                        cxml_url python:'%s/ERP5Site_cml' %here.getPortalObject().absolute_url();
                        source here/getSourceValue;
                        source_address python:here.Delivery_getSourceAddressText()[0];
@@ -94,7 +94,7 @@
           <TransportInformation tal:omit-tag="">
             <ShippingContractNumber tal:omit-tag=""></ShippingContractNumber>
             <ShippingInstructions tal:omit-tag="">
-              <Description tal:omit-tag="" xml:lang="de-DE"></Description>
+              <Description tal:omit-tag="" tal:attributes="xml:lang language"></Description>
             </ShippingInstructions>
           </TransportInformation>
         </ShipControl>
@@ -103,7 +103,7 @@
             <DocumentReference tal:attributes="payloadID order/Order_getPayloadId"></DocumentReference>
           </OrderReference>
           <span tal:omit-tag="" tal:repeat="line python:here.objectValues(sort_on=[('int_index', 'ascending')], portal_type='Sale Packing List Line')">
-            <ShipNoticeItem tal:attributes="shipNoticeLineNumber line/getIntIndex; quantity line/getQuantity; lineNumber line/DeliveryLine_getOrderLineIntIndex">
+            <ShipNoticeItem tal:condition="line/getQuantity" tal:attributes="shipNoticeLineNumber line/getIntIndex; quantity line/getQuantity; lineNumber line/DeliveryLine_getOrderLineIntIndex">
               <ItemID>
                 <SupplierPartID tal:content="line/getResourceReference"></SupplierPartID>
                 <BuyerPartID tal:content="line/DeliveryLine_getResourceDestinationReference"></BuyerPartID>
@@ -112,10 +112,11 @@
                 <UnitPrice>
                   <Money tal:attributes="currency line/getPriceCurrencyTitle" tal:content="line/getPrice"></Money>
                 </UnitPrice>
-                <Description tal:content="line/getDescription" xml:lang="de-DE"></Description>
+                <Description tal:content="line/getTitle" tal:attributes="xml:lang language"></Description>
               </ShipNoticeItemDetail>
               <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
               <AssetInfo tal:repeat="item_title python:line.getAggregateTitleList(portal_type='Item')" tal:attributes="serialNumber item_title" tagNumber=""></AssetInfo>
+              <Comments tal:content="line/getDescription" tal:attributes="xml:lang language"></Comments>
             </ShipNoticeItem>
           </span>
         </ShipNoticePortion>

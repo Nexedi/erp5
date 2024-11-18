@@ -13,4 +13,6 @@ Sale Invoice Transaction | CxmlOrderConstraint
 Sale Order | CxmlOrder
 Sale Order | CxmlOrderConstraint
 Sale Order | Version
+Sale Packing List | CxmlDelivery
+Sale Packing List | CxmlOrder
 Sale Packing List | CxmlOrderConstraint

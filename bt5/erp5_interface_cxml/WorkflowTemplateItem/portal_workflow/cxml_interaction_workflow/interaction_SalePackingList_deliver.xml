@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>activate_script/portal_workflow/cxml_interaction_workflow/script_SalePackingList_sendShipNoticeRequest</string>
+                <string>after_script/portal_workflow/cxml_interaction_workflow/script_SalePackingList_sendShipNoticeRequest</string>
               </tuple>
             </value>
         </item>
