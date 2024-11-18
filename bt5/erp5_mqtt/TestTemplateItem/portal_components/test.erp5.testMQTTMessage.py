@@ -27,7 +27,7 @@
 
 import string
 import random
-import urllib
+import six.moves.urllib as urllib
 import msgpack
 
 from six.moves.http_client import NO_CONTENT
@@ -66,7 +66,7 @@ class TestDataIngestion(ERP5TypeTestCase):
 
     body = msgpack.packb([0, data_chunk], use_bin_type=True)
     env = { "CONTENT_TYPE": "application/x-www-form-urlencoded" }
-    body = str2bytes(urllib.urlencode({ "data_chunk": body }))
+    body = str2bytes(urllib.parse.urlencode({ "data_chunk": body }))
 
     if not isinstance(ingestion_policy, str):
       ingestion_policy = ingestion_policy.getPath()
