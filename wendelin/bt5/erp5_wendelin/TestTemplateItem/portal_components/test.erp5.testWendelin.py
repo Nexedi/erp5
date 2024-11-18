@@ -30,7 +30,7 @@ import string
 import random
 import struct
 import textwrap
-import urllib
+import six.moves.urllib as urllib
 import uuid
 from zExceptions import BadRequest
 
@@ -100,7 +100,7 @@ class Test(ERP5TypeTestCase):
     body = msgpack.packb([0, real_data], use_bin_type=True)
     if old_fluentd:
       env = {'CONTENT_TYPE': 'application/x-www-form-urlencoded'}
-      body = urllib.urlencode({'data_chunk': body})
+      body = urllib.parse.urlencode({'data_chunk': body})
     else:
       env = {'CONTENT_TYPE': 'application/octet-stream'}
     path = ingestion_policy.getPath() + '/ingest?reference=' + reference
