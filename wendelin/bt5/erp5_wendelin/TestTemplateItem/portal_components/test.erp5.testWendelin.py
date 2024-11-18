@@ -49,11 +49,11 @@ if getZopeVersion() < (4, ): # BBB Zope2
 
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
-    for _ in xrange(32)])
+    for _ in range(32)])
 
 def chunks(l, n):
   """Yield successive n-sized chunks from l."""
-  for i in xrange(0, len(l), n):
+  for i in range(0, len(l), n):
     yield l[i:i+n]
 
 class Test(ERP5TypeTestCase):
@@ -275,7 +275,7 @@ class Test(ERP5TypeTestCase):
       bucket_stream.insertBucket(i, i*10000)
 
     self.assertEqual(100, bucket_stream.getBucketCount())
-    self.assertEqual(range(100), bucket_stream.getKeyList())
+    self.assertEqual(list(range(100)), bucket_stream.getKeyList())
 
     # test as sequence
     bucket = bucket_stream.getBucketKeyItemSequenceByKey(start_key=10, count=1)[0]

@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import re
+from six.moves import range
 import transaction
 from DateTime import DateTime
 from wendelin.bigarray.array_zodb import ZBigArray
@@ -58,7 +59,7 @@ class ZBigArrayConverter(object):
       data_array = result[0]
       
     array = data_array.getArray()
-    for index in xrange(len(array)): 
+    for index in range(len(array)):
       # We need to order everything related to the data schema here. The Results methods
       # `tuples()`, `names` and `data_dictionary` returns the fields in a different order
       # and order is very important in the conversion to a ZBigArray. So we build
@@ -179,7 +180,7 @@ class ZBigArrayExtender(object):
     extension_dtype = DtypeIdentifier(self.extension).identify()
     if not self.source.dtype == extension_dtype:
       raise TypeError('Source and extension data types does not match.')
-    for index in xrange(len(self.extension)): 
+    for index in range(len(self.extension)):
       # Basically the same problem here with the order of Results instance fields
       # when we convert it to an array.
       ordered_movements = []
