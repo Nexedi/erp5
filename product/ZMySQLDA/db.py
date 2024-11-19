@@ -506,7 +506,8 @@ class DB(TM):
             self._transaction_begun = True
             if self._transactions:
                 if self._current_isolation_level:
-                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self._current_isolation_level.replace('-', ' '))
+                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self._current_isolation_level.replace('-', ' '),
+                                allow_reconnect=True)
                 self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
