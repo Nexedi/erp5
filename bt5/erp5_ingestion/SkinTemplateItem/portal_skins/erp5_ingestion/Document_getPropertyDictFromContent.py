@@ -7,6 +7,7 @@ To use, write your own method (probably External Method, since it is most likely
 to use re) that would analyze text content of the doc
 and return a dictionary of properties.
 """
+from zExceptions import NotFound
 information = context.getContentInformation()
 
 result = {}
@@ -21,7 +22,10 @@ for k, v in information.items():
       else:
         result[key] = v
     elif key == 'author':
-      p = context.portal_catalog.getResultValue(title = v)
+      try:
+        p = context.portal_catalog.getResultValue(title = v)
+      except NotFound:
+        p = None
       if p is not None:
         result['contributor'] = p.getRelativeUrl()
     elif key == 'keywords':
