@@ -82,6 +82,8 @@ class CxmlDocument(XMLObject):
   security.declareProtected(AccessContentsInformation, "getDocumentType")
   def getDocumentType(self):
     et = self.getElementTree()
+    if et is None:
+      return
     message = et.find('Response') or et.find('Request')
     if not message:
       return

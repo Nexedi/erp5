@@ -32,7 +32,8 @@ from DateTime import DateTime
 from Products.ERP5Type.Permissions import AccessContentsInformation
 
 hs_payment_condition_mapping_dict = {
-  "4060": "60E"
+  "4060": "60E",
+  "1030": "N30",
 }
 
 def s(u):

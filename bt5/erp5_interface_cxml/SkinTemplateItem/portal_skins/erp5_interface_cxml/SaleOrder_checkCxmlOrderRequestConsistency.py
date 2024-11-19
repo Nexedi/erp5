@@ -161,12 +161,13 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
   # necessary in fixit case because we need to already know about the
   # organisation before we can find or create its address
   for key, value in sorted(property_dict.items()):
-    if document.getPortalType() in ("Sale Order Line", "Sale Packing List Line") and key == "quantity":
-      if context.getCxmlChanges():
-        continue
+    if context.getCxmlChanges():
+      continue
     if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction") and key in ('order_date', 'int_index'):
       continue
     if document.getPortalType() == "Invoice Line" and key in ('start_date', 'stop_date'):
+      continue
+    if context.getPortalType() in ("Sale Order", "Sale Packing List") and key == "destination_section_vat_code":
       continue
     if isinstance(value, dict):
       category = document.getProperty(key)
@@ -216,7 +217,7 @@ if context.getPortalType() == "Sale Invoice Transaction":
   line_portal_type = "Invoice Line"
 else:
   line_portal_type = '%s Line' %context.getPortalType()
-line_list = [x for x in context.objectValues(portal_type=line_portal_type) if x.getUse() not in ("trade/tax", "trade/discount_service")]
+line_list = [x for x in context.objectValues(portal_type=line_portal_type, checked_permission="View") if x.getUse() not in ("trade/tax", "trade/discount_service")]
 for i, line in enumerate(line_list):
   if line.getIntIndex() is None:
     if fixit:
@@ -227,7 +228,7 @@ for i, line in enumerate(line_list):
       ))
       break
 
-# for Sale Packing List and Sale Invoice also check that int_index is defined on related Sale Order Lines
+# for Sale Packing List and Sale Invoice Transaction also check that int_index is defined on related Sale Order Lines
 if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction"):
   for i, line in enumerate(line_list):
     if line.DeliveryLine_getOrderLineIntIndex() is None:
