@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drone_capture_flag_test_page.js</string> </value>
+            <value> <string>gadget_erp5_page_drone_simulator_multicopter_test_page.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_capture_drone_flight_js</string> </value>
+            <value> <string>test_drone_simulator_multicopter_flight_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone Capture Flag Test Page JS</string> </value>
+            <value> <string>Drone Simulator Multicopter Test Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -197,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1689188262.88</float>
+                              <float>1729871328.22</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1015.64187.34381.50346</string> </value>
+                      <value> <string>1020.29316.53379.55108</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +266,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1713428877.4</float>
+                              <float>1730738357.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -329,7 +329,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1689182795.12</float>
+                              <float>1729871118.19</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
