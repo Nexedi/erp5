@@ -291,17 +291,14 @@ class TestDocumentConversionCache(TestDocumentMixin):
   def test_08_check_conversion_cache_with_portal_document_type_list(self):
     """Check cache conversion for all Portal Document Types
     """
-    portal_type_list = list(self.portal.getPortalDocumentTypeList())
+    portal_type_set = set(self.portal.getPortalDocumentTypeList())
 
-    if 'File' in portal_type_list:
-      #File conversion is not implemented
-      portal_type_list.remove('File')
-    if 'Web Illustration' in portal_type_list:
-      #Web Illustration conversion is not implemented
-      portal_type_list.remove('Web Illustration')
-    if 'Web Table' in portal_type_list:
-      #Web Table conversion is not implemented
-      portal_type_list.remove('Web Table')
+    # Some conversions are not implemented
+    portal_type_set.discard('File')
+    portal_type_set.discard('Notification Message')
+    portal_type_set.discard('Web Illustration')
+    portal_type_set.discard('Web Table')
+
     data_mapping = {'Drawing': 'TEST-en-002.sxd',
                     'Text': 'TEST-en-002.doc',
                     'Spreadsheet': 'TEST-en-002.sxc',
@@ -311,8 +308,8 @@ class TestDocumentConversionCache(TestDocumentMixin):
                     'File': 'TEST-en-002.rtf',
                     'PDF': 'TEST-en-002.pdf'}
     #Check that all portal_types are handled by test
-    self.assertEqual(len(portal_type_list), len([pt for pt in portal_type_list if pt in data_mapping]))
-    for portal_type in portal_type_list:
+    self.assertEqual(len(portal_type_set), len([pt for pt in portal_type_set if pt in data_mapping]))
+    for portal_type in portal_type_set:
       module = self.portal.getDefaultModule(portal_type=portal_type)
       upload_file = self.makeFileUpload(data_mapping[portal_type])
       document = module.newContent(portal_type=portal_type)
