@@ -1,22 +1,13 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, URLSearchParams, Blob*/
-(function (window, rJS, domsugar, document, URLSearchParams, Blob) {
+/*global window, rJS, domsugar, document, MulticopterDroneAPI*/
+(function (window, rJS, domsugar, document, MulticopterDroneAPI) {
   "use strict";
 
-  var SIMULATION_SPEED = 1,
+  var SIMULATION_SPEED = 100,
     LOOP_INTERVAL = 1000 / 60,
     ON_UPDATE_INTERVAL = LOOP_INTERVAL,
-    SIMULATION_TIME = LOOP_INTERVAL / 1000,
-    DEFAULT_SPEED = 16,
-    MAX_ACCELERATION = 6,
-    MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
-    MAX_SPEED = 26,
-    MAX_ROLL = 35,
-    MIN_PITCH = -20,
-    MAX_PITCH = 25,
-    MAX_CLIMB_RATE = 8,
-    MAX_SINK_RATE = 3,
+    SIMULATION_TIME = 714 * LOOP_INTERVAL / 1000,
+    DEFAULT_SPEED = 5,
     NUMBER_OF_DRONES = 1,
     MIN_LAT = 45.6364,
     MAX_LAT = 45.65,
@@ -26,14 +17,17 @@
     start_AMSL = 595,
     INIT_LON = 14.2658,
     INIT_LAT = 45.6412,
-    INIT_ALT = 15,
-    // Non-inputs parameters
+    INIT_ALT = 0,
+    STEP = 2.3992831666911723e-06 / 16,
+    TAKEOFF_ALTITUDE = 7,
     DEFAULT_SCRIPT_CONTENT =
       'function assert(a, b, msg) {\n' +
-      '  if (a === b)\n' +
+      '  if (a === b) {\n' +
       '    console.log(msg + ": OK");\n' +
-      '  else\n' +
+      '  } else {\n' +
       '    console.log(msg + ": FAIL");\n' +
+      '    console.log(a, b);\n' +
+      '  }\n' +
       '}\n' +
       '\n' +
       'function distance(lat1, lon1, lat2, lon2) {\n' +
@@ -49,25 +43,45 @@
       '}\n' +
       '\n' +
       'function compare(coord1, coord2) {\n' +
-      '  assert(coord1.latitude, coord2.latitude, "Latitude")\n' +
-      '  assert(coord1.longitude, coord2.longitude, "Longitude")\n' +
-      '  assert(coord1.altitude, coord2.altitude, "Altitude")\n' +
+      '  assert(coord1.latitude, coord2.latitude, "Latitude");\n' +
+      '  assert(coord1.longitude, coord2.longitude, "Longitude");\n' +
+      '  assert(coord1.altitude, coord2.altitude, "Altitude");\n' +
       '}\n' +
       '\n' +
       'me.onStart = function (timestamp) {\n' +
-      '  assert(me.getSpeed(), ' + DEFAULT_SPEED + ', "Initial speed");\n' +
-      '  assert(me.getYaw(), 0, "Yaw angle")\n' +
-      '  me.initialPosition = me.getCurrentPosition();\n' +
+      '  assert(me.getSpeed(), 0, "Initial speed");\n' +
+      '  assert(me.getYaw(), 0, "Yaw angle");\n' +
       '  me.start_time = timestamp;\n' +
-      '  me.setTargetCoordinates(\n' +
-      '    me.initialPosition.latitude + 0.01,\n' +
-      '    me.initialPosition.longitude,\n' +
-      '    me.getAltitudeAbs(),\n' +
-      '    ' + DEFAULT_SPEED + '\n' +
-      '  );\n' +
+      '  me.takeOff();\n' +
+      '  me.direction_set = false;\n' +
+      '  me.interval_ckecked = false;\n' +
       '};\n' +
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
+      '  if (!me.interval_ckecked) {\n' +
+      '    var time_interval = timestamp - me.start_time,\n' +
+      '      expected_interval = ' + LOOP_INTERVAL + ';\n' +
+      '    assert(time_interval.toFixed(4), expected_interval.toFixed(4), "Timestamp");\n' +
+      '    assert(Date.now(), timestamp, "Date");\n' +
+      '    me.interval_ckecked = true;\n' +
+      '  }\n' +
+      '  if (!me.isReadyToFly()) {\n' +
+      '    return;\n' +
+      '  } else {\n' +
+      '    if (me.direction_set === false) {\n' +
+      '      me.initialPosition = me.getCurrentPosition();\n' +
+      '      me.initialPosition.altitude = me.initialPosition.altitude.toFixed(2);\n' +
+      '      assert(me.initialPosition.altitude, (' + TAKEOFF_ALTITUDE + ').toFixed(2),\n' +
+      '             "Altitude");\n' +
+      '      me.direction_set = true;\n' +
+      '      return me.setTargetCoordinates(\n' +
+      '        me.initialPosition.latitude + 0.01,\n' +
+      '        me.initialPosition.longitude,\n' +
+      '        me.getAltitudeAbs(),\n' +
+      '        ' + DEFAULT_SPEED + '\n' +
+      '      );\n' +
+      '    }\n' +
+      '  }\n' +
       '  var current_position = me.getCurrentPosition(),\n' +
       '    realDistance = distance(\n' +
       '    me.initialPosition.latitude,\n' +
@@ -75,15 +89,12 @@
       '    me.getCurrentPosition().latitude,\n' +
       '    me.getCurrentPosition().longitude\n' +
       '  ).toFixed(8),\n' +
-      '    time_interval = timestamp - me.start_time,\n' +
-      '    expected_interval = ' + LOOP_INTERVAL + ',\n' +
-      '    expectedDistance = (me.getSpeed() * expected_interval / 1000).toFixed(8);\n' +
-      '    assert(time_interval.toFixed(4), expected_interval.toFixed(4), "Timestamp");\n' +
-      '    assert(Date.now(), timestamp, "Date");\n' +
+      '    expectedDistance = (me.getSpeed() * ' + LOOP_INTERVAL + ' / 1000).toFixed(8);\n' +
       '    assert(realDistance, expectedDistance, "Distance");\n' +
       '  current_position.latitude = current_position.latitude.toFixed(7);\n' +
+      '  current_position.altitude = current_position.altitude.toFixed(2);\n' +
       '  compare(current_position, {\n' +
-      '    latitude: (me.initialPosition.latitude + 2.3992831666911723e-06).toFixed(7),\n' +
+      '    latitude: (me.initialPosition.latitude + me.getSpeed() *' + STEP + ').toFixed(7),\n' +
       '    longitude: me.initialPosition.longitude,\n' +
       '    altitude: me.initialPosition.altitude\n' +
       '  });\n' +
@@ -95,7 +106,8 @@
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_simulator_logic.js',
       'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
-      'gadget_erp5_page_drone_simulator_dronelogfollower.js'
+      'gadget_erp5_page_drone_simulator_dronelogfollower.js',
+      MulticopterDroneAPI.SCRIPT_NAME
     ];
 
   rJS(window)
@@ -138,9 +150,12 @@
                   "key": "script",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "renderjs_extra": '{"editor": "codemirror", "maximize": true}',
-                  "url": "gadget_editor.html",
-                  "sandbox": "public"
+                  "renderjs_extra": JSON.stringify({
+                    "language": "en",
+                    "portal_type": "Web Script",
+                    "editor": "codemirror"
+                  }),
+                  "url": "gadget_editor.html"
                 }
               }},
               "_links": {
@@ -167,23 +182,14 @@
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < NUMBER_OF_DRONES; i += 1) {
-        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
+        DRONE_LIST[i] = {"id": i, "type": MulticopterDroneAPI.name,
                          "script_content": options.script};
       }
       game_parameters_json = {
         "debug_test_mode": true,
         "drone": {
-          "maxAcceleration": MAX_ACCELERATION,
-          "maxDeceleration": MAX_DECELERATION,
-          "minSpeed": MIN_SPEED,
-          "speed": DEFAULT_SPEED,
-          "maxSpeed": MAX_SPEED,
-          "maxRoll": MAX_ROLL,
-          "minPitchAngle": MIN_PITCH,
-          "maxPitchAngle": MAX_PITCH,
-          "maxSinkRate": MAX_SINK_RATE,
-          "maxClimbRate": MAX_CLIMB_RATE,
-          "onUpdateInterval": ON_UPDATE_INTERVAL
+          "onUpdateInterval": ON_UPDATE_INTERVAL,
+          "list": DRONE_LIST
         },
         "gameTime": SIMULATION_TIME,
         "simulation_speed": SIMULATION_SPEED,
@@ -207,9 +213,13 @@
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
-        "log_interval_time": LOG_TIME,
-        "droneList": DRONE_LIST
+        "log_interval_time": LOG_TIME
       };
+      Object.keys(MulticopterDroneAPI.FORM_VIEW).forEach(function (parameter) {
+        var field = MulticopterDroneAPI.FORM_VIEW[parameter];
+        game_parameters_json.drone[field.key] = field.default;
+      });
+
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
         .push(function () {
@@ -259,8 +269,7 @@
           var div = domsugar('div', { text: "CONSOLE LOG ENTRIES:" }),
             lines = result.console_log.split('\n'),
             line_nb,
-            node,
-            test_log_node = document.querySelector('.test_log');;
+            test_log_node = document.querySelector('.test_log');
           document.querySelector('.container').parentNode.appendChild(div);
           function appendToTestLog(test_log_node, message) {
             var log_node = document.createElement("div"),
@@ -283,4 +292,4 @@
         });
     });
 
-}(window, rJS, domsugar, document, URLSearchParams, Blob));
+}(window, rJS, domsugar, document, MulticopterDroneAPI));
