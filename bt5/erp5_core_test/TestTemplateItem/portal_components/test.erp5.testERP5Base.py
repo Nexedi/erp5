@@ -1309,6 +1309,9 @@ class TestERP5Base(ERP5TypeTestCase):
                                    site='distibution/tokyo')
     self.assertNotEqual(None, assignment.getGroupValue())
     assignment.open()
+    unrelated_assignment = person.newContent(portal_type='Assignment',
+                                   group='nexedi/rentalinux',
+                                   site='distibution/new_york')
     login = person.newContent(
       portal_type="ERP5 Login",
       reference="user_login",
