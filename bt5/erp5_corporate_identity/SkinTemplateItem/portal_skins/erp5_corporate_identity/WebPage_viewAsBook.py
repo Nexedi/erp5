@@ -35,7 +35,6 @@ MAIN FILE: generate book in different output formats
 import re
 import six
 
-from Products.PythonScripts.standard import html_quote
 from Products.ERP5Type.Utils import str2bytes, bytes2str, unicode2str
 from base64 import b64encode
 
@@ -75,15 +74,15 @@ if not book_content:
   return
 book_aggregate_list = []
 book_revision = book.getRevision()
-book_modification_date = book.getModificationDate()
+book_modification_date =  book.getEffectiveDate() or book.getModificationDate()
 book_language = book.getLanguage()
 
 # XXX sigh for passing "" around
-book_reference = html_quote(override_document_reference) if override_document_reference else book.getReference()
-book_short_title = html_quote(override_document_short_title) if override_document_short_title else book.getShortTitle()
-book_version = html_quote(override_document_version) if override_document_version else book.getVersion() or "001"
-book_description = html_quote(override_document_description) if override_document_description else book.getDescription()
-book_title = html_quote(override_document_title) if override_document_title else book.getTitle()
+book_reference = override_document_reference if override_document_reference else book.getReference()
+book_short_title = override_document_short_title if override_document_short_title else book.getShortTitle()
+book_version = override_document_version if override_document_version else book.getVersion() or "001"
+book_description = override_document_description if override_document_description else book.getDescription()
+book_title = override_document_title if override_document_title else book.getTitle()
 
 if six.PY2 and isinstance(book_content, six.text_type):
   book_content = unicode2str(book_content)
