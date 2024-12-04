@@ -6,8 +6,10 @@ Cxml Multipart Document | view
 Cxml Order Request | view
 Network Id | view
 Organisation | cxml
+Sale Invoice Transaction | send_cxml_invoice
 Sale Order | fix_cxml_constraint_list
 Sale Order | jump_related_cxml_document_list
 Sale Order | jump_related_cxml_order_request
 Sale Packing List | fix_cxml_constraint_list
 Sale Packing List | jump_related_cxml_document_list
+Sale Packing List | send_cxml_ship_notice

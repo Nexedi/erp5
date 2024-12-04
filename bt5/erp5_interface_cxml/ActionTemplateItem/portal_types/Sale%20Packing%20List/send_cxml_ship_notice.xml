@@ -42,23 +42,27 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fix_cxml_constraint_list</string> </value>
+            <value> <string>send_cxml_ship_notice</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>View</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Action Information</string> </value>
+        </item>
+        <item>
             <key> <string>priority</string> </key>
-            <value> <float>10.0</float> </value>
+            <value> <float>15.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Apply Changes from Order Request</string> </value>
+            <value> <string>Send Cxml Ship Notice</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -75,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SaleOrder_fixCxmlOrderRequestConsistency</string> </value>
+            <value> <string>string:${object_url}/SalePackingList_sendShipNoticeRequestAction</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -88,7 +92,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>object/Base_isCxmlRelated</string> </value>
+            <value> <string>python: object.Base_isCxmlRelated() and object.SalePackingList_getCxmlStatusItem()[0] != "accepted"</string> </value>
         </item>
       </dictionary>
     </pickle>
