@@ -50,15 +50,18 @@ if destination_section_network_id != order_request_value.getFrom().rstrip("-Test
         mapping=dict(destination_section_network_id=destination_section_network_id, from_network_id=order_request_value.getFrom().rstrip("-Test"))
       ))
 
-try:
-  source_address = context.Delivery_getSourceAddressText()[0]
-except AttributeError:
-  source_address = None
-if source_address is None:
-  error_list.append(translate(
-        "Sender Address must be defined",
-        mapping=dict(destination_section_network_id=destination_section_network_id, from_network_id=order_request_value.getFrom().rstrip("-Test"))
-      ))
+if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction"):
+  try:
+    source_address = context.Delivery_getSourceAddressText()[0]
+  except AttributeError:
+    source_address = None
+  if source_address is None:
+    error_list.append(translate("Sender Address must be defined"))
+
+if context.getPortalType() == "Sale Invoice Transaction":
+  supplier_tax_id = context.SaleInvoiceTransaction_getSupplierTaxId()
+  if not supplier_tax_id:
+    error_list.append(translate("Supplier VAT Code must be defined."))
 
 property_title_dict = {
   "": "",
@@ -154,6 +157,8 @@ def createSaleOrderLine(property_dict):
       'validation_state' : 'validated',
     })
   property_dict['portal_type'] = 'Sale Order Line'
+  if property_dict.get('title') and not property_dict.get('description'):
+    property_dict['description'] = property_dict.get('title')
   context.newContent(**property_dict)
 
 def compare(document, property_dict, context_key='', context_title='', parent_context_title='', set_property=False):
@@ -163,12 +168,14 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
   for key, value in sorted(property_dict.items()):
     if context.getCxmlChanges():
       continue
-    if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction") and key in ('order_date', 'int_index'):
+    if document.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction") and key in ('order_date', 'int_index'):
       continue
     if document.getPortalType() == "Invoice Line" and key in ('start_date', 'stop_date'):
       continue
-    if context.getPortalType() in ("Sale Order", "Sale Packing List") and key == "destination_section_vat_code":
+    if document.getPortalType() in ("Sale Order", "Sale Packing List") and key == "destination_section_vat_code":
       continue
+    if document.getPortalType() == "Sale Order Line" and key == "title" and set_property and not document.getDescription():
+      document.setDescription(value)
     if isinstance(value, dict):
       category = document.getProperty(key)
       if not category:

@@ -15,6 +15,7 @@
                        order python:here.getCausalityValue(portal_type='Sale Order');
                        order_request order/Order_getRelatedOrderRequestValue;
                        data_dict here/Invoice_getODTDataDict;
+                       supplier_bank_account here/SaleInvoiceTransaction_getSupplierBankAccount;
                        connector here/Base_getCxmlConnectorValueForSale;">
   <cXML tal:attributes="xml:lang language; payloadID connector/getPayloadId; timestamp python:DateTime().ISO8601(); version connector/getCxmlVersion">
     <Header>
@@ -90,6 +91,16 @@
               </PostalAddress>
             </Contact>
           </InvoicePartner>
+          <InvoicePartner>
+            <Contact role="wireReceivingBank">
+              <Name xml:lang="en-US" tal:content="python: supplier_bank_account['bank_name']"></Name>
+            </Contact>
+            <IdReference domain="accountName" tal:attributes="identifier python: supplier_bank_account['title']"/>
+            <IdReference domain="accountType" tal:attributes="identifier python: supplier_bank_account['account_type']"/>
+            <IdReference domain="swiftID" tal:attributes="identifier python: supplier_bank_account['bic_code']"/>
+            <IdReference domain="accountID" tal:attributes="identifier python: supplier_bank_account['iban']"/>
+            <IdReference domain="ibanID" tal:attributes="identifier python: supplier_bank_account['iban']"/>
+          </InvoicePartner>
           <InvoicePartner tal:content="structure order_request/getContactSoldToXml" />
           <InvoiceDetailShipping>
             <Contact role="shipFrom">
@@ -102,7 +113,7 @@
                 <Country tal:attributes="isoCountryCode source_address/getRegionReference" tal:content="source_address/getRegionTitle"></Country>
               </PostalAddress>
             </Contact>
-            <Contact  tal:attributes="addressID destination_address/getIntIndex" role="shipTo">
+            <Contact tal:attributes="addressID destination_address/getIntIndex" role="shipTo">
               <Name tal:attributes="xml:lang language" tal:content="destination/Entity_getTitle"></Name>
               <PostalAddress>
                 <Street tal:content="destination_address/getStreetAddress"></Street>
@@ -170,7 +181,7 @@
           <Tax>
             <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_price"></Money>
             <Description xml:lang = "en-US"></Description>
-            <TaxDetail category="vat" tal:attributes="percentageRate python: float(line_tax['base_price'] or 0) *100; taxPointDate python:here.getStartDate().ISO8601()">
+            <TaxDetail category="vat" tal:attributes="exemptDetail python: here.SaleInvoiceTransaction_getExeptDetail() or nothing; percentageRate python: float(line_tax['base_price'] or 0) *100; taxPointDate python:here.getStartDate().ISO8601()">
               <TaxableAmount>
                 <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_quantity"></Money>
               </TaxableAmount>

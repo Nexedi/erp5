@@ -35,7 +35,8 @@ else:
           raise ValidationFailed(Message('erp5_ui', error))
         clone_order = sale_order_value.Order_cloneAndUpdateVersion()
         previous_order_request.setFollowUpValue(clone_order)
-        sale_order_value.update()
+        if portal.portal_workflow.isTransitionPossible(sale_order_value, 'update'):
+          sale_order_value.update()
         break
     else:
       # we did not find another order request, so no need to clone

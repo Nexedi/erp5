@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SalePackingList_getCxmlStatusText</string> </value>
+            <value> <string>SalePackingList_getCxmlStatusItem</string> </value>
         </item>
       </dictionary>
     </pickle>

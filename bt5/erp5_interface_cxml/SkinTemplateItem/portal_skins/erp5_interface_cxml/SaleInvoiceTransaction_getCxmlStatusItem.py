@@ -7,7 +7,7 @@ for start_date, cxml_document in reversed(sorted([(x.getStartDate(), x) for x in
       # a status code 2xx. Only then we had a successfull
       # ConfirmationRequest
       if response.getStatusCode().startswith("2"):
-        return "Invoice accepted"
-      return "Invoice not accepted"
-    return "Invoice sent but no reply"
-return "Invoice not sent"
+        return "accepted", context.Base_translateString("Invoice accepted")
+      return "not_accepted", context.Base_translateString("Invoice not accepted")
+    return "not_reply", context.Base_translateString("Invoice sent but no reply")
+return "not_sent", context.Base_translateString("Invoice not sent")

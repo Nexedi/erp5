@@ -136,8 +136,8 @@ class CxmlOrderRequest(CxmlDocument):
     bill_to = order_request_header.find('BillTo')
     address = bill_to.find('Address')
     bill_to_name = get_text(address, 'Name')
-    sold_to_name = ''.join(order_request_header.xpath('//BusinessPartner[@role="soldTo"]/Address/Name/text()'))
-    buyer_vat_id = ''.join(order_request_header.xpath('//Extrinsic[@name="buyerVatID"]/text()'))
+    sold_to_name = s(''.join(order_request_header.xpath('//BusinessPartner[@role="soldTo"]/Address/Name/text()')))
+    buyer_vat_id = s(''.join(order_request_header.xpath('//Extrinsic[@name="buyerVatID"]/text()')))
     property_dict['destination_section'] = {'portal_type': 'Organisation', 'corporate_name': sold_to_name or bill_to_name}
     if buyer_vat_id:
       property_dict['destination_section_vat_code'] = buyer_vat_id

@@ -7,7 +7,7 @@ for start_date, cxml_document in reversed(sorted([(x.getStartDate(), x) for x in
       # a status code 2xx. Only then we had a successfull
       # ConfirmationRequest
       if response.getStatusCode().startswith("2"):
-        return "ASN accepted"
-      return "ASN not accepted"
-    return "ASN sent but no reply"
-return "ASN not sent"
+        return "accepted", context.Base_translateString("ASN accepted")
+      return "not_accepted", context.Base_translateString("ASN not accepted")
+    return "no_reply", context.Base_translateString("ASN sent but no reply")
+return "not_sent", context.Base_translateString("ASN not sent")

@@ -90,7 +90,7 @@ class CxmlConnector(XMLObject):
     except AssertionError:
       self.log(text_content)
       self.log(response.content)
-      error_message = "Unexepected Response Status in response %s" %response_document.getRelativeUrl()
+      error_message = et.xpath('/cXML/Response/Status')[0].text
       raise AssertionError(error_message)
     return response_document
 

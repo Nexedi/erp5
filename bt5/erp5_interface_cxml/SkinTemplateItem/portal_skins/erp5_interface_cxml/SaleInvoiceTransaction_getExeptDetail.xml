@@ -53,16 +53,8 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Auditor</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleInvoiceTransaction_getCxmlStatusText</string> </value>
+            <value> <string>SaleInvoiceTransaction_getExeptDetail</string> </value>
         </item>
       </dictionary>
     </pickle>
