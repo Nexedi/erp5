@@ -23,6 +23,7 @@
   <item>CxmlNode</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
+  <item>CxmlOrder</item>
   <item>CxmlOrderConstraint</item>
  </portal_type>
  <portal_type id="Sale Order">
