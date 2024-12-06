@@ -69,6 +69,9 @@
         schema.description = " (default: " + schema.default + ")";
       }
     }
+    if (schema.default !== undefined) {
+      delete schema.default;
+    }
     return schema;
   };
 
