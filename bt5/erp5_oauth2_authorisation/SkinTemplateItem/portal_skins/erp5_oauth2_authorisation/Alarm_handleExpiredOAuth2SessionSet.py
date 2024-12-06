@@ -8,6 +8,7 @@ now = DateTime()
 now_catalog_condition = '<%f' % now.timeTime()
 container_value = context.getPortalObject().session_module
 searchFolder = container_value.searchFolder
+deletion_id_list = []
 client_lifespan_accuracy_dict = {}
 def getSessionAccuracyCompensatedExpirationMaxDate(session_value):
   key = session_value.getSource()
@@ -18,32 +19,63 @@ def getSessionAccuracyCompensatedExpirationMaxDate(session_value):
   return session_value.getExpirationDate() + lifespan_accuracy
 def getSessionRawExpirationMaxDate(session_value):
   return session_value.getExpirationDate()
-for (state, expiration_max_date, getSessionExpirationMaxDate, action) in (
+deletion_delay_days = context.ERP5Site_getPreferredInvalidatedOAuth2SessionDeletionDelay()
+if deletion_delay_days is None:
+  deletion_cutoff = None
+else:
+  deletion_cutoff = now - deletion_delay_days
+for (state_list, catalog_date_condition, expiration_max_date, getSessionExpirationMaxDate, action) in (
   ( # Draft sessions' expiration date is the time the Authorisation Code expires.
     # These should be quite rare, as they mean authentication succeeded but was not transformed into a token.
     # The session did not actually become something, so mark it deleted.
-    'draft',
+    ('draft', ),
+    now_catalog_condition,
     now,
     getSessionRawExpirationMaxDate,
     lambda x: x.delete(),
   ),
   ( # Validated sessions' expiration date, plus the associated client's accuracy, is the time the Refresh Token expires.
     # Invalidate the session, as it is now unusable and should not be presented to the user when listing active sessions.
-    'validated',
+    ('validated', ),
     now,
+    now_catalog_condition,
     getSessionAccuracyCompensatedExpirationMaxDate,
     lambda x: x.invalidate(),
   ),
+  (
+    # Invalidated and deleted (state) sessions get deleted after enough time has passed.
+    ('invalidated', 'deleted'),
+    (
+      None
+      if deletion_cutoff is None else
+      '<%f' % deletion_cutoff.timeTime()
+    ),
+    deletion_cutoff,
+    getSessionRawExpirationMaxDate,
+    lambda x: deletion_id_list.append(x.getId()),
+  ),
 ):
-  for session_value in searchFolder(
-    portal_type='OAuth2 Session',
-    validation_state=state,
-    float_index=now_catalog_condition,
-  ):
-    session_value = session_value.getObject()
-    # Recheck document data from ZODB
-    if (
-      session_value.getValidationState() == state and
-      getSessionExpirationMaxDate(session_value) <= expiration_max_date
+  if now_catalog_condition is None:
+    continue
+  for state in state_list: # Query with a single state at a time for better SQL index efficiency
+    for session_value in searchFolder(
+      portal_type='OAuth2 Session',
+      validation_state=state,
+      float_index=catalog_date_condition,
     ):
-      action(session_value)
+      session_value = session_value.getObject()
+      # Recheck document data from ZODB
+      if (
+        session_value.getValidationState() == state and
+        getSessionExpirationMaxDate(session_value) <= expiration_max_date
+      ):
+        action(session_value)
+if deletion_id_list:
+  DELETE_CHUNK = 1000
+  active_container_value = container_value.activate(
+    activity='SQLQueue',
+    priority=4,
+  )
+  while deletion_id_list:
+    active_container_value.manage_delObjects(ids=deletion_id_list[:DELETE_CHUNK])
+    deletion_id_list = deletion_id_list[DELETE_CHUNK:]
