@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -38,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>newThread</string> </value>
+            <value> <string>new_thread</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -71,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DiscussionThread_viewNewPostDialog</string> </value>
+            <value> <string>string:${object_url}/DiscussionForum_viewNewThreadDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
