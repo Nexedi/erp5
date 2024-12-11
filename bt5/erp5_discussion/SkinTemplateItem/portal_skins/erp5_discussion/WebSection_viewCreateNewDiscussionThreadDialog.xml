@@ -42,6 +42,10 @@
             <value> <string>WebSection_createNewDiscussionThread</string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Use this dialog to create a reply and associate it to a Post</string> </value>
         </item>
@@ -126,7 +130,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionThread_viewNewPostDialog</string> </value>
+            <value> <string>WebSection_viewCreateNewDiscussionThreadDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
