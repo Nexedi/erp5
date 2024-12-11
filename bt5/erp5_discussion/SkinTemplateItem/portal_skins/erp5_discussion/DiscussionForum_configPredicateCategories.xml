@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionPost_getAttachmentList</string> </value>
+            <value> <string>DiscussionForum_configPredicateCategories</string> </value>
         </item>
       </dictionary>
     </pickle>
