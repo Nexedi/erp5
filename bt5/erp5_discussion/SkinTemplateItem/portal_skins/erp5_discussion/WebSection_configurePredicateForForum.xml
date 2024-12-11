@@ -50,21 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>text_content, form_id=\'view\', predecessor=None, file=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThread_createNewDiscussionPost</string> </value>
+            <value> <string>WebSection_configurePredicateForForum</string> </value>
         </item>
       </dictionary>
     </pickle>
