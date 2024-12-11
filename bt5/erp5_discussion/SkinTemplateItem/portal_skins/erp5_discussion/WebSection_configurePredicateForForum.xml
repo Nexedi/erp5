@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>forum_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionPost_getAttachmentList</string> </value>
+            <value> <string>WebSection_configurePredicateForForum</string> </value>
         </item>
       </dictionary>
     </pickle>
