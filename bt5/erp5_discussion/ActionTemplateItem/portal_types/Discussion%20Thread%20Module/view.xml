@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DiscussionModule_viewDiscussionThreadList</string> </value>
+            <value> <string>string:${object_url}/DiscussionThreadModule_viewDiscussionThreadList</string> </value>
         </item>
       </dictionary>
     </pickle>
