@@ -7,31 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -39,7 +14,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,15 +57,15 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -98,13 +77,20 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_id</string>
+                        <string>my_title</string>
+                        <string>my_short_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_translated_validation_state_title</string>
+                        <string>my_follow_up_title_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -112,7 +98,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionModule_viewDiscussionThreadList</string> </value>
+            <value> <string>DiscussionForum_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -120,11 +106,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionModule_viewDiscussionThreadList</string> </value>
+            <value> <string>DiscussionForum_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -136,7 +122,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Discussion Threads</string> </value>
+            <value> <string>Discussion Forum</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
