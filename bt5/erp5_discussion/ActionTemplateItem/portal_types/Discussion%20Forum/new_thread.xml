@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>add_discussion_post</string> </value>
+            <value> <string>new_thread</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -53,16 +53,12 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Action Information</string> </value>
-        </item>
-        <item>
             <key> <string>priority</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Reply</string> </value>
+            <value> <string>New Thread</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DiscussionThread_viewCreateNewDiscussionPostDialog</string> </value>
+            <value> <string>string:${object_url}/DiscussionForum_viewNewThreadDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
