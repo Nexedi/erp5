@@ -39,11 +39,15 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>DiscussionThread_createNewDiscussionPost</string> </value>
+            <value> <string>DiscussionForumModule_createNewForum</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Use this dialog to create a reply and associate it to a Post</string> </value>
+            <value> <string>Use this dialog to create a discussion forum</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -97,10 +101,8 @@
                     <key> <string>left reply-dialog</string> </key>
                     <value>
                       <list>
-                        <string>your_text_content</string>
-                        <string>your_file</string>
-                        <string>your_captcha</string>
-                        <string>your_warning</string>
+                        <string>your_title</string>
+                        <string>your_send_notification_text</string>
                       </list>
                     </value>
                 </item>
@@ -115,7 +117,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThread_viewCreateNewDiscussionPostDialog</string> </value>
+            <value> <string>DiscussionForumModule_viewNewForumDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,7 +125,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>DiscussionForumModule_viewNewForumDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -139,7 +141,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Reply</string> </value>
+            <value> <string>Create Forum</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
