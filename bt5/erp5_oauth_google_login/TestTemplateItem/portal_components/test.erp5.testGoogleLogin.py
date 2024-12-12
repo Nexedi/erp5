@@ -310,7 +310,7 @@ class TestGoogleLogin(GoogleLoginTestCase):
       resp = self.publish(self.portal.getPath(), env=env)
       self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
 
-    def token_callback(request):
+    def _check_token_callback_request(request, refresh_token):
       self.assertEqual(
         request.headers['Content-Type'],
         'application/x-www-form-urlencoded')
@@ -321,36 +321,81 @@ class TestGoogleLogin(GoogleLoginTestCase):
           'client_id': self.client_id,
           'client_secret': self.secret_key,
           'grant_type': 'refresh_token',
-          'refresh_token': self.refresh_token,
+          'refresh_token': refresh_token,
         }
       )
+
+    def _userinfo_callback(request, access_token):
+      self.assertEqual(
+        request.headers['Authorization'],
+        'Bearer ' + access_token)
+      return 200, {}, json.dumps({
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": self.default_google_login_email_address,
+      })
+
+    def token_callback_1(request):
+      # First refresh, the refresh token is still valid, so it is not
+      # included in the response, the client gets a new access_token
+      # and will re-use the same refresh_token
+      _check_token_callback_request(request, self.refresh_token)
       return 200, {}, json.dumps({
         'access_token': 'new' + self.access_token,
+        'expires_in': 3600,
+      })
+
+    def userinfo_callback_1(request):
+      return _userinfo_callback(request, 'new' + self.access_token)
+
+    def token_callback_2(request):
+      # Second refresh, the refresh token is no longer valid and a new
+      # token is included in the response, the client gets a new access_token
+      # and and a new refresh_token
+      _check_token_callback_request(request, self.refresh_token)
+      return 200, {}, json.dumps({
+        'access_token': 'newnew' + self.access_token,
         'refresh_token': 'new' + self.refresh_token,
         'expires_in': 3600,
       })
 
-    with mock.patch(
-        'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin.time.time',
-        return_value=time.time() + 5000), \
-        responses.RequestsMock() as rsps:
-      rsps.add_callback(
-        responses.POST,
-        'https://accounts.google.com/o/oauth2/token',
-        token_callback,
-      )
-      # refreshing the token calls userinfo again
-      rsps.add(
-        method='GET',
-        url='https://www.googleapis.com/oauth2/v1/userinfo',
-        json={
-          "first_name": "John",
-          "last_name": "Doe",
-          "email": self.default_google_login_email_address,
-        }
-      )
-      resp = self.publish(self.portal.getPath(), env=env)
-      self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
+    def userinfo_callback_2(request):
+      return _userinfo_callback(request, 'newnew' + self.access_token)
+
+    def token_callback_3(request):
+      # Third refresh, we check that the refresh is made with the new refresh
+      # token from second refresh.
+      _check_token_callback_request(request, 'new' + self.refresh_token)
+      return 200, {}, json.dumps({
+        'access_token': 'newnewnew' + self.access_token,
+        'expires_in': 3600,
+      })
+
+    def userinfo_callback_3(request):
+      return _userinfo_callback(request, 'newnewnew' + self.access_token)
+
+    for i, (token_callback, userinfo_callback) in enumerate(
+      zip(
+        (token_callback_1, token_callback_2, token_callback_3),
+        (userinfo_callback_1, userinfo_callback_2, userinfo_callback_3),
+      ), 1):
+      with mock.patch(
+          'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin.time.time',
+          return_value=time.time() + i * 5000), \
+          responses.RequestsMock() as rsps:
+        rsps.add_callback(
+          responses.POST,
+          'https://accounts.google.com/o/oauth2/token',
+          token_callback,
+        )
+        # refreshing the token calls userinfo again, with the new access token
+        rsps.add_callback(
+          responses.GET,
+          'https://www.googleapis.com/oauth2/v1/userinfo',
+          userinfo_callback,
+        )
+        resp = self.publish(self.portal.getPath(), env=env)
+        self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
 
     resp = self.publish(self.portal.getPath(), env=env)
     self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
