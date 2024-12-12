@@ -713,6 +713,61 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
+  @simulate('Base_filterActionId', 'actions', """
+filtered_actions = {}
+for action_category_name, action_list in actions.items():
+  filtered_actions[action_category_name] = [action for action in action_list if 'foo' in action['id']]
+return filtered_actions
+""")
+  @changeSkin('Hal')
+  def test_getHateoasDocument_filtered_view(self):
+    self.portal.web_site_module.hateoas.edit(configuration_filter_action_script_id='Base_filterActionId')
+    document = self._makeDocument()
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title='Foo Lines',
+      field_list_method='objectValues',
+      field_portal_types='Foo Line | Foo Line',
+      field_stat_method='portal_catalog',
+      field_stat_columns='quantity | Foo_statQuantity',
+      field_editable=1,
+      field_columns='id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns='id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      field_search_columns='id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',
+      field_domain_root_list='foo_category|FooCat\nfoo_domain|FooDomain\nnot_existing_domain|NotExisting',)
+
+    parent = document.getParentValue()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_links']['parent'],
+                    {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
+
+    self.assertEqual(result_dict['_links']['view']['href'],
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view_formbox_fooline" % (
+                       self.portal.absolute_url(),
+                       quote_plus(document.getRelativeUrl())))
+    self.assertEqual(result_dict['_links']['view']['title'], "FormBox FooLine")
+    self.assertEqual(result_dict['_links']['view']['name'], "view_formbox_fooline")
+
+    self.assertNotIn('_embedded', result_dict)
+    for category, value in result_dict['_links'].items():
+      if 'action' in category:
+        if isinstance(value, dict):
+          self.assertIn('foo', value['name'])
+        else:
+          for link in value:
+            self.assertIn('foo', link['name'])
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
   @changeSkin('Hal')
   def test_getHateoasDocument_non_existing_action(self):
     document = self._makeDocument()
