@@ -57,7 +57,9 @@
          </tal:block>
 
         <!-- field value -->
-        <tal:block tal:define="value python: field.get_value('default'); style_prefix string:with_border_">
+        <tal:block tal:define="value python: field.get_value('default');
+                               style_prefix string:with_border_;
+                               merge_cells python: True">
           <tal:block metal:use-macro="here/field_ods_macro/macros/cell_value" />
         </tal:block>
 
@@ -74,7 +76,8 @@
       <tal:block  tal:define="is_list python:same_type(value, []) or same_type(value, ());
                               is_float python: isinstance(value, modules['six'].integer_types + (float, ));">
         <tal:block tal:condition="python: is_list">
-          <table:table-cell tal:attributes="table:style-name string:${style_prefix}text">
+          <table:table-cell tal:attributes="table:style-name string:${style_prefix}text;
+                                            table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)">
             <tal:block tal:condition="python: field is None" tal:repeat="item value">
               <text:p tal:content="item"/>
             </tal:block>
@@ -87,7 +90,8 @@
           <tal:block tal:condition="is_float">
             <tal:block tal:condition="python: isinstance(value, modules['six'].integer_types)">
               <table:table-cell tal:attributes="office:value value;
-                                table:style-name string:${style_prefix}figure"
+                                table:style-name string:${style_prefix}figure;
+                                table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                 office:value-type="float"
                                 table:style-name="figure">
                 <text:p tal:condition="python: field is None"
@@ -107,13 +111,15 @@
                     ">
                     <table:table-cell tal:attributes="office:value value;
                                       table:style-name style_name;
-                                      office:value-type python: ('%' in input_style) and 'percentage' or 'float'"
+                                      office:value-type python: ('%' in input_style) and 'percentage' or 'float';
+                                      table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                       table:style-name="figure">
                       <text:p tal:content="python: field.render_pdf(value)" />
                     </table:table-cell>
                   </tal:block>
                   <tal:block tal:condition="python:field.meta_type not in ['FloatField','IntegerField'] and field.meta_type!='ProxyField'">
-                    <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"
+                    <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;
+                                      table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                       table:style-name="string"
                                       office:value-type="string">
                       <text:p>Error: field is not a FloatField nor an IntegerField</text:p>
@@ -123,7 +129,8 @@
               </tal:block>
               <tal:block tal:condition="python: field is None">
                 <table:table-cell tal:attributes="office:value value;
-                                  table:style-name string:${style_prefix}figure"
+                                  table:style-name string:${style_prefix}figure;
+                                  table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                   office:value-type="float"
                                   table:style-name="figure">
                   <text:p tal:condition="python: field is None"
@@ -139,7 +146,8 @@
             <tal:block tal:condition="python: isinstance(value, DateTime)">
               <tal:block tal:condition="python: field is None">
                 <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
-                                                  table:style-name string:${style_prefix}date;"
+                                  table:style-name string:${style_prefix}date;
+                                  table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                   table:style-name="date"
                                   office:value-type="date">
                   <text:p tal:content="python: value"/>
@@ -149,7 +157,8 @@
                 <tal:block tal:condition="python:field.meta_type=='DateTimeField' or (field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'DateTimeField')">
                   <tal:block tal:condition="python:field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order') or 'ymd'">
                     <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
-                                    table:style-name string:${style_prefix}date_${input_order};"
+                                    table:style-name string:${style_prefix}date_${input_order};
+                                    table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                     table:style-name="date"
                                     office:value-type="date">
                       <text:p tal:content="python: field.render_pdf(value)"/>
@@ -157,7 +166,8 @@
                   </tal:block>
                   <tal:block tal:condition="python:not field.get_value('date_only')" tal:define="input_order python:field.get_value('input_order') or 'ymd'">
                     <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);
-                                    table:style-name string:${style_prefix}date_with_time_${input_order};"
+                                    table:style-name string:${style_prefix}date_with_time_${input_order};
+                                    table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                     table:style-name="date_with_time"
                                     office:value-type="date">
                       <text:p tal:content="python: field.render_pdf(value)"/>
@@ -165,7 +175,8 @@
                   </tal:block>
                 </tal:block>
                 <tal:block tal:condition="python:field.meta_type!='DateTimeField' and field.meta_type!='ProxyField'">
-                  <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"
+                  <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;
+                                    table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                     table:style-name="string"
                                     office:value-type="string">
                     <text:p>Error: field is not a DateTimeField</text:p>
@@ -174,7 +185,8 @@
               </tal:block>
             </tal:block>
             <tal:block tal:condition="python:not isinstance(value, DateTime)">
-             <table:table-cell tal:attributes="table:style-name string:${style_prefix}text"
+             <table:table-cell tal:attributes="table:style-name string:${style_prefix}text;
+                               table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                                table:style-name="text">
               <text:p tal:condition="python: field is None"
                       tal:content="python: value"/>
@@ -187,7 +199,8 @@
         </tal:block>
         <tal:block tal:condition="python: value is None">
           <table:table-cell office:value-type='string'
-                            tal:attributes="table:style-name string:${style_prefix}text"
+                            tal:attributes="table:style-name string:${style_prefix}text;
+                            table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
                             table:style-name='text'>
             <text:p tal:content="python: ''">
             </text:p>
