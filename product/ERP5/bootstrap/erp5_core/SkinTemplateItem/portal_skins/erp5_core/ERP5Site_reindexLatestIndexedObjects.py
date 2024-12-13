@@ -1,3 +1,4 @@
+from erp5.component.module.Log import log
 # Reindex objects which indexation_timestamp is at most
 # delta seconds before current time (ie, bound inclued).
 # Unindex objects which cannot be found.
@@ -10,7 +11,8 @@ candidate_list = context.ERP5Site_zGetLatestIndexedObjectList(delta=delta)
 reindex_count = 0
 unindex_count = 0
 
-for candidate in candidate_list:
+row_count = len(candidate_list)
+for i, candidate in enumerate(candidate_list):
   path = candidate['path']
   try:
     obj = portal.restrictedTraverse(path)
@@ -23,6 +25,9 @@ for candidate in candidate_list:
   else:
     obj.reindexObject()
     reindex_count += 1
+  if i % 1000 == 0:
+    log('processed %i/%i lines' % (i, row_count))
 
-print('%s object reindexed, %s object unindexed' % (reindex_count, unindex_count))
-return printed
+message = '%s object reindexed, %s object unindexed' % (reindex_count, unindex_count)
+log(message)
+return message
