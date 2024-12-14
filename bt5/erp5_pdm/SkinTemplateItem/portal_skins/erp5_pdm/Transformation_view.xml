@@ -112,7 +112,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_reference</string>
+                        <string>my_transformation_type</string>
                         <string>my_resource_title</string>
                         <string>my_template_transformation_title_list</string>
                       </list>
@@ -122,6 +122,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_variation_base_category_list</string>
                         <string>my_variation_category_list</string>

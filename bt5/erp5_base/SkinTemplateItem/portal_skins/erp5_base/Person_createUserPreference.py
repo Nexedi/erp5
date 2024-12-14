@@ -19,6 +19,8 @@ preference.setTitle(translateString('Preference for ${name}',
                      mapping=dict(name=context.getTitle())))
 
 for assignment in context.contentValues(portal_type='Assignment'):
+  if assignment.getValidationState() != 'open':
+    continue
   group = assignment.getGroup(base=True)
   if group:
     preference.setPreferredSectionCategory(group)
