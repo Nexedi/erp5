@@ -260,4 +260,4 @@ class CxmlOrderRequest(CxmlDocument):
     if len(sale_order_list) == 1:
       sale_order = sale_order_list[0]
       self.setFollowUpValue(sale_order)
-      portal.portal_workflow.doActionFor(self, "validate_action")
+      #portal.portal_workflow.doActionFor(self, "validate_action")
