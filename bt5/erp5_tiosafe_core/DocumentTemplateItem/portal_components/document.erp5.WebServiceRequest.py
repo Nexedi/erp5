@@ -38,7 +38,7 @@ except ImportError:
 # pylint:enable=no-name-in-module
 from lxml import etree
 from zLOG import LOG, ERROR, INFO
-from erp5.component.tool.WebServiceTool import ConnectionError
+from erp5.component.tool.WebServiceTool import WebServiceConnectionError
 from Products.ERP5Type.Cache import CachingMethod
 import six
 
@@ -193,7 +193,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     # Call the method
     try:
       url, xml = callRequest(self, method_name, *args, **kw)
-    except ConnectionError as msg:
+    except WebServiceConnectionError as msg:
       if test_mode:
         error = msg
         url = connection.url
