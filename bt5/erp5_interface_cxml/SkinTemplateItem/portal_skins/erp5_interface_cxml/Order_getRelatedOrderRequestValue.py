@@ -1,4 +1,5 @@
 portal_type = context.getPortalType()
+order = None
 if portal_type == "Sale Order":
   order = context
 elif portal_type in ("Sale Packing List", "Sale Invoice Transaction"):
