@@ -7,9 +7,14 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI (expected failure)</td></tr>
+<tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>store</td>
+  <td tal:content="python:str('web_site_module/officejs_monitoring/#page=ojsm_landing&url=https://someurl/public/feeds&username=user&password=pass')"></td>
+  <td>url_parameters</td>
+</tr>
 <!-- Clean Up -->
 <tr>
   <td>open</td>
@@ -21,31 +26,10 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- Old entry point (backward compatibility) -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/officejs_monitoring/#page=settings_configurator&url=https://someurl/public/feeds&username=user&password=pass</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Monitoring Configurations']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>OPML Documents</td>
-  <td></td>
-</tr>
 <!-- New entry point -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_monitoring/#page=ojsm_landing&url=https://someurl/public/feeds&username=user&password=pass</td>
+  <td>${base_url}/${url_parameters}</td>
   <td></td>
 </tr>
 <tr>
@@ -59,8 +43,13 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Add OPML']</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertTextPresent</td>
-  <td>OPML Documents</td>
+  <td>OPML URL</td>
   <td></td>
 </tr>
 </tbody></table>
