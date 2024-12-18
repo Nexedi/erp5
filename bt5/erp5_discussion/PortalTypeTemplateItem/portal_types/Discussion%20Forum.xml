@@ -7,6 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>content_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addXMLObject</string> </value>
         </item>
@@ -15,8 +27,32 @@
             <value> <string>Discussion Forum</string> </value>
         </item>
         <item>
+            <key> <string>init_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>type_class</string> </key>
             <value> <string>XMLObject</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
