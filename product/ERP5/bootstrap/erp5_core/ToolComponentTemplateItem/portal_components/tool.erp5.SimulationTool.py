@@ -1817,6 +1817,8 @@ class SimulationTool(BaseTool):
                              simulation_period='',
                              valuation_method=None,
                              lowest_value_test=False,
+                             previous_period_total_asset_price=None,
+                             previous_period_total_quantity=None,
                              **kw):
     """
     Same thing as getInventory but returns an asset
@@ -1858,8 +1860,14 @@ class SimulationTool(BaseTool):
       'MonthlyWeightedAverage', 'MovingAverage'):
       raise ValueError("Invalid valuation method: %s" % valuation_method)
     if lowest_value_test and valuation_method not in ('Fifo', 'Filo',
-       'MovingAverage'):
+       'MovingAverage', 'WeightedAverage'):
       raise NotImplementedError('lowest_value_test not implemented')
+    if (previous_period_total_asset_price is not None or
+        previous_period_total_quantity is not None
+       ) and valuation_method != 'WeightedAverage':
+      raise NotImplementedError(
+        'previous_period_total_asset_price and previous_period_quantity not implemented'
+      )
 
     assert 'node_uid' in kw or 'section_uid' in kw
     sql_kw = self._generateSQLKeywordDict(**kw)
@@ -1872,6 +1880,8 @@ class SimulationTool(BaseTool):
     result = self.Resource_zGetAssetPrice(
         valuation_method=valuation_method,
         lowest_value_test=lowest_value_test,
+        previous_period_total_asset_price=previous_period_total_asset_price,
+        previous_period_total_quantity=previous_period_total_quantity,
         src__=src__,
         **sql_kw)
 
@@ -1974,6 +1984,7 @@ class SimulationTool(BaseTool):
                              omit_asset_increase=0, omit_asset_decrease=0,
                              initial_running_total_quantity=0,
                              initial_running_total_price=0, precision=None,
+                             omit_internal=0,
                              **kw):
     """Returns a list of movements which modify the inventory
     for a single or a group of resource, node, section, etc.
@@ -1990,6 +2001,11 @@ class SimulationTool(BaseTool):
       for x in extra_column_set if not x.endswith('__score__'))
 
     sql_kw = self._generateSQLKeywordDict(**kw)
+
+    if omit_internal:
+      # ignore internal movements
+      sql_kw['where_expression'] += ' AND ' \
+        'NOT(stock.section_uid<=>stock.mirror_section_uid)'
 
     return self.Resource_zGetMovementHistoryList(
                        src__=src__, ignore_variation=ignore_variation,

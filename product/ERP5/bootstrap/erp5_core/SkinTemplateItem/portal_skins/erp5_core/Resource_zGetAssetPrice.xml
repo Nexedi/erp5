@@ -11,7 +11,8 @@
             <value> <string>where_expression\n
 valuation_method\n
 lowest_value_test\n
-</string> </value>
+previous_period_total_asset_price\n
+previous_period_total_quantity</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
