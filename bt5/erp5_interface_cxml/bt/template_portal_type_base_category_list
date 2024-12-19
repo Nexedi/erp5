@@ -1,3 +1,7 @@
+Cxml Confirmation Request | causality
+Cxml Confirmation Request | follow_up
+Cxml Confirmation Request | predecessor
+Cxml Confirmation Request | successor
 Cxml Document Module | business_application
 Cxml Document | causality
 Cxml Document | follow_up

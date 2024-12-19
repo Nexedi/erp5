@@ -33,10 +33,11 @@ else:
         if sale_order_value.getDestinationReference() != context.getReference():
           error = translate("Cannot FollowUp to Sale Order %s because it is related to another Order Request and the OrderID does not match." %sale_order.getTitle())
           raise ValidationFailed(Message('erp5_ui', error))
+        if portal.portal_workflow.isTransitionPossible(sale_order_value, 'replan'):
+          sale_order_value.replan()
         clone_order = sale_order_value.Order_cloneAndUpdateVersion()
         previous_order_request.setFollowUpValue(clone_order)
-        if portal.portal_workflow.isTransitionPossible(sale_order_value, 'update'):
-          sale_order_value.update()
+        sale_order_value.setVersion(context.getVersion())
         break
     else:
       # we did not find another order request, so no need to clone
@@ -46,6 +47,8 @@ else:
       elif sale_order_value.getDestinationReference() != context.getReference():
         error = translate("Could not validate. The OrderID of the Follow-Up Sale Order does not match." %sale_order.getTitle())
         raise ValidationFailed(Message('erp5_ui', error))
+    if sale_order_value.getSimulationState() == 'confirmed':
+      sale_order_value.update()
     sale_order_value.setVersion(context.getVersion())
 
 # Attach PDF to Sale Order

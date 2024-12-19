@@ -1,4 +1,10 @@
 <base_category_list>
+ <portal_type id="Cxml Confirmation Request">
+  <item>causality</item>
+  <item>follow_up</item>
+  <item>predecessor</item>
+  <item>successor</item>
+ </portal_type>
  <portal_type id="Cxml Document">
   <item>causality</item>
   <item>follow_up</item>

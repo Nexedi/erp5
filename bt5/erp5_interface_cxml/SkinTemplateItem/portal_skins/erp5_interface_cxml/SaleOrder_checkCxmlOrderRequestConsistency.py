@@ -67,7 +67,7 @@ property_title_dict = {
   "": "",
   "address_extension": "Address Extension",
   "city": "City",
-  "corporate_name": "Corportate Name",
+  "corporate_name": "Corporate Name",
   "destination_section": "Client",
   "destination_section_address": "Invoicing Address",
   "destination": "Recipient or Beneficiary",
@@ -102,7 +102,7 @@ def findCreateOrganisation(organisation_dict, create=False):
 address_key_tuple = ("address_extension", "street_address", "city", "zip_code", "region_title")
 def findCreateAddress(category, address_dict, organisation, create=False):
   wrong_value_list = []
-  for address_value in organisation.objectValues(portal_type="Address"):
+  for address_value in organisation.objectValues(portal_type="Address", checked_permission="View"):
     # the address is correct if all values are same as in the order request.
     # only for the addressID (int_index), we overwrite with the value from cXML
     for key, value in address_dict.items():
@@ -201,6 +201,8 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
       our_value = document.getProperty(key)
       if key == "quantity_unit" and value == "unit/piece" and our_value == "unit/set":
         value = "unit/set"
+      if document.getPortalType() == "Organisation" and key == "corporate_name" and value == "Vestas Northern EuropeA/S":
+        value = "Vestas Northern Europe A/S"
       if (our_value or '') != value:
         if set_property:
           if key == "quantity_unit" and document.getResourceValue() is None:

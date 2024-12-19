@@ -1,5 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Cxml Document Module">
+  <item>Cxml Confirmation Request</item>
   <item>Cxml Document</item>
   <item>Cxml Order Request</item>
  </portal_type>

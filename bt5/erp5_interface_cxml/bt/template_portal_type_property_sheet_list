@@ -1,3 +1,6 @@
+Cxml Confirmation Request | Reference
+Cxml Confirmation Request | Task
+Cxml Confirmation Request | TextDocument
 Cxml Connector | Login
 Cxml Connector | Reference
 Cxml Connector | Url
@@ -7,6 +10,7 @@ Cxml Document | TextDocument
 Cxml Multipart Document | Data
 Cxml Order Request | Reference
 Cxml Order Request | TextDocument
+Cxml Order Request | WoelfelCxmlOrderRequest
 Network Id | Reference
 Organisation | CxmlNode
 Sale Invoice Transaction | CxmlOrder

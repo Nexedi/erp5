@@ -1,4 +1,9 @@
 <property_sheet_list>
+ <portal_type id="Cxml Confirmation Request">
+  <item>Reference</item>
+  <item>Task</item>
+  <item>TextDocument</item>
+ </portal_type>
  <portal_type id="Cxml Connector">
   <item>Login</item>
   <item>Reference</item>
@@ -15,6 +20,7 @@
  <portal_type id="Cxml Order Request">
   <item>Reference</item>
   <item>TextDocument</item>
+  <item>WoelfelCxmlOrderRequest</item>
  </portal_type>
  <portal_type id="Network Id">
   <item>Reference</item>

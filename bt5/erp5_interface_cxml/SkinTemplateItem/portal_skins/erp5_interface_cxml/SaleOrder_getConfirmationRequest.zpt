@@ -35,10 +35,11 @@
       <OrderReference tal:attributes="orderDate python:here.getOrderDate().ISO8601(); orderID here/getDestinationReference">
         <DocumentReference tal:attributes="payloadID here/Order_getPayloadId"></DocumentReference>
       </OrderReference>
-      <span tal:omit-tag="" tal:repeat="line python:here.objectValues(sort_on=[('int_index', 'ascending')], portal_type='Sale Order Line')">
-      <ConfirmationItem tal:condition="line/SaleOrderLine_isConfirmationItem" tal:attributes="lineNumber line/getIntIndex; quantity line/SaleOrderLine_getCxmlOrderQuantity">
+      <span tal:omit-tag="" tal:repeat="item here/SaleOrder_getConfirmationItemList">
+      <ConfirmationItem tal:attributes="lineNumber item/index; quantity item/order_quantity">
         <UnitOfMeasure>EA</UnitOfMeasure>
-        <ConfirmationStatus tal:condition="python: line.getQuantity()-line.SaleOrderLine_getCxmlOrderQuantity() == 0" tal:attributes="shipmentDate python:line.getStartDate().ISO8601(); deliveryDate python:line.getStopDate().ISO8601(); quantity line/getQuantity" type="accept">
+        <span tal:omit-tag="" tal:repeat="line item/line_list">
+        <ConfirmationStatus tal:attributes="deliveryDate python:line.getStopDate().ISO8601(); quantity line/getQuantity" type="accept">
           <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
           <ItemIn tal:condition="python: False" tal:attributes="lineNumber line/getIntIndex; quantity line/getQuantity">
             <ItemID>
@@ -59,9 +60,7 @@
             </ItemDetail>
           </ItemIn>
         </ConfirmationStatus>
-        <ConfirmationStatus tal:condition="python: line.SaleOrderLine_getCxmlOrderQuantity() - line.getQuantity()" tal:attributes="quantity python:line.SaleOrderLine_getCxmlOrderQuantity() - line.getQuantity()" type="reject">
-          <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
-        </ConfirmationStatus>
+        </span>
       </ConfirmationItem>
       </span>
     </ConfirmationRequest>
