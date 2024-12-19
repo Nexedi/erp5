@@ -1,4 +1,42 @@
-<dtml-if "'WeightedAverage' in valuation_method">
+<dtml-if "'WeightedAverage'==valuation_method and previous_period_total_asset_price">
+select
+    (@total_quantity:=<dtml-var "previous_period_total_quantity">+quantity_diff) as total_quantity,
+    <dtml-if "lowest_value_test">
+        (@unit_price:=LEAST((<dtml-var "previous_period_total_asset_price">+incoming_total_price)/(<dtml-var "previous_period_total_quantity">+incoming_total_quantity), last_incoming_unit_price)) as unit_price,
+        (@total_quantity * @unit_price) as total_asset_price
+    <dtml-else>
+        (@unit_price:=(<dtml-var "previous_period_total_asset_price">+incoming_total_price)/(<dtml-var "previous_period_total_quantity">+incoming_total_quantity), last_incoming_unit_price) as unit_price,
+        (<dtml-var "previous_period_total_asset_price"> + incoming_total_price + outgoing_total_quantity * @unit_price) as total_asset_price
+    </dtml-if>
+from
+    (
+        select
+            SUM(IF(quantity>0, total_price, 0)) as incoming_total_price,
+            SUM(IF(quantity>0, quantity, 0)) as incoming_total_quantity,
+            SUM(IF(quantity>0, 0, quantity)) as outgoing_total_quantity,
+            SUM(quantity) as quantity_diff
+            <dtml-if "lowest_value_test">,
+            (
+                select
+                    total_price / quantity
+                from
+                    stock, catalog
+                where
+                    quantity > 0
+                and
+                    <dtml-var where_expression>
+                order by
+                    date desc
+                limit 1
+            ) as last_incoming_unit_price
+            </dtml-if>
+        from
+            stock, catalog
+        where
+          <dtml-var where_expression>
+     ) as period
+
+<dtml-elif "'WeightedAverage' in valuation_method">
 
 /*
 Almost the same SQL for WeightedAverage/MonthlyWeightedAverage
