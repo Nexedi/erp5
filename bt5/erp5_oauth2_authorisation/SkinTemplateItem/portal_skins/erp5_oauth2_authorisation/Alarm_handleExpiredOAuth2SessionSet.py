@@ -56,7 +56,7 @@ for (state_list, catalog_date_condition, expiration_max_date, getSessionExpirati
     lambda x: deletion_id_list.append(x.getId()),
   ),
 ):
-  if now_catalog_condition is None:
+  if expiration_max_date is None:
     continue
   for state in state_list: # Query with a single state at a time for better SQL index efficiency
     result_list = searchFolder(
