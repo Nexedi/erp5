@@ -79,6 +79,7 @@ try:
     id="forum_%s" % test_id
   )[0].getObject()
 
+  print("!---- test created objects ----------------------------------------")
   print("blog.getMembershipCriterionCategoryList (should be %s):" % publication_section_blog_path)
   print(blog.getMembershipCriterionCategoryList())
   print('blog criterion list (should be ("portal_type", "Web Page")):')
@@ -92,4 +93,45 @@ try:
   print(forum.getRelativeUrl())
 except IndexError:
   print("re-run for tic()")
+
+# check objects created via UI
+try:
+  thread = portal.discussion_thread_module.searchFolder(
+    portal_type="Discussion Thread",
+    id=6
+  )[0].getObject()
+  post = thread.searchFolder(
+    portal_type="Discussion Post"
+  )[0].getObject()
+  print()
+  print("!---- objects created via UI ----------------------------------------")
+  print(thread.getRelativeUrl())
+  print(post.getRelativeUrl())
+  # test_public_web_section
+  membership_criterion_category_list = test_public_web_section.getMembershipCriterionCategoryList()
+  multimembership_criterion_base_category_list = test_public_web_section.getMultimembershipCriterionBaseCategoryList()
+  print()
+  print("!---- test web section categories ----------------------------------------")
+  print("membership_criterion_category_list")
+  print(membership_criterion_category_list)
+  print("multimembership_criterion_base_category_list")
+  print(multimembership_criterion_base_category_list)
+  membership_criterion_category_list = forum.getMembershipCriterionCategoryList()
+  multimembership_criterion_base_category_list = forum.getMultimembershipCriterionBaseCategoryList()
+  print()
+  print("!---- forum web section categories ----------------------------------------")
+  print("membership_criterion_category_list")
+  print(membership_criterion_category_list)
+  print("multimembership_criterion_base_category_list")
+  print(multimembership_criterion_base_category_list)
+  category_list = thread.getCategoryList()
+  print()
+  print("!---- thread and post categories ----------------------------------------")
+  print("thread category_list")
+  print(category_list)
+  category_list = post.getCategoryList()
+  print("post category_list")
+  print(category_list)
+except:
+  print("no objects created via UI")
 return printed
