@@ -14,9 +14,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>A Discussion Forum defines a default object and predicate to show/select content (discussion threads) listed in it.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
