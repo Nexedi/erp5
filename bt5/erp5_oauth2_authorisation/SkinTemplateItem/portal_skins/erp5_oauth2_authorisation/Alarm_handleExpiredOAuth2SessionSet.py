@@ -4,6 +4,7 @@ Cleanup OAuth2 Sessions.
 This is not required for expired sessions to be unusable (as they should be),
 but this allows cleaning up sessions from a document point of view.
 """
+LOAD_LIMIT = 10000
 now = DateTime()
 now_catalog_condition = '<%f' % now.timeTime()
 container_value = context.getPortalObject().session_module
@@ -25,7 +26,8 @@ if deletion_delay_days is None:
   deletion_cutoff = None
 else:
   deletion_cutoff = now - deletion_delay_days
-load_limit = 10000
+load_limit = LOAD_LIMIT
+action_skip_count = 0
 with context.defaultActivateParameterDict({'tag': action_tag}):
   for (state_list, catalog_date_condition, expiration_max_date, getSessionExpirationMaxDate, action) in (
     ( # Draft sessions' expiration date is the time the Authorisation Code expires.
@@ -76,10 +78,25 @@ with context.defaultActivateParameterDict({'tag': action_tag}):
           getSessionExpirationMaxDate(session_value) <= expiration_max_date
         ):
           action(session_value)
+        else:
+          action_skip_count += 1
       if load_limit <= 0:
         break
   if deletion_id_list:
     container_value.manage_delObjects(ids=deletion_id_list)
+if (
+  action_skip_count >= LOAD_LIMIT or (
+    action_skip_count > 100 and
+    action_skip_count > (LOAD_LIMIT - load_limit) / 10
+  )
+):
+  # Raise if more than 10% of the number of found documents were skipped, but not if the absolute value is under 100, but do if LOAD_LIMIT is less than 100.
+  # Possible consequences:
+  # - poor performance (every subsequent iteration will load and skip the same documents)
+  #   This one may be non-critical, but best to know of, investigate and fix.
+  # - infinite iteration (this script will respawn itself, find LOAD_LIMIT documents, process 0, and respawn itself until the in-ZODB conditions become true - which can take months)
+  #   This one is more difficult to properly fix, and worth a raise.
+  raise Exception('Many documents were matched in catalog but skipped by supposedly-identical condition on ZODB. Please investigate.')
 if load_limit <= 0:
   # The load quota was exhausted, there may be more to cleanup
   getattr(
