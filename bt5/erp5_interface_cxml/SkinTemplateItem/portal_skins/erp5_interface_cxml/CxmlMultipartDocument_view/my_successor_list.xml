@@ -95,6 +95,10 @@
                           <string>Cxml Order Request</string>
                           <string>Cxml Order Request</string>
                         </tuple>
+                        <tuple>
+                          <string>PDF</string>
+                          <string>PDF</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

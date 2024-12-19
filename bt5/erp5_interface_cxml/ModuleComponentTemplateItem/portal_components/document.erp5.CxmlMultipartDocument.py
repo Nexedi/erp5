@@ -41,7 +41,41 @@ class CxmlMultipartDocument(XMLObject):
   security.declareObjectProtected(AccessContentsInformation)
 
   def getTitle(self):
-    return None
+    return "%s %s" %(self.portal_type, self.getId())
+
+  security.declareProtected(ModifyPortalContent, 'checkParts')
+  def checkParts(self):
+    "CHeck Parts"
+    portal = self.getPortalObject()
+    output = ""
+    content = "content-length: %s\nContent-Type: %s\n%s" %(
+      self.getSize(),
+      self.getContentType(),
+      self.getData()
+    )
+    message = email.Parser.Parser().parsestr(content)
+    for part in message.walk():
+      output += part.get_content_type() + "\n"
+      if part.is_multipart():
+        continue
+      payload = part.get_payload(decode=0)
+      cxml_document_list = []
+      if part.get_content_type() == "application/pdf":
+        filename = part.get_filename()
+        pdf_document = portal.document_module.newContent(
+          portal_type = "PDF",
+          data = payload,
+          filename = filename,
+          title = filename.rstrip('.pdf'),
+          version = "001",
+          classification="collaborative/team",
+          group="woelfel/wws",
+          publication_section="verkauf/auftraege",
+        )
+        pdf_document.submit()
+        cxml_document_list.append(pdf_document)
+    self.setSuccessorValueList(self.getSuccessorValueList() + cxml_document_list)
+    return output
 
   security.declareProtected(ModifyPortalContent, 'extract')
   def extract(self):
@@ -54,17 +88,37 @@ class CxmlMultipartDocument(XMLObject):
     )
     message = email.Parser.Parser().parsestr(content)
     cxml_document_list = []
+    pdf_document_list = []
     for part in message.walk():
       if part.is_multipart():
         continue
       payload = part.get_payload(decode=0)
-      if "<OrderRequest>" in payload:
-        portal_type = "Cxml Order Request"
+      if part.get_content_type() == "application/pdf":
+        filename = part.get_filename()
+        pdf_document = portal.document_module.newContent(
+          portal_type = "PDF",
+          data = payload,
+          filename = filename,
+          title = filename.rstrip('.pdf'),
+          version = "001",
+          classification="collaborative/team",
+          group="woelfel/wws",
+          publication_section="verkauf/auftraege",
+        )
+        pdf_document.submit()
+        pdf_document_list.append(pdf_document)
       else:
-        portal_type = "Cxml Document"
-      cxml_document_list.append(portal.cxml_document_module.newContent(
-        portal_type=portal_type,
-        text_content=payload,
-        causality_value=self))
-    self.setSuccessorValueList(cxml_document_list)
+        if "<OrderRequest>" in payload:
+          portal_type = "Cxml Order Request"
+        else:
+          portal_type = "Cxml Document"
+        cxml_document_list.append(portal.cxml_document_module.newContent(
+          portal_type=portal_type,
+          text_content=payload,
+          causality_value=self))
+    for order_request in cxml_document_list:
+      if order_request.getPortalType() == "Cxml Order Request":
+        for pdf_document in pdf_document_list:
+          pdf_document.setFollowUpValue(order_request)
+    self.setSuccessorValueList(cxml_document_list + pdf_document_list)
     return cxml_document_list

@@ -199,8 +199,12 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
         compare(category_value, value, context_key=key, parent_context_title=context_title)
     else:
       our_value = document.getProperty(key)
+      if key == "quantity_unit" and value == "unit/piece" and our_value == "unit/set":
+        value = "unit/set"
       if (our_value or '') != value:
         if set_property:
+          if key == "quantity_unit" and document.getResourceValue() is None:
+            continue
           document.setProperty(key, value)
         else:
           title = translate(property_title_dict.get(key, key))

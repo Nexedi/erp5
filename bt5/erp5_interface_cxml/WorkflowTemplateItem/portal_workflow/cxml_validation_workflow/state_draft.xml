@@ -18,9 +18,17 @@
               <tuple>
                 <string>destination/portal_workflow/cxml_validation_workflow/transition_delete</string>
                 <string>destination/portal_workflow/cxml_validation_workflow/transition_delete_action</string>
+                <string>destination/portal_workflow/cxml_validation_workflow/transition_invalidate</string>
+                <string>destination/portal_workflow/cxml_validation_workflow/transition_invalidate_action</string>
                 <string>destination/portal_workflow/cxml_validation_workflow/transition_validate</string>
                 <string>destination/portal_workflow/cxml_validation_workflow/transition_validate_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>

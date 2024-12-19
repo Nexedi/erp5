@@ -47,4 +47,9 @@ else:
         error = translate("Could not validate. The OrderID of the Follow-Up Sale Order does not match." %sale_order.getTitle())
         raise ValidationFailed(Message('erp5_ui', error))
     sale_order_value.setVersion(context.getVersion())
+
+# Attach PDF to Sale Order
+for pdf in context.getFollowUpRelatedValueList(portal_type="PDF", checked_permission="Modify portal content"):
+  pdf.setFollowUpValueList(pdf.getFollowUpValueList() + [sale_order_value])
+
 context.validate()
