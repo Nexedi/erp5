@@ -77,6 +77,17 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>listbox</string>
+                        <string>my_absolute_url</string>
+                        <string>my_authorization_forced</string>
+                        <string>my_caching_policy</string>
+                        <string>my_custom_render_method_id</string>
+                        <string>my_default_page_displayed</string>
+                        <string>my_description</string>
+                        <string>my_id</string>
+                        <string>my_short_title</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>my_visible</string>
                       </list>
                     </value>
                 </item>
