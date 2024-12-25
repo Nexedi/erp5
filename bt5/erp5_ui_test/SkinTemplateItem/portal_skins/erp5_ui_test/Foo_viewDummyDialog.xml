@@ -76,6 +76,7 @@
                     <value>
                       <list>
                         <string>your_string_field</string>
+                        <string>your_inspect_request</string>
                       </list>
                     </value>
                 </item>
