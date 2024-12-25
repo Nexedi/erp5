@@ -1,4 +1,8 @@
 """Call the Foo_viewDummyDialog"""
-kw.update(context.REQUEST.form)
-return context.ERP5Site_redirect("%s/Foo_viewDummyDialog" % context.absolute_url(),
-        keep_items={'portal_status_message': '"Update" action is done with "%s".' % string_field}, **kw)
+return context.Base_renderForm(
+  'Foo_viewDummyDialog',
+  message='"Update" action is done with "%s".' % string_field,
+  keep_items={
+    'key_posted_during_on_update': 'A value pushed by update action'
+  }
+)
