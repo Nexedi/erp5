@@ -41,7 +41,7 @@ class FakeFormBoxEditor(dict):
   __allow_access_to_unprotected_subobjects__ = 1
 
   def as_dict(self):
-    return self
+    return dict(self)
 
 
 class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
