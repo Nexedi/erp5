@@ -50,11 +50,21 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>create_blog=False, create_forum=False, blog_id="blog", forum_id="forum", form_id="view"</string> </value>
+            <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, send_notification_text=None, reference=None, file=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_createBlogAndForum</string> </value>
+            <value> <string>DiscussionForum_createNewDiscussionThread</string> </value>
         </item>
       </dictionary>
     </pickle>
