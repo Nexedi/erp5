@@ -16,9 +16,22 @@ context.edit(custom_render_method_id="WebSection_viewDiscussionThreadForm",
              membership_criterion_base_category=membership_criterion_base_category_list,
              multimembership_criterion_base_category=multimembership_criterion_base_category_list,
              membership_criterion_category=membership_criterion_category_list + ["publication_section/forum"]) #???
-#context.setMembershipCriterionBaseCategory(membership_criterion_base_category_list)
-#context.setMultimembershipCriterionBaseCategory(multimembership_criterion_base_category_list)
-#context.setMembershipCriterionCategory(membership_criterion_category_list + ["publication_section/forum"])
 
 # TODO FIX
 #context.setCriterion("portal_type", "Discussion Thread")
+
+# could / should use this pdm resource init?
+'''
+# from erp5_pdm/Resource_init.py
+portal_type = context.getPortalType().lower().replace(' ', '_')
+
+base = context.portal_preferences.getPreference('preferred_%s_variation_base_category_list' % portal_type, [])
+optional = context.portal_preferences.getPreference('preferred_%s_optional_variation_base_category_list' % portal_type, [])
+individual = context.portal_preferences.getPreference('preferred_%s_individual_variation_base_category_list' % portal_type, [])
+use_list = context.portal_preferences.getPreference('preferred_%s_use_list' % portal_type, [])
+
+context.edit(variation_base_category_list=base,
+    optional_variation_base_category_list=optional,
+    individual_variation_base_category_list=individual,
+    use_list=use_list)
+'''
