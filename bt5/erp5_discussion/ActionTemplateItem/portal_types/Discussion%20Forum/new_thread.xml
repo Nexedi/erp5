@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>newThread</string> </value>
+            <value> <string>new_thread</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
