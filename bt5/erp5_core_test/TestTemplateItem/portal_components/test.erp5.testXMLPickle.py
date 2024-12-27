@@ -33,7 +33,7 @@ import zodbpickle.fastpickle as pickle
 import re
 from io import BytesIO
 from six import StringIO
-from Products.ERP5Type.XMLExportImport import importXML, ppml
+from Products.ERP5Type.XMLExportImport import importXML, OrderedPickler, ppml
 import six
 import lxml.etree
 
@@ -194,6 +194,7 @@ class TestXMLPickle(XMLPickleTestCase):
     self.check_and_load({'a': 1, 'b': 2})
     self.check_and_load({'hé': 'ho'})
     self.check_and_load(dict.fromkeys(range(3000)))
+    self.check_and_load({1: 'one', 'two': 2})
 
   def test_tuple(self):
     self.check_and_load((1, ))
@@ -346,3 +347,24 @@ class TestXMLPickleStringHeuristics(XMLPickleTestCase):
     self.assertEqual(
       persistent_ids,
       [b'\x00\x00\x00\x00\x00\x00\x00\x01'])
+
+
+class TestOrderedPickler(unittest.TestCase):
+  def test_ordered_pickler(self):
+    def check(obj, check_items_order=True):
+      f = BytesIO()
+      pickler = OrderedPickler(f)
+      pickler.dump(obj)
+      f.seek(0)
+      reconstructed = pickle.load(f)
+      self.assertEqual(reconstructed, obj)
+      self.assertIs(type(reconstructed), type(obj))
+      if check_items_order:
+        self.assertEqual(list(reconstructed.items()), list(obj.items()))
+
+    check({"one": 1, "two": 2})
+    check({1: "one", "two": 2})
+    check({b"one": 1, b"two": 2})
+    check({})
+    check(1, check_items_order=False)
+    check("one", check_items_order=False)
