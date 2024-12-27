@@ -54,7 +54,7 @@ for base_category in multimembership_criterion_base_category_list:
   #create_kw['%s_list' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]
   category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])
 
-discussion_thread = portal.discussion_thread_module.newContent(
+discussion_thread = context.newContent(
                       portal_type = "Discussion Thread",
                       **create_kw)
 # as we create a thread under a "root" predicate web section copy  # now should be "root" predocate Discussion Forum
