@@ -38,6 +38,7 @@ getPreferredCategoryChildItemListMethodId.
 # - all resource child must be properly indented
 # It is much simpler if only "empty_category=False" case is handled.
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Utils import bytes2str
 from AccessControl import getSecurityManager
 from six.moves import range
 portal = context.getPortalObject()
@@ -58,7 +59,7 @@ if indent_category == indent_resource == compact == None:
 accessor_id = 'getCompactTranslatedTitle' if compact else 'getTranslatedTitle'
 
 def getResourceItemList():
-  INDENT = portal_preferences.getPreferredWhitespaceNumberForChildItemIndentation() * '\xc2\xa0' # UTF-8 Non-breaking space
+  INDENT = portal_preferences.getPreferredWhitespaceNumberForChildItemIndentation() * bytes2str(b'\xc2\xa0') # UTF-8 Non-breaking space
   RESOURCE_INDENT = INDENT if indent_resource else ''
   getResourceTitle = lambda resource, category, depth: RESOURCE_INDENT * depth + getattr(resource, accessor_id)()
   if indent_category:
