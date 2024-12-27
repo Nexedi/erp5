@@ -39,7 +39,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>WebSection_createNewDiscussionThread</string> </value>
+            <value> <string>DiscussionForum_createNewDiscussionThread</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
