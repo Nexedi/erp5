@@ -25,8 +25,10 @@ if not (portal_type in destination.getVisibleAllowedContentTypeList() and
   if batch_mode:
     return None
   else:
-    return context.Base_redirect(keep_items={'portal_status_message':
-             translateString("You are not allowed to clone this object.")})
+    return context.Base_redirect(keep_items={
+      'portal_status_message': translateString("You are not allowed to clone this object."),
+      'portal_status_level': 'error',
+    })
 
 # prepare query params
 kw = {'portal_type' : translateString(portal_type)}
@@ -36,9 +38,14 @@ if web_mode:
   if script is not None:
     msg = script(**form_data)
     if msg is not None:
-      return context.Base_redirect(form_id,
-                          editable_mode=editable_mode,
-                          keep_items={'portal_status_message': msg})
+      return context.Base_redirect(
+        form_id,
+        editable_mode=editable_mode,
+        keep_items={
+          'portal_status_message': msg,
+          'portal_status_level': 'error',
+        }
+      )
 
 # Standard cloning method
 if clone:
