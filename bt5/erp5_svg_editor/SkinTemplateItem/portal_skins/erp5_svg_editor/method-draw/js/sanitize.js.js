@@ -183,9 +183,7 @@ svgedit.sanitize.sanitizeSvg = function(node) {
           se_attrs.push([attrName, attr.nodeValue]);
         } 
 
-        // TODO looks dangerous
-
-        //node.removeAttributeNS(attrNsURI, attrLocalName);
+        node.removeAttributeNS(attrNsURI, attrLocalName);
       }
       
       // Add spaces before negative signs where necessary
