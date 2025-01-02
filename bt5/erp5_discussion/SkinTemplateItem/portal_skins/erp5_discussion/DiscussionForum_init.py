@@ -1,12 +1,12 @@
 portal = context.getPortalObject()
 type_definition = context.getTypeInfo()
-membership_criterion_base_category_set = set([]) #set(context.getMembershipCriterionBaseCategoryList())
-multimembership_criterion_base_category_set = set([]) #set(context.getMultimembershipCriterionBaseCategoryList())
+membership_criterion_base_category_set = set(context.getMembershipCriterionBaseCategoryList()) #TODO this should come from the linked object (e.g. a web section, what else? a project?)
+multimembership_criterion_base_category_set = set(context.getMultimembershipCriterionBaseCategoryList()) #TODO same
+membership_criterion_category_list = context.getMembershipCriterionCategoryList() #TODO same
 multimembership_criterion_base_category_set.update(membership_criterion_base_category_set)
-multimembership_criterion_base_category_set.add("publication_section")
+multimembership_criterion_base_category_set.add("publication_section") #TODO: mmm, publication_section is the "root predicate" from old web_section way. Then, add another category here?
 membership_criterion_base_category_list = []
 multimembership_criterion_base_category_list = list(multimembership_criterion_base_category_set)
-membership_criterion_category_list = [] #context.getMembershipCriterionCategoryList()
 
 context.setTitle("Forum")
 context.edit(visible=True,
@@ -18,7 +18,7 @@ context.edit(visible=True,
              membership_criterion_base_category=membership_criterion_base_category_list,
              multimembership_criterion_base_category=multimembership_criterion_base_category_list,
              membership_criterion_category=membership_criterion_category_list + ["publication_section/forum"]) #???
-               #TODO: no, publication_section is the "root predicate" from old web_section way. Then, add another category here?
+               #TODO: mmm, publication_section is the "root predicate" from old web_section way. Then, add another category here?
 context.setCriterion("portal_type", "Discussion Thread")
 
 # could / should use this pdm resource init?
