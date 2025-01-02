@@ -2007,14 +2007,20 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             editable_field_dict[select] = proxy_form.get_field(proxy_field_name, include_disabled=1)
             break
 
-    # handle the case when list-scripts are ignoring `limit` - paginate for them
-    if limit is not None:
+    # handle the case when list-scripts are ignoring `limit` - paginate for them.
+    # Except when `limit` is explicitely set to 0, meaning no limit.
+    if limit:
       if isinstance(limit, (tuple, list)):
         start, num_items = map(int, limit)
-      elif isinstance(limit, int):
-        start, num_items = 0, limit
       else:
-        start, num_items = 0, int(limit)
+        if isinstance(limit, int):
+          limit_int = limit
+        else:
+          limit_int = int(limit)
+        if limit_int == 0:
+          start, num_items = 0, len(search_result_iterable)
+        else:
+          start, num_items = 0, int(limit_int)
       if not (is_rendering_listbox and not has_listbox_a_count_method):
         # the limit was most likely taken into account thus we don't need to slice
         start, num_items = 0, len(search_result_iterable)
