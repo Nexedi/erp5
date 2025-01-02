@@ -22,10 +22,9 @@ if group_list in MARKER:
 if site_list in MARKER:
   site_list = user_assignment_dict['site_list']
 
-# TODO FIX (Discussion Forum portal type is not yet a predicate)
 # set predicate settings for current Discussion Forum
-membership_criterion_category_list = []#context.getMembershipCriterionCategoryList()
-multimembership_criterion_base_category_list = []#context.getMultimembershipCriterionBaseCategoryList()
+membership_criterion_category_list = context.getMembershipCriterionCategoryList()
+multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
 
 reference = context.Base_generateReferenceFromString(title)
 random_string_length = 10
