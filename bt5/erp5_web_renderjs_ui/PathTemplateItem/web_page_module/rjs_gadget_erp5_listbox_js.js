@@ -1214,7 +1214,7 @@
       select_list.push("uid");
 
       if (gadget.state.lines === 0) {
-        limit_options = undefined;
+        limit_options = 0;
       } else {
         limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
       }
