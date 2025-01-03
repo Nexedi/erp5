@@ -363,7 +363,7 @@ class OOoTemplate(ZopePageTemplate):
           picture_type = picture.content_type()
       else:
         # "standard" filetype case (Image or File)
-        picture_data = str(picture_data)
+        picture_data = bytes(picture_data)
         if picture_type is None:
           picture_type = picture.getContentType()
 
