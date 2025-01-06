@@ -33,13 +33,13 @@ from erp5.component.document.ImmobilisableItem import ImmobilisableItem
 
 
 class Machine(ImmobilisableItem):
-    """
-    Machine represents
-    """
+  """
+  Machine represents
+  """
 
-    meta_type = 'ERP5 Machine'
-    portal_type = 'Machine'
-    add_permission = Permissions.AddPortalContent
+  meta_type = 'ERP5 Machine'
+  portal_type = 'Machine'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
+  # Declarative security
+  security = ClassSecurityInfo()
