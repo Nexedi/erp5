@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Listbox_asRSS</string> </value>
+            <value> <string>ListBox_asRSS</string> </value>
         </item>
       </dictionary>
     </pickle>

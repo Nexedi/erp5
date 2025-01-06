@@ -6,7 +6,7 @@
   tal:define="line_list here/query;
               label_list here/getLabelValueList;
               real_context here/getContext;
-              feed_data python: real_context.Listbox_asRSS(label_list, line_list);">
+              feed_data python: real_context.ListBox_asRSS(label_list, line_list);">
 
 <rss version="2.0">
     <channel>

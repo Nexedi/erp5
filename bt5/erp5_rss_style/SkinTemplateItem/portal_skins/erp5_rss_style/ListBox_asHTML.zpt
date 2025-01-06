@@ -4,7 +4,7 @@
   tal:define="line_list here/query;
               label_list here/getLabelValueList;
               real_context here/getContext;
-              feed_data python: real_context.Listbox_asRSS(label_list, line_list);">
+              feed_data python: real_context.ListBox_asRSS(label_list, line_list);">
   <item tal:repeat="item_info feed_data/listItemInfos" >
     <tal:block tal:replace="structure item_info"/>
   </item>
