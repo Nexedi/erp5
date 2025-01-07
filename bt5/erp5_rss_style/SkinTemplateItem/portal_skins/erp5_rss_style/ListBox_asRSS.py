@@ -38,7 +38,6 @@ from Products.ERP5Type.Utils import str2unicode
 
 items = []
 feed_data = {}
-request = context.REQUEST
 
 # required channel elements for RSS 2.0 specification
 required_field_list = ('title', 'description', 'link')
