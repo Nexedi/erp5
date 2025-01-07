@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>sur titres immobilisés (droit de créance)</string> </value>
+            <value> <string>Intérêts courus sur titres immobilisés (droit de créance)</string> </value>
         </item>
       </dictionary>
     </pickle>

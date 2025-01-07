@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Immobilisations en cours</string> </value>
+            <value> <string>Immobilisations en cours, avances et acomptes</string> </value>
         </item>
       </dictionary>
     </pickle>

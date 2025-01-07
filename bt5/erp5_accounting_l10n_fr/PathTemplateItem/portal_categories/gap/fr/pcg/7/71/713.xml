@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Variation des stocks (en-cours de production, produits)</string> </value>
+            <value> <string>Variation des stocks des en-cours de production et de produits</string> </value>
         </item>
       </dictionary>
     </pickle>

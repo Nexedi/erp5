@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Même ventilation que celle du compte 212</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

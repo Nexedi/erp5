@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Rabais, remises et ristournes obtenus sur achats</string> </value>
+            <value> <string>Rabais, remises et ristournes obtenus sur achats (même ventilation que celle du compte 60)</string> </value>
         </item>
       </dictionary>
     </pickle>

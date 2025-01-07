@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Etat - Charges à payer et produits à recevoir</string> </value>
+            <value> <string>État - Charges à payer et produits à recevoir</string> </value>
         </item>
       </dictionary>
     </pickle>

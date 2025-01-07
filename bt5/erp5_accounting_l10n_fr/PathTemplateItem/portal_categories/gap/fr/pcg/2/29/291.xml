@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Même ventilation que celle du compte 21. règlement n°2002-10 du crc</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -73,7 +75,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Dépréciations des immobilisations corporelles (même ventilation que celle du compte 21)</string> </value>
+            <value> <string>Dépréciations des immobilisations corporelles</string> </value>
         </item>
       </dictionary>
     </pickle>

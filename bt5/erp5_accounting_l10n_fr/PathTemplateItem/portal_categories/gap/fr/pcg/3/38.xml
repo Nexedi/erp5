@@ -57,7 +57,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>(lorsque l\'entité tient un inventaire permanent en comptabilité générale, le compte 38 peut être utilisé pour comptabiliser les stocks en voie d\'acheminement, mis en dépôt ou donnés en consignation)</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -69,7 +71,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>(lorsque l\'entité tient un inventaire permanent en comptabilité générale, le compte 38 peut être utilisé pour comptabiliser les stocks en voie d\'acheminement, mis en dépôt ou donnés en consignation)</string> </value>
+            <value> <string>(Le compte 38 peut être utilisé pour comptabiliser les stocks en voie d\'acheminement, mis en dépôt ou donnés en consignation)</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Supprimé par le règlement n°99-08 du crc</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

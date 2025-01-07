@@ -67,8 +67,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Plan comptable général\n
-Version consolidée du règlement ANC 2014-03 (Version au 1er janvier 2017)</string> </value>
+            <value> <string>Plan comptable général - Règlement ANC 2014-03 (Version 2025)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -80,7 +79,7 @@ Version consolidée du règlement ANC 2014-03 (Version au 1er janvier 2017)</str
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Plan Comptable Général (Version au 1er janvier 2017)</string> </value>
+            <value> <string>Plan Comptable Général (Version au 1er janvier 2025)</string> </value>
         </item>
       </dictionary>
     </pickle>
