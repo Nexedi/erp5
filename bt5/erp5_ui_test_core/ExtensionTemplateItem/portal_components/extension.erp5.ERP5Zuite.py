@@ -1,14 +1,15 @@
 import itertools
 import time
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
-from Products.CMFActivity.ActivityTool import getCurrentNode
+from Products.CMFActivity.ActivityTool import getCurrentNode, timerservice_lock
 
-def waitForActivities(self, delay=100, count=None):
+
+def waitForActivities(self, delay=100):
   """
-    We wait until all activities are finished
+    Wait until all activities are finished, or delay is reached.
 
     RuntimeError is raised in case there is no way
-    to finish activities.
+    to finish activities before delay.
   """
   activity_tool = self.getPortalObject().portal_activities
   assert not (
@@ -16,14 +17,11 @@ def waitForActivities(self, delay=100, count=None):
     and getCurrentNode() in activity_tool.getProcessingNodeList()), \
     'still subscribed to activities'
 
-  if count is not None: # BBB
-    # completely arbitrary conversion factor: count used to default to 1000
-    # and I (just as arbitrarily) converted that into a 100s default maximum
-    # tolerable wait delay before bailing.
-    delay = count / 10.
   deadline = time.time() + delay
   for call_count in itertools.count():
-    x = activity_tool.getMessageList()
+    assert not timerservice_lock.locked()
+    with timerservice_lock:
+      x = activity_tool.getMessageList()
     if not x:
       return 'Done.'
     if all(x.processing_node == -2 for x in x):
@@ -34,7 +32,8 @@ def waitForActivities(self, delay=100, count=None):
     if time.time() > deadline:
       break
     if call_count % 10 == 0:
-      activity_tool.timeShift(3 * VALIDATION_ERROR_DELAY)
+      with timerservice_lock:
+        activity_tool.timeShift(3 * VALIDATION_ERROR_DELAY)
   raise RuntimeError('tic is looping forever.')
 
 def UpdateImage(image):
