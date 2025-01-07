@@ -39,8 +39,9 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
     self.xml_object_tag = 'node'
 
 
-  def _createContent(self, xml=None, object=None, object_id=None, sub_object=None,
-      reset_local_roles=0, reset_workflow=0, simulate=0, **kw):
+  def _createContent(self, xml=None, object=None,  # pylint: disable=redefined-builtin 
+        object_id=None, sub_object=None, reset_local_roles=0,
+        reset_workflow=0, simulate=0, **kw):
     # if exist namespace retrieve only the tag
     index = 0
     if xml.nsmap not in [None, {}]:
@@ -82,7 +83,7 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
     return object.person_module(person_id=new_id)[0]
 
 
-  def _deleteContent(self, object=None, object_id=None):
+  def _deleteContent(self, object=None, object_id=None): # pylint: disable=redefined-builtin
     object.person_module.deletePersonAddress(person_id=object_id)
     object.person_module.deletePerson(person_id=object_id)
 
