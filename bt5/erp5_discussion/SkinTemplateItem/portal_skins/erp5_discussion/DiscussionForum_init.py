@@ -1,5 +1,4 @@
-portal = context.getPortalObject()
-type_definition = context.getTypeInfo()
+#portal = context.getPortalObject()
 membership_criterion_base_category_set = set(context.getMembershipCriterionBaseCategoryList()) #TODO this should come from the linked object (e.g. a web section, what else? a project?)
 multimembership_criterion_base_category_set = set(context.getMultimembershipCriterionBaseCategoryList()) #TODO same
 membership_criterion_category_list = context.getMembershipCriterionCategoryList() #TODO same
@@ -9,11 +8,7 @@ membership_criterion_base_category_list = []
 multimembership_criterion_base_category_list = list(multimembership_criterion_base_category_set)
 
 context.setTitle("Forum")
-context.edit(visible=True,
-             default_page_displayed=True,
-             authorization_forced=True,
-             custom_render_method_id="WebSection_viewDiscussionThreadForm",
-             criterion_property="portal_type",
+context.edit(criterion_property="portal_type",
              empty_criterion_valid=True,
              membership_criterion_base_category=membership_criterion_base_category_list,
              multimembership_criterion_base_category=multimembership_criterion_base_category_list,
