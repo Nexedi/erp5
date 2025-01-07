@@ -11,6 +11,12 @@
             <value> <string>testComputerWithComputerModel</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>test.erp5.testComputerWithComputerModel</string> </value>
         </item>
