@@ -25,7 +25,7 @@ class TestComputerWithComputerModel(ERP5TypeTestCase):
     self.assertEqual(computer.getPropertyList('group'), [])
     result = computer.Computer_applyComputerModel()
     self.assertEqual(computer.getPropertyList('group'), category_list)
-    self.assertTrue('=Computer%20Model%20applied.' in result, result)
+    self.assertIn('=Computer%20Model%20applied.', result)
 
   def test_apply_model_empty_computer_batch_mode(self):
     category_list = ['mana', 'mahna']
@@ -73,7 +73,7 @@ class TestComputerWithComputerModel(ERP5TypeTestCase):
     result = computer.Computer_applyComputerModel(force=1)
     self.assertEqual(computer.getPropertyList('group'),
       category_list)
-    self.assertTrue('=Computer%20Model%20applied.' in result, result)
+    self.assertIn('=Computer%20Model%20applied.', result)
 
   def test_apply_model_filled_computer_force_batch_mode(self):
     computer_category_list = ['oink']
@@ -91,7 +91,7 @@ class TestComputerWithComputerModel(ERP5TypeTestCase):
   def test_apply_no_model(self):
     computer = self.newComputer()
     result = computer.Computer_applyComputerModel()
-    self.assertTrue('=No%20Computer%20Model.' in result, result)
+    self.assertIn('=No%20Computer%20Model.', result)
 
   def test_apply_no_model_batch_mode(self):
     computer = self.newComputer()
@@ -124,7 +124,7 @@ class TestComputerWithComputerModel(ERP5TypeTestCase):
     computer = self.newComputer(specialise_value=model)
     result = computer.Computer_applyComputerModel()
     self.assertSameSet(category_list, computer.getCategoryList())
-    self.assertTrue('=Computer%20Model%20applied.', result)
+    self.assertIn('=Computer%20Model%20applied.', result)
 
 def test_suite():
   suite = unittest.TestSuite()
