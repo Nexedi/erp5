@@ -7,12 +7,16 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>OpenSans-Regular.woff2</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>font/woff2</string> </value>
+            <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
