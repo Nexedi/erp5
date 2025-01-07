@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Report à nouveau (solde débiteur)</string> </value>
+            <value> <string>Report à nouveau - solde débiteur</string> </value>
         </item>
       </dictionary>
     </pickle>

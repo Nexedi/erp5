@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Règlement n°2005-09 du crc</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -73,7 +75,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Dotations aux amortissements, aux dépréciations et aux provisions - Charges financières</string> </value>
+            <value> <string>Dotations aux amortissements, aux dépréciations et aux provisions (à inscrire dans les charges financières)</string> </value>
         </item>
       </dictionary>
     </pickle>

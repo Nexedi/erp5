@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Amortissements des immobilisations incorporelles</string> </value>
+            <value> <string>Amortissements des immobilisations incorporelles et des frais d’établissement (même ventilation que celle du compte 20)</string> </value>
         </item>
       </dictionary>
     </pickle>

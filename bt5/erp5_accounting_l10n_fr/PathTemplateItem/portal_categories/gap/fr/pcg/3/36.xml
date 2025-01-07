@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>(compte à ouvrir, le cas échéant, sous l\'intitulé "Stocks provenant d\'immobilisations")</string> </value>
+            <value> <string>(Compte à ouvrir, le cas échéant, sous l\'intitulé « Stocks provenant d\'immobilisations »)</string> </value>
         </item>
       </dictionary>
     </pickle>

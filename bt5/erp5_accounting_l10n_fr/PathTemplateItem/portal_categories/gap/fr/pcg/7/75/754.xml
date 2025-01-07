@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Ristournes perçues des coopératives (provenant des excédents)</string> </value>
+            <value> <string>Ristournes perçues des coopératives provenant des excédents</string> </value>
         </item>
       </dictionary>
     </pickle>

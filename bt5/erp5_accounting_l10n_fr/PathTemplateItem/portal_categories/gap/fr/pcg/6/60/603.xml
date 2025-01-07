@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Variations des stocks (approvisionnements et marchandises)</string> </value>
+            <value> <string>Variation des stocks d\'approvisionnements et de marchandises</string> </value>
         </item>
       </dictionary>
     </pickle>
