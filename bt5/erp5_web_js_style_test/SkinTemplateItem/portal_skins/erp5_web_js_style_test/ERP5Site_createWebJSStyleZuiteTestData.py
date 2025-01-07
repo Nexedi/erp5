@@ -204,6 +204,12 @@ configuration_dict = {
     'title': "Not Loading Style",
     'site_map_section_parent': True
   },
+  'not_loading_style_and_default_css': {
+    'configuration_style_gadget_url': "jsstyle_demo_not_loading.html",
+    'title': "Not Loading Style And Default CSS",
+    'site_map_section_parent': True
+    # create a web section with the css reference
+  },
   'not_rendering': {
     'configuration_style_gadget_url': "jsstyle_demo_not_rendering.html",
     'title': "Not Rendering Style",
@@ -328,6 +334,13 @@ if configuration in ('form', 'form_and_default_page'):
     title="Demo Section Form",
     custom_render_method_id='WebSite_viewJSStyleTestDialog',
     aggregate_value=web_site.getAggregateValue()
+  )
+
+if configuration in ('not_loading_style_and_default_css', ):
+  web_site.newContent(
+    portal_type=web_section_portal_type,
+    id='jsstyle.css',
+    title="This web section does not return CSS"
   )
 
 return "Web Site created."
