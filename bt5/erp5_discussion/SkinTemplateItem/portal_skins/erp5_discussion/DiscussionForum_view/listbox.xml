@@ -11,12 +11,16 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>lines</string>
-                <string>list_action</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
+                <string>count_method</string>
+                <string>default_params</string>
+                <string>editable_columns</string>
+                <string>list_method</string>
+                <string>search</string>
+                <string>search_columns</string>
                 <string>sort</string>
+                <string>sort_columns</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -63,6 +67,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -71,25 +87,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>list_action</string> </key>
+                    <key> <string>search</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>search_columns</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -98,6 +112,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -112,36 +130,53 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
+                          <string>author</string>
+                          <string>Author</string>
+                        </tuple>
+                        <tuple>
+                          <string>response_count</string>
+                          <string>Responses</string>
+                        </tuple>
+                        <tuple>
+                          <string>last_post</string>
+                          <string>Latest Post</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>modification_date</string>
+                          <string>modification_date</string>
                         </tuple>
                         <tuple>
-                          <string>visible</string>
-                          <string>Visible</string>
+                          <string>author</string>
+                          <string>Author</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
+                          <string>last_post</string>
+                          <string>Latest Post</string>
                         </tuple>
                       </list>
                     </value>
@@ -152,38 +187,47 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Discussion Thread</string>
-                          <string>Discussion Thread</string>
-                        </tuple>
-                      </list>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>search_selection</string> </value>
+                    <key> <string>search</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
+                          <string>modification_date</string>
+                          <string>descending</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -194,7 +238,13 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Discussion Threads</string> </value>
+                    <value> <string>Discussion Threadsaaaaw</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -204,16 +254,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: \'%s_selection\' % (here.getRelativeUrl())</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>WebSection_getDiscussionThreadList</string> </value>
         </item>
       </dictionary>
     </pickle>
