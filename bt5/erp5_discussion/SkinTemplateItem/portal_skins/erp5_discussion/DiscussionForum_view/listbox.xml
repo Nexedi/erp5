@@ -260,7 +260,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSection_getDiscussionThreadList</string> </value>
+            <value> <string>DiscussionForum_getDiscussionThreadList</string> </value>
         </item>
       </dictionary>
     </pickle>
