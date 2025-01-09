@@ -4,5 +4,6 @@ portal_alarms/check_conversion_tool_availability
 portal_alarms/check_folder_handler
 portal_alarms/check_item_tracking
 portal_alarms/check_localizer
+portal_alarms/check_site_daily_modification
 portal_alarms/check_skin_cache
 portal_alarms/check_stock
