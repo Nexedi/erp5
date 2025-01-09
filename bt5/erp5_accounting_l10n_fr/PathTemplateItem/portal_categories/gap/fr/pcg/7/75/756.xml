@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gains de change sur créances commerciales</string> </value>
+            <value> <string>Gains de change sur créances et dettes commerciales</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Personnel extérieur à l\'entreprise</string> </value>
+            <value> <string>Personnel extérieur à l\'entité</string> </value>
         </item>
       </dictionary>
     </pickle>

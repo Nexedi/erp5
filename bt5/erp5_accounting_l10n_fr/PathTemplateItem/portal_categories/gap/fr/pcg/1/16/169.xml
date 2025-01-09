@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Primes de remboursement des obligations</string> </value>
+            <value> <string>Primes de remboursement des emprunts</string> </value>
         </item>
       </dictionary>
     </pickle>

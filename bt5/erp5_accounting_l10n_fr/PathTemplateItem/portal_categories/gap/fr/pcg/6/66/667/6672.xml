@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Category" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>6672</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>6672</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Charges nettes sur cessions de titres immobilisés de l’activité de portefeuille</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

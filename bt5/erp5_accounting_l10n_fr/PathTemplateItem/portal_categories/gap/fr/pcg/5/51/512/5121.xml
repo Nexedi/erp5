@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Comptes en monnaie nationale</string> </value>
+            <value> <string>Comptes en euros</string> </value>
         </item>
       </dictionary>
     </pickle>
