@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Primes liées au capital social</string> </value>
+            <value> <string>Primes liées au capital</string> </value>
         </item>
       </dictionary>
     </pickle>

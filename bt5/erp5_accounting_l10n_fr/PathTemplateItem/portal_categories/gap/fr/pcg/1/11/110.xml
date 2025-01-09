@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Report à nouveau (solde créditeur)</string> </value>
+            <value> <string>Report à nouveau - solde créditeur</string> </value>
         </item>
       </dictionary>
     </pickle>

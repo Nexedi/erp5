@@ -22,5 +22,6 @@ if REQUEST is None:
 
 for key, value in keep_items.items():
   REQUEST.set(key, value)
+  REQUEST.form[key] = value
 
 return getattr(context, form_id)()

@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>des dettes rattachées à des participations</string> </value>
+            <value> <string>Intérêts des dettes rattachées à des participations</string> </value>
         </item>
       </dictionary>
     </pickle>

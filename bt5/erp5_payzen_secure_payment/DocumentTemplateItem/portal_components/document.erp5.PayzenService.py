@@ -12,7 +12,7 @@ else:
 import datetime
 import os
 import time
-import six
+
 import requests
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Utils import str2bytes, bytes2str
@@ -24,20 +24,21 @@ if 'TZ' in os.environ:
   tz = os.environ['TZ']
 os.environ['TZ'] = 'UTC'
 time.tzset()
+
 def setUTCTimeZone(fn):
   def wrapped(*args, **kwargs):
-    present = False
-    tz = None
+    tz_present = False
+    environ_tz = None
     if 'TZ' in os.environ:
-      present = True
-      tz = os.environ['TZ']
+      tz_present = True
+      environ_tz = os.environ['TZ']
     os.environ['TZ'] = 'UTC'
     time.tzset()
     try:
       return fn(*args, **kwargs)
     finally:
-      if present:
-        os.environ['TZ'] = tz
+      if tz_present:
+        os.environ['TZ'] = environ_tz
       else:
         del(os.environ['TZ'])
       time.tzset()
@@ -189,14 +190,14 @@ class PayzenService(XMLObject, PayzenREST):
   def notifySuccess(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
-    return self._getTypeBasedMethod("acceptPayment")(**kw)
+    # return self._getTypeBasedMethod("acceptPayment")(**kw)
 
   def notifyFail(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
-    return self._getTypeBasedMethod("failInPayment")(**kw)
+    # return self._getTypeBasedMethod("failInPayment")(**kw)
 
   def notifyCancel(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
-    return self._getTypeBasedMethod("abortPayment")(**kw)
+    # return self._getTypeBasedMethod("abortPayment")(**kw)

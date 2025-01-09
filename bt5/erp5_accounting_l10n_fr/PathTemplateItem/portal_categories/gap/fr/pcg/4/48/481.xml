@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Règlement n°2004-06 du crc</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -73,7 +75,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Charges à répartir sur plusieurs exercices</string> </value>
+            <value> <string>Frais d’émission des emprunts</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -12,11 +12,17 @@ sender = event.getSourceValue()
 if kw.get("from_url") is not None:
   from_url = kw.get("from_url")
 elif sender is not None:
-  from_url = formataddr((sender.hasTitle() and sender.getTitle(), sender.getDefaultEmailText()))
+  sender_email_text = sender.getDefaultEmailText()
+  if not sender_email_text:
+    raise ValueError("Sender %s ( %s ) does not have email address" % (sender.getTitle(), sender.getRelativeUrl()))
+  from_url = formataddr((sender.hasTitle() and sender.getTitle(), sender_email_text))
 else:
   from_url = portal.portal_preferences.getPreferredEventSenderEmail()
 
-to_url = formataddr((context.hasTitle() and context.getTitle(), context.getDefaultEmailText()))
+recipient_email_text = context.getDefaultEmailText()
+if not recipient_email_text:
+  raise ValueError("Recipient %s ( %s ) does not have email address" % (context.getTitle(), context.getRelativeUrl()))
+to_url = formataddr((context.hasTitle() and context.getTitle(), recipient_email_text))
 
 document_type_list = list(event.getPortalEmbeddedDocumentTypeList()) + list(event.getPortalDocumentTypeList())
 embedded_file_list = event.getAggregateValueList(portal_type=document_type_list)
