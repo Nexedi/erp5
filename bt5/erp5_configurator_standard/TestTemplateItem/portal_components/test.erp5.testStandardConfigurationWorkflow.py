@@ -33,15 +33,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.module.ConfiguratorTestMixin import \
     TestLiveConfiguratorWorkflowMixin
-
-
-class FakeFormBoxEditor(dict):
-  """Quick replacement for formbox editor.
-  """
-  __allow_access_to_unprotected_subobjects__ = 1
-
-  def as_dict(self):
-    return self
+from Products.ERP5Form.FormBox import FormBoxEditor
 
 
 class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
@@ -1169,6 +1161,16 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         ],
     )
 
+    form_box_editor = FormBoxEditor(
+      result=(
+        {
+          # this is what GenericSolver_viewConfigurationFormBox/my_tested_property_list passes as default hidden
+          'tested_property_list': solver_decision.getCausalityValue().getTestedPropertyList(),
+        },
+        [],
+      ),
+      context=None,
+    )
     listbox = (
         {
             'listbox_key':
@@ -1177,9 +1179,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                 'portal_solvers/Accept Solver',
             # this is what GenericSolver_viewConfigurationFormBox/my_tested_property_list passes as default hidden
             'solver_configuration':
-                FakeFormBoxEditor(
-                    tested_property_list=solver_decision.getCausalityValue()
-                    .getTestedPropertyList()),
+                form_box_editor,
             'comment':
                 '',
         },)
@@ -1607,17 +1607,24 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         ],
     )
 
+    form_box_editor = FormBoxEditor(
+      result=(
+        {
+          # this is what GenericSolver_viewConfigurationFormBox/my_tested_property_list passes as default hidden
+          'tested_property_list': solver_decision.getCausalityValue().getTestedPropertyList(),
+        },
+        [],
+      ),
+      context=None,
+    )
     listbox = (
         {
             'listbox_key':
                 solver_decision.getPath(),
             'solver':
                 'portal_solvers/Accept Solver',
-            # this is what GenericSolver_viewConfigurationFormBox/my_tested_property_list passes as default hidden
             'solver_configuration':
-                FakeFormBoxEditor(
-                    tested_property_list=solver_decision.getCausalityValue()
-                    .getTestedPropertyList()),
+                form_box_editor,
             'comment':
                 '',
         },)
