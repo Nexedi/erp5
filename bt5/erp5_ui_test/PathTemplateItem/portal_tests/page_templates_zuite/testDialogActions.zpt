@@ -51,6 +51,16 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertValue</td>
+  <td>//input[@name="field_your_string_field"]</td>
+  <td>A value from the user</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>A value pushed by update action</td>
+  <td></td>
+</tr>
+<tr>
   <td>clickAndWait</td>
   <td>Base_callDialogMethod:method</td>
   <td></td>
