@@ -11,6 +11,7 @@ class SetupSiteError(Exception):
 def patch():
     import six
 
+    import contextlib
     import traceback
     from unittest import TestCase, TextTestResult, TextTestRunner
 
@@ -21,6 +22,10 @@ def patch():
       TestCase.assertRaisesRegex = getattr(TestCase, 'assertRaisesRegexp')
       TestCase.assertRegex = getattr(TestCase, 'assertRegexpMatches')
       TestCase.assertCountEqual = TestCase.assertItemsEqual
+      @contextlib.contextmanager
+      def subTest(self, msg='', **params):
+        yield
+      TestCase.subTest = subTest
 
     TextTestResult_addError = six.get_unbound_function(TextTestResult.addError)
     def addError(self, test, err):
