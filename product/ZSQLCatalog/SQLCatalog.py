@@ -402,8 +402,18 @@ class Catalog(Folder,
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_deferred_catalog_object_list',
+      'description' : 'Methods to be called to catalog the list of objects with a deferred connection',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_uncatalog_object',
       'description' : 'Methods to be called to uncatalog an object',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_deferred_uncatalog_object',
+      'description' : 'Methods to be called to uncatalog an object with a deferred connection',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
@@ -587,7 +597,9 @@ class Catalog(Folder,
   sql_catalog_delete_uid = ''
   sql_catalog_clear_reserved = ''
   sql_catalog_object_list = ()
+  sql_deferred_catalog_object_list = ()
   sql_uncatalog_object = ()
+  sql_deferred_uncatalog_object = ()
   sql_clear_catalog = ()
   sql_catalog_translation_list = ''
   sql_delete_translation_list = ''
@@ -1281,6 +1293,9 @@ class Catalog(Folder,
   def getSqlCatalogObjectListList(self):
     return self.sql_catalog_object_list
 
+  def getSqlDeferredCatalogObjectListList(self):
+    return self.sql_deferred_catalog_object_list
+
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None):
     """This is the real method to catalog objects."""
@@ -1495,6 +1510,9 @@ class Catalog(Folder,
 
   def getSqlUncatalogObjectList(self):
     return self.sql_uncatalog_object
+
+  def getSqlDeferredUncatalogObjectList(self):
+    return self.sql_deferred_uncatalog_object
 
   security.declarePrivate('uncatalogObject')
   def uncatalogObject(self, path=None, uid=None):
@@ -2465,7 +2483,9 @@ class Catalog(Folder,
     if withCMF:
       method_id_set.update(
         self.getSqlCatalogObjectListList() +
+        self.getSqlDeferredCatalogObjectListList() +
         self.getSqlUncatalogObjectList() +
+        self.getSqlDeferredUncatalogObjectList() +
         self.getSqlUpdateObjectList()
       )
     return [
