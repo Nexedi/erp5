@@ -29,7 +29,6 @@ from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import (
   access_contents_information,
-  import_export_objects,
   manage_zcatalog_entries,
 )
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
@@ -54,10 +53,6 @@ import pprint
 import re
 import warnings
 from contextlib import contextmanager
-from xml.dom.minidom import parse
-from xml.sax.saxutils import escape, quoteattr
-import os
-from hashlib import md5
 
 from .interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
@@ -1217,11 +1212,10 @@ class Catalog(Folder,
     elapse = time.time()
     c_elapse = time.clock()
 
-    words = 0
     obj = REQUEST.PARENTS[1]
     path = '/'.join(obj.getPhysicalPath())
 
-    results = self.aq_parent.ZopeFindAndApply(obj,
+    self.aq_parent.ZopeFindAndApply(obj,
                     obj_metatypes=obj_metatypes,
                     obj_ids=obj_ids,
                     obj_searchterm=obj_searchterm,
@@ -1874,9 +1868,7 @@ class Catalog(Folder,
     """
     search_key, related_key_definition = self.getColumnSearchKey(key,
       search_key_name=search_key_name)
-    if search_key is None:
-      result = None
-    else:
+    if search_key is not None:
       if related_key_definition is not None:
         search_key = search_key.getSearchKey(sql_catalog=self,
           related_key_definition=related_key_definition,
@@ -2450,27 +2442,9 @@ class Catalog(Folder,
       if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method') and ('deferred' in method.connection_id) == deferred:
         return method.connection_id
 
-  def getSqlCatalogObjectList(self):
-    try:
-      return self.sql_catalog_object
-    except AttributeError:
-      return ()
-
-  def getSqlUncatalogObjectList(self):
-    try:
-      return self.sql_uncatalog_object
-    except AttributeError:
-      return ()
-
   def getSqlUpdateObjectList(self):
     try:
       return self.sql_update_object
-    except AttributeError:
-      return ()
-
-  def getSqlCatalogObjectListList(self):
-    try:
-      return self.sql_catalog_object_list
     except AttributeError:
       return ()
 
@@ -2482,10 +2456,9 @@ class Catalog(Folder,
     method_id_set = set()
     if withCMF:
       method_id_set.update(
-        self.getSqlCatalogObjectList() +
+        self.getSqlCatalogObjectListList() +
         self.getSqlUncatalogObjectList() +
-        self.getSqlUpdateObjectList() +
-        self.getSqlCatalogObjectListList()
+        self.getSqlUpdateObjectList()
       )
     return [
       method
