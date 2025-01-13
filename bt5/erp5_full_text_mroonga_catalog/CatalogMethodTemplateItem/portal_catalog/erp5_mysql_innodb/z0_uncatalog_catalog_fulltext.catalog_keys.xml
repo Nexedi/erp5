@@ -1,5 +1,2 @@
 <catalog_method>
- <item key="sql_deferred_uncatalog_object" type="int">
-  <value>1</value>
- </item>
 </catalog_method>
