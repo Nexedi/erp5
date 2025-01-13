@@ -3255,17 +3255,9 @@ class Test(ERP5TypeTestCase):
     self.assertNotEqual(os, None)
 '''
 
-  def testRunLiveTest(self):
+  def _runLiveTest(self, test_name):
+    """Runs a live test from portal_components
     """
-    Create a new ZODB Test Component and try to run it as a live tests and
-    check the expected output
-    """
-    # First try with a test which run successfully
-    source_code = self._getValidSourceCode()
-    component = self._newComponent('testRunLiveTest', source_code)
-    component.validate()
-    self.tic()
-
     from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
     ERP5TypeTestLoader_loadTestsFromNames = ERP5TypeTestLoader.loadTestsFromNames
     def loadTestsFromNames(self, *args, **kwargs):
@@ -3287,6 +3279,35 @@ class Test(ERP5TypeTestCase):
 
       return ret
 
+    # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
+    # needs to be restored after calling runLiveTest
+    base_tuple = ERP5TypeTestCase.__bases__
+    ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
+    from six.moves import cStringIO as StringIO
+    stderr = StringIO()
+    _real_stderr = sys.stderr
+    sys.stderr = stderr
+    try:
+      self._component_tool.runLiveTest(test_name)
+    finally:
+      ERP5TypeTestCase.__bases__ = base_tuple
+      ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
+      sys.stderr = _real_stderr
+    test_output = self._component_tool.readTestOutput()
+    self.assertEqual(stderr.getvalue(), test_output)
+    return test_output
+
+  def testRunLiveTest(self):
+    """
+    Create a new ZODB Test Component and try to run it as a live tests and
+    check the expected output
+    """
+    # First try with a test which run successfully
+    source_code = self._getValidSourceCode()
+    component = self._newComponent('testRunLiveTest', source_code)
+    component.validate()
+    self.tic()
+
     self.assertEqual(component.getValidationState(), 'validated')
     self.assertModuleImportable('testRunLiveTest')
     self._component_tool.reset(force=True,
@@ -3295,19 +3316,7 @@ class Test(ERP5TypeTestCase):
     # set a request key, that should not be set from the test request
     self.portal.REQUEST.set('foo', 'something from main request')
 
-    def runLiveTest(test_name):
-      # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
-      # needs to be restored after calling runLiveTest
-      base_tuple = ERP5TypeTestCase.__bases__
-      ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
-      try:
-        self._component_tool.runLiveTest(test_name)
-      finally:
-        ERP5TypeTestCase.__bases__ = base_tuple
-        ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
-      return self._component_tool.readTestOutput()
-
-    output = runLiveTest('testRunLiveTest')
+    output = self._runLiveTest('testRunLiveTest')
     expected_msg_re = re.compile('Ran 1 test.*OK', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
@@ -3325,7 +3334,7 @@ class Test(ERP5TypeTestCase):
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
-    output = runLiveTest('testRunLiveTest')
+    output = self._runLiveTest('testRunLiveTest')
     expected_msg_re = re.compile(r'Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
@@ -3350,7 +3359,7 @@ class Test(ERP5TypeTestCase):
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
-    output = runLiveTest('testRunLiveTest')
+    output = self._runLiveTest('testRunLiveTest')
     expected_msg_re = re.compile('Ran 3 test.*OK', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
@@ -3364,44 +3373,11 @@ break_at_import()
     component.validate()
     self.tic()
 
-    from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
-    ERP5TypeTestLoader_loadTestsFromNames = ERP5TypeTestLoader.loadTestsFromNames
-    def loadTestsFromNames(self, *args, **kwargs):
-      """
-      Monkey patched to simulate a reset right after importing the ZODB Test
-      Component whose Unit Tests are going to be executed
-      """
-      ret = ERP5TypeTestLoader_loadTestsFromNames(self, *args, **kwargs)
-
-      from Products.ERP5.ERP5Site import getSite
-      getSite().portal_components.reset(force=True)
-
-      # Simulate a new REQUEST while the old one has been GC'ed
-      import erp5.component
-      erp5.component.ref_manager.clear()
-
-      import gc
-      gc.collect()
-
-      return ret
-
     self.assertEqual(component.getValidationState(), 'validated')
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
-    def runLiveTest(test_name):
-      # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
-      # needs to be restored after calling runLiveTest
-      base_tuple = ERP5TypeTestCase.__bases__
-      ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
-      try:
-        self._component_tool.runLiveTest(test_name)
-      finally:
-        ERP5TypeTestCase.__bases__ = base_tuple
-        ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
-      return self._component_tool.readTestOutput()
-
-    output = runLiveTest('testRunLiveTestImportError')
+    output = self._runLiveTest('testRunLiveTestImportError')
     relative_url = 'portal_components/test.erp5.testRunLiveTestImportError'
     if six.PY2:
       module_file = '<' + relative_url + '>'
@@ -3417,7 +3393,7 @@ break_at_import()
 %(error_message)s
 ''' % dict(module_file=module_file, error_message=error_message), output)
 
-    output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
+    output = self._runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
     if six.PY2:
       expected_output = "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist"
     else:
