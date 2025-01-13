@@ -12,6 +12,7 @@ def patch():
     import six
 
     import contextlib
+    import sys
     import traceback
     from unittest import TestCase, TextTestResult, TextTestRunner
 
@@ -26,6 +27,16 @@ def patch():
       def subTest(self, msg='', **params):
         yield
       TestCase.subTest = subTest
+
+    if sys.version_info < (3, 11):
+        def enterContext(self, cm):
+            cls = type(cm)
+            enter = cls.__enter__
+            exit = cls.__exit__
+            result = enter(cm)
+            self.addCleanup(exit, cm, None, None, None)
+            return result
+        TestCase.enterContext = enterContext
 
     TextTestResult_addError = six.get_unbound_function(TextTestResult.addError)
     def addError(self, test, err):
