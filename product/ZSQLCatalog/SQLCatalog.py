@@ -2450,27 +2450,9 @@ class Catalog(Folder,
       if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method') and ('deferred' in method.connection_id) == deferred:
         return method.connection_id
 
-  def getSqlCatalogObjectList(self):
-    try:
-      return self.sql_catalog_object
-    except AttributeError:
-      return ()
-
-  def getSqlUncatalogObjectList(self):
-    try:
-      return self.sql_uncatalog_object
-    except AttributeError:
-      return ()
-
   def getSqlUpdateObjectList(self):
     try:
       return self.sql_update_object
-    except AttributeError:
-      return ()
-
-  def getSqlCatalogObjectListList(self):
-    try:
-      return self.sql_catalog_object_list
     except AttributeError:
       return ()
 
@@ -2482,10 +2464,9 @@ class Catalog(Folder,
     method_id_set = set()
     if withCMF:
       method_id_set.update(
-        self.getSqlCatalogObjectList() +
+        self.getSqlCatalogObjectListList() +
         self.getSqlUncatalogObjectList() +
-        self.getSqlUpdateObjectList() +
-        self.getSqlCatalogObjectListList()
+        self.getSqlUpdateObjectList()
       )
     return [
       method
