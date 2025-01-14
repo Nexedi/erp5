@@ -11,10 +11,11 @@ except KeyError:
   priority = 1
 # Optimise cache usage by reducing the likelyhood of a processing node
 # including activities spawned by others into its activity group.
-# But prevent the group from going below 10 activities, for better throughput.
+# Use unindexObject as dummy method id for compatibility with
+#   after_method_id=('unindexObject', ...)
 context.activate(
   activity='SQLQueue',
   priority=priority,
   node='same',
   group_method_id=GROUP_METHOD_ID,
-).deferUnindexObject(uid=uid)
+).unindexObject(uid=uid)
