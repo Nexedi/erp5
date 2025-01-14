@@ -4,11 +4,14 @@
   passed from REQUEST not index yet threads.
 """
 thread_relative_url = context.REQUEST.get('thread_relative_url')
-discussion_thread_list = [x.getObject() for x  in context.getDocumentValueList(**kw)] #searches in all erp5 docs linked to this predicate config
-context.log("[DEBUG] -Forum- context.getDocumentValueList(**kw):")
-[context.log(x.getObject()) for x  in context.getDocumentValueList(**kw)]
+related_forum_url = context.follow_up
+if related_forum_url is not None:
+  forum = context.restrictedTraverse(related_forum_url)
+  discussion_thread_list = [x.getObject() for x  in forum.getDocumentValueList(**kw)] #searches in all erp5 docs linked to this predicate config
+else:
+  discussion_thread_list = []
 if thread_relative_url is not None:
-  thread = context.restrictedTraverse(thread_relative_url)
+  thread = forum.restrictedTraverse(thread_relative_url)
   if thread is not None and thread not in discussion_thread_list:
     discussion_thread_list = [thread] + discussion_thread_list
 return discussion_thread_list
