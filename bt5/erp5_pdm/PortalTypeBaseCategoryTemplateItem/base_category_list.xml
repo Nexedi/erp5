@@ -23,6 +23,9 @@
  <portal_type id="Service Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Transformation">
+  <item>transformation_type</item>
+ </portal_type>
  <portal_type id="Transformation Module">
   <item>business_application</item>
  </portal_type>

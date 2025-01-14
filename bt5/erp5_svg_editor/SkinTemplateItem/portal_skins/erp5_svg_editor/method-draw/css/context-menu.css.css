@@ -1,0 +1,59 @@
+
+/* Generic context menu styles */
+.contextMenu {
+  position: absolute;
+  z-index: 99999;
+  background: var(--z15);
+  padding: 5px 0;
+  margin: 0px;
+  display: none;
+  font: 14px/18px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+  border-radius: 5px;
+  box-shadow: 2px 5px 10px rgba(0,0,0,.3);
+}
+
+.contextMenu LI {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.contextMenu .shortcut {
+  width: 115px;           
+  text-align:right;
+  float:right;
+}
+
+.contextMenu A {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  color: var(--z2);
+  text-decoration: none;
+  display: block;
+  line-height: 20px;
+  height: 20px;
+  background-position: 6px center;
+  background-repeat: no-repeat;
+  outline: none;
+  padding: 0px 15px 1px 20px;
+}
+
+.contextMenu LI.hover A {
+  background-color: var(--accent7);
+  color: var(--z15);
+  cursor: default;
+}
+
+.contextMenu LI.disabled A {
+  color: #999;
+}
+
+.contextMenu LI.hover.disabled A {
+  background-color: transparent;
+}
+
+.contextMenu LI.separator {
+  border-top: solid 1px #E3E3E3;
+  padding-top: 5px;
+  margin-top: 5px;
+}

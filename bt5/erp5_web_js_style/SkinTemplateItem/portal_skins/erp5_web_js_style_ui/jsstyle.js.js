@@ -457,14 +457,17 @@
             showPage();
             return;
           }
+          function showContentAtAllCost() {
+            // Set again the page content after the css is loaded
+            // to prevent ugly rendering
+            // And if the css load fails,
+            // show the page content instead of a blank page
+            gadget.element.innerHTML = parsed_content.original_content;
+            // Ensure the page is visible in case of error
+            showPage();
+          }
           return new RSVP.Queue(rJS.declareCSS(style_css_url, document.head))
-            .push(function () {
-              // Set again the page content after the css is loaded
-              // to prevent ugly rendering
-              gadget.element.innerHTML = parsed_content.original_content;
-              // Ensure the page is visible in case of error
-              showPage();
-            });
+            .push(showContentAtAllCost, showContentAtAllCost);
         });
     });
 

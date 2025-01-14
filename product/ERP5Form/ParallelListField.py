@@ -79,6 +79,7 @@ class ParallelListWidget(Widget.MultiListWidget,
                                title='Hash script',
                                description=(
         "The method to call to hash items list."),
+                               css_class="form-control code",
                                required=0)
 
     def __init__(self):

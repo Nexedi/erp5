@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Avances et acomptes versés sur immobilisations incorporelles</string> </value>
+            <value> <string>Avances et acomptes versés sur commandes d\'immobilisations incorporelles</string> </value>
         </item>
       </dictionary>
     </pickle>

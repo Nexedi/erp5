@@ -3,6 +3,7 @@ Set up an Workflow with defaults variables needed by ERP5
 """
 state = context.newContent(portal_type='Workflow State', reference='draft', title='Draft')
 context.setSourceValue(state)
+context.setManagerBypass(True)
 
 for v, property_dict in (
       ('action', {

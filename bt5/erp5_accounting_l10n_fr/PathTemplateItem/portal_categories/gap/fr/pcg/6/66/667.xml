@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Charges nettes sur cessions de valeurs mobilières de placement</string> </value>
+            <value> <string>Charges sur cession d’éléments financiers</string> </value>
         </item>
       </dictionary>
     </pickle>

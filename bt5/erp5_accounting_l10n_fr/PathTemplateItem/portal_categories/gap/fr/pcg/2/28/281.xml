@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Amortissements des immobilisations corporelles</string> </value>
+            <value> <string>Amortissements des immobilisations corporelles (même ventilation que celle du compte 21)</string> </value>
         </item>
       </dictionary>
     </pickle>

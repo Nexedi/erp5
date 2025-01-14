@@ -186,7 +186,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
           else:
             raise ValueError("Could not create cell %s" % str(cell_index_tuple))
         else:
-          raise ValueError("Cell %s does not exist %s" % str(cell_index_tuple))
+          raise ValueError("Cell %s does not exist" % str(cell_index_tuple))
 
 field_prefix_len = len(field_prefix)
 

@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Résultat de l\'exercice (bénéfice ou perte)</string> </value>
+            <value> <string>Résultat de l\'exercice</string> </value>
         </item>
       </dictionary>
     </pickle>

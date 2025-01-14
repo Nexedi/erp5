@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Personnel détaché ou prêté à l\'entreprise</string> </value>
+            <value> <string>Personnel détaché ou prêté à l\'entité</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -879,8 +879,12 @@ class TestOAuth2(ERP5TypeTestCase):
     # OAuth2 Session is now validated
     self.assertEqual(user_session.getValidationState(), 'validated')
     expiration_date = int(user_session.getExpirationDate())
-    self.assertLessEqual(time_before + refresh_token_lifespan, expiration_date)
-    self.assertLessEqual(expiration_date, time_after + refresh_token_lifespan)
+    refresh_token_base_offset = (
+      refresh_token_lifespan +
+      oauth2_client_declaration_value.getRefreshTokenLifespanAccuracy()
+    )
+    self.assertLessEqual(time_before + refresh_token_base_offset, expiration_date)
+    self.assertLessEqual(expiration_date, time_after + refresh_token_base_offset)
 
     # Request a new access token
     status, header_dict, cookie_dict, body = self._query(

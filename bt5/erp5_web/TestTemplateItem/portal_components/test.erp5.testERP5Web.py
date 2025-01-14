@@ -252,6 +252,7 @@ class TestERP5Web(ERP5TypeTestCase):
     page.edit(text_content='<b>OK</b>')
     self.assertEqual('text/html', page.getContentType())
     self.assertEqual('<b>OK</b>', page.getTextContent())
+    self.assertEqual(b'<b>OK</b>', page.getData())
 
   def test_WebPageAsTextUTF8(self):
     """Check if Web Page's asText() returns utf-8 string correctly
@@ -269,6 +270,16 @@ class TestERP5Web(ERP5TypeTestCase):
     page.edit(text_content='<p>H&eacute;!</p>', content_type='text/html')
     self.tic()
     self.assertEqual('Hé!', page.asText().strip())
+
+  def test_WebPageAsTextEmpty(self):
+    page = self.web_page_module.newContent(portal_type='Web Page')
+    self.tic()
+    self.assertIsNone(page.getTextContent())
+    self.assertIsNone(page.getData())
+    default = []
+    self.assertIs(page.getData(default), default)
+    self.assertEqual(page.asText(), '')
+    self.assertEqual(page.getSearchableText(), '')
 
   def test_WebPageAsTextWrap(self):
     """Check if Web Page's asText() is wrapped by certain column width.
@@ -1883,7 +1894,7 @@ Hé Hé Hé!""", page.asText().strip())
     # Check cache control
     cache_control_header = response.getHeader('Cache-Control')
     self.assertEqual(cache_control_header,
-      'max-age=600, stale-while-revalidate=360000, stale-if-error=31536000, public')
+      'max-age=14400, stale-while-revalidate=360000, stale-if-error=31536000, public')
   
     # Check Vary
     cache_control_header = response.getHeader('Vary')

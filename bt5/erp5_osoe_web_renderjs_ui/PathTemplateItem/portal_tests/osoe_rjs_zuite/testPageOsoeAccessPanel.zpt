@@ -20,12 +20,22 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@class, 'active')]</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@href, '#!display') and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@href, '#!display')]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Contribute File' and contains(@href, '#!display')]</td>
   <td></td>
 </tr>
 <tr>
@@ -40,6 +50,11 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@href, '#!display')]</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@class, 'active')]</td>
   <td></td>
@@ -47,6 +62,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Contribute File' and contains(@href, '#!display')]</td>
   <td></td>
 </tr>
 <tr>
@@ -61,8 +81,18 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@href, '#!display')]</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@href, '#!display')]</td>
   <td></td>
 </tr>
 <tr>
@@ -87,8 +117,18 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@href, '#!display')]</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Contribute File' and contains(@href, '#!display')]</td>
   <td></td>
 </tr>
 <tr>

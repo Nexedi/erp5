@@ -104,6 +104,14 @@ var repair = false;
             '#page=settings_configurator',
             '#/?page=settings_configurator'
           );
+        } else if (gadget.props.redirect_url.hash
+            .startsWith('#page=ojsm_landing')) {
+          // Make monitoring app still compatible with old instances setup URLs
+          gadget.props.redirect_url.hash =
+            gadget.props.redirect_url.hash.replace(
+            '#page=ojsm_landing',
+            '#/?page=ojsm_landing'
+          );
         }
       }
     })

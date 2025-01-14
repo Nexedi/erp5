@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Taxes sur le chiffre d\'affaires sur factures non parvenues</string> </value>
+            <value> <string>Taxes sur le chiffre d’affaires sur factures non parvenues</string> </value>
         </item>
       </dictionary>
     </pickle>

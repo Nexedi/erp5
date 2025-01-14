@@ -50,6 +50,7 @@ def create_settings_form():
          title='Report Method',
          description=('The method to get a list of items (object, form,'
                       ' parameters) to aggregate in a single Report'),
+         css_class="form-control code",
          default='',
          required=0)
 

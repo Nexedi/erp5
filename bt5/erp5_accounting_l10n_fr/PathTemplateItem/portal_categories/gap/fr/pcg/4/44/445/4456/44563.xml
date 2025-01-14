@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>TVA transférée par d\'autres entreprises</string> </value>
+            <value> <string>TVA transférée par d\'autres entités</string> </value>
         </item>
       </dictionary>
     </pickle>

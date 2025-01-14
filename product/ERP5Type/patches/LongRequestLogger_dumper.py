@@ -13,6 +13,7 @@ import sys
 import time
 import traceback
 
+import six
 from six.moves import StringIO
 from six.moves._thread import get_ident
 from Products.ERP5Type.Utils import bytes2str
@@ -61,7 +62,12 @@ class Dumper(object):
         def _extract_sql(self, frame, func_code=DB._query.__code__):
             while frame is not None:
                 if frame.f_code is func_code:
-                    return bytes2str(frame.f_locals['query'])
+                    query = frame.f_locals['query']
+                    if six.PY3 and isinstance(query, bytes):
+                        return query.decode(
+                            'utf-8',
+                            errors='backslashreplace')
+                    return query
                 frame = frame.f_back
         del DB
 

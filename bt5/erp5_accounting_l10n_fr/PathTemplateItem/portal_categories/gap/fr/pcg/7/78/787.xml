@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Règlement n°2005-09 du crc</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -79,7 +81,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Reprises sur provisions et dépréciations (à inscrire dans les produits exceptionnels)</string> </value>
+            <value> <string>Reprises sur dépréciations et provisions (à inscrire dans les produits exceptionnels)</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1338,6 +1338,7 @@ class TestResource(ERP5TypeTestCase):
        {'quantity': 21, 'price': 198./21, 'total_price': 198.},
        {'quantity': 22, 'price': 206./22, 'total_price': 206.},
        {'quantity': 25, 'price': 230./25, 'total_price': 230.},
+       {'quantity': 0., 'price': 0., 'total_price': 0.},
     ]:
       _test(**case)
 

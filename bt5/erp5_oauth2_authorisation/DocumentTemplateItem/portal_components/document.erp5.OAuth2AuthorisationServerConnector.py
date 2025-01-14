@@ -687,7 +687,6 @@ class _ERP5RequestValidator(RequestValidator):
   def save_authorization_code(self, client_id, code, request, *args, **kwargs):
     self._authorisation_server_connector_value.createSession(
       authorisation_code=code['code'],
-      request=request,
       client_value=request.client.erp5_client_value,
       redirect_uri=request.redirect_uri,
       scope_list=[
@@ -1094,9 +1093,6 @@ class OAuth2AuthorisationServerConnector(XMLObject):
 
     - authorization_code (standard)
     - refresh_token (standard)
-    - urn:uuid:15a68f81-dbce-4ddd-bfcb-a81f25359cf2
-      Zope-based request authentication (ex: "Authorization: Basic ..."
-      request header).
     """
     now = int(time())
     def getAccessTokenLifespan(request):
@@ -1179,8 +1175,9 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         algorithm=algorithm,
       )
     def generateRefreshToken(request):
+      erp5_client_value = request.client.erp5_client_value
       session_value = request.user.erp5_session_value
-      expiration_timestamp = now + request.client.erp5_client_value.getRefreshTokenLifespan()
+      expiration_timestamp = now + erp5_client_value.getRefreshTokenLifespan()
       session_expiration_date = session_value.getPolicyExpirationDate()
       if session_expiration_date is not None:
         expiration_timestamp = min(
@@ -1192,7 +1189,9 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         session_refresh_token_expiration_date is None or
         session_refresh_token_expiration_date < DateTime(expiration_timestamp)
       ):
-        session_value.setRefreshTokenExpirationDate(DateTime(expiration_timestamp))
+        session_value.setRefreshTokenExpirationDate(DateTime(
+          expiration_timestamp + erp5_client_value.getRefreshTokenLifespanAccuracy(),
+        ))
       _, algorithm, symetric_key = self.__getRefreshTokenKeyList()[0]
       return jwt.encode(
         {
@@ -1529,7 +1528,6 @@ class OAuth2AuthorisationServerConnector(XMLObject):
   def createSession(
     self,
     authorisation_code,
-    request,
     client_value,
     redirect_uri,
     scope_list,
@@ -1567,7 +1565,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       code_challenge_method=code_challenge_method,
       network_address=network_address,
       user_agent=user_agent,
-      network_list=request.client.erp5_client_value.getNetworkList(),
+      network_list=client_value.getNetworkList(),
       **kw
     )
     # XXX: use a non-draft state ?

@@ -39,6 +39,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5.mixin.timer_service import TimerServiceMixin
+from Products.CMFActivity.ActivityTool import getServerAddress
 from DateTime import DateTime
 from six.moves import urllib
 
@@ -186,7 +187,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
         if now - last_tic >= self.interval:
           self.tic()
           last_tic = now
-      elif _check_upgrade and self.getServerAddress() == alarmNode:
+      elif _check_upgrade and getServerAddress() == alarmNode:
         # BBB: check (once per run) if our node was alarm_node by address, and
         # migrate it.
         _check_upgrade = False

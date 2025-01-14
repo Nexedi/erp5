@@ -96,11 +96,12 @@ class GoogleConnector(XMLObject):
 
     Used by Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin
     """
+    refresh_token = token['refresh_token']
     body = self._getOAuthlibClient().prepare_refresh_body(
       client_id=self.getClientId(),
       client_secret=self.getSecretKey(),
       access_type="offline",
-      refresh_token=token['refresh_token'],
+      refresh_token=refresh_token,
     )
     resp = requests.post(
       TOKEN_URL,
@@ -110,7 +111,9 @@ class GoogleConnector(XMLObject):
     )
     if not resp.ok:
       return {}
-    return self._getGoogleTokenFromJSONResponse(resp.json())
+    new_token = resp.json()
+    new_token.setdefault('refresh_token', refresh_token)
+    return self._getGoogleTokenFromJSONResponse(new_token)
 
   @security.private
   def getUserEntry(self, access_token):

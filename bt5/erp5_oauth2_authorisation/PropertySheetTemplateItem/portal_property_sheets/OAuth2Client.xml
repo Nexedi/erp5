@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An OAuth2 client is a piece of software implementing the OAuth2 protocol, and using which a user can authenticate themselve to servers implemneting the OAuth2 protocol.</string> </value>
+            <value> <string>An OAuth2 client is a piece of software implementing the OAuth2 protocol, and using which an user can authenticate himself to servers implementing the OAuth2 protocol.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
