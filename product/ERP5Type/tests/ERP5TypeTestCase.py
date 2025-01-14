@@ -17,6 +17,7 @@ import string
 import sys
 import time
 import traceback
+import warnings
 from six.moves import configparser
 from contextlib import contextmanager
 from io import BytesIO
@@ -273,6 +274,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
 
     def newPassword(self):
       """ Generate a password """
+      forced_password = os.environ.get('insecure_erp5_test_password')
+      if forced_password:
+        warnings.warn("Using password set from environment variable")
+        return forced_password
       return ''.join(random.SystemRandom().sample(string.ascii_letters + string.digits, 20))
 
     def login(self, user_name=None, quiet=0):

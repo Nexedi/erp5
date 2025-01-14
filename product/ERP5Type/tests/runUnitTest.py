@@ -798,7 +798,8 @@ def main(argument_list=None):
         "sys_path=",
         "instance_home=",
         "log_directory=",
-        "with_wendelin_core"
+        "with_wendelin_core",
+        "insecure_password=",
         ])
   except getopt.GetoptError as msg:
     usage(sys.stderr, msg)
@@ -919,6 +920,8 @@ def main(argument_list=None):
       _log_directory = os.path.abspath(arg)
     elif opt == "--with_wendelin_core":
       os.environ["with_wendelin_core"] = "1"
+    elif opt == "--insecure_password":
+      os.environ["insecure_erp5_test_password"] = arg
 
   setupWarnings()
 
