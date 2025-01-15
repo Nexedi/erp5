@@ -118,7 +118,9 @@
                     <value>
                       <list>
                         <string>my_sql_catalog_object_list_list</string>
+                        <string>my_sql_deferred_catalog_object_list_list</string>
                         <string>my_sql_uncatalog_object_list</string>
+                        <string>my_sql_deferred_uncatalog_object_list</string>
                         <string>my_sql_search_tables_list</string>
                         <string>my_sql_catalog_datetime_search_keys_list</string>
                       </list>
