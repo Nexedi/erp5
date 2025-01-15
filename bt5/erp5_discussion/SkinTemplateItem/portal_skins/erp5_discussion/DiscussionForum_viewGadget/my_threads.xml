@@ -102,9 +102,7 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -152,7 +150,9 @@
                 </item>
                 <item>
                     <key> <string>renderjs_extra</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\\\'source_column\\\', \\\'Event_getSafeSourceTitle\\\'), (\\\'date_column\\\', \\\'movement.start_date\\\'), (\\\'lines\\\', 100), ("query_dict", {"portal_type": context.getPortalObject().getPortalEventTypeList(), "follow_up__uid": context.getUid()})]</string> </value>
+            <value> <string>python: [(\'source_column\', \'Event_getSafeSourceTitle\'), (\'lines\', 100), ("query_dict", {"portal_type": "Discussion Thread", "follow_up__uid": context.getUid()})]</string> </value>
         </item>
       </dictionary>
     </pickle>
