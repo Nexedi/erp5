@@ -54,13 +54,23 @@ def canConnect(caucase_url):
     return False
   return True
 
-def findFreeTCPPort(ip=''):
-  """Find a free TCP port to listen to.
+def findFreeTCPPortRange(ip='', count=1):
+  # type: (str, int) -> int
+  """Find a range of consecutive `count` free TCP ports to listen to.
   """
-  family = socket.AF_INET6 if ':' in ip else socket.AF_INET
-  with contextlib.closing(socket.socket(family, socket.SOCK_STREAM)) as s:
-    s.bind((ip, 0))
-    return str(s.getsockname()[1])
+  for _ in range(10):  # retry 10 times
+    port = random.randrange(20000, 30000)
+    for offset in range(count):
+      with closing(socket.socket(
+          socket.AF_INET6 if ':' in ip else socket.AF_INET, socket.SOCK_STREAM)) as s:
+        try:
+          s.bind((ip, port + offset))
+        except OSError:
+          port = None
+          break
+  if port is None:
+    raise RuntimeError("Can't find port")
+  return port
 
 def retry(callback, try_count=10, try_delay=0.1):
     """
@@ -89,7 +99,7 @@ class ERP5TypeCaucaseTestCase(ERP5TypeTestCase):
       if _ip is not None:
         ip = _ip
         break
-    port = findFreeTCPPort(ip)
+    port = findFreeTCPPortRange(ip)
     self.caucase_runtime = caucase_runtime = multiprocessing.Process(
       target=caucase.http.main,
       kwargs=dict(
