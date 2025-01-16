@@ -58,7 +58,7 @@ discussion_thread = portal.discussion_thread_module.newContent(
                       **create_kw)
 # as we create a thread under a "root" predicate discussion forum
 # copy all categories from it to create a thread,
-# this way thread will be part of discussion forum (through getDocumentValue API)
+# this way thread will be part of discussion forum (through predicate's searchResults)
 discussion_thread.setCategoryList(category_list)
 
 # predecessor
