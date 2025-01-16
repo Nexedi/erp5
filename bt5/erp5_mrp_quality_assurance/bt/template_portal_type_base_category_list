@@ -1,0 +1,26 @@
+ACOM | aggregate
+ACOM | causality
+ACOM | destination_decision
+Defect Correction | aggregate
+Defect Correction | causality
+Defect Correction | destination_decision
+Defect Declaration | aggregate
+Defect Declaration | causality
+Defect Declaration | destination_decision
+Gate | aggregate
+Gate | causality
+Gate | destination_decision
+Quality Assurance Module | business_application
+Quality Control | aggregate
+Quality Control | causality
+Quality Control | destination_decision
+Quality Control | quality_assurance
+SMON | aggregate
+SMON | causality
+SMON | destination_decision
+SMON | quality_assurance
+Serial Number | aggregate
+Serial Number | follow_up
+Traceability | aggregate
+Traceability | causality
+Traceability | destination_decision
