@@ -1,4 +1,8 @@
 portal_alarms/psa_quality_assurance_builder_alarm
+portal_categories/ledger/manufacturing
+portal_categories/ledger/manufacturing/electronic_insurance
+portal_categories/ledger/manufacturing/execution
+portal_categories/ledger/manufacturing/quality_insurance
 portal_categories/publication_section/electronic_insurance
 portal_categories/publication_section/quality_insurance
 web_page_module/gadget_post_ok_for_quality_control**
