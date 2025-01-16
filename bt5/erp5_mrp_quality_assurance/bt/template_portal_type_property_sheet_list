@@ -1,0 +1,8 @@
+ACOM | SortIndex
+Defect Correction | SortIndex
+Defect Declaration | SortIndex
+Gate | SortIndex
+Manufacturing Execution Line | DeliveryLine_qualityAssuranceConstraint
+Quality Control | SortIndex
+SMON | SortIndex
+Traceability | SortIndex
