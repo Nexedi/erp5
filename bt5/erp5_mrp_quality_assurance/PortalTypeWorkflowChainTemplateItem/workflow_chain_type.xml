@@ -1,0 +1,34 @@
+<workflow_chain>
+ <chain>
+  <type>ACOM</type>
+  <workflow>edit_workflow, quality_assurance_interaction_workflow, quality_assurance_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Defect Correction</type>
+  <workflow>edit_workflow, quality_assurance_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Defect Declaration</type>
+  <workflow>edit_workflow, quality_assurance_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Gate</type>
+  <workflow>edit_workflow, quality_assurance_interaction_workflow, quality_assurance_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Quality Control</type>
+  <workflow>edit_workflow, quality_assurance_interaction_workflow, quality_assurance_workflow</workflow>
+ </chain>
+ <chain>
+  <type>SMON</type>
+  <workflow>edit_workflow, quality_assurance_interaction_workflow, quality_assurance_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Serial Number</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Traceability</type>
+  <workflow>edit_workflow, quality_assurance_interaction_workflow, quality_assurance_workflow</workflow>
+ </chain>
+</workflow_chain>
