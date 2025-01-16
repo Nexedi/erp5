@@ -31,7 +31,7 @@ random_string_length = 10
 while True:
   random_reference = "%s-%s" % (reference, context.Base_generateRandomString(string_length=random_string_length))
   if context.restrictedTraverse(random_reference, None) is None:
-    # object does not already exist (module, web site, web section, action, bound method, ...)
+    # object does not already exist (module, discussion thread, discussion post, action, bound method, ...)
     break
   random_string_length += 1
 
@@ -53,12 +53,12 @@ for base_category in multimembership_criterion_base_category_list:
   #create_kw['%s_list' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]
   category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])
 
-discussion_thread = context.newContent(
+discussion_thread = portal.discussion_thread_module.newContent(
                       portal_type = "Discussion Thread",
                       **create_kw)
-# as we create a thread under a "root" predicate web section copy  # now should be "root" predocate Discussion Forum
-# all categories from it to create thread, this way thread will be part
-# of web section (through getDocumentValue API)
+# as we create a thread under a "root" predicate discussion forum
+# copy all categories from it to create a thread,
+# this way thread will be part of discussion forum (through getDocumentValue API)
 discussion_thread.setCategoryList(category_list)
 
 # predecessor
@@ -69,15 +69,8 @@ else:
   predecessor_portal_type = predecessor_object.getPortalType()
   redirect_url = predecessor_object.getAbsoluteUrl()
 
-  # predecessor will only be set on document = web section default page
-  if predecessor_portal_type == 'Web Section':
-    predecessor_default_page = predecessor_object.getAggregate()
-    if predecessor_default_page is not None:
-      predecessor_document = context.restrictedTraverse(predecessor_default_page)
-      discussion_thread.setPredecessorValueList([predecessor_document])
-
   # set predecessor on document
-  if predecessor_portal_type == 'Web Page':
+  if predecessor_portal_type == 'Discussion Forum':
     discussion_thread.setPredecessorValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
