@@ -1258,7 +1258,7 @@ class Catalog(Folder,
 
   security.declarePrivate('catalogObjectList')
   def catalogObjectList(self, object_list, method_id_list=None,
-                        disable_cache=0, check_uid=1, idxs=None):
+                        disable_cache=0, check_uid=1, idxs=None, deferred=0):
     """Add objects to the Catalog by calling all SQL methods and
     providing needed arguments.
 
@@ -1282,7 +1282,8 @@ class Catalog(Folder,
                               method_id_list=method_id_list,
                               disable_cache=disable_cache,
                               check_uid=check_uid,
-                              idxs=idxs)
+                              idxs=idxs,
+                              deferred=deferred)
 
   def getSqlCatalogObjectListList(self):
     return self.sql_catalog_object_list
@@ -1291,7 +1292,7 @@ class Catalog(Folder,
     return self.sql_deferred_catalog_object_list
 
   def _catalogObjectList(self, object_list, method_id_list=None,
-                         disable_cache=0, check_uid=1, idxs=None):
+                         disable_cache=0, check_uid=1, idxs=None, deferred=0):
     """This is the real method to catalog objects."""
     if idxs not in (None, []):
       LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING,
@@ -1317,7 +1318,7 @@ class Catalog(Folder,
         object.uid = uid = self.newUid()
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
-    if check_uid:
+    if check_uid and not deferred:
       path_uid_dict = self.getUidDictForPathList(path_list=ensure_list(object_path_dict.values()))
       uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
       for object, path in six.iteritems(object_path_dict):
@@ -1358,7 +1359,10 @@ class Catalog(Folder,
           LOG('SQLCatalog._catalogObjectList', ERROR, error_message)
 
     if method_id_list is None:
-      method_id_list = self.getSqlCatalogObjectListList()
+      if deferred:
+        method_id_list = self.getSqlDeferredCatalogObjectListList()
+      else:
+        method_id_list = self.getSqlCatalogObjectListList()
     econtext = getEngine().getContext()
     if disable_cache:
       argument_cache = DummyDict()

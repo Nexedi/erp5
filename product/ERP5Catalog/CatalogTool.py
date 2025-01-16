@@ -974,12 +974,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     reindexObject = reindexCatalogObject
 
 
-    def catalogObjectList(self, object_list, *args, **kw):
+    def catalogObjectList(self, object_list, deferred=0, *args, **kw):
         """Catalog a list of objects"""
         m = object_list[0]
         if isinstance(m, GroupedMessage):
           tmp_object_list = [x.object for x in object_list]
-          super(CatalogTool, self).catalogObjectList(tmp_object_list, **m.kw)
+          super(CatalogTool, self).catalogObjectList(tmp_object_list, deferred=deferred, **m.kw)
           if tmp_object_list:
             exc_info = sys.exc_info()
           for x in object_list:
@@ -988,7 +988,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             else:
               x.result = None
         else:
-          super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
+          super(CatalogTool, self).catalogObjectList(object_list, deferred=0, *args, **kw)
+
+    def deferCatalogObjectList(self, object_list):
+      self.catalogObjectList(object_list=object_list, deferred=1)
 
     security.declarePrivate('uncatalogObjectList')
     def uncatalogObjectList(self, message_list):
