@@ -1,6 +1,6 @@
 # This script is called to defer fulltext indexing.
 METHOD_ID = script.id + 'Activity'
-GROUP_METHOD_ID = context.getRelativeUrl() + '/' + METHOD_ID
+GROUP_METHOD_ID = 'portal_catalog/catalogObjectList'
 activateObject = context.getPortalObject().portal_activities.activateObject
 try:
   priority = context.getActivityRuntimeEnvironment().getPriority()
@@ -26,4 +26,4 @@ for document in getPath:
       serialization_tag='full_text_' + document,
     ),
     METHOD_ID,
-  )()
+  )(check_uid=0, deferred=1)
