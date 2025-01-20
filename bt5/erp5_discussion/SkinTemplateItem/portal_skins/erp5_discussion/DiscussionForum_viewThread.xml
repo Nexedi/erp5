@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionForum_viewForm</string> </value>
+            <value> <string>DiscussionForum_viewThread</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionForum_view</string> </value>
+            <value> <string>DiscussionForum_viewThread</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
