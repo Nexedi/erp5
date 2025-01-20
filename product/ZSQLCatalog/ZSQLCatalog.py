@@ -671,7 +671,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     return []
 
   security.declarePrivate('wrapObjectList')
-  def wrapObjectList(self, object_value_list, catalog_value):
+  def wrapObjectList(self, object_value_list, catalog_value, deferred=False):
     """
       Return a list of wrapped objects for reindexing.
 
@@ -690,6 +690,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """Catalog a list of objects.
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
+    deferred = kw.get('deferred', False)
     hot_reindexing = (self.hot_reindexing_state is not None) and \
                      (catalog is not None) and \
                      (self.source_sql_catalog_id == catalog.id)
@@ -791,6 +792,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             self.wrapObjectList(
               object_value_list=d['obj'],
               catalog_value=destination_catalog,
+              deferred=deferred,
             ),
             **kw
           )
@@ -801,6 +803,7 @@ class ZCatalog(Folder, Persistent, Implicit):
               self.wrapObjectList(
                 object_value_list=d['obj'],
                 catalog_value=archive_catalog,
+                deferred=deferred,
               ),
               **kw
             )
@@ -815,6 +818,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           self.wrapObjectList(
             object_value_list=current_catalog_object_list,
             catalog_value=catalog,
+            deferred=deferred,
           ),
           **kw
         )
@@ -828,6 +832,7 @@ class ZCatalog(Folder, Persistent, Implicit):
               self.wrapObjectList(
                 object_value_list=object_set,
                 catalog_value=destination_catalog,
+                deferred=deferred,
               ),
               **kw
             )

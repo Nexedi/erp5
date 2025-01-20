@@ -889,10 +889,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         return ZCatalog.countResults(self, REQUEST, **kw)
 
-    def wrapObjectList(self, object_value_list, catalog_value):
+    def wrapObjectList(self, object_value_list, catalog_value, deferred=False):
       """
         Return a list of wrapped objects for reindexing.
       """
+      if deferred:
+        # No need to wrap
+        return object_value_list
       portal = self.getPortalObject()
 
       user_set = set()
