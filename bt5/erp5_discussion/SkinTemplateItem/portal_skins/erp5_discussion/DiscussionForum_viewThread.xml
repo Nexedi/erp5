@@ -79,6 +79,8 @@
                     <value>
                       <list>
                         <string>listbox_response_count</string>
+                        <string>listbox_author</string>
+                        <string>listbox_last_post</string>
                       </list>
                     </value>
                 </item>
