@@ -76,7 +76,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_threads</string>
+                        <string>my_posts</string>
                       </list>
                     </value>
                 </item>
@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionForum_viewGadget</string> </value>
+            <value> <string>DiscussionThread_viewPosts</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionForum_view</string> </value>
+            <value> <string>DiscussionThread_viewPosts</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -115,7 +115,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Discussion Forum</string> </value>
+            <value> <string>Discussion Posts</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

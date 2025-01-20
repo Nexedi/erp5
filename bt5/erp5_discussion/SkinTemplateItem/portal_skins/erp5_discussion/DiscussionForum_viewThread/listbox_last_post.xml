@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>css_class</string>
                 <string>default</string>
-                <string>display_width</string>
                 <string>editable</string>
                 <string>title</string>
               </list>
@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_title</string> </value>
+            <value> <string>listbox_last_post</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -56,14 +56,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -93,12 +93,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -106,7 +106,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_label_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -118,7 +118,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
+                    <value> <string>Latest Post Author</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -128,16 +128,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.REQUEST.get(\'discussion_post_title\',\'\')</string> </value>
+            <value> <string>python: cell.DiscussionThread_viewLastPostWidget()</string> </value>
         </item>
       </dictionary>
     </pickle>
