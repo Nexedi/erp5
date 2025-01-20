@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>psa_quality_assurance_builder_alarm</string> </value>
+            <value> <string>quality_assurance_builder_alarm</string> </value>
         </item>
         <item>
             <key> <string>periodicity_day_frequency</string> </key>
