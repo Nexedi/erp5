@@ -16,7 +16,6 @@ if is_temp_object:
 
 discussion_post = discussion_thread.newContent(
                     portal_type = "Discussion Post",
-                    title = title,
                     text_content = text_content,
                     source_value = person,
                     predecessor_value = predecessor,
