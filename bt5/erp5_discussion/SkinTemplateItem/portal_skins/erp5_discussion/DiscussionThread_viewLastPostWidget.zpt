@@ -10,9 +10,10 @@
   <span tal:content="author_dict/author_title"
         tal:condition="not:is_author_link_available"/>
  
-  <a class="listbox-row-discussion-thread-last-post-link"
+  <!-- TODO fix url to latest post -->
+  <!--a class="listbox-row-discussion-thread-last-post-link"
      tal:attributes="href python: '%s/view?list_start=%s&reset=1#%s' %(here.getReference(), last_post.getId(), last_post.getUid())">
     <img src="document_icon.gif" alt="Link To Post"/>
-  </a>
+  </a-->
  
 </tal:block>
