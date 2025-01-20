@@ -46,6 +46,7 @@
                 <string>source_payment</string>
                 <string>destination_payment</string>
                 <string>specialise</string>
+                <string>ledger</string>
               </tuple>
             </value>
         </item>
