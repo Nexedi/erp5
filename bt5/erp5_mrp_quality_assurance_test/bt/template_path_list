@@ -1,0 +1,13 @@
+business_process_module/production_business_process
+business_process_module/production_business_process/**
+organisation_module/fabrication_line
+organisation_module/starlink
+organisation_module/warehouse
+portal_rules/production_delivery
+portal_rules/production_delivery/**
+portal_rules/production_manufacturing_order
+portal_rules/production_manufacturing_order/**
+portal_rules/production_manufacturing_rule
+portal_rules/production_manufacturing_rule/**
+portal_rules/transformation_rule
+portal_rules/transformation_rule/**
