@@ -134,7 +134,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'%s\' %len(cell.objectIds())</string> </value>
+            <value> <string>python: cell.countFolder(portal_type=\'Discussion Post\')[0][0]</string> </value>
         </item>
       </dictionary>
     </pickle>
