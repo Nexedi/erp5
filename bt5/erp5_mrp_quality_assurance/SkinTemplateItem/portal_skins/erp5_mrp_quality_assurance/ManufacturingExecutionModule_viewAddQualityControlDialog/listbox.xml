@@ -428,7 +428,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>ManufacturingExecutionMovement_getOpenManufacturingExecutionList</string> </value>
+            <value> <string>ManufacturingExecutionModule_getOpenManufacturingExecutionList</string> </value>
         </item>
       </dictionary>
     </pickle>

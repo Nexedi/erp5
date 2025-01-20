@@ -60,7 +60,6 @@
                       <list>
                         <string>completed_operation_listbox</string>
                         <string>incompleted_operation_listbox</string>
-                        <string>related_defect_item_listbox</string>
                       </list>
                     </value>
                 </item>
