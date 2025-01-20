@@ -990,6 +990,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
+    deferredCatalogObjectList = catalogObjectList
+
     security.declarePrivate('uncatalogObjectList')
     def uncatalogObjectList(self, message_list):
       """Uncatalog a list of objects"""
