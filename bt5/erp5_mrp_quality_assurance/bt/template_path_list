@@ -7,4 +7,11 @@ portal_categories/publication_section/electronic_insurance
 portal_categories/publication_section/quality_insurance
 portal_categories/trade_phase/manufacturing/electronic_insurance
 portal_categories/trade_phase/manufacturing/quality_insurance
+portal_categories/use/manufacturing/acom
+portal_categories/use/manufacturing/electronic_insurance
+portal_categories/use/manufacturing/gate
+portal_categories/use/manufacturing/quality_control
+portal_categories/use/manufacturing/quality_insurance
+portal_categories/use/manufacturing/smon
+portal_categories/use/manufacturing/traceability
 web_page_module/gadget_post_ok_for_quality_control**
