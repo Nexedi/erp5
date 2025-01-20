@@ -88,7 +88,7 @@
         </item>
         <item>
             <key> <string>test_tales_expression</string> </key>
-            <value> <string>python: context.getResourceValue().getUse() == "manufacturing/build"</string> </value>
+            <value> <string>python: context.getResourceValue().getPortalType()== "Product"</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
