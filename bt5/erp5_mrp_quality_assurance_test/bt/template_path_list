@@ -11,3 +11,5 @@ portal_rules/production_manufacturing_rule
 portal_rules/production_manufacturing_rule/**
 portal_rules/transformation_rule
 portal_rules/transformation_rule/**
+transformation_module/test_quality_insurance_transformation
+transformation_module/test_quality_insurance_transformation/**
