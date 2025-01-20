@@ -40,12 +40,14 @@ ME_insurance = context.getParentValue()
 
 production_order = ME_insurance.getCausalityValue(portal_type='Production Order')
 
+production_type = context.Base_getProductionType()
+
 for me in production_order.getCausalityRelatedValueList(portal_type='Manufacturing Execution'):
   if me.getLedger() == 'manufacturing/execution':
     ME_execution = me
     break
 
-vin = ME_execution.getAggregateValue(portal_type='VIN')
+production_object = ME_execution.getAggregateValue(portal_type=production_type)
 
 
 if portal_type == "Traceability":
@@ -66,7 +68,7 @@ if portal_type == "Traceability":
       int_index = context.getIntIndex(),
       description = resource_value.getDescription(),
       causality_value = ME_execution,
-      aggregate_value = vin,
+      aggregate_value = production_object,
       effective_date = DateTime(),
       publication_section = publication_section
     )
@@ -84,8 +86,8 @@ if portal_type == "Traceability":
     return []
   else:
     assurance_document = context.getAggregateValue(portal_type=portal_type)
-    if (not assurance_document.getAggregate(portal_type="VIN")) and vin:
-      assurance_document.setAggregateValue(vin, portal_type="VIN")
+    if (not assurance_document.getAggregate(portal_type=production_type)) and production_object:
+      assurance_document.setAggregateValue(production_object, portal_type=production_type)
 
 
 else:
@@ -99,7 +101,7 @@ else:
       int_index = context.getIntIndex(),
       description = resource_value.getDescription(),
       causality_value = ME_execution,
-      aggregate_value = vin,
+      aggregate_value = production_object,
       publication_section = publication_section,
       effective_date = DateTime()
     )
@@ -107,7 +109,7 @@ else:
     assurance_document.plan()
   else:
     assurance_document = context.getAggregateValue(portal_type=portal_type)
-    if (not assurance_document.getAggregate(portal_type="VIN")) and vin:
-      assurance_document.setAggregateValue(vin, portal_type="VIN")
+    if (not assurance_document.getAggregate(portal_type=production_type)) and production_object:
+      assurance_document.setAggregateValue(production_object, portal_type=production_type)
 
 return []

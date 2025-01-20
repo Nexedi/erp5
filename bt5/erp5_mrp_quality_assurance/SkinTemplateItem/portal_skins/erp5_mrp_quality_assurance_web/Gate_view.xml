@@ -59,8 +59,6 @@
                     <value>
                       <list>
                         <string>incompleted_operation_listbox</string>
-                        <string>related_defect_item_listbox</string>
-                        <string>your_action</string>
                       </list>
                     </value>
                 </item>

@@ -54,6 +54,20 @@
               <dictionary>
                 <item>
                     <key> <string>columns</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -98,10 +112,6 @@
                         <tuple>
                           <string>causality_title</string>
                           <string>Delivery</string>
-                        </tuple>
-                        <tuple>
-                          <string>aggregate_reference</string>
-                          <string>VIN</string>
                         </tuple>
                         <tuple>
                           <string>effective_date</string>
@@ -170,6 +180,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'title\', \'Title\'), (\'reference\', \'Reference\'),(\'portal_type\', \'Type\'), (\'int_index\', \'Index\'),(\'causality_title\', \'Delivery\'),(\'aggregate_reference\', here.Base_getProductionType()), (\'effective_date\', \'Date\'),(\'publication_section_title\', \'Publication Section\'),(\'quality_assurance_title\',\'Control Result\'),(\'description\', \'Description\'),(\'translated_validation_state_title\', \'State\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,15 +1,18 @@
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 
-vin = context.getAggregateValue(portal_type='VIN')
-if not vin:
+production_type = context.Base_getProductionType()
+
+
+production_object = context.getAggregateValue(portal_type=production_type)
+if not production_object:
   po = context.getCausalityValue(portal_type='Production Order')
   if po:
     for me in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution'):
-      vin = me.getAggregateValue(portal_type='VIN')
-      if vin:
+      production_object = me.getAggregateValue(portal_type=production_type)
+      if production_object:
         break
 
-if not vin:
+if not production_object:
   return []
 
 query_list = []
@@ -30,7 +33,6 @@ if not_started:
       SimpleQuery(validation_state=('queued', 'confirmed')),
       logical_operator='AND'),
   )
-context.log(context.getRelativeUrl())
 search_dict = {
   "sort_on" : (('int_index', 'ascending'),),
   "strict_publication_section_uid": context.portal_categories.publication_section.electronic_insurance.getUid(),
@@ -38,7 +40,7 @@ search_dict = {
     logical_operator='OR',
     *query_list
     ),
-  "strict_aggregate_uid": vin.getUid()
+  "strict_aggregate_uid": production_object.getUid()
 }
 
 

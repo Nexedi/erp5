@@ -40,12 +40,6 @@ elif result == 'nok':
       'portal_status_message': translateString("Only OK is allowed"),
       'portal_status_level': 'error'
     })
-  if not context.getCausalityRelatedValue(portal_type='Defect Item') and redirect_to_defect_dialog:
-    return context.Base_redirect(form_id = 'declare_defect', keep_items={
-      'post_quality_control': True,
-      "portal_status_message":context.Base_translateString("Defect needs to be input firstly for NOK Quality Control"),
-      'portal_status_level': 'error'
-    })
 
   clone_one = context.Base_createCloneDocument(batch_mode=True)
   clone_one.setFollowUpValueList(clone_one.getFollowUpValueList(portal_type='Manufacturing Execution') + [context])
