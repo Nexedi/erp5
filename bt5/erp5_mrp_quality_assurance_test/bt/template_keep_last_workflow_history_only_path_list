@@ -1,0 +1,6 @@
+portal_rules/production_delivery
+portal_rules/production_manufacturing_order
+portal_rules/production_manufacturing_rule
+portal_rules/transformation_rule
+transformation_module/test_product_transformation
+transformation_module/test_quality_insurance_transformation
