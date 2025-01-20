@@ -2,8 +2,10 @@ clone_one = context.getFollowUpRelatedValue(portal_type='Traceability')
 if clone_one:
   return clone_one.Base_redirect('view')
 
-# set serial number's vin to None, so it can be reused
+# set serial number's production object to None, so it can be reused
 serial_number = context.getAggregateValue(portal_type='Serial Number')
+
+production_type = context.Base_getProductionType()
 
 is_for_radio = False
 part_reference = context.getReference()
@@ -12,10 +14,10 @@ if part_product and part_product.getProductLine() == 'part/radio':
   is_for_radio = True
 
 if is_for_radio:
-  actually_vin = context.getAggregateValue(portal_type='VIN')
-  if actually_vin:
-    new_aggregate_vin_list = [x for x in serial_number.getAggregateValueList(portal_type='VIN') if x.getRelativeUrl() != actually_vin.getRelativeUrl()]
-    serial_number.setAggregateValueList(new_aggregate_vin_list, portal_type='VIN')
+  actually_production_object = context.getAggregateValue(portal_type=production_type)
+  if actually_production_object:
+    new_aggregate_production_object_list = [x for x in serial_number.getAggregateValueList(portal_type=production_type) if x.getRelativeUrl() != actually_production_object.getRelativeUrl()]
+    serial_number.setAggregateValueList(new_aggregate_production_object_list, portal_type=production_type)
 
   new_follow_up_traceability_list = [x for x in serial_number.getFollowUpValueList(portal_type='Traceability') if x.getRelativeUrl() != context.getRelativeUrl()]
   serial_number.setFollowUpValueList(new_follow_up_traceability_list, portal_type='Traceability')
@@ -23,7 +25,7 @@ if is_for_radio:
 
 
 else:
-  serial_number.setAggregateValue(None, portal_type='VIN')
+  serial_number.setAggregateValue(None, portal_type=production_type)
   serial_number.setFollowUpValue(None, portal_type='Traceability')
 
 
