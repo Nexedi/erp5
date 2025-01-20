@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_threads</string> </value>
+            <value> <string>my_posts</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -229,7 +229,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Discussion Threads (rjs gadget)</string> </value>
+                    <value> <string>Discussion Posts</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'source_column\', \'Event_getSafeSourceTitle\'), (\'lines\', 100), ("query_dict", {"portal_type": "Discussion Thread", "follow_up__uid": context.getUid()})]</string> </value>
+            <value> <string>python: [(\'lines\', 100), ("query_dict", {"portal_type": "Discussion Post", "parent_relative_url": context.getRelativeUrl()})]</string> </value>
         </item>
       </dictionary>
     </pickle>
