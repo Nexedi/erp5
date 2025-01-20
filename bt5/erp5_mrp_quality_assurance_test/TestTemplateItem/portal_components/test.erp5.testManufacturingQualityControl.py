@@ -40,16 +40,19 @@ class TestQualityAssurance(ERP5TypeTestCase):
     ppl_id_list = []
     mo_id_list = []
     for po in po_list:
-      ppl = po.getCausalityRelatedValue(portal_type='Production Packing List')
-      if ppl:
+      for ppl in po.getCausalityRelatedValueList(portal_type='Production Packing List'):
         ppl_id_list.append(ppl.getId())
-      sm = po.getDeliveryRelatedValue(portal_type='Simulation Movement')
+      sm = po.getCausalityRelatedValue(portal_type='Simulation Movement')
       if sm:
         sm_id_list.append(sm.getId())
       for me in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution'):
         me_id_list.append(me.getId())
-      for mo in po.getCausalityRelatedValueList(portal_type='Manufacturing Order'):
-        mo_id_list.append(mo.getId())
+        for quality_element in me.getCausalityRelatedValueList(portal_type=('Quality Control', 'Traceability', 'Gate', 'Defect Declaration','Defect Correction', 'SMON', 'ACOM')):
+          if quality_element.getId() not in quality_element_id_list:
+            quality_element_id_list.append(quality_element.getId())
+
+      for mo_line in po.getCausalityRelatedValueList(portal_type='Manufacturing Order Line'):
+        mo_id_list.append(mo_line.getParentValue().getId())
 
 
     self.portal.quality_assurance_module.manage_delObjects(ids=quality_element_id_list)
@@ -57,6 +60,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.portal.production_packing_list_module.manage_delObjects(ids=ppl_id_list)
     self.portal.manufacturing_order_module.manage_delObjects(ids=mo_id_list)
     self.portal.manufacturing_execution_module.manage_delObjects(ids=me_id_list)
+    self.quality_element_type = getattr(self.portal.portal_types, 'Quality Assurance Module').getTypeAllowedContentTypeList()
 
     self.tic()
 
@@ -69,7 +73,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
         publication_section = 'quality_insurance'
       )
 
-    for portal_type in ['Quality Control', 'Traceability', 'Gate', 'Defect Declaration','Defect Correction', 'SMON', 'ACOM']:
+    for portal_type in self.quality_element_type:
       quality_element = createTestElement(portal_type)
       self.assertEquals(quality_element.getValidationState(), 'draft')
       quality_element.plan()
@@ -111,7 +115,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
       id='test_%s' % DateTime().second(),
       ledger = 'manufacturing/execution')
 
-    for portal_type in ['Quality Control', 'Traceability', 'Gate', 'Quality Control', 'SMON', 'Quality Control', 'ACOM']:
+    for portal_type in self.quality_element_type:
       quality_element = createTestElement(portal_type=portal_type)
       quality_element.edit(int_index = index, causality_value = me_2)
       quality_element.plan()
@@ -165,6 +169,9 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.tic()
     self.portal.portal_alarms.quality_assurance_builder_alarm.activeSense()
     self.tic()
+    me = [x for x in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution') if x.getLedger() == 'manufacturing/execution'][0]
+    quality_element_list = me.getCausalityRelatedValueList(portal_type=self.quality_element_type)
+    self.assertEquals(len(quality_element_list), 15, quality_element_list)
 
 
 
