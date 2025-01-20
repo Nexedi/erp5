@@ -24,6 +24,7 @@
               <tuple>
                 <string>trade_phase/production/manufacturing</string>
                 <string>successor/trade_state/ordered</string>
+                <string>delivery_builder/portal_deliveries/manufacturing_order_builder</string>
               </tuple>
             </value>
         </item>

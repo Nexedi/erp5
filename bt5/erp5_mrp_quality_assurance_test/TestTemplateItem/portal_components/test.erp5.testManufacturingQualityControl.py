@@ -29,15 +29,36 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
 class TestQualityAssurance(ERP5TypeTestCase):
-  """
-  A Sample Test Class
-  """
 
   def afterSetUp(self):
-    """
-    This is ran before anything, used to set the environment
-    """
-    # here, you can create the categories and objects your test will depend on
+    quality_element_id_list = [x.getId() for x in self.portal.quality_assurance_module.searchFolder(id='test_%')]
+    self.portal.quality_assurance_module.manage_delObjects(ids=quality_element_id_list)
+    self.tic()
+    po_list = self.portal.production_order_module.searchFolder(id='test_%')
+    sm_id_list = []
+    me_id_list = []
+    ppl_id_list = []
+    mo_id_list = []
+    for po in po_list:
+      ppl = po.getCausalityRelatedValue(portal_type='Production Packing List')
+      if ppl:
+        ppl_id_list.append(ppl.getId())
+      sm = po.getDeliveryRelatedValue(portal_type='Simulation Movement')
+      if sm:
+        sm_id_list.append(sm.getId())
+      for me in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution'):
+        me_id_list.append(me.getId())
+      for mo in po.getCausalityRelatedValueList(portal_type='Manufacturing Order'):
+        mo_id_list.append(mo.getId())
+
+
+    self.portal.quality_assurance_module.manage_delObjects(ids=quality_element_id_list)
+    self.portal.production_order_module.manage_delObjects(ids=[x.getId() for x in po_list])
+    self.portal.production_packing_list_module.manage_delObjects(ids=ppl_id_list)
+    self.portal.manufacturing_order_module.manage_delObjects(ids=mo_id_list)
+    self.portal.manufacturing_execution_module.manage_delObjects(ids=me_id_list)
+
+    self.tic()
 
 
   def test_quality_element_workflow(self):
@@ -76,10 +97,20 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.assertEquals(quality_control.getValidationState(), 'archived')
     element_list = []
     index = 0
-    po = self.portal.production_order_module.newContent(portal_type='Production Order')
-    me  = self.portal.manufacturing_execution_module.newContent(portal_type='Manufacturing Execution', causality_value = po, ledger = 'manufacturing/quality_insurance')
-    me_2 = self.portal.manufacturing_execution_module.newContent(portal_type='Manufacturing Execution', causality_value = po, ledger = 'manufacturing/execution')
-    self.portal.manufacturing_execution_module.newContent(portal_type='Manufacturing Execution', causality_value = po, ledger = 'manufacturing/electronic_insurance')
+    po = self.portal.production_order_module.newContent(
+      portal_type='Production Order',
+      id='test_%s' % DateTime().second())
+    me  = self.portal.manufacturing_execution_module.newContent(
+      portal_type='Manufacturing Execution',
+      causality_value = po,
+      id='test_%s' % DateTime().second(),
+      ledger = 'manufacturing/quality_insurance')
+    me_2 = self.portal.manufacturing_execution_module.newContent(
+      portal_type='Manufacturing Execution',
+      causality_value = po,
+      id='test_%s' % DateTime().second(),
+      ledger = 'manufacturing/execution')
+
     for portal_type in ['Quality Control', 'Traceability', 'Gate', 'Quality Control', 'SMON', 'Quality Control', 'ACOM']:
       quality_element = createTestElement(portal_type=portal_type)
       quality_element.edit(int_index = index, causality_value = me_2)
@@ -107,4 +138,87 @@ class TestQualityAssurance(ERP5TypeTestCase):
 
     for index in [0, 1,3, 5, 6]:
       self.assertEquals(element_list[index].getValidationState(), 'expected')
+
+  def test_quality_element_creation(self):
+    now = DateTime()
+    po = self.portal.production_order_module.newContent(
+      portal_type='Production Order',
+      id='test_%s' % now.second(),
+      specialise = 'business_process_module/production_business_process',
+      start_date = now,
+      stop_date = now,
+      destination_section = 'organisation_module/starlink',
+      destination = 'organisation_module/warehouse'
+    )
+    po.newContent(
+      portal_type='Production Order Line',
+      resource = 'product_module/test_product',
+      specialise = 'transformation_module/test_product_transformation',
+      quantity = 1)
+    po.newContent(
+      portal_type='Production Order Line',
+      resource = 'service_module/test_quality_insurance',
+      specialise = 'transformation_module/test_quality_insurance_transformation',
+      quantity = 1)
+    po.plan()
+    po.confirm()
+    self.tic()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
