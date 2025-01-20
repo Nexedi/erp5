@@ -8,7 +8,6 @@ Manufacturing Execution Module | add_quality_control
 Manufacturing Execution | quality_history
 Manufacturing Execution | view_traceability_input
 Quality Assurance Module | view
-Quality Control | declare_defect
 Quality Control | redo_quality_control
 Quality Control | request_new_quality_control
 Quality Control | result_nok
