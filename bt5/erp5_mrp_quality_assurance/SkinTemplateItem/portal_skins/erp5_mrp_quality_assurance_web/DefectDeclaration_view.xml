@@ -86,7 +86,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_aggregate_title</string>
                         <string>my_follow_up_title</string>
                         <string>my_causality_title_list</string>
                         <string>my_description</string>
