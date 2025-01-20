@@ -98,6 +98,7 @@
                     <value>
                       <list>
                         <string>my_preferred_data_product_individual_variation_base_category_list</string>
+                        <string>my_preferred_enable_data_analysis_sharing</string>
                       </list>
                     </value>
                 </item>
