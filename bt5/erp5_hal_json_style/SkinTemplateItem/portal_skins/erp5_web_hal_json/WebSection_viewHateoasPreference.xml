@@ -78,6 +78,7 @@
                       <list>
                         <string>my_configuration_login</string>
                         <string>my_configuration_logout</string>
+                        <string>my_configuration_filter_action_script_id</string>
                       </list>
                     </value>
                 </item>

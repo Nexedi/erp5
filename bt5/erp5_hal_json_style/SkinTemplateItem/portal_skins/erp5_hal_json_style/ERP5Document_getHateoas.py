@@ -1472,8 +1472,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
     # Find current action URL and extract embedded view
+    filter_action_script_id = ''
+    if hasattr(site_root, 'getLayoutProperty'):
+      filter_action_script_id = site_root.getLayoutProperty('configuration_filter_action_script_id', default='')
     erp5_action_dict = portal.Base_filterDuplicateActions(
-      portal.portal_actions.listFilteredActionsFor(traversed_document))
+      portal.portal_actions.listFilteredActionsFor(traversed_document),
+      filter_action_script_id)
     for erp5_action_key in erp5_action_dict.keys():
       for view_action in erp5_action_dict[erp5_action_key]:
         # Try to embed the form in the result

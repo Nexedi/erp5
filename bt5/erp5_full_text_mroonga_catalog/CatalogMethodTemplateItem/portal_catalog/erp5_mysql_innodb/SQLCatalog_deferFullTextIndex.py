@@ -1,6 +1,6 @@
 # This script is called to defer fulltext indexing.
 METHOD_ID = script.id + 'Activity'
-GROUP_METHOD_ID = 'portal_catalog/catalogObjectList'
+GROUP_METHOD_ID = 'portal_catalog/deferredCatalogObjectList'
 activateObject = context.getPortalObject().portal_activities.activateObject
 try:
   priority = context.getActivityRuntimeEnvironment().getPriority()

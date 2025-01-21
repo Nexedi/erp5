@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_tracking_url_string</string> </value>
+            <value> <string>my_configuration_filter_action_script_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,14 +25,6 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <unicode>required_not_found</unicode> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <unicode>too_long</unicode> </key>
-                    <value> <string>Too much input was given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -47,6 +39,10 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -64,6 +60,10 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -73,7 +73,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_view_mode_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Tracking Url</string> </value>
+                    <value> <string>Filter Action Script Id</string> </value>
                 </item>
               </dictionary>
             </value>
