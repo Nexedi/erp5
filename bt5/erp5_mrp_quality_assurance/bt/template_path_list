@@ -5,6 +5,8 @@ portal_categories/ledger/manufacturing/execution
 portal_categories/ledger/manufacturing/quality_insurance
 portal_categories/publication_section/electronic_insurance
 portal_categories/publication_section/quality_insurance
+portal_categories/quality_assurance
+portal_categories/quality_assurance/**
 portal_categories/trade_phase/manufacturing/electronic_insurance
 portal_categories/trade_phase/manufacturing/quality_insurance
 portal_categories/use/manufacturing/acom
