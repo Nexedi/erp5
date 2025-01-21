@@ -8,15 +8,6 @@ if incompleted_list:
     "portal_status_level": "error"
   })
 
-opened_defect_list = context.Base_getManufacturingExecutionRelatedDefectList(portal_type='Defect Item', validation_state='opened')
-# We get the object in case immediateReindexObject was not immediate
-for defect in opened_defect_list:
-  if defect.getObject().getValidationState() == "opened":
-    return context.Base_redirect('view', keep_items={
-      "portal_status_message":context.Base_translateString("Defects are not closed"),
-      "portal_status_level": "error"
-    })
-
 user_value = context.portal_membership.getAuthenticatedMember().getUserValue()
 
 now = DateTime()
