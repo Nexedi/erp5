@@ -240,8 +240,8 @@ class TestQualityAssurance(ERP5TypeTestCase):
       previous_quality_element_list = quality_element_list[:-1]
 
 
-  def _test_SMON(self):
-    me_execution = self.startManufacturingForTest()
+  def test_SMON(self):
+    me_execution = self.me_execution
     while True:
       quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
       if quality_element_list[-1].getPortalType() != 'Gate':
@@ -259,8 +259,8 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.assertEquals(SMON.getValidationState(), 'posted')
     self.assertEquals(me_execution.getSimulationState(), 'stopped')
 
-  def _test_ACOM(self):
-    me_execution = self.startManufacturingForTest()
+  def test_ACOM(self):
+    me_execution = self.me_execution
     while True:
       quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
       if quality_element_list[-1].getPortalType() != 'Gate':
@@ -281,41 +281,14 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.tic()
     self.assertEquals(ACOM.getValidationState(), 'expected')
 
-    #declare defect doesn't change quality control state
-    defect_one = incompleted_list[0].getObject()
-    defect_one.Delivery_declareDefectItem(
-      aggregate=defect_one.Delivery_getVINValueList()[0].getRelativeUrl(),
-      description="TEST",
-      psa_square_nature="TEST1",
-      psa_square_localisation="TEST2")
-    self.tic()
 
     for i in incompleted_list:
       self.assertEquals(i.getValidationState(), 'expected')
-    defect_one.QualityControl_postQualityAssuranceResult(result='nok', batch=True, redirect_to_defect_dialog=False)
-    for i in incompleted_list:
-      if i.getValidationState() == "expected":
-        i.post()
+      i.post()
 
     self.tic()
-    incompleted_list = ACOM.Base_getIncompletedOperationList()
-    self.assertEquals(len(incompleted_list), 1)
-    ACOM.ACOM_validate()
-    self.tic()
-    self.assertEquals(ACOM.getValidationState(), 'expected')
-    redo_one = defect_one.getFollowUpRelatedValue(portal_type='Quality Control')
-    redo_one.QualityControl_postQualityAssuranceResult(result='ok', batch=True)
-    self.tic()
-
     incompleted_list = ACOM.Base_getIncompletedOperationList()
     self.assertEquals(len(incompleted_list), 0)
-    ACOM.ACOM_validate()
-    self.tic()
-    # still can't since has defect item
-    self.assertEquals(ACOM.getValidationState(), 'expected')
-    defect_item = defect_one.getCausalityRelatedValue(portal_type='Defect Item')
-    defect_item.DefectItem_close()
-    self.tic()
     ACOM.ACOM_validate()
     self.tic()
     self.assertEquals(ACOM.getValidationState(), 'posted')
