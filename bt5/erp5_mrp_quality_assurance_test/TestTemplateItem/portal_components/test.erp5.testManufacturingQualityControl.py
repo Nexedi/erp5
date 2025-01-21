@@ -31,6 +31,7 @@ from DateTime import DateTime
 class TestQualityAssurance(ERP5TypeTestCase):
 
   def afterSetUp(self):
+    # remove all test datas
     quality_element_id_list = [x.getId() for x in self.portal.quality_assurance_module.searchFolder(id='test_%')]
     self.portal.quality_assurance_module.manage_delObjects(ids=quality_element_id_list)
     self.tic()
@@ -60,9 +61,43 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.portal.production_packing_list_module.manage_delObjects(ids=ppl_id_list)
     self.portal.manufacturing_order_module.manage_delObjects(ids=mo_id_list)
     self.portal.manufacturing_execution_module.manage_delObjects(ids=me_id_list)
-    self.quality_element_type = getattr(self.portal.portal_types, 'Quality Assurance Module').getTypeAllowedContentTypeList()
+    self.portal.portal_simulation.manage_delObjects(ids=sm_id_list)
 
     self.tic()
+    self.quality_element_type = getattr(self.portal.portal_types, 'Quality Assurance Module').getTypeAllowedContentTypeList()
+    # create needed test production datas
+    now = DateTime()
+    po = self.portal.production_order_module.newContent(
+      portal_type='Production Order',
+      id='test_%s' % now.second(),
+      specialise = 'business_process_module/production_business_process',
+      start_date = now,
+      stop_date = now,
+      destination_section = 'organisation_module/starlink',
+      destination = 'organisation_module/warehouse'
+    )
+    po.newContent(
+      portal_type='Production Order Line',
+      resource = 'product_module/test_product',
+      specialise = 'transformation_module/test_product_transformation',
+      quantity = 1)
+    po.newContent(
+      portal_type='Production Order Line',
+      resource = 'service_module/test_quality_insurance',
+      specialise = 'transformation_module/test_quality_insurance_transformation',
+      quantity = 1)
+    po.plan()
+    po.confirm()
+    self.po = po
+    self.tic()
+    self.portal.portal_alarms.quality_assurance_builder_alarm.activeSense()
+    self.tic()
+    me_execution = [x for x in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution') if x.getLedger() == 'manufacturing/execution'][0]
+    me_execution.start()
+    self.me_execution = me_execution
+    self.tic()
+
+
 
 
   def test_quality_element_workflow(self):
@@ -143,37 +178,46 @@ class TestQualityAssurance(ERP5TypeTestCase):
     for index in [0, 1,3, 5, 6]:
       self.assertEquals(element_list[index].getValidationState(), 'expected')
 
-  def test_quality_element_creation(self):
-    now = DateTime()
-    po = self.portal.production_order_module.newContent(
-      portal_type='Production Order',
-      id='test_%s' % now.second(),
-      specialise = 'business_process_module/production_business_process',
-      start_date = now,
-      stop_date = now,
-      destination_section = 'organisation_module/starlink',
-      destination = 'organisation_module/warehouse'
-    )
-    po.newContent(
-      portal_type='Production Order Line',
-      resource = 'product_module/test_product',
-      specialise = 'transformation_module/test_product_transformation',
-      quantity = 1)
-    po.newContent(
-      portal_type='Production Order Line',
-      resource = 'service_module/test_quality_insurance',
-      specialise = 'transformation_module/test_quality_insurance_transformation',
-      quantity = 1)
-    po.plan()
-    po.confirm()
-    self.tic()
-    self.portal.portal_alarms.quality_assurance_builder_alarm.activeSense()
-    self.tic()
-    me = [x for x in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution') if x.getLedger() == 'manufacturing/execution'][0]
-    quality_element_list = me.getCausalityRelatedValueList(portal_type=self.quality_element_type)
+  def test_quality_control(self):
+    me_execution = self.me_execution
+    quality_element_list = me_execution.getCausalityRelatedValueList(portal_type=self.quality_element_type)
     self.assertEquals(len(quality_element_list), 15, quality_element_list)
+    quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
+    self.assertEquals(len(quality_element_list), 0)
+    me_execution.Base_showNextStepQualityOperation(me=me_execution)
+    self.tic()
+    quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
+    self.assertEquals(len(quality_element_list), 3)
+    for quality_element in quality_element_list:
+      self.assertEquals(quality_element.getValidationState(), 'expected')
+    self.assertEquals(quality_element_list[-1].getPortalType(), 'Gate')
+    quality_control = quality_element_list[0].getObject()
+    quality_control.QualityControl_postQualityAssuranceResult(result='ok', batch=True)
+    self.tic()
+    self.assertEquals(quality_control.getValidationState(), 'posted')
+    self.assertEquals(quality_control.getQualityAssurance(), 'result/ok')
+    cloned_one = quality_control.QualityControl_RequestNewQualityControl(batch=True)
+    self.tic()
+    self.assertTrue(cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line') is not None)
+    self.assertNotEquals(cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), quality_control.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
+    self.tic()
+    self.assertEquals(quality_control.getValidationState(), 'posted')
+    self.assertEquals(cloned_one.getValidationState(), 'expected')
+    cloned_one.QualityControl_postQualityAssuranceResult(result='nok', batch=True, redirect_to_defect_dialog=False)
+    self.tic()
+    self.assertEquals(quality_control.getValidationState(), 'archived')
+    self.assertEquals(cloned_one.getValidationState(), 'posted')
+    cloned_cloned_one = cloned_one.getFollowUpRelatedValue(portal_type='Quality Control')
+    self.assertTrue(cloned_cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line') is not None)
+    self.assertNotEquals(cloned_cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
+    self.assertEquals(cloned_cloned_one.getValidationState(), 'pending_update')
+    cloned_cloned_one.QualityControl_postQualityAssuranceResult(result='ok', batch=True)
+    self.tic()
+    self.assertEquals(cloned_one.getValidationState(), 'archived')
+    self.assertEquals(cloned_cloned_one.getValidationState(), 'posted')
+    defect_one = cloned_cloned_one.QualityControl_RequestNewQualityControl(batch=True)
 
-
+    self.assertEquals(defect_one.getValidationState(), 'expected')
 
 
 
