@@ -94,6 +94,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.tic()
     me_execution = [x for x in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution') if x.getLedger() == 'manufacturing/execution'][0]
     me_execution.start()
+    me_execution.Base_showNextStepQualityOperation(me=me_execution)
     self.me_execution = me_execution
     self.tic()
 
@@ -183,10 +184,6 @@ class TestQualityAssurance(ERP5TypeTestCase):
     quality_element_list = me_execution.getCausalityRelatedValueList(portal_type=self.quality_element_type)
     self.assertEquals(len(quality_element_list), 15, quality_element_list)
     quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
-    self.assertEquals(len(quality_element_list), 0)
-    me_execution.Base_showNextStepQualityOperation(me=me_execution)
-    self.tic()
-    quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
     self.assertEquals(len(quality_element_list), 3)
     for quality_element in quality_element_list:
       self.assertEquals(quality_element.getValidationState(), 'expected')
@@ -220,32 +217,209 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.assertEquals(defect_one.getValidationState(), 'expected')
 
 
+  def test_gate(self):
+    me_execution = self.me_execution
+    previous_quality_element_list = []
+    while True:
+      quality_element_list = [x.getObject() for x in me_execution.Delivery_getUpcomingQualityControlOperationList()]
+
+      for i in previous_quality_element_list:
+        self.assertTrue(i in quality_element_list)
+
+      for i in quality_element_list:
+        self.assertEquals(i.getValidationState(), 'expected')
+
+      if quality_element_list[-1].getPortalType() != 'Gate':
+        break
+
+
+      gate = quality_element_list[-1]
+      gate.Gate_validate()
+      self.tic()
+      self.assertEquals(gate.getValidationState(), 'posted')
+      previous_quality_element_list = quality_element_list[:-1]
+
+
+  def _test_SMON(self):
+    me_execution = self.startManufacturingForTest()
+    while True:
+      quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
+      if quality_element_list[-1].getPortalType() != 'Gate':
+        break
+      gate = quality_element_list[-1]
+      gate.Gate_validate()
+      self.tic()
+
+    # all gate are passed, SMON is the next last one
+    SMON = quality_element_list[-1]
+    incompleted_list = SMON.Base_getIncompletedOperationList()
+    self.assertTrue(incompleted_list is not None)
+    SMON.SMON_postSMONResult()
+    self.tic()
+    self.assertEquals(SMON.getValidationState(), 'posted')
+    self.assertEquals(me_execution.getSimulationState(), 'stopped')
+
+  def _test_ACOM(self):
+    me_execution = self.startManufacturingForTest()
+    while True:
+      quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
+      if quality_element_list[-1].getPortalType() != 'Gate':
+        break
+      gate = quality_element_list[-1]
+      gate.Gate_validate()
+      self.tic()
+
+    SMON =  quality_element_list[-1]
+    SMON.SMON_postSMONResult()
+    self.tic()
+    quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
+    ACOM = quality_element_list[-1]
+
+    incompleted_list = ACOM.Base_getIncompletedOperationList()
+    self.assertTrue(incompleted_list is not None)
+    ACOM.ACOM_validate()
+    self.tic()
+    self.assertEquals(ACOM.getValidationState(), 'expected')
+
+    #declare defect doesn't change quality control state
+    defect_one = incompleted_list[0].getObject()
+    defect_one.Delivery_declareDefectItem(
+      aggregate=defect_one.Delivery_getVINValueList()[0].getRelativeUrl(),
+      description="TEST",
+      psa_square_nature="TEST1",
+      psa_square_localisation="TEST2")
+    self.tic()
+
+    for i in incompleted_list:
+      self.assertEquals(i.getValidationState(), 'expected')
+    defect_one.QualityControl_postQualityAssuranceResult(result='nok', batch=True, redirect_to_defect_dialog=False)
+    for i in incompleted_list:
+      if i.getValidationState() == "expected":
+        i.post()
+
+    self.tic()
+    incompleted_list = ACOM.Base_getIncompletedOperationList()
+    self.assertEquals(len(incompleted_list), 1)
+    ACOM.ACOM_validate()
+    self.tic()
+    self.assertEquals(ACOM.getValidationState(), 'expected')
+    redo_one = defect_one.getFollowUpRelatedValue(portal_type='Quality Control')
+    redo_one.QualityControl_postQualityAssuranceResult(result='ok', batch=True)
+    self.tic()
+
+    incompleted_list = ACOM.Base_getIncompletedOperationList()
+    self.assertEquals(len(incompleted_list), 0)
+    ACOM.ACOM_validate()
+    self.tic()
+    # still can't since has defect item
+    self.assertEquals(ACOM.getValidationState(), 'expected')
+    defect_item = defect_one.getCausalityRelatedValue(portal_type='Defect Item')
+    defect_item.DefectItem_close()
+    self.tic()
+    ACOM.ACOM_validate()
+    self.tic()
+    self.assertEquals(ACOM.getValidationState(), 'posted')
+    self.assertEquals(me_execution.getSimulationState(), 'delivered')
+
+
+  def _test_SMON_ACOM_operation_list(self, ACOM = False):
+    me_execution = self.startManufacturingForTest()
+    while True:
+      quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
+      if quality_element_list[-1].getPortalType() != 'Gate':
+        break
+      gate = quality_element_list[-1]
+      gate.Gate_validate()
+      self.tic()
+
+    target_element = quality_element_list[-1]
+    self.assertEquals(target_element.getPortalType(), 'SMON')
+    if ACOM:
+      target_element.SMON_postSMONResult()
+      self.tic()
+      target_element = me_execution.Delivery_getUpcomingQualityControlOperationList()[-1]
+      self.assertEquals(target_element.getPortalType(), 'ACOM')
+
+
+    incompleted_list = target_element.Base_getIncompletedOperationList()
+    for element in incompleted_list:
+      self.assertTrue(element.getIntIndex() < target_element.getIntIndex())
+      self.assertEquals(element.getValidationState(), 'expected')
+    incompleted_list[0].getObject().QualityControl_postQualityAssuranceResult(result='nok', batch=True, redirect_to_defect_dialog=False)
+    self.tic()
+    new_incompleted_list = target_element.Base_getIncompletedOperationList()
+    self.assertEquals([x.getObject() for x in incompleted_list], [x.getObject() for x in new_incompleted_list])
+    self.assertEquals(new_incompleted_list[0].getValidationState(), 'posted')
+
+  def _test_SMON_operation_list(self):
+    self._test_SMON_ACOM_operation_list()
+
+  def _test_ACOM_operation_list(self):
+    self._test_SMON_ACOM_operation_list(True)
 
 
 
 
+  def _test_traceability(self):
+    me_execution = self.startManufacturingForTest()
+    while True:
+      quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
+      if quality_element_list[-1].getPortalType() != 'Gate':
+        break
+      gate = quality_element_list[-1]
+      gate.Gate_validate()
+      self.tic()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 3)
+    me_execution.ManufacturingExecution_processTraceabilityData('''00463429720111111111111111
+00517566260111111111111111
+''')
+    self.tic()
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 1)
+    self.assertEquals(traceability_list[0].getReference(), '00519267020')
+    me_execution.ManufacturingExecution_processTraceabilityData('''00463429720111111111111111
+''')
+    self.tic()
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 1)
+    self.assertEquals(traceability_list[0].getReference(), '00519267020')
+    update_traceability = traceability_list[0]
+    me_execution.ManufacturingExecution_processTraceabilityData('''00519267020111111111111111
+''')
+    self.tic()
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 0)
+    update_traceability.Traceability_updateTraceabilityInput()
+    self.tic()
+    self.assertEquals(update_traceability.getValidationState(), 'archived')
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 1)
+    self.assertNotEquals(traceability_list[0], update_traceability)
+    self.assertEquals(traceability_list[0].getObject(), update_traceability.getFollowUpRelatedValue(portal_type='Traceability'))
+    # traceability_list[0] is the new one
+    self.assertTrue(traceability_list[0].getAggregateRelatedValue(portal_type='Manufacturing Execution Line') is not None)
+    self.assertNotEquals(traceability_list[0].getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), update_traceability.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
+    # same traceability as before, can be reused
+    me_execution.ManufacturingExecution_processTraceabilityData('''00519267020111111111111111
+''')
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 0)
+    self.tic()
+    serial_number = self.portal.quality_assurance_module['00463429720111111111111111']
+    traceability = serial_number.getFollowUpValue(portal_type='Traceability')
+    self.assertEquals(traceability.getAggregateValue(portal_type='Serial Number'), serial_number)
+    traceability.Traceability_updateTraceabilityInput()
+    self.tic()
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 1)
+    # 00519267020111111111111111 is used for one valide traceability
+    me_execution.ManufacturingExecution_processTraceabilityData('''00519267020111111111111111
+''')
+    traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
+    self.assertEquals(len(traceability_list), 1)
 
 
 
