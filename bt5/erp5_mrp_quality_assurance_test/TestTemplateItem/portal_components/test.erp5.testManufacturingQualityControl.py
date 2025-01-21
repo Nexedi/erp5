@@ -296,7 +296,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
 
 
   def _test_SMON_ACOM_operation_list(self, ACOM = False):
-    me_execution = self.startManufacturingForTest()
+    me_execution = self.me_execution
     while True:
       quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
       if quality_element_list[-1].getPortalType() != 'Gate':
@@ -324,10 +324,10 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.assertEquals([x.getObject() for x in incompleted_list], [x.getObject() for x in new_incompleted_list])
     self.assertEquals(new_incompleted_list[0].getValidationState(), 'posted')
 
-  def _test_SMON_operation_list(self):
+  def test_SMON_operation_list(self):
     self._test_SMON_ACOM_operation_list()
 
-  def _test_ACOM_operation_list(self):
+  def test_ACOM_operation_list(self):
     self._test_SMON_ACOM_operation_list(True)
 
 
