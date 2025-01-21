@@ -71,7 +71,7 @@ class TransformedResource(AmountGeneratorLine):
       # we also need to check if 'self' has a quantity.
       # Otherwise, generated amounts could have 0 quantity
       # (overridden by cells that only define variation).
-      result = ['quantity']
+      result = ['quantity', 'int_index']
       # Take into account variation_property_list for each variation
       # for which hasProperty is true...
       # FIXME: Why the resource and not the model line itself ? Or both ??
