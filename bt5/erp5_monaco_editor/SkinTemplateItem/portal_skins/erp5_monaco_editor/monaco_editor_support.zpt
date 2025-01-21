@@ -242,8 +242,8 @@ $script.onload = function() {
           "pylint",
           data["annotations"].map(annotation => {
             return {
-              startLineNumber: annotation.row + 1,
-              endLineNumber: annotation.row + 1,
+              startLineNumber: annotation.row,
+              endLineNumber: annotation.row,
               startColumn: annotation.col,
               endColumn: Infinity,
               message: annotation.text,
