@@ -894,7 +894,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         Return a list of wrapped objects for reindexing.
       """
       if deferred:
-        # No need to wrap
+        # No need to wrap, but should return a list
+        if isinstance(object_value_list, set):
+          object_value_list = list(object_value_list)
         return object_value_list
       portal = self.getPortalObject()
 
