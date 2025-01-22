@@ -446,6 +446,7 @@ class Test(ERP5TypeTestCase):
       source_section=data_supply.getSourceSection(),
       destination="organisation_module/test_wendelin_destination",
       destination_section="organisation_module/test_wendelin_destination_section",
+      destination_project=data_supply.getDestinationProject(),
       start_date=data_supply.getCreationDate())
 
     self.addCleanup(self._removeDocument, data_ingestion)
@@ -474,7 +475,7 @@ class Test(ERP5TypeTestCase):
 
     return data_ingestion
 
-  def test_10_DataAnalysesCreation(self):
+  def test_10_1_DataAnalysesCreation(self):
     """
     Test data ingestion and analyses execution.
     """
@@ -527,6 +528,110 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(len(data_transformation.objectValues()),
                      len(to_delete_data_analysis.objectValues()))
     self.assertEqual("started", to_delete_data_analysis.getSimulationState())
+  
+  def test_10_2_sharedDataAnalysesCreationEnabled(self, enable_pref=True):
+    """
+      Test that Data Analysis creation correctly takes into account the
+      the 'Enable Data Analysis Sharing' Wendelin system preference.
+    """
+    portal = self.portal
+
+    # Set the system preference
+    default_system_preference = getattr(portal.portal_preferences, 'default_system_preference', None)
+    default_system_preference.setPreferredEnableDataAnalysisSharing(enable_pref)
+    self.tic()
+    self.assertEqual(default_system_preference.getPreferenceState(), 'global')
+    self.assertEqual(default_system_preference.getPreferredEnableDataAnalysisSharing(), enable_pref)
+
+    # test DataSupply_viewAddRelatedDataIngestionActionDialog dialog
+    # this test code will create a Data Ingestion which itself will
+    # be used in later tests of ERP5Site_createDataAnalysisList
+    data_supply_1 = portal.data_supply_module.test_10_sharedDataAnalysesCreation_data_supply_1
+    data_supply_2 = portal.data_supply_module.test_10_sharedDataAnalysesCreation_data_supply_2
+    data_ingestion_1 = self._addDataIngestionToDataSupply(data_supply_1)
+
+    self.assertNotEqual(None, data_ingestion_1)
+    self.tic()
+
+    before_data_analysis_list = portal.portal_catalog(
+      portal_type="Data Analysis",
+      simulation_state="started")
+
+    # create first DA from first DI
+    portal.ERP5Site_createDataAnalysisList()
+    self.tic()
+
+    data_ingestion_2 = self._addDataIngestionToDataSupply(data_supply_2)
+
+    self.assertNotEqual(None, data_ingestion_2)
+    self.tic()
+
+    # create second DA from second DI
+    portal.ERP5Site_createDataAnalysisList()
+    self.tic()
+
+    after_data_analysis_list = portal.portal_catalog(
+      portal_type="Data Analysis",
+      simulation_state="started")
+
+    before_data_analysis_list = set([x.getObject() for x in before_data_analysis_list])
+    after_data_analysis_list = set([x.getObject() for x in after_data_analysis_list])
+    new_data_analysis_count = 1 if enable_pref else 2
+    self.assertEqual(new_data_analysis_count, len(after_data_analysis_list) - len(before_data_analysis_list))
+
+    to_delete_data_analysis_set = after_data_analysis_list - before_data_analysis_list
+    to_delete_data_analysis_list = [
+      data_analysis for data_analysis in to_delete_data_analysis_set \
+      if data_analysis.getCausalityValue() in [data_ingestion_1, data_ingestion_2]
+    ]
+    for data_analysis in to_delete_data_analysis_list:
+      self.addCleanup(self._removeDocument, data_analysis)
+    
+    data_transformation = portal.data_transformation_module.test_wendelin_data_transformation
+
+    if enable_pref:
+      data_analysis = to_delete_data_analysis_list[0]
+      self.assertSameSet(
+        [data_ingestion_1, data_ingestion_2],
+        data_analysis.getCausalityValueList()
+      )
+      self.assertSameSet(
+        [data_supply_1, data_supply_2, data_transformation],
+        data_analysis.getSpecialiseValueList()
+      )
+      # all lines should be properly created
+      self.assertEqual(len(data_transformation.objectValues()) + 1,
+                       len(data_analysis.objectValues()))
+      self.assertEqual("started", data_analysis.getSimulationState())
+    else:
+      data_analysis_1 = None
+      data_analysis_2 = None
+      # List may not be in consistent order due to being created from sets
+      for data_analysis in to_delete_data_analysis_list:
+        if data_analysis.getCausalityValue() == data_ingestion_1:
+          data_analysis_1 = data_analysis
+        elif data_analysis.getCausalityValue() == data_ingestion_2:
+          data_analysis_2 = data_analysis
+      self.assertEqual(data_ingestion_1, data_analysis_1.getCausalityValue())
+      self.assertEqual(data_ingestion_2, data_analysis_2.getCausalityValue())
+      self.assertSameSet(
+        [data_supply_1, data_transformation],
+        data_analysis_1.getSpecialiseValueList()
+      )
+      self.assertSameSet(
+        [data_supply_2, data_transformation],
+        data_analysis_2.getSpecialiseValueList()
+      )
+      # all lines should be properly created
+      self.assertEqual(len(data_transformation.objectValues()),
+                      len(data_analysis_1.objectValues()))
+      self.assertEqual("started", data_analysis_1.getSimulationState())
+      self.assertEqual(len(data_transformation.objectValues()),
+                      len(data_analysis_2.objectValues()))
+      self.assertEqual("started", data_analysis_2.getSimulationState())
+  
+  def test_10_3_sharedDataAnalysesCreationDisabled(self):
+    self.test_10_2_sharedDataAnalysesCreationEnabled(enable_pref=False)
 
   def test_11_temporaryDataArray(self):
     """
@@ -869,7 +974,6 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
     self.assertEqual(diff_object_list, [['/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'],
                                         ['/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'],
                                         ['/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527']])
-
 
   def test_18_wendelinTextToNumpySecurity(self):
     """
