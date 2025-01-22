@@ -978,7 +978,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declarePrivate('reindexObject')
     reindexObject = reindexCatalogObject
 
-
+    security.declarePrivate('catalogObjectList')
     def catalogObjectList(self, object_list, *args, **kw):
         """Catalog a list of objects"""
         m = object_list[0]
@@ -995,6 +995,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
+    security.declarePrivate('deferredCatalogObjectList')
     deferredCatalogObjectList = catalogObjectList
 
     security.declarePrivate('uncatalogObjectList')
