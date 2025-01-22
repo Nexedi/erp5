@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'source_column\', \'Event_getSafeSourceTitle\'), (\'lines\', 100), ("query_dict", {"portal_type": "Discussion Post", "parent_relative_url": context.getRelativeUrl()})]</string> </value>
+            <value> <string>python: [(\'lines\', 100), ("query_dict", {"portal_type": "Discussion Post", "parent_relative_url": context.getRelativeUrl()})]</string> </value>
         </item>
       </dictionary>
     </pickle>
