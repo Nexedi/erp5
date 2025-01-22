@@ -29,6 +29,7 @@
 
 
 
+from Products.ERP5Type.Utils import ensure_ascii
 from Products.ERP5Type.Core.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -101,7 +102,7 @@ class IntegrationSite(Folder):
     for cat in category.split('/'):
       cat_id = cat.replace(' ', '').replace('-', '')
       try:
-        cat_object = current_object[cat_id.encode('ascii', 'ignore')]
+        cat_object = current_object[ensure_ascii(cat_id, errors='ignore')]
       except KeyError:
         #LOG("getCategoryFromMapping",  WARNING, "Nothing found for %s , %s on %s" %(category, cat_id, current_object.getPath()))
         if current_object.getPortalType() == "Integration Base Category Mapping":
@@ -114,13 +115,13 @@ class IntegrationSite(Folder):
             return current_object.getDestinationReference() +'/'+ category.split('/', 1)[1]
           else:
             # Create default line that has to be mapped by user later
-            cat_object = current_object.newContent(id=cat_id.encode('ascii', 'ignore'), source_reference=cat, title=cat)
+            cat_object = current_object.newContent(id=ensure_ascii(cat_id, errors='ignore'), source_reference=cat, title=cat)
             LOG("getCategoryFromMapping", INFO, "created mapping %s - %s" %(cat, cat_object),)
             missing_mapping = True
         else:
           if create_mapping:
             cat_object = current_object.newContent(portal_type="Integration Base Category Mapping",
-                                                   id=cat_id.encode('ascii', 'ignore'), source_reference=cat, title=cat)
+                                                   id=ensure_ascii(cat_id, errors='ignore'), source_reference=cat, title=cat)
             LOG("getCategoryFromMapping", INFO, "created base mapping %s - %s" %(cat, cat_object),)
             missing_mapping = True
           else:
