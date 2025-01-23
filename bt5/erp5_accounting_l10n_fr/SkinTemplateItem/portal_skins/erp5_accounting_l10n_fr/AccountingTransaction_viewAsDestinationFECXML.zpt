@@ -1,4 +1,7 @@
-<ecriture xmlns:tal="http://xml.zope.org/namespaces/tal">
+<ecriture
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    tal:define="line_list python:context.AccountingTransaction_getFECXMLAccountingTransactionLineList('destination', options['test_compta_demat_compatibility'])"
+    tal:condition="line_list">
   <EcritureNum tal:content="context/getDestinationReference">Specific Reference</EcritureNum>
   <EcritureDate tal:content="python: context.getStopDate().strftime('%Y-%m-%d')">Specific Date</EcritureDate>
   <EcritureLib tal:content="context/getTitle">Title</EcritureLib>
@@ -7,9 +10,8 @@
   <tal:block tal:replace="nothing"><EcritureLet></EcritureLet>
   <DateLet></DateLet></tal:block>
   <ValidDate tal:content="python: context.AccountingTransaction_getDeliverDate().strftime('%Y-%m-%d')">Modification Date</ValidDate>
-  <tal:block tal:repeat="line python:context.contentValues(portal_type=context.getPortalAccountingMovementTypeList())"><ligne
-    tal:define="account python:line.getDestinationValue(portal_type='Account')"
-    tal:condition="python: account is not None and ((line.getDestinationTotalAssetPrice() if line.hasDestinationTotalAssetPrice() else line.getQuantity()) or not options['test_compta_demat_compatibility'])">
+  <tal:block tal:repeat="line line_list"><ligne
+    tal:define="account python:line.getDestinationValue(portal_type='Account')">
       <CompteNum tal:content="account/Account_getGapId">Reference Compte (Account_getGapId)</CompteNum>
       <CompteLib tal:content="line/Movement_getDestinationCompteLib">Translated Title Compte</CompteLib>
       <tal:block tal:condition="python: account.getAccountType() in ('asset/receivable', 'liability/payable')"
