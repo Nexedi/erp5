@@ -6,5 +6,5 @@
 result = []
 for successor in context.getSuccessorValueList():
   result.append({'title': successor.getTitle(),
-                 'url': successor.absolute_url()})
+                 'url': successor.File_getDownloadUrl()})
 return result
