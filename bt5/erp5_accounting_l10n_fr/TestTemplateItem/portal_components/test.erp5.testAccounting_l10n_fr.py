@@ -31,7 +31,6 @@
 """
 
 import six
-import unittest
 import zipfile
 if six.PY2:
   from email import message_from_string as message_from_bytes
@@ -45,6 +44,7 @@ from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
 
 from erp5.component.test.testAccounting import AccountingTestCase
+
 
 class TestAccounting_l10n_fr(AccountingTestCase):
   """Test Accounting L10N FR
@@ -405,7 +405,29 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
   def test_ValidDate(self):
     account_module = self.portal.account_module
-    invoice = self._makeOne(
+    invoice_source = self._makeOne(
+              portal_type='Purchase Invoice Transaction',
+              title='Premiere Ecriture',
+              simulation_state='delivered',
+              reference='1',
+              source_section_value=self.organisation_module.supplier,
+              stop_date=DateTime(2014, 2, 2),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=132.00),
+                     dict(source_value=account_module.refundable_vat,
+                          source_credit=22.00),
+                     dict(source_value=account_module.goods_purchase,
+                          source_credit=110.00)))
+
+    assert invoice_source.workflow_history['accounting_workflow'][-1]['action'] == 'deliver'
+    invoice_source.workflow_history['accounting_workflow'][-1]['time'] = DateTime(2001, 2, 3)
+
+    tree = etree.fromstring(
+      invoice_source.AccountingTransaction_viewAsSourceFECXML(
+        test_compta_demat_compatibility=True))
+    self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
+
+    invoice_destination = self._makeOne(
               portal_type='Purchase Invoice Transaction',
               title='Premiere Ecriture',
               simulation_state='delivered',
@@ -419,15 +441,11 @@ class TestAccounting_l10n_fr(AccountingTestCase):
                      dict(destination_value=account_module.goods_purchase,
                           destination_credit=110.00)))
 
-    assert invoice.workflow_history['accounting_workflow'][-1]['action'] == 'deliver'
-    invoice.workflow_history['accounting_workflow'][-1]['time'] = DateTime(2001, 2, 3)
+    assert invoice_destination.workflow_history['accounting_workflow'][-1]['action'] == 'deliver'
+    invoice_destination.workflow_history['accounting_workflow'][-1]['time'] = DateTime(2001, 2, 3)
 
     tree = etree.fromstring(
-      invoice.AccountingTransaction_viewAsSourceFECXML(
-        test_compta_demat_compatibility=True))
-    self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
-    tree = etree.fromstring(
-      invoice.AccountingTransaction_viewAsDestinationFECXML(
+      invoice_destination.AccountingTransaction_viewAsDestinationFECXML(
         test_compta_demat_compatibility=True))
     self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
 
@@ -551,9 +569,92 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         '//ecriture/PieceRef[text()="source"]/../ligne/Credit/text()'),
       ['0.00', '40.00', '200.00'])
 
+  def test_SkipEmptyTransactions(self):
+    # Don't include transactions without lines, because they are
+    # reported as invalid by Test Compta Demat
+    account_module = self.portal.account_module
+    self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='destination 0',
+      simulation_state='delivered',
+      reference='destination_0_lines',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable, destination_debit=0.00),
+        dict(
+          destination_value=account_module.payable,
+          destination_debit=10000.00,
+          destination_asset_debit=0.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=0.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=10000.00,
+          destination_asset_credit=0.00)))
+    self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='destination no',
+      simulation_state='delivered',
+      reference='destination_no_lines',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=())
+
+    self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      title='source 0',
+      simulation_state='delivered',
+      reference='source_0_lines',
+      destination_section_value=self.organisation_module.client_2,
+      start_date=DateTime(2014, 3, 1),
+      lines=(
+        dict(source_value=account_module.receivable, source_debit=0.00),
+        dict(source_value=account_module.collected_vat, source_credit=0.00)))
+    self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      title='source no',
+      simulation_state='delivered',
+      reference='source_no_lines',
+      destination_section_value=self.organisation_module.client_2,
+      start_date=DateTime(2014, 3, 1),
+      lines=())
+
+    self.tic()
+
+    self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
+      section_category='group/demo_group',
+      section_category_strict=False,
+      at_date=DateTime(2014, 12, 31),
+      simulation_state=['delivered'])
+    self.tic()
+
+    tree = etree.fromstring(self.getFECFromMailMessage())
+    self.validateFECXML(tree)
+    self.assertEqual(tree.xpath('//ecriture'), [])
+
   def test_PieceRefDefaultValue(self):
     account_module = self.portal.account_module
-    invoice = self._makeOne(
+    invoice_source = self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='Premiere Ecriture',
+      simulation_state='delivered',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          source_value=account_module.payable, source_debit=132.00),
+        dict(
+          source_value=account_module.refundable_vat,
+          source_credit=22.00),
+        dict(
+          source_value=account_module.goods_purchase,
+          source_credit=110.00)))
+    invoice_source.setSourceReference('source_reference')
+
+    invoice_destination = self._makeOne(
       portal_type='Purchase Invoice Transaction',
       title='Premiere Ecriture',
       simulation_state='delivered',
@@ -568,16 +669,14 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         dict(
           destination_value=account_module.goods_purchase,
           destination_credit=110.00)))
-
-    invoice.setSourceReference('source_reference')
-    invoice.setDestinationReference('destination_reference')
+    invoice_destination.setDestinationReference('destination_reference')
     tree = etree.fromstring(
-      invoice.AccountingTransaction_viewAsSourceFECXML(
+      invoice_source.AccountingTransaction_viewAsSourceFECXML(
         test_compta_demat_compatibility=True))
     self.assertEqual(tree.xpath('//EcritureNum/text()'), ['source_reference'])
     self.assertEqual(tree.xpath('//PieceRef/text()'), ['source_reference'])
     tree = etree.fromstring(
-      invoice.AccountingTransaction_viewAsDestinationFECXML(
+      invoice_destination.AccountingTransaction_viewAsDestinationFECXML(
         test_compta_demat_compatibility=True))
     self.assertEqual(
       tree.xpath('//EcritureNum/text()'), ['destination_reference'])
@@ -585,12 +684,12 @@ class TestAccounting_l10n_fr(AccountingTestCase):
       tree.xpath('//PieceRef/text()'), ['destination_reference'])
 
     tree = etree.fromstring(
-      invoice.AccountingTransaction_viewAsSourceFECXML(
+      invoice_source.AccountingTransaction_viewAsSourceFECXML(
         test_compta_demat_compatibility=False))
     self.assertEqual(tree.xpath('//EcritureNum/text()'), ['source_reference'])
     self.assertEqual([n.text for n in tree.xpath('//PieceRef')], [None])
     tree = etree.fromstring(
-      invoice.AccountingTransaction_viewAsDestinationFECXML(
+      invoice_destination.AccountingTransaction_viewAsDestinationFECXML(
         test_compta_demat_compatibility=False))
     self.assertEqual(
       tree.xpath('//EcritureNum/text()'), ['destination_reference'])
@@ -661,9 +760,3 @@ class TestAccounting_l10n_fr(AccountingTestCase):
       tree.xpath(
         '//ecriture/PieceRef[text()="source"]/../ligne/Credit/text()'),
       ['0.00', '345.00'])
-
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAccounting_l10n_fr))
-  return suite
