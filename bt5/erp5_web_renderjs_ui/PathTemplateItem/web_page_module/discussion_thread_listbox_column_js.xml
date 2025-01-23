@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_thread_reader.js</string> </value>
+            <value> <string>gadget_thread_listbox_column.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,11 +85,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_thread_reader_js</string> </value>
+            <value> <string>discussion_thread_listbox_column_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,11 +101,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Thread Reader JS</string> </value>
+            <value> <string>Gadget Thread Listbox Column JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -189,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1693917441.67</float>
+                              <float>1753307019.57</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -238,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1026.59571.5755.58282</string> </value>
+                      <value> <string>1026.53792.38468.53060</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1755629043.51</float>
+                              <float>1755281424.26</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -323,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1693917390.89</float>
+                              <float>1753306973.01</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
