@@ -64,7 +64,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.portal.portal_simulation.manage_delObjects(ids=sm_id_list)
 
     self.tic()
-    self.quality_element_type = getattr(self.portal.portal_types, 'Quality Assurance Module').getTypeAllowedContentTypeList()
+    self.quality_element_type = ['Quality Control', 'Traceability', 'Gate', 'Defect Declaration','Defect Correction', 'SMON', 'ACOM']
     # create needed test production datas
     now = DateTime()
     po = self.portal.production_order_module.newContent(
@@ -151,7 +151,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
       id='test_%s' % DateTime().second(),
       ledger = 'manufacturing/execution')
 
-    for portal_type in self.quality_element_type:
+    for portal_type in ['Quality Control', 'Traceability', 'Gate', 'Quality Control', 'SMON', 'Quality Control', 'ACOM']:
       quality_element = createTestElement(portal_type=portal_type)
       quality_element.edit(int_index = index, causality_value = me_2)
       quality_element.plan()
@@ -333,8 +333,8 @@ class TestQualityAssurance(ERP5TypeTestCase):
 
 
 
-  def _test_traceability(self):
-    me_execution = self.startManufacturingForTest()
+  def test_traceability(self):
+    me_execution = self.me_execution
     while True:
       quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
       if quality_element_list[-1].getPortalType() != 'Gate':

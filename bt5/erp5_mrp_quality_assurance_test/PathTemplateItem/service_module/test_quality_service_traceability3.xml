@@ -76,7 +76,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>Traceability-00519267020---00519267020</string> </value>
+            <value> <string>Traceability-00463429720---00463429720</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -86,7 +86,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_quality_service_traceability</string> </value>
+            <value> <string>test_quality_service_traceability3</string> </value>
         </item>
         <item>
             <key> <string>individual_variation_base_category_list</string> </key>
@@ -96,7 +96,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Traceability</string> </value>
+            <value> <string>Traceability3</string> </value>
         </item>
         <item>
             <key> <string>variation_base_category_list</string> </key>
