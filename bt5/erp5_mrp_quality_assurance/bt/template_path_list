@@ -9,6 +9,7 @@ portal_categories/quality_assurance
 portal_categories/quality_assurance/**
 portal_categories/trade_phase/manufacturing/electronic_insurance
 portal_categories/trade_phase/manufacturing/quality_insurance
+portal_categories/use/manufacturing
 portal_categories/use/manufacturing/acom
 portal_categories/use/manufacturing/electronic_insurance
 portal_categories/use/manufacturing/gate
