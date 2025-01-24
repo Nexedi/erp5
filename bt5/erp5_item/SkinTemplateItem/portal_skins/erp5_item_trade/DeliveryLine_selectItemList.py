@@ -92,7 +92,7 @@ for item_uid in uids:
   movement_to_update.setAggregateValueSet(
       movement_to_update.getAggregateValueList() + [item])
 
-update_quantity = not context.Movement_isQuantityEditable()
+update_quantity = not context.Movement_isQuantityEnabled()
 if update_quantity:
   if context.isMovement():
     movement_list = context,
