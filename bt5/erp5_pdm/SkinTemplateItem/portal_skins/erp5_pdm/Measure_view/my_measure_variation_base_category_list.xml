@@ -127,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getResourceValue().getVariationBaseCategoryItemList(omit_optional_variation=1, display_id=\'translated_title\')</string> </value>
+            <value> <string>python: here.getResourceValue().getVariationBaseCategoryItemList(display_id=\'translated_title\')</string> </value>
         </item>
       </dictionary>
     </pickle>
