@@ -7,6 +7,31 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="_reconstructor" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -17,26 +42,12 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
-            <key> <string>action_title</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
-        </item>
-        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -58,38 +69,56 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>incompleted_operation_listbox</string>
-                        <string>related_defect_item_listbox</string>
+                        <string>nok_quality_control_listbox</string>
+                        <string>upcoming_quality_control_operation_listbox</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_quantity</string>
+                        <string>listbox_quantity_unit</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_stop_date</string>
+                        <string>listbox_int_index</string>
+                        <string>upcoming_quality_control_operation_listbox_quality_ok</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_causality_title</string>
                         <string>my_title</string>
-                        <string>my_description</string>
-                        <string>my_destination_decision_title</string>
+                        <string>my_reference</string>
+                        <string>my_causality_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>my_comment</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_causality_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -97,7 +126,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Gate_view</string> </value>
+            <value> <string>ManufacturingExecution_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -105,7 +134,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Gate_view</string> </value>
+            <value> <string>ManufacturingExecution_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -121,7 +150,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gate</string> </value>
+            <value> <string>Manufacturing Execution</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -129,10 +158,6 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

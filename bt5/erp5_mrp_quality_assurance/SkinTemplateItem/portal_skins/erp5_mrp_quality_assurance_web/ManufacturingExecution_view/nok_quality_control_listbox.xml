@@ -10,15 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable</string>
-                <string>portal_type</string>
+                <string>columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_aggregate_title</string> </value>
+            <value> <string>nok_quality_control_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -66,34 +67,60 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>VIN</string>
-                          <string>VIN</string>
+                          <string>Quality Control</string>
+                          <string>Quality Control</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>VIN</string> </value>
+                    <value> <string>NOK Quality Controls</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>Delivery_getNOKQualityControlList</string> </value>
         </item>
       </dictionary>
     </pickle>
