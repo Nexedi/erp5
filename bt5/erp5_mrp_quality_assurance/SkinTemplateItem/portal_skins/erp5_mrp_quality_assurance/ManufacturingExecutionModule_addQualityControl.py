@@ -6,7 +6,7 @@ control_value_list = []
 new_control_value_list = []
 
 me_quality_list = []
-manufacturing_execution_list = context.ManufacturingExecutionMovement_getOpenManufacturingExecutionList()
+manufacturing_execution_list = context.ManufacturingExecutionModule_getOpenManufacturingExecutionList()
 
 if not manufacturing_execution_list:
   return context.Base_redirect(
