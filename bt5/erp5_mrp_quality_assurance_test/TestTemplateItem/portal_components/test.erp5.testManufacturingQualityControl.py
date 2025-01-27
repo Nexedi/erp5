@@ -182,7 +182,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
   def test_quality_control(self):
     me_execution = self.me_execution
     quality_element_list = me_execution.getCausalityRelatedValueList(portal_type=self.quality_element_type)
-    self.assertEquals(len(quality_element_list), 15, quality_element_list)
+    self.assertEquals(len(quality_element_list), 17, quality_element_list)
     quality_element_list = me_execution.Delivery_getUpcomingQualityControlOperationList()
     self.assertEquals(len(quality_element_list), 3)
     for quality_element in quality_element_list:
