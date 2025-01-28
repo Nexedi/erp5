@@ -42,8 +42,8 @@ with context.defaultActivateParameterDict({'tag': action_tag}):
     ( # Validated sessions' expiration date, plus the associated client's accuracy, is the time the Refresh Token expires.
       # Invalidate the session, as it is now unusable and should not be presented to the user when listing active sessions.
       ('validated', ),
-      now,
       now_catalog_condition,
+      now,
       getSessionAccuracyCompensatedExpirationMaxDate,
       lambda x: x.invalidate(),
     ),
