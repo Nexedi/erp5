@@ -74,7 +74,7 @@ if not book_content:
   return
 book_aggregate_list = []
 book_revision = book.getRevision()
-book_modification_date = book.getModificationDate()
+book_modification_date = book.getEffectiveDate() or book.getModificationDate()
 book_language = book.getLanguage()
 
 # XXX sigh for passing "" around
