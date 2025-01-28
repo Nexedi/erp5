@@ -497,3 +497,13 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     )
     self.assertEqual(output, None)
 
+  def test_escapeOverridden(self):
+    book_export = self.portal.web_page_module.template_test_book_input_003_en_html.WebPage_viewAsBook(
+      format="html",
+      override_document_description='<script>alert("description");</script>',
+      override_document_short_title='<script>alert("short title");</script>',
+      override_document_title='<script>alert("title");</script>',
+      override_document_version='<script>alert("001");</script>',
+      override_document_reference='<script>alert("reference");</script>',
+    )
+    self.assertNotIn("<script>alert", book_export)
