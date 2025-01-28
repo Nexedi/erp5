@@ -6,7 +6,6 @@ but this allows cleaning up sessions from a document point of view.
 """
 LOAD_LIMIT = 10000
 now = DateTime()
-now_catalog_condition = '<%f' % now.timeTime()
 container_value = context.getPortalObject().session_module
 searchFolder = container_value.searchFolder
 deletion_id_list = []
@@ -29,12 +28,11 @@ else:
 load_limit = LOAD_LIMIT
 action_skip_count = 0
 with context.defaultActivateParameterDict({'tag': action_tag}):
-  for (state_list, catalog_date_condition, expiration_max_date, getSessionExpirationMaxDate, action) in (
+  for (state_list, expiration_max_date, getSessionExpirationMaxDate, action) in (
     ( # Draft sessions' expiration date is the time the Authorisation Code expires.
       # These should be quite rare, as they mean authentication succeeded but was not transformed into a token.
       # The session did not actually become something, so mark it deleted.
       ('draft', ),
-      now_catalog_condition,
       now,
       getSessionRawExpirationMaxDate,
       lambda x: x.delete(),
@@ -42,19 +40,13 @@ with context.defaultActivateParameterDict({'tag': action_tag}):
     ( # Validated sessions' expiration date, plus the associated client's accuracy, is the time the Refresh Token expires.
       # Invalidate the session, as it is now unusable and should not be presented to the user when listing active sessions.
       ('validated', ),
-      now_catalog_condition,
-      now,
+      now - 1,
       getSessionAccuracyCompensatedExpirationMaxDate,
       lambda x: x.invalidate(),
     ),
     (
       # Invalidated and deleted (state) sessions get deleted after enough time has passed.
       ('invalidated', 'deleted'),
-      (
-        None
-        if deletion_cutoff is None else
-        '<%f' % deletion_cutoff.timeTime()
-      ),
       deletion_cutoff,
       getSessionRawExpirationMaxDate,
       lambda x: deletion_id_list.append(x.getId()),
@@ -62,6 +54,7 @@ with context.defaultActivateParameterDict({'tag': action_tag}):
   ):
     if expiration_max_date is None:
       continue
+    catalog_date_condition = '<%f' % expiration_max_date.timeTime()
     for state in state_list: # Query with a single state at a time for better SQL index efficiency
       result_list = searchFolder(
         portal_type='OAuth2 Session',
