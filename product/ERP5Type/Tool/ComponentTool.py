@@ -315,6 +315,7 @@ class Test(ERP5TypeTestCase):
       except ImportError:
         import traceback
         traceback.print_exc(file=global_stream)
+        traceback.print_exc()  # also print on stderr
       global_stream.seek(0)
       return global_stream.read()
     finally:
