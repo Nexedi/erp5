@@ -96,6 +96,8 @@ class TestQualityAssurance(ERP5TypeTestCase):
     me_execution.start()
     me_execution.Base_showNextStepQualityOperation(me=me_execution)
     self.me_execution = me_execution
+    quality_execution = [x for x in po.getCausalityRelatedValueList(portal_type='Manufacturing Execution') if x.getLedger() == 'manufacturing/quality_insurance'][0]
+    quality_execution.start()
     self.tic()
 
 
@@ -196,7 +198,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
     cloned_one = quality_control.QualityControl_RequestNewQualityControl(batch=True)
     self.tic()
     self.assertTrue(cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line') is not None)
-    self.assertNotEquals(cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), quality_control.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
+    self.assertNotEqual(cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), quality_control.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
     self.tic()
     self.assertEqual(quality_control.getValidationState(), 'posted')
     self.assertEqual(cloned_one.getValidationState(), 'expected')
@@ -206,7 +208,7 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.assertEqual(cloned_one.getValidationState(), 'posted')
     cloned_cloned_one = cloned_one.getFollowUpRelatedValue(portal_type='Quality Control')
     self.assertTrue(cloned_cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line') is not None)
-    self.assertNotEquals(cloned_cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
+    self.assertNotEqual(cloned_cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), cloned_one.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
     self.assertEqual(cloned_cloned_one.getValidationState(), 'pending_update')
     cloned_cloned_one.QualityControl_postQualityAssuranceResult(result='ok', batch=True)
     self.tic()
@@ -370,11 +372,11 @@ class TestQualityAssurance(ERP5TypeTestCase):
     self.assertEqual(update_traceability.getValidationState(), 'archived')
     traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
     self.assertEqual(len(traceability_list), 1)
-    self.assertNotEquals(traceability_list[0], update_traceability)
+    self.assertNotEqual(traceability_list[0], update_traceability)
     self.assertEqual(traceability_list[0].getObject(), update_traceability.getFollowUpRelatedValue(portal_type='Traceability'))
     # traceability_list[0] is the new one
     self.assertTrue(traceability_list[0].getAggregateRelatedValue(portal_type='Manufacturing Execution Line') is not None)
-    self.assertNotEquals(traceability_list[0].getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), update_traceability.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
+    self.assertNotEqual(traceability_list[0].getAggregateRelatedValue(portal_type='Manufacturing Execution Line'), update_traceability.getAggregateRelatedValue(portal_type='Manufacturing Execution Line'))
     # same traceability as before, can be reused
     me_execution.ManufacturingExecution_processTraceabilityData('''00519267020111111111111111
 ''')
@@ -393,3 +395,51 @@ class TestQualityAssurance(ERP5TypeTestCase):
 ''')
     traceability_list = me_execution.Base_getExpectedTraceabilityInputList()
     self.assertEqual(len(traceability_list), 1)
+
+
+  def test_add_quality_control(self):
+    me_list = [self.me_execution]
+    now = DateTime()
+    control_service_list = self.portal.Base_getQualityControlServiceList()
+
+    form_id = 'ManufacturingExecutionModule_viewManufacturingExecutionList'
+    form = getattr(self.portal, form_id, None)
+    listbox = form.Base_getListbox()
+    selection_name = listbox.get_value('selection_name')
+    self.portal.portal_selections.setSelectionParamsFor(selection_name, params=dict(causality_reference=[x.getCausalityReference() for x in me_list]))
+
+    self.portal.manufacturing_execution_module.ManufacturingExecutionModule_addQualityControl(
+      control_list=[x.getRelativeUrl() for x in control_service_list[0:2]],
+      new_control_list=['Control A', 'Control B']
+    )
+    self.tic()
+    for me in me_list:
+      new_control_list = [x for x in me.Delivery_getUpcomingQualityControlOperationList() if x.getCreationDate() > now]
+      self.assertEqual(len(new_control_list), 4)
+      self.assertEqual(sorted([x.getTitle() for x in new_control_list]), sorted(['Control A', 'Control B'] + [x.getTitle() for x in control_service_list[0:2]]))
+      for new_control in new_control_list:
+        self.assertEqual(new_control.getIntIndex(), -1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
