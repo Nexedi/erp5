@@ -39,7 +39,11 @@ for control in control_list:
 
 for me in manufacturing_execution_list:
   po = me.getCausalityValue(portal_type='Production Order')
-  me_quality = po.ProductionOrder_getRelatedManufacturingExecutionDict()['quality_execution']
+  me_quality = portal.portal_catalog.getResultValue(
+    portal_type='Manufacturing Execution',
+    strict_causality_uid = po.getUid(),
+    strict_ledger_uid=portal.portal_categories.ledger.manufacturing.quality_insurance.getUid()
+  )
   if me_quality.getSimulationState() == 'delivered':
     return context.Base_redirect(
       'view',
