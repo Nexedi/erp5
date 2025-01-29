@@ -32,8 +32,36 @@ from AccessControl import ClassSecurityInfo
 class CertificateLoginMixin:
   security = ClassSecurityInfo()
 
-  def _getCertificate(self):
+  def _getCaucaseConnector(self):
     portal = self.getPortalObject()
+    connector_list = portal.portal_catalog.unrestrictedSearchResults(
+      portal_type="Caucase Connector",
+      reference="erp5-certificate-login",
+      validation_state="validated"
+    )
+    if len(connector_list) == 0:
+      raise ValueError("No caucase connector found!")
+    if len(connector_list) > 1:
+      raise ValueError("Too many caucase connector found!")
+    
+    return connector_list[0]
+
+  def _getCertificate(self, csr=None):
+    caucase_connector = self._getCaucaseConnector()
+    portal = self.getPortalObject()
+
+    certificate_dict = {
+      "common_name" : self.getReference()
+    }
+    if self.getReference() and self.getCsrId():
+      if csr is not None:
+        raise ValueError("The certificate was already requsted without the certificate sign request.")
+      certificate_dict["id"] = self.getCsrId()
+      crt_pem = caucase_connector.getCertificate(self.getCsrId())
+      certificate_dict["certificate"] = crt_pem
+      # We should assert that reference is the CN of crt_pem
+      return certificate_dict
+
     _id = self._generateRandomId()
     reference = 'CERTLOGIN-%i-%s' % (
       portal.portal_ids.generateNewId(
@@ -42,35 +70,46 @@ class CertificateLoginMixin:
       ), _id
     )
     self.setReference(reference)
-    certificate_dict = self.getPortalObject().portal_certificate_authority\
-      .getNewCertificate(self.getReference())
-    self.setDestinationReference(certificate_dict['id'])
-    return certificate_dict
+    template_csr = caucase_connector.getCertificateSigningRequestTemplate(reference)
+    csr_id = caucase_connector.createCertificateSigningRequest(csr)
 
-  def _revokeCertificate(self):
-    if self.getDestinationReference() is not None:
-      certificate_dict = self.getPortalObject().portal_certificate_authority\
-        .revokeCertificate(self.getDestinationReference())
-      self.setDestinationReference(None)
+    caucase_connector.createCertificate(csr_id, template_csr=template_csr)
+    crt_pem = caucase_connector.getCertificate(csr_id)
+    self.setCsrId(csr_id)
+
+    return {
+      "certificate" : crt_pem,
+      "id" : self.getCsrId(),
+      "common_name" : reference
+    }
+    
+  security.declarePublic('getCertificate')
+  def getCertificate(self, csr=None):
+    """Returns new SSL certificate"""
+    if csr is None and self.getCsrId() is None:
+      key, csr = self._getCaucaseConnector()._createCertificateRequest()
+      certificate_dict = self._getCertificate(csr=csr)
+      certificate_dict["key"] = key
       return certificate_dict
-    elif self.getReference() is not None:
-      # Backward compatibility whenever the serial wast set
-      certificate_dict = self.getPortalObject().portal_certificate_authority\
-        .revokeCertificateByCommonName(self.getReference())
-      # Ensure it is None
-      self.setDestinationReference(None)
-      return certificate_dict
+    else:
+      return self._getCertificate(csr=csr)
+
+  def _revokeCertificate(self, key_pem=None):
+    if self.getDestinationReference() is not None or (
+      self.getReference() is not None and self.getCsrId() is None
+    ):
+      raise ValueError("You cannot revoke certificates from prior implementation!")
+    
+    if self.getCsrId() is not None:
+      caucase_connector = self._getCaucaseConnector()
+      crt_pem = caucase_connector.getCertificate(self.getCsrId())
+      if key_pem is None:
+        return caucase_connector.revokeCertificate(crt_pem, key_pem)
+      return caucase_connector.revokeCertificate(crt_pem)
     else:
       raise ValueError("No certificate found to revoke!")
 
-  security.declarePublic('getCertificate')
-  def getCertificate(self):
-    """Returns new SSL certificate"""
-    if self.getDestinationReference() is not None:
-      raise ValueError("Certificate was already issued, please revoke first.")
-    return self._getCertificate()
-
-  security.declarePublic('revokeCertificate')
-  def revokeCertificate(self):
+  security.declarePrivate('revokeCertificate')
+  def revokeCertificate(self, key_pem=None):
     """Revokes existing certificate"""
-    self._revokeCertificate()
+    self._revokeCertificate(key_pem=key_pem)
