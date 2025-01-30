@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_onlyxhtml_view</string>
+                <string>action_type/object_onlyjio_view</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_onlyxhtml_view</string> </value>
+            <value> <string>object_onlyjio_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view</string> </value>
+            <value> <string>onlyjio_redirect_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>1.0</float> </value>
+            <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Traceability_view</string> </value>
+            <value> <string>string:${object_url}/Traceability_redirect</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -88,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: context.getWebSectionValue() is None</string> </value>
+            <value> <string>python: context.getValidationState() == \'expected\'</string> </value>
         </item>
       </dictionary>
     </pickle>

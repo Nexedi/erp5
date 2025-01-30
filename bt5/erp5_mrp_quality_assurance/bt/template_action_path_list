@@ -16,6 +16,7 @@ Quality Control | view
 SMON | validate_smon
 SMON | view
 Serial Number | view
+Traceability | onlyjio_redirect_view
+Traceability | onlyjio_view
 Traceability | update_traceability_input
 Traceability | view
-Traceability | view_traceability_data
