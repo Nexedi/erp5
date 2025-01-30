@@ -130,7 +130,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionThread_viewNewPostDialog</string> </value>
+            <value> <string>DiscussionForum_viewNewThreadDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
