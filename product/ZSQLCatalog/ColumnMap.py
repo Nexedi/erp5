@@ -334,7 +334,8 @@ class ColumnMap(object):
         table_name_list = column_table_map.get(column_name, [])
         if len(table_name_list) == 0:
           if not(group is DEFAULT_GROUP_ID and column_name in self.related_key_dict):
-            LOG('ColumnMap', WARNING, 'Not a known column name: %r' % (column_name, ))
+            if column_name != 'metric_type_uid':  # XXX ignore this noisy warning for now
+              LOG('ColumnMap', WARNING, 'Not a known column name: %r' % (column_name, ))
           continue
         column_map_key = (group, column_name)
         if column_map_key in self.column_map:

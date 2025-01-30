@@ -142,7 +142,9 @@ class RelatedKey(SearchKey):
       msg = RELATED_KEY_ALIASED_MESSAGE % (self.related_key_id,
                                            self.column,
                                            table_alias_list,)
-      log.warning(msg + "\n\nForcing implicit join...")
+      # XXX ignore this noisy warning for now
+      if self.related_key_id != 'z_related_metric_type' and self.column != 'metric_type_uid':
+        log.warning(msg + "\n\nForcing implicit join...")
       column_map.implicit_join = True
     for table_position in xrange(len(self.table_list) - 1):
       table_name = self.table_list[table_position]
