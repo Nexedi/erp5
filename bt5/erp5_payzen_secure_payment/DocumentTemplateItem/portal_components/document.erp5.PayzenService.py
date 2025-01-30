@@ -50,6 +50,9 @@ else:
   del(os.environ['TZ'])
 time.tzset()
 
+
+DEFAULT_TIMEOUT = 30  # seconds
+
 class PayzenREST:
   """REST communication
 
@@ -68,7 +71,12 @@ class PayzenREST:
     LOG('callPayzenApi', WARNING,
         "data = %s URL = %s" % (str(payzen_dict), URL), error=False)
     # send data
-    result = requests.post(URL, data=payzen_dict, headers=header)
+    result = requests.post(
+      URL,
+      data=payzen_dict,
+      headers=header,
+      timeout=self.getTimeout() or DEFAULT_TIMEOUT,
+    )
     try:
       data = result.json()
     except Exception:
@@ -110,10 +118,11 @@ class PayzenService(XMLObject, PayzenREST):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.Reference
+                    , PropertySheet.SocketClient
                     )
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
-    pass
+
 
   def _getSignature(self, ob, sorted_key_list):
     """Calculates signature from ob
