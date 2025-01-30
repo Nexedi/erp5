@@ -18,6 +18,8 @@ unprocess_data_list = []
 processed_data_list = []
 already_used_dict = {}
 
+production_type = context.Base_getProductionType()
+
 for product_reference, serial_number_list in data_dict.iteritems():
   if product_reference in traceability_input_dict:
     traceability_input_list = traceability_input_dict[product_reference]
@@ -29,7 +31,7 @@ for product_reference, serial_number_list in data_dict.iteritems():
       is_for_radio = False
       if serial_item:
         # check if can be reused
-        affected_vin = serial_item.getAggregateValue(portal_type='VIN')
+        production_object = serial_item.getAggregateValue(portal_type=production_type)
 
         # check if it's for radio
         traceability = serial_item.getFollowUpValue(portal_type='Traceability')
@@ -38,8 +40,8 @@ for product_reference, serial_number_list in data_dict.iteritems():
           part_product = context.portal_catalog.getResultValue(portal_type='Product', reference=part_reference)
           if part_product and part_product.getProductLine() == 'part/radio':
             is_for_radio = True
-        if affected_vin and (not is_for_radio):
-          already_used_dict[serial_number] = affected_vin.getReference()
+        if production_object and (not is_for_radio):
+          already_used_dict[serial_number] = production_object.getReference()
           continue
       else:
         serial_item = context.quality_assurance_module.newContent(
@@ -59,10 +61,10 @@ for product_reference, serial_number_list in data_dict.iteritems():
         title = title
       )
       if is_for_radio:
-        serial_item.setAggregateValueList(serial_item.getAggregateValueList(portal_type='VIN') + [context.getAggregateValue(portal_type='VIN')], portal_type='VIN')
+        serial_item.setAggregateValueList(serial_item.getAggregateValueList(portal_type=production_type) + [context.getAggregateValue(portal_type=production_type)], portal_type=production_type)
         serial_item.setFollowUpValueList(serial_item.getFollowUpValueList(portal_type='Traceability') + [traceability_input], portal_type='Traceability')
       else:
-        serial_item.setAggregateValue(context.getAggregateValue(portal_type='VIN'), portal_type='VIN')
+        serial_item.setAggregateValue(context.getAggregateValue(portal_type=production_type), portal_type=production_type)
         serial_item.setFollowUpValue(traceability_input, portal_type='Traceability')
 
       traceability_input.setAggregateValue(serial_item, portal_type='Serial Number')
@@ -78,8 +80,8 @@ for product_reference, serial_number_list in data_dict.iteritems():
   else:
     for unprocess_number in serial_number_list:
       unprocess_number_value = getattr(context.quality_assurance_module, unprocess_number, None)
-      if unprocess_number_value and unprocess_number_value.getAggregateReference(portal_type='VIN'):
-        already_used_dict[unprocess_number] = unprocess_number_value.getAggregateReference(portal_type='VIN')
+      if unprocess_number_value and unprocess_number_value.getAggregateReference(portal_type=production_type):
+        already_used_dict[unprocess_number] = unprocess_number_value.getAggregateReference(portal_type=production_type)
       else:
         unprocess_data_list.append(unprocess_number)
 
@@ -95,12 +97,12 @@ if unprocess_data_list or already_used_dict:
     msg = msg + translateString("Those data are not processed")
   if already_used_dict:
     msg = msg + '\n' +  translateString("Already used:")
-    for serial_number, vin in already_used_dict.iteritems():
+    for serial_number, production_object in already_used_dict.iteritems():
       msg= msg + '\n' +  translateString(
-        "${serial_number}:  ${vin}",
+        "${serial_number}:  ${production_object}",
         mapping = {
           'serial_number' : serial_number,
-          'vin': vin
+          'production_object': production_object
         }
       )
   return context.Base_redirect('view_traceability_input', keep_items={
