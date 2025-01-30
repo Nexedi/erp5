@@ -310,3 +310,29 @@ class CodingStyleTestCase(ERP5TypeTestCase):
           self.portal.portal_workflow[workflow_id].checkConsistency())
 
     self.assertEqual(message_list, [])
+
+  def test_skin_http_cache(self):
+    self.maxDiff = None
+    skin_id_set = set()
+    for business_template in self._getTestedBusinessTemplateValueList():
+      skin_id_set.update(business_template.getTemplateSkinIdList())
+
+    filter_extension_list = ["js", "css", "json", "html", "git", "ico", "png"]
+    # Init message list
+    message_list = []
+
+    # Test skins
+    portal_skins = self.portal.portal_skins
+    for skin_id in skin_id_set:
+      skin = portal_skins[skin_id]
+      for _, document in skin.ZopeFind(
+          skin,
+          obj_metatypes=("Image", "File", "Filesystem Image", "Filesytem File"),
+          search_sub=True):
+
+        object_id = document.id
+        if object_id.split(".")[-1] in filter_extension_list and \
+                document.ZCacheable_getManagerId() is None:
+          # the current file is not cached
+           message_list.append(document.absolute_url(relative=1))
+    self.assertEqual(message_list, [])
