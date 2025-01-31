@@ -11,6 +11,8 @@ portal_rules/production_manufacturing_rule
 portal_rules/production_manufacturing_rule/**
 portal_rules/transformation_rule
 portal_rules/transformation_rule/**
+portal_tests/manufacturing_quality_control_zuite
+portal_tests/manufacturing_quality_control_zuite/**
 product_module/test_product
 product_module/test_resource**
 service_module/test_quality**
