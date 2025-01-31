@@ -7,8 +7,6 @@
 forum = context.getDestinationValue()
 if forum is not None:
   discussion_thread_list = [x.getObject() for x  in forum.searchResults(**kw)] #searches in all erp5 docs linked to this predicate config
-  context.log("discussion_thread_list:")
-  context.log(discussion_thread_list)
   thread_relative_url = context.REQUEST.get('thread_relative_url')
   if thread_relative_url is not None:
     thread = forum.restrictedTraverse(thread_relative_url)
