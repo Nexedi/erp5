@@ -1,0 +1,26 @@
+<property_sheet_list>
+ <portal_type id="ACOM">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Defect Correction">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Defect Declaration">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Gate">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Manufacturing Execution Line">
+  <item>DeliveryLine_qualityAssuranceConstraint</item>
+ </portal_type>
+ <portal_type id="Quality Control">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="SMON">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Traceability">
+  <item>SortIndex</item>
+ </portal_type>
+</property_sheet_list>

@@ -1,0 +1,21 @@
+ACOM | edit_workflow
+ACOM | quality_assurance_interaction_workflow
+ACOM | quality_assurance_workflow
+Defect Correction | edit_workflow
+Defect Correction | quality_assurance_workflow
+Defect Declaration | edit_workflow
+Defect Declaration | quality_assurance_workflow
+Gate | edit_workflow
+Gate | quality_assurance_interaction_workflow
+Gate | quality_assurance_workflow
+Quality Control | edit_workflow
+Quality Control | quality_assurance_interaction_workflow
+Quality Control | quality_assurance_workflow
+SMON | edit_workflow
+SMON | quality_assurance_interaction_workflow
+SMON | quality_assurance_workflow
+Serial Number | edit_workflow
+Serial Number | validation_workflow
+Traceability | edit_workflow
+Traceability | quality_assurance_interaction_workflow
+Traceability | quality_assurance_workflow

@@ -141,6 +141,7 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
         movement = newMovement(amount.getCausality(), dict((k, v)
             for k, v in six.iteritems(amount.__dict__)
             if k[0] != '_' and k != 'categories'))
+        movement.setIntIndex(amount.getCausalityValue().getIntIndex())
         base_category_set = set(amount.getBaseCategoryList())
         base_category_set.remove('price_currency') # XXX
         movement._setCategoryMembership(base_category_set,

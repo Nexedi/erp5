@@ -1,0 +1,46 @@
+<base_category_list>
+ <portal_type id="ACOM">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>destination_decision</item>
+ </portal_type>
+ <portal_type id="Defect Correction">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>destination_decision</item>
+ </portal_type>
+ <portal_type id="Defect Declaration">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>destination_decision</item>
+ </portal_type>
+ <portal_type id="Gate">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>destination_decision</item>
+ </portal_type>
+ <portal_type id="Quality Assurance Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Quality Control">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>destination_decision</item>
+  <item>quality_assurance</item>
+ </portal_type>
+ <portal_type id="SMON">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>destination_decision</item>
+  <item>quality_assurance</item>
+ </portal_type>
+ <portal_type id="Serial Number">
+  <item>aggregate</item>
+  <item>follow_up</item>
+ </portal_type>
+ <portal_type id="Traceability">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>destination_decision</item>
+ </portal_type>
+</base_category_list>
