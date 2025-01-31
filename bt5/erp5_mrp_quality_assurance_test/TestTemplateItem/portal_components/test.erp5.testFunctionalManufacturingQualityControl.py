@@ -40,6 +40,8 @@ class TestFunctionalManufacturingQualityControl(ERP5TypeFunctionalTestCase):
     )
 
   def afterSetUp(self):
+    super(TestFunctionalManufacturingQualityControl, self).afterSetUp()
+    self.tic()
     self.quality_element_type = ['Quality Control', 'Traceability', 'Gate', 'Defect Declaration','Defect Correction', 'SMON', 'ACOM']
     # create needed test production datas
     now = DateTime()
