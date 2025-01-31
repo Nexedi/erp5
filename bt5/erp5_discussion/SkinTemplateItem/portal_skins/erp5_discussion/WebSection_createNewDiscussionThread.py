@@ -23,8 +23,12 @@ if site_list in MARKER:
   site_list = user_assignment_dict['site_list']
 
 # set predicate settings for current Web Section
-membership_criterion_category_list = context.getMembershipCriterionCategoryList()
-multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
+forum = context.getDestinationValue()
+membership_criterion_category_list = []
+multimembership_criterion_base_category_list = []
+if forum is not None:
+  membership_criterion_category_list = forum.getMembershipCriterionCategoryList()
+  multimembership_criterion_base_category_list = forum.getMultimembershipCriterionBaseCategoryList()
 
 reference = context.Base_generateReferenceFromString(title)
 random_string_length = 10
