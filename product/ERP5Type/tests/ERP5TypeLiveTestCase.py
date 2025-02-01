@@ -291,12 +291,18 @@ def runLiveTest(test_list, verbosity=1, stream=None, request_server_url=None, **
   output = stream
   if stream is None:
     output = StringIO()
-  def print_and_write(data):
-    sys.stderr.write(data)
-    sys.stderr.flush()
-    return output.write(data)
-  print_and_write("**Running Live Test:\n")
-  ZopeTestCase._print = print_and_write
+  class StderrIOWrapper:
+    def __init__(self, wrapped):
+      self._wrapped_io = wrapped
+    def write(self, data):
+      sys.stderr.write(data)
+      return self._wrapped_io.write(data)
+    def __getattr__(self, attr):
+      return getattr(self._wrapped_io, attr)
+
+  output = StderrIOWrapper(output)
+  output.write("**Running Live Test:\n")
+  ZopeTestCase._print = output.write
 
   with warnings.catch_warnings():
     warnings.simplefilter(kw['warnings'])
@@ -306,6 +312,6 @@ def runLiveTest(test_list, verbosity=1, stream=None, request_server_url=None, **
     from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
     sm = getSecurityManager()
     try:
-      result = TestRunner(stream=output, verbosity=verbosity).run(suite)
+      TestRunner(stream=output, verbosity=verbosity).run(suite)
     finally:
       setSecurityManager(sm)

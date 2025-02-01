@@ -150,6 +150,7 @@ Options:
                                  timer service.
                              This option only makes sense with --activity_node=
                              or when not specifying a test to run.
+  --insecure_password=PWD    Use `PWD` instead of generating random passwords for users.
   --zserver=ADDRESS[,...]    Make ZServer listen on given IPv4 address.
                              Addresses can be given in the following syntaxs:
                                - HOST:PORT
@@ -798,7 +799,8 @@ def main(argument_list=None):
         "sys_path=",
         "instance_home=",
         "log_directory=",
-        "with_wendelin_core"
+        "with_wendelin_core",
+        "insecure_password=",
         ])
   except getopt.GetoptError as msg:
     usage(sys.stderr, msg)
@@ -919,6 +921,8 @@ def main(argument_list=None):
       _log_directory = os.path.abspath(arg)
     elif opt == "--with_wendelin_core":
       os.environ["with_wendelin_core"] = "1"
+    elif opt == "--insecure_password":
+      os.environ["insecure_erp5_test_password"] = arg
 
   setupWarnings()
 

@@ -134,8 +134,11 @@ class TestCopySupport(ERP5TypeTestCase):
       self.tic()
     finally:
       ActivityTool.invokeGroup = ActivityTool_invokeGroup
-    self.assertEqual(invokeGroup_list,
-      ['portal_catalog/uncatalogObjectList', uid_list, 'SQLQueue', False])
+    catalog_relative_url = self.portal.portal_catalog.getSQLCatalog().getRelativeUrl()
+    self.assertEqual(invokeGroup_list, [
+      'portal_catalog/uncatalogObjectList', uid_list, 'SQLQueue', False,
+      catalog_relative_url + '/SQLCatalog_deferUncatalogObjectActivity', uid_list, 'SQLQueue', False,
+    ])
     self.assertEqual(len(search_catalog(uid=uid_list)), 0)
 
 

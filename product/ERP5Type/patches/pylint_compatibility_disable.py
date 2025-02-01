@@ -62,7 +62,12 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
             "possibly-used-before-assignment",
             "possibly-used-before-assignment",
             ""
-        )
+        ),
+        "E9987": (
+            "repeated-keyword",
+            "repeated-keyword",
+            ""
+        ),
     }
 
 

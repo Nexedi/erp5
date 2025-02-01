@@ -29,7 +29,6 @@ from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import (
   access_contents_information,
-  import_export_objects,
   manage_zcatalog_entries,
 )
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
@@ -54,10 +53,6 @@ import pprint
 import re
 import warnings
 from contextlib import contextmanager
-from xml.dom.minidom import parse
-from xml.sax.saxutils import escape, quoteattr
-import os
-from hashlib import md5
 
 from .interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
@@ -402,8 +397,18 @@ class Catalog(Folder,
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_deferred_catalog_object_list',
+      'description' : 'Methods to be called to catalog the list of objects with a deferred connection',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_uncatalog_object',
       'description' : 'Methods to be called to uncatalog an object',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_deferred_uncatalog_object',
+      'description' : 'Methods to be called to uncatalog an object with a deferred connection',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
@@ -587,7 +592,9 @@ class Catalog(Folder,
   sql_catalog_delete_uid = ''
   sql_catalog_clear_reserved = ''
   sql_catalog_object_list = ()
+  sql_deferred_catalog_object_list = ()
   sql_uncatalog_object = ()
+  sql_deferred_uncatalog_object = ()
   sql_clear_catalog = ()
   sql_catalog_translation_list = ''
   sql_delete_translation_list = ''
@@ -1217,11 +1224,10 @@ class Catalog(Folder,
     elapse = time.time()
     c_elapse = time.clock()
 
-    words = 0
     obj = REQUEST.PARENTS[1]
     path = '/'.join(obj.getPhysicalPath())
 
-    results = self.aq_parent.ZopeFindAndApply(obj,
+    self.aq_parent.ZopeFindAndApply(obj,
                     obj_metatypes=obj_metatypes,
                     obj_ids=obj_ids,
                     obj_searchterm=obj_searchterm,
@@ -1252,7 +1258,7 @@ class Catalog(Folder,
 
   security.declarePrivate('catalogObjectList')
   def catalogObjectList(self, object_list, method_id_list=None,
-                        disable_cache=0, check_uid=1, idxs=None):
+                        disable_cache=0, check_uid=1, idxs=None, deferred=0):
     """Add objects to the Catalog by calling all SQL methods and
     providing needed arguments.
 
@@ -1276,13 +1282,17 @@ class Catalog(Folder,
                               method_id_list=method_id_list,
                               disable_cache=disable_cache,
                               check_uid=check_uid,
-                              idxs=idxs)
+                              idxs=idxs,
+                              deferred=deferred)
 
   def getSqlCatalogObjectListList(self):
     return self.sql_catalog_object_list
 
+  def getSqlDeferredCatalogObjectListList(self):
+    return self.sql_deferred_catalog_object_list
+
   def _catalogObjectList(self, object_list, method_id_list=None,
-                         disable_cache=0, check_uid=1, idxs=None):
+                         disable_cache=0, check_uid=1, idxs=None, deferred=0):
     """This is the real method to catalog objects."""
     if idxs not in (None, []):
       LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING,
@@ -1349,7 +1359,10 @@ class Catalog(Folder,
           LOG('SQLCatalog._catalogObjectList', ERROR, error_message)
 
     if method_id_list is None:
-      method_id_list = self.getSqlCatalogObjectListList()
+      if deferred:
+        method_id_list = self.getSqlDeferredCatalogObjectListList()
+      else:
+        method_id_list = self.getSqlCatalogObjectListList()
     econtext = getEngine().getContext()
     if disable_cache:
       argument_cache = DummyDict()
@@ -1495,6 +1508,9 @@ class Catalog(Folder,
 
   def getSqlUncatalogObjectList(self):
     return self.sql_uncatalog_object
+
+  def getSqlDeferredUncatalogObjectList(self):
+    return self.sql_deferred_uncatalog_object
 
   security.declarePrivate('uncatalogObject')
   def uncatalogObject(self, path=None, uid=None):
@@ -1874,9 +1890,7 @@ class Catalog(Folder,
     """
     search_key, related_key_definition = self.getColumnSearchKey(key,
       search_key_name=search_key_name)
-    if search_key is None:
-      result = None
-    else:
+    if search_key is not None:
       if related_key_definition is not None:
         search_key = search_key.getSearchKey(sql_catalog=self,
           related_key_definition=related_key_definition,
@@ -2450,27 +2464,9 @@ class Catalog(Folder,
       if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method') and ('deferred' in method.connection_id) == deferred:
         return method.connection_id
 
-  def getSqlCatalogObjectList(self):
-    try:
-      return self.sql_catalog_object
-    except AttributeError:
-      return ()
-
-  def getSqlUncatalogObjectList(self):
-    try:
-      return self.sql_uncatalog_object
-    except AttributeError:
-      return ()
-
   def getSqlUpdateObjectList(self):
     try:
       return self.sql_update_object
-    except AttributeError:
-      return ()
-
-  def getSqlCatalogObjectListList(self):
-    try:
-      return self.sql_catalog_object_list
     except AttributeError:
       return ()
 
@@ -2482,10 +2478,11 @@ class Catalog(Folder,
     method_id_set = set()
     if withCMF:
       method_id_set.update(
-        self.getSqlCatalogObjectList() +
+        self.getSqlCatalogObjectListList() +
+        self.getSqlDeferredCatalogObjectListList() +
         self.getSqlUncatalogObjectList() +
-        self.getSqlUpdateObjectList() +
-        self.getSqlCatalogObjectListList()
+        self.getSqlDeferredUncatalogObjectList() +
+        self.getSqlUpdateObjectList()
       )
     return [
       method

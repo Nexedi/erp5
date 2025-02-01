@@ -29,6 +29,8 @@ def filterActions(actions):
       filtered_actions[action_category_name].extend(action_list)
     else:
       filtered_actions[action_category_name] = action_list
+    if filter_action_script_id:
+      filtered_actions = getattr(context, filter_action_script_id)(filtered_actions)
   return {action_category_name: sorted(action_list, key=lambda x: x.get('priority', 1.0))
           for action_category_name, action_list in filtered_actions.items()}
 

@@ -28,7 +28,6 @@
 ##############################################################################
 
 import os
-import unittest
 from io import BytesIO
 from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
@@ -216,6 +215,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     file_path = os.path.join(os.path.dirname(__file__), 'test_document',
         filename)
     upload_file = FileUpload(file_path)
+    self.addCleanup(upload_file.close)
     document = self.portal.portal_contributions.newContent(file=upload_file)
     addOOoTemplate = self.getPortal().manage_addProduct['ERP5OOo'].addOOoTemplate
     addOOoTemplate(id='Base_viewIncludeImageAsOdt', title='')
@@ -239,17 +239,14 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     cs = BytesIO()
     cs.write(body)
     zip_document = ZipFile(cs)
-    picture_list = filter(lambda x: "Pictures" in x.filename,
-        zip_document.infolist())
-    self.assertNotEqual([], picture_list)
+    picture_list = [x for x in zip_document.infolist() if "Pictures" in x.filename]
+    self.assertTrue(picture_list)
     manifest = bytes2str(zip_document.read('META-INF/manifest.xml'))
     content = bytes2str(zip_document.read('content.xml'))
     for picture in picture_list:
       self.assertIn(picture.filename, manifest)
       self.assertIn(picture.filename, content)
+    with open(file_path, 'rb') as f:
+      expected_data = f.read()
+    self.assertTrue([p for p in picture_list if zip_document.read(p) == expected_data])
 
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOooDynamicStyle))
-  return suite

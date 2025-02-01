@@ -12,7 +12,7 @@ from six.moves.urllib.parse import urljoin
 from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import ElementMaker
-from Products.ERP5Type.Utils import unicode2str, str2unicode
+from Products.ERP5Type.Utils import bytes2str, unicode2str, str2unicode
 import re
 import sys
 import six
@@ -1145,7 +1145,7 @@ class MultiItemsWidget(ItemsWidget):
       d[item_value] = item_text
     result = []
     for e in value:
-      result.append(d[e].replace('\xc2\xa0', ''))
+      result.append(d[e].replace(bytes2str(b'\xc2\xa0'), ''))
     return result
 
   def render_odg(self, field, value, as_string, ooo_builder, REQUEST,

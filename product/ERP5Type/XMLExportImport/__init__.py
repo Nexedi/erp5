@@ -74,9 +74,10 @@ class OrderedPickler(Pickler):
     dispatch = Pickler.dispatch.copy()
 
     def save_dict(self, obj):
-        return Pickler.save_dict(
-            self,
-            OrderedDict(sorted(obj.items())))
+        items = sorted(
+            obj.items(),
+            key=lambda item:str(item[0]))
+        return Pickler.save_dict(self, OrderedDict(items))
 
     dispatch[dict] = save_dict
 

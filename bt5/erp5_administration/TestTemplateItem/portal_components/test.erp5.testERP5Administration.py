@@ -30,6 +30,7 @@
 import unittest
 import time
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
+from DateTime import DateTime
 
 class TestERP5Administration(InventoryAPITestCase):
   """Test for erp5_administration business template.
@@ -229,6 +230,51 @@ component_error()
         'portal_components/extension.erp5.DummyComponentForSourceCodeTest:2:0',
         "Undefined variable 'component_error' (undefined-variable)"),
       location_and_message_list)
+
+
+  def test_check_site_modification(self):
+    # remove second, obj's modification in erp5 don't have seconds
+    check_date = DateTime(DateTime().strftime('%Y-%m-%d %H:%M'))
+    active_process = self.portal.portal_activities.newActiveProcess()
+    self.portal.Base_checkSiteDailyModification(
+      active_process=active_process.getRelativeUrl(),
+      check_date = check_date
+    )
+    result_list  = [x.detail for x in active_process.getResultList()]
+    message_list = [
+      'erp5_administration/Base_checkSiteDailyModification is modified',
+      'erp5_administration/BusinessTemplate_viewCheckPythonCodeDialog is modified',
+      'portal_workflow/edit_workflow is modified',
+      'portal_workflow/edit_workflow/state_current is modified',
+      'portal_workflow/preference_interaction_workflow is modified'
+    ]
+    for message in message_list:
+      self.assertNotIn(message, result_list)
+
+    self.portal.portal_skins.erp5_administration.Base_checkSiteDailyModification.ZPythonScript_setTitle('%s' % check_date)
+    self.portal.portal_skins.erp5_administration.Base_checkSiteDailyModification.ZPythonScript_setTitle('')
+    self.portal.portal_skins.erp5_administration.BusinessTemplate_viewCheckPythonCodeDialog.manage_addProduct['Formulator'].manage_addField('my_title', 'Title', 'StringField')
+    self.portal.portal_skins.erp5_administration.BusinessTemplate_viewCheckPythonCodeDialog.manage_delObjects('my_title')
+    new_comment = 'Test %s' % check_date
+    self.portal.portal_workflow.preference_interaction_workflow.edit(
+      comment = new_comment
+    )
+    self.portal.portal_workflow.edit_workflow.edit(
+      comment = new_comment
+    )
+    self.portal.portal_workflow.edit_workflow.state_current.edit(
+      comment = new_comment
+    )
+
+    self.tic()
+    self.portal.Base_checkSiteDailyModification(
+      active_process=active_process.getRelativeUrl(),
+      check_date = check_date
+    )
+    result_list = [x.detail for x in active_process.getResultList()]
+    for message in message_list:
+      self.assertIn(message, result_list)
+
 
 
 def test_suite():
