@@ -211,7 +211,7 @@ if book_include_content_table:
     book_table_of_content = book.WebPage_createBookXslTableOfContent(
       book_toc_title=book_translated_toc_title,
       margin_15mm = margin_15mm
-    ).strip()
+    ).encode('utf-8').strip()
   elif book_format == "html":
     book_content, book_table_of_content = book.WebPage_createTableOfContent(
       doc_content=book_content,

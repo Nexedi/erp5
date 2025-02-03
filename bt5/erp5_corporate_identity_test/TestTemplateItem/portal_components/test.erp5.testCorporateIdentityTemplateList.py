@@ -1420,6 +1420,26 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
     )
 
+  @changeSkin('Book')
+  def test_pdfBookInFrench(self):
+    test_page = self.portal.web_page_module.template_test_book_input_001_en_html
+    clone_page = test_page.Base_createCloneDocument(batch_mode=1)
+    clone_page.setLanguage('fr')
+    self.runPdfTestPattern(
+      clone_page.getId(),
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=1,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_content_table=1
+      )
+    )
+
+
+
   # XXX change to a single pdf from which pics are generated!
   @changeSkin('Book')
   def test_pdfBookAllOptions(self):
