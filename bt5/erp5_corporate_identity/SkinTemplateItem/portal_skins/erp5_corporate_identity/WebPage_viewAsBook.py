@@ -208,10 +208,10 @@ else:
 if book_include_content_table:
   book_translated_toc_title = context.Base_translateString("Table of Contents", lang=book_language)
   if book_format == "pdf":
-    book_table_of_content = book.WebPage_createBookXslTableOfContent(
+    book_table_of_content = unicode2str(book.WebPage_createBookXslTableOfContent(
       book_toc_title=book_translated_toc_title,
       margin_15mm = margin_15mm
-    ).strip()
+    )).strip()
   elif book_format == "html":
     book_content, book_table_of_content = book.WebPage_createTableOfContent(
       doc_content=book_content,
