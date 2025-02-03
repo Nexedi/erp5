@@ -68,6 +68,18 @@ class TestERP5Discussion(DocumentUploadTestCase):
   def stepCreatePost(self,thread):
     return thread.newContent(portal_type="Discussion Post")
 
+  def stepCreateForumWebSection(self,group,web_site):
+    web_section = web_site.newContent(portal_type='Web Section')
+    module =  self.portal.getDefaultModule("Discussion Forum")
+    forum = module.newContent(portal_type="Discussion Forum")
+    # TODO: create a forum
+    # config its predicate
+    # link it to web section
+    forum.setMultimembershipCriterionBaseCategoryList(['group'])
+    forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    web_section.setDestinationValue(forum)
+    return web_section
+
   def test_01_createDiscussionThread(self):
     """Create a new discussion thread"""
 
@@ -101,9 +113,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     group1 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 1')
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
-    web_section1 = web_site.newContent(portal_type='Web Section')
-    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
+    web_section1 = self.stepCreateForumWebSection(group1, web_site)
     self.tic()
 
     web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
