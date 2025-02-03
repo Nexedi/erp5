@@ -43,13 +43,17 @@
         <item>
             <key> <string>text_content_error_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>E: 34,  0: No name \'DocumentUploadTestCase\' in module \'erp5.component.test.erp5_version.testDms\' (no-name-in-module)</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 33,  0: Unused newSecurityManager imported from AccessControl.SecurityManagement (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -74,7 +78,276 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>text_content</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+# -*- coding: utf-8 -*-\n
+##############################################################################\n
+#\n
+# Copyright (c) 2010 Nexedi SA and Contributors.\n
+# All Rights Reserved.\n
+#          Romain Courteaud <romain@nexedi.com>\n
+#          Fabien MORIN <fabien@nexedi.com>\n
+#\n
+# WARNING: This program as such is intended to be used by professional\n
+# programmers who take the whole responsability of assessing all potential\n
+# consequences resulting from its eventual inadequacies and bugs\n
+# End users who are looking for a ready-to-use solution with commercial\n
+# garantees and support are strongly adviced to contract a Free Software\n
+# Service Company\n
+#\n
+# This program is Free Software; you can redistribute it and/or\n
+# modify it under the terms of the GNU General Public License\n
+# as published by the Free Software Foundation; either version 2\n
+# of the License, or (at your option) any later version.\n
+#\n
+# This program is distributed in the hope that it will be useful,\n
+# but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n
+# GNU General Public License for more details.\n
+#\n
+# You should have received a copy of the GNU General Public License\n
+# along with this program; if not, write to the Free Software\n
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
+#\n
+##############################################################################\n
+\n
+import unittest\n
+from AccessControl.SecurityManagement import newSecurityManager\n
+from erp5.component.test.testDms import DocumentUploadTestCase\n
+\n
+\n
+class TestERP5Discussion(DocumentUploadTestCase):\n
+  """Test for erp5_discussion business template.\n
+  """\n
+  def getTitle(self):\n
+    return "Test ERP5 Discussion"\n
+\n
+  def getBusinessTemplateList(self):\n
+    """\n
+    """\n
+    return (\'erp5_core\',\n
+            \'erp5_base\',\n
+            \'erp5_xhtml_style\',\n
+            \'erp5_ingestion\',\n
+            \'erp5_web\',\n
+            \'erp5_dms\',\n
+            \'erp5_knowledge_pad\',\n
+            \'erp5_rss_style\',\n
+            \'erp5_jquery\',\n
+            \'erp5_discussion\', )\n
+\n
+  def beforeTearDown(self):\n
+    self.abort()\n
+    for module in (self.portal.discussion_thread_module,):\n
+      module.manage_delObjects(list(module.objectIds()))\n
+    self.tic()\n
+\n
+  def stepCreateThread(self):\n
+\n
+    module =  self.portal.getDefaultModule("Discussion Thread")\n
+    return module.newContent(portal_type="Discussion Thread")\n
+\n
+  def stepCreatePost(self,thread):\n
+    return thread.newContent(portal_type="Discussion Post")\n
+\n
+  def test_01_createDiscussionThread(self):\n
+    """Create a new discussion thread"""\n
+\n
+    self.stepCreateThread()\n
+    self.tic()\n
+\n
+  def test_02_createDiscussionPost(self):\n
+    """Create a disucssion post inside a discussion thread"""\n
+\n
+    thread = self.stepCreateThread()\n
+    post = self.stepCreatePost(thread)\n
+    # post is not indexed yet\n
+    self.assertSameSet([], thread.DiscussionThread_getDiscussionPostList())\n
+\n
+    # not indexed but its relative url is passed through REQUEST\n
+    self.app.REQUEST.set(\'post_relative_url\', post.getRelativeUrl())\n
+    self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())\n
+    self.tic()\n
+\n
+    # indexed already\n
+    self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())\n
+\n
+  def test_03_createDiscussionThread(self):\n
+    """\n
+      Create a disucssion thread\n
+    """\n
+    portal = self.portal\n
+    discussion_thread_id_set = set(portal.discussion_thread_module.objectIds())\n
+\n
+    # create web sections & set predicates\n
+    group1 = portal.portal_categories.group.newContent(portal_type=\'Category\',\n
+                                                       title = \'Group 1\')\n
+    web_site = portal.web_site_module.newContent(portal_type=\'Web Site\')\n
+    web_section1 = web_site.newContent(portal_type=\'Web Section\')\n
+    web_section1.setMultimembershipCriterionBaseCategoryList([\'group\'])\n
+    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])\n
+    self.tic()\n
+\n
+    web_section1.WebSection_createNewDiscussionThread(\'test1-new\', \'test1 body\')\n
+    discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \\\n
+                          if x.getId() not in discussion_thread_id_set]\n
+    discussion_thread_id_set.add(discussion_thread.getId())\n
+    self.assertTrue(discussion_thread.getReference().startswith("test1-new-"))\n
+    # not indexed yet\n
+    self.assertSameSet([], web_section1.WebSection_getDiscussionThreadList())\n
+\n
+    # not indexed but its relative url is passed through REQUEST\n
+    self.app.REQUEST.set(\'thread_relative_url\', discussion_thread.getRelativeUrl())\n
+    self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())\n
+\n
+    self.tic()\n
+    # indexed already\n
+    self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())\n
+    discussion_post = discussion_thread.contentValues(filter={\'portal_type\': \'Discussion Post\'})[0]\n
+    attachment_list = discussion_post.DiscussionPost_getAttachmentList()\n
+    self.assertEqual(discussion_thread.getValidationState(), \'published\')\n
+    self.assertEqual(0, len(attachment_list))\n
+\n
+    # check attachment creation\n
+    file_ = self.makeFileUpload(\'TEST-en-002.doc\')\n
+    web_section1.WebSection_createNewDiscussionThread(\'test1-new-with-attachment\', \'test1 body\', file=file_)\n
+    discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \\\n
+                          if x.getId() not in discussion_thread_id_set]\n
+    discussion_thread_id_set.add(discussion_thread.getId())\n
+    self.assertTrue(discussion_thread.getReference().startswith("test1-new-with-attachment-"))\n
+    self.tic()\n
+\n
+    discussion_post = discussion_thread.contentValues(filter={\'portal_type\': \'Discussion Post\'})[0]\n
+    attachment_list = discussion_post.DiscussionPost_getAttachmentList()\n
+    self.assertEqual(discussion_thread.getValidationState(), \'published\')\n
+    self.assertEqual(1, len(attachment_list))\n
+\n
+  def test_MultipleForum(self):\n
+    """\n
+      Test multiple forums may exists within same ERP5 Web Site.\n
+    """\n
+    portal = self.portal\n
+\n
+    # create web sections & set predicates\n
+    group1 = portal.portal_categories.group.newContent(portal_type=\'Category\',\n
+                                                       title = \'Group 1\')\n
+    group2 = portal.portal_categories.group.newContent(portal_type=\'Category\',\n
+                                                       title = \'Group 2\')\n
+    web_site = portal.web_site_module.newContent(portal_type=\'Web Site\')\n
+    web_section1 = web_site.newContent(portal_type=\'Web Section\')\n
+    web_section2 = web_site.newContent(portal_type=\'Web Section\')\n
+    web_section1.setMultimembershipCriterionBaseCategoryList([\'group\'])\n
+    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])\n
+    web_section2.setMultimembershipCriterionBaseCategoryList([\'group\'])\n
+    web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])\n
+    self.tic()\n
+\n
+    # add threads on Web Section context\n
+    web_section1.WebSection_createNewDiscussionThread(\'test1\', \'test1 body\')\n
+    web_section2.WebSection_createNewDiscussionThread(\'test2\', \'test2 body\')\n
+    self.tic()\n
+    discussion_thread_object1 = portal.portal_catalog.getResultValue(portal_type = \'Discussion Thread\',\n
+                                                                    title = \'test1\')\n
+    discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = \'Discussion Thread\',\n
+                                                                    title = \'test2\')\n
+    self.assertEqual(group1, discussion_thread_object1.getGroupValue())\n
+    self.assertEqual(group2, discussion_thread_object2.getGroupValue())\n
+\n
+    # check getDocumentValue.. on Web Section context (by default forum is public\n
+    # so threads should be part of document list)\n
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])\n
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])\n
+\n
+    # test RSS generation by testing indirectly its "get" method\n
+    # (new post should be first in list)\n
+    current_post_list = list(discussion_thread_object1.objectValues())\n
+    new_post = discussion_thread_object1.newContent()\n
+    self.tic()\n
+    self.assertSameSet([new_post] + current_post_list, [x.getObject() for x in web_section1.WebSection_getLatestDiscussionPostList()])\n
+\n
+    # test archiving threads so the do not belong any more to web section document list\n
+    discussion_thread_object1.archive()\n
+    discussion_thread_object2.archive()\n
+    self.tic()\n
+\n
+    self.assertSameSet([], web_section1.getDocumentValueList())\n
+    self.assertSameSet([], web_section2.getDocumentValueList())\n
+\n
+    # test new thread reference do no overlap any other traversable object\n
+    web_section1.WebSection_createNewDiscussionThread(web_section1.getId(), \'test reference using web section\')\n
+    web_section1.WebSection_createNewDiscussionThread(\'image_module\', \'test1 body\')\n
+    web_section1.WebSection_createNewDiscussionThread(\'manage_main\', \'test1 body\')\n
+    self.tic()\n
+    self.assertNotEqual(web_section1.getId(),\n
+                        portal.portal_catalog.getResultValue(\n
+                          portal_type = \'Discussion Thread\',\n
+                          title = web_section1.getId()).getReference())\n
+    self.assertNotEqual(\'image_module\',\n
+                        portal.portal_catalog.getResultValue(\n
+                          portal_type = \'Discussion Thread\',\n
+                          title = \'image_module\').getReference())\n
+    self.assertNotEqual(\'manage_main\',\n
+                        portal.portal_catalog.getResultValue(\n
+                          portal_type = \'Discussion Thread\',\n
+                          title = \'manage_main\').getReference())\n
+\n
+  def test_02_ReferenceGenerationFromString(self):\n
+    s = "a test by ivan !@#$%^&*()[]\\\\é"\n
+    self.assertEqual(\'a-test-by-ivan\', self.portal.Base_generateReferenceFromString(s))\n
+\n
+  def test_AttachmentIngestion(self):\n
+    """\n
+    Test the attachment of a CSV file, from both newDiscussionPost and newDiscussionThread\n
+    use cases.\n
+    CSV wasn\'t chosen randomly, as it may be subjected to a portal type migration through\n
+    discover metadata, which used to cause a bug.\n
+    """\n
+    discussion_thread_id_set = set(self.portal.discussion_thread_module.objectIds())\n
+\n
+    web_site_value = self.portal.web_site_module.newContent(portal_type=\'Web Site\')\n
+    web_section_value = web_site_value.newContent(portal_type=\'Web Section\')\n
+    file_ = self.makeFileUpload(\'simple.csv\')\n
+    web_section_value.WebSection_createNewDiscussionThread(\n
+      "Thread Title",\n
+      "Post Content",\n
+      file=file_\n
+    )\n
+    self.tic()\n
+    thread_value, = [\n
+      x for x in self.portal.discussion_thread_module.objectValues()\n
+      if x.getId() not in discussion_thread_id_set\n
+    ]\n
+\n
+    post_value, = thread_value.objectValues(portal_type=\'Discussion Post\')\n
+    tested_post_value_set = {post_value,}\n
+    attachment_list = post_value.DiscussionPost_getAttachmentList()\n
+    self.assertEqual(1, len(attachment_list))\n
+\n
+    thread_value.DiscussionThread_createNewDiscussionPost(\n
+      title="Post Title",\n
+      text_content="Post Content",\n
+      file=file_,\n
+    )\n
+    self.tic()\n
+    post_value, = [\n
+      x for x in thread_value.objectValues()\n
+      if x not in tested_post_value_set\n
+    ]\n
+    attachment_list = post_value.DiscussionPost_getAttachmentList()\n
+    self.assertEqual(1, len(attachment_list))\n
+\n
+def test_suite():\n
+  suite = unittest.TestSuite()\n
+  suite.addTest(unittest.makeSuite(TestERP5Discussion))\n
+  return suite\n
+
+
+]]></string> </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>
@@ -115,11 +388,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>validate</string> </value>
+                      <value> <string>modify</string> </value>
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>validated</string> </value>
+                      <value> <string>modified</string> </value>
                   </item>
                 </dictionary>
               </list>
