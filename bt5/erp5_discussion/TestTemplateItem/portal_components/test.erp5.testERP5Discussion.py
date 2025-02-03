@@ -162,12 +162,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     group2 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 2')
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
-    web_section1 = web_site.newContent(portal_type='Web Section')
-    web_section2 = web_site.newContent(portal_type='Web Section')
-    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
-    web_section2.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])
+    web_section1 = self.stepCreateForumWebSection(group1, web_site)
+    web_section2 = self.stepCreateForumWebSection(group2, web_site)
     self.tic()
 
     # add threads on Web Section context
