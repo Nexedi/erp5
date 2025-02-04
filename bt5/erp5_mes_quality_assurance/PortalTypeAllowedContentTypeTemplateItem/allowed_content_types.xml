@@ -1,0 +1,12 @@
+<allowed_content_type_list>
+ <portal_type id="Quality Assurance Module">
+  <item>ACOM</item>
+  <item>Defect Correction</item>
+  <item>Defect Declaration</item>
+  <item>Gate</item>
+  <item>Quality Control</item>
+  <item>SMON</item>
+  <item>Serial Number</item>
+  <item>Traceability</item>
+ </portal_type>
+</allowed_content_type_list>
