@@ -101,6 +101,7 @@ Mixin Component | view
 Mixin Component | web_view
 Module Component | view
 Module Component | web_view
+Page Template | view
 Predicate | view
 Preference Tool Type | jump_property_sheets
 Preference Tool Type | view
