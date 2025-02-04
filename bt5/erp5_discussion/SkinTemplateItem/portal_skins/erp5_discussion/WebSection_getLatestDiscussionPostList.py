@@ -1,9 +1,10 @@
 """
   Get list of latest Posts which belong to a forum (i.e. websection + predicate)
 """
-# first get list of all container Threads (details should be set on predicate)
+# first get list of all forum Threads (details should be set on predicate)
+forum = context.getDestinationValue()
 parent_uid_list = [
-  x.uid for x in context.getDocumentValueList(
+  x.uid for x in forum.searchResults(
     portal_type="Discussion Thread",
   )
 ]
