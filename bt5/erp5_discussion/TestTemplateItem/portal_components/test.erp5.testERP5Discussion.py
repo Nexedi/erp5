@@ -117,7 +117,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     forum = web_section1.getDestinationValue()
     self.assertTrue(forum)
     self.assertEqual(forum.getPortalType(), "Discussion Forum")
-    self.assertEqual(group1, forum.getGroupValue())
+    self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
 
     web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
     discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
