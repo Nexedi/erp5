@@ -1,0 +1,65 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Fast Post Quality Control</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Fast Post Quality Control</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/manufacturing_execution_module</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//td//a[contains(text(), "Execution")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//td//a[contains(text(), "Execution")]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Upcoming Quality Control</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="Mark OK"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//input[@value="Mark OK"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="OK"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
