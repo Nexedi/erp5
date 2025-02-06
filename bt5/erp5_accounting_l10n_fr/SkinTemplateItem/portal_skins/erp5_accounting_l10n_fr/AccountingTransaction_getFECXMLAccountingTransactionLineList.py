@@ -1,7 +1,13 @@
 line_list = []
 
-for line in context.contentValues(
-    portal_type=context.getPortalAccountingMovementTypeList()):
+if side == 'source':
+  sorted_key = lambda x: (x.getSource(), x.getQuantity())
+else:
+  assert side == 'destination'
+  sorted_key = lambda x: (x.getDestination(), x.getQuantity())
+
+for line in sorted(context.contentValues(
+    portal_type=context.getPortalAccountingMovementTypeList()),  key=sorted_key):
   has_amount = True
   if side == 'source':
     account = line.getSourceValue(portal_type='Account')

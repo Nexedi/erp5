@@ -5,12 +5,14 @@ from io import BytesIO
 import zipfile
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Utils import ensure_ascii
+import zlib
 
 portal = context.getPortalObject()
 active_process = portal.restrictedTraverse(active_process)
 
 # XXX we need proxy role for this
-result_list = active_process.getResultList()
+result_list = [zlib.decompress(result.detail) for result in active_process.getResultList() ]
+result_list.sort()
 
 fec_file = context.AccountingTransactionModule_viewComptabiliteAsFECXML(
       at_date=at_date,
