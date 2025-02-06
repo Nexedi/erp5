@@ -28,6 +28,7 @@
 
 import six
 from zodbpickle.pickle import PicklingError
+import six.moves.http_client
 import unittest
 import sys
 import mock
@@ -2974,6 +2975,14 @@ return True''')
     person = self.getPersonModule().newContent(portal_type='Person')
     person.validate()
     self.assertRaises(WorkflowException, person.validate)
+
+  def test_workflow_transitions_are_not_published(self):
+    person = self.getPersonModule().newContent(portal_type='Person')
+    # workflow methods are not published by zope because they don't have a __doc__ attribute
+    self.assertIsNone(person.validate.__doc__)
+    ret = self.publish('%s/validate' % person.getPath(), basic='ERP5TypeTestCase:')
+    self.assertEqual(ret.getStatus(), six.moves.http_client.NOT_FOUND)
+    self.assertEqual(person.getValidationState(), 'draft')
 
   def test_PropertyConstantGetter(self):
     """
