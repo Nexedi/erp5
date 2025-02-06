@@ -1,4 +1,5 @@
 context.setTitle("New Forum")
+# Default predicate configuration, could be updated by the user in the Predicate view
 context.edit(criterion_property=("portal_type",),
              empty_criterion_valid=True,
              membership_criterion_base_category=[],
