@@ -6,3 +6,4 @@ context.edit(criterion_property=("portal_type",),
              multimembership_criterion_base_category=["publication_section"],
              membership_criterion_category= ["publication_section/forum"])
 context.setCriterion("portal_type", "Discussion Thread")
+context.setCategoryList(["publication_section/forum"]) # can be used by other predicates to access the forum
