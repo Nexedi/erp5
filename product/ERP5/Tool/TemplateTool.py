@@ -39,6 +39,7 @@ import shutil
 import sys
 import six
 
+from packaging.version import Version
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
@@ -1101,33 +1102,13 @@ class TemplateTool (BaseTool):
         - 1.1 < 2.0
         - 1.0.0 = 1.0
       """
-      r = re.compile(r'(\d+|[a-zA-Z])')
-      v1 = r.findall(version1)
-      v2 = r.findall(version2)
-
-      def convert(v, i):
-        """Convert the ith element of v to an interger for a comparison.
-        """
-        #LOG('convert', 0, 'v = %r, i = %r' % (v, i))
-        try:
-          e = v[i]
-          try:
-            e = int(e)
-          except ValueError:
-            # ASCII code is one byte, so this produces negative.
-            e = struct.unpack('b', e.encode())[0] - 0x200
-        except IndexError:
-          e = 0
-        return e
-
-      for i in xrange(max(len(v1), len(v2))):
-        e1 = convert(v1, i)
-        e2 = convert(v2, i)
-        result = cmp(e1, e2)
-        if result != 0:
-          return result
-
-      return 0
+      version1_object = Version(version1)
+      version2_object = Version(version2)
+      if version1 < version2:
+        return -1
+      elif version1 == version2:
+        return 0
+      return 1
 
     def _getBusinessTemplateUrlDict(self):
       business_template_url_dict = {}
