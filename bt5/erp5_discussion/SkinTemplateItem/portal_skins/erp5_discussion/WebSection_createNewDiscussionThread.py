@@ -23,10 +23,12 @@ if site_list in MARKER:
   site_list = user_assignment_dict['site_list']
 
 # set predicate settings for current Web Section
-forum = context.getDestinationValue()
+# get the related forum using predicate search
+result = list(context.searchResults(portal_type="Discussion Forum"))
 membership_criterion_category_list = []
 multimembership_criterion_base_category_list = []
-if forum is not None:
+if result:
+  forum = result[0]
   membership_criterion_category_list = forum.getMembershipCriterionCategoryList()
   multimembership_criterion_base_category_list = forum.getMultimembershipCriterionBaseCategoryList()
 

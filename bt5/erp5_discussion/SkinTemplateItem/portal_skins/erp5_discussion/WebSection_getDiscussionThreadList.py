@@ -4,8 +4,10 @@
   passed from REQUEST not index yet threads.
 """
 
-forum = context.getDestinationValue()
-if forum is not None:
+# get the related forum using predicate search
+result = list(context.searchResults(portal_type="Discussion Forum"))
+if result:
+  forum = result[0]
   discussion_thread_list = [x.getObject() for x  in forum.searchResults(**kw)] #searches in all erp5 docs linked to this predicate config
   thread_relative_url = context.REQUEST.get('thread_relative_url')
   if thread_relative_url is not None:
