@@ -74,7 +74,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     forum = module.newContent(portal_type="Discussion Forum")
     forum.setMultimembershipCriterionBaseCategoryList(['group'])
     forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
-    web_section.setDestinationValue(forum)
+    web_section.WebSection_configurePredicateForForum(forum)
     return web_section
 
   def test_01_createDiscussionThread(self):
@@ -114,7 +114,9 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.tic()
 
     # check forum is created and linked
-    forum = web_section1.getDestinationValue()
+    result = list(web_section1.searchResults(portal_type="Discussion Forum"))
+    if result:
+      forum = result[0]
     self.assertTrue(forum)
     self.assertEqual(forum.getPortalType(), "Discussion Forum")
     self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
@@ -169,8 +171,12 @@ class TestERP5Discussion(DocumentUploadTestCase):
     web_section2 = self.stepCreateForumWebSection(group2, web_site)
     self.tic()
 
-    forum1 = web_section1.getDestinationValue()
-    forum2 = web_section2.getDestinationValue()
+    result = list(web_section1.searchResults(portal_type="Discussion Forum"))
+    if result:
+      forum1 = result[0]
+    result = list(web_section2.searchResults(portal_type="Discussion Forum"))
+    if result:
+      forum2 = result[0]
 
     # add threads on Web Section context
     web_section1.WebSection_createNewDiscussionThread('test1', 'test1 body')
