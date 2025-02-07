@@ -150,6 +150,7 @@
             lines: options.lines || 1,
             date_column: options.date_column || 'modification_date',
             source_column: options.source_column || 'source_title',
+            attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
@@ -221,8 +222,7 @@
                   return '';
                 }
                 var source_title = entry.value[gadget.state.source_column] || '',
-                  attachment_list = entry.value
-                                         .Event_getAttachmentList || [],
+                  attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
                   j,
                   word_list = source_title.split(' '),
@@ -314,13 +314,12 @@
       } else {
         limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
       }
-
       return gadget.jio_allDocs({
         query: gadget.state.query_string,
         limit: limit_options,
         select_list: ['asStrippedHTML', gadget.state.date_column,
                       gadget.state.source_column,
-                      'Event_getAttachmentList'],
+                      gadget.state.attachment_column],
         sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
       })
         .push(function (result) {
