@@ -62,9 +62,9 @@ for base_category in multimembership_criterion_base_category_list:
 discussion_thread = portal.discussion_thread_module.newContent(
                       portal_type = "Discussion Thread",
                       **create_kw)
-# as we create a thread under a "root" predicate web section copy
-# all categories from it to create thread, this way thread will be part
-# of web section (through getDocumentValue API)
+# as we create a thread under a "root" predicate discussion forum
+# copy all categories from it to create a thread,
+# this way thread will be part of discussion forum (through predicate's searchResults)
 discussion_thread.setCategoryList(category_list)
 
 # predecessor
