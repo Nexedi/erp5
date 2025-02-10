@@ -652,9 +652,7 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
 
     self.tic()
 
-    # we need a base for asContext, we use the currency, but in real code you
-    # might want to use a more meaningful context.
-    context = euro.asContext(
+    context = self._getPriceContext(
                     categories=['resource/%s' % euro.getRelativeUrl(),
                                 'price_currency/%s' % usd.getRelativeUrl(),
                                 'currency_exchange_type/type_a'])
