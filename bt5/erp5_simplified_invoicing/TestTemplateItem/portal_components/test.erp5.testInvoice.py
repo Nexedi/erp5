@@ -1499,6 +1499,51 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     sale_invoice_brain, = self.portal.portal_catalog(uid=sale_invoice.getUid(), select_list=["specialise_trade_condition_title"], limit=1)
     self.assertEqual(sale_invoice_brain.specialise_trade_condition_title, trade_condition_title)
 
+  def test_invoice_movement_getPrice(self):
+    resource = self.portal.product_module.newContent(
+      portal_type='Product',
+      title='Resource %s' % self.id(),
+    )
+    resource.setSaleSupplyLineBasePrice(123)
+    resource.setPurchaseSupplyLineBasePrice(123)
+    currency = self.portal.currency_module.newContent(
+      portal_type='Currency', title='Currency %s' % self.id())
+    currency.newContent(
+      portal_type='Currency Exchange Line',
+      price_currency_value=currency,
+      base_price=1,
+    ).validate()
+    client = self.portal.organisation_module.newContent(
+      portal_type='Organisation', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+      portal_type='Organisation', title='Vendor')
+
+    self.tic()
+    invoice = self.portal.accounting_module.newContent(
+      portal_type=self.invoice_portal_type,
+      source_value=vendor,
+      source_section_value=vendor,
+      destination_value=client,
+      destination_section_value=client,
+      start_date=DateTime(2008, 10, 21),
+      price_currency_value=currency,
+      resource_value=currency,
+    )
+
+    invoice_line = invoice.newContent(
+      portal_type=self.invoice_line_portal_type,
+      resource_value=resource,
+      quantity=1)
+    self.assertEqual(invoice_line.getPrice(), 123)
+    invoice_line_without_resource = invoice.newContent(
+      portal_type=self.invoice_line_portal_type, quantity=1)
+    self.assertIsNone(invoice_line_without_resource.getPrice())
+
+    invoice_cell_without_resource = invoice_line_without_resource.newContent(
+      portal_type=self.invoice_line_portal_type, quantity=1)
+    self.assertIsNone(invoice_cell_without_resource.getPrice())
+
+
 class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
