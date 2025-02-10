@@ -23,6 +23,11 @@ def sort_key(exchange_line):
 if movement is None:
   return context.Resource_getPriceCalculationOperandDict(**kw)
 else:
+  portal = context.getPortalObject()
+  if not movement.hasResource() and movement.getPortalType() in portal.getPortalInvoiceMovementTypeList():
+    # XXX Invoice have a currency as resource and this resource is acquired on lines, but we don't want
+    # to lookup a price using the currency exchange line for such lines.
+    return None
   if validation_state is None:
     validation_state = 'validated'
   kw.setdefault('portal_type', 'Currency Exchange Line')
@@ -31,7 +36,7 @@ else:
   # and that searchPredicateList does not accept.
   kw.pop('categories', None)
 
-  predicate_list = context.portal_domains.searchPredicateList(
+  predicate_list = portal.portal_domains.searchPredicateList(
       context=movement,
       validation_state=validation_state,
       test=True,
