@@ -74,6 +74,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     forum = module.newContent(portal_type="Discussion Forum")
     forum.setMultimembershipCriterionBaseCategoryList(['group'])
     forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    forum.setCategoryList([group.getRelativeUrl()])
     web_section.WebSection_configurePredicateForForum(forum_relative_url=forum.getRelativeUrl())
     return web_section
 
@@ -130,9 +131,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertSameSet([], web_section1.WebSection_getDiscussionThreadList())
 
     # not indexed but its relative url is passed through REQUEST
-    #self.app.REQUEST.set('thread_relative_url', discussion_thread.getRelativeUrl())
-    #self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())
-    #DEBUG
+    self.app.REQUEST.set('thread_relative_url', discussion_thread.getRelativeUrl())
+    self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())
 
     self.tic()
     # indexed already
@@ -188,11 +188,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
                                                                     title = 'test2')
     
-    #DEBUG
-    self.assertEqual([group1.getRelativeUrl()], discussion_thread_object1.getMembershipCriterionCategoryList())
-    self.assertEqual([group1.getRelativeUrl()], discussion_thread_object2.getMembershipCriterionCategoryList())
-    #self.assertEqual(group1, discussion_thread_object1.getGroupValue())
-    #self.assertEqual(group2, discussion_thread_object2.getGroupValue())
+    self.assertEqual(group1, discussion_thread_object1.getGroupValue())
+    self.assertEqual(group2, discussion_thread_object2.getGroupValue())
 
     # check forum predicate search.. on Discussion Forum context
     self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in forum1.searchResults()])
