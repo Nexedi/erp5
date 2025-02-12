@@ -163,7 +163,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                               group_by_node=1,
                               group_by_resource=1,
                               **default_inventory_params):
-        if inventory.total_price and inventory.total_quantity:
+        if inventory.total_price or inventory.total_quantity:
           stock_list.append(
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
@@ -193,7 +193,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                               group_by_mirror_section=1,
                               group_by_resource=1,
                               **default_inventory_params):
-        if inventory.total_price and inventory.total_quantity:
+        if inventory.total_price or inventory.total_quantity:
           stock_list.append(
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
@@ -224,7 +224,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                               group_by_payment=1,
                               group_by_resource=1,
                               **default_inventory_params):
-        if inventory.total_price and inventory.total_quantity:
+        if inventory.total_price or inventory.total_quantity:
           stock_list.append(
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,

@@ -2240,6 +2240,160 @@ class TestClosingPeriod(AccountingTestCase):
     balance_transaction.reindexObject()
     self.tic()
 
+  def test_createBalanceTransactionZeroInAccountingTransactionCurrencyNextYear(self):
+    pl = self.portal.account_module.newContent(
+      portal_type='Account', account_type='equity')
+    bank_account = self.section.newContent(portal_type='Bank Account')
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+
+    self._makeOne(
+      start_date=DateTime(2006, 1, 1),
+      title='Yen',
+      resource='currency_module/yen',
+      destination_section_value=organisation_module.client_1,
+      portal_type='Sale Invoice Transaction',
+      simulation_state='delivered',
+      lines=(
+        dict(
+          source_value=self.account_module.goods_sales,
+          source_asset_debit=1,
+          source_debit=70,
+        ),
+        dict(
+          source_value=self.account_module.stocks,
+          source_asset_credit=1,
+          source_credit=30,
+        ),
+        # account by node
+        dict(
+          source_value=self.account_module.stocks,
+          source_asset_credit=0,
+          source_debit=70,
+        ),
+        # account by mirror_section
+        dict(
+          source_value=self.account_module.receivable,
+          source_asset_credit=0,
+          source_debit=30,
+        ),
+        # account by payment
+        dict(
+          source_value=self.account_module.bank,
+          source_payment_value=bank_account,
+          source_asset_credit=0,
+          source_credit=100,
+        ),
+      ))
+    self.tic()
+    period.AccountingPeriod_createBalanceTransaction(
+      profit_and_loss_account=pl.getRelativeUrl())
+    self.tic()
+
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEqual(2, len(accounting_transaction_list))
+    balance_transaction, = self.accounting_module.contentValues(
+      portal_type='Balance Transaction')
+
+    self.assertEqual(
+      self.section, balance_transaction.getDestinationSectionValue())
+    self.assertEqual(None, balance_transaction.getSourceSection())
+    self.assertEqual(DateTime(2007, 1, 1), balance_transaction.getStartDate())
+    self.assertEqual('currency_module/euro', balance_transaction.getResource())
+
+    def check_balance_transaction_lines(bt):
+      self.assertEqual(
+        sorted(
+          [
+            (
+              line.getDestinationDebit(),
+              line.getDestinationCredit(),
+              line.getDestinationInventoriatedTotalAssetDebit(),
+              line.getDestinationInventoriatedTotalAssetCredit(),
+              line.getResourceTitle(),
+              line.getDestinationValue(),
+              line.getDestinationPaymentValue(),
+              line.getSourceSectionValue(),
+            ) for line in bt.contentValues()
+          ]), [
+            (
+              0.0,
+              100.0,
+              0.0,
+              0.0,
+              'Yen',
+              self.account_module.bank,
+              bank_account,
+              None,
+            ),
+            (
+              1.0,
+              0.0,
+              1.0,
+              0.0,
+              'Euro',
+              pl,
+              None,
+              None,
+            ),
+            (
+              30.0,
+              0.0,
+              0.0,
+              0.0,
+              'Yen',
+              self.account_module.receivable,
+              None,
+              organisation_module.client_1,
+            ),
+            (
+              40.0,
+              0.0,
+              0.0,
+              1.0,
+              'Yen',
+              self.portal.account_module.stocks,
+              None,
+              None,
+            ),
+          ])
+    check_balance_transaction_lines(balance_transaction)
+    q = self.portal.erp5_sql_connection.manage_test
+    self.assertEqual(
+      1,
+      q(
+        "SELECT count(*) FROM stock WHERE portal_type="
+        "'Balance Transaction Line'")[0][0])
+    self.assertEqual(
+      1,
+      q(
+        "SELECT total_price FROM stock WHERE portal_type="
+        "'Balance Transaction Line'")[0][0])
+    self.assertEqual(
+      1,
+      q(
+        "SELECT quantity FROM stock WHERE portal_type="
+        "'Balance Transaction Line'")[0][0])
+
+    # next year, if there are no transactions during period, closing should produce
+    # the same balance transaction.
+    period_next_year = self.section.newContent(portal_type='Accounting Period')
+    period_next_year.setStartDate(DateTime(2007, 1, 1))
+    period_next_year.setStopDate(DateTime(2007, 12, 31))
+    period_next_year.AccountingPeriod_createBalanceTransaction(
+      profit_and_loss_account=pl.getRelativeUrl())
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEqual(3, len(accounting_transaction_list))
+    balance_transaction_next_year, = [bt for bt in self.accounting_module.contentValues(
+      portal_type='Balance Transaction') if bt != balance_transaction]
+    check_balance_transaction_lines(balance_transaction_next_year)
+
+    # we can reindex again
+    balance_transaction.reindexObject()
+    balance_transaction_next_year.reindexObject()
+    self.tic()
 
   def test_AccountingPeriodWorkflow(self):
     """Tests that accounting_period_workflow creates a balance transaction.
