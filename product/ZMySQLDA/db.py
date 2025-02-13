@@ -242,6 +242,7 @@ class DB(TM):
             raise NotSupportedError("transactions not supported by this server")
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
+        self._transaction_begun = False
 
     def _parse_connection_string(self):
         self._mysql_lock = self._try_transactions = self._isolation_level = None
@@ -448,19 +449,22 @@ class DB(TM):
         # Unfortunately, MySQLdb does not want to be graceful.
         if query_string[-1:] == b';':
           query_string = query_string[:-1]
-        if self._use_TM and not self._registered and isolation_level is not None:
-            if isolation_level:
-                self._current_isolation_level = isolation_level
-            elif self._isolation_level:
-                self._current_isolation_level = self._isolation_level
-            else:
-                for qs in query_string.split(b'\0'):
-                    if match_select(qs.strip()):
-                        self._current_isolation_level = 'REPEATABLE-READ'
-                        break
-                else:
-                    self._current_isolation_level = 'READ-COMMITTED'
+        if self._use_TM:
             self._register()
+            if not self._transaction_begun:
+                self._begin_transaction()
+            if isolation_level is not None:
+                if isolation_level:
+                    self._current_isolation_level = isolation_level
+                elif self._isolation_level:
+                    self._current_isolation_level = self._isolation_level
+                else:
+                    for qs in query_string.split(b'\0'):
+                        if match_select(qs.strip()):
+                            self._current_isolation_level = 'REPEATABLE-READ'
+                            break
+                    else:
+                        self._current_isolation_level = 'READ-COMMITTED'
         for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:
@@ -500,7 +504,7 @@ class DB(TM):
         except UnicodeEncodeError:
             return self.db.string_literal(s.encode('utf-8'))
 
-    def _begin(self, *ignored):
+    def _begin_transaction(self, *ignored):
         """Begin a transaction (when TM is enabled)."""
         try:
             self._transaction_begun = True
@@ -706,7 +710,7 @@ class DeferredDB(DB):
         #      fail. Consider moving them to commit, tpc_vote or in an
         #      after-commit hook.
         if self._sql_string_list:
-            DB._begin(self)
+            DB._begin_transaction(self)
             for qs in self._sql_string_list:
                 self._query(qs)
             del self._sql_string_list[:]
