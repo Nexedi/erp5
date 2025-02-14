@@ -63,6 +63,8 @@ if execution_date is not None:
       'time': str(execution_date),
     },
   )
+
+portal_status_level = 'error'
 try:
   portal.portal_workflow.doActionFor(
     context,
@@ -90,6 +92,7 @@ except WorkflowException as error_message:
     raise
 else:
   message = request.get('portal_status_message')
+  portal_status_level = request.get('portal_status_level', 'success')
   if message is None:
     message = translateString('Status changed.')
   kw.clear() # useful ?
@@ -103,4 +106,4 @@ else:
   redirect_document = context
 
 return redirect_document.Base_redirect(form_id,
-                keep_items={'portal_status_message': message}, **kw)
+                keep_items={'portal_status_message': message, 'portal_status_level': portal_status_level}, **kw)
