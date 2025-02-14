@@ -3775,6 +3775,20 @@ class ModuleTemplateItem(BaseTemplateItem):
       xml_data = self.generateXml(path=key)
       bta.addObject(xml_data, name=key, path=path)
 
+  def preinstall(self, context, installed_item, **kw):
+    """Keep modules when they are not empty.
+    """
+    _modified_object_dict = super(ModuleTemplateItem, self).preinstall(context, installed_item, **kw)
+    portal = context.getPortalObject()
+    modified_object_dict = {}
+    for module_id, (action, item_class) in _modified_object_dict.items():
+      if action == 'Removed':
+        module = portal._getOb(module_id, None)
+        if module is not None and len(module.objectValues()):
+          action = 'Removed but should be kept'
+      modified_object_dict[module_id] = (action, item_class)
+    return modified_object_dict
+
   def install(self, context, trashbin, **kw):
     portal = context.getPortalObject()
     update_dict = kw.get('object_to_update')
