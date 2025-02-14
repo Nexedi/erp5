@@ -1,0 +1,45 @@
+div.dialog_in_listbox input[type='submit']{
+  margin-top: 0pt;
+  margin-right:0pt;
+}
+
+.document_table tbody tr td form div.dialog_in_listbox{
+  width: max-content;
+  position: relative;
+}
+
+.ui-visibility-hidden {
+  visibility: hidden;
+}
+
+div.dialog_in_listbox .ui-icon-spinner{
+  position: absolute;
+  top:50%;
+  left:18%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+input[type='submit'].error {
+  cursor: default;
+  pointer-events: none;
+}
+
+input[type='submit'].success {
+  background-color: #37A419;
+  border-color: #37A419;
+  cursor: default;
+  pointer-events: none;
+}
+
+input[type='submit'].success:hover,
+input[type='submit'].success:focus {
+  background-color: #37A419;
+}
+
+form.dialog_form_center_in_listbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

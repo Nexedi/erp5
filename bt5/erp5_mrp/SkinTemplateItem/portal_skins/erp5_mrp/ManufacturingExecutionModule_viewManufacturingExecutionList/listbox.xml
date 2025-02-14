@@ -155,6 +155,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>ledger_title</string>
+                          <string>Ledger</string>
+                        </tuple>
+                        <tuple>
                           <string>source_title</string>
                           <string>Sender or Provider</string>
                         </tuple>
@@ -236,6 +240,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>ledger_title</string>
+                          <string>Ledger</string>
+                        </tuple>
+                        <tuple>
                           <string>source_title</string>
                           <string>Sender or Provider</string>
                         </tuple>
@@ -312,6 +320,10 @@
                         <tuple>
                           <string>reference</string>
                           <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>ledger_title</string>
+                          <string>Ledger</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
