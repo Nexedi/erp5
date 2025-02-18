@@ -109,11 +109,11 @@
                           <string>Recipient or Beneficiary</string>
                         </tuple>
                         <tuple>
-                          <string>start_date_range_min</string>
+                          <string>predicate.start_date_range_min</string>
                           <string>Valid from</string>
                         </tuple>
                         <tuple>
-                          <string>start_date_range_max</string>
+                          <string>predicate.start_date_range_max</string>
                           <string>Valid until</string>
                         </tuple>
                         <tuple>
