@@ -38,7 +38,7 @@ from slapos.grid.utils import md5digest
 def dealShebang(run_test_suite_path):
   with open(run_test_suite_path) as f:
     if f.read(2) == '#!':
-      return f.readline().split(None, 1)
+      return f.readline().rstrip().split(None, 1)
   return []
 
 class UnitTestRunner(object):

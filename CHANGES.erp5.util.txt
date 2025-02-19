@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.77 (2025-02-18)
+-------------------
+
+  * testnode:
+    - fix handling of shebang like '#!/bin/sh -e'
+  * remove totally webchecker
+
 0.4.76 (2024-05-07)
 -------------------
 

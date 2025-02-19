@@ -135,11 +135,11 @@
                           <string>Sender or Provider</string>
                         </tuple>
                         <tuple>
-                          <string>start_date_range_min</string>
+                          <string>predicate.start_date_range_min</string>
                           <string>Valid from</string>
                         </tuple>
                         <tuple>
-                          <string>start_date_range_max</string>
+                          <string>predicate.start_date_range_max</string>
                           <string>Valid until</string>
                         </tuple>
                         <tuple>
@@ -238,6 +238,14 @@
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>predicate.start_date_range_min</string>
+                          <string>Valid from</string>
+                        </tuple>
+                        <tuple>
+                          <string>predicate.start_date_range_max</string>
+                          <string>Valid until</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -299,6 +307,14 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>predicate.start_date_range_min</string>
+                          <string>Valid from</string>
+                        </tuple>
+                        <tuple>
+                          <string>predicate.start_date_range_max</string>
+                          <string>Valid until</string>
                         </tuple>
                       </list>
                     </value>
