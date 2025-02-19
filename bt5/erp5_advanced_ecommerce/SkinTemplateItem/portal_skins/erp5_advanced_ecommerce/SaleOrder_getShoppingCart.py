@@ -48,7 +48,7 @@ if not shopping_cart_id in session.keys():
                                           "Modify portal content",
                                           "View"])
   context.WebSection_updateShoppingCartTradeCondition(shopping_cart, None)
-  user = context.ERP5Site_getAuthenticatedMemberPersonValue()
+  user = context.portal_membership.getAuthenticatedMember().getUserValue()
   if user:
     shopping_cart.setDestinationValue(user)
   shopping_cart.setPriceCurrency(shopping_cart.getSpecialiseValue().getPriceCurrency())

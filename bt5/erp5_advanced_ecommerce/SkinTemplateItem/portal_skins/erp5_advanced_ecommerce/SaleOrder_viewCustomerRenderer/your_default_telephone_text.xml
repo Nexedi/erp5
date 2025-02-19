@@ -113,6 +113,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>autocomplete</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -154,6 +158,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -269,7 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.ERP5Site_getAuthenticatedMemberPersonValue().getDefaultTelephoneText()</string> </value>
+            <value> <string>python: here.portal_membership.getAuthenticatedMember().getUserValue().getDefaultTelephoneText()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -282,7 +290,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.ERP5Site_getAuthenticatedMemberPersonValue().getDefaultTelephoneText() is not None</string> </value>
+            <value> <string>python: here.portal_membership.getAuthenticatedMember().getUserValue().getDefaultTelephoneText() is not None</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -23,7 +23,7 @@ if sale_order.getSimulationState() == "draft":
 
 for amount in sale_order.getAggregatedAmountList():
   if 'base_amount/loyalty_program/using_point' in amount.getBaseApplicationList():
-    user = context.ERP5Site_getAuthenticatedMemberPersonValue()
+    user = context.portal_membership.getAuthenticatedMember().getUserValue()
     loyalty_transaction = context.loyalty_transaction_module.newContent(
       portal_type='Loyalty Transaction',
       destination_section_value=user,

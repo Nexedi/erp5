@@ -311,7 +311,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: "<a href=%s/person_module/%s?login_come_from_url=%s> %s </a>" % (context.getWebSiteValue().absolute_url(),context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue().getId(), context.getWebSectionValue().absolute_url(), context.Base_translateString("Change your informations"))
+python: "<a href=%s/person_module/%s?login_come_from_url=%s> %s </a>" % (context.getWebSiteValue().absolute_url(),context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue().getId(), context.getWebSectionValue().absolute_url(), context.Base_translateString("Change your informations"))
 
 ]]></string> </value>
         </item>
