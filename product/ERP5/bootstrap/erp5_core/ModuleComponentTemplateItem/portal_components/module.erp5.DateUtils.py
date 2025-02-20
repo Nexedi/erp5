@@ -109,9 +109,8 @@ def addToDate(date, to_add=None, **kw):
       return_value[key] = return_value[key] - number_of_in_dict[key]
       return_value[larger_key_dict[key]] = return_value[larger_key_dict[key]] + 1
 
+  month_in_to_add = to_add.get('month', None)
   for key in key_list:
-    if key == 'day':
-      continue
     if to_add.get(key, None) is not None:
       return_value[key] = return_value[key] + to_add[key]
       del to_add[key]
@@ -126,13 +125,7 @@ def addToDate(date, to_add=None, **kw):
       for local_key in return_value.keys():
         if local_key not in ('day', 'year'):
           treatPositiveValues(return_value, local_key)
-
-  day_to_add = min(
-    return_value['day'],
-    getNumberOfDayInMonth(
-      DateTime(return_value['year'], int(return_value['month']), 1)
-    )
-  ) - 1
+  day_to_add = return_value['day'] - 1
   if to_add.get('day', None) is not None:
     day_to_add += to_add['day']
   return_value['day'] = 1
@@ -143,6 +136,9 @@ def addToDate(date, to_add=None, **kw):
                                                 return_value['minute'],
                                                 return_value['second'],
                                                 date.timezone()))
+  overflow_day = date.day() - getNumberOfDayInMonth(return_date)
+  if month_in_to_add and (overflow_day > 0):
+    day_to_add -= overflow_day
 
   return_date += day_to_add
   return return_date
