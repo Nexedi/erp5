@@ -29,8 +29,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type.Utils import UpperCase
-from decimal import Decimal
-from erp5.component.tool.RoundingTool import ROUNDING_OPTION_DICT
+from erp5.component.tool.RoundingTool import round as round_
 import ExtensionClass
 from math import log
 
@@ -61,37 +60,21 @@ class RoundingModel(Predicate):
     if not value:
       return value
 
+    precision = self.getPrecision()
     rounding_method_id = self.getRoundingMethodId()
     if rounding_method_id is not None:
       rounding_method = getattr(self, rounding_method_id, None)
       if rounding_method is None:
         raise ValueError('Rounding method (%s) was not found.' \
                 % (rounding_method_id,))
+      return rounding_method(value, precision)
     else:
       decimal_rounding_option = self.getDecimalRoundingOption()
-      if decimal_rounding_option not in ROUNDING_OPTION_DICT:
-        raise ValueError('Decimal rounding option must be selected.')
-
-      def rounding_method(value, precision):
-        if precision is None:
-          precision = 1
-
-        scale = int(log(precision, 10))
-        if scale > 0 or (scale==0 and precision>=1):
-          value = Decimal(str(value))
-          scale = Decimal(str(int(precision))).quantize(value)
-          precision = Decimal('1')
-          value /= scale
-          value = value.quantize(precision, rounding=decimal_rounding_option)
-          value *= scale
-          result = float(value.quantize(precision))
-        else:
-          result = float(
-            Decimal(str(value)).quantize(Decimal(str(precision)),
-                                         rounding=decimal_rounding_option))
-        return result
-
-    return rounding_method(value, self.getPrecision())
+      if precision is None:
+        ndigits = 0
+      else:
+        ndigits = -int(round(log(precision, 10)))
+        return round_(value, ndigits, decimal_rounding_option)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoundingProxy')
   def getRoundingProxy(self, document):
