@@ -74,6 +74,10 @@ class TestDateUtils(unittest.TestCase):
                               addToDate(march_31, month=1).toZone('UTC').ISO())
     self.assertEqual(DateTime('2001/05/1 %s' % self.timezone).toZone('UTC').ISO(),
                               addToDate(march_31, month=1, day=1).toZone('UTC').ISO())
+    self.assertEqual(DateTime('2001/05/1 %s' % self.timezone).toZone('UTC').ISO(),
+                              addToDate(march_31, month=1, hour=24).toZone('UTC').ISO())
+    self.assertEqual(DateTime('2001/05/1 %s' % self.timezone).toZone('UTC').ISO(),
+                              addToDate(march_31, hour=24*31).toZone('UTC').ISO())
 
   def test_negative_add_to_date(self):
     date = DateTime('2000/01/01 %s' % self.timezone)
@@ -97,6 +101,10 @@ class TestDateUtils(unittest.TestCase):
     may_31 = DateTime('2000/05/31 %s' % self.timezone)
     self.assertEqual(DateTime('2000/04/30 %s' % self.timezone).toZone('UTC').ISO(),
                               addToDate(may_31, month=-1).toZone('UTC').ISO())
+    self.assertEqual(DateTime('2001/02/27 %s' % self.timezone).toZone('UTC').ISO(),
+                              addToDate(march_31, month=-1, hour=-24).toZone('UTC').ISO())
+    self.assertEqual(DateTime('2001/02/27 %s' % self.timezone).toZone('UTC').ISO(),
+                              addToDate(march_31, hour=-24*32).toZone('UTC').ISO())
 
   def test_float_add_to_date(self):
     date = DateTime('2000/01/01 %s' % self.timezone)
