@@ -29,4 +29,6 @@ if credential_update_destination_decision_portal_type_list:
     activate_kw={'tag': tag}
   )
 
-context.activate(after_tag=tag).getId()
+# Do not prevent the alarm to run again if one activity fails
+# Fixing this requires to review the credential scripts
+# context.activate(after_tag=tag).getId()
