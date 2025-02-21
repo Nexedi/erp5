@@ -8,15 +8,11 @@
       <dictionary>
         <item>
             <key> <string>active_sense_method_id</string> </key>
-            <value> <string>Alarm_checkPromiseCertificateAuthority</string> </value>
+            <value> <string>Alarm_updateCACertificateChain</string> </value>
         </item>
         <item>
-            <key> <string>alarm_notification_mode</string> </key>
-            <value>
-              <tuple>
-                <string>never</string>
-              </tuple>
-            </value>
+            <key> <string>automatic_solve</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -26,28 +22,28 @@
         </item>
         <item>
             <key> <string>enabled</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>promise_certificate_autority_tool</string> </value>
-        </item>
-        <item>
-            <key> <string>periodicity_day_frequency</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>update_caucase_connector_ca_certificate_chain</string> </value>
         </item>
         <item>
             <key> <string>periodicity_hour</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour_frequency</string> </key>
+            <value> <int>3</int> </value>
         </item>
         <item>
             <key> <string>periodicity_minute</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
@@ -76,7 +72,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>0.0</float>
+                    <float>1672531200.0</float>
                     <string>GMT</string>
                   </tuple>
                 </state>
@@ -90,16 +86,8 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Alarm</string> </value>
-        </item>
-        <item>
-            <key> <string>solve_method_id</string> </key>
-            <value> <string>Alarm_installPromiseCertificateAuthority</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Certificate Authority Tool</string> </value>
+            <value> <string>Update CA Certificate Chain on Caucase Connector</string> </value>
         </item>
       </dictionary>
     </pickle>
