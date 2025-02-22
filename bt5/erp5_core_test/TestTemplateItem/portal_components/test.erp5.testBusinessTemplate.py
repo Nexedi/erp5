@@ -7211,6 +7211,53 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.assertEqual(module_content_uid, self.portal.geek_module['1'].uid)
     self.assertEqual('kept', self.portal.geek_module['1'].title)
 
+  def test_update_business_template_with_module_removed(self):
+    """Updating business template with a module removed keeps the module if it contains documents
+    """
+    self.portal.newContent(
+      portal_type='Person Module',
+      id='kept_module',
+    ).newContent(
+      portal_type='Person',
+      id='keep',
+    )
+    self.portal.newContent(portal_type='Person Module', id='removed_module')
+    self.tic()
+
+    # install a bt containing two modules
+    bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_module_id_list=['kept_module', 'removed_module'])
+    bt.build()
+    self.tic()
+    bt.install()
+    self.tic()
+
+    # in next version, both modules are removed
+    bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+    )
+    bt.build()
+    self.tic()
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+          url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    self.assertEqual(
+      new_bt.preinstall(),
+      {
+        'removed_module': ('Removed', 'Module'),
+        'kept_module': ('Removed but should be kept', 'Module'),
+      })
+
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
     sequence_string = '\

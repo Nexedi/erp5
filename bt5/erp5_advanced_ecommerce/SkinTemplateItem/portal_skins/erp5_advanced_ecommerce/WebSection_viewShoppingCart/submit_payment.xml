@@ -197,7 +197,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not here.getPortalObject().portal_membership.isAnonymousUser() and not here.SaleOrder_isShoppingCartEmpty() and len(here.ERP5Site_getAuthenticatedMemberPersonValue().checkConsistency()) == 0 and here.SaleOrder_getSelectedShippingResource() is not None</string> </value>
+            <value> <string>python: not here.getPortalObject().portal_membership.isAnonymousUser() and not here.SaleOrder_isShoppingCartEmpty() and len(here.portal_membership.getAuthenticatedMember().getUserValue().checkConsistency()) == 0 and here.SaleOrder_getSelectedShippingResource() is not None</string> </value>
         </item>
       </dictionary>
     </pickle>

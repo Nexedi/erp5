@@ -13,6 +13,7 @@ if portal_type_list:
   searchAndActivate(
     portal_type=portal_type_list,
     validation_state='submitted',
+    activate_kw={'tag': tag}
   )
 
 credential_update_destination_decision_portal_type_list = []
@@ -25,4 +26,9 @@ if credential_update_destination_decision_portal_type_list:
     portal_type='Credential Update',
     destination_decision_portal_type=credential_update_destination_decision_portal_type_list,
     validation_state='submitted',
+    activate_kw={'tag': tag}
   )
+
+# Do not prevent the alarm to run again if one activity fails
+# Fixing this requires to review the credential scripts
+# context.activate(after_tag=tag).getId()

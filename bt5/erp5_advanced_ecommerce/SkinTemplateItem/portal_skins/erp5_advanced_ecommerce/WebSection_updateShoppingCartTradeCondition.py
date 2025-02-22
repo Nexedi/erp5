@@ -12,7 +12,7 @@ reference='no_loyalty_reward'
 if context.REQUEST.get("loyalty_reward", "") == "enable" and context.getSiteLoyaltyExplanationTemplate():
   # this is double check.
   # a trade condition should properly configured for anonymous
-  if context.ERP5Site_getAuthenticatedMemberPersonValue():
+  if context.portal_membership.getAuthenticatedMember().getUserValue():
     reference= 'loyalty_reward'
 
 if payment_mode:

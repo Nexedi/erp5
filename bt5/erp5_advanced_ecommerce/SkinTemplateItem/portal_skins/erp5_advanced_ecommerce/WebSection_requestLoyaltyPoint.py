@@ -1,6 +1,6 @@
 import random
 translateString = context.Base_translateString
-person =  context.ERP5Site_getAuthenticatedMemberPersonValue()
+person =  context.portal_membership.getAuthenticatedMember().getUserValue()
 
 
 if person is None:

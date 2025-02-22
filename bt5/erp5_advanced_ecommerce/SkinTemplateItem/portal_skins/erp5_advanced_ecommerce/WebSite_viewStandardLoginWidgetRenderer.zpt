@@ -29,7 +29,7 @@
    </tal:block>
 
   <tal:block tal:condition="not: isAnon"
-             tal:define="customer here/ERP5Site_getAuthenticatedMemberPersonValue;
+             tal:define="customer python: here.portal_membership.getAuthenticatedMember().getUserValue();
                          login customer/getReference | string: ;
                          website here/getWebSiteValue">
 
