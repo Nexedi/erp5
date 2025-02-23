@@ -851,11 +851,23 @@ var OperatorAPI = /** @class */ (function () {
         .push(function (result) {
           var a, blob, div, key, log, log_content, label;
           i = 0;
-          div = domsugar('div', { text: result.message });
+          div = domsugar('div', { id: 'result_div' });
           label = domsugar('label', { text: "Results" });
           label.classList.add("item-label");
           document.querySelector('.container').parentNode.appendChild(label);
           document.querySelector('.container').parentNode.appendChild(div);
+          document.querySelector('#result_div').parentNode.appendChild(
+            domsugar('p', { text: result.message, id: 'result_message' })
+          );
+          document.querySelector('#result_div').parentNode.appendChild(
+            domsugar('p', { text: "User score: " + result.score, id: 'result_score' })
+          );
+          document.querySelector('#result_div').parentNode.appendChild(
+            domsugar('p', {
+              text: "Simulation duration: " + result.duration + " seconds",
+              id: 'simulation_duration'
+            })
+          );
           for (key in result.content) {
             if (result.content.hasOwnProperty(key)) {
               log_content = result.content[key].join('\n').replaceAll(",", ";");
