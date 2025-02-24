@@ -866,3 +866,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       1,
       len(self.portal.portal_catalog(uid=person2.getUid())),
     )
+
+  def test_ERP5Site_testisIndexable(self):
+    base_type = getattr(self.portal.portal_types, 'Base Type')
+    self.assertEqual(base_type.isIndexable(), 1)
+
+
