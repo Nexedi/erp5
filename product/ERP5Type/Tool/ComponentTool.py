@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import logging
 from six import string_types as basestring
 from types import ModuleType
 
@@ -40,8 +41,6 @@ from AccessControl.Permission import Permission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.dynamic import aq_method_lock
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-
-from zLOG import LOG, INFO, WARNING
 import six
 
 global_stream = None
@@ -50,6 +49,8 @@ from DateTime import DateTime
 DEFAULT_TEST_TEMPLATE_COPYRIGHT = "Copyright (c) 2002-%s Nexedi SA and " \
     "Contributors. All Rights Reserved." % DateTime().year()
 
+
+logger = logging.getLogger(__name__)
 live_test_running = False
 last_sync = -1
 class ComponentTool(BaseTool):
@@ -143,7 +144,7 @@ class ComponentTool(BaseTool):
 
       last_sync = cookie
 
-    LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
+    logger.info("Resetting Components")
 
     # Make sure that it is not possible to load Components or load Portal Type
     # class when Components are reset through aq_method_lock
@@ -285,7 +286,7 @@ class Test(ERP5TypeTestCase):
     global live_test_running
     self.serialize()
     if live_test_running:
-      LOG('ComponentTool', INFO, 'Live test already running')
+      logger.info('Live test already running')
       return ''
 
     global_stream = StringIO()
