@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import logging
 from six import string_types as basestring
 from types import ModuleType
 
@@ -40,8 +41,6 @@ from AccessControl.Permission import Permission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.dynamic import aq_method_lock
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-
-from zLOG import LOG, INFO, WARNING
 import six
 
 global_stream = None
@@ -50,6 +49,8 @@ from DateTime import DateTime
 DEFAULT_TEST_TEMPLATE_COPYRIGHT = "Copyright (c) 2002-%s Nexedi SA and " \
     "Contributors. All Rights Reserved." % DateTime().year()
 
+
+logger = logging.getLogger(__name__)
 live_test_running = False
 last_sync = -1
 class ComponentTool(BaseTool):
@@ -114,7 +115,8 @@ class ComponentTool(BaseTool):
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
   def reset(self,
             force=False,
-            reset_portal_type_at_transaction_boundary=False):
+            reset_portal_type_at_transaction_boundary=False,
+            only_test_component_module=None):
     """
     Reset all ZODB Component packages. A cache cookie is used to check whether
     the reset is necessary when force is not specified. This allows to make
@@ -143,7 +145,7 @@ class ComponentTool(BaseTool):
 
       last_sync = cookie
 
-    LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
+    logger.info("Resetting Components")
 
     # Make sure that it is not possible to load Components or load Portal Type
     # class when Components are reset through aq_method_lock
@@ -151,10 +153,15 @@ class ComponentTool(BaseTool):
     from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
     with aq_method_lock:
       component_package_list = []
-      for package in six.itervalues(erp5.component.__dict__):
-        if isinstance(package, ComponentDynamicPackage):
-          package.reset()
-          component_package_list.append(package.__name__)
+      if only_test_component_module:
+        package_list = (erp5.component.test, )
+      else:
+        package_list = [
+          package for package in six.itervalues(erp5.component.__dict__)
+          if isinstance(package, ComponentDynamicPackage)]
+      for package in package_list:
+        package.reset()
+        component_package_list.append(package.__name__)
 
       erp5.component.filesystem_import_dict = None
       erp5.component.ref_manager.gc()
@@ -165,7 +172,8 @@ class ComponentTool(BaseTool):
       for k in list(astroid_cache.keys()):
         if k.startswith('erp5.component.') and k not in component_package_list:
           del astroid_cache[k]
-
+    if only_test_component_module:
+      return True
     if reset_portal_type_at_transaction_boundary:
       portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
     else:
@@ -176,19 +184,31 @@ class ComponentTool(BaseTool):
 
   security.declareProtected(Permissions.ResetDynamicClasses,
                             'resetOnceAtTransactionBoundary')
-  def resetOnceAtTransactionBoundary(self):
+  def resetOnceAtTransactionBoundary(self, only_test_component_module=False):
     """
     Schedule a single reset at the end of the transaction. The idea behind
     this is that a reset is (very) costly and that we want to do it as little
     often as possible.  Moreover, doing it twice in a transaction is useless
     (but still twice as costly).
+
+    Test component module is a bit different, because test components are
+    not involved in dynamic classes, we don't need to rebuilt the portal type
+    classes when editing a test component. For this reason, this method
+    supports a `only_test_component_module` argument to only reload the module.
     """
+
     tv = getTransactionalVariable()
     key = 'ComponentTool.resetOnceAtTransactionBoundary'
     if key not in tv:
       tv[key] = None
-      transaction.get().addBeforeCommitHook(self.reset,
-                                            args=(True, True))
+      transaction.get().addBeforeCommitHook(
+        self.reset,
+        kws={
+          'force': True,
+          'reset_portal_type_at_transaction_boundary': True,
+          'only_test_component_module': only_test_component_module
+        }
+      )
 
   __test_text_content_template = '''\
 ##############################################################################
@@ -285,7 +305,7 @@ class Test(ERP5TypeTestCase):
     global live_test_running
     self.serialize()
     if live_test_running:
-      LOG('ComponentTool', INFO, 'Live test already running')
+      logger.info('Live test already running')
       return ''
 
     global_stream = StringIO()

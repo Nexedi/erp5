@@ -3400,6 +3400,17 @@ break_at_import()
       expected_output = "ModuleNotFoundError: No module named 'testDoesNotExist_import_error_because_module_does_not_exist'"
     self.assertIn(expected_output, output)
 
+  def test_dynamic_modules_not_reloaded_on_test_component_edit(self):
+    source_code = self._getValidSourceCode()
+    component = self._newComponent('testNoPortalTypeClassReload', source_code)
+    component.validate()
+    self.tic()
+    from erp5.component.document.erp5_version.Person import Person as class_before
+    component.setTextContent(source_code + '\n#change\n')
+    self.tic()
+    from erp5.component.document.erp5_version.Person import Person as class_after
+    self.assertIs(class_after, class_before)
+
   def testERP5Broken(self):
     # Create a broken ghost object
     import erp5.portal_type
