@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_info_gadget_field</string> </value>
+            <value> <string>my_posts</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -211,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>gadget_erp5_page_project_page.html</string> </value>
+                    <value> <string>gadget_thread_reader.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -229,7 +229,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>my_info_gadget_field</string> </value>
+                    <value> <string>Discussion Posts</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: {"jio_key": here.getRelativeUrl(), "related_forum": here.getPortalObject().portal_domains.searchPredicateList(here, portal_type=[\'Discussion Forum\'])[0].getRelativeUrl() if here.getPortalObject().portal_domains.searchPredicateList(here, portal_type=[\'Discussion Forum\']) else None, "forum_link_url": here.getForumLink().asText(), "publication_section": here.getPortalObject().portal_preferences.getPreferredProjectHomePagePublicationSectionCategory() }</string> </value>
+            <value> <string>python: [(\'lines\', 15), (\'attachment_column\', \'DiscussionPost_getAttachmentList\'), ("query_dict", {"portal_type": "Discussion Post", "parent_relative_url": context.getRelativeUrl()}), (\'sort_order\', \'DESC\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
