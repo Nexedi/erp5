@@ -35,9 +35,12 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     return oSerializer.serializeToString(doc);
   }
 
-  function enableLink(link_element, url) {
+  function enableLink(link_element, url, target) {
     link_element.href = url;
     link_element.disabled = false;
+    if (target) {
+      link_element.target = target;
+    }
     link_element.classList.remove("ui-disabled");
   }
 
@@ -145,6 +148,11 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       });
   }
 
+  function getForumInfo(gadget, project_jio_key, forum_url) {
+    //TODO if nothing else is needed here, get rid of this function
+    return forum_url;
+  }
+
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
     var id,
       content,
@@ -230,7 +238,8 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     .declareMethod('render', function (options) {
       var state_dict = {
           jio_key: options.jio_key || "",
-          publication_section: options.publication_section
+          publication_section: options.publication_section,
+          forum_url: options.related_forum
         };
       return this.changeState(state_dict);
     })
@@ -262,7 +271,10 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             modification_dict.jio_key + '&view=Project_viewMilestoneList',
             activity_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewActivityList';
+            modification_dict.jio_key + '&view=Project_viewActivityList',
+            forum_view = result_list[0] +
+            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+            modification_dict.forum_url + '&view=view_threads';
           web_page_info = result_list[2];
           if (web_page_info) {
             editor = result_list[1];
@@ -324,6 +336,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           if (web_page_info) {
             url_parameter_list.push(getUrlParameterDict(web_page_info.id, web_page_info.edit_view));
           }
+          if (modification_dict.forum_url) {
+            url_parameter_list.push(getUrlParameterDict(modification_dict.forum_url, forum_view));
+          }
           return gadget.getUrlForList(url_parameter_list);
         })
         .push(function (url_list) {
@@ -338,6 +353,13 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           enableLink(document.querySelector("#activity_link"), url_list[8]);
           if (web_page_info) {
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
+          }
+          if (modification_dict.forum_url) {
+            if (web_page_info) {
+              enableLink(document.querySelector("#forum_link"), url_list[10]);
+            } else {
+              enableLink(document.querySelector("#forum_link"), url_list[9]);
+            }
           }
           //XXX move into a job to call it async
           setLatestTestResult(gadget, document.querySelector("#test_result_svg"),
