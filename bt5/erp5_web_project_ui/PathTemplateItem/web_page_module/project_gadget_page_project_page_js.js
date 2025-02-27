@@ -35,9 +35,12 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     return oSerializer.serializeToString(doc);
   }
 
-  function enableLink(link_element, url) {
+  function enableLink(link_element, url, target) {
     link_element.href = url;
     link_element.disabled = false;
+    if (target) {
+      link_element.target = target;
+    }
     link_element.classList.remove("ui-disabled");
   }
 
@@ -145,6 +148,11 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       });
   }
 
+  function getForumInfo(gadget, project_jio_key, forum_url) {
+    //TODO if nothing else is needed here, get rid of this function
+    return forum_url;
+  }
+
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
     var id,
       content,
@@ -230,7 +238,8 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     .declareMethod('render', function (options) {
       var state_dict = {
           jio_key: options.jio_key || "",
-          publication_section: options.publication_section
+          publication_section: options.publication_section,
+          forum_url: options.forum_url
         };
       return this.changeState(state_dict);
     })
@@ -238,6 +247,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     .onStateChange(function (modification_dict) {
       var gadget = this,
         web_page_info,
+        forum_info,
         url_parameter_list,
         promise_list,
         editor;
@@ -250,6 +260,10 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             promise_list.push(gadget.getDeclaredGadget("editor"));
             promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key,
                                              modification_dict.publication_section));
+          }
+          if (modification_dict.forum_url) {
+            promise_list.push(getForumInfo(gadget, modification_dict.jio_key,
+                                           modification_dict.forum_url));
           }
           return RSVP.all(promise_list);
         })
@@ -264,6 +278,13 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             modification_dict.jio_key + '&view=Project_viewActivityList';
           web_page_info = result_list[2];
+          if (modification_dict.forum_url) {
+            if (web_page_info) {
+              forum_info = result_list[3];
+            } else {
+              forum_info = result_list[1];
+            }
+          }
           if (web_page_info) {
             editor = result_list[1];
             editor.render({"editor": "fck_editor", "editable": false,
@@ -338,6 +359,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           enableLink(document.querySelector("#activity_link"), url_list[8]);
           if (web_page_info) {
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
+          }
+          if (forum_info) {
+            enableLink(document.querySelector("#forum_link"), forum_info, "_blank");
           }
           //XXX move into a job to call it async
           setLatestTestResult(gadget, document.querySelector("#test_result_svg"),
