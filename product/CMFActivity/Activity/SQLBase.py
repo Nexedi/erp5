@@ -426,9 +426,17 @@ CREATE TABLE %s (
         0,
       )[1]
     else:
+      if group_method_id:
+        force_index = ''
+      else:
+        # MariaDB often choose processing_node_priority_date index
+        # but node2_priority_date is much faster if there exist
+        # many node < 0 non-groupable activities.
+        force_index = b'FORCE INDEX (node2_priority_date)'
       subquery = lambda *a, **k: str2bytes(bytes2str(b"("
         b"SELECT 3*priority{} AS effective_priority, date"
         b" FROM %s"
+        b" {}"
         b" WHERE"
         b"  {} AND"
         b"  processing_node=0 AND"
@@ -444,11 +452,11 @@ CREATE TABLE %s (
           b" UNION ALL ".join(
             chain(
               (
-                subquery('-1', 'node = %i' % processing_node),
-                subquery('', 'node=0'),
+                subquery('-1', force_index, 'node = %i' % processing_node),
+                subquery('', force_index, 'node=0'),
               ),
               (
-                subquery('-1', 'node = %i' % x)
+                subquery('-1', force_index, 'node = %i' % x)
                 for x in node_set
               ),
             ),
@@ -465,7 +473,7 @@ CREATE TABLE %s (
         # sorted set to filter negative node values.
         # This is why this query is only executed when the previous one
         # did not find anything.
-        result = query(subquery('+1', 'node>0'), 0)[1]
+        result = query(subquery('+1', force_index, 'node>0'), 0)[1]
     if result:
       return result[0]
     return Queue.getPriority(self, activity_tool, processing_node, node_set)
@@ -781,9 +789,17 @@ CREATE TABLE %s (
           0,
         ))
       else:
+        if group_method_id:
+          force_index = ''
+        else:
+          # MariaDB often choose processing_node_priority_date index
+          # but node2_priority_date is much faster if there exist
+          # many node < 0 non-groupable activities.
+          force_index = b'FORCE INDEX (node2_priority_date)'
         subquery = lambda *a, **k: str2bytes(bytes2str(b"("
           b"SELECT *, 3*priority{} AS effective_priority"
           b" FROM %s"
+          b" {}"
           b" WHERE"
           b"  {} AND"
           b"  processing_node=0 AND"
@@ -799,11 +815,11 @@ CREATE TABLE %s (
             b" UNION ALL ".join(
               chain(
                 (
-                  subquery('-1', 'node = %i' % processing_node),
-                  subquery('', 'node=0'),
+                  subquery('-1', force_index, 'node = %i' % processing_node),
+                  subquery('', force_index, 'node=0'),
                 ),
                 (
-                  subquery('-1', 'node = %i' % x)
+                  subquery('-1', force_index, 'node = %i' % x)
                   for x in node_set
                 ),
               ),
@@ -821,7 +837,7 @@ CREATE TABLE %s (
           # sorted set to filter negative node values.
           # This is why this query is only executed when the previous one
           # did not find anything.
-          result = Results(query(subquery('+1', 'node>0'), 0))
+          result = Results(query(subquery('+1', force_index, 'node>0'), 0))
       if result:
         # Reserve messages.
         uid_list = [x.uid for x in result]
