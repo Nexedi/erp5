@@ -1,0 +1,5 @@
+<tal:block tal:define="last_post here/DiscussionThread_getLastPost;
+                       author_dict last_post/DiscussionPost_getAuthorDict;">
+  <span tal:content="author_dict/author_title"></span>
+  <img src="document_icon.gif" alt="Link To Posta"/>
+</tal:block>
