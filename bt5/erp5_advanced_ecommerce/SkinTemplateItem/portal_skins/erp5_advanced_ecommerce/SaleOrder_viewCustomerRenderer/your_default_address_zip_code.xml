@@ -113,6 +113,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>autocomplete</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -152,6 +156,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -267,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.ERP5Site_getAuthenticatedMemberPersonValue().getDefaultAddressZipCode() or context.Base_translateString("Missing")</string> </value>
+            <value> <string>python: here.portal_membership.getAuthenticatedMember().getUserValue().getDefaultAddressZipCode() or context.Base_translateString("Missing")</string> </value>
         </item>
       </dictionary>
     </pickle>

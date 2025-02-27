@@ -1,5 +1,5 @@
 payment_mode = payment_mode.lower()
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()
+person = context.portal_membership.getAuthenticatedMember().getUserValue()
 
 sale_order = context.WebSection_persistShoppingCart(shopping_cart, person)
 if payment_mode == 'paypal':

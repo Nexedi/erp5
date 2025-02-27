@@ -37,16 +37,15 @@
       hour = minute * 60,
       day = hour * 24,
       week = day * 7,
+      year = day * 365,
       time_format = new Intl.RelativeTimeFormat(language);
-
-    diff = date.getFullYear() - current_date.getFullYear();
-    if (diff !== 0) {
-      return time_format.format(diff, 'year');
-    }
 
     diff = date - current_date;
     abs = Math.abs(diff);
     // "year", "quarter", "month", "week", "day", "hour", "minute", "second"
+    if (abs > year) {
+      return time_format.format(Math.floor(diff / year), 'year');
+    }
     if (abs > (week * 2)) {
       return time_format.format(Math.floor(diff / week), 'week');
     }

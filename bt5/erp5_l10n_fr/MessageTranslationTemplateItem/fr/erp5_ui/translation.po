@@ -7333,6 +7333,9 @@ msgstr "Mouvements"
 msgid "Multiple (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} already exists."
 msgstr "Plusieurs (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} existent déjà."
 
+msgid "My Account"
+msgstr "Mon compte"
+
 msgid "My Contacts"
 msgstr "Mes contacts"
 
