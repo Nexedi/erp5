@@ -145,6 +145,11 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       });
   }
 
+  function getForumInfo(gadget, project_jio_key, forum) {
+    //TODO
+    return null;
+  }
+
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
     var id,
       content,
@@ -230,7 +235,8 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     .declareMethod('render', function (options) {
       var state_dict = {
           jio_key: options.jio_key || "",
-          publication_section: options.publication_section
+          publication_section: options.publication_section,
+          forum: options.forum
         };
       return this.changeState(state_dict);
     })
@@ -250,6 +256,10 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             promise_list.push(gadget.getDeclaredGadget("editor"));
             promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key,
                                              modification_dict.publication_section));
+          }
+          if (modification_dict.forum) {
+            promise_list.push(getForumInfo(gadget, modification_dict.jio_key,
+                                           modification_dict.forum));
           }
           return RSVP.all(promise_list);
         })
