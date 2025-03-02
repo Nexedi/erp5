@@ -1,3 +1,4 @@
+import six
 traceability_list = traceability_data.split('\n')
 traceability_dict = {}
 
@@ -66,7 +67,7 @@ for traceability in traceability_list:
   else:
     #unknown data
     data_dict = {traceability: traceability}
-  for reference, data in data_dict.iteritems():
+  for reference, data in six.iteritems(data_dict):
     if reference not in traceability_dict:
       traceability_dict[reference] = []
     if data not in traceability_dict[reference]:

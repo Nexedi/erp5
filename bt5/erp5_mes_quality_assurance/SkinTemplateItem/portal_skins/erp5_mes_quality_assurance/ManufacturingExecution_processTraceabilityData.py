@@ -1,3 +1,4 @@
+import six
 from DateTime import DateTime
 
 translateString = context.Base_translateString
@@ -20,7 +21,7 @@ already_used_dict = {}
 
 production_type = context.Base_getProductionType()
 
-for product_reference, serial_number_list in data_dict.iteritems():
+for product_reference, serial_number_list in six.iteritems(data_dict):
   if product_reference in traceability_input_dict:
     traceability_input_list = traceability_input_dict[product_reference]
 
@@ -97,7 +98,7 @@ if unprocess_data_list or already_used_dict:
     msg = msg + translateString("Those data are not processed")
   if already_used_dict:
     msg = msg + '\n' +  translateString("Already used:")
-    for serial_number, production_object in already_used_dict.iteritems():
+    for serial_number, production_object in six.iteritems(already_used_dict):
       msg= msg + '\n' +  translateString(
         "${serial_number}:  ${production_object}",
         mapping = {
