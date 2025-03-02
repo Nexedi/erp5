@@ -791,7 +791,7 @@ CREATE TABLE %s (
           # MariaDB often choose processing_node_priority_date index
           # but node2_priority_date is much faster if there exist
           # many node < 0 non-groupable activities.
-          force_index = b'FORCE INDEX (node2_priority_date)'
+          force_index = 'FORCE INDEX (node2_priority_date)'
         subquery = lambda *a, **k: str2bytes(bytes2str(b"("
           b"SELECT *, 3*priority{} AS effective_priority"
           b" FROM %s"
