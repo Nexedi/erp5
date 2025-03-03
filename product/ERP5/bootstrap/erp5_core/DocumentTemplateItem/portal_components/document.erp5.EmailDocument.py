@@ -192,7 +192,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isSupportBaseDataConversion')
   @publishable
-  def isSupportBaseDataConversion(self):
+  def isSupportTextConversion(self):
     return False
 
   # Overriden methods
