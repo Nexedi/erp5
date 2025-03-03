@@ -96,7 +96,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     """
     module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
-                           'NotificationMessage_getDummySubstitionMapping',
+                           'NotificationMessage_getDummySubstitutionMapping',
                            '**kw',
                            '''return dict(a="b")''')
     doc = module.newContent(portal_type='Notification Message',
@@ -104,7 +104,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             content_type='text/plain',
                             text_content='substitution text: ${a}',
                             text_content_substitution_mapping_method_id=
-                            'NotificationMessage_getDummySubstitionMapping')
+                            'NotificationMessage_getDummySubstitutionMapping')
 
     mime, text = doc.convert('txt')
     self.assertEqual('text/plain', mime)
@@ -117,7 +117,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     by using substitution_method_parameter_dict """
     module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
-                           'NotificationMessage_getDummySubstitionMapping',
+                           'NotificationMessage_getDummySubstitutionMapping',
                            '**kw',
                            '''return kw''')
     doc = module.newContent(portal_type='Notification Message',
@@ -125,7 +125,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             text_content='substitution text: ${a}',
                             content_type='text/plain',
                             text_content_substitution_mapping_method_id=
-                            'NotificationMessage_getDummySubstitionMapping')
+                            'NotificationMessage_getDummySubstitutionMapping')
 
     _, text = doc.convert('txt',
                              substitution_method_parameter_dict=dict(a='b'))
@@ -136,14 +136,14 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     """
     module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
-                           'NotificationMessage_getDummySubstitionMapping',
+                           'NotificationMessage_getDummySubstitutionMapping',
                            '**kw',
                            '''return dict(a="b")''')
     doc = module.newContent(portal_type='Notification Message',
                             content_type='text/html',
                             text_content='substitution text: <em>${a}</em>',
                             text_content_substitution_mapping_method_id=
-                            'NotificationMessage_getDummySubstitionMapping')
+                            'NotificationMessage_getDummySubstitutionMapping')
 
     _, text = doc.convert('txt')
     self.assertEqual('substitution text: b', text.rstrip())
@@ -154,7 +154,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     """
     module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
-                           'NotificationMessage_getDummySubstitionMapping',
+                           'NotificationMessage_getDummySubstitutionMapping',
                            '**kw',
                            '''return dict(a="b")''')
     doc = module.newContent(portal_type='Notification Message',
@@ -162,7 +162,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             content_type='text/plain',
                             text_content='substitution text: ${b}',
                             text_content_substitution_mapping_method_id=
-                            'NotificationMessage_getDummySubstitionMapping')
+                            'NotificationMessage_getDummySubstitutionMapping')
 
     _, text = doc.convert('txt')
     self.assertEqual('substitution text: ${b}', text.rstrip())
@@ -178,7 +178,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     """
     module = self.portal.notification_message_module
     createZODBPythonScript(
-        self.portal, 'NotificationMessage_getDummySubstitionMapping', '**kw',
+        self.portal, 'NotificationMessage_getDummySubstitutionMapping', '**kw',
         textwrap.dedent(
             '''\
             class DynamicDict:
@@ -190,7 +190,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
         portal_type='Notification Message',
         content_type='text/plain',
         text_content='substitution text: ${a}',
-        text_content_substitution_mapping_method_id='NotificationMessage_getDummySubstitionMapping'
+        text_content_substitution_mapping_method_id='NotificationMessage_getDummySubstitutionMapping'
     )
 
     mime, text = doc.convert('txt')
