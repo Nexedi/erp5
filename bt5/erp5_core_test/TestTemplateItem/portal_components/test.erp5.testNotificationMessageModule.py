@@ -172,6 +172,27 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.assertRaises(KeyError, doc.convert, 'html', safe_substitute=False)
     self.assertRaises(KeyError, doc.asSubjectText, safe_substitute=False)
 
+  def test_lazy_substitution(self):
+    """Tests that substitution method is not called when content does
+    not access any substitution variable.
+    """
+    module = self.portal.notification_message_module
+    createZODBPythonScript(self.portal,
+                           'NotificationMessage_getErrorSubstitutionMapping',
+                           '**kw',
+                           '''raise ValueError("should not be called")''')
+    doc = module.newContent(portal_type='Notification Message',
+                            title='title',
+                            content_type='text/plain',
+                            text_content='text_content',
+                            text_content_substitution_mapping_method_id=
+                            'NotificationMessage_getErrorSubstitutionMapping')
+
+    mime, text = doc.convert('txt')
+    self.assertEqual('text/plain', mime)
+    self.assertEqual('text_content', text.rstrip())
+    self.assertEqual('title', doc.asSubjectText())
+
   def test_substitution_lazy_dict(self):
     """Substitution script just needs to return an object implementing
     __getitem__ protocol.
