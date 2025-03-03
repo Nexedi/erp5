@@ -366,6 +366,8 @@ class ERP5TypeInformation(XMLObject,
       """
       portal = self.getPortalObject()
       klass = portal.portal_types.getPortalTypeClass(self.getId())
+      if self.__class__ is klass:
+        return True
       return klass.isIndexable()
 
     security.declarePublic('constructTempInstance')
