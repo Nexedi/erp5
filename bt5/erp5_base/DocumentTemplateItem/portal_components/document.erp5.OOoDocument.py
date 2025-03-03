@@ -201,9 +201,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     """
       Communicates with server to convert a file
     """
-    if not self.hasBaseData():
-      # XXX please pass a meaningful description of error as argument
-      raise NotConvertedError()
     if format == 'text-content':
       # Extract text from the ODF file
       cs = BytesIO()
@@ -256,17 +253,11 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     # return raw data
     if not format:
       return self.getContentType(), self.getData()
-    # Check if we have already a base conversion
-    if not self.hasBaseData():
-      # XXX please pass a meaningful description of error as argument
-      raise NotConvertedError()
     # Make sure we can support html and pdf by default
     is_html = 0
     requires_pdf_first = 0
     original_format = format
     allowed_format_list = self.getTargetFormatList()
-    if format == 'base-data':
-      return self.getBaseContentType(), self.getBaseData()
     if format == 'pdf':
       format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
