@@ -201,24 +201,12 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     """
       Communicates with server to convert a file
     """
-    if format == 'text-content':
-      # Extract text from the ODF file
-      cs = BytesIO()
-      cs.write(self.getBaseData())
-      z = zipfile.ZipFile(cs)
-      s = bytes2str(z.read('content.xml'))
-      s = self.rx_strip.sub(" ", s) # strip xml
-      s = self.rx_compr.sub(" ", s) # compress multiple spaces
-      cs.close()
-      z.close()
-      return 'text/plain', s
-    orig_format = self.getBaseContentType()
     with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
       generate_result = server_proxy.run_generate(self.getId(),
-                                       bytes2str(enc(bytes(self.getBaseData()))),
+                                       bytes2str(enc(bytes(self.getData()))),
                                        None,
                                        format,
-                                       orig_format)
+                                       self.getContentType())
     try:
       _, response_dict, _ = generate_result
     except ValueError:
