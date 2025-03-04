@@ -5,7 +5,7 @@
 type_tool = context.getPortalObject().portal_types
 for portal_type_name in context.getTypeInfo().getTypeAllowedContentTypeList():
   type_ = getattr(type_tool, portal_type_name)
-  if type_.getTypeAcquireLocalRole() and type_.isIndexable():
+  if type_.getTypeAcquireLocalRole() and type_.isInstanceIndexable():
     reindex = context.recursiveReindexObject
     break
 else:
