@@ -25,11 +25,14 @@ import tempfile
 import json
 import time
 import re
-from six.moves.configparser import ConfigParser
 try:
   from unittest import mock
+  try:
+  from configparser import ConfigParser
 except ImportError:
   # BBB python2
+  from ConfigParser import SafeConfigParser as ConfigParser
+  ConfigParser.read_file = ConfigParser.readfp
   import mock
 
 @contextmanager
@@ -763,7 +766,7 @@ shared = true
     # test node slapos slapos uses the shared parts defined in config
     cfg_parser = ConfigParser()
     with open(os.path.join(test_node_slapos.working_directory, 'slapos.cfg')) as f:
-      cfg_parser.readfp(f)
+      cfg_parser.read_file(f)
     self.assertEqual(
         '/not/exists\n/not/exists_either',
         cfg_parser.get('slapos', 'shared_part_list'))
@@ -773,7 +776,7 @@ shared = true
     # softwares.
     cfg_parser = ConfigParser()
     with open(os.path.join(node_test_suite.working_directory, 'slapos.cfg')) as f:
-      cfg_parser.readfp(f)
+      cfg_parser.read_file(f)
     self.assertEqual(
         '/not/exists\n/not/exists_either\n%s/shared' % node_test_suite.working_directory,
         cfg_parser.get('slapos', 'shared_part_list'))
