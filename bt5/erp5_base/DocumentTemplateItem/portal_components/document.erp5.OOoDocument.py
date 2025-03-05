@@ -151,10 +151,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       NOTE: it is the responsability of the conversion server
       to provide an extensive list of conversion formats.
     """
-    if not self.hasBaseData():
-      # if we have no date we can not format it
-      return []
-
     def cached_getTargetFormatItemList(content_type):
       from six.moves.xmlrpc_client import Fault
       server_proxy = DocumentConversionServerProxy(self)
@@ -195,7 +191,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                 id="OOoDocument_getTargetFormatItemList",
                                 cache_factory='erp5_ui_medium')
 
-    return cached_getTargetFormatItemList(self.getBaseContentType())
+    return cached_getTargetFormatItemList(self.getContentType())
 
   def _getConversionFromProxyServer(self, format): #  pylint: disable=redefined-builtin
     """
