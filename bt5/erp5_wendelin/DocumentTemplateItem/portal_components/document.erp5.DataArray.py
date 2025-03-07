@@ -28,7 +28,7 @@ from wendelin.bigarray.array_zodb import ZBigArray
 from erp5.component.document.File import _MARKER
 from wendelin.bigarray.array_ram import RAMArray
 from ZPublisher import HTTPRangeSupport
-from webdav.common import rfc1123_date
+from App.Common import rfc1123_date
 from DateTime import DateTime
 from mimetools import choose_boundary
 import transaction
