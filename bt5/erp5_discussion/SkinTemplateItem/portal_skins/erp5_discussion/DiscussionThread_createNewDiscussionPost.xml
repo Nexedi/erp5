@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id=\'view\', predecessor=None, file=None, **kw</string> </value>
+            <value> <string>text_content, form_id=\'view\', predecessor=None, file=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
