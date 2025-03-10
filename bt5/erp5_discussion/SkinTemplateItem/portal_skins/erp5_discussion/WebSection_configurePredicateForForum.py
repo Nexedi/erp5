@@ -7,6 +7,8 @@ if forum_relative_url:
   multimembership_criterion_base_category=forum.getMultimembershipCriterionBaseCategoryList()
   membership_criterion_category=forum.getMembershipCriterionCategoryList()
 
+forum.setCategoryList(membership_criterion_category)
+
 context.edit(criterion_property=("portal_type",),
              membership_criterion_base_category=[],
              multimembership_criterion_base_category=multimembership_criterion_base_category,
