@@ -35,9 +35,12 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     return oSerializer.serializeToString(doc);
   }
 
-  function enableLink(link_element, url) {
+  function enableLink(link_element, url, target) {
     link_element.href = url;
     link_element.disabled = false;
+    if (target) {
+      link_element.target = target;
+    }
     link_element.classList.remove("ui-disabled");
   }
 
@@ -146,8 +149,8 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
   }
 
   function getForumInfo(gadget, project_jio_key, forum_url) {
-    //TODO refactor this hardcoded stuff
-    return window.location.origin + '/erp5/' + forum_url + '/';
+    //TODO if nothing else is needed here, get rid of this function
+    return forum_url;
   }
 
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
@@ -358,7 +361,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
           }
           if (forum_info) {
-            enableLink(document.querySelector("#forum_link"), forum_info);
+            enableLink(document.querySelector("#forum_link"), forum_info, "_blank");
           }
           //XXX move into a job to call it async
           setLatestTestResult(gadget, document.querySelector("#test_result_svg"),
