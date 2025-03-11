@@ -368,7 +368,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         base_tuple, portal_type_category_list, \
           interface_list, attribute_dict = class_definition
 
-      klass.__isghost__ = False
+      cls.__isghost__ = klass.__isghost__ = False
       klass.__bases__ = base_tuple
 
       klass.resetAcquisition()
