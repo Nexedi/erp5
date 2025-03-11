@@ -5,6 +5,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
+from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from . import aq_method_lock
 from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
 from Products.ERP5Type.Utils import UpperCase, ensure_list
@@ -400,3 +401,24 @@ def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name,
                              (InitGhostBase,),
                              dict(portal_type=portal_type_name))
+
+
+class TemporaryPortalTypeMetaClass(PortalTypeMetaClass):
+  def loadClass(cls):
+    super(TemporaryPortalTypeMetaClass, cls).loadClass()
+    cls.__isghost__ = False
+
+
+def loadTempPortalTypeClass(portal_type_name):
+  """
+  Returns a class suitable for a temporary portal type
+
+  This class will in fact be a subclass of erp5.portal_type.xxx, which
+  means that loading an attribute on this temporary portal type loads
+  the lazily-loaded parent class, and that any changes on the parent
+  class will be reflected on the temporary objects.
+  """
+  import erp5.portal_type
+  klass = getattr(erp5.portal_type, portal_type_name)
+  return TemporaryPortalTypeMetaClass(
+    portal_type_name, (TemporaryDocumentMixin, klass), {})

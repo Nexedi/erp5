@@ -235,7 +235,7 @@ def initializeDynamicModules():
   erp5.portal_type = registerDynamicModule('erp5.portal_type',
                                            generateLazyPortalTypeClass)
 
-  from .portal_type_class import loadTempPortalTypeClass
+  from .lazy_class import loadTempPortalTypeClass
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
