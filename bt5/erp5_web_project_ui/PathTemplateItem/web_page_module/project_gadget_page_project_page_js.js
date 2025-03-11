@@ -145,9 +145,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       });
   }
 
-  function getForumInfo(gadget, project_jio_key, forum) {
-    //TODO
-    return null;
+  function getForumInfo(gadget, project_jio_key, forum_url) {
+    //TODO refactor this hardcoded stuff
+    return window.location.origin + '/erp5/' + forum_url + '/';
   }
 
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
@@ -236,7 +236,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       var state_dict = {
           jio_key: options.jio_key || "",
           publication_section: options.publication_section,
-          forum: options.forum
+          forum_url: options.forum_url
         };
       return this.changeState(state_dict);
     })
@@ -244,6 +244,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     .onStateChange(function (modification_dict) {
       var gadget = this,
         web_page_info,
+        forum_info,
         url_parameter_list,
         promise_list,
         editor;
@@ -257,9 +258,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key,
                                              modification_dict.publication_section));
           }
-          if (modification_dict.forum) {
+          if (modification_dict.forum_url) {
             promise_list.push(getForumInfo(gadget, modification_dict.jio_key,
-                                           modification_dict.forum));
+                                           modification_dict.forum_url));
           }
           return RSVP.all(promise_list);
         })
@@ -274,6 +275,13 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             modification_dict.jio_key + '&view=Project_viewActivityList';
           web_page_info = result_list[2];
+          if (modification_dict.forum_url) {
+            if (web_page_info) {
+              forum_info = result_list[3];
+            } else {
+              forum_info = result_list[1];
+            }
+          }
           if (web_page_info) {
             editor = result_list[1];
             editor.render({"editor": "fck_editor", "editable": false,
@@ -348,6 +356,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           enableLink(document.querySelector("#activity_link"), url_list[8]);
           if (web_page_info) {
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
+          }
+          if (forum_info) {
+            enableLink(document.querySelector("#forum_link"), forum_info);
           }
           //XXX move into a job to call it async
           setLatestTestResult(gadget, document.querySelector("#test_result_svg"),
