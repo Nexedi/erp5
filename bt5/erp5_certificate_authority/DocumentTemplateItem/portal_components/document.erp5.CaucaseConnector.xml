@@ -8,7 +8,13 @@
       <dictionary>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>Person</string> </value>
+            <value> <string>CaucaseConnector</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -18,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>document.erp5_certificate_authority.Person</string> </value>
+            <value> <string>document.erp5.CaucaseConnector</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -44,7 +50,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>erp5_certificate_authority</string> </value>
+            <value> <string>erp5</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
