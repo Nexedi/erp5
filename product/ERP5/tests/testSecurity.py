@@ -31,6 +31,7 @@ import unittest
 from types import MethodType
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Core.WorkflowTransition import TRIGGER_USER_ACTION
 
 # You can invoke security tests in your favourite collection of business templates
 # by using TestSecurityMixin like the following :
@@ -121,8 +122,8 @@ class TestSecurityMixin(ERP5TypeTestCase):
       if wf.__class__.__name__ in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
         continue
       for transition in wf.getTransitionValueList():
-        if transition.getTriggerType() == 0:
-          # Automatic transition without guard is safe
+        if transition.getTriggerType() != TRIGGER_USER_ACTION:
+          # Only user action workflow transitions needs a security definition.
           continue
         if not transition.isGuarded():
           error_list.append('%s/transitions/%s' % (wf.getId(), transition.getId()))
