@@ -1229,9 +1229,9 @@ class CategoryTool(BaseTool):
             pass
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getAcquiredCategoryList' )
-    def getAcquiredCategoryList(self, context):
+    def getAcquiredCategoryList(self, context, base_category=None):
       result = self.getAcquiredCategoryMembershipList(context,
-                     base_category = self.getBaseCategoryList(context=context))
+                     base_category=base_category or self.getBaseCategoryList(context=context))
       for c in self._getCategoryList(context):
         # Make sure all local categories are considered
         if c not in result:
