@@ -1164,13 +1164,12 @@ class CategoryTool(BaseTool):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
-
         XXX Should include acquisition ?
       """
       if getattr(aq_base(context), 'isCategory', 0):
         return context.isAcquiredMemberOf(category)
-      for c in self.getAcquiredCategoryList(context):
-        if c.find(category) >= 0:
+      for c in self.getAcquiredCategoryList(context, base_category=[category.split('/')[0]]):
+        if c == category or c.startswith(category + '/'):
           return 1
       return 0
 
