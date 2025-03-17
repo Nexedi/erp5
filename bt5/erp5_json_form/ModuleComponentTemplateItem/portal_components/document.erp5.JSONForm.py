@@ -67,7 +67,7 @@ class JSONForm(JSONType, TextDocument):
       else:
         raise ValueError(json.dumps(validation_result))
     if self.getAfterMethodId():
-      return getattr(getattr(self, 'aq_parent', None), self.getAfterMethodId())(json_data, self.getResponseSchema())
+      return getattr(getattr(self, 'aq_parent', None), self.getAfterMethodId())(json_data, self)
     return "Nothing to do"
 
   def validateJSON(self, json_data, list_error=False):
