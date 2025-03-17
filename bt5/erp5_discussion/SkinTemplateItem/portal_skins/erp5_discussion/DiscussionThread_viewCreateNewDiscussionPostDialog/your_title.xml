@@ -66,11 +66,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>field_id</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
+                    <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
