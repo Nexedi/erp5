@@ -74,9 +74,7 @@ class JSONForm(JSONType, TextDocument):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
     """
-    if not json_data:
-      return True
-    defined_schema = json.loads(self.getTextContent() or "")
+    defined_schema = json.loads(self.getTextContent(""))
     try:
       jsonschema.validate(json_data, defined_schema, format_checker=jsonschema.FormatChecker())
     except jsonschema.exceptions.ValidationError as err:
