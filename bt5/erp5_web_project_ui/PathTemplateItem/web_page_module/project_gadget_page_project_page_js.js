@@ -356,9 +356,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           }
           if (modification_dict.forum_url) {
             if (web_page_info) {
-              enableLink(document.querySelector("#forum_link"), url_list[10], "_blank");
+              enableLink(document.querySelector("#forum_link"), url_list[10]);
             } else {
-              enableLink(document.querySelector("#forum_link"), url_list[9], "_blank");
+              enableLink(document.querySelector("#forum_link"), url_list[9]);
             }
           }
           //XXX move into a job to call it async
