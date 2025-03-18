@@ -2300,11 +2300,11 @@ class Base(
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAcquiredCategoryList')
-  def getAcquiredCategoryList(self):
+  def getAcquiredCategoryList(self, base_category=None):
     """
       Returns the list of acquired categories
     """
-    return self._getCategoryTool().getAcquiredCategoryList(self)
+    return self._getCategoryTool().getAcquiredCategoryList(self, base_category=base_category)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
   def setCategoryList(self, path_list):

@@ -313,6 +313,12 @@ class TestERP5Category(ERP5TypeTestCase):
     self.assertEqual([], subdoc.getCategoryList())
     self.assertEqual(['test_aq_category/1'], subdoc.getAcquiredCategoryList())
 
+    self.assertEqual(
+      subdoc.getAcquiredCategoryList(base_category=['test_aq_category']),
+      ['test_aq_category/1'])
+    self.assertEqual(
+      subdoc.getAcquiredCategoryList(base_category=['source']), [])
+
     doc.setCategoryList([])
     self.assertEqual([], ctool.getAcquiredCategoryList(doc))
 
