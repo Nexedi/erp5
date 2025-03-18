@@ -261,10 +261,6 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key,
                                              modification_dict.publication_section));
           }
-          if (modification_dict.forum_url) {
-            promise_list.push(getForumInfo(gadget, modification_dict.jio_key,
-                                           modification_dict.forum_url));
-          }
           return RSVP.all(promise_list);
         })
         .push(function (result_list) {
@@ -276,15 +272,11 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             modification_dict.jio_key + '&view=Project_viewMilestoneList',
             activity_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewActivityList';
+            modification_dict.jio_key + '&view=Project_viewActivityList',
+            forum_view = result_list[0] +
+            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+            modification_dict.forum_url + '&view=view_threads';
           web_page_info = result_list[2];
-          if (modification_dict.forum_url) {
-            if (web_page_info) {
-              forum_info = result_list[3];
-            } else {
-              forum_info = result_list[1];
-            }
-          }
           if (web_page_info) {
             editor = result_list[1];
             editor.render({"editor": "fck_editor", "editable": false,
@@ -345,6 +337,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           if (web_page_info) {
             url_parameter_list.push(getUrlParameterDict(web_page_info.id, web_page_info.edit_view));
           }
+          if (modification_dict.forum_url) {
+            url_parameter_list.push(getUrlParameterDict(modification_dict.forum_url, forum_view));
+          }
           return gadget.getUrlForList(url_parameter_list);
         })
         .push(function (url_list) {
@@ -361,7 +356,11 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
           }
           if (forum_info) {
-            enableLink(document.querySelector("#forum_link"), forum_info, "_blank");
+            if (web_page_info) {
+              enableLink(document.querySelector("#forum_link"), url_list[10], "_blank");
+            } else {
+              enableLink(document.querySelector("#forum_link"), url_list[9], "_blank");
+            }
           }
           //XXX move into a job to call it async
           setLatestTestResult(gadget, document.querySelector("#test_result_svg"),
