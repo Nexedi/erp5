@@ -247,7 +247,6 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     .onStateChange(function (modification_dict) {
       var gadget = this,
         web_page_info,
-        forum_info,
         url_parameter_list,
         promise_list,
         editor;
@@ -355,7 +354,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           if (web_page_info) {
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
           }
-          if (forum_info) {
+          if (modification_dict.forum_url) {
             if (web_page_info) {
               enableLink(document.querySelector("#forum_link"), url_list[10], "_blank");
             } else {
