@@ -19,7 +19,7 @@ except Exception as e:
   response.setStatus(500)
   try:
     error_text = str(e[1])
-  except IndexError:
+  except Exception:
     error_text = str(e)
   response.write(str2bytes(error_text))
   return
