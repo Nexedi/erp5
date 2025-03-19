@@ -88,4 +88,4 @@ else:
   msg = translateString("Created %s ${portal_type}." % message_kind, mapping = kw)
   return new_object.Base_redirect(form_id,
                                   editable_mode=1,
-                                  keep_items={'portal_status_message': msg})
+                                  keep_items={'portal_status_message': msg, 'portal_status_level': 'success'})

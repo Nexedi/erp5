@@ -12,6 +12,7 @@ if keep_items is None:
   keep_items =  {}
 new_content = context.newContent(portal_type=type_name)
 keep_items['portal_status_message'] = Base_translateString("Object created.")
+keep_items['portal_status_level'] = 'success'
 keep_items['editable_mode'] = 1
 kw = new_content.getRedirectParameterDictAfterAdd(context, **kw)
 redirect_url = kw.pop('redirect_url', None)
