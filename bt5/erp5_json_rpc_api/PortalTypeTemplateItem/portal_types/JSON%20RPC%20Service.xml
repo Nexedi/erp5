@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Base Type" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>JSON RPC Service</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>title</string>
+                <string>description</string>
+                <string>reference</string>
+                <string>short_title</string>
+                <string>json_form_list</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>JsonRpcAPIService</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
