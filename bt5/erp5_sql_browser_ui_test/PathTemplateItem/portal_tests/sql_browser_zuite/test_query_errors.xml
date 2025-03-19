@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_query_commands_out_of_sync</string> </value>
+            <value> <string>test_query_errors</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

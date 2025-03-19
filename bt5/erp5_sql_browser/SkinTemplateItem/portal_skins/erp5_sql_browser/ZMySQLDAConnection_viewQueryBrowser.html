@@ -60,6 +60,12 @@
 <body>
   <script type="text/javascript">
     var monaco_editor, analyze_output_editor;
+    function escapeHTML(text){
+      let sanitizer = document.createElement('div');
+      sanitizer.textContent = text;
+      return sanitizer.innerHTML;
+    }
+
     $(function() {
         var editor,
             ht = new Handsontable(document.getElementById('table_container'), { data: [[0]], rowHeaders: true, colHeaders: true}),
@@ -132,7 +138,7 @@
               }
             ).catch((error) => {
                 notification.close();
-                noty({type: "error", text: error, timeout: 5000, layout: "bottom" });
+                noty({type: "error", text: escapeHTML(error), timeout: 5000, layout: "bottom" });
               });
             };
 
@@ -185,12 +191,15 @@
 
           $("#query").resizable();
           $("#analyze_output").resizable();
+          $("#pivot_table").resizable();
 
-          $.getJSON("ZMySQLDAConnection_getSchemaAsJSON").then(
-            function(schema) {
+          fetch("ZMySQLDAConnection_getSchemaAsJSON")
+            .then(response => response.json())
+            .then(schema => {
               monaco.languages.registerCompletionItemProvider('sql', new SQLCompletionProvider(schema));
               document.querySelector('#query').classList.add('initialized');
-            });
+            })
+            .catch(error => console.error("Error fetching schema:", error));
 
           $('input[name="Analyze"]').click(redraw);
           $('button[name="Query"]').click(redraw);
