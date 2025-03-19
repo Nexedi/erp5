@@ -31,6 +31,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.document.OpenAPITypeInformation import byteify
 
 
+def loadsJson(*args, **kw):
+  return byteify(json.loads(*args, **kw))
+
+
 class JsonRpcAPITestCase(ERP5TypeTestCase):
   _type_id = 'JSON RPC Service'
   _action_list_text = ''
@@ -166,7 +170,7 @@ class TestJsonRpcAPIConnectorView(JsonRpcAPITestCase):
     self.assertEqual(ret.getStatus(), 404)
     self.assertEqual(ret.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(ret.getBody()), {
+      loadsJson(ret.getBody()), {
         "type": "not-found",
         "title": 'non_existing_attribute'
       })
@@ -186,7 +190,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 415)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "status": 415,
         "type": "unexpected-media-type",
         "title": 'Request Content-Type must be "application/json", not ""'
@@ -203,7 +207,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 405)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "status": 405,
         "type": "not-allowed-http-method",
         "title": "Only HTTP POST accepted"
@@ -220,7 +224,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 404)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "not-found",
         "title": "error.handling.unknown.reference"
       })
@@ -236,7 +240,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "AttributeError: 'RequestContainer' object has no attribute 'JsonRpcService_doesNotExist'"
       })
@@ -256,7 +260,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 400)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "status": 400,
         "type": "not-parsable-json-content",
         "title": "Extra data: line 1 column 2 - line 1 column 6 (char 1 - 5)"
@@ -277,7 +281,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 400)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "status": 400,
         "type": "not-json-object-content",
         "title": "Did not received a JSON Object"
@@ -295,7 +299,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ValueError: Unparsable configuration: foobarmissingseparator"
       })
@@ -312,7 +316,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ValueError: JsonRpcService_view is not a JSON Form"
       })
@@ -332,7 +336,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         'title': 'ValueError: Extra data: line 1 column 2 - line 1 column 4 (char 1 - 3)',
         'type': 'unknown-error'
       })
@@ -353,7 +357,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "AttributeError: 'RequestContainer' object has no attribute 'THISSCRIPTDOESNOTEXIST'"
       })
@@ -379,7 +383,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ZeroDivisionError: integer division or modulo by zero"
       })
@@ -406,7 +410,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ZeroDivisionError: integer division or modulo by zero"
       })
@@ -436,7 +440,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ValueError: JsonRpcService_testExample has an output schema but response is empty"
       })
@@ -467,7 +471,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ValueError: JsonRpcService_testExample has an output schema but response is empty"
       })
@@ -498,7 +502,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ValueError: 2 is not of type u'string'"
       })
@@ -526,7 +530,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      json.loads(response.getBody()), {
+      loadsJson(response.getBody()), {
         "type": "unknown-error",
         "title": "ValueError: JsonRpcService_testExample does not have an output schema but response is not empty"
       })
@@ -554,7 +558,7 @@ class TestJsonRpcAPIJsonFormHandling(JsonRpcAPITestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      byteify(json.loads(response.getBody())),
+      loadsJson(response.getBody()),
       {
         'type': 'success-type',
         'title': "query completed",
@@ -576,7 +580,7 @@ class TestJsonRpcAPIJsonFormHandling(JsonRpcAPITestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      byteify(json.loads(response.getBody())),
+      loadsJson(response.getBody()),
       {
         'type': 'success-type',
         'title': "query completed",
