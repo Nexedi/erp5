@@ -61,6 +61,12 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>script_Call_alarmActiveSense</string> </value>
         </item>

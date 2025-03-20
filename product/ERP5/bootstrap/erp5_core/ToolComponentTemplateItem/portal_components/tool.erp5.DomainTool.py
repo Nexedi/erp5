@@ -93,6 +93,7 @@ class DomainTool(BaseTool):
     portal_categories = portal.portal_categories
     # Search the columns of the predicate table
     query_list = [] if query is None else [query]
+    preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList([])
     for column in portal_catalog.getSQLCatalog().getTableColumnList('predicate'):
       # Arbitrary suffix choice, this code expects COLUMN, COLUMN_range_min
       # and COLUMN_range_max to be simultaneously present for ranged
@@ -140,7 +141,8 @@ class DomainTool(BaseTool):
       # Add category selection
       if tested_base_category_list is None:
         if acquired:
-          category_list = context.getAcquiredCategoryList()
+          category_list = context.getAcquiredCategoryList(
+            base_category=preferred_predicate_category_list or None)
         else:
           category_list = context.getCategoryList()
       else:
@@ -168,7 +170,6 @@ class DomainTool(BaseTool):
       left_join_list = kw.get('left_join_list', [])[:]
       inner_join_list = kw.get('inner_join_list', [])[:]
       if category_list:
-        preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList([])
         left_join_category_list = []
         inner_join_category_list = []
         for category in category_list:

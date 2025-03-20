@@ -1,47 +1,71 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>SQL Browser</title>
 
-    <script type="text/javascript" src="jquery/core/jquery-1.9.min.js"></script>
-    <script type="text/javascript" src="jquery/ui/js/jquery-ui.min.js"></script>
-    <link rel="stylesheet" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.min.css">
+<head>
+  <title>SQL Browser</title>
 
-    <!-- "local" handsontable TODO make a bt ? -->
-    <script src="sql_browser/handsontable.full.js"></script>
-    <link rel="stylesheet" media="screen" href="sql_browser/handsontable.full.css">
+  <script type="text/javascript" src="jquery/core/jquery-1.9.min.js"></script>
+  <script type="text/javascript" src="jquery/ui/js/jquery-ui.min.js"></script>
+  <link rel="stylesheet" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.min.css">
 
-    <!-- "local" jquery noty -->
-    <script type="text/javascript" src="sql_browser/jquery.noty.packaged.js"></script>
+  <!-- "local" handsontable TODO make a bt ? -->
+  <script src="sql_browser/handsontable.full.js"></script>
+  <link rel="stylesheet" media="screen" href="sql_browser/handsontable.full.css">
 
-    <!-- build from  https://lab.nexedi.com/jerome/monaco-editor-sql-completion-provider/ -->
-    <script type="text/javascript" src="sql_browser/monaco-editor-sql-completion-provider.bundle.js"></script>
+  <!-- "local" jquery noty -->
+  <script type="text/javascript" src="sql_browser/jquery.noty.packaged.js"></script>
+
+  <!-- build from  https://lab.nexedi.com/jerome/monaco-editor-sql-completion-provider/ -->
+  <script type="text/javascript" src="sql_browser/monaco-editor-sql-completion-provider.bundle.js"></script>
 
 
-    <!-- "local" c3.js (0.4.10) and d3.js (3.5.5) -->
-    <link rel="stylesheet" type="text/css" href="sql_browser/c3.min.css">
-    <script type="text/javascript" src="sql_browser/d3.min.js"></script>
-    <script type="text/javascript" src="sql_browser/c3.min.js"></script>
+  <!-- "local" c3.js (0.4.10) and d3.js (3.5.5) -->
+  <link rel="stylesheet" type="text/css" href="sql_browser/c3.min.css">
+  <script type="text/javascript" src="sql_browser/d3.min.js"></script>
+  <script type="text/javascript" src="sql_browser/c3.min.js"></script>
 
-    <!-- PivotTable.js libs from erp5_pivot_table -->
-    <link rel="stylesheet" type="text/css" href="pivottable/pivot.css">
-    <script type="text/javascript" src="pivottable/pivot.js"></script>
-    <script type="text/javascript" src="pivottable/gchart_renderers.js"></script>
-    <script type="text/javascript" src="pivottable/c3_renderers.js"></script>
+  <!-- PivotTable.js libs from erp5_pivot_table -->
+  <link rel="stylesheet" type="text/css" href="pivottable/pivot.css">
+  <script type="text/javascript" src="pivottable/pivot.js"></script>
+  <script type="text/javascript" src="pivottable/gchart_renderers.js"></script>
+  <script type="text/javascript" src="pivottable/c3_renderers.js"></script>
 
-    <style>
-      body {font-family: Verdana;}
-      .c3-line {stroke-width: 3px;}
-      .c3 circle {stroke: white;}
-      .c3 text {font-size: 12px;}
-      .c3 text {font-size: 12px;}
-      .tick line {stroke: white;}
-    </style>
-  </head>
+  <style>
+    body {
+      font-family: Verdana;
+    }
 
-  <body>
-    <script type="text/javascript">
-    var monaco_editor;
+    .c3-line {
+      stroke-width: 3px;
+    }
+
+    .c3 circle {
+      stroke: white;
+    }
+
+    .c3 text {
+      font-size: 12px;
+    }
+
+    .c3 text {
+      font-size: 12px;
+    }
+
+    .tick line {
+      stroke: white;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="text/javascript">
+    var monaco_editor, analyze_output_editor;
+    function escapeHTML(text){
+      let sanitizer = document.createElement('div');
+      sanitizer.textContent = text;
+      return sanitizer.innerHTML;
+    }
+
     $(function() {
         var editor,
             ht = new Handsontable(document.getElementById('table_container'), { data: [[0]], rowHeaders: true, colHeaders: true}),
@@ -58,19 +82,41 @@
               var intFormat = numberFormat({digitsAfterDecimal: 0});
               var notification = noty({type: "info", text: "Refreshing data", layout: "bottom"});
 
-              $.post("ZMySQLDAConnection_getQueryResultAsJSON", {query: editor.getValue()}, function(mps) {
+              fetch("ZMySQLDAConnection_getQueryResultAsJSON", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ 
+                  query: editor.getValue(),
+                  "analyze:int": document.getElementById('Analyze').checked ? 1 : 0,
+                })
+              })
+              .then(response => {
+                  if (!response.ok) {
+                    return response.text().then(e => { throw e; })
+                  }
+                  const serverTiming = response.headers.get("Server-Timing");
+                  return response.json().then(data => ({ data, serverTiming }));
+              })
+              .then(({ data, serverTiming }) => {
+                document.getElementById("server_timing").textContent = serverTiming;
                 ht.clear();
-                if (mps.length > 1) {
+                const results = data['results'];
+                const analyze = data['analyze']
+                if (results.length > 1) {
                   ht.updateSettings({
-                    data: mps.slice(1),
-                    colHeaders: mps[0]
+                    data: results.slice(1),
+                    colHeaders: results[0]
                   });
                 } else {
                   ht.updateSettings({ data: [[0]], colHeaders: true})
                 }
 
-
-                $("#output").pivotUI(mps, {
+                if (analyze) {
+                  analyze_output_editor.setValue(analyze);
+                }
+                $("#pivot_table").pivotUI(results, {
                   renderers: renderers,
 
                   hiddenAttributes: [],
@@ -90,9 +136,9 @@
                 });
                 notification.close();
               }
-             , 'json').fail(function(jqXHR, textStatus, errorThrown) {
+            ).catch((error) => {
                 notification.close();
-                noty({type: "error", text: jqXHR.responseText, timeout: 5000, layout: "bottom" });
+                noty({type: "error", text: escapeHTML(error), timeout: 5000, layout: "bottom" });
               });
             };
 
@@ -130,15 +176,32 @@
               return null;
             }
           });
+          analyze_output_editor =  monaco.editor.create(
+            document.querySelector('#analyze_output'),
+            {
+              automaticLayout: window.ResizeObserver ? true : false,
+              fontSize: 10,
+              lineNumbers: false,
+            }
+          );
+          monaco.editor.setModelLanguage(
+            analyze_output_editor.getModel(),
+            "json"
+          );
 
           $("#query").resizable();
+          $("#analyze_output").resizable();
+          $("#pivot_table").resizable();
 
-          $.getJSON("ZMySQLDAConnection_getSchemaAsJSON").then(
-            function(schema) {
+          fetch("ZMySQLDAConnection_getSchemaAsJSON")
+            .then(response => response.json())
+            .then(schema => {
               monaco.languages.registerCompletionItemProvider('sql', new SQLCompletionProvider(schema));
               document.querySelector('#query').classList.add('initialized');
-            });
+            })
+            .catch(error => console.error("Error fetching schema:", error));
 
+          $('input[name="Analyze"]').click(redraw);
           $('button[name="Query"]').click(redraw);
           $('button[name="Copy"]').click(e => {
             const tableAsMarkdown = (([
@@ -182,39 +245,43 @@
           redraw();
         });
       });
-    </script>
-<!--
+  </script>
+  <!--
     Presets: <select id="presets"><option selected="selected" value=""></option></select>
     <button name="Save">Save Preset</button>
     <br/>
 -->
 
-    <div style="width: 100%; height: 300px" id="query"> </div>
-    <button name="Query">Run Query</button>
-    <button name="Copy">Copy Results</button>
+  <div style="width: 100%; height: 30vh" id="query"> </div>
+  <button name="Query">Run Query</button>
+  <button name="Copy">Copy Results</button>
+  <input type="checkbox" name="Analyze" id="Analyze"><label for="Analyze">Analyze Query</label>
 
+  <div id="table_container" style="margin: 10px; height: 30vh; overflow: hidden; z-index: 1;"></div>
+  <small><pre id="server_timing"></pre></small>
+  <div style="display: grid;  grid-template-columns: 1fr 1fr;">
+    <div id="pivot_table" style="margin: 10px; overflow: scroll; width: 100%"></div>
+    <div id="analyze_output" style="width: 100%; height: 40vh;"> </div>
+  </div>
 
-    <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden; z-index: 1;"></div>
-    <div id="output" style="margin: 10px; overflow: scroll"></div>
+  <!-- TODO: debug saved configuration -->
+  <div style="display: none">
+    <pre id="config_json"></pre>
+  </div>
+  <div style="display: none">
+    <textarea name="editor_backup"></textarea>
+  </div>
 
-    <!-- TODO: debug saved configuration -->
-    <div style="display: none">
-      <pre id="config_json"></pre>
-    </div>
-    <div style="display: none">
-      <textarea name="editor_backup"></textarea>
-    </div>
+</body>
 
-  </body>
-
-  <!-- monaco editor from erp5_monaco_editor bt -->
-  <script>
-    /*
+<!-- monaco editor from erp5_monaco_editor bt -->
+<script>
+  /*
       This is understood by our build of monaco-editor
       https://lab.nexedi.com/jerome/monaco-editor-erp5/blob/master/public-path.js
     */
     window.monacoEditorWebPackResourceBaseUrl = "monaco-editor/";
-  </script>
-  <script src="monaco-editor/app.bundle.min.js"></script>
+</script>
+<script src="monaco-editor/app.bundle.min.js"></script>
 
 </html>

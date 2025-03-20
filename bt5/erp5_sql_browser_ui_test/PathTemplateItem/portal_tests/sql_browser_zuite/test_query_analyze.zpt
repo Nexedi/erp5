@@ -27,26 +27,7 @@
       <tr>
         <td>assertEval</td>
         <td>
-          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'type', {'text': 'select 1+1; select "boom"'})
-        </td>
-        <td>null</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="Query"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[contains(@class, "noty_message")]/span[@class="noty_text" and contains(text(), "rror")]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertEval</td>
-        <td>
-          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'editor.action.smartSelect.expand');
-          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'editor.action.deleteLines');
-          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'type', {'text': 'select 1+1'})
+          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'type', {'text': 'select * from catalog where owner = "System Processes"'})
         </td>
         <td>null</td>
       </tr>
@@ -57,15 +38,31 @@
       </tr>
       <tr>
         <td>waitForText</td>
-        <td>xpath=(//div[contains(@class, "handsontable")]//th//span[@class="colHeader"])[2]</td>
-        <td>1+1</td>
+        <td>xpath=(//div[contains(@class, "handsontable")]//th//span[@class="colHeader"])[3]</td>
+        <td>owner</td>
       </tr>
       <tr>
         <td>assertText</td>
-        <td>//div[contains(@class, "handsontable")]//tbody/tr/td</td>
-        <td>2</td>
+        <td>//div[contains(@class, "handsontable")]//tbody/tr/td[3]</td>
+        <td>System Processes</td>
       </tr>
-
+      <tr>
+        <td>click</td>
+        <td>//input[@name="Analyze"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForEval</td>
+        <td>
+          JSON.parse(selenium.browserbot.getCurrentWindow().analyze_output_editor.getValue()).query_block.table.table_name
+        </td>
+        <td>catalog</td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//div[contains(@class, "handsontable")]//tbody/tr/td[3]</td>
+        <td>System Processes</td>
+      </tr>
     </tbody>
   </table>
 </body>

@@ -238,23 +238,27 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegionValue(),region_value)
 
   def test_isMemberOf(self):
-    region_path = 'region/%s' % self.region1
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(None)
-    self.assertFalse(p1.isMemberOf(region_path))
-    p1.setRegion(self.region1)
-    self.assertTrue(p1.isMemberOf(region_path))
+    self.assertFalse(p1.isMemberOf('region/europe/west'))
+    p1.setRegion('region/europe/west')
+    self.assertTrue(p1.isMemberOf('region/europe/west'))
+    self.assertTrue(p1.isMemberOf('region/europe'))
+    self.assertFalse(p1.isMemberOf('region/europe/we'))
 
   def test_isAcquiredMemberOf(self):
-    region_path = 'region/%s' % self.region1
     p1 = self.getPersonModule()._getOb(self.id1)
     sub_person = p1._getOb(self.id1)
     p1.setRegion(None)
-    self.assertFalse(p1.isAcquiredMemberOf(region_path))
-    self.assertFalse(sub_person.isAcquiredMemberOf(region_path))
-    p1.setRegion(self.region1)
-    self.assertTrue(p1.isAcquiredMemberOf(region_path))
-    self.assertTrue(sub_person.isAcquiredMemberOf(region_path))
+    self.assertFalse(p1.isAcquiredMemberOf('region/europe/west'))
+    self.assertFalse(sub_person.isAcquiredMemberOf('region/europe/west'))
+    p1.setRegion('region/europe/west')
+    self.assertTrue(p1.isAcquiredMemberOf('region/europe/west'))
+    self.assertTrue(sub_person.isAcquiredMemberOf('region/europe/west'))
+    self.assertTrue(p1.isAcquiredMemberOf('region/europe'))
+    self.assertTrue(sub_person.isAcquiredMemberOf('region/europe'))
+    self.assertFalse(p1.isAcquiredMemberOf('region/europe/we'))
+    self.assertFalse(sub_person.isAcquiredMemberOf('region/europe/we'))
 
   def test_04_ReturnNone(self):
     # Test if we getCategory return None if the cat is '' or None

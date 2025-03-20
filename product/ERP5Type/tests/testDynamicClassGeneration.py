@@ -31,6 +31,7 @@
 from __future__ import absolute_import
 
 import gc
+import mock
 import os
 import shutil
 import tempfile
@@ -154,18 +155,21 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     portal = self.portal
     person_module = portal.person_module
     person = person_module.newContent(id='John Dough', portal_type='Person')
+    temp_person = person_module.newContent(portal_type='Person', temp_object=True)
 
     person_type = portal.portal_types.Person
     self.assertEqual(person_type.getTypeMixinList() or [], [])
 
     try:
       self.assertEqual(getattr(person, 'asText', None), None)
+      self.assertEqual(getattr(temp_person, 'asText', None), None)
       # just use a mixin/method that Person does not have yet
       person_type.setTypeMixin('TextConvertableMixin')
 
       self.commit()
 
       self.assertNotEqual(getattr(person, 'asText', None), None)
+      self.assertNotEqual(getattr(temp_person, 'asText', None), None)
     finally:
       # reset the type
       person_type.setTypeMixin(None)
@@ -179,18 +183,21 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     portal = self.portal
     person_module = portal.person_module
     person = person_module.newContent(id='Eva Dough', portal_type='Person')
+    temp_person = person_module.newContent(portal_type='Person', temp_object=True)
 
     person_type = portal.portal_types.Person
     self.assertEqual(person_type.getTypeClass(), 'Person')
 
     try:
       self.assertEqual(getattr(person, 'getCorporateName', None), None)
+      self.assertEqual(getattr(temp_person, 'getCorporateName', None), None)
       # change the base type class
       person_type.setTypeClass('Organisation')
 
       self.commit()
 
       self.assertNotEqual(getattr(person, 'getCorporateName', None), None)
+      self.assertNotEqual(getattr(temp_person, 'getCorporateName', None), None)
     finally:
       # reset the type
       person_type.setTypeClass('Person')
@@ -209,6 +216,15 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       obj = newDocument(portal_type='Folder', temp_object=not temp_first)
       obj.newContent('file', portal_type)
       obj.file.aq_base
+
+  def testTempPortalTypeLoadClass(self):
+    temp_document = self.portal.person_module.newContent(
+      portal_type='Person', temp_object=True)
+    with mock.patch(
+      'Products.ERP5Type.dynamic.lazy_class.PortalTypeMetaClass.generatePortalTypeAccessors'
+      ) as generatePortalTypeAccessors:
+      temp_document.propertyIds()
+    generatePortalTypeAccessors.assert_not_called()
 
   def testBoundMethodCaching(self):
     """Test that it is safe to cache a bound method during a transaction
