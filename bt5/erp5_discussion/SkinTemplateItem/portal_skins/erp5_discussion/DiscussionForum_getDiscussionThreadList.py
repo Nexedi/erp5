@@ -5,7 +5,7 @@
 """
 
 thread_relative_url = context.REQUEST.get('thread_relative_url')
-discussion_thread_list = [x.getObject() for x  in context.searchResults(**kw)] #searches in all erp5 docs linked to this predicate config
+discussion_thread_list = [x.getObject() for x  in context.searchResults(portal_type="Discussion Thread")] #searches in all erp5 docs linked to this predicate config
 
 if thread_relative_url is not None:
   thread = context.restrictedTraverse(thread_relative_url)
