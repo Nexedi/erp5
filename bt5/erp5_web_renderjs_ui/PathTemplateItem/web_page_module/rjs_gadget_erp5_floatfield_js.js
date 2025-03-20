@@ -37,7 +37,15 @@
       float *= 100.0;
     }
     if (!isNaN(precision)) {
-      float = float.toFixed(precision);
+      try {
+        float = float.toFixed(precision);
+      } catch (e) {
+        if (!(e instanceof RangeError)) {
+          throw e;
+        }
+        // RangeError thrown if digits is not between 0 and 100 (inclusive)
+        // keep the field usable if step can not be calculated
+      }
     }
     return float.toString();
   }
@@ -157,8 +165,17 @@
         state_dict.append = "%";
       }
       if (!isNaN(precision)) {
-        state_dict.step = Math.pow(10, -precision)
-                              .toFixed(precision);
+        try {
+          state_dict.step = Math.pow(10, -precision)
+                                .toFixed(precision);
+        } catch (e) {
+          if (!(e instanceof RangeError)) {
+            throw e;
+          }
+          // RangeError thrown if digits is not between 0 and 100 (inclusive)
+          // keep the field usable if step can not be calculated
+          state_dict.step = "any";
+        }
       }
 
       return this.changeState(state_dict);
