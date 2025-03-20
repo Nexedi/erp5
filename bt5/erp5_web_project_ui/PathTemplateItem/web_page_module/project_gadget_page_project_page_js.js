@@ -274,7 +274,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             modification_dict.jio_key + '&view=Project_viewActivityList',
             forum_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.forum_url + '&view=view_threads';
+            modification_dict.forum_url + '&view=DiscussionForum_viewProjectForum';
           web_page_info = result_list[2];
           if (web_page_info) {
             editor = result_list[1];
@@ -337,7 +337,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             url_parameter_list.push(getUrlParameterDict(web_page_info.id, web_page_info.edit_view));
           }
           if (modification_dict.forum_url) {
-            url_parameter_list.push(getUrlParameterDict(modification_dict.forum_url, forum_view));
+            url_parameter_list.push(getUrlParameterDict(modification_dict.jio_key,
+                                                        forum_view,
+                                                        [["modification_date", "descending"]]));
           }
           return gadget.getUrlForList(url_parameter_list);
         })
