@@ -25,8 +25,8 @@
 #
 ##############################################################################
 
-import six
 import json
+from erp5.component.module.JsonUtils import loadJson
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -101,8 +101,8 @@ return json.dumps({
     self.tic()
     result = getattr(self.portal, method)(data)
     self.assertEqual(
-      json.loads(result)['content'],
-      json.loads(json.dumps(data))
+      loadJson(result)['content'],
+      loadJson(json.dumps(data))
     )
 
   def test_call_no_after_method_id_valid_json(self):
@@ -154,13 +154,9 @@ return json.dumps({
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
     except ValueError as e:
-      if six.PY2:
-        error_list = [[u"Validation Error", u"'2' is not of type u'integer'"],
-                      [u"Validation Error", u"2 is not of type u'string'"]]
-      else:
-        error_list = [["Validation Error", "'2' is not of type 'integer'"],
-                      ["Validation Error", "2 is not of type 'string'"]]
-      self.assertEqual({"my-schema.json": error_list}, json.loads(str(e)))
+      error_list = [["Validation Error", "'2' is not of type 'integer'"],
+                    ["Validation Error", "2 is not of type 'string'"]]
+      self.assertEqual({"my-schema.json": error_list}, loadJson(str(e)))
 
   def test_call_valid_datetime_format(self):
     """
@@ -184,8 +180,8 @@ return json.dumps({
     self.tic()
     result = getattr(self.portal, method)(data)
     self.assertEqual(
-      json.loads(json.dumps(data)),
-      json.loads(result)['content']
+      loadJson(json.dumps(data)),
+      loadJson(result)['content']
     )
 
   def test_call_invalid_datetime_format(self):
@@ -213,9 +209,6 @@ return json.dumps({
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
     except ValueError as e:
-      if six.PY2:
-        error_list = [[u"Validation Error", u"'2018-11-13T20:20:67' is not a u'date-time'"]]
-      else:
-        error_list = [["Validation Error", "'2018-11-13T20:20:67' is not a 'date-time'"]]
-      self.assertEqual({"my-schema.json": error_list}, json.loads(str(e)))
+      error_list = [["Validation Error", "'2018-11-13T20:20:67' is not a 'date-time'"]]
+      self.assertEqual({"my-schema.json": error_list}, loadJson(str(e)))
 

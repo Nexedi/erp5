@@ -27,6 +27,7 @@
 ##############################################################################
 import json
 import jsonschema
+from erp5.component.module.JsonUtils import loadJson
 from erp5.component.document.JSONType import JSONType
 from erp5.component.document.TextDocument import TextDocument
 
@@ -74,7 +75,7 @@ class JSONForm(JSONType, TextDocument):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
     """
-    defined_schema = json.loads(self.getTextContent(""))
+    defined_schema = loadJson(self.getTextContent(""))
     try:
       jsonschema.validate(json_data, defined_schema, format_checker=jsonschema.FormatChecker())
     except jsonschema.exceptions.ValidationError as err:
