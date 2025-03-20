@@ -239,7 +239,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       var state_dict = {
           jio_key: options.jio_key || "",
           publication_section: options.publication_section,
-          forum_url: options.forum_url
+          forum_url: options.related_forum
         };
       return this.changeState(state_dict);
     })
