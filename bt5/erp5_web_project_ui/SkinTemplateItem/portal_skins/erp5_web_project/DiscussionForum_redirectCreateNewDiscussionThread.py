@@ -6,6 +6,8 @@ form_id = 'DiscussionForum_viewProjectForum'
 redirect_url = '%s/%s' % (context.absolute_url(), form_id)
 
 return context.Base_redirect(form_id="DiscussionForum_viewNewThreadDialog",
+                             redirect_url=redirect_url,
+                             predecessor=context.getRelativeUrl(),
                              keep_items = dict(predecessor=context.getRelativeUrl(),
                                                redirect_url=redirect_url,
                                                portal_status_message=context.Base_translateString(portal_status_message)))
