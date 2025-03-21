@@ -250,19 +250,19 @@
                         </tuple>
                         <tuple>
                           <string>author</string>
-                          <string></string>
+                          <string>Listbox_getDiscussionThreadReaderUrl</string>
                         </tuple>
                         <tuple>
                           <string>response_count</string>
-                          <string></string>
+                          <string> Listbox_getDiscussionThreadReaderUrl</string>
                         </tuple>
                         <tuple>
                           <string>last_post</string>
-                          <string></string>
+                          <string> Listbox_getDiscussionThreadReaderUrl</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string></string>
+                          <string> Listbox_getDiscussionThreadReaderUrl</string>
                         </tuple>
                       </list>
                     </value>
