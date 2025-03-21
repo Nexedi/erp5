@@ -148,9 +148,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       });
   }
 
-  function getForumInfo(gadget, project_jio_key, forum_url) {
+  function getForumInfo(gadget, project_jio_key, forum_jio_key) {
     //TODO if nothing else is needed here, get rid of this function
-    return forum_url;
+    return forum_jio_key;
   }
 
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
@@ -239,7 +239,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       var state_dict = {
           jio_key: options.jio_key || "",
           publication_section: options.publication_section,
-          forum_url: options.related_forum
+          forum_jio_key: options.related_forum
         };
       return this.changeState(state_dict);
     })
@@ -274,7 +274,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             modification_dict.jio_key + '&view=Project_viewActivityList',
             forum_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.forum_url + '&view=DiscussionForum_viewProjectForum';
+            modification_dict.forum_jio_key + '&view=DiscussionForum_viewProjectForum';
           web_page_info = result_list[2];
           if (web_page_info) {
             editor = result_list[1];
@@ -336,7 +336,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           if (web_page_info) {
             url_parameter_list.push(getUrlParameterDict(web_page_info.id, web_page_info.edit_view));
           }
-          if (modification_dict.forum_url) {
+          if (modification_dict.forum_jio_key) {
             url_parameter_list.push(getUrlParameterDict(modification_dict.jio_key,
                                                         forum_view,
                                                         [["modification_date", "descending"]]));
@@ -356,7 +356,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           if (web_page_info) {
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
           }
-          if (modification_dict.forum_url) {
+          if (modification_dict.forum_jio_key) {
             if (web_page_info) {
               enableLink(document.querySelector("#forum_link"), url_list[10]);
             } else {
