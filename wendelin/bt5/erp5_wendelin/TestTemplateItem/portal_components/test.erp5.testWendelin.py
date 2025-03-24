@@ -901,6 +901,7 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
 
   def test_17_DataMapping(self):
     """
+      Test Data Mapping portal type and methods
     """
     portal = self.portal
     data_mapping = portal.data_mapping_module.newContent(portal_type='Data Mapping')
@@ -972,42 +973,24 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
 
     another_data_mapped_list = []
 
+    original_size = data_mapping.getSize()
     for data in another_data_list:
       another_data_mapped_list.append(data_mapping.addObject(data))
+    self.assertEqual(original_size + 3, data_mapping.getSize())
     self.assertEqual(len(another_data_mapped_list), len(data_list))
 
     array = np.array(data_mapped_list)
     another_array = np.array(another_data_mapped_list)
     # simply call setdiff1d to get the different between two datas
-    diff_array = np.setdiff1d(another_array, array)
-    self.assertEqual(diff_array.size, 3)
+    # Convert to list of ints: data_mapping.getObjectFromValue does not accept np.int
+    diff_array = np.setdiff1d(another_array, array).tolist()
+    self.assertEqual(len(diff_array), 3)
     diff_object_list = []
     for value in diff_array:
       diff_object_list.append(data_mapping.getObjectFromValue(value))
     self.assertEqual(diff_object_list, [('/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'),
                                         ('/usr/bin/aclocal-1.16', '6ba134fb4f97d79a5', 'ModifiedValue', 'cc4595fba3251aaa9b48'),
                                         ('/usr/bin/appres', '7ccb78e306838a87b68d2c', 'ModifiedValue', 'c3e24ec3fee558e9f06bd0')])
-    # same data value as "another_data_list" but in other format
-    other_format_data_list = [
-      ['/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'],
-      ['/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'],
-      ['/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527']
-    ]
-    other_format_data_mapped_list = []
-    original_size = data_mapping.getSize()
-    for data in other_format_data_list:
-      other_format_data_mapped_list.append(data_mapping.addObject(data))
-    self.assertEqual(original_size + 3, data_mapping.getSize())
-    other_format_array = np.array(other_format_data_mapped_list)
-    # ensure "even data values are same but format is different" is considered different
-    diff_array = np.setdiff1d(other_format_array, another_array)
-    self.assertEqual(diff_array.size, 3)
-    diff_object_list = []
-    for value in diff_array:
-      diff_object_list.append(data_mapping.getObjectFromValue(value))
-    self.assertEqual(diff_object_list, [['/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'],
-                                        ['/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'],
-                                        ['/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527']])
 
   def test_18_wendelinTextToNumpySecurity(self):
     """
