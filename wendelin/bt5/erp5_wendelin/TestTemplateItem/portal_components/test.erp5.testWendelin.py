@@ -208,14 +208,14 @@ class Test(ERP5TypeTestCase):
     # as these are differerent objects
     pure_numpy_array = persistent_zbig_array[:,:] # ZBigArray -> ndarray view of it
     pure_numpy_array = np.resize(pure_numpy_array, (4, 4))
-    self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
+    self.assertNotEqual(pure_numpy_array.shape, persistent_zbig_array.shape)
 
     # test copy numpy -> wendelin but first resize persistent one (add new one)
     data_array.initArray((4, 4), np.uint8)
     persistent_zbig_array = data_array.getArray()
     new_array = np.arange(1,17).reshape((4,4))
     persistent_zbig_array[:,:] = new_array
-    self.assertEquals(new_array.shape, persistent_zbig_array.shape)
+    self.assertEqual(new_array.shape, persistent_zbig_array.shape)
     self.assertTrue(np.array_equal(new_array, persistent_zbig_array))
 
     # test set element in zbig array
@@ -224,7 +224,7 @@ class Test(ERP5TypeTestCase):
 
     # resize Zbig Array
     persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
-    self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
+    self.assertNotEqual(pure_numpy_array.shape, persistent_zbig_array.shape)
 
     # get array slice (fails)
     data_array = self.portal.data_array_module.newContent( \
@@ -237,7 +237,7 @@ class Test(ERP5TypeTestCase):
     new_array = np.arange(1000)
     new_array.resize(shape)
 
-    self.assertEquals(new_array.shape, persistent_zbig_array.shape)
+    self.assertEqual(new_array.shape, persistent_zbig_array.shape)
 
     persistent_zbig_array[:,] = new_array
     self.tic()
