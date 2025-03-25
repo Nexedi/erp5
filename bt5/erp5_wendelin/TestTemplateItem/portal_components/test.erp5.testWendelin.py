@@ -122,7 +122,7 @@ class Test(ERP5TypeTestCase):
     self.assertEqual('Data Stream', data_stream.getPortalType())
 
     data_stream_data = data_stream.getData()
-    self.assertEqual(real_data, data_stream_data)
+    self.assertEqual(real_data, data_stream_data.decode('utf-8'))
 
     # try sample transformation
     data_array = portal.data_array_module.newContent(
@@ -165,7 +165,7 @@ class Test(ERP5TypeTestCase):
     data_stream = portal.data_stream_module.newContent(
                     portal_type = 'Data Stream',
                     reference = reference)
-    data_stream.appendData(real_data)
+    data_stream.appendData(real_data.encode('utf-8'))
     data_stream.validate()
     data_array = portal.data_array_module.newContent(
                           portal_type = 'Data Array',
@@ -717,7 +717,7 @@ class Test(ERP5TypeTestCase):
     """
     ingestion_policy_id = "test_13_unpackLazy_IngestionPolicy"
     try:
-      ingestion_policy = self.getPortal().portal_ingestion_policies.newContent(
+      ingestion_policy = self.portal.portal_ingestion_policies.newContent(
         id=ingestion_policy_id,
         title=ingestion_policy_id,
         portal_type='Ingestion Policy',
@@ -726,7 +726,7 @@ class Test(ERP5TypeTestCase):
       )
     # ingestion_policy still exists from previous failed test run
     except BadRequest:
-      ingestion_policy = self.portal.get(ingestion_policy_id)
+      ingestion_policy = self.portal.portal_ingestion_policies.get(ingestion_policy_id)
 
     self.assertNotEqual(ingestion_policy, None)
 
