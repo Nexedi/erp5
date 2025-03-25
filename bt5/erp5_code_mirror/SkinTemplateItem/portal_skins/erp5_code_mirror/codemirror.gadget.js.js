@@ -79,6 +79,8 @@
         mode = 'javascript';
       } else if (options.portal_type === 'Web Style') {
         mode = 'css';
+      } else if (options.portal_type === 'JSON Form') {
+        mode = 'application/json';
       } else if ((options.portal_type === 'Python Script') ||
                  (options.portal_type === 'Test Component') ||
                  (options.portal_type === 'Module Component') ||
