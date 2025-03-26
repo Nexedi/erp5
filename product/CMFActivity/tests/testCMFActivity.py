@@ -41,7 +41,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Base import Base
 from Products.CMFActivity import ActivityTool
-from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE
+from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE, \
+  DEPENDENCY_IGNORED_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Activity.SQLDict import SQLDict
 from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
@@ -398,6 +399,43 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if there is still the message after it crashed
     message_list = activity_tool.getMessageList()
     self.assertEqual(len(message_list),1)
+
+    self.flushAllActivities(silent=1, loop_size=100)
+    message_list = activity_tool.getMessageList()
+    self.assertEqual(len(message_list),1)
+    self.assertEqual(message_list[0].processing_node,
+                     INVOKE_ERROR_STATE)
+    activity_tool.manageCancel(organisation.getPhysicalPath(),'crashThisActivity')
+    # Needed so that the message are commited into the queue
+    self.commit()
+
+  @for_each_activity
+  def testTryMessageWithNonBlockingErrorOnActivity(self, activity):
+    """
+    Make sure that message with errors are not deleted
+    """
+    activity_tool = self.portal.portal_activities
+    def crashThisActivity(self):
+      self.IWillCrash()
+    organisation =  self.getOrganisation()
+    Organisation.crashThisActivity = crashThisActivity
+    organisation.activate(activity=activity, failure_state='non_blocking').crashThisActivity()
+    # Needed so that the message are commited into the queue
+    self.commit()
+    message_list = activity_tool.getMessageList()
+    LOG('Before MessageWithErrorOnActivityFails, message_list',0,[x.__dict__ for x in message_list])
+    self.assertEqual(len(message_list),1)
+    activity_tool.tic()
+    # XXX HERE WE SHOULD USE TIME SHIFT IN ORDER TO SIMULATE MULTIPLE TICS
+    # Test if there is still the message after it crashed
+    message_list = activity_tool.getMessageList()
+    self.assertEqual(len(message_list),1)
+
+    self.flushAllActivities(silent=1, loop_size=100)
+    message_list = activity_tool.getMessageList()
+    self.assertEqual(len(message_list),1)
+    self.assertEqual(message_list[0].processing_node,
+                     DEPENDENCY_IGNORED_ERROR_STATE)
     activity_tool.manageCancel(organisation.getPhysicalPath(),'crashThisActivity')
     # Needed so that the message are commited into the queue
     self.commit()
@@ -737,7 +775,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       activity_tool.distribute(node_count=1)
       activity_tool.tic(processing_node=1)
 
-      finished = all(message.processing_node == INVOKE_ERROR_STATE
+      finished = all(message.processing_node <= INVOKE_ERROR_STATE
                      for message in activity_tool.getMessageList())
 
       activity_tool.timeShift(3 * VALIDATION_ERROR_DELAY)
