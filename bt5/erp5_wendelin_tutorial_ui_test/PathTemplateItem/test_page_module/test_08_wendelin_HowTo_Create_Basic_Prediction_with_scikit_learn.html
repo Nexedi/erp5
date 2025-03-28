@@ -546,8 +546,9 @@ if in_zbigarray.shape[0] == 0:
 
 df = predict(in_zbigarray)
 
+
 dtype = [(&#39;Date&#39;, &#39;&lt;M8[ns]&#39;),(&#39;Actual&#39;, &#39;&lt;f8&#39;), (&#39;Predicted&#39;, &#39;&lt;f8&#39;)]
-ndarray = df.to_records(index=False, convert_datetime64=False)
+ndarray = df.to_records(index=False)
 ndarray = ndarray[[&#39;Date&#39;,&#39;Actual&#39;,&#39;Predicted&#39;]]
 
 zbigarray = out_data_array.getArray()
@@ -834,7 +835,7 @@ if in_zbigarray.shape[0] == 0:
 df = predict(in_zbigarray)
 
 dtype = [(&#39;Date&#39;, &#39;&lt;M8[ns]&#39;),(&#39;Actual&#39;, &#39;&lt;f8&#39;), (&#39;Predicted&#39;, &#39;&lt;f8&#39;)]
-ndarray = df.to_records(index=False, convert_datetime64=False)
+ndarray = df.to_records(index=False)
 
 ndarray = ndarray[[&#39;Date&#39;,&#39;Actual&#39;,&#39;Predicted&#39;]]
 
