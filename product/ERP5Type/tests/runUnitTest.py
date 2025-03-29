@@ -475,9 +475,6 @@ class DebugTestResult:
     self.result = result
 
   def _start_debugger(self, tb):
-    import Lifetime
-    if Lifetime._shutdown_phase:
-      return
     try:
       # try ipython if available
       import IPython
@@ -519,6 +516,11 @@ def setupWarnings():
   warnings.filterwarnings(
     'ignore',
     message='(?s)Node name auto-generation is deprecated.*product-config CMFActivity.*'
+  )
+  warnings.filterwarnings(
+    'ignore',
+    message=r"Deprecated call to `pkg_resources.declare_namespace\('(five|z3c|z3c\.pt|zc|zmi|zope|zope\.app|Shared|Shared\.DC)'\)`\.",
+    category=DeprecationWarning,
   )
 
 
@@ -651,11 +653,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
   TestRunner = unittest.TextTestRunner
 
-  import Lifetime
   from Zope2.custom_zodb import Storage, save_mysql, \
       node_pid_list, neo_cluster, zeo_server_pid, wcfs_server
   def shutdown(signum, frame, signum_set=set()):
-    Lifetime.shutdown(0)
     signum_set.add(signum)
     if node_pid_list is None and len(signum_set) > 1:
       # in case of ^C, a child should also receive a SIGHUP from the parent,

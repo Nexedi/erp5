@@ -27,6 +27,7 @@
 
 import io
 import json
+import six
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.module.JsonUtils import loadJson
 
@@ -255,12 +256,20 @@ error.handling.callable | JsonRpcService_testExample'''
       env={'CONTENT_TYPE': 'application/json'})
     self.assertEqual(response.getStatus(), 400)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
-    self.assertEqual(
-      loadJson(response.getBody()), {
-        "status": 400,
-        "type": "not-parsable-json-content",
-        "title": "Extra data: line 1 column 2 - line 1 column 6 (char 1 - 5)"
-      })
+    if six.PY2:
+      self.assertEqual(
+        loadJson(response.getBody()), {
+          "status": 400,
+          "type": "not-parsable-json-content",
+          "title": "Extra data: line 1 column 2 - line 1 column 6 (char 1 - 5)"
+        })
+    else:
+      self.assertEqual(
+        loadJson(response.getBody()), {
+          "status": 400,
+          "type": "not-parsable-json-content",
+          "title": "Extra data: line 1 column 2 (char 1)"
+        })
 
   def test_requestErrorHandling_notJsonDict(self):
     self.addJSONForm(
@@ -331,11 +340,19 @@ error.handling.callable | JsonRpcService_testExample'''
       env={'CONTENT_TYPE': 'application/json'})
     self.assertEqual(response.getStatus(), 500)
     self.assertEqual(response.getHeader('content-type'), 'application/json')
-    self.assertEqual(
-      loadJson(response.getBody()), {
-        'title': 'ValueError: Extra data: line 1 column 2 - line 1 column 4 (char 1 - 3)',
-        'type': 'unknown-error'
-      })
+    if six.PY2:
+      self.assertEqual(
+        loadJson(response.getBody()), {
+          'title': 'ValueError: Extra data: line 1 column 2 - line 1 column 4 (char 1 - 3)',
+          'type': 'unknown-error'
+        })
+    else:
+      self.assertEqual(
+        loadJson(response.getBody()), {
+          'title': 'JSONDecodeError: Extra data: line 1 column 2 (char 1)',
+          'type': 'unknown-error'
+        })
+
 
   def test_requestErrorHandling_unknownAfterMethod(self):
     self.addJSONForm(
@@ -389,7 +406,7 @@ error.handling.callable | JsonRpcService_testExample'''
       'JsonRpcService_fail',
       'data_dict, json_form',
       'context.getPortalObject().setTitle("ooops")\n'
-      '1/0',
+      '1//0',
     )
     self.addJSONForm(
       'JsonRpcService_testExample',
@@ -599,13 +616,12 @@ class TestJsonRpcAPIJsonFormHandling(JsonRpcAPITestCase):
       env={'CONTENT_TYPE': 'application/json'})
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
-      response.getBody(),
-      json.dumps(
-        {
-          'title': "1 is not of type 'string'",
-          'type': "invalid-json-object-content",
-          'status': 400
-        }).encode())
+      loadJson(response.getBody()),
+      {
+        'title': "1 is not of type 'string'",
+        'type': "invalid-json-object-content",
+        'status': 400
+      })
     self.assertEqual(response.getStatus(), 400)
 
   def test_jsonFormHandling_customError(self):
