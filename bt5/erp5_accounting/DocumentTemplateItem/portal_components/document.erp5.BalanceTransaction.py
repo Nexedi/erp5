@@ -53,7 +53,7 @@ class InventoryKey(UserDict):
     raise TypeError('InventoryKey are immutable')
 
   def __hash__(self):
-    return hash(tuple(self.items()))
+    return hash(tuple(sorted(self.items())))
 
 
 class BalanceTransaction(AccountingTransaction, Inventory):
