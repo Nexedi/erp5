@@ -77,6 +77,10 @@ class ActiveObject(ExtensionClass.Base):
       at_date           --  request execution date for this activate call
                             (default: date of commit)
 
+      failure_state     -- can be one of the following values:
+        - None (default): the failed activity will have a processing node value of INVOKE_ERROR_STATE
+        - "non_blocking": the failed activity will have a processing node value of DEPENDENCY_IGNORED_ERROR_STATE
+
       Messages are executed according to the following ordering:
 
         priority, node_preference, date
