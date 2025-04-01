@@ -9,6 +9,8 @@
       option_dict,
       i;
 
+    // In case we want to sort the entries here as well
+    displayable_column_list.sort(function (a, b) { return a[1].localeCompare(b[1]); });
     for (i = 0; i < displayable_column_list.length; i += 1) {
       option_dict = {
         value: displayable_column_list[i][0],
@@ -21,12 +23,50 @@
       dom_option_list.push(domsugar('option', option_dict));
     }
 
-    return domsugar('div', [
-      domsugar('button', {class: 'ui-icon ui-icon-minus'}),
-      domsugar('div', {class: 'column_item ui-controlgroup-controls'}, [
+    return domsugar('div', {
+      class: 'column_item ui-controlgroup-controls',
+      draggable: true
+    }, [
+      domsugar('button', { class: 'ui-icon ui-icon-minus' }),
+      domsugar('div', { class: 'column_item ui-controlgroup-controls' }, [
         domsugar('select', dom_option_list)
-      ])
+      ]),
+      domsugar('div', { class: 'ui-icon ui-icon-bars' })
     ]);
+  }
+
+  function enableDragAndDrop(container) {
+    let draggedItem = null;
+
+    container.addEventListener("dragstart", function (event) {
+      draggedItem = event.target.closest('.column_item');
+      if (!draggedItem) return;
+
+      event.dataTransfer.effectAllowed = "move";
+    });
+
+    container.addEventListener("dragend", function () {
+      if (draggedItem) {
+        draggedItem.classList.remove("dragging");
+      }
+    });
+
+    container.addEventListener("dragover", function (event) {
+      event.preventDefault();
+
+      const afterElement = getDragAfterElement(container, event.clientY);
+
+      if (afterElement) {
+        container.insertBefore(draggedItem, afterElement); // insert before the afterElement
+      } else {
+        container.appendChild(draggedItem); // Append to the end if no valid afterElement
+      }
+    });
+  }
+
+  function getDragAfterElement(container, y) {
+    return [...container.querySelectorAll(".column_item:not(.dragging)")]
+      .find(child => y < child.getBoundingClientRect().top + child.offsetHeight / 2);
   }
 
   rJS(window)
@@ -49,20 +89,20 @@
       ])
         .push(function (translation_list) {
           var column_dom_list =
-              gadget.state.column_list.map(
-                function (column_item) {
-                  return createColumnItemTemplate(
-                    column_item,
-                    gadget.state.displayable_column_list
-                  );
-                }
-              );
+            gadget.state.column_list.map(
+              function (column_item) {
+                return createColumnItemTemplate(
+                  column_item,
+                  gadget.state.displayable_column_list
+                );
+              }
+            );
 
-          domsugar(gadget.element.querySelector(".container"), [
+          let container = domsugar(gadget.element.querySelector(".container"), [
             domsugar('div', [
-              domsugar('div', {'data-role': 'header', 'class': 'ui-header'}, [
-                domsugar('div', {class: 'ui-btn-right'}, [
-                  domsugar('div', {class: 'ui-controlgroup-controls'}, [
+              domsugar('div', { 'data-role': 'header', 'class': 'ui-header' }, [
+                domsugar('div', { class: 'ui-btn-right' }, [
+                  domsugar('div', { class: 'ui-controlgroup-controls' }, [
                     domsugar('button', {
                       type: 'submit',
                       class: 'submit ui-btn-icon-left ui-icon-check',
@@ -70,9 +110,9 @@
                     })
                   ])
                 ]),
-                domsugar('h1', {text: translation_list[1]}),
-                domsugar('div', {class: 'ui-btn-left'}, [
-                  domsugar('div', {class: 'ui-controlgroup-controls'}, [
+                domsugar('h1', { text: translation_list[1] }),
+                domsugar('div', { class: 'ui-btn-left' }, [
+                  domsugar('div', { class: 'ui-controlgroup-controls' }, [
                     domsugar('button', {
                       type: 'submit',
                       class: 'close ui-btn-icon-left ui-icon-times',
@@ -82,8 +122,8 @@
                 ])
               ]),
               domsugar('section', [
-                domsugar('div', {class: 'column_item_container'},
-                         column_dom_list),
+                domsugar('div', { class: 'column_item_container' },
+                  column_dom_list),
                 domsugar('button', {
                   class: 'plus ui-icon-plus ui-btn-icon-left',
                   text: translation_list[3]
@@ -92,11 +132,10 @@
                   class: 'trash ui-icon-trash-o ui-btn-icon-left',
                   text: translation_list[4]
                 })
-
               ])
             ])
           ]);
-
+          enableDragAndDrop(container.querySelector('.column_item_container'));
         });
     })
 
@@ -124,9 +163,9 @@
       if (evt.target.classList.contains('plus')) {
         evt.preventDefault();
         return gadget.element.querySelector(".column_item_container")
-                             .appendChild(
+          .appendChild(
             createColumnItemTemplate(undefined,
-                                     gadget.state.displayable_column_list)
+              gadget.state.displayable_column_list)
           );
       }
 
@@ -157,10 +196,8 @@
         column_list = column_list.filter(function (el, i, a) {
           return i === a.indexOf(el);
         });
-
         options[gadget.state.key] = column_list;
       }
-
       return gadget.redirect({
         command: 'store_and_change',
         options: options
