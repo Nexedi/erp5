@@ -519,6 +519,7 @@
       }
 
       len = options.search_column_list.length;
+      options.search_column_list.sort(function(a,b){return a[1].localeCompare(b[1]);});
       for (i = 0; i < len; i += 1) {
         search_column_dict[options.search_column_list[i][0]] = true;
         search_column_list.push([
