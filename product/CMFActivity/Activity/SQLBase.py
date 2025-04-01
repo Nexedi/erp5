@@ -1081,6 +1081,7 @@ CREATE TABLE %s (
     deletable_uid_list = []
     delay_uid_list = []
     final_error_uid_list = []
+    final_dependency_ignored_error_uid_list = []
     make_available_uid_list = []
     notify_user_list = []
     executed_uid_list = deletable_uid_list
@@ -1110,7 +1111,10 @@ CREATE TABLE %s (
           if max_retry is not None and retry >= max_retry:
             # Always notify when we stop retrying.
             notify_user_list.append((m, False))
-            final_error_uid_list.append(uid)
+            if m.activity_kw.get('ignore_for_dependency_if_failed'):
+              final_dependency_ignored_error_uid_list.append(uid)
+            else:
+              final_error_uid_list.append(uid)
             continue
           # In case of infinite retry, notify the user
           # when the default limit is reached.
@@ -1154,6 +1158,12 @@ CREATE TABLE %s (
       except:
         self._log(ERROR, 'Failed to set message to error state for %r'
                          % final_error_uid_list)
+    if final_dependency_ignored_error_uid_list:
+      try:
+        self.assignMessageList(db, DEPENDENCY_IGNORED_ERROR_STATE, final_dependency_ignored_error_uid_list)
+      except:
+        self._log(ERROR, 'Failed to set message to error state for %r'
+                         % final_dependency_ignored_error_uid_list)
     if make_available_uid_list:
       try:
         self.assignMessageList(db, 0, make_available_uid_list)

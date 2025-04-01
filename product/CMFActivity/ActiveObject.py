@@ -77,6 +77,10 @@ class ActiveObject(ExtensionClass.Base):
       at_date           --  request execution date for this activate call
                             (default: date of commit)
 
+      ignore_for_dependency_if_failed -- if True, the activity will be
+                                         ignored for other activities'
+                                         dependencies if it fails.
+
       Messages are executed according to the following ordering:
 
         priority, node_preference, date
