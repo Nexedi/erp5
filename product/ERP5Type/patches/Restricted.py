@@ -349,7 +349,9 @@ import csv
 allow_module('csv')
 temp_io = io.StringIO()
 allow_type(type(csv.reader(temp_io)))
+allow_type(type(csv.DictReader(temp_io)))
 allow_type(type(csv.writer(temp_io)))
+allow_type(type(csv.DictWriter(temp_io, ())))
 del temp_io
 allow_module('datetime')
 import datetime
