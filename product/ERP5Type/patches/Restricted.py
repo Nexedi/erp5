@@ -351,6 +351,8 @@ temp_io = io.StringIO()
 allow_type(type(csv.reader(temp_io)))
 allow_type(type(csv.writer(temp_io)))
 del temp_io
+allow_class(csv.DictReader)
+allow_class(csv.DictWriter)
 allow_module('datetime')
 import datetime
 ContainerAssertions[datetime.datetime] = 1
