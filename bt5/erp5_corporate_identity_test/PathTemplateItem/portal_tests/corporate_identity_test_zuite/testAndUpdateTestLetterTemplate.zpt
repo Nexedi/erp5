@@ -137,11 +137,6 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>assertTextPresent</td>
       <td>Data updated.</td>
       <td></td>
@@ -169,11 +164,6 @@ Note:
     <tr>
       <td>clickAndWait</td>
       <td>name=Base_showUpdateDialog:method</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
       <td></td>
     </tr>
     <tr>
@@ -317,11 +307,6 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>assertTextPresent</td>
       <td>Data updated.</td>
       <td></td>
@@ -394,11 +379,6 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>assertTextPresent</td>
       <td>Data updated.</td>
       <td></td>
@@ -426,11 +406,6 @@ Note:
     <tr>
       <td>clickAndWait</td>
       <td>name=Base_showUpdateDialog:method</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
       <td></td>
     </tr>
     <tr>
@@ -579,11 +554,6 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>assertTextPresent</td>
       <td>Data updated.</td>
       <td></td>
@@ -656,11 +626,6 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>assertTextPresent</td>
       <td>Data updated.</td>
       <td></td>
@@ -728,11 +693,6 @@ Note:
     <tr>
       <td>clickAndWait</td>
       <td>name=Base_showUpdateDialog:method</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
       <td></td>
     </tr>
     <tr>
@@ -878,11 +838,6 @@ Note:
     <tr>
       <td>clickAndWait</td>
       <td>//button[@class="save"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
       <td></td>
     </tr>
     <tr>
@@ -958,11 +913,6 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>assertTextPresent</td>
       <td>Data updated.</td>
       <td></td>
@@ -995,11 +945,6 @@ Note:
     <tr>
       <td>clickAndWait</td>
       <td>name=Base_showUpdateDialog:method</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
       <td></td>
     </tr>
     <tr>
@@ -1145,11 +1090,6 @@ Note:
     <tr>
       <td>clickAndWait</td>
       <td>//button[@class="save"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
       <td></td>
     </tr>
     <tr>
@@ -2275,11 +2215,6 @@ Note:
     <tr>
       <td>clickAndWait</td>
       <td>name=Base_showUpdateDialog:method</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@class="transition_message"]</td>
       <td></td>
     </tr>
     <tr>
