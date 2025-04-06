@@ -264,7 +264,8 @@ if context.REQUEST.get('is_web_mode', False) and \
 redirect_url_kw = dict(
     ignore_layout=ignore_layout,
     editable_mode=editable_mode,
-    portal_status_message=message
+    portal_status_message=message,
+    portal_status_level='success',
     )
 if selection_name:
   redirect_url_kw.update(
