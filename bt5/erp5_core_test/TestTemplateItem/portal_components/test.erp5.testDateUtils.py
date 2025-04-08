@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from datetime import timedelta
 import os
 import unittest
 import six
@@ -248,6 +249,18 @@ class TestPinDateTime(ERP5TypeTestCase):
     with self.pinDateTime(DateTime('2001/01/01 01:01:01 Europe/Paris')):
       self.assertEqual(DateTime().timezone(), 'Europe/Paris')
       self.assertEqual(DateTime('2001/01/01 01:01:01 GMT+4').timezone(), 'GMT+4')
+
+  def test_pinDateTime_step(self):
+    actual_begin_date = DateTime()
+
+    with self.pinDateTime(DateTime('2001/01/01 01:01:01'), step=timedelta(hours=1)):
+      self.assertEqual(DateTime(), DateTime('2001/01/01 01:01:01'))
+      self.assertTrue(DateTime('2001/01/01 01:02:01').isFuture())
+      self.assertEqual(DateTime(), DateTime('2001/01/01 02:01:01'))
+      self.assertEqual(DateTime('1999/01/02 03:04:05'), DateTime('1999/01/02 03:04:05'))
+      self.assertEqual(DateTime(), DateTime('2001/01/01 03:01:01'))
+
+    self.assertGreaterEqual(DateTime(), actual_begin_date)
 
 
 class TestTimeZoneContext(ERP5TypeTestCase):
