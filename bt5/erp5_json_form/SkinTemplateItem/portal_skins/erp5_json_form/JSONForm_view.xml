@@ -57,9 +57,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -80,11 +78,11 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_id</string>
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_after_method_id</string>
-                        <string>my_response_schema</string>
                       </list>
                     </value>
                 </item>

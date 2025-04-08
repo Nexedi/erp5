@@ -27,13 +27,13 @@
 #
 ##############################################################################
 
+import itertools
 import six
 import os
 import inspect
 import transaction
 from ZODB import Connection
 
-from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.Base import resetRegisteredWorkflowMethod
 from . import aq_method_lock
 from Products.ERP5Type.Globals import InitializeClass
@@ -375,20 +375,6 @@ def generatePortalTypeClass(site, portal_type_name):
                                   interface_class_list,
                                   attribute_dict)
 
-def loadTempPortalTypeClass(portal_type_name):
-  """
-  Returns a class suitable for a temporary portal type
-
-  This class will in fact be a subclass of erp5.portal_type.xxx, which
-  means that loading an attribute on this temporary portal type loads
-  the lazily-loaded parent class, and that any changes on the parent
-  class will be reflected on the temporary objects.
-  """
-  import erp5.portal_type
-  klass = getattr(erp5.portal_type, portal_type_name)
-  return type(portal_type_name, (TemporaryDocumentMixin, klass), {})
-
-
 last_sync = -1
 _bootstrapped = set()
 def synchronizeDynamicModules(context, force=False):
@@ -522,8 +508,10 @@ def synchronizeDynamicModules(context, force=False):
 
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
     try:
-      for _, klass in inspect.getmembers(erp5.portal_type,
-                                         inspect.isclass):
+      for _, klass in itertools.chain(
+        inspect.getmembers(erp5.portal_type, inspect.isclass),
+        inspect.getmembers(erp5.temp_portal_type, inspect.isclass),
+      ):
         # Zope Interface is implemented through __implements__,
         # __implemented__ (both implementedBy instances) and __provides__
         # (ClassProvides instance) attributes set on the class by

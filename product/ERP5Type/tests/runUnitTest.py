@@ -520,6 +520,11 @@ def setupWarnings():
     'ignore',
     message='(?s)Node name auto-generation is deprecated.*product-config CMFActivity.*'
   )
+  warnings.filterwarnings(
+    'ignore',
+    message=r"Deprecated call to `pkg_resources.declare_namespace\('(five|z3c|z3c\.pt|zc|zmi|zope|zope\.app|Shared|Shared\.DC)'\)`\.",
+    category=DeprecationWarning,
+  )
 
 
 def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):

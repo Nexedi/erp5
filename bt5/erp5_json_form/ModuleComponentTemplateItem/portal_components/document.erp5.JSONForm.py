@@ -27,6 +27,7 @@
 ##############################################################################
 import json
 import jsonschema
+from erp5.component.module.JsonUtils import loadJson
 from erp5.component.document.JSONType import JSONType
 from erp5.component.document.TextDocument import TextDocument
 
@@ -67,16 +68,14 @@ class JSONForm(JSONType, TextDocument):
       else:
         raise ValueError(json.dumps(validation_result))
     if self.getAfterMethodId():
-      return getattr(getattr(self, 'aq_parent', None), self.getAfterMethodId())(json_data, self.getResponseSchema())
+      return getattr(getattr(self, 'aq_parent', None), self.getAfterMethodId())(json_data, self)
     return "Nothing to do"
 
   def validateJSON(self, json_data, list_error=False):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
     """
-    if not json_data:
-      return True
-    defined_schema = json.loads(self.getTextContent() or "")
+    defined_schema = loadJson(self.getTextContent(""))
     try:
       jsonschema.validate(json_data, defined_schema, format_checker=jsonschema.FormatChecker())
     except jsonschema.exceptions.ValidationError as err:

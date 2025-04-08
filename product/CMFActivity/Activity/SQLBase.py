@@ -791,7 +791,7 @@ CREATE TABLE %s (
           # MariaDB often choose processing_node_priority_date index
           # but node2_priority_date is much faster if there exist
           # many node < 0 non-groupable activities.
-          force_index = b'FORCE INDEX (node2_priority_date)'
+          force_index = 'FORCE INDEX (node2_priority_date)'
         subquery = lambda *a, **k: str2bytes(bytes2str(b"("
           b"SELECT *, 3*priority{} AS effective_priority"
           b" FROM %s"
@@ -1080,7 +1080,8 @@ CREATE TABLE %s (
     db = activity_tool.getSQLConnection()
     deletable_uid_list = []
     delay_uid_list = []
-    final_error_uid_list = []
+    final_blocking_error_uid_list = []
+    final_non_blocking_error_uid_list = []
     make_available_uid_list = []
     notify_user_list = []
     executed_uid_list = deletable_uid_list
@@ -1110,7 +1111,10 @@ CREATE TABLE %s (
           if max_retry is not None and retry >= max_retry:
             # Always notify when we stop retrying.
             notify_user_list.append((m, False))
-            final_error_uid_list.append(uid)
+            if m.activity_kw.get('failure_state', None) == 'non_blocking':
+              final_non_blocking_error_uid_list.append(uid)
+            else:
+              final_blocking_error_uid_list.append(uid)
             continue
           # In case of infinite retry, notify the user
           # when the default limit is reached.
@@ -1148,12 +1152,18 @@ CREATE TABLE %s (
                                    VALIDATION_ERROR_DELAY, False)
       except:
         self._log(ERROR, 'Failed to delay %r' % delay_uid_list)
-    if final_error_uid_list:
+    if final_blocking_error_uid_list:
       try:
-        self.assignMessageList(db, INVOKE_ERROR_STATE, final_error_uid_list)
+        self.assignMessageList(db, INVOKE_ERROR_STATE, final_blocking_error_uid_list)
       except:
         self._log(ERROR, 'Failed to set message to error state for %r'
-                         % final_error_uid_list)
+                         % final_blocking_error_uid_list)
+    if final_non_blocking_error_uid_list:
+      try:
+        self.assignMessageList(db, DEPENDENCY_IGNORED_ERROR_STATE, final_non_blocking_error_uid_list)
+      except:
+        self._log(ERROR, 'Failed to set message to error state for %r'
+                         % final_non_blocking_error_uid_list)
     if make_available_uid_list:
       try:
         self.assignMessageList(db, 0, make_available_uid_list)

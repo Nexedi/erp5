@@ -89,16 +89,25 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
             ' mapping method %s from %r, so the content will not be'
             ' substituted.' % (method_id, self.getRelativeUrl()))
         return text
-      mapping = method(**kw)
 
       # unicode()
       is_str = isinstance(text, str)
       if six.PY2 and is_str:
         text = str2unicode(text)
 
-      class UnicodeMapping:
+      class LazyUnicodeMapping:
+        """Lazily calls the substitution method if some substitution is needed
+        and manage the str/unicode on py2.
+        """
+        _mapping = None
+        @property
+        def mapping(self):
+          if self._mapping is None:
+            self._mapping = method(**kw)
+          return self._mapping
+
         def __getitem__(self, item):
-          v = mapping[item]
+          v = self.mapping[item]
           if six.PY2:
             if isinstance(v, str):
               v = str2unicode(v)
@@ -108,7 +117,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
             if not isinstance(v, str):
               v = str(v)
           return v
-      unicode_mapping = UnicodeMapping()
+      unicode_mapping = LazyUnicodeMapping()
 
       if safe_substitute:
         text = Template(text).safe_substitute(unicode_mapping)
