@@ -190,11 +190,12 @@ DateTime._original_parse_args = DateTime._parse_args
 
 _datetime_system_time_patcher = None
 _pinned_date_time = None
+_get_pinned_date_time = None
 
 def _parse_args(self, *args, **kw):
-  if _pinned_date_time is not None and (not args or args[0] == None):
+  if _get_pinned_date_time is not None and (not args or args[0] == None):
     # simulate fixed "Now"
-    args = (_pinned_date_time,) + args[1:]
+    args = (_get_pinned_date_time(), ) + args[1:]
   return self._original_parse_args(*args, **kw)
 
 _parse_args._original = DateTime._original_parse_args
@@ -373,15 +374,38 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
         uf._doAddUser(user_name, self.newPassword(), ['Member'], [])
 
     @classmethod
-    def pinDateTime(cls, date_time):
-      # pretend time has stopped at a certain date (i.e. the test runs
-      # infinitely fast), for example to avoid errors on tests that are started
-      # just before midnight.
-      # This is best used as a context manager, otherwise use unpinDateTime to
-      # reset.
-      global _pinned_date_time, _datetime_system_time_patcher
+    def pinDateTime(cls, date_time, step=None):
+      # type: (DateTime.DateTime, datetime.timedelta | None) -> collections.AbstractContextManager
+      """Control the time of new `DateTime.DateTime()` instances.
+
+      This can be useful to pretend time has stopped at a certain date (i.e. the test
+      runs infinitely fast), for example to avoid errors on tests that are started
+      just before midnight.
+
+      An optional `step` argument can be provided, which makes each new `DateTime` created
+      with an interval of `step` between the previous.
+
+      This is best used as a context manager, otherwise use unpinDateTime to
+      reset.
+      """
+      global _get_pinned_date_time, _pinned_date_time, _datetime_system_time_patcher
       assert date_time is None or isinstance(date_time, DateTime)
       _pinned_date_time = date_time
+      if step:
+        # because we'll add the step each time, to start with the passed date_time
+        # we substract the step once.
+        _pinned_date_time = DateTime(_pinned_date_time.asdatetime() - step)
+
+      if date_time is None:
+        _get_pinned_date_time = None
+      else:
+        def _get_next_pinned_date_time():
+          global _pinned_date_time
+          assert _pinned_date_time
+          if step:
+            _pinned_date_time = DateTime(_pinned_date_time.asdatetime() + step)
+          return _pinned_date_time
+        _get_pinned_date_time = _get_next_pinned_date_time
 
       if _datetime_system_time_patcher is not None:
         _datetime_system_time_patcher.stop()
@@ -389,7 +413,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
         _datetime_system_time_patcher = mock.patch.object(
           sys.modules['DateTime.DateTime'],
           '_system_time',
-          return_value=date_time.timeTime())
+          side_effect=_pinned_date_time.timeTime)
         _datetime_system_time_patcher.start()
 
       unpinDateTime = cls.unpinDateTime
