@@ -392,7 +392,7 @@ def parseActionUrl(context_relative_url, url):
         param_name, param_type = param_name.split(":")
         if param_type == "int":
           param_value = int(param_value)
-        elif param_type == "bool":
+        elif param_type in ("bool", "boolean"):
           param_value = True if param_value.lower() in ("true", "1") else False
         elif param_type == "list":
           if param_name not in param_dict:
