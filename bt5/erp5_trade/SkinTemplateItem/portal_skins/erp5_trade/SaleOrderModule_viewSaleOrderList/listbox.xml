@@ -89,8 +89,16 @@
                           <string>Supplier Project</string>
                         </tuple>
                         <tuple>
+                          <string>source_decision_title</string>
+                          <string>Seller</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_project_title</string>
                           <string>Client Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Buyer</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
@@ -244,6 +252,10 @@
                           <string>Supplier Project</string>
                         </tuple>
                         <tuple>
+                          <string>source_decision_title</string>
+                          <string>Seller</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_title</string>
                           <string>Recipient or Beneficiary</string>
                         </tuple>
@@ -254,6 +266,10 @@
                         <tuple>
                           <string>destination_project_title</string>
                           <string>Client Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Buyer</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
@@ -315,6 +331,10 @@
                           <string>Supplier Project</string>
                         </tuple>
                         <tuple>
+                          <string>source_decision_title</string>
+                          <string>Seller</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_title</string>
                           <string>Recipient or Beneficiary</string>
                         </tuple>
@@ -325,6 +345,10 @@
                         <tuple>
                           <string>destination_project_title</string>
                           <string>Client Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Buyer</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
