@@ -19,12 +19,10 @@ if context.REQUEST["REQUEST_METHOD"] == "POST":
       response=json.dumps(data, indent=2),
       resource_value=portal.portal_categories.http_exchange_resource.stripe.webhook,
     )
+    # Trigger the alarm before changing the event state
+    # (and so, removing the access permission)
+    system_event.activate(after_tag=store_webhook_tag).Base_reindexAndSenseAlarm(['handle_confirmed_http_exchanges'])
     system_event.confirm()
-  alarm = portal.portal_alarms.handle_confirmed_http_exchanges
-  alarm.activate(
-    after_tag=store_webhook_tag,
-    activity='SQLQueue',
-  ).activeSense()
   response.setStatus(200)
 else:
   response.setStatus(400)
