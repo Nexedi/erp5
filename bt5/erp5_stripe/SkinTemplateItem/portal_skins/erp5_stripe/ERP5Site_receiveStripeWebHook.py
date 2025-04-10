@@ -20,11 +20,7 @@ if context.REQUEST["REQUEST_METHOD"] == "POST":
       resource_value=portal.portal_categories.http_exchange_resource.stripe.webhook,
     )
     system_event.confirm()
-  alarm = portal.portal_alarms.handle_confirmed_http_exchanges
-  alarm.activate(
-    after_tag=store_webhook_tag,
-    activity='SQLQueue',
-  ).activeSense()
+  system_event.activate(after_tag=store_webhook_tag).Base_reindexAndSenseAlarm(['handle_confirmed_http_exchanges'])
   response.setStatus(200)
 else:
   response.setStatus(400)

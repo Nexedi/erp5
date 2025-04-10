@@ -12,6 +12,4 @@ http_exchange = container.newContent(
 )
 # Notification ends in confirmed state, to be picked up by alarm (for security context switch)
 http_exchange.confirm()
-tag = script.id + '-' + http_exchange.getId()
-http_exchange.reindexObject(activate_kw={'tag': tag})
-portal.portal_alarms.handle_confirmed_http_exchanges.activate(after_tag=tag).activeSense()
+http_exchange.Base_reindexAndSenseAlarm(['handle_confirmed_http_exchanges'])
