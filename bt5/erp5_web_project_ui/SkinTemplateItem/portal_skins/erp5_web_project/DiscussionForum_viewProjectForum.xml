@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>action_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Post Message</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -144,7 +144,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Post Message</string> </value>
+            <value> <string>Project Forum</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
