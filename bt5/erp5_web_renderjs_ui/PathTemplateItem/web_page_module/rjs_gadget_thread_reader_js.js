@@ -148,6 +148,7 @@
             begin_from: parseInt(result_dict.begin_from || '0', 10) || 0,
             lines: options.lines || 1,
             date_column: options.date_column || 'modification_date',
+            sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
             attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
@@ -319,7 +320,7 @@
         select_list: ['asStrippedHTML', gadget.state.date_column,
                       gadget.state.source_column,
                       gadget.state.attachment_column],
-        sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
+        sort_on: [[gadget.state.date_column, gadget.state.sort_order], ['uid', 'ASC']]
       })
         .push(function (result) {
           return gadget.changeState({
