@@ -254,27 +254,27 @@ class Test(ERP5TypeTestCase):
                                 portal_type = 'Data Bucket Stream')
     self.tic()
 
-    self.assertEqual(0, len(bucket_stream))
+    self.assertEqual(0, bucket_stream.getBucketCount())
 
     # test set and get
     bin_string = "1"*100000
-    key = len(bucket_stream) + 1
+    key = bucket_stream.getBucketCount() + 1
     bucket_stream.insertBucket(key, bin_string )
     self.assertEqual(bin_string, bucket_stream.getBucketByKey(key))
     self.assertEqual(bin_string, bucket_stream.getBucketByIndex(0))
 
     # test sequence
-    self.assertEqual(1, len(bucket_stream))
+    self.assertEqual(1, bucket_stream.getBucketCount())
 
     # test delete bucket by key
     bucket_stream.delBucketByKey(key)
-    self.assertEqual(0, len(bucket_stream))
+    self.assertEqual(0, bucket_stream.getBucketCount())
 
     # set many buckets
     for i in range(100):
       bucket_stream.insertBucket(i, i*10000)
 
-    self.assertEqual(100, len(bucket_stream))
+    self.assertEqual(100, bucket_stream.getBucketCount())
     self.assertEqual(range(100), bucket_stream.getKeyList())
 
     # test as sequence
