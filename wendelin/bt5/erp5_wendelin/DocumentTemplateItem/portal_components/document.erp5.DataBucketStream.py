@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2015 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2015-2025 Nexedi SA and Contributors. All Rights Reserved.
 #                    Ivan Tyagov <ivan@nexedi.com>
 #
 # This program is free software: you can Use, Study, Modify and Redistribute
@@ -132,23 +132,31 @@ class DataBucketStream(Document):
     Document.__init__(self, identifier, **kw)
 
   def __len__(self):
-    return len(self._tree)
+    return len(self._bucket_tree)
 
-  # XXX: Workaround to fix errors during consistency checks.
-  # We should rename the "_tree" attribute add a migration
-  # script for existing instances. Then we can remove
-  # the following two methods.
-  def objectValues(self, *args, **kw):
-    return []
-
-  def objectIds(self, *args, **kw):
-    return []
+  # BBB: migration from '_tree' to '_bucket_tree'. In the initial implementation
+  # we used the '_tree' attribute for the buckets, however this created many issues,
+  # because this is the attribute name used by the parent Folder class [1]. We don't
+  # want our buckets to be reachable by the Folder API - they are too big, don't
+  # support aquisition and must not be indexed in the catalog.
+  #
+  # [1] https://lab.nexedi.com/nexedi/erp5/blob/a17bb910/product/ERP5Type/Core/Folder.py#L1119
+  def __setstate__(self, state):
+    if isinstance(state, tuple):
+      inst_dict, _ = state
+    else:
+      inst_dict = state
+    if "_tree" in inst_dict:  # migrate old attribute
+      if "_bucket_tree" not in inst_dict:  # prevent data loss
+        inst_dict["_bucket_tree"] = inst_dict["_tree"]
+        del inst_dict["_tree"]
+    Document.__setstate__(self, inst_dict)
 
   def initBucketTree(self):
     """
       Initialize the Bucket Tree
     """
-    self._tree = OOBTree()
+    self._bucket_tree = OOBTree()
 
   def initIndexTree(self):
     """
@@ -161,7 +169,7 @@ class DataBucketStream(Document):
     Return the maximum key
     """
     try:
-      return self._tree.maxKey(key)
+      return self._bucket_tree.maxKey(key)
     except ValueError:
       return None
 
@@ -179,7 +187,7 @@ class DataBucketStream(Document):
     Return the minimum key
     """
     try:
-      return self._tree.minKey(key)
+      return self._bucket_tree.minKey(key)
     except ValueError:
       return None
 
@@ -199,7 +207,7 @@ class DataBucketStream(Document):
     """
       Get one bucket
     """
-    persistent_string = self._tree[key]
+    persistent_string = self._bucket_tree[key]
     v = persistent_string.value
     persistent_string._p_deactivate()  # free memory
     return v
@@ -221,7 +229,7 @@ class DataBucketStream(Document):
     """
       Wether bucket with such key exists
     """
-    return key in self._tree
+    return key in self._bucket_tree
 
   def hasBucketIndex(self, index):
     """
@@ -244,17 +252,17 @@ class DataBucketStream(Document):
     except AttributeError:
       pass
     value = PersistentString(value)
-    is_new_key = self._tree.insert(key, value)
+    is_new_key = self._bucket_tree.insert(key, value)
     if not is_new_key:
       self.log("Reingestion of same key")
-      self._tree[key] = value
+      self._bucket_tree[key] = value
     
   def getBucketKeySequenceByKey(self, start_key=None, stop_key=None,
                    count=None, exclude_start_key=False, exclude_stop_key=False):
     """
       Get a lazy sequence of bucket keys
     """
-    sequence = self._tree.keys(min=start_key, max=stop_key,
+    sequence = self._bucket_tree.keys(min=start_key, max=stop_key,
                                excludemin=exclude_start_key,
                                excludemax=exclude_stop_key)
     if count is None:
@@ -302,7 +310,7 @@ class DataBucketStream(Document):
     """
       Get a lazy sequence of bucket values
     """
-    sequence = self._tree.values(min=start_key, max=stop_key,
+    sequence = self._bucket_tree.values(min=start_key, max=stop_key,
                                  excludemin=exclude_start_key,
                                  excludemax=exclude_stop_key)
     if count is None:
@@ -326,7 +334,7 @@ class DataBucketStream(Document):
     """
       Get a lazy sequence of bucket items
     """
-    sequence = self._tree.items(min=start_key, max=stop_key,
+    sequence = self._bucket_tree.items(min=start_key, max=stop_key,
                                excludemin=exclude_start_key,
                                excludemax=exclude_stop_key)
     if count is None:
@@ -369,13 +377,13 @@ class DataBucketStream(Document):
     """
       Return a list of all key, value pairs
     """
-    return [item for item in self._tree.items()]
+    return [item for item in self._bucket_tree.items()]
     
   def getKeyList(self):
     """
       Return a list of all keys
     """
-    return [key for key in self._tree.keys()]
+    return [key for key in self._bucket_tree.keys()]
     
   def getIndexList(self):
     """
@@ -401,7 +409,7 @@ class DataBucketStream(Document):
     """
       Remove the bucket.
     """
-    del self._tree[key]
+    del self._bucket_tree[key]
     for index, my_key in list(self.getBucketIndexKeySequenceByIndex()):
       if my_key == key:
         del self._long_index_tree[index]
@@ -411,7 +419,7 @@ class DataBucketStream(Document):
       Remove the bucket.
     """
     key = self._long_index_tree[index]
-    del self._tree[key]
+    del self._bucket_tree[key]
     del self._long_index_tree[index]
 
   def rebuildIndexTreeByKeyOrder(self):
