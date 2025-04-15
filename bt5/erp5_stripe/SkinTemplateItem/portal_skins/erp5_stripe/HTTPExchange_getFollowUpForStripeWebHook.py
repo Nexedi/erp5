@@ -7,22 +7,15 @@ data = response["data"]["object"]
 session_id = data["id"]
 
 assert session_id
-stripe_payment_session, = portal.portal_catalog(
+stripe_payment_session = portal.portal_catalog.getResultValue(
   portal_type="Stripe Payment Session",
-  reference=session_id,
-  limit=2,
+  reference=session_id
 )
 
-stripe_payment_session = stripe_payment_session.getObject()
-tag = '{}:{}'.format(script.getId(), stripe_payment_session.getId())
-
-with stripe_payment_session.defaultActivateParameterDict(
-  {'tag': tag},
-):
-  # set an expiration date in the past so that next alarm run process this payment session
-  stripe_payment_session.setExpirationDate(DateTime() - 1)
+# set an expiration date in the past so that next alarm run process this payment session
+stripe_payment_session.setExpirationDate(DateTime() - 1)
 context.setFollowUpValue(stripe_payment_session)
 
 # activate alarm after the payment session is reindexed
-alarm = portal.portal_alarms.check_stripe_payment_session
-alarm.activate(queue='SQLQueue', after_tag=tag).activeSense()
+context.Base_reindexAndSenseAlarm(['check_stripe_payment_session'])
+stripe_payment_session.Base_reindexAndSenseAlarm(['check_stripe_payment_session'])

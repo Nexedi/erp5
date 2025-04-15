@@ -11,18 +11,17 @@ if context.REQUEST["REQUEST_METHOD"] == "POST":
   assert data, "BODY should not be empty"
   assert "id" in data, "ID is missing"
   assert data["object"] == "event", "Unexpected object"
-  store_webhook_tag = "store_webhook"
-  with portal.portal_activities.defaultActivateParameterDict({"tag": store_webhook_tag}, placeless=True):
-    system_event = portal.system_event_module.newContent(
-      title="WebHook Response",
-      portal_type="HTTP Exchange",
-      response=json.dumps(data, indent=2),
-      resource_value=portal.portal_categories.http_exchange_resource.stripe.webhook,
-    )
-    # Trigger the alarm before changing the event state
-    # (and so, removing the access permission)
-    system_event.activate(after_tag=store_webhook_tag).Base_reindexAndSenseAlarm(['handle_confirmed_http_exchanges'])
-    system_event.confirm()
+
+  system_event = portal.system_event_module.newContent(
+    title="WebHook Response",
+    portal_type="HTTP Exchange",
+    response=json.dumps(data, indent=2),
+    resource_value=portal.portal_categories.http_exchange_resource.stripe.webhook,
+  )
+  # Trigger the alarm before changing the event state
+  # (and so, removing the access permission)
+  system_event.Base_reindexAndSenseAlarm(['handle_confirmed_http_exchanges'])
+  system_event.confirm()
   response.setStatus(200)
 else:
   response.setStatus(400)
