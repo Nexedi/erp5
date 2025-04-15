@@ -131,9 +131,6 @@ class DataBucketStream(Document):
     self.initIndexTree()
     Document.__init__(self, identifier, **kw)
 
-  def __len__(self):
-    return len(self._bucket_tree)
-
   # BBB: migration from '_tree' to '_bucket_tree'. In the initial implementation
   # we used the '_tree' attribute for the buckets, however this created many issues,
   # because this is the attribute name used by the parent Folder class [1]. We don't
@@ -163,7 +160,13 @@ class DataBucketStream(Document):
       Initialize the Index Tree
     """
     self._long_index_tree = LOBTree()
-    
+
+  def getBucketCount(self):
+    """
+    Return count of buckets.
+    """
+    return len(self._bucket_tree)
+
   def getMaxKey(self, key=None):
     """
     Return the maximum key
