@@ -53,14 +53,6 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>DiscussionPost_getAttachmentList</string> </value>
         </item>
