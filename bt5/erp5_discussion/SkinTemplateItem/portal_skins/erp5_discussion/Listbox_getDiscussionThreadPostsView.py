@@ -1,5 +1,3 @@
-context.log("NEW LISTBOX ULR!")
-
 if url_dict:
   jio_key = context.getRelativeUrl()
   return {
