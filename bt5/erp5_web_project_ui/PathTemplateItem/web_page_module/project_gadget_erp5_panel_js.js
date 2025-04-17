@@ -58,6 +58,11 @@
     })
 
     .declareMethod('render', function render(options) {
+      if (options.erp5_document) {
+        if (options.erp5_document._embedded._view.dialog_id) {
+          options.erp5_document._links = {};
+        }
+      }
       var erp5_document = options.erp5_document,
         jio_key = options.jio_key,
         view = options.view,
