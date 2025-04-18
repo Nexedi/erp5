@@ -10,8 +10,8 @@ http_exchange = container.newContent(
   resource_value=None if notification_type is None else getattr(portal.portal_categories.http_exchange_resource.payline.notification, notification_type),
   source_value=context,
 )
+# Trigger the alarm before changing the event state
+# (and so, removing the access permission)
+http_exchange.Base_reindexAndSenseAlarm(['handle_confirmed_http_exchanges'])
 # Notification ends in confirmed state, to be picked up by alarm (for security context switch)
 http_exchange.confirm()
-tag = script.id + '-' + http_exchange.getId()
-http_exchange.reindexObject(activate_kw={'tag': tag})
-portal.portal_alarms.handle_confirmed_http_exchanges.activate(after_tag=tag).activeSense()
