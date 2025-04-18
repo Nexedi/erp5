@@ -567,7 +567,10 @@ else:
   try:                    # for pandas >= 0.20.x
     allow_type(pd.Int64Index)
   except AttributeError:  # BBB for pandas < 0.20.x
-    allow_type(pd.indexes.numeric.Int64Index)
+    try:
+      allow_type(pd.indexes.numeric.Int64Index)
+    except AttributeError:  # BBB for pandas >= 2.0
+      pass
   allow_type(pd.core.groupby.DataFrameGroupBy)
   allow_type(pd.core.groupby.SeriesGroupBy)
   try:                    # for pandas >= 0.20.x
