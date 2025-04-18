@@ -1,0 +1,17 @@
+<hidden_content_type_list>
+ <portal_type id="Daily Statement Record Module">
+  <item>Daily Statement Record</item>
+ </portal_type>
+ <portal_type id="Purchase Price Record Module">
+  <item>Purchase Price Record</item>
+ </portal_type>
+ <portal_type id="Purchase Record Module">
+  <item>Purchase Record</item>
+ </portal_type>
+ <portal_type id="Sale Price Record Module">
+  <item>Sale Price Record</item>
+ </portal_type>
+ <portal_type id="Sale Record Module">
+  <item>Sale Record</item>
+ </portal_type>
+</hidden_content_type_list>
