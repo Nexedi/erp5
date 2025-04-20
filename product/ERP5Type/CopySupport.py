@@ -16,7 +16,7 @@ from six.moves import xrange
 from functools import partial
 from OFS import Moniker
 from zExceptions import BadRequest
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo, getSecurityManager, Unauthorized
 from AccessControl.Permission import Permission
 from OFS.ObjectManager import ObjectManager
 from OFS.CopySupport import CopyContainer as OriginalCopyContainer
@@ -207,7 +207,7 @@ class CopyContainer:
 
 
   security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
-  def manage_delObjects(self, ids=None, uids=None, REQUEST=None):
+  def XXXmanage_delObjects(self, ids=None, uids=None, REQUEST=None):
       """Delete a subordinate object
 
       The objects specified in 'ids' get deleted.
@@ -219,6 +219,7 @@ class CopyContainer:
           return MessageDialog(title='No items specified',
                  message='No items were specified!',
                  action ='./manage_main',)
+      checkDeletePermission = partial(getSecurityManager().checkPermission, 'Delete objects')
       while uids:
           uid = uids.pop()
           ob=self.getPortalObject().portal_catalog.getObject(uid)
@@ -227,6 +228,8 @@ class CopyContainer:
           v=container._getOb(id, self)
           if v is self:
               raise BadRequest('%s does not exist' % id)
+          if not checkDeletePermission(container):
+              raise Unauthorized()
           container._delObject(id)
       if REQUEST is not None:
               return self.manage_main(self, REQUEST, update_menu=1)
