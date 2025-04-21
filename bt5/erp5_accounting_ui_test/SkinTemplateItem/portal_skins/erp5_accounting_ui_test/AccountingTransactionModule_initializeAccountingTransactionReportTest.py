@@ -10,7 +10,9 @@ module = portal.accounting_module
 portal.PreferenceTool_setAccountingTestAccountReferencePreference(report_style=report_style)
 
 # First, clean up the module
-module.manage_delObjects(list(module.objectIds()))
+object_ids = list(module.objectIds())
+if object_ids:
+  module.manage_delObjects(object_ids)
 
 # Create datasets
 if report_name == "journal":

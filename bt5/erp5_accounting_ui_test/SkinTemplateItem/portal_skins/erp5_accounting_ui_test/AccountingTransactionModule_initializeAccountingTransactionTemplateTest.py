@@ -1,7 +1,9 @@
 portal = context.getPortalObject()
 module = portal.accounting_module
 
-module.manage_delObjects(list(module.objectIds()))
+object_ids = list(module.objectIds())
+if object_ids:
+  module.manage_delObjects(object_ids)
 
 module.setProperty('current_content_script', script.getId())
 

@@ -202,30 +202,34 @@ class AccountingTestCase(ERP5TypeTestCase):
     """
     self.abort()
     self.login()
-    self.accounting_module.manage_delObjects(
-                      list(self.accounting_module.objectIds()))
+    def delObjects(container, ids):
+      if ids:
+        container.manage_delObjects(ids)
+    delObjects(self.accounting_module, list(self.accounting_module.objectIds()))
     organisation_list = ('my_organisation', 'main_organisation',
                          'client_1', 'client_2', 'supplier')
-    self.organisation_module.manage_delObjects([x for x in
-          self.accounting_module.objectIds() if x not in organisation_list])
+    delObjects(
+      self.organisation_module, [x for x in
+          self.organisation_module.objectIds() if x not in organisation_list])
     for organisation_id in organisation_list:
       organisation = self.organisation_module._getOb(organisation_id, None)
       if organisation is not None:
-        organisation.manage_delObjects([x.getId() for x in
+        delObjects(organisation, [x.getId() for x in
                 organisation.objectValues(
                   portal_type=('Accounting Period', 'Bank Account'))])
-    self.person_module.manage_delObjects([x for x in
+    delObjects(
+      self.person_module, [x for x in
           self.person_module.objectIds() if x not in ('john_smith',)])
-    self.account_module.manage_delObjects([x for x in
+    delObjects(
+      self.account_module, [x for x in
           self.account_module.objectIds() if x not in ('bank', 'collected_vat',
             'equity', 'fixed_assets', 'goods_purchase', 'goods_sales',
             'payable', 'receivable', 'refundable_vat', 'stocks',)])
-    self.portal.portal_preferences.manage_delObjects([x.getId() for x in
+    delObjects(self.portal.portal_preferences, [x.getId() for x in
           self.portal.portal_preferences.objectValues()
           if x.getId() not in ('accounting_zuite_preference', 'default_site_preference')
           and x.getPriority() != Priority.SITE])
-    self.portal.portal_simulation.manage_delObjects(list(
-          self.portal.portal_simulation.objectIds()))
+    delObjects(self.portal.portal_simulation, list(self.portal.portal_simulation.objectIds()))
     self.tic()
 
   def getBusinessTemplateList(self):

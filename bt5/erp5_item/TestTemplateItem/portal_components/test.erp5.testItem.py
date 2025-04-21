@@ -323,7 +323,9 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                    self.portal.purchase_packing_list_module,
                    self.portal.product_module,
                    self.portal.portal_simulation,):
-      module.manage_delObjects(list(module.objectIds()))
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.tic()
 
 

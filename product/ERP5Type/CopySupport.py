@@ -215,21 +215,12 @@ class CopyContainer:
       if ids:
         # Use default method
         return ObjectManager.manage_delObjects(self, ids, REQUEST)
-      if not uids:
-          return MessageDialog(title='No items specified',
-                 message='No items were specified!',
-                 action ='./manage_main',)
-      while uids:
-          uid = uids.pop()
-          ob=self.getPortalObject().portal_catalog.getObject(uid)
-          container = ob.aq_inner.aq_parent
-          id = ob.id
-          v=container._getOb(id, self)
-          if v is self:
-              raise BadRequest('%s does not exist' % id)
-          container._delObject(id)
-      if REQUEST is not None:
-              return self.manage_main(self, REQUEST, update_menu=1)
+      if uids:
+        raise ValueError
+      # XXX we reach here when ids is empty, which is a BadRequest error in
+      # ObjectManager.manage_delObjects, but many places in ERP5 blindly pass a
+      # list that might be empty to manage_delObjects, so we tolerate this behavior
+      # for "bug compatiblity".
 
   # Copy and paste support
   security.declarePrivate('manage_afterClone')

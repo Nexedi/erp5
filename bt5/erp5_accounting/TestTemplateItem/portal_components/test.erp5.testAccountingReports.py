@@ -5430,7 +5430,9 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
         preferred_accounting_transaction_line_analytic_base_category_list=())
     for module_id in ('project_module',):
       module = self.portal[module_id]
-      module.manage_delObjects([x for x in module.objectIds()])
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.commit()
 
   def testJournalAnalyticsShown(self):

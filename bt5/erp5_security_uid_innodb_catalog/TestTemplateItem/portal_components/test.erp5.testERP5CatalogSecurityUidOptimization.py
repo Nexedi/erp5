@@ -61,9 +61,11 @@ class SecurityUidOptimizationTestCase(ERP5TypeTestCase):
       self.portal.portal_types.Organisation,
       self.portal.portal_types.Person,
     ):
-      portal_type.manage_delObjects(ids=[
+      object_ids = [
         ri.getId() for ri in portal_type.contentValues(
-          portal_type='Role Information')])
+          portal_type='Role Information')]
+      if object_ids:
+        portal_type.manage_delObjects(object_ids)
     for module in (
       self.portal.organisation_module,
       self.portal.person_module,
