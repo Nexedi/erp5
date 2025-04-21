@@ -1589,7 +1589,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     type_tool = self.getTypeTool()
     portal_type_object = type_tool['Organisation']
     def addCustomAction(name,condition):
-      portal_type_object.newContent(portal_type='Action Information',
+      action = portal_type_object.newContent(
+        portal_type='Action Information',
         reference=name,
         title='Become Geek',
         action='string:${object_url}/become_geek_action',
@@ -1598,25 +1599,32 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         action_type='object_action',
         visible=1,
         float_index=2.0)
-    addCustomAction('action1','python: here.getDescription()=="foo"')
-    obj = self.getOrganisationModule().newContent(portal_type='Organisation')
-    action_tool = self.portal.portal_actions
-    actions = action_tool.listFilteredActionsFor(obj)
-    action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertNotIn('action1', action_id_list)
-    obj.setDescription('foo')
-    actions = action_tool.listFilteredActionsFor(obj)
-    action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertIn('action1', action_id_list)
-    addCustomAction('action2',"python: portal_url not in (None,'')")
-    actions = action_tool.listFilteredActionsFor(obj)
-    action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertIn('action2', action_id_list)
-    addCustomAction('action3',"python: object_url not in (None,'')")
-    actions = action_tool.listFilteredActionsFor(obj)
-    action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertIn('action3', action_id_list)
+      self.commit()
+      return action
 
+    action1 = addCustomAction('action1','python: here.getDescription()=="foo"')
+    obj = self.getOrganisationModule().newContent(portal_type='Organisation')
+    def get_obj_action_id_list():
+      actions = self.portal.portal_actions.listFilteredActionsFor(obj)
+      return [x['id'] for x in actions.get('object_action',[])]
+
+    self.assertNotIn('action1', get_obj_action_id_list())
+    obj.setDescription('foo')
+    self.assertIn('action1', get_obj_action_id_list())
+    addCustomAction('action2',"python: portal_url not in (None,'')")
+    self.assertIn('action2', get_obj_action_id_list())
+    addCustomAction('action3',"python: object_url not in (None,'')")
+    self.assertIn('action3', get_obj_action_id_list())
+
+    # editing an action is immediately reflected, without cache
+    with \
+        mock.patch('Products.ERP5Type.CachePlugins.RamCache.RamCache.clearCache'), \
+        mock.patch('Products.ERP5Type.CachePlugins.RamCache.RamCache.delete') :
+      action1.setCondition('python: here.getDescription()=="bar"')
+      self.commit()
+    self.assertNotIn('action1', get_obj_action_id_list())
+    obj.setDescription('bar')
+    self.assertIn('action1', get_obj_action_id_list())
 
   def test_21bis_getDefaultViewFor(self):
     """check that any action, in category view, with higher priority
