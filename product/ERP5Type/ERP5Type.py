@@ -39,7 +39,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.ImmediateReindexContextManager import ImmediateReindexContextManager
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList, \
     getAccessorHolderList
 import six
@@ -201,6 +201,7 @@ InitializeClass(LocalRoleAssignorMixIn)
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
                           LocalRoleAssignorMixIn,
+                          CacheCookieMixin,
                           TranslationProviderBase):
     """
     ERP5 Types are based on FactoryTypeInformation
@@ -740,21 +741,27 @@ class ERP5TypeInformation(XMLObject,
       # priorities than actions defined on portal types
       action_list.sort(key=lambda x:x['priority'])
       return action_list
+
+    def _getActionList_cache_id_generator(method_id, obj, *args, **kw):
+      return '%s:getActionList:%s' % (
+        obj.getId(),
+        obj.getCacheCookie('getActionList')
+      )
     _getActionList = CachingMethod(_getActionList,
       id='getActionList',
       cache_factory='erp5_content_long',
-      cache_id_generator=lambda method_id, *args: method_id)
+      cache_id_generator=_getActionList_cache_id_generator)
 
     security.declarePrivate('getActionList')
     def getActionList(self):
       """Return the list of enabled actions from cache, sorted by priority"""
-      return self._getActionList(self, scope=self.id)
+      return self._getActionList(self)
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'clearGetActionListCache')
     def clearGetActionListCache(self):
-      """Clear a cache of _getRawActionInformationList."""
-      self._getActionList.delete(scope=self.id)
+      """Clear cache of getActionList for this type"""
+      self.newCacheCookie('getActionList')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionInformationList')
