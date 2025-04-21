@@ -3760,7 +3760,7 @@ VALUES
 
     # Delete the new object to free the uid.
     available_uid = person.uid
-    person_module.manage_delObjects(uids=[available_uid])
+    person_module.manage_delObjects(ids=[person.getId()])
     self.tic()
 
     # Make sure that the uid is not used any longer.
