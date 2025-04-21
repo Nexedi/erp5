@@ -104,7 +104,9 @@ class TestResource(ERP5TypeTestCase):
           self.portal.getDefaultModule(self.node_portal_type),
           self.portal.getDefaultModule("Sale Order"),
           self.portal.getDefaultModule("Purchase Order"),):
-      folder.manage_delObjects([i for i in folder.objectIds()])
+      object_ids = list(folder.objectIds())
+      if object_ids:
+        folder.manage_delObjects(object_ids)
     self.tic()
 
   def createCategories(self):

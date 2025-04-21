@@ -301,8 +301,10 @@ class SolverProcess(XMLObject, ActiveProcess):
     # delete non-matched existing solver decisions, unless they have been
     # solved already (we detect this by the fact that the solver decision is
     # associated to a target solver)
-    self.manage_delObjects(ids=[x.getId() for x in
-          unmatched_solver_decision_list if not x.getCausality()])
+    object_ids = [x.getId() for x in
+          unmatched_solver_decision_list if not x.getCausality()]
+    if object_ids:
+      self.manage_delObjects(ids=object_ids)
 
   def _generateRandomId(self):
     # call ActiveProcess._generateRandomId() explicitly otherwise

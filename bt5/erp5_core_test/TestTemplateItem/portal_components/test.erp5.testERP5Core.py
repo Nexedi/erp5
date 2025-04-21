@@ -525,6 +525,34 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue('Deleted.' in redirect, redirect)
     self.assertEqual(module.objectCount(), 0)
 
+  def test_Folder_delete_context_unauthorized(self):
+    context = self.portal.newContent(portal_type='Folder', id='test_folder')
+    document = context.newContent(portal_type='Folder', id='1')
+    self.tic()
+    context.manage_permission('Delete objects', [], acquire=0)
+    redirect = self._Folder_delete(document)
+    self.assertIn(
+      six.moves.urllib.parse.quote(
+        "You are not allowed to access 'manage_delObjects' in this context"),
+      redirect)
+    self.assertEqual(context.objectCount(), 1)
+
+  def test_Folder_delete_container_unauthorized(self):
+    context = self.portal.newContent(portal_type='Folder', id='test_folder')
+    document_1 = context.newContent(portal_type='Folder', id='1')
+    container = self.portal.newContent(portal_type='Folder', title=self.id())
+    document_2 = container.newContent(portal_type='Folder', id='2')
+    self.tic()
+    container.manage_permission('Delete objects', [], acquire=0)
+    # Folder_delete supports deleting multiple documents from different containers
+    # security of each container is checked individually.
+    redirect = self._Folder_delete(document_1, document_2)
+    self.assertIn(
+      six.moves.urllib.parse.quote(
+        "You are not allowed to access 'manage_delObjects' in this context"),
+      redirect)
+    self.assertEqual(container.objectCount(), 1)
+
   def test_Folder_delete_related_object(self):
     # deletion is refused if there are related objects
     organisation_module_len = len(self.portal.organisation_module)
