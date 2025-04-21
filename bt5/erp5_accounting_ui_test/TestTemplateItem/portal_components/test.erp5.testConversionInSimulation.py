@@ -126,14 +126,18 @@ class TestConversionInSimulation(AccountingTestCase):
     # clear modules if necessary
     currency_list = ('euro', 'yen', 'usd')
     module = self.portal.currency_module
-    module.manage_delObjects([x for x in module.objectIds()
-                        if x not in currency_list])
+    object_ids = [x for x in module.objectIds()
+                        if x not in currency_list]
+    if object_ids:
+      module.manage_delObjects(object_ids)
     for currency_id in currency_list:
       currency = self.currency_module._getOb(currency_id, None)
       if currency is not None:
-        currency.manage_delObjects([x.getId() for x in
+        object_ids = [x.getId() for x in
                 currency.objectValues(
-                  portal_type='Currency Exchange Line')])
+                  portal_type='Currency Exchange Line')]
+        if object_ids:
+          currency.manage_delObjects(object_ids)
     if getattr(self, 'business_process', None) is not None:
       self.business_process.getParentValue()._delObject(
         self.business_process.getId()

@@ -3,7 +3,9 @@
 # Clean up the contents.
 for name in ('foo_module', 'bar_module', 'foo_bar_module'):
   module = getattr(context, name)
-  module.manage_delObjects(list(module.objectIds()))
+  object_ids = list(module.objectIds())
+  if object_ids:
+    module.manage_delObjects(object_ids)
   module.setLastId(1)
 
 # Reset the foo module listbox

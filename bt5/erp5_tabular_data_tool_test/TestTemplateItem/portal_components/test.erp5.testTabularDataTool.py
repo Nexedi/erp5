@@ -61,7 +61,8 @@ class TestTabularDataTool(ERP5TypeTestCase):
       return document.getTitle().startswith(self._getTestDocumentTitlePrefix())
     for module in delete_module_list:
       delete_id_list = [id_ for id_ in module.objectIds() if isDelete(module[id_])]
-      module.manage_delObjects(delete_id_list)
+      if delete_id_list:
+        module.manage_delObjects(delete_id_list)
     rule_reference_script = 'InternalPackingList_getRuleReference'
     if self.portal.portal_skins.custom.get(rule_reference_script, None) is not None:
       self.portal.portal_skins.custom.manage_delObjects([rule_reference_script])
