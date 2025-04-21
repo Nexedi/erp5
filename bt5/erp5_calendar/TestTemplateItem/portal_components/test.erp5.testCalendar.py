@@ -107,7 +107,9 @@ class TestCalendar(ERP5ReportTestCase):
     for module in (self.portal.group_calendar_module,
                    self.portal.leave_request_module,
                    self.portal.presence_request_module,):
-      module.manage_delObjects(list(module.objectIds()))
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.tic()
 
   def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):

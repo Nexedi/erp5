@@ -87,7 +87,9 @@ class IngestionTestCase(ERP5TypeTestCase):
     """.split()
     for module_id in module_id_list:
       module = self.portal[module_id]
-      module.manage_delObjects([id for id in module.objectIds()])
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.tic()
     activity_tool = self.portal.portal_activities
     activity_status = {m.processing_node < -1

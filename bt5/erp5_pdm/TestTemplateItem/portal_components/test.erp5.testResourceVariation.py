@@ -195,14 +195,13 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
     """Remove all documents.
     """
     self.abort()
-    self.product_module.manage_delObjects(
-                      list(self.service_module.objectIds()))
-    self.service_module.manage_delObjects(
-                      list(self.service_module.objectIds()))
-    self.component_module.manage_delObjects(
-                      list(self.component_module.objectIds()))
-    self.portal_categories.manage_delObjects((['required_size',
-                                    'individual_aspect','option_colour']))
+    for module in self.product_module, self.service_module, self.component_module:
+      object_ids = list(self.service_module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
+
+    self.portal_categories.manage_delObjects((
+      ['required_size', 'individual_aspect','option_colour']))
 
     self.tic()
 

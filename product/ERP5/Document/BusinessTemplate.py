@@ -3423,9 +3423,11 @@ class ActionTemplateItem(ObjectTemplateItem):
         obj.moveDownActions(selections=tuple(move_down_list))
     for path, action_dict in six.iteritems(portal_type_dict):
       container = p.unrestrictedTraverse(path)
-      container.manage_delObjects([obj.id
+      action_id_list = [obj.id
         for obj in container.getActionInformationList()
-        if obj.getReference() in action_dict])
+        if obj.getReference() in action_dict]
+      if action_id_list:
+        container.manage_delObjects(action_id_list)
       for name, obj in six.iteritems(action_dict):
         container._importOldAction(obj).aq_base
 
@@ -3594,7 +3596,9 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         obj = p.unrestrictedTraverse(path, None)
         if obj is not None:
           # reset roles before applying
-          obj.manage_delObjects([x.id for x in obj.getRoleInformationList()])
+          role_id_list = [x.id for x in obj.getRoleInformationList()]
+          if role_id_list:
+            obj.manage_delObjects(role_id_list)
           type_roles_list = self._objects[roles_path] or []
           for role_property_dict in type_roles_list:
             obj._importRole(role_property_dict)
@@ -3611,11 +3615,11 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       keys = self._objects
     for roles_path in keys:
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
-      try:
-        obj = p.unrestrictedTraverse(path)
-        obj.manage_delObjects([x.id for x in obj.getRoleInformationList()])
-      except (NotFound, KeyError):
-        pass
+      obj = p.unrestrictedTraverse(path, None)
+      if obj is not None:
+        role_id_list = [x.id for x in obj.getRoleInformationList()]
+        if role_id_list:
+          obj.manage_delObjects(role_id_list)
 
 class SitePropertyTemplateItem(BaseTemplateItem):
 
