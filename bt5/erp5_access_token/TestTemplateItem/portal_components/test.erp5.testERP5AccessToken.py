@@ -452,9 +452,11 @@ class TestERP5AccessTokenUpgraderEnablePlugin(AccessTokenTestCase):
   def afterSetUp(self):
     # disable plugin if it had been enabled by another test.
     acl_users = self.portal.acl_users
-    acl_users.manage_delObjects(ids=[
+    object_ids = [
       x.getId() for x in
-        acl_users.objectValues(spec=('ERP5 Access Token Extraction Plugin',))])
+        acl_users.objectValues(spec=('ERP5 Access Token Extraction Plugin',))]
+    if object_ids:
+      acl_users.manage_delObjects(object_ids)
     self.commit()
 
   def test_post_upgrade_constraint_enable_plugin(self):

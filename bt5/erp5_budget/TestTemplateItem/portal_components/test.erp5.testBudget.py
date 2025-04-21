@@ -50,8 +50,9 @@ class TestBudget(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.abort()
-    self.portal.accounting_module.manage_delObjects(
-       list(self.portal.accounting_module.objectIds()))
+    object_ids = list(self.portal.accounting_module.objectIds())
+    if object_ids:
+      self.portal.accounting_module.manage_delObjects(object_ids)
     self.tic()
 
   def getBusinessTemplateList(self):

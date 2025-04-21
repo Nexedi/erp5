@@ -50,10 +50,13 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.abort()
-    self.portal.person_module.manage_delObjects(
-            list(self.portal.person_module.objectIds()))
-    self.portal.social_contract_module.manage_delObjects(
-            list(self.portal.social_contract_module.objectIds()))
+    for module in (
+        self.portal.person_module,
+        self.portal.social_contract_module,
+      ):
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.tic()
 
   def test_getChildCount(self):
