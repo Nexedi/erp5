@@ -117,7 +117,9 @@
         state_dict.schema_url = options.schema_url;
       }
       state_dict.model_language = model_language;
+      state_dict.portal_type = options.portal_type;
       state_dict.value = options.value || '';
+      state_dict.python_script_header = options.python_script_header || '';
       return this.changeState(state_dict);
     })
 
@@ -339,7 +341,9 @@
               };
               return window['registerRuffDiagnosticProvider'](
                 this.editor,
-                ruffConfig
+                ruffConfig,
+                preprocessSourceCode,
+                adjustDiagnostic,
               ).then(disposable => {
                 // TODO: register disposable.dispose() to be called when gadget is destroyed (how to do this ?)
                 ;
