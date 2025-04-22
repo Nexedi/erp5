@@ -204,6 +204,16 @@
                     <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -270,6 +280,12 @@
                 <item>
                     <key> <string>text_editor</string> </key>
                     <value> <string>text_area</string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

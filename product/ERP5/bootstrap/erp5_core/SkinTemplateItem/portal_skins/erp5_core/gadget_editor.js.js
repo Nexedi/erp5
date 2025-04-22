@@ -15,6 +15,8 @@
  * @property {string} language the user language, if the editor supports
  *  localisation it will be displayed in this language
  * @property {string} password a password to decrypt the content
+ * @property {string} python_script_header Function definition of a python script,
+ *  used by code editors for code analysis.
  * @property {boolean} run a hack for jsmd editor
  * @property {string} key Key for ERP5 form
  * @property {string} schema_url Schema's URL for json editor
@@ -96,6 +98,7 @@
           key: options.key,
           password: options.password,
           schema_url: options.schema_url,
+          python_script_header: options.python_script_header,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
