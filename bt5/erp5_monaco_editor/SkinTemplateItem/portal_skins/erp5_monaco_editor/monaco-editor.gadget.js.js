@@ -117,7 +117,9 @@
         state_dict.schema_url = options.schema_url;
       }
       state_dict.model_language = model_language;
+      state_dict.portal_type = options.portal_type;
       state_dict.value = options.value || '';
+      state_dict.python_script_header = options.python_script_header || '';
       return this.changeState(state_dict);
     })
 
@@ -304,6 +306,26 @@
             yapfDocumentFormattingProvider
           );
 
+          // diagnostics with ruff
+          // for the case of python scripts, we rewrite the body to add a function
+          // definition header and adjust the location of the diagnostics
+          const python_script_header = gadget.state.python_script_header;
+          function preprocessSourceCode(code) {
+            if (python_script_header){
+              return [python_script_header, ...code.split('\n').map(line => '  ' + line)].join('\n');
+            }
+            return code;
+          }
+          function adjustDiagnostic(diag) {
+            if (python_script_header){
+              const lineOffset = gadget.state.python_script_header.split("\n").length;
+              diag.startLineNumber -= lineOffset;
+              diag.endLineNumber -= lineOffset;
+              diag.startColumn -= 2;
+              diag.endColumn -= 2;
+            }
+            return diag;
+          }
           queue.push(
             () => {
               // https://raw.githubusercontent.com/charliermarsh/ruff/main/ruff.schema.json
@@ -339,7 +361,9 @@
               };
               return window['registerRuffDiagnosticProvider'](
                 this.editor,
-                ruffConfig
+                ruffConfig,
+                preprocessSourceCode,
+                adjustDiagnostic,
               ).then(disposable => {
                 // TODO: register disposable.dispose() to be called when gadget is destroyed (how to do this ?)
                 ;
