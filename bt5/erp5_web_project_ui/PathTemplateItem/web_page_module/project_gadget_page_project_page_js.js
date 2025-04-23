@@ -274,7 +274,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             modification_dict.jio_key + '&view=Project_viewActivityList',
             forum_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.forum_jio_key + '&view=view_threads';
+            modification_dict.forum_jio_key;
           web_page_info = result_list[2];
           if (web_page_info) {
             editor = result_list[1];
