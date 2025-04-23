@@ -436,6 +436,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(message_list),1)
     self.assertEqual(message_list[0].processing_node,
                      DEPENDENCY_IGNORED_ERROR_STATE)
+    with self.assertRaisesRegex(RuntimeError, "no attribute 'IWillCrash'"):
+      self.tic()
     activity_tool.manageCancel(organisation.getPhysicalPath(),'crashThisActivity')
     # Needed so that the message are commited into the queue
     self.commit()
