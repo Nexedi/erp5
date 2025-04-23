@@ -30,7 +30,6 @@
 ##############################################################################
 
 import unittest
-from AccessControl.SecurityManagement import newSecurityManager
 from erp5.component.test.testDms import DocumentUploadTestCase
 
 
