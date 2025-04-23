@@ -11,17 +11,6 @@ person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 version = '001'
 language = portal.Localizer.get_selected_language()
 
-try:
-  user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()
-except Unauthorized:
-  # not in all cases current logged in user may access its details
-  user_assignment_dict = {'group_list': [], 'site_list':[]}
-
-if group_list in MARKER:
-  group_list = user_assignment_dict['group_list']
-if site_list in MARKER:
-  site_list = user_assignment_dict['site_list']
-
 # set predicate settings for current Discussion Forum
 membership_criterion_category_list = context.getMembershipCriterionCategoryList()
 multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
@@ -71,7 +60,7 @@ else:
 
   # set predecessor on document
   if predecessor_portal_type == 'Discussion Forum':
-    discussion_thread.setPredecessorValueList([predecessor_object])
+    discussion_thread.setFollowUpValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",

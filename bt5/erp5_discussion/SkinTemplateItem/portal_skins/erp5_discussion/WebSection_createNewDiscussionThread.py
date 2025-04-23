@@ -11,17 +11,6 @@ person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 version = '001'
 language = portal.Localizer.get_selected_language()
 
-try:
-  user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()
-except Unauthorized:
-  # not in all cases current logged in user may access its details
-  user_assignment_dict = {'group_list': [], 'site_list':[]}
-
-if group_list in MARKER:
-  group_list = user_assignment_dict['group_list']
-if site_list in MARKER:
-  site_list = user_assignment_dict['site_list']
-
 # set predicate settings for current Web Section
 # get the related forum using predicate search
 result = list(context.searchResults(portal_type="Discussion Forum"))
@@ -71,6 +60,7 @@ discussion_thread.setCategoryList(category_list)
 if predecessor is None:
   redirect_url = context.getAbsoluteUrl()
 else:
+  context.log("[WScreate DEBUG] predecessor param! : " + predecessor.getRelativeUrl())
   predecessor_object = context.restrictedTraverse(predecessor)
   predecessor_portal_type = predecessor_object.getPortalType()
   redirect_url = predecessor_object.getAbsoluteUrl()
@@ -80,11 +70,11 @@ else:
     predecessor_default_page = predecessor_object.getAggregate()
     if predecessor_default_page is not None:
       predecessor_document = context.restrictedTraverse(predecessor_default_page)
-      discussion_thread.setPredecessorValueList([predecessor_document])
+      discussion_thread.setFollowUpValueList([predecessor_document])
 
   # set predecessor on document
   if predecessor_portal_type == 'Web Page':
-    discussion_thread.setPredecessorValueList([predecessor_object])
+    discussion_thread.setFollowUpValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",
