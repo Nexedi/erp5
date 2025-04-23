@@ -243,20 +243,7 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Listbox_getDiscussionThreadPostsView</string>
-                        </tuple>
-                        <tuple>
-                          <string>response_count</string>
-                          <string> Listbox_getDiscussionThreadPostsView</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string> Listbox_getDiscussionThreadPostsView</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
