@@ -1,0 +1,196 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+    <table cellpadding="1" cellspacing="1" border="1">
+        <thead>
+            <tr>
+                <td rowspan="1" colspan="3" tal:content="template/title_and_id"></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+            <tr>
+                <td>open</td>
+                <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertTextPresent</td>
+                <td>Reset Successfully.</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><b>Set preferred code editor</b></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/portal_preferences/erp5_ui_test_preference/Preference_viewHtmlStyle</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>click</td>
+                <td>//input[@name="field_my_preferred_source_code_editor" and @value="monaco"]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>clickAndWait</td>
+                <td>//button[@name='Base_edit:method']</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Create an ERP5 Python Script with ZMI</b></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/portal_skins/custom/manage_main</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>select</td>
+                <td>addItemSelect</td>
+                <td>label=ERP5 Python Script</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//input[@name="id"]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>type</td>
+                <td>//input[@name="id"]</td>
+                <td>Base_dummyPythonScriptForMonacoEditorUITest</td>
+            </tr>
+            <tr>
+                <td>clickAndWait</td>
+                <td>submit</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/portal_preferences/Zuite_waitForActivities</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertTextPresent</td>
+                <td>Done.</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Switch to renderjs UI and edit the ERP5 python script</b></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/web_site_module/renderjs_runner/#/portal_skins/custom/Base_dummyPythonScriptForMonacoEditorUITest?editable=true
+                </td>
+                <td></td>
+            </tr>
+            <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+            <tr>
+                <td colspan="3"><b>Wait for editor to be loaded and edit</b></td>
+            </tr>
+
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//div[@data-gadget-scope="editor"]//iframe</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>selectFrame</td>
+                <td>//div[@data-gadget-scope="editor"]//iframe</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>css=div.monaco-editor.vs</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>waitForEval</td>
+                <td>(function () {
+                    return selenium.browserbot.getCurrentWindow().monaco.editor.getEditors()[0].getOption(
+                    selenium.browserbot.getCurrentWindow().monaco.editor.EditorOption.readOnly)
+                    })()</td>
+                <td>false</td>
+            </tr>
+            <tr>
+                <td>storeEval</td>
+                <td>selenium.browserbot.getCurrentWindow().document.querySelector('div.monaco-editor.vs').getAttribute('data-uri')
+                </td>
+                <td>model-data-uri</td>
+            </tr>
+            <tr>
+                <td>assertEval</td>
+                <td>selenium.browserbot.getCurrentWindow().monaco.editor.getModel(storedVars['model-data-uri']).setValue(
+                    "def&nbsp;buggy():\n&nbsp;&nbsp;undefined_variable + 2\n&nbsp;&nbsp;unused_variable = 1\n")
+                </td>
+                <td>null</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//span[contains(@class, "mtk1") and contains(text(), "undefined_variable")]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//span[contains(@class, "squiggly-inline-unnecessary") and text()="unused_variable"]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertEval</td>
+                <td>selenium.browserbot.getCurrentWindow().monaco.editor.getEditors()[0].focus()
+                </td>
+                <td>null</td>
+            </tr>
+            <tr>
+                <td>assertEval</td>
+                <td>JSON.stringify(
+                    selenium.browserbot.getCurrentWindow().monaco.editor.getModelMarkers(
+                    storedVars['model-data-uri']).map(m => [m.startLineNumber, m.startColumn]))</td>
+                <td>[[2,3],[3,3]]</td>
+            </tr>
+            <!-- check that the syntax of python script is allowed: some names are present, like context and it's OK to return because it's a function -->
+            <tr>
+                <td>assertEval</td>
+                <td>selenium.browserbot.getCurrentWindow().monaco.editor.getModel(storedVars['model-data-uri']).setValue(
+                    "return context")
+                </td>
+                <td>null</td>
+            </tr>
+            <tr>
+                <td>waitForEval</td>
+                <td>JSON.stringify(
+                    selenium.browserbot.getCurrentWindow().monaco.editor.getModelMarkers(
+                    storedVars['model-data-uri']).map(m => [m.startLineNumber, m.startColumn]))</td>
+                <td>[]</td>
+            </tr>
+            <tr>
+                <td>assertEval</td>
+                <td>selenium.browserbot.getCurrentWindow().monaco.editor.getModel(storedVars['model-data-uri']).setValue(
+                    "return context + XXX")
+                </td>
+                <td>null</td>
+            </tr>
+            <tr>
+                <td>waitForEval</td>
+                <td>JSON.stringify(
+                    selenium.browserbot.getCurrentWindow().monaco.editor.getModelMarkers(
+                    storedVars['model-data-uri']).map(m => [m.startLineNumber, m.startColumn, m.endColumn, m.message]))</td>
+                <td>[[1,18,21,"F821: Undefined name `XXX`"]]</td>
+            </tr>
+            <tr>
+                <td>selectFrame</td>
+                <td>relative=top</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
