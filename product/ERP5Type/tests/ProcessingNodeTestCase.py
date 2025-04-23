@@ -14,6 +14,7 @@ from Testing import ZopeTestCase
 from zope.globalrequest import setRequest
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
+from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE, DEPENDENCY_IGNORED_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
@@ -321,8 +322,11 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
-        if time.time() >= deadline or message_count and any(x.processing_node == -2
-                                              for x in message_list):
+        if time.time() >= deadline or message_count and any(
+            x.processing_node in (
+              INVOKE_ERROR_STATE,
+              DEPENDENCY_IGNORED_ERROR_STATE,
+            ) for x in message_list):
           # We're about to raise RuntimeError, but maybe we've reached
           # the stop condition, so check just once more:
           if stop_condition(message_list):
