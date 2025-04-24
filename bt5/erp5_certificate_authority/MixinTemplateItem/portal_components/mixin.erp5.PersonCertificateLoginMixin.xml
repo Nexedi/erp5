@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Test Component" module="erp5.portal_type"/>
+      <global name="Mixin Component" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testCertificateAuthorityTool</string> </value>
+            <value> <string>PersonCertificateLoginMixin</string> </value>
         </item>
         <item>
             <key> <string>default_source_reference</string> </key>
@@ -24,11 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testCertificateAuthorityTool</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Test Component</string> </value>
+            <value> <string>mixin.erp5.PersonCertificateLoginMixin</string> </value>
         </item>
         <item>
             <key> <string>sid</string> </key>
