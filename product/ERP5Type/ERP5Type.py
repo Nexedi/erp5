@@ -740,21 +740,27 @@ class ERP5TypeInformation(XMLObject,
       # priorities than actions defined on portal types
       action_list.sort(key=lambda x:x['priority'])
       return action_list
+
+    def _getActionList_cache_id_generator(method_id, obj, *args, **kw):
+      return '%s:getActionList:%s' % (
+        obj.getId(),
+        obj.getPortalObject().getCacheCookie('%s.getActionList' % obj.getId())
+      )
     _getActionList = CachingMethod(_getActionList,
       id='getActionList',
       cache_factory='erp5_content_long',
-      cache_id_generator=lambda method_id, *args: method_id)
+      cache_id_generator=_getActionList_cache_id_generator)
 
     security.declarePrivate('getActionList')
     def getActionList(self):
       """Return the list of enabled actions from cache, sorted by priority"""
-      return self._getActionList(self, scope=self.id)
+      return self._getActionList(self)
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'clearGetActionListCache')
     def clearGetActionListCache(self):
-      """Clear a cache of _getRawActionInformationList."""
-      self._getActionList.delete(scope=self.id)
+      """Clear cache of getActionList for this type"""
+      self.getPortalObject().newCacheCookie('%s.getActionList' % self.getId())
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionInformationList')

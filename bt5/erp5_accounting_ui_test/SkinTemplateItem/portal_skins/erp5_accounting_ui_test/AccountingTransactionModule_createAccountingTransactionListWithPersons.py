@@ -20,7 +20,9 @@ for module_id in ['accounting_module',
                   'sale_packing_list_module',
                   'portal_simulation', ]:
   module = portal[module_id]
-  module.manage_delObjects(list(module.objectIds()))
+  object_ids = list(module.objectIds())
+  if object_ids:
+    module.manage_delObjects(object_ids)
 
 # XXX copy & paste
 def getAccountByTitle(title):

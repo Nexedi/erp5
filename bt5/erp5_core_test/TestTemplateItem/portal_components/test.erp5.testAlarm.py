@@ -142,7 +142,7 @@ class TestAlarm(AlarmTestCase):
     # Delete the alarm
     a_tool = self.getAlarmTool()
     alarm_uid = alarm.getUid()
-    a_tool.manage_delObjects(uids=[alarm_uid])
+    a_tool.manage_delObjects(ids=[alarm.getId()])
     self.tic()
     # Check that related entry was removed
     sql_connection = self.getSQLConnection()

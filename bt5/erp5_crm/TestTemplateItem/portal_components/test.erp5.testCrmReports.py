@@ -228,7 +228,9 @@ class CrmTestCase(ERP5ReportTestCase):
                    self.organisation_module,
                    self.person_module,
                    self.event_module):
-      module.manage_delObjects(list(module.objectIds()))
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.portal_categories['group'].manage_delObjects((['demo_group',]))
     self.tic()
 

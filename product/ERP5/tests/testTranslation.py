@@ -413,7 +413,9 @@ class TestTranslation(ERP5TypeTestCase):
 
     # erase created objects
     for module in (self.portal.person_module, self.portal.organisation_module):
-      module.manage_delObjects(list(module.objectIds()))
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.portal.manage_delObjects(['myzpt'])
 
     self.tic()
