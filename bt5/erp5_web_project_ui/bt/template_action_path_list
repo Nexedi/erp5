@@ -1,3 +1,5 @@
+Benchmark Result Line | project_view
+Benchmark Result | project_view
 Bug Line | project_view
 Bug Module | project_view
 Bug | project_view
@@ -24,4 +26,8 @@ Task Report Line | project_view
 Task Report Module | project_view
 Task Report | project_view
 Task | project_view
+Test Result Line | project_view
+Test Result Module | project_view
+Test Result Node | project_view
+Test Result | project_view
 Text | project_view
