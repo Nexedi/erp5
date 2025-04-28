@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Maileva SOAP Connector">
+  <item>Link</item>
+ </portal_type>
  <portal_type id="System Event Module">
   <item>Maileva Exchange</item>
  </portal_type>
