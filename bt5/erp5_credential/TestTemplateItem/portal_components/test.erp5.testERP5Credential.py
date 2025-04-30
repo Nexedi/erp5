@@ -151,8 +151,12 @@ class TestERP5Credential(ERP5TypeTestCase):
            )
 
   def beforeTearDown(self):
+    self.abort()
     self.login()
     self.resetCredentialSystemPreference()
+    credential_recovery_id_list = list(self.portal.credential_recovery_module.objectIds())
+    if credential_recovery_id_list:
+      self.portal.credential_recovery_module.manage_delObjects(credential_recovery_id_list)
     self.tic()
     self.logout()
 
@@ -1510,7 +1514,9 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     with self.assertRaises(RuntimeError):
       self.tic()
-    self.assertEqual(len(self.portal.portal_activities.getMessageList()), 1)
+    self.assertEqual(
+      len([m for m in self.portal.portal_activities.getMessageList()
+          if m.method_id=='Credential_accept']), 1)
     self.portal.portal_activities.manageClearActivities()
     self.commit()
 
