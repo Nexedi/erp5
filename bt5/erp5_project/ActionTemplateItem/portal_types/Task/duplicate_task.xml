@@ -88,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: portal.Base_checkPermission(\'task_module\', \'Add portal content\')</string> </value>
+            <value> <string>python: False # portal.Base_checkPermission(\'task_module\', \'Add portal content\')</string> </value>
         </item>
       </dictionary>
     </pickle>
