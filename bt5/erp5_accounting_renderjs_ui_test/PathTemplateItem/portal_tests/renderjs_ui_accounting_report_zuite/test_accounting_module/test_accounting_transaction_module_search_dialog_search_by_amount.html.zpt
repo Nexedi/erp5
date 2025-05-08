@@ -1,0 +1,213 @@
+<html>
+
+<head>
+  <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="4" tal:content="template/title_and_id"></td>
+      </tr>
+
+    </thead>
+    <tbody
+      tal:define="init_method string:AccountingTransactionModule_createAccountingTransactionList?add_draft_transactions:int=0">
+      <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init" />
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+      <tr>
+        <td colspan="3"><b>Search by exact amount</b></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@data-i18n='Filter']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@data-i18n='Filter']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=.filter_item_container select.column option</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>css=.filter_item_container select.column</td>
+        <td>Amount on Accounting Transaction Lines</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>css=.filter_item_container input</td>
+        <td>2000</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//h1[.="Filter Editor"]/..//button[.="Submit"]</td>
+        <td></td>
+      </tr>
+      <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+      </tal:block>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope='field_listbox']//table/tbody</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyText</td>
+        <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[8]</td>
+        <td>2 200.00</td>
+      </tr>
+      <tr>
+        <td>verifyText</td>
+        <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[9]</td>
+        <td>2 200.00</td>
+      </tr>
+
+
+      <tr>
+        <td colspan="3"><b>Search by min amount</b></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@data-i18n='Filter']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=.filter_item_container select.column option</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertSelected</td>
+        <td>css=.filter_item_container select.column</td>
+        <td>Amount on Accounting Transaction Lines</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>css=.filter_item_container select:nth-child(2)</td>
+        <td>Greater than or Equal to</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>css=.filter_item_container input</td>
+        <td>7000</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//h1[.="Filter Editor"]/..//button[.="Submit"]</td>
+        <td></td>
+      </tr>
+      <tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+      </tal:block>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope='field_listbox']//table/tbody</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>20 000.00</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>7 700.00</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td colspan="3"><b>Search by amount range</b></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@data-i18n='Filter']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=.filter_item_container select.column option</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertSelected</td>
+        <td>css=.filter_item_container select.column</td>
+        <td>Amount on Accounting Transaction Lines</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>css=.filter_item_container select:nth-child(2)</td>
+        <td>Greater than</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>css=.filter_item_container input</td>
+        <td>1999</td>
+      </tr>
+
+      <tr>
+        <td>click</td>
+        <td>//h1[.="Filter Editor"]/../..//button[.="Add Criteria"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=.filter_item_container div:nth-child(2) .filter_item select.column option</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>css=.filter_item_container div:nth-child(2) .filter_item select.column</td>
+        <td>Amount on Accounting Transaction Lines</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>css=.filter_item_container div:nth-child(2) div:nth-child(2) select:nth-child(2)</td>
+        <td>Less than</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>css=.filter_item_container div:nth-child(2) div:nth-child(2) input</td>
+        <td>2001</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//h1[.="Filter Editor"]/..//button[.="Submit"]</td>
+        <td></td>
+      </tr>
+      <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+      </tal:block>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope='field_listbox']//table/tbody</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyText</td>
+        <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr/td[8]</td>
+        <td>2 200.00</td>
+      </tr>
+      <tr>
+        <td>verifyText</td>
+        <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr/td[9]</td>
+        <td>2 200.00</td>
+      </tr>
+
+    </tbody>
+  </table>
+</body>
+
+</html>
