@@ -14,54 +14,56 @@ if not mission_account:
     )
   )
 
+currency = context.getPriceCurrencyValue()
 transaction =  portal.accounting_module.newContent(
   portal_type="Purchase Invoice Transaction",
-  title="""Frais %s""" % (context.getReference()),
   source_section=context.getDestinationDecision(),
   destination_project=context.getSourceProject(),
   destination_section=context.getSourceSection(),
-  resource=context.getPriceCurrency(),
+  resource=currency,
   created_by_builder=1,  # XXX this prevent init script from creating lines.
   start_date=context.getStartDate(),
   stop_date=context.getStartDate(),
   causality=context.getRelativeUrl(),
+)
+transaction.setTitle(
+  portal.Base_translateString(
+    "Expense ${expense_request_reference} ${mirror_section_title}",
+    mapping=dict(
+      expense_request_reference=context.getReference(),
+      mirror_section_title=transaction.getSourceSectionTitle() or '',
+    )
+  )
 )
 
 document = context.getFollowUpRelatedValue(portal_type=['PDF', 'Image'])
 if document:
   document.setFollowUpValueList(document.getFollowUpValueList() + [transaction])
 
+precision = 2
+if currency is not None:
+  precision = currency.getQuantityPrecision()
+
+amount = round(context.getTotalPrice(), precision)
+
 transaction.newContent(
   portal_type='Purchase Invoice Transaction Line',
   destination=mission_account,
-  quantity= (float(context.getTotalPrice())),
+  quantity=amount,
 )
 
 transaction.newContent(
   portal_type='Purchase Invoice Transaction Line',
   destination=debt_account,
-  quantity=(-float(context.getTotalPrice())),
+  quantity=-amount,
 )
 
 from Products.ERP5Type.Core.Workflow import ValidationFailed
-from zExceptions import Redirect
 try:
-  transaction.Base_checkConsistency()
-except ValidationFailed as error_message:
-  if getattr(error_message, 'msg', None):
-    # use of Message class to store message+mapping+domain
-    message = error_message.msg
-    if same_type(message, []):
-      message = '. '.join('%s' % x for x in message)
-    else:
-      message = str(message)
-  else:
-    message = str(error_message)
-  if len(message) > 2000: # too long message will generate a too long URI
-                          # that would become an error.
-    message = "%s ..." % message[:(2000 - 4)]
-  context.Base_redirect(keep_items={'portal_status_message':message})
-
-transaction.confirm()
+  transaction.AccountingTransaction_checkConsistency()
+except ValidationFailed:
+  pass
+else:
+  transaction.confirm()
 
 return transaction.getRelativeUrl()
