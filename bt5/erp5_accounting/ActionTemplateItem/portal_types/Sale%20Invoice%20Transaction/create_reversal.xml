@@ -88,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.getSimulationState() in (\'delivered\', )</string> </value>
+            <value> <string>python: object.getSimulationState() in (\'stopped\', \'delivered\', )</string> </value>
         </item>
       </dictionary>
     </pickle>
