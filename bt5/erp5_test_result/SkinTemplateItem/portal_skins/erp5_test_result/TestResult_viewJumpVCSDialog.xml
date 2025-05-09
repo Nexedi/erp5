@@ -14,7 +14,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>TestResult_view</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
