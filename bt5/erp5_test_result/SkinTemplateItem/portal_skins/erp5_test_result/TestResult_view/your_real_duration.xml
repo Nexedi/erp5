@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getStopDate().asdatetime() - context.getStartDate().asdatetime() if context.hasStopDate() else \'\'</string> </value>
+            <value> <string>python: str(context.getStopDate().asdatetime() - context.getStartDate().asdatetime() if context.hasStopDate() else \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
