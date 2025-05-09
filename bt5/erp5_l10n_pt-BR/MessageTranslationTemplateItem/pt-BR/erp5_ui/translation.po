@@ -3539,9 +3539,6 @@ msgstr "Forma de Pagamento"
 msgid "Payment conditions can be either on a sale/purchase order or on a sale/purchase trade condition document. Payment condition describes the payment conditions that will be applied to an order, such as the payment mode, the term, etc.."
 msgstr "Condições de pagamento pode existir tanto em um pedido de venda/compra ou em uma condição de negócio de compra/venda. Condição de pagamento descreve as condições de pagamento que será aplicado para um pedido, tal como, modo de pagamento, prazo, etc.."
 
-msgid "Payment of ${invoice_title}"
-msgstr "Pagamento da ${invoice_title}"
-
 msgid "Pending"
 msgstr "Pendente"
 
