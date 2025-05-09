@@ -22,10 +22,19 @@ def makeVCSLink(repository_url, revision):
   def getListItemUrl(*args, **kw):
     return url
 
+  def getListItemUrlDict(*args, **kw):
+    return {
+      'command': 'raw',
+        'options': {
+        'url': url
+      }
+    }
+
   return Object(
     uid='new_',
     getUid=lambda: 'new_',
     getListItemUrl=getListItemUrl,
+    getListItemUrlDict=getListItemUrlDict,
     repository=repository_url,
     revision=revision)
 
