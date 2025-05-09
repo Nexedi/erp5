@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Account" module="erp5.portal_type"/>
+      <global name="Career" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12,25 +12,9 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Add_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Delete_objects_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -38,7 +22,10 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -48,9 +35,9 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -58,23 +45,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>account_type/liability/payable</string>
+                <string>subordination/organisation_module/hr_test_company</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>travel_expense_credit_account</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Account</string> </value>
+            <value> <string>default_career</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -96,7 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>account_workflow</string> </key>
+                    <key> <string>career_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -126,7 +103,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>validate</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -154,7 +133,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1746759447.49</float>
+                              <float>1746760193.48</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -163,7 +142,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>validated</string> </value>
+                      <value> <string>draft</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -193,9 +172,7 @@
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string></string> </value>
                   </item>
                   <item>
                       <key> <string>error_message</string> </key>
@@ -203,7 +180,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1024.41393.30035.34013</string> </value>
+                      <value> <string>0.0.0.0</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -223,7 +200,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1746759473.98</float>
+                              <float>1746760193.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
