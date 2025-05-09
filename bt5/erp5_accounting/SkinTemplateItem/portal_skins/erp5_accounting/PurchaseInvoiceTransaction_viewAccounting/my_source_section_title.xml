@@ -12,7 +12,6 @@
               <list>
                 <string>base_category</string>
                 <string>catalog_index</string>
-                <string>parameter_list</string>
               </list>
             </value>
         </item>
@@ -88,12 +87,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>parameter_list</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

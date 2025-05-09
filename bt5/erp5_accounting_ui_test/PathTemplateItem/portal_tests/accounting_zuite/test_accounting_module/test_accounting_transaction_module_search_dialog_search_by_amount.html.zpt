@@ -73,6 +73,42 @@ Accounting Transaction Module Search Dialog: seach by amount
 </tr>
 <!-- }}} -->
 
+<!-- search by min amount {{{ -->
+<tr>
+  <td>type</td>
+  <td>field_your_amount_range_min</td>
+  <td>7000</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<!-- list filtered with 2 items-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- check amounts for lines -->
+<tr>
+  <td>assertTextPresent</td>
+  <td>20 000.00</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>7 700.00</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
 <!-- search by amount range {{{ -->
 <tr>
   <td>type</td>
