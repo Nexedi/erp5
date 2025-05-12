@@ -28,8 +28,11 @@
 ##############################################################################
 
 from AccessControl import ModuleSecurityInfo
+from Products.ERP5Type.Utils import str2bytes, unicode2str
+
 import six
 import json
+
 
 security = ModuleSecurityInfo(__name__)
 security.declarePublic('loadJson')
@@ -39,7 +42,6 @@ security.declarePublic('loadJson')
 # to simple dicts, because the former also have an ugly representation.
 # http://stackoverflow.com/a/13105359
 if six.PY2:
-
   def byteify(string):
     if isinstance(string, dict):
       return {
@@ -50,13 +52,16 @@ if six.PY2:
       return [byteify(element) for element in string]
     elif isinstance(string, tuple):
       return tuple(byteify(element) for element in string)
+    elif isinstance(string, unicode):
+      return string.encode('utf-8')
     elif isinstance(string, six.text_type):
       return string.encode('utf-8')
     else:
       return string
 else:
-
   def byteify(x):
+    if isinstance(x, unicode):
+      return str2bytes(unicode2str(x))
     return x
 
 
