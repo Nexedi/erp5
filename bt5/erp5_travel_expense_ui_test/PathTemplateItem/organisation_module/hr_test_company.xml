@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Account" module="erp5.portal_type"/>
+      <global name="Organisation" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22,14 +22,9 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Delete_objects_Permission</string> </key>
-            <value>
-              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -38,6 +33,9 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -55,14 +53,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>account_type/liability/payable</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -70,11 +60,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>travel_expense_credit_account</string> </value>
+            <value> <string>hr_test_company</string> </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Account</string> </value>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>HR TEST COMPANY</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -96,13 +92,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>account_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>edit_workflow</string> </key>
+                    <key> <string>validation_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
@@ -114,6 +110,71 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>ERP5TypeTestCase</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1024.41394.35396.32085</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="_reconstructor" module="copy_reg"/>
+                          </klass>
+                          <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1746759522.21</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -154,7 +215,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1746759447.49</float>
+                              <float>1746759526.89</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -164,71 +225,6 @@
                   <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>validated</string> </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>edit</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>ERP5TypeTestCase</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value>
-                        <none/>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>1024.41393.30035.34013</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>state</string> </key>
-                      <value> <string>current</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1746759473.98</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
                   </item>
                 </dictionary>
               </list>

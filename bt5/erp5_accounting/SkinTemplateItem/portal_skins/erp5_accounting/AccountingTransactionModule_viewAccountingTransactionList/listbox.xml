@@ -483,6 +483,10 @@
                           <string>source_title</string>
                           <string>Sender or Provider</string>
                         </tuple>
+                        <tuple>
+                          <string>accounting_transaction_line_total_price</string>
+                          <string>Amount on Accounting Transaction Lines</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

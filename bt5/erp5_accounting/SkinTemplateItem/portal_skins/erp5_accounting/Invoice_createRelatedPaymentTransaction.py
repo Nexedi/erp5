@@ -45,9 +45,6 @@ if sum(total_payable_price_details.values()) == 0:
 
 related_payment = portal.accounting_module.newContent(
   portal_type=transaction_portal_type,
-  title=Base_translateString("Payment of ${invoice_title}",
-          mapping=dict(invoice_title=(context.getReference() or
-                                      context.getTitle() or ''))),
   source_section=context.getSourceSection(),
   destination_section=context.getDestinationSection(),
   source_project=context.getSourceProject(),
@@ -65,10 +62,26 @@ if is_source:
   related_payment.setDestinationPayment(context.getDestinationPayment())
   related_payment.setSourcePayment(payment)
   mirror_section = context.getDestinationSection()
+  mirror_section_title = context.getDestinationSectionTitle()
 else:
   related_payment.setDestinationPayment(payment)
   related_payment.setSourcePayment(context.getSourcePayment())
   mirror_section = context.getSourceSection()
+  mirror_section_title = context.getSourceSectionTitle()
+
+related_payment.setTitle(
+  Base_translateString(
+    "${payment_mode_reference} ${mirror_section_title} ${invoice_title}",
+    mapping=dict(
+      invoice_title=(context.getReference() or context.getTitle() or ''),
+      reference=(context.getReference() or ''),
+      title=(context.getTitle() or ''),
+      payment_mode_reference=related_payment.getPaymentModeReference() or '',
+      payment_mode_title=related_payment.getPaymentModeTitle() or '',
+      mirror_section_title=mirror_section_title or '',
+    )
+  )
+)
 
 bank = related_payment.newContent(
    portal_type=line_portal_type,
@@ -104,6 +117,9 @@ if plan:
 if not batch_mode:
   return related_payment.Base_redirect(
     'view',
-    keep_items={'portal_status_message': Base_translateString('Related payment created.')})
+    keep_items={
+      'portal_status_message': Base_translateString('Related payment created.'),
+      'portal_status_level': 'success',
+    })
 
 return related_payment

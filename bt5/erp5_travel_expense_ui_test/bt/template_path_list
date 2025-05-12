@@ -1,7 +1,9 @@
 account_module/travel_expense_credit_account
 account_module/travel_expense_debit_account
 currency_module/hr_test*
+organisation_module/hr_test_company
 person_module/hr_user
+person_module/hr_user/**
 portal_categories/publication_section/hr_document
 portal_categories/use/hr/expense_validation_request
 portal_categories/use/hr/expense_validation_request/*
