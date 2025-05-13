@@ -168,9 +168,10 @@ class OpenAPIService(XMLObject):
       # intentionnaly do not leak information when something is unauthorized
       exception_info = {
         'type': 'unauthorized',
+        'status': 401,
       }
     elif isinstance(exception, NotFound):
-      exception_info = {'type': 'not-found', 'title': str(exception)}
+      exception_info = {'type': 'not-found', 'title': str(exception), 'status': 404}
     else:
       exception_info = {
         'type': 'unknown-error',

@@ -1077,6 +1077,7 @@ class TestOpenAPIErrorHandling(OpenAPIPetStoreTestCase):
       response.getBody(),
       json.dumps({
         'type': 'unauthorized',
+        'status': 401,
       }).encode())
     self.assertEqual(response.getStatus(), 401)
 
@@ -1095,6 +1096,7 @@ class TestRestrictedAPI(OpenAPIPetStoreTestCase):
       response.getBody(),
       json.dumps({
         'type': 'unauthorized',
+        'status': 401,
       }).encode())
     self.assertEqual(response.getStatus(), 401)
 
