@@ -166,6 +166,10 @@ class JsonRpcAPIService(OpenAPIService):
         }
       }
     result['paths'] = path_dict
+
+    if self.REQUEST:
+      self.REQUEST.RESPONSE.setHeader("Content-Type", "application/json")
+
     return json.dumps(result, indent=2).encode()
 
   def getMatchingOperation(self, request):
