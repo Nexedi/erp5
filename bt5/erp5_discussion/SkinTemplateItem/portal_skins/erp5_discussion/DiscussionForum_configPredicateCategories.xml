@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionForum_init</string> </value>
+            <value> <string>DiscussionForum_configPredicateCategories</string> </value>
         </item>
       </dictionary>
     </pickle>
