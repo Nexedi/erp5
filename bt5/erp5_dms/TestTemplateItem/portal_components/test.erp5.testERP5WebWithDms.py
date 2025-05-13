@@ -364,6 +364,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # check Unauthorized exception is raised for anonymous when authorization_forced is set
     self.logout()
+    self.REQUEST.set("ACTUAL_URL", websection.absolute_url())
     self.assertEqual(None,  websection.getDefaultDocumentValue())
     self.assertRaises(Unauthorized,  websection)
 
