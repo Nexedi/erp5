@@ -5,4 +5,5 @@ Foo Module | business_application
 Foo | bar_category
 Foo | foo_big_category
 Foo | foo_category
+Foo | foo_no_portal_type_filter_category
 Foo | successor
