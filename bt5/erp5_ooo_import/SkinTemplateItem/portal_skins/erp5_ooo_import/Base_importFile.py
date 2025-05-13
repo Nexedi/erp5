@@ -20,7 +20,6 @@ def getSpreadsheet(file):
       tmp_ooo = context.newContent(temp_object=True, portal_type='OOo Document',
         id=file.filename)
       tmp_ooo.edit(data=file.read(), content_type=content_type)
-      tmp_ooo.convertToBaseFormat()
       ignored, import_file_content = tmp_ooo.convert('ods')
       ooo_parser.openFromBytes(bytes(import_file_content))
     else:
