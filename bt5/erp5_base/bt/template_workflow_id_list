@@ -13,7 +13,6 @@ login_interaction_workflow
 login_validation_workflow
 movement_resource_interaction_workflow
 notification_message_workflow
-processing_status_workflow
 query_workflow
 reachability_workflow
 reindex_object_interaction_workflow

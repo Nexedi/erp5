@@ -7,7 +7,6 @@ Drawing | document_conversion_interaction_workflow
 Drawing | document_publication_workflow
 Drawing | document_security_interaction_workflow
 Drawing | edit_workflow
-Drawing | processing_status_workflow
 File | document_publication_workflow
 File | document_security_interaction_workflow
 Image | document_publication_workflow
@@ -20,7 +19,6 @@ Presentation | document_conversion_interaction_workflow
 Presentation | document_publication_workflow
 Presentation | document_security_interaction_workflow
 Presentation | edit_workflow
-Presentation | processing_status_workflow
 RSS Feed | document_conversion_interaction_workflow
 RSS Feed | document_publication_workflow
 RSS Feed | document_security_interaction_workflow
@@ -29,23 +27,19 @@ Spreadsheet | document_conversion_interaction_workflow
 Spreadsheet | document_publication_workflow
 Spreadsheet | document_security_interaction_workflow
 Spreadsheet | edit_workflow
-Spreadsheet | processing_status_workflow
 Text | document_conversion_interaction_workflow
 Text | document_publication_workflow
 Text | document_security_interaction_workflow
 Text | edit_workflow
-Text | processing_status_workflow
 URL Crawler | document_publication_workflow
 URL Crawler | edit_workflow
 Web Illustration | document_conversion_interaction_workflow
 Web Illustration | document_publication_workflow
 Web Illustration | document_security_interaction_workflow
 Web Illustration | edit_workflow
-Web Illustration | processing_status_workflow
 Web Page | -publication_workflow
 Web Page | document_publication_workflow
 Web Table | document_conversion_interaction_workflow
 Web Table | document_publication_workflow
 Web Table | document_security_interaction_workflow
 Web Table | edit_workflow
-Web Table | processing_status_workflow
