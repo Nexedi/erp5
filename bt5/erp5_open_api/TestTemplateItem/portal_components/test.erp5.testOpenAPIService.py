@@ -132,6 +132,7 @@ class TestOpenAPIConnectorView(OpenAPIPetStoreTestCase):
     ret = self.publish(
       self.connector.getPath() + '/viewOpenAPIAsJson', user='ERP5TypeTestCase')
     self.assertEqual(ret.getStatus(), 200)
+    self.assertEqual(ret.getHeader("Content-Type"), "application/json")
     body = json.load(io.BytesIO(ret.getBody()))
     server_url = body['servers'][0]['url']
     self.assertIn(self.connector.getPath(), server_url)
