@@ -142,7 +142,11 @@ class OpenAPIService(XMLObject):
         'url': self.absolute_url(),
         'description': self.getDescription()
       })
-    return json.dumps(schema)
+
+    if self.REQUEST:
+      self.REQUEST.RESPONSE.setHeader("Content-Type", "application/json")
+
+    return json.dumps(schema, indent=2).encode()
 
   def handleException(self, exception, request):
     """Default Exception handler, renders the exception as json (rfc7807)
