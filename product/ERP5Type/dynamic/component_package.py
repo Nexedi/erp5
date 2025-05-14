@@ -57,11 +57,16 @@ class ComponentVersionPackage(ModuleType):
   """
   __path__ = []
 
-try:
-  ModuleNotFoundError
-except NameError: # < 3.6
+
+if sys.version_info < (3, 6):
   class ModuleNotFoundError(ImportError):
     pass
+
+if sys.version_info < (3, 10):
+  class MetaPathFinder(object):
+    pass
+else:
+  from importlib.abc import MetaPathFinder
 
 
 class ComponentImportError(ImportError):
@@ -70,7 +75,7 @@ class ComponentImportError(ImportError):
   """
 
 
-class ComponentDynamicPackage(ModuleType):
+class ComponentDynamicPackage(ModuleType, MetaPathFinder):
   """
   A top-level component is a package as it contains modules, this is required
   to be able to add import hooks (as described in PEP 302) when a in the
@@ -118,6 +123,12 @@ class ComponentDynamicPackage(ModuleType):
     retrieved outside of ERP5 (eg DeadlockDebugguer).
     """
     return self.__fullname_source_code_dict.get(fullname)
+
+  def create_module(self, module):
+    return None
+
+  def exec_module(self, module):
+    return self.load_module(module.__name__)
 
   def find_module(self, fullname, path=None):
     """
