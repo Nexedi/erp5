@@ -47,6 +47,8 @@ from lxml import etree
 from lxml.html.builder import E
 import certifi
 import urllib3
+import six
+import six.moves.urllib as urllib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as _WebDriverWait
@@ -259,45 +261,102 @@ class FunctionalTestRunner:
       if not (debug and os.getenv('DISPLAY')):
         logger.debug("You can set 'erp5_debug_mode' environment variable to 1 to use your existing display instead of Xvfb.")
         xvfb.run()
-      capabilities = webdriver.common.desired_capabilities \
-        .DesiredCapabilities.FIREFOX.copy()
-      capabilities['marionette'] = True
-      # Zope is accessed through haproxy with a certificate not trusted by firefox
-      capabilities['acceptInsecureCerts'] = True
-      kw = dict(capabilities=capabilities, options=options)
-      firefox_bin = os.environ.get('firefox_bin')
-      if firefox_bin:
-        geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
-        kw.update(
-            firefox_binary=firefox_bin,
-            executable_path=geckodriver,
-            service_log_path=os.path.join(log_directory, 'geckodriver.log'),
-        )
-      browser = webdriver.Firefox(**kw)
+      kw = dict(options=options)
+      if six.PY2:
+        capabilities = webdriver.common.desired_capabilities \
+          .DesiredCapabilities.FIREFOX.copy()
+        capabilities['marionette'] = True
+        # Zope is accessed through haproxy with a certificate not trusted by firefox
+        capabilities['acceptInsecureCerts'] = True
+        kw['capabilities'] = capabilities
+        firefox_bin = os.environ.get('firefox_bin')
+        if firefox_bin:
+          geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
+          kw.update(
+              firefox_binary=firefox_bin,
+              executable_path=geckodriver,
+              service_log_path=os.path.join(log_directory, 'geckodriver.log'),
+          )
+      else:
+        firefox_bin = os.environ.get('firefox_bin')
+        if firefox_bin:
+          options.binary_location = firefox_bin
+          kw.update(
+            service=webdriver.firefox.service.Service(
+              executable_path=os.path.join(os.path.dirname(firefox_bin), 'geckodriver'),
+              log_output=os.path.join(log_directory, 'geckodriver.log'),
+            )
+          )
+        browser = webdriver.Firefox(**kw)
     else:
-      executor = RemoteConnection(
-          selenium_test_runner_configuration['server-url'],
-          keep_alive=True)
-      cert_reqs = 'CERT_REQUIRED'
-      ca_certs = certifi.where()
-      if not selenium_test_runner_configuration.get('verify-server-certificate', True):
-        cert_reqs = 'CERT_NONE'
+      if six.PY2:
+        executor = RemoteConnection(
+            selenium_test_runner_configuration['server-url'],
+            keep_alive=True)
+        cert_reqs = 'CERT_REQUIRED'
+        ca_certs = certifi.where()
+        if not selenium_test_runner_configuration.get('verify-server-certificate', True):
+          cert_reqs = 'CERT_NONE'
+          ca_certs = None
+        if selenium_test_runner_configuration.get('server-ca-certificate'):
+          ca_certs_tempfile = tempfile.NamedTemporaryFile(
+              suffix="-cacerts.pem",
+              mode="w",
+              delete=False)
+          ca_certs = ca_certs_tempfile.name
+          self.testcase.addCleanup(os.unlink, ca_certs_tempfile)
+          with open(ca_certs, 'w') as f:
+            f.write(selenium_test_runner_configuration['server-ca-certificate'])
+        executor._conn = urllib3.PoolManager(cert_reqs=cert_reqs, ca_certs=ca_certs)
+        browser = webdriver.Remote(
+            command_executor=executor,
+            desired_capabilities=selenium_test_runner_configuration['desired-capabilities'],
+            options=options
+        )
+      else:
+        capabilities = selenium_test_runner_configuration['desired-capabilities']
+        options = getattr(webdriver, capabilities.pop('browserName')).options.Options()
+        accept_insecure_certs = capabilities.get('acceptInsecureCerts')
+        if accept_insecure_certs is not None:
+          options.accept_insecure_certs = accept_insecure_certs
+        browser_version = capabilities.get('version') or capabilities.get('browserVersion')
+        if browser_version is not None:
+          options.browser_version = browser_version
+
+        def extract_auth(url):
+          parts = urllib.parse.urlsplit(url)
+          username = parts.username
+          password = parts.password
+          hostname = parts.hostname
+          if ':' in hostname:
+            hostname = '[{hostname}]'.format(**locals())
+          netloc = hostname
+          if parts.port:
+            netloc += ':{parts.port}'.format(**locals())
+          clean_url = urllib.parse.urlunsplit(parts._replace(netloc=netloc))
+          return username, password, clean_url
+        username, password, server_url = extract_auth(selenium_test_runner_configuration['server-url'])
         ca_certs = None
-      if selenium_test_runner_configuration.get('server-ca-certificate'):
-        ca_certs_tempfile = tempfile.NamedTemporaryFile(
-            suffix="-cacerts.pem",
-            mode="w",
-            delete=False)
-        ca_certs = ca_certs_tempfile.name
-        self.testcase.addCleanup(os.unlink, ca_certs_tempfile)
-        with open(ca_certs, 'w') as f:
-          f.write(selenium_test_runner_configuration['server-ca-certificate'])
-      executor._conn = urllib3.PoolManager(cert_reqs=cert_reqs, ca_certs=ca_certs)
-      browser = webdriver.Remote(
-          command_executor=executor,
-          desired_capabilities=selenium_test_runner_configuration['desired-capabilities'],
-          options=options
-      )
+        if selenium_test_runner_configuration.get('server-ca-certificate'):
+          ca_certs_tempfile = tempfile.NamedTemporaryFile(
+              suffix="-cacerts.pem",
+              mode="w",
+              delete=False)
+          ca_certs = ca_certs_tempfile.name
+          self.testcase.addCleanup(os.unlink, ca_certs_tempfile)
+          with open(ca_certs, 'w') as f:
+            f.write(selenium_test_runner_configuration['server-ca-certificate'])
+
+        client_config = webdriver.remote.client_config.ClientConfig(
+          server_url,
+          username=username,
+          password=password,
+          ignore_certificates=not selenium_test_runner_configuration.get('verify-server-certificate', True),
+          ca_certs=ca_certs,
+        )
+        browser = webdriver.Remote(
+          command_executor=server_url, options=options, client_config=client_config)
+
       self.testcase.addCleanup(browser.quit)
 
     start_time = time.time()
@@ -322,7 +381,7 @@ class FunctionalTestRunner:
     )
     login_field.clear()
     login_field.send_keys(self.testcase.manager_username)
-    password_field = browser.find_element_by_id('password')
+    password_field = browser.find_element(By.ID, 'password')
     password_field.clear()
     password_field.send_keys(self.testcase.manager_password)
     login_form_url = browser.current_url
@@ -330,7 +389,8 @@ class FunctionalTestRunner:
     # an <input type="submit"...>) does not work: it seems to submit only
     # fields which have a value on their own. Which means type="submit" fields
     # are absent, which breaks the form submission handling locic on Zope side.
-    password_field.find_element_by_xpath(
+    password_field.find_element(
+      By.XPATH,
       'ancestor::fieldset/descendant::input[@type="submit"]',
     ).click()
     WebDriverWait(browser, 10).until(EC.url_changes(login_form_url))
