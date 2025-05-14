@@ -206,7 +206,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           ProcessingNodeTestCase._server_thread = t = Thread(
             target=hs.run,
             name='ProcessingNodeTestCase.startHTTPServer')
-          t.setDaemon(1)
+          t.daemon = True
           t.start()
       from Products.CMFActivity import ActivityTool
       # Reset, in case that getServerAddress was already called,
