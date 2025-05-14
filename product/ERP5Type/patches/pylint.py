@@ -543,11 +543,15 @@ if six.PY2:
     'ignore',
     message='Python 2 is no longer supported by the Python core team. '
     'Support for it is now deprecated in cryptography.*')
-import cryptography.hazmat.bindings._openssl
-_register_module_extender_from_live_module(
-  'cryptography.hazmat.bindings._openssl',
-  cryptography.hazmat.bindings._openssl)
-
+  import cryptography.hazmat.bindings._openssl
+  _register_module_extender_from_live_module(
+    'cryptography.hazmat.bindings._openssl',
+    cryptography.hazmat.bindings._openssl)
+else:
+  import cryptography.hazmat.bindings._rust
+  _register_module_extender_from_live_module(
+    'cryptography.hazmat.bindings._rust',
+    cryptography.hazmat.bindings._rust)
 
 if six.PY2:
   # xmlsec has a module with .pyi files which python2 does not understand
