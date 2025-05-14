@@ -287,7 +287,7 @@ class FunctionalTestRunner:
               log_output=os.path.join(log_directory, 'geckodriver.log'),
             )
           )
-        browser = webdriver.Firefox(**kw)
+      browser = webdriver.Firefox(**kw)
     else:
       if six.PY2:
         executor = RemoteConnection(
