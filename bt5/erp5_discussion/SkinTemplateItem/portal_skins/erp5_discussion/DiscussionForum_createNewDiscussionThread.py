@@ -60,7 +60,7 @@ else:
 
   # set predecessor on document
   if predecessor_portal_type == 'Discussion Forum':
-    discussion_thread.setPredecessorValueList([predecessor_object])
+    discussion_thread.setFollowUpValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",
