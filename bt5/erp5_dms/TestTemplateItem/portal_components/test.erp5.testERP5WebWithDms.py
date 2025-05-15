@@ -38,7 +38,7 @@ from base64 import b64decode, b64encode
 from email.parser import Parser as EmailParser
 
 import transaction
-from AccessControl import Unauthorized
+from zExceptions import Unauthorized
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -136,8 +136,12 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
 
   def beforeTearDown(self):
+    self.abort()
     self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.web_page_module)
+    for entry in self.portal.error_log.getLogEntries():
+      self.portal.error_log.forgetEntry(entry['id'])
+    self.tic()
 
   def _getTestDataPath(self):
     from Products.ERP5 import tests
@@ -294,6 +298,30 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.logout()
     self.assertRaises(Unauthorized, websection._getExtensibleContent, request, document_reference)
 
+    def check_redirect_to_login_page(path):
+      response = self.publish(path)
+      self.assertEqual(response.getStatus(), 302)
+      location = response.getHeader('Location')
+      self.assertIn('/login_form', location)
+      self.assertEqual(self.portal.error_log.getLogEntries(), [])
+
+    websection.setDefaultPageDisplayed(False)
+    check_redirect_to_login_page(websection.absolute_url_path())
+    check_redirect_to_login_page(websection.absolute_url_path() + '/' + document_reference)
+
+    websection.setDefaultPageDisplayed(True)
+    check_redirect_to_login_page(websection.absolute_url_path())
+    check_redirect_to_login_page(websection.absolute_url_path() + '/' + document_reference)
+
+    website.setAuthorizationForced(True)
+    website.setDefaultPageDisplayed(False)
+    check_redirect_to_login_page(website.absolute_url_path())
+    check_redirect_to_login_page(website.absolute_url_path() + '/' + document_reference)
+
+    website.setDefaultPageDisplayed(True)
+    check_redirect_to_login_page(website.absolute_url_path())
+    check_redirect_to_login_page(website.absolute_url_path() + '/' + document_reference)
+
   def test_03_LatestContent(self):
     """ Test latest content for a Web Section. Test different use case like languaeg, workflow state.
    """
@@ -365,7 +393,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # check Unauthorized exception is raised for anonymous when authorization_forced is set
     self.logout()
     self.assertEqual(None,  websection.getDefaultDocumentValue())
-    self.assertRaises(Unauthorized,  websection)
+    self.assertRaises(Unauthorized, websection)
+    response = self.publish(websection.absolute_url_path())
+    self.assertEqual(response.getStatus(), 302)
+    self.assertIn('/login_form', response.getHeader('location'))
+    self.assertEqual(self.portal.error_log.getLogEntries(), [])
 
     # Anonymous User should not get Unauthorized when authorization_forced is not set
     self.login()
@@ -378,6 +410,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       websection()
     except Unauthorized:
       self.fail("Web Section should not prompt user for login.")
+    self.assertEqual(self.publish(websection.absolute_url_path()).getStatus(), 200)
 
     self.login()
     web_page_list = []

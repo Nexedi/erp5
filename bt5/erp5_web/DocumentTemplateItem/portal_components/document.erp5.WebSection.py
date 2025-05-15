@@ -194,7 +194,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
   # Default view display
   security.declareProtected(Permissions.View, '__call__')
-  def __call__(self):
+  def __call__(self, REQUEST=None):  # pylint:disable=arguments-differ
     """
         If a Web Section has a default document, we render
         the default document instead of rendering the Web Section
@@ -231,8 +231,11 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
           # but we may ask him to login if such a document exists
           isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
           if isAuthorizationForced is not None and isAuthorizationForced():
-            if unrestricted_apply(self.getDefaultDocumentValue) is not None:
+            if (self.getPortalObject().portal_membership.isAnonymousUser()
+                or unrestricted_apply(self.getDefaultDocumentValue) is not None):
               # force user to login as specified in Web Section
+              if REQUEST is not None:
+                REQUEST.RESPONSE.unauthorized()
               raise Unauthorized
         if document is not None and document.getReference() is not None:
           # we use web_site_module/site_id/section_id/page_reference
@@ -249,6 +252,8 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         if isAuthorizationForced is not None and isAuthorizationForced():
           if self.getPortalObject().portal_membership.isAnonymousUser():
             # force anonymous to login
+            if REQUEST is not None:
+              REQUEST.RESPONSE.unauthorized()
             raise Unauthorized
       # Try to use a custom renderer if any
       custom_render_method_id = self.getCustomRenderMethodId()
