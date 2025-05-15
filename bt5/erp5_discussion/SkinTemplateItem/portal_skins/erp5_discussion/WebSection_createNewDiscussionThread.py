@@ -11,17 +11,6 @@ person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 version = '001'
 language = portal.Localizer.get_selected_language()
 
-try:
-  user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()
-except Unauthorized:
-  # not in all cases current logged in user may access its details
-  user_assignment_dict = {'group_list': [], 'site_list':[]}
-
-if group_list in MARKER:
-  group_list = user_assignment_dict['group_list']
-if site_list in MARKER:
-  site_list = user_assignment_dict['site_list']
-
 # set predicate settings for current Web Section
 # get the related forum using predicate search
 result = list(context.searchResults(portal_type="Discussion Forum"))
