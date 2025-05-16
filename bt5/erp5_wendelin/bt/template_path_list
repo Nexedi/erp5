@@ -13,7 +13,6 @@ portal_categories/use/**
 portal_gadgets/WendelinInformationGadget
 portal_gadgets/WendelinInformationGadget/**
 portal_ingestion_policies/default
-web_page_module/*_wendelin_*
 web_page_module/gadget_erp5_page_wendelin_front_html
 web_page_module/gadget_erp5_page_wendelin_front_js
 web_page_module/rjs_gadget_erp5_pt_callables_html
