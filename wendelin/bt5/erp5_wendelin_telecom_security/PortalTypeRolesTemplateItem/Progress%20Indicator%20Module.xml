@@ -1,0 +1,6 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>Administrator</property>
+   <multi_property id='category'>function/administrator</multi_property>
+  </role>
+</type_roles>

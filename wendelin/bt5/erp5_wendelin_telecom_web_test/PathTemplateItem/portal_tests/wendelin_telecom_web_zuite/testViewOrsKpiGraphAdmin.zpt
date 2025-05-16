@@ -1,0 +1,31 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Test View ORS KPI Graph as Administrator</title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3">Test View ORS KPI Graph as Administrator</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_ingestor_test_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_admin_test_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_ors_test_data" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/login_as_admin_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/check_ors_kpi_graphs" />
+    </tbody>
+  </table>
+</body>
+
+</html>
