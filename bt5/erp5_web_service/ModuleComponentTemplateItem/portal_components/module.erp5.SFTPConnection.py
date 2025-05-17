@@ -27,14 +27,18 @@
 #
 ##############################################################################
 
-import os, socket
+import io
+import os
 import operator
+import socket
+import six
 from six.moves.urllib.parse import urlparse
 from socket import gaierror, error, socket, getaddrinfo, AF_UNSPEC, SOCK_STREAM
-from six.moves.xmlrpc_client import Binary
 from six.moves import cStringIO as StringIO
 from paramiko import Transport, RSAKey, SFTPClient
-from paramiko.util import retry_on_signal
+
+from Products.ERP5Type.Utils import bytes2str
+
 
 class SFTPError(Exception):
   """
@@ -49,6 +53,7 @@ class SFTPConnection:
 
   def __init__(self, url, user_name, password=None, private_key=None,
       bind_address=None):
+    # type: (str, str, str|None, str|None,, str|None) -> None
     self.url = url
     self.user_name = user_name
     if password and private_key:
@@ -58,6 +63,7 @@ class SFTPConnection:
     self.bind_address = bind_address
 
   def connect(self):
+    # type: () -> None
     """ Get a handle to a remote connection """
     # Check URL
     schema = urlparse(self.url)
@@ -76,13 +82,17 @@ class SFTPConnection:
             # May not be easy if name resolution is involved.
             # Try to reconciliate them ?
             sock.bind((self.bind_address, 0))
-          retry_on_signal(lambda: sock.connect((hostname, port))) # pylint: disable=cell-var-from-loop
+          if six.PY2:
+            from paramiko.util import retry_on_signal
+            retry_on_signal(lambda: sock.connect((hostname, port))) # pylint: disable=cell-var-from-loop
+          else:
+            sock.connect((hostname, port))
           break
       else:
         raise SFTPError('No suitable socket family found')
       self.transport = Transport(sock)
     else:
-      raise SFTPError('Not a valid sftp url %s, type is %s' %(self.url, schema.scheme))
+      raise SFTPError('Not a valid sftp url')
     # Add authentication to transport
     try:
       if self.password:
@@ -95,49 +105,48 @@ class SFTPConnection:
       # Connect
       self.conn = SFTPClient.from_transport(self.transport)
     except (gaierror, error) as msg:
-      raise SFTPError(str(msg) + ' while establishing connection to %s' % (self.url,))
+      raise SFTPError(str(msg) + ' while establishing connection')
     # Go to specified directory
     try:
       schema.path.rstrip('/')
       if len(schema.path):
         self.conn.chdir(schema.path)
     except IOError as msg:
-      raise SFTPError(str(msg) + ' while changing to dir -%r-' % (schema.path,))
+      __traceback_info__ = schema.path
+      raise SFTPError(str(msg) + ' while changing directory')
     return self
 
   def writeFile(self, path, filename, data, confirm=True):
+    # type: (str, str, bytes, bool) -> None
     """
     Write data in provided filepath
     """
     filepath = os.path.join(path, filename)
-    serialized_data = Binary(str(data))
-    try:
-      self.conn.putfo(StringIO(str(serialized_data)), filepath, confirm=confirm)
-    except error as msg:
-      raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path))
-
+    self.conn.putfo(io.BytesIO(data), filepath, confirm=confirm)
+  
   def _getFile(self, filepath):
-    """Retrieve the file"""
-    try:
-      # always open with binary mode, otherwise paramiko will raise
-      # UnicodeDecodeError for non-utf8 data. also SFTP has no ASCII
-      # mode like FTP that normalises CRLF/CR/LF.
-      tmp_file = self.conn.file(filepath, 'rb')
-      tmp_file.seek(0)
-      return tmp_file.read()
-    except error as msg:
-      raise SFTPError(str(msg) + ' while retrieving file %s from %s' % (filepath, self.url))
+    # type: (str) -> bytes
+    """Retrieve the file content"""
+    # always open with binary mode, otherwise paramiko will raise
+    # UnicodeDecodeError for non-utf8 data. also SFTP has no ASCII
+    # mode like FTP that normalises CRLF/CR/LF.
+    tmp_file = self.conn.file(filepath, 'rb')
+    tmp_file.seek(0)
+    return tmp_file.read()
 
   def readBinaryFile(self, filepath):
+    # type: (str) -> bytes
     """Retrieve the file in binary mode"""
     return self._getFile(filepath)
 
   def readAsciiFile(self, filepath):
+    # type: (str) -> str
     """Retrieve the file in ASCII mode"""
     # normalise CRLF/CR/LF like FTP's ASCII mode transfer.
-    return os.linesep.join(self._getFile(filepath).splitlines())
+    return os.linesep.join(bytes2str(self._getFile(filepath)).splitlines())
 
   def getDirectoryContent(self, path, sort_on=None):
+    # type: (str, str|None) -> list[str]
     """retrieve all entries in a givan path as a list.
 
     `sort_on` parameter allows to retrieve the directory content in a sorted
@@ -145,43 +154,40 @@ class SFTPConnection:
     paramiko.sftp_attr.SFTPAttributes, the most useful being `st_mtime` to sort
     by modification date.
     """
-    try:
-      if sort_on:
-        return [x.filename for x in sorted(self.conn.listdir_attr(path), key=operator.attrgetter(sort_on))]
-      return self.conn.listdir(path)
-    except (EOFError, error) as msg:
-      raise SFTPError(str(msg) + ' while trying to list %s on %s' % (path, self.url))
+    if sort_on:
+      return [x.filename for x in sorted(self.conn.listdir_attr(path), key=operator.attrgetter(sort_on))]
+    return self.conn.listdir(path)
 
   def getDirectoryFileList(self, path):
+    # type: (str) -> list[str]
     """Retrieve all entries in a given path with absolute paths as a list"""
     return ["%s/%s"%(path, x) for x in self.getDirectoryContent(path)]
 
   def removeFile(self, filepath):
+    # type: (str) -> None
     """Delete the file"""
-    try:
-      self.conn.unlink(filepath)
-    except error as msg:
-      raise SFTPError(str(msg) + 'while trying to delete %s on %s' % (filepath, self.url))
+    self.conn.unlink(filepath)
 
   def renameFile(self, old_path, new_path):
+    # type: (str, str) -> None
     """Rename a file"""
-    try:
-      self.conn.rename(old_path, new_path)
-    except error as msg:
-      raise SFTPError('%s while trying to rename "%s" to "%s" on %s.' % \
-                     (str(msg), old_path, new_path, self.url))
+    __traceback_info__ = old_path, new_path
+    self.conn.rename(old_path, new_path)
 
   def createDirectory(self, path, mode=0o777):
+    # type: (str, int) -> None
     """Create a directory `path` with mode `mode`.
     """
     return self.conn.mkdir(path, mode)
 
   def removeDirectory(self, path):
+    # type: (str, int) -> None
     """Remove directory `path`.
     """
     return self.conn.rmdir(path)
 
   def logout(self):
+    # type: () -> None
     """Logout of the SFTP Server"""
     self.conn.close()
     self.transport.close()
