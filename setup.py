@@ -52,7 +52,7 @@ setup(name=name,
         'six',
       ],
       extras_require={
-        'testnode': ['slapos.core', 'xml_marshaller', 'psutil >= 0.5.0'],
+        'testnode': ['slapos.core', 'xml_marshaller', 'psutil >= 0.5.0', 'netaddr'],
         'testbrowser': ['zope.testbrowser >= 5.0.0', 'z3c.etestbrowser'],
         'benchmark': benchmark_install_require_list,
         'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],

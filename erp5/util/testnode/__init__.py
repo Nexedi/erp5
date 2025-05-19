@@ -75,7 +75,7 @@ def main(*args):
               'test_node_title', 'ipv4_address','ipv6_address','test_suite_master_url',
               'slapos_binary', 'httpd_ip', 'httpd_port', 'httpd_software_access_port',
               'computer_id', 'server_url', 'shared_part_list', 'keep_log_days',
-              'frontend_url', 'log_frontend_url', ):
+              'frontend_url', 'log_frontend_url', 'ipv6_range'):
     CONFIG[key] = config.get('testnode',key)
 
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
