@@ -50,6 +50,7 @@ setup(name=name,
         'setuptools', # namespaces
         'psutil >= 0.5.0',
         'six',
+        'netaddr',
       ],
       extras_require={
         'testnode': ['slapos.core', 'xml_marshaller', 'psutil >= 0.5.0'],
