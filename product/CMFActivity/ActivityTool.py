@@ -115,14 +115,7 @@ def getServerAddress():
         try:
             zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
         except KeyError:
-            from asyncore import socket_map
-            for k, v in six.iteritems(socket_map):
-                if hasattr(v, 'addr'):
-                    # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                    type = str(getattr(v, '__class__', 'unknown'))
-                    if type == 'ZServer.HTTPServer.zhttp_server':
-                        ip, port = v.addr
-                        break
+            pass
         else:
             ip, port = zopewsgi.server.addr
         if ip == '0.0.0.0':
