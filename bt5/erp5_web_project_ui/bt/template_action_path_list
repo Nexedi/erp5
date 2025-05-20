@@ -19,6 +19,9 @@ Project Milestone | project_view
 Project Module | project_view
 Project | project_view
 Role Definition | project_view
+Scalability Test Suite | project_view
+SlapOS Agent Test Suite | project_view
+SlapOS Software Release Unit Test | project_view
 Spreadsheet | project_view
 Support Request Module | project_view
 Support Request | project_view
@@ -32,6 +35,9 @@ Test Result Line | project_view
 Test Result Module | project_view
 Test Result Node | project_view
 Test Result | project_view
+Test Suite Module | project_view
+Test Suite Repository | project_view
+Test Suite | project_view
 Text | project_view
 Web Illustration | project_view
 Web Manifest | project_view
