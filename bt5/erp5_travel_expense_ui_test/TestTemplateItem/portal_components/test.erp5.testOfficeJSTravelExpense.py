@@ -41,7 +41,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
     now = DateTime()
     date = "%s" % now.Date().replace('/','-')
     quantity = 3.14
-    resource = "currency_module/CNY"
+    resource = self.portal.currency_module.hr_test_currency.getRelativeUrl()
     resource_title = "Money"
     comment="New Work is Comming %s" % now
     latitude = 121012012
@@ -53,7 +53,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
       resource_title=resource_title,
       comment=comment,
       source_reference = '%s' % now,
-      source='person_module/hr_user',
+      source=self.portal.person_module.hr_user.getRelativeUrl(),
       latitude=latitude,
       longitude=longitude,
       )
@@ -91,7 +91,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
     now = DateTime()
     date = "%s" % now.Date().replace('/','-')
     quantity = 3.14
-    resource = "currency_module/CNY"
+    resource = self.portal.currency_module.hr_test_currency.getRelativeUrl()
     resource_title = "Money"
     comment="New Work is Comming %s" % now
     latitude = 121012012
@@ -102,7 +102,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
       resource=resource,
       resource_title=resource_title,
       source_reference = '%s' % now,
-      source='person_module/hr_user',
+      source=self.portal.person_module.hr_user.getRelativeUrl(),
       comment=comment,
       latitude=latitude,
       longitude=longitude,
@@ -135,7 +135,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
     now = DateTime()
     date = "%s" % now.Date().replace('/','-')
     quantity = 3.14
-    resource = "currency_module/CNY"
+    resource = self.portal.currency_module.hr_test_currency.getRelativeUrl()
     resource_title = "Money"
     comment="New Work is Comming %s" % now
     latitude = 121012012
@@ -147,7 +147,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
       resource_title=resource_title,
       comment=comment,
       source_reference = '%s' % now,
-      source='person_module/hr_user',
+      source=self.portal.person_module.hr_user.getRelativeUrl(),
       latitude=latitude,
       longitude=longitude,
       )
@@ -183,7 +183,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
       start_date =  now.Date(),
       stop_date = now.Date(),
       source_reference = "%s" % now,
-      source='person_module/hr_user',
+      source=self.portal.person_module.hr_user.getRelativeUrl(),
       title = "Test Leave Record %s" % now
     )
     self.tic()
@@ -212,7 +212,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
       start_date =  now.Date(),
       stop_date = now.Date(),
       source_reference = "%s" % now,
-      source='person_module/hr_user',
+      source=self.portal.person_module.hr_user.getRelativeUrl(),
       title = "Test Leave Record %s" % now
     )
     self.tic()
@@ -246,7 +246,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
       start_date =  now.Date(),
       stop_date = now.Date(),
       source_reference = "%s" % now,
-      source='person_module/hr_user',
+      source=self.portal.person_module.hr_user.getRelativeUrl(),
       title = "Test Leave Record %s" % now
     )
     self.tic()
@@ -273,7 +273,7 @@ class TestOfficeJSTravelExpense(ERP5TypeTestCase):
       start_date =  now.Date(),
       stop_date = now.Date(),
       source_reference = "%s" % now,
-      source='person_module/hr_user',
+      source=self.portal.person_module.hr_user.getRelativeUrl(),
       title = "Test Travel Request Record %s" % now
     )
     self.tic()

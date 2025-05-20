@@ -15,7 +15,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -23,10 +22,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -34,10 +30,7 @@
             <key> <string>_Delete_objects_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -45,10 +38,7 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -61,8 +51,21 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>account_type/expense</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -123,13 +126,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>validate</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -153,7 +154,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1631277631.12</float>
+                              <float>1746759465.75</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -162,7 +163,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>draft</string> </value>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -188,11 +189,13 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>error_message</string> </key>
@@ -200,7 +203,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>0.0.0.0</string> </value>
+                      <value> <string>1024.41390.7504.25907</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -220,7 +223,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1631277631.13</float>
+                              <float>1746759462.25</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
