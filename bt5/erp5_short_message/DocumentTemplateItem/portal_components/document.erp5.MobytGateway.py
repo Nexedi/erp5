@@ -229,7 +229,8 @@ class MobytGateway(XMLObject):
   security.declarePublic('receive')
   def receive(self,REQUEST):
     """Receive push notification from the gateway"""
-
+    if not self.getProperty("( TODO received enabled )"):
+      raise NotImplementedError()
     #Get current user
     sm = getSecurityManager()
     try:
