@@ -21,9 +21,12 @@ body = context.getTextContent()
 if not context.getStartDate():
   context.setStartDate(DateTime())
 
+portal_sms = context.getPortalObject().portal_sms
+node = portal_sms.getGatewayActivityFamily()
 for recipient in context.getDestinationList():
-  context.portal_sms.activate(
+  portal_sms.activate(
     activity="SQLQueue",
+    node=node,
     # We do not retry these activities not to send SMS multiple times
     max_retry=0,
     conflict_retry=False,
