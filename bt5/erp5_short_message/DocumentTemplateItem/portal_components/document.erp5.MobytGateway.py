@@ -28,12 +28,10 @@
 ##############################################################################
 """Receive or send SMS"""
 
-#Import python module
-from six.moves.urllib.parse import urlencode, unquote
-from six.moves.urllib.request import urlopen
+from six.moves.urllib.parse import unquote
+import requests
 from DateTime import DateTime
 
-#Import Zope module
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import  getSecurityManager, \
                                               setSecurityManager, \
@@ -42,12 +40,17 @@ import zope.interface
 from zLOG import LOG, INFO
 
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import unicode2str
 from Products.ERP5Type.XMLObject import XMLObject
 from Products import ERP5Security
 
 from erp5.component.module.SMSGatewayError import SMSGatewayError
 from erp5.component.interface.ISmsSendingGateway import ISmsSendingGateway
 from erp5.component.interface.ISmsReceivingGateway import ISmsReceivingGateway
+
+
+DEFAULT_TIMEOUT = 10  # seconds
+
 
 @zope.interface.implementer(
         ISmsSendingGateway,
@@ -69,6 +72,7 @@ class MobytGateway(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.Reference
+                    , PropertySheet.SocketClient
                     , PropertySheet.SMSGateway
                     )
 
@@ -76,27 +80,11 @@ class MobytGateway(XMLObject):
   # for documentation of this old API
   api_url = "https://multilevel.mobyt.fr/sms"
 
-  security.declarePrivate("_fetchSendResponseAsDict")
-  def _fetchSendResponseAsDict(self,page):
-    """Page result is like Key=value in text format.
-       We transform it to a more powerfull dictionnary"""
-    result = {}
-    lines = page.readlines()
-    assert len(lines) == 1, "Multi lines response is not managed %s" % lines
-    line = lines[0]
-    parts = line.split(' ')
-    #Format is 'Status Message'
-    result['status'] = parts[0]
-    result['status_info'] = ' '.join(parts[1:])
-
-    return result
-
   security.declarePrivate("_fetchStatusResponseAsDict")
-  def _fetchStatusResponseAsDict(self,page):
+  def _fetchStatusResponseAsDict(self, lines):
     """Page result is like Key=value in text format.
        We transform it to a more powerfull dictionnary"""
     result = {}
-    lines = page.readlines()
 
     #First line is special : CSV column title or error inform
     line = lines[0]
@@ -154,8 +142,6 @@ class MobytGateway(XMLObject):
     recipient = self._transformPhoneUrlToGatewayNumber(
           traverse(recipient).getDefaultMobileTelephoneValue().asURL())
 
-    base_url = self.api_url + "/send.php"
-
     #Common params
     params = {  "user" : self.getGatewayUser(),
                 "pass" : self.getGatewayPassword(),
@@ -170,28 +156,36 @@ class MobytGateway(XMLObject):
       params['sender'] = self._transformPhoneUrlToGatewayNumber(
             traverse(sender).getDefaultMobileTelephoneValue().asURL()) or self.getDefaultSender()
 
-    #Define type of message
+    # Define type of message
     if message_type != "text":
       assert quality == 'n', "This type of message require top level messsage quality"
       params['operation'] = message_type
 
-    #Send message (or test)
+    # Send message (or test)
     if self.isSimulationMode():
       LOG("MobytGateway", INFO, params)
-      result =  {'status': "Test"}
+      result = {'status': "Test"}
     else:
-      params = urlencode(params)
-      page = urlopen(base_url, params)
-      result = self._fetchSendResponseAsDict(page)
+      resp = requests.post(
+        self.api_url + "/send.php",
+        data=params,
+        timeout=self.getTimeout() or DEFAULT_TIMEOUT,
+      )
+      resp.raise_for_status()
+      status, info = unicode2str(resp.text).split(' ', 1)
+      result = {
+        'status': status,
+        'status_info': info.strip()
+      }
 
-    #Check result and return
+    # Check result and return
     if result['status'] == "OK":
-      return [result.get('status_info', "")] #return message id (gateway side)
+      return result['status_info']
     elif result['status'] == "KO":
-      #we get an error when call the gateway
+      # we get an error when call the gateway
       raise SMSGatewayError(unquote(result.get('status_info', "Impossible to send the SMS")))
     elif result['status'] == "Test":
-      #just a test, no message id
+      # just a test, no message id
       return None
     else:
       raise ValueError("Unknown result", 0, result)
@@ -199,17 +193,20 @@ class MobytGateway(XMLObject):
   security.declareProtected(Permissions.ManagePortal, 'getMessageStatus')
   def getMessageStatus(self, message_id):
     """Retrive the status of a message"""
-    base_url = self.api_url + "/batch-status.php"
-
     params = {  "user" : self.getGatewayUser(),
                 "pass" : self.getGatewayPassword(),
                 "id" : message_id,
                 "type" : 'notify',
                 "schema" : 1  }
 
-    params = urlencode(params)
-    page = urlopen(base_url, params)
-    result = self._fetchStatusResponseAsDict(page)
+    resp = requests.post(
+      self.api_url + "/batch-status.php",
+      data=params,
+      timeout=self.getTimeout() or DEFAULT_TIMEOUT,
+    )
+    resp.raise_for_status()
+    result = self._fetchStatusResponseAsDict(
+      unicode2str(resp.text).splitlines())
 
     if result['status'] == "OK":
       row_list = result.get('status_info')
@@ -229,7 +226,8 @@ class MobytGateway(XMLObject):
   security.declarePublic('receive')
   def receive(self,REQUEST):
     """Receive push notification from the gateway"""
-
+    if not self.getProperty("( TODO received enabled )"):
+      raise NotImplementedError()
     #Get current user
     sm = getSecurityManager()
     try:
