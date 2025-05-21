@@ -73,7 +73,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     forum = module.newContent(portal_type="Discussion Forum")
     forum.setMultimembershipCriterionBaseCategoryList(['group'])
     forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
-    forum.setCategoryList([group.getRelativeUrl()])
+    forum.setFollowUp(web_section.getRelativeUrl())
     web_section.WebSection_configurePredicateForForum(forum_relative_url=forum.getRelativeUrl())
     return web_section
 
@@ -114,7 +114,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.tic()
 
     # check forum is created and linked
-    result = list(web_section1.searchResults(portal_type="Discussion Forum"))
+    result = list(web_section1.getFollowUpRelated(portal_type="Discussion Forum"))
     if result:
       forum = result[0]
     self.assertTrue(forum)
@@ -171,10 +171,10 @@ class TestERP5Discussion(DocumentUploadTestCase):
     web_section2 = self.stepCreateForumWebSection(group2, web_site)
     self.tic()
 
-    result = list(web_section1.searchResults(portal_type="Discussion Forum"))
+    result = list(web_section1.getFollowUpRelated(portal_type="Discussion Forum"))
     if result:
       forum1 = result[0]
-    result = list(web_section2.searchResults(portal_type="Discussion Forum"))
+    result = list(web_section2.getFollowUpRelated(portal_type="Discussion Forum"))
     if result:
       forum2 = result[0]
 
