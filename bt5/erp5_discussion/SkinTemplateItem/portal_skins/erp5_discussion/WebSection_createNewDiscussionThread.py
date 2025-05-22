@@ -13,7 +13,7 @@ language = portal.Localizer.get_selected_language()
 
 # set predicate settings for current Web Section
 # get the related forum using follow_up
-result = list(context.getFollowUpRelated(portal_type = "Discussion Forum"))
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
 membership_criterion_category_list = []
 multimembership_criterion_base_category_list = []
 if result:
@@ -60,7 +60,6 @@ discussion_thread.setCategoryList(category_list)
 if predecessor is None:
   redirect_url = context.getAbsoluteUrl()
 else:
-  context.log("[WScreate DEBUG] predecessor param! : " + predecessor.getRelativeUrl())
   predecessor_object = context.restrictedTraverse(predecessor)
   predecessor_portal_type = predecessor_object.getPortalType()
   redirect_url = predecessor_object.getAbsoluteUrl()
