@@ -2429,7 +2429,7 @@ else:
   site_root = portal
   view_action_type = "object_view"
 
-site_root_absolute_url = site_root_absolute_url.rstrip('/') + '/'
+site_root_absolute_url = site_root.absolute_url().rstrip('/') + '/'
 
 # Calculate view url
 if mode == 'url_generator':
