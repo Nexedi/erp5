@@ -1,14 +1,21 @@
 """
   Get list of latest Posts which belong to a forum (i.e. websection + predicate)
 """
-# first get list of all container Threads (details should be set on predicate)
-parent_uid_list = [
-  x.uid for x in context.getDocumentValueList(
-    portal_type="Discussion Thread",
-  )
-]
+parent_uid_list = None
+
+# first get the related forum using predicate search
+result = list(context.getFollowUpRelated(portal_type="Discussion Forum"))
+if result:
+  forum = result[0]
+  # get list of all forum Threads (details should be set on predicate)
+  parent_uid_list = [
+    x.uid for x in forum.searchResults(
+      portal_type="Discussion Thread",
+    )
+  ]
 
 if not parent_uid_list:
+  # no related forum or
   # no parent discussion threads therefore no posts
   return []
 
