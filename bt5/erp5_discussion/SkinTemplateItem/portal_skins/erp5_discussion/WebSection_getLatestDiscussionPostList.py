@@ -4,7 +4,7 @@
 parent_uid_list = None
 
 # first get the related forum using predicate search
-result = list(context.searchResults(portal_type="Discussion Forum"))
+result = list(context.getFollowUpRelated(portal_type="Discussion Forum"))
 if result:
   forum = result[0]
   # get list of all forum Threads (details should be set on predicate)
