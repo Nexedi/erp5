@@ -2054,6 +2054,42 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertIn(added_utf_eight_token, web_page.asStrippedHTML())
     self.assertIn(added_utf_eight_token, web_page.asEntireHTML())
 
+  def test_TextDocument_getContentMd5(self):
+    text_document = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      text_content='foo')
+    self.assertEqual(text_document.getContentMd5(), 'acbd18db4cc2f85cedef654fccc4a4d8')
+    text_document.setTextContent('bar')
+    self.assertEqual(text_document.getContentMd5(), '37b51d194a7513e45b56f6524f2d51f2')
+    text_document.setTextContent('')
+    self.assertEqual(text_document.getContentMd5(), 'd41d8cd98f00b204e9800998ecf8427e')
+
+  def test_TextDocument_asStrippedHTML(self):
+    text_document = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      content_type='text/html',
+      title='HTML web page',
+      text_content='<html><head><title>Title!</title></head><body><p>content</p></body></html>')
+    self.assertEqual(text_document.asStrippedHTML(), '<p>content</p>')
+    text_document.setTextContent('<p>updated</p>')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '<p>updated</p>')
+    text_document.setTextContent('')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<!-- empty -->')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<broken')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<!-- broken')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<p>repaired</div>')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '<p>repaired</div>')
+
   @unittest.expectedFailure  # if test start to pass, drop the non strict test.
   def test_PDFDocument_asTextConversion_strict(self):
     """Test a PDF document with embedded images

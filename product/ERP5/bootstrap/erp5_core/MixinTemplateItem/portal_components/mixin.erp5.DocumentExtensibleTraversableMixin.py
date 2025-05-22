@@ -60,4 +60,6 @@ class DocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
     if isAuthorizationForced is not None and isAuthorizationForced():  # pylint:disable=not-callable
       if unrestricted_apply(self.getDocumentValue, (name, portal)) is not None:
         # force user to login as specified in Web Section
+        if request is not None:
+          request.RESPONSE.unauthorized()
         raise Unauthorized

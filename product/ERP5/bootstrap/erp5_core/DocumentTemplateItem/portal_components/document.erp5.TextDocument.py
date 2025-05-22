@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from hashlib import md5
 import six
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
@@ -444,3 +445,11 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         return File.getData(self)
       else:
         return File.getData(self, default)
+
+  def updateContentMd5(self):
+    """Update md5 checksum from the original file
+
+    Overriden here because CachedConvertableMixin version does not
+    understand the dynamic nature TextDocument's data.
+    """
+    self._setContentMd5(md5(self.getData() or b'').hexdigest())

@@ -142,7 +142,11 @@ class OpenAPIService(XMLObject):
         'url': self.absolute_url(),
         'description': self.getDescription()
       })
-    return json.dumps(schema)
+
+    if self.REQUEST:
+      self.REQUEST.RESPONSE.setHeader("Content-Type", "application/json")
+
+    return json.dumps(schema, indent=2).encode()
 
   def handleException(self, exception, request):
     """Default Exception handler, renders the exception as json (rfc7807)
@@ -164,9 +168,10 @@ class OpenAPIService(XMLObject):
       # intentionnaly do not leak information when something is unauthorized
       exception_info = {
         'type': 'unauthorized',
+        'status': 401,
       }
     elif isinstance(exception, NotFound):
-      exception_info = {'type': 'not-found', 'title': str(exception)}
+      exception_info = {'type': 'not-found', 'title': str(exception), 'status': 404}
     else:
       exception_info = {
         'type': 'unknown-error',
