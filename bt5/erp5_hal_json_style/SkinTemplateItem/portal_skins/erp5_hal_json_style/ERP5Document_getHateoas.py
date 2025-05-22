@@ -302,22 +302,22 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
 
 url_template_dict = {
   "form_action": "%(traversed_document_url)s/%(action_id)s",
-  "traverse_generator": "%(root_url)s/%(script_id)s?mode=traverse" + \
+  "traverse_generator": "%(root_url)s%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s",
-  "traverse_generator_action": "%(root_url)s/%(script_id)s?mode=traverse" + \
+  "traverse_generator_action": "%(root_url)s%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s&extra_param_json=%(extra_param_json)s",
-  "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \
+  "traverse_template": "%(root_url)s%(script_id)s?mode=traverse" + \
                        "{&relative_url,view}",
 
   # Search template will call standard "searchValues" on a document described by `root_url`
-  "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
+  "search_template": "%(root_url)s%(script_id)s?mode=search" + \
                      "{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}",
-  "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",
+  "worklist_template": "%(root_url)s%(script_id)s?mode=worklist",
   # Custom search comes with Listboxes where "list_method" is specified. We pass even listbox's
   # own URL so the search can resolve template fields for proper rendering/formatting/editability
   # of the results (because they will be backed up with real documents).
   # :param extra_param_json: contains mainly previous form id to replicate previous search (it is a replacement for Selections)
-  "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \
+  "custom_search_template": "%(root_url)s%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&form_relative_url=%(form_relative_url)s" \
                      "&list_method=%(list_method)s" \
@@ -327,21 +327,21 @@ url_template_dict = {
   # Non-editable searches suppose the search results will be rendered as-is and no template
   # fields will get involved. Unfortunately, fields need to be resolved because of formatting
   # all the time so we abandoned this no_editable version
-  "custom_search_template_no_editable": "%(root_url)s/%(script_id)s?mode=search" + \
+  "custom_search_template_no_editable": "%(root_url)s%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&list_method=%(list_method)s" \
                      "&default_param_json=%(default_param_json)s" \
                      "{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}",
-  "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",
-  "bulk_action": "%(root_url)s/%(script_id)s?mode=bulk",
+  "new_content_action": "%(root_url)s%(script_id)s?mode=newContent",
+  "bulk_action": "%(root_url)s%(script_id)s?mode=bulk",
   # XXX View is set by default to empty
-  "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \
+  "document_hal": "%(root_url)s%(script_id)s?mode=traverse" + \
                   "&relative_url=%(relative_url)s",
   "jio_get_template": "urn:jio:get:%(relative_url)s",
   "jio_search_template": "urn:jio:allDocs?%(query)s",
   # XXX Hardcoded sub websection
-  "login_template": "%(root_url)s/%(login)s",
-  "logout_template": "%(root_url)s/%(logout)s"
+  "login_template": "%(root_url)s%(login)s",
+  "logout_template": "%(root_url)s%(logout)s"
 }
 
 default_document_uri_template = url_template_dict["jio_get_template"]
@@ -371,7 +371,7 @@ def parseActionUrl(context_relative_url, url):
   :param url: {str} is expected to be in form https://<site_root>/context/view_id?optional=params
   """
   param_dict = {}
-  url_and_params = url.split(site_root.absolute_url())[-1].split('?')
+  url_and_params = url.split(site_root_absolute_url)[-1].split('?')
   url_path = url_and_params[0].strip("/ ")
   other_context = None
   _, script = url_path.rsplit('/', 1)
@@ -669,7 +669,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       "allow_jump": field.get_value('allow_jump'),
       "allow_creation": field.get_value('allow_creation'),
       "search_view": url_template_dict['traverse_generator_action'] % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
@@ -795,7 +795,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       if REQUEST.get('proxy_listbox_id', None) is not None:
         extra_param_dict['proxy_listbox_id'] = REQUEST.get('proxy_listbox_id')
       list_method_custom = url_template_dict["custom_search_template"] % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "form_relative_url": "%s/%s" % (form_relative_url, field.id),
@@ -818,7 +818,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       list_method_query_dict["parent_uid"] = traversed_document.getUid()
     else:
       list_method_custom = url_template_dict["custom_search_template_no_editable"] % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "script_id": script.id,
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "list_method": list_method_name,
@@ -834,7 +834,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
 #       document = row.getObject()
 #       line = {
 #         "url": url_template_dict["document_hal"] % {
-#           "root_url": site_root.absolute_url(),
+#           "root_url": site_root_absolute_url,
 #           "relative_url": document.getRelativeUrl(),
 #           "script_id": script.id
 #         }
@@ -996,7 +996,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     response_dict['_actions'] = {
       'put': {
         "href": url_template_dict["form_action"] % {
-          "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(traversed_document),
+          "traversed_document_url": site_root_absolute_url + "/" + getRealRelativeUrl(traversed_document),
           "action_id": action_to_call
         },
         "action": form.action,
@@ -1021,7 +1021,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   # Form traversed_document
   response_dict['_links']['traversed_document'] = {
     "href": default_document_uri_template % {
-      "root_url": site_root.absolute_url(),
+      "root_url": site_root_absolute_url,
       "relative_url": getRealRelativeUrl(traversed_document),
       "script_id": script.id
     },
@@ -1062,7 +1062,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     renderHiddenField(response_dict, "proxy_form_id_list", '')
     response_dict["proxy_form_id_list"].update({
       "items": [(Base_translateString(y), url_template_dict['traverse_generator_action'] % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
@@ -1087,7 +1087,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     else:
       # Correctly set the listfield default value
       response_dict["proxy_form_id_list"]["default"] = url_template_dict['traverse_generator_action'] % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
@@ -1322,7 +1322,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       response.setHeader(
         'WWW-Authenticate',
         'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "login": login_relative_url
         })
       )
@@ -1368,7 +1368,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # Always inform about site root
       "site_root": {
         "href": default_document_uri_template % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "relative_url": site_root.getRelativeUrl(),
           "script_id": script.id
         },
@@ -1445,7 +1445,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if document_type is not None:
         result_dict['_links']['type'] = {
           "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "relative_url": document_type.getRelativeUrl(),
             "script_id": script.id
           },
@@ -1464,7 +1464,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           container_name = ensureUTF8(container.getTitle())
         result_dict['_links']['parent'] = {
           "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "relative_url": container.getRelativeUrl(),
             "script_id": script.id
           },
@@ -1548,7 +1548,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           embedded_dict['_actions'] = {
             'put': {
               "href": url_template_dict["form_action"] % {
-                "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(view_context),
+                "traversed_document_url": site_root_absolute_url + "/" + getRealRelativeUrl(view_context),
                 "action_id": current_action['view_id']
               }
             },
@@ -1596,7 +1596,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             else last_form_id
 
           erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
-                "root_url": site_root.absolute_url(),
+                "root_url": site_root_absolute_url,
                 "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
                 "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
                 "view": erp5_action_list[-1]['name'],
@@ -1631,7 +1631,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   #     }
       result_dict['_links']['raw_search'] = {
         "href": url_template_dict["search_template"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'name': 'Raw Search',
@@ -1639,7 +1639,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       }
       result_dict['_links']['traverse'] = {
         "href": url_template_dict["traverse_template"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'name': 'Traverse',
@@ -1647,7 +1647,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       }
       action_dict['add'] = {
         "href": url_template_dict["new_content_action"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'method': 'POST',
@@ -1655,7 +1655,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       }
       action_dict['bulk'] = {
         "href": url_template_dict["bulk_action"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'method': 'POST',
@@ -1667,7 +1667,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if person is not None and portal.portal_membership.checkPermission('View', person):
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "relative_url": person.getRelativeUrl(),
             "script_id": script.id
           },
@@ -1686,7 +1686,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "script_id": script.id
           }
         }
@@ -1696,7 +1696,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if preference:
           result_dict['_links']['active_preference'] = {
             "href": default_document_uri_template % {
-              "root_url": site_root.absolute_url(),
+              "root_url": site_root_absolute_url,
               "relative_url": preference.getRelativeUrl(),
               "script_id": script.id
             }
@@ -1707,7 +1707,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if (logout_relative_url):
           result_dict['_links']['logout'] = {
             "href": url_template_dict['logout_template'] % {
-              "root_url": site_root.absolute_url(),
+              "root_url": site_root_absolute_url,
               "logout": logout_relative_url,
               "template": True
             }
@@ -2082,7 +2082,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       contents_item['_links'] = {
         'self': {
           "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "relative_url": brain_relative_url,
             "script_id": script.id
           },
@@ -2216,7 +2216,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               contents_item[select]['url_value']['options'] = url_parameter_dict['options']
               # Generate `view` to be used to construct URL
               contents_item[select]['url_value']['options']['view'] = url_template_dict[url_template_id] % {
-                "root_url": site_root.absolute_url(),
+                "root_url": site_root_absolute_url,
                 "script_id": script.id,
                 "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
                 "view": url_parameter_dict['view_kw']['view'],
@@ -2343,7 +2343,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     response.setStatus(201)
     response.setHeader("X-Location",
       default_document_uri_template % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "relative_url": document.getRelativeUrl(),
         "script_id": script.id
       })
@@ -2429,6 +2429,8 @@ else:
   site_root = portal
   view_action_type = "object_view"
 
+site_root_absolute_url = site_root.absolute_url().rstrip('/') + '/'
+
 # Calculate view url
 if mode == 'url_generator':
   #################################################
@@ -2442,7 +2444,7 @@ if mode == 'url_generator':
     keep_items_json = bytes2str(urlsafe_b64encode(str2bytes(
       json.dumps(ensureSerializable(keep_items), sort_keys=True))))
   return url_template_dict[generator_key] % {
-    "root_url": site_root.absolute_url(),
+    "root_url": site_root_absolute_url,
     "script_id": 'ERP5Document_getHateoas',
     "relative_url": relative_url.replace("/", "%2F"),
     "view": view,
