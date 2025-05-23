@@ -190,8 +190,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertEqual(group2, discussion_thread_object2.getGroupValue())
 
     # check forum predicate search.. on Discussion Forum context
-    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in forum1.searchResults()])
-    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in forum2.searchResults()])
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in forum1.searchResults(portal_type="Discussion Thread")])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in forum2.searchResults(portal_type="Discussion Thread")])
 
     # test RSS generation by testing indirectly its "get" method
     # (new post should be first in list)
