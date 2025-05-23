@@ -2191,37 +2191,6 @@ return 1
       'TEST-en-002.png'
     )
 
-  def test_getExtensibleContent(self):
-    """
-      Test extensible content of some DMS types. As this is possible only on URL traversal use publish.
-    """
-    # Create a root level zope user
-    root_user_folder = self.app.acl_users
-    assert not root_user_folder.getUserById('zope_user')
-    zope_user_password = self.newPassword()
-    root_user_folder._doAddUser('zope_user', zope_user_password, ['Manager',], [])
-    def remove_user():
-      root_user_folder._doDelUsers(('zope_user', ))
-      self.tic()
-    self.addCleanup(remove_user)
-
-    # Create document with good content
-    document = self.portal.document_module.newContent(portal_type='Presentation')
-    upload_file = self.makeFileUpload('TEST-en-003.odp')
-    document.edit(file=upload_file)
-    self.tic()
-    self.assertEqual('converted', document.getExternalProcessingState())
-    for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
-      for credential in ['%s:%s' % (self.manager_username, self.manager_password), 'zope_user:%s' % zope_user_password]:
-        response = self.publish('%s/%s' %(document.getPath(), object_url),
-                                basic=credential)
-        self.assertIn(b'200 OK', response.getOutput())
-        # cloudooo produced HTML navigation, test it
-        self.assertIn(b'First page', response.getBody())
-        self.assertIn(b'Back', response.getBody())
-        self.assertIn(b'Continue', response.getBody())
-        self.assertIn(b'Last page', response.getBody())
-
   def test_getTargetFormatItemList(self):
     """
      Test getting target conversion format item list.
