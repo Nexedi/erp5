@@ -31,6 +31,7 @@ import subprocess
 import time
 import xml_marshaller
 import argparse
+from netaddr import IPNetwork
 from six.moves import range
 from slapos import client
 from slapos.util import rmtree
@@ -287,6 +288,10 @@ class SlapOSControler(object):
     # naming scheme (which already happened), do this at instance_root level.
     createFolder(instance_root, True)
     partition_list = []
+    ipv6_range = IPNetwork(config['ipv6_range'])
+    partition_netmask = ipv6_range.netmask
+    partition_addresses = list(ipv6_range.subnet(ipv6_range.prefixlen+3))[1]
+
     for i in range(MAX_PARTITIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
@@ -299,8 +304,9 @@ class SlapOSControler(object):
       partition_list.append(
           {'address_list': [{'addr': config['ipv4_address'],
                             'netmask': '255.255.255.255'},
-                          {'addr': config['ipv6_address'],
-                            'netmask': 'ffff:ffff:ffff::'},],
+                            # don't use address 0 of the network
+                            {'addr': str(partition_addresses[i+1]),
+                            'netmask': str(partition_netmask)},],
           'path': partition_path,
           'reference': partition_reference,
           'tap': {'name': partition_reference},})
