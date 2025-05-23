@@ -21,6 +21,7 @@ if notification_message is not None:
   if context.getContentType() == 'text/html':
     target_format = "html"
   _, text_content = notification_message.convert(target_format,
+      safe_substitute=safe_substitute,
       substitution_method_parameter_dict=substitution_method_parameter_dict)
   context.setTextContent(text_content)
   context.setAggregateSet(
@@ -28,4 +29,5 @@ if notification_message is not None:
 
   if not context.hasTitle():
     context.setTitle(notification_message.asSubjectText(
+      safe_substitute=safe_substitute,
       substitution_method_parameter_dict=substitution_method_parameter_dict))
