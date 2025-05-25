@@ -4071,9 +4071,6 @@ msgstr "결제 트랜젝션"
 msgid "Payment creation already in progress, abandon."
 msgstr "결제 개체 만들기가 진행 중입니다, 중단함."
 
-msgid "Payment of ${invoice_title}"
-msgstr "${invoice_title} 결제"
-
 msgid "Payments creation for ${activated_invoice_count} on ${total_selection_count} invoices in progress."
 msgstr "${total_selection_count} 인보이스 중 ${activated_invoice_count}의 결제 개체 만들기가 진행 중입니다."
 

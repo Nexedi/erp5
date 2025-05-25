@@ -4639,9 +4639,6 @@ msgstr "معامله پرداخت"
 msgid "Payment creation already in progress, abandon."
 msgstr "ایجاد پرداخت در حال پیشرفت است، رها کنید."
 
-msgid "Payment of ${invoice_title}"
-msgstr "پرداخت ${invoice_title}"
-
 msgid "Payments creation for ${activated_invoice_count} on ${total_selection_count} invoices in progress."
 msgstr "ایجاد پرداخت برای ${activated_invoice_count} عدد صورتحساب از ${total_selection_count} در حال پیشرفت است"
 
