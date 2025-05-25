@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import cgi
 import unittest
 import os
 import logging
@@ -40,6 +39,7 @@ from subprocess import Popen, PIPE
 from AccessControl import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import parse_http_header
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole, findContentChain
 from Products.ERP5Form.ProxyField import BrokenProxyField
 from Products.CMFCore.utils import getToolByName
@@ -626,7 +626,7 @@ def makeTestMethod(validator, portal_type, view_name, bt_name):
     charset = 'iso8859-15'
     content_type = response.getHeader('content-type')
     if content_type:
-      _, params = cgi.parse_header(content_type)
+      _, params = parse_http_header(content_type)
       charset = params.get('charset', charset)
 
     self.assertTrue(*validate_xhtml( validator=validator,

@@ -655,9 +655,15 @@ if six.PY3:
     if isinstance(s, str):
       s = bytes(s, 'ascii', errors)
     return s.decode('ascii', errors)
+  from email.message import Message as _Message
+  def parse_http_header(value):
+    msg = _Message()
+    msg['Content-Type'] = value
+    return msg.get_content_type(), dict(msg.get_params()[1:])
 else:
   ensure_list = lambda x: x
   ensure_ascii = lambda s, errors='strict': s.encode('ascii', errors)
+  from cgi import parse_header as parse_http_header
 
 def with_metaclass(meta, *bases):
   """

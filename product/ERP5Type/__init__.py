@@ -188,7 +188,7 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
     'Email_parseAddressHeader', 'guessEncodingFromText',
     'isValidTALESExpression',
-    'ensure_list', 'ensure_ascii',
+    'ensure_list', 'ensure_ascii', 'parse_http_header',
     'bytes2str', 'str2bytes', 'str2unicode', 'unicode2str',
 )
 
