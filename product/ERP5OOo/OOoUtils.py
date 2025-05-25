@@ -36,7 +36,7 @@ from ZPublisher.HTTPRequest import FileUpload
 from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED, ZIP_STORED
 from io import BytesIO
 import imghdr
 import random
@@ -94,6 +94,7 @@ class OOoBuilder(Implicit):
       self._document.write(document)
     self._image_count = 0
     self._manifest_additions_list = []
+    self._replaced_member_dict = {}
 
   def replace(self, filename, stream):
     """
@@ -104,17 +105,20 @@ class OOoBuilder(Implicit):
       zf = ZipFile(self._document, mode='a', compression=ZIP_DEFLATED)
     except RuntimeError:
       zf = ZipFile(self._document, mode='a')
-    try:
-      # remove the file first if it exists
-      fi = zf.getinfo(filename)
-      zf.filelist.remove( fi )
-    except KeyError:
-      # This is a new file
-      pass
+
     if isinstance(stream, six.text_type):
       stream = stream.encode('utf-8')
-    zf.writestr(filename, stream)
-    zf.close()
+
+    with zf:
+      # zipfile does not have an API to update a file in a zipfile in place.
+      # If the archive already contains the filename, we remember the new content
+      # aand recreate a new zipfile with updated archive members in self.render
+      try:
+        zf.getinfo(filename)
+      except KeyError:
+        zf.writestr(filename, stream)
+      else:
+        self._replaced_member_dict[filename] = stream
 
   def extract(self, filename):
     """
@@ -206,6 +210,35 @@ class OOoBuilder(Implicit):
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)
 
+  def _rebuild_zipfile(self):
+    if self._replaced_member_dict:
+      # make a full copy of the zip file, before we start re-opening self._document
+      # in 'w' mode.
+      self._document.seek(0)
+      copy = BytesIO()
+      while True:
+        chunk = self._document.read(8192)
+        if not chunk:
+          break
+        copy.write(chunk)
+      copy.seek(0)
+
+      try:
+        zf = ZipFile(self._document, mode='w', compression=ZIP_DEFLATED)
+      except RuntimeError:
+        zf = ZipFile(self._document, mode='w')
+      with zf, ZipFile(copy) as zf_copy:
+        # Write `mimetype` first, uncompressed, with no comment or extra
+        zinfo_mimetype = ZipInfo('mimetype')
+        zf.writestr(zinfo_mimetype, zf_copy.read('mimetype'))
+        for item in zf_copy.infolist():
+          if (item.filename != 'mimetype'
+              and item.filename not in self._replaced_member_dict):
+            zf.writestr(item, zf_copy.read(item.filename))
+        for filename, content in self._replaced_member_dict.items():
+          zf.writestr(filename, content)
+      self._replaced_member_dict = {}
+
   def render(self, name='', extension='sxw', source=False):
     """
     returns the OOo document
@@ -215,6 +248,7 @@ class OOoBuilder(Implicit):
       request.response.setHeader('Content-Disposition',
                               'attachment; filename=%s.%s' % (name, extension))
 
+    self._rebuild_zipfile()
     self._document.seek(0)
     return self._document.read()
 
