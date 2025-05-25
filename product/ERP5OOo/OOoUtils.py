@@ -36,7 +36,7 @@ from ZPublisher.HTTPRequest import FileUpload
 from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
-from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED, ZIP_STORED
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from io import BytesIO
 import imghdr
 import random
@@ -124,20 +124,12 @@ class OOoBuilder(Implicit):
     """
     Extracts a file from the archive
     """
-    try:
-      zf = ZipFile(self._document, mode='r', compression=ZIP_DEFLATED)
-    except RuntimeError:
-      zf = ZipFile(self._document, mode='r')
-    return zf.read(filename)
+    with ZipFile(self._document, mode='r') as zf:
+      return zf.read(filename)
 
   def getNameList(self):
-    try:
-      zf = ZipFile(self._document, mode='r', compression=ZIP_DEFLATED)
-    except RuntimeError:
-      zf = ZipFile(self._document, mode='r')
-    li = zf.namelist()
-    zf.close()
-    return li
+    with ZipFile(self._document, mode='r') as zf:
+      return zf.namelist()
 
   def getMimeType(self):
     return bytes2str(self.extract('mimetype'))
@@ -223,14 +215,11 @@ class OOoBuilder(Implicit):
         copy.write(chunk)
       copy.seek(0)
 
-      try:
-        zf = ZipFile(self._document, mode='w', compression=ZIP_DEFLATED)
-      except RuntimeError:
-        zf = ZipFile(self._document, mode='w')
-      with zf, ZipFile(copy) as zf_copy:
+      self._document.seek(0)
+      with ZipFile(self._document, mode='w') as zf, ZipFile(copy) as zf_copy:
         # Write `mimetype` first, uncompressed, with no comment or extra
-        zinfo_mimetype = ZipInfo('mimetype')
-        zf.writestr(zinfo_mimetype, zf_copy.read('mimetype'))
+        # spec recommends this for file magic discovery.
+        zf.writestr(ZipInfo('mimetype'), zf_copy.read('mimetype'))
         for item in zf_copy.infolist():
           if (item.filename != 'mimetype'
               and item.filename not in self._replaced_member_dict):
