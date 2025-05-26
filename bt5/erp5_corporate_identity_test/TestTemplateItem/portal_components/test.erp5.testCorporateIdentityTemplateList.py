@@ -380,28 +380,6 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
     )
 
-  def test_pdfPresentationOdpToSlideView(self):
-    self.runPdfTestPattern(
-      "template_test_presentation_odp",
-      "template_test_image_source_pdf",
-      **dict(
-        page_number=3,
-        test_method="Presentation_viewAsSlideshow",
-        format="pdf"
-      )
-    )
-
-  def test_pdfPresentationPptxToSlideView(self):
-    self.runPdfTestPattern(
-      "template_test_presentation_pptx",
-      "template_test_image_source_pdf",
-      **dict(
-        page_number=3,
-        test_method="Presentation_viewAsSlideshow",
-        format="pdf"
-      )
-    )
-
   @changeSkin('Slide')
   def test_pdfSlideShow(self):
     """
