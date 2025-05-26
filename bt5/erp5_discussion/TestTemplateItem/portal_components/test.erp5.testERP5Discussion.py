@@ -73,6 +73,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     forum = module.newContent(portal_type="Discussion Forum")
     forum.setMultimembershipCriterionBaseCategoryList(['group'])
     forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    forum.setCriterion("portal_type", ["Project", "Discussion Thread"])
     forum.setFollowUp(web_section.getRelativeUrl())
     return web_section
 
