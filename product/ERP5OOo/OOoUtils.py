@@ -215,14 +215,13 @@ class OOoBuilder(Implicit):
       request.response.setHeader('Content-Disposition',
                               'attachment; filename=%s.%s' % (name, extension))
 
-    # rearchive zip to clean up deleted entries
+    # rearchive zip to clean up duplicated entries
     self._document.seek(0)
     io_ = BytesIO()
     with ZipFile(self._document, 'r') as zf:
       with ZipFile(io_, 'w', compression=ZIP_DEFLATED) as new_zf:
         for file_info in zf.infolist():
-          data = zf.read(file_info)
-          new_zf.writestr(file_info, data)
+          new_zf.writestr(file_info, zf.read(file_info))
     io_.seek(0)
     return io_.read()
 
