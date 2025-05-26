@@ -328,20 +328,26 @@
               return RSVP.delay(200);
             })
             .push(function () {
+              var query_list = [];
+              if (JSON.parse(gadget.state.portal_types).length > 0) {
+                query_list.push(
+                  QueryFactory.create(
+                    new URI(gadget.state.query).query(true).query
+                  )
+                );
+              }
+              query_list.push(
+                new SimpleQuery({
+                  key: gadget.state.catalog_index,
+                  value: value_text
+                })
+              );
               return RSVP.all([
 
                 gadget.jio_allDocs({
                   query: Query.objectToSearchText(new ComplexQuery({
                     operator: "AND",
-                    query_list: [
-                      QueryFactory.create(
-                        new URI(gadget.state.query).query(true).query
-                      ),
-                      new SimpleQuery({
-                        key: gadget.state.catalog_index,
-                        value: value_text
-                      })
-                    ]
+                    query_list: query_list
                   })),
                   limit: [0, 10],
                   select_list: [gadget.state.catalog_index, "uid"],
