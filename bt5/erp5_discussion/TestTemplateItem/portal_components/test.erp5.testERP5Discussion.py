@@ -73,6 +73,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     forum = module.newContent(portal_type="Discussion Forum")
     forum.setMultimembershipCriterionBaseCategoryList(['group'])
     forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    forum.edit(criterion_property=("portal_type",))
+    forum.setCriterion("portal_type", ["Project", "Discussion Thread"])
     forum.setFollowUp(web_section.getRelativeUrl())
     return web_section
 
@@ -119,6 +121,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertTrue(forum)
     self.assertEqual(forum.getPortalType(), "Discussion Forum")
     self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
+    self.assertEquals([(x.property, x.identity) for x in forum.getCriterionList()],
+                      [("portal_type", ['Project', 'Discussion Thread'])])
 
     web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
     discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
