@@ -101,24 +101,9 @@ class OOoBuilder(Implicit):
     Replaces the content of filename by stream in the archive.
     Creates a new file if filename was not already there.
     """
-    try:
-      zf = ZipFile(self._document, mode='a', compression=ZIP_DEFLATED)
-    except RuntimeError:
-      zf = ZipFile(self._document, mode='a')
-
     if isinstance(stream, six.text_type):
       stream = stream.encode('utf-8')
-
-    with zf:
-      # zipfile does not have an API to update a file in a zipfile in place.
-      # If the archive already contains the filename, we remember the new content
-      # aand recreate a new zipfile with updated archive members in self.render
-      try:
-        zf.getinfo(filename)
-      except KeyError:
-        zf.writestr(filename, stream)
-      else:
-        self._replaced_member_dict[filename] = stream
+    self._replaced_member_dict[filename] = stream
 
   def extract(self, filename):
     """
@@ -168,13 +153,12 @@ class OOoBuilder(Implicit):
     li = '<manifest:file-entry manifest:media-type="%s" manifest:full-path="%s"/>'%(media_type, full_path)
     self._manifest_additions_list.append(li)
 
-  def updateManifest(self):
-    """ Add a path to the manifest """
+  def _update_manifest(self):
     MANIFEST_FILENAME = 'META-INF/manifest.xml'
     meta_infos = bytes2str(self.extract(MANIFEST_FILENAME))
     # prevent some duplicates
     for meta_line in meta_infos.split('\n'):
-        for new_meta_line in self._manifest_additions_list:
+        for new_meta_line in list(self._manifest_additions_list):
             if meta_line.strip() == new_meta_line:
                 self._manifest_additions_list.remove(new_meta_line)
 
@@ -196,14 +180,14 @@ class OOoBuilder(Implicit):
       warn('content_type argument must be passed explicitely', FutureWarning)
       content_type = mimetypes.guess_type(name)[0]
     self.addManifest(name, content_type)
-    # we need to explicitly update manifest file
-    self.updateManifest()
     self.replace(name, image)
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)
 
   def _rebuild_zipfile(self):
-    if self._replaced_member_dict:
+    if self._replaced_member_dict or self._manifest_additions_list:
+      self._update_manifest()
+
       # make a full copy of the zip file, before we start re-opening self._document
       # in 'w' mode.
       self._document.seek(0)
@@ -224,9 +208,12 @@ class OOoBuilder(Implicit):
           if (item.filename != 'mimetype'
               and item.filename not in self._replaced_member_dict):
             zf.writestr(item, zf_copy.read(item.filename))
-        for filename, content in self._replaced_member_dict.items():
-          zf.writestr(filename, content)
-      self._replaced_member_dict = {}
+        while self._replaced_member_dict:
+          filename, content = self._replaced_member_dict.popitem()
+          zi = ZipInfo(filename)
+          if filename in ('content.xml', 'styles.xml'):
+            zi.compress_type = ZIP_DEFLATED
+          zf.writestr(zi, content)
 
   def render(self, name='', extension='sxw', source=False):
     """
