@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.4.78 (2025-05-26)
+-------------------
+
+  * testnode:
+    - give a different IP to each partition inside the testnode
+
 0.4.77 (2025-02-18)
 -------------------
 
