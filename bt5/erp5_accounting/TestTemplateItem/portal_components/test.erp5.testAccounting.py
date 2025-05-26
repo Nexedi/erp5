@@ -4108,6 +4108,85 @@ class TestTransactions(AccountingTestCase):
     self.tic()
     self.assertFalse(payment.line_with_grouping_reference.getGroupingReference())
 
+  def test_grouping_reference_partial_grouping(self):
+    """Check that automatic guess can group only some matching lines
+    """
+    invoice = self._makeOne(
+               title='Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                          source_debit=0.3),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=0.3,
+                           id='line_1')))
+    self.portal.portal_workflow._jumpToStateFor(invoice, 'stopped')
+    payment = self._makeOne(
+               title='Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_2',
+                           source_debit=0.3),
+                      dict(source_value=self.account_module.receivable,
+                           id='line_3',
+                           source_credit=0.1),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=0.2,)))
+    self.portal.portal_workflow._jumpToStateFor(payment, 'stopped')
+    self.tic()
+
+    # Ensure we are in the expected state
+    self.assertFalse(invoice.line_1.getGroupingReference())
+    self.assertFalse(payment.line_2.getGroupingReference())
+    self.assertFalse(payment.line_3.getGroupingReference())
+
+    # If lines are explicitely provided, no partial grouping is done
+    grouped = invoice.AccountingTransaction_guessGroupedLines(
+      accounting_transaction_line_uid_list=(
+        invoice.line_1.getUid(),
+        payment.line_2.getUid(),
+        payment.line_3.getUid(),
+    ))
+    self.assertEqual(
+      sorted(grouped),
+      sorted([])
+    )
+    self.assertFalse(invoice.line_1.getGroupingReference())
+    self.assertFalse(payment.line_2.getGroupingReference())
+    self.assertFalse(payment.line_3.getGroupingReference())
+
+    # If no lines are explicitely provided, partial grouping is executed
+    # and it will search accounting transaction with the causality relation
+    grouped = invoice.AccountingTransaction_guessGroupedLines()
+    self.assertEqual(
+      sorted(grouped),
+      sorted([])
+    )
+    self.assertFalse(invoice.line_1.getGroupingReference())
+    self.assertFalse(payment.line_2.getGroupingReference())
+    self.assertFalse(payment.line_3.getGroupingReference())
+
+    # So, set the causality relation to help
+    payment.setCausalityValue(invoice)
+    self.tic()
+    grouped = invoice.AccountingTransaction_guessGroupedLines()
+    self.assertEqual(
+      sorted(grouped),
+      sorted([
+        invoice.line_1.getRelativeUrl(),
+        payment.line_2.getRelativeUrl(),
+    ]))
+
+    self.assertTrue(invoice.line_1.getGroupingReference())
+    self.assertTrue(payment.line_2.getGroupingReference())
+    self.assertFalse(payment.line_3.getGroupingReference())
+    self.assertEqual(invoice.line_1.getGroupingReference(),
+                     payment.line_2.getGroupingReference())
+
+    self.tic()
+
   def test_grouping_reference_rounding(self):
     """Reproduction of a bug that grouping was not possible because of rounding error
 
