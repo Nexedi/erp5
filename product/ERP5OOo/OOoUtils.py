@@ -36,7 +36,7 @@ from ZPublisher.HTTPRequest import FileUpload
 from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from io import BytesIO
 import imghdr
 import random
@@ -94,46 +94,27 @@ class OOoBuilder(Implicit):
       self._document.write(document)
     self._image_count = 0
     self._manifest_additions_list = []
+    self._replaced_member_dict = {}
 
   def replace(self, filename, stream):
     """
     Replaces the content of filename by stream in the archive.
     Creates a new file if filename was not already there.
     """
-    try:
-      zf = ZipFile(self._document, mode='a', compression=ZIP_DEFLATED)
-    except RuntimeError:
-      zf = ZipFile(self._document, mode='a')
-    try:
-      # remove the file first if it exists
-      fi = zf.getinfo(filename)
-      zf.filelist.remove( fi )
-    except KeyError:
-      # This is a new file
-      pass
     if isinstance(stream, six.text_type):
       stream = stream.encode('utf-8')
-    zf.writestr(filename, stream)
-    zf.close()
+    self._replaced_member_dict[filename] = stream
 
   def extract(self, filename):
     """
     Extracts a file from the archive
     """
-    try:
-      zf = ZipFile(self._document, mode='r', compression=ZIP_DEFLATED)
-    except RuntimeError:
-      zf = ZipFile(self._document, mode='r')
-    return zf.read(filename)
+    with ZipFile(self._document, mode='r') as zf:
+      return zf.read(filename)
 
   def getNameList(self):
-    try:
-      zf = ZipFile(self._document, mode='r', compression=ZIP_DEFLATED)
-    except RuntimeError:
-      zf = ZipFile(self._document, mode='r')
-    li = zf.namelist()
-    zf.close()
-    return li
+    with ZipFile(self._document, mode='r') as zf:
+      return zf.namelist()
 
   def getMimeType(self):
     return bytes2str(self.extract('mimetype'))
@@ -172,13 +153,12 @@ class OOoBuilder(Implicit):
     li = '<manifest:file-entry manifest:media-type="%s" manifest:full-path="%s"/>'%(media_type, full_path)
     self._manifest_additions_list.append(li)
 
-  def updateManifest(self):
-    """ Add a path to the manifest """
+  def _update_manifest(self):
     MANIFEST_FILENAME = 'META-INF/manifest.xml'
     meta_infos = bytes2str(self.extract(MANIFEST_FILENAME))
     # prevent some duplicates
     for meta_line in meta_infos.split('\n'):
-        for new_meta_line in self._manifest_additions_list:
+        for new_meta_line in list(self._manifest_additions_list):
             if meta_line.strip() == new_meta_line:
                 self._manifest_additions_list.remove(new_meta_line)
 
@@ -200,11 +180,40 @@ class OOoBuilder(Implicit):
       warn('content_type argument must be passed explicitely', FutureWarning)
       content_type = mimetypes.guess_type(name)[0]
     self.addManifest(name, content_type)
-    # we need to explicitly update manifest file
-    self.updateManifest()
     self.replace(name, image)
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)
+
+  def _rebuild_zipfile(self):
+    if self._replaced_member_dict or self._manifest_additions_list:
+      self._update_manifest()
+
+      # make a full copy of the zip file, before we start re-opening self._document
+      # in 'w' mode.
+      self._document.seek(0)
+      copy = BytesIO()
+      while True:
+        chunk = self._document.read(8192)
+        if not chunk:
+          break
+        copy.write(chunk)
+      copy.seek(0)
+
+      self._document.seek(0)
+      with ZipFile(self._document, mode='w') as zf, ZipFile(copy) as zf_copy:
+        # Write `mimetype` first, uncompressed, with no comment or extra
+        # spec recommends this for file magic discovery.
+        zf.writestr(ZipInfo('mimetype'), zf_copy.read('mimetype'))
+        for item in zf_copy.infolist():
+          if (item.filename != 'mimetype'
+              and item.filename not in self._replaced_member_dict):
+            zf.writestr(item, zf_copy.read(item.filename))
+        while self._replaced_member_dict:
+          filename, content = self._replaced_member_dict.popitem()
+          zi = ZipInfo(filename)
+          if filename in ('content.xml', 'styles.xml'):
+            zi.compress_type = ZIP_DEFLATED
+          zf.writestr(zi, content)
 
   def render(self, name='', extension='sxw', source=False):
     """
@@ -215,6 +224,7 @@ class OOoBuilder(Implicit):
       request.response.setHeader('Content-Disposition',
                               'attachment; filename=%s.%s' % (name, extension))
 
+    self._rebuild_zipfile()
     self._document.seek(0)
     return self._document.read()
 
