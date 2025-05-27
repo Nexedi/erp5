@@ -97,6 +97,7 @@ class ERP5TestNode(TestCase):
     config["partition_reference"] = "part"
     config["ipv4_address"] = "1.2.3.4"
     config["ipv6_address"] = "::1"
+    config["ipv6_range"] = "::1/48"
     config["slapos_binary"] = "/opt/slapgrid/HASH/bin/slapos"
     config["srv_directory"] = "srv_directory"
     config["shared_part_list"] = "/not/exists\n /not/exists_either"
