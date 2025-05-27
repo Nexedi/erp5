@@ -41,7 +41,10 @@ class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
     self.status_dict = status_dict
   def __getattr__(self, name):
-    return self.status_dict[name]
+    try:
+      return self.status_dict[name]
+    except KeyError:
+      raise AttributeError(name)
   def __str__(self):
     return 'Error %i' % self.status_code
 
