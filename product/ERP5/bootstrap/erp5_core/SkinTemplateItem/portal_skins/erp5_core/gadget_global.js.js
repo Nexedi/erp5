@@ -16,7 +16,10 @@
         isNaN(value) :
         ((typeof value === "boolean") ?
           false :
-          (Object.keys(value).length === 0)
+          ((typeof value === "string") ?
+            value.length === 0 :
+            (Object.keys(value).length === 0)
+          )
         )
       )
     );
