@@ -46,6 +46,7 @@ class ERP5TestNode(TestCase):
     self.slapos_directory = os.path.join(self._temp_dir, 'slapos')
     self.software_directory = os.path.join(self._temp_dir, 'software_directory')
     self.test_suite_directory = os.path.join(self._temp_dir,'test_suite')
+    self.home_directory = os.path.join(self._temp_dir,'home_directory')
     self.environment = os.path.join(self._temp_dir,'environment')
     self.log_directory = os.path.join(self._temp_dir,'var/log/testnode')
     self.log_file = os.path.join(self.log_directory,'test.log')
@@ -59,6 +60,7 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.test_suite_directory)
     os.mkdir(self.software_directory)
     os.mkdir(self.environment)
+    os.mkdir(self.home_directory)
     os.mkdir(self.system_temp_folder)
     os.makedirs(self.log_directory)
     os.close(os.open(self.log_file,os.O_CREAT))
@@ -97,6 +99,7 @@ class ERP5TestNode(TestCase):
     config["partition_reference"] = "part"
     config["ipv4_address"] = "1.2.3.4"
     config["ipv6_address"] = "::1"
+    config["ipv6_range"] = "::1/48"
     config["slapos_binary"] = "/opt/slapgrid/HASH/bin/slapos"
     config["srv_directory"] = "srv_directory"
     config["shared_part_list"] = "/not/exists\n /not/exists_either"
@@ -118,10 +121,10 @@ class ERP5TestNode(TestCase):
        "vcs_repository_list": [
             {'url': self.remote_repository0,
              'profile_path': 'software.cfg',
-             'branch': 'master'},
+             'branch': 'main'},
             {'url': self.remote_repository1,
              'buildout_section_id': 'rep1',
-             'branch': 'master'}]}]
+             'branch': 'main'}]}]
     if add_third_repository:
       # add a third repository
       # insert in position zero since we already had bug when the profile_path
@@ -148,9 +151,12 @@ class ERP5TestNode(TestCase):
                                add_broken_repository=add_broken_repository)[0])
 
   def getCaller(self, **kw):
+    home_directory = self.home_directory
     class Caller(object):
 
       def __init__(self, **kw):
+        kw.setdefault('env', dict(os.environ, HOME=home_directory))
+        kw.setdefault('stderr', subprocess.PIPE)
         self.__dict__.update(**kw)
 
       def __call__(self, command):
@@ -165,14 +171,14 @@ class ERP5TestNode(TestCase):
       repository_list.append(self.remote_repository2)
     for i, repository_path in enumerate(repository_list):
       call = self.getCaller(cwd=repository_path)
+      call('git config --global init.defaultBranch main'.split())
       call("git init".split())
-      git_config = open(os.path.join(repository_path, '.git', 'config'), 'a')
-      git_config.write("""
+      with open(os.path.join(repository_path, '.git', 'config'), 'a') as git_config:
+        git_config.write("""
 [user]
   name = a b
   email = a@b.c
 """)
-      git_config.close()
       call("touch first_file".split())
       call("git add first_file".split())
       call("git commit -v -m first_commit".split())
@@ -189,7 +195,7 @@ class ERP5TestNode(TestCase):
       self.assertEqual(expected_commit_subject_list, commit_subject_list)
       commit_dict['rep%i' % i] = [x.split() for x in output_line_list]
       if repository_path == self.remote_repository2:
-        output = call('git checkout master -b foo'.split())
+        output = call('git checkout main -b foo'.split())
     # commit_dict looks like
     # {'rep1': [['6669613db7239c0b7f6e1fdb82af6f583dcb3a94', 'next_commit'],
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']],
@@ -260,7 +266,7 @@ extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
 [rep1]
 repository = %(temp_dir)s/testnode/foo/rep1
-branch = master
+branch = main
 revision =
 develop = false
 shared = true
@@ -346,15 +352,14 @@ shared = true
     vcs_repository_info = node_test_suite.vcs_repository_list[0]
     self.assertEqual(vcs_repository_info['repository_id'], 'rep2')
     self.assertEqual(vcs_repository_info['branch'], 'foo')
-    # change it to master
-    vcs_repository_info['branch'] = 'master'
+    # change it to main
+    vcs_repository_info['branch'] = 'main'
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
-    print(output)
-    self.assertIn("* master", output.split('\n'))
+    self.assertIn("* main", output.split('\n'))
     # Add a third branch on remote, make sure we could switch to it
     remote_call = self.getCaller(cwd=self.remote_repository2)
-    output = remote_call('git checkout master -b bar'.split())
+    output = remote_call('git checkout main -b bar'.split())
     vcs_repository_info['branch'] = 'bar'
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
@@ -363,7 +368,7 @@ shared = true
     # this time the branch name is a substring of previous one (we had
     # failure is such case at some point)
     remote_call = self.getCaller(cwd=self.remote_repository2)
-    output = remote_call('git checkout master -b ba'.split())
+    output = remote_call('git checkout main -b ba'.split())
     vcs_repository_info['branch'] = 'ba'
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
@@ -517,16 +522,16 @@ shared = true
       test_file.write("test file !")
     call("git add test_file".split())
     call("git commit -m added".split())
-    call("git checkout master".split())
+    call("git checkout main".split())
     call("git merge --no-ff test_branch".split())
     expected_revision = call("git rev-parse HEAD".split()).strip()
-    # Including the merge, we have 4 commits on this branch, because master is at o4
+    # Including the merge, we have 4 commits on this branch, because main is at o4
     self.assertEqual(
         '4',
         call('git rev-list --topo-order --count HEAD'.split()).strip())
 
     vcs_repository_info = node_test_suite.vcs_repository_list[0]
-    vcs_repository_info['branch'] = 'master'
+    vcs_repository_info['branch'] = 'main'
     rev_list = [
         rev.split('=') for rev
         in self.getAndUpdateFullRevisionList(test_node, node_test_suite)]
@@ -536,7 +541,7 @@ shared = true
 
   def test_06_checkRevision(self):
     """
-    Check if we are able to restore older commit hash if master decide so
+    Check if we are able to restore older commit hash if distributor decide so
     """
     commit_dict = self.generateTestRepositoryList()
     test_node = self.getTestNode()
