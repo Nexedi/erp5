@@ -533,9 +533,13 @@ class SafeHTML:
                     # So consider this parsing as last chance
                     # to get parsable html.
                     repaired_html_tree = soupfromstring(orig)
-                orig = tostring(repaired_html_tree,
-                                include_meta_content_type=True,
-                                method='xml')
+
+                if repaired_html_tree is None:
+                    orig = ''
+                else:
+                    orig = tostring(repaired_html_tree,
+                                    include_meta_content_type=True,
+                                    method='xml')
                 repaired += 1
                 # avoid breaking now.
                 # continue into the loop with repaired html

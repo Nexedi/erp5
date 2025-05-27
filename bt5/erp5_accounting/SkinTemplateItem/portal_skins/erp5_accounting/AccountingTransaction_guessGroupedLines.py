@@ -119,6 +119,34 @@ for (
   if total_price == 0:
     for line in line_info_list:
       non_grouped_section_count.subtract({line['path']: 1})
+
+  elif (accounting_transaction_line_uid_list is None) and (2 < len(line_info_list)):
+    # Try to do partial grouping, if no explicit transaction lines were provided
+    # Search partial list with a 0 total price
+    partial_zero_line_info_index_set = set()
+    for index, line_info in enumerate(line_info_list):
+      if index in partial_zero_line_info_index_set:
+        continue
+      # Only check couple of 2 lines with the same value for now
+      for second_index, second_line_info in enumerate(line_info_list[index + 1:]):
+        if second_index in partial_zero_line_info_index_set:
+          continue
+        if round(sum([l['total_price'] for l in [line_info, second_line_info]]), currency_precision) == 0:
+          partial_zero_line_info_index_set.add(index)
+          partial_zero_line_info_index_set.add(second_index + index + 1)
+          break
+
+    if partial_zero_line_info_index_set:
+      # Found matching lines.
+      for index, line_info in enumerate(line_info_list):
+        if index in partial_zero_line_info_index_set:
+          # As the sum is zero, decrease the count for this line
+          non_grouped_section_count.subtract({line_info['path']: 1})
+
+      # Remove all others from the current data structure, as if they don't exist
+      lines_per_node[node, section, mirror_section, _] = \
+        [line_info for index, line_info in enumerate(line_info_list) if index in partial_zero_line_info_index_set]
+
   else:
     # this group is not valid, remove it for second path
     del lines_per_node[node, section, mirror_section, _]

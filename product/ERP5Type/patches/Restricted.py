@@ -351,6 +351,8 @@ temp_io = io.StringIO()
 allow_type(type(csv.reader(temp_io)))
 allow_type(type(csv.writer(temp_io)))
 del temp_io
+allow_class(csv.DictReader)
+allow_class(csv.DictWriter)
 allow_module('datetime')
 import datetime
 ContainerAssertions[datetime.datetime] = 1
@@ -565,7 +567,10 @@ else:
   try:                    # for pandas >= 0.20.x
     allow_type(pd.Int64Index)
   except AttributeError:  # BBB for pandas < 0.20.x
-    allow_type(pd.indexes.numeric.Int64Index)
+    try:
+      allow_type(pd.indexes.numeric.Int64Index)
+    except AttributeError:  # BBB for pandas >= 2.0
+      pass
   allow_type(pd.core.groupby.DataFrameGroupBy)
   allow_type(pd.core.groupby.SeriesGroupBy)
   try:                    # for pandas >= 0.20.x

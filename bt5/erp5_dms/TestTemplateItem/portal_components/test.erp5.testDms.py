@@ -2054,6 +2054,42 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertIn(added_utf_eight_token, web_page.asStrippedHTML())
     self.assertIn(added_utf_eight_token, web_page.asEntireHTML())
 
+  def test_TextDocument_getContentMd5(self):
+    text_document = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      text_content='foo')
+    self.assertEqual(text_document.getContentMd5(), 'acbd18db4cc2f85cedef654fccc4a4d8')
+    text_document.setTextContent('bar')
+    self.assertEqual(text_document.getContentMd5(), '37b51d194a7513e45b56f6524f2d51f2')
+    text_document.setTextContent('')
+    self.assertEqual(text_document.getContentMd5(), 'd41d8cd98f00b204e9800998ecf8427e')
+
+  def test_TextDocument_asStrippedHTML(self):
+    text_document = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      content_type='text/html',
+      title='HTML web page',
+      text_content='<html><head><title>Title!</title></head><body><p>content</p></body></html>')
+    self.assertEqual(text_document.asStrippedHTML(), '<p>content</p>')
+    text_document.setTextContent('<p>updated</p>')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '<p>updated</p>')
+    text_document.setTextContent('')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<!-- empty -->')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<broken')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<!-- broken')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '')
+    text_document.setTextContent('<p>repaired</div>')
+    self.tic()
+    self.assertEqual(text_document.asStrippedHTML(), '<p>repaired</div>')
+
   @unittest.expectedFailure  # if test start to pass, drop the non strict test.
   def test_PDFDocument_asTextConversion_strict(self):
     """Test a PDF document with embedded images
@@ -2154,37 +2190,6 @@ return 1
       'Image',
       'TEST-en-002.png'
     )
-
-  def test_getExtensibleContent(self):
-    """
-      Test extensible content of some DMS types. As this is possible only on URL traversal use publish.
-    """
-    # Create a root level zope user
-    root_user_folder = self.app.acl_users
-    assert not root_user_folder.getUserById('zope_user')
-    zope_user_password = self.newPassword()
-    root_user_folder._doAddUser('zope_user', zope_user_password, ['Manager',], [])
-    def remove_user():
-      root_user_folder._doDelUsers(('zope_user', ))
-      self.tic()
-    self.addCleanup(remove_user)
-
-    # Create document with good content
-    document = self.portal.document_module.newContent(portal_type='Presentation')
-    upload_file = self.makeFileUpload('TEST-en-003.odp')
-    document.edit(file=upload_file)
-    self.tic()
-    self.assertEqual('converted', document.getExternalProcessingState())
-    for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
-      for credential in ['%s:%s' % (self.manager_username, self.manager_password), 'zope_user:%s' % zope_user_password]:
-        response = self.publish('%s/%s' %(document.getPath(), object_url),
-                                basic=credential)
-        self.assertIn(b'200 OK', response.getOutput())
-        # cloudooo produced HTML navigation, test it
-        self.assertIn(b'First page', response.getBody())
-        self.assertIn(b'Back', response.getBody())
-        self.assertIn(b'Continue', response.getBody())
-        self.assertIn(b'Last page', response.getBody())
 
   def test_getTargetFormatItemList(self):
     """

@@ -450,6 +450,36 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         ''',
         expected='1,,a\r\n',
     )
+    self.createAndRunScript('''
+        import csv
+        import six
+        from io import BytesIO, StringIO
+        if six.PY2:
+          io_ = BytesIO()
+        else:
+          io_ = StringIO()
+        csv_writer = csv.DictWriter(io_, fieldnames=["a", "b", "c"])
+        csv_writer.writeheader()
+        csv_writer.writerow({"a": 1, "b": None, "c": "a"})
+        io_.seek(0)
+        return io_.getvalue()
+        ''',
+        expected='a,b,c\r\n1,,a\r\n',
+    )
+    self.createAndRunScript('''
+        import csv
+        import six
+        from io import BytesIO, StringIO
+        content = 'a,b\\n1,2\\n'
+        if six.PY2:
+          io_ = BytesIO(content)
+        else:
+          io_ = StringIO(content)
+        for line in csv.DictReader(io_):
+          return line
+        ''',
+        expected={'a': '1', 'b': '2'},
+    )
 
   def test_lax_name(self):
     self.createAndRunScript('''

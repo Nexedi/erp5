@@ -886,6 +886,9 @@ msgstr "Montant limite"
 msgid "Amount Non Subject To Contribution"
 msgstr "Montant Non Soumis À Cotisation"
 
+msgid "Amount on Accounting Transaction Lines"
+msgstr "Montant sur les lignes comptables"
+
 msgid "An account in the third party's accounting"
 msgstr "Un compte de tiers."
 
@@ -8568,9 +8571,6 @@ msgstr "Fin de mois"
 
 msgid "Payment mode"
 msgstr "Mode de règlement"
-
-msgid "Payment of ${invoice_title}"
-msgstr "Paiement de ${invoice_title}"
 
 msgid "Payment selection in progress."
 msgstr "Sélection des règlements en cours."

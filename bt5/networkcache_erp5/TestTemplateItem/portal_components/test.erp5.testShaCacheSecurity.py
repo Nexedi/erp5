@@ -57,11 +57,13 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
     """
       Clear everything for next test.
     """
-    for module in ('person_module',
-                   'image_module',
-                   'document_module',):
-      folder = self.portal[module]
-      folder.manage_delObjects(list(folder.objectIds()))
+    for module in (
+        self.portal.person_module,
+        self.portal.image_module,
+        self.portal.document_module,):
+      object_ids = list(module.objectIds())
+      if object_ids:
+        module.manage_delObjects(object_ids)
     self.tic()
 
   # Tests

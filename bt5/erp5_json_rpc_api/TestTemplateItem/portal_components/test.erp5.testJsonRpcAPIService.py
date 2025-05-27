@@ -168,6 +168,7 @@ class TestJsonRpcAPIConnectorView(JsonRpcAPITestCase):
     self.assertEqual(ret.getHeader('content-type'), 'application/json')
     self.assertEqual(
       loadJson(ret.getBody()), {
+        "status": 404,
         "type": "not-found",
         "title": 'non_existing_attribute'
       })
@@ -222,6 +223,7 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
       loadJson(response.getBody()), {
+        "status": 404,
         "type": "not-found",
         "title": "error.handling.unknown.reference"
       })

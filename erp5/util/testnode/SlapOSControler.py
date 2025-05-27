@@ -31,6 +31,7 @@ import subprocess
 import time
 import xml_marshaller
 import argparse
+from netaddr import IPNetwork
 from six.moves import range
 from slapos import client
 from slapos.util import rmtree
@@ -287,10 +288,21 @@ class SlapOSControler(object):
     # naming scheme (which already happened), do this at instance_root level.
     createFolder(instance_root, True)
     partition_list = []
+
+    # IPv6 for inner testnode partitions will be allocated inside the ipv6_range
+    # of our partition.
+    # Please note that the current allocation scheme of the IPv6 range (AAAA::/N) is:
+    #  * AAAA::/(N+3): simple IPv6 for slapos-sr-testing partitions
+    #  * AAAA:2000::/(N+3): simple IPv6 for inner testnode partitions <-- what we allocate right now
+    #  * AAAA:4000::/(N+2): IPv6 range for slapos-sr-testing partitions
+    #  * AAAA:8000::/(N+2): IPv6 range for slapos-sr-testing tap
+    #  * AAAA:C000::/(N+2): IPv6 range for slapos-sr-testing tun
+    ipv6_range = IPNetwork(config['ipv6_range'])
+    partition_netmask = ipv6_range.netmask
+    partition_addresses = list(ipv6_range.subnet(ipv6_range.prefixlen+3))[1]
+
     for i in range(MAX_PARTITIONS):
       # create partition and configure computer
-      # XXX: at the moment all partitions do share same virtual interface address
-      # this is not a problem as usually all services are on different ports
       partition_reference = '%s%s' %(config['partition_reference'], i)
       partition_path = os.path.join(instance_root, partition_reference)
       if not(os.path.exists(partition_path)):
@@ -299,8 +311,9 @@ class SlapOSControler(object):
       partition_list.append(
           {'address_list': [{'addr': config['ipv4_address'],
                             'netmask': '255.255.255.255'},
-                          {'addr': config['ipv6_address'],
-                            'netmask': 'ffff:ffff:ffff::'},],
+                            # don't use address 0 of the network
+                            {'addr': str(partition_addresses[i+1]),
+                            'netmask': str(partition_netmask)},],
           'path': partition_path,
           'reference': partition_reference,
           'tap': {'name': partition_reference},})
