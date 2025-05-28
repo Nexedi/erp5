@@ -68,6 +68,7 @@ class DummyGateway(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.Reference
+                    , PropertySheet.SocketClient
                     , PropertySheet.SMSGateway
                     )
 

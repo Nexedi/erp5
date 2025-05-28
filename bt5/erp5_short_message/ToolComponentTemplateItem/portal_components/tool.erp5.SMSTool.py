@@ -32,7 +32,6 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Permissions import ManagePortal
 from Products.ERP5Type.Utils import non_publishable
 
-#from Products.ERP5ShortMessage import _dtmldir
 
 class SMSTool(BaseTool):
   """
@@ -46,7 +45,10 @@ class SMSTool(BaseTool):
   # Declarative Security
   security = ClassSecurityInfo()
   security.declareProtected(ManagePortal, 'manage_overview')
-  #manage_overview = DTMLFile('explainSMSTool', _dtmldir )
+
+  security.declareProtected(ManagePortal, 'getGatewayActivityFamily')
+  def getGatewayActivityFamily(self, gateway_reference='default'):
+    return self._findGateway(gateway_reference).getGatewayActivityFamily()
 
   security.declareProtected(ManagePortal, 'send')
   @non_publishable

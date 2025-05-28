@@ -113,6 +113,8 @@
                       <list>
                         <string>my_simulation_mode</string>
                         <string>my_title_mode</string>
+                        <string>my_timeout</string>
+                        <string>my_gateway_activity_family</string>
                       </list>
                     </value>
                 </item>
