@@ -6,8 +6,9 @@ want to have any URL as there is no comparison needed,
 thus we return empty dictionary in case of renderJS UI and
 nothing for XHTMl UI.
 """
+from ZTUtils import make_query
 
-request = context.REQUEST
+request = container.REQUEST
 
 serial = getattr(brain, 'serial', '0.0.0.0')
 next_serial = getattr(brain, 'next_serial', '0.0.0.0')
@@ -41,8 +42,18 @@ if serial != '0.0.0.0':
               }
             }
            }
-  return 'Base_viewHistoricalComparison?serial=%s&amp;next_serial=%s&amp;time=%s&amp;action=%s&amp;actor=%s'\
-      % ( serial, next_serial, time, action, actor )
+
+  query_kw = {
+    'serial': serial,
+    'next_serial': next_serial,
+    'time': time,
+    'action': action,
+    'actor': actor
+  }
+  ignore_layout = request.get('ignore_layout')
+  if ignore_layout is not None:
+    query_kw['ignore_layout'] = ignore_layout
+  return 'Base_viewHistoricalComparison?%s' % make_query(query_kw)
 
 elif url_dict:
   return {}

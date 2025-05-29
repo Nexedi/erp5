@@ -5,7 +5,9 @@ to show the diff between the new value and current value.
 In case there new value is the current value, there is no
 need to show the diff link.
 """
-request = context.REQUEST
+from ZTUtils import make_query
+
+request = container.REQUEST
 
 # In this case, the second serial should be the current value, i.e, 0.0.0.0
 first_serial = getattr(brain, 'next_serial', '0.0.0.0')
@@ -41,8 +43,18 @@ if first_serial != second_serial:
             }
            }
 
-  return 'Base_viewHistoricalComparisonDiff?first_serial=%s&amp;second_serial=%s&amp;time=%s&amp;action=%s&amp;actor=%s'\
-      % ( first_serial, second_serial, time, action, actor )
+  query_kw = {
+    'first_serial': first_serial,
+    'second_serial': second_serial,
+    'time': time,
+    'action': action,
+    'actor': actor
+  }
+  ignore_layout = request.get('ignore_layout')
+  if ignore_layout is not None:
+    query_kw['ignore_layout'] = ignore_layout
+
+  return 'Base_viewHistoricalComparisonDiff?%s' % make_query(query_kw)
 
 elif url_dict:
   return {}
