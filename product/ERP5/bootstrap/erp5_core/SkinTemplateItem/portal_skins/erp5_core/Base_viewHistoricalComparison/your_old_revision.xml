@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>old_revision</string> </value>
+            <value> <string>your_old_revision</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -129,6 +129,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>autocomplete</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>check_link</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -176,6 +180,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -301,19 +309,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string:${here/absolute_url}/HistoricalRevisions/${request/serial}/view?portal_status_message=Version%20from%20${request/time}</string> </value>
+            <value> <string>context/Base_getOldRevisionLink</string> </value>
         </item>
       </dictionary>
     </pickle>
