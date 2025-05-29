@@ -87,7 +87,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>old_revision</string>
+                        <string>your_old_revision</string>
                       </list>
                     </value>
                 </item>
