@@ -314,7 +314,6 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
                  "The setup functions were named as *module*_setup. "
                  "')") % (', '.join(import_fixer.warning_module_names))
       tree = ast.parse(warning)
-      tree.body[0].lineno = ast_node.body[-1].lineno+5
       ast_node.body.append(tree.body[0])
 
     ast_node = print_fixer.visit(ast_node)
