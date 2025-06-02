@@ -22,6 +22,7 @@ from Products.CMFCore.ActionsTool import ActionsTool
 from Products.CMFCore.interfaces import IActionProvider
 from Products.CMFCore.permissions import ManagePortal
 from urlparse import urlparse, urlunparse
+import re
 
 security = ClassSecurityInfo()
 
@@ -93,11 +94,18 @@ def listFilteredActionsFor(self, object=None):
 
     for action in actions:
       # normalise the url defined in actions, in the case they
-      # have double slashes
+      # have double slashes (apart form http:// or https:// of course)
       url = action.get('url')
       if isinstance(url, str):
         parsed_list = list(urlparse(url))
-        parsed_list[2] = parsed_list[2].replace('//', '/')
+        url = parsed_list[2].strip()
+        protocol_match = re.match(r'(https?://)', url)
+        if protocol_match is not None:
+          protocol = protocol_match.group(0)
+          url = url[len(protocol):]
+        else:
+          protocol = ''
+        parsed_list[2] = protocol + re.sub(r'/{2,}', '/', url)
         action['url'] = urlunparse(parsed_list)
       filtered_actions.setdefault(action['category'], []).append(action)
 
