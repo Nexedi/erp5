@@ -21,7 +21,6 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.ActionsTool import ActionsTool
 from Products.CMFCore.interfaces import IActionProvider
 from Products.CMFCore.permissions import ManagePortal
-from urlparse import urlparse, urlunparse
 
 security = ClassSecurityInfo()
 
@@ -55,11 +54,8 @@ def listFilteredActionsFor(self, object=None):
     this API should be moved to listActionInfos() of each tool so as not to
     create duplicate code paths that are sources of bugs.
 
-    Also, this patch detects tools that are no longer action providers and
+    Finally, this patch detects tools that are no longer action providers and
     invokes the migration of their actions to portal_actions
-
-    Finally, this patch normalised the url defined in actions, in the case they
-    have double slashes
     """
     actions = []
 
@@ -92,14 +88,7 @@ def listFilteredActionsFor(self, object=None):
                       }
 
     for action in actions:
-      # normalise the url defined in actions, in the case they
-      # have double slashes
-      url = action.get('url')
-      if isinstance(url, str):
-        parsed_list = list(urlparse(url))
-        parsed_list[2] = parsed_list[2].replace('//', '/')
-        action['url'] = urlunparse(parsed_list)
-      filtered_actions.setdefault(action['category'], []).append(action)
+        filtered_actions.setdefault(action['category'], []).append(action)
 
     return filtered_actions
 
