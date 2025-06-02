@@ -206,10 +206,12 @@ def round2(number, ndigits=None):
 		return float(quotient * exponent)
 	else:
 		exponent = _decimal.Decimal('10') ** (-ndigits)
-
-		d = _decimal.Decimal.from_float(number).quantize(
-			exponent, rounding=_decimal.ROUND_HALF_UP)
-
+		try:
+				d = _decimal.Decimal.from_float(number).quantize(
+					exponent, rounding=_decimal.ROUND_HALF_UP)
+		except TypeError:
+				d = _decimal.Decimal(str(number)).quantize(
+					exponent, rounding=_decimal.ROUND_HALF_UP)
 		return float(d)
 
 round_native = round
