@@ -50,8 +50,14 @@
         console.log("fillDialog, value", event.target.value);
         var solver_decision_uid = event.target.name.split("_").pop();
 
-        var data_cell = event.target.parentElement.parentElement.querySelectorAll(
-          ".listbox-table-data-cell")[2];
+        var data_cell;
+        data_cell = document.evaluate(
+          "ancestor::tr[1]//td[@class='listbox-table-data-cell'][3]",
+          event.target,
+          null,
+          XPathResult.FIRST_ORDERED_NODE_TYPE,
+          null
+        ).singleNodeValue;
         // The purpose here is to not make visible the submit button until
         // there is no error which should not be counted twice...
         if (!data_cell.innerHTML.includes('ERROR')) {
