@@ -1748,13 +1748,19 @@ Hé Hé Hé!""", page.asText().strip())
 
     for context in web_site, web_section:
       self.assertTrue(context.getDefaultPageDisplayed())
-      resp = self.publish(context.getPath(), handle_errors=False)
+      resp = self.publish(
+        context.getPath().rstrip('/') + '/',
+        handle_errors=False,
+      )
       self.assertEqual(resp.getStatus(), 200)
       self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
       self.assertIn(b'<h1>Hello !</h1>', resp.getBody())
 
       context.setDefaultPageDisplayed(False)
-      resp = self.publish(context.getPath(), handle_errors=False)
+      resp = self.publish(
+        context.getPath().rstrip('/') + '/',
+        handle_errors=False
+      )
       self.assertEqual(resp.getStatus(), 200)
       self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
       self.assertNotIn(b'<h1>Hello !</h1>', resp.getBody())
