@@ -543,7 +543,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_page_en, websection.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web section rather than the portal
-    self.REQUEST.set("ACTUAL_URL", websection.absolute_url())
+    self.getPortalObject().REQUEST.set("ACTUAL_URL", websection.absolute_url())
     html_page = websection()
     from erp5.component.document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
@@ -581,7 +581,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_page_en, website.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web site rather than the portal
-    self.REQUEST.set("ACTUAL_URL", website.absolute_url())
+    self.getPortalObject().REQUEST.set("ACTUAL_URL", website.absolute_url())
     html_page = website()
     from erp5.component.document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
