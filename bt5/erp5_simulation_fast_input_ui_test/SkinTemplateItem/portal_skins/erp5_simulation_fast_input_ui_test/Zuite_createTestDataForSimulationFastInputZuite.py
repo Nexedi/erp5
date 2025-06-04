@@ -94,7 +94,7 @@ delivery_rule.validate()
 builder = portal.portal_deliveries.newContent(
   portal_type='Delivery Builder',
   id='sale_packing_list_builder_for_simulation_fast_input',
-  simulation_select_method_id='',
+  simulation_select_method_id='DeliveryBuilder_selectSalePackingListSimulationMovementList',
   delivery_module='sale_packing_list_module',
   delivery_portal_type='Sale Packing List',
   delivery_line_portal_type='Sale Packing List Line',
