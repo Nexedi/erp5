@@ -2,7 +2,9 @@
 This URL script is used for Historical comparison list
 to get diff between old and new value
 """
-request = context.REQUEST
+from ZTUtils import make_query
+
+request = container.REQUEST
 
 first_serial = getattr(brain, 'serial', '0.0.0.0')
 second_serial = getattr(brain, 'next_serial', '0.0.0.0')
@@ -36,5 +38,14 @@ if url_dict:
           }
          }
 
-return 'Base_viewHistoricalComparisonDiff?first_serial=%s&amp;second_serial=%s&amp;time=%s&amp;action=%s&amp;actor=%s'\
-    % ( first_serial, second_serial, time, action, actor )
+query_kw = {
+  'first_serial': first_serial,
+  'second_serial': second_serial,
+  'time': time,
+  'action': action,
+  'actor': actor
+}
+ignore_layout = request.get('ignore_layout')
+if ignore_layout is not None:
+  query_kw['ignore_layout'] = ignore_layout
+return 'Base_viewHistoricalComparisonDiff?%s' % make_query(query_kw)
