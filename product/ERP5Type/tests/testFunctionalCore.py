@@ -75,6 +75,8 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
                 'erp5_ui_test_data',
                 'erp5_knowledge_pad_ui_test',
+                'erp5_simulation_fast_input',
+                'erp5_simulation_fast_input_ui_test',
                 'erp5_crm',
                 'erp5_forge',
                 'erp5_credential',
