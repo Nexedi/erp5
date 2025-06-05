@@ -204,7 +204,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             .push(function (web_page_document) {
               edit_view = getActionListByName(
                 ensureArray(web_page_document._links.view),
-                "view_editor"
+                "project_view"
               );
               return {"id": id, "content": content, "edit_view": edit_view};
             });
