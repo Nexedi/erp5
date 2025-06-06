@@ -117,6 +117,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_reference_date_method_id</string>
                         <string>my_payment_term</string>
                         <string>my_trade_date</string>
                         <string>my_payment_additional_term</string>
