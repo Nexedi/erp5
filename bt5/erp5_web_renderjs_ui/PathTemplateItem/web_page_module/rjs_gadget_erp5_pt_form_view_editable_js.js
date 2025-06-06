@@ -184,8 +184,17 @@
         })
         .push(function (result) {
           if (result.jio_key) {
-            // success redirect callback receives jio_key
-            return gadget.redirect({command: 'reload'});
+            if (gadget.state.jio_key === result.jio_key) {
+              // success redirect callback receives jio_key
+              return gadget.redirect({command: 'reload'});
+            }
+            return gadget.redirect({
+              command: 'display',
+              options: {
+                jio_key: result.jio_key,
+                view: result.view
+              }
+            });
           }
         }); // page form handles failures well enough
 
