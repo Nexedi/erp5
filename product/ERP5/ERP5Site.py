@@ -989,9 +989,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     Return a list of workflow states classified to a specific group.
     """
     def getStateList(group):
+      workflow_id_set = set()
+      for type_info in self.portal_types.listTypeInfo():
+        workflow_id_set.update(type_info.getTypeWorkflowList())
       state_set = set()
-      for wf in self.portal_workflow.objectValues():
-        for state in wf.getStateValueList():
+      for workflow_id in workflow_id_set:
+        workflow = self.portal_workflow[workflow_id]
+        for state in workflow.getStateValueList():
           if group in state.getStateTypeList():
             state_set.add(state.getReference())
       return tuple(sorted(state_set))
