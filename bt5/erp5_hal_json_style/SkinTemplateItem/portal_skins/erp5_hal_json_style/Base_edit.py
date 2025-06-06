@@ -203,6 +203,7 @@ encapsulated_editor_list = []  # editors placed inside REQUEST object
 MARKER = []  # placeholder for an empty value
 message = Base_translateString("Data updated.")
 
+changed_id = False
 try:
   # extract all listbox's object form fields from the request and `edit` the object
   for field in form.get_fields():
@@ -232,7 +233,9 @@ try:
 
   # Maybe we should build a list of objects we need
   # Update basic attributes
+  current_id = context.getId()
   context.edit(REQUEST=request, edit_order=edit_order, **edit_kwargs)
+  changed_id = (context.getId() != current_id)
   for encapsulated_editor in encapsulated_editor_list:
     encapsulated_editor.edit(context)
 except ActivityPendingError as e:
@@ -256,6 +259,11 @@ if context.REQUEST.get('is_web_mode', False) and \
 
 # Directly render the form after a successful edit, but in a before commit
 # hook, so that if interactions modify the state we render the new state.
+# Except for the case where the action changed the ID of the context document,
+# in such case we need to redirect to the new document path location
+if changed_id:
+  context.REQUEST.form.pop('form_id', None)  # force Base_redirect re-computing the form_id
+  return context.Base_redirect(form_id, keep_items={'portal_status_message': message})
 
 # Cleanup formulator's special key in request to ensure field are only calculated from context and not the request anymore
 for key in list(context.REQUEST.keys()):
