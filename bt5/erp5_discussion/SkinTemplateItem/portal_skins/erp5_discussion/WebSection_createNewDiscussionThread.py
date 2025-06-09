@@ -13,7 +13,8 @@ language = portal.Localizer.get_selected_language()
 
 # set predicate settings for current Web Section
 # get the related forum using follow_up
-result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                             validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
 membership_criterion_category_list = []
 multimembership_criterion_base_category_list = []
 if result:
@@ -69,11 +70,11 @@ else:
     predecessor_default_page = predecessor_object.getAggregate()
     if predecessor_default_page is not None:
       predecessor_document = context.restrictedTraverse(predecessor_default_page)
-      discussion_thread.setFollowUpValueList([predecessor_document])
+      discussion_thread.setPredecessorValueList([predecessor_document])
 
   # set predecessor on document
   if predecessor_portal_type == 'Web Page':
-    discussion_thread.setFollowUpValueList([predecessor_object])
+    discussion_thread.setPredecessorValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",

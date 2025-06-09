@@ -4,7 +4,8 @@
 parent_uid_list = None
 
 # first get the related forum using predicate search
-result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                             validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
 if result:
   forum = result[0]
   # get list of all forum Threads (details should be set on predicate)
