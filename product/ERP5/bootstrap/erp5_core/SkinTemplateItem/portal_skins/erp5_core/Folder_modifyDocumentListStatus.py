@@ -55,4 +55,7 @@ portal.portal_catalog.searchAndActivate(
 context.activate(after_tag=tag).getId()
 
 return context.Base_redirect(form_id,
-  keep_items=dict(portal_status_message=translate("Workflow modification in progress.")))
+  keep_items=dict(
+    portal_status_message=translate("Workflow modification in progress."),
+    portal_status_level='success',
+  ))

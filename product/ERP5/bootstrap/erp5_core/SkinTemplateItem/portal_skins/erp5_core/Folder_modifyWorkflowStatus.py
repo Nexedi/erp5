@@ -88,4 +88,7 @@ context.activate(after_tag=tag).getTitle()
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])
 
 return context.Base_redirect(form_id,
-          keep_items=dict(portal_status_message=translateString("Workflow modification in progress.")))
+  keep_items=dict(
+    portal_status_message=translate("Workflow modification in progress."),
+    portal_status_level='success',
+  ))
