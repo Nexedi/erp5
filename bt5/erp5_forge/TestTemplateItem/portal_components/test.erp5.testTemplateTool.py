@@ -663,6 +663,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     repository, = [
         repo for repo in template_tool.getRepositoryList() if
         '/bootstrap' not in repo
+        and '/wendelin' not in repo
         and '/erp5-bin' not in repo
         and '/erp5-doc' not in repo]
 
