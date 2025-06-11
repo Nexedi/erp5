@@ -9,17 +9,12 @@
   Calling isEmpty(x) is more robust than expression !x.
   */
   function isEmpty(value) {
-    return (
-      (value === undefined) ||
-      (value === null) ||
-      ((typeof value === "number") ?
-        isNaN(value) :
-        ((typeof value === "boolean") ?
-          false :
-          (Object.keys(value).length === 0)
-        )
-      )
-    );
+    if (value === undefined || value === null) return true;
+    const type = typeof value;
+    if (type === 'number') return isNaN(value);
+    if (type === 'boolean') return false;
+    if (type === 'string') return value.length === 0;
+    return Object.keys(value).length === 0;
   }
   window.isEmpty = isEmpty;
 
