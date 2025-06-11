@@ -56,7 +56,7 @@
       return obj;
     }
     if (typeof obj === "number") {
-      return Boolean(obj)
+      return Boolean(obj);
     }
     return !isEmpty(obj);
   }
