@@ -60,10 +60,14 @@
             </value>
         </item>
         <item>
-            <key> <string>content_md5</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <none/>
+              <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>85567f6cfbe78a054751ab2fb2763c1a</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>

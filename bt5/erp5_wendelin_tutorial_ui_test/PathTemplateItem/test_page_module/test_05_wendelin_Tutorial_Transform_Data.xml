@@ -62,16 +62,12 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/functional_test_tutorial_username</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>4214c09c2dfaf9a0f95cb1e1ac4b8936</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
