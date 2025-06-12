@@ -34,7 +34,7 @@ if test_compta_demat_compatibility:
     siret_list = [b.getObject().getCorporateRegistrationCode() for b in portal.portal_catalog(uid=section_uid_list)]
     siret_list = [siret for siret in siret_list if siret]
     if len(siret_list) == 1:
-      siren = siret_list[0][:8]
+      siren = siret_list[0].replace(" ", "")[:9]
   filename = at_date.strftime('{siren}FEC%Y%m%d.xml').format(siren=siren)
 zipfileobj.writestr(filename, fec_file.encode('utf8'))
 zipfileobj.close()

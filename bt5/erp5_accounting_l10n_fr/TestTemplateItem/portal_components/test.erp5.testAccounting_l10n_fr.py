@@ -66,7 +66,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     # > Il se compose de 14 chiffres : les neuf chiffres du numéro SIREN +
     # > les cinq chiffres correspondant à un numéro NIC (numéro interne de
     # > classement).
-    self.section.setCorporateRegistrationCode('12345689 12345')
+    self.section.setCorporateRegistrationCode('123 456 789 12345')
     # set a french gap on test accounts
     account_module = self.portal.account_module
     account_module.payable.setGap('fr/pcg/4/40/401')
@@ -130,8 +130,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         self.assertEqual('application/zip', content_type)
         data = part.get_payload(decode=True)
         zf = zipfile.ZipFile(io.BytesIO(data))
-        self.assertIn("12345689FEC20141231.xml", zf.namelist())
-        return zf.open("12345689FEC20141231.xml").read()
+        self.assertIn("123456789FEC20141231.xml", zf.namelist())
+        return zf.open("123456789FEC20141231.xml").read()
     self.fail("Attachment not found")
 
   def test_FEC(self):
