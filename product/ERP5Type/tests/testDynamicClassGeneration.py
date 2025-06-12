@@ -3400,7 +3400,7 @@ break_at_import()
       error_message = "ImportError: No module named non.existing.module"
     else:
       module_file = 'erp5://' + relative_url
-      error_message = "ModuleNotFoundError: No module named 'non'"
+      error_message = "    ^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'non'"
     self.assertIn('''
   File "%(module_file)s", line 4, in <module>
     break_at_import()
