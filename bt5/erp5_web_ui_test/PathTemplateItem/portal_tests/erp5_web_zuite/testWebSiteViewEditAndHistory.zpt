@@ -1,0 +1,185 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_and_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_and_id"></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/test_web_site/view?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Updated Test Web Site</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_title</td>
+  <td>Updated Test Web Site</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Updated Again Test Web Site</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_title</td>
+  <td>Updated Again Test Web Site</td>
+</tr>
+
+
+<tr>
+  <td colspan="3"><b>Compare</b></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class= "listbox-title"]//span[text() = "Edit Workflow"]/../../../../../../..//table//tr[2]/td[4]/a</td>
+  <td></td>
+</tr>
+
+<!-- we are still in xhtml_style mode -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class="document"]/div[@class="actions"]/ul/li/a[.="History"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class= "listbox-title"]//span[text() = "Differences"]/../../../../../../..//table//tr/td[3]/a</td>
+  <td>Updated Test Web Site</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Compare to previous value (details)</b></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class= "listbox-title"]//span[text() = "Differences"]/../../../../../../..//table//tr/td[3]/a</td>
+  <td></td>
+</tr>
+<!-- we are still in xhtml_style mode -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class="document"]/div[@class="actions"]/ul/li/a[.="History"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Compare to latest value (details)</b></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class= "listbox-title"]//span[text() = "Edit Workflow"]/../../../../../../..//table//tr[2]/td[4]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class= "listbox-title"]//span[text() = "Differences"]/../../../../../../..//table//tr/td[4]/a</td>
+  <td></td>
+</tr>
+<!-- we are still in xhtml_style mode -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class="document"]/div[@class="actions"]/ul/li/a[.="History"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td colspan="3"><b>View old revision</b></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class= "listbox-title"]//span[text() = "Edit Workflow"]/../../../../../../..//table//tr[2]/td[4]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=View Old Revision</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_title</td>
+  <td>Test Web Site</td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>glob:Version from 20*</td>
+  <td></td>
+</tr>
+
+<!-- we are still in xhtml_style mode -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class="document"]/div[@class="actions"]/ul/li/a[.="History"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
