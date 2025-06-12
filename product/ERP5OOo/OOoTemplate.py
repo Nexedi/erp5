@@ -532,9 +532,6 @@ class OOoTemplate(ZopePageTemplate):
           # We don't replace manifest
           ooo_builder.replace(name, additional_builder.extract(name))
 
-    # Update the META information
-    ooo_builder.updateManifest()
-
     # Produce final result
     if batch_mode:
       ooo = ooo_builder.render()
