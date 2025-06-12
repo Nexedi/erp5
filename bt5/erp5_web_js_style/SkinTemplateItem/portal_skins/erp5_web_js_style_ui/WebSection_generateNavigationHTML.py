@@ -66,7 +66,7 @@ result_list.append('</ul></nav>')
 
 # Sitemap
 result_list.append('<nav id="sitemap">')
-result_list.append('<a href="%s">%s</a>' % (_(web_site.absolute_url()), _(web_site.getTranslatedTitle())))
+result_list.append('<a href="%s/">%s</a>' % (_(web_site.absolute_url()), _(web_site.getTranslatedTitle())))
 generateSectionListHTML(result_list, web_site.WebSection_getSiteMapTree(include_document=False, depth=99))
 result_list.append('</nav>')
 
