@@ -1791,7 +1791,7 @@ class LabelWidget(Widget):
     def render(self, field, key, value, REQUEST=None, render_prefix=None):
         return render_element("div",
                               css_class=field.get_value('css_class'),
-                              contents=field.get_value('default'))
+                              contents=html_quote(field.get_value('default')))
 
     # XXX should render view return the same information as render?
     def render_view(self, field, value, REQUEST=None, render_prefix=None):
