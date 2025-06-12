@@ -336,11 +336,11 @@
                       <list>
                         <tuple>
                           <string>stock.date</string>
-                          <string>ASC</string>
+                          <string>DESC</string>
                         </tuple>
                         <tuple>
                           <string>stock.uid</string>
-                          <string>ASC</string>
+                          <string>DESC</string>
                         </tuple>
                       </list>
                     </value>
