@@ -38,7 +38,7 @@
       return gadget.getTranslationList(translation_list.map(function (x) {
         return x[0];
       }))
-        .then(function (translation_result) {
+        .queue(function (translation_result) {
           var i;
           for (i = 0; i < translation_list.length; i++) {
             translation_list[i][1].innerText = translation_result[i];
