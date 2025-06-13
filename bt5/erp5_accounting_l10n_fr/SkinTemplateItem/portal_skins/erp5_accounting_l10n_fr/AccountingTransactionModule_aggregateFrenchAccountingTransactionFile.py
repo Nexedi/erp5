@@ -20,8 +20,10 @@ if test_compta_demat_compatibility:
   # some "important" characters such as €
   # https://github.com/DGFiP/Test-Compta-Demat/issues/37
   # https://github.com/DGFiP/Test-Compta-Demat/issues/39
+  # also replace some unsupported characters
+  # https://github.com/DGFiP/Test-Compta-Demat/issues/45
   fec_file = ensure_ascii(unicodedata.normalize(
-    'NFKD', fec_file.replace(u"€", "EUR")
+    'NFKD', fec_file.replace(u"€", "EUR").replace("|", "")
   ), 'ignore')
 
 zipbuffer = BytesIO()
@@ -34,7 +36,7 @@ if test_compta_demat_compatibility:
     siret_list = [b.getObject().getCorporateRegistrationCode() for b in portal.portal_catalog(uid=section_uid_list)]
     siret_list = [siret for siret in siret_list if siret]
     if len(siret_list) == 1:
-      siren = siret_list[0][:8]
+      siren = siret_list[0].replace(" ", "")[:9]
   filename = at_date.strftime('{siren}FEC%Y%m%d.xml').format(siren=siren)
 zipfileobj.writestr(filename, fec_file.encode('utf8'))
 zipfileobj.close()
