@@ -20,8 +20,10 @@ if test_compta_demat_compatibility:
   # some "important" characters such as €
   # https://github.com/DGFiP/Test-Compta-Demat/issues/37
   # https://github.com/DGFiP/Test-Compta-Demat/issues/39
+  # also replace some unsupported characters
+  # https://github.com/DGFiP/Test-Compta-Demat/issues/45
   fec_file = ensure_ascii(unicodedata.normalize(
-    'NFKD', fec_file.replace(u"€", "EUR")
+    'NFKD', fec_file.replace(u"€", "EUR").replace("|", "")
   ), 'ignore')
 
 zipbuffer = BytesIO()

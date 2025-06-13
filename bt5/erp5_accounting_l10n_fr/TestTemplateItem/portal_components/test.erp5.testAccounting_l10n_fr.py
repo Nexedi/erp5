@@ -453,11 +453,12 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     # Workaround bugs with Test Compta Demat
     # https://github.com/DGFiP/Test-Compta-Demat/issues/37
     # https://github.com/DGFiP/Test-Compta-Demat/issues/39
+    # https://github.com/DGFiP/Test-Compta-Demat/issues/45
 
     account_module = self.portal.account_module
     self._makeOne(
       portal_type='Purchase Invoice Transaction',
-      title='Le libéllé c’est çà: œufs, des Œufs, des Ÿ et des €',
+      title='Le libéllé c’est çà: œufs, des Œufs, des Ÿ, des | et des €',
       simulation_state='delivered',
       reference='1',
       source_section_value=self.organisation_module.supplier,
@@ -483,7 +484,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.validateFECXML(tree)
     self.assertEqual(
       tree.xpath('//EcritureLib/text()'),
-      [u'Le libelle cest ca: ufs, des ufs, des Y et des EUR'])
+      [u'Le libelle cest ca: ufs, des ufs, des Y, des  et des EUR'])
 
   def test_Skip0QuantityLines(self):
     # Don't include lines with 0 quantity in the output, because they are
