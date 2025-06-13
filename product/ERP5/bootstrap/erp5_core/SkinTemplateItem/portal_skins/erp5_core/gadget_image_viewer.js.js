@@ -54,24 +54,19 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        className = "image-viewer-transformation";
+        className = "image-viewer-transformation",
+        img_element = gadget.state.image_element;
 
-      if (gadget.state.rotation) {
-        className += " rotation-" + gadget.state.rotation;
-      }
-
-      if (gadget.state.zoom) {
-        className += " zoom-" + gadget.state.zoom;
-      }
-
-      if (gadget.state.image_element === undefined && gadget.state.src) {
-        var img_element = window.document.createElement("img"),
-          src_attr = new URL(gadget.state.src);
-
+      if (gadget.state.image_element === undefined) {
+        img_element = gadget.element.querySelector(".gadget_image_viewer_content > img");
+        gadget.state.image_element = img_element;
         if (gadget.state.alt) {
           img_element.setAttribute("alt", gadget.state.alt);
         }
+      }
 
+      if (modification_dict.hasOwnProperty("src")) {
+        var src_attr = new URL(gadget.state.src);
         if (gadget.state.quality) {
           src_attr.searchParams.set("quality", gadget.state.quality);
         }
@@ -79,12 +74,16 @@
           src_attr.searchParams.set("format", gadget.state.format);
         }
         img_element.setAttribute("src", src_attr);
-
-        gadget.element.querySelector(".gadget_image_viewer_content").appendChild(img_element);
-        gadget.state.image_element = img_element;
       }
 
+      var rotation = gadget.state.rotation;
+      if (rotation) { className += " rotation-" + rotation; }
+
+      var zoom = gadget.state.zoom;
+      if (zoom) { className += " zoom-" + zoom; }
+
       gadget.state.image_element.className = className;
+
       return gadget;
     })
 
