@@ -8,6 +8,7 @@ test.erp5.testFunctionalRJSDms
 test.erp5.testFunctionalRJSEditorGadget
 test.erp5.testFunctionalRJSFloatField
 test.erp5.testFunctionalRJSFormbox
+test.erp5.testFunctionalRJSImageViewerGadget
 test.erp5.testFunctionalRJSIntegerField
 test.erp5.testFunctionalRJSInterfaceValidator
 test.erp5.testFunctionalRJSLabelField
