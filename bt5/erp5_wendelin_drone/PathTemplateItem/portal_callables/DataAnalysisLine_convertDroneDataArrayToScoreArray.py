@@ -38,9 +38,6 @@ def rated_value(next_value, previous_value, rate):
 
 
 
-
-
-
 real_array = input_array_real["Data Array"]
 sim_array = input_array_sim["Data Array"]
 
@@ -65,32 +62,38 @@ seen_sims = progress_indicator_sim.getStringOffsetIndex()
 new_seen = ""
 if seen_sims is None:
   seen_sims = ""
-  score_dtypes = {'name': 'S256', 'Param1': 'f16', 'Param2': 'f16', 
-          'distance_reciprocal': 'f8', 'ASML_reciprocal': 'f8', 
-          'ground_speed_reciprocal': 'f8', 'climb_rate_reciprocal': 'f8', 
-          'score_reciprocal': 'f16', 'score_cosine_row': 'f16', 
-          'score_cosine_column': 'f16'}
+  score_dtypes = [
+    ('name','S256'),
+    ('Param1','f16'),
+    ('Param2', 'f16'),
+    ('distance_reciprocal', 'f8'),
+    ('ASML_reciprocal', 'f8'),
+    ('ground_speed_reciprocal', 'f8'),
+    ('climb_rate_reciprocal', 'f8'),
+    ('score_reciprocal', 'f16'),
+    ('score_cosine_row', 'f16'),
+    ('score_cosine_column', 'f16')
+  ]
+  _ = out_array_scores["Data Array"].initArray(shape=(0,), dtype=score_dtypes)
 
-  _ = out_array_scores["Data Array"].initArray(shape=(0,), dtype=list(score_dtypes.items()))
-
-  plot_dtypes = {
-    'name': 'S256',
-    'Param1': 'f8',
-    'Param2': 'f8',
-    'timestamp': 'f8',
-    'distance_diff': 'f8',
-    'ASML_diff': 'f8',
-    'ground_speed_diff': 'f8',
-    'climb_rate_diff': 'f8',
-    'distance_reciprocal': 'f8',
-    'ASML_reciprocal': 'f8',
-    'ground_speed_reciprocal': 'f8',
-    'climb_rate_reciprocal': 'f8',
-    'score_reciprocal': 'f16',
-    'score_cosine_row': 'f16',
-    'score_cosine_column': 'f16'
-  }
-  _ = out_array_plot_data["Data Array"].initArray(shape=(0,), dtype=list(plot_dtypes.items()))
+  plot_dtypes = [
+    ('name', 'S256'),
+    ('Param1', 'f8'),
+    ('Param2','f8'),
+    ('timestamp', 'f8'),
+    ('distance_diff', 'f8'),
+    ('ASML_diff', 'f8'),
+    ('ground_speed_diff', 'f8'),
+    ('climb_rate_diff', 'f8'),
+    ('distance_reciprocal', 'f8'),
+    ('ASML_reciprocal','f8'),
+    ('ground_speed_reciprocal', 'f8'),
+    ('climb_rate_reciprocal', 'f8'),
+    ('score_reciprocal', 'f16'),
+    ('score_cosine_row', 'f16'),
+    ('score_cosine_column', 'f16')
+  ]
+  _ = out_array_plot_data["Data Array"].initArray(shape=(0,), dtype=plot_dtypes)
 
 simulated_flight_list = []
 simulated_flights_value_dict_list = []
@@ -255,6 +258,25 @@ if plots_df.empty:
   return
 
 plots_df=plots_df.astype(plot_dtypes)
+plots_df = plots_df[
+  [
+    'name',
+    'Param1',
+    'Param2',
+    'timestamp',
+    'distance_diff',
+    'ASML_diff',
+    'ground_speed_diff',
+    'climb_rate_diff',
+    'distance_reciprocal',
+    'ASML_reciprocal',
+    'ground_speed_reciprocal',
+    'climb_rate_reciprocal',
+    'score_reciprocal',
+    'score_cosine_row',
+    'score_cosine_column'
+  ]
+]
 
 
 # Initialize a dictionary to store the combined values
@@ -279,6 +301,20 @@ score_dtypes = {'name': 'S256', 'Param1': 'float64', 'Param2': 'float64',
           'score_cosine_column': 'float64'}
 scores_df = pd.DataFrame(combined_data)
 scores_df = scores_df.astype(score_dtypes)
+scores_df = scores_df[
+  [
+    'name',
+    'Param1',
+    'Param2',
+    'distance_reciprocal',
+    'ASML_reciprocal',
+    'ground_speed_reciprocal',
+    'climb_rate_reciprocal',
+    'score_reciprocal',
+    'score_cosine_row',
+    'score_cosine_column'
+  ]
+]
 ###############################
 
 
@@ -286,7 +322,6 @@ scores_df = scores_df.astype(score_dtypes)
 zbigarray_scores = out_array_scores["Data Array"].getArray()
 
 score_names = list(out_array_scores["Data Array"])
-
 
 
 

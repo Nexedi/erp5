@@ -1,7 +1,5 @@
 import math
 import pandas as pd
-import numpy as np
-import re
 
 
 # Take the data from the score list array. See if the array is larger than this one. If it is not, do not do anything. Else recalculate the scores for each simulation we have seen (just sort the data).
@@ -9,56 +7,40 @@ import re
 # This new array will give us the final overview of the ranking of the parameters. This can be used by our genetic algorithm to decide when we can stop and which parameters worked the best.
 
 
-score_dtypes = {'name': 'S256', 'Param1': 'f8', 'Param2': 'f8', 
-          'distance_reciprocal': 'f8', 'ASML_reciprocal': 'f8', 
-          'ground_speed_reciprocal': 'f8', 'climb_rate_reciprocal': 'f8', 
-          'score_reciprocal': 'f8', 'score_cosine_row': 'f8', 
-          'score_cosine_column': 'f8'}
 
-new_score_dtypes= {'name': 'S256', 'Param1': 'f8', 'Param2': 'f8', 
-          'distance_reciprocal': 'f8', 'ASML_reciprocal': 'f8', 
-          'ground_speed_reciprocal': 'f8', 'climb_rate_reciprocal': 'f8', 
-          'score_reciprocal': 'f8', 'score_cosine_row': 'f8', 
-          'score_cosine_column': 'f8',
-          'iteration': 'i8'}
-          
-    
-plot_dtypes = {
-    'name': 'S256',
-    'Param1': 'f8',
-    'Param2': 'f8',
-    'timestamp': 'f8',
-    'distance_diff': 'f8',
-    'ASML_diff': 'f8',
-    'ground_speed_diff': 'f8',
-    'climb_rate_diff': 'f8',
-    'distance_reciprocal': 'f8',
-    'ASML_reciprocal': 'f8',
-    'ground_speed_reciprocal': 'f8',
-    'climb_rate_reciprocal': 'f8',
-    'score_reciprocal': 'f8',
-    'score_cosine_row': 'f8',
-    'score_cosine_column': 'f8',
-    'iteration': 'i8'
-}
 
-new_plot_dtypes = {
-    'Param1': 'f8',
-    'Param2': 'f8',
-    'timestamp': 'f8',
-    'distance_diff': 'f8',
-    'ASML_diff': 'f8',
-    'ground_speed_diff': 'f8',
-    'climb_rate_diff': 'f8',
-    'distance_reciprocal': 'f8',
-    'ASML_reciprocal': 'f8',
-    'ground_speed_reciprocal': 'f8',
-    'climb_rate_reciprocal': 'f8',
-    'score_reciprocal': 'f8',
-    'score_cosine_row': 'f8',
-    'score_cosine_column': 'f8',
-    'iteration': 'i8'
-}
+new_score_dtypes= [
+  ('name', 'S256'),
+  ('Param1', 'f8'),
+  ('Param2', 'f8'),
+  ('distance_reciprocal', 'f8'),
+  ('ASML_reciprocal', 'f8'),
+  ('ground_speed_reciprocal', 'f8'),
+  ('climb_rate_reciprocal', 'f8'),
+  ('score_reciprocal', 'f8'),
+  ('score_cosine_row', 'f8'),
+  ('score_cosine_column', 'f8'),
+  ('iteration', 'i8')
+]
+
+
+new_plot_dtypes = [
+  ('Param1', 'f8'),
+  ('Param2', 'f8'),
+  ('timestamp', 'f8'),
+  ('distance_diff', 'f8'),
+  ('ASML_diff', 'f8'),
+  ('ground_speed_diff', 'f8'),
+  ('climb_rate_diff', 'f8'),
+  ('distance_reciprocal', 'f8'),
+  ('ASML_reciprocal', 'f8'),
+  ('ground_speed_reciprocal', 'f8'),
+  ('climb_rate_reciprocal', 'f8'),
+  ('score_reciprocal', 'f8'),
+  ('score_cosine_row', 'f8'),
+  ('score_cosine_column', 'f8'),
+  ('iteration', 'i8')
+]
 
 
 score_array = input_array_scores["Data Array"]
@@ -70,11 +52,11 @@ new_plot_array = out_array_plots["Data Array"]
 # Should only look at the newest few
 score_nparray = score_array.getArray()
 if score_nparray is None:
-  score_nparray = out_array_scores["Data Array"].initArray(shape=(0,), dtype=list(new_score_dtypes.items()))
+  score_nparray = out_array_scores["Data Array"].initArray(shape=(0,), dtype=new_score_dtypes)
 
 plot_nparray = plot_array.getArray()
 if plot_nparray is None:
-  plot_nparray = out_array_plots["Data Array"].initArray(shape=(0,), dtype=list(new_plot_dtypes.items()))
+  plot_nparray = out_array_plots["Data Array"].initArray(shape=(0,), dtype=new_plot_dtypes)
   
 old_score_df = pd.DataFrame.from_records(score_nparray[:].copy())
 old_plot_df = pd.DataFrame.from_records(plot_nparray[:].copy())
@@ -101,13 +83,13 @@ if len([x for x in sim_flight_names if x not in seen_sims]) == 0:
 
 new_score_nparray = new_score_array.getArray()
 if new_score_nparray is None:
-  new_score_nparray = out_array_scores["Data Array"].initArray(shape=(0,), dtype=list(new_score_dtypes.items()))
+  new_score_nparray = out_array_scores["Data Array"].initArray(shape=(0,), dtype=new_score_dtypes)
 
 
 
 new_plot_nparray = new_plot_array.getArray()
 if new_plot_nparray is None:
-  new_plot_nparray = out_array_plots["Data Array"].initArray(shape=(0,), dtype=list(new_plot_dtypes.items()))
+  new_plot_nparray = out_array_plots["Data Array"].initArray(shape=(0,), dtype=new_plot_dtypes)
 
 
 
@@ -158,9 +140,9 @@ answer_scores["iteration"] = new_score_iteration
 answer_plots["iteration"] = new_plot_iteration
 
 # We will remove all the data from the data arrays before we append the new data. Essentially we will be left with only the best few iterations
-new_score_nparray = out_array_scores["Data Array"].initArray(shape=(0,), dtype=list(new_score_dtypes.items()))
+new_score_nparray = out_array_scores["Data Array"].initArray(shape=(0,), dtype=new_score_dtypes)
 
-new_plot_nparray = out_array_plots["Data Array"].initArray(shape=(0,), dtype=list(new_plot_dtypes.items()))
+new_plot_nparray = out_array_plots["Data Array"].initArray(shape=(0,), dtype=new_plot_dtypes)
 
 new_score_nparray.append(answer_scores.to_records(index = False))
 
