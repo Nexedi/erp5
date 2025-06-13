@@ -24,17 +24,36 @@
       zoom: 0
     })
 
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
+
     .declareMethod('render', function (options) {
       return this.renderAsynchronously(options);
     })
 
     .declareJob('renderAsynchronously', function (options) {
-      return this.changeState({
-        src: options.value,
-        quality: options.quality,
-        format: options.format,
-        alt: options.description || options.title
+      var gadget = this,
+        translation_list = [];
+      gadget.element.querySelectorAll("[data-i18n]").values().forEach(function (el) {
+        translation_list.push([
+          el.getAttribute("data-i18n"),
+          el
+        ]);
       });
+      return gadget.getTranslationList(translation_list.map(function (x) {
+        return x[0];
+      }))
+        .then(function (translation_result) {
+          var i;
+          for (i = 0; i < translation_list.length; i++) {
+            translation_list[i][1].innerText = translation_result[i];
+          }
+          return gadget.changeState({
+            src: options.value,
+            quality: options.quality,
+            format: options.format,
+            alt: options.description || options.title
+          });
+        });
     })
 
     .onStateChange(function (modification_dict) {
@@ -82,9 +101,9 @@
           return this.changeState({rotation: addToRotation(this.state.rotation, -90)});
         case 'rotate-right':
           return this.changeState({rotation: addToRotation(this.state.rotation, 90)});
-        case 'zoom-plus':
+        case 'zoom-in':
           return this.changeState({zoom: addToZoom(this.state.zoom, 1)});
-        case 'zoom-minus':
+        case 'zoom-out':
           return this.changeState({zoom: addToZoom(this.state.zoom, -1)});
         }
       }
