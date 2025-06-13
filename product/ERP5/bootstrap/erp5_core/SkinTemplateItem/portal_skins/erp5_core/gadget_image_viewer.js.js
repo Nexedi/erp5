@@ -27,10 +27,6 @@
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     .declareMethod('render', function (options) {
-      return this.renderAsynchronously(options);
-    })
-
-    .declareJob('renderAsynchronously', function (options) {
       var gadget = this,
         translation_list = [];
       gadget.element.querySelectorAll("[data-i18n]").values().forEach(function (el) {
