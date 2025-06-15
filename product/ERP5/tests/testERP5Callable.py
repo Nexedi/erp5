@@ -85,21 +85,25 @@ class TestERP5PythonScript(ERP5TypeTestCase):
     self.script.setBody('return "Hello " + who')
     self.assertEqual(self.script("world"), "Hello world")
 
-    if six.PY2:
-      filename = 'ERP5 Python Script'
-    else:
-      filename = 'ERP5 Python Script:%s' % self.script.getPath()
-
     try:
       self.script(123)
     except TypeError:
       _, _, tb = sys.exc_info()
       # python script code is visible in traceback
-      self.assertEqual(
-        traceback.format_tb(tb)[-1],
-        '  File "%s", line 1, in %s\n'
-        '    return "Hello " + who\n' % (filename, self.id())
-      )
+      if six.PY2:
+        self.assertEqual(
+          traceback.format_tb(tb)[-1],
+          '  File "ERP5 Python Script", line 1, in %s\n'
+          '    return "Hello " + who\n' % (self.id())
+        )
+      else:
+        self.assertEqual(
+          traceback.format_tb(tb)[-1],
+          '  File "ERP5 Python Script:%s", line 1, in %s\n'
+          '    return "Hello " + who\n'
+          '           ~~~~~~~~~^~~~~\n'
+           % (self.script.getPath(), self.id())
+        )
     else:
       self.fail('Exception not raised')
 
@@ -132,20 +136,23 @@ class TestERP5WorkflowScript(ERP5TypeTestCase):
     self.script.setBody('return "Hello " + state_change')
     self.assertEqual(self.script("world"), "Hello world")
 
-    if six.PY2:
-      filename = 'ERP5 Workflow Script'
-    else:
-      filename = 'ERP5 Workflow Script:%s' % self.script.getPath()
-
     try:
       self.script(123)
     except TypeError:
       _, _, tb = sys.exc_info()
       # python script code is visible in traceback
-      self.assertEqual(
-        traceback.format_tb(tb)[-1],
-        ('  File "%s", line 1, in script_test_script\n'
-        '    return "Hello " + state_change\n') % filename
-      )
+      if six.PY2:
+        self.assertEqual(
+          traceback.format_tb(tb)[-1],
+          ('  File "ERP5 Workflow Script", line 1, in script_test_script\n'
+          '    return "Hello " + state_change\n')
+        )
+      else:
+        self.assertEqual(
+          traceback.format_tb(tb)[-1],
+          ('  File "ERP5 Workflow Script:%s", line 1, in script_test_script\n'
+          '    return "Hello " + state_change\n'
+          '           ~~~~~~~~~^~~~~~~~~~~~~~\n') % self.script.getPath()
+        )
     else:
       self.fail('Exception not raised')
