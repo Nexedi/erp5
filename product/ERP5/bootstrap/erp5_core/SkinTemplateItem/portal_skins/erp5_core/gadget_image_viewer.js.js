@@ -19,31 +19,32 @@
   }
 
   function initializeGadget(gadget) {
-      var translation_list = [];
+    var translation_list = [];
 
-      gadget.element.querySelectorAll("[data-i18n]").values().forEach(function (el) {
-        translation_list.push([
-          el.getAttribute("data-i18n"),
-          el
-        ]);
+    gadget.element.querySelectorAll("[data-i18n]").values().forEach(function (el) {
+      translation_list.push([
+        el.getAttribute("data-i18n"),
+        el
+      ]);
+    });
+
+    return gadget.getTranslationList(translation_list.map(function (x) {
+      return x[0];
+    }))
+      .push(function (translation_result) {
+        var img_element = gadget.element.querySelector(".gadget_image_viewer_content img"),
+          i = 0;
+        for (i = 0; i < translation_list.length; i++) {
+          translation_list[i][1].innerText = translation_result[i];
+        }
+
+        if (gadget.state.alt) {
+          img_element.setAttribute("alt", gadget.state.alt);
+        }
+        gadget.state.image_element = img_element;
+        return gadget;
       });
-
-      return gadget.getTranslationList(translation_list.map(function (x) {
-        return x[0];
-      }))
-        .push(function (translation_result) {
-          for (var i = 0; i < translation_list.length; i++) {
-            translation_list[i][1].innerText = translation_result[i];
-          }
-
-          var img_element = gadget.element.querySelector(".gadget_image_viewer_content img");
-          if (gadget.state.alt) {
-            img_element.setAttribute("alt", gadget.state.alt);
-          }
-          gadget.state.image_element = img_element;
-          return gadget;
-        });
-    }
+  }
 
   rJS(window)
     .setState({
@@ -74,10 +75,12 @@
       }
 
       return queue.push(function () {
-        var img_element = gadget.state.image_element;
+        var img_element = gadget.state.image_element,
+          src_attr = new URL(gadget.state.src),
+          rotation = gadget.state.rotation,
+          zoom = gadget.state.zoom;
 
         if (modification_dict.hasOwnProperty("src")) {
-          var src_attr = new URL(gadget.state.src);
           if (gadget.state.quality) {
             src_attr.searchParams.set("quality", gadget.state.quality);
           }
@@ -87,10 +90,7 @@
           img_element.setAttribute("src", src_attr);
         }
 
-        var rotation = gadget.state.rotation;
         if (rotation) { className += " rotation-" + rotation; }
-
-        var zoom = gadget.state.zoom;
         if (zoom) { className += " zoom-" + zoom; }
 
         gadget.state.image_element.className = className;
@@ -124,4 +124,4 @@
     .declareMethod('checkValidity', function () {
       return true;
     });
-})(window, rJS, RSVP, URL);
+}(window, rJS, RSVP, URL));
