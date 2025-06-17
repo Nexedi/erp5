@@ -1,6 +1,6 @@
-/*global window, rJS, URL*/
+/*global window, rJS, RSVP, URL*/
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, URL) {
+(function (window, rJS, RSVP, URL) {
   'use strict';
 
   function addToRotation(rotation, degree) {
@@ -18,6 +18,33 @@
     return zoom;
   }
 
+  function initializeGadget(gadget) {
+      var translation_list = [];
+
+      gadget.element.querySelectorAll("[data-i18n]").values().forEach(function (el) {
+        translation_list.push([
+          el.getAttribute("data-i18n"),
+          el
+        ]);
+      });
+
+      return gadget.getTranslationList(translation_list.map(function (x) {
+        return x[0];
+      }))
+        .push(function (translation_result) {
+          for (var i = 0; i < translation_list.length; i++) {
+            translation_list[i][1].innerText = translation_result[i];
+          }
+
+          var img_element = gadget.element.querySelector(".gadget_image_viewer_content img");
+          if (gadget.state.alt) {
+            img_element.setAttribute("alt", gadget.state.alt);
+          }
+          gadget.state.image_element = img_element;
+          return gadget;
+        });
+    }
+
   rJS(window)
     .setState({
       rotation: 0,
@@ -27,64 +54,49 @@
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     .declareMethod('render', function (options) {
-      var gadget = this,
-        translation_list = [];
-      gadget.element.querySelectorAll("[data-i18n]").values().forEach(function (el) {
-        translation_list.push([
-          el.getAttribute("data-i18n"),
-          el
-        ]);
+      return this.changeState({
+        src: options.value,
+        quality: options.quality,
+        format: options.format,
+        alt: options.description || options.title
       });
-      return gadget.getTranslationList(translation_list.map(function (x) {
-        return x[0];
-      }))
-        .queue(function (translation_result) {
-          var i;
-          for (i = 0; i < translation_list.length; i++) {
-            translation_list[i][1].innerText = translation_result[i];
-          }
-          return gadget.changeState({
-            src: options.value,
-            quality: options.quality,
-            format: options.format,
-            alt: options.description || options.title
-          });
-        });
     })
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
         className = "image-viewer-transformation",
-        img_element = gadget.state.image_element;
+        queue = new RSVP.Queue();
 
       if (gadget.state.image_element === undefined) {
-        img_element = gadget.element.querySelector(".gadget_image_viewer_content > img");
-        gadget.state.image_element = img_element;
-        if (gadget.state.alt) {
-          img_element.setAttribute("alt", gadget.state.alt);
-        }
+        queue.push(function () {
+          return initializeGadget(gadget);
+        });
       }
 
-      if (modification_dict.hasOwnProperty("src")) {
-        var src_attr = new URL(gadget.state.src);
-        if (gadget.state.quality) {
-          src_attr.searchParams.set("quality", gadget.state.quality);
+      return queue.push(function () {
+        var img_element = gadget.state.image_element;
+
+        if (modification_dict.hasOwnProperty("src")) {
+          var src_attr = new URL(gadget.state.src);
+          if (gadget.state.quality) {
+            src_attr.searchParams.set("quality", gadget.state.quality);
+          }
+          if (gadget.state.format) {
+            src_attr.searchParams.set("format", gadget.state.format);
+          }
+          img_element.setAttribute("src", src_attr);
         }
-        if (gadget.state.format) {
-          src_attr.searchParams.set("format", gadget.state.format);
-        }
-        img_element.setAttribute("src", src_attr);
-      }
 
-      var rotation = gadget.state.rotation;
-      if (rotation) { className += " rotation-" + rotation; }
+        var rotation = gadget.state.rotation;
+        if (rotation) { className += " rotation-" + rotation; }
 
-      var zoom = gadget.state.zoom;
-      if (zoom) { className += " zoom-" + zoom; }
+        var zoom = gadget.state.zoom;
+        if (zoom) { className += " zoom-" + zoom; }
 
-      gadget.state.image_element.className = className;
+        gadget.state.image_element.className = className;
 
-      return gadget;
+        return gadget;
+      });
     })
 
     .onEvent('click', function (event) {
@@ -112,4 +124,4 @@
     .declareMethod('checkValidity', function () {
       return true;
     });
-})(window, rJS, URL);
+})(window, rJS, RSVP, URL);
