@@ -10,6 +10,14 @@ if response is None:
 default_web_page = context
 web_section = REQUEST.get("current_web_section")
 
+if REQUEST['PUBLISHED'] == web_section and REQUEST['REQUEST_METHOD'] == 'GET' and not REQUEST['PATH_INFO'].endswith('/'):
+  query_string = REQUEST.get('QUERY_STRING', '')
+  if query_string:
+    query_string = '?' + query_string
+  next_url = '%s/%s' % (web_section.absolute_url(), query_string)
+  response.redirect(next_url)
+  return "Redirecting to %s" % next_url
+
 available_language_set = web_section.getLayoutProperty("available_language_set", default=['en'])
 portal = context.getPortalObject()
 default_language = web_section.getLayoutProperty("default_available_language", default='en')
