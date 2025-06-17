@@ -66,7 +66,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     # > Il se compose de 14 chiffres : les neuf chiffres du numéro SIREN +
     # > les cinq chiffres correspondant à un numéro NIC (numéro interne de
     # > classement).
-    self.section.setCorporateRegistrationCode('12345689 12345')
+    self.section.setCorporateRegistrationCode('123 456 789 12345')
     # set a french gap on test accounts
     account_module = self.portal.account_module
     account_module.payable.setGap('fr/pcg/4/40/401')
@@ -130,8 +130,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         self.assertEqual('application/zip', content_type)
         data = part.get_payload(decode=True)
         zf = zipfile.ZipFile(io.BytesIO(data))
-        self.assertIn("12345689FEC20141231.xml", zf.namelist())
-        return zf.open("12345689FEC20141231.xml").read()
+        self.assertIn("123456789FEC20141231.xml", zf.namelist())
+        return zf.open("123456789FEC20141231.xml").read()
     self.fail("Attachment not found")
 
   def test_FEC(self):
@@ -453,11 +453,12 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     # Workaround bugs with Test Compta Demat
     # https://github.com/DGFiP/Test-Compta-Demat/issues/37
     # https://github.com/DGFiP/Test-Compta-Demat/issues/39
+    # https://github.com/DGFiP/Test-Compta-Demat/issues/45
 
     account_module = self.portal.account_module
     self._makeOne(
       portal_type='Purchase Invoice Transaction',
-      title='Le libéllé c’est çà: œufs, des Œufs, des Ÿ et des €',
+      title='Le libéllé c’est çà: œufs, des Œufs, des Ÿ, des | et des €',
       simulation_state='delivered',
       reference='1',
       source_section_value=self.organisation_module.supplier,
@@ -483,7 +484,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.validateFECXML(tree)
     self.assertEqual(
       tree.xpath('//EcritureLib/text()'),
-      [u'Le libelle cest ca: ufs, des ufs, des Y et des EUR'])
+      [u'Le libelle cest ca: ufs, des ufs, des Y, des  et des EUR'])
 
   def test_Skip0QuantityLines(self):
     # Don't include lines with 0 quantity in the output, because they are
