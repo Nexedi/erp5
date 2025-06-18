@@ -121,6 +121,9 @@ class TestOOoImport(TestOOoImportMixin):
   ##################################
   def stepImportRawDataFile(self, sequence=None, sequence_list=None, **kw):
     f = self.makeFileUpload('import_data_list.ods')
+    # Content Type is normally set on upload, but `makeFileUpload` does not add it
+    # Fix it here for now.
+    f.headers['Content-Type'] = 'application/vnd.oasis.opendocument.spreadsheet'
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
