@@ -5,8 +5,6 @@
 
   // globals
   const JSLINT = window['JSLINT'];
-  const prettier = window['prettier'];
-  const prettierPlugins = window['prettierPlugins'];
 
   rJS(window)
     .declareAcquiredMethod('notifySubmit', 'notifySubmit')
@@ -139,30 +137,6 @@
           monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
         }
         if (this.state.model_language === 'javascript') {
-          // prettier as a formatting provider
-          monaco.languages.registerDocumentFormattingEditProvider(
-            'javascript',
-            {
-              provideDocumentFormattingEdits(model, options, token) {
-                const text = prettier.format(model.getValue(), {
-                  parser: 'babel',
-                  plugins: [prettierPlugins.babel],
-                  // see http://json.schemastore.org/prettierrc for supported options.
-                  singleQuote: true,
-                  tabWidth: 2,
-                  trailingComma: 'none'
-                });
-
-                return [
-                  {
-                    range: model.getFullModelRange(),
-                    text
-                  }
-                ];
-              }
-            }
-          );
-
           // lint with jslint
           this.editor.getModel().onDidChangeContent(this.runJsLint.bind(this));
           this.runJsLint();
