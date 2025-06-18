@@ -33,7 +33,9 @@
         </item>
         <item>
             <key> <string>guard_expression</string> </key>
-            <value> <string>python: here.isSupportBaseDataConversion() and here.hasBaseData()</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>

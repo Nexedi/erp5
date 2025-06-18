@@ -23,7 +23,6 @@
             <value>
               <tuple>
                 <string>action_type/workflow</string>
-                <string>after_script/portal_workflow/processing_status_workflow/script_Document_convertToBaseFormat</string>
                 <string>destination/portal_workflow/processing_status_workflow/state_uploaded</string>
               </tuple>
             </value>
