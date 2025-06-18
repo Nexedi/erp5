@@ -57,7 +57,6 @@ from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from AccessControl.SecurityManagement import newSecurityManager
-from erp5.component.document.Document import NotConvertedError
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
@@ -736,46 +735,6 @@ class TestDocument(TestDocumentMixin):
       self.assertIsInstance(portal.creation_date, DateTime)
       self.assertLess(portal.creation_date, obj.getCreationDate())
       self.assertIsNone(module.getCreationDate())
-
-  def test_06_ProcessingStateOfAClonedDocument(self):
-    """
-    Check that the processing state of a cloned document
-    is not draft
-    """
-    filename = 'TEST-en-002.doc'
-    file_ = self.makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file_)
-
-    self.assertEqual('converting', document.getExternalProcessingState())
-    self.commit()
-    self.assertEqual('converting', document.getExternalProcessingState())
-
-    # Clone a uploaded document
-    container = document.getParentValue()
-    clipboard = container.manage_copyObjects(ids=[document.getId()])
-    paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
-    new_document = container[paste_result[0]['new_id']]
-
-    self.assertEqual('converting', new_document.getExternalProcessingState())
-    self.commit()
-    self.assertEqual('converting', new_document.getExternalProcessingState())
-
-    # Change workflow state to converted
-    self.tic()
-    self.assertEqual('converted', document.getExternalProcessingState())
-    self.assertEqual('converted', new_document.getExternalProcessingState())
-
-    # Clone a converted document
-    container = document.getParentValue()
-    clipboard = container.manage_copyObjects(ids=[document.getId()])
-    paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
-    new_document = container[paste_result[0]['new_id']]
-
-    self.assertEqual('converted', new_document.getExternalProcessingState())
-    self.commit()
-    self.assertEqual('converted', new_document.getExternalProcessingState())
-    self.tic()
-    self.assertEqual('converted', new_document.getExternalProcessingState())
 
   def test_07_EmbeddedDocumentOfAClonedDocument(self):
     """
@@ -1563,31 +1522,6 @@ class TestDocument(TestDocumentMixin):
       self.assertEqual(document.asText(), 'ERP5 is a free software.')
       self.tic()
 
-  def test_Base_showFoundText(self):
-    # Create document with good content
-    document = self.portal.document_module.newContent(portal_type='Drawing')
-    self.assertEqual('empty', document.getExternalProcessingState())
-
-    upload_file = self.makeFileUpload('TEST-en-002.odt')
-    document.edit(file=upload_file)
-    self.tic()
-    self.assertEqual('converted', document.getExternalProcessingState())
-
-    # Delete base_data
-    document.edit(base_data=None)
-
-    # As document is not converted, text conversion is impossible
-    self.assertRaises(NotConvertedError, document.asText)
-    self.assertRaises(NotConvertedError, document.getSearchableText)
-    self.assertEqual('This document is not converted yet.',
-                      document.Base_showFoundText())
-
-    # upload again good content
-    upload_file = self.makeFileUpload('TEST-en-002.odt')
-    document.edit(file=upload_file)
-    self.tic()
-    self.assertEqual('converted', document.getExternalProcessingState())
-
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
     then to plain text.
@@ -2030,29 +1964,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     web_page.convert(format='txt')
     web_page.edit()
     self.assertFalse(web_page.hasConversion(format='txt'))
-
-  def test_TextDocument_conversion_to_base_format(self):
-    """Check that any files is converted into utf-8
-    """
-    web_page_portal_type = 'Web Page'
-    module = self.portal.getDefaultModule(web_page_portal_type)
-    upload_file = self.makeFileUpload('TEST-text-iso8859-1.txt')
-    web_page = module.newContent(portal_type=web_page_portal_type,
-                                 file=upload_file)
-    self.tic()
-    self.assertEqual(web_page.getContentType(), 'text/plain')
-    text_content = web_page.getTextContent()
-    self.assertIn('éèàùôâïî', text_content)
-    self.assertIn('éèàùôâïî', web_page.asStrippedHTML())
-    self.assertIn('éèàùôâïî', web_page.asEntireHTML())
-
-    added_utf_eight_token = 'ùééàçèîà'
-    text_content = text_content.replace('\n', '\n%s\n' % added_utf_eight_token)
-    web_page.edit(text_content=text_content)
-    self.assertIn('éèàùôâïî', web_page.asStrippedHTML())
-    self.assertIn('éèàùôâïî', web_page.asEntireHTML())
-    self.assertIn(added_utf_eight_token, web_page.asStrippedHTML())
-    self.assertIn(added_utf_eight_token, web_page.asEntireHTML())
 
   def test_TextDocument_getContentMd5(self):
     text_document = self.portal.web_page_module.newContent(
@@ -2640,68 +2551,23 @@ return 1
       self.assertEqual(len(subject_result), 1)
       self.assertEqual(subject_result[0].getPath(), document.getPath())
 
-  def test_base_convertable_uses_pdata_for_base_data(self):
+  def test_base_convertable_uses_pdata_for_big_data(self):
     document = self.portal.document_module.newContent(
       portal_type='Spreadsheet',
       file=self.makeFileUpload('import_big_spreadsheet.ods'))
     self.tic()
     # for large documents base_data is stored as Pdata
-    self.assertIsInstance(document.base_data, Pdata)
+    self.assertIsInstance(document.data, Pdata)
     # the accessor unpacks to bytes
-    self.assertIsInstance(document.getBaseData(), bytes)
+    self.assertIsInstance(document.getData(), bytes)
 
     # for small documents, it's bytes directly
     document = self.portal.document_module.newContent(
       portal_type='Text',
       file=self.makeFileUpload('TEST-en-002.odt'))
     self.tic()
-    self.assertIsInstance(document.base_data, bytes)
-    self.assertIsInstance(document.getBaseData(), bytes)
-
-  def test_base_convertable_behaviour_with_successive_updates(self):
-    """Check that update content's document (with setData and setFile)
-    will refresh base_data and content_md5 as expected.
-
-    When cloning a document base_data must not be computed once again.
-    """
-    # create a document
-    upload_file = self.makeFileUpload('TEST-en-002.doc')
-    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
-    document = self.portal.Base_contribute(**kw)
-    self.tic()
-    previous_md5 = document.getContentMd5()
-    previous_base_data = document.getBaseData()
-
-    # Clone document: base_data must not be computed once again
-    cloned_document = document.Base_createCloneDocument(batch_mode=True)
-    self.assertEqual(previous_md5, cloned_document.getContentMd5())
-    self.assertEqual(document.getData(), cloned_document.getData())
-    self.assertEqual(document.getBaseData(), cloned_document.getBaseData())
-    self.assertEqual(document.getExternalProcessingState(),
-                      cloned_document.getExternalProcessingState())
-    self.assertEqual(document.getExternalProcessingState(), 'converted')
-
-    # Update document with another content by using setData:
-    # base_data must be recomputed
-    document.edit(data=self.makeFileUpload('TEST-en-002.odt').read())
-    self.tic()
-    self.assertTrue(document.hasBaseData())
-    self.assertNotEqual(previous_base_data, document.getBaseData(),
-                         'base data is not refreshed')
-    self.assertNotEqual(previous_md5, document.getContentMd5())
-    self.assertEqual(document.getExternalProcessingState(), 'converted')
-    previous_md5 = document.getContentMd5()
-    previous_base_data = document.getBaseData()
-
-    # Update document with another content by using setFile:
-    # base_data must be recomputed
-    document.edit(file=self.makeFileUpload('TEST-en-002.doc'))
-    self.tic()
-    self.assertTrue(document.hasBaseData())
-    self.assertNotEqual(previous_base_data, document.getBaseData(),
-                         'base data is not refreshed')
-    self.assertNotEqual(previous_md5, document.getContentMd5())
-    self.assertEqual(document.getExternalProcessingState(), 'converted')
+    self.assertIsInstance(document.data, bytes)
+    self.assertIsInstance(document.getData(), bytes)
 
   def _test_document_publication_workflow(self, portal_type, transition):
     document = self.getDocumentModule().newContent(portal_type=portal_type)
@@ -2993,16 +2859,12 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     text_document.edit(file=f)
     self.tic()
 
-    # the document should be automatically converted to html
-    self.assertEqual(text_document.getExternalProcessingState(), 'converted')
-
     # check there is nothing in the cache for pdf conversion
     self.assertFalse(text_document.hasConversion(format='pdf'))
 
     # call pdf conversion, in this way, the result should be cached
     _, pdf_data = text_document.convert(format='pdf')
     pdf_size = len(pdf_data)
-
 
     # check there is a cache entry for pdf conversion of this document
     self.assertTrue(text_document.hasConversion(format='pdf'))
