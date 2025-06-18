@@ -72,6 +72,11 @@ class TestOOoImportMixin(ERP5TypeTestCase):
       portal_categories[function_bc].newContent(id='director', portal_type='Category', title='Director')
     if 'manager' not in portal_categories[function_bc]:
       portal_categories[function_bc].newContent(id='manager', portal_type='Category', title='Manager')
+    
+    # Set Cloudooo conversion server URL
+    conversion_server_url_list = self.portal.portal_preferences.getPreferredDocumentConversionServerUrlList() or ["https://cloudooo.erp5.net"]
+    system_preference = self.portal.portal_preferences.default_system_preference
+    system_preference.setPreferredDocumentConversionServerUrlList(conversion_server_url_list)
 
     self.portal.portal_caches.clearCache()
     self.tic()
