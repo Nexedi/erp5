@@ -11,7 +11,6 @@
             <value>
               <tuple>
                 <string>after_script/portal_workflow/document_conversion_interaction_workflow/script_Document_guessMimeType</string>
-                <string>after_script/portal_workflow/document_conversion_interaction_workflow/script_Document_upload</string>
               </tuple>
             </value>
         </item>
@@ -21,7 +20,9 @@
         </item>
         <item>
             <key> <string>guard_expression</string> </key>
-            <value> <string>here/isSupportBaseDataConversion</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>
