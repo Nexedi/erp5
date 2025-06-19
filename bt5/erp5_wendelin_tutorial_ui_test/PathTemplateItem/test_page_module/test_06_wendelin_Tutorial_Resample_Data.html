@@ -1355,11 +1355,6 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td>DataAnalysisLine_resampleRawArrayAll</td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @data-i18n="Save"]</td>
         <td></td>
@@ -1378,6 +1373,11 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td colspan="3">&lt;tal:block
           metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
           &lt;/tal:block&gt;</td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
@@ -1390,23 +1390,8 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td>in_array={}, out_array=[]</td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td colspan="3">&lt;tal:block
-          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
-          &lt;/tal:block&gt;</td>
-      </tr>
-      <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
+        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
         <td></td>
       </tr>
       <tr>
@@ -3139,12 +3124,42 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
       </tr>
       <tr>
         <td>waitForTextPresent</td>
-        <td>Resample Generic Interval Array</td>
+        <td>Resample Generic Interval Array-Resampled Array (60 Seconds)</td>
         <td></td>
       </tr>
       <tr>
-        <td>assertTextNotPresent</td>
-        <td>None</td>
+        <td>waitForTextPresent</td>
+        <td>(83554,)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Resample Generic Interval Array-Resampled Array (300 Seconds)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>(16711,)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Resample Generic Interval Array-Resampled Array (3000 Seconds)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>(1672,)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Resample Generic Interval Array-Resampled Array (30000 Seconds)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>(168,)</td>
         <td></td>
       </tr>
     </tbody>

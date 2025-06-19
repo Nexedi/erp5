@@ -700,11 +700,6 @@
           <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
         </tr>
         <tr>
-          <td>pause</td>
-          <td>3000</td>
-          <td></td>
-        </tr>
-        <tr>
           <td>waitForElementPresent</td>
           <td>//button[@type="submit" and @data-i18n="Save"]</td>
           <td></td>
@@ -722,6 +717,11 @@
         <tr>
           <td>waitForElementPresent</td>
           <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
           <td></td>
         </tr>
       </tbody>
@@ -823,22 +823,7 @@ if end &lt; in_data_stream.getSize():
         </tr>
         <tr>
           <td>waitForElementPresent</td>
-          <td>//button[@type="submit" and @data-i18n="Save"]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>click</td>
-          <td>//button[@type="submit" and @data-i18n="Save"]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td colspan="3">&lt;tal:block
-            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
-            &lt;/tal:block&gt;</td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//button[@type="submit" and @class="success"]</td>
+          <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
           <td></td>
         </tr>
         <tr>
