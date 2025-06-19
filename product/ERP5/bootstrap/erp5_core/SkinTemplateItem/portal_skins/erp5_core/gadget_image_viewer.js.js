@@ -34,7 +34,7 @@
       .push(function (translation_result) {
         var img_element = gadget.element.querySelector(".gadget_image_viewer_content img"),
           i = 0;
-        for (i = 0; i < translation_list.length; i++) {
+        for (i = 0; i < translation_list.length; i += 1) {
           translation_list[i][1].innerText = translation_result[i];
         }
 
