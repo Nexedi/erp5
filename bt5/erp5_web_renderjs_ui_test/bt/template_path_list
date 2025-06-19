@@ -16,6 +16,8 @@ portal_tests/renderjs_ui_float_field_zuite
 portal_tests/renderjs_ui_float_field_zuite/**
 portal_tests/renderjs_ui_form_box_zuite
 portal_tests/renderjs_ui_form_box_zuite/**
+portal_tests/renderjs_ui_image_viewer_gadget_zuite
+portal_tests/renderjs_ui_image_viewer_gadget_zuite/**
 portal_tests/renderjs_ui_integer_field_zuite
 portal_tests/renderjs_ui_integer_field_zuite/**
 portal_tests/renderjs_ui_interface_validator_zuite
