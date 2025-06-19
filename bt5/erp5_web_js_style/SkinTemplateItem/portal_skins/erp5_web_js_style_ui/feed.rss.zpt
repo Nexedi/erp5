@@ -8,7 +8,7 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title tal:content="python: web_section.getTranslatedTitle()"></title>
-    <link tal:content="python: web_section.absolute_url()"></link>
+    <link tal:content="python: '%s/' % web_section.absolute_url()"></link>
     <lastBuildDate tal:content="python: DateTime().rfc822()"></lastBuildDate>
     <description tal:condition="python: web_section.getDescription()" tal:content="python: web_section.getDescription()"></description>
   </channel>
