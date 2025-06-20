@@ -2904,7 +2904,10 @@ class TestGC(XMLObject):
       gc.disable()
 
       gc.collect()
-      original_garbage = gc.garbage
+      if six.PY2:
+        original_garbage = gc.garbage
+      else:
+        original_garbage = []
       self.assertModuleImportable('TestGC', reset=False)
       class_id = id(self._module.TestGC.TestGC)
       Implements_id = id(self._module.TestGC.TestGC.__implemented__)
