@@ -28,6 +28,7 @@
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.ERP5Type import PropertySheet
 
+
 class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
   """
   Check that measures defined on a resource are not meaningless.
@@ -65,6 +66,8 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
     quantity_map = {}
     metric_type_set = set()
 
+    quantity_unit_definition_dict = obj._getQuantityUnitDefinitionDict()
+
     for measure in obj.getMeasureList():
       metric_type = measure.getMetricType()
       if metric_type:
@@ -78,7 +81,7 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
         if not measure.getConvertedQuantityUnit():
           error('message_measure_no_quantity_unit',
                 metric_type=display(metric_type, 'metric_type'))
-        elif not measure.asCatalogRowList():
+        elif not measure.asCatalogRowList(quantity_unit_definition_dict):
           error('message_measure_no_quantity',
                 metric_type=display(metric_type, 'metric_type'))
         if metric_type in metric_type_set:
