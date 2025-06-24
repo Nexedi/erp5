@@ -47,6 +47,13 @@ def getQuantityUnitDefinitionDict():
     result = getCategoryQuantityUnitDefinitionDict()
   return result
 
+if context.REQUEST.URL == 'http://nohost':
+  if context.portal_membership.getAuthenticatedMember().getUserName() == 'ERP5TypeTestCase.root':
+    # Don't cache here because we are in the process of setUpERP5Site,
+    # caching here will leave incomplete data for a long time, causing
+    # quantity unit conversion to not work correctly.
+    return getQuantityUnitDefinitionDict()
+
 from Products.ERP5Type.Cache import CachingMethod
 return CachingMethod(getQuantityUnitDefinitionDict,
                      "getUniversalQuantityUnitDefinitionDict",
