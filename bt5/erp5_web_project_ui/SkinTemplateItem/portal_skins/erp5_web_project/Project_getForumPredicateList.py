@@ -18,7 +18,7 @@ tmp_context = portal.discussion_thread_module.newContent(
 def filter_method(element_list):
   return [x for x in element_list if 'follow_up' in x.getMultimembershipCriterionBaseCategoryList()]
 
-predicate_list = [x.getObject() for x in domain_tool.searchPredicateList(
+predicate_list = [x.getRelativeUrl() for x in domain_tool.searchPredicateList(
   tmp_context,
   portal_type='Discussion Forum',
   filter_method=filter_method,
