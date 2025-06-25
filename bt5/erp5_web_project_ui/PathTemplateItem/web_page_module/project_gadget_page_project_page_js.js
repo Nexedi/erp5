@@ -148,11 +148,6 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       });
   }
 
-  function getForumInfo(gadget, project_jio_key, forum_jio_key) {
-    //TODO if nothing else is needed here, get rid of this function
-    return forum_jio_key;
-  }
-
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
     var id,
       content,
@@ -238,9 +233,11 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     .declareMethod('render', function (options) {
       var state_dict = {
           jio_key: options.jio_key || "",
-          publication_section: options.publication_section,
-          forum_jio_key: options.related_forum
+          publication_section: options.publication_section
         };
+      if (options.related_forum.length > 0) {
+        state_dict.forum_jio_key = options.related_forum[0];
+      }
       return this.changeState(state_dict);
     })
 
