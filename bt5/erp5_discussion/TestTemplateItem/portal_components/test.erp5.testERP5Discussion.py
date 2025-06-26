@@ -115,7 +115,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.tic()
 
     # check forum is created and linked
-    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                                      validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
     if result:
       forum = result[0]
     self.assertTrue(forum)
@@ -174,10 +175,12 @@ class TestERP5Discussion(DocumentUploadTestCase):
     web_section2 = self.stepCreateForumWebSection(group2, web_site)
     self.tic()
 
-    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                                      validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
     if result:
       forum1 = result[0]
-    result = web_section2.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    result = web_section2.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                                      validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
     if result:
       forum2 = result[0]
 
