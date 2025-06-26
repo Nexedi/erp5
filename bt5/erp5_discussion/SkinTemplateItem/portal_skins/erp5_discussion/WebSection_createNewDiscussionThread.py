@@ -69,11 +69,11 @@ else:
     predecessor_default_page = predecessor_object.getAggregate()
     if predecessor_default_page is not None:
       predecessor_document = context.restrictedTraverse(predecessor_default_page)
-      discussion_thread.setFollowUpValueList([predecessor_document])
+      discussion_thread.setPredecessorValueList([predecessor_document])
 
   # set predecessor on document
   if predecessor_portal_type == 'Web Page':
-    discussion_thread.setFollowUpValueList([predecessor_object])
+    discussion_thread.setPredecessorValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",
