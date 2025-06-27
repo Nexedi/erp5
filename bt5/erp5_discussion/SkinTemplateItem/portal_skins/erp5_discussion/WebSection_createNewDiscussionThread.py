@@ -13,7 +13,8 @@ language = portal.Localizer.get_selected_language()
 
 # set predicate settings for current Web Section
 # get the related forum using follow_up
-result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                             validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
 membership_criterion_category_list = []
 multimembership_criterion_base_category_list = []
 if result:
