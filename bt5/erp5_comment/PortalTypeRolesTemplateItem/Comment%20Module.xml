@@ -1,0 +1,7 @@
+<type_roles>
+  <role id='Author'>
+   <property id='title'>Employee</property>
+   <property id='description'>All employees can view and create Comments</property>
+   <multi_property id='category'>function/unternehmen/mitarbeiter</multi_property>
+  </role>
+</type_roles>

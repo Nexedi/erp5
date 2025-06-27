@@ -1,0 +1,10 @@
+<base_category_list>
+ <portal_type id="Comment">
+  <item>comment_type</item>
+  <item>follow_up</item>
+  <item>source</item>
+ </portal_type>
+ <portal_type id="Comment Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>
