@@ -21,6 +21,7 @@ def filter_method(element_list):
 predicate_list = [x.getRelativeUrl() for x in domain_tool.searchPredicateList(
   tmp_context,
   portal_type='Discussion Forum',
+  validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'),
   filter_method=filter_method,
   tested_base_category_list=['follow_up']
 )]
