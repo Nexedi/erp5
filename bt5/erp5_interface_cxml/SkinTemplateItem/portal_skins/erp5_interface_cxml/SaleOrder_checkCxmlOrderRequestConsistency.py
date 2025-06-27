@@ -5,12 +5,21 @@ portal = context.getPortalObject()
 translate = portal.Base_translateString
 error_list = []
 
+
 if context.getPortalType() == "Sale Packing List":
-# Carrier name and Tracking number are mandatory in Ariba
-  if context.getDestinationCarrierValue() is None:
-    error_list.append("Destination Carrier must be defined")
-  if not context.getDestinationReference():
-    error_list.append("Tracking Nb must be defined")
+# Carrier name and Tracking number are mandatory in Ariba (except if all lines are services)
+  has_product = False
+  for line in context.getMovementList(checked_permission='View'):
+    resource = line.getResourceValue()
+    if resource is not None:
+      if resource.getPortalType() == "Product" and line.getQuantity() != 0:
+        has_product = True
+        break
+  if has_product:
+    if context.getDestinationCarrierValue() is None:
+      error_list.append("Destination Carrier must be defined")
+    if not context.getDestinationReference():
+      error_list.append("Tracking Nb must be defined")
 
 if order_request_value is None:
   order_request_value = context.Order_getRelatedOrderRequestValue()
@@ -74,7 +83,7 @@ property_title_dict = {
   "destination_address": "Delivery Address",
   "int_index": "Sort Index",
   "order_date": "Order Date",
-  "region_title": "Country",
+  "region": "Country",
   "street_address": "Street Address",
   "stop_date": "Delivery Date",
   "zip_code": "Postal Code",
@@ -99,7 +108,7 @@ def findCreateOrganisation(organisation_dict, create=False):
   if organisation_value is not None:
     return organisation_value.getRelativeUrl()
 
-address_key_tuple = ("address_extension", "street_address", "city", "zip_code", "region_title")
+address_key_tuple = ("address_extension", "street_address", "city", "zip_code", "region")
 def findCreateAddress(category, address_dict, organisation, create=False):
   wrong_value_list = []
   for address_value in organisation.objectValues(portal_type="Address", checked_permission="View"):
@@ -168,6 +177,8 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
   for key, value in sorted(property_dict.items()):
     if context.getCxmlChanges():
       continue
+    if key == "portal_type" and value == "Address" and document.getPortalType() == "Cxml Address":
+      continue
     if document.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction") and key in ('order_date', 'int_index'):
       continue
     if document.getPortalType() == "Invoice Line" and key in ('start_date', 'stop_date'):
@@ -182,10 +193,10 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
         if fixit:
           if value.get('portal_type') == 'Organisation':
             document.setProperty(key, findCreateOrganisation(value))
-          elif value.get('portal_type') == 'Address' and key.endswith("_address"):
-            organisation = document.getProperty(key[:-8])
-            if organisation is not None:
-              document.setProperty(key, findCreateAddress(key, value, context.restrictedTraverse(organisation), create=True))
+          #elif value.get('portal_type') == 'Address' and key.endswith("_address"):
+          #  organisation = document.getProperty(key[:-8])
+          #  if organisation is not None:
+          #    document.setProperty(key, findCreateAddress(key, value, context.restrictedTraverse(organisation), create=False))
         else:
           title = translate(property_title_dict.get(key, key))
           if not context_title:
@@ -208,6 +219,9 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
           if key == "quantity_unit" and document.getResourceValue() is None:
             continue
           document.setProperty(key, value)
+          # if we change delivery date, also set shipping date to same value as delivery date
+          if key == "stop_date":
+            document.setStartDate(value)
         else:
           title = translate(property_title_dict.get(key, key))
           if not context_title:
@@ -241,16 +255,17 @@ for i, line in enumerate(line_list):
       ))
       break
 
-# for Sale Packing List and Sale Invoice Transaction also check that int_index is defined on related Sale Order Lines
-if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction"):
-  for i, line in enumerate(line_list):
-    if line.DeliveryLine_getOrderLineIntIndex() is None:
-      #if fixit:
-      #  line.setIntIndex(i)
-      #else:
-      error_list.append(translate(
-        "Sort Index must be defined on all lines of the related Sale Order."
-      ))
+if not context.getCxmlChanges():
+  # for Sale Packing List and Sale Invoice Transaction also check that int_index is defined on related Sale Order Lines
+  if context.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction"):
+    for i, line in enumerate(line_list):
+      if line.DeliveryLine_getOrderLineIntIndex() is None:
+        #if fixit:
+        #  line.setIntIndex(i)
+        #else:
+        error_list.append(translate(
+          "Sort Index must be defined on line of the Sale Order Related to line %s." %line.getTitle()
+        ))
 
 if line_portal_type == "Sale Order Line":
   index_method = "getIntIndex"
@@ -264,7 +279,7 @@ for int_index, property_dict in order_request_line_property_dict.items():
   if int_index not in line_dict and context.getPortalType() == "Sale Order":
     if fixit:
       createSaleOrderLine(property_dict)
-    else:
+    elif not context.getCxmlChanges():
       error_list.append(translate(
         "Line No ${int_index} from Order Request is missing.",
         mapping=dict(int_index=int_index)
@@ -283,10 +298,24 @@ for int_index, line in line_dict.items():
         context.manage_delObjects([line.getId()])
       else:
         line.setQuantity(0.0)
-    else:
+    elif not context.getCxmlChanges():
       error_list.append(translate(
         "Line No ${int_index} does not exist in Order Request",
         mapping=dict(int_index=int_index)
       ))
+
+# if there is only one line, copy dates from the line to the order:
+if fixit and context.getPortalType() == "Sale Order":
+  movement_list = context.getMovementList()
+  if len(movement_list) == 1:
+    movement = movement_list[0]
+    stop_date = movement.getStopDate()
+    if stop_date:
+      context.setStopDate(stop_date)
+      movement.setStopDate(None)
+    start_date = movement.getStartDate()
+    if start_date:
+      context.setStartDate(start_date)
+      movement.setStartDate(None)
 
 return error_list

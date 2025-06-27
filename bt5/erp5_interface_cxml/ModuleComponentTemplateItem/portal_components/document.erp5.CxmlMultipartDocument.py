@@ -43,6 +43,23 @@ class CxmlMultipartDocument(XMLObject):
   def getTitle(self):
     return "%s %s" %(self.portal_type, self.getId())
 
+  security.declareProtected(ModifyPortalContent, 'checkPartList')
+  def checkPartList(self):
+    "Extract Multipart Document and store the parts in corresponding modules"
+    content = "content-length: %s\nContent-Type: %s\n%s" %(
+      self.getSize(),
+      self.getContentType(),
+      self.getData()
+    )
+    message = email.Parser.Parser().parsestr(content)
+    out = ""
+    for part in message.get_payload():
+      if part.is_multipart():
+        sub_part = part.get_payload()
+        for part in sub_part:
+          out += "\n" + part.get_content_type()
+    return out
+
   security.declareProtected(ModifyPortalContent, 'checkParts')
   def checkParts(self):
     "CHeck Parts"

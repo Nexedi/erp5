@@ -50,7 +50,8 @@ def get_attr(et, tag_name, attr):
 def get_text(et, tag_name):
   tag = et.find(tag_name)
   if tag is not None:
-    return s(tag.text)
+    if tag.text is not None:
+      return s(tag.text)
   return ''
 
 class CxmlOrderRequest(CxmlDocument):
@@ -78,17 +79,16 @@ class CxmlOrderRequest(CxmlDocument):
 
   def _getRegionCategoryForIsoCountryCode(self, iso_country_code):
     portal = self.getPortalObject()
-    region_dict = {x.getReference(): x.getRelativeUrl() for x in [portal.portal_categories.region.europe.western_europe.germany] + \
+    region_dict = {x.getReference(): x.getCategoryRelativeUrl() for x in [portal.portal_categories.region.europe.western_europe.germany] + \
       portal.portal_categories.region.getCategoryChildValueList(include_if_child=0) \
-        if not x.getRelativeUrl().startswith('region/europe/western_europe/germany/')}
+        if not x.getCategoryRelativeUrl().startswith('europe/western_europe/germany/')}
     return region_dict[iso_country_code]
 
-  def _getAddressPropertyDict(self, address, corporate_name='', name_on_address=''):
-    portal = self.getPortalObject()
+  def _getAddressPropertyDict(self, to, corporate_name='', name_on_address=''):
+    address = to.find('Address')
     postal_address = address.find('PostalAddress')
     iso_country_code = postal_address.find('Country').get('isoCountryCode')
     region = self._getRegionCategoryForIsoCountryCode(iso_country_code)
-    region_value = portal.portal_categories.region.unrestrictedTraverse(region)
     address_extension = ''
     if name_on_address and name_on_address != corporate_name:
       address_extension = name_on_address
@@ -102,11 +102,25 @@ class CxmlOrderRequest(CxmlDocument):
       "street_address": get_text(postal_address, 'Street'),
       "city": get_text(postal_address, 'City'),
       "zip_code": get_text(postal_address, 'PostalCode'),
-      "region_title": region_value.getTitle(),
-      "address_extension": address_extension}
+      "region": region,
+      "address_extension": address_extension,
+    }
+    id_reference_mapping = {
+      "buyerID": "buyer_id",
+      "buyerLocationID": "buyer_location_id",
+      "storageLocationID": "storage_location_id",
+      "buyerAccountID": "buyer_account_id",
+      "PhysicalAddressID": "physical_address_id",
+    }
+    for id_reference in to.xpath('//IdReference'):
+      domain = id_reference.get('domain')
+      if domain in id_reference_mapping:
+        property_dict[id_reference_mapping[domain]] = id_reference.get('identifier', '')
     int_index = address.get('addressID')
     if int_index is not None:
       property_dict['int_index'] = int(int_index)
+    property_dict['address_id_domain'] = address.get('addressIDDomain', '')
+    property_dict['title'] = corporate_name
     return property_dict
 
   security.declareProtected(AccessContentsInformation, 'getPropertyDict')
@@ -141,13 +155,17 @@ class CxmlOrderRequest(CxmlDocument):
     property_dict['destination_section'] = {'portal_type': 'Organisation', 'corporate_name': sold_to_name or bill_to_name}
     if buyer_vat_id:
       property_dict['destination_section_vat_code'] = buyer_vat_id
-    property_dict['destination_section_address'] = self._getAddressPropertyDict(address, corporate_name=sold_to_name or bill_to_name, name_on_address=bill_to_name)
+    property_dict['destination_section_address'] = self._getAddressPropertyDict(bill_to, corporate_name=sold_to_name or bill_to_name, name_on_address=bill_to_name)
     property_dict['order_date'] = DateTime(order_request_header.get('orderDate'))
     ship_to = order_request_header.find('ShipTo')
-    address = ship_to.find('Address')
-    name = s(address.find('Name').text)
-    property_dict['destination'] = {'portal_type': 'Organisation','corporate_name': name}
-    property_dict['destination_address'] = self._getAddressPropertyDict(address, corporate_name=name)
+    try:
+      address = ship_to.find('Address')
+    except AttributeError:
+      pass
+    else:
+      name = s(address.find('Name').text)
+      property_dict['destination_address'] = self._getAddressPropertyDict(ship_to, corporate_name=name, name_on_address=bill_to_name)
+    property_dict['destination'] = {'portal_type': 'Organisation','corporate_name': sold_to_name or bill_to_name}
     return property_dict
 
   security.declareProtected(AccessContentsInformation, 'getLinePropertyDict')
@@ -162,10 +180,13 @@ class CxmlOrderRequest(CxmlDocument):
     price_currency_value = None
     for item_out in et.xpath('/cXML/Request/OrderRequest/ItemOut'):
       # We do not support different destination per line
-      assert item_out.find('ShipTo') is None
+      #assert item_out.find('ShipTo') is None
       property_dict = {}
       property_dict['int_index'] = int_index = int(item_out.get("lineNumber"))
       stop_date = item_out.get("requestedDeliveryDate")
+      schedule_line = item_out.find('ScheduleLine')
+      if schedule_line is not None:
+        stop_date = schedule_line.get("requestedDeliveryDate") or stop_date
       if stop_date is not None:
         property_dict['stop_date'] = DateTime(stop_date)#.toZone('UTC').earliestTime()
       property_dict['quantity'] = float(item_out.get("quantity"))
@@ -181,7 +202,7 @@ class CxmlOrderRequest(CxmlDocument):
             property_dict['title'] = s(description.text)
             #property_dict['description'] = s(description.text)
         unit_of_measure_text = get_text(item_detail, 'UnitOfMeasure')
-        assert unit_of_measure_text in ("EA", "PC")
+        assert unit_of_measure_text in ("EA", "PC", "C62")
       property_dict['quantity_unit'] = "unit/piece"
       unit_price = item_detail.find('UnitPrice')
       if unit_price is not None:
@@ -194,14 +215,15 @@ class CxmlOrderRequest(CxmlDocument):
               price_currency_value = portal.currency_module[currency]
             else:
               assert price_currency_value.getId() == currency
-        property_dict['price'] = float(money.text)
+          if money.text is not None:
+            property_dict['price'] = float(money.text)
       item_id = item_out.find('ItemID')
       supplier_part_id = get_text(item_id, "SupplierPartID")
       buyer_part_id = get_text(item_id, "BuyerPartID")
       if supplier_part_id:
-        property_dict['resource_reference'] = supplier_part_id
+        property_dict['resource_reference'] = supplier_part_id.strip()
       elif buyer_part_id:
-        property_dict['resource'] = {'default_sale_supply_line_destination_reference': buyer_part_id}
+        property_dict['resource'] = {'default_sale_supply_line_destination_reference': buyer_part_id.strip()}
       line_dict[int_index] = property_dict
     return line_dict
 

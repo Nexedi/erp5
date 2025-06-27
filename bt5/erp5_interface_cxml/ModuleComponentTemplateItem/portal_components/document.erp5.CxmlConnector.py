@@ -28,9 +28,12 @@
 ##############################################################################
 
 import random, time, requests
+from lxml import etree
+from io import BytesIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG
 
 class CxmlConnector(XMLObject):
@@ -59,11 +62,17 @@ class CxmlConnector(XMLObject):
   def getTextContentFromRequest(self):
     raise Exception(str(self.REQUEST.get('BODY')))
 
+  @UnrestrictedMethod
   def sendOutgoingRequest(self, text_content, portal_type="Cxml Document", causality='', follow_up='', temp_object=False):
     portal = self.getPortalObject()
     url = self.getUrlString()
     # Add password
-    text_content = text_content.replace("REPLACE_WITH_PASSWORD", self.getPassword())
+    text_content = text_content.replace("REPLACE_WITH_PASSWORD", self.getPassword().replace("&", "&amp;"))
+    #dtd = portal.portal_skins.erp5_interface_cxml["cxml.1.2.061.cXML.dtd"]
+    #f = BytesIO(str(dtd))
+    #dtd = etree.DTD(f)
+    #et = etree.fromstring(text_content, parser=etree.XMLParser(encoding='utf-8'))
+    #dtd.validate(et)
     response = requests.post(
       url,
       data=text_content,

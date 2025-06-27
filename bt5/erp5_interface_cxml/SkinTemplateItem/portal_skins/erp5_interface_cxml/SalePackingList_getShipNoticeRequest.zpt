@@ -56,7 +56,7 @@
               </TelephoneNumber>
             </Phone>
           </Contact>
-          <Contact tal:attributes="addressID destination_address/getReference" role="shipTo">
+          <Contact tal:attributes="addressID destination_address/getIntIndex" role="shipTo">
             <Name tal:attributes="xml:lang language" tal:content="destination/Entity_getTitle"></Name>
             <PostalAddress>
               <Street tal:content="destination_address/getStreetAddress"></Street>

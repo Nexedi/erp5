@@ -1,3 +1,5 @@
+Cxml Address Module | view
+Cxml Address | view
 Cxml Confirmation Request | view
 Cxml Connector | view
 Cxml Document Module | view
@@ -8,7 +10,6 @@ Cxml Order Request | document_list
 Cxml Order Request | view
 Network Id | view
 Organisation | cxml
-Sale Invoice Transaction | send_cxml_invoice
 Sale Order | fix_cxml_constraint_list
 Sale Order | jump_related_cxml_document_list
 Sale Order | jump_related_cxml_order_request

@@ -1,4 +1,10 @@
 sale_order = context.getParentValue()
+order_request = sale_order.Order_getRelatedOrderRequestValue()
+if order_request is None:
+  return False
+# if a line was not ordered, do not put it in the confirmation request
+if context.getIntIndex() not in order_request.getLinePropertyDict():
+  return False
 # if the line was in the previous order confirmation and it did not
 # change, then it is not included in the new confirmation request
 document_list = sale_order.getFollowUpRelatedValueList(portal_type="Cxml Confirmation Request")

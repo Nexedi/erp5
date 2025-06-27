@@ -1,4 +1,10 @@
 <base_category_list>
+ <portal_type id="Cxml Address">
+  <item>specialise</item>
+ </portal_type>
+ <portal_type id="Cxml Address Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Cxml Confirmation Request">
   <item>causality</item>
   <item>follow_up</item>

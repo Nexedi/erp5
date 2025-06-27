@@ -39,7 +39,10 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 31,  0: Unused etree imported from lxml (unused-import)</string>
+                <string>W: 32,  0: Unused BytesIO imported from io (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>

@@ -1,4 +1,3 @@
-return
 context = state_change['object']
 # only send if object is related to a valid Cxml Order Request
 if not context.Base_isCxmlRelated():

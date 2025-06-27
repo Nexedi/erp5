@@ -106,6 +106,8 @@ class CxmlDocument(XMLObject):
   def getStartDate(self):
     """Get timestam from cXML content"""
     et = self.getElementTree()
+    if et is None:
+      return None
     return DateTime(et.get("timestamp")).toZone('UTC')
 
   security.declareProtected(AccessContentsInformation, 'getPayloadId')

@@ -1,4 +1,8 @@
 <property_sheet_list>
+ <portal_type id="Cxml Address">
+  <item>CxmlAddress</item>
+  <item>WoelfelAddress</item>
+ </portal_type>
  <portal_type id="Cxml Confirmation Request">
   <item>Reference</item>
   <item>Task</item>
