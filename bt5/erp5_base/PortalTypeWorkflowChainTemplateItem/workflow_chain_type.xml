@@ -88,6 +88,10 @@
   <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, notification_message_workflow</workflow>
  </chain>
  <chain>
+  <type>OOo Document</type>
+  <workflow>document_conversion_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Organisation</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
