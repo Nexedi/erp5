@@ -16,10 +16,13 @@ def getSpreadsheet(import_file):
     content_type = import_file.headers.get('Content-Type', '')
     if not (content_type.startswith('application/vnd.sun.xml')
        or content_type.startswith('application/vnd.oasis.opendocument')):
-
-      tmp_ooo = context.newContent(temp_object=True, portal_type='OOo Document',
-        id=import_file.filename, content_type=content_type)
-      tmp_ooo.edit(data=import_file.read())
+      tmp_ooo = context.newContent(
+        portal_type='OOo Document',
+        temp_object=True,
+        id=import_file.filename,
+        content_type=content_type,
+      )
+      tmp_ooo.edit(data=import_file.read(), filename=import_file.filename)
       _, import_file_content = tmp_ooo.convert('ods')
       ooo_parser.openFromBytes(bytes(import_file_content))
     else:
