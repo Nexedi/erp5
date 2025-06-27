@@ -1,0 +1,14 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>All employees</property>
+   <property id='description'>All employees can view comments</property>
+   <multi_property id='category'>function/unternehmen/mitarbeiter</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Source of comment</property>
+   <property id='description'>Source of comment can modify it</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='categories'>local_role_group/person</multi_property>
+   <multi_property id='base_category'>source</multi_property>
+  </role>
+</type_roles>
