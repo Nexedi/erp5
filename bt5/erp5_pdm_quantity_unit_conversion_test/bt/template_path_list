@@ -1,0 +1,17 @@
+currency_module/jpy
+portal_categories/metric_type/unit
+portal_categories/metric_type/unit/case
+portal_categories/metric_type/unit/package
+portal_categories/packing_form/case
+portal_categories/packing_form/package
+portal_categories/quantity_unit/unit
+portal_categories/quantity_unit/unit/piece
+product_module/test_quantity_unit_unit_piece
+product_module/test_quantity_unit_unit_piece/1
+product_module/test_quantity_unit_unit_piece/1/cell_0
+product_module/test_quantity_unit_unit_piece/1/cell_1
+product_module/test_quantity_unit_unit_piece/2
+product_module/test_quantity_unit_unit_piece/2/cell_0
+product_module/test_quantity_unit_unit_piece/2/cell_1
+quantity_unit_conversion_module/conversion_group_unit
+quantity_unit_conversion_module/conversion_group_unit/1

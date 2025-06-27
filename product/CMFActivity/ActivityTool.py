@@ -1778,7 +1778,10 @@ class ActivityTool (BaseTool):
       message_list = self.getMessageList(**kw)
       object_list = []
       for sql_message in message_list:
-        message = self.newContent(temp_object=1)
+        message = self.newContent(
+          portal_type="Active Process",
+          temp_object=1,
+        )
         message.__dict__.update(**sql_message.__dict__)
         object_list.append(message)
       return object_list
