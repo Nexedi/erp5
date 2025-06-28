@@ -31,7 +31,6 @@ import six
 import re
 from io import BytesIO
 from six.moves import urllib
-from cgi import parse_header
 import os
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -41,7 +40,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import reencodeUrlEscapes
 from Products.ERP5 import _dtmldir
-from Products.ERP5Type.Utils import fill_args_from_request
+from Products.ERP5Type.Utils import fill_args_from_request, parse_http_header
 from AccessControl import Unauthorized
 
 from DateTime import DateTime
@@ -648,7 +647,7 @@ class ContributionTool(BaseTool):
     # try first to read the suggested filename from it.
     header_info = url_file.info()
     content_disposition = header_info.get('content-disposition', '')
-    filename = parse_header(content_disposition)[1].get('filename')
+    filename = parse_http_header(content_disposition)[1].get('filename')
     if not filename:
       # Now read the filename from url.
       # In case of http redirection, the real url must be read
