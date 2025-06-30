@@ -630,7 +630,7 @@ class TestIngestion(IngestionTestCase):
     # implemented in OOoDocument class - we don't really
     # need oood for getting/setting metadata...
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    newcontent = document.getBaseData()
+    newcontent = document.getData()
     builder = OOoBuilder(newcontent)
     xml_tree = etree.fromstring(builder.extract('meta.xml'))
     title = xml_tree.find('*/{%s}title' % xml_tree.nsmap['dc']).text
