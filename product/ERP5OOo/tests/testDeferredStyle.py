@@ -466,7 +466,6 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
       data=part.get_payload(decode=True),
       temp_object=True,
     )
-    doc.convertToBaseFormat()
     report_as_txt = doc.asText()
 
     self.assertIn(
