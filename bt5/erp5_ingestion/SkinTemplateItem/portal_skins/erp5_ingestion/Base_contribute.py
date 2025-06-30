@@ -81,7 +81,7 @@ try:
     if document.isSupportBaseDataConversion():
       document.processFile()
     filename = document.getFilename()
-    merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(
+    merged_document = document.discoverMetadata(
                                   filename=filename,
                                   user_login=user_login,
                                   input_parameter_dict=document_kw)
