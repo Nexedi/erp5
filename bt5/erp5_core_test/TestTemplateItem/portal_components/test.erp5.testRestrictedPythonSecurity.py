@@ -556,6 +556,13 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         ''',
         expected=["int32", 8]
     )
+    # structured array
+    self.createAndRunScript('''
+        import numpy as np
+        return np.dtype([('a', 'int8'), ('b', 'float16')]).name
+        ''',
+        expected='void24'
+    )
 
   def testNdarrayWrite(self):
     self.createAndRunScript('''
