@@ -82,7 +82,7 @@ class TestOOoConversionServerRetry(DocumentUploadTestCase):
     file_ = self.makeFileUpload(filename)
     document = self.portal.document_module.newContent(portal_type='Text')
     document.edit(file = file_)
-    message = document.Document_tryToConvertToBaseFormat()
+    document.convert('txt')
     self.assertEqual(message.count('Error converting document to base format'), 1)
 
 
@@ -97,7 +97,7 @@ class TestOOoConversionServerRetry(DocumentUploadTestCase):
     file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
-    message = document.Document_tryToConvertToBaseFormat()
+    message = document.convert('docx')
     self.assertEqual(message.count('broken.url: Connection refused'), self.retry_count + 1)
     system_pref.setPreferredDocumentConversionServerUrlList(saved_server_list)
     self.commit()
@@ -112,6 +112,6 @@ class TestOOoConversionServerRetry(DocumentUploadTestCase):
     file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
-    message = document.Document_tryToConvertToBaseFormat()
+    message = document.convert('docx')
     if 'Socket Error: SSLError' in message:
       self.assertEqual(message.count('Socket Error: SSLError'), (self.retry_count + 1) * len(server_list))
