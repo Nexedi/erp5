@@ -395,7 +395,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # sucessfully converted document
       self._setBaseData(dec(str2bytes(response_dict['data'])))
       metadata = response_dict['meta']
-      self._base_metadata = metadata
       if metadata.get('MIMEType', None) is not None:
         self._setBaseContentType(metadata['MIMEType'])
     else:
@@ -403,13 +402,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       raise ConversionError(
                 "OOoDocument: Error converting document to base format. (Code %s: %s)"
                                        % (response_code, response_message))
-
-  def _getContentInformation(self):
-    """
-      Returns the metadata extracted by the conversion
-      server.
-    """
-    return getattr(self, '_base_metadata', {})
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateBaseMetadata')
