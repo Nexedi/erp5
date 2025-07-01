@@ -71,8 +71,8 @@ class BaseConvertableFileMixin:
       self.convertFile(comment=message) # Invoke workflow method
     return message
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
-  def updateBaseMetadata(self, **kw):
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateMetadata')
+  def updateMetadata(self, **kw):
     """This Method must be defined explicitly.
     """
     raise NotImplementedError
