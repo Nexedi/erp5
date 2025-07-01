@@ -122,7 +122,7 @@ class PandasInventoryTest(ERP5TypeTestCase):
     self.tic()
     
     data_array = self.portal.portal_catalog(portal_type='Data Array', reference='TestingFillBigArray')[0].getObject()
-    self.assertEquals(len(data_array.getArray()), 8)
+    self.assertEqual(len(data_array.getArray()), 8)
 
   def test_02_extendBigArrayTest(self):
     resource_uid = self.sale_order['1'].getResourceUid()
