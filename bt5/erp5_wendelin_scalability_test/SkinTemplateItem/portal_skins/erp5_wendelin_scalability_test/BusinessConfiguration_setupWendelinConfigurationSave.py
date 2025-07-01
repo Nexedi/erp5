@@ -67,5 +67,5 @@ configuration_save.addConfigurationItem("Portal Type Roles Spreadsheet Configura
 # Create ERP5Site_getSecurityCategoryMapping
 configuration_save.addConfigurationItem("Security Category Mapping Configurator Item")
 
-print "Created."
+print("Created.")
 return printed

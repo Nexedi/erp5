@@ -14,8 +14,8 @@
 import os.path
 data =  str(context.file_system_checksum).strip()
 lines = data.split("\n")
-print "Total files = ", len(lines)
-print
+print("Total files = ", len(lines))
+print()
 check_result = True
 for line in lines[:]:
   md5_checksum = line[:32].strip()
@@ -27,16 +27,16 @@ for line in lines[:]:
                 "reference": reference}
   data_stream = context.portal_catalog.getResultValue(**catalog_kw)
   if data_stream is None:
-    print "[NOT FOUND]", reference
+    print("[NOT FOUND]", reference)
     check_result = False
   else:
     is_upload_ok = (data_stream.getVersion()==md5_checksum)
-    print md5_checksum, filename, data_stream is not None, is_upload_ok
+    print(md5_checksum, filename, data_stream is not None, is_upload_ok)
     if not is_upload_ok:
       check_result = False
-print
+print()
 if check_result:
-  print "[OK] Data set correctly uploaded"
+  print("[OK] Data set correctly uploaded")
 else:
-  print "[ERROR] Data set was not correctly uploaded"
+  print("[ERROR] Data set was not correctly uploaded")
 return printed
