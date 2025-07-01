@@ -70,7 +70,7 @@ if seen_sims is None:
 sim_flight_names = list(old_score_df["name"])
   
 # We will only continue if there is new data available.
-if len([x for x in sim_flight_names if x not in seen_sims]) == 0: 
+if len([x for x in sim_flight_names if x.decode('utf-8') not in seen_sims]) == 0: 
   return 
 
 
