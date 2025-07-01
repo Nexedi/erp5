@@ -264,11 +264,11 @@ class CategoryProcessor(object):
         field_category_name = field+'_category'
         field_name = field+'_uid'
       if verbose:
-        print 'Processing %s' % field_name
+        print('Processing %s' % field_name)
       uids = [str(row[0]) for row in array[:][[field_name]]]
       objects = self.context.portal_catalog(uid=uids)
       if verbose:
-        print 'Found %s %s' % (len(objects), field)
+        print('Found %s %s' % (len(objects), field))
         
       for resource in objects:
         categories = resource.getCategoryList()
@@ -278,8 +278,8 @@ class CategoryProcessor(object):
             category_uids.append(str(categories_df.ix[category]['uid']))
           except KeyError:
             if verbose:
-              print 'Category %s not found from %s' % (category, field_category_name)
-              print '...adding to the DataFrame.'
+              print('Category %s not found from %s' % (category, field_category_name))
+              print('...adding to the DataFrame.')
             categories_df.loc[category] = self.context.portal_categories.resolveCategory(category).getUid()
         fields_objects_categories[field][int(resource.getUid())] = ','.join(category_uids)
     
@@ -312,7 +312,7 @@ class CategoryProcessor(object):
           row[field_category_name] = categories
     transaction.commit()
     if duplicate_category:
-      print 'Duplication added to the array: %s' % total_duplication 
+      print('Duplication added to the array: %s' % total_duplication)
     return
   
   def _getCategoriesDf(self):

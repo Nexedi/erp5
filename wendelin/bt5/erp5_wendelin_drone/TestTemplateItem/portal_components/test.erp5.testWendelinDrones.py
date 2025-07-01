@@ -93,7 +93,7 @@ class Test(ERP5TypeTestCase):
             {"message": self.create_random_wrong_dataframe(column_names), "filepath": self.create_random_name()}]
 
   def checkCorrectName(self, data_bucket_stream, name):
-    self.assertNotEquals(data_bucket_stream.get(name), None)
+    self.assertNotEqual(data_bucket_stream.get(name), None)
     return name
   def stepCallAnalyses(self):
     self.portal.portal_alarms.wendelin_handle_analysis.activeSense()
@@ -124,7 +124,7 @@ class Test(ERP5TypeTestCase):
         specialise_uid = self.portal.data_supply_module.drone_simulation.getUid(),
         reference = 'drone_simulation')
 
-    self.assertNotEquals(data_ingestion, None)
+    self.assertNotEqual(data_ingestion, None)
     
     #self.document_to_delete_list.append(data_ingestion)
     return data_ingestion
@@ -149,7 +149,7 @@ class Test(ERP5TypeTestCase):
         specialise_uid = self.portal.data_supply_module.drone_real.getUid(),
         reference = 'drone_real')
 
-    self.assertNotEquals(data_ingestion, None)
+    self.assertNotEqual(data_ingestion, None)
     
     #self.document_to_delete_list.append(data_ingestion)
     return data_ingestion
@@ -183,14 +183,14 @@ class Test(ERP5TypeTestCase):
     Or we just start it and the test will only fail if the programm throws an error
     """
     # check line for binary data
-    self.assertNotEquals(bin_line, None)
-    self.assertEquals(bin_line.getQuantity(), 1)
-    self.assertEquals(bin_line.getResource(), 
+    self.assertNotEqual(bin_line, None)
+    self.assertEqual(bin_line.getQuantity(), 1)
+    self.assertEqual(bin_line.getResource(),
       'data_product_module/drone_raw_data')
     
     destination_data_stream_bucket = bin_line.getAggregateDataBucketStreamValue()
-    self.assertNotEquals(destination_data_stream_bucket, None)
-    self.assertNotEquals(destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]), None)
+    self.assertNotEqual(destination_data_stream_bucket, None)
+    self.assertNotEqual(destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]), None)
     self.assertIn(bin_chunk["message"], destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]))
   
     self.stepCallAnalyses()
@@ -218,7 +218,7 @@ class Test(ERP5TypeTestCase):
       if reference == 'out_array':
         data_array = data_analysis_line.getAggregateValueList(portal_type = 'Data Array')[0]
         zarray = data_array.getArray()
-        self.assertNotEquals(zarray, None)
+        self.assertNotEqual(zarray, None)
     
   def test_02_WrongSimIngestion(self):
     portal = self.getPortalObject()
@@ -241,19 +241,19 @@ class Test(ERP5TypeTestCase):
           bin_line = line
         
     # check line for binary data
-      self.assertNotEquals(bin_line, None)
-      self.assertEquals(bin_line.getQuantity(), 1)
-      self.assertEquals(bin_line.getResource(), 
+      self.assertNotEqual(bin_line, None)
+      self.assertEqual(bin_line.getQuantity(), 1)
+      self.assertEqual(bin_line.getResource(),
         'data_product_module/drone_raw_data')
     
       destination_data_stream_bucket = bin_line.getAggregateDataBucketStreamValue()
-      self.assertNotEquals(destination_data_stream_bucket, None)
+      self.assertNotEqual(destination_data_stream_bucket, None)
       if bin_chunk["filepath"] != "Wrong Filepath Name but correct data":
         try:
           _ = destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"])
         except KeyError:
           continue
-      self.assertNotEquals(destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]), None)
+      self.assertNotEqual(destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]), None)
       self.assertIn(bin_chunk["message"], destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]))
   
 
@@ -282,7 +282,7 @@ class Test(ERP5TypeTestCase):
         if reference == 'out_array':
           data_array = data_analysis_line.getAggregateValueList(portal_type = 'Data Array')[0]
           zarray = data_array.getArray()
-          self.assertNotEquals(zarray, None)
+          self.assertNotEqual(zarray, None)
     
     
   def test_03_RealIngestion(self):
@@ -306,16 +306,16 @@ class Test(ERP5TypeTestCase):
         bin_line = line
         
     # check line for binary data
-    self.assertNotEquals(bin_line, None)
-    self.assertEquals(bin_line.getQuantity(), 1)
-    self.assertEquals(bin_line.getResource(), 
+    self.assertNotEqual(bin_line, None)
+    self.assertEqual(bin_line.getQuantity(), 1)
+    self.assertEqual(bin_line.getResource(),
       'data_product_module/bouncy_flight_mavsdk_raw_data')
     
     destination_data_stream_bucket = bin_line.getAggregateDataBucketStreamValue()
-    self.assertNotEquals(destination_data_stream_bucket, None)
+    self.assertNotEqual(destination_data_stream_bucket, None)
 
     for i in ["Test","","simulation_log_D0_(14.0, 10.0).log"]:
-      self.assertEquals(
+      self.assertEqual(
             destination_data_stream_bucket.getBucketByKey(i), \
             self.bucket_data[0])
 
@@ -344,7 +344,7 @@ class Test(ERP5TypeTestCase):
       if reference == 'out_array':
         data_array = data_analysis_line.getAggregateValueList(portal_type = 'Data Array')[0]
         zarray = data_array.getArray()
-        self.assertNotEquals(zarray, None)
+        self.assertNotEqual(zarray, None)
   def test_04_ScoreCalculation(self):
     # Sim flights
     data_transformation_sim_flight = self.portal.portal_catalog.getResultValue(
