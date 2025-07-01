@@ -27,6 +27,8 @@
            global js_list python: ['%s/%s' % (portal_path, x) for x in portal.ERP5Site_getJavaScriptRelativeUrlList()] + js_list;
            global http_parameter_list  python: portal.ERP5Site_filterParameterList(request.form);
            dummy                python: http_parameter_list.update(local_parameter_list);
+           dummy                python: http_parameter_list.pop('object_path', None);
+           dummy                python: http_parameter_list.pop('object_uid', None);
            global http_parameters      python: portal.ERP5Site_renderHTTPParameterList(http_parameter_list);
            global form                 nocall:form | nothing;
            portal_preferences   python: portal.portal_preferences;
