@@ -212,11 +212,11 @@ class ContributionTool(BaseTool):
       # if _setObject is not called
       document = container.newContent(document_id, portal_type, **kw)
       if discover_metadata:
-        document.activate().discoverMetadata(
-          filename=filename,
-          user_login=user_login,
-          input_parameter_dict=input_parameter_dict,
-        )
+        document.activate(after_path_and_method_id=(document.getPath(),
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat')))\
+              .discoverMetadata(filename=filename,
+                                user_login=user_login,
+                                input_parameter_dict=input_parameter_dict)
       if REQUEST is not None:
         response = REQUEST.RESPONSE
         response.setHeader('X-Location', document.absolute_url())
@@ -403,11 +403,14 @@ class ContributionTool(BaseTool):
           # If we need to discoverMetadata synchronously, it must
           # be for user interface and should thus be handled by
           # ZODB scripts
-          document.activate().discoverMetadata(
-            filename=filename,
-            user_login=user_login,
-            input_parameter_dict=input_parameter_dict
-          )
+          document.activate(
+            after_path_and_method_id=(
+              document.getPath(),
+              ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'),
+            ),
+          ).discoverMetadata(filename=filename,
+                            user_login=user_login,
+                            input_parameter_dict=input_parameter_dict)
     # Keep the document close to us - this is only useful for
     # file upload from webdav
     volatile_cache = getattr(self, '_v_document_cache', None)
@@ -557,8 +560,13 @@ class ContributionTool(BaseTool):
                               # we do not update it
                               # This feature must be implemented by Base or File
                               # not here (look at _edit in Base)
+      # Step 2: convert to base format
+      if content.isSupportBaseDataConversion():
+        content.activate().Document_tryToConvertToBaseFormat()
       # Step 3: run discoverMetadata
-      content.activate().discoverMetadata(filename=filename)
+      content.activate(after_path_and_method_id=(content.getPath(),
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
+          .discoverMetadata(filename=filename)
       # Step 4: activate populate (unless interaction workflow does it)
       content.activate().populateContent()
       # Step 5: activate crawlContent
