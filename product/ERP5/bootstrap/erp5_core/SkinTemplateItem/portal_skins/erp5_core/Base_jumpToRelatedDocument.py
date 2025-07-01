@@ -12,7 +12,10 @@ jump_reference_list = getattr(context, accessor_name)(portal_type=portal_type, f
 
 if len(jump_reference_list)==1:
   jump_reference = jump_reference_list[0]
-  return jump_reference.Base_redirect()
+  keep_items = {}
+  if ignore_layout is not None:
+    keep_items['ignore_layout'] = ignore_layout
+  return jump_reference.Base_redirect(keep_items=keep_items)
 else:
   selection_uid_list = [x.getUid() for x in jump_reference_list] or None
   kw = {'uid': selection_uid_list}
