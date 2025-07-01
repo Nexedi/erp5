@@ -34,13 +34,14 @@ import six
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
+from zLOG import LOG, WARNING
 from zope.contenttype import guess_content_type
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 from erp5.component.document.File import File
-from erp5.component.document.Document import Document, \
-       VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST, ConversionError, NotConvertedError
+from erp5.component.document.Document import ConversionError, Document, \
+       VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
 from Products.ERP5Type.Utils import (guessEncodingFromText,
                                      bytes2str,
                                      fill_args_from_request,
@@ -395,7 +396,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # sucessfully converted document
       self._setBaseData(dec(str2bytes(response_dict['data'])))
       metadata = response_dict['meta']
-      self._base_metadata = metadata
       if metadata.get('MIMEType', None) is not None:
         self._setBaseContentType(metadata['MIMEType'])
     else:
@@ -411,28 +411,68 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     """
     return getattr(self, '_base_metadata', {})
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateBaseMetadata')
-  def updateBaseMetadata(self, **kw):
+  security.declareProtected(Permissions.ModifyPortalContent, 'eraseLocalMetadata')
+  def eraseLocalMetadata(self):
+    self._base_metadata = {}
+    self.setContentType(None)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
+  def updateLocalMetadataFromDocument(self, **kw):
+    """
+      Updates locally stored metadata (and Content Type) from
+      information stored on the document.
+    """
+    data = kw.pop("data", None)
+    use_data_property = (data is None)
+    if use_data_property:
+      data = self.getData()
+
+    # No metadata can be guessed from empty documents, early abort
+    if not data:
+      return
+
+    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
+      response_code, response_dict, response_message = \
+          server_proxy.run_getmetadata(self.getId(),
+                                       bytes2str(enc(bytes(data))),
+                                       kw)
+
+    if response_code == 200:
+      metadata = response_dict['meta']
+      self._base_metadata = metadata
+      if metadata.get('MIMEType', None) is not None:
+        if not self.hasContentType():
+          self._setContentType(metadata['MIMEType'])
+        elif not use_data_property:
+          metadata["MIMEType"] = self.getContentType()
+    else:
+      # Backward compatibility for OnlyOffice formats, such as XLSY
+      # Guessing metadata is not supported by Cloudooo, but converting to
+      # base format is. We therefore guess after conversion.
+      if self.getTargetFormatItemList() is not None:
+        self.updateLocalMetadataFromDocument(data=self.getBaseData())
+      else:
+        raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
+                          % (response_code, response_message))
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateMetadata')
+  def updateMetadata(self, **kw):
     """
       Updates metadata information in the converted OOo document
       based on the values provided by the user. This is implemented
       through the invocation of the conversion server.
     """
-    if not self.hasBaseData():
-      # XXX please pass a meaningful description of error as argument
-      raise NotConvertedError()
-
     with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
       response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
-                                       bytes2str(enc(bytes(self.getBaseData()))),
+                                       bytes2str(enc(bytes(self.getData()))),
                                        kw)
     if response_code == 200:
-      # successful meta data extraction
-      self._setBaseData(dec(str2bytes(response_dict['data'])))
-      self.updateFileMetadata() # record in workflow history # XXX must put appropriate comments.
+      # Update document with new content
+      self._setData(dec(str2bytes(response_dict['data'])))
     else:
-      # Explicitly raise the exception!
-      raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
-                        % (response_code, response_message))
+      # On failure, do not raise, simply issue a warning
+      # This keeps some backward compatibility, when `updateMetadata`
+      # was not called every time.
+      msg = "OOoDocument: error setting document metadata (Code %s: %s)" % (response_code, response_message)
+      LOG('OOoDocument.updateMetadata', WARNING, msg)
