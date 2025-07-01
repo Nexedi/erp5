@@ -227,7 +227,7 @@ This small database prevents sending duplicate log data in case of a restart and
 <li> <em> hostname </em>: The hostname of the machine on which fluentbit will run. </li>\n
 </ul>\n
 <br>\n
-<p> For more information, see <a href="https://docs.fluentbit.io/manual"> the fluentbit documentation <a>.</p>
+<p> For more information, see <a href="https://docs.fluentbit.io/manual"> the fluentbit documentation </a>.</p>
 
 ]]></string> </value>
                 </item>
