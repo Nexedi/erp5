@@ -521,7 +521,10 @@ allow_module('numpy.lib.recfunctions')
 for dtype in ('int8', 'int16', 'int32', 'int64', \
               'uint8', 'uint16', 'uint32', 'uint64', \
               'float16', 'float32', 'float64', \
-              'complex64', 'complex128'):
+              'complex64', 'complex128', \
+              'bool_', \
+              # structured data
+              [('a', 'int8'), ('b', 'float16')]):
   allow_type(type(np.dtype(dtype)))
   z = np.array([0,], dtype = dtype)
   allow_type(type(z[0]))
