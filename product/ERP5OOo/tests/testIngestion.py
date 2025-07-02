@@ -491,7 +491,7 @@ class TestIngestion(IngestionTestCase):
       Upload a file from view form and make sure this increases the revision
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    f = self.makeFileUpload('TEST-en-002.doc')
+    f = self.makeFileUpload('TEST-en-002.odt')
     revision = document.getRevision()
     document.edit(file=f)
     self.assertEqual(document.getRevision(), str(int(revision) + 1))
