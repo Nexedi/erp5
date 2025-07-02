@@ -192,7 +192,7 @@ class OOoBuilder(Implicit):
       self._update_manifest()
     new_io = BytesIO()
 
-    with ZipFile(new_io, mode='w', compression=ZIP_DEFLATED) as zf:
+    with ZipFile(new_io, mode='w', compression=ZIP_DEFLATED, allowZip64=True) as zf:
       # Write `mimetype` first, uncompressed, with no comment or extra
       # spec recommends this for file magic discovery.
       zf.writestr('mimetype', self._content['mimetype'], ZIP_STORED)
