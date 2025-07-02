@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>script_id</string> </key>
-            <value> <string>DataDelivery_checkSimulationStateConsistency</string> </value>
+            <value> <string>Base_checkDataDeliverySimulationStateConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>
