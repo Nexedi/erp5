@@ -5,7 +5,8 @@
 """
 
 # get the related forum using predicate search
-result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                             validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
 if result:
   forum = result[0]
   discussion_thread_list = [x.getObject() for x  in forum.searchResults(portal_type="Discussion Thread",
