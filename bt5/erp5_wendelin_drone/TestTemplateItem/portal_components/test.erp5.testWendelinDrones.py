@@ -392,7 +392,7 @@ class Test(ERP5TypeTestCase):
     # Determine if there are duplicates
     self.assertEqual(len(test_sim_score_dataframe["name"]), len(test_sim_score_dataframe["name"].unique()))
    
-    optimal_flight = test_sim_score_dataframe[test_sim_score_dataframe["name"]=="simulation_log_D0_(14.0, 10.0).log"]
+    optimal_flight = test_sim_score_dataframe[test_sim_score_dataframe["name"] == b'simulation_log_D0_(14.0, 10.0).log']
 
     # Check that the score is 1 everytwhere for this one instance
     self.assertTrue(not optimal_flight[optimal_flight["climb_rate_reciprocal"] == 1].empty)
