@@ -60,7 +60,7 @@
                 </tal:block>
               </select>
               <tal:block tal:define="object_path request/object_path | nothing;"
-                         tal:condition="object_path"
+                         tal:condition="python: object_path and object_path != here.getPath()"
                          tal:replace="structure python: modules['ZTUtils'].make_hidden_input({'object_path': object_path})" />
               <button type="submit" name="Base_doDialog:method">
                 <span class="image"></span>
