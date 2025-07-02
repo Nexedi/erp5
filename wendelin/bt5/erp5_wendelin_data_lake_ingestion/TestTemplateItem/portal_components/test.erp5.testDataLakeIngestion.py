@@ -34,7 +34,7 @@ class TestDataIngestion(SecurityTestCase):
     self.assertEqual(self.PART_1, self.REFERENCE_SEPARATOR + self.portal.ERP5Site_getIngestionReferenceDictionary()["split_first_suffix"])
 
   def getRandomReference(self):
-    random_string = ''.join([random.choice(string.ascii_letters + string.digits) for _ in xrange(10)])
+    random_string = ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(10)])
     return 'UNIT-TEST-' + random_string
 
   def getIngestionReference(self, reference, extension, randomize_ingestion_reference=False, data_set_reference=False):
@@ -58,7 +58,7 @@ class TestDataIngestion(SecurityTestCase):
     return self.REF_SUPPLIER_PREFIX + ingestion_reference + self.REFERENCE_SEPARATOR +  self.REFERENCE_SEPARATOR + str("") +  self.REFERENCE_SEPARATOR + ""
 
   def chunks(self, l, n):
-    for i in xrange(0, len(l), n):
+    for i in range(0, len(l), n):
       yield l[i:i+n]
 
   def getDataIngestion(self, reference):
@@ -154,13 +154,13 @@ class TestDataIngestion(SecurityTestCase):
       chunks).
     """
     data_chunk_1 = ''.join([random.choice(string.ascii_letters + string.digits) \
-                              for _ in xrange(250)])
+                              for _ in range(250)])
     data_chunk_2 = ''.join([random.choice(string.ascii_letters + string.digits) \
-                              for _ in xrange(250)])
+                              for _ in range(250)])
     data_chunk_3 = ''.join([random.choice(string.ascii_letters + string.digits) \
-                              for _ in xrange(250)])
+                              for _ in range(250)])
     data_chunk_4 = ''.join([random.choice(string.ascii_letters + string.digits) \
-                              for _ in xrange(250)])
+                              for _ in range(250)])
 
     reference = self.getRandomReference()
 

@@ -20,22 +20,23 @@
 #
 ##############################################################################
 
-from cStringIO import StringIO
+from io import BytesIO
 import base64
 import binascii
-from httplib import NO_CONTENT
+from six.moves.http_client import NO_CONTENT
 import msgpack
 import numpy as np
 import string
 import random
 import struct
 import textwrap
-import urllib
+import six.moves.urllib as urllib
 import uuid
 from zExceptions import BadRequest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
+from Products.ERP5Type.Utils import str2bytes
 from wendelin.bigarray.array_zodb import ZBigArray
 
 from App.version_txt import getZopeVersion
@@ -49,11 +50,11 @@ if getZopeVersion() < (4, ): # BBB Zope2
 
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
-    for _ in xrange(32)])
+    for _ in range(32)])
 
 def chunks(l, n):
   """Yield successive n-sized chunks from l."""
-  for i in xrange(0, len(l), n):
+  for i in range(0, len(l), n):
     yield l[i:i+n]
 
 class Test(ERP5TypeTestCase):
@@ -100,12 +101,12 @@ class Test(ERP5TypeTestCase):
     body = msgpack.packb([0, real_data], use_bin_type=True)
     if old_fluentd:
       env = {'CONTENT_TYPE': 'application/x-www-form-urlencoded'}
-      body = urllib.urlencode({'data_chunk': body})
+      body = str2bytes(urllib.parse.urlencode({'data_chunk': body}))
     else:
       env = {'CONTENT_TYPE': 'application/octet-stream'}
     path = ingestion_policy.getPath() + '/ingest?reference=' + reference
     publish_kw = dict(user='ERP5TypeTestCase', env=env,
-      request_method='POST', stdin=StringIO(body))
+      request_method='POST', stdin=BytesIO(body))
     response = self.publish(path, **publish_kw)
     self.assertEqual(NO_CONTENT, response.getStatus())
     # at every ingestion if no specialised Data Ingestion exists it is created
@@ -275,7 +276,7 @@ class Test(ERP5TypeTestCase):
       bucket_stream.insertBucket(i, i*10000)
 
     self.assertEqual(100, bucket_stream.getBucketCount())
-    self.assertEqual(range(100), bucket_stream.getKeyList())
+    self.assertEqual(list(range(100)), bucket_stream.getKeyList())
 
     # test as sequence
     bucket = bucket_stream.getBucketKeyItemSequenceByKey(start_key=10, count=1)[0]
@@ -424,7 +425,7 @@ class Test(ERP5TypeTestCase):
 
     path = ingestion_policy.getPath() + '/ingest?reference=' + reference
     publish_kw = dict(user='ERP5TypeTestCase', env=env,
-      request_method='POST', stdin=StringIO(body))
+      request_method='POST', stdin=BytesIO(body))
     response = self.publish(path, **publish_kw)
 
     self.assertEqual(NO_CONTENT, response.getStatus())

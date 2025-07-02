@@ -11,7 +11,7 @@ import string
 
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
-    for _ in xrange(32)])
+    for _ in range(32)])
 
 # Game of Life examples
 default_input_ndarray = np.array([[0,0,0,0,0,0],

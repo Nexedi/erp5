@@ -1,6 +1,7 @@
 """
 This script is called from ebulk client to get list of Data Streams for a Data set.
 """
+from Products.ERP5Type.Utils import ensure_list
 import json
 from erp5.component.module.Log import log
 
@@ -40,5 +41,5 @@ for stream_brain in data_stream_list:
                                     'large-hash': version,
                                     'full-size': size}
 
-result_dict = { 'status_code': 0, 'result': data_stream_dict.values()}
+result_dict = { 'status_code': 0, 'result': ensure_list(data_stream_dict.values())}
 return json.dumps(result_dict)

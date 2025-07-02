@@ -28,10 +28,16 @@ from wendelin.bigarray.array_zodb import ZBigArray
 from erp5.component.document.File import _MARKER
 from wendelin.bigarray.array_ram import RAMArray
 from ZPublisher import HTTPRangeSupport
-from App.Common import rfc1123_date
+from zope.datetime import rfc1123_date
 from DateTime import DateTime
-from mimetools import choose_boundary
 import transaction
+import six
+
+if six.PY3:
+  from email.generator import _make_boundary as choose_boundary
+else:
+  from mimetools import choose_boundary  # pylint:disable=import-error
+
 
 class DataArray(BigFile):
   """

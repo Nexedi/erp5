@@ -149,11 +149,11 @@ class ProgbarLogger(OriginalProgbarLogger):
 seed = 7
 np.random.seed(seed)
 
-from cStringIO import StringIO
+from io import BytesIO
 import cPickle
 def save(portal, value):
   data_stream = portal.data_stream_module.wendelin_examples_keras_nn
-  data_stream.edit(file=StringIO(cPickle.dumps(value)))
+  data_stream.edit(file=BytesIO(cPickle.dumps(value)))
 
 def load(portal):
   data_stream = portal.data_stream_module.wendelin_examples_keras_nn
@@ -168,7 +168,7 @@ def train(portal):
   # 1. you can use keras.
   # 2. you can save trained model.
   # 3. you can load trained model.
-  # from cStringIO import StringIO
+  # from io import BytesIO
   import tensorflow as tf # pylint:disable=import-error
   sess = tf.Session()
   from keras import backend as K # pylint:disable=import-error
@@ -190,7 +190,7 @@ def train(portal):
     model.add(Dense(1, init='uniform', activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-  dataset = np.loadtxt(StringIO(str(portal.portal_skins.erp5_wendelin_examples_keras['pima.csv'])), delimiter=',')
+  dataset = np.loadtxt(BytesIO(bytes(portal.portal_skins.erp5_wendelin_examples_keras['pima.csv'])), delimiter=',')
   X = dataset[:, 0:8]
   Y = dataset[:, 8]
 

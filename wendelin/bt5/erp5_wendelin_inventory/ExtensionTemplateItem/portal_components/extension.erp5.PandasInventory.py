@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
 import re
+from six.moves import range
 import transaction
 from DateTime import DateTime
 from wendelin.bigarray.array_zodb import ZBigArray
+import six
 
 
 class ZBigArrayConverter(object):
@@ -58,7 +60,7 @@ class ZBigArrayConverter(object):
       data_array = result[0]
       
     array = data_array.getArray()
-    for index in xrange(len(array)): 
+    for index in range(len(array)):
       # We need to order everything related to the data schema here. The Results methods
       # `tuples()`, `names` and `data_dictionary` returns the fields in a different order
       # and order is very important in the conversion to a ZBigArray. So we build
@@ -179,7 +181,7 @@ class ZBigArrayExtender(object):
     extension_dtype = DtypeIdentifier(self.extension).identify()
     if not self.source.dtype == extension_dtype:
       raise TypeError('Source and extension data types does not match.')
-    for index in xrange(len(self.extension)): 
+    for index in range(len(self.extension)):
       # Basically the same problem here with the order of Results instance fields
       # when we convert it to an array.
       ordered_movements = []
@@ -419,7 +421,7 @@ class InventoryDataFrameQuery(object):
   def _filterCategoryParameters(self, **kw):
     category_kw = {}
     keys_to_delete = []
-    for key, value in kw.iteritems():
+    for key, value in six.iteritems(kw):
       for field in self.FIELDS_WITH_CATEGORY:
         regex = re.compile(r'%s_.*_uid$' % field)
         if regex.match(key):
@@ -546,7 +548,7 @@ class InventoryDataFrameQuery(object):
   
   def _filterCategories(self):
     partial_filter = self._true_array()
-    for field, value in self.category_kw.iteritems():
+    for field, value in six.iteritems(self.category_kw):
       if self.duplicated_categories:
         partial_filter = (partial_filter) & (self.df[field] == value)
       else:

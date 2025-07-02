@@ -1,7 +1,7 @@
 import binascii
 import struct
 import numpy as np
-from cStringIO import StringIO
+from io import BytesIO
 
 MAGIC_PREFIX = b'\x92WEN'
 MAGIC_LEN = len(MAGIC_PREFIX) +2
@@ -18,7 +18,7 @@ assert major == 0 and minor == 1
 # verify crc32 checksum
 checksum = struct.unpack('<i', data[MAGIC_LEN:HEADER_LEN])[0]
 assert checksum == binascii.crc32(data[HEADER_LEN:])
-io = StringIO()
+io = BytesIO()
 io.write(data[HEADER_LEN:])
 io.seek(0)
 array = np.load(io, allow_pickle=False)
