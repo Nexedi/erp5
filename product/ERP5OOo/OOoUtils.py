@@ -192,7 +192,7 @@ class OOoBuilder(Implicit):
       self._update_manifest()
     new_io = BytesIO()
 
-    with ZipFile(new_io, mode='w', compression=ZIP_DEFLATED) as zf:
+    with ZipFile(new_io, mode='w', compression=ZIP_DEFLATED, allowZip64=True) as zf:
       # Write `mimetype` first, uncompressed, with no comment or extra
       # spec recommends this for file magic discovery.
       zf.writestr('mimetype', self._content['mimetype'], ZIP_STORED)
@@ -565,3 +565,56 @@ allow_class(CorruptedOOoFile)
 def newOOoParser(container):
   return OOoParser().__of__(container)
 
+
+def _get_optimized_odf_xml_from_fragment(xml_string):
+  parser = etree.XMLParser(remove_blank_text=True, remove_comments=True)
+  root = etree.fromstring(
+    u"""<dummy
+      xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dom="http://www.w3.org/2001/xml-events"
+      xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0"
+      xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
+      xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
+      xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"
+      xmlns:math="http://www.w3.org/1998/Math/MathML"
+      xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
+      xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"
+      xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+      xmlns:ooo="http://openoffice.org/2004/office"
+      xmlns:oooc="http://openoffice.org/2004/calc"
+      xmlns:ooow="http://openoffice.org/2004/writer"
+      xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
+      xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
+      xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"
+      xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
+      xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+      xmlns:xforms="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0"
+      xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0"
+    >{xml_string}</dummy>""".format(xml_string=xml_string), parser)
+
+  for cell in root.xpath(
+    '//table:table-cell[@table:number-columns-spanned="0" '
+                        'or @table:number-columns-spanned="1"]', namespaces=root.nsmap):
+    cell.attrib.pop(
+      '{urn:oasis:names:tc:opendocument:xmlns:table:1.0}number-columns-spanned', None)
+  return etree.tostring(root)
+
+
+_optimize_odf_xml_fragment_head_len = None
+
+
+def optimize_odf_xml_fragment(xml_string):
+  global _optimize_odf_xml_fragment_head_len
+  if _optimize_odf_xml_fragment_head_len is None:
+    minimal_content_odf = _get_optimized_odf_xml_from_fragment(u"<content/>")
+    # we have "{head}<content/></dummy>", we want to know the length of head
+    assert minimal_content_odf.endswith(u"><content/></dummy>")
+    _optimize_odf_xml_fragment_head_len = len(minimal_content_odf) - len("<content/></dummy>")
+
+  optimized = _get_optimized_odf_xml_from_fragment(xml_string)
+  return optimized[_optimize_odf_xml_fragment_head_len:-len("</dummy>")]
