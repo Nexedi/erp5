@@ -736,11 +736,11 @@ class Test(ERP5TypeTestCase):
 
     code = r"""
 ingestion_policy = context.portal_ingestion_policies.get("{}")
-result = [x for x in ingestion_policy.unpackLazy('b"\x93\x01\x02\x03"')]
+result = [x for x in ingestion_policy.unpackLazy(b"\x93\x01\x02\x03")]
 return result
 """.format(ingestion_policy_id)
 
-    self.createAndRunScript(code, [98, 34, [1, 2, 3], 34])
+    self.createAndRunScript(code, [[1, 2, 3]])
 
   def test_14_IndexSequenceInRestrictedPython(self):
     """
