@@ -81,12 +81,14 @@ class TestDataIngestion(SecurityTestCase):
     return data_stream_list
 
   def ingestRequest(self, reference, eof, data_chunk, ingestion_policy):
-    encoded_data_chunk = base64.b64encode(data_chunk)
+    encoded_data_chunk = base64.b64encode(data_chunk.encode('utf-8'))
     request = self.portal.REQUEST
     # only POST for Wendelin allowed
     request.environ["REQUEST_METHOD"] = 'POST'
+
     reference = reference + eof + self.SIZE_HASH
     self.portal.log("Ingest with reference=%s" %reference)
+
     request.set('reference', reference)
     request.set('data_chunk', encoded_data_chunk)
     ingestion_policy.ingest()
@@ -132,7 +134,7 @@ class TestDataIngestion(SecurityTestCase):
     self.assertNotEqual(None, data_stream)
 
     data_stream_data = data_stream.getData()
-    self.assertEqual(data_chunk, data_stream_data)
+    self.assertEqual(data_chunk.encode('utf-8'), data_stream_data)
 
     return data_set, [data_stream]
 

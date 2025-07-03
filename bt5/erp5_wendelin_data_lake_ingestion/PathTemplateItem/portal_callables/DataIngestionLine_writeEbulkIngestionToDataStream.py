@@ -17,7 +17,7 @@ def getHash(data_stream):
     except Exception:
       # data stream is empty
       data_stream_chunk = ""
-    hash_md5.update(data_stream_chunk)
+    hash_md5.update(data_stream_chunk.encode('utf-8'))
     if data_stream_chunk == "": break
     n_chunk += 1
   return hash_md5.hexdigest()
