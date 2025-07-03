@@ -1,3 +1,4 @@
+from Products.ERP5OOo.OOoUtils import optimize_odf_xml_fragment
 import bz2
 request = container.REQUEST
 request.form.update(report_request)
@@ -23,7 +24,7 @@ with portal.Localizer.translationContext(localizer_language):
                                    first=report_section_idx == 0,
                                    report_section=report_section,
                                    render_prefix=render_prefix))
-
   report_section.popReport(portal, render_prefix=render_prefix)
 
-return report_section_idx, bz2.compress(data.encode('utf8'))
+data = optimize_odf_xml_fragment(data).encode('utf-8')
+return report_section_idx, bz2.compress(data)
