@@ -28,6 +28,7 @@
 import os
 import unittest
 import six.moves.urllib.parse
+import time
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -52,9 +53,9 @@ class TestSFTPConnection(ERP5TypeTestCase):
       self.assertEqual([], self.connection.listFiles("."))
 
     def test_create_read_delete_file(self):
-      self.connection.putFile("filename", "file content")
+      self.connection.putFile("filename", b"file content")
       self.assertEqual(
-        "file content",
+        b"file content",
         self.connection.getFile("filename")
       )
       self.connection.removeFile("filename")
@@ -66,16 +67,17 @@ class TestSFTPConnection(ERP5TypeTestCase):
       )
 
     def test_put_rename(self):
-      self.connection.putFile("filename", "file content")
+      self.connection.putFile("filename", b"file content")
       self.connection.renameFile("filename", "new name")
       self.assertEqual(
-        "file content",
-        self.connection.getFile("new name")
+        self.connection.getFile("new name"),
+        b"file content",
       )
 
     def test_list_dir(self):
-      self.connection.putFile("first_file", "first file content ( a bit bigger )")
-      self.connection.putFile("second_file", "second file content")
+      self.connection.putFile("first_file", b"first file content ( a bit bigger )")
+      time.sleep(0.5)
+      self.connection.putFile("second_file", b"second file content")
       # by default, ordering is not specified
       self.assertCountEqual(
           ["first_file", "second_file"],
