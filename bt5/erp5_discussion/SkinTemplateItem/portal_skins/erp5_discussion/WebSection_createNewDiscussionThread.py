@@ -11,20 +11,16 @@ person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 version = '001'
 language = portal.Localizer.get_selected_language()
 
-try:
-  user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()
-except Unauthorized:
-  # not in all cases current logged in user may access its details
-  user_assignment_dict = {'group_list': [], 'site_list':[]}
-
-if group_list in MARKER:
-  group_list = user_assignment_dict['group_list']
-if site_list in MARKER:
-  site_list = user_assignment_dict['site_list']
-
 # set predicate settings for current Web Section
-membership_criterion_category_list = context.getMembershipCriterionCategoryList()
-multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
+# get the related forum using follow_up
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
+                                             validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
+membership_criterion_category_list = []
+multimembership_criterion_base_category_list = []
+if result:
+  forum = result[0]
+  membership_criterion_category_list = forum.getMembershipCriterionCategoryList()
+  multimembership_criterion_base_category_list = forum.getMultimembershipCriterionBaseCategoryList()
 
 reference = context.Base_generateReferenceFromString(title)
 random_string_length = 10
@@ -56,9 +52,9 @@ for base_category in multimembership_criterion_base_category_list:
 discussion_thread = portal.discussion_thread_module.newContent(
                       portal_type = "Discussion Thread",
                       **create_kw)
-# as we create a thread under a "root" predicate web section copy
-# all categories from it to create thread, this way thread will be part
-# of web section (through getDocumentValue API)
+# as we create a thread under a "root" predicate discussion forum
+# copy all categories from it to create a thread,
+# this way thread will be part of discussion forum (through predicate's searchResults)
 discussion_thread.setCategoryList(category_list)
 
 # predecessor
