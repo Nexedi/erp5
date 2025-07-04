@@ -113,6 +113,7 @@
                     <value>
                       <list>
                         <string>my_start_date</string>
+                        <string>my_stop_date</string>
                         <string>my_source_project_title</string>
                         <string>my_comment</string>
                         <string>my_causality_title_list</string>
