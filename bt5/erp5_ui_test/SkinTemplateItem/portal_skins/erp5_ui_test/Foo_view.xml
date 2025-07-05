@@ -113,6 +113,7 @@
                         <string>my_fake_category_title</string>
                         <string>my_foo_big_category_title</string>
                         <string>my_local_title</string>
+                        <string>your_multi_list_field</string>
                       </list>
                     </value>
                 </item>
