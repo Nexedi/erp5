@@ -4484,6 +4484,51 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         debit_price=600,
         credit_price=0)
 
+  def testGeneralLedgerGAPRoot(self):
+    # General Ledger export, with a GAP root
+    self.createAccountStatementDataSet(use_two_bank_accounts=0)
+
+    # adjust accounts to have an account number on `another_country/another_standards`
+    payable_gap_list = self.account_module.payable.getGapList()
+
+    def cleanup(account, gap_list):
+      account.setGapList(gap_list)
+      self.tic()
+    self.addCleanup(cleanup, self.account_module.payable, payable_gap_list)
+    self.account_module.payable.setGapList(set(payable_gap_list + ['another_country/another_standards/1']))
+    self.tic()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['gap_root'] = 'gap/another_country/another_standards'
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['export'] = True
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEqual(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+
+    self.assertEqual(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getNodeGapId='1',
+          Movement_getSpecificReference='1',
+          date=DateTime(2006, 2, 1),
+          debit_price=0, credit_price=100, )
+
+    self.checkLineProperties(data_line_list[1],
+          Movement_getNodeGapId='1',
+          Movement_getSpecificReference='2',
+          date=DateTime(2006, 2, 1, 0, 1),
+          debit_price=200, credit_price=0, )
+
   def testGeneralLedgerFunction(self):
     # general ledger restricted to a function
     self.createProjectAndFunctionDataSet()
