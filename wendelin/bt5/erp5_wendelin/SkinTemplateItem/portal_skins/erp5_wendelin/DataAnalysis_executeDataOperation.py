@@ -10,7 +10,7 @@ transient_output_item = None
 context.checkConsistency(fixit=True)
 initial_product = context.getSpecialiseValue(portal_type="Data Transformation").getResourceValue()
 for analysis_line in sorted(context.objectValues(portal_type="Data Analysis Line"),
-                           key=lambda x: x.getIntIndex()):
+                            key=lambda x: x.getIntIndex() or 0): # Cast None to 0
   resource = analysis_line.getResourceValue()
   if resource == initial_product:
     use_list = analysis_line.getUseList()
