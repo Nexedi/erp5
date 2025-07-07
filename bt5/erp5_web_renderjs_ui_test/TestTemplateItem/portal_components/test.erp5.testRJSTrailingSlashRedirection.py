@@ -46,7 +46,7 @@ class TestRenderJSTrailingSlashRedirection(ERP5TypeTestCase):
       self.web_site.getRelativeUrl()
     )
     self.assertEqual(
-      'Redirecting to %s' % expected_redirection_url,
+      ('Redirecting to %s' % expected_redirection_url).encode(),
       response.getBody()
     )
     self.assertEqual(
