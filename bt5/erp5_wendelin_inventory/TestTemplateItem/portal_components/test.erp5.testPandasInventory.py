@@ -174,7 +174,7 @@ class PandasInventoryTest(ERP5TypeTestCase):
       portal_type='Data Array'
     )[0].getObject().getArray()
     resource_category_array = array[:][['resource_category']]
-    self.assertTrue(all([item != '' for item in resource_category_array]))
+    self.assertTrue(all([item['resource_category'] != '' for item in resource_category_array]))
     
   def test_04_getMovementHistoryListTest(self):
     resource_uid = self.sale_order['1'].getResourceUid()
