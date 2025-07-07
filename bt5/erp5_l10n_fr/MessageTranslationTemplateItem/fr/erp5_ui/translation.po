@@ -10501,6 +10501,12 @@ msgstr "Définition de rôle"
 msgid "Roles"
 msgstr "Rôles"
 
+msgid "Rotate Left"
+msgstr "Pivoter à gauche"
+
+msgid "Rotate Right"
+msgstr "Pivoter à droite"
+
 msgid "Rule"
 msgstr "Règle"
 
@@ -14439,6 +14445,12 @@ msgstr "Cet onglet ne contient aucun gadget"
 
 msgid "Zip Code"
 msgstr "Code Postal"
+
+msgid "Zoom in"
+msgstr "Agrandir"
+
+msgid "Zoom out"
+msgstr "Réduire"
 
 msgid "accounting_workflow"
 msgstr "Workflow de Comptabilité"
