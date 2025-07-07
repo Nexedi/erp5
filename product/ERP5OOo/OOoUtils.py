@@ -602,7 +602,7 @@ def _get_optimized_odf_xml_from_fragment(xml_string):
                         'or @table:number-columns-spanned="1"]', namespaces=root.nsmap):
     cell.attrib.pop(
       '{urn:oasis:names:tc:opendocument:xmlns:table:1.0}number-columns-spanned', None)
-  return etree.tostring(root)
+  return etree.tostring(root, encoding="unicode")
 
 
 _optimize_odf_xml_fragment_head_len = None
@@ -613,7 +613,7 @@ def optimize_odf_xml_fragment(xml_string):
   if _optimize_odf_xml_fragment_head_len is None:
     minimal_content_odf = _get_optimized_odf_xml_from_fragment(u"<content/>")
     # we have "{head}<content/></dummy>", we want to know the length of head
-    assert minimal_content_odf.endswith(u"><content/></dummy>")
+    assert minimal_content_odf.endswith("><content/></dummy>")
     _optimize_odf_xml_fragment_head_len = len(minimal_content_odf) - len("<content/></dummy>")
 
   optimized = _get_optimized_odf_xml_from_fragment(xml_string)
