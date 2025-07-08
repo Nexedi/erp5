@@ -32,6 +32,7 @@
 """
 import xml.dom.minidom
 import zipfile
+import lxml.html
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
@@ -1584,7 +1585,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       base_unit_quantity=0.01)
     sequence.edit(currency=currency)
 
-  def stepCheckInvoiceWithBadPrecision(self, sequence):
+  def stepCheckInvoiceWithBadPrecision1(self, sequence):
+    """
+    Check that with two invoice lines with total price equal 0.14,
+    the receivable line will be 0.03 and vat line 0
+    """
     portal = self.portal
     vendor = sequence.get('vendor')
     invoice = portal.accounting_module.newContent(
@@ -1613,34 +1618,117 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     self.tic()
     movement_list = invoice.getMovementList(
         portal_type=invoice.getPortalAccountingMovementTypeList())
-    receivable_line = [m for m in movement_list \
-      if m.getSourceValue().getAccountType() == \
-        "asset/receivable"][0]
-    self.assertEqual(0.03, receivable_line.getSourceDebit())
-    data = invoice.Invoice_getODTDataDict()
-    precision = invoice.getQuantityPrecisionFromResource(
-      invoice.getResource())
-    self.assertEqual(round(data['total_price'], precision),
-      receivable_line.getSourceDebit())
-    vat_line = [m for m in movement_list \
-      if m.getSourceValue().getAccountType() == \
-        "liability/payable/collected_vat"][0]
-    self.assertEqual(0.0, vat_line.getSourceDebit())
-    income_line = [m for m in movement_list \
-      if m.getSourceValue().getAccountType() == \
-        "income"][0]
-    self.assertEqual(0.03, income_line.getSourceCredit())
+    self.assertEqual(
+      sorted(
+        [
+          (
+            m.getSourceValue().getAccountType(), m.getSourceDebit(),
+            m.getSourceCredit()) for m in movement_list
+        ]), [
+          ('asset/receivable', 0.03, 0.0),
+          ('income', 0.0, 0.03),
+          ('liability/payable/collected_vat', 0.0, 0.0),
+        ])
+
+    tree = lxml.html.fromstring(invoice.SaleInvoiceTransaction_viewInvoice())
+    self.assertEqual(
+      tree.xpath('//label[normalize-space(.)="Total Price"]/..//*[@class="figure"]/text()'),
+      ['0.03'],  # matches receivable line
+    )
+    self.assertFalse(invoice.checkConsistency())
+
+  def stepCheckInvoiceWithBadPrecision2(self, sequence):
+    """
+    Reproduction case for a python2 problem that price in the html is rounded using
+    ROUND_HALF_EVEN and the python2 round was ROUND_HALF_UP
+
+    """
+    portal = self.portal
+    business_process_no_vat = self.portal.business_process_module.newContent(
+      portal_type='Business Process',
+      specialise_value=self.portal.business_process_module.erp5_default_business_process, 
+    )
+    business_process_no_vat.newContent(
+      portal_type='Trade Model Path',
+      reference='TMP-ACCOUNTING-CREDIT',
+      trade_phase='trade/accounting',
+      trade_date='trade_phase/trade/invoicing',
+      source_value=self.portal.account_module.customer,
+      efficiency=-1,
+    )
+    business_process_no_vat.newContent(
+      portal_type='Trade Model Path',
+      reference='TMP-ACCOUNTING-DEBIY',
+      trade_phase='trade/accounting',
+      trade_date='trade_phase/trade/invoicing',
+      source_value=self.portal.account_module.sale,
+      efficiency=1,
+    )
+
+    vendor = sequence.get('vendor')
+    invoice = portal.accounting_module.newContent(
+      portal_type="Sale Invoice Transaction",
+      specialise_value=business_process_no_vat,
+      source_section_value=vendor,
+      start_date=self.datetime,
+      price_currency_value=sequence.get('currency'),
+      destination_section_value=sequence.get('client1'),
+      source_value=vendor)
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',
+                    sale_supply_line_source_account="account_module/sale",
+                    product_line='apparel')
+    invoice.newContent(
+      portal_type="Invoice Line",
+      resource_value=resource,
+      quantity=10,
+      price=0.1125
+    )
+    self.tic()
+    invoice.plan()
+    invoice.confirm()
+    self.tic()
+    invoice.start()
+    self.tic()
+    movement_list = invoice.getMovementList(
+        portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertEqual(
+      sorted(
+        [
+          (
+            m.getSourceValue().getAccountType(), m.getSourceDebit(),
+            m.getSourceCredit()) for m in movement_list
+        ]), [
+          ('asset/receivable', 1.12, 0.0),
+          ('income', 0.0, 1.12),
+        ])
+
+    tree = lxml.html.fromstring(invoice.SaleInvoiceTransaction_viewInvoice())
+    self.assertEqual(
+      tree.xpath('//label[normalize-space(.)="Total Price"]/..//*[@class="figure"]/text()'),
+      ['1.12'],  # matches receivable line
+    )
+    self.assertEqual(
+      self.portal.portal_simulation.getInventoryAssetPrice(
+        explanation_uid=invoice.getUid(),
+        section_uid=invoice.getSourceSectionUid(),
+        only_accountable=False,
+        portal_type='Invoice Line',
+        precision=2,
+      ),
+      -1.12,
+    )
+    self.assertFalse(invoice.checkConsistency())
 
   def test_AccountingTransaction_roundDebitCredit(self):
-    """
-      Check that with two invoice lines with total price equal 0.14,
-      the receivable line will be 0.03 and vat line 0
-    """
     sequence_list = SequenceList()
     sequence_list.addSequenceString("""
       stepCreateCurrency
       stepCreateEntities
-      stepCheckInvoiceWithBadPrecision
+      stepCheckInvoiceWithBadPrecision1
+      stepCheckInvoiceWithBadPrecision2
     """)
     sequence_list.play(self)
 
