@@ -2,13 +2,14 @@ project = context
 forum = None
 
 # check if project already has a forum
-predicate_list = project.Project_getForumPredicateList()
-if len(predicate_list) > 0:
-  forum = context.restrictedTraverse(predicate_list[0])
-
-follow_up_list = [x for x in project.getFollowUpRelatedValueList(portal_type = "Discussion Forum") if x.getValidationState() in ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')]
+follow_up_list = [x for x in project.getFollowUpRelatedValueList(portal_type = "Discussion Forum") if x.getValidationState()
+                  in ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')]
 if len(follow_up_list) > 0:
   forum = follow_up_list[0]
+if not forum:
+  predicate_list = project.Project_getForumPredicateList()
+  if len(predicate_list) > 0:
+    forum = context.restrictedTraverse(predicate_list[0])
 
 if forum:
   return project.Base_redirect(
