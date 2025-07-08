@@ -1,3 +1,4 @@
+subject_set | SQLCatalog_makeSubjectSetQuery
 quick_search_text | SQLCatalog_makeQuickSearchQuery
 advanced_search_text | SQLCatalog_makeQuickSearchQuery
 full_text | SQLCatalog_makeFullTextQuery
