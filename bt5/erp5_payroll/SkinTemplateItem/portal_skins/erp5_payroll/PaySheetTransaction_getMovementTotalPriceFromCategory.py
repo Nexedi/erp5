@@ -3,6 +3,8 @@
   category_list parameter is in variation_category_list of the PaySheet line
   and wich has a base_contribution in the base_contribution_list
 '''
+from erp5.component.tool.RoundingTool import round_half_even
+
 if excluded_reference_list is None:
   excluded_reference_list = []
 
@@ -28,8 +30,5 @@ for movement in movement_list:
       total_price += movement.getTotalPrice()
 
 
-# Get Precision
 precision = context.getPriceCurrencyValue().getQuantityPrecision()
-
-amount = round(total_price, precision)
-return amount
+return round_half_even(total_price, precision)
