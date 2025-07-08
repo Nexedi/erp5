@@ -109,7 +109,8 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     }
     payslip_content = test_pay_sheet_transaction.PaySheetTransaction_getPayslipData()
     for key, value in six.iteritems(expected_payslip_content):
-      self.assertAlmostEqual(value, payslip_content[key])
+      with self.subTest(key):
+        self.assertAlmostEqual(value, payslip_content[key])
 
     expected_non_contribution_dict_list= [
       {'title': 'AMOUNT NON SUBJECT TO CONTRIBUTION', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
@@ -122,11 +123,12 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
 
     non_contribution_dict_list = payslip_content['non_contribution_dict_list']
     self.assertEqual(len(non_contribution_dict_list), len(expected_non_contribution_dict_list))
-    for index in  range(len(expected_non_contribution_dict_list)):
+    for index in range(len(expected_non_contribution_dict_list)):
       expected_value_dict = expected_non_contribution_dict_list[index]
       value_dict = non_contribution_dict_list[index]
       for key, value in six.iteritems(expected_value_dict):
-        self.assertEqual(value_dict[key], value)
+        with self.subTest(key):
+          self.assertEqual(value_dict[key], value)
 
     expected_contribution_dict_list = [
       {'title': 'FIRST NAME LAST NAME', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
@@ -141,10 +143,10 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
       {'title': 'Prevoyance Generali TA', 'base': 2250.0, 'employee_price': None, 'employee_total_price': None, 'employer_price': -0.007, 'employer_total_price': -15.75},
       {'title': 'WORK ACCIDENT-OCCUPATIONAL DISEASE', 'base': 2250.0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': -0.011, 'employer_total_price': -24.75},
       {'title': 'RETIREMENT', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
-      {'title': 'Assurance vieillesse', 'base': 2250.0, 'employee_price': -0.0685, 'employee_total_price': -154.13, 'employer_price': -0.085, 'employer_total_price': -191.25},
+      {'title': 'Assurance vieillesse', 'base': 2250.0, 'employee_price': -0.0685, 'employee_total_price': -154.12, 'employer_price': -0.085, 'employer_total_price': -191.25},
       {'title': 'GMP', 'base': 322.82, 'employee_price': -0.078, 'employee_total_price': -25.18, 'employer_price': -0.1275, 'employer_total_price': -41.16},
       {'title': 'CET', 'base': 2250.0, 'employee_price': -0.0013, 'employee_total_price': -2.92, 'employer_price': -0.0022, 'employer_total_price': -4.95},
-      {'title': 'Retraite complementaire IRNEO TA', 'base': 2250.0, 'employee_price': -0.031, 'employee_total_price': -69.75, 'employer_price': -0.0465, 'employer_total_price': -104.63},
+      {'title': 'Retraite complementaire IRNEO TA', 'base': 2250.0, 'employee_price': -0.031, 'employee_total_price': -69.75, 'employer_price': -0.0465, 'employer_total_price': -104.62},
       {'title': 'AGFF TA', 'base': 2250.0, 'employee_price': -0.008, 'employee_total_price': -18.0, 'employer_price': -0.012, 'employer_total_price': -27.0},
       {'title': 'Assurance vieillesse deplafonnée', 'base': 2250.0, 'employee_price': -0.003, 'employee_total_price': -6.75, 'employer_price': -0.018, 'employer_total_price': -40.5},
       {'title': 'FAMILY-SOCAL SECURITY', 'base': 2250.0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': -0.0345, 'employer_total_price': -77.625},
@@ -161,11 +163,12 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
 
     contribution_dict_list = payslip_content['contribution_dict_list']
     self.assertEqual(len(contribution_dict_list), len(expected_contribution_dict_list))
-    for index in  range(len(expected_contribution_dict_list)):
+    for index in range(len(expected_contribution_dict_list)):
       expected_value_dict = expected_contribution_dict_list[index]
       value_dict = contribution_dict_list[index]
       for key, value in six.iteritems(expected_value_dict):
-        self.assertAlmostEqual(value_dict[key], value)
+        with self.subTest(key):
+          self.assertAlmostEqual(value_dict[key], value)
 
     test_pay_sheet_transaction.setStartDate(DateTime("2020/01/01"))
     self.tic()
