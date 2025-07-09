@@ -81,8 +81,10 @@
             <tal:block tal:condition="python: field is None" tal:repeat="item value">
               <text:p tal:content="item"/>
             </tal:block>
-            <tal:block tal:condition="python: field is not None" tal:repeat="item value">
-              <text:p tal:content="python: field.render_pdf(item)"/>
+            <tal:block tal:condition="python: field is not None" tal:define="item_list python: field.has_value('items') and field.get_value('items') or None;">
+              <tal:block tal:repeat="item value">
+                <text:p tal:content="python: [i[0] for i in item_list if i[1] == item][0]" tal:on-error="python: field.render_pdf(item)"/>
+              </tal:block>
             </tal:block>
           </table:table-cell>
         </tal:block>

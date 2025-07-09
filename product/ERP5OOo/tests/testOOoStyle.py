@@ -59,7 +59,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     gender = self.portal.portal_categories.gender
     if 'male' not in gender.objectIds():
-      gender.newContent(id='male')
+      gender.newContent(id='male', title='Male')
       self.portal.portal_caches.clearAllCache()
 
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
@@ -354,6 +354,20 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
+    response = self.publish(
+      '/%s/person_module/pers/Person_view?format=html'
+      % self.portal.getId(),
+      basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    if self.skin == 'ODT':
+      self.assertEqual(
+        tree.xpath('normalize-space(//tr/td/*[normalize-space(.)="Gender"]/../following-sibling::td)'),
+        'Male')
+    elif self.skin == 'ODS':
+      self.assertEqual(
+        tree.xpath('normalize-space(//tr/td/*[normalize-space(.)="Gender"]/../following-sibling::td)'),
+        'Male')
+
   def test_form_view_broken_category(self):
     self.portal.person_module.pers.setGender('not exist')
     self.portal.person_module.pers.setCareerRole('not exist')
@@ -365,6 +379,29 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_disposition = response.getHeader('content-disposition')
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
+
+  def test_form_view_multi_list_field(self):
+    foo = self.portal.foo_module.newContent(portal_type='Foo')
+    response = self.publish(
+       '%s/Foo_view' % foo.getPath(), basic=self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEqual('attachment', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+    response = self.publish(
+       '%s/Foo_view?format=html&multi_list_field:list=a&multi_list_field:list=b' % foo.getPath(), basic=self.auth)
+    tree = lxml.html.fromstring(response.getBody())
+    if self.skin == 'ODT':
+      self.assertEqual(
+        tree.xpath('normalize-space(//tr/td/*[normalize-space(.)="Multi List Field"]/../following-sibling::td/p)'),
+        'A B')
+    elif self.skin == 'ODS':
+      self.assertEqual(
+        tree.xpath('//tr/td/*[normalize-space(.)="Multi List Field"]/../following-sibling::td/text()'),
+        ['A', 'B'])
 
   def test_form_view_embedded_image(self):
     # with image

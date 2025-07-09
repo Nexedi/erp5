@@ -153,9 +153,19 @@ def getTitleForUid(uid):
     title_for_uid_cache[uid] = name
     return name
 
+request.other['Movement_getNodeGapIdCache'] = account_gap_id_cache = {}
+def fill_Movement_getNodeGapIdCache(account_relative_url):
+  try:
+    return account_gap_id_cache[account_relative_url]
+  except KeyError:
+    gap_id = traverse(account_relative_url).Account_getGapId(gap_root=gap_root)
+    account_gap_id_cache[account_relative_url] = gap_id
+    return gap_id
+
 def getFullAccountName(account_info):
   account_relative_url, mirror_section_uid, payment_uid = account_info
   account_name = getAccountName(account_relative_url)
+  fill_Movement_getNodeGapIdCache(account_relative_url)
   mirror_section_name = getTitleForUid(mirror_section_uid)
   if mirror_section_name:
     account_name = '%s (%s)' % (account_name, mirror_section_name)
