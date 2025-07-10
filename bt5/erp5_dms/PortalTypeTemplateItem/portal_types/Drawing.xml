@@ -38,6 +38,7 @@
                 <string>file_document</string>
                 <string>my_document</string>
                 <string>recent_document</string>
+                <string>ooo_document</string>
               </tuple>
             </value>
         </item>
@@ -77,6 +78,12 @@
                 <string>subject_list</string>
                 <string>filename</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
