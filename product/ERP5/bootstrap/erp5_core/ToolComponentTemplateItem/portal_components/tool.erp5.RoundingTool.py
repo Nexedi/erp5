@@ -48,14 +48,14 @@ def round(value, ndigits=None, decimal_rounding_option='ROUND_HALF_EVEN'): # pyl
     assert isinstance(ndigits, int), 'ndigits should be int.'
     precision = 10 ** -ndigits
   if precision >= 1:
-    value = Decimal(str(value))
+    value = Decimal(value)
     value /= precision
     value = value.quantize(precision, rounding=decimal_rounding_option)
     value *= precision
     result = float(value.quantize(precision))
   else:
     result = float(
-      Decimal(str(value)).quantize(Decimal(str(precision)),
+      Decimal(value).quantize(Decimal(str(precision)),
                                    rounding=decimal_rounding_option))
   return result
 
