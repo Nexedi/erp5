@@ -4364,6 +4364,59 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     self.assertFalse(line_list[-1].isStatLine())
 
+  def testGeneralLedgerReceivableAccountNoMirrorSection(self):
+    self.createAccountStatementDataSetOnTwoPeriods()
+    # adjust the data to remove the mirror section, this create inconsistent
+    # transactions, but in practice it happened in scenarios like:
+    #  - account is not asset/receivable, transactions are recorded without
+    #    mirror section
+    #  - account is changed to asset/receivable
+    # the existing transactions would not be accepted with the new account
+    # configuration, but existing transactions are OK anyway.
+    for si in self.portal.accounting_module.contentValues(portal_type='Sale Invoice Transaction'):
+      self.assertEqual(si.getDestinationSectionValue(), self.organisation_module.client_1)
+      si.setDestinationSection(None)
+    self.tic()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 2, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['gap_list'] = [
+        'my_country/my_accounting_standards/4/41']
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['export'] = True
+
+    report_section_list = self.getReportSectionList(
+        self.portal.accounting_module,
+        'AccountModule_viewGeneralLedgerReport')
+    self.assertEqual(1, len(report_section_list))
+
+    # export mode has no section headers
+    self.assertEqual(None, report_section_list[0].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+
+    self.assertEqual(2, len(data_line_list))
+    self.checkLineProperties(
+        data_line_list[0],
+        Movement_getSpecificReference='Previous Balance',
+        mirror_section_title='',
+        date=DateTime(2006, 2, 1),
+        debit_price=300,
+        credit_price=0, )
+
+    self.checkLineProperties(
+        data_line_list[1],
+        Movement_getSpecificReference='3',
+        mirror_section_title=None,  # an implementation detail makes that this is None and not '' here
+        date=DateTime(2006, 2, 2),
+        debit_price=300,
+        credit_price=0, )
+
   def testGeneralLedgerGAPFilter(self):
     # General Ledger filtered by GAP category
     # we will use the same data set as account statement
