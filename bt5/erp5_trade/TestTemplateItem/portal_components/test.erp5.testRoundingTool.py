@@ -76,6 +76,10 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(round_(0.85, 1, 'ROUND_HALF_EVEN'), 0.8)
     self.assertEqual(round_(-0.75, 1, 'ROUND_HALF_EVEN'), -0.8)
     self.assertEqual(round_(-0.85, 1, 'ROUND_HALF_EVEN'), -0.8)
+    from erp5.component.tool.RoundingTool import round_half_up
+    self.assertEqual(round_half_up(1.25, 1), 1.3)
+    from erp5.component.tool.RoundingTool import round_half_even
+    self.assertEqual(round_half_even(1.25, 1), 1.2)
 
   def testRoundValueMethod(self):
     """
