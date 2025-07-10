@@ -283,8 +283,7 @@ class TestPerformance(TestPerformanceMixin):
 
       if PROFILE:
         self.profile(self.bar_module.BarModule_viewBarList, i)
-    keys = view_result.keys()
-    keys.sort()
+    keys = sorted(view_result.keys())
     # first display results
     i = 0
     for key in keys:
