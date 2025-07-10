@@ -676,7 +676,7 @@ class TestDeferredStyleUtils(DeferredStyleTestCase):
       ),
       ('<a>  <b   ></b>  </a>', '<a><b/></a>', ),
       ('  <a> significant   spaces  </a>  ', '<a> significant   spaces  </a>', ),
-      (u'<a>👍</a>', u'<a>&#128077;</a>', ),
+      (u'<a>👍</a>', u'<a>👍</a>', ),
       ('<table:table-cell table:number-columns-spanned="0">0</table:table-cell>', '<table:table-cell>0</table:table-cell>', ),
       ('<table:table-cell table:number-columns-spanned="1">1</table:table-cell>', '<table:table-cell>1</table:table-cell>', ),
       ('<table:table-cell table:number-columns-spanned="2">2</table:table-cell>', '<table:table-cell table:number-columns-spanned="2">2</table:table-cell>', ),
