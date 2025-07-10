@@ -29,7 +29,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type.Utils import UpperCase
-from erp5.component.tool.RoundingTool import round as round_
+from erp5.component.tool.RoundingTool import round_
 import ExtensionClass
 from math import log
 

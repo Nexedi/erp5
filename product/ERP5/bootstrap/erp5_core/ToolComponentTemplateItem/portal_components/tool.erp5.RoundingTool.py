@@ -41,7 +41,7 @@ ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
                         'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
                         'ROUND_HALF_UP':ROUND_HALF_UP}
 
-def round(value, ndigits=None, decimal_rounding_option='ROUND_HALF_EVEN'): # pylint:disable=redefined-builtin
+def round_(value, ndigits=None, decimal_rounding_option='ROUND_HALF_EVEN'):
   if ndigits is None:
     precision = 1
   else:
@@ -133,5 +133,4 @@ class RoundingTool(BaseTool):
     return ROUNDING_OPTION_DICT.items()
 
   security.declarePublic('round')
-  def round(self, value, ndigits=None, decimal_rounding_option='ROUND_HALF_UP'):
-    return round(value, ndigits, decimal_rounding_option)
+  round = staticmethod(round_)
