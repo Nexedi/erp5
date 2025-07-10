@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>script_OOoDocument_updateMetadata</string> </value>
+            <value> <string>script_OOoDocument_eraseLocalMetadata</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

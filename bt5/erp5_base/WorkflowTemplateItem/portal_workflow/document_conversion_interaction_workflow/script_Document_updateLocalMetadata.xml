@@ -60,11 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>script_OOoDocument_updateMetadata</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Workflow Script</string> </value>
+            <value> <string>script_Document_updateLocalMetadata</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

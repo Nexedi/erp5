@@ -10,7 +10,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>after_script/portal_workflow/document_conversion_interaction_workflow/script_OOoDocument_updateMetadata</string>
+                <string>before_script/portal_workflow/document_conversion_interaction_workflow/script_OOoDocument_eraseLocalMetadata</string>
+                <string>after_script/portal_workflow/document_conversion_interaction_workflow/script_Document_updateLocalMetadata</string>
               </tuple>
             </value>
         </item>
@@ -22,17 +23,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>interaction_Document_base_convertable_edit</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Interaction Workflow Interaction</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type_filter</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>interaction_Document_ooo_setData</string> </value>
         </item>
         <item>
             <key> <string>portal_type_group_filter</string> </key>
@@ -44,23 +35,21 @@
         </item>
         <item>
             <key> <string>temporary_document_disallowed</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>trigger_method_id</string> </key>
             <value>
               <tuple>
-                <string>edit</string>
+                <string>_setFile</string>
+                <string>_setData</string>
+                <string>_setTextContent</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>trigger_once_per_transaction</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>
