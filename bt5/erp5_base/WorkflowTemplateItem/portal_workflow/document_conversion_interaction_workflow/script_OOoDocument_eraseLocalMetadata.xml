@@ -11,9 +11,13 @@
             <value>
               <object>
                 <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="_reconstructor" module="copy_reg"/>
                 </klass>
-                <tuple/>
+                <tuple>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -56,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>script_OOoDocument_updateMetadata</string> </value>
+            <value> <string>script_OOoDocument_eraseLocalMetadata</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
