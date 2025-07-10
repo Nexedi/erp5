@@ -404,6 +404,54 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                 "OOoDocument: Error converting document to base format. (Code %s: %s)"
                                        % (response_code, response_message))
 
+  def _getContentInformation(self):
+    """
+      Returns the metadata extracted by the conversion
+      server.
+    """
+    return getattr(self, '_base_metadata', {})
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'eraseLocalMetadata')
+  def eraseLocalMetadata(self):
+    self._base_metadata = {}
+    self.setContentType(None)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
+  def updateLocalMetadataFromDocument(self, **kw):
+    """
+      Updates locally stored metadata (and Content Type) from
+      information stored on the document.
+    """
+    data = kw.pop("data", None)
+    if data is None:
+      data = self.getData()
+
+    # No metadata can be guessed from empty documents, early abort
+    if not data:
+      return
+
+    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
+      response_code, response_dict, response_message = \
+          server_proxy.run_getmetadata(self.getId(),
+                                       bytes2str(enc(bytes(data))),
+                                       kw)
+
+    if response_code == 200:
+      metadata = response_dict['meta']
+      self._base_metadata = metadata
+      if metadata.get('MIMEType', None) is not None and \
+          not self.hasContentType():
+        self._setContentType(metadata['MIMEType'])
+    else:
+      # Backward compatibility for OnlyOffice formats, such as XLSY
+      # Guessing metadata is not supported by Cloudooo, but converting to
+      # base format is. We therefore guess after conversion.
+      if self.getTargetFormatItemList() is not None:
+        self.updateLocalMetadataFromDocument(data=self.getBaseData())
+      else:
+        raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
+                          % (response_code, response_message))
+
   security.declareProtected(Permissions.ModifyPortalContent, 'updateMetadata')
   def updateMetadata(self, **kw):
     """
