@@ -132,7 +132,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
       zeo_connection.trigger.pull_trigger()
     # link to ZEO will be unfrozen 1 second after we read 'message' table
     unfreeze_timer = threading.Timer(1, unfreezeStorage)
-    unfreeze_timer.setDaemon(True)
+    unfreeze_timer.daemon = True
     ## prepare monkey-patches (with code to revert them)
     from Products.CMFActivity.Activity.SQLDict import SQLDict
     zeo_server = storage._server
