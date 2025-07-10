@@ -11,7 +11,7 @@ kw = state_change['kwargs']
 metadata_field_mapping_dict = document.getMetadataMappingDict()
 
 # edit metadata (only if we have OOo file)
-if document.hasData():
+if document.hasData() and document.getContentInformation():
   new_metadata = {}
   for field in metadata_field_mapping_dict.keys():
     value = kw.get(field, None)
