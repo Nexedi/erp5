@@ -1076,7 +1076,7 @@ date_vector = df.index.values.copy()
 context.log(&quot;date_vector = &quot;, date_vector)
 
 # convert data back to ndarray
-default_data = df.to_records(convert_datetime64=False)
+default_data = df.to_records()
 # view as structured array
 
 # set date to zero where all values are 0
@@ -1151,7 +1151,7 @@ for out_array in out_array_list[1:]:
   date_vector = df.index.values.copy()
 
   # convert data back to ndarray
-  new_data = df.to_records(convert_datetime64=False)
+  new_data = df.to_records()
 
   # set date to zero where all values are 0
   new_data[&#39;date&#39;][(df==0).all(axis=1)] = 0
@@ -1447,7 +1447,7 @@ date_vector = df.index.values.copy()<br />
 context.log(&quot;date_vector = &quot;, date_vector)<br />
 <br />
 # convert data back to ndarray<br />
-default_data = df.to_records(convert_datetime64=False)<br />
+default_data = df.to_records()<br />
 # view as structured array<br />
 <br />
 # set date to zero where all values are 0<br />
@@ -1522,7 +1522,7 @@ for out_array in out_array_list[1:]:<br />
 &nbsp;&nbsp;date_vector = df.index.values.copy()<br />
 <br />
 &nbsp;&nbsp;# convert data back to ndarray<br />
-&nbsp;&nbsp;new_data = df.to_records(convert_datetime64=False)<br />
+&nbsp;&nbsp;new_data = df.to_records()<br />
 <br />
 &nbsp;&nbsp;# set date to zero where all values are 0<br />
 &nbsp;&nbsp;new_data[&#039;date&#039;][(df==0).all(axis=1)] = 0<br />

@@ -9,4 +9,5 @@ initially, depending on fluentd plugin configuration. For example fluentd might 
 json to msgpack, then what is saved in Data Stream might be str(python_dict) and not json.
 """
 
-out_stream["Data Stream"].appendData(''.join([str(c[1]) for c in context.unpack(data_chunk)]))
+unpacked_data = ''.join([str(c[1]) for c in context.unpack(data_chunk)])
+out_stream["Data Stream"].appendData(unpacked_data.encode('utf-8'))

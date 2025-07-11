@@ -24,6 +24,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Core.Folder import Folder
 from zExceptions import BadRequest, NotFound
+import six
+from Products.ERP5Type.Utils import parse_http_header
 
 class IngestionPolicy(Folder):
   """
@@ -57,12 +59,26 @@ class IngestionPolicy(Folder):
     try:
       if method != 'POST':
         raise BadRequest('Only POST request is allowed.')
-      if self.REQUEST._file is not None:
-        assert not self.REQUEST.form, self.REQUEST.form # Are cgi and HTTPRequest fixed ?
-        # Query string was ignored so parse again, faking a GET request.
-        # Such POST is legit: https://stackoverflow.com/a/14710450
-        self.REQUEST.processInputs()
-        self.REQUEST.form['data_chunk'] = self.REQUEST._file.read()
+      #keep old behavior
+      if six.PY2:
+        if self.REQUEST._file is not None:
+          assert not self.REQUEST.form, self.REQUEST.form # Are cgi and HTTPRequest fixed ?
+          # Query string was ignored so parse again, faking a GET request.
+          # Such POST is legit: https://stackoverflow.com/a/14710450
+          self.REQUEST.processInputs()
+          self.REQUEST.form['data_chunk'] = self.REQUEST._file.read()
+      else:
+        if ('data_chunk' in self.REQUEST.form) and self.REQUEST.form['data_chunk']:
+          # old fluentd, data is urlencoded and zope have decoded the bytes
+          # https://github.com/zopefoundation/Zope/blob/031706db694b310d5b71829b22389c470f9b7a62/src/ZPublisher/HTTPRequest.py#L569-L571
+          # re-encode to get the inital bytes
+          content_type = self.REQUEST.environ.get('CONTENT_TYPE')
+          _, params = parse_http_header(content_type)
+          used_charset = params.get('charset', self.REQUEST.charset)
+          self.REQUEST.form['data_chunk'] = self.REQUEST.form['data_chunk'].encode(used_charset, errors='surrogateescape')
+        else:
+          self.REQUEST.form['data_chunk'] = self.REQUEST.get('BODY')
+
     finally:
       environ['REQUEST_METHOD'] = method
 
