@@ -10,7 +10,8 @@ def DataStream_copyCSVToDataArray(data_stream, chunk_list, start, end, \
   """
     Receive CSV data and transform it to a numpy array of floats.
   """
-  chunk_text = ''.join(chunk_list)
+  # Convert chunk bytes to string
+  chunk_text = ''.join([chunk.decode('utf-8') for chunk in chunk_list])
 
   # compensate possible offset mistmatch
   last_new_line_index = chunk_text.rfind('\n')
