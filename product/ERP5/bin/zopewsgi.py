@@ -1,4 +1,3 @@
-import six
 import argparse
 import atexit
 from io import BytesIO
@@ -187,6 +186,7 @@ def runwsgi():
     parser.add_argument('--timerserver-interval', help='Interval for timerserver', type=float)
     parser.add_argument('--threads', help='Number of threads', default=4, type=int)
     parser.add_argument('--pidfile', help='Write process id in file')
+    parser.add_argument('--shutdown-timeout', help='Timeout in seconds for server shutdown', default=45, type=float)
     parser.add_argument(
       '--large-file-threshold',
       help='Requests bigger than this size in bytes get saved into a temporary file '
@@ -276,18 +276,14 @@ def runwsgi():
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
-    if six.PY2:
-      from Signals.SignalHandler import SignalHandler
-      SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
-    else:
-      warnings.warn("zope4py3: SignalHandling not implemented!")
-
     if args.timerserver_interval:
       import Products.TimerService
-      Products.TimerService.timerserver.TimerServer.TimerServer(
+      timerserver = Products.TimerService.timerserver.TimerServer.TimerServer(
           module='Zope2',
           interval=args.timerserver_interval,
       )
+    else:
+      timerserver = None
 
     if args.with_max_rlimit_nofile:
       cur_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
@@ -295,7 +291,7 @@ def runwsgi():
       resource.setrlimit(resource.RLIMIT_NOFILE, new_limit)
 
     port = urlsplit('//' + args.address).port
-    createServer(
+    server = createServer(
         app_wrapper(
           large_file_threshold=args.large_file_threshold,
           webdav_ports=[port] if args.webdav else ()),
@@ -305,4 +301,28 @@ def runwsgi():
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
         ident=None,
-    ).run()
+    )
+    logger = logging.getLogger(__name__)
+
+    def shutdown(signum, _frame):
+      logger.info("Initiating shutdown after signal %s", signal.Signals(signum).name)
+      deadline = time.time() + args.shutdown_timeout
+
+      if timerserver:
+        # shutdown timerserver, to stop queueing new waitress tasks
+        timerserver.shutdown()
+
+      # wait for current activities
+      import Products.CMFActivity.ActivityTool
+      clean = Products.CMFActivity.ActivityTool.shutdown(timeout=max(deadline - time.time(), 1))
+      if clean:
+        # shutdown waitress to stop processing http requests
+        clean = server.task_dispatcher.shutdown(timeout=max(deadline - time.time(), 1))
+      if not clean:
+        logger.critical("Could not finish clean shutdown")
+      server.close()
+      sys.exit(0 if clean else 1)
+
+    signal.signal(signal.SIGTERM, shutdown)
+    signal.signal(signal.SIGINT, shutdown)
+    server.run()
