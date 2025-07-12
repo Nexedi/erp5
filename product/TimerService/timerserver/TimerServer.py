@@ -21,9 +21,14 @@ class TimerServer(threading.Thread):
         self.daemon = True
         self.module = module
         self.interval = interval
+        self._shutdown = False
         self.start()
         logger.info('Service initialized with interval of %s second(s).',
                     interval)
+
+    def shutdown(self):
+        logger.debug('Shutdown request received')
+        self._shutdown = True
 
     def run(self):
         try:
@@ -93,7 +98,7 @@ class TimerServer(threading.Thread):
 
         logger.info('Service ready.')
 
-        while 1:
+        while not self._shutdown:
             time.sleep(interval)
             # send message to zope
             try:
@@ -102,7 +107,8 @@ class TimerServer(threading.Thread):
                 response = TimerResponse(out, err)
                 handle(module, TimerRequest(response, interval), response)
             except Exception:
-                logger.warn("Ignoring exception in run loop", exc_info=True)
+                logger.warning("Ignoring exception in run loop", exc_info=True)
+        logger.info('Finished')
 
 
 TIMER_SERVICE_PATH = '/Control_Panel/timer_service'
