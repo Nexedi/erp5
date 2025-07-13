@@ -673,7 +673,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     dummy = save and (int(os.environ.get('update_business_templates', 0))
                       or not load)
     if zeo_server_pid == 0:
-      suite = ZEOServerTestCase('asyncore_loop')
+      suite = ZEOServerTestCase('zeo_server_loop')
     elif node_pid_list is None or not test_list:
       processing_node_loop = os.environ.get('processing_node_loop', 'processing_node')
       suite = ProcessingNodeTestCase(processing_node_loop)
