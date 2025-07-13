@@ -1560,13 +1560,10 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       os.close(zeo_client)
     ZopeTestCase._print("\nZEO Storage started at %s:%s ... " % host_port)
 
-  def asyncore_loop(self):
-    try:
-      self.zeo_server.loop()
-    except AttributeError: # BBB
-      super(ZEOServerTestCase, self).asyncore_loop()
-    except KeyboardInterrupt:
-      pass
+  def zeo_server_loop(self):
+    """Method for test (see runUnitTest.py)
+    """
+    self.zeo_server.loop()
 
   def tearDown(self):
     self.zeo_server.close()
