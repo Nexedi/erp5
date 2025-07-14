@@ -53,7 +53,7 @@ from zLOG import LOG
 from ZODB.POSException import ConflictError
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import (
-  cancelProcessShutdown, Message, getCurrentNode, getServerAddress)
+  cancelProcessShutdown, shutdown, Message, getCurrentNode, getServerAddress)
 from MySQLdb import OperationalError
 from Products.ZMySQLDA.db import DB
 import gc
@@ -1765,7 +1765,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # activity won't be executed.
       class ProcessShutdownThread(threading.Thread):
         def run(self):
-          activity_tool.process_shutdown(3, 0)
+          shutdown(5)
       process_shutdown_thread = ProcessShutdownThread()
       # Do not try to outlive main thread.
       process_shutdown_thread.daemon = True

@@ -115,14 +115,7 @@ def getServerAddress():
         try:
             zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
         except KeyError:
-            from asyncore import socket_map
-            for k, v in six.iteritems(socket_map):
-                if hasattr(v, 'addr'):
-                    # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                    type = str(getattr(v, '__class__', 'unknown'))
-                    if type == 'ZServer.HTTPServer.zhttp_server':
-                        ip, port = v.addr
-                        break
+            pass
         else:
             ip, port = zopewsgi.server.addr
         if ip == '0.0.0.0':
@@ -622,14 +615,31 @@ class ActiveWrapper(object):
 # True when activities cannot be executing any more.
 has_processed_shutdown = False
 
-def cancelProcessShutdown():
+def shutdown(timeout):
+  """Signal ActivityTool that the application is shutting down.
+
+  Prevent shutdown from happening while an activity queue is
+  processing a batch.
+
+  Returns true if shutdown could be processed before the timeout.
   """
-    This method reverts the effect of calling "process_shutdown" on activity
-    tool.
+  global has_processed_shutdown
+  clean = True
+  if not has_processed_shutdown:
+    has_processed_shutdown = True
+    LOG('CMFActivity', INFO, "Shutdown: Waiting for activities to finish.")
+    clean = is_running_lock.acquire(timeout=timeout)
+    LOG('CMFActivity', INFO, "Shutdown: Activities finished." )
+  return clean
+
+
+def cancelProcessShutdown():
+  """This function reverts the effect of calling "shutdown".
   """
   global has_processed_shutdown
   is_running_lock.release()
   has_processed_shutdown = False
+
 
 # Due to a circular import dependency between this module and
 # Products.ERP5Type.Core.Folder, both modules must import after the definitions
@@ -1274,19 +1284,6 @@ class ActivityTool (BaseTool):
           '/manageLoadBalancing?manage_tabs_message=' +
           urllib.parse.quote(message))
 
-    security.declarePrivate('process_shutdown')
-    def process_shutdown(self, phase, time_in_phase):
-        """
-          Prevent shutdown from happening while an activity queue is
-          processing a batch.
-        """
-        global has_processed_shutdown
-        if phase == 3 and not has_processed_shutdown:
-          has_processed_shutdown = True
-          LOG('CMFActivity', INFO, "Shutdown: Waiting for activities to finish.")
-          is_running_lock.acquire()
-          LOG('CMFActivity', INFO, "Shutdown: Activities finished.")
-
     security.declareProtected(CMFCorePermissions.ManagePortal, 'process_timer')
     def process_timer(self, tick, interval, prev="", next=""):
       """
@@ -1361,6 +1358,8 @@ class ActivityTool (BaseTool):
             break
         finally:
           is_running_lock.release()
+          if has_processed_shutdown:
+            break
 
     security.declarePublic('tic')
     def tic(self, processing_node=1, force=0):
@@ -1406,6 +1405,9 @@ class ActivityTool (BaseTool):
               break
           finally:
             is_running_lock.release()
+            if has_processed_shutdown:
+              break
+
       finally:
         # decrease the number of active_threads
         with tic_lock:
