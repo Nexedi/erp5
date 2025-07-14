@@ -27,6 +27,7 @@
 ##############################################################################
 
 import six
+import itertools
 import textwrap
 import unittest
 import textwrap
@@ -683,6 +684,10 @@ class TestDeferredStyleUtils(DeferredStyleTestCase):
     )):
       with self.subTest(i):
         self.assertEqual(optimize_odf_xml_fragment(input_), expected)
+
+    input_ = u'\n'.join(itertools.repeat(u'<table:table-cell>hé\n hé</table:table-cell>', 10 ** 7))
+    expected = u''.join(itertools.repeat(u'<table:table-cell>hé\n hé</table:table-cell>', 10 ** 7))
+    self.assertEqual(optimize_odf_xml_fragment(input_), expected)
 
 
 def test_suite():
