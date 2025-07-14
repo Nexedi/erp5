@@ -21,57 +21,44 @@ class TimerServer(threading.Thread):
         self.daemon = True
         self.module = module
         self.interval = interval
+        self._shutdown = False
         self.start()
         logger.info('Service initialized with interval of %s second(s).',
                     interval)
 
+    def shutdown(self):
+        logger.debug('Shutdown request received')
+        self._shutdown = True
+
     def run(self):
-        try:
-            zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
-        except KeyError:
-            # wait until the zhttp_server exist in socket_map
-            # because TimerService has to be started after the Zope HTTPServer
-            from asyncore import socket_map
-            ip = port = ''
-            while 1:
-                time.sleep(5)
-                for k, v in socket_map.items():
-                    if hasattr(v, 'addr'):
-                        # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                        type = str(getattr(v, '__class__', 'unknown'))
-                        if type == 'ZServer.HTTPServer.zhttp_server':
-                            ip, port = v.addr
-                            break
-                if port:
-                    break
-            from ZServer.PubCore import handle
-        else:
-            while 1:
-                time.sleep(5)
-                try:
-                    server = zopewsgi.server
-                    break
-                except AttributeError:
-                    pass
+        zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
 
-            ip, port = server.addr
-            start_response = lambda *_: None
+        while 1:
+            time.sleep(5)
+            try:
+                server = zopewsgi.server
+                break
+            except AttributeError:
+                pass
 
-            class handle(object):
-                def __init__(self, module_name, request, response):
-                    self.service = partial(zopewsgi.publish_module,
-                        request.environ,
-                        start_response,
-                        _module_name=module_name,
-                        _request=request,
-                        _response=response)
-                    server.task_dispatcher.add_task(self)
+        ip, port = server.addr
+        start_response = lambda *_: None
 
-                def cancel(self):
-                    pass
+        class handle(object):
+            def __init__(self, module_name, request, response):
+                self.service = partial(zopewsgi.publish_module,
+                    request.environ,
+                    start_response,
+                    _module_name=module_name,
+                    _request=request,
+                    _response=response)
+                server.task_dispatcher.add_task(self)
+
+            def cancel(self):
+                pass
 
         if ip == '0.0.0.0':
-          ip = socket.gethostbyname(socket.gethostname())
+            ip = socket.gethostbyname(socket.gethostname())
 
         # To be very sure, try to connect to the HTTPServer
         # and only start after we are able to connect and got a response
@@ -83,7 +70,7 @@ class TimerServer(threading.Thread):
             except socket.error:
                 time.sleep(5)
                 continue
-            s.send(b'GET / HTTP/1.1\r\n\r\n')
+            s.send(b'GET / HTTP/1.0\r\n\r\n')
             s.recv(4096) # blocks until a response is received
             break
         s.close()
@@ -93,7 +80,7 @@ class TimerServer(threading.Thread):
 
         logger.info('Service ready.')
 
-        while 1:
+        while not self._shutdown:
             time.sleep(interval)
             # send message to zope
             try:
@@ -102,7 +89,8 @@ class TimerServer(threading.Thread):
                 response = TimerResponse(out, err)
                 handle(module, TimerRequest(response, interval), response)
             except Exception:
-                logger.warn("Ignoring exception in run loop", exc_info=True)
+                logger.warning("Ignoring exception in run loop", exc_info=True)
+        logger.info('Finished')
 
 
 TIMER_SERVICE_PATH = '/Control_Panel/timer_service'
