@@ -28,7 +28,7 @@ def calc_periods(mlog, tperiod):
       t_ = measurement['X.Tstart']
       if (t_ - t) >= tperiod:
         calc = kpi.Calc(mlog, t, t + tperiod)
-        t = calc.tau_hi
+        t = calc.τ_hi
         yield calc
   except IndexError:
     # No data to read: exit
@@ -50,7 +50,7 @@ def calcEnbKpi(data, t_period):
     except AssertionError as e:
       LOG('WendelinTelecomCalcOrsKpi.calcEnbKpi', WARNING, "Skipped data during KPI calculation: %s" % str(e))
       continue
-    vt.append(calc.tau_lo)
+    vt.append(calc.τ_lo)
     v_initial_epsb_estab_sr.append((erab_accessibility[0]['lo'], erab_accessibility[0]['hi']))
     v_added_epsb_estab_sr.append((erab_accessibility[1]['lo'], erab_accessibility[1]['hi']))
 
@@ -72,7 +72,7 @@ def calcEnbKpi(data, t_period):
         qci_measurement['ul']['lo'],
         qci_measurement['ul']['hi']
        ))
-    evt.append(calc.tau_lo)
+    evt.append(calc.τ_lo)
     v_ip_throughput_qci.append(period_qci_data)
 
   kpi_data_dict = dict(
