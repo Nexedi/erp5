@@ -1,0 +1,63 @@
+/**********************************************
+* Gadget CSS Rules
+**********************************************/
+div[data-gadget-scope='field_my_image_viewer'] button {
+  padding: 6pt;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
+  background-color: #FFFFFF;
+}
+div[data-gadget-scope='field_my_image_viewer'] button::before {
+  margin-right: 6pt;
+}
+div[data-gadget-scope='field_my_image_viewer'] button:hover,
+div[data-gadget-scope='field_my_image_viewer'] button:active {
+  background-color: #e0e0e0;
+}
+/**********************************************
+* Image transformation CSS rules
+**********************************************/
+.image-viewer-transformation {
+  transform: rotate(var(--rotation, 0)) scale(var(--zoom, 1)) translateX(var(--translateX, 0)) translateY(var(--translateY, 0));
+  transform-origin: top left;
+}
+.rotation-90 {
+  --rotation: 90deg;
+  --translateY: -100%;
+}
+.rotation-180 {
+  --rotation: 180deg;
+  --translateX: -100%;
+  --translateY: -100%;
+}
+.rotation-270 {
+  --rotation: 270deg;
+  --translateX: -100%;
+}
+.zoom-1 {
+  --zoom: 1.3;
+}
+.zoom-2 {
+  --zoom: 1.6;
+}
+.zoom-3 {
+  --zoom: 2;
+}
+.zoom-4 {
+  --zoom: 3;
+}
+.zoom-5 {
+  --zoom: 4;
+}
+.zoom--1 {
+  --zoom: 0.8;
+}
+.zoom--2 {
+  --zoom: 0.6;
+}
+.zoom--3 {
+  --zoom: 0.4;
+}
+.zoom--4 {
+  --zoom: 0.2;
+}
