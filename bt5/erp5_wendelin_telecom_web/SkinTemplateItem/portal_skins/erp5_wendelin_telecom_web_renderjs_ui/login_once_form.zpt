@@ -25,7 +25,7 @@
     <div data-gadget-scope='panel'>
       <div data-role="header">
         <div class="panel_img" style="height: 80pt !important; padding-top: 10pt;">
-          <img alt="Wendelin Telecom" src="gadget_wendelin_telecom_panel.png"/>
+          <img alt="Wendelin Telecom" src="wendelin_telecom_gadget_panel.png"/>
         </div>
       </div>
     </div>
