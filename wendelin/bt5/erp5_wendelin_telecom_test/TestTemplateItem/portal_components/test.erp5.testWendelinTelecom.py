@@ -24,8 +24,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
-from cStringIO import StringIO
-from httplib import NO_CONTENT
+from io import BytesIO
+from six.moves.http_client import NO_CONTENT
 import json
 import msgpack
 import random
@@ -43,7 +43,7 @@ def generateRandomString(length=24, only_digits=False, hexadecimal=False):
       character_list += 'ABCDEF'
     else:
       character_list += string.ascii_letters
-  return ''.join([random.choice(character_list) for _ in xrange(length)])
+  return ''.join([random.choice(character_list) for _ in range(length)])
 
 class WendelinTelecomTest(SecurityTestCase):
   """
@@ -238,7 +238,7 @@ class WendelinTelecomTest(SecurityTestCase):
       env=env,
       user=self.ingestor_user.Person_getUserId(),
       request_method='POST',
-      stdin=StringIO(body)
+      stdin=BytesIO(body)
     )
     return self.publish(path, **publish_kw)
 
