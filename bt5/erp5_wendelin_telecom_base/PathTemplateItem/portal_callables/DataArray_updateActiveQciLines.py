@@ -17,7 +17,7 @@ for qci in range(QCI_COUNT):
   qci_ul_hi = qci_data_view['ul_hi']
 
   # Silent QCI: skip
-  if (qci_dl_hi == 0.).all() and (qci_ul_hi == 0.).all():
+  if all(x == 0. for x in qci_dl_hi) and all(x == 0. for x in qci_ul_hi):
     continue
 
   active_qci_id = "active_qci_%s" % qci
