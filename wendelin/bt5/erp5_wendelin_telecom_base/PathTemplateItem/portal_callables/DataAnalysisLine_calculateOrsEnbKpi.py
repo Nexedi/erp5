@@ -28,8 +28,8 @@ e_utran_data_array.activate().DataArray_updateActiveQciLines()
 if offset_index >= end:
   return
 
-previous_log_data = ''.join(in_data_stream.readChunkList(start, offset_index))
-new_log_data = ''.join(in_data_stream.readChunkList(offset_index, end))
+previous_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(start, offset_index)])
+new_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(offset_index, end)])
 
 previous_log_data_line_list = previous_log_data.splitlines()
 new_log_data_line_list = new_log_data.splitlines()
@@ -84,7 +84,6 @@ new_log_data_line_first_index = min([
 history_start_index = max(0, new_log_data_line_first_index - HISTORY_LINE_COUNT)
 
 log_data = '\n'.join(log_data_line_list[history_start_index:])
-log_data = log_data.decode('utf8')
 
 # Calculate the KPI data
 kpi_data_dict = context.Base_calcEnbKpi(log_data, T_PERIOD)
