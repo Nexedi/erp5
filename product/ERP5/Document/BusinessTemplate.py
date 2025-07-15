@@ -118,7 +118,7 @@ except TypeError:
   pass
 cache_database = threading.local()
 from Products.MimetypesRegistry.interfaces import MimeTypeException
-import imghdr
+
 
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
@@ -742,10 +742,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     yield getattr(document_base, "title", None)
     # Try to guess from content
     if data:
-      for test in imghdr.tests:
-        extension = test(data, None)
-        if extension:
-          yield 'x.' + extension
+      for extension in portal.mimetypes_registry.classify(data).extensions:
+        yield 'x.' + extension
 
   def guessExtensionOfDocument(self, document, key, data=None):
     """Guesses and returns the extension of an ERP5 document.
