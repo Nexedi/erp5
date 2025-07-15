@@ -1,3 +1,4 @@
+from erp5.component.tool.RoundingTool import round_half_even
 portal = context.getPortalObject()
 
 # record base and rate for each ctp for an Establishment
@@ -149,13 +150,13 @@ def getFeeBlocAsDict(ctp, ctp_dict):
     bloc["S21.G00.23.003"] = '%.2f'%(printAsPositiveRate(standard_rate_mapping[ctp]))
   # If CTP is Fillon deduction
   if ctp == '671P':
-    bloc["S21.G00.23.005"] = "%.02f" % round(ctp_dict[ctp])
+    bloc["S21.G00.23.005"] = "%.02f" % round_half_even(ctp_dict[ctp])
   # For 260D we need to add other "forfait social" bases too
   elif ctp == '260D':
-    bloc["S21.G00.23.004"] = "%.02f" % round(ctp_dict[ctp] + ctp_dict.get('012D', 0.) + ctp_dict.get('0000', 0.))
+    bloc["S21.G00.23.004"] = "%.02f" % round_half_even(ctp_dict[ctp] + ctp_dict.get('012D', 0.) + ctp_dict.get('0000', 0.))
   # All standard cases
   else:
-    bloc["S21.G00.23.004"] = "%.02f" % round(ctp_dict[ctp])
+    bloc["S21.G00.23.004"] = "%.02f" % round_half_even(ctp_dict[ctp])
 
   # The CTP 900T needs this specific rubric
   if ctp == '900T':
@@ -183,11 +184,11 @@ for ctp in sorted(done_ctp_set):
 
 total_payment_slip = []
 total_payment_slip.append(("S21.G00.22.001", SOCIAL_ENTITY))
-total_payment_slip.append(("S21.G00.22.005", "%.02f" % round(fee_total_sum)))
+total_payment_slip.append(("S21.G00.22.005", "%.02f" % round_half_even(fee_total_sum)))
 
 payment = []
 payment.append(("S21.G00.20.001", SOCIAL_ENTITY))
-payment.append(("S21.G00.20.005", "%.02f" % round(fee_total_sum)))
+payment.append(("S21.G00.20.005", "%.02f" % round_half_even(fee_total_sum)))
 
 result_dict = {'total_payment_slip': total_payment_slip,
                'aggregated_fee_list': aggregated_fee_list,

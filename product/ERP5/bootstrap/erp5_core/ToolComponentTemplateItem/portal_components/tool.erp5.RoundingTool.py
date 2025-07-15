@@ -26,11 +26,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import six
+import functools
 import zope.interface
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from erp5.component.interface.IRoundingTool import IRoundingTool
-from decimal import (ROUND_DOWN, ROUND_UP, ROUND_CEILING, ROUND_FLOOR,
+from decimal import (Decimal, ROUND_DOWN, ROUND_UP, ROUND_CEILING, ROUND_FLOOR,
                      ROUND_HALF_DOWN, ROUND_HALF_EVEN, ROUND_HALF_UP)
 
 ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
@@ -40,6 +42,52 @@ ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
                         'ROUND_HALF_DOWN':ROUND_HALF_DOWN,
                         'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
                         'ROUND_HALF_UP':ROUND_HALF_UP}
+
+def round_(value, ndigits=None, decimal_rounding_option='ROUND_HALF_EVEN'):
+  if ndigits is None:
+    precision = 1
+  else:
+    assert isinstance(ndigits, int), 'ndigits should be int.'
+    precision = 10 ** -ndigits
+  if precision >= 1:
+    value = Decimal(value)
+    value /= precision
+    value = value.quantize(precision, rounding=decimal_rounding_option)
+    value *= precision
+    result = float(value.quantize(precision))
+  else:
+    result = float(
+      Decimal(value).quantize(Decimal(str(precision)),
+                                   rounding=decimal_rounding_option))
+  return result
+
+
+round_down = functools.partial(round_, decimal_rounding_option=ROUND_DOWN)
+round_up = functools.partial(round_, decimal_rounding_option=ROUND_UP)
+round_ceiling = functools.partial(round_, decimal_rounding_option=ROUND_CEILING)
+round_floor = functools.partial(round_, decimal_rounding_option=ROUND_FLOOR)
+round_half_down = functools.partial(round_, decimal_rounding_option=ROUND_HALF_DOWN)
+round_half_even = functools.partial(round_, decimal_rounding_option=ROUND_HALF_EVEN)
+round_half_up = functools.partial(round_, decimal_rounding_option=ROUND_HALF_UP)
+
+
+# prefer native round
+if six.PY3:
+  round_half_even = round
+else:
+  round_half_up = round
+
+
+ModuleSecurityInfo(__name__).declarePublic(
+  'round_down',
+  'round_up',
+  'round_ceiling',
+  'round_floor',
+  'round_half_down',
+  'round_half_even',
+  'round_half_up',
+)
+
 
 @zope.interface.implementer(IRoundingTool)
 class RoundingTool(BaseTool):
@@ -113,3 +161,6 @@ class RoundingTool(BaseTool):
     by python standard decimal module.
     """
     return ROUNDING_OPTION_DICT.items()
+
+  security.declarePublic('round')
+  round = staticmethod(round_)
