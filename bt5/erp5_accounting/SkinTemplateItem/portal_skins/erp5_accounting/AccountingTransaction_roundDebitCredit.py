@@ -9,6 +9,7 @@ What is expected with this script:
   - In reality we probably also want that amount on vat line match invoice vat
   amount, but we have ignored this.
 """
+from erp5.component.tool.RoundingTool import round_half_even
 import six
 line_list = context.getMovementList(
             portal_type=context.getPortalAccountingMovementTypeList())
@@ -53,11 +54,11 @@ def roundLine(resource, get_method, set_method, exchange_ratio):
   precision = context.getQuantityPrecisionFromResource(resource)
   total_quantity = 0.0
   for line in line_list:
-    line_quantity = round(getattr(line, get_method)(), precision)
+    line_quantity = round_half_even(getattr(line, get_method)(), precision)
     getattr(line, set_method)(line_quantity)
     total_quantity += line_quantity
 
-  abs_total_quantity = abs(round(total_quantity, precision))
+  abs_total_quantity = abs(round_half_even(total_quantity, precision))
   # The total quantity should be zero with a little error, if simulation has been
   # completely applied, because the debit and the credit must be balanced. However,
   # this is not the case, if the delivery is divergent, as the builder does not
@@ -66,7 +67,7 @@ def roundLine(resource, get_method, set_method, exchange_ratio):
   if abs_total_quantity > 2 * context.restrictedTraverse(resource).getBaseUnitQuantity():
     return
 
-  total_price = round(context.getTotalPrice() * exchange_ratio, precision)
+  total_price = round_half_even(context.getTotalPrice() * exchange_ratio, precision)
   if not asset_line:
     assert total_price == 0.0 and total_quantity == 0.0, \
       'receivable or payable line not found.'
@@ -81,7 +82,7 @@ def roundLine(resource, get_method, set_method, exchange_ratio):
   # If is not a payable or receivable, vat or other line (ie. income) is used.
   line_to_adjust = None
   if abs_total_quantity != 0:
-    if round(abs(getattr(asset_line, get_method)()), precision) != round(abs(context.getTotalPrice()) * exchange_ratio, precision):
+    if round_half_even(abs(getattr(asset_line, get_method)()), precision) != round_half_even(abs(context.getTotalPrice()) * exchange_ratio, precision):
       # adjust payable or receivable
       for line in line_list:
         if receivable_type in account_type_dict[line] or \
@@ -105,7 +106,7 @@ def roundLine(resource, get_method, set_method, exchange_ratio):
 
   if line_to_adjust is not None:
     getattr(line_to_adjust, set_method)(
-      round(getattr(line_to_adjust, get_method)() - total_quantity, precision))
+      round_half_even(getattr(line_to_adjust, get_method)() - total_quantity, precision))
 
 
 

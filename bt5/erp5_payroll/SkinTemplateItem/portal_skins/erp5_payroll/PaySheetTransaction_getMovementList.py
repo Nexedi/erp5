@@ -5,7 +5,7 @@
   It's used in the PaySheetTransaction_view to display PaySheetLines
 '''
 
-
+from erp5.component.tool.RoundingTool import round_half_even
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5Type.Message import translateString
 
@@ -63,7 +63,7 @@ for paysheet_line in paysheet_line_list:
     share_dict[cell_contribution_share+'_price'] = cell.getPrice()
     share_dict[cell_contribution_share+'_quantity'] = cell.getQuantity()
     share_dict[cell_contribution_share+'_total_price'] = \
-                    round(cell.getTotalPrice(), precision)
+                    round_half_even(cell.getTotalPrice(), precision)
 
     tuple_dict = {}
     for item in product:
