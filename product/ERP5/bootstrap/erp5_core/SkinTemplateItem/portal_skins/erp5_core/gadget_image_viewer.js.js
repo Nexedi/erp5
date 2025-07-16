@@ -19,14 +19,17 @@
   }
 
   function initializeGadget(gadget) {
-    var translation_list = [];
+    var translatable_element_list = gadget.element.querySelectorAll("[data-i18n]"),
+        translation_list = [],
+        i = 0;
 
-    gadget.element.querySelectorAll("[data-i18n]").values().forEach(function (el) {
+    for (i = 0; i < translatable_element_list.length; i += 1) {
+      var element = translatable_element_list[i];
       translation_list.push([
-        el.getAttribute("data-i18n"),
-        el
+        element.getAttribute("data-i18n"),
+        element
       ]);
-    });
+    }
 
     return gadget.getTranslationList(translation_list.map(function (x) {
       return x[0];
