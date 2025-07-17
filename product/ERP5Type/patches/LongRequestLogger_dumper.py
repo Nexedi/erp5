@@ -37,7 +37,10 @@ def _format_request_dict(d):
     # response can be very large, we don't include the full response to
     # prevent log files from growing too fast.
     if 'RESPONSE' in d:
-        d['RESPONSE'] = str(d['RESPONSE'])[:256]
+        try:
+            d['RESPONSE'] = repr(d['RESPONSE'])[:256]
+        except Exception:
+            pass
     return pformat(d)
 
 
