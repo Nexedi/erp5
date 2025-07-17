@@ -118,7 +118,7 @@ except TypeError:
   pass
 cache_database = threading.local()
 from Products.MimetypesRegistry.interfaces import MimeTypeException
-import imghdr
+
 
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
@@ -742,10 +742,11 @@ class ObjectTemplateItem(BaseTemplateItem):
     yield getattr(document_base, "title", None)
     # Try to guess from content
     if data:
-      for test in imghdr.tests:
-        extension = test(data, None)
-        if extension:
-          yield 'x.' + extension
+      for extension in self.getPortalObject().mimetypes_registry.classify(data).extensions:
+        # BBB for historical reasons we use `jpeg` and not `jpg`
+        if extension == 'jpg':
+          extension = 'jpeg'
+        yield 'x.' + extension
 
   def guessExtensionOfDocument(self, document, key, data=None):
     """Guesses and returns the extension of an ERP5 document.
@@ -785,7 +786,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     for key in self._guessFilename(document, key, data):
       if key:
         ext = os.path.splitext(key)[1][1:].lower()
-        if ext and (mimetypes_registry.lookupExtension(ext) is mime if mime
+        if ext and (mimetypes_registry.lookupExtension(ext) == mime if mime
                else mimetypes_registry.lookupExtension(ext)):
           return ext
 
