@@ -783,7 +783,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     for key in self._guessFilename(document, key, data):
       if key:
         ext = os.path.splitext(key)[1][1:].lower()
-        if ext and (mimetypes_registry.lookupExtension(ext) is mime if mime
+        if ext and (mimetypes_registry.lookupExtension(ext) == mime if mime
                else mimetypes_registry.lookupExtension(ext)):
           return ext
 
