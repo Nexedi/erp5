@@ -369,7 +369,7 @@ portal.%s()
     portal = self.portal
     self.login('dev_user')
     jupyter_code = """
-import imghdr as imh
+import enum as enm
 import sys
 """
     reference = 'Test.Notebook.ModuleObject %s' %time.time()
@@ -379,12 +379,12 @@ import sys
       )
     self.tic()
 
-    jupyter_code = "print(imh.__name__)"
+    jupyter_code = "print(enm.__name__)"
     result = portal.Base_executeJupyter(
       reference=reference,
       python_expression=jupyter_code)
 
-    self.assertEqual(json.loads(result)['code_result'].rstrip(), 'imghdr')
+    self.assertEqual(json.loads(result)['code_result'].rstrip(), 'enum')
     self.assertEqual(json.loads(result)['mime_type'].rstrip(), 'text/plain')
 
   def testERP5ImageProcessor(self):

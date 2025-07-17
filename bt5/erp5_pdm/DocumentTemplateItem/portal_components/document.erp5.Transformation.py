@@ -170,7 +170,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
     User may want to define generic transformation without
     any defined resource.
     """
-    if base_category_list is ():
+    if base_category_list == ():
       base_category_list = self.getVariationBaseCategoryList()
 
     resource = self.getResourceValue()
