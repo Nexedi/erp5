@@ -22,7 +22,7 @@ def shouldRetry(test_result_line):
 
   test_result = test_result_line.getParentValue()
   for other_test_result_line in test_result.contentValues(portal_type='Test Result Line'):
-    if test_result_line != other_test_result_line and other_test_result_line.getStringIndex() in ('UNKNOWN', 'FAILED'):
+    if test_result_line != other_test_result_line and other_test_result_line.getStringIndex() in ('MISSING', 'FAILED'):
       return False
 
   test_suite_data = test_result.TestResult_getTestSuiteData()
@@ -34,7 +34,7 @@ def shouldRetry(test_result_line):
 
 
 if test_result.getPortalType() == 'Test Result':
-  has_unknown_result = False
+  has_missing_result = False
   edit_kw = dict(duration=0,
                  all_tests=0,
                  errors=0,
@@ -48,11 +48,11 @@ if test_result.getPortalType() == 'Test Result':
         edit_kw[prop] = edit_kw[prop] + line.getProperty(prop, 0)
       except TypeError as e:
         context.log("", repr(e))
-        has_unknown_result = True
+        has_missing_result = True
       else:
-        if line.getStringIndex() == 'UNKNOWN':
-          has_unknown_result = True
-  if has_unknown_result or not test_result_line_list or edit_kw['errors'] or (
+        if line.getStringIndex() == 'MISSING':
+          has_missing_result = True
+  if has_missing_result or not test_result_line_list or edit_kw['errors'] or (
       edit_kw['failures'] and unexpected(test_result)):
     status = 'FAIL'
   else:
@@ -65,7 +65,7 @@ elif test_result.getPortalType() == 'Test Result Line':
   failures = kw.get('failure_count', 0)
   skips = kw.get('skip_count', 0)
   if (all_tests is None) or (all_tests == 0):
-    status = 'UNKNOWN'
+    status = 'MISSING'
     all_tests = 0
   elif errors or failures and unexpected(test_result.getParentValue()):
     status = 'FAILED'
