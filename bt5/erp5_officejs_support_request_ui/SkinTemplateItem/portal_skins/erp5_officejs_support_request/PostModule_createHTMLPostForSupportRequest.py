@@ -43,6 +43,13 @@ if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in
         portal.portal_preferences.getPreferredDocumentClassification(),
     'file': file,
   }
+  # support request app only supports document type, do not let Base_contribute
+  # guess a portal_type that support request app would not be allowed to display
+  portal_type = portal.portal_contribution_registry.findPortalTypeName(
+    filename=file.filename, content_type=file.headers.get('Content-Type'))
+  if portal_type not in portal.getPortalDocumentTypeList():
+    document_kw['portal_type'] = 'File'
+
   with follow_up_value.defaultActivateParameterDict(
       dict(tag=ingest_document_tag), placeless=True):
     # XXX this Base_contribute might update in place another document with same reference
