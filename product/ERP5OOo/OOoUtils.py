@@ -38,7 +38,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED, ZIP_STORED
 from io import BytesIO
-import imghdr
 import random
 from Products.ERP5Type import Permissions
 from zLOG import LOG, INFO, DEBUG
@@ -264,18 +263,6 @@ class OOoParser(Implicit):
       Return the name of the OpenOffice file
     """
     return self.filename
-
-  def getPicturesMapping(self):
-    """
-      Return a dictionnary of all pictures in the document
-    """
-    if not self.pictures:
-      for file_name in self.oo_files:
-        raw_data = self.oo_files[file_name]
-        pict_type = imghdr.what(None, raw_data)
-        if pict_type != None:
-          self.pictures[file_name] = raw_data
-    return self.pictures
 
   def getContentDom(self):
     """
