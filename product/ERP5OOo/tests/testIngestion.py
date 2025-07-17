@@ -33,7 +33,6 @@ import six
 import io
 import unittest
 import os
-from cgi import FieldStorage
 from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
