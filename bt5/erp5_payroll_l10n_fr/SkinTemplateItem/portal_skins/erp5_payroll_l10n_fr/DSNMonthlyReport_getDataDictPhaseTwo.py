@@ -1,3 +1,4 @@
+from erp5.component.tool.RoundingTool import round_half_even
 from erp5.component.module.DateUtils import getNumberOfDayInMonth
 import six
 
@@ -286,7 +287,7 @@ if block_id == 'S21.G00.78':
   rubric_value_dict['S21.G00.78.001'] = kw['base_code']
   rubric_value_dict['S21.G00.78.002'] = formatDate(target.getStartDate())
   rubric_value_dict['S21.G00.78.003'] = formatDate(target.getStopDate())
-  rubric_value_dict['S21.G00.78.004'] = formatFloat(round(kw['amount'], 2))
+  rubric_value_dict['S21.G00.78.004'] = formatFloat(round_half_even(kw['amount'], 2))
 
 if block_id == 'S21.G00.79':
   rubric_value_dict['S21.G00.79.001'] = kw['base_code']
