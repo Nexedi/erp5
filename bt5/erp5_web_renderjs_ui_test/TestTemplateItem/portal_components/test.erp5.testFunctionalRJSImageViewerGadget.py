@@ -1,8 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.
-#                     Kazuhiko <kazuhiko@nexedi.com>
-#                     Rafael Monnerat <rafael@nexedi.com>
+#                     Nicolas Wavrant <nicolas.wavrant@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

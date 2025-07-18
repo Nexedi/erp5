@@ -57,7 +57,7 @@
 
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='field_my_image_viewer']//button[@data-function='zoom-plus']</td>
+  <td>//div[@data-gadget-scope='field_my_image_viewer']//button[@data-function='zoom-in']</td>
   <td></td>
 </tr>
 <tr>

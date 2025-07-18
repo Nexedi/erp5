@@ -96,13 +96,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>validate</string> </value>
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>draft</string> </value>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>
