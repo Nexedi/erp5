@@ -1,0 +1,32 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_and_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_and_id"></td></tr>
+</thead><tbody tal:define="foo_create_objects_query_kw string:&amp;quantity:float=1.25">
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/1?editable=1</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr><td>assertText</td>
+    <td>//div[@data-gadget-scope="field_my_quantity_read_only"]//p</td>
+    <td>1.2</td></tr>
+<tr><td>assertValue</td>
+    <td>//input[@name="field_my_quantity"]</td>
+    <td>1.2</td></tr>
+
+</tbody></table>
+</body>
+</html>
