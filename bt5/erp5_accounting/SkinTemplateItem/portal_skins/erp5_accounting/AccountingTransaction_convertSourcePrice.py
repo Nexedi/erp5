@@ -2,6 +2,7 @@
 Script to convert the prices used in the transaction to the
 currency of the source section
 """
+from erp5.component.tool.RoundingTool import round_half_even
 portal = context.getPortalObject()
 precision = context.getSourceSectionValue().getPriceCurrencyValue().getQuantityPrecision()
 line_list = context.contentValues(
@@ -30,9 +31,10 @@ for line in line_list:
   # update the corresponding price and round it according to the precision of
   # the converted currency
   line.setSourceTotalAssetPrice(
-       round(exchange_rate * (-line.getQuantity()), precision))
+       round_half_even(exchange_rate * (-line.getQuantity()), precision))
 
 msg = context.Base_translateString('Price converted.')
 
-return context.Base_redirect(form_id,
-                             keep_items=dict(portal_status_message=msg))
+return context.Base_redirect(
+  form_id,
+  keep_items=dict(portal_status_message=msg, portal_status_level='success'))
