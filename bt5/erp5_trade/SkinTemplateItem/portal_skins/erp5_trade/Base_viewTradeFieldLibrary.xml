@@ -310,6 +310,7 @@
                         <string>my_view_mode_ledger</string>
                         <string>my_report_mode_currency</string>
                         <string>my_dialog_mode_use_list</string>
+                        <string>my_reference_date_method_id</string>
                       </list>
                     </value>
                 </item>
