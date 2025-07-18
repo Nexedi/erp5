@@ -30,6 +30,29 @@
     throw new Error('No supported input style: ' + input_style);
   }
 
+  /**
+   * Round a float, using `ROUND_HALF_EVEN` rounding methods ("banker's rounding")
+   * to be consistent with erp5_xhtml_style rounding rules.
+   * @param {number} value
+   * @param {number} digits
+   */
+  function toFixedRoundHalfEven(value, digits) {
+    digits = digits || 0;
+    var factor = Math.pow(10, digits),
+      rounded,
+      n = Math.round(value * factor * 2) / 2,
+      floor = Math.floor(n);
+
+    if (n % 1 === 0.5) {
+      // halfway, apply round half even logic:
+      rounded = (floor % 2 === 0) ? floor : Math.ceil(n);
+    } else {
+      rounded = Math.round(n);
+    }
+
+    return (rounded / factor).toFixed(digits);
+  }
+
   function convertFloatToHTML5Input(precision, input_style, float) {
     // ERP5 always devides the value by 100 if it is set to percentages
     // thus we have to mitigate that in javascript here
@@ -38,7 +61,7 @@
     }
     if (!isNaN(precision)) {
       try {
-        float = float.toFixed(precision);
+        float = toFixedRoundHalfEven(float, precision);
       } catch (e) {
         if (!(e instanceof RangeError)) {
           throw e;
