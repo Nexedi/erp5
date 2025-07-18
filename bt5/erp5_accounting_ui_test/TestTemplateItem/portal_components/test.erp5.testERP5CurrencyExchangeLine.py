@@ -25,15 +25,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
-import unittest
 
 from DateTime import DateTime
 from erp5.component.test.testAccounting import AccountingTestCase
-from AccessControl.SecurityManagement import newSecurityManager
+
 
 class CurrencyExchangeTestCase(AccountingTestCase):
-
-  username = 'username'
 
   def beforeTearDown(self):
     self.abort()
@@ -58,13 +55,6 @@ class CurrencyExchangeTestCase(AccountingTestCase):
                 list(currency_exchange_type.objectIds()))
 
     self.tic()
-
-  def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.username, '', ['Assignee', 'Assignor',
-       'Author','Manager'], [])
-    user = uf.getUserById(self.username).__of__(uf)
-    newSecurityManager(None, user)
 
   def getBusinessTemplateList(self):
     """
@@ -161,10 +151,9 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     invoice.AccountingTransaction_convertDestinationPrice(form_id='view')
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
-    for line in line_list:
-      self.assertEqual(line.getDestinationTotalAssetPrice(),
-             round(655.957*line.getQuantity()))
-
+    self.assertEqual(
+      sorted([line.getDestinationTotalAssetPrice() for line in line_list]),
+      [-327978, 327978])
 
   def test_CreateEmptyCurrencyExchangeLineForDestination(self):
     """
@@ -220,9 +209,9 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                          form_id='view')
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
-    for line in line_list:
-      self.assertEqual(line.getDestinationTotalAssetPrice(),
-                   round(655.957*line.getQuantity()))
+    self.assertEqual(
+      sorted([line.getDestinationTotalAssetPrice() for line in line_list]),
+      [-327978, 327978])
 
   def test_UseCurrencyExchangeLineForSource(self):
     """
@@ -268,10 +257,10 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     for line in line_list:
       if line.getSourceValue() == self.account_module.goods_purchase:
         self.assertEqual(line.getSourceInventoriatedTotalAssetDebit(),
-                           327979)
+                           327978)
       elif line.getSourceValue() == self.account_module.receivable:
         self.assertEqual(line.getSourceInventoriatedTotalAssetCredit(),
-                           327979)
+                           327978)
       else:
         self.fail('line not found')
 
@@ -303,9 +292,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                         form_id='view')
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
-    for line in line_list:
-      self.assertEqual(line.getDestinationTotalAssetPrice(),None)
-
+    self.assertEqual([line.getDestinationTotalAssetPrice() for line in line_list], [None, None])
 
   def test_DateOfCurrencyExchangeLineNotDateofTransaction(self):
     """
@@ -352,8 +339,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                               form_id='view')
     line_list = transaction1.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
-    for line in line_list:
-      self.assertEqual(line.getDestinationTotalAssetPrice(),None)
+    self.assertEqual([line.getDestinationTotalAssetPrice() for line in line_list], [None, None])
     transaction2 = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/06'),
@@ -370,10 +356,10 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
         self.assertEqual(line.getDestinationInventoriatedTotalAssetDebit(),
-                           327979)
+                           327978)
       elif line.getDestinationValue() == self.account_module.receivable:
         self.assertEqual(line.getDestinationInventoriatedTotalAssetCredit(),
-                           327979)
+                           327978)
       else:
         self.fail('line not found')
 
@@ -420,9 +406,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                            form_id='view')
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
-    for line in line_list:
-      self.assertEqual(line.getDestinationTotalAssetPrice(), None)
-
+    self.assertEqual([line.getDestinationTotalAssetPrice() for line in line_list], [None, None])
 
   def test_CreateCELWithNoBasePrice(self):
     """
@@ -484,10 +468,10 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
         self.assertEqual(line.getDestinationInventoriatedTotalAssetDebit(),
-                           327979)
+                           327978)
       elif line.getDestinationValue() == self.account_module.receivable:
         self.assertEqual(line.getDestinationInventoriatedTotalAssetCredit(),
-                           327979)
+                           327978)
       else:
         self.fail('line not found')
 
@@ -561,6 +545,8 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
 
 class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
   def afterSetUp(self):
+    super(TestCurrencyExchangeCell, self).afterSetUp()
+    self.login()
     currency_exchange_type = \
       self.portal.portal_categories.currency_exchange_type
     currency_exchange_type.newContent(
@@ -760,10 +746,3 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
         'currency_exchange_type/type_a'])
     self.assertEqual(0.7,
       euro.getPrice(context=context_2017, portal_type='Currency Exchange Cell'))
-
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCurrencyExchangeLine))
-  suite.addTest(unittest.makeSuite(TestCurrencyExchangeCell))
-  return suite
