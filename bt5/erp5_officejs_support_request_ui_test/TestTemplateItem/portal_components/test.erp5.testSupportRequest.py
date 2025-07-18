@@ -26,15 +26,20 @@
 ##############################################################################
 import json
 import io
+import os
 import six.moves.urllib.parse
 import six.moves.http_client
 
 import feedparser
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import Products.ERP5.tests
+
 
 class FileUpload(io.BytesIO):
+  __allow_access_to_unprotected_subobjects__ = 1
   filename = 'attached_file.txt'
+  headers = {'Content-Type': 'text/plain'}
 
 
 def ignoreKeys(list_of_dict, *ignored):
@@ -343,6 +348,64 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
         date=web_message.getStartDate().ISO8601(),
         attachment_link=file_document.getRelativeUrl(),
         attachment_name='attached_file.txt',
+        message_id='xxx-message-id'),],
+      json.loads(support_request.SupportRequest_getCommentPostListAsJson()))
+
+  def test_comment_on_support_request_with_eml_attachment(self):
+    support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
+    attachement_file = self.makeFileUpload(
+      'gmail.eml',
+      path=os.path.join(
+        os.path.dirname(Products.ERP5.tests.__file__),
+        'test_data'))
+
+    self.portal.PostModule_createHTMLPostForSupportRequest(
+      follow_up=support_request.getRelativeUrl(),
+      predecessor=None,
+      data=b"<p>Please look at the <b>attached eml file</b></p>",
+      file=attachement_file,
+      source_reference="xxx-message-id",
+      web_site_relative_url=self.getWebSite().getRelativeUrl(),
+    )
+
+   # the API to get comments works before ingestion, thanks to portal_session
+    self.assertEqual(
+      [dict(
+          user=self.user.getTitle(),
+          text='<p>Please look at the <b>attached eml file</b></p>',
+          attachment_name='gmail.eml',
+          message_id='xxx-message-id'),],
+      ignoreKeys(
+         json.loads(support_request.SupportRequest_getCommentPostListAsJson()),
+         'date', 'attachment_link'))
+    self.tic()
+    web_message, = support_request.getFollowUpRelatedValueList(
+        portal_type='Web Message'
+    )
+
+    self.assertEqual('<p>Please look at the <b>attached eml file</b></p>', web_message.asStrippedHTML())
+
+    # a file document was ingested from the file post
+    file_document, = web_message.getAggregateValueList(
+      portal_type='File'
+    )
+    self.assertEqual('gmail.eml', file_document.getFilename())
+    self.assertIn(b'test@gmail.com', bytes(file_document.getData()))
+    self.assertEqual('shared', file_document.getValidationState())
+    # this document is also attached to the context of the support request
+    # and is visible from the document tab.
+    self.assertIn(
+        file_document,
+        [doc.getObject() for doc in support_request.Base_getRelatedDocumentList()])
+
+    # the API to get comments also works once ingested
+    self.assertEqual(
+      [dict(
+        user=self.user.getTitle(),
+        text='<p>Please look at the <b>attached eml file</b></p>',
+        date=web_message.getStartDate().ISO8601(),
+        attachment_link=file_document.getRelativeUrl(),
+        attachment_name='gmail.eml',
         message_id='xxx-message-id'),],
       json.loads(support_request.SupportRequest_getCommentPostListAsJson()))
 
