@@ -12,7 +12,9 @@
         </item>
         <item>
             <key> <string>action_name</string> </key>
-            <value> <string>Delete Action</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
