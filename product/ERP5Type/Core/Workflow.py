@@ -1081,6 +1081,17 @@ class Workflow(XMLObject):
                 message=
                 'Required variable {variable_reference} missing in workflow.'.
                 format(variable_reference=variable_reference)))
+    delete_transition = self.getTransitionValueByReference('delete_action')
+    if delete_transition is not None:
+      if not (delete_transition.getTriggerType() == TRIGGER_USER_ACTION
+          and delete_transition.getActionName() is None):
+        consistency_message_list.append(
+            ConsistencyMessage(
+                self,
+                object_relative_url=self.getRelativeUrl(),
+                message=
+                'Transition delete_action not correctly configured.'))
+
     return consistency_message_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')

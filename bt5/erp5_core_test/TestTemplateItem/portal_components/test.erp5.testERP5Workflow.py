@@ -27,13 +27,14 @@
 #
 ##############################################################################
 
-import unittest
-
 from unittest import expectedFailure
+from Products.ERP5Type.Core.WorkflowTransition import (
+  TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD)
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from AccessControl import SpecialUsers
+
 
 class TestERP5Workflow(ERP5TypeTestCase):
   """
@@ -325,7 +326,40 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertRaises(Unauthorized, createWorkflowInstance)
     self.assertRaises(Unauthorized, workflow_instance.view)
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Workflow))
-  return suite
+
+class TestERP5WorkflowConstraints(ERP5TypeTestCase):
+  def afterSetUp(self):
+    super(TestERP5WorkflowConstraints, self).afterSetUp()
+    self.workflow = self.portal.portal_workflow.newContent(
+      portal_type='Workflow',
+    )
+    self.assertFalse(self.workflow.checkConsistency())
+
+  def test_error_message_variable_required(self):
+    self.workflow.manage_delObjects(['variable_error_message'])
+    self.assertEqual(
+      [str(m.getMessage()) for m in self.workflow.checkConsistency()],
+      ['Required variable error_message missing in workflow.'],
+    )
+
+  def test_delete_action_transition_configuration(self):
+    delete_action = self.workflow.newContent(
+      portal_type='Workflow Transition',
+      reference='delete_action',
+      trigger_type=TRIGGER_WORKFLOW_METHOD,
+      action_name='Delete !!!',
+    )
+    self.assertEqual(
+      [str(m.getMessage()) for m in self.workflow.checkConsistency()],
+      ['Transition delete_action not correctly configured.'],
+    )
+    delete_action.setTriggerType(TRIGGER_USER_ACTION)
+    self.assertEqual(
+      [str(m.getMessage()) for m in self.workflow.checkConsistency()],
+      ['Transition delete_action not correctly configured.'],
+    )
+    delete_action.setActionName(None)
+    self.assertEqual(
+      [str(m.getMessage()) for m in self.workflow.checkConsistency()],
+      [],
+    )
