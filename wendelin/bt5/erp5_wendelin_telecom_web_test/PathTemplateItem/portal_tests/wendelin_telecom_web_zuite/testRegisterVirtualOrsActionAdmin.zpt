@@ -1,0 +1,110 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Test Register Virtual ORS Action as Admin</title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3">Test Register Virtual ORS Action as Admin</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_admin_test_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/login_as_admin_user" />
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Modules']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Modules']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Data Acquisition Units']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Data Acquisition Units']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Register a Virtual ORS']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Register a Virtual ORS']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@name='field_your_comp_id']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>type</td>
+        <td>//input[@name='field_your_comp_id']</td>
+        <td>1234</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@name='field_your_tag_title']</td>
+        <td>TestAdminAction56789</td>
+      </tr>
+
+      <tr>
+        <td>click</td>
+        <td>//input[@value='Register Virtual ORS']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[text()='Virtual ORS successfully registered.']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope='field_information']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope='field_your_fluentbit_configuration']</td>
+        <td></td>
+      </tr>
+
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/wendelin_telecom_admin_front/#/data_acquisition_unit_module</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[starts-with(text(), 'orsVIRT_COMP-1234_TestAdminAction56789')]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>
