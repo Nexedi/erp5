@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Data Analysis</type>
+  <workflow>wendelin_telecom_security_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Analysis Line</type>
+  <workflow>wendelin_telecom_security_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Supply</type>
+  <workflow>wendelin_telecom_security_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Supply Line</type>
+  <workflow>wendelin_telecom_security_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>
