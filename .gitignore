@@ -7,5 +7,6 @@ dist/
 erp5.util.egg-info/
 bt5/bt5list
 product/ERP5/bootstrap/bt5list
+wendelin/bt5/bt5list
 TAGS
 tags
