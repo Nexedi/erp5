@@ -42,8 +42,8 @@ document_classes = updateGlobals( this_module, globals(), permissions_module = P
 
 # Allow access to OOoParser from scripts
 from AccessControl import ModuleSecurityInfo
-ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('OOoParser',)
-ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('newOOoParser',)
+ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic(
+  'optimize_odf_xml_fragment', 'newOOoParser', 'OOoParser')
 
 # Define object classes and tools
 from .OOoTemplate import OOoTemplate

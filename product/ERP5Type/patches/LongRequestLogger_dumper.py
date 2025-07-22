@@ -17,6 +17,7 @@ import six
 from six.moves import StringIO
 from six.moves._thread import get_ident
 from Products.ERP5Type.Utils import bytes2str
+from ZPublisher.HTTPRequest import _filterPasswordFields
 
 
 logger = logging.getLogger('Products.LongRequestLogger')
@@ -29,6 +30,19 @@ retry count: %(retries)s
 form: %(form)s
 other: %(other)s
 """
+
+
+def _format_request_dict(d):
+    d = dict(_filterPasswordFields(d.items()))
+    # response can be very large, we don't include the full response to
+    # prevent log files from growing too fast.
+    if 'RESPONSE' in d:
+        try:
+            d['RESPONSE'] = repr(d['RESPONSE'])[:256]
+        except Exception:
+            pass
+    return pformat(d)
+
 
 class Dumper(object):
 
@@ -46,8 +60,8 @@ class Dumper(object):
                 "method": request["REQUEST_METHOD"],
                 "url": request.getURL() + ("?" + query if query else ""),
                 "retries": request.retry_count,
-                "form": pformat(request.form),
-                "other": pformat(request.other),
+                "form": _format_request_dict(request.form),
+                "other": _format_request_dict(request.other),
             }
         except Exception:
             return "[Unprintable request]\n" + traceback.format_exc()

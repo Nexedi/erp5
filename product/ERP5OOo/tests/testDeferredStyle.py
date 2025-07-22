@@ -27,10 +27,12 @@
 ##############################################################################
 
 import six
+import itertools
 import textwrap
 import unittest
 import textwrap
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5OOo.OOoUtils import optimize_odf_xml_fragment
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -651,9 +653,47 @@ class TestDeferredReportAlarm(DeferredStyleTestCase):
     self.assertEqual(alarm.getTitle(), 'after script called with foo=bar')
 
 
+class TestDeferredStyleUtils(DeferredStyleTestCase):
+  def test_optimize_odf_xml_fragment(self):
+    for i, (input_, expected) in enumerate((
+      (
+        """
+            <office:spreadsheet>
+              <table:table table:name="Sheet1">
+                <table:table-row>
+                  <table:table-cell>
+                    <text:p>Hello</text:p>
+                  </table:table-cell>
+                  <table:table-cell>
+                    <text:p>World</text:p>
+                  </table:table-cell>
+                </table:table-row>
+              </table:table>
+            </office:spreadsheet>
+        """,
+        """<office:spreadsheet><table:table table:name="Sheet1"><table:table-row><table:table-cell>"""
+        """<text:p>Hello</text:p></table:table-cell><table:table-cell><text:p>World</text:p></table:table-cell>"""
+        """</table:table-row></table:table></office:spreadsheet>""",
+      ),
+      ('<a>  <b   ></b>  </a>', '<a><b/></a>', ),
+      ('  <a> significant   spaces  </a>  ', '<a> significant   spaces  </a>', ),
+      (u'<a>👍</a>', u'<a>👍</a>', ),
+      ('<table:table-cell table:number-columns-spanned="0">0</table:table-cell>', '<table:table-cell>0</table:table-cell>', ),
+      ('<table:table-cell table:number-columns-spanned="1">1</table:table-cell>', '<table:table-cell>1</table:table-cell>', ),
+      ('<table:table-cell table:number-columns-spanned="2">2</table:table-cell>', '<table:table-cell table:number-columns-spanned="2">2</table:table-cell>', ),
+    )):
+      with self.subTest(i):
+        self.assertEqual(optimize_odf_xml_fragment(input_), expected)
+
+    input_ = u'\n'.join(itertools.repeat(u'<table:table-cell>hé\n hé</table:table-cell>', 10 ** 7))
+    expected = u''.join(itertools.repeat(u'<table:table-cell>hé\n hé</table:table-cell>', 10 ** 7))
+    self.assertEqual(optimize_odf_xml_fragment(input_), expected)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestODSDeferredStyle))
   suite.addTest(unittest.makeSuite(TestODTDeferredStyle))
   suite.addTest(unittest.makeSuite(TestDeferredReportAlarm))
+  suite.addTest(unittest.makeSuite(TestDeferredStyleUtils))
   return suite

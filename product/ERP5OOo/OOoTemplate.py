@@ -439,7 +439,7 @@ class OOoTemplate(ZopePageTemplate):
       office_include.getparent().replace(office_include, draw_object)
     text = bytes2str(etree.tostring(xml_doc, encoding='utf-8', xml_declaration=True,
                                     pretty_print=False))
-    text = re.sub(r'<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
+    text = re.sub(r'(?s)<\s*office:include_img\s+(.*?)\s*/\s*>', replaceIncludesImg, text)
 
     return (text, attached_files_dict)
   # Proxy method to PageTemplate
@@ -531,9 +531,6 @@ class OOoTemplate(ZopePageTemplate):
         if name not in ('META-INF/manifest.xml',):
           # We don't replace manifest
           ooo_builder.replace(name, additional_builder.extract(name))
-
-    # Update the META information
-    ooo_builder.updateManifest()
 
     # Produce final result
     if batch_mode:

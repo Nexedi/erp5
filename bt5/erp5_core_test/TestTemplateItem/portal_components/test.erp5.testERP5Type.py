@@ -27,9 +27,14 @@
 ##############################################################################
 
 import six
+from six.moves._thread import get_ident
+from six.moves import StringIO
 from zodbpickle.pickle import PicklingError
+import logging
 import unittest
 import sys
+import threading
+import time
 import mock
 
 import transaction
@@ -3294,6 +3299,78 @@ class TestAccessControl(ERP5TypeTestCase):
   def test(self):
     self.portal.person_module.newContent(immediate_reindex=True)
 
+
+class TestLongRequestLogger(ERP5TypeTestCase):
+  def afterSetUp(self):
+    self.log_stream = StringIO()
+    self.log_handler = logging.StreamHandler(self.log_stream)
+    logger = logging.getLogger('Products.LongRequestLogger')
+    logger.addHandler(self.log_handler)
+    self.addCleanup(logger.removeHandler, self.log_handler)
+
+  def start_long_request_monitor(self, request):
+    from Products.ERP5Type.patches.LongRequestLogger_dumper import factory
+
+    class Config:
+      loglevel = 'INFO'
+
+    class HandlerState:
+      monitorTime = 10
+
+    class Req:
+      threadId = get_ident()
+      startTime = 2
+    Req.request = request
+
+    dumper = factory(Config())
+
+    def dump_in_thread():
+      time.sleep(1)
+      dumper(req=Req(), handlerState=HandlerState(), globalState=None)
+    self.long_request_thread = threading.Thread(target=dump_in_thread)
+    self.long_request_thread.start()
+
+  def get_long_request_log(self):
+    self.long_request_thread.join(timeout=5)
+    self.log_handler.flush()
+    return self.log_stream.getvalue()
+
+  def test_log_contains_traceback(self):
+    self.start_long_request_monitor(self.portal.REQUEST)
+    time.sleep(4)   # <= in traceback
+    long_request_log = self.get_long_request_log()
+    self.assertIn('time.sleep(4)   # <= in traceback', long_request_log)
+
+  def test_log_contains_request(self):
+    request = self.portal.REQUEST
+    request.set("request_key", "request_value")
+    self.start_long_request_monitor(request)
+    long_request_log = self.get_long_request_log()
+    self.assertIn("request_key", long_request_log)
+    self.assertIn("request_value", long_request_log)
+
+  def test_log_obfuscate_passwords(self):
+    request = self.portal.REQUEST
+    request.form["password"] = "secret"
+    self.start_long_request_monitor(request)
+    long_request_log = self.get_long_request_log()
+    self.assertNotIn("secret", long_request_log)
+
+  def test_log_includes_sql_query(self):
+    self.start_long_request_monitor(self.portal.REQUEST)
+    self.portal.erp5_sql_connection.manage_test("SELECT SLEEP(4) -- sleeping_in_sql")
+    long_request_log = self.get_long_request_log()
+    self.assertIn("SELECT SLEEP(4) -- sleeping_in_sql", long_request_log)
+
+  def test_log_does_not_includes_full_response_body(self):
+    request = self.portal.REQUEST
+    request.RESPONSE.setBody(b'very ' * 100 + b'large response body')
+    self.start_long_request_monitor(request)
+    long_request_log = self.get_long_request_log()
+    self.assertIn("very very", long_request_log)
+    self.assertNotIn("large response body", long_request_log)
+
+
 def add_tests(suite, module):
   if hasattr(module, 'test_suite'):
     return suite.addTest(module.test_suite())
@@ -3306,6 +3383,7 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
   suite.addTest(unittest.makeSuite(TestAccessControl))
+  suite.addTest(unittest.makeSuite(TestLongRequestLogger))
 
   # run tests for monkey patched ZPublisher modules
   import ZPublisher.tests.testBaseRequest

@@ -1791,7 +1791,7 @@ class LabelWidget(Widget):
     def render(self, field, key, value, REQUEST=None, render_prefix=None):
         return render_element("div",
                               css_class=field.get_value('css_class'),
-                              contents=field.get_value('default'))
+                              contents=html_quote(field.get_value('default')))
 
     # XXX should render view return the same information as render?
     def render_view(self, field, value, REQUEST=None, render_prefix=None):
@@ -2188,7 +2188,6 @@ class LinkWidget(TextWidget):
     """
     link_type = field.get_value('link_type', REQUEST=REQUEST)
     if REQUEST is None:
-      # stop relying on get_request bein patched in Globals
       REQUEST = field.REQUEST
 
     if link_type == 'internal':
@@ -2196,8 +2195,10 @@ class LinkWidget(TextWidget):
     elif link_type == 'relative':
       value = urljoin(REQUEST['URL1'], value)
 
-    return '<a href="%s">%s</a>' % (value,
-        field.get_value('title', cell=getattr(REQUEST,'cell',None)))
+    return render_element(
+      'a',
+      href=value,
+      contents=html_quote(field.get_value('title', cell=getattr(REQUEST, 'cell', None))))
 
 LinkWidgetInstance = LinkWidget()
 

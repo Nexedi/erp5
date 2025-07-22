@@ -193,8 +193,15 @@ if from_date or is_pl_account:
             node_translated_title=node.getTranslatedTitle(),
             Movement_getNodeFinancialSectionTitle=node.getFinancialSectionTranslatedTitle(),
           )
-        if params.get('mirror_section_uid'):
-          brain_list = portal.portal_catalog(uid=params['mirror_section_uid'], limit=2)
+        mirror_section_uid = params.get('mirror_section_uid')
+        # mirror_section_uid is either the uid of the specific mirror section, when rendering a GL
+        # restricted to a mirror section or a <SimpleQuery mirror_section_uid=None>, which in
+        # Inventory API selects movements without mirror_section_uid, but is not supported in
+        # general portal_catalog queries, so we do not want to search catalog with this - and we
+        # do not need to, because as this means "no mirror section" there's nothing to find in
+        # catalog either.
+        if mirror_section_uid and not isinstance(mirror_section_uid, SimpleQuery):
+          brain_list = portal.portal_catalog(uid=mirror_section_uid, limit=2)
           if brain_list:
             brain, = brain_list
             previous_balance.edit(

@@ -1,0 +1,340 @@
+<html>
+<head><title tal:content="template/title"></title></head>
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr><td rowspan="1" colspan="4" tal:content="template/title"></td></tr>
+    </thead>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>setTimeout</td>
+      <td>600000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_deleteTestDataForSimulationFastInputZuite</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Deleted Successfully.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_createTestDataForSimulationFastInputZuite</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Created Successfully.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/sale_order_module/sale_order_for_simulation_fast_input</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>sale_order_for_simulation_fast_input</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>subfield_field_my_start_date_year</td>
+      <td>2025</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_my_start_date_month</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_my_start_date_day</td>
+      <td>2</td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>subfield_field_my_stop_date_year</td>
+      <td>2025</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_my_stop_date_month</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_my_stop_date_day</td>
+      <td>3</td>
+    </tr>
+
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_edit:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertPortalStatusMessage</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>selectAndWait</td>
+      <td>select_action</td>
+      <td>Confirm Order</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertPortalStatusMessage</td>
+      <td>Status changed.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_buildSalePackingListForSimulationFastInputZuite</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Built Successfully.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/sale_order_module/sale_order_for_simulation_fast_input</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>sale_order_for_simulation_fast_input</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>selectAndWait</td>
+      <td>select_jump</td>
+      <td>Related Sale Packing List</td>
+    </tr>
+    <tr>
+      <td>assertPortalStatusMessage</td>
+      <td>Sale Packing List related to Sale Order : sale_order_for_simulation_fast_input.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>clickAndWait</td>
+      <td>//span[text()='View']</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>storeEval</td>
+      <td>selenium.getLocation()</td>
+      <td>spl_url</td>
+    </tr>
+
+    <tr>
+      <td>clickAndWait</td>
+      <td>link=product_for_simulation_fast_input</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>field_my_quantity</td>
+      <td>12</td>
+    </tr>
+
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_edit:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertPortalStatusMessage</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>clickAndWait</td>
+      <td>//div[@id='breadcrumb']/a[2]</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${spl_url}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Diverged</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>Solved</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>selectAndWait</td>
+      <td>select_action</td>
+      <td>Solve Divergences</td>
+    </tr>
+
+    <tr>
+      <td>verifyTextNotPresent</td>
+      <td>New Shipping Date</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>pause</td>
+      <td>3000</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>click</td>
+      <td>//input[@value='portal_solvers/Quantity Split Solver']</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//label[normalize-space(text())='New Shipping Date']</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>xpath=(//input[@class='date_field' and @value='13'])[1]</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>xpath=(//input[@class='date_field' and @value='13'])[2]</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//input[@value='FIFO Delivery Solver']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//input[@value='FIFO Delivery Solver']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertPortalStatusMessage</td>
+      <td>Divergence solvers started in background.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${spl_url}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>Diverged</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Solved</td>
+      <td></td>
+    </tr>
+
+  </table>
+</body>
+</html>

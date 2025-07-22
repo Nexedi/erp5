@@ -96,6 +96,62 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     self.assertEqual(len(product.contentValues(portal_type='Measure')),
                      2)
 
+
+class TestResourceMeasureConstraint(ERP5TypeTestCase):
+  def afterSetUp(self):
+    quantity_unit = self.portal.portal_categories.quantity_unit
+    if 'unit' not in quantity_unit.contentIds():
+      quantity_unit.newContent(portal_type='Category', id='unit')
+    if 'piece' not in quantity_unit.unit.contentIds():
+      quantity_unit.unit.newContent(portal_type='Category', id='piece')
+    self.tic()
+
+    quantity_unit_conversion_module = self.portal.quantity_unit_conversion_module
+    if 'unit' not in quantity_unit_conversion_module.contentIds():
+      unit_group = quantity_unit_conversion_module.newContent(
+          id='unit',
+          portal_type='Quantity Unit Conversion Group',
+          quantity_unit_value=quantity_unit.unit.piece)
+      unit_group.newContent(
+          portal_type='Quantity Unit Conversion Definition',
+          quantity_unit_value=quantity_unit.unit.piece,
+          quantity=1).validate()
+      unit_group.validate()
+    self.tic()
+
+    metric_type = self.portal.portal_categories.metric_type
+    if 'unit' not in metric_type.contentIds():
+      metric_type.newContent(portal_type='Category', id='unit')
+    if 'a' not in metric_type.unit.contentIds():
+      metric_type.unit.newContent(portal_type='Category', id='a')
+
+    self.constraint = self.portal.portal_trash.newContent(
+      portal_type='Resource Measures Consistency Constraint',
+      temp_object=True
+    )
+    self.resource = self.portal.product_module.newContent(
+      portal_type='Product',
+      quantity_unit_value=quantity_unit.unit.piece,
+    )
+    self.tic()
+
+  def _check_consistency(self):
+    return [str(m.getMessage()) for m in self.constraint._checkConsistency(self.resource)]
+
+  def test_measure_consistency(self):
+    m = self.resource.newContent(portal_type='Measure')
+    m.setMetricType('unit/a')
+    self.assertIn(
+      "Measure for metric_type 'unit/a' doesn't have a valid quantity_unit",
+      self._check_consistency())
+    m.setQuantityUnit('unit/piece')
+    self.assertIn(
+      "Measure for metric_type 'unit/a' doesn't have a valid quantity value",
+      self._check_consistency())
+    m.setQuantity(1)
+    self.assertFalse(self._check_consistency())
+
+
 class DefaultSupplyLineTestCase(ERP5TypeTestCase):
   def _makeOne(self):
     raise NotImplementedError()
@@ -163,6 +219,7 @@ class TestComponentDefaultSupplyLine(DefaultSupplyLineTestCase):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPDMWithSecurity))
+  suite.addTest(unittest.makeSuite(TestResourceMeasureConstraint))
   suite.addTest(unittest.makeSuite(TestProductDefaultSupplyLine))
   suite.addTest(unittest.makeSuite(TestServiceDefaultSupplyLine))
   suite.addTest(unittest.makeSuite(TestComponentDefaultSupplyLine))
