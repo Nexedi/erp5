@@ -317,7 +317,7 @@ class WendelinERP5(ERP5TypeTestSuite):
     # as they need the dedicated software release to run properly
     return ['%s:%s' % (x.group(1), x.group(2)) \
       for x in [component_re.match(y) for y in glob(os.path.join(
-        "%s/../wendelin" % HERE, '*', '*', '*', 'test.erp5.test*.py'))] \
+        "%s/../wendelin/bt5" % HERE, '*', '*', '*', 'test.erp5.test*.py'))] \
       if "WendelinTelecom" not in x.group(2)]
 
   def run(self, full_test):
@@ -378,7 +378,7 @@ class WendelinTelecomERP5(WendelinERP5):
     # as they need the dedicated software release to run properly
     return ['%s:%s' % (x.group(1), x.group(2)) \
       for x in [component_re.match(y) for y in glob(os.path.join(
-      BT5, '*', '*', '*', 'test.erp5.test*.py'))] \
+      "%s/../wendelin/bt5" % HERE, '*', '*', '*', 'test.erp5.test*.py'))] \
       if "WendelinTelecom" in x.group(2)]
 
 class WendelinBusinessTemplateCodingStyleTestSuite(WendelinERP5):
@@ -417,8 +417,6 @@ class WendelinBusinessTemplateCodingStyleTestSuite(WendelinERP5):
         args[-1] + '-' + (kw.get('TESTED_BUSINESS_TEMPLATE') or kw['TESTED_PRODUCT']))
     os.mkdir(log_directory)
     return log_directory
-
-  pass
 
 class WendelinTelecomBusinessTemplateCodingStyleTestSuite(WendelinBusinessTemplateCodingStyleTestSuite):
   def getTestList(self):
