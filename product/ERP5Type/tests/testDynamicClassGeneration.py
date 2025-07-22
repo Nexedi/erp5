@@ -2904,16 +2904,20 @@ class TestGC(XMLObject):
       gc.disable()
 
       gc.collect()
+      if six.PY2:
+        original_garbage = gc.garbage
+      else:
+        original_garbage = []
       self.assertModuleImportable('TestGC', reset=False)
       class_id = id(self._module.TestGC.TestGC)
       Implements_id = id(self._module.TestGC.TestGC.__implemented__)
       ClassProvides_id = id(self._module.TestGC.TestGC.__provides__)
       self.assertEqual(gc.collect(), 0)
-      self.assertEqual(gc.garbage, [])
+      self.assertEqual(gc.garbage, original_garbage)
 
       self._component_tool.reset(force=True)
       gc.collect()
-      self.assertEqual(gc.garbage, [])
+      self.assertEqual(gc.garbage, original_garbage)
 
       import erp5.component
       debug_flags = (
@@ -2938,7 +2942,7 @@ class TestGC(XMLObject):
       sys.stderr = initial_stderr
 
     # And make sure that it has really be collected thanks to DEBUG_COLLECTABLE
-    self.assertEqual(gc.garbage, [])
+    self.assertEqual(gc.garbage, original_garbage)
     stderr.seek(0)
     found_line_list = []
     for line in stderr:
