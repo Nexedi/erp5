@@ -5,6 +5,8 @@ ZOPE_USER_FAMILY = "user"
 ZOPE_ACTIVITIES_FAMILIY = "activities"
 PERSON_KEY = "person_per_hour"
 ORDER_KEY = "sale_order_per_hour"
+DATA_STREAM_KEY = "data_stream_per_hour"
+
 
 class ERP5_scalability():
 
@@ -76,3 +78,29 @@ class ERP5_scalability():
         output_json[ORDER_KEY] = metric_json[ORDER_KEY]
     return "Person: %s doc/hour; SaleOrder: %s doc/hour;" % (
             str(output_json[PERSON_KEY]), str(output_json[ORDER_KEY]))
+
+
+
+class Wendelin_scalability(ERP5_scalability):
+
+  def getTestList(self):
+    return ['createDataStream']
+
+  def getTestPath(self):
+    return 'example_wendelin/'
+
+  def getUsersFilePath(self):
+    return 'example_wendelin/scalabilityUsers'
+
+  def getScalabilityTestOutput(self, metric_list):
+    """
+    From the list of metrics taken during a test run, select the best metric
+    for the test output by a specific criteria
+    """
+    if not metric_list: return None
+    output_json = json.loads(metric_list[0])
+    for metric in metric_list:
+      metric_json = json.loads(metric)
+      if metric_json[DATA_STREAM_KEY] > output_json[DATA_STREAM_KEY]:
+        output_json[DATA_STREAM_KEY] = metric_json[DATA_STREAM_KEY]
+    return "DataStream: %s doc/hour;" %  str(output_json[DATA_STREAM_KEY])

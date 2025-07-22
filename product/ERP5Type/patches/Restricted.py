@@ -637,3 +637,21 @@ allow_type(ipaddress.IPv4Network)
 allow_type(ipaddress.IPv6Network)
 allow_type(ipaddress.IPv4Interface)
 allow_type(ipaddress.IPv6Interface)
+
+# wendelin
+allow_module('sklearn')
+allow_module('sklearn.model_selection')
+allow_module('sklearn.linear_model')
+allow_module('scipy')
+
+allow_module('wendelin.bigarray.array_zodb')
+
+import sklearn.linear_model
+allow_class(sklearn.linear_model.LinearRegression)
+
+from wendelin.bigarray.array_zodb import ZBigArray
+allow_full_write(ZBigArray)
+allow_type(ZBigArray)
+from wendelin.bigarray.array_ram import RAMArray
+allow_full_write(RAMArray)
+allow_type(RAMArray)
