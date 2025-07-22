@@ -9,7 +9,7 @@ from itertools import chain
 
 HERE = os.path.dirname(__file__)
 
-class _ERP5(ERP5TypeTestSuite):
+class _Base(ERP5TypeTestSuite):
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
                           'ERP5Form',
@@ -66,6 +66,32 @@ class _ERP5(ERP5TypeTestSuite):
     self.checkout('products', 'bt5')
     self.enableProducts()
 
+  def _updateFunctionalTestResponse(self, status_dict):
+    """ Convert the Unit Test output into more accurate information
+        related to functional test run.
+    """
+    # Parse relevant information to update response information
+    try:
+      summary, html_test_result = status_dict['stderr'].split(b"-"*79)[1:3]
+    except ValueError:
+      # In case of error when parse the file, preserve the original
+      # information. This prevents we have unfinished tests.
+      return status_dict
+    status_dict['html_test_result'] = html_test_result
+    search = self.FTEST_PASS_FAIL_RE.search(summary.decode())
+    if search:
+      group_dict = search.groupdict()
+      status_dict['failure_count'] = int(group_dict['failures']) \
+          or int(status_dict.get('failure_count', 0))
+      status_dict['test_count'] = int(group_dict['total'])
+      status_dict['skip_count'] = int(group_dict['expected_failure'])
+    return status_dict
+
+
+class _ERP5(_Base):
+  def _getAllTestList(self):
+    all_test_list = super(_ERP5, self)._getAllTestList()
+    return [x for x in all_test_list if ('wendelin' not in x.lower()) and ('mqtt' not in x.lower())]
 
 class PERF(_ERP5):
 
@@ -99,19 +125,6 @@ class ERP5(_ERP5):
       if not status_dict['status_code']:
         status_dict = self.runUnitTest('--load', '--activity_node=2', full_test)
       return status_dict
-    elif test.startswith('testWendelinCore'):
-      # Combining Zope and WCFS working together requires data to be on a real
-      # storage, not on in-RAM MappingStorage inside Zope's Python process.
-      # Force this via --load --save for now.
-      #
-      # Also manually indicate via --with_wendelin_core, that this test needs
-      # WCFS server - corresponding to ZODB test storage - to be launched.
-      #
-      # In the future we might want to rework custom_zodb.py to always use
-      # FileStorage on tmpfs instead of δ=MappingStorage in DemoStorage(..., δ),
-      # and to always spawn WCFS for all tests, so that this hack becomes
-      # unnecessary.
-      return self.runUnitTest('--load', '--save', '--with_wendelin_core', full_test)
     elif test.startswith('testFunctional'):
       return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
     elif test.startswith('testUpgradeInstanceWithOldDataFs'):
@@ -153,27 +166,6 @@ class ERP5(_ERP5):
           full_test)
 
     return super(ERP5, self).run(full_test)
-
-  def _updateFunctionalTestResponse(self, status_dict):
-    """ Convert the Unit Test output into more accurate information
-        related to functional test run.
-    """
-    # Parse relevant information to update response information
-    try:
-      summary, html_test_result = status_dict['stderr'].split(b"-"*79)[1:3]
-    except ValueError:
-      # In case of error when parse the file, preserve the original
-      # information. This prevents we have unfinished tests.
-      return status_dict
-    status_dict['html_test_result'] = html_test_result
-    search = self.FTEST_PASS_FAIL_RE.search(summary.decode())
-    if search:
-      group_dict = search.groupdict()
-      status_dict['failure_count'] = int(group_dict['failures']) \
-          or int(status_dict.get('failure_count', 0))
-      status_dict['test_count'] = int(group_dict['total'])
-      status_dict['skip_count'] = int(group_dict['expected_failure'])
-    return status_dict
 
 class WORKFLOW(ERP5):
   # new test suite running a few test related to Workflow
@@ -236,7 +228,7 @@ class FunctionalTests(ERP5):
       if x.startswith('testFunctional') or ':testFunctional' in x]
 
 
-class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
+class _BusinessTemplateCodingStyleTestSuite(_Base):
   """Run coding style test on all business templates.
   """
   def getTestList(self):
@@ -277,6 +269,12 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
     os.mkdir(log_directory)
     return log_directory
 
+class ERP5BusinessTemplateCodingStyleTestSuite(_BusinessTemplateCodingStyleTestSuite):
+  def getTestList(self):
+    all_test_list = super(ERP5BusinessTemplateCodingStyleTestSuite, self).getTestList()
+    return [x for x in all_test_list if ('wendelin' not in x.lower()) and ('mqtt' not in x.lower())]
+
+
 
 class ReExportERP5BusinessTemplateTestSuite(ERP5TypeTestSuite):
 
@@ -306,3 +304,60 @@ class RJS_Only(_ERP5):
                             "erp5_gadget_interface_validator_ui_test",
                             "erp5_hal_json_style"]
     return [test for test in self._getAllTestList() if any(test.find(bt)>-1 for bt in rjs_officejs_bt_list)]
+
+
+class WendelinERP5(_Base):
+
+  def getTestList(self):
+    all_test_list = self._getAllTestList()
+    print(all_test_list)
+    all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
+    return [x for x in all_test_list if  "WendelinTelecom" not in x]
+
+  def run(self, full_test):
+    test = ':' in full_test and full_test.split(':')[1] or full_test
+    # from https://lab.nexedi.com/nexedi/erp5/commit/530e8b4e:
+    # ---- 8< ----
+    #   Combining Zope and WCFS working together requires data to be on a real
+    #   storage, not on in-RAM MappingStorage inside Zope's Python process.
+    #   Force this via --load --save for now.
+    #
+    #   Also manually indicate via --with_wendelin_core, that this test needs
+    #   WCFS server - corresponding to ZODB test storage - to be launched.
+    #
+    #   In the future we might want to rework custom_zodb.py to always use
+    #   FileStorage on tmpfs instead of δ=MappingStorage in DemoStorage(..., δ),
+    #   and to always spawn WCFS for all tests, so that this hack becomes
+    #   unnecessary.
+    # ---- 8< ----
+    # Always run configurator test from scratch
+    # The load&save mechanism will load previous test data if it's present
+    # If test node run configurator A test, then run configurator B test
+    # It will then load the data created by A to run B
+    if 'Configurator' not in test:
+      status_dict = self.runUnitTest('--load', '--save', '--with_wendelin_core', full_test)
+    else:
+      status_dict = self.runUnitTest(full_test)
+    if test.startswith('testFunctional'):
+      status_dict = self._updateFunctionalTestResponse(status_dict)
+    return status_dict
+
+class WendelinTelecomERP5(WendelinERP5):
+  def getTestList(self):
+    all_test_list = self._getAllTestList()
+    print(all_test_list)
+    all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
+    return [x for x in all_test_list if  "WendelinTelecom" in x]
+
+class WendelinBusinessTemplateCodingStyleTestSuite(_BusinessTemplateCodingStyleTestSuite):
+  def getTestList(self):
+    all_test_list = super(WendelinBusinessTemplateCodingStyleTestSuite, self).getTestList()
+    all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
+    return [x for x in all_test_list if 'wendelin_telecom' not in x]
+
+
+class WendelinTelecomBusinessTemplateCodingStyleTestSuite(_BusinessTemplateCodingStyleTestSuite):
+  def getTestList(self):
+    all_test_list = super(WendelinTelecomBusinessTemplateCodingStyleTestSuite, self).getTestList()
+    all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
+    return [x for x in all_test_list if 'wendelin_telecom' in x]

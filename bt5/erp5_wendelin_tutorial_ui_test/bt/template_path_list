@@ -1,0 +1,6 @@
+data_stream_module/*
+portal_skins/erp5_wendelin_data_lake/Ingestion_*
+test_page_module/*wendelin*
+web_page_module/rjs_gadget_ndarray_html
+web_page_module/rjs_gadget_ndarray_js
+web_page_module/rjs_ndarray_bundle_js

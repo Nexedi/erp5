@@ -1,0 +1,353 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <tal:block metal:define-macro="handle_analysis_alarm">
+    <tr>
+      <td colspan="3"><b>Activate alarms</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_activateWendelinHandleAnalysisAlarmTest</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Alarm activated</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="add_ingestor_test_user">
+    <tr>
+      <td colspan="3"><b>Add ingestor test user</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_bootstrapWendelinTelecomWebUiTest?step=ingestor_user</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Done</td>
+      <td></td>
+    </tr>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+  </tal:block>
+
+  <tal:block metal:define-macro="add_client_test_user">
+    <tr>
+      <td colspan="3"><b>Add client test user</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_bootstrapWendelinTelecomWebUiTest?step=client_user</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Done</td>
+      <td></td>
+    </tr>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+  </tal:block>
+
+  <tal:block metal:define-macro="add_admin_test_user">
+    <tr>
+      <td colspan="3"><b>Add administrator test user</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_bootstrapWendelinTelecomWebUiTest?step=admin_user</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Done</td>
+      <td></td>
+    </tr>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+  </tal:block>
+
+  <tal:block metal:define-macro="add_ors_test_data">
+    <tr>
+      <td colspan="3"><b>Add ORS test data</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_bootstrapWendelinTelecomWebUiTest?step=ors</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Done</td>
+      <td></td>
+    </tr>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+    <tr>
+      <td>open</td>
+      <td
+        tal:content="python: '${base_url}/ERP5Site_ingestTestLogData?ors_tag=ors000_COMP-0000_e0x00000Test&ingestor_reference=web_test_ingestor_user'">
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Done</td>
+      <td></td>
+    </tr>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+    <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/handle_analysis_alarm" />
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+    <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/handle_analysis_alarm" />
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+  </tal:block>
+
+  <tal:block metal:define-macro="login_as_client_user">
+    <tr>
+      <td colspan="3"><b>Login as client user</b></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/wendelin_telecom_client_front/hateoas/connection/login_form</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@name='__ac_name']</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>//input[@name='__ac_name']</td>
+      <td>web_test_client_user</td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>//input[@name='__ac_password']</td>
+      <td>web_test_client_user</td>
+    </tr>
+
+    <tr>
+      <td>click</td>
+      <td>//input[@value='Login']</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  </tal:block>
+
+  <tal:block metal:define-macro="login_as_admin_user">
+    <tr>
+      <td colspan="3"><b>Login as administrator user</b></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/wendelin_telecom_admin_front/hateoas/connection/login_form</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@name='__ac_name']</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>//input[@name='__ac_name']</td>
+      <td>web_test_admin_user</td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>//input[@name='__ac_password']</td>
+      <td>web_test_admin_user</td>
+    </tr>
+
+    <tr>
+      <td>click</td>
+      <td>//input[@value='Login']</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  </tal:block>
+
+  <tal:block metal:define-macro="check_ors_kpi_graphs">
+    <tr>
+      <td colspan="3"><b>Check ORS KPI graphs</b></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
+      <td></td>
+    </tr>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text()='E-RAB Accessibility KPI']</td>
+      <td></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'E-RAB Accessibility KPI'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+    </tal:block>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-initial-success-rate')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-added-success-rate')]</td>
+      <td></td>
+    </tr>
+
+    <!-- Best-effort way to check that the data is correctly plotted -->
+    <!-- Can only reliably check date as times are timezone-sensitive -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-initial-success-rate')]//*[text()='Nov 20, 2024']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-initial-success-rate')]//*[text()='0']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-initial-success-rate')]//*[text()='100']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-added-success-rate')]//*[text()='Nov 20, 2024']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-added-success-rate')]//*[text()='0']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-added-success-rate')]//*[text()='100']</td>
+      <td></td>
+    </tr>
+
+    <!-- Check that the default no-data axis labels are not present -->
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-initial-success-rate')]//*[text()='-1']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-initial-success-rate')]//*[text()='6']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-added-success-rate')]//*[text()='-1']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-added-success-rate')]//*[text()='6']</td>
+      <td></td>
+    </tr>
+
+    <tal:block tal:define="click_configuration python: {'text': 'E-UTRAN IP Throughput KPI'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+    </tal:block>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-downlink')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-uplink')]</td>
+      <td></td>
+    </tr>
+
+    <!-- Best-effort way to check that the data is correctly plotted -->
+    <!-- Can only reliably check date as times are timezone-sensitive -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-downlink')]//*[text()='Nov 20, 2024']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-downlink')]//*[text()='0']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-downlink')]//*[text()='20']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-uplink')]//*[text()='Nov 20, 2024']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-uplink')]//*[text()='0']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-uplink')]//*[text()='20']</td>
+      <td></td>
+    </tr>
+
+    <!-- Check that the default no-data axis labels are not present -->
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-uplink')]//*[text()='-1']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-downlink')]//*[text()='6']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-uplink')]//*[text()='-1']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-downlink')]//*[text()='6']</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+</tal:block>
