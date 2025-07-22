@@ -271,7 +271,7 @@ class _BusinessTemplateCodingStyleTestSuite(_Base):
 
 class ERP5BusinessTemplateCodingStyleTestSuite(_BusinessTemplateCodingStyleTestSuite):
   def getTestList(self):
-    all_test_list = super(ERP5BusinessTemplateCodingStyleTestSuite, self).getAllTestList()
+    all_test_list = super(ERP5BusinessTemplateCodingStyleTestSuite, self).getTestList()
     return [x for x in all_test_list if ('wendelin' not in x.lower()) and ('mqtt' not in x.lower())]
 
 
@@ -351,13 +351,13 @@ class WendelinTelecomERP5(WendelinERP5):
 
 class WendelinBusinessTemplateCodingStyleTestSuite(_BusinessTemplateCodingStyleTestSuite):
   def getTestList(self):
-    all_test_list = super(WendelinBusinessTemplateCodingStyleTestSuite, self).getAllTestList()
+    all_test_list = super(WendelinBusinessTemplateCodingStyleTestSuite, self).getTestList()
     all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
     return [x for x in all_test_list if 'wendelin_telecom' not in x]
 
 
 class WendelinTelecomBusinessTemplateCodingStyleTestSuite(_BusinessTemplateCodingStyleTestSuite):
   def getTestList(self):
-    all_test_list = super(WendelinTelecomBusinessTemplateCodingStyleTestSuite, self).getAllTestList()
+    all_test_list = super(WendelinTelecomBusinessTemplateCodingStyleTestSuite, self).getTestList()
     all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
     return [x for x in all_test_list if 'wendelin_telecom' in x]
