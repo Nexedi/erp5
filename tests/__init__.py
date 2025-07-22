@@ -308,8 +308,9 @@ class RJS_Only(_ERP5):
 
 class WendelinERP5(_Base):
 
-  def getAllTestList(self):
+  def getTestList(self):
     all_test_list = self._getAllTestList()
+    print(all_test_list)
     all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
     return [x for x in all_test_list if  "WendelinTelecom" not in x]
 
@@ -344,6 +345,7 @@ class WendelinERP5(_Base):
 class WendelinTelecomERP5(WendelinERP5):
   def getTestList(self):
     all_test_list = self._getAllTestList()
+    print(all_test_list)
     all_test_list =  [x for x in all_test_list if ('wendelin' in x.lower()) or ('mqtt' in x.lower())]
     return [x for x in all_test_list if  "WendelinTelecom" in x]
 
