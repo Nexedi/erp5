@@ -1,0 +1,109 @@
+<allowed_content_type_list>
+ <portal_type id="Data Acquisition Unit Module">
+  <item>Data Acquisition Unit</item>
+ </portal_type>
+ <portal_type id="Data Aggregation Unit Module">
+  <item>Data Aggregation Unit</item>
+ </portal_type>
+ <portal_type id="Data Analysis">
+  <item>Data Analysis Line</item>
+ </portal_type>
+ <portal_type id="Data Analysis Module">
+  <item>Data Analysis</item>
+ </portal_type>
+ <portal_type id="Data Array">
+  <item>Data Array Line</item>
+ </portal_type>
+ <portal_type id="Data Array Module">
+  <item>Data Array</item>
+  <item>Data Array View</item>
+ </portal_type>
+ <portal_type id="Data Array View">
+  <item>Data Array View Line</item>
+ </portal_type>
+ <portal_type id="Data Descriptor Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
+ <portal_type id="Data Event Module">
+  <item>Data Event</item>
+ </portal_type>
+ <portal_type id="Data Ingestion">
+  <item>Data Ingestion Line</item>
+ </portal_type>
+ <portal_type id="Data Ingestion Batch Module">
+  <item>Data Ingestion Batch</item>
+ </portal_type>
+ <portal_type id="Data Ingestion Module">
+  <item>Data Ingestion</item>
+ </portal_type>
+ <portal_type id="Data License Module">
+  <item>Data License</item>
+ </portal_type>
+ <portal_type id="Data Mapping Module">
+  <item>Data Mapping</item>
+ </portal_type>
+ <portal_type id="Data Operation Module">
+  <item>Data Operation</item>
+ </portal_type>
+ <portal_type id="Data Order">
+  <item>Data Order Line</item>
+ </portal_type>
+ <portal_type id="Data Order Module">
+  <item>Data Order</item>
+ </portal_type>
+ <portal_type id="Data Product">
+  <item>Embedded File</item>
+  <item>Measure</item>
+  <item>Product Individual Variation</item>
+ </portal_type>
+ <portal_type id="Data Product Module">
+  <item>Data Product</item>
+ </portal_type>
+ <portal_type id="Data Release Module">
+  <item>Data Release</item>
+ </portal_type>
+ <portal_type id="Data Set Module">
+  <item>Data Set</item>
+ </portal_type>
+ <portal_type id="Data Stream Module">
+  <item>Data Bucket Stream</item>
+  <item>Data Stream</item>
+ </portal_type>
+ <portal_type id="Data Supply">
+  <item>Data Supply Line</item>
+ </portal_type>
+ <portal_type id="Data Supply Module">
+  <item>Data Supply</item>
+ </portal_type>
+ <portal_type id="Data Transformation">
+  <item>Data Transformation Operation Line</item>
+  <item>Data Transformation Resource Line</item>
+ </portal_type>
+ <portal_type id="Data Transformation Module">
+  <item>Data Transformation</item>
+ </portal_type>
+ <portal_type id="Device Configuration Module">
+  <item>Device Configuration</item>
+ </portal_type>
+ <portal_type id="Device Configuration Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
+ <portal_type id="Ingestion Policy Tool">
+  <item>Ingestion Policy</item>
+ </portal_type>
+ <portal_type id="Progress Indicator Module">
+  <item>Progress Indicator</item>
+ </portal_type>
+ <portal_type id="Property Sheet">
+  <item>Data Array Line Existence Constraint</item>
+ </portal_type>
+ <portal_type id="Sensor Module">
+  <item>Sensor</item>
+ </portal_type>
+ <portal_type id="Types Tool">
+  <item>Data Descriptor Type</item>
+  <item>Device Configuration Type</item>
+ </portal_type>
+</allowed_content_type_list>

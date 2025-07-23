@@ -1,0 +1,107 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Test Add ORS Client Project Action as Admin</title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3">Test Add ORS Client Project Action as Admin</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_ingestor_test_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_admin_test_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/login_as_admin_user" />
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Modules']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Modules']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Projects']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Projects']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Register ORS Client Project']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Register ORS Client Project']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@name='field_your_project_reference']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>type</td>
+        <td>//input[@name='field_your_project_reference']</td>
+        <td>web_test_register_action_project</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@name='field_your_project_title']</td>
+        <td>Web Test Register Action Project</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@name='field_your_client_email']</td>
+        <td>web_test_client@web-test.wendelin-tele.com</td>
+      </tr>
+
+      <tr>
+        <td>click</td>
+        <td>//input[@value='Register ORS Client Project']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[text()='ORS Client Project successfully registered.']</td>
+        <td></td>
+      </tr>
+
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/wendelin_telecom_admin_front/#/project_module</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='web_test_register_action_project']</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>
