@@ -42,7 +42,7 @@ length = context.getArrayShape()[0]
 # never access more than 1000 lines at once
 list_lines = min(list_lines, limit, 1000)
 
-if context.REQUEST.has_key("limit"):
+if "limit" in context.REQUEST:
   list_start = limit[0]
   list_lines = limit[1] - limit[0]
 
