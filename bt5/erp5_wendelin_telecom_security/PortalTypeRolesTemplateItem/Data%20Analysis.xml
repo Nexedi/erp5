@@ -1,0 +1,14 @@
+<type_roles>
+  <role id='Assignor'>
+   <property id='title'>Administrator</property>
+   <multi_property id='category'>function/administrator</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Client</property>
+   <property id='description'>A client can only access a Data Analysis related to the same project. Required for ORS KPI graphing.</property>
+   <property id='condition'>python: here.getDestinationProject() is not None</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='category'>function/user</multi_property>
+   <multi_property id='base_category'>destination_project</multi_property>
+  </role>
+</type_roles>
