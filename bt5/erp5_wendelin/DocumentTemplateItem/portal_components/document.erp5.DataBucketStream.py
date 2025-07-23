@@ -238,7 +238,7 @@ class DataBucketStream(Document):
     """
       Wether bucket with such index exists
     """
-    return self._long_index_tree.has_key(index)
+    return index in self._long_index_tree
     
   def insertBucket(self, key, value):
     """
