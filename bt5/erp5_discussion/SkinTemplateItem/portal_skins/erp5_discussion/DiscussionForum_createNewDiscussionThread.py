@@ -1,7 +1,6 @@
 """
  This script allows to create a new Discussion Thread.
 """
-from zExceptions import Unauthorized
 
 MARKER = ['', None, []]
 
@@ -20,7 +19,7 @@ random_string_length = 10
 while True:
   random_reference = "%s-%s" % (reference, context.Base_generateRandomString(string_length=random_string_length))
   if context.restrictedTraverse(random_reference, None) is None:
-    # object does not already exist (module, discussion thread, discussion post, action, bound method, ...)
+    # object does not already exist
     break
   random_string_length += 1
 
@@ -51,12 +50,18 @@ discussion_thread = portal.discussion_thread_module.newContent(
 discussion_thread.setCategoryList(category_list)
 
 # predecessor
-if predecessor is None:
-  redirect_url = context.getAbsoluteUrl()
-else:
+if predecessor is not None:
   predecessor_object = context.restrictedTraverse(predecessor)
   predecessor_portal_type = predecessor_object.getPortalType()
-  redirect_url = predecessor_object.getAbsoluteUrl()
+
+  # old forum backward compatibility
+  if predecessor_portal_type == 'Web Section':
+    predecessor_default_page = predecessor_object.getAggregate()
+    if predecessor_default_page is not None:
+      predecessor_document = context.restrictedTraverse(predecessor_default_page)
+      discussion_thread.setPredecessorValueList([predecessor_document])
+  if predecessor_portal_type == 'Web Page':
+    discussion_thread.setPredecessorValueList([predecessor_object])
 
   # set predecessor on document
   if predecessor_portal_type == 'Discussion Forum':
@@ -126,6 +131,4 @@ if send_notification_text not in ('', None):
         message_text_format=notification_message.getContentType(),
         store_as_event=False)
 
-return context.Base_redirect(redirect_url=redirect_url,
-         keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),
-                           thread_relative_url=discussion_thread.getRelativeUrl()))
+return discussion_thread.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))

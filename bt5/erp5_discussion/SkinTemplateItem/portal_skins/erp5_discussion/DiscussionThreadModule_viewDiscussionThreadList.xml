@@ -7,6 +7,31 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="_reconstructor" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -14,7 +39,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
@@ -71,11 +96,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_response_count</string>
-                        <string>listbox_last_post</string>
-                        <string>listbox_author</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -95,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionForum_viewThread</string> </value>
+            <value> <string>DiscussionThreadModule_viewDiscussionThreadList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -103,11 +124,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionForum_viewThread</string> </value>
+            <value> <string>DiscussionThreadModule_viewDiscussionThreadList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -119,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Discussion Forum</string> </value>
+            <value> <string>Discussion Threads</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
