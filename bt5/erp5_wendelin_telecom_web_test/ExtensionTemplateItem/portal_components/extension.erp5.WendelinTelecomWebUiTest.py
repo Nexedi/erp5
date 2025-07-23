@@ -211,6 +211,7 @@ def ERP5Site_ingestTestLogData(self, ors_tag, ingestor_reference):
     auth=(ingestor_reference, ingestor_reference),
     data={'data_chunk': msgpack_data},
     headers=header_dict,
+    timeout=60,
     verify=False
   )
   return 'Done'
