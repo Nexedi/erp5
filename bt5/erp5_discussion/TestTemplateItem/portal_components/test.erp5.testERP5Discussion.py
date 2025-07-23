@@ -32,7 +32,6 @@
 import unittest
 from erp5.component.test.testDms import DocumentUploadTestCase
 
-
 class TestERP5Discussion(DocumentUploadTestCase):
   """Test for erp5_discussion business template.
   """
@@ -76,6 +75,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     forum.edit(criterion_property=("portal_type",))
     forum.setCriterion("portal_type", ["Project", "Discussion Thread"])
     forum.setFollowUp(web_section.getRelativeUrl())
+    forum.publish()
     return web_section
 
   def test_01_createDiscussionThread(self):
@@ -115,8 +115,9 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.tic()
 
     # check forum is created and linked
-    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
-                                                      validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
+    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+    result = [forum for forum in result if forum.getValidationState() in valid_states]
     if result:
       forum = result[0]
     self.assertTrue(forum)
@@ -175,12 +176,14 @@ class TestERP5Discussion(DocumentUploadTestCase):
     web_section2 = self.stepCreateForumWebSection(group2, web_site)
     self.tic()
 
-    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
-                                                      validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
+    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+    result = [forum for forum in result if forum.getValidationState() in valid_states]
     if result:
       forum1 = result[0]
-    result = web_section2.getFollowUpRelatedValueList(portal_type = "Discussion Forum",
-                                                      validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
+    result = web_section2.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+    result = [forum for forum in result if forum.getValidationState() in valid_states]
     if result:
       forum2 = result[0]
 
@@ -192,7 +195,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
                                                                     title = 'test1')
     discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
                                                                     title = 'test2')
-    
+
     self.assertEqual(group1, discussion_thread_object1.getGroupValue())
     self.assertEqual(group2, discussion_thread_object2.getGroupValue())
 
