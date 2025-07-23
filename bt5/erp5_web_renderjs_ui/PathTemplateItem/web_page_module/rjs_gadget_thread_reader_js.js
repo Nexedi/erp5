@@ -129,10 +129,11 @@
 
       return new RSVP.Queue(RSVP.hash({
         language: gadget.getSelectedLanguage(),
-        begin_from: gadget.getUrlParameter(options.key + '_begin_from')
+        begin_from: gadget.getUrlParameter(options.key + '_begin_from'),
+        last_page: gadget.getUrlParameter('last_page')
       }))
         .push(function (result_dict) {
-          return gadget.changeState({
+          var state_dict = {
             key: options.key,
             language: result_dict.language,
             query_string: Query.objectToSearchText(
@@ -155,7 +156,31 @@
             render_timestamp: new Date().getTime(),
             first_render: true,
             allDocs_result: undefined
-          });
+          };
+          if (!result_dict.last_page) {
+            return gadget.changeState(state_dict);
+          } else {
+            return gadget.jio_allDocs({
+              query: Query.objectToSearchText(
+                new ComplexQuery({
+                  operator: "AND",
+                  type: "complex",
+                  query_list: Object.entries(options.query_dict)
+                                    .map(function (tuple) {
+                      return createMultipleSimpleOrQuery(tuple[0], tuple[1]);
+                    })
+                })
+              ),
+              limit: [0, 1000],
+              select_list: ['uid']
+            })
+              .push(function (result) {
+                var lines = options.lines || 1;
+                state_dict.lines = lines;
+                state_dict.begin_from = Math.max(0, result.data.total_rows - lines);
+                return gadget.changeState(state_dict);
+            })
+          }
         });
     })
 
@@ -188,10 +213,13 @@
         pagination_key = gadget.state.key + '_begin_from';
         first_param = {};
         first_param[pagination_key] = undefined;
+        first_param['last_page'] = undefined;
         prev_param = {};
         prev_param[pagination_key] = Math.max(0, gadget.state.begin_from - gadget.state.lines) || undefined;
+        prev_param['last_page'] = undefined
         next_param = {};
         next_param[pagination_key] = gadget.state.begin_from + gadget.state.lines;
+        next_param['last_page'] = undefined;
 
         return new RSVP.Queue(RSVP.hash({
           viewer_list: RSVP.all(allDocs_result.data.rows.map(function (entry, i) {
