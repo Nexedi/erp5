@@ -130,7 +130,7 @@
       return new RSVP.Queue(RSVP.hash({
         language: gadget.getSelectedLanguage(),
         begin_from: gadget.getUrlParameter(options.key + '_begin_from'),
-        last_page: gadget.getUrlParameter(options.key + '_last_page')
+        last_page: gadget.getUrlParameter('last_page')
       }))
         .push(function (result_dict) {
           var state_dict = {
@@ -213,13 +213,13 @@
         pagination_key = gadget.state.key + '_begin_from';
         first_param = {};
         first_param[pagination_key] = undefined;
-        first_param[gadget.state.key + '_last_page'] = undefined;
+        first_param['last_page'] = undefined;
         prev_param = {};
         prev_param[pagination_key] = Math.max(0, gadget.state.begin_from - gadget.state.lines) || undefined;
-        prev_param[gadget.state.key + '_last_page'] = undefined
+        prev_param['last_page'] = undefined
         next_param = {};
         next_param[pagination_key] = gadget.state.begin_from + gadget.state.lines;
-        next_param[gadget.state.key + '_last_page'] = undefined;
+        next_param['last_page'] = undefined;
 
         return new RSVP.Queue(RSVP.hash({
           viewer_list: RSVP.all(allDocs_result.data.rows.map(function (entry, i) {
