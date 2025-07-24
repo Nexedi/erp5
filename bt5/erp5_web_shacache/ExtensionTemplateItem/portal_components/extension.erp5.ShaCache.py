@@ -27,7 +27,6 @@
 ##############################################################################
 
 import hashlib
-import six
 import six.moves.http_client
 from Products.ERP5Type.UnrestrictedMethod import super_user
 
@@ -84,9 +83,22 @@ def File_viewAsWeb(self):
     RESPONSE.write(data)
     return
 
-  # For Pdata type, we must iterate and send chunk by chunk.
-  # And no need to continue if the client closed the connection.
-  while data and not RESPONSE.stdout._channel.closed:
+  # XXX This code was not updated for WSGI and
+  # https://github.com/zopefoundation/Zope/issues/662
+  # The historical comment for ZServer was:
+  #
+  #   For Pdata type, we must iterate and send chunk by chunk.
+  #   And no need to continue if the client closed the connection.
+  #
+  # With WSGI we currently do not send chunk by chunk, this just builds
+  # big buffer and send at the end.
+  #
+  # We do not even check if client disconnected. On ZServer, this was checked using:
+  # `RESPONSE.stdout._channel.closed`, which we could replace by waitress'
+  # `REQUEST.environ['waitress.client_disconnected']()`; this would require running
+  # waitress with channel_request_lookahead larger than 0, so this was left as a possible
+  # future improvement.
+  while data:
     # Send data to the client.
     RESPONSE.write(data.data)
     # Load next object without keeping previous chunks in memory.
