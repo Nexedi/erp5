@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="String Attribute Match Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>constraint_property</string> </key>
+            <value>
+              <tuple>
+                <string>Reference</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Check that the reference of an ORS Data Acquisition Unit correctly follows the eNB fluentbit tag format.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ors_tag_reference_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>message_attribute_not_match</string> </key>
+            <value> <string>${attribute_name} ${attribute_value} is not a valid ORS tag</string> </value>
+        </item>
+        <item>
+            <key> <string>message_no_such_property</string> </key>
+            <value> <string>${property_id} has not been set</string> </value>
+        </item>
+        <item>
+            <key> <string>regular_expression</string> </key>
+            <value> <string>^[a-zA-Z\\d-]{1,64}_COMP-(?:\\d+|XXXX)(?:_[eg](?:0x[\\dA-F]{5}|None)|_[a-zA-Z\\d-]{1,64}-\\d{8}-\\d{6})?$</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
