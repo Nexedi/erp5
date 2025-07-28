@@ -1,0 +1,88 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Test Add ORS Client Project Action as Admin</title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3">Test Add ORS Client Project Action as Admin</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_ingestor_test_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_admin_test_user" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/add_ors_test_data" />
+
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/login_as_admin_user" />
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Modules']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Modules']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Data Acquisition Units']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Data Acquisition Units']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Update ORS Configurations']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Update ORS Configurations']</td>
+        <td></td>
+      </tr>
+
+      <!-- TODO: Actually update the ORS data if possible -->
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@value='Update ORS Configurations']</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>click</td>
+        <td>//input[@value='Update ORS Configurations']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[text()='ORS configurations successfully updated.']</td>
+        <td></td>
+      </tr>
+
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/wendelin_telecom_admin_front/#/data_acquisition_unit_module</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>
