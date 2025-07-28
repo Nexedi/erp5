@@ -15,23 +15,27 @@
     //////////////////////////////////////////////
     .declareMethod('render', function render(options) {
       var gadget = this, jio_key = options.jio_key,
-        author = options.last_post_author_dict.author_title,
-        view_posts = options.view || "view_posts";
+        view_posts = options.view || "view_posts",
+        last_post = options.last_post || false,
+        author = options.author_dict.author_title,
+        url_options = {
+          command: 'push_history',
+          options: {
+            'jio_key': jio_key,
+            'page': 'form'
+          }
+        };
       return gadget.getSetting("hateoas_url")
         .push(function (hateoas_url) {
           var posts_view = hateoas_url +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             jio_key +
             '&view=' + view_posts;
-          return gadget.getUrlFor({
-            command: 'push_history',
-            options: {
-              'jio_key': jio_key,
-              'page': 'form',
-              'view': posts_view,
-              'last_page': true
-            }
-          });
+          url_options.options.view = posts_view;
+          if (last_post) {
+            url_options.options.last_page = last_post;
+          }
+          return gadget.getUrlFor(url_options);
         })
         .push(function (url) {
           gadget.element.appendChild(domsugar('a', {
