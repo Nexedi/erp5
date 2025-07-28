@@ -1,4 +1,4 @@
-Wendelin is a Big Data platform based on ERP5 utilizing the NEO database.
+Wendelin is a Big Data platform utilizing the NEO database.
 =======
 
 Wendelin = scikit-learn + "out-of-core" + NEO DB
