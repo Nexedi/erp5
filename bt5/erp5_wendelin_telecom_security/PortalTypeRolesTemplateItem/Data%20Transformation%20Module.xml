@@ -1,0 +1,12 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>Administrator</property>
+   <property id='description'>Access to the Data Transformation Module is only needed for ORS KPI graphing.</property>
+   <multi_property id='category'>function/administrator</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Client</property>
+   <property id='description'>Access to the Data Transformation Module is only needed for ORS KPI graphing.</property>
+   <multi_property id='category'>function/user</multi_property>
+  </role>
+</type_roles>
