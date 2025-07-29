@@ -402,12 +402,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>author</string>
                           <string>Author</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
                         </tuple>
                         <tuple>
                           <string>DiscussionThread_getDiscussionPostCount</string>
@@ -416,6 +412,10 @@
                         <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
