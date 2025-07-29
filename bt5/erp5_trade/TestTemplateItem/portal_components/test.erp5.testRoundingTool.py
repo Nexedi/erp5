@@ -55,6 +55,32 @@ class TestRoundingTool(ERP5TypeTestCase):
     user_folder._doAddUser('assignor', '', ['Auditor', 'Author', 'Assignor'], [])
     self.tic()
 
+  def testRoundMethod(self):
+    """
+    Test round utility method
+    """
+    rounding_tool = self.portal.portal_roundings
+    round_ = rounding_tool.round
+    self.assertEqual(round_(500 * 655.957, 0), 327978.0)
+    self.assertEqual(round_(-0.5), 0)
+    self.assertEqual(round_(0.15, 1), 0.1)
+    self.assertEqual(round_(-0.15, 1), -0.1)
+    self.assertEqual(round_(0.45, 1), 0.5)
+    self.assertEqual(round_(-0.45, 1), -0.5)
+    self.assertEqual(round_(500 * 655.957, 0, 'ROUND_HALF_EVEN'), 327978.0)
+    self.assertEqual(round_(500 * 655.957, 0, 'ROUND_HALF_UP'), 327979.0)
+    self.assertEqual(round_(0.5, 0, 'ROUND_HALF_EVEN'), 0.0)
+    self.assertEqual(round_(1.5, 0, 'ROUND_HALF_EVEN'), 2.0)
+    self.assertEqual(round_(1.5, 0, 'ROUND_HALF_DOWN'), 1.0)
+    self.assertEqual(round_(0.75, 1, 'ROUND_HALF_EVEN'), 0.8)
+    self.assertEqual(round_(0.85, 1, 'ROUND_HALF_EVEN'), 0.8)
+    self.assertEqual(round_(-0.75, 1, 'ROUND_HALF_EVEN'), -0.8)
+    self.assertEqual(round_(-0.85, 1, 'ROUND_HALF_EVEN'), -0.8)
+    from erp5.component.tool.RoundingTool import round_half_up
+    self.assertEqual(round_half_up(1.25, 1), 1.3)
+    from erp5.component.tool.RoundingTool import round_half_even
+    self.assertEqual(round_half_even(1.25, 1), 1.2)
+
   def testRoundValueMethod(self):
     """
     Test rounding method
@@ -68,7 +94,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(rounding_model.roundValue(12.355), 12.36)
     rounding_model.edit(precision=0.1)
     self.assertEqual(rounding_model.roundValue(12.34), 12.3)
-    self.assertEqual(rounding_model.roundValue(12.35), 12.4)
+    self.assertEqual(rounding_model.roundValue(12.55), 12.6)
     rounding_model.edit(precision=1.0)
     self.assertEqual(rounding_model.roundValue(1.1), 1)
     self.assertEqual(rounding_model.roundValue(1.5), 2)
