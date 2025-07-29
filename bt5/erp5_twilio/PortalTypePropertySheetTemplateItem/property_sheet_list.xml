@@ -1,0 +1,7 @@
+<property_sheet_list>
+ <portal_type id="Twilio Connector">
+  <item>OAuthClient</item>
+  <item>SocketClient</item>
+  <item>TwilioConnector</item>
+ </portal_type>
+</property_sheet_list>
