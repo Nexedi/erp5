@@ -129,10 +129,11 @@
 
       return new RSVP.Queue(RSVP.hash({
         language: gadget.getSelectedLanguage(),
-        begin_from: gadget.getUrlParameter(options.key + '_begin_from')
+        begin_from: gadget.getUrlParameter(options.key + '_begin_from'),
+        last_page: gadget.getUrlParameter('last_page')
       }))
         .push(function (result_dict) {
-          return gadget.changeState({
+          var state_dict = {
             key: options.key,
             language: result_dict.language,
             query_string: Query.objectToSearchText(
@@ -148,12 +149,38 @@
             begin_from: parseInt(result_dict.begin_from || '0', 10) || 0,
             lines: options.lines || 1,
             date_column: options.date_column || 'modification_date',
+            sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
+            attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
             allDocs_result: undefined
-          });
+          };
+          if (!result_dict.last_page) {
+            return gadget.changeState(state_dict);
+          } else {
+            return gadget.jio_allDocs({
+              query: Query.objectToSearchText(
+                new ComplexQuery({
+                  operator: "AND",
+                  type: "complex",
+                  query_list: Object.entries(options.query_dict)
+                                    .map(function (tuple) {
+                      return createMultipleSimpleOrQuery(tuple[0], tuple[1]);
+                    })
+                })
+              ),
+              limit: [0, 1000],
+              select_list: ['uid']
+            })
+              .push(function (result) {
+                var lines = options.lines || 1;
+                state_dict.lines = lines;
+                state_dict.begin_from = Math.max(0, result.data.total_rows - lines);
+                return gadget.changeState(state_dict);
+            })
+          }
         });
     })
 
@@ -186,10 +213,13 @@
         pagination_key = gadget.state.key + '_begin_from';
         first_param = {};
         first_param[pagination_key] = undefined;
+        first_param['last_page'] = undefined;
         prev_param = {};
         prev_param[pagination_key] = Math.max(0, gadget.state.begin_from - gadget.state.lines) || undefined;
+        prev_param['last_page'] = undefined
         next_param = {};
         next_param[pagination_key] = gadget.state.begin_from + gadget.state.lines;
+        next_param['last_page'] = undefined;
 
         return new RSVP.Queue(RSVP.hash({
           viewer_list: RSVP.all(allDocs_result.data.rows.map(function (entry, i) {
@@ -220,8 +250,7 @@
                   return '';
                 }
                 var source_title = entry.value[gadget.state.source_column] || '',
-                  attachment_list = entry.value
-                                         .Event_getAttachmentList || [],
+                  attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
                   j,
                   word_list = source_title.split(' '),
@@ -313,14 +342,13 @@
       } else {
         limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
       }
-
       return gadget.jio_allDocs({
         query: gadget.state.query_string,
         limit: limit_options,
         select_list: ['asStrippedHTML', gadget.state.date_column,
                       gadget.state.source_column,
-                      'Event_getAttachmentList'],
-        sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
+                      gadget.state.attachment_column],
+        sort_on: [[gadget.state.date_column, gadget.state.sort_order], ['uid', 'ASC']]
       })
         .push(function (result) {
           return gadget.changeState({
