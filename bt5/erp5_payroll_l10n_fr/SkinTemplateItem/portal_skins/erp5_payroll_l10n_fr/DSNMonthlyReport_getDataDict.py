@@ -1,3 +1,4 @@
+from erp5.component.tool.RoundingTool import round_half_even
 from erp5.component.module.DateUtils import getIntervalBetweenDates, getNumberOfDayInMonth
 import six
 
@@ -230,9 +231,9 @@ if block_id == 'S21.G00.23':
     else:
       target['quantity'] = target['quantity'] * -1.
       assert target['quantity'] > 0
-    rubric_value_dict['S21.G00.23.005'] = formatFloat(round(target['quantity']))
+    rubric_value_dict['S21.G00.23.005'] = formatFloat(round_half_even(target['quantity']))
   else:
-    rubric_value_dict['S21.G00.23.004'] = formatFloat(round(target['base']))
+    rubric_value_dict['S21.G00.23.004'] = formatFloat(round_half_even(target['base']))
   rubric_value_dict['S21.G00.23.006'] = target['zip_code']
 
 # Individu
@@ -431,7 +432,7 @@ if block_id == 'S21.G00.78':
   if target['code'] in ('31',):
     rubric_value_dict['S21.G00.78.004'] = '0.00'
   else:
-    rubric_value_dict['S21.G00.78.004'] = formatFloat(round(target['base'], 2))
+    rubric_value_dict['S21.G00.78.004'] = formatFloat(round_half_even(target['base'], 2))
   rubric_value_dict['S21.G00.78.005'] = target['contract_id']
 
 if block_id == 'S21.G00.79':
