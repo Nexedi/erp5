@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="MQTT Message">
+  <item>MQTT Message</item>
+  <item>XMLObject</item>
+ </portal_type>
+</property_sheet_list>

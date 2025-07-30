@@ -1,0 +1,21 @@
+<property_sheet_list>
+ <portal_type id="Data Acquisition Unit">
+  <item>WendelinTelecomOrsObject</item>
+ </portal_type>
+ <portal_type id="Data Analysis">
+  <item>WendelinTelecomDataDelivery</item>
+ </portal_type>
+ <portal_type id="Data Analysis Line">
+  <item>WendelinTelecomDataMovement</item>
+ </portal_type>
+ <portal_type id="Data Ingestion">
+  <item>WendelinTelecomDataDelivery</item>
+ </portal_type>
+ <portal_type id="Data Ingestion Line">
+  <item>WendelinTelecomDataMovement</item>
+ </portal_type>
+ <portal_type id="Data Supply">
+  <item>WendelinTelecomDataSupply</item>
+  <item>WendelinTelecomOrsObject</item>
+ </portal_type>
+</property_sheet_list>
