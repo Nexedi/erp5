@@ -1,0 +1,54 @@
+Data Acquisition Unit | edit_workflow
+Data Acquisition Unit | validation_workflow
+Data Aggregation Unit | edit_workflow
+Data Aggregation Unit | validation_workflow
+Data Analysis Line | edit_workflow
+Data Analysis | data_refresh_workflow
+Data Analysis | data_simulation_workflow
+Data Analysis | edit_workflow
+Data Array Line | edit_workflow
+Data Array View Line | edit_workflow
+Data Array View | edit_workflow
+Data Array View | validation_workflow
+Data Array | edit_workflow
+Data Array | validation_workflow
+Data Bucket Stream | data_stream_interaction_workflow
+Data Bucket Stream | edit_workflow
+Data Bucket Stream | validation_workflow
+Data Event | edit_workflow
+Data Ingestion Line | edit_workflow
+Data Ingestion | data_simulation_workflow
+Data Ingestion | edit_workflow
+Data License | edit_workflow
+Data License | validation_workflow
+Data Mapping | edit_workflow
+Data Mapping | validation_workflow
+Data Operation | edit_workflow
+Data Operation | validation_workflow
+Data Order Line | edit_workflow
+Data Order | data_simulation_workflow
+Data Order | edit_workflow
+Data Product | edit_workflow
+Data Product | validation_workflow
+Data Release | edit_workflow
+Data Release | validation_workflow
+Data Set | edit_workflow
+Data Set | validation_workflow
+Data Stream | data_stream_interaction_workflow
+Data Stream | edit_workflow
+Data Stream | validation_workflow
+Data Supply Line | edit_workflow
+Data Supply Line | edit_workflow
+Data Supply Line | validation_workflow
+Data Supply | data_supply_validation_workflow
+Data Supply | edit_workflow
+Data Transformation | edit_workflow
+Data Transformation | validation_workflow
+Device Configuration | edit_workflow
+Device Configuration | validation_workflow
+Ingestion Policy | edit_workflow
+Ingestion Policy | validation_workflow
+Progress Indicator | edit_workflow
+Progress Indicator | validation_workflow
+Sensor | edit_workflow
+Sensor | validation_workflow
