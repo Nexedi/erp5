@@ -1,4 +1,8 @@
 <property_sheet_list>
+ <portal_type id="Discussion Forum">
+  <item>Document</item>
+  <item>Reference</item>
+ </portal_type>
  <portal_type id="Discussion Post">
   <item>DiscussionPost</item>
  </portal_type>
