@@ -1,7 +1,6 @@
 """
  This script allows to create a new Discussion Thread.
 """
-from zExceptions import Unauthorized
 
 MARKER = ['', None, []]
 
