@@ -57,40 +57,35 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_author</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_id</string>
-                        <string>my_title</string>
-                        <string>my_short_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_translated_validation_state_title</string>
-                        <string>my_follow_up_title_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -98,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionForum_view</string> </value>
+            <value> <string>DiscussionForum_viewThreadsXhtml</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
