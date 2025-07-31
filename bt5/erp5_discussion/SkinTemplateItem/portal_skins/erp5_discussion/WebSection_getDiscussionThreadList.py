@@ -11,4 +11,4 @@ if result:
 else:
   raise ValueError, 'Unable to found a valid Discussion Forum for the current web site/section'
 
-return forum.DiscussionForum_getDiscussionThreadList(**kw)
+return forum.DiscussionForum_getValidDiscussionThreadList(**kw)
