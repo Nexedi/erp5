@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<instance>
+    <parameter id="conf-text">
+        &lt;source&gt;
+            @type forward
+            port 24224
+            bind <FLUENTD-GATEWAY-IPv4>
+        &lt;/source&gt;
+
+        &lt;match *.sample-environment-raw-data&gt;
+            @type wendelin
+            streamtool_uri https://softinst<INSTANCE_ID>.host.vifib.net/erp5/portal_ingestion_policies/default
+            user      <USERNAME>
+            password  <PASSWORD>
+            &lt;buffer&gt;
+                flush_mode interval
+                @type file
+                path fluentd-temp-buffer-file/
+                flush_interval 5s
+            &lt;/buffer&gt;
+        &lt;/match&gt;
+
+        &lt;match *.mqtt&gt;
+            @type wendelin
+            streamtool_uri https://softinst<INSTANCE_ID>.host.vifib.net/erp5/portal_ingestion_policies/default_mqtt
+            user      <USERNAME>
+            password  <PASSWORD>
+            &lt;buffer&gt;
+                flush_mode interval
+                @type file
+                path fluentd-temp-buffer-file-mqtt/
+                flush_interval 5s
+            &lt;/buffer&gt;
+        &lt;/match&gt;
+
+    </parameter>
+</instance>
+
+
