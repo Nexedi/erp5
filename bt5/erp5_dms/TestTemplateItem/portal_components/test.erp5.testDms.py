@@ -50,7 +50,6 @@ import time
 import io
 import base64
 from subprocess import Popen, PIPE
-from unittest import expectedFailure
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -620,9 +619,9 @@ class TestDocument(TestDocumentMixin):
 
     response = self.publish('%s/OOoDocument_getOOoFile' % doc.getPath(),
                             basic='member_user1:secret')
-    self.assertEqual('application/vnd.oasis.opendocument.text',
+    self.assertEqual('application/msword',
                       response.headers['content-type'])
-    self.assertEqual('attachment; filename="TEST-en-002.odt"',
+    self.assertEqual('attachment; filename="TEST-en-002.doc"',
                       response.headers['content-disposition'])
 
     # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
