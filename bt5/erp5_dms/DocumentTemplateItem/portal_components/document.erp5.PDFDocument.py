@@ -72,6 +72,15 @@ class PDFDocument(Image):
                     , PropertySheet.Periodicity
                     )
 
+  # XXX-Titouan: this method should likely be deleted from Image in favor
+  # ok anything else more coherent (`updateLocalMetadataFromContent`),
+  # but for now let's patch.
+  def _update_image_info(self):
+    self.height = -1
+    self.width = -1
+    # Do not set Content-Type, it will be guessed from filename
+    #self._setContentType(content_type)
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getWatermarkedData')
   def getWatermarkedData(self, watermark_data, repeat_watermark=True,
@@ -338,7 +347,7 @@ class PDFDocument(Image):
   security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
   def updateLocalMetadataFromDocument(self, **kw):
     """
-      Updates locally stored metadata (and Content Type) from
+      Updates locally stored metadata from
       information stored on the document.
     """
     self._content_information = {}
