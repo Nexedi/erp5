@@ -257,7 +257,8 @@ class DataBucketStream(Document):
     value = PersistentString(value)
     is_new_key = self._bucket_tree.insert(key, value)
     if not is_new_key:
-      self.log("Reingestion of same key")
+      change_state = "differ" if value != self._bucket_tree[key] else "are equal"
+      self.log("Reingestion of same key: {} (values {})".format(key, change_state))
       self._bucket_tree[key] = value
     
   def getBucketKeySequenceByKey(self, start_key=None, stop_key=None,
