@@ -9,7 +9,8 @@
              local_parameter_list  local_parameter_list | python: {};
              action_context    python: portal.restrictedTraverse(request.get('object_path', '?'), here);
       global actions          python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(action_context));
-      global url              here/absolute_url;
+      absolute_url            here/absolute_url;
+      global url              python: absolute_url[:-1] if absolute_url.endswith('/') else absolute_url;
       global current_form_id  python: local_parameter_list.get('dialog_id', local_parameter_list.get('form_id', 'view'));
            dummy            python: request.set('current_form_id', current_form_id);
            global current_url      python: '%s/%s' % (url, current_form_id);
