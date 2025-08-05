@@ -323,16 +323,28 @@ class PDFDocument(Image):
       tmp.close()
     return command_result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
-  def getContentInformation(self):
-    """Returns the information about the PDF document with pdfinfo.
+  def _getContentInformation(self):
     """
-    if not self.hasData():
-      return {}
+      Returns cached information about the PDF document.
+
+      Metadata are fetched when document is uploaded using
+      `updateLocalMetadataFromDocument` method on Interaction Workflow.
+    """
     try:
       return self._content_information.copy() # pylint: disable=access-member-before-definition
     except AttributeError:
-      pass
+      return {}
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
+  def updateLocalMetadataFromDocument(self, **kw):
+    """
+      Updates locally stored metadata (and Content Type) from
+      information stored on the document.
+    """
+    self._content_information = {}
+    if not self.hasData():
+      return
+
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(self.getData())
     tmp.seek(0)
@@ -393,7 +405,6 @@ class PDFDocument(Image):
     # Store cache as an instance of document. FIXME: we usually try to avoid this
     # pattern and cache the result of methods using content md5 as a cache key.
     self._content_information = result
-    return result.copy()
 
   def _setFile(self, *args, **kw):
     try:
