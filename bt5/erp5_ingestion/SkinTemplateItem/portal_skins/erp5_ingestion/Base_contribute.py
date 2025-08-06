@@ -81,6 +81,8 @@ try:
     if document.isSupportBaseDataConversion():
       document.processFile()
     filename = document.getFilename()
+    if document.getPortalType() in portal.getPortalOOoDocumentTypeList():
+      document.updateLocalMetadataFromDocument()
     merged_document = document.discoverMetadata(
                                   filename=filename,
                                   user_login=user_login,
