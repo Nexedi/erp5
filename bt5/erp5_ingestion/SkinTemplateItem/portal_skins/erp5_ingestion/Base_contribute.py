@@ -78,8 +78,6 @@ try:
   if synchronous_metadata_discovery:
     # we need to do all synchronously, in other case portal_contributions will do
     # this in an activity
-    if document.isSupportBaseDataConversion():
-      document.processFile()
     filename = document.getFilename()
     if document.getPortalType() in portal.getPortalOOoDocumentTypeList():
       document.updateLocalMetadataFromDocument()
