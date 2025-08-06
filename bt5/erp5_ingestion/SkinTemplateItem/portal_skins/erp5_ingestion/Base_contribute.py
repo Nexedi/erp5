@@ -78,9 +78,9 @@ try:
   if synchronous_metadata_discovery:
     # we need to do all synchronously, in other case portal_contributions will do
     # this in an activity
-    if document.isSupportBaseDataConversion():
-      document.processFile()
     filename = document.getFilename()
+    if document.getMetaType() == "ERP5 OOo Document":
+      document.updateLocalMetadataFromDocument()
     merged_document = document.discoverMetadata(
                                   filename=filename,
                                   user_login=user_login,
