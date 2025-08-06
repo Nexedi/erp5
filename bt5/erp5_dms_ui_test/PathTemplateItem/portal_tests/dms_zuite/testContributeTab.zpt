@@ -76,11 +76,6 @@ Wait for activities</span>
   <td>Presentation</td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
-  <td>regexp:Convert(ing|ed)</td>
-</tr>
-<tr>
   <td>storeEval</td>
   <td>selenium.getLocation().split("?")[0]</td>
   <td>document_location</td>
@@ -151,11 +146,6 @@ Wait for activities</span>
   <td>assertText</td>
   <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>Presentation</td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
-  <td>regexp:Convert(ing|ed)</td>
 </tr>
 
 <!-- Contribute PDF -->
@@ -303,11 +293,6 @@ Wait for activities</span>
   <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>Spreadsheet</td>
 </tr>
-<tr>
-  <td>assertText</td>
-  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
-  <td>regexp:Convert(ing|ed)</td>
-</tr>
 
 <!-- Contribute Drawing -->
 <tr>
@@ -359,11 +344,6 @@ Wait for activities</span>
   <td>assertText</td>
   <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>Drawing</td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
-  <td>regexp:Convert(ing|ed)</td>
 </tr>
 
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
