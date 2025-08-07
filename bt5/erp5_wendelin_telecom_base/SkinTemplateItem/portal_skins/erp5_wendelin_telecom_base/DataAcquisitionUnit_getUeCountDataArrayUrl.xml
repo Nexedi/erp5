@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="PyData Script" module="erp5.portal_type"/>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -45,43 +45,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>in_stream=None, out_array=[]</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DataAnalysisLine_calculateOrsEnbKpi</string> </value>
-        </item>
-        <item>
-            <key> <string>reference</string> </key>
-            <value> <string>DataAnalysisLine_calculateOrsKpi</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>DataAnalysisLine_calculateOrsEnbKpi</string> </value>
+            <value> <string>DataAcquisitionUnit_getUeCountDataArrayUrl</string> </value>
         </item>
       </dictionary>
     </pickle>
