@@ -15,11 +15,15 @@ end = min(in_data_stream.getSize(), offset_index + MAX_NEW_CHUNK_SIZE)
 
 e_rab_data_array = None
 e_utran_data_array = None
+ue_count_data_array = None
 for array in out_array:
   if array['variation'] == 'e_rab':
     e_rab_data_array = array['Data Array']
   if array['variation'] == 'e_utran':
     e_utran_data_array = array['Data Array']
+  if array['variation'] == 'ue_count':
+    ue_count_data_array = array['Data Array']
+
 # No new data to process
 if offset_index >= end:
   return
@@ -95,6 +99,10 @@ log_data = '\n'.join([x[x.find('{'):] for x in log_data_line_list[history_start_
 
 # Calculate the KPI data
 kpi_data_dict = context.Base_calcEnbKpi(log_data, T_PERIOD)
+
+# What to do with T_PERIOD?
+ue_count_dict = context.Base_calcOrsUeCount(log_data, T_PERIOD)
+
 vt, v_initial_epsb_estab_sr, v_added_epsb_estab_sr = kpi_data_dict['e_rab_accessibility']
 evt, v_ip_throughput_qci = kpi_data_dict['e_utran_ip_throughput']
 
@@ -113,6 +121,16 @@ e_utran_dtype = np.dtype([
   ('ul_hi', 'float64'),
 ])
 
+ue_count_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('ue_count_max', 'float'),
+  ('ue_count_min', 'float'),
+  ('ue_count_avg', 'float'),
+  ('rrc_con_req', 'float'),
+  ('rrc_paging', 'float')
+])
+
 e_rab_array = e_rab_data_array.getArray()
 if not e_rab_array:
   e_rab_array = e_rab_data_array.initArray(shape=(0,), dtype=e_rab_dtype)
@@ -122,6 +140,11 @@ e_utran_array = e_utran_data_array.getArray()
 if not e_utran_array:
   e_utran_array = e_utran_data_array.initArray(shape=(0,), dtype=e_utran_dtype)
 e_utran_array_data = []
+
+ue_count_array = ue_count_data_array.getArray()
+if not ue_count_array:
+  ue_count_array = ue_count_data_array.initArray(shape=(0,), dtype=ue_count_dtype)
+ue_count_array_data = []
 
 # Don't duplicate KPI data:
 # search and start inserting new timestamps from the first one
@@ -150,6 +173,10 @@ for i in range(first_new_row_evt, len(evt)):
     for qci_data in v_ip_throughput_qci[i]:
       e_utran_array_data.append((evt[i], qci_data[0], qci_data[1], qci_data[2], qci_data[3]))
 
+# For now use direct translation
+for e in ue_count_dict['ue_count']:
+  ue_count_array_data.append(e)
+
 if e_rab_array_data:
   e_rab_array_data = np.ndarray((len(e_rab_array_data),), e_rab_dtype, np.array(e_rab_array_data))
   e_rab_array.append(e_rab_array_data)
@@ -157,6 +184,11 @@ if e_rab_array_data:
 if e_utran_array_data:
   e_utran_array_data = np.ndarray((len(e_utran_array_data),), e_utran_dtype, np.array(e_utran_array_data))
   e_utran_array.append(e_utran_array_data)
+
+if ue_count_array_data:
+  ue_count_array_data = np.ndarray((len(ue_count_array_data),), ue_count_dtype, np.array(ue_count_array_data))
+  ue_count_array.append(ue_count_array_data)
+
 
 progress_indicator.setIntOffsetIndex(end)
 e_utran_data_array.activate().DataArray_updateActiveQciLines()
