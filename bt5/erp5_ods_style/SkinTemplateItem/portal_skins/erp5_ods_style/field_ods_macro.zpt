@@ -77,7 +77,8 @@
                               is_float python: isinstance(value, modules['six'].integer_types + (float, ));">
         <tal:block tal:condition="python: is_list">
           <table:table-cell tal:attributes="table:style-name string:${style_prefix}text;
-                                            table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)">
+                                            table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
+                            office:value-type="string">
             <tal:block tal:condition="python: field is None" tal:repeat="item value">
               <text:p tal:content="item"/>
             </tal:block>
@@ -120,9 +121,9 @@
                     </table:table-cell>
                   </tal:block>
                   <tal:block tal:condition="python:field.meta_type not in ['FloatField','IntegerField'] and field.meta_type!='ProxyField'">
-                    <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;
+                    <table:table-cell tal:attributes="table:style-name string:${style_prefix}text;
                                       table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
-                                      table:style-name="string"
+                                      table:style-name="text"
                                       office:value-type="string">
                       <text:p>Error: field is not a FloatField nor an IntegerField</text:p>
                     </table:table-cell>
@@ -177,9 +178,9 @@
                   </tal:block>
                 </tal:block>
                 <tal:block tal:condition="python:field.meta_type!='DateTimeField' and field.meta_type!='ProxyField'">
-                  <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;
+                  <table:table-cell tal:attributes="table:style-name string:${style_prefix}text;
                                     table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
-                                    table:style-name="string"
+                                    table:style-name="text"
                                     office:value-type="string">
                     <text:p>Error: field is not a DateTimeField</text:p>
                   </table:table-cell>
@@ -189,7 +190,8 @@
             <tal:block tal:condition="python:not isinstance(value, DateTime)">
              <table:table-cell tal:attributes="table:style-name string:${style_prefix}text;
                                table:number-columns-spanned python:exists('merge_cells') and max(column_len-1, 1)"
-                               table:style-name="text">
+                               table:style-name="text"
+                               office:value-type="string">
               <text:p tal:condition="python: field is None"
                       tal:content="python: value"/>
               <text:p tal:condition="python: field is not None"
