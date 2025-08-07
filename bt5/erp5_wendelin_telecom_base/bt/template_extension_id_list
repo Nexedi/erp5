@@ -1,2 +1,4 @@
+extension.erp5.WendelinTelecomCalcBase
 extension.erp5.WendelinTelecomCalcEnbKpi
+extension.erp5.WendelinTelecomGetOrsBase
 extension.erp5.WendelinTelecomGetOrsKpi
