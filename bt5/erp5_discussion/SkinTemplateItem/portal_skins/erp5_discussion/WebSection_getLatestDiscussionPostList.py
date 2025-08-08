@@ -3,17 +3,13 @@
 """
 parent_uid_list = None
 
-# first get the related forum using predicate search
-result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
-valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
-result = [forum for forum in result if forum.getValidationState() in valid_states]
-if result:
-  forum = result[0]
+forum = context.WebSection_getRelatedForum()
+if forum:
   # get list of all forum Threads (details should be set on predicate)
   parent_uid_list = [
-    x.uid for x in forum.searchResults(
-      portal_type="Discussion Thread",
-    )
+    x.uid for x in forum.searchResults(portal_type='Discussion Thread',
+                                       sort_on=[('modification_date', 'descending')],
+                                       validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
   ]
 
 if not parent_uid_list:
