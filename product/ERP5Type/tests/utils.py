@@ -38,6 +38,7 @@ import random
 import socket
 import sys
 import time
+import transaction
 import unittest
 import ZODB
 import zLOG
@@ -104,6 +105,39 @@ class PortalAlarmDisabled(object):
     if self.was_subscribed:
       self.portal_alarms.subscribe()
       # transaction.commit()
+
+
+class TemporaryAlarmScript(object):
+  """
+  Context manager for temporary alarm python scripts
+  """
+  def __init__(self, portal, script_name, fake_return="", attribute=None):
+    self.script_name = script_name
+    self.portal = portal
+    self.fake_return = fake_return
+    self.attribute = attribute
+
+  def __enter__(self):
+    if self.script_name in self.portal.portal_skins.custom.objectIds():
+      raise ValueError('Precondition failed: %s exists in custom' % self.script_name)
+    if self.attribute is None:
+      content = """portal_workflow = context.portal_workflow
+portal_workflow.doActionFor(context, action='edit_action', comment='Visited by %s')
+return %s""" % (self.script_name, self.fake_return)
+    else:
+      content = """portal_workflow = context.portal_workflow
+context.edit(%s='Visited by %s')
+return %s""" % (self.attribute, self.script_name, self.fake_return)
+    createZODBPythonScript(self.portal.portal_skins.custom,
+                        self.script_name,
+                        '*args, **kwargs',
+                        '# Script body\n' + content)
+    transaction.commit()
+
+  def __exit__(self, exc_type, exc_value, traceback):
+    if self.script_name in self.portal.portal_skins.custom.objectIds():
+      self.portal.portal_skins.custom.manage_delObjects(self.script_name)
+    transaction.commit()
 
 
 # dummy objects

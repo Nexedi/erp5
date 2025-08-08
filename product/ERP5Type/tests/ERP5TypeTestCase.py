@@ -16,6 +16,7 @@ import string
 import sys
 import time
 import traceback
+import transaction
 import warnings
 from six.moves import configparser
 from contextlib import contextmanager
@@ -51,6 +52,7 @@ from Products.ERP5Type.tests.utils import parseListeningAddress
 from Products.ERP5Type.tests.utils import timeZoneContext
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import PortalAlarmDisabled
+from Products.ERP5Type.tests.utils import TemporaryAlarmScript
 
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
@@ -438,6 +440,33 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
 
     def changeContextByDisablingPortalAlarm(self):
       return PortalAlarmDisabled(self.getPortalObject())
+
+    def changeContextByAddingAnAlarmPythonScript(self, *args, **kw):
+      return TemporaryAlarmScript(self.getPortalObject(), *args, **kw)
+
+    def __assertAlarmVisit(self, expected_result, alarm, document, script_name, attribute=None):
+      self.tic()
+      with self.changeContextByAddingAnAlarmPythonScript(script_name, attribute=attribute):
+        alarm.activeSense()
+        self.tic()
+      if attribute is None:
+        content = document.workflow_history['edit_workflow'][-1]['comment']
+      else:
+        content = document.getProperty(attribute)
+      if expected_result:
+        self.assertEqual(
+            'Visited by %s' % script_name,
+            content)
+      else:
+        self.assertNotEqual(
+            'Visited by %s' % script_name,
+            content)
+
+    def assertAlarmVisitingDocument(self, *args, **kw):
+      return self.__assertAlarmVisit(True, *args, **kw)
+
+    def assertAlarmNotVisitingDocument(self, *args, **kw):
+      return self.__assertAlarmVisit(False, *args, **kw)
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'
