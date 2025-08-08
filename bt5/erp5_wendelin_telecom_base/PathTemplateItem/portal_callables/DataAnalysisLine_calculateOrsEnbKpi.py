@@ -85,7 +85,8 @@ new_log_data_line_first_index = min([
 # This also gives some tolerance to log errors
 history_start_index = max(0, new_log_data_line_first_index - HISTORY_LINE_COUNT)
 
-log_data = '\n'.join(log_data_line_list[history_start_index:])
+
+log_data = '\n'.join([x[x.find('{'):] for x in log_data_line_list[history_start_index:]])
 
 # Calculate the KPI data
 kpi_data_dict = context.Base_calcEnbKpi(log_data, T_PERIOD)
