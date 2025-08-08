@@ -87,6 +87,25 @@ class FileUpload(FileIO):
     self.headers = {}
 
 
+class PortalAlarmDisabled(object):
+  """
+  Context manager to disable portal alarm
+  """
+  def __init__(self, portal):
+    self.portal_alarms = portal.portal_alarms
+    self.was_subscribed = self.portal_alarms.isSubscribed()
+
+  def __enter__(self):
+    if self.was_subscribed:
+      self.portal_alarms.unsubscribe()
+      # transaction.commit()
+
+  def __exit__(self, exc_type, exc_value, traceback):
+    if self.was_subscribed:
+      self.portal_alarms.subscribe()
+      # transaction.commit()
+
+
 # dummy objects
 class DummyMailHostMixin(object):
   """Dummy Mail Host that doesn't really send messages and keep a copy in

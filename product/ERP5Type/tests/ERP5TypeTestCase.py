@@ -50,6 +50,7 @@ from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
 from Products.ERP5Type.tests.utils import timeZoneContext
 from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.utils import PortalAlarmDisabled
 
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
@@ -434,6 +435,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       timezone = timeZoneContext('UTC')
       timezone.__enter__()
       self.addCleanup(timezone.__exit__, None, None, None)
+
+    def changeContextByDisablingPortalAlarm(self):
+      return PortalAlarmDisabled(self.getPortalObject())
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'
