@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, send_notification_text=None, reference=None, file=None, redirect_url=None, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -64,7 +64,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionForum_createNewDiscussionThread</string> </value>
+            <value> <string>WebSection_getRelatedForum</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
