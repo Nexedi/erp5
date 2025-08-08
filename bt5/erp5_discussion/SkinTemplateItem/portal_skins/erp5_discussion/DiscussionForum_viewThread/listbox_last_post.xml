@@ -84,7 +84,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>gadget_latest_post.html</string> </value>
+                    <value> <string>gadget_thread_listbox_column.html</string> </value>
                 </item>
                 <item>
                     <key> <string>renderjs_extra</string> </key>
@@ -106,7 +106,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("author_dict", cell.DiscussionThread_getLastPost().DiscussionPost_getAuthorDict()), (\'jio_key\', cell.getRelativeUrl()), (\'last_post\', True)]</string> </value>
+            <value> <string>python: [("author_dict", cell.DiscussionThread_getLastPost().DiscussionPost_getAuthorDict()), (\'jio_key\', cell.getRelativeUrl()), (\'last_post\', cell.DiscussionThread_getDiscussionPostCount())]</string> </value>
         </item>
       </dictionary>
     </pickle>
