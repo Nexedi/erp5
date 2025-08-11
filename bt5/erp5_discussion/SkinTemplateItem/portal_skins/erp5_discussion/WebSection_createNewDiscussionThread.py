@@ -1,37 +1,33 @@
 """
- This script allows to create a new Discussion Thread.
+ Old forum backward compatibility script
+ This script allows to create a new Discussion Thread
 """
-from zExceptions import Unauthorized
-
-MARKER = ['', None, []]
 
 portal = context.getPortalObject()
-person = portal.portal_membership.getAuthenticatedMember().getUserValue()
+person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
 
 version = '001'
 language = portal.Localizer.get_selected_language()
 
-try:
-  user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()
-except Unauthorized:
-  # not in all cases current logged in user may access its details
-  user_assignment_dict = {'group_list': [], 'site_list':[]}
+# get the related forum using follow_up
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+result = [forum for forum in result if forum.getValidationState() in valid_states]
+if result:
+  forum = result[0]
+else:
+  raise ValueError, 'Unable to found a valid Discussion Forum for the current web site/section'
 
-if group_list in MARKER:
-  group_list = user_assignment_dict['group_list']
-if site_list in MARKER:
-  site_list = user_assignment_dict['site_list']
+# set predicate settings for current Discussion Forum
+membership_criterion_category_list = forum.getMembershipCriterionCategoryList()
+multimembership_criterion_base_category_list = forum.getMultimembershipCriterionBaseCategoryList()
 
-# set predicate settings for current Web Section
-membership_criterion_category_list = context.getMembershipCriterionCategoryList()
-multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
-
-reference = context.Base_generateReferenceFromString(title)
+reference = forum.Base_generateReferenceFromString(title)
 random_string_length = 10
 while True:
-  random_reference = "%s-%s" % (reference, context.Base_generateRandomString(string_length=random_string_length))
-  if context.restrictedTraverse(random_reference, None) is None:
-    # object does not already exist (module, web site, web section, action, bound method, ...)
+  random_reference = "%s-%s" % (reference, forum.Base_generateRandomString(string_length=random_string_length))
+  if forum.restrictedTraverse(random_reference, None) is None:
+    # object does not already exist
     break
   random_string_length += 1
 
@@ -56,29 +52,11 @@ for base_category in multimembership_criterion_base_category_list:
 discussion_thread = portal.discussion_thread_module.newContent(
                       portal_type = "Discussion Thread",
                       **create_kw)
-# as we create a thread under a "root" predicate web section copy
-# all categories from it to create thread, this way thread will be part
-# of web section (through getDocumentValue API)
+# as we create a thread under a "root" predicate discussion forum
+# copy all categories from it to create a thread,
+# this way thread will be part of discussion forum (through predicate's searchResults)
+contributor_list = discussion_thread.getContributorValueList()
 discussion_thread.setCategoryList(category_list)
-
-# predecessor
-if predecessor is None:
-  redirect_url = context.getAbsoluteUrl()
-else:
-  predecessor_object = context.restrictedTraverse(predecessor)
-  predecessor_portal_type = predecessor_object.getPortalType()
-  redirect_url = predecessor_object.getAbsoluteUrl()
-
-  # predecessor will only be set on document = web section default page
-  if predecessor_portal_type == 'Web Section':
-    predecessor_default_page = predecessor_object.getAggregate()
-    if predecessor_default_page is not None:
-      predecessor_document = context.restrictedTraverse(predecessor_default_page)
-      discussion_thread.setPredecessorValueList([predecessor_document])
-
-  # set predecessor on document
-  if predecessor_portal_type == 'Web Page':
-    discussion_thread.setPredecessorValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",
@@ -89,23 +67,58 @@ discussion_post = discussion_thread.newContent(
                       language = language)
 
 # depending on security model Thread and Post can be directly published or shared
-portal_status_message = "New discussion thread created."
-discussion_thread.publish()
+portal_status_message = "New discussion created."
+# examine category_list and if follow_up is used consider private
+has_classification = len([x for x in category_list if x.startswith("classification/")])
+has_group = len([x for x in category_list if x.startswith("group/")])
+has_classification_and_group = has_classification and has_group
+is_private_project = len([x for x in category_list if x.startswith('follow_up') and not x.startswith('follow_up/product_module/')])  # XXX please see DiscussionThread_createNewDiscussionPost
 
+if has_classification_and_group:
+  # private forum based on classification & group security
+  discussion_thread.share()
+elif is_private_project:
+  # private forum based on project security
+  discussion_thread.setClassification('collaborative/project')
+  discussion_thread.share()
+else:
+  # public forum
+  discussion_thread.publish()
+#Set contributor back on thread as it has been removed
+#when category list was set above.
+discussion_thread.setContributorValueList(contributor_list)
 # handle attachments
 if getattr(file, 'filename', '') != '':
-  document = context.Base_contribute(
-    batch_mode=True,
-    redirect_to_document=False,
-    synchronous_metadata_discovery=True,
-    file=file,
-  )
+  if person:
+    document_kw = {'batch_mode': True,
+                   'synchronous_metadata_discovery': True,
+                   'redirect_to_document': False,
+                   'file': file}
+    document = forum.Base_contribute(**document_kw)
+  else:
+    document_kw = {'batch_mode': True,
+                   'discover_metadata': 1,
+                   'redirect_to_document': False,
+                   'file': file}
+
+    document = portal.portal_contributions.newContent(**document_kw)
 
   # set relation between post and document
   discussion_post.setSuccessorValueList([document])
 
   # depending on security model this should be changed accordingly
-  document.publish()
+  if has_classification_and_group:
+    # private forum based on classification & group security
+    document.setCategoryList(category_list)
+    document.share()
+  elif is_private_project:
+    # private forum based on project security
+    document.setCategoryList(category_list)
+    document.setClassification('collaborative/project')
+    document.share()
+  else:
+    # public forum
+    document.publish()
 
 if send_notification_text not in ('', None):
   # we can send notifications
@@ -119,9 +132,9 @@ if send_notification_text not in ('', None):
   if len(person_list):
     #Get message from catalog
     notification_reference = 'forum-new-thread'
-    notification_message = context.NotificationTool_getDocumentValue(notification_reference, 'en')
+    notification_message = forum.NotificationTool_getDocumentValue(notification_reference, 'en')
     if notification_message is None:
-      raise ValueError('Unable to found Notification Message with reference "%s".' % notification_reference)
+      raise ValueError, 'Unable to found Notification Message with reference "%s".' % notification_reference
 
     notification_mapping_dict = {'subject': discussion_thread.getTitle(),
                                  'url': discussion_thread.absolute_url(),
@@ -133,7 +146,7 @@ if send_notification_text not in ('', None):
     else:
       mail_text = notification_message.asText(
         substitution_method_parameter_dict={'mapping_dict':notification_mapping_dict})
-    sender = portal.portal_membership.getAuthenticatedMember().getUserValue()
+    sender = portal.ERP5Site_getAuthenticatedMemberPersonValue()
     #Send email
     for recipient in person_list:
       portal.portal_notifications.sendMessage(
@@ -144,6 +157,6 @@ if send_notification_text not in ('', None):
         message_text_format=notification_message.getContentType(),
         store_as_event=False)
 
-return context.Base_redirect(redirect_url=redirect_url,
-         keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),
-                           thread_relative_url=discussion_thread.getRelativeUrl()))
+return context.Base_redirect(redirect_url=context.getAbsoluteUrl(),
+                             keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),
+                                               thread_relative_url=discussion_thread.getRelativeUrl()))
