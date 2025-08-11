@@ -1,9 +1,7 @@
 """
+ Old forum backward compatibility script
  This script allows to create a new Discussion Thread.
 """
-from zExceptions import Unauthorized
-
-MARKER = ['', None, []]
 
 portal = context.getPortalObject()
 person = portal.portal_membership.getAuthenticatedMember().getUserValue()
@@ -11,27 +9,26 @@ person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 version = '001'
 language = portal.Localizer.get_selected_language()
 
-try:
-  user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()
-except Unauthorized:
-  # not in all cases current logged in user may access its details
-  user_assignment_dict = {'group_list': [], 'site_list':[]}
+# get the related forum using follow_up
+result = context.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+result = [forum for forum in result if forum.getValidationState() in valid_states]
+if result:
+  forum = result[0]
+else:
+  raise ValueError, 'Unable to found a valid Discussion Forum for the current web site/section'
 
-if group_list in MARKER:
-  group_list = user_assignment_dict['group_list']
-if site_list in MARKER:
-  site_list = user_assignment_dict['site_list']
 
-# set predicate settings for current Web Section
-membership_criterion_category_list = context.getMembershipCriterionCategoryList()
-multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
+# set predicate settings for current Discussion Forum
+membership_criterion_category_list = forum.getMembershipCriterionCategoryList()
+multimembership_criterion_base_category_list = forum.getMultimembershipCriterionBaseCategoryList()
 
-reference = context.Base_generateReferenceFromString(title)
+reference = forum.Base_generateReferenceFromString(title)
 random_string_length = 10
 while True:
-  random_reference = "%s-%s" % (reference, context.Base_generateRandomString(string_length=random_string_length))
-  if context.restrictedTraverse(random_reference, None) is None:
-    # object does not already exist (module, web site, web section, action, bound method, ...)
+  random_reference = "%s-%s" % (reference, forum.Base_generateRandomString(string_length=random_string_length))
+  if forum.restrictedTraverse(random_reference, None) is None:
+    # object does not already exist
     break
   random_string_length += 1
 
@@ -56,28 +53,27 @@ for base_category in multimembership_criterion_base_category_list:
 discussion_thread = portal.discussion_thread_module.newContent(
                       portal_type = "Discussion Thread",
                       **create_kw)
-# as we create a thread under a "root" predicate web section copy
-# all categories from it to create thread, this way thread will be part
-# of web section (through getDocumentValue API)
+# as we create a thread under a "root" predicate discussion forum
+# copy all categories from it to create a thread,
+# this way thread will be part of discussion forum (through predicate's searchResults)
 discussion_thread.setCategoryList(category_list)
 
 # predecessor
-if predecessor is None:
-  redirect_url = context.getAbsoluteUrl()
-else:
-  predecessor_object = context.restrictedTraverse(predecessor)
+if predecessor is not None:
+  predecessor_object = forum.restrictedTraverse(predecessor)
   predecessor_portal_type = predecessor_object.getPortalType()
-  redirect_url = predecessor_object.getAbsoluteUrl()
 
-  # predecessor will only be set on document = web section default page
+  # old forum backward compatibility
   if predecessor_portal_type == 'Web Section':
     predecessor_default_page = predecessor_object.getAggregate()
     if predecessor_default_page is not None:
-      predecessor_document = context.restrictedTraverse(predecessor_default_page)
+      predecessor_document = forum.restrictedTraverse(predecessor_default_page)
       discussion_thread.setPredecessorValueList([predecessor_document])
+  if predecessor_portal_type == 'Web Page':
+    discussion_thread.setPredecessorValueList([predecessor_object])
 
   # set predecessor on document
-  if predecessor_portal_type == 'Web Page':
+  if predecessor_portal_type == 'Discussion Forum':
     discussion_thread.setPredecessorValueList([predecessor_object])
 
 discussion_post = discussion_thread.newContent(
@@ -94,7 +90,7 @@ discussion_thread.publish()
 
 # handle attachments
 if getattr(file, 'filename', '') != '':
-  document = context.Base_contribute(
+  document = forum.Base_contribute(
     batch_mode=True,
     redirect_to_document=False,
     synchronous_metadata_discovery=True,
@@ -119,7 +115,7 @@ if send_notification_text not in ('', None):
   if len(person_list):
     #Get message from catalog
     notification_reference = 'forum-new-thread'
-    notification_message = context.NotificationTool_getDocumentValue(notification_reference, 'en')
+    notification_message = forum.NotificationTool_getDocumentValue(notification_reference, 'en')
     if notification_message is None:
       raise ValueError('Unable to found Notification Message with reference "%s".' % notification_reference)
 
@@ -144,6 +140,6 @@ if send_notification_text not in ('', None):
         message_text_format=notification_message.getContentType(),
         store_as_event=False)
 
-return context.Base_redirect(redirect_url=redirect_url,
+return context.Base_redirect(redirect_url=context.getAbsoluteUrl(),
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),
                            thread_relative_url=discussion_thread.getRelativeUrl()))
