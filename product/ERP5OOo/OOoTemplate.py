@@ -565,8 +565,8 @@ class OOoTemplate(ZopePageTemplate):
       # Performance improvement:
       # We already have OOo format data, so we do not need to call
       # convertToBaseFormat(), but just copy it into base_data property.
-      tmp_ooo.setBaseData(ooo)
-      tmp_ooo.setBaseContentType(mimetype)
+      tmp_ooo.setData(ooo)
+      tmp_ooo.setContentType(mimetype)
 
     if request is not None and not batch_mode and not source:
       return tmp_ooo.index_html(REQUEST=request,
