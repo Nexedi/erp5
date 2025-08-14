@@ -58,7 +58,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_rrc_connection_request</string>
+                        <string>your_rrc_paging</string>
                       </list>
                     </value>
                 </item>
