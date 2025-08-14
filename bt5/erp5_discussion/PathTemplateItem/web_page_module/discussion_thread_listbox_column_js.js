@@ -33,7 +33,12 @@
             '&view=' + view_posts;
           url_options.options.view = posts_view;
           if (last_post) {
-            url_options.options.last_page = last_post;
+            url_options.options.last_post = last_post;
+            var img = domsugar('img', {
+              src: "document_icon.gif"
+            });
+            img.classList.add("img_latest");
+            gadget.element.appendChild(img);
           }
           return gadget.getUrlFor(url_options);
         })
