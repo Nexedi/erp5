@@ -68,6 +68,8 @@
   <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
   <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url">
+    <link rel="shortcut icon" tal:attributes="href favicon_url">
+    <link rel="apple-touch-icon-precomposed" tal:attributes="href favicon_url">
   </tal:block>
   <link tal:condition="include_document" rel="alternate" type="application/rss+xml" href="feed.rss">
   <meta name="robots" content="index, follow">

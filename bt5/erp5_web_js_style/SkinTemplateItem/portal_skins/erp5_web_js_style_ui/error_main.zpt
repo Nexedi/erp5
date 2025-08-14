@@ -28,6 +28,8 @@
   <title tal:content="python: web_section.getTranslatedTitle()"></title>
   <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url">
+    <link rel="shortcut icon" tal:attributes="href favicon_url">
+    <link rel="apple-touch-icon-precomposed" tal:attributes="href favicon_url">
   </tal:block>
   <meta name="robots" content="noindex,follow">
   <link rel="stylesheet" tal:attributes="href no_style_css_url">
