@@ -16,7 +16,7 @@
     .declareMethod('render', function render(options) {
       var gadget = this, jio_key = options.jio_key,
         view_posts = options.view || "view_posts",
-        last_post = options.last_post || false,
+        last_post = options.last_post_url || false,
         author = options.author_dict.author_title,
         url_options = {
           command: 'push_history',
@@ -33,7 +33,7 @@
             '&view=' + view_posts;
           url_options.options.view = posts_view;
           if (last_post) {
-            url_options.options.last_page = last_post;
+            url_options.options.last_post = last_post;
           }
           return gadget.getUrlFor(url_options);
         })
