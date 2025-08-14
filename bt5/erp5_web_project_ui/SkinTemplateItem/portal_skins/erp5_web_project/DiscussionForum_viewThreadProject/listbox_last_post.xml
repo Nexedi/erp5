@@ -106,7 +106,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("author_dict", cell.DiscussionThread_getLastPost().DiscussionPost_getAuthorDict()), (\'jio_key\', cell.getRelativeUrl()), (\'last_post\', True), (\'view\', \'project_view\')]</string> </value>
+            <value> <string>python: [("last_post_url", cell.DiscussionThread_getLastPost().getRelativeUrl()), ("author_dict", cell.DiscussionThread_getLastPost().DiscussionPost_getAuthorDict()), (\'jio_key\', cell.getRelativeUrl()), (\'view\', \'project_view\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
