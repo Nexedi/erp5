@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'data_array_url\', context.DataAcquisitionUnit_getUeCountDataArrayUrl()), (\'kpi_type\', \'ue_count\')]</string> </value>
+            <value> <string>python: [(\'data_array_url\', context.DataAcquisitionUnit_getDataArrayUrl(data_type="cell_ue_count")), (\'data_type\', \'ue_count\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
