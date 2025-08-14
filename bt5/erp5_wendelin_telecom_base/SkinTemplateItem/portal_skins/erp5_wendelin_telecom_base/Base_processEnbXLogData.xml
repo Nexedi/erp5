@@ -8,15 +8,15 @@
       <dictionary>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>calcOrsUeCount</string> </value>
+            <value> <string>processEnbXLogData</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
-            <value> <string>WendelinTelecomCalcBase</string> </value>
+            <value> <string>WendelinTelecomCalculation</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_calcOrsUeCount</string> </value>
+            <value> <string>Base_processEnbXLogData</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

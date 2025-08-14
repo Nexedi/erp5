@@ -63,9 +63,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>f703f915e63aa9486daec31d10428a08</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -108,7 +106,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -127,13 +125,13 @@
                 <item>
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -159,7 +157,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -174,13 +172,9 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1734617161.66</float>
@@ -218,7 +212,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -232,7 +226,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1022.1462.17971.33587</string> </value>
+                      <value> <string>1026.27650.63535.46028</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -243,16 +237,12 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
-                              <float>1736844940.5</float>
+                              <float>1755544163.07613</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
