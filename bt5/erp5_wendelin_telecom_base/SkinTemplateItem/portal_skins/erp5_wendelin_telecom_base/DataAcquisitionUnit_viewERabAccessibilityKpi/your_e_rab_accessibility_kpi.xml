@@ -151,7 +151,7 @@
                 <item>
                     <key> <string>renderjs_extra</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'data_array_url\', context.DataAcquisitionUnit_getERabDataArrayUrl()), (\'kpi_type\', \'e_rab_accessibility\')]</string> </value>
+            <value> <string>python: [(\'data_array_url\', context.DataAcquisitionUnit_getDataArrayUrl(data_type=\'e_rab\')), (\'data_type\', \'e_rab_accessibility\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
