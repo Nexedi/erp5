@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_latest_post.html</string> </value>
+            <value> <string>gadget_thread_listbox_column.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>discussion_gadget_latest_post_html</string> </value>
+            <value> <string>discussion_thread_listbox_column_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Latest Post</string> </value>
+            <value> <string>Gadget Thread Listbox Column</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -240,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1026.21950.42379.52736</string> </value>
+                      <value> <string>1026.52653.63737.38638</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1753370869.54</float>
+                              <float>1755213100.69</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
