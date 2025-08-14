@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_rrc_connection_request</string> </value>
+            <value> <string>your_rrc_paging</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'data_array_url\', context.DataAcquisitionUnit_getUeCountDataArrayUrl()), (\'kpi_type\', \'rrc_paging\')]</string> </value>
+            <value> <string>python: [(\'data_array_url\', context.DataAcquisitionUnit_getDataArrayUrl(data_type="cell_rrc")), (\'data_type\', \'rrc_paging\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

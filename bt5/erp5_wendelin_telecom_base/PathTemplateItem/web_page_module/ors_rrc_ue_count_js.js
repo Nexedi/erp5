@@ -1,14 +1,14 @@
-/*global window, rJS, RSVP, console, Plotly, location, URI, loopEventListener */
+/*global window, document, Math, rJS, RSVP, console, Plotly, location, URI, loopEventListener */
 /*jslint indent: 2, maxlen: 80, nomen: true */
-(function (window, rJS, RSVP, Plotly, URI, loopEventListener) {
+(function (window, document, Math, rJS, RSVP, Plotly, URI, loopEventListener) {
   'use strict';
 
   var gadget_klass = rJS(window);
 
-  function getNoDataPlotLayout(title, annotation) {
+  function getNoDataPlotLayout(annotation) {
     return {
       'title' : {
-        'text': title
+        'text': 'RRC Connection Request + UE Count vs Time'
       },
       'xaxis': {
         'fixedrange': true
@@ -31,8 +31,6 @@
   }
 
   function getDataPlotLayout(title) {
-    var yaxis_clipmax;
-
     return {
       'title' : {
         'text': title
@@ -47,7 +45,6 @@
       'yaxis': {
         'autorange': true,
         'autorangeoptions': {
-          clipmax: yaxis_clipmax,
           minallowed: 0
         },
         'fixedrange': true,
@@ -57,7 +54,6 @@
       }
     };
   }
-
   function getPlotData(date, rrc, hi, avg, lo) {
     var data_list = [];
 
@@ -124,41 +120,79 @@
     return data_list;
   }
 
-  function plotFromResponse(response, element, data_type) {
-    var rafael_test_data_dict,
-      date = [],
-      cell_id = [],
-      rcc = [],
-      link_data = [];
+  function plotFromData(data, element, label) {
+    var date = [];
 
-    rafael_test_data_dict = response;
-
-    if (Object.keys(rafael_test_data_dict).length === 0 ||
-        rafael_test_data_dict.utc.length === 0) {
+    if (Object.keys(data).length === 0 ||
+        data.utc.length === 0) {
+      element.innerHTML = "";
       Plotly.react(
         element,
         [],
-        getNoDataPlotLayout(data_type, 'No data found')
+        getNoDataPlotLayout('No data found')
       );
       return;
     }
 
-    rafael_test_data_dict.utc.forEach(function (element) {
+    data.utc.forEach(function (element) {
       date.push(new Date(element * 1000));
     });
 
-    link_data = getPlotData(
-      date,
-      rafael_test_data_dict.rrc_con_req,
-      rafael_test_data_dict.ue_count_max,
-      rafael_test_data_dict.ue_count_avg,
-      rafael_test_data_dict.ue_count_min
-    );
-    Plotly.react(
+    return Plotly.react(
       element,
-      link_data,
-      getDataPlotLayout(data_type)
+      getPlotData(date,
+        data.rrc_con_req,
+        data.ue_count_max,
+        data.ue_count_avg,
+        data.ue_count_min),
+      getDataPlotLayout(label)
     );
+  }
+
+  function plotFromResponse(response, base_element) {
+    var key,
+      data,
+      label,
+      plotContainer,
+      plotContainerList = [];
+    if (Object.keys(response).length === 0) {
+      Plotly.react(
+        base_element,
+        [],
+        getNoDataPlotLayout('No data found')
+      );
+      return;
+    }
+
+    // Add base before
+    label = "UE Count vs Time (all cells)";
+    plotContainer = document.createElement('div');
+    plotContainer.classList.add('graph-item');
+    plotContainer.setAttribute('data-id', 'base');
+
+    plotFromData(response.base, plotContainer, label);
+    plotContainerList.push(plotContainer);
+
+    // Include cell list after
+    Object.entries(response).forEach(function (entry) {
+      key = entry[0];
+      data = entry[1];
+      label = "RRC Connection Requests + UE Count vs Time";
+      plotContainer = document.createElement('div');
+
+      if (key !== 'base') {
+        label += " CELL " + Math.floor(key).toString();
+        plotContainer.classList.add('graph-item');
+        plotContainer.setAttribute('data-id', key);
+        plotFromData(data, plotContainer, label);
+        plotContainerList.push(plotContainer);
+      }
+    });
+    base_element.innerHTML = "";
+    plotContainerList.forEach(function (div) {
+      base_element.appendChild(div);
+    });
+    return plotContainerList;
   }
 
   gadget_klass
@@ -168,65 +202,80 @@
     .declareService(function () {
       var gadget = this;
       return loopEventListener(window, 'resize', false, function () {
-        return Plotly.Plots.resize(
-          gadget.element.querySelector('.graph-rrc-con-req'));
+        var div_list = gadget.element.querySelectorAll('.graph-ue-count');
+        if (div_list.length > 0) {
+          div_list.forEach(function (element) {
+            Plotly.Plots.resize(element);
+          });
+        }
+        return;
       });
     })
     .declareMethod('render', function (option_dict) {
       var gadget = this,
-        ue_count_url,
-        chart_element = gadget.element.querySelector('.graph-rrc-con-req');
+        data_url,
+        chart_element = gadget.element.querySelector('.graph-base');
 
       return new RSVP.Queue().push(function () {
         return gadget.getSetting('hateoas_url');
       })
         .push(function (hateoas_url) {
-          ue_count_url =
+          data_url =
             (new URI(hateoas_url)).absoluteTo(location.href).toString() +
-            'Base_getOrsEnbUeCount?data_array_url=' +
-            option_dict.data_array_url +
-            '&kpi_type=' + option_dict.kpi_type;
-          return gadget.jio_getAttachment('erp5', ue_count_url, {
+            'Base_getMergedDataArrayForDataTypeAsJSON?first_data_array_url=' +
+            option_dict.first_data_array_url + '&second_data_array_url=' +
+            option_dict.second_data_array_url +
+            '&data_type=' + option_dict.data_type;
+          return gadget.jio_getAttachment('erp5', data_url, {
             format: 'json'
           });
         })
         .push(function (response) {
-          plotFromResponse(
-            response, chart_element, 'RRC Connection Requests + UE Count');
+          var plotContainerList = plotFromResponse(response, chart_element);
           gadget.element.querySelector('.ui-icon-spinner').hidden = true;
 
-          chart_element.on(
-            'plotly_relayout',
-            function (eventdata) {
-              var xrange_0 = eventdata['xaxis.range[0]'],
-                xrange_1 = eventdata['xaxis.range[1]'],
-                x_start = new Date(xrange_0).getTime() / 1000,
-                x_end = new Date(xrange_1).getTime() / 1000,
-                update_ue_count_url = ue_count_url + '&time_start=' + x_start +
-                  '&time_end=' + x_end;
-
+          return new RSVP.Queue().push(function () {
+            plotContainerList.forEach(function (el) {
               return new RSVP.Queue().push(function () {
-                return gadget.jio_getAttachment('erp5', update_ue_count_url, {
-                  format: 'json'
-                });
+                return Plotly.Plots.resize(el);
               })
-                .push(function (response) {
-                  plotFromResponse(
-                    response,
-                    chart_element,
-                    'RRC Connection Requests + UE Count'
+                .push(function () {
+                  return el.on(
+                    'plotly_relayout',
+                    function (eventdata) {
+                      var st = new Date(eventdata['xaxis.range[0]']).getTime(),
+                        end = new Date(eventdata['xaxis.range[1]']).getTime(),
+                        update_data_url = data_url + '&time_start=' +
+                          st / 1000 + '&time_end=' + end  / 1000;
+
+                      return new RSVP.Queue().push(function () {
+                        return gadget.jio_getAttachment('erp5',
+                          update_data_url, {format: 'json' });
+                      })
+                        .push(function (response) {
+                          var key = el.getAttribute('data-id'),
+                            label = "RRC Connection Request + UE Count" +
+                              " vs Time CELL " +
+                              Math.floor(key).toString(),
+                            data = response[key];
+
+                          return plotFromData(data, el, label);
+                        });
+                    }
                   );
                 });
-            }
-          );
+            });
+            return plotContainerList;
+          });
         }, function () {
           // On request error, show empty plots
-          plotFromResponse(
+          var plot = plotFromResponse(
             {},
-            chart_element,
-            'RRC Connection Requests + UE Count'
+            chart_element
           );
           gadget.element.querySelector('.ui-icon-spinner').hidden = true;
+          return plot;
         });
     });
-}(window, rJS, RSVP, Plotly, URI, loopEventListener));
+}(window, document, Math, rJS, RSVP, Plotly, URI, loopEventListener));
+
