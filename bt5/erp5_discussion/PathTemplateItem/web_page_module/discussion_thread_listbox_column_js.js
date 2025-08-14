@@ -33,7 +33,10 @@
             '&view=' + view_posts;
           url_options.options.view = posts_view;
           if (last_post) {
-            url_options.options.last_page = last_post;
+            url_options.options.last_post = last_post;
+            gadget.element.appendChild(domsugar('img', {
+              src: "document_icon.gif"
+            }));
           }
           return gadget.getUrlFor(url_options);
         })
