@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DataAcquisitionUnit_viewUeCount</string> </value>
+            <value> <string>DataAcquisitionUnit_viewRRCUeCount</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -115,7 +115,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>UE Count vs Time</string> </value>
+            <value> <string>RRC Connection Request + UE Count vs Time</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
