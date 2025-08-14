@@ -79,6 +79,7 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <tal:block tal:condition="site_url">
+    <link rel="sitemap" type="application/xml" title="Sitemap" tal:attributes="href python: site_url + 'WebSite_viewSiteMapAsXML'">
     <meta name="url" tal:attributes="content site_url">
     <meta property="og:url" tal:attributes="content site_url">
     <meta name="twitter:url" tal:attributes="content site_url">
