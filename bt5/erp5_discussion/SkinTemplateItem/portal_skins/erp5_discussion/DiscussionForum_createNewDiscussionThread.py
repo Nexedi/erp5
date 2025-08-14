@@ -2,8 +2,6 @@
  This script allows to create a new Discussion Thread.
 """
 
-MARKER = ['', None, []]
-
 portal = context.getPortalObject()
 person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
@@ -131,4 +129,9 @@ if send_notification_text not in ('', None):
         message_text_format=notification_message.getContentType(),
         store_as_event=False)
 
-return discussion_thread.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))
+if redirect_url:
+  return context.Base_redirect(redirect_url=redirect_url,
+                               keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),
+                                                 thread_relative_url=discussion_thread.getRelativeUrl()))
+else:
+  return discussion_thread.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))
