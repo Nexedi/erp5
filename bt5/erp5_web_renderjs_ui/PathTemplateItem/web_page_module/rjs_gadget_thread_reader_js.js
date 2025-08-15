@@ -135,10 +135,8 @@
         .push(function (result_dict) {
           var begin_from = parseInt(result_dict.begin_from || '0', 10) || 0,
             lines = options.lines || 1;
-          if (result_dict.last_post) {
-            //TODO better get #posts as parameter in last_post
-            var number_of_posts = result_dict.last_post.replace(options.query_dict.parent_relative_url + "/", ""),
-              number_of_pages = Math.ceil(number_of_posts/lines);
+          if (result_dict.last_post && !isNaN(result_dict.last_post)) {
+            var number_of_pages = Math.ceil(result_dict.last_post/lines);
             begin_from = (number_of_pages-1)*lines;
           }
           return gadget.changeState({
