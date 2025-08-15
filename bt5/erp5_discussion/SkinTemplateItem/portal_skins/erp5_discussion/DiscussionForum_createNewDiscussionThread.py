@@ -134,4 +134,5 @@ if redirect_url:
                                keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),
                                                  thread_relative_url=discussion_thread.getRelativeUrl()))
 else:
-  return discussion_thread.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))
+  return context.Base_redirect(redirect_url=discussion_thread.getRelativeUrl(),
+                               keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))
