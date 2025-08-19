@@ -294,7 +294,7 @@
               }));
             setPaginationElement(gadget, allDocs_result.data.total_rows,
                                  result_dict.url_list,
-                                 modification_dict.hasOwnProperty('last_post'));
+                                 gadget.state.last_post);
           });
       }
     })
