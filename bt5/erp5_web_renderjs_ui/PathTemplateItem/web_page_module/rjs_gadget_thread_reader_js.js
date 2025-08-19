@@ -58,7 +58,7 @@
     return time_format.format(Math.floor(diff / minute), 'minute');
   }
 
-  function setPaginationElement(gadget, count, url_list) {
+  function setPaginationElement(gadget, count, url_list, last_post) {
     var disabled_suffix = ' ui-disabled',
       span_dict,
       first_dict = {
@@ -106,6 +106,10 @@
       domsugar('a', next_dict),
       domsugar('span', span_dict)
     ]);
+
+    if (last_post) {
+      gadget.element.querySelector(':scope > nav').scrollIntoView()
+    }
   }
 
   rJS(window)
@@ -161,7 +165,8 @@
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
-            allDocs_result: undefined
+            allDocs_result: undefined,
+            last_post: result_dict.last_post
           });
         });
     })
@@ -179,7 +184,7 @@
       }
 
       if (modification_dict.hasOwnProperty('first_render')) {
-        setPaginationElement(gadget, 0, []);
+        setPaginationElement(gadget, 0, [], modification_dict.hasOwnProperty('last_post'));
       }
 
       if (modification_dict.hasOwnProperty('render_timestamp')) {
@@ -288,7 +293,8 @@
                 ]);
               }));
             setPaginationElement(gadget, allDocs_result.data.total_rows,
-                                 result_dict.url_list);
+                                 result_dict.url_list,
+                                 modification_dict.hasOwnProperty('last_post'));
           });
       }
     })
