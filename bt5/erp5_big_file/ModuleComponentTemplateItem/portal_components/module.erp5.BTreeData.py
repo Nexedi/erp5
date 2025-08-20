@@ -23,6 +23,20 @@ class PersistentString(Persistent):
 
 negative_offset_error = ValueError('Negative offset')
 
+def _to_bytes(chunk_data):
+
+  if six.PY2:
+    return chunk_data
+
+  if isinstance(chunk_data, bytes):
+    return chunk_data
+  if isinstance(chunk_data, str):
+    return chunk_data.encode('utf-8')
+  if hasattr(chunk_data, '__iter__'):
+    return b''.join(_to_bytes(x) for x in chunk_data)
+
+  raise TypeError("Unsupported type %r" % type(chunk_data))
+
 class BTreeData(Persistent):
   """
   In-ZODB (non-BLOB) storage of arbitrary binary data.
@@ -202,7 +216,10 @@ class BTreeData(Persistent):
         while padding:
           padding_chunk = min(padding, MAX_PADDING_CHUNK)
           padding -= padding_chunk
-          yield '\x00' * padding_chunk
+          if six.PY2:
+            yield '\x00' * padding_chunk
+          else:
+            yield b'\x00' * padding_chunk
       else:
         chunk_offset = next_byte - key
       if size == 0:
@@ -215,7 +232,7 @@ class BTreeData(Persistent):
       to_write_len = len(to_write)
       size -= to_write_len
       next_byte += to_write_len
-      yield to_write
+      yield _to_bytes(to_write)
 
   def truncate(self, offset):
     """
