@@ -28,7 +28,9 @@ e_utran_data_array.activate().DataArray_updateActiveQciLines()
 if offset_index >= end:
   return
 
-previous_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(start, offset_index)])
+previous_log_data = ''.join(
+  [x.decode('utf-8') if isinstance(x, bytes) else x for x in in_data_stream.readChunkList(start, offset_index)]
+)
 new_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(offset_index, end)])
 
 previous_log_data_line_list = previous_log_data.splitlines()
