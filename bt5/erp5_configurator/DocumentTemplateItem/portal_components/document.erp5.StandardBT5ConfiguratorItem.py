@@ -81,7 +81,8 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         template_tool.installBusinessTemplateListFromRepository([bt5_id],
                                   update_catalog=self.getUpdateCatalog(0),
                                   install_dependency=self.getInstallDependency(1),
-                                  activate=True)
+                                  force_all=True,
+                                  activate=False)
 
       return [self._createConstraintMessage('%s should be installed' % bt5_id),]
 
