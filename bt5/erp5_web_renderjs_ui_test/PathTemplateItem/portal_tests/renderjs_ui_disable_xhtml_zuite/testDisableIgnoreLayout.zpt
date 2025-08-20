@@ -1,0 +1,143 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Disable Ignore Layout</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Disable Ignore Layout for anonymous user</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td colspan="3"><b>Check ignore layout for connected user</b></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/portal_preferences/default_system_preference?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Logged In as</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Conversion Server URLs</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>${base_url}/web_site_module/renderjs_runner/portal_preferences/default_system_preference?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Logout</b></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Username</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Password</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check ignore layout for anonymous</b></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/portal_preferences/default_system_preference?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Logged In as</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Conversion Server URLs</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertNotAbsoluteLocation</td>
+  <td>${base_url}/web_site_module/renderjs_runner/portal_preferences/default_system_preference?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Login again to be nice for next test</b></td>
+</tr>
+<tal:block tal:define="
+  login_form_url python: '${base_url}';
+  submit_name python: '//input[@value=\'Login\']';
+">
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_username")</td>
+    <td>manager_username</td>
+  </tr>
+  <tr>
+    <td>storeEval</td>
+    <td>selenium.getCookieByName("manager_password")</td>
+    <td>manager_password</td>
+  </tr>
+  <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+    <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+    <tal:block metal:fill-slot="password">${manager_password}</tal:block>
+  </tal:block>
+</tal:block>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Welcome to ERP5</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>
