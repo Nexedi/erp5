@@ -21,14 +21,13 @@ for array in out_array:
   if array['variation'] == 'e_utran':
     e_utran_data_array = array['Data Array']
 
-# Queue active QCI updating in all cases
-e_utran_data_array.activate().DataArray_updateActiveQciLines()
-
 # No new data to process
 if offset_index >= end:
   return
 
-previous_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(start, offset_index)])
+previous_log_data = ''.join(
+  [x.decode('utf-8') if isinstance(x, bytes) else x for x in in_data_stream.readChunkList(start, offset_index)]
+)
 new_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(offset_index, end)])
 
 previous_log_data_line_list = previous_log_data.splitlines()
@@ -152,4 +151,5 @@ if e_utran_array_data:
   e_utran_array.append(e_utran_array_data)
 
 progress_indicator.setIntOffsetIndex(end)
+e_utran_data_array.activate().DataArray_updateActiveQciLines()
 return
