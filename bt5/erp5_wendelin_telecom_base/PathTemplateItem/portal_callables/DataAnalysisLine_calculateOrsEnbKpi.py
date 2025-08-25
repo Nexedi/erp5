@@ -17,6 +17,7 @@ e_rab_data_array = None
 e_utran_data_array = None
 cell_ue_count_data_array = None
 cell_rrc_data_array = None
+cell_rms_rx_data_array = None
 for array in out_array:
   if array['variation'] == 'e_rab':
     e_rab_data_array = array['Data Array']
@@ -26,6 +27,9 @@ for array in out_array:
     cell_ue_count_data_array = array['Data Array']
   if array['variation'] == 'cell_rrc':
     cell_rrc_data_array = array['Data Array']
+  if array['variation'] == 'cell_rms_rx':
+    cell_rms_rx_data_array = array['Data Array']
+
 
 # No new data to process
 if offset_index >= end:
@@ -99,6 +103,7 @@ evt, v_ip_throughput_qci = enb_xlog_data_dict['e_utran_ip_throughput']
 
 ue_count_data_list = enb_xlog_data_dict['ue_count']
 rrc_list = enb_xlog_data_dict['rrc']
+rms_rx_list = enb_xlog_data_dict['rms']['rx']
 
 e_rab_dtype = np.dtype([
   ('vt', 'float'),
@@ -133,6 +138,16 @@ cell_rrc_dtype = np.dtype([
   ('rrc_sec_complete', 'float')
 ])
 
+cell_rms_rx_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('antenna', 'float'),
+  ('count', 'float'),
+  ('max', 'float64'),
+  ('rms', 'float64'),
+  ('rms_dbm', 'float64')
+])
+
 e_rab_array = e_rab_data_array.getArray()
 if not e_rab_array:
   e_rab_array = e_rab_data_array.initArray(shape=(0,), dtype=e_rab_dtype)
@@ -152,6 +167,11 @@ cell_rrc_array = cell_rrc_data_array.getArray()
 if not cell_rrc_array:
   cell_rrc_array = cell_rrc_data_array.initArray(shape=(0,), dtype=cell_rrc_dtype)
 cell_rrc_array_data = []
+
+cell_rms_rx_array = cell_rms_rx_data_array.getArray()
+if not cell_rms_rx_array:
+  cell_rms_rx_array = cell_rms_rx_data_array.initArray(shape=(0,), dtype=cell_rms_rx_dtype)
+cell_rms_rx_array_data = []
 
 # Don't duplicate KPI data:
 # search and start inserting new timestamps from the first one
@@ -187,6 +207,9 @@ for e in ue_count_data_list:
 for e in rrc_list:
   cell_rrc_array_data.append(e)
 
+for e in rms_rx_list:
+  cell_rms_rx_array_data.append(e)
+
 if e_rab_array_data:
   e_rab_array_data = np.ndarray((len(e_rab_array_data),), e_rab_dtype, np.array(e_rab_array_data))
   e_rab_array.append(e_rab_array_data)
@@ -202,6 +225,10 @@ if cell_ue_count_array_data:
 if cell_rrc_array_data:
   cell_rrc_array_data = np.ndarray((len(cell_rrc_array_data),), cell_rrc_dtype, np.array(cell_rrc_array_data))
   cell_rrc_array.append(cell_rrc_array_data)
+
+if cell_rms_rx_array_data:
+  cell_rms_rx_array_data = np.ndarray((len(cell_rms_rx_array_data),), cell_rms_rx_dtype, np.array(cell_rms_rx_array_data))
+  cell_rms_rx_array.append(cell_rms_rx_array_data)
 
 progress_indicator.setIntOffsetIndex(end)
 e_utran_data_array.activate().DataArray_updateActiveQciLines()
