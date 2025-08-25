@@ -18,4 +18,7 @@
   <item>WendelinTelecomDataSupply</item>
   <item>WendelinTelecomOrsObject</item>
  </portal_type>
+ <portal_type id="Progress Indicator">
+  <item>WendelinTelecomProgressIndicator</item>
+ </portal_type>
 </property_sheet_list>
