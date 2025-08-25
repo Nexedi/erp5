@@ -59,7 +59,8 @@ def processEnbXLogData(data, t_period):
       for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
 
         # XXX Ensure that n_antenna_ul refers to RX
-        rms_rx_index = [(cell_id, ant_id+1) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))]
+        # Not correct
+        rms_rx_index = [(cell_id, ant_id+1) for ant_id in range(0, cell_data.get("n_antenna_ul", 4))]
         # rms_tx_index = [ (cell_id, ant_id) for ant_id in range(1, cell_data.get("n_antenna_ul", 0))]  # Not required for now
 
         ue_count_max = cell_data.get("ue_count_max", None)
@@ -89,7 +90,6 @@ def processEnbXLogData(data, t_period):
                            rrc_recon_com, rrc_sec_command, rrc_sec_complete))
 
       cell_samples_rx_list = xlog_line_dict.get("samples", {}).get("rx", [])
-      raise ValueError(len(cell_samples_rx_list), len(rms_rx_index))
       for pos, sample_rx in enumerate(cell_samples_rx_list):
         rms_rx_data.append((
           timestamp,
