@@ -36,12 +36,18 @@ def calc_periods(mlog, tperiod):
     # No data to read: exit
     return
 
-def processEnbXLogData(data, t_period):
+def processEnbXLogData(self, data, t_period, progress_indicator=None):
   fxlog = io.StringIO(data)
 
   rrc_data = []
   ue_data = []
   rms_rx_data = []
+  is_config_updated = False
+  if progress_indicator is not None:
+    last_config_dict = json.loads(progress_indicator.getLastXLogConfig('{}'))
+  else:
+    last_config_dict = {}
+  rms_rx_index = last_config_dict.get('rms_rx_index', [])
   for xlog_line in fxlog:
     try:
       xlog_line_dict = json.loads(xlog_line)
@@ -52,15 +58,14 @@ def processEnbXLogData(data, t_period):
     if timestamp is None:
       continue
 
-    # Extract max UE count among all cells
-    rms_rx_index = []
-    # rms_tx_index = [] # Not required for now
-    if "cells" in xlog_line_dict:
+    if xlog_line_dict.get("message", None) == 'config_get' and "cells" in xlog_line_dict:
+      rms_rx_index = []
       for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
+        rms_rx_index.extend([(cell_id, ant_id+1) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))])
+      is_config_updated = True
 
-        # XXX Ensure that n_antenna_ul refers to RX
-        rms_rx_index = [(cell_id, ant_id+1) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))]
-        # rms_tx_index = [ (cell_id, ant_id) for ant_id in range(1, cell_data.get("n_antenna_ul", 0))]  # Not required for now
+    if xlog_line_dict.get("message", None) == 'stats' and "cells" in xlog_line_dict:
+      for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
 
         ue_count_max = cell_data.get("ue_count_max", None)
         ue_count_min = cell_data.get("ue_count_min", None)
@@ -89,18 +94,21 @@ def processEnbXLogData(data, t_period):
                            rrc_recon_com, rrc_sec_command, rrc_sec_complete))
 
       cell_samples_rx_list = xlog_line_dict.get("samples", {}).get("rx", [])
-      raise ValueError(len(cell_samples_rx_list), len(rms_rx_index))
-      for pos, sample_rx in enumerate(cell_samples_rx_list):
-        rms_rx_data.append((
-          timestamp,
-          int(rms_rx_index[pos][0]),  # Cell ID
-          rms_rx_index[pos][1],       # Antenna ID
-          sample_rx['count'],
-          sample_rx['max'],
-          sample_rx['rms'],
-          sample_rx['rms_dbm']
-        ))
-        # XXX REVIEW: Until here.
+      if len(rms_rx_index) == len(cell_samples_rx_list):
+        for pos, sample_rx in enumerate(cell_samples_rx_list):
+          rms_rx_data.append((
+            timestamp,
+            int(rms_rx_index[pos][0]),  # Cell ID
+            rms_rx_index[pos][1],       # Antenna ID
+            sample_rx['count'],
+            sample_rx['max'],
+             sample_rx['rms'],
+            sample_rx['rms_dbm']
+          ))
+      #else:
+       # raise ValueError("len(rms_rx_index) %s != len(cell_samples_rx_list) %s" % (
+       #   len(rms_rx_index), len(cell_samples_rx_list)))
+       # XXX REVIEW: Until here.
 
   # Seek is faster them recreate fxlog with same data. Optionally this the block
   # below should be re-implemented inside xlte in future.
@@ -150,6 +158,14 @@ def processEnbXLogData(data, t_period):
     e_utran_ip_throughput=(evt, v_ip_throughput_qci),
     ue_count=ue_data,
     rrc=rrc_data,
-    rms={'rx': rms_rx_data}
+    rms={'rx': rms_rx_data},
+    last_rms_rx_index=rms_rx_index
   )
+  if is_config_updated and progress_indicator is not None:
+    progress_indicator.setLastXLogConfig(
+      json.dumps({
+        'utc': timestamp,
+        'rms_rx_index': rms_rx_index
+      }))
+
   return enb_xlog_data_dict
