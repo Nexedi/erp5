@@ -1,0 +1,78 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Login</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Login</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/login_form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='__ac_name']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_name']</td>
+  <td>ù</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_password']</td>
+  <td>ù</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Login and/or password is incorrect</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@name='__ac_name']</td>
+  <td></td>
+</tr>
+
+ <tr>
+   <td>storeEval</td>
+   <td>selenium.getCookieByName("manager_username")</td>
+   <td>manager_username</td>
+</tr>
+<tr>
+  <td>storeEval</td>
+  <td>selenium.getCookieByName("manager_password")</td>
+  <td>manager_password</td>
+</tr>
+<tal:block tal:define="submit_name python:'//input[@value=\'Login\']'">
+  <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+    <tal:block metal:fill-slot="username">${manager_username}</tal:block>
+    <tal:block metal:fill-slot="password">${manager_password}</tal:block>
+  </tal:block>
+</tal:block>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Welcome to ERP5</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

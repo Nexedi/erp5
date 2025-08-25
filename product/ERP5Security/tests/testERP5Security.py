@@ -50,6 +50,7 @@ from DateTime import DateTime
 from Products import ERP5Security
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+import requests
 
 
 AUTO_LOGIN = object()
@@ -117,6 +118,18 @@ class UserManagementTestCase(ERP5TypeTestCase):
       self.tic()
     return new_person.Person_getUserId(), login, password
 
+  def _checkPageMessage(self, url, message, login, password):
+    session = requests.Session()
+    session.post(
+      self.portal.absolute_url() + '/login_form',
+      data={
+        '__ac_name': login,
+        '__ac_password': password
+      }
+    )
+    response = session.get(url)
+    self.assertIn(message, response.text)
+
   def _assertUserExists(self, login, password):
     """Checks that a user with login and password exists and can log in to the
     system.
@@ -129,6 +142,7 @@ class UserManagementTestCase(ERP5TypeTestCase):
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
                   {'login':login, 'password':password}) is not None:
+        self._checkPageMessage(self.portal.absolute_url(), b'Welcome to ERP5', login, password)
         break
     else:
       self.fail("No plugin could authenticate '%s' with password '%s'" %
@@ -148,6 +162,8 @@ class UserManagementTestCase(ERP5TypeTestCase):
         self.fail(
            "Plugin %s should not have authenticated '%s' with password '%s'" %
            (plugin_name, login, password))
+
+    self._checkPageMessage(self.portal.absolute_url(), b'Log in', login, password)
 
   def _getOrCreateGroupValue(self):
     group_id = 'dummy_group'
@@ -363,6 +379,7 @@ class TestUserManagement(UserManagementTestCase):
     login = 'j\xc3\xa9'
     _, _, password = self._makePerson(login=login)
     self._assertUserExists(login, password)
+    self._assertUserDoesNotExists(login, '%s-x' % password)
 
   def test_PersonWithLoginWithNonePasswordAreNotUsers(self):
     """Tests a person with a login but None as a password is not a valid user."""
