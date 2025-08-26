@@ -45,3 +45,5 @@ portal_tests/relation_field_zuite
 portal_tests/relation_field_zuite/**
 portal_tests/search_zuite
 portal_tests/search_zuite/**
+portal_tests/zlogin_zuite
+portal_tests/zlogin_zuite/**
