@@ -19,7 +19,12 @@ class PersistentString(Persistent):
 
   # Save place when storing this data in zodb
   __getstate__ = __bytes__
-  __setstate__ = __init__
+
+  def __setstate__(self, state):
+    # we might be loading a PersistentString saved from python2
+    if six.PY3 and isinstance(state, str):
+      state = state.encode('utf-8')
+    self.__init__(state)
 
 negative_offset_error = ValueError('Negative offset')
 
@@ -91,12 +96,13 @@ class BTreeData(Persistent):
     """
     Create a new chunk at given offset, with given data.
 
-    buf (string)
+    buf (bytes)
      Data to write
     offset (int)
      Offset of first data byte.
     """
     # TODO: auto-aggregation of continuous keys when overwriting
+    assert isinstance(buf, bytes)
     if offset < 0:
       raise negative_offset_error
     tree = self._tree
