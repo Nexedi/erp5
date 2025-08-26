@@ -91,12 +91,13 @@ class BTreeData(Persistent):
     """
     Create a new chunk at given offset, with given data.
 
-    buf (string)
+    buf (bytes)
      Data to write
     offset (int)
      Offset of first data byte.
     """
     # TODO: auto-aggregation of continuous keys when overwriting
+    assert isinstance(buf, bytes)
     if offset < 0:
       raise negative_offset_error
     tree = self._tree
