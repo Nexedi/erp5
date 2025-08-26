@@ -163,7 +163,7 @@ class BTreeData(Persistent):
 
     Returns bytes of read data.
     """
-    return b''.join(self.iterate(offset, size))
+    return b''.join([chunk.encode('utf-8') if not isinstance(chunk, bytes) else chunk for chunk in self.iterate(offset, size)])
 
   def iterate(self, offset=0, size=None):
     """
