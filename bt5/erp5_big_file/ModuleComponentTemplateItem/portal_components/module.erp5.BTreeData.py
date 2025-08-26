@@ -10,6 +10,7 @@ MAX_PADDING_CHUNK = 2 ** 20
 
 class PersistentString(Persistent):
   def __init__(self, value):
+    assert isinstance(value, bytes)
     self.value = value
 
   def __bytes__(self):
@@ -91,7 +92,7 @@ class BTreeData(Persistent):
     """
     Create a new chunk at given offset, with given data.
 
-    buf (string)
+    buf (bytes)
      Data to write
     offset (int)
      Offset of first data byte.
