@@ -66,6 +66,7 @@ class OldDataFsSetup(ERP5TypeTestCase):
       'Document Module',
       'Organisation Module',
       'Person Module',
+      'Big File Module'
     ):
       self.portal.portal_types[module_portal_type].newContent(
         portal_type='Role Information',
@@ -144,6 +145,11 @@ class OldDataFsSetup(ERP5TypeTestCase):
       id='file_content_invalid_utf8',
       data=b'\xff',
     )
+    big_file = self.portal.big_file_module.newContent(
+      portal_type='Big File',
+      id='test_big_file'
+    )
+    big_file.appendData('testdata1')
 
 
 class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
@@ -187,6 +193,7 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       'erp5_configurator_standard_trade_template',
       'erp5_monaco_editor',
       'erp5_upgrader',
+      'erp5_big_file',
      )
 
   def run_upgrader(self):
@@ -214,7 +221,8 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
          'erp5_dms',
          'erp5_mrp',
          'erp5_officejs',
-         'erp5_web_renderjs_ui'),
+         'erp5_web_renderjs_ui',
+         'erp5_big_file'),
          ())""")
     self.tic()
 
@@ -310,6 +318,9 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
     organisation.setDescription('test\nhéhé\nafter')
     self.tic()
     self.assertEqual(organisation.getDescription(), 'test\nhéhé\nafter')
+    big_file = self.portal.big_file_module.test_big_file
+    big_file.appendData(b'testdata2')
+    self.assertEqual(big_file.getData(), b'testdata1testdata2')
 
   def check_existing_dms_documents(self):
     self.assertEqual(
