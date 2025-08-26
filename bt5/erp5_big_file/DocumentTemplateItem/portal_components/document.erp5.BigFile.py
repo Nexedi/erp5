@@ -119,10 +119,11 @@ class BigFile(File):
     # cache of 5000 objects, and with n = 64KB, this makes using about 330 MB
     # of memory.
     n=1 << 16
-
+    # Big string: cut it into smaller chunks
     if isinstance(file, bytes):
-      # Big string: cut it into smaller chunks
       file = io.BytesIO(file)
+    elif isinstance(file, str):
+      file = io.StringIO(file)
 
     if isinstance(file, FileUpload) and not file:
       raise ValueError('File not specified')
@@ -135,7 +136,7 @@ class BigFile(File):
 
     if data is None:
       btree = BTreeData()
-    elif isinstance(data, bytes):
+    elif isinstance(data, (bytes, str)):
       # we'll want to append content to this file -
       # - automatically convert bytes (empty or not) to BTreeData
       btree = BTreeData()
