@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_e_rab_accessibility_kpi</string> </value>
+            <value> <string>your_rrc_ue_count</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -187,7 +187,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>gadget_ors_e_rab_accessibility_kpi</string> </value>
+                    <value> <string>gadget_ors_rrc_ue_count</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -211,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>gadget_ors_e_rab_accessibility_kpi.html</string> </value>
+                    <value> <string>gadget_ors_rrc_ue_count.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -229,7 +229,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>E-RAB Accessibility KPI Graph</string> </value>
+                    <value> <string>RRC Connection Request + Ue Count</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'data_array_url\', context.DataAcquisitionUnit_getDataArrayUrl(data_type=\'e_rab\')), (\'data_type\', \'e_rab_accessibility\')]</string> </value>
+            <value> <string>python: [(\'first_data_array_url\', context.DataAcquisitionUnit_getDataArrayUrl(data_type="cell_ue_count")), (\'second_data_array_url\', context.DataAcquisitionUnit_getDataArrayUrl(data_type="cell_rrc")), (\'data_type\', \'ue_rrc\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

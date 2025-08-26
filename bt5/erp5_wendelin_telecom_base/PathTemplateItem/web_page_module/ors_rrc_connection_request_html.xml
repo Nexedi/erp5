@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -63,17 +63,15 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>f703f915e63aa9486daec31d10428a08</string> </value>
+            <value> <string>42c0c2b250767968d00cdc013c6d5633</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ors_e_rab_accessibility_kpi.js</string> </value>
+            <value> <string>gadget_ors_rrc_connection_request.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,11 +81,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ors_e_rab_accessibility_kpi_js</string> </value>
+            <value> <string>ors_rrc_connection_request_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ORS E RAB Accessibility KPI JS</string> </value>
+            <value> <string>Gadget ORS RRC Connection Request</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -132,6 +134,12 @@
                     <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -177,7 +185,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1734617161.66</float>
+                              <float>1754680657.944858</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -226,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1026.27650.63535.46028</string> </value>
+                      <value> <string>1026.43782.26046.64273</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -242,7 +250,66 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1755544163.07613</float>
+                              <float>1755651361.344561</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>detect_converted_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>external_processing_state</string> </key>
+                      <value> <string>converted</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple/>
+                          <state>
+                            <tuple>
+                              <float>1754680603.24629</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
