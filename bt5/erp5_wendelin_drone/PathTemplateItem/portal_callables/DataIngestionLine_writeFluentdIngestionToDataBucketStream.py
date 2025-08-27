@@ -12,7 +12,7 @@ try:
       names_message_dir[file_name] = [message]
 
   for tag in names_message_dir:
-    bucket_stream["Data Bucket Stream"].insertBucket(tag,"\n".join(names_message_dir[tag]))
+    bucket_stream["Data Bucket Stream"].insertBucket(tag,"\n".join(names_message_dir[tag]).encode('utf-8'))
 except:
   context.log("The send file is missing the filepath attribute")
   pass
