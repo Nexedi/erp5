@@ -209,8 +209,8 @@ class File(Document, OFS_File):
     try:
       mime_type, content = self.convert(None)
     except ConversionError:
-      mime_type = self.getBaseContentType()
-      content = self.getBaseData()
+      mime_type = self.getContentType()
+      content = self.getData()
     except (NotImplementedError, MimeTypeException):
       pass
 
@@ -219,8 +219,6 @@ class File(Document, OFS_File):
         content = self.getTextContent()
       elif getattr(self, 'getData', None) is not None:
         content = self.getData()
-      elif getattr(self, 'getBaseData', None) is not None:
-        content = self.getBaseData()
 
     if content is not None:
       if isinstance(content, six.text_type):
