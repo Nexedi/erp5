@@ -364,32 +364,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       zip_file.close()
       archive_file.close()
 
-  security.declarePrivate('_convertToBaseFormat')
-  def _convertToBaseFormat(self):
-    """
-      Converts the original document into ODF
-      by invoking the conversion server. Store the result
-      on the object. Update metadata information.
-    """
-    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
-      response_code, response_dict, response_message = server_proxy.run_convert(
-                                      self.getFilename() or self.getId(),
-                                      bytes2str(enc(bytes(self.getData()))),
-                                      None,
-                                      None,
-                                      self.getContentType())
-    if response_code == 200:
-      # sucessfully converted document
-      self._setBaseData(dec(str2bytes(response_dict['data'])))
-      metadata = response_dict['meta']
-      if metadata.get('MIMEType', None) is not None:
-        self._setBaseContentType(metadata['MIMEType'])
-    else:
-      # Explicitly raise the exception!
-      raise ConversionError(
-                "OOoDocument: Error converting document to base format. (Code %s: %s)"
-                                       % (response_code, response_message))
-
   def _getContentInformation(self):
     """
       Returns the metadata extracted by the conversion
