@@ -9,7 +9,6 @@ interface.erp5.IAmountList
 interface.erp5.IAmountPrice
 interface.erp5.IArrowBase
 interface.erp5.IAssetMovement
-interface.erp5.IBaseConvertable
 interface.erp5.IBuildableBusinessLinkProcess
 interface.erp5.IBusinessLinkProcess
 interface.erp5.IBusinessProcess
