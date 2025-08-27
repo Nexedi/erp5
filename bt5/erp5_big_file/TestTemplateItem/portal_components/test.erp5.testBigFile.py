@@ -29,7 +29,7 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import IS_ZOPE2
-from erp5.component.module.BTreeData import BTreeData
+from erp5.component.module.BTreeData import BTreeData, PersistentString
 
 
 # like Testing.makerequest, but
@@ -72,6 +72,19 @@ def request_function(method_name):
   method_func.func_name = method_name
   return method_func
 
+def checkBTreeData(tree, length, read_offset, read_length, data_, keys=None):
+  #print(list(tree._tree.items()))
+  tree_length = len(tree)
+  tree_data = tree.read(read_offset, read_length)
+  tree_iterator_data = b''.join(tree.iterate(read_offset, read_length))
+  assert tree_length == length, tree_length
+  assert tree_data == data_, repr(tree_data)
+  assert tree_iterator_data == data_, repr(tree_iterator_data)
+  if keys is not None:
+    tree_keys = list(tree._tree.keys())
+    assert tree_keys == keys, tree_keys
+
+
 # requests
 get = request_function('GET')
 put = request_function('PUT')
@@ -84,9 +97,9 @@ if IS_ZOPE2: # BBB Zope2
 else:
   R308 = 308
 
-class TestBigFile(ERP5TypeTestCase):
-  """Tests for ERP5.Document.BigFile"""
 
+class TestBTreeData(ERP5TypeTestCase):
+  """Tests for ERP5.Document.BTreeData"""
   def getBusinessTemplateList(self):
     """bt5 required to run this tests"""
     return ('erp5_big_file',
@@ -98,6 +111,122 @@ class TestBigFile(ERP5TypeTestCase):
                  'erp5_base',
                )[::-1]	# NOTE install order is important
 
+
+  def testBTreeData_checkData(self):
+
+    PersistentString.__repr__ = lambda self: repr(self.value)
+
+    data = BTreeData()
+    data.write(b'', 10)
+    checkBTreeData(data, 10, 0, 20, b'\x00' * 10, [10])
+
+    data.truncate(0)
+    checkBTreeData(data, 0, 0, 20, b'', [])
+
+    data.write(b'a', 5)
+    checkBTreeData(data, 6, 4, 3, b'\x00a', [5])
+
+    data.write(b'b', 5)
+    checkBTreeData(data, 6, 4, 3, b'\x00b', [5])
+
+    data.write(b'0123456', 0)
+    checkBTreeData(data, 7, 0, 10, b'0123456', [0, 5])
+    checkBTreeData(data, 7, 0, 1, b'0')
+    checkBTreeData(data, 7, 1, 1, b'1')
+    checkBTreeData(data, 7, 2, 1, b'2')
+    checkBTreeData(data, 7, 5, 1, b'5')
+    checkBTreeData(data, 7, 6, 1, b'6')
+
+    # Unaligned write, spilling in next existing chunk
+    data.write(b'XY', 4)
+    checkBTreeData(data, 7, 0, 10, b'0123XY6', [0, 5])
+    # Unaligned write, inside existing chunk
+    data.write(b'VW', 1)
+    checkBTreeData(data, 7, 0, 10, b'0VW3XY6', [0, 5])
+    # Empty write inside existing chunk
+    data.write(b'', 4)
+    checkBTreeData(data, 7, 0, 10, b'0VW3XY6', [0, 5])
+    # Aligned write
+    data.write(b'Z', 5)
+    checkBTreeData(data, 7, 0, 10, b'0VW3XZ6', [0, 5])
+
+    data.write(b'a', 10)
+    data.write(b'8', 8)
+    checkBTreeData(data, 11, 0, 10, b'0VW3XZ6\x008\x00', [0, 5, 8, 10])
+    checkBTreeData(data, 11, 7, 10, b'\x008\x00a')
+
+    data.write(b'ABCDE', 6)
+    checkBTreeData(data, 11, 0, 11, b'0VW3XZABCDE', [0, 5, 8, 10])
+
+    data.truncate(7)
+    checkBTreeData(data, 7, 0, 7, b'0VW3XZA', [0, 5])
+    data.truncate(5)
+    checkBTreeData(data, 5, 0, 5, b'0VW3X', [0])
+    data.truncate(3)
+    checkBTreeData(data, 3, 0, 3, b'0VW', [0])
+    data.truncate(0)
+    checkBTreeData(data, 0, 0, 0, b'', [])
+
+    data.truncate(10)
+    checkBTreeData(data, 10, 0, 10, b'\x00' * 10, [10])
+    data.write(b'a', 15)
+    checkBTreeData(data, 16, 0, 16, b'\x00' * 15 + b'a', [15])
+    data.write(b'bc', 9)
+    checkBTreeData(data, 16, 0, 16, b'\x00' * 9 + b'bc' + b'\x00' * 4 + b'a', [9, 15])
+
+    data = BTreeData(chunk_size=4, max_chunk_size=10)
+    data.write(b'01', 0)
+    checkBTreeData(data, 2, 0, 10, b'01', [0])
+    data.write(b'23', 2)
+    checkBTreeData(data, 4, 0, 10, b'0123', [0])
+    data.write(b'AB4', 2)
+    checkBTreeData(data, 5, 0, 10, b'01AB4', [0])
+    data.write(b'C56', 4)
+    checkBTreeData(data, 7, 0, 10, b'01ABC56', [0])
+    data.write(b'7', 7)
+    checkBTreeData(data, 8, 0, 10, b'01ABC567', [0, 7])
+    data.write(b'8', 8)
+    checkBTreeData(data, 9, 0, 10, b'01ABC5678', [0, 7])
+    data.write(b'C', 12)
+    checkBTreeData(data, 13, 0, 13, b'01ABC5678\x00\x00\x00C', [0, 7, 12])
+    data.write(b'9ABcDEFG', 9)
+    checkBTreeData(data, 17, 0, 17, b'01ABC56789ABcDEFG', [0, 7, 12])
+    for _ in data.defragment():
+      pass
+    checkBTreeData(data, 17, 0, 17, b'01ABC56789ABcDEFG', [0, 10])
+    data.write(b'HIJKL', len(data))
+    checkBTreeData(data, 22, 0, 22, b'01ABC56789ABcDEFGHIJKL', [0, 10, 17])
+    for _ in data.defragment():
+      pass
+    checkBTreeData(data, 22, 0, 22, b'01ABC56789ABcDEFGHIJKL', [0, 10, 20])
+    data.write(b'NOPQRSTUVWXYZ', 23)
+    checkBTreeData(data, 36, 0, 36, b'01ABC56789ABcDEFGHIJKL\x00NOPQRSTUVWXYZ', [0, 10, 20, 23, 33])
+    for _ in data.defragment():
+      pass
+    checkBTreeData(data, 36, 0, 36, b'01ABC56789ABcDEFGHIJKL\x00NOPQRSTUVWXYZ', [0, 10, 20, 23, 33])
+
+    data = BTreeData(max_chunk_size=10)
+    for x in range(255):
+      data.write(b'%02x' % x, x * 2)
+    checkBTreeData(data, 510, 0, 10, b'0001020304', [x * 2 for x in range(255)])
+    defragment_generator = data.defragment(batch_size=2)
+    next(defragment_generator)
+    checkBTreeData(data, 510, 0, 10, b'0001020304', [0] + [x * 2 for x in range(2, 255)])
+    opaque = next(defragment_generator)
+    defragment_generator.close()
+    checkBTreeData(data, 510, 0, 10, b'0001020304', [0] + [x * 2 for x in range(4, 255)])
+    defragment_generator = data.defragment(batch_size=2, resume_at=opaque)
+    next(defragment_generator)
+    checkBTreeData(data, 510, 0, 10, b'0001020304', [0] + [x * 2 for x in range(5, 255)])
+    defragment_generator.send(10)
+    checkBTreeData(data, 510, 0, 10, b'0001020304', [0, 10, 20] + [x * 2 for x in range(13, 255)])
+    next(defragment_generator)
+    checkBTreeData(data, 510, 0, 10, b'0001020304', [0, 10, 20, 30, 40] + [x * 2 for x in range(23, 255)])
+    for _ in defragment_generator:
+      pass
+    checkBTreeData(data, 510, 0, 10, b'0001020304', [x * 10 for x in range(51)])
+
+class TestBigFile(ERP5TypeTestCase):
 
   # check that object (document) method corresponding to request returns
   # result, with expected response body, status and headers
