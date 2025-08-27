@@ -259,19 +259,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
   security.declareProtected(Permissions.ModifyPortalContent, '_baseSetBaseContentType')
   _baseSetBaseContentType = _setBaseContentType
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
-  def getBaseData(self, default=_MARKER):
-    """
-    """
-    self._checkConversionFormatPermission(None)
-    if default is _MARKER:
-      text_content = self.getTextContent()
-    else:
-      text_content = self.getTextContent(default=default)
-    if six.PY3 and text_content and text_content is not default:
-      text_content = str2bytes(text_content)
-    return text_content
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
   def getContentType(self, default=_MARKER): # pylint: disable=arguments-differ
     """Backward compatibility, read content_type
