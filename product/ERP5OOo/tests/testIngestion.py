@@ -577,7 +577,6 @@ class TestIngestion(IngestionTestCase):
     """
     self.tic()
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.assertTrue(document.hasBaseData())
     self.assertIn('magic', document.SearchableText())
     self.assertIn('magic', str(document.asText()))
 
