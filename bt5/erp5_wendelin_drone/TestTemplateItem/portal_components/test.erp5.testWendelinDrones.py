@@ -30,6 +30,7 @@ import string
 import pandas as pd
 import math
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import str2bytes
 
 class Test(ERP5TypeTestCase):
   """
@@ -49,7 +50,7 @@ class Test(ERP5TypeTestCase):
                 },
                   {"message":"timestamp (ms);latitude ();longitude ();AMSL (m);rel altitude (m);yaw ();ground speed (m/s);climb rate (m/s)\n 16.666666666666668;45.6403;14.264800000000008;660.46;65.668;0;16.666666666666668;0\n 33.333333333333336;45.64030377777778;14.264800000000008;660.46;65.668;3.5083546492674384e-15;16.666666666666668;0\n 50;45.64030720137322;14.264799927891772;660.5773939615947;65.78539396159465;-0.669850845047716;15.10512978394417;7.043637695678324\n 66.66666666666667;45.640310624266725;14.264799783685163;660.6947879231893;65.9027879231893;-1.3397016900954353;15.10512978394417;7.043637695678324\n 83.33333333333334;45.64031404599047;14.264799567399876;660.812181884784;66.02018188478394;-2.0095525351431416;15.105129783944166;7.043637695678324\n 100.00000000000001;45.640317466076766;14.264799279065471;660.9295758463786;66.13757584637858;-2.6794033801908608;15.105129783944168;7.043637695678324\n 116.66666666666669;45.640320884058156;14.264798918721397;661.0469698079733;66.25496980797323;-3.3492542252385813;15.105129783944165;7.043637695678322\n 133.33333333333334;45.64032429946747;14.264798486416822;661.1643637695679;66.37236376956787;-4.019105070286313;15.105129783944168;7.043637695678324\n 150;45.640327711837884;14.26479798221095;661.2817577311625;66.48975773116251;-4.688955915334046;15.105129783944168;7.043637695678324", "filepath":"simulation_log_D0_(14.0, 10.0).log"}]
     self.portal = self.getPortalObject()
-    
+
     self.column_names = ["timestamp (ms)","latitude ()","longitude ()","AMSL (m)","rel altitude (m)","yaw ()","ground speed (m/s)","climb rate (m/s)"]
     self.wrong_column_names = ["timestamp (ms)","latit()","","AL (m)","rel alie (m)","ya ()","ground speed ()"]
 
@@ -64,14 +65,14 @@ class Test(ERP5TypeTestCase):
     x.insert(0, column_names)
     for line in x:
       l.append(";".join(map(str, line)))
-    
+
     return "\n".join(l)
 
-    
+
   def create_random_data_msg(self, column_names):
     return {"message": self.create_random_dataframe_string(column_names), "filepath": self.create_random_name()}
-  
-    
+
+
 
   def randomword(self, length):
     letters = string.ascii_lowercase
@@ -84,9 +85,9 @@ class Test(ERP5TypeTestCase):
     x.insert(0, column_names)
     for line in x:
       l.append(";".join(map(str, line)))
-    
+
     return "\n".join(l)
-    
+
   def create_random_wrong_data_msg_list(self, column_names, wrong_column_names):
     return [{"message": self.create_random_dataframe_string(column_names), "filepath": "Wrong Filepath Name but correct data"},
             {"message": self.create_random_data_msg(wrong_column_names), "filepath": self.create_random_name()},
@@ -109,7 +110,7 @@ class Test(ERP5TypeTestCase):
         portal_type = "Data Array")
 
     request = self.portal.REQUEST
-    
+
     # simulate fluentd by setting proper values in REQUEST
     request.environ['REQUEST_METHOD'] = 'POST'
     data_chunk = msgpack.packb([0, data], use_bin_type=True)
@@ -125,16 +126,16 @@ class Test(ERP5TypeTestCase):
         reference = 'drone_simulation')
 
     self.assertNotEqual(data_ingestion, None)
-    
+
     #self.document_to_delete_list.append(data_ingestion)
     return data_ingestion
-  
+
   def stepIngestRealDroneData(self, ingestion_policy, tag, data):
     """
       Ingest some data
     """
     request = self.portal.REQUEST
-    
+
     # simulate fluentd by setting proper values in REQUEST
     request.environ['REQUEST_METHOD'] = 'POST'
     data_chunk = msgpack.packb([0, data], use_bin_type=True)
@@ -150,14 +151,14 @@ class Test(ERP5TypeTestCase):
         reference = 'drone_real')
 
     self.assertNotEqual(data_ingestion, None)
-    
+
     #self.document_to_delete_list.append(data_ingestion)
     return data_ingestion
-  
+
   def test_01_CorrectSimIngestion(self):
     portal = self.getPortalObject()
     ingestion_policy = portal.portal_ingestion_policies.default
-    
+
     self.tic()
     #ingest sim data
     tag_bin = "drone_simulation.sample-drone-raw-data"
@@ -187,15 +188,16 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(bin_line.getQuantity(), 1)
     self.assertEqual(bin_line.getResource(),
       'data_product_module/drone_raw_data')
-    
+
     destination_data_stream_bucket = bin_line.getAggregateDataBucketStreamValue()
     self.assertNotEqual(destination_data_stream_bucket, None)
     self.assertNotEqual(destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]), None)
-    self.assertIn(bin_chunk["message"], destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]))
-  
+    self.logMessage(destination_data_stream_bucket.getRelativeUrl())
+    self.assertIn(str2bytes(bin_chunk["message"]), destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]))
+
     self.stepCallAnalyses()
-  
-   
+
+
     data_transformation = portal.portal_catalog.getResultValue(
                                    portal_type = 'Data Transformation',
                                    reference = 'convert-drone-raw-data',
@@ -208,22 +210,22 @@ class Test(ERP5TypeTestCase):
                                    specialise_uid = data_transformation.getUid(),
                                    simulation_state = 'started')
     self.assertNotEqual(None, data_analysis)
-    
+
     for data_analysis_line in data_analysis.objectValues():
       reference = data_analysis_line.getReference()
       if reference == 'in_stream':
         data_stream = data_analysis_line.getAggregateValueList(portal_type= "Data Bucket Stream")[0]
         self.assertIn(bin_chunk["filepath"], data_stream.getKeyList())
-        
+
       if reference == 'out_array':
         data_array = data_analysis_line.getAggregateValueList(portal_type = 'Data Array')[0]
         zarray = data_array.getArray()
         self.assertNotEqual(zarray, None)
-    
+
   def test_02_WrongSimIngestion(self):
     portal = self.getPortalObject()
     ingestion_policy = portal.portal_ingestion_policies.default
-    
+
     self.tic()
     #ingest sim data
     tag_bin = "drone_simulation.sample-drone-raw-data"
@@ -239,13 +241,13 @@ class Test(ERP5TypeTestCase):
           portal_type = "Data Ingestion Line"):
         if line.getReference() == "bucket_stream":
           bin_line = line
-        
+
     # check line for binary data
       self.assertNotEqual(bin_line, None)
       self.assertEqual(bin_line.getQuantity(), 1)
       self.assertEqual(bin_line.getResource(),
         'data_product_module/drone_raw_data')
-    
+
       destination_data_stream_bucket = bin_line.getAggregateDataBucketStreamValue()
       self.assertNotEqual(destination_data_stream_bucket, None)
       if bin_chunk["filepath"] != "Wrong Filepath Name but correct data":
@@ -254,12 +256,12 @@ class Test(ERP5TypeTestCase):
         except KeyError:
           continue
       self.assertNotEqual(destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]), None)
-      self.assertIn(bin_chunk["message"], destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]))
-  
+      self.assertIn(str2bytes(bin_chunk["message"]), destination_data_stream_bucket.getBucketByKey(bin_chunk["filepath"]))
+
 
       self.stepCallAnalyses()
-  
-   
+
+
       data_transformation = portal.portal_catalog.getResultValue(
                                    portal_type = 'Data Transformation',
                                    reference = 'convert-drone-raw-data',
@@ -272,19 +274,19 @@ class Test(ERP5TypeTestCase):
                                    specialise_uid = data_transformation.getUid(),
                                    simulation_state = 'started')
       self.assertNotEqual(None, data_analysis)
-    
+
       for data_analysis_line in data_analysis.objectValues():
         reference = data_analysis_line.getReference()
         if reference == 'in_stream':
           data_stream = data_analysis_line.getAggregateValueList(portal_type= "Data Bucket Stream")[0]
           self.assertIn(bin_chunk["filepath"], data_stream.getKeyList())
-        
+
         if reference == 'out_array':
           data_array = data_analysis_line.getAggregateValueList(portal_type = 'Data Array')[0]
           zarray = data_array.getArray()
           self.assertNotEqual(zarray, None)
-    
-    
+
+
   def test_03_RealIngestion(self):
     portal = self.getPortalObject()
     ingestion_policy = portal.portal_ingestion_policies.default
@@ -298,19 +300,19 @@ class Test(ERP5TypeTestCase):
                                              tag_bin,
                                              bin_chunk)
     self.tic()
-    
+
     bin_line = None
     for line in data_ingestion_bin.objectValues(
         portal_type = "Data Ingestion Line"):
       if line.getReference() == "bucket_stream":
         bin_line = line
-        
+
     # check line for binary data
     self.assertNotEqual(bin_line, None)
     self.assertEqual(bin_line.getQuantity(), 1)
     self.assertEqual(bin_line.getResource(),
       'data_product_module/bouncy_flight_mavsdk_raw_data')
-    
+
     destination_data_stream_bucket = bin_line.getAggregateDataBucketStreamValue()
     self.assertNotEqual(destination_data_stream_bucket, None)
 
@@ -320,7 +322,7 @@ class Test(ERP5TypeTestCase):
             self.bucket_data[0])
 
     self.stepCallAnalyses()
-  
+
     # find resampling data transformation and its data analayze
     data_transformation = portal.portal_catalog.getResultValue(
                                    portal_type = 'Data Transformation',
@@ -334,13 +336,13 @@ class Test(ERP5TypeTestCase):
                                    specialise_uid = data_transformation.getUid(),
                                    simulation_state = 'started')
     self.assertNotEqual(None, data_analysis)
-    
+
     for data_analysis_line in data_analysis.objectValues():
       reference = data_analysis_line.getReference()
       if reference == 'in_stream':
         data_stream = data_analysis_line.getAggregateValueList(portal_type= "Data Bucket Stream")[0]
         self.assertSetEqual(set(data_stream.getKeyList()), set(["","Test","simulation_log_D0_(14.0, 10.0).log"]))
-        
+
       if reference == 'out_array':
         data_array = data_analysis_line.getAggregateValueList(portal_type = 'Data Array')[0]
         zarray = data_array.getArray()
@@ -364,8 +366,8 @@ class Test(ERP5TypeTestCase):
 
 
 
-      
-      
+
+
     # Sim flights after score 
     data_transformation_sim_flight_score = self.portal.portal_catalog.getResultValue(
                                  portal_type = 'Data Transformation',
@@ -388,10 +390,10 @@ class Test(ERP5TypeTestCase):
     test_sim_score_data = zarray_sim_flight_score.getArray()
 
     test_sim_score_dataframe = pd.DataFrame.from_records(test_sim_score_data[:].copy())
-    
+
     # Determine if there are duplicates
     self.assertEqual(len(test_sim_score_dataframe["name"]), len(test_sim_score_dataframe["name"].unique()))
-   
+
     optimal_flight = test_sim_score_dataframe[test_sim_score_dataframe["name"] == b'simulation_log_D0_(14.0, 10.0).log']
 
     # Check that the score is 1 everytwhere for this one instance
@@ -399,21 +401,21 @@ class Test(ERP5TypeTestCase):
     self.assertTrue(not optimal_flight[optimal_flight["ground_speed_reciprocal"] == 1].empty)
     self.assertTrue(not optimal_flight[optimal_flight["ASML_reciprocal"] == 1].empty)
     self.assertTrue(not optimal_flight[optimal_flight["distance_reciprocal"] == 1].empty)
-    
+
     # Check if the scores are (approximately) correct (floating point errors can not be avoided)
     for flight_name in test_sim_score_dataframe["name"]:
       flight_dataframe = test_sim_score_dataframe[test_sim_score_dataframe["name"] == flight_name]
       # Because we can be sure that each flight_dataframe is only one row (because each simulation is represented with exactly one row), we can use .item()
       self.assertAlmostEqual((flight_dataframe["climb_rate_reciprocal"] + flight_dataframe["ground_speed_reciprocal"] + flight_dataframe["ASML_reciprocal"] + flight_dataframe["distance_reciprocal"]).item()/4,
                             flight_dataframe["score_reciprocal"].item())
-      
+
   def test_05_RecalculateScores(self):
     data_transformation = self.portal.portal_catalog.getResultValue(
                                  portal_type = 'Data Transformation',
                                  reference = 'recalculate-score-list-array',
                                  validation_state = 'validated')
     self.assertNotEqual(data_transformation, None)
-    
+
     self.stepCallAnalyses()
 
     data_analysis = self.portal.portal_catalog.getResultValue(
@@ -433,6 +435,6 @@ class Test(ERP5TypeTestCase):
 
     self.assertNotEqual(zarray.getArray(), None)
     recalculated_scores = pd.DataFrame.from_records(zarray.getArray()[:].copy())
-    
+
     # Determine if there are nan values
     self.assertFalse(math.isnan(recalculated_scores["iteration"].max()))
