@@ -301,14 +301,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
     result.extend(re.findall(self.email_parser, self.getBccRecipient('')))
     return result
 
-  # Conversion API Implementation
-  def _convertToBaseFormat(self):
-    """
-      Build a structure which can be later used
-      to extract content information from this mail
-      message.
-    """
-
   security.declareProtected(Permissions.View, 'index_html')
   index_html = TextDocument.index_html
 
