@@ -315,15 +315,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   convert = TextDocument.convert
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-  def hasBaseData(self):
-    """
-      Since there is no need to convert to a base format, we consider that
-      we always have the base format data if and only is we have
-      some text defined or a file.
-    """
-    return self.hasFile() or self.hasTextContent()
-
   # Methods which can be useful to prepare a reply by email to an event
   security.declareProtected(Permissions.AccessContentsInformation, 'getReplyBody')
   def getReplyBody(self, content_type=None):

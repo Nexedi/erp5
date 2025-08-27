@@ -272,12 +272,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       text_content = str2bytes(text_content)
     return text_content
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-  def hasBaseData(self):
-    """
-    """
-    return self.hasTextContent()
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
   def getContentType(self, default=_MARKER): # pylint: disable=arguments-differ
     """Backward compatibility, read content_type
