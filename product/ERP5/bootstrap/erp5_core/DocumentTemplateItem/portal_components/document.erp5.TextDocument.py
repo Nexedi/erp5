@@ -42,15 +42,13 @@ from string import Template
 
 # Mixin Import
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
-from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes, str2unicode, unicode2str
 
 from lxml import html as etree_html
 from lxml import etree
 
-class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContentHistoryMixin,
-                                                            TextContent, File):
+class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
   """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
   and ITextConvertable
   """
@@ -234,30 +232,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         if base_list:
           return str(base_list[0])
     return Document.getContentBaseURL(self)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBaseData')
-  def setBaseData(self, value):
-    """Store base_data into text_content
-    """
-    self._setTextContent(bytes2str(value))
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
-  _setBaseData = setBaseData
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_baseSetBaseData')
-  _baseSetBaseData = _setBaseData
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBaseContentType')
-  def setBaseContentType(self, value):
-    """store value into content_type
-    """
-    self._setContentType(value)
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseContentType')
-  _setBaseContentType = setBaseContentType
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_baseSetBaseContentType')
-  _baseSetBaseContentType = _setBaseContentType
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
   def getContentType(self, default=_MARKER): # pylint: disable=arguments-differ

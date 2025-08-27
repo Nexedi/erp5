@@ -48,7 +48,6 @@ from Products.ERP5Type.Utils import (guessEncodingFromText,
                                      unicode2str)
 
 # Mixin Import
-from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from erp5.component.mixin.TextConvertableMixin import TextConvertableMixin
 from erp5.component.mixin.OOoDocumentExtensibleTraversableMixin import OOoDocumentExtensibleTraversableMixin
 
@@ -62,8 +61,7 @@ from erp5.component.document.Document import global_server_proxy_uri_failure_tim
 from erp5.component.document.Document import enc, dec
 OOoServerProxy = DocumentConversionServerProxy
 
-class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
-                  TextConvertableMixin, Document):
+class OOoDocument(OOoDocumentExtensibleTraversableMixin, File, TextConvertableMixin, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
