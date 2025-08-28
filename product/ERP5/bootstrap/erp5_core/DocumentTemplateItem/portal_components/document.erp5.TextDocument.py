@@ -43,14 +43,14 @@ from string import Template
 # Mixin Import
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
-from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes, str2unicode, unicode2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str
 
 from lxml import html as etree_html
-from lxml import etree
 
 class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
-  """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
-  and ITextConvertable
+  """
+  A TextDocument implements IDocument, IFile, ICachedconvertable, ITextConvertable
+  and ITextDocument.
   """
 
   meta_type = 'ERP5 Text Document'
@@ -260,13 +260,16 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
   def getTextContent(self, default=_MARKER):
-    """Overridden method to check permission to access content in raw format
+    """
+    Overridden method to check permission to access content in raw format.
+
+    Basically, the text content of a *Text* Document, is simply `data`.
     """
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
-      return self._baseGetTextContent()
+      return self.getData()
     else:
-      return self._baseGetTextContent(default)
+      return self.getData(default)
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
