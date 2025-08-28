@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Data Product" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,7 +10,6 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -25,15 +24,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_local_roles_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -44,6 +35,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -52,7 +44,6 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -62,18 +53,43 @@
             </value>
         </item>
         <item>
-            <key> <string>content_md5</string> </key>
-            <value> <string>f703f915e63aa9486daec31d10428a08</string> </value>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+            </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
+            <key> <string>_mt_index</string> </key>
             <value>
-              <none/>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>aggregated_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>Data Array</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>use/big_data/ingestion/stream</string>
+                <string>quantity_unit/unit/piece</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ors_e_rab_accessibility_kpi.js</string> </value>
+            <value> <string>ors_enb_cell</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,36 +99,58 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ors_e_rab_accessibility_kpi_js</string> </value>
+            <value> <string>ors_enb_cell</string> </value>
+        </item>
+        <item>
+            <key> <string>individual_variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ORS E RAB Accessibility KPI JS</string> </value>
-        </item>
-        <item>
-            <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>ORS eNB Cell</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -123,15 +161,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>document_publication_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>edit_workflow</string> </key>
+                    <key> <string>validation_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -140,62 +178,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>publish_alive</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple/>
-                          <state>
-                            <tuple>
-                              <float>1734617161.66</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -226,7 +209,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1026.27650.63535.46028</string> </value>
+                      <value> <string>1026.52488.986.16554</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -242,12 +225,67 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1755544163.07613</float>
+                              <float>1755203064.790542</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
                       </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple/>
+                          <state>
+                            <tuple>
+                              <float>1755202861.454609</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>
