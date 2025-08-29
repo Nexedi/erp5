@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_view</string>
+                <string>action_type/object_jio_view</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>object_jio_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
