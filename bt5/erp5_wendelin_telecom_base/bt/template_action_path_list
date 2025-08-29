@@ -2,6 +2,7 @@ Data Acquisition Unit Module | fast_input_archive_ors_ingestion
 Data Acquisition Unit Module | fast_input_ors_update_configuration
 Data Acquisition Unit Module | register_virtual_ors
 Data Acquisition Unit | create_ors_data_supply
+Data Acquisition Unit | view_cell_rms_rx
 Data Acquisition Unit | view_e_rab_accessibility_kpi
 Data Acquisition Unit | view_e_utran_ip_throughput_kpi
 Data Acquisition Unit | view_failure_rrc_security_mode
