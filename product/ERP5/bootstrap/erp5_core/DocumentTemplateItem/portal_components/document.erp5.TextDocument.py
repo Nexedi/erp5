@@ -251,10 +251,10 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
       else:
         return self._baseGetContentType(default)
 
-  # base_convertable support
-  security.declareProtected(Permissions.AccessContentsInformation, 'isSupportBaseDataConversion')
-  def isSupportBaseDataConversion(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'isSupportTextConversion')
+  def isSupportTextConversion(self):
     """
+    Generally, a Text Document is convertable to text format.
     """
     return True
 
