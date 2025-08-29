@@ -152,6 +152,9 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, File, TextConvertableMi
     def cached_getTargetFormatItemList(content_type):
       from six.moves.xmlrpc_client import Fault
       server_proxy = DocumentConversionServerProxy(self)
+      # Coerce Content-Type as a string when falsy, otherwise Cloudooo returns
+      # Code 402: expected str, bytes or os.PathLike object, not NoneType
+      content_type = content_type or ""
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
                                                       content_type)
