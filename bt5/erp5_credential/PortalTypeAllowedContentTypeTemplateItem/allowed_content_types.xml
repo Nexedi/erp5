@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Assignment Request Module">
+  <item>Assignment Request</item>
+ </portal_type>
  <portal_type id="Credential Recovery">
   <item>Credential Question</item>
   <item>Email</item>
