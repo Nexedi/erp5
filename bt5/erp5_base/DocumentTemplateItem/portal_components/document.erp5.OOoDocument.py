@@ -61,7 +61,7 @@ from erp5.component.document.Document import global_server_proxy_uri_failure_tim
 from erp5.component.document.Document import enc, dec
 OOoServerProxy = DocumentConversionServerProxy
 
-class OOoDocument(OOoDocumentExtensibleTraversableMixin, File, TextConvertableMixin, Document):
+class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, File, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
