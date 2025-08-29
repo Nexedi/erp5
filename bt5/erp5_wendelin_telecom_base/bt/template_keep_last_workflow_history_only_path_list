@@ -19,6 +19,7 @@ web_page_module/ors_e_rab_accessibility_kpi_*
 web_page_module/ors_e_utran_ip_throughput_kpi_*
 web_page_module/ors_failure_rrc_security_mode_*
 web_page_module/ors_kpi_css
+web_page_module/ors_rms_rx_*
 web_page_module/ors_rrc_connection_request_*
 web_page_module/ors_rrc_ue_count_*
 web_page_module/ors_ue_count_*
