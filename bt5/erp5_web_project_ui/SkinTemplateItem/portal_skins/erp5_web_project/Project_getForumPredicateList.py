@@ -29,4 +29,4 @@ predicate_list = [x.getRelativeUrl() for x in domain_tool.searchPredicateList(
 follow_up_list = [x.getRelativeUrl() for x in project.getFollowUpRelatedValueList(portal_type = "Discussion Forum") if x.getValidationState()
                   in ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')]
 
-return predicate_list + follow_up_list
+return list(set(predicate_list + follow_up_list))
