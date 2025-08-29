@@ -272,7 +272,7 @@ class TestIngestion(IngestionTestCase):
       document.edit(file=f)
       self.tic()
       self.assertTrue(document.hasFile())
-      if document.isSupportBaseDataConversion():
+      if document.isSupportTextConversion():
         self.assertIn('magic', document.SearchableText())
         self.assertIn('magic', str(document.asText()))
       else:
@@ -336,7 +336,7 @@ class TestIngestion(IngestionTestCase):
       count+=1
       self.assertEqual(document.getPortalType(), portal_type)
       self.assertEqual(document.getReference(), 'TEST')
-      if document.isSupportBaseDataConversion():
+      if document.isSupportTextConversion():
         self.assertIn('magic', document.SearchableText())
 
   def newPythonScript(self, script_id, argument_list, code):
