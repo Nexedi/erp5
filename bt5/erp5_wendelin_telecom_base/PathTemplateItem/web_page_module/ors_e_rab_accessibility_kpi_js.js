@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, console, Plotly */
+/*global window, location, rJS, RSVP, URI, loopEventListener, console, Plotly */
 /*jslint indent: 2, maxlen: 80, nomen: true */
-(function (window, rJS, RSVP, Plotly, loopEventListener) {
+(function (window, location, rJS, RSVP, Plotly, loopEventListener) {
   'use strict';
 
   var gadget_klass = rJS(window);
@@ -145,9 +145,9 @@
         .push(function (hateoas_url) {
           kpi_url =
             (new URI(hateoas_url)).absoluteTo(location.href).toString() +
-            'Base_getOrsEnbKpi?data_array_url=' +
+            'Base_getDataArrayForDataTypeAsJSON?data_array_url=' +
             option_dict.data_array_url +
-            '&kpi_type=' + option_dict.kpi_type;
+            '&data_type=' + option_dict.data_type;
           return gadget.jio_getAttachment('erp5', kpi_url, {
             format: 'json'
           });
@@ -168,13 +168,11 @@
           initial_success_rate_element.on(
             'plotly_relayout',
             function (eventdata) {
-              var x_start = new Date(eventdata['xaxis.range[0]']).getTime()
-                / 1000,
-                x_end = new Date(eventdata['xaxis.range[1]']).getTime()
-                / 1000,
+              var x_start = new Date(eventdata['xaxis.range[0]']).getTime(),
+                x_end = new Date(eventdata['xaxis.range[1]']).getTime(),
                 update_kpi_url = kpi_url +
-                '&time_start=' + x_start +
-                '&time_end=' + x_end;
+                '&time_start=' + x_start / 1000 +
+                '&time_end=' + x_end / 1000;
 
               return new RSVP.Queue().push(function () {
                 return gadget.jio_getAttachment('erp5', update_kpi_url, {
@@ -193,13 +191,11 @@
           added_success_rate_element.on(
             'plotly_relayout',
             function (eventdata) {
-              var x_start = new Date(eventdata['xaxis.range[0]']).getTime()
-                / 1000,
-                x_end = new Date(eventdata['xaxis.range[1]']).getTime()
-                / 1000,
+              var x_start = new Date(eventdata['xaxis.range[0]']).getTime(),
+                x_end = new Date(eventdata['xaxis.range[1]']).getTime(),
                 update_kpi_url = kpi_url +
-                '&time_start=' + x_start +
-                '&time_end=' + x_end;
+                '&time_start=' + x_start / 1000 +
+                '&time_end=' + x_end / 1000;
 
               return new RSVP.Queue().push(function () {
                 return gadget.jio_getAttachment('erp5', update_kpi_url, {
@@ -231,4 +227,4 @@
         });
     });
 
-}(window, rJS, RSVP, Plotly, loopEventListener));
+}(window, location, rJS, RSVP, Plotly, loopEventListener));

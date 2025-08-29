@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>WendelinTelecomCalcEnbKpi</string> </value>
+            <value> <string>WendelinTelecomCalculation</string> </value>
         </item>
         <item>
             <key> <string>default_source_reference</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>extension.erp5.WendelinTelecomCalcEnbKpi</string> </value>
+            <value> <string>extension.erp5.WendelinTelecomCalculation</string> </value>
         </item>
         <item>
             <key> <string>sid</string> </key>
@@ -51,7 +51,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -70,7 +70,7 @@
                 <item>
                     <key> <string>component_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>

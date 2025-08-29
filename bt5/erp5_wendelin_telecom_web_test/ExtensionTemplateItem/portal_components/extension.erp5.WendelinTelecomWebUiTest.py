@@ -4,6 +4,7 @@ from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 import msgpack
 import requests
+from Products.ERP5Type.Utils import bytes2str
 
 def ERP5Site_bootstrapWendelinTelecomWebUiTest(self, step):
   if step not in ['ingestor_user', 'client_user', 'admin_user', 'ors']:
@@ -184,7 +185,14 @@ def ERP5Site_bootstrapWendelinTelecomWebUiTest(self, step):
 
   return 'Done'
 
-def ERP5Site_ingestTestLogData(self, ors_tag, ingestor_reference):
+
+def split_data_by_line_chunks(log_data, chunk_size=50):
+  line_list = log_data.splitlines()
+  for i in range(0, len(line_list), chunk_size):
+    yield '\n'.join(line_list[i:i + chunk_size])
+
+def ERP5Site_ingestTestLogData(self, ors_tag, ingestor_reference,
+  document=None):
   portal = self.getPortalObject()
 
   # Preventing ingesting the same data more than once
@@ -199,21 +207,31 @@ def ERP5Site_ingestTestLogData(self, ors_tag, ingestor_reference):
       return 'Done'
 
   ingestion_reference = 'ors.%s' % ors_tag
-  log_data = {
-    'log': portal.web_page_module.test_example_ors_enb_log_valid.getTextContent()
-  }
-  msgpack_data = msgpack.packb([0, log_data], use_bin_type=True)
-  header_dict = {'CONTENT_TYPE': 'application/octet-stream'}
-  ingestion_url = portal.portal_ingestion_policies.ors_enb_log_ingestion.getAbsoluteUrl() \
-    + '/ingest?reference=' + ingestion_reference
-  requests.post(
-    ingestion_url,
-    auth=(ingestor_reference, ingestor_reference),
-    data={'data_chunk': msgpack_data},
-    headers=header_dict,
-    timeout=60,
-    verify=False
-  )
+  if document is None:
+    document = 'web_page_module/test_example_ors_enb_log_valid'
+
+  document_value = portal.restrictedTraverse(document)
+  log_as_string = bytes2str(document_value.getData())
+
+
+  for log_chunk in split_data_by_line_chunks(log_as_string):
+    log_data = {
+      'log': log_chunk
+    }
+    msgpack_data = msgpack.packb([0, log_data], use_bin_type=True)
+    header_dict = {'CONTENT_TYPE': 'application/octet-stream'}
+    ingestion_url = portal.portal_ingestion_policies.ors_enb_log_ingestion.getAbsoluteUrl() \
+      + '/ingest?reference=' + ingestion_reference
+    response = requests.post(
+      ingestion_url,
+      auth=(ingestor_reference, ingestor_reference),
+      data={'data_chunk': msgpack_data},
+      headers=header_dict,
+      verify=False,
+      timeout=5
+    )
+    # Ensure that ingest worked for tests
+    response.raise_for_status()
   return 'Done'
 
 def ERP5Site_activateWendelinHandleAnalysisAlarmTest(self):
