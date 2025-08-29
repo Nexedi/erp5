@@ -134,8 +134,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     return Document.index_html(self, REQUEST, *args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSupportBaseDataConversion')
-  def isSupportBaseDataConversion(self):
+                            'isSupportTextConversion')
+  def isSupportTextConversion(self):
     """
     OOoDocument is needed to conversion to base format.
     """
