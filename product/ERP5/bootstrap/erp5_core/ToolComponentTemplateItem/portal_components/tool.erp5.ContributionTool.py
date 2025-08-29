@@ -560,13 +560,8 @@ class ContributionTool(BaseTool):
                               # we do not update it
                               # This feature must be implemented by Base or File
                               # not here (look at _edit in Base)
-      # Step 2: convert to base format
-      if content.isSupportBaseDataConversion():
-        content.activate().Document_tryToConvertToBaseFormat()
       # Step 3: run discoverMetadata
-      content.activate(after_path_and_method_id=(content.getPath(),
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
-          .discoverMetadata(filename=filename)
+      content.activate().discoverMetadata(filename=filename)
       # Step 4: activate populate (unless interaction workflow does it)
       content.activate().populateContent()
       # Step 5: activate crawlContent
