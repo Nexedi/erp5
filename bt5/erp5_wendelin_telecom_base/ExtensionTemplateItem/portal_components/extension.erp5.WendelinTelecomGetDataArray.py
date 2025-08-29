@@ -14,7 +14,10 @@ NA_VALUES_REPLACEMENTS = {
   'dl_lo': 0.,
   'dl_hi': 0.,
   'ul_lo': 0.,
-  'ul_hi': 0.
+  'ul_hi': 0.,
+  'ue_count_max': 0.,
+  'ue_count_min': 0.,
+  'ue_count_avg': 0.
 }
 
 def compute_positive_delta(nparray):
@@ -252,6 +255,55 @@ def get_rrc_per_cell(data_array, data_array_dtype, time_start, time_end, column_
 
   return response_dict
 
+def get_rms_rx_per_cell_antenna(data_array, data_array_dtype, time_start, time_end, column_list):
+  data_zarray = data_array.getArray()[:]
+  time_field = data_array_dtype[0]
+  data_zarray, time_start, time_end = get_data_zarray_in_time_range(
+    data_zarray, time_field, time_start, time_end
+  )
+
+  data_frame = pd.DataFrame.from_records(data_zarray)
+  data_frame[time_field] = pd.to_datetime(data_frame[time_field], unit='s')
+  data_frame = data_frame.sort_values(by=time_field)
+
+  # Resample data if array is too large
+  if len(data_zarray) > RESAMPLE_SIZE:
+    resample_period = '%ss' % int((time_end - time_start) / RESAMPLE_SIZE)
+
+    # Get numeric columns and remove cell_id_field explicitly
+    value_columns = data_frame.select_dtypes(include=[np.number]).columns.tolist()
+    value_columns = [col for col in value_columns if col not in ['cell_id', 'antenna']]
+
+    # Group by cell_id_field and resample
+    data_frame = (
+        data_frame
+        .groupby(['cell_id', 'antenna', pd.Grouper(key=time_field, freq=resample_period)])
+        [value_columns]
+        .mean()
+        .reset_index()
+    )
+
+    data_frame = data_frame.fillna(value=NA_VALUES_REPLACEMENTS)
+
+  data_frame = data_frame.reset_index()
+  data_frame[time_field] = data_frame[time_field].map(pd.Timestamp.timestamp)
+
+  _group_column_list = [time_field]
+  _group_column_list.extend(column_list)
+  response_dict = {}
+  for (cell, antenna), group in data_frame.groupby(['cell_id', 'antenna']):
+    if cell not in response_dict:
+      response_dict[cell] = {}
+    response_dict[cell][antenna] = (
+      group[_group_column_list]
+      .reset_index(drop=True)
+      .to_dict(orient='list')
+    )
+
+  return response_dict
+
+
+
 def get_rrc_paging(data_array, data_array_dtype, time_start, time_end, column):
   data_zarray = data_array.getArray()[:]
   time_field = data_array_dtype[0]
@@ -463,5 +515,10 @@ def getDataArrayForDataTypeAsJSON(self, data_array_url, data_type,
         utc=resampled_data_dict[cell_id]['utc'],
         failure_rate_rrc_sec=failure_rate_rrc_sec.tolist()
       )
-
     return json.dumps(response_dict)
+
+  if data_type == 'rms_rx':
+    return json.dumps(get_rms_rx_per_cell_antenna(
+      data_array, data_array_dtype, time_start, time_end, ['rms']))
+
+
