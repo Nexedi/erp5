@@ -644,7 +644,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     uf = self.portal.acl_users
-    uf._doAddUser('member_user2', 'secret', ['Member'], [])
+    uf._doAddUser('member_user2', 'secret', ['Member', 'Assignor', 'Auditor'], [])
     user = uf.getUserById('member_user2').__of__(uf)
     newSecurityManager(None, user)
 
