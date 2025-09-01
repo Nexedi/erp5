@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import six
 
 # Function to remove non-ASCII characters from a string, because I can not be bothered to make to_records with utf8 right now
 def remove_non_ascii(text):
@@ -39,6 +40,8 @@ new_end = ""
 for key in [x for x in keys if x not in end]:
   try:
     log = in_data_stream.getBucketByKey(key)
+    if six.PY3:
+      log = log.decode('utf-8')
     df = pd.read_csv(log, sep=';', dtype=dtype)
 
     if df.shape[0] == 0:
