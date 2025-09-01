@@ -7,7 +7,7 @@ import six
 # Maximum memory to allocate for sparse-induced padding.
 MAX_PADDING_CHUNK = 2 ** 20
 
-class PersistentString(Persistent):
+class PersistentBytes(Persistent):
   def __init__(self, value):
     self.value = value
 
@@ -19,6 +19,9 @@ class PersistentString(Persistent):
   # Save place when storing this data in zodb
   __getstate__ = __bytes__
   __setstate__ = __init__
+
+PersistentString = PersistentBytes  # BBB compatibility with old name instances that might be saved in ZODB
+
 
 negative_offset_error = ValueError('Negative offset')
 
@@ -140,7 +143,7 @@ class BTreeData(Persistent):
       try:
         chunk = tree[key]
       except KeyError:
-        tree[key] = chunk = PersistentString(b'')
+        tree[key] = chunk = PersistentBytes(b'')
       entry_size = len(chunk.value)
       if entry_size < to_write_len:
         to_write_len = min(to_write_len, max_to_write_len)

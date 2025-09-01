@@ -29,7 +29,7 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import IS_ZOPE2
-from erp5.component.module.BTreeData import BTreeData, PersistentString
+from erp5.component.module.BTreeData import BTreeData, PersistentBytes
 
 
 # like Testing.makerequest, but
@@ -114,7 +114,7 @@ class TestBTreeData(ERP5TypeTestCase):
 
   def testBTreeData_checkData(self):
 
-    PersistentString.__repr__ = lambda self: repr(self.value)
+    PersistentBytes.__repr__ = lambda self: repr(self.value)
 
     data = BTreeData()
     data.write(b'', 10)
