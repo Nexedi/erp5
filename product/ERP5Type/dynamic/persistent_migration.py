@@ -319,6 +319,16 @@ def enable_zodbupdate_load_monkey_patch():
                             self._klass_name = klass.__name__
                         else:
                             self._klass_modulename, self._klass_name = klass
+                    # directly load as bytes what we know for sure what will be bytes
+                    if (self._klass_modulename, self._klass_name) in {
+                      ('OFS.Image', 'PData'),
+                      ('erp5.component.module.erp5_version.BTreeData', 'PersistentString')}:
+                      self._unpickler = PersistentUnpickler(
+                        find_global,
+                        persistent_load,
+                        file,
+                        encoding='bytes',
+                        )
                     return loaded_klass
                 # second, load state and convert it using zodbupdate
                 state = self._unpickler.load()
