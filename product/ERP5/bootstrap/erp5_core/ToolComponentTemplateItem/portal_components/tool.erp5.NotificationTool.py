@@ -76,9 +76,6 @@ def buildAttachmentDictList(document_list, document_type_list=()):
       if mime_type is not None:
         try:
           mime_type, content = attachment.convert(mime_type)
-        except ConversionError:
-          mime_type = attachment.getBaseContentType()
-          content = attachment.getBaseData()
         except (NotImplementedError, MimeTypeException):
           pass
 
@@ -87,8 +84,6 @@ def buildAttachmentDictList(document_list, document_type_list=()):
           content = attachment.getTextContent()
         elif getattr(attachment, 'getData', None) is not None:
           content = attachment.getData()
-        elif getattr(attachment, 'getBaseData', None) is not None:
-          content = attachment.getBaseData()
 
     if not isinstance(content, str):
       content = str(content)
