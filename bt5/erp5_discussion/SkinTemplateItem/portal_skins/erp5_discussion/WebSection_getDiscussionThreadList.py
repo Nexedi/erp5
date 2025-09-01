@@ -7,7 +7,7 @@
 
 forum = context.WebSection_getRelatedForum()
 thread_relative_url = context.REQUEST.get('thread_relative_url')
-discussion_thread_list = [x.getObject() for x  in context.searchResults(portal_type='Discussion Thread',
+discussion_thread_list = [x.getObject() for x  in forum.searchResults(portal_type='Discussion Thread',
                                                                         sort_on=[('modification_date', 'descending')],
                                                                         validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))]
 if thread_relative_url is not None:
