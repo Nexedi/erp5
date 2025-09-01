@@ -235,7 +235,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           jio_key: options.jio_key || "",
           publication_section: options.publication_section
         };
-      if (options.related_forum.length > 0) {
+      if (options.related_forum && options.related_forum.length > 0) {
         state_dict.forum_jio_key = options.related_forum[0];
       }
       return this.changeState(state_dict);
