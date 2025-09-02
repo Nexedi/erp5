@@ -47,7 +47,8 @@ def manage_addActivityConnection(self, id, title,
 
 class ActivityConnection(Connection):
     """Products ZMySQLDA.DA.Connection subclass that tweaks the sortKey() of
-       the actual connection to commit after all other connections
+       the actual connection to commit after all other connections and uses
+       READ COMMITTED isolation level for better performance.
     """
     meta_type = title = 'CMFActivity Database Connection'
 
@@ -60,6 +61,11 @@ class ActivityConnection(Connection):
 
     def factory(self):
         return ActivityDB
+
+    def connect(self, s):
+        super(ActivityConnection, self).connect(s)
+        self._isolation_level = 'READ-COMMITTED'
+        return self
 
 InitializeClass(ActivityConnection)
 
