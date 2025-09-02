@@ -185,12 +185,8 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
   </tal:block>
 
-  <tal:block metal:define-macro="check_ors_kpi_graphs">
-    <tr>
-      <td colspan="3"><b>Check ORS KPI graphs</b></td>
-    </tr>
-
-    <tr>
+    <tal:block metal:define-macro="access_data_acquisition_unit_graph">
+      <tr>
       <td>waitForElementPresent</td>
       <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
       <td></td>
@@ -202,16 +198,23 @@
     </tr>
 
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tr>
+
+      <tr>
       <td>waitForElementPresent</td>
-      <td>//a[text()='E-RAB Accessibility KPI']</td>
+      <td tal:content="python: '//a[text()=\'%s\']' % click_configuration['text']"></td>
       <td></td>
     </tr>
-    <tal:block tal:define="click_configuration python: {'text': 'E-RAB Accessibility KPI'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
-    </tal:block>
-
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+  </tal:block>
+
+  <tal:block metal:define-macro="check_ors_kpi_graphs">
+    <tr>
+      <td colspan="3"><b>Check ORS KPI graphs</b></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'E-RAB Accessibility KPI'}">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
+    </tal:block>
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[contains(@class,'graph-initial-success-rate')]</td>
@@ -222,7 +225,6 @@
       <td>//div[contains(@class,'graph-added-success-rate')]</td>
       <td></td>
     </tr>
-
     <!-- Best-effort way to check that the data is correctly plotted -->
     <!-- Can only reliably check date as times are timezone-sensitive -->
     <tr>
@@ -354,29 +356,9 @@
     <tr>
       <td colspan="3"><b>Check ORS UE Count graphs</b></td>
     </tr>
-
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
-      <td></td>
-    </tr>
-
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//a[text()='Ue Count']</td>
-      <td></td>
-    </tr>
     <tal:block tal:define="click_configuration python: {'text': 'Ue Count'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
     </tal:block>
-
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[contains(@class,'graph-base')]</td>
@@ -680,29 +662,9 @@
     <tr>
       <td colspan="3"><b>Check ORS UE Count + RRC Connection Requests graphs</b></td>
     </tr>
-
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
-      <td></td>
-    </tr>
-
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//a[text()='Ue Count + RRC']</td>
-      <td></td>
-    </tr>
     <tal:block tal:define="click_configuration python: {'text': 'Ue Count + RRC'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
     </tal:block>
-
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[contains(@class,'graph-base')]</td>
@@ -1006,29 +968,9 @@
     <tr>
       <td colspan="3"><b>Check ORS RRC Connection Requests graphs</b></td>
     </tr>
-
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//div[contains(@data-gadget-scope,'field_listbox_ors')]//a[contains(text(),'ors000_COMP-0000_e0x00000Test') and contains(@href,'#!')]</td>
-      <td></td>
-    </tr>
-
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//a[text()='Ue Count + RRC']</td>
-      <td></td>
-    </tr>
-    <tal:block tal:define="click_configuration python: {'text': 'Ue Count + RRC'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+    <tal:block tal:define="click_configuration python: {'text': 'RRC Connection Requests'}">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
     </tal:block>
-
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[contains(@class,'graph-base')]</td>
@@ -1323,6 +1265,80 @@
     <tr>
       <td>assertElementNotPresent</td>
       <td>//div[contains(@class,'graph-item') and @data-id='13.0']//*[text()='900']</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_ors_rrc_paging_graphs">
+    <tr>
+      <td colspan="3"><b>Check ORS RRC Paging graphs</b></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'RRC Paging'}">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
+    </tal:block>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b>Check ORS RRC Paging Graph</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[contains(text(), 'Mar 9')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='0']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='80k']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[contains(text(), 'Mar 9')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='0']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='80k']</td>
+      <td></td>
+    </tr>
+
+    <!-- Check that the default no-data axis labels are not present -->
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='-1']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='90k']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='-1']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@class,'graph-item') and @data-id='base']//*[text()='90k']</td>
       <td></td>
     </tr>
   </tal:block>
