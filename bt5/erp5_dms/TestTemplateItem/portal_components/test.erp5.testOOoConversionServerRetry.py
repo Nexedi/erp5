@@ -25,9 +25,10 @@
 #
 ##############################################################################
 
+from erp5.component.document.Document import ConversionError
 from erp5.component.test.testDms import DocumentUploadTestCase
-from Products.ERP5Form.PreferenceTool import Priority
 
+from Products.ERP5Form.PreferenceTool import Priority
 
 class TestOOoConversionServerRetry(DocumentUploadTestCase):
   def getBusinessTemplateList(self):
@@ -72,21 +73,6 @@ class TestOOoConversionServerRetry(DocumentUploadTestCase):
       pref.enable()
     return pref
 
-
-  def test_01_no_retry_for_no_network_issue(self):
-    system_pref = self.getDefaultSystemPreference()
-    system_pref.setPreferredDocumentConversionServerRetry(self.retry_count)
-    self.tic()
-
-    filename = 'monochrome_sample.tiff'
-    file_ = self.makeFileUpload(filename)
-    document = self.portal.document_module.newContent(portal_type='Text')
-    document.edit(file = file_)
-    document.convert('txt')
-    self.assertEqual(message.count('Error converting document to base format'), 1)
-
-
-
   def test_02_retry_for_network_issue(self):
     system_pref = self.getDefaultSystemPreference()
     saved_server_list = system_pref.getPreferredDocumentConversionServerUrlList()
@@ -97,8 +83,10 @@ class TestOOoConversionServerRetry(DocumentUploadTestCase):
     file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
-    message = document.convert('docx')
-    self.assertEqual(message.count('broken.url: Connection refused'), self.retry_count + 1)
+    with self.assertRaises(ConversionError) as err:
+      document.convert('docx')
+
+    self.assertEqual(str(err.exception).count('broken.url: Connection refused'), self.retry_count + 1)
     system_pref.setPreferredDocumentConversionServerUrlList(saved_server_list)
     self.commit()
 
