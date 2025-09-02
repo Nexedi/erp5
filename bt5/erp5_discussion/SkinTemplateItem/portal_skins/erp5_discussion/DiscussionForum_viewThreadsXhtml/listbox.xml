@@ -558,7 +558,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>search_selection_</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

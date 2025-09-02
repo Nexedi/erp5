@@ -60,8 +60,7 @@ post_relative_url = discussion_post.getRelativeUrl()
 
 if not is_temp_object:
   if len(forum_list) > 0:
-    forum = portal.restrictedTraverse(forum_list[0])
-    return forum.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))
+    return discussion_post.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))
   return discussion_post.Base_redirect(form_id,
            keep_items = dict(portal_status_message=portal_status_message))
 else:
