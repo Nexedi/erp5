@@ -9,7 +9,7 @@
   <table cellpadding="1" cellspacing="1" border="1">
     <thead>
       <tr>
-        <td rowspan="1" colspan="3">Test View ORS UE Count + RRC Graph as Administrator</td>
+        <td rowspan="1" colspan="3">Test View ORS RRC Paging Graph as Administrator</td>
       </tr>
     </thead>
     <tbody>
