@@ -159,7 +159,7 @@
     // Add base before
     label = "UE Count vs Time (all cells)";
     plotContainer = document.createElement('div');
-    plotContainer.classList.add('graph-ue-count');
+    plotContainer.classList.add('graph-item');
     plotContainer.setAttribute('data-id', 'base');
 
     plotFromData(response.base, plotContainer, label);
@@ -174,7 +174,7 @@
 
       if (key !== 'base') {
         label += " CELL " + Math.floor(key).toString();
-        plotContainer.classList.add('graph-ue-count');
+        plotContainer.classList.add('graph-item');
         plotContainer.setAttribute('data-id', key);
         plotFromData(data, plotContainer, label);
         plotContainerList.push(plotContainer);
@@ -194,7 +194,7 @@
     .declareService(function () {
       var gadget = this;
       return loopEventListener(window, 'resize', false, function () {
-        var div_list = gadget.element.querySelectorAll('.graph-ue-count');
+        var div_list = gadget.element.querySelectorAll('.graph-item');
         if (div_list.length > 0) {
           div_list.forEach(function (element) {
             Plotly.Plots.resize(element);
@@ -208,9 +208,7 @@
         data_url,
         chart_element = gadget.element.querySelector('.graph-base');
 
-      return new RSVP.Queue().push(function () {
-        return gadget.getSetting('hateoas_url');
-      })
+      return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
           data_url =
             (new URI(hateoas_url)).absoluteTo(location.href).toString() +
@@ -257,14 +255,6 @@
             });
             return plotContainerList;
           });
-        }, function () {
-          // On request error, show empty plots
-          var plot = plotFromResponse(
-            {},
-            chart_element
-          );
-          gadget.element.querySelector('.ui-icon-spinner').hidden = true;
-          return plot;
         });
     });
 }(window, document, Math, rJS, RSVP, Plotly, URI, loopEventListener));
