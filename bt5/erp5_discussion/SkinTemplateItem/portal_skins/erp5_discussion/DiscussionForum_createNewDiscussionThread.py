@@ -47,12 +47,24 @@ discussion_thread = portal.discussion_thread_module.newContent(
 # this way thread will be part of discussion forum (through predicate's searchResults)
 discussion_thread.setCategoryList(category_list)
 
+redirect_url = None
+# old forum backward compatibility redirect
+if web_section:
+  if predecessor is not None:
+    predecessor_object = context.restrictedTraverse(predecessor)
+    if predecessor_object.getPortalType() != 'Discussion Forum':
+      redirect_url = predecessor_object.getAbsoluteUrl()
+  if not redirect_url:
+    web_section_object = context.restrictedTraverse(web_section)
+    redirect_url = web_section_object.getAbsoluteUrl()
+
 # predecessor
 if predecessor is not None:
   predecessor_object = context.restrictedTraverse(predecessor)
   predecessor_portal_type = predecessor_object.getPortalType()
 
-  # old forum backward compatibility
+  # old forum backward compatibility predecessor
+  # set predecessor on document
   if predecessor_portal_type == 'Web Section':
     predecessor_default_page = predecessor_object.getAggregate()
     if predecessor_default_page is not None:
@@ -61,9 +73,10 @@ if predecessor is not None:
   if predecessor_portal_type == 'Web Page':
     discussion_thread.setPredecessorValueList([predecessor_object])
 
-  # set predecessor on document
   if predecessor_portal_type == 'Discussion Forum':
     discussion_thread.setPredecessorValueList([predecessor_object])
+    if not web_section:
+      redirect_url = None
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",
@@ -134,4 +147,4 @@ if redirect_url:
                                keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),
                                                  thread_relative_url=discussion_thread.getRelativeUrl()))
 else:
-  return discussion_thread.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))
+  return discussion_post.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))
