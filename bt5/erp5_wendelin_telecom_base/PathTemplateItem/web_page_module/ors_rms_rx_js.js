@@ -5,10 +5,10 @@
 
   var gadget_klass = rJS(window);
 
-  function getNoDataPlotLayout(title, annotation) {
+  function getNoDataPlotLayout(annotation) {
     return {
       'title' : {
-        'text': title
+        'text': 'RX RMS'
       },
       'xaxis': {
         'fixedrange': true
@@ -109,14 +109,14 @@
         [],
         getNoDataPlotLayout('No data found')
       );
-      return;
+      return plotContainerList;
     }
 
     // Include cell list after
     Object.entries(response).forEach(function (cell) {
       key = cell[0];
       Object.entries(cell[1]).forEach(function (antenna) {
-        antenna_id = antenna[0],
+        antenna_id = antenna[0];
         data = antenna[1];
         label = "RX RMS";
         plotContainer = document.createElement('div');
@@ -156,9 +156,17 @@
         data_url,
         chart_element = gadget.element.querySelector('.graph-base');
 
-      return new RSVP.Queue().push(function () {
-        return gadget.getSetting('hateoas_url');
-      })
+      if (option_dict.data_array_url === null) {
+        gadget.element.querySelector('.ui-icon-spinner').hidden = true;
+        Plotly.react(
+          chart_element,
+          [],
+          getNoDataPlotLayout('No data found')
+        );
+        return;
+      }
+
+      return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
           data_url =
             (new URI(hateoas_url)).absoluteTo(location.href).toString() +
@@ -205,14 +213,6 @@
             });
             return plotContainerList;
           });
-        }, function () {
-          // On request error, show empty plots
-          var plot = plotFromResponse(
-            {},
-            chart_element
-          );
-          gadget.element.querySelector('.ui-icon-spinner').hidden = true;
-          return plot;
         });
     });
 }(window, document, Math, rJS, RSVP, Plotly, URI, loopEventListener));

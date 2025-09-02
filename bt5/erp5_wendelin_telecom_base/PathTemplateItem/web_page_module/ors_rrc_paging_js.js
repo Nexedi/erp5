@@ -5,10 +5,10 @@
 
   var gadget_klass = rJS(window);
 
-  function getNoDataPlotLayout(title, annotation) {
+  function getNoDataPlotLayout(annotation) {
     return {
       'title' : {
-        'text': title
+        'text': 'RRC Paging'
       },
       'xaxis': {
         'fixedrange': true
@@ -111,7 +111,7 @@
         [],
         getNoDataPlotLayout('No data found')
       );
-      return;
+      return plotContainerList;
     }
 
     // There is only once cell to plot
@@ -150,6 +150,16 @@
       var gadget = this,
         data_url,
         chart_element = gadget.element.querySelector('.graph-base');
+
+      if (option_dict.data_array_url === null) {
+        gadget.element.querySelector('.ui-icon-spinner').hidden = true;
+        Plotly.react(
+          chart_element,
+          [],
+          getNoDataPlotLayout('No data found')
+        );
+        return;
+      }
 
       return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
