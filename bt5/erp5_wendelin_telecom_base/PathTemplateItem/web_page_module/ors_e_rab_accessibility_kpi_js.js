@@ -139,9 +139,24 @@
         added_success_rate_element =
           gadget.element.querySelector('.graph-added-success-rate');
 
-      return new RSVP.Queue().push(function () {
-        return gadget.getSetting('hateoas_url');
-      })
+      if (option_dict.data_array_url === null) {
+        gadget.element.querySelector('.ui-icon-spinner').hidden = true;
+        Plotly.react(
+          initial_success_rate_element,
+          [],
+          getNoDataPlotLayout(
+            'Initial E-RAB establishment success rate', 'No data found')
+        );
+        Plotly.react(
+          added_success_rate_element,
+          [],
+          getNoDataPlotLayout(
+            'Added E-RAB establishment success rate', 'No data found')
+        );
+        return;
+      }
+
+      return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
           kpi_url =
             (new URI(hateoas_url)).absoluteTo(location.href).toString() +
@@ -171,8 +186,8 @@
               var x_start = new Date(eventdata['xaxis.range[0]']).getTime(),
                 x_end = new Date(eventdata['xaxis.range[1]']).getTime(),
                 update_kpi_url = kpi_url +
-                '&time_start=' + x_start / 1000 +
-                '&time_end=' + x_end / 1000;
+                  '&time_start=' + x_start / 1000 +
+                  '&time_end=' + x_end / 1000;
 
               return new RSVP.Queue().push(function () {
                 return gadget.jio_getAttachment('erp5', update_kpi_url, {
@@ -194,8 +209,8 @@
               var x_start = new Date(eventdata['xaxis.range[0]']).getTime(),
                 x_end = new Date(eventdata['xaxis.range[1]']).getTime(),
                 update_kpi_url = kpi_url +
-                '&time_start=' + x_start / 1000 +
-                '&time_end=' + x_end / 1000;
+                  '&time_start=' + x_start / 1000 +
+                  '&time_end=' + x_end / 1000;
 
               return new RSVP.Queue().push(function () {
                 return gadget.jio_getAttachment('erp5', update_kpi_url, {
@@ -211,19 +226,6 @@
                 });
             }
           );
-        }, function () {
-          // On request error, show empty plots
-          plotFromResponse(
-            {},
-            initial_success_rate_element,
-            'Initial E-RAB establishment success rate'
-          );
-          plotFromResponse(
-            {},
-            added_success_rate_element,
-            'Added E-RAB establishment success rate'
-          );
-          gadget.element.querySelector('.ui-icon-spinner').hidden = true;
         });
     });
 
