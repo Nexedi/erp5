@@ -134,16 +134,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>author</string>
-                          <string>Author</string>
-                        </tuple>
-                        <tuple>
                           <string>response_count</string>
                           <string>Responses</string>
-                        </tuple>
-                        <tuple>
-                          <string>last_post</string>
-                          <string>Latest Post</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -173,14 +165,6 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>modification_date</string>
-                        </tuple>
-                        <tuple>
-                          <string>author</string>
-                          <string>Author</string>
-                        </tuple>
-                        <tuple>
-                          <string>last_post</string>
-                          <string>Latest Post</string>
                         </tuple>
                       </list>
                     </value>
