@@ -9,6 +9,7 @@ MAX_PADDING_CHUNK = 2 ** 20
 
 class PersistentBytes(Persistent):
   def __init__(self, value):
+    assert isinstance(value, bytes)
     self.value = value
 
   def __bytes__(self):
@@ -99,7 +100,6 @@ class BTreeData(Persistent):
      Offset of first data byte.
     """
     # TODO: auto-aggregation of continuous keys when overwriting
-    assert isinstance(buf, bytes)
     if offset < 0:
       raise negative_offset_error
     tree = self._tree
