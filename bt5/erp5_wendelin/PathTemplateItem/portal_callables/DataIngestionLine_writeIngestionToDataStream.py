@@ -5,4 +5,4 @@
   Note that by default fluentd data is encoded in msgpack format, this script will not unpack it.
 """
 
-out_stream["Data Stream"].appendData(data_chunk)
+out_stream["Data Stream"].appendData(data_chunk.encode('utf-8'))
