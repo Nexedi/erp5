@@ -8,7 +8,13 @@
       <dictionary>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testWendelinTelecom</string> </value>
+            <value> <string>testWendelinTelecomSecurity</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -18,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testWendelinTelecom</string> </value>
+            <value> <string>test.erp5.testWendelinTelecomSecurity</string> </value>
         </item>
         <item>
             <key> <string>sid</string> </key>
@@ -45,7 +51,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -64,7 +70,7 @@
                 <item>
                     <key> <string>component_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
