@@ -1,4 +1,10 @@
 <base_category_list>
+ <portal_type id="Assignment Request">
+  <item>function</item>
+ </portal_type>
+ <portal_type id="Assignment Request Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Credential Recovery Module">
   <item>business_application</item>
  </portal_type>
