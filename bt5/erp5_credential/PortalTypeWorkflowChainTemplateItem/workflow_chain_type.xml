@@ -1,5 +1,13 @@
 <workflow_chain>
  <chain>
+  <type>Assignment</type>
+  <workflow>credential_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Assignment Request</type>
+  <workflow>credential_interaction_workflow, edit_workflow, ticket_workflow</workflow>
+ </chain>
+ <chain>
   <type>Credential Recovery</type>
   <workflow>credential_interaction_workflow, credential_validation_workflow, edit_workflow</workflow>
  </chain>
