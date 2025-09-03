@@ -296,7 +296,7 @@ class Test(ERP5TypeTestCase):
     Before the migration of the attribute from '_tree' to '_bucket_tree', it broke.
     """
     bucket_stream = self._getTestDataBucket()
-    # Buckets (PersistentStrings) must not be findable with folder API, otherwise
+    # Buckets (PersistentBytes) must not be findable with folder API, otherwise
     # erp5 tries to index them which is bad. Furthermore they are not aquisition
     # objects and can't be wrapped, therefore they'd also break folders iteritem method.
     self.assertEqual(list(bucket_stream.iteritems()), [])
