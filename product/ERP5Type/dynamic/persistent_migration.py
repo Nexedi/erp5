@@ -322,7 +322,7 @@ def enable_zodbupdate_load_monkey_patch():
                     # directly load as bytes what we know for sure what will be bytes
                     if (self._klass_modulename, self._klass_name) in {
                       ('OFS.Image', 'PData'),
-                      ('erp5.component.module.erp5_version.BTreeData', 'PersistentString')}:
+                      ('erp5.component.module.erp5_version.BTreeData', 'PersistentBytes')}:
                       self._unpickler = PersistentUnpickler(
                         find_global,
                         persistent_load,
