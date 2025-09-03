@@ -1,5 +1,6 @@
 import six
 import hashlib
+from Products.ERP5Type.Utils import str2bytes
 portal = context.getPortalObject()
 
 if ignore_folder_list is None:
@@ -21,13 +22,13 @@ def getSkinHash(skin, skin_container):
     try:
       content = skin.formXML()
       if isinstance(content, six.text_type):
-        content = content.encode('utf8', 'repr')
+        content = content
     except AttributeError as e:
       # This can happen with dead proxy fields.
-      content = b"broken form %s" % e
-    content = b'ignore'
+      content = "broken form %s" % e
+    content = 'ignore'
   m = hashlib.md5()
-  m.update(content)
+  m.update(str2bytes(content))
   content_hash = m.hexdigest()
   return ";".join((skin_container.getId(), skin.getId(), skin.meta_type, content_hash))
 
@@ -42,7 +43,7 @@ for skin_folder in portal.portal_skins.objectValues('Folder'):
 
 if include_workflow_scripts:
   for workflow in portal.portal_workflow.objectValues():
-    for skin in workflow.scripts.objectValues():
+    for skin in workflow.objectValues("Workflow Script"):
       print(getSkinHash(skin, workflow))
 
 container.REQUEST.RESPONSE.setHeader('content-type', 'text/plain')
