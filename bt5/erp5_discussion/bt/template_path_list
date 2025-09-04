@@ -2,3 +2,4 @@ notification_message_module/forum-new-thread
 notification_message_module/forum-new-thread/**
 portal_gadgets/erp5_forum
 portal_gadgets/erp5_forum/**
+web_page_module/discussion_**
