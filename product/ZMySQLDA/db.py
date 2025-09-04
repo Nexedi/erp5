@@ -242,9 +242,21 @@ class DB(TM):
             raise NotSupportedError("transactions not supported by this server")
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
+        self._transaction_begun = False
+
+    @property
+    def isolation_level(self):
+        return self._isolation_level
+
+    @isolation_level.setter
+    def isolation_level(self, v):
+        if v not in ('REPEATABLE-READ', 'READ-COMMITTED', 'READ-UNCOMMITTED',
+                     'SERIALIZABLE'):
+            raise RuntimeError('Isolation level %s is not supported.' % v)
+        self._isolation_level = v
 
     def _parse_connection_string(self):
-        self._mysql_lock = self._try_transactions = None
+        self._mysql_lock = self._try_transactions = self._isolation_level = None
         self._kw_args = kwargs = {'conv': self.conv}
         items = self._connection.split()
         if not items:
@@ -262,6 +274,8 @@ class DB(TM):
             del items[0]
         if items[0][0] == "*":
             self._mysql_lock = items.pop(0)[1:]
+        if items[0][0] == "!":
+            self.isolation_level = items.pop(0)[1:]
         db = items.pop(0)
         if '@' in db:
             db, host = db.split('@', 1)
@@ -438,7 +452,10 @@ class DB(TM):
 
     def query(self, query_string, max_rows=1000):
         """Execute 'query_string' and return at most 'max_rows'."""
-        self._use_TM and self._register()
+        if self._use_TM:
+            self._register()
+            if not self._transaction_begun:
+                self._begin_transaction()
         desc = None
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
@@ -487,10 +504,16 @@ class DB(TM):
             return self.db.string_literal(s.encode('utf-8'))
 
     def _begin(self, *ignored):
+        self._begin_transaction()
+
+    def _begin_transaction(self, *ignored):
         """Begin a transaction (when TM is enabled)."""
         try:
             self._transaction_begun = True
             if self._transactions:
+                if self.isolation_level:
+                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self.isolation_level.replace('-', ' '),
+                                allow_reconnect=True)
                 self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
