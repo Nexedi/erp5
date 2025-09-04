@@ -162,14 +162,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
     promise_config.add_section('portal_templates')
     promise_config.set('portal_templates', 'repository',
                                    ' '.join(bt5_repository_path_list))
-
-  if os.environ.get('TEST_CA_PATH') is not None:
-    promise_config.add_section('portal_certificate_authority')
-    promise_config.set('portal_certificate_authority', 'certificate_authority_path',
-                                           os.environ['TEST_CA_PATH'])
-
-  with open(promise_path, 'w') as f:
-    promise_config.write(f)
+  promise_config.write(open(promise_path, 'w'))
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
