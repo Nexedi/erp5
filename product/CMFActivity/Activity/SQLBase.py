@@ -847,8 +847,9 @@ CREATE TABLE %s (
     """
       Put messages back in given processing_node.
     """
-    db.query(str2bytes("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+    db.query(str2bytes("UPDATE %s SET processing_node=%s WHERE uid IN (%s)" % (
       self.sql_table, state, ','.join(map(str, uid_list)))))
+    db.commitSingleConnector()
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
@@ -897,8 +898,9 @@ CREATE TABLE %s (
         # new transaction starts on the first 'FOR UPDATE' query, which is all
         # the more important as the current on started with getPriority().
         result = db.query(b"SELECT * FROM %s WHERE processing_node=%d"
-          b" ORDER BY priority, date LIMIT 1\0COMMIT" % (
+          b" ORDER BY priority, date LIMIT 1" % (
           str2bytes(self.sql_table), processing_node), 0)
+        db.commitSingleConnector()
         already_assigned = result[1]
         if already_assigned:
           result = Results(result)
@@ -971,7 +973,7 @@ CREATE TABLE %s (
         self._log(TRACE, '(no message was reserved)')
     return (), None, None
 
-  def _abort(self):
+  def abortSingleConnector(self):
     try:
       transaction.abort()
     except:
@@ -1034,7 +1036,7 @@ CREATE TABLE %s (
             % [(m.uid, m.object_path, m.method_id) for m in message_list])
           for m in message_list:
             m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
-        self._abort()
+        self.abortSingleConnector()
         exc_info = message_list[0].exc_info
         if exc_info:
           try:
@@ -1048,7 +1050,7 @@ CREATE TABLE %s (
           except:
             self._log(WARNING, 'Exception raised when processing error callbacks')
             message.setExecutionState(MESSAGE_NOT_EXECUTED)
-            self._abort()
+            self.abortSingleConnector()
       self.finalizeMessageExecution(activity_tool, message_list,
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()

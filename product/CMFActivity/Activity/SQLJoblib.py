@@ -167,10 +167,10 @@ CREATE TABLE %s (
           if uid_list:
             self.assignMessageList(db, processing_node, uid_list)
           else:
-            db.query(b"COMMIT") # XXX: useful ?
+            db.commitSingleConnector() # XXX: useful ?
         except:
           self._log(WARNING, 'Failed to reserve duplicates')
-          db.query(b"ROLLBACK")
+          db.abortSingleConnector()
           raise
         if uid_list:
           self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)
