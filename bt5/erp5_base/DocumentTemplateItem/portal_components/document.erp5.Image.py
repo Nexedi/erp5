@@ -120,7 +120,6 @@ class Image(TextConvertableMixin, File, OFSImage):
         image = PIL.Image.open(BytesIO(bytes(self.data)))
       except IOError:
         width = height = -1
-        content_type = 'application/unknown'
       else:
         width, height = image.size
         content_type = image.get_format_mimetype()
@@ -130,7 +129,9 @@ class Image(TextConvertableMixin, File, OFSImage):
           content_type = mimetype_list[0].normalized()
     self.height = height
     self.width = width
-    self._setContentType(content_type)
+
+    if content_type:
+      self._setContentType(content_type)
 
   def _upgradeImage(self):
     """
@@ -151,8 +152,13 @@ class Image(TextConvertableMixin, File, OFSImage):
     if not hasattr(aq_base(self), 'data') and hasattr(aq_base(self), '_data'):
       self.data = self._data
 
-    # Make sure size is defined
-    size = len(self.data)
+    # We want to match is data is None in itself, or simply undefined (equivalent)
+    data = getattr(aq_base(self), 'data', None)
+    if data is None:
+      size = 0
+    else:
+      size = len(data)
+
     if getattr(aq_base(self), 'size', None) != size:
       self.size = size
 
@@ -382,7 +388,11 @@ class Image(TextConvertableMixin, File, OFSImage):
     else:
       parameter_list.append('-')
 
-    data = bytes(self.getData())
+    data = self.getData()
+    if data is None:
+      return None
+    data = bytes(data)
+
     if self.getContentType() == "image/svg+xml":
       data = transformUrlToDataURI(data)
 
