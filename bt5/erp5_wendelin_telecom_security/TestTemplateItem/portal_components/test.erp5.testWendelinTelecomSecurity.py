@@ -197,6 +197,12 @@ class TestWendelinTelecomSecurity(TestWendelinTelecomMixin):
       validation_state='validated'
     )
     self.checkDocumentPermissions(user, ors_enb_kpi, True, False, False)
+    ors_enb_cell = self.portal.portal_catalog.getResultValue(
+      portal_type='Data Product',
+      reference='ors_enb_cell',
+      validation_state='validated'
+    )
+    self.checkDocumentPermissions(user, ors_enb_cell, True, False, False)
     ors_enb_log_data = self.portal.portal_catalog.getResultValue(
       portal_type='Data Product',
       reference='ors_enb_log_data',
