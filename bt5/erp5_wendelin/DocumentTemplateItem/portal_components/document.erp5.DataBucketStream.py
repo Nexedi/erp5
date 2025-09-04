@@ -28,7 +28,7 @@ from BTrees.LOBTree import LOBTree
 from AccessControl import ClassSecurityInfo
 from erp5.component.document.Document import Document
 from Products.ERP5Type import Permissions, PropertySheet
-from erp5.component.module.BTreeData import PersistentString
+from erp5.component.module.BTreeData import PersistentBytes
 from erp5.component.module.Log import log
 from AccessControl.ZopeGuards import ContainerAssertions
 
@@ -254,7 +254,7 @@ class DataBucketStream(Document):
       self._long_index_tree.insert(count, key)
     except AttributeError:
       pass
-    value = PersistentString(value)
+    value = PersistentBytes(value)
     is_new_key = self._bucket_tree.insert(key, value)
     if not is_new_key:
       change_state = "differ" if value != self._bucket_tree[key] else "are equal"
