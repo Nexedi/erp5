@@ -70,4 +70,4 @@ class ActivityDB(DB):
 
     @property
     def isolation_level(self):
-        return 'READ-COMMITTED'
+        return 'READ COMMITTED'
