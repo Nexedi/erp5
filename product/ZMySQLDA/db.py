@@ -252,7 +252,7 @@ class DB(TM):
     def isolation_level(self, v):
         if v not in ('REPEATABLE READ', 'READ COMMITTED', 'READ UNCOMMITTED',
                      'SERIALIZABLE'):
-            raise RuntimeError('Isolation level %s is not supported.' % v)
+            raise ValueError('Isolation level %s is not supported.' % v)
         self._isolation_level = v
 
     def _parse_connection_string(self):
