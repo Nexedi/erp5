@@ -119,7 +119,6 @@ class Image(TextConvertableMixin, File, OFSImage):
         image = PIL.Image.open(BytesIO(bytes(self.data)))
       except IOError:
         width = height = -1
-        content_type = 'application/unknown'
       else:
         width, height = image.size
         content_type = image.get_format_mimetype()
@@ -129,7 +128,9 @@ class Image(TextConvertableMixin, File, OFSImage):
           content_type = mimetype_list[0].normalized()
     self.height = height
     self.width = width
-    self._setContentType(content_type)
+
+    if content_type:
+      self._setContentType(content_type)
 
   def _upgradeImage(self):
     """
