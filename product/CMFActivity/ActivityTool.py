@@ -721,9 +721,7 @@ class ActivityTool (BaseTool):
         return meta_types
 
     def getSQLConnection(self):
-      db = self.aq_inner.aq_parent.cmf_activity_sql_connection()
-      db._isolation_level = 'READ-COMMITTED'
-      return db
+      return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
       connection_id = 'cmf_activity_sql_connection'
