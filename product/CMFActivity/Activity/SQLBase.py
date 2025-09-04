@@ -973,7 +973,7 @@ CREATE TABLE %s (
         self._log(TRACE, '(no message was reserved)')
     return (), None, None
 
-  def abortSingleConnector(self):
+  def _abort(self):
     try:
       transaction.abort()
     except:
@@ -1036,7 +1036,7 @@ CREATE TABLE %s (
             % [(m.uid, m.object_path, m.method_id) for m in message_list])
           for m in message_list:
             m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
-        self.abortSingleConnector()
+        self._abort()
         exc_info = message_list[0].exc_info
         if exc_info:
           try:
@@ -1050,7 +1050,7 @@ CREATE TABLE %s (
           except:
             self._log(WARNING, 'Exception raised when processing error callbacks')
             message.setExecutionState(MESSAGE_NOT_EXECUTED)
-            self.abortSingleConnector()
+            self._abort()
       self.finalizeMessageExecution(activity_tool, message_list,
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()
