@@ -242,7 +242,6 @@ class DB(TM):
             raise NotSupportedError("transactions not supported by this server")
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
-        self._transaction_begun = False
 
     @property
     def isolation_level(self):
@@ -452,10 +451,7 @@ class DB(TM):
 
     def query(self, query_string, max_rows=1000):
         """Execute 'query_string' and return at most 'max_rows'."""
-        if self._use_TM:
-            self._register()
-            if not self._transaction_begun:
-                self._begin_transaction()
+        self._use_TM and self._register()
         desc = None
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
@@ -504,9 +500,6 @@ class DB(TM):
             return self.db.string_literal(s.encode('utf-8'))
 
     def _begin(self, *ignored):
-        self._begin_transaction()
-
-    def _begin_transaction(self, *ignored):
         """Begin a transaction (when TM is enabled)."""
         try:
             self._transaction_begun = True
