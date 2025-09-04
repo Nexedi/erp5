@@ -250,7 +250,7 @@ class DB(TM):
 
     @isolation_level.setter
     def isolation_level(self, v):
-        if v not in ('REPEATABLE-READ', 'READ-COMMITTED', 'READ-UNCOMMITTED',
+        if v not in ('REPEATABLE READ', 'READ COMMITTED', 'READ UNCOMMITTED',
                      'SERIALIZABLE'):
             raise RuntimeError('Isolation level %s is not supported.' % v)
         self._isolation_level = v
@@ -275,7 +275,7 @@ class DB(TM):
         if items[0][0] == "*":
             self._mysql_lock = items.pop(0)[1:]
         if items[0][0] == "!":
-            self.isolation_level = items.pop(0)[1:]
+            self.isolation_level = items.pop(0)[1:].replace('-', ' ')
         db = items.pop(0)
         if '@' in db:
             db, host = db.split('@', 1)
@@ -512,7 +512,7 @@ class DB(TM):
             self._transaction_begun = True
             if self._transactions:
                 if self.isolation_level:
-                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self.isolation_level.replace('-', ' '),
+                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self.isolation_level,
                                 allow_reconnect=True)
                 self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
