@@ -30,9 +30,7 @@
 ##############################################################################
 
 import unittest
-from AccessControl.SecurityManagement import newSecurityManager
 from erp5.component.test.testDms import DocumentUploadTestCase
-
 
 class TestERP5Discussion(DocumentUploadTestCase):
   """Test for erp5_discussion business template.
@@ -68,6 +66,18 @@ class TestERP5Discussion(DocumentUploadTestCase):
   def stepCreatePost(self,thread):
     return thread.newContent(portal_type="Discussion Post")
 
+  def stepCreateForumWebSection(self,group,web_site):
+    web_section = web_site.newContent(portal_type='Web Section')
+    module =  self.portal.getDefaultModule("Discussion Forum")
+    forum = module.newContent(portal_type="Discussion Forum")
+    forum.setMultimembershipCriterionBaseCategoryList(['group'])
+    forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    forum.edit(criterion_property=("portal_type",))
+    forum.setCriterion("portal_type", ["Project", "Discussion Thread"])
+    forum.setFollowUp(web_section.getRelativeUrl())
+    forum.publish()
+    return web_section
+
   def test_01_createDiscussionThread(self):
     """Create a new discussion thread"""
 
@@ -97,14 +107,24 @@ class TestERP5Discussion(DocumentUploadTestCase):
     portal = self.portal
     discussion_thread_id_set = set(portal.discussion_thread_module.objectIds())
 
-    # create web sections & set predicates
+    # create web section, forum & set predicates
     group1 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 1')
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
-    web_section1 = web_site.newContent(portal_type='Web Section')
-    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
+    web_section1 = self.stepCreateForumWebSection(group1, web_site)
     self.tic()
+
+    # check forum is created and linked
+    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+    result = [forum for forum in result if forum.getValidationState() in valid_states]
+    if result:
+      forum = result[0]
+    self.assertTrue(forum)
+    self.assertEqual(forum.getPortalType(), "Discussion Forum")
+    self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
+    self.assertEquals([(x.property, x.identity) for x in forum.getCriterionList()],
+                      [("portal_type", ['Project', 'Discussion Thread'])])
 
     web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
     discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
@@ -146,19 +166,26 @@ class TestERP5Discussion(DocumentUploadTestCase):
     """
     portal = self.portal
 
-    # create web sections & set predicates
+    # create web sections, forums & set predicates
     group1 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 1')
     group2 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 2')
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
-    web_section1 = web_site.newContent(portal_type='Web Section')
-    web_section2 = web_site.newContent(portal_type='Web Section')
-    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
-    web_section2.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])
+    web_section1 = self.stepCreateForumWebSection(group1, web_site)
+    web_section2 = self.stepCreateForumWebSection(group2, web_site)
     self.tic()
+
+    result = web_section1.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+    result = [forum for forum in result if forum.getValidationState() in valid_states]
+    if result:
+      forum1 = result[0]
+    result = web_section2.getFollowUpRelatedValueList(portal_type = "Discussion Forum")
+    valid_states = ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')
+    result = [forum for forum in result if forum.getValidationState() in valid_states]
+    if result:
+      forum2 = result[0]
 
     # add threads on Web Section context
     web_section1.WebSection_createNewDiscussionThread('test1', 'test1 body')
@@ -168,13 +195,13 @@ class TestERP5Discussion(DocumentUploadTestCase):
                                                                     title = 'test1')
     discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
                                                                     title = 'test2')
+
     self.assertEqual(group1, discussion_thread_object1.getGroupValue())
     self.assertEqual(group2, discussion_thread_object2.getGroupValue())
 
-    # check getDocumentValue.. on Web Section context (by default forum is public
-    # so threads should be part of document list)
-    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
-    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])
+    # check forum predicate search.. on Discussion Forum context
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in forum1.searchResults(portal_type="Discussion Thread")])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in forum2.searchResults(portal_type="Discussion Thread")])
 
     # test RSS generation by testing indirectly its "get" method
     # (new post should be first in list)
