@@ -50,7 +50,11 @@ class TestWendelinTelecomMixin(SecurityTestCase):
     # Set up variables for ORS ingestion testing
     self.ors_enb_log_ingestion = self.portal.portal_ingestion_policies.ors_enb_log_ingestion
 
-    self.ors_enb_kpi_endpoint_path = self.portal.getPath() + '/Base_getDataArrayForDataTypeAsJSON'
+    self.ors_get_data_array_endpoint_path = self.portal.getPath() + \
+      '/Base_getDataArrayForDataTypeAsJSON'
+
+    self.ors_get_merged_data_array_endpoint_path = self.portal.getPath() + \
+      '/Base_getMergedDataArrayForDataTypeAsJSON'
 
     module = self.portal.web_page_module
     self.test_ors_example_log_valid = {
@@ -324,8 +328,8 @@ class TestWendelinTelecomMixin(SecurityTestCase):
       'progress_indicator': progress_indicator
     }
 
-  def getOrsEnbKpiDict(self, data_array_url, kpi_type):
-    kpi_path = self.ors_enb_kpi_endpoint_path + '?data_array_url=' + \
+  def getOrsDataArrayAsDict(self, data_array_url, kpi_type):
+    kpi_path = self.ors_get_data_array_endpoint_path + '?data_array_url=' + \
       data_array_url + '&data_type=' + kpi_type
     publish_kw = dict(
       user='ERP5TypeTestCase'
@@ -333,4 +337,16 @@ class TestWendelinTelecomMixin(SecurityTestCase):
     response = self.publish(kpi_path, **publish_kw)
     body = response.getBody()
     return json.loads(body)
+
+  def getOrsMergedDataArrayAsDict(self, data_array_url, data_type):
+    kpi_path = self.ors_get_merged_data_array_endpoint_path + \
+      '?data_array_url=' + \
+      data_array_url + '&data_type=' + data_type
+    publish_kw = dict(
+      user='ERP5TypeTestCase'
+    )
+    response = self.publish(kpi_path, **publish_kw)
+    body = response.getBody()
+    return json.loads(body)
+
 
