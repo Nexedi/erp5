@@ -16,11 +16,18 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
+                <string>destination/portal_workflow/event_simulation_workflow/transition_cancel</string>
                 <string>destination/portal_workflow/event_simulation_workflow/transition_deliver</string>
                 <string>destination/portal_workflow/event_simulation_workflow/transition_deliver_action</string>
                 <string>destination/portal_workflow/event_simulation_workflow/transition_stop</string>
                 <string>destination/portal_workflow/event_simulation_workflow/transition_stop_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
