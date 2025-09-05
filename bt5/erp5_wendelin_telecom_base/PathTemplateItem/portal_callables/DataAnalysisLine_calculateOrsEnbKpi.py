@@ -20,15 +20,23 @@ for array in out_array:
     e_rab_data_array = array['Data Array']
   if array['variation'] == 'e_utran':
     e_utran_data_array = array['Data Array']
-
 # No new data to process
 if offset_index >= end:
   return
 
-previous_log_data = ''.join(
-  [x.decode('utf-8') if isinstance(x, bytes) else x for x in in_data_stream.readChunkList(start, offset_index)]
-)
-new_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(offset_index, end)])
+def readLog(start_index, end_index):
+  log_list = []
+  for x in in_data_stream.readChunkList(start_index, end_index):
+    if isinstance(x, bytes):
+      try:
+        x = x.decode('utf-8')
+      except UnicodeDecodeError:
+        continue
+    log_list.append(x)
+  return ''.join(log_list)
+
+previous_log_data = readLog(start, offset_index)
+new_log_data = readLog(offset_index, end)
 
 previous_log_data_line_list = previous_log_data.splitlines()
 new_log_data_line_list = new_log_data.splitlines()
