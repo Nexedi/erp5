@@ -82,6 +82,17 @@ class File(Document, OFS_File):
                     , PropertySheet.Periodicity
     )
 
+  # edit order is useful for setting the right `content_type`
+  _default_edit_order = Base._default_edit_order + (
+    # Least priority: guess from content (data)
+    'data',
+    # Then, guess from filename
+    'file',
+    'filename',
+    # Most priority: no guess, set by caller
+    'content_type',
+  )
+
   # OFS.File has an overloaded __str__ that returns the file content
   __str__ = object.__str__
 
