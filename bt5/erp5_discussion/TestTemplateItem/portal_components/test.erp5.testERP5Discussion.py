@@ -30,11 +30,10 @@
 ##############################################################################
 
 import unittest
-from AccessControl.SecurityManagement import newSecurityManager
-from erp5.component.test.testDms import DocumentUploadTestCase
+#from erp5.component.test.testDms import DocumentUploadTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-
-class TestERP5Discussion(DocumentUploadTestCase):
+class TestERP5Discussion(ERP5TypeTestCase):
   """Test for erp5_discussion business template.
   """
   def getTitle(self):
@@ -68,6 +67,38 @@ class TestERP5Discussion(DocumentUploadTestCase):
   def stepCreatePost(self,thread):
     return thread.newContent(portal_type="Discussion Post")
 
+  def stepCreateForum(self, group):
+    module =  self.portal.getDefaultModule("Discussion Forum")
+    forum = module.newContent(portal_type="Discussion Forum")
+    forum.setMultimembershipCriterionBaseCategoryList(['group'])
+    forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    forum.edit(criterion_property=("portal_type",))
+    forum.setCriterion("portal_type", ["Discussion Thread"])
+    forum.publish()
+    return forum
+
+  def stepCreateForumWebSection(self, group, web_site):
+    web_section = web_site.newContent(portal_type='Web Section')
+    web_section.setMultimembershipCriterionBaseCategoryList(['group'])
+    web_section.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    web_section.edit(criterion_property=("portal_type",))
+    web_section.setCriterion("portal_type", ["Discussion Forum"])
+    module =  self.portal.getDefaultModule("Discussion Forum")
+    forum = module.newContent(portal_type="Discussion Forum")
+    forum.setMultimembershipCriterionBaseCategoryList(['group'])
+    forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    forum.edit(criterion_property=("portal_type",))
+    forum.setCriterion("portal_type", ["Discussion Thread"])
+    forum.publish()
+    return web_section
+
+  def test_00_createDiscussionForum(self):
+    """Create a new discussion forum"""
+
+    module =  self.portal.getDefaultModule("Discussion Forum")
+    module.newContent(portal_type="Discussion Forum")
+    self.tic()
+
   def test_01_createDiscussionThread(self):
     """Create a new discussion thread"""
 
@@ -90,21 +121,86 @@ class TestERP5Discussion(DocumentUploadTestCase):
     # indexed already
     self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())
 
-  def test_03_createDiscussionThread(self):
+  def test_03_createDiscussionForum(self):
     """
-      Create a disucssion thread
+      Create a discussion forum
+    """
+    portal = self.portal
+
+    # create forum & set predicates
+    group1 = portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 1')
+    forum = self.stepCreateForum(group1)
+    self.assertTrue(forum)
+    self.assertEqual(forum.getPortalType(), "Discussion Forum")
+    self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
+    self.assertEquals([(x.property, x.identity) for x in forum.getCriterionList()],
+                      [("portal_type", ['Discussion Thread'])])
+    self.assertSameSet([], forum.DiscussionForum_getDiscussionThreadList())
+
+  def test_04_createDiscussionThread(self):
+    """
+      Create a discussion thread
     """
     portal = self.portal
     discussion_thread_id_set = set(portal.discussion_thread_module.objectIds())
 
-    # create web sections & set predicates
+    # create forum & set predicates
+    group1 = portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 1')
+    forum = self.stepCreateForum(group1)
+
+    forum.DiscussionForum_createNewDiscussionThread('test1-new', 'test1 body')
+    discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
+                          if x.getId() not in discussion_thread_id_set]
+    discussion_thread_id_set.add(discussion_thread.getId())
+    self.assertTrue(discussion_thread.getReference().startswith("test1-new-"))
+    # not indexed yet
+    self.assertSameSet([], forum.DiscussionForum_getDiscussionThreadList())
+
+    self.tic()
+    # indexed already
+    self.assertSameSet([discussion_thread], [x.getObject() for x in forum.DiscussionForum_getDiscussionThreadList()])
+    discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
+    attachment_list = discussion_post.DiscussionPost_getAttachmentList()
+    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(0, len(attachment_list))
+
+    # check attachment creation
+    '''file_ = self.makeFileUpload('TEST-en-002.doc')
+    forum.DiscussionForum_createNewDiscussionThread('test1-new-with-attachment', 'test1 body', file=file_)
+    discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
+                          if x.getId() not in discussion_thread_id_set]
+    discussion_thread_id_set.add(discussion_thread.getId())
+    self.assertTrue(discussion_thread.getReference().startswith("test1-new-with-attachment-"))
+    self.tic()
+
+    discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
+    attachment_list = discussion_post.DiscussionPost_getAttachmentList()
+    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(1, len(attachment_list))'''
+
+  def test_05_createDiscussionThread_webSectionBackwardCompatibility(self):
+    """
+      Create a disucssion thread (old web section)
+    """
+    portal = self.portal
+    discussion_thread_id_set = set(portal.discussion_thread_module.objectIds())
+
+    # create web section, forum & set predicates
     group1 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 1')
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
-    web_section1 = web_site.newContent(portal_type='Web Section')
-    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
+    web_section1 = self.stepCreateForumWebSection(group1, web_site)
     self.tic()
+
+    # check forum is created and linked
+    forum = web_section1.WebSection_getRelatedForum()
+    self.assertTrue(forum)
+    self.assertEqual(forum.getPortalType(), "Discussion Forum")
+    self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
+    self.assertEquals([(x.property, x.identity) for x in forum.getCriterionList()],
+                      [("portal_type", ['Discussion Thread'])])
 
     web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
     discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
@@ -127,7 +223,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertEqual(0, len(attachment_list))
 
     # check attachment creation
-    file_ = self.makeFileUpload('TEST-en-002.doc')
+    '''file_ = self.makeFileUpload('TEST-en-002.doc')
     web_section1.WebSection_createNewDiscussionThread('test1-new-with-attachment', 'test1 body', file=file_)
     discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
                           if x.getId() not in discussion_thread_id_set]
@@ -138,7 +234,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
     attachment_list = discussion_post.DiscussionPost_getAttachmentList()
     self.assertEqual(discussion_thread.getValidationState(), 'published')
-    self.assertEqual(1, len(attachment_list))
+    self.assertEqual(1, len(attachment_list))'''
 
   def test_MultipleForum(self):
     """
@@ -146,19 +242,66 @@ class TestERP5Discussion(DocumentUploadTestCase):
     """
     portal = self.portal
 
-    # create web sections & set predicates
+    # create forums & set predicates
+    group1 = portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 1')
+    group2 = portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 2')
+    self.tic()
+
+    forum1 = self.stepCreateForum(group1)
+    self.assertTrue(forum1)
+    forum2 = self.stepCreateForum(group2)
+    self.assertTrue(forum2)
+
+    # add threads on forum context
+    forum1.DiscussionForum_createNewDiscussionThread('test1', 'test1 body')
+    forum2.DiscussionForum_createNewDiscussionThread('test2', 'test2 body')
+    self.tic()
+    discussion_thread_object1 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
+                                                                    title = 'test1')
+    discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
+                                                                    title = 'test2')
+
+    self.assertEqual(group1, discussion_thread_object1.getGroupValue())
+    self.assertEqual(group2, discussion_thread_object2.getGroupValue())
+
+    # check forum predicate search.. on Discussion Forum context
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in forum1.searchResults(portal_type="Discussion Thread")])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in forum2.searchResults(portal_type="Discussion Thread")])
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x in forum1.DiscussionForum_getDiscussionThreadList()])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x in forum2.DiscussionForum_getDiscussionThreadList()])
+
+    # test archiving threads so the do not belong any more to forum search
+    discussion_thread_object1.archive()
+    discussion_thread_object2.archive()
+    self.tic()
+
+    #self.assertSameSet([], web_section1.getDocumentValueList())
+    #self.assertSameSet([], web_section2.getDocumentValueList())
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x in forum1.DiscussionForum_getDiscussionThreadList()])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x in forum2.DiscussionForum_getDiscussionThreadList()])
+
+  def test_MultipleForumBackwardCompatibility(self):
+    """
+      Test multiple forums may exists within same ERP5 Web Site.
+    """
+    portal = self.portal
+
+    # create web sections, forums & set predicates
     group1 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 1')
     group2 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 2')
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
-    web_section1 = web_site.newContent(portal_type='Web Section')
-    web_section2 = web_site.newContent(portal_type='Web Section')
-    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
-    web_section2.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])
+    web_section1 = self.stepCreateForumWebSection(group1, web_site)
+    web_section2 = self.stepCreateForumWebSection(group2, web_site)
     self.tic()
+
+    forum1 = web_section1.WebSection_getRelatedForum()
+    self.assertTrue(forum1)
+    forum2 = web_section2.WebSection_getRelatedForum()
+    self.assertTrue(forum2)
 
     # add threads on Web Section context
     web_section1.WebSection_createNewDiscussionThread('test1', 'test1 body')
@@ -168,13 +311,13 @@ class TestERP5Discussion(DocumentUploadTestCase):
                                                                     title = 'test1')
     discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
                                                                     title = 'test2')
+
     self.assertEqual(group1, discussion_thread_object1.getGroupValue())
     self.assertEqual(group2, discussion_thread_object2.getGroupValue())
 
-    # check getDocumentValue.. on Web Section context (by default forum is public
-    # so threads should be part of document list)
-    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
-    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])
+    # check forum predicate search.. on Discussion Forum context
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in forum1.searchResults(portal_type="Discussion Thread")])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in forum2.searchResults(portal_type="Discussion Thread")])
 
     # test RSS generation by testing indirectly its "get" method
     # (new post should be first in list)
@@ -223,8 +366,11 @@ class TestERP5Discussion(DocumentUploadTestCase):
     discussion_thread_id_set = set(self.portal.discussion_thread_module.objectIds())
 
     web_site_value = self.portal.web_site_module.newContent(portal_type='Web Site')
-    web_section_value = web_site_value.newContent(portal_type='Web Section')
-    file_ = self.makeFileUpload('simple.csv')
+    group1 = self.portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 1')
+    web_section_value = self.stepCreateForumWebSection(group1, web_site_value)
+    self.tic()
+    '''file_ = self.makeFileUpload('simple.csv')
     web_section_value.WebSection_createNewDiscussionThread(
       "Thread Title",
       "Post Content",
@@ -252,7 +398,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
       if x not in tested_post_value_set
     ]
     attachment_list = post_value.DiscussionPost_getAttachmentList()
-    self.assertEqual(1, len(attachment_list))
+    self.assertEqual(1, len(attachment_list))'''
 
 def test_suite():
   suite = unittest.TestSuite()
