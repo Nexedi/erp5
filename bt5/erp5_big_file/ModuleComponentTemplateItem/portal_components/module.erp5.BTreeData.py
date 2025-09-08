@@ -202,7 +202,7 @@ class BTreeData(Persistent):
         while padding:
           padding_chunk = min(padding, MAX_PADDING_CHUNK)
           padding -= padding_chunk
-          yield '\x00' * padding_chunk
+          yield b'\x00' * padding_chunk
       else:
         chunk_offset = next_byte - key
       if size == 0:

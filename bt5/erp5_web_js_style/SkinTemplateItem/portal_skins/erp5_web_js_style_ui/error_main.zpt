@@ -20,13 +20,16 @@
 <!DOCTYPE html>
 <html tal:attributes="lang current_language">
   <head>
-  <meta http-equiv="Content-Security-Policy" tal:attributes="content content_security_policy"/>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" tal:attributes="content content_security_policy">
   <meta name="referrer" content="same-origin">
-  <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
-  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
+  <base tal:attributes="href python: '%s/' % web_section.absolute_url()">
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1">
   <title tal:content="python: web_section.getTranslatedTitle()"></title>
   <tal:block tal:condition="favicon_url">
-    <link rel="icon" tal:attributes="href favicon_url" />
+    <link rel="icon" tal:attributes="href favicon_url">
+    <link rel="shortcut icon" tal:attributes="href favicon_url">
+    <link rel="apple-touch-icon-precomposed" tal:attributes="href favicon_url">
   </tal:block>
   <meta name="robots" content="noindex,follow">
   <link rel="stylesheet" tal:attributes="href no_style_css_url">

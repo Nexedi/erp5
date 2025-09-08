@@ -73,7 +73,7 @@ class WebSiteTraversalHook(WebSectionTraversalHook):
       # Search for the common part index
       # XXX more testing should be added to check
       # if the URL is the kind of URL which is a Web Site
-      common_index = 0
+      common_index = -1
       i = 0
       path_len = len(path)
       for name in website_path:
@@ -83,7 +83,7 @@ class WebSiteTraversalHook(WebSectionTraversalHook):
           common_index = i
         i += 1
       # Insert the web site path after the common part of the path
-      if path_len > common_index + 1:
+      if (common_index >= 0) and (path_len > common_index + 1):
         path = website_path + path[common_index + 1:]
     rpp = request.other.get('VirtualRootPhysicalPath', ('', ))
     i = 0

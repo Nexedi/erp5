@@ -117,7 +117,7 @@ class UserManagementTestCase(ERP5TypeTestCase):
       self.tic()
     return new_person.Person_getUserId(), login, password
 
-  def _assertUserExists(self, login, password):
+  def _assertUserExists(self, login, password, transactional_user = False):
     """Checks that a user with login and password exists and can log in to the
     system.
     """
@@ -129,6 +129,16 @@ class UserManagementTestCase(ERP5TypeTestCase):
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
                   {'login':login, 'password':password}) is not None:
+        response = self.publish(
+          self.portal.absolute_url(relative=1),
+          basic = '%s:%s' % (login, password))
+        if not transactional_user:
+          self.assertEqual(response.getStatus(), 200)
+          self.assertIn('Logged In', bytes2str(response.getBody()))
+        else:
+          self.assertEqual(response.getStatus(), 302)
+          self.assertIn('location', response.headers.keys())
+          self.assertTrue(response.headers['location'].endswith('login_form'))
         break
     else:
       self.fail("No plugin could authenticate '%s' with password '%s'" %
@@ -148,6 +158,13 @@ class UserManagementTestCase(ERP5TypeTestCase):
         self.fail(
            "Plugin %s should not have authenticated '%s' with password '%s'" %
            (plugin_name, login, password))
+
+    response = self.publish(
+      self.portal.absolute_url(relative=1),
+      basic = '%s:%s' % (login, password))
+    self.assertEqual(response.getStatus(), 302)
+    self.assertIn('location', response.headers.keys())
+    self.assertTrue(response.headers['location'].endswith('login_form'))
 
   def _getOrCreateGroupValue(self):
     group_id = 'dummy_group'
@@ -363,6 +380,7 @@ class TestUserManagement(UserManagementTestCase):
     login = 'j\xc3\xa9'
     _, _, password = self._makePerson(login=login)
     self._assertUserExists(login, password)
+    self._assertUserDoesNotExists(login, '%s-x' % password)
 
   def test_PersonWithLoginWithNonePasswordAreNotUsers(self):
     """Tests a person with a login but None as a password is not a valid user."""
@@ -498,20 +516,20 @@ class TestUserManagement(UserManagementTestCase):
     """Tests a person created on same transaction with a login & password
        is a valid user if you set transactional variable."""
     _, login, password = self._makePerson(tic=0, set_transactional_user=True)
-    self._assertUserExists(login, password)
+    self._assertUserExists(login, password, transactional_user = True)
 
   def test_TransactionalPersonLoginCaseSensitive(self):
     """Login/password are case sensitive."""
     login = 'case_test_user'
     _, _, password = self._makePerson(login=login, tic=0, set_transactional_user=True)
-    self._assertUserExists(login, password)
+    self._assertUserExists(login, password, transactional_user = True)
     self._assertUserDoesNotExists('case_test_User', password)
 
   def test_TransactionalPersonLoginNonAscii(self):
     """Login can contain non ascii chars."""
     login = 'j\xc3\xa9'
     _, _, password = self._makePerson(login=login, tic=0, set_transactional_user=True)
-    self._assertUserExists(login, password)
+    self._assertUserExists(login, password, transactional_user = True)
 
   def test_TransactionalPersonWithLoginWithNonePasswordAreNotUsers(self):
     """Tests a person created on same transaction with a login but None as 

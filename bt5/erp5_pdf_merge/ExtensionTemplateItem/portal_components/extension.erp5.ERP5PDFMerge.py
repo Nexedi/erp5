@@ -42,7 +42,7 @@ def mergePDFList(self, pdf_data_list, start_on_recto=False):
 
   for pdf_data in pdf_data_list:
     if pdf_data:
-      pdf_reader = PdfFileReader(BytesIO(pdf_data))
+      pdf_reader = PdfFileReader(BytesIO(bytes(pdf_data)))
       page_count = pdf_reader.getNumPages()
       for page in range(page_count):
         output.addPage(pdf_reader.getPage(page))

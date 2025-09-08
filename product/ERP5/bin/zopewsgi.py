@@ -305,7 +305,11 @@ def runwsgi():
     logger = logging.getLogger(__name__)
 
     def shutdown(signum, _frame):
-      logger.info("Initiating shutdown after signal %s", signal.Signals(signum).name)
+      if sys.version_info >= (3, ):
+        signal_name = signal.Signals(signum).name
+      else:
+        signal_name = signum
+      logger.info("Initiating shutdown after signal %s", signal_name)
       deadline = time.time() + args.shutdown_timeout
 
       if timerserver:

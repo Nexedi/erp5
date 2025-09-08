@@ -5,5 +5,7 @@ notification_message_module/20110426-1B7D
 notification_message_module/credential_recovery-username.en
 notification_message_module/credential_request-subscription
 portal_alarms/accept_submitted_credentials
+portal_alarms/credential_create_missing_assignment_request_alarm
+portal_alarms/credential_handle_assignment_request_alarm
 portal_categories/question/credential
 portal_categories/question/credential/**

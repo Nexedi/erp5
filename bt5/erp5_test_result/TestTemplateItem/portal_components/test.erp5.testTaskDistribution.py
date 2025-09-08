@@ -1465,7 +1465,7 @@ class TestRetryUnknownTest(TaskDistributionTestCase):
     }
     self.tool.stopUnitTest(line_url, status_dict)
     self.tic()
-    self.assertEqual(test_result_line.getStringIndex(), 'UNKNOWN')
+    self.assertEqual(test_result_line.getStringIndex(), 'MISSING')
     self.assertEqual(test_result_line.getSimulationState(), 'stopped')
     self.assertEqual(test_result.getStringIndex(), 'FAIL')
     self.assertEqual(test_result.getSimulationState(), 'stopped')
@@ -1478,7 +1478,7 @@ class TestRetryUnknownTest(TaskDistributionTestCase):
     status_dict = {}
     self.tool.stopUnitTest(line_url, status_dict)
     self.tic()
-    self.assertEqual(test_result_line.getStringIndex(), 'UNKNOWN')
+    self.assertEqual(test_result_line.getStringIndex(), 'MISSING')
     self.assertEqual(test_result_line.getSimulationState(), 'stopped')
     self.assertEqual(test_result.getStringIndex(), 'FAIL')
     self.assertEqual(test_result.getSimulationState(), 'stopped')
