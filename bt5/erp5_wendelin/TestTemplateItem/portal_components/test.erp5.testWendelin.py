@@ -258,7 +258,7 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(0, bucket_stream.getBucketCount())
 
     # test set and get
-    bin_string = "1"*100000
+    bin_string = b"1"*100000
     key = bucket_stream.getBucketCount() + 1
     bucket_stream.insertBucket(key, bin_string )
     self.assertEqual(bin_string, bucket_stream.getBucketByKey(key))
@@ -273,14 +273,14 @@ class Test(ERP5TypeTestCase):
 
     # set many buckets
     for i in range(100):
-      bucket_stream.insertBucket(i, i*10000)
+      bucket_stream.insertBucket(i, str2bytes(str(i*10000)))
 
     self.assertEqual(100, bucket_stream.getBucketCount())
     self.assertEqual(list(range(100)), bucket_stream.getKeyList())
 
     # test as sequence
     bucket = bucket_stream.getBucketKeyItemSequenceByKey(start_key=10, count=1)[0]
-    self.assertEqual(100000, bucket[1].value)
+    self.assertEqual(b'100000', bucket[1].value)
   
   def test_04_DataBucket_consistency(self):
     """Ensure 'Data Bucket Stream' doesn't break when running consistency checks [1].
@@ -296,7 +296,7 @@ class Test(ERP5TypeTestCase):
     Before the migration of the attribute from '_tree' to '_bucket_tree', it broke.
     """
     bucket_stream = self._getTestDataBucket()
-    # Buckets (PersistentStrings) must not be findable with folder API, otherwise
+    # Buckets (PersistentBytes) must not be findable with folder API, otherwise
     # erp5 tries to index them which is bad. Furthermore they are not aquisition
     # objects and can't be wrapped, therefore they'd also break folders iteritem method.
     self.assertEqual(list(bucket_stream.iteritems()), [])
@@ -311,7 +311,7 @@ class Test(ERP5TypeTestCase):
     data_steam_module = self.portal.data_stream_module
     bucket_stream = data_steam_module.newContent(portal_type='Data Bucket Stream')
     self.tic()
-    bucket_stream.insertBucket(1, 'testBucket')
+    bucket_stream.insertBucket(1, b'testBucket')
     self.tic()
     return bucket_stream
 
@@ -752,7 +752,7 @@ return result
 data_bucket_stream = context.portal_catalog.data_stream_module.newContent(
   portal_type='Data Bucket Stream'
 )
-data_bucket_stream.insertBucket(1,  "1" * 100000)
+data_bucket_stream.insertBucket(1,  b"1" * 100000)
 result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
 """
 
