@@ -1,5 +1,5 @@
 <module>
- <id>discussion_thread_module</id>
+ <id>discussion_forum_module</id>
  <permission_list>
   <permission type='tuple'>
    <name>Access Transient Objects</name>
@@ -92,6 +92,6 @@
    <role>Manager</role>
   </permission>
  </permission_list>
- <portal_type>Discussion Thread Module</portal_type>
- <title>Discussion Threads</title>
+ <portal_type>Discussion Forum Module</portal_type>
+ <title>DIscussion Forums</title>
 </module>
