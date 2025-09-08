@@ -2043,6 +2043,34 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(cache_control_header,
       "Accept-Language, Cookie, Authorization, Accept-Encoding")
 
+  def test_ignore_layout(self):
+    """
+     Check that ignore_layout parameter is disabled for anonymous user
+    """
+    website = self.setupWebSite()
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache?ignore_layout:int=1'
+    # ignore_layout redirection to the web site root url
+    response = self.publish(path)
+    self.assertEqual(303, response.getStatus())
+    location_header = response.getHeader('Location')
+    self.assertTrue(location_header.endswith(website.absolute_url_path()))
+
+    # ensure ignore_layout is working for authenticated user
+    response = self.publish(path, self.credential)
+    self.assertEqual(200, response.getStatus())
+
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
