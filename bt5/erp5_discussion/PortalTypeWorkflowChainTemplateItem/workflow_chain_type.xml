@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Discussion Forum</type>
-  <workflow>discussion_interaction_workflow, document_publication_workflow, edit_workflow</workflow>
- </chain>
- <chain>
   <type>Discussion Post</type>
   <workflow>edit_workflow, embedded_workflow</workflow>
  </chain>
