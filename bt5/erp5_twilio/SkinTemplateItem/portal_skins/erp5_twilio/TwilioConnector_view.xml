@@ -130,7 +130,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>HTTPConnector_view</string> </value>
+            <value> <string>TwilioConnector_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -146,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Satim Connector</string> </value>
+            <value> <string>Twilio Connector</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
