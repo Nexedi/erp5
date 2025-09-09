@@ -847,8 +847,9 @@ CREATE TABLE %s (
     """
       Put messages back in given processing_node.
     """
-    db.query(str2bytes("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+    db.query(str2bytes("UPDATE %s SET processing_node=%s WHERE uid IN (%s)" % (
       self.sql_table, state, ','.join(map(str, uid_list)))))
+    db.commitSingleConnector()
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
@@ -897,8 +898,9 @@ CREATE TABLE %s (
         # new transaction starts on the first 'FOR UPDATE' query, which is all
         # the more important as the current on started with getPriority().
         result = db.query(b"SELECT * FROM %s WHERE processing_node=%d"
-          b" ORDER BY priority, date LIMIT 1\0COMMIT" % (
+          b" ORDER BY priority, date LIMIT 1" % (
           str2bytes(self.sql_table), processing_node), 0)
+        db.commitSingleConnector()
         already_assigned = result[1]
         if already_assigned:
           result = Results(result)

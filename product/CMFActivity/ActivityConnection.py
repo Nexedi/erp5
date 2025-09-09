@@ -67,3 +67,15 @@ InitializeClass(ActivityConnection)
 class ActivityDB(DB):
 
     _sort_key = chr(255)
+
+    @property
+    def isolation_level(self):
+        return 'READ COMMITTED'
+
+    def abortSingleConnector(self):
+        self._abort()
+        self._begin()
+
+    def commitSingleConnector(self):
+        self._finish()
+        self._begin()
