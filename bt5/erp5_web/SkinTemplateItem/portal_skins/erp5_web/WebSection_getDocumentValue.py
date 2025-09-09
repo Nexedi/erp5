@@ -14,7 +14,7 @@ if portal is None:
 kw['limit'] = 1
 
 document_list = portal.portal_catalog.getDocumentValueList(
-  reference=name,
+  reference={'query': name, 'key': 'ExactMatch'},
   language=language,
   strict_language=strict_language,
   now=now,
