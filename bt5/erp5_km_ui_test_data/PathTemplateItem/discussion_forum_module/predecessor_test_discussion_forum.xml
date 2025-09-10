@@ -2,10 +2,23 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Section" module="erp5.portal_type"/>
+      <global name="Discussion Forum" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
         <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
@@ -16,25 +29,7 @@
             </value>
         </item>
         <item>
-            <key> <string>_Add_portal_folders_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Copy_or_Move_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Delete_objects_Permission</string> </key>
+            <key> <string>_Change_local_roles_Permission</string> </key>
             <value>
               <tuple>
                 <string>Assignor</string>
@@ -46,84 +41,33 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>__before_publishing_traverse__</string> </key>
+            <key> <string>_View_Permission</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_defined_in_class</string> </key>
-                        <value> <bool>True</bool> </value>
-                    </item>
-                    <item>
-                        <key> <string>_hookname</string> </key>
-                        <value> <string>__before_publishing_traverse__</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_list</string> </key>
-                        <value>
-                          <list>
-                            <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
-                          </list>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_prior</string> </key>
-                        <value>
-                          <none/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>__before_traverse__</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Section/discussions</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>__translation_dict</string> </key>
-            <value>
-              <dictionary/>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -135,16 +79,10 @@
             </value>
         </item>
         <item>
-            <key> <string>custom_render_method_id</string> </key>
-            <value> <string>WebSection_viewDiscussionThreadForm</string> </value>
-        </item>
-        <item>
-            <key> <string>default_page_displayed</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>Discussion section, this should display all discussions</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>empty_criterion_valid</string> </key>
@@ -152,12 +90,12 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>discussions</string> </value>
+            <value> <string>predecessor_test_discussion_forum</string> </value>
         </item>
         <item>
-            <key> <string>int_index</string> </key>
+            <key> <string>membership_criterion_base_category</string> </key>
             <value>
-              <none/>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -177,29 +115,9 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Section</string> </value>
-        </item>
-        <item>
             <key> <string>short_title</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>skin_selection_name</string> </key>
-            <value> <string>KM</string> </value>
-        </item>
-        <item>
-            <key> <string>string_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>test_method_id</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -207,27 +125,15 @@
             <value> <string>Discussion</string> </value>
         </item>
         <item>
-            <key> <string>visible</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="WebSectionTraversalHook" module="Products.ERP5.Document.WebSection"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -242,7 +148,6 @@
                     <value>
                       <list>
                         <string>Discussion Thread</string>
-                        <string>Discussion Forum</string>
                       </list>
                     </value>
                 </item>
@@ -252,7 +157,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -267,7 +172,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -278,18 +183,77 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>category_publication_workflow</string> </key>
+                    <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>publish</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <unicode>zope</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="_reconstructor" module="copy_reg"/>
+                          </klass>
+                          <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1757541622.4</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published</string> </value>
+                  </item>
+                </dictionary>
+              </list>
             </value>
         </item>
       </dictionary>
@@ -308,68 +272,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple/>
-                          <state>
-                            <tuple>
-                              <float>1449656397.1</float>
-                              <string>GMT</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>validation_state</string> </key>
-                      <value> <string>embedded</string> </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
                       <value> <string>edit</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -383,7 +290,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>947.44018.2151.15581</string> </value>
+                      <value> <string>1027.25928.24520.53862</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -394,13 +301,17 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
-                          <tuple/>
+                          <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
+                            <none/>
+                          </tuple>
                           <state>
                             <tuple>
-                              <float>1450184308.94</float>
-                              <string>GMT</string>
+                              <float>1757541653.6</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
