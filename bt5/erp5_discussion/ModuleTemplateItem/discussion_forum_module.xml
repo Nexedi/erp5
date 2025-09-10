@@ -78,7 +78,7 @@
    <name>View</name>
    <role>Assignee</role>
    <role>Assignor</role>
-   <role>Author</role>
+   <role>Associate</role>
    <role>Auditor</role>
    <role>Manager</role>
   </permission>
@@ -86,6 +86,8 @@
    <name>View History</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
   </permission>
