@@ -69,10 +69,17 @@ def File_viewAsWeb(self):
     Make possible to send the file data to the client without consume the
     RAM memory.
   """
-  RESPONSE = self.REQUEST.RESPONSE
+  REQUEST = self.REQUEST
+  RESPONSE = REQUEST.RESPONSE
+  RESPONSE.setHeader('Cache-Control', 'public,max-age=31556926,immutable')
+
+  if REQUEST.getHeader('If-None-Match') == self.getReference():
+    RESPONSE.setStatus(six.moves.http_client.NOT_MODIFIED)
+    return ''
+
   RESPONSE.setHeader('Content-Type', self.getContentType())
   RESPONSE.setHeader('Content-Length', self.getSize())
-  RESPONSE.setHeader('Cache-Control', 'public,max-age=31556926')
+  RESPONSE.setHeader('Etag', self.getReference())
   RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
   # Shortcut if the file is not a Pdata.
