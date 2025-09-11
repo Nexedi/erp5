@@ -329,4 +329,21 @@ def runwsgi():
 
     signal.signal(signal.SIGTERM, shutdown)
     signal.signal(signal.SIGINT, shutdown)
+
+    def neo_log_rotation(*args):
+      try:
+        import neo.lib
+        neo.lib.logging.reopen()
+      except ImportError:
+        pass
+
+    _sigusr2_handler_list = [neo_log_rotation]
+    def _sigusr2_handler(signum, _frame):
+      for handler in _sigusr2_handler_list:
+        handler(signum, _frame)
+
+    _previous_handler = signal.signal(signal.SIGUSR2, _sigusr2_handler)
+    if _previous_handler not in (signal.SIG_DFL, signal.SIG_IGN, None):
+      _sigusr2_handler_list.append(_previous_handler)
+
     server.run()
