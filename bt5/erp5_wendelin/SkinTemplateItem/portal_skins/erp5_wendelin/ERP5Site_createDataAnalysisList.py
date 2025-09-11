@@ -76,23 +76,26 @@ for movement in portal_catalog(query = query):
       except KeyError:
         pass
 
-    if data_analysis is not None:
+    if data_analysis is not None and not force_update_line:
       continue
-    # If the system preference is enabled, check if a data analysis with the same project and source already exists.
-    # If yes, add additional input lines to this shared data analysis later on
-    if share_data_analysis_pref and delivery.getPortalType() == "Data Ingestion":
-      data_analysis = portal_catalog.getResultValue(
-        portal_type="Data Analysis",
-        specialise_relative_url = transformation.getRelativeUrl(),
-        source_relative_url = delivery.getSource(),
-        destination_project_relative_url = delivery.getDestinationProject())
-    if data_analysis is not None:
-      data_analysis.setDefaultCausalityValue(delivery)
-      data_analysis.setSpecialiseValueSet(data_analysis.getSpecialiseValueList() + data_supply_list)
-      data_analysis_is_shared = True
-    else:
-      # Create the data analysis
-      data_analysis = portal.data_analysis_module.newContent(
+
+    if data_analysis is None:
+      # If the system preference is enabled, check if a data analysis with the same project and source already exists.
+      # If yes, add additional input lines to this shared data analysis later on
+      if share_data_analysis_pref and delivery.getPortalType() == "Data Ingestion":
+        data_analysis = portal_catalog.getResultValue(
+          portal_type="Data Analysis",
+          specialise_relative_url = transformation.getRelativeUrl(),
+          source_relative_url = delivery.getSource(),
+          destination_project_relative_url = delivery.getDestinationProject())
+
+      if data_analysis is not None:
+        data_analysis.setDefaultCausalityValue(delivery)
+        data_analysis.setSpecialiseValueSet(data_analysis.getSpecialiseValueList() + data_supply_list)
+        data_analysis_is_shared = True
+      else:
+        # Create the data analysis
+        data_analysis = portal.data_analysis_module.newContent(
                     portal_type = "Data Analysis",
                     title = transformation.getTitle(),
                     reference = delivery.getReference(),
@@ -121,6 +124,17 @@ for movement in portal_catalog(query = query):
       # In case of a shared data analysis only add additional input lines
       if data_analysis_is_shared and quantity > -1:
         continue
+
+      if force_update_line:
+        # Check if the line was created already:
+        existing_ref_line_list = [(
+          i.getIntIndex(), i.getTitle(), i.getReference()
+        ) for i in data_analysis.objectValues(portal_type="Data Analysis Line")]
+
+        if (transformation_line.getIntIndex(),
+            transformation_line.getTitle(),
+            transformation_line.getReference()) in existing_ref_line_list:
+          continue
 
       aggregate_set = set()
       # manually add device to every line
