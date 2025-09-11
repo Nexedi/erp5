@@ -48,10 +48,8 @@ class ShaCacheMixin(object):
     self.shacache = module.newContent(portal_type='Web Site',
       title='SHA Cache Server', skin_selection_name='SHACACHE')
     self.shacache.publish()
-    self.header_dict = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + bytes2str(base64.b64encode(str2bytes(
-        '%s:%s' % (self.manager_username, self.manager_password))))
+    self.env_dict = {
+      'CONTENT_TYPE': 'application/json'
     }
     self.shacache_url = self.shacache.absolute_url()
     self.tic()
