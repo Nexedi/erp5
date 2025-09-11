@@ -166,20 +166,29 @@ if not e_utran_array:
   e_utran_array = e_utran_data_array.initArray(shape=(0,), dtype=e_utran_dtype)
 e_utran_array_data = []
 
-cell_ue_count_array = cell_ue_count_data_array.getArray()
-if not cell_ue_count_array:
-  cell_ue_count_array = cell_ue_count_data_array.initArray(shape=(0,), dtype=cell_ue_count_dtype)
 cell_ue_count_array_data = []
+if cell_ue_count_data_array is not None:
+  cell_ue_count_array = cell_ue_count_data_array.getArray()
+  if not cell_ue_count_array:
+    cell_ue_count_array = cell_ue_count_data_array.initArray(shape=(0,), dtype=cell_ue_count_dtype)
+  for e in ue_count_data_list:
+    cell_ue_count_array_data.append(e)
 
-cell_rrc_array = cell_rrc_data_array.getArray()
-if not cell_rrc_array:
-  cell_rrc_array = cell_rrc_data_array.initArray(shape=(0,), dtype=cell_rrc_dtype)
 cell_rrc_array_data = []
+if cell_rrc_data_array is not None:
+  cell_rrc_array = cell_rrc_data_array.getArray()
+  if not cell_rrc_array:
+    cell_rrc_array = cell_rrc_data_array.initArray(shape=(0,), dtype=cell_rrc_dtype)
+  for e in rrc_list:
+    cell_rrc_array_data.append(e)
 
-cell_rms_rx_array = cell_rms_rx_data_array.getArray()
-if not cell_rms_rx_array:
-  cell_rms_rx_array = cell_rms_rx_data_array.initArray(shape=(0,), dtype=cell_rms_rx_dtype)
 cell_rms_rx_array_data = []
+if cell_rms_rx_data_array is not None:
+  cell_rms_rx_array = cell_rms_rx_data_array.getArray()
+  if not cell_rms_rx_array:
+    cell_rms_rx_array = cell_rms_rx_data_array.initArray(shape=(0,), dtype=cell_rms_rx_dtype)
+  for e in rms_rx_list:
+    cell_rms_rx_array_data.append(e)
 
 # Don't duplicate KPI data:
 # search and start inserting new timestamps from the first one
@@ -207,16 +216,6 @@ for i in range(first_new_row_evt, len(evt)):
   if evt[i] not in evt_column:
     for qci_data in v_ip_throughput_qci[i]:
       e_utran_array_data.append((evt[i], qci_data[0], qci_data[1], qci_data[2], qci_data[3]))
-
-# For now use direct translation
-for e in ue_count_data_list:
-  cell_ue_count_array_data.append(e)
-
-for e in rrc_list:
-  cell_rrc_array_data.append(e)
-
-for e in rms_rx_list:
-  cell_rms_rx_array_data.append(e)
 
 if e_rab_array_data:
   e_rab_array_data = np.ndarray((len(e_rab_array_data),), e_rab_dtype, np.array(e_rab_array_data))
