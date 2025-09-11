@@ -52,7 +52,7 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
     try:
       xlog_line_dict = json.loads(xlog_line)
     except json.JSONDecodeError:
-      raise ValueError(xlog_line)
+      continue
 
     timestamp = xlog_line_dict.get("utc", None)  # UTC timestamp
     if timestamp is None:
