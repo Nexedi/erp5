@@ -44,6 +44,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg', )
 HTTP_OK = 200
+MOVED_PERMANENTLY = 301
 MOVED_TEMPORARILY = 302
 
 
@@ -228,6 +229,105 @@ class TestERP5Web(ERP5TypeTestCase):
       webpage_list.append(webpage)
 
     return webpage_list
+
+  def test_WebSection_add_trailing_slash_in_url(self):
+    """
+     When accessing an ERP5 web section without a trailing / in the URL, the
+     browser will calculate absolute URL from the parent document and not the web
+     site itself.
+
+     Example:
+      In http://foo.com/web_site_module/bar , the relative URL couscous.js will
+      be resolved http://foo.com/web_site_module/couscous.js If couscous.js is a
+      document from DMS (Web Page for example), such URL can not be resolved and
+      leads to a 404 error.
+
+     One solution to solve this is to redirect (302) the browser when accessing a
+     Web Section (Web Site is a web section) directly in ERP5.
+     Example:
+      http://foo.com/web_site_module/bar -> http://foo.com/web_site_module/bar/
+      But http://foo.com/web_site_module/bar/view should not redirect
+    """
+    # Web Site as context
+    website = self.setupWebSite()
+    response = self.publish(website.absolute_url_path()[:-1])
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
+    response = self.publish(
+      "%s?ignore_layout:int=1" % website.absolute_url_path()[:-1])
+    self.assertEqual("%s?ignore_layout:int=1" % website.absolute_url(),
+      response.headers.get("location"))
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
+    response = self.publish(
+      "%s/getTitle?ignore_layout:int=1" % website.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("test", response.body)
+    response = self.publish(
+      "%s/getTitle" % website.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("test", response.body)
+    response = self.publish(
+      "%s/a_non_existing_page" % website.absolute_url_path())
+    self.assertEqual(404, response.status)
+    # Web Section as context
+    websection = self.setupWebSection()
+    response = self.publish(
+      "%s?ignore_layout:int=1" % websection.absolute_url_path()[:-1])
+    self.assertEqual("%s?ignore_layout:int=1" % websection.absolute_url(),
+      response.headers.get("location"))
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
+    response = self.publish(
+      "%s/getTitle?ignore_layout:int=1" % websection.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("1", response.body)
+    response = self.publish(
+      "%s/getTitle" % websection.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("1", response.body)
+
+  def test_Document_remove_trailing_slash_from_url(self):
+    '''
+      When we publish a document using its reference and a trailing slash
+      we raise 301 redirect to the url excluding the slash
+
+      This is different than Web Section.
+      But in Web Page we need no-slash since we would render all other sources
+      in the container Web Section, so keeping the caches
+    '''
+    web_site = self.setupWebSite()
+    web_section = self.setupWebSection()
+
+    web_page_reference = 'foo_web_page'
+    web_page = self.web_page_module.newContent(
+      portal_type='Web Page',
+      reference=web_page_reference,
+      text_content='<b>OK</b>'
+    )
+    web_page.publish()
+    self.tic()
+
+    # Web Site as context
+    url_without_slash = web_site.absolute_url_path() + web_page_reference
+    url_with_slash = url_without_slash + '/'
+    response = self.publish(url_without_slash)
+    self.assertEqual(HTTP_OK, response.status)
+    response = self.publish(url_with_slash)
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
+    self.assertEqual(
+      web_site.absolute_url() + web_page_reference,
+      response.headers.get("location")
+    )
+
+    # Web Section as context
+    url_without_slash = web_section.absolute_url_path() + web_page_reference
+    url_with_slash = url_without_slash + '/'
+    response = self.publish(url_without_slash)
+    self.assertEqual(HTTP_OK, response.status)
+    response = self.publish(url_with_slash)
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
+    self.assertEqual(
+      web_section.absolute_url() + web_page_reference,
+      response.headers.get("location")
+    )
 
   def test_01_WebSiteRecatalog(self):
     """
@@ -443,11 +543,12 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_page_en, websection.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web section rather than the portal
+    self.getPortalObject().REQUEST.set("ACTUAL_URL", websection.absolute_url())
     html_page = websection()
     from erp5.component.document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
-    self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(),
+    self.assertEqual(base_url, "%s%s/" % (websection.absolute_url(),
                                            web_page_en.getReference()))
 
   def test_06b_DefaultDocumentForWebSite(self):
@@ -480,11 +581,12 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_page_en, website.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web site rather than the portal
+    self.getPortalObject().REQUEST.set("ACTUAL_URL", website.absolute_url())
     html_page = website()
     from erp5.component.document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
-    self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), web_page_en.getReference()))
+    self.assertEqual(base_url, "%s%s/" % (website.absolute_url(), web_page_en.getReference()))
 
   def test_07_getDocumentValueList(self):
     """ Check getting getDocumentValueList from Web Section.
@@ -871,7 +973,7 @@ Hé Hé Hé!""", page.asText().strip())
     website_relative_url = website.absolute_url(relative=1)
     website_fr = self.portal.restrictedTraverse(
       'web_site_module/%s/fr' % website_id)
-    website_relative_url_fr = '%s/fr' % website_relative_url
+    website_relative_url_fr = '%sfr/' % website_relative_url
 
     websection_id = self.setupWebSection().getId()
     websection = self.portal.restrictedTraverse(
@@ -879,7 +981,7 @@ Hé Hé Hé!""", page.asText().strip())
     websection_relative_url = websection.absolute_url(relative=1)
     websection_fr = self.portal.restrictedTraverse(
       'web_site_module/%s/fr/%s' % (website_id, websection_id))
-    websection_relative_url_fr = '%s/%s' % (website_relative_url_fr,
+    websection_relative_url_fr = '%s%s/' % (website_relative_url_fr,
                                             websection.getId())
 
     page_ref = 'foo'
@@ -948,28 +1050,28 @@ Hé Hé Hé!""", page.asText().strip())
     request = self.portal.REQUEST
     request['HTTP_REFERER'] = ''
     website_absolute_url = website.absolute_url()
-    self.assertEqual(website_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(websection_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(webpage_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(websection_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(webpage_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     self.assertEqual(website_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(websection_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(webpage_fr.Base_doLanguage('en'), website_absolute_url)
-    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(websection_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(webpage_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(websection_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(webpage_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     self.assertEqual(website_bg_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(websection_bg_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(webpage_bg_fr.Base_doLanguage('en'), website_absolute_url)
 
     # change language with referer
     request['HTTP_REFERER'] = website_fr.absolute_url()
-    self.assertEqual(website_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     request['HTTP_REFERER'] = websection_fr.absolute_url()
     self.assertEqual(websection_fr.Base_doLanguage('de'), websection_fr.absolute_url().replace('/fr/', '/de/'))
     request['HTTP_REFERER'] = webpage_fr.absolute_url()
     self.assertEqual(webpage_fr.Base_doLanguage('de'), webpage_fr.absolute_url().replace('/fr/', '/de/'))
     request['HTTP_REFERER'] = website_bg_fr.absolute_url()
-    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     request['HTTP_REFERER'] = websection_bg_fr.absolute_url()
     self.assertEqual(websection_bg_fr.Base_doLanguage('de'), websection_bg_fr.absolute_url().replace('/bg/fr/', '/de/'))
     request['HTTP_REFERER'] = webpage_bg_fr.absolute_url()
@@ -987,9 +1089,9 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(self.publish(websection_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
                      websection_fr.absolute_url())
     self.assertEqual(self.publish(webpage_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
-                     webpage_fr.absolute_url())
+                     webpage_fr.absolute_url() + '/')
     self.assertEqual(self.publish(website_bg_en_fr.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
-                     website_fr.absolute_url()+'?a=b&c=d')
+                     website_fr.absolute_url() +'?a=b&c=d')
 
     # /bg/en/xxx should be redirected to /xxx where en is the default language
     website_bg_en = self.portal.restrictedTraverse(
@@ -1003,7 +1105,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(self.publish(websection_bg_en.absolute_url(relative=1)).getHeader('location'),
                      websection.absolute_url())
     self.assertEqual(self.publish(webpage_bg_en.absolute_url(relative=1)).getHeader('location'),
-                     webpage.absolute_url())
+                     webpage.absolute_url() + '/')
     self.assertEqual(self.publish(websection_bg_en.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
                      websection.absolute_url()+'?a=b&c=d')
 
@@ -1019,9 +1121,9 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(self.publish(websection_en.absolute_url(relative=1)).getHeader('location'),
                      websection.absolute_url())
     self.assertEqual(self.publish(webpage_en.absolute_url(relative=1)).getHeader('location'),
-                     webpage.absolute_url())
+                     webpage.absolute_url() + '/')
     self.assertEqual(self.publish(webpage_en.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
-                     webpage.absolute_url()+'?a=b&c=d')
+                     webpage.absolute_url()+'/?a=b&c=d')
 
   def test_13_DocumentCache(self):
     """
@@ -1235,7 +1337,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.setupWebSite()
     websection = self.setupWebSection()
 
-    websection_url = '%s/%s' % (self.portal.getId(), websection.getRelativeUrl())
+    websection_url = '%s/%s' % (self.portal.getId(), websection.absolute_url(relative=1))
 
     # connect as administrator and check that only developper_mode is enable
     response = self.publish(websection_url, 'administrator:administrator')
@@ -1646,13 +1748,19 @@ Hé Hé Hé!""", page.asText().strip())
 
     for context in web_site, web_section:
       self.assertTrue(context.getDefaultPageDisplayed())
-      resp = self.publish(context.getPath(), handle_errors=False)
+      resp = self.publish(
+        context.getPath().rstrip('/') + '/',
+        handle_errors=False,
+      )
       self.assertEqual(resp.getStatus(), 200)
       self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
       self.assertIn(b'<h1>Hello !</h1>', resp.getBody())
 
       context.setDefaultPageDisplayed(False)
-      resp = self.publish(context.getPath(), handle_errors=False)
+      resp = self.publish(
+        context.getPath().rstrip('/') + '/',
+        handle_errors=False
+      )
       self.assertEqual(resp.getStatus(), 200)
       self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
       self.assertNotIn(b'<h1>Hello !</h1>', resp.getBody())
