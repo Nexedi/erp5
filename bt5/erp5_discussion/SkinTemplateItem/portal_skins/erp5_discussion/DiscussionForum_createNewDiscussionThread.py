@@ -47,10 +47,10 @@ discussion_thread = portal.discussion_thread_module.newContent(
 # this way thread will be part of discussion forum (through predicate's searchResults)
 discussion_thread.setCategoryList(category_list)
 
+redirect_url = None
 # old forum backward compatibility
-if web_section:
-  if predecessor is None and redirect_url is None:
-    redirect_url = context.getAbsoluteUrl()
+if web_section and predecessor is None:
+  redirect_url = context.getAbsoluteUrl()
 # predecessor
 if predecessor is not None:
   predecessor_object = context.restrictedTraverse(predecessor)
