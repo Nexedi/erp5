@@ -36,10 +36,9 @@ _ = data_acquisition_unit.DataAcquisitionUnit_createOrsDataSupply(batch=1)
 
 if batch:
   return data_acquisition_unit
-return data_acquisition_unit.Base_renderForm(
+return data_acquisition_unit.Base_redirect(
   'DataAcquisitionUnit_viewVirtualOrsInformationDialog',
-  message='Virtual ORS successfully registered.',
   keep_items={
-    'your_virtual_ors_tag': virtual_ors_tag
+    'portal_status_message': 'Virtual ORS successfully registered.'
   }
 )
