@@ -75,7 +75,8 @@ if predecessor is not None:
 
   if predecessor_portal_type == 'Discussion Forum':
     discussion_thread.setPredecessorValueList([predecessor_object])
-    redirect_url = None
+    if not web_section:
+      redirect_url = None
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",
