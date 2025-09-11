@@ -73,8 +73,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
       '/'.join([self.shacache.getPath(), key]),
       request_method='GET'
     )
-
-    return response.getStatus(), response.getBody()
+    return response
 
   def test_put_file(self):
     """
@@ -107,9 +106,28 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     document = self.portal.portal_catalog.getResultValue(reference=self.key)
     self.assertNotEqual(None, document)
 
-    result, data = self.getFile()
-    self.assertEqual(result, six.moves.http_client.OK)
+    response = self.getFile()
+    http_status, data = response.getStatus(), response.getBody()
+    self.assertEqual(http_status, six.moves.http_client.OK)
     self.assertEqual(data, self.data)
+    self.assertEqual(response.getHeader('content-type'), 'application/octet-stream')
+    self.assertEqual(response.getHeader('cache-control'), 'public,max-age=31556926,immutable')
+    self.assertEqual(response.getHeader('accept-ranges'), 'bytes')
+    self.assertEqual(response.getHeader('etag'), self.key)
+
+    # Check cache handling
+    response = self.publish(
+      '/'.join([self.shacache.getPath(), self.key]),
+      request_method='GET',
+      env={'IF_NONE_MATCH': self.key}
+    )
+    http_status, data = response.getStatus(), response.getBody()
+    self.assertEqual(http_status, six.moves.http_client.NOT_MODIFIED)
+    self.assertEqual(data, '')
+    self.assertEqual(response.getHeader('content-type'), None)
+    self.assertEqual(response.getHeader('cache-control'), 'public,max-age=31556926,immutable')
+    self.assertEqual(response.getHeader('accept-ranges'), None)
+    self.assertEqual(response.getHeader('etag'), None)
 
   def test_put_file_twice(self):
     """
