@@ -48,17 +48,23 @@ discussion_thread = portal.discussion_thread_module.newContent(
 discussion_thread.setCategoryList(category_list)
 
 redirect_url = None
-# old forum backward compatibility
-if web_section and predecessor is None:
-  redirect_url = context.getAbsoluteUrl()
+# old forum backward compatibility redirect
+if web_section:
+  if predecessor is not None:
+    predecessor_object = context.restrictedTraverse(predecessor)
+    if predecessor_object.getPortalType() != 'Discussion Forum':
+      redirect_url = predecessor_object.getAbsoluteUrl()
+  if not redirect_url:
+    web_section_object = context.restrictedTraverse(web_section)
+    redirect_url = web_section_object.getAbsoluteUrl()
+
 # predecessor
 if predecessor is not None:
   predecessor_object = context.restrictedTraverse(predecessor)
   predecessor_portal_type = predecessor_object.getPortalType()
-  if web_section:
-    redirect_url = predecessor_object.getAbsoluteUrl()
 
-  # old forum backward compatibility
+  # old forum backward compatibility predecessor
+  # set predecessor on document
   if predecessor_portal_type == 'Web Section':
     predecessor_default_page = predecessor_object.getAggregate()
     if predecessor_default_page is not None:
@@ -67,9 +73,9 @@ if predecessor is not None:
   if predecessor_portal_type == 'Web Page':
     discussion_thread.setPredecessorValueList([predecessor_object])
 
-  # set predecessor on document
   if predecessor_portal_type == 'Discussion Forum':
     discussion_thread.setPredecessorValueList([predecessor_object])
+    redirect_url = None
 
 discussion_post = discussion_thread.newContent(
                       portal_type = "Discussion Post",
