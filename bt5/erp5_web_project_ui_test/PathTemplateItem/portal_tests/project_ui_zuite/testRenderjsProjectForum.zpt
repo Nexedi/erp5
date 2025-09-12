@@ -99,6 +99,39 @@
   <td>Discussion Threads</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='New Thread' and contains(@href, '#!display_dialog_with_history')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='New Thread' and contains(@href, '#!display_dialog_with_history')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Create</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_your_title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_title']</td>
+  <td>Thread 1</td>
+</tr>
+<tal:block tal:define="text_content python: 'Post 1'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>clickAndWait</td>
+  <td>action_confirm</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
