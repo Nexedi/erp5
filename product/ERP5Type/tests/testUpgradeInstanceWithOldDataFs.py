@@ -86,6 +86,7 @@ class OldDataFsSetup(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(
       portal_type='Person',
       first_name='test person',
+      last_name = 'test person é',
       id='test_person_login',
     )
     person.validate()
@@ -321,6 +322,10 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
     big_file = self.portal.big_file_module.test_big_file
     big_file.appendData(b'testdata2')
     self.assertEqual(big_file.getData(), b'testdata1testdata2')
+    clone_person = self.portal.person_module.test_person_login.Base_createCloneDocument(batch_mode=True)
+    clone_person.setFirstName('')
+    self.assertEqual(clone_person.getLastName(), 'test person é')
+    self.assertEqual(clone_person.getTitle(), 'test person é')
 
   def check_existing_dms_documents(self):
     self.assertEqual(
@@ -376,19 +381,19 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       [
         brain.getObject().getTitle()
         for brain in self.portal.portal_catalog(
-          title='test person',
+          title='test person test person é',
           portal_type='Person',
         )
-      ], ['test person'])
+      ], ['test person test person é'])
     self.assertEqual(
       [
         brain.getObject().getTitle()
         for brain in self.portal.portal_catalog(
-          title='test person',
+          title='test person test person é',
           portal_type='Person',
           local_roles=['Assignee'],
         )
-      ], ['test person'])
+      ], ['test person test person é'])
 
   def check_catalog_as_anonymous(self):
     self.logout()
