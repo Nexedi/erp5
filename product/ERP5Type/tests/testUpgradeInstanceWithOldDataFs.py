@@ -307,6 +307,12 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       self.portal.person_module.test_person_login.getUserId())
     self.assertEqual(workflow_history[-1]['time'], DateTime(2123, 4, 5))
 
+    # make sure we can copy an organisation, before saving it again to database
+    organisation_copy = organisation.Base_createCloneDocument(batch_mode=True)
+    self.assertEqual(organisation_copy.getTitle(), 'test héhé')
+    organisation_copy.setTitle('copy')
+    self.assertEqual(organisation_copy.getTitle(), 'copy')
+
     organisation.setDescription('test\nhéhé\nafter')
     self.tic()
     self.assertEqual(organisation.getDescription(), 'test\nhéhé\nafter')

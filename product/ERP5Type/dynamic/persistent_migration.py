@@ -35,7 +35,11 @@
 # from __setstate__.
 
 import six
-import logging, re
+import io
+import logging
+import pickletools
+import re
+import tempfile
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from OFS.Folder import Folder as OFS_Folder
@@ -44,6 +48,11 @@ from ZODB.serialize import ObjectWriter, ObjectReader
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base, TempBase, WorkflowMethod
 from zodbpickle import binary
+from ZODB.ExportImport import export_end_marker
+from ZODB.POSException import ExportError
+from ZODB.utils import oid_repr
+from ZODB.utils import u64
+
 
 log = logging.getLogger('ERP5Type')
 log.trace = lambda *args, **kw: log.log(5, *args, **kw)
@@ -222,6 +231,36 @@ else:
   __setstate__ = None
 
 
+def pickle_has_py2_string(f):
+    for opcode, arg, pos in pickletools.genops(f):
+        if opcode.name in ("STRING", "BINSTRING", "SHORT_BINSTRING"):
+            return True
+    return False
+
+
+def iter_py2_string_oids(f):
+    # type: (typing.BinaryIO) -> typing.Iterator[bytes]
+    """Reads a ZEXP export file and returns the oids with python2 string opcodes.
+    """
+    magic = f.read(4)
+    assert magic == b'ZEXP'
+
+    while True:
+        header = f.read(16)
+        if header == export_end_marker:
+            break
+        if len(header) != 16:
+            raise ExportError("Truncated export file")
+        ooid = header[:8]
+        length = u64(header[8:16])
+        dataf = io.BytesIO(f.read(length))
+        if (
+            pickle_has_py2_string(dataf)  # class
+            or pickle_has_py2_string(dataf)  # data
+        ):
+            yield ooid
+
+
 def enable_zodbupdate_load_monkey_patch():
     import six
     assert six.PY3
@@ -330,3 +369,21 @@ def enable_zodbupdate_load_monkey_patch():
         return PersistentUnpicklerWithMigration()
 
     ObjectReader._get_unpickler = _ObjectReader_get_unpickler
+
+
+    # Cloning an object uses low level connection export / import, which
+    # copies the pickle bytes without going through ObjectReader. To prevent
+    # cloning non-migrated objects, we force a migration on _getCopy.
+    from OFS.CopySupport import CopySource
+    _original_getCopy = CopySource._getCopy
+    def _getCopy_with_migration(self, container):
+        connection = self._p_jar
+        with tempfile.TemporaryFile() as f:
+            connection.exportFile(self._p_oid, f)
+            f.seek(0)
+            for oid in iter_py2_string_oids(f):
+                connection.get(oid)._p_changed = True
+                log.info("updated %s during _getCopy", oid_repr(oid))
+
+        return _original_getCopy(self, container)
+    CopySource._getCopy = _getCopy_with_migration
