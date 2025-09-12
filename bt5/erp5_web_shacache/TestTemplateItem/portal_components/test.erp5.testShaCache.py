@@ -34,6 +34,8 @@ from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
 from Products.ERP5Type.Utils import str2bytes
+import io
+
 
 class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
   """
@@ -50,15 +52,14 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
       Post the file
     """
-    parsed = six.moves.urllib.parse.urlparse(self.shacache_url)
-    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
-    try:
-      connection.request('POST', parsed.path, self.data, self.header_dict)
-      result = connection.getresponse()
-      data = result.read()
-    finally:
-      connection.close()
-    return result.status, data
+    response = self.publish(
+      self.shacache.getPath(),
+      user=self.manager_username,
+      request_method='POST',
+      stdin=io.BytesIO(self.data),
+      env=self.env_dict
+    )
+    return response.getStatus(), response.getBody()
 
   def getFile(self, key=None):
     """
@@ -68,15 +69,11 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     if key is None:
       key = self.key
 
-    parsed = six.moves.urllib.parse.urlparse(self.shacache_url)
-    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
-    try:
-      connection.request('GET', '/'.join([parsed.path, key]), None, {})
-      result = connection.getresponse()
-      data = result.read()
-    finally:
-      connection.close()
-    return result.status, data
+    response = self.publish(
+      '/'.join([self.shacache.getPath(), key]),
+      request_method='GET'
+    )
+    return response
 
   def test_put_file(self):
     """
@@ -109,9 +106,28 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     document = self.portal.portal_catalog.getResultValue(reference=self.key)
     self.assertNotEqual(None, document)
 
-    result, data = self.getFile()
-    self.assertEqual(result, six.moves.http_client.OK)
+    response = self.getFile()
+    http_status, data = response.getStatus(), response.getBody()
+    self.assertEqual(http_status, six.moves.http_client.OK)
     self.assertEqual(data, self.data)
+    self.assertEqual(response.getHeader('content-type'), 'application/octet-stream')
+    self.assertEqual(response.getHeader('cache-control'), 'public,max-age=31556926,immutable')
+    self.assertEqual(response.getHeader('accept-ranges'), 'bytes')
+    self.assertEqual(response.getHeader('etag'), self.key)
+
+    # Check cache handling
+    response = self.publish(
+      '/'.join([self.shacache.getPath(), self.key]),
+      request_method='GET',
+      env={'IF_NONE_MATCH': self.key}
+    )
+    http_status, data = response.getStatus(), response.getBody()
+    self.assertEqual(http_status, six.moves.http_client.NOT_MODIFIED)
+    self.assertEqual(data, b'')
+    self.assertEqual(response.getHeader('content-type'), None)
+    self.assertEqual(response.getHeader('cache-control'), 'public,max-age=31556926,immutable')
+    self.assertEqual(response.getHeader('accept-ranges'), None)
+    self.assertEqual(response.getHeader('etag'), None)
 
   def test_put_file_twice(self):
     """
