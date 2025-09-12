@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, console, Plotly, location */
+/*global window, rJS, RSVP, console, Plotly, location, loopEventListener, URI */
 /*jslint indent: 2, maxlen: 80, nomen: true */
-(function (window, rJS, RSVP, Plotly) {
+(function (window, rJS, RSVP, location, Plotly, loopEventListener, URI) {
   'use strict';
 
   var gadget_klass = rJS(window);
@@ -33,9 +33,9 @@
   function getDataPlotLayout(title) {
     var yaxis_clipmax;
 
-    if (title == 'Downlink') {
+    if (title === 'Downlink') {
       yaxis_clipmax = 400;
-    } else if (title == 'Uplink') {
+    } else if (title === 'Uplink') {
       yaxis_clipmax = 150;
     }
 
@@ -181,15 +181,28 @@
         downlink_element = gadget.element.querySelector('.graph-downlink'),
         uplink_element = gadget.element.querySelector('.graph-uplink');
 
-      return new RSVP.Queue().push(function () {
-        return gadget.getSetting('hateoas_url');
-      })
+      if (option_dict.data_array_url === null) {
+        gadget.element.querySelector('.ui-icon-spinner').hidden = true;
+        Plotly.react(
+          downlink_element,
+          [],
+          getNoDataPlotLayout('Downlink', 'No data found')
+        );
+        Plotly.react(
+          uplink_element,
+          [],
+          getNoDataPlotLayout('Uplink', 'No data found')
+        );
+        return;
+      }
+
+      return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
           kpi_url =
             (new URI(hateoas_url)).absoluteTo(location.href).toString() +
-            'Base_getOrsEnbKpi?data_array_url=' +
+            'Base_getDataArrayForDataTypeAsJSON?data_array_url=' +
             option_dict.data_array_url +
-            '&kpi_type=' + option_dict.kpi_type;
+            '&data_type=' + option_dict.data_type;
           return gadget.jio_getAttachment('erp5', kpi_url, {
             format: 'json'
           });
@@ -202,13 +215,11 @@
           downlink_element.on(
             'plotly_relayout',
             function (eventdata) {
-              var x_start = new Date(eventdata['xaxis.range[0]']).getTime()
-                / 1000,
-                x_end = new Date(eventdata['xaxis.range[1]']).getTime()
-                / 1000,
+              var x_start = new Date(eventdata['xaxis.range[0]']).getTime(),
+                x_end = new Date(eventdata['xaxis.range[1]']).getTime(),
                 update_kpi_url = kpi_url +
-                '&time_start=' + x_start +
-                '&time_end=' + x_end;
+                  '&time_start=' + x_start / 1000 +
+                  '&time_end=' + x_end / 1000;
 
               return new RSVP.Queue().push(function () {
                 return gadget.jio_getAttachment('erp5', update_kpi_url, {
@@ -227,13 +238,11 @@
           uplink_element.on(
             'plotly_relayout',
             function (eventdata) {
-              var x_start = new Date(eventdata['xaxis.range[0]']).getTime()
-                / 1000,
-                x_end = new Date(eventdata['xaxis.range[1]']).getTime()
-                / 1000,
+              var x_start = new Date(eventdata['xaxis.range[0]']).getTime(),
+                x_end = new Date(eventdata['xaxis.range[1]']).getTime(),
                 update_kpi_url = kpi_url +
-                '&time_start=' + x_start +
-                '&time_end=' + x_end;
+                  '&time_start=' + x_start / 1000 +
+                  '&time_end=' + x_end / 1000;
 
               return new RSVP.Queue().push(function () {
                 return gadget.jio_getAttachment('erp5', update_kpi_url, {
@@ -249,19 +258,6 @@
                 });
             }
           );
-        }, function () {
-          // On request error, show empty plots
-          plotFromResponse(
-            {},
-            downlink_element,
-            'Downlink'
-          );
-          plotFromResponse(
-            {},
-            uplink_element,
-            'Uplink'
-          );
-          gadget.element.querySelector('.ui-icon-spinner').hidden = true;
         });
     });
-}(window, rJS, RSVP, Plotly));
+}(window, rJS, RSVP, location, Plotly, loopEventListener, URI));
