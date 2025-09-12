@@ -316,6 +316,10 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       self.portal.person_module.test_person_login.getUserId())
     self.assertEqual(workflow_history[-1]['time'], DateTime(2123, 4, 5))
 
+    self.assertEqual(
+      organisation._getCopy(self.portal.organisation_module).getTitle(),
+      'test héhé')
+
     organisation.setDescription('test\nhéhé\nafter')
     self.tic()
     self.assertEqual(organisation.getDescription(), 'test\nhéhé\nafter')
