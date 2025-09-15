@@ -344,6 +344,7 @@ if six.PY2:
   allow_type(cStringIO.InputType)
   allow_type(cStringIO.OutputType)
 
+ModuleSecurityInfo('html').declarePublic('escape')
 import csv
 allow_module('csv')
 temp_io = io.StringIO()
