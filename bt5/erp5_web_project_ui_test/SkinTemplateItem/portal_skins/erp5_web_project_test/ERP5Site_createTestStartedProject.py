@@ -3,7 +3,7 @@ from datetime import datetime
 portal = context.getPortalObject()
 now = datetime.now()
 date_time = now.strftime("%m-%d-%Y-%H-%M-%S")
-test_id = "documented-project-" if create_project_documents else "test-project-"
+test_id = "test-project-documents-" if create_project_documents else "test-project-"
 test_id += date_time
 project_reference = 'test-project-home' if home_page else 'test-project-documents' if create_project_documents else 'test-project-forum' if forum else 'test-project'
 page_reference = 'test-home-page-' + date_time
