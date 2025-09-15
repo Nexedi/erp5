@@ -5,7 +5,7 @@ now = datetime.now()
 date_time = now.strftime("%m-%d-%Y-%H-%M-%S")
 test_id = "documented-project-" if create_project_documents else "test-project-"
 test_id += date_time
-project_reference = 'test-project-home' if home_page else 'documented-project' if create_project_documents else 'test-project'
+project_reference = 'test-project-home' if home_page else 'test-project-documents' if create_project_documents else 'test-project-forum' if forum else 'test-project'
 page_reference = 'test-home-page-' + date_time
 failed_project = "failed-project"
 empty_project = "empty-project"
@@ -226,6 +226,17 @@ if create_project_documents:
   empty_project = module.newContent(id = draft_project + "-" + date_time,
                                     portal_type = 'Project',
                                     reference = draft_project)
+if forum:
+  multimembership_criterion_base_category_list = ['follow_up', 'publication_section', 'classification']
+  membership_criterion_category_list = ['follow_up/' + project.getRelativeUrl(), 'publication_section/forum', 'classification/collaborative/project']
+  module =  portal.getDefaultModule("Discussion Forum")
+  forum = module.newContent(portal_type="Discussion Forum")
+  forum.setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)
+  forum.setMembershipCriterionCategoryList(membership_criterion_category_list)
+  forum.edit(criterion_property=("portal_type",))
+  forum.setCriterion("portal_type", ["Discussion Thread"])
+  forum.setClassification('collaborative/project')
+  forum.share()
 
 print("Project Created")
 return printed

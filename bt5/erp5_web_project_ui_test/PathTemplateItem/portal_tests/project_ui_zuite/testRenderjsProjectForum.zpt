@@ -1,0 +1,208 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_createTestStartedProject?forum=true</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Project Created</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/project_management/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_page_project_front_page.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='front-project-list']</td>
+  <td></td>
+</tr>
+<!-- Check project present -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//span[text()='test-project-forum']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[@id='test-project-forum-project_page_link' and text()='(Project Page)']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[@id='test-project-forum-project_page_link' and text()='(Project Page)']</td>
+  <td></td>
+</tr>
+<!-- check project quick view page elements -->
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//a[@id='milestone_link' and @class='first-line-buttons']</td>
+ <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_editor.html']</td>
+  <td></td>
+</tr>
+<tr>
+ <td>assertElementNotPresent</td>
+ <td>//a[text()='Project Forum' and @class='first-line-buttons ui-disabled']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>assertElementPresent</td>
+ <td>//a[text()='Project Forum']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//a[text()='Project Forum']</td>
+ <td></td>
+</tr>
+<!-- check forum page elements -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='New Thread' and contains(@href, '#!display_dialog_with_history')]</td>
+  <td></td>
+</tr>
+<!-- Create a new thread -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='New Thread' and contains(@href, '#!display_dialog_with_history')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Create</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_your_title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_title']</td>
+  <td>Thread 1</td>
+</tr>
+<tal:block tal:define="text_content python: 'Post 1'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Create']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'New discussion created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<!-- check redirect to reader -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//nav//span[text()='Page 1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_header.html']//a[@data-i18n='Discussion Thread: Thread 1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//ol//li//p[text()='Post 1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='Reply' and contains(@href, '#!display_dialog_with_history')]</td>
+  <td></td>
+</tr>
+<!-- Reply the thread -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='Reply' and contains(@href, '#!display_dialog_with_history')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_your_title' and @value='Re: Thread 1']</td>
+  <td></td>
+</tr>
+<tal:block tal:define="text_content python: 'Post 2'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Reply']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'New post created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<!-- check redirect to forum view -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_field_listbox.html']//table//a[text()='Thread 1']</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
