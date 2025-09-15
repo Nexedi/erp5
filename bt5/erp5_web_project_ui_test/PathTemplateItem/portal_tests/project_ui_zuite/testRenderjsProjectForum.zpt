@@ -143,6 +143,7 @@
                                                            'text': 'New discussion thread created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 <!-- check redirect to reader -->
 <tr>
   <td>waitForElementPresent</td>
