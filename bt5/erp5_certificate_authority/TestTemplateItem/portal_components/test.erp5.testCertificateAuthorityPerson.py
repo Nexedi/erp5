@@ -27,15 +27,27 @@
 #
 ##############################################################################
 
-import os
 import random
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeCaucaseTestCase import ERP5TypeCaucaseTestCase
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from AccessControl import Unauthorized
+from caucase.client import CaucaseHTTPError
 
-class TestPersonCertificateLogin(ERP5TypeTestCase):
+from cryptography import x509
+from cryptography.x509.oid import NameOID
+
+class TestPersonCertificateLogin(ERP5TypeCaucaseTestCase):
+
+  caucase_certificate_kw = {
+    "company_name": "ERP5 Company",
+    "country_name": "FR",
+    "email_address": "noreply@erp5.net",
+    "locality_name": "Lille",
+    "state_or_province_name": "Nord-Pas-de-Calais"
+  }
 
   def afterSetUp(self):
+    self.setUpCaucase()
     if getattr(self.portal.portal_types.Person,
         'user_can_see_himself', None) is None:
       self.portal.portal_types.Person.newContent(
@@ -45,12 +57,10 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
             role_base_category_script_id="ERP5Type_getSecurityCategoryFromSelf",
             role_base_category="group",
             portal_type="Role Information")
-    if "TEST_CA_PATH" in os.environ:
-      self.portal.portal_certificate_authority.certificate_authority_path = \
-          os.environ['TEST_CA_PATH']
+    self.tic()
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_certificate_authority')
+    return ('erp5_base', 'erp5_web_service', 'erp5_certificate_authority')
 
   def _createPerson(self):
     login = str(random.random())
@@ -76,8 +86,26 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
     self.assertNotEqual(certificate_login.getReference(), login)
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
 
-    self.assertIn('CN=%s' % certificate_login.getReference(), certificate['certificate'])
-    self.assertNotIn('CN=%s' % user_id, certificate['certificate'])
+    ssl_certificate = x509.load_pem_x509_certificate(certificate['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn)
+
+    self.assertEqual(["ERP5 Company"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.ORGANIZATION_NAME])
+
+    self.assertEqual(["FR"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.COUNTRY_NAME])
+
+    self.assertEqual(["noreply@erp5.net"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.EMAIL_ADDRESS])
+
+    self.assertEqual(["Lille"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.LOCALITY_NAME])
+
+    self.assertEqual(["Nord-Pas-de-Calais"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.STATE_OR_PROVINCE_NAME])
+
 
   def test_person_duplicated_login(self):
     user_id, login = self._createPerson()
@@ -96,8 +124,11 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
     self.assertNotEqual(certificate_login.getReference(), user_id)
     self.assertNotEqual(certificate_login.getReference(), login)
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
-    self.assertIn('CN=%s' % certificate_login.getReference(), certificate['certificate'])
-    self.assertNotIn('CN=%s' % user_id, certificate['certificate'])
+
+    ssl_certificate = x509.load_pem_x509_certificate(certificate['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn)
 
     # ERP5 Login dont conflicts
     person.newContent(portal_type='ERP5 Login',
@@ -117,10 +148,12 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
     self.assertNotEqual(certificate_login.getReference(), user_id)
     self.assertNotEqual(certificate_login.getReference(), login)
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
-    
-    self.assertIn('CN=%s' % certificate_login.getReference(), certificate['certificate'])
-    self.assertNotIn('CN=%s' % user_id, certificate['certificate'])
-    self.assertNotIn('CN=%s' % login, certificate['certificate'])
+
+    ssl_certificate = x509.load_pem_x509_certificate(certificate['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn)
+
     self.assertEqual(certificate_login.getValidationState(), "validated")
 
     new_certificate = person.generateCertificate()
@@ -139,11 +172,12 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
       certificate_login.getReference())
     
     self.assertTrue(new_certificate_login.getReference().startswith("CERT"))
-    
-    self.assertIn('CN=%s' % new_certificate_login.getReference(), new_certificate['certificate'])
-    self.assertNotIn('CN=%s' % user_id, new_certificate['certificate'])
-    self.assertNotIn('CN=%s' % login, new_certificate['certificate'])
-    self.assertNotIn('CN=%s' % certificate_login.getReference(), new_certificate['certificate'])
+
+    ssl_certificate = x509.load_pem_x509_certificate(new_certificate['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME][0]
+    self.assertEqual(new_certificate_login.getReference().decode("UTF-8"), cn)
+
     self.assertEqual(new_certificate_login.getValidationState(), "validated")
 
   def test_person_generate_certificate_for_another(self):
@@ -191,13 +225,32 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
     self.assertNotEqual(certificate_login.getReference(), person.getUserId())
 
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
-    
-    self.assertIn('CN=%s' % certificate_login.getReference(), certificate_dict['certificate'])
-    self.assertNotIn('CN=%s' % person.getUserId(), certificate_dict['certificate'])
+
+    ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
+    self.assertEqual(len(cn_list), 1)
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
+
     self.assertEqual(certificate_login.getValidationState(), "draft")
 
     certificate_login.validate()
     self.assertEqual(certificate_login.getValidationState(), "validated")
+
+    self.assertEqual(["ERP5 Company"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.ORGANIZATION_NAME])
+
+    self.assertEqual(["FR"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.COUNTRY_NAME])
+
+    self.assertEqual(["noreply@erp5.net"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.EMAIL_ADDRESS])
+
+    self.assertEqual(["Lille"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.LOCALITY_NAME])
+
+    self.assertEqual(["Nord-Pas-de-Calais"],
+      [i.value for i in ssl_certificate.subject if i.oid == NameOID.STATE_OR_PROVINCE_NAME])
 
   def test_certificate_login_get_certificate_set_reference(self):
     person = self.portal.person_module.newContent(portal_type='Person')
@@ -212,9 +265,12 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
 
     # Reference is reset while setting the generate the certificate.
     self.assertTrue(certificate_login.getReference().startswith("CERT"))
-    
-    self.assertIn('CN=%s' % certificate_login.getReference(), certificate_dict['certificate'])
-    self.assertNotIn('CN=%s' % person.getUserId(), certificate_dict['certificate'])
+
+    ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
+    self.assertEqual(len(cn_list), 1)
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
     self.assertEqual(certificate_login.getValidationState(), "draft")
 
     certificate_login.validate()
@@ -230,12 +286,26 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
     reference = certificate_login.getReference()
     # Reference is reset while setting the generate the certificate.
     self.assertTrue(reference.startswith("CERT"))
-    
-    self.assertIn('CN=%s' % reference, certificate_dict['certificate'])
-    self.assertNotIn('CN=%s' % person.getUserId(), certificate_dict['certificate'])
+
+    # If no csr is provided, the private key is generated by the master
+    # this is to provide backward compatibility with old clients
+    self.assertIn("key", certificate_dict.keys())
+
+    ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
+    self.assertEqual(len(cn_list), 1)
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
     self.assertEqual(certificate_login.getValidationState(), "draft")
 
-    self.assertRaises(ValueError, certificate_login.getCertificate)
+    same_certificate_dict = certificate_login.getCertificate()
+    self.assertEqual(certificate_dict['certificate'], same_certificate_dict['certificate'])
+    
+    # If no csr is provided, the private key is generated by the master
+    # this is to provide backward compatibility with old clients
+    self.assertNotIn("key", same_certificate_dict.keys())
+
+    self.assertRaises(ValueError, certificate_login.getCertificate, "some_csr_string")
 
   def test_certificate_login_revoke(self):
     person = self.portal.person_module.newContent(portal_type='Person')
@@ -246,15 +316,48 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
     certificate_dict = certificate_login.getCertificate()
     reference = certificate_login.getReference()
     self.assertTrue(reference.startswith("CERT"))
-    self.assertIn('CN=%s' % reference, certificate_dict['certificate'])
-    self.assertNotEqual(certificate_login.getDestinationReference(), None)
+    
+    ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
+    self.assertEqual(len(cn_list), 1)
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
+
+    self.assertEqual(certificate_login.getDestinationReference(), None)
+    self.assertNotEqual(certificate_login.getCsrId(), None)
 
     self.assertEqual(None, certificate_login.revokeCertificate())
     self.assertEqual(certificate_login.getDestinationReference(), None)
     self.assertEqual(reference, certificate_login.getReference())
 
     # Revoke again must raise
+    self.assertRaises(CaucaseHTTPError, certificate_login.revokeCertificate)
+
+  def test_certificate_login_revoke_providing_key(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    certificate_login = person.newContent(portal_type='Certificate Login')
+    self.assertEqual(certificate_login.getReference(), None)
     self.assertRaises(ValueError, certificate_login.revokeCertificate)
+    
+    certificate_dict = certificate_login.getCertificate()
+    reference = certificate_login.getReference()
+    self.assertTrue(reference.startswith("CERT"))
+    
+    ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
+    self.assertEqual(len(cn_list), 1)
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
+
+    self.assertEqual(certificate_login.getDestinationReference(), None)
+    self.assertNotEqual(certificate_login.getCsrId(), None)
+
+    self.assertEqual(None, certificate_login.revokeCertificate(certificate_dict['key']))
+    self.assertEqual(certificate_login.getDestinationReference(), None)
+    self.assertEqual(reference, certificate_login.getReference())
+
+    # Revoke again must raise
+    self.assertRaises(CaucaseHTTPError, certificate_login.revokeCertificate, certificate_dict['key'])
 
   def test_certificate_login_revoke_backward_compatibility(self):
     person = self.portal.person_module.newContent(portal_type='Person')
@@ -265,14 +368,36 @@ class TestPersonCertificateLogin(ERP5TypeTestCase):
     certificate_dict = certificate_login.getCertificate()
     reference = certificate_login.getReference()
     self.assertTrue(reference.startswith("CERT"))
-    self.assertIn('CN=%s' % reference, certificate_dict['certificate'])
-    self.assertNotEqual(certificate_login.getDestinationReference(), None)
+
+    ssl_certificate = x509.load_pem_x509_certificate(certificate_dict['certificate'])
+    self.assertEqual(len(ssl_certificate.subject), 6)
+    cn_list = [i.value for i in ssl_certificate.subject if i.oid == NameOID.COMMON_NAME]
+    self.assertEqual(len(cn_list), 1)
+    self.assertEqual(certificate_login.getReference().decode("UTF-8"), cn_list[0])
+
+    self.assertEqual(certificate_login.getDestinationReference(), None)
+    self.assertNotEqual(certificate_login.getCsrId(), None)
 
     # Older implementation wont set it on the Certificate login
     certificate_login.setDestinationReference(None)
-    self.assertEqual(None, certificate_login.revokeCertificate())
-    self.assertEqual(certificate_login.getDestinationReference(), None)
-    self.assertEqual(reference, certificate_login.getReference())
+    certificate_login.setCsrId(None)
+
+    # Still raise since it has no valid certificate anymore
+    self.assertRaises(ValueError, certificate_login.revokeCertificate)
+
+  def test_certificate_login_revoke_backward_compatibility_with_old_serial(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    certificate_login = person.newContent(portal_type='Certificate Login')
+    self.assertEqual(certificate_login.getReference(), None)
+    self.assertRaises(ValueError, certificate_login.revokeCertificate)
+    
+    certificate_login.getCertificate()
+    reference = certificate_login.getReference()
+    self.assertTrue(reference.startswith("CERT"))
+
+    # Older implementation, using openssl, would have destination reference set
+    # this just raise since it cannot be managed by caucase
+    certificate_login.setDestinationReference("SOMESERIAL")
 
     # Still raise since it has no valid certificate anymore
     self.assertRaises(ValueError, certificate_login.revokeCertificate)
