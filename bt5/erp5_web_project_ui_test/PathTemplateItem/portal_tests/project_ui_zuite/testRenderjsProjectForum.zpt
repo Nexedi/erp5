@@ -160,6 +160,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_header.html']//a[@data-i18n='Discussion Thread: Thread 1']</td>
   <td></td>
