@@ -507,7 +507,9 @@ class DB(TM):
                 if self.isolation_level:
                     self._query("SET TRANSACTION ISOLATION LEVEL %s" % self.isolation_level,
                                 allow_reconnect=True)
-                self._query("BEGIN", allow_reconnect=True)
+                    self._query("BEGIN")
+                else:
+                    self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
         except:
