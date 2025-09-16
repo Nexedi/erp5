@@ -243,8 +243,19 @@ class DB(TM):
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
 
+    @property
+    def isolation_level(self):
+        return self._isolation_level
+
+    @isolation_level.setter
+    def isolation_level(self, v):
+        if v not in ('REPEATABLE READ', 'READ COMMITTED', 'READ UNCOMMITTED',
+                     'SERIALIZABLE'):
+            raise ValueError('Isolation level %s is not supported.' % v)
+        self._isolation_level = v
+
     def _parse_connection_string(self):
-        self._mysql_lock = self._try_transactions = None
+        self._mysql_lock = self._try_transactions = self._isolation_level = None
         self._kw_args = kwargs = {'conv': self.conv}
         items = self._connection.split()
         if not items:
@@ -262,6 +273,8 @@ class DB(TM):
             del items[0]
         if items[0][0] == "*":
             self._mysql_lock = items.pop(0)[1:]
+        if items[0][0] == "!":
+            self.isolation_level = items.pop(0)[1:].replace('-', ' ')
         db = items.pop(0)
         if '@' in db:
             db, host = db.split('@', 1)
@@ -491,7 +504,12 @@ class DB(TM):
         try:
             self._transaction_begun = True
             if self._transactions:
-                self._query("BEGIN", allow_reconnect=True)
+                if self.isolation_level:
+                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self.isolation_level,
+                                allow_reconnect=True)
+                    self._query("BEGIN")
+                else:
+                    self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
         except:
