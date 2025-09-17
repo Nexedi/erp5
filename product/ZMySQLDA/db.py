@@ -346,7 +346,7 @@ class DB(TM):
       self.db = MySQLdb.connect(**self._kw_args)
       self._query(b"SET time_zone='+00:00'")
       if self.isolation_level:
-        self._query(b"SET SESSION TRANSACTION ISOLATION LEVEL %s" % self.isolation_level)
+        self._query('SET SESSION TRANSACTION ISOLATION LEVEL %s' % self.isolation_level)
       # BBB mysqlclient on python2 does not support sql_mode, check that
       # the connection is actually encrypted.
       if self._kw_args.get('ssl') and \
