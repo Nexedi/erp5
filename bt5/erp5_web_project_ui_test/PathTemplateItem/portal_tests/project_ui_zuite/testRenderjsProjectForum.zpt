@@ -155,6 +155,49 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_header.html']//a[@data-i18n='Discussion Post: Thread 1']</td>
   <td></td>
 </tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/project_management/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[@id='test-project-forum-project_page_link' and text()='(Project Page)']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[@id='test-project-forum-project_page_link' and text()='(Project Page)']</td>
+  <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//a[@id='milestone_link' and @class='first-line-buttons']</td>
+ <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_editor.html']</td>
+  <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//a[text()='Project Forum']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//a[text()='Project Forum']</td>
+ <td></td>
+</tr>
+  
 <!-- check thread in list -->
 <tr>
   <td>waitForTextPresent</td>
