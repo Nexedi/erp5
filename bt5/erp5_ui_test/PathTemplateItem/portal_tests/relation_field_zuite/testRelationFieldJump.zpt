@@ -68,6 +68,24 @@
   <td></td>
   <td></td>
 </tr>
+<!-- jump keeps the ignore_layout:int=1 argument from ERP5 web -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//fieldset[@class='left editable']/div[4]/div/a/img[@alt="jump"]</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>${base_url}/foo_module/1?ignore_layout:int=1</td>
+  <td></td>
+  <td></td>
+</tr>
 
 <!-- jump when there are more than one relation, then an intermediate listbox
 will be shown
@@ -81,7 +99,9 @@ will be shown
 <tr>
   <td>type</td>
   <td>field_my_category_list</td>
-  <td>bar_category/foo_module/0<br />bar_category/foo_module/1</td>
+  <td>
+<pre>bar_category/foo_module/0
+bar_category/foo_module/1</pre></td>
   <td></td>
 </tr>
 <tr>

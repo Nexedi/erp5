@@ -53,7 +53,8 @@
 <tr>
   <td>type</td>
   <td>field_my_bar_category_title_list</td>
-  <td>%1%<br />%2%</td>
+  <td><pre>%1%
+%2%</pre></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
