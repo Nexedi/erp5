@@ -1300,6 +1300,11 @@ class Catalog(Folder,
     if not self.getPortalObject().isIndexable():
       return
 
+    # force using READ COMMITTED isolation.
+    connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
+    db = getattr(self.getPortalObject(), connection_id)()
+    db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED', allow_reconnect=True)
+
     object_path_dict = {}
     uid_list = []
     uid_list_append = uid_list.append
