@@ -53,5 +53,5 @@ class TestFunctionalAdvancedECommerce(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalAdvancedECommerce))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalAdvancedECommerce))
   return suite

@@ -43,5 +43,5 @@ class TestPasswordToolWithCRM(TestPasswordTool):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPasswordToolWithCRM))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPasswordToolWithCRM))
   return suite

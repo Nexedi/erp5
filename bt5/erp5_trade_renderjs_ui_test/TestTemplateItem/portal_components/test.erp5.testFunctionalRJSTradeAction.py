@@ -46,5 +46,5 @@ class TestRenderJSUITradeAction(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUITradeAction))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUITradeAction))
   return suite

@@ -218,9 +218,9 @@ class TestComponentDefaultSupplyLine(DefaultSupplyLineTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPDMWithSecurity))
-  suite.addTest(unittest.makeSuite(TestResourceMeasureConstraint))
-  suite.addTest(unittest.makeSuite(TestProductDefaultSupplyLine))
-  suite.addTest(unittest.makeSuite(TestServiceDefaultSupplyLine))
-  suite.addTest(unittest.makeSuite(TestComponentDefaultSupplyLine))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPDMWithSecurity))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestResourceMeasureConstraint))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestProductDefaultSupplyLine))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestServiceDefaultSupplyLine))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestComponentDefaultSupplyLine))
   return suite

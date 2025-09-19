@@ -259,5 +259,5 @@ class TestRoundingTool(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRoundingTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRoundingTool))
   return suite

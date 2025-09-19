@@ -40,5 +40,5 @@ class TestProductionDeliveryApparel(TestProductionOrderApparelMixin,
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionDeliveryApparel))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestProductionDeliveryApparel))
   return suite

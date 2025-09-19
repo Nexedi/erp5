@@ -41,5 +41,5 @@ class TestPackingListRoundingPrecision(TestPackingList):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPackingListRoundingPrecision))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPackingListRoundingPrecision))
   return suite

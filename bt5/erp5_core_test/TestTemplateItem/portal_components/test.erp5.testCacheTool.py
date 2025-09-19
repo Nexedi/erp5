@@ -549,6 +549,6 @@ return 'a' * 1024 * 1024 * 25
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCacheTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCacheTool))
   return suite
 

@@ -297,5 +297,5 @@ class TestPerson(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPerson))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPerson))
   return suite

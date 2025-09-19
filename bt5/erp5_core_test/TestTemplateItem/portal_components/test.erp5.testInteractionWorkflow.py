@@ -741,5 +741,5 @@ context.setTitle('Bar')
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInteractionWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInteractionWorkflow))
   return suite

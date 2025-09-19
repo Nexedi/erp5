@@ -407,5 +407,5 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFreeSubscription))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFreeSubscription))
   return suite

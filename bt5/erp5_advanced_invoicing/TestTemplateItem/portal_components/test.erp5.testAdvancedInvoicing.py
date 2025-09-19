@@ -1268,7 +1268,7 @@ class TestWorkflow(SecurityTestCase):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAdvancedSaleInvoice))
-  suite.addTest(unittest.makeSuite(TestAdvancedPurchaseInvoice))
-  suite.addTest(unittest.makeSuite(TestWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAdvancedSaleInvoice))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAdvancedPurchaseInvoice))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestWorkflow))
   return suite

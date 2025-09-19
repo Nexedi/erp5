@@ -45,5 +45,5 @@ class TestRenderJSUIRecoverPassword(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIRecoverPassword))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIRecoverPassword))
   return suite

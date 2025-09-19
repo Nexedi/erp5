@@ -477,7 +477,7 @@ class TestTranslationWithBusinessTemplate(TestTranslation):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTranslation))
-  suite.addTest(unittest.makeSuite(TestTranslationWithBusinessTemplate))
-  suite.addTest(unittest.makeSuite(TestWorkflowStateTitleTranslation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTranslation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTranslationWithBusinessTemplate))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestWorkflowStateTitleTranslation))
   return suite

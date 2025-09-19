@@ -389,5 +389,5 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestEditorField))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestEditorField))
   return suite

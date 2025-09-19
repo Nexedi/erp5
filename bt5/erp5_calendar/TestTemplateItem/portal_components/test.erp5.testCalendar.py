@@ -2315,5 +2315,5 @@ class TestCalendar(ERP5ReportTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCalendar))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCalendar))
   return suite
