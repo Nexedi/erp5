@@ -197,7 +197,6 @@
  <td>//a[text()='Project Forum']</td>
  <td></td>
 </tr>
-  
 <!-- check thread in list -->
 <tr>
   <td>waitForTextPresent</td>
@@ -250,6 +249,16 @@
   <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
 </tal:block>
 <tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Reply']</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//input[@name='action_confirm' and @value='Reply']</td>
   <td></td>
@@ -257,7 +266,7 @@
 <!-- check redirect to post -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_header.html']//a[@data-i18n='Discussion Thread: Thread 1']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_header.html']//a[@data-i18n='Discussion Post: Re: Thread 1']</td>
   <td></td>
 </tr>
 <tr>
