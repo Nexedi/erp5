@@ -44,6 +44,7 @@ from ZODB.POSException import ConflictError
 from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Utils import ensure_list
+from MySQLdb import OperationalError
 
 from inspect import CO_VARKEYWORDS
 from functools import wraps
@@ -1303,7 +1304,11 @@ class Catalog(Folder,
     # force using READ COMMITTED isolation.
     connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
-    db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED', allow_reconnect=True)
+    try:
+      db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED', allow_reconnect=True)
+    except OperationalError:
+      # transaction is already in progress, in case of explicit immediateReindexObject, for example.
+      pass
 
     object_path_dict = {}
     uid_list = []
