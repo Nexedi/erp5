@@ -381,5 +381,5 @@ class TestArchive(InventoryAPITestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestArchive))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestArchive))
   return suite

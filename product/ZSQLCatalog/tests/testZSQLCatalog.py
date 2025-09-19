@@ -65,7 +65,7 @@ class TestSQLCatalog(unittest.TestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSQLCatalog))
-  suite.addTest(unittest.makeSuite(TestZSQLCatalog))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalog))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZSQLCatalog))
   return suite
 

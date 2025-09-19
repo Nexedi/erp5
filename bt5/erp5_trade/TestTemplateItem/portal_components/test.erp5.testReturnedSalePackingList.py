@@ -583,5 +583,5 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestReturnedSalePackingList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestReturnedSalePackingList))
   return suite

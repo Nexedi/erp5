@@ -1235,5 +1235,5 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionOrderApparel))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestProductionOrderApparel))
   return suite

@@ -923,5 +923,5 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAuthenticationPolicy))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAuthenticationPolicy))
   return suite

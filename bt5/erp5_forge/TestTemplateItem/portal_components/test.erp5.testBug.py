@@ -619,5 +619,5 @@ class TestBug(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestBug))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBug))
   return suite

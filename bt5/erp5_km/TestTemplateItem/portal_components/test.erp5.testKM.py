@@ -1082,6 +1082,6 @@ class TestKMSearch(TestKMMixIn):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestKM))
-  suite.addTest(unittest.makeSuite(TestKMSearch))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestKM))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestKMSearch))
   return suite

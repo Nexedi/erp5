@@ -43,5 +43,5 @@ class TestOfficejSUIBookmark(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUIBookmark))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUIBookmark))
   return suite

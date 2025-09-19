@@ -438,5 +438,5 @@ class TestOpenOrder(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOpenOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOpenOrder))
   return suite

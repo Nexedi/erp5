@@ -97,7 +97,7 @@ class TestDocumentWithPreConversion(TestDocument):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDocumentWithPreConversion))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDocumentWithPreConversion))
   return suite
 
 

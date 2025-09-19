@@ -130,5 +130,5 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAcknowledgementTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAcknowledgementTool))
   return suite

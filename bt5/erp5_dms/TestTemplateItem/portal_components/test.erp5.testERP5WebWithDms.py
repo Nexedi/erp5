@@ -1637,5 +1637,5 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5WebWithDms))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5WebWithDms))
   return suite

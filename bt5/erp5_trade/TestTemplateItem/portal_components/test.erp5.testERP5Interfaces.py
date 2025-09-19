@@ -96,5 +96,5 @@ for failing_method in [
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Interfaces))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Interfaces))
   return suite

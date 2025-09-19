@@ -47,5 +47,5 @@ class TestRenderJSUIBankReconciliationAction(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIBankReconciliationAction))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIBankReconciliationAction))
   return suite

@@ -125,5 +125,5 @@ class TestExternalAccount(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestExternalAccount))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestExternalAccount))
   return suite

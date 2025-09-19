@@ -1423,5 +1423,5 @@ class TestTradeModelLineSale(TestTradeModelLine):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTradeModelLineSale))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTradeModelLineSale))
   return suite

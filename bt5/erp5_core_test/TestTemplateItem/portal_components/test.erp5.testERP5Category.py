@@ -328,6 +328,6 @@ class TestERP5Category(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Category))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Category))
   return suite
 

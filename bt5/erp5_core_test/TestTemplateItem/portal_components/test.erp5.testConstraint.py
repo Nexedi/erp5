@@ -1636,5 +1636,5 @@ class TestConstraint(PropertySheetTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestConstraint))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestConstraint))
   return suite
