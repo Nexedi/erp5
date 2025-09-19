@@ -106,6 +106,9 @@ def SQLLock(db, lock_name, timeout):
   1: lock acquired
   0: timeout
   """
+  if db.version > (10, 6):
+    yield 1
+    return
   lock_name = db.string_literal(lock_name)
   query = db.query
   (_, ((acquired, ), )) = query(
@@ -746,6 +749,7 @@ CREATE TABLE %s (
         b''
       ),
       limit,
+      ' SKIP LOCKED' if db.version > (10, 6) else '',
     )
 
     # Note: Not all write accesses to our table are protected by this lock.
@@ -782,7 +786,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-          b" FOR UPDATE" % args,
+          b" FOR UPDATE%s" % args,
           0,
         ))
       else:
@@ -803,6 +807,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
+          b" FOR UPDATE%s"
         b")" % args).format(*a, **k))
         result = Results(query(
           b"SELECT *"
