@@ -40,7 +40,8 @@
 <tr>
   <td>type</td>
   <td>field_my_bar_category_title_list</td>
-  <td>A new foo<br/>Another new foo</td>
+  <td><pre>A new foo
+Another new foo</pre></td>
   <td></td>
 </tr>
 <tr>
@@ -73,7 +74,8 @@
 <tr>
   <td>verifyValue</td>
   <td>field_my_bar_category_title_list</td>
-  <td>A new foo<br/>Another new foo</td>
+  <td><pre>A new foo
+Another new foo</pre></td>
   <td></td>
 </tr>
 
@@ -87,7 +89,8 @@
 <tr>
   <td>verifyValue</td>
   <td>field_my_bar_category_title_list</td>
-  <td>A new foo<br/>Another new foo</td>
+  <td><pre>A new foo
+Another new foo</pre></td>
   <td></td>
 </tr>
 

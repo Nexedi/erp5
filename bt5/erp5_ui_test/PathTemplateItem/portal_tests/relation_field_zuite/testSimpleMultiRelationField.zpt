@@ -44,8 +44,9 @@ to set categories</td></tr>
 <tr>
   <td>type</td>
   <td>field_my_category_list</td>
-  <td>bar_category/foo_module/0<br />bar_category/foo_module/1<br />foo_category/a/a1</td>
-  <td></td>
+  <td><pre>bar_category/foo_module/0
+bar_category/foo_module/1
+foo_category/a/a1</pre></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -68,13 +69,16 @@ to set categories</td></tr>
 <tr>
   <td>verifyValue</td>
   <td>field_my_bar_category_title_list</td>
-  <td>Title 0<br />Title 1</td>
+  <td><pre>Title 0
+Title 1</pre></td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
   <td>field_my_bar_category_title_list</td>
-  <td>Title 0<br />Title 1<br />Title 1</td>
+  <td><pre>Title 0
+Title 1
+Title 1</pre></td>
   <td>Make sure than we can repeat the second item in a list</td>
 </tr>
 <tr>
@@ -86,13 +90,18 @@ to set categories</td></tr>
 <tr>
   <td>verifyValue</td>
   <td>field_my_bar_category_title_list</td>
-  <td>Title 0<br />Title 1<br />Title 1</td>
+  <td><pre>Title 0
+Title 1
+Title 1</pre></td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
   <td>field_my_bar_category_title_list</td>
-  <td>Title 0<br />Title 0<br />Title 1<br />Title 1</td>
+  <td><pre>Title 0
+Title 0
+Title 1
+Title 1</pre></td>
   <td>Make sure that we can repeat the first item (default) in a list</td>
 </tr>
 <tr>
@@ -104,13 +113,18 @@ to set categories</td></tr>
 <tr>
   <td>verifyValue</td>
   <td>field_my_bar_category_title_list</td>
-  <td>Title 0<br />Title 0<br />Title 1<br />Title 1</td>
+  <td><pre>Title 0
+Title 0
+Title 1
+Title 1</pre></td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
   <td>field_my_bar_category_title_list</td>
-  <td>Title 1<br />Title 0<br />Title 1</td>
+  <td><pre>Title 1
+Title 0
+Title 1</pre></td>
   <td>Make sure we can reorder items in a list</td>
 </tr>
 <tr>
@@ -122,7 +136,9 @@ to set categories</td></tr>
 <tr>
   <td>verifyValue</td>
   <td>field_my_bar_category_title_list</td>
-  <td>Title 1<br />Title 0<br />Title 1</td>
+  <td><pre>Title 1
+Title 0
+Title 1</pre></td>
   <td></td>
 </tr>
 <!-- XXX don't test jump for now, because we don't have good locators anyway.
