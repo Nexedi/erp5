@@ -362,6 +362,6 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     sequence_list.play(self, quiet=quiet)
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTaskReportDivergence))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTaskReportDivergence))
   return suite
 

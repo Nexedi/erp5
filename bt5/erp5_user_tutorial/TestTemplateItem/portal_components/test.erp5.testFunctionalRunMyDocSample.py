@@ -65,5 +65,5 @@ class TestZeleniumRunMyDocSample(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestZeleniumRunMyDocSample))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZeleniumRunMyDocSample))
   return suite

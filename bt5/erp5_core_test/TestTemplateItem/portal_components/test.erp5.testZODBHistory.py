@@ -171,5 +171,5 @@ class TestZODBHistory(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestZODBHistory))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZODBHistory))
   return suite

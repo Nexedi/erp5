@@ -256,5 +256,5 @@ class TestERP5Discussion(DocumentUploadTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Discussion))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Discussion))
   return suite

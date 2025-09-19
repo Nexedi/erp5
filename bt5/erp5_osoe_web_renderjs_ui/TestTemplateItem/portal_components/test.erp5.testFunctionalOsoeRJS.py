@@ -46,5 +46,5 @@ class TestOsoeRJS(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOsoeRJS))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOsoeRJS))
   return suite

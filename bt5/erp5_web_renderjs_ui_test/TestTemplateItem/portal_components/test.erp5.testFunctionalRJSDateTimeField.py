@@ -44,5 +44,5 @@ class TestRenderJSUIDateTimeField(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIDateTimeField))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIDateTimeField))
   return suite

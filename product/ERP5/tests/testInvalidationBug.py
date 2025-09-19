@@ -225,5 +225,5 @@ if (count % 500) < 5:
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInvalidationBug))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInvalidationBug))
   return suite

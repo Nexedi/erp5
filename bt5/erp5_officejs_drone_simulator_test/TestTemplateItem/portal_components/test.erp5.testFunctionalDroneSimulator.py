@@ -42,5 +42,5 @@ class TestDroneSimulator(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDroneSimulator))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDroneSimulator))
   return suite

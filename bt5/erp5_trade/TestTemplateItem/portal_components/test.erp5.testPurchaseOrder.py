@@ -61,6 +61,6 @@ class TestPurchaseOrder(TestOrder):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPurchaseOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPurchaseOrder))
   return suite
 

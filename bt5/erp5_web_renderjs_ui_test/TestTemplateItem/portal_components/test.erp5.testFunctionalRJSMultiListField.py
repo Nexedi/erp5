@@ -44,5 +44,5 @@ class TestRenderJSUIMultiListField(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIMultiListField))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIMultiListField))
   return suite

@@ -489,5 +489,5 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
 def test_suite():
   import unittest
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTransformation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTransformation))
   return suite

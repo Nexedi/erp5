@@ -77,5 +77,5 @@ class TestHTMLPostLogic(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestHTMLPostLogic))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestHTMLPostLogic))
   return suite

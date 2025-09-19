@@ -43,5 +43,5 @@ class TestRenderJSUILinesField(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUILinesField))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUILinesField))
   return suite

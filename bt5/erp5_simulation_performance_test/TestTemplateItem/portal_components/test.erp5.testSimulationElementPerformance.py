@@ -830,5 +830,5 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSimulationPerformance))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSimulationPerformance))
   return suite

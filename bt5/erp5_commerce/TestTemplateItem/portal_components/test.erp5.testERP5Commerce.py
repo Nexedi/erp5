@@ -953,5 +953,5 @@ class TestCommerce(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCommerce))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCommerce))
   return suite

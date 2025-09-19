@@ -235,5 +235,5 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestMaxmaDemoConfiguratorWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestMaxmaDemoConfiguratorWorkflow))
   return suite

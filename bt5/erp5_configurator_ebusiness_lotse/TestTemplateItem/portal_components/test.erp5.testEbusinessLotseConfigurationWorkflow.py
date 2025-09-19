@@ -235,5 +235,5 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestEbusinessLotseConfigurationWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestEbusinessLotseConfigurationWorkflow))
   return suite

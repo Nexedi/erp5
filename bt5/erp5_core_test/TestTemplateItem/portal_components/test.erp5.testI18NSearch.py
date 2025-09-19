@@ -166,5 +166,5 @@ class TestI18NSearch(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestI18NSearch))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestI18NSearch))
   return suite

@@ -808,6 +808,6 @@ return context.objectValues()
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestListBox))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestListBox))
   return suite
 

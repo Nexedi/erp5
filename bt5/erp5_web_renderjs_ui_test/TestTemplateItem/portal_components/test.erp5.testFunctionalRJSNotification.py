@@ -43,5 +43,5 @@ class TestRenderJSUINotification(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUINotification))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUINotification))
   return suite

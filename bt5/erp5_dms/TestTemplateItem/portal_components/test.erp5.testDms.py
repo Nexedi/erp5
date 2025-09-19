@@ -3271,17 +3271,17 @@ class TextConsistencyTestCase(DocumentConsistencyTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDocument))
-  suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
-  suite.addTest(unittest.makeSuite(TestDocumentPerformance))
-  suite.addTest(unittest.makeSuite(DrawingConsistencyTestCase))
-  suite.addTest(unittest.makeSuite(FileConsistencyTestCase))
-  suite.addTest(unittest.makeSuite(PDFConsistencyTestCase))
-  suite.addTest(unittest.makeSuite(PresentationConsistencyTestCase))
-  suite.addTest(unittest.makeSuite(SpreadsheetConsistencyTestCase))
-  suite.addTest(unittest.makeSuite(TextConsistencyTestCase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDocument))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDocumentWithSecurity))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDocumentPerformance))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(DrawingConsistencyTestCase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(FileConsistencyTestCase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(PDFConsistencyTestCase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(PresentationConsistencyTestCase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(SpreadsheetConsistencyTestCase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TextConsistencyTestCase))
 
   # Run erp5_base's TestImage with dms installed (because dms has specific interactions)
   from erp5.component.test.testERP5Base import TestImage
-  suite.addTest(unittest.makeSuite(TestImage))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestImage))
   return suite

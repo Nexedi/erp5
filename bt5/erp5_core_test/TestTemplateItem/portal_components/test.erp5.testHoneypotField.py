@@ -64,5 +64,5 @@ class TestHoneypotField(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestHoneypotField))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestHoneypotField))
   return suite

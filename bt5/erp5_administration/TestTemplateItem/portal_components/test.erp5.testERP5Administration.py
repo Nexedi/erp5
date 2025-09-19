@@ -279,5 +279,5 @@ component_error()
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Administration))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Administration))
   return suite

@@ -592,6 +592,6 @@ if new_last_id_group is not None:
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestIdTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestIdTool))
   return suite
 

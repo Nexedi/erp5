@@ -41,5 +41,5 @@ class TestFunctionalJsStyle(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalJsStyle))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalJsStyle))
   return suite

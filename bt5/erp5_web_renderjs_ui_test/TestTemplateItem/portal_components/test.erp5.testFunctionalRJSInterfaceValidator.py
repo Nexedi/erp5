@@ -43,5 +43,5 @@ class TestRenderJSUIInterfaceValidator(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIInterfaceValidator))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIInterfaceValidator))
   return suite

@@ -312,6 +312,6 @@ class TestDistributedCacheSessionTool(SessionToolTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRAMCacheSessionTool))
-  suite.addTest(unittest.makeSuite(TestDistributedCacheSessionTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRAMCacheSessionTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDistributedCacheSessionTool))
   return suite

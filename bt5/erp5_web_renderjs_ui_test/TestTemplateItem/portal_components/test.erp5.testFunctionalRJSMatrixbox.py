@@ -43,5 +43,5 @@ class TestRenderJSUIMatrixbox(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIMatrixbox))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIMatrixbox))
   return suite

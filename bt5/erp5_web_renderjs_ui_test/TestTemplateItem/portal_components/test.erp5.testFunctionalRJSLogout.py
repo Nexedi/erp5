@@ -45,5 +45,5 @@ class TestRenderJSUILogout(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUILogout))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUILogout))
   return suite

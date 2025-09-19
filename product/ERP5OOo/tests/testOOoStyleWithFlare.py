@@ -55,7 +55,7 @@ class TestODSStyle(TestOOoStyleWithFlare):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestODTStyle))
-  suite.addTest(unittest.makeSuite(TestODSStyle))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestODTStyle))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestODSStyle))
   return suite
 
