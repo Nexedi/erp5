@@ -66,6 +66,7 @@ class OldDataFsSetup(ERP5TypeTestCase):
       'Document Module',
       'Organisation Module',
       'Person Module',
+      'Big File Module'
     ):
       self.portal.portal_types[module_portal_type].newContent(
         portal_type='Role Information',
@@ -85,6 +86,7 @@ class OldDataFsSetup(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(
       portal_type='Person',
       first_name='test person',
+      last_name = 'test person é',
       id='test_person_login',
     )
     person.validate()
@@ -144,6 +146,11 @@ class OldDataFsSetup(ERP5TypeTestCase):
       id='file_content_invalid_utf8',
       data=b'\xff',
     )
+    big_file = self.portal.big_file_module.newContent(
+      portal_type='Big File',
+      id='test_big_file'
+    )
+    big_file.appendData('testdata1')
 
 
 class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
@@ -187,6 +194,7 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       'erp5_configurator_standard_trade_template',
       'erp5_monaco_editor',
       'erp5_upgrader',
+      'erp5_big_file',
      )
 
   def run_upgrader(self):
@@ -214,7 +222,8 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
          'erp5_dms',
          'erp5_mrp',
          'erp5_officejs',
-         'erp5_web_renderjs_ui'),
+         'erp5_web_renderjs_ui',
+         'erp5_big_file'),
          ())""")
     self.tic()
 
@@ -307,9 +316,20 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       self.portal.person_module.test_person_login.getUserId())
     self.assertEqual(workflow_history[-1]['time'], DateTime(2123, 4, 5))
 
+    self.assertEqual(
+      organisation._getCopy(self.portal.organisation_module).getTitle(),
+      'test héhé')
+
     organisation.setDescription('test\nhéhé\nafter')
     self.tic()
     self.assertEqual(organisation.getDescription(), 'test\nhéhé\nafter')
+    big_file = self.portal.big_file_module.test_big_file
+    big_file.appendData(b'testdata2')
+    self.assertEqual(big_file.getData(), b'testdata1testdata2')
+    clone_person = self.portal.person_module.test_person_login.Base_createCloneDocument(batch_mode=True)
+    clone_person.setFirstName('')
+    self.assertEqual(clone_person.getLastName(), 'test person é')
+    self.assertEqual(clone_person.getTitle(), 'test person é')
 
   def check_existing_dms_documents(self):
     self.assertEqual(
@@ -365,19 +385,19 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       [
         brain.getObject().getTitle()
         for brain in self.portal.portal_catalog(
-          title='test person',
+          title='test person test person é',
           portal_type='Person',
         )
-      ], ['test person'])
+      ], ['test person test person é'])
     self.assertEqual(
       [
         brain.getObject().getTitle()
         for brain in self.portal.portal_catalog(
-          title='test person',
+          title='test person test person é',
           portal_type='Person',
           local_roles=['Assignee'],
         )
-      ], ['test person'])
+      ], ['test person test person é'])
 
   def check_catalog_as_anonymous(self):
     self.logout()
