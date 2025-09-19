@@ -47,5 +47,5 @@ class TestRenderJSUIDeferredStyle(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIDeferredStyle))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIDeferredStyle))
   return suite

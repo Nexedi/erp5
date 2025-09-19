@@ -37,5 +37,5 @@ class TestRenderJSDocumentScanner(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSDocumentScanner))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSDocumentScanner))
   return suite

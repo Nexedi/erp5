@@ -78,5 +78,5 @@ class TestComputer(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestComputer))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestComputer))
   return suite

@@ -426,7 +426,7 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSelectionTool))
-  suite.addTest(unittest.makeSuite(TestSelectionToolMemcachedStorage))
-  suite.addTest(unittest.makeSuite(TestSelectionPersistence))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSelectionTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSelectionToolMemcachedStorage))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSelectionPersistence))
   return suite

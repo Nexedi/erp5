@@ -2319,5 +2319,5 @@ class TestBudget(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestBudget))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBudget))
   return suite

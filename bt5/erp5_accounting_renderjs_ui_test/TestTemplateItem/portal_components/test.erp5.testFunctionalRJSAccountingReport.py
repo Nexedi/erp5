@@ -50,5 +50,5 @@ class TestRenderJSAccountingReport(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSAccountingReport))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSAccountingReport))
   return suite

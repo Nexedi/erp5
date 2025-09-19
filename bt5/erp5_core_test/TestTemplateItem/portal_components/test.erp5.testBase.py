@@ -1536,6 +1536,6 @@ class TestERP5PropertyManager(unittest.TestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestBase))
-  suite.addTest(unittest.makeSuite(TestERP5PropertyManager))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5PropertyManager))
   return suite

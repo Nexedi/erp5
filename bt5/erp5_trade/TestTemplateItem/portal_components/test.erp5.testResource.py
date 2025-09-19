@@ -1475,5 +1475,5 @@ class TestResource(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestResource))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestResource))
   return suite

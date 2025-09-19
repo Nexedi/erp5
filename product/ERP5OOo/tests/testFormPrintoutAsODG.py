@@ -474,5 +474,5 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFormPrintoutAsODG))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFormPrintoutAsODG))
   return suite

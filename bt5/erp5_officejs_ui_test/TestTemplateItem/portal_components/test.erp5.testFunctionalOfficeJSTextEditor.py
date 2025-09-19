@@ -43,5 +43,5 @@ class TestOfficejSUITextEditor(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUITextEditor))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUITextEditor))
   return suite

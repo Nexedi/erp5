@@ -718,5 +718,5 @@ def test_suite():
       ('erp5_core',) + TestXHTML.getBusinessTemplateList(),
       expected_failure_list=expected_failure_list)
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestXHTML))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestXHTML))
   return suite

@@ -121,5 +121,5 @@ class TestNamingConvention(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestNamingConvention))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestNamingConvention))
   return suite

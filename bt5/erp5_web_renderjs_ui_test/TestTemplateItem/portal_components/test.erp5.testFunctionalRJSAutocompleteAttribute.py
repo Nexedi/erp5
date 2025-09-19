@@ -44,5 +44,5 @@ class TestRenderJSUIAutocompleteAttribute(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIAutocompleteAttribute))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIAutocompleteAttribute))
   return suite

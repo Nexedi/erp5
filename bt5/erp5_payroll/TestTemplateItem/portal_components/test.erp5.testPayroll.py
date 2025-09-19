@@ -3448,5 +3448,5 @@ class TestPayroll(TestPayrollMixin):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPayroll))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPayroll))
   return suite

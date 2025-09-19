@@ -259,5 +259,5 @@ class TestICal(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestICal))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestICal))
   return suite

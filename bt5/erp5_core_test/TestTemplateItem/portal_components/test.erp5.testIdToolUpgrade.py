@@ -329,5 +329,5 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestIdToolUpgrade))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestIdToolUpgrade))
   return suite

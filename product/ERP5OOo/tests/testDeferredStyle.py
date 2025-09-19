@@ -692,8 +692,8 @@ class TestDeferredStyleUtils(DeferredStyleTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestODSDeferredStyle))
-  suite.addTest(unittest.makeSuite(TestODTDeferredStyle))
-  suite.addTest(unittest.makeSuite(TestDeferredReportAlarm))
-  suite.addTest(unittest.makeSuite(TestDeferredStyleUtils))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestODSDeferredStyle))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestODTDeferredStyle))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDeferredReportAlarm))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDeferredStyleUtils))
   return suite

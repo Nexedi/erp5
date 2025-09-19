@@ -8991,11 +8991,11 @@ TestMixinTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemT
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestBusinessTemplate))
-  suite.addTest(unittest.makeSuite(TestConstraintTemplateItem))
-  suite.addTest(unittest.makeSuite(TestDocumentTemplateItem))
-  suite.addTest(unittest.makeSuite(TestInterfaceTemplateItem))
-  suite.addTest(unittest.makeSuite(TestMixinTemplateItem))
-  suite.addTest(unittest.makeSuite(TestExtensionTemplateItem))
-  suite.addTest(unittest.makeSuite(TestTestTemplateItem))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBusinessTemplate))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestConstraintTemplateItem))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDocumentTemplateItem))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInterfaceTemplateItem))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestMixinTemplateItem))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestExtensionTemplateItem))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTestTemplateItem))
   return suite

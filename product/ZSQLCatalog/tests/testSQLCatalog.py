@@ -866,6 +866,6 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSQLCatalog))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalog))
   return suite
 

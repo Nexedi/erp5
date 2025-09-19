@@ -302,5 +302,5 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Type))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Type))
   return suite

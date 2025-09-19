@@ -144,5 +144,5 @@ class TestCopySupport(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCopySupport))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCopySupport))
   return suite
