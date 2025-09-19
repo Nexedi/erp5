@@ -39,6 +39,8 @@ from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Globals import get_request
 from Products.PythonScripts.standard import html_quote
 import json
+import ZTUtils
+
 
 # Max. number of catalog result
 MAX_SELECT = 30
@@ -423,27 +425,27 @@ $(document).ready(function() {
         if cell is not None else
         self._getContextValue(field, REQUEST)
       )
+
+      jump_query_params = {
+        'field_id': field.id,
+        'form_id': field.aq_parent.id,
+      }
       # Keep the selection name in the URL
       selection_name = REQUEST.get('selection_name')
       if selection_name is not None:
-        selection_name_html = '&amp;selection_name=%s&amp;selection_index=%s' % (
-          html_quote(selection_name),
-          html_quote(str(REQUEST.get('selection_index', 0))),
-        )
-      else:
-        selection_name_html = ''
+        jump_query_params['selection_name'] = selection_name
+        jump_query_params['selection_index'] = REQUEST.get('selection_index', 0)
       ignore_layout = REQUEST.get('ignore_layout')
       if ignore_layout is not None:
-        selection_name_html += '&amp;ignore_layout:int=%s' % int(ignore_layout)
+        jump_query_params['ignore_layout'] = int(ignore_layout)
+
       # Generate plan link
-      return '<a href="%s/%s?field_id=%s&amp;form_id=%s%s">' \
+      return '<a href="%s/%s?%s">' \
         '<img src="%s/images/jump.png" alt="jump" />' \
       '</a>' % (
         html_quote(here.absolute_url()),
         html_quote(field.get_value('jump_method')),
-        html_quote(field.id),
-        html_quote(field.aq_parent.id),
-        html_quote(selection_name_html),
+        ZTUtils.make_query(jump_query_params),
         html_quote(here.getPortalObject().portal_url()),
       )
     return ''
