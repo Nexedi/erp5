@@ -521,5 +521,5 @@ class TestTrashTool(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTrashTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTrashTool))
   return suite

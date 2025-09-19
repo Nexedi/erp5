@@ -43,5 +43,5 @@ class TestOfficejSUISvgEditor(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUISvgEditor))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUISvgEditor))
   return suite

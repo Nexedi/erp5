@@ -187,5 +187,5 @@ class TestDataProtection(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDataProtection))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDataProtection))
   return suite

@@ -1778,5 +1778,5 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestProductionOrder))
   return suite

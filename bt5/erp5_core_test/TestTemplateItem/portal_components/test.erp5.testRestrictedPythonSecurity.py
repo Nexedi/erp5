@@ -996,12 +996,12 @@ def add_tests(suite, module):
     return suite.addTest(module.test_suite())
   for obj in vars(module).values():
     if isinstance(obj, type) and issubclass(obj, unittest.TestCase):
-      suite.addTest(unittest.makeSuite(obj))
+      suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(obj))
 
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRestrictedPythonSecurity))
 
   # Also run original tests of RestrictedPython, to confirm that our patches did not break
   # original functionality

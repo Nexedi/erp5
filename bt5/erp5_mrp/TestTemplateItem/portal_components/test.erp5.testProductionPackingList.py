@@ -780,5 +780,5 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProductionDelivery))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestProductionDelivery))
   return suite

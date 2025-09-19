@@ -52,5 +52,5 @@ class TestRenderJSUIStockBrowser(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIStockBrowser))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIStockBrowser))
   return suite

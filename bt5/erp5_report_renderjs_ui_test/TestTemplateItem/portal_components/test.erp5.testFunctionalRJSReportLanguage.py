@@ -57,5 +57,5 @@ class TestFunctionalRJSReportLanguage(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalRJSReportLanguage))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalRJSReportLanguage))
   return suite

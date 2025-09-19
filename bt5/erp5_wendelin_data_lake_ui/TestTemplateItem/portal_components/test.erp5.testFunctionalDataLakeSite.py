@@ -37,5 +37,5 @@ class TestDataLakeSite(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDataLakeSite))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDataLakeSite))
   return suite

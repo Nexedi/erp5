@@ -43,5 +43,5 @@ class testFunctionalECI(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(testFunctionalECI))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testFunctionalECI))
   return suite

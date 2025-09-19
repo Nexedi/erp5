@@ -104,5 +104,5 @@ class TestUrl(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestUrl))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestUrl))
   return suite

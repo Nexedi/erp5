@@ -42,5 +42,5 @@ class testFunctionalRJSProject(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(testFunctionalRJSProject))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testFunctionalRJSProject))
   return suite

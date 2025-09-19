@@ -221,5 +221,5 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestLocalizer))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestLocalizer))
   return suite

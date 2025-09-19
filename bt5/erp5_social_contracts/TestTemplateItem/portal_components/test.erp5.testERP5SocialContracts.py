@@ -106,6 +106,6 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5SocialContracts))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5SocialContracts))
   return suite
 

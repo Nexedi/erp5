@@ -121,5 +121,5 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPayroll_l10n_fr))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPayroll_l10n_fr))
   return suite

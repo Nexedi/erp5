@@ -521,6 +521,6 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDCWorkflow))
-  suite.addTest(unittest.makeSuite(TestConvertedWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDCWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestConvertedWorkflow))
   return suite

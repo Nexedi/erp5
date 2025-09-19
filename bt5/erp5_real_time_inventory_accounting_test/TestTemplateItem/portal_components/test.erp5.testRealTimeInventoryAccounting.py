@@ -1129,5 +1129,5 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRealTimeInventoryAccounting))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRealTimeInventoryAccounting))
   return suite

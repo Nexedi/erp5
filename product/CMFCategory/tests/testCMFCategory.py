@@ -1485,6 +1485,6 @@ class TestCMFCategory(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCMFCategory))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCMFCategory))
   return suite
 
