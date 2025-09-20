@@ -162,7 +162,7 @@ CREATE TABLE %s (
             b" AND method_id = %s AND group_method_id = %s FOR UPDATE%s" % (
               quote(path), quote(line.signature),
               quote(method_id), quote(line.group_method_id),
-              b' SKIP LOCKED' if db.version > (10, 6) else ''
+              b' SKIP LOCKED' if db.db._server_version >= (10, 6) else ''
             ), 0)[1]
           uid_list = [x for x, in result]
           if uid_list:
