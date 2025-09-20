@@ -352,6 +352,8 @@ class DB(TM):
       if self._kw_args.get('ssl') and \
           not self._query(b"SHOW STATUS LIKE 'Ssl_version'").fetch_row()[0][1]:
           raise NotSupportedError("Connection established without SSL")
+      version = self._query(b"SHOW VARIABLES LIKE 'version'").fetch_row()[0][1]
+      self.version = tuple(int(e) for e in version.split('-', 1)[0].split('.'))
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
