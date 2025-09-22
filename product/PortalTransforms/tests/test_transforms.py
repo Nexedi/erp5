@@ -256,8 +256,8 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
 
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import TestSuite, defaultTestLoader
     suite = TestSuite()
     for test in make_tests():
-        suite.addTest(makeSuite(test))
+        suite.addTest(defaultTestLoader.loadTestsFromTestCase(test))
     return suite

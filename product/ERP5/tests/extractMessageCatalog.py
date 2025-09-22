@@ -70,5 +70,5 @@ class ExtractMessageCatalog(TestXHTML):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(ExtractMessageCatalog))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(ExtractMessageCatalog))
   return suite

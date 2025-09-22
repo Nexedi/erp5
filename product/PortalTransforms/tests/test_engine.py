@@ -279,7 +279,7 @@ class TestEngine(ATSiteTestCase):
 
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import TestSuite, defaultTestLoader
     suite = TestSuite()
-    suite.addTest(makeSuite(TestEngine))
+    suite.addTest(defaultTestLoader.loadTestsFromTestCase(TestEngine))
     return suite
