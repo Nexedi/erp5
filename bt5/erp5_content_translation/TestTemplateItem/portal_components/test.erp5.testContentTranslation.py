@@ -268,5 +268,5 @@ class TestContentTranslation(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestContentTranslation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestContentTranslation))
   return suite

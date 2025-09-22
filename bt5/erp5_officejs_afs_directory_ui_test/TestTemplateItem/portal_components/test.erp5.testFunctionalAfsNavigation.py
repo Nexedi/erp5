@@ -46,5 +46,5 @@ class TestFunctionalAfsNavigation(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalAfsNavigation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalAfsNavigation))
   return suite

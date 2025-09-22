@@ -142,5 +142,5 @@ class TestSecurity(TestSecurityMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSecurity))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSecurity))
   return suite

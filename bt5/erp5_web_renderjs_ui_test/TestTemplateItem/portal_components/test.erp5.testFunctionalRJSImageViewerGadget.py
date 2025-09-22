@@ -43,5 +43,5 @@ class TestRenderJSUIImageViewerGadget(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIImageViewerGadget))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIImageViewerGadget))
   return suite

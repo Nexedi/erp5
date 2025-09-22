@@ -2560,7 +2560,7 @@ class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPackingList))
-  suite.addTest(unittest.makeSuite(TestSolvingPackingList))
-  suite.addTest(unittest.makeSuite(TestPurchasePackingList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPackingList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSolvingPackingList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPurchasePackingList))
   return suite

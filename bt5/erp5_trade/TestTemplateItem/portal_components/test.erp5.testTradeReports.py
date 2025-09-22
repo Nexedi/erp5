@@ -2105,6 +2105,6 @@ class TestTradeReports(ERP5ReportTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTradeReports))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTradeReports))
   return suite
 

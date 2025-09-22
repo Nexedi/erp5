@@ -701,6 +701,6 @@ class TestPredicates(TestPredicateMixIn):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPredicates))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPredicates))
   return suite
 

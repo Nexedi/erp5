@@ -43,5 +43,5 @@ class TestFunctionalRJSTranslation(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalRJSTranslation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalRJSTranslation))
   return suite

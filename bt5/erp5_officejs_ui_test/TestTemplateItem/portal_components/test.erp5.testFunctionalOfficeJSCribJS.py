@@ -43,5 +43,5 @@ class TestOfficejSUICribjs(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUICribjs))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUICribjs))
   return suite

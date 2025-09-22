@@ -113,6 +113,6 @@ class TestOoodResponse(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOoodResponse))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOoodResponse))
   return suite
 

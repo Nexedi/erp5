@@ -36,5 +36,5 @@ class TestFunctionalPDM(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalPDM))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalPDM))
   return suite

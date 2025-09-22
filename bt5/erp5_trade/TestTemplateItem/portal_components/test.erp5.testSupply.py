@@ -628,7 +628,7 @@ class TestInternalSupply(TestSaleSupply):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSaleSupply))
-  suite.addTest(unittest.makeSuite(TestPurchaseSupply))
-  suite.addTest(unittest.makeSuite(TestInternalSupply))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSaleSupply))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPurchaseSupply))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInternalSupply))
   return suite

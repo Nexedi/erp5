@@ -368,5 +368,5 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFieldLibraryGuideline))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFieldLibraryGuideline))
   return suite

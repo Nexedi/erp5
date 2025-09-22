@@ -511,5 +511,5 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDivergenceTester))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDivergenceTester))
   return suite
