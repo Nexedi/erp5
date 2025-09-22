@@ -110,7 +110,7 @@ class SQLDict(SQLBase):
                   processing_node,
                   b','.join(map(quote, path_list)),
                   sql_method_id,
-                  b' SKIP LOCKED' if db.db._server_version >= (10, 6) else '',
+                  b' SKIP LOCKED' if db.has_skip_locked else b'',
                 ), 0))
               if result: # found a parent
                 # mark child as duplicate
@@ -127,7 +127,7 @@ class SQLDict(SQLBase):
               b"%s FOR UPDATE%s" % (
                 quote(path), quote(path.replace('_', r'\_') + '/%'),
                 sql_method_id,
-                b' SKIP LOCKED' if db.db._server_version >= (10, 6) else '',
+                b' SKIP LOCKED' if db.has_skip_locked else b'',
               ), 0)[1]
             reserve_uid_list = [x for x, in result]
             uid_list += reserve_uid_list
@@ -139,7 +139,7 @@ class SQLDict(SQLBase):
             result = db.query(b"SELECT uid FROM message"
               b" WHERE processing_node = 0 AND path = %s%s FOR UPDATE%s" % (
                 quote(path), sql_method_id,
-                b' SKIP LOCKED' if db.db._server_version >= (10, 6) else '',
+                b' SKIP LOCKED' if db.has_skip_locked else b'',
               ), 0)[1]
             reserve_uid_list = uid_list = [x for x, in result]
           if reserve_uid_list:
