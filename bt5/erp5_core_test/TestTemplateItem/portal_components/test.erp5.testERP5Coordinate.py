@@ -385,5 +385,5 @@ class TestERP5Coordinate(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Coordinate))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Coordinate))
   return suite

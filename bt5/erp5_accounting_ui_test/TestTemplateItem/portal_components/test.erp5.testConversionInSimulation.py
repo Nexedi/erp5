@@ -964,5 +964,5 @@ class TestConversionInSimulation(AccountingTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestConversionInSimulation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestConversionInSimulation))
   return suite

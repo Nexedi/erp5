@@ -43,6 +43,6 @@ class testFunctionalCorporateIdentityInRenderJSUI(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(testFunctionalCorporateIdentityInRenderJSUI))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testFunctionalCorporateIdentityInRenderJSUI))
   return suite
 

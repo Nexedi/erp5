@@ -511,5 +511,5 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFolderMigration))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFolderMigration))
   return suite

@@ -140,5 +140,5 @@ def test_suite():
   # required to create content in portal_components
   addUserToDeveloperRole('ERP5TypeTestCase')
 
-  suite.addTest(unittest.makeSuite(testclass))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testclass))
   return suite

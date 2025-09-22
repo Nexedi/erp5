@@ -73,5 +73,5 @@ class TestSoapBinding(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSoapBinding))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSoapBinding))
   return suite

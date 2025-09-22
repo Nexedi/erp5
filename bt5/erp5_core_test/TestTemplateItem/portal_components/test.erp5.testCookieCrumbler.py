@@ -110,7 +110,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
 
 
 def test_suite():
-  return unittest.makeSuite(ERP5CookieCrumblerTests)
+  return unittest.defaultTestLoader.loadTestsFromTestCase(ERP5CookieCrumblerTests)
 
 if __name__ == '__main__':
   unittest.main(defaultTest='test_suite')

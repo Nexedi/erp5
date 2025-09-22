@@ -2600,6 +2600,6 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestConsultingConfiguratorWorkflow))
-  suite.addTest(unittest.makeSuite(TestStandardConfiguratorWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestConsultingConfiguratorWorkflow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestStandardConfiguratorWorkflow))
   return suite

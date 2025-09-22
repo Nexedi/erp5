@@ -322,7 +322,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDocumentConversionCache))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDocumentConversionCache))
   return suite
 
 

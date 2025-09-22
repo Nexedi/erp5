@@ -46,5 +46,5 @@ class TestRenderJSUIItemTracking(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIItemTracking))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIItemTracking))
   return suite

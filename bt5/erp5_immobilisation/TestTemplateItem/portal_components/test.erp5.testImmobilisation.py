@@ -3793,6 +3793,6 @@ class TestImmobilisation(TestImmobilisationMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestImmobilisation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestImmobilisation))
   return suite
 

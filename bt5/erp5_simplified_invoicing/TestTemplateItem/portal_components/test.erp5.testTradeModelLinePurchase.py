@@ -44,5 +44,5 @@ class TestTradeModelLinePurchase(TestTradeModelLine):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTradeModelLinePurchase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTradeModelLinePurchase))
   return suite

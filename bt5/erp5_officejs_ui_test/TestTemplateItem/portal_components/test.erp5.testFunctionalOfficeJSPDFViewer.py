@@ -43,5 +43,5 @@ class TestOfficejSUIPDFViewer(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUIPDFViewer))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUIPDFViewer))
   return suite

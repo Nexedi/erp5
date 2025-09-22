@@ -176,5 +176,5 @@ class TestAccessTab(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAccessTab))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAccessTab))
   return suite

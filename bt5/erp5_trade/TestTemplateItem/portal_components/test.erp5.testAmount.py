@@ -694,7 +694,7 @@ class TestAccountingTransactionLine(TestMovement):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAmount))
-  suite.addTest(unittest.makeSuite(TestMovement))
-  suite.addTest(unittest.makeSuite(TestAccountingTransactionLine))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAmount))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestMovement))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAccountingTransactionLine))
   return suite

@@ -63,5 +63,5 @@ class TestERP5Site(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Site))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Site))
   return suite

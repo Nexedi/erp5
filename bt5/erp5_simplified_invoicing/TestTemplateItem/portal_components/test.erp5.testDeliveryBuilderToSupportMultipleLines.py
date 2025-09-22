@@ -414,5 +414,5 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestNestedLine))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestNestedLine))
   return suite

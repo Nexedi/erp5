@@ -125,5 +125,5 @@ class TestSimulationPerformance(TestTradeModelLineSale):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSimulationPerformance))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSimulationPerformance))
   return suite

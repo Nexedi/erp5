@@ -525,14 +525,14 @@ class TestPropertyGroupingMovementGroup(MovementGroupTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPropertyMovementGroup))
-  suite.addTest(unittest.makeSuite(TestPropertyAssignmentMovementGroup))
-  suite.addTest(unittest.makeSuite(TestOrderMovementGroup))
-  suite.addTest(unittest.makeSuite(TestOrderMovementGroupDelivery))
-  suite.addTest(unittest.makeSuite(TestDeliveryCausalityAssignmentMovementGroup))
-  suite.addTest(unittest.makeSuite(TestDuplicatedKeyRaiseException))
-  suite.addTest(unittest.makeSuite(TestCategoryMovementGroup))
-  suite.addTest(unittest.makeSuite(TestMovementGroupCommonAPI))
-  suite.addTest(unittest.makeSuite(TestPropertyGroupingMovementGroup))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPropertyMovementGroup))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPropertyAssignmentMovementGroup))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOrderMovementGroup))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOrderMovementGroupDelivery))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDeliveryCausalityAssignmentMovementGroup))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDuplicatedKeyRaiseException))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCategoryMovementGroup))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestMovementGroupCommonAPI))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPropertyGroupingMovementGroup))
   return suite
 

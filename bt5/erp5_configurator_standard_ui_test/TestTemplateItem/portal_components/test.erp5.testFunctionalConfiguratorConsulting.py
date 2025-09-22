@@ -47,5 +47,5 @@ class TestZeleniumConfiguratorConsulting(TestZeleniumConfiguratorStandard, ERP5T
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestZeleniumConfiguratorConsulting))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZeleniumConfiguratorConsulting))
   return suite

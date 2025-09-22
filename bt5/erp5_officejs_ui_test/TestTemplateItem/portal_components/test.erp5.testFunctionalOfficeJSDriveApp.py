@@ -43,5 +43,5 @@ class TestOfficejSUIDriveApp(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUIDriveApp))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUIDriveApp))
   return suite

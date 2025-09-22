@@ -963,6 +963,6 @@ class TestOOoImportWeb(TestOOoImportMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOOoImport))
-  suite.addTest(unittest.makeSuite(TestOOoImportWeb))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOOoImport))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOOoImportWeb))
   return suite

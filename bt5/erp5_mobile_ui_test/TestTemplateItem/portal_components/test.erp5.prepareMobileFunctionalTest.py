@@ -39,5 +39,5 @@ class MobileTestZelenium(TestZelenium):
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(MobileTestZelenium))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(MobileTestZelenium))
     return suite

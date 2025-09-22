@@ -80,7 +80,7 @@ class ImageMagickTransformsTest(ERP5TypeTestCase, ZopeTestCase.Functional):
 # FIXME missing tests for image_to_html, st
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import TestSuite, defaultTestLoader
     suite = TestSuite()
-    suite.addTest(makeSuite(ImageMagickTransformsTest))
+    suite.addTest(defaultTestLoader.loadTestsFromTestCase(ImageMagickTransformsTest))
     return suite

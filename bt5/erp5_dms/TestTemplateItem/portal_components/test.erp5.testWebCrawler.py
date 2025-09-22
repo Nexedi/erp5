@@ -290,5 +290,5 @@ class TestWebCrawler(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestWebCrawler))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestWebCrawler))
   return suite

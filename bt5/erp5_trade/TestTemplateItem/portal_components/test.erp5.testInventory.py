@@ -4183,5 +4183,5 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInventory))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInventory))
   return suite

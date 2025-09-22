@@ -1234,7 +1234,7 @@ class TestItemScripts(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestItem))
-  suite.addTest(unittest.makeSuite(TestItemScripts))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestItem))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestItemScripts))
   return suite
 

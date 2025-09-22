@@ -12,7 +12,7 @@ from AccessControl.users import system as SystemUser,SimpleUser
 from OFS.Folder import Folder
 from .test_MailTemplate import DummyMailHost,Zope,get_transaction
 from Testing.makerequest import makerequest
-from unittest import TestCase,TestSuite,makeSuite,main
+from unittest import TestCase,TestSuite,defaultTestLoader,main
 
 try:
     import Products.CMFCore
@@ -160,7 +160,7 @@ else:
 
 def test_suite():
     return TestSuite((
-        makeSuite(TestFSMailTemplate),
+        defaultTestLoader.loadTestsFromTestCase(TestFSMailTemplate),
         ))
 
 if __name__ == '__main__':

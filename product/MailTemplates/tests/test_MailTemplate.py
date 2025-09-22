@@ -18,7 +18,7 @@ from six.moves import cStringIO as StringIO
 from difflib import unified_diff
 from Products.MailHost.MailHost import MailHost
 from Testing.makerequest import makerequest
-from unittest import TestCase,TestSuite,makeSuite,main
+from unittest import TestCase,TestSuite,defaultTestLoader,main
 
 try:
     # Zope 2.8 only
@@ -868,7 +868,7 @@ class TestMailTemplate(TestCase):
 
 def test_suite():
     return TestSuite((
-        makeSuite(TestMailTemplate),
+        defaultTestLoader.loadTestsFromTestCase(TestMailTemplate),
         ))
 
 if __name__ == '__main__':

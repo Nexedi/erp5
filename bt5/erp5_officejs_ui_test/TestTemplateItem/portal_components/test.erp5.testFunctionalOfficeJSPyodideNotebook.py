@@ -43,5 +43,5 @@ class TestOfficejSUIPyodideNotebook(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUIPyodideNotebook))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUIPyodideNotebook))
   return suite

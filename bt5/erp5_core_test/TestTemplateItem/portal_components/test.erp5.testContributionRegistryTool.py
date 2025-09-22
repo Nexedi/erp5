@@ -160,5 +160,5 @@ Subject: Fax
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestContributionRegistryTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestContributionRegistryTool))
   return suite

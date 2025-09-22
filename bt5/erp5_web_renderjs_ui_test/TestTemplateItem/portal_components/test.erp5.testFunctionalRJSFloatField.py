@@ -44,5 +44,5 @@ class TestRenderJSUIFloatField(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIFloatField))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIFloatField))
   return suite

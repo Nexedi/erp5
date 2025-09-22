@@ -141,9 +141,9 @@ class TestXSSFilter(ATSiteTestCase):
        self.doTest(data_in, data_out)
 
 def test_suite():
-   from unittest import TestSuite, makeSuite
+   from unittest import TestSuite, defaultTestLoader
    suite = TestSuite()
-   suite.addTest(makeSuite(TestXSSFilter))
+   suite.addTest(defaultTestLoader.loadTestsFromTestCase(TestXSSFilter))
    return suite
 
 if __name__ == '__main__':

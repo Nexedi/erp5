@@ -107,5 +107,5 @@ class TestXForwardedFor(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestXForwardedFor))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestXForwardedFor))
   return suite

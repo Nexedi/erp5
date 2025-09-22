@@ -53,6 +53,6 @@ class TestInternalOrder(TestPurchaseOrder):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInternalOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInternalOrder))
   return suite
 

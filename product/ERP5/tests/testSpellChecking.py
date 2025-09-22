@@ -168,5 +168,5 @@ class TestSpellChecking(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSpellChecking))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSpellChecking))
   return suite
