@@ -159,9 +159,10 @@ CREATE TABLE %s (
           # Select duplicates.
           result = db.query(b"SELECT uid FROM message_job"
             b" WHERE processing_node = 0 AND path = %s AND signature = %s"
-            b" AND method_id = %s AND group_method_id = %s FOR UPDATE" % (
+            b" AND method_id = %s AND group_method_id = %s FOR UPDATE%s" % (
               quote(path), quote(line.signature),
               quote(method_id), quote(line.group_method_id),
+              b' SKIP LOCKED' if db.has_skip_locked else b''
             ), 0)[1]
           uid_list = [x for x, in result]
           if uid_list:
