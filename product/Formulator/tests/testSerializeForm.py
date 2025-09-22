@@ -481,7 +481,7 @@ class SerializeTestCase(unittest.TestCase):
 def test_suite():
     suite = unittest.TestSuite()
 
-    suite.addTest(unittest.makeSuite(SerializeTestCase, 'test'))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(SerializeTestCase))
     return suite
 
 def main():

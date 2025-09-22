@@ -297,5 +297,5 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestWebDavSupport))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestWebDavSupport))
   return suite

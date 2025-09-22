@@ -1564,5 +1564,5 @@ class TestERP5Credential(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Credential))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Credential))
   return suite

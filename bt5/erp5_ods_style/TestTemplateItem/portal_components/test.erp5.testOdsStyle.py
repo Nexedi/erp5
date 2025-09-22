@@ -45,5 +45,5 @@ class TestOdsStyle(TestOOoChartMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOdsStyle))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOdsStyle))
   return suite

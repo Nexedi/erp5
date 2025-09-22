@@ -518,6 +518,6 @@ class TestDomainTool(TestPredicateMixIn):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDomainTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDomainTool))
   return suite
 

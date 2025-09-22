@@ -3376,14 +3376,14 @@ def add_tests(suite, module):
     return suite.addTest(module.test_suite())
   for obj in vars(module).values():
     if isinstance(obj, type) and issubclass(obj, unittest.TestCase):
-      suite.addTest(unittest.makeSuite(obj))
+      suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(obj))
 
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Type))
-  suite.addTest(unittest.makeSuite(TestAccessControl))
-  suite.addTest(unittest.makeSuite(TestLongRequestLogger))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Type))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAccessControl))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestLongRequestLogger))
 
   # run tests for monkey patched ZPublisher modules
   import ZPublisher.tests.testBaseRequest

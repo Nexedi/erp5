@@ -40,5 +40,5 @@ class TestGraphEditor(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestGraphEditor))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestGraphEditor))
   return suite

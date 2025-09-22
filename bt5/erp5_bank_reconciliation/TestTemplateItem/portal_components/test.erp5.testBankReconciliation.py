@@ -726,5 +726,5 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestBankReconciliation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBankReconciliation))
   return suite

@@ -43,5 +43,5 @@ class testFunctionalOfficeJSTravelExpense(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(testFunctionalOfficeJSTravelExpense))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testFunctionalOfficeJSTravelExpense))
   return suite

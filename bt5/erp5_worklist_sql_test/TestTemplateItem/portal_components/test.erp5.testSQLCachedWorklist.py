@@ -49,5 +49,5 @@ class TestSQLCachedWorklist(TestWorklist):
 # creation of suite also add the suite of TestWorklist, and we do not want this
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSQLCachedWorklist))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCachedWorklist))
   return suite

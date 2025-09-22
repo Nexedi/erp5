@@ -338,7 +338,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
 
 def test_suite():
     return unittest.TestSuite((
-        unittest.makeSuite(HBTreeFolder2Tests),
+        unittest.defaultTestLoader.loadTestsFromTestCase(HBTreeFolder2Tests),
         ))
 
 if __name__ == '__main__':

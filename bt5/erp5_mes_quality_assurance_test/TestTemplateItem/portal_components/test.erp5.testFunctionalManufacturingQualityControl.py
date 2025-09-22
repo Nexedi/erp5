@@ -83,7 +83,7 @@ class TestFunctionalManufacturingQualityControl(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalManufacturingQualityControl))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalManufacturingQualityControl))
   return suite
 
 

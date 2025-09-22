@@ -467,6 +467,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     return name_list
 
 unittest.loader.TestLoader = ERP5TypeTestLoader
+unittest.loader.defaultTestLoader = ERP5TypeTestLoader()
 
 class DebugTestResult:
   """Wrap an unittest.TestResult, invoking pdb on errors / failures

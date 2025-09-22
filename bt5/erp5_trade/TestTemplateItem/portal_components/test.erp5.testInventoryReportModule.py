@@ -856,5 +856,5 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
 
 def _test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInventoryReportModule))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInventoryReportModule))
   return suite

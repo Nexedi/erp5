@@ -42,6 +42,6 @@ class TestFunctionalCorporateIdentityTemplateList(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalCorporateIdentityTemplateList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalCorporateIdentityTemplateList))
   return suite
 

@@ -1261,5 +1261,5 @@ return []
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFormPrintoutAsODT))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFormPrintoutAsODT))
   return suite

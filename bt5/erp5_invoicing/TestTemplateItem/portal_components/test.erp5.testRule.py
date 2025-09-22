@@ -735,5 +735,5 @@ return context.generatePredicate(
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRule))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRule))
   return suite

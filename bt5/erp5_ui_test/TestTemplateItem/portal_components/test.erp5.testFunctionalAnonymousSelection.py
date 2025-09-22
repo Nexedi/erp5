@@ -48,5 +48,5 @@ class TestAnonymousSelection(TestZeleniumCore):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAnonymousSelection))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAnonymousSelection))
   return suite

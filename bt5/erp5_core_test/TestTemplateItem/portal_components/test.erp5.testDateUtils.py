@@ -365,10 +365,10 @@ class TestDateTimePatch(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDateUtils))
-  suite.addTest(unittest.makeSuite(TestPinDateTime))
-  suite.addTest(unittest.makeSuite(TestTimeZoneContext))
-  suite.addTest(unittest.makeSuite(TestDateTimePatch))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDateUtils))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPinDateTime))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTimeZoneContext))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDateTimePatch))
 
   # also run original tests from DateTime module BBB ZOPE2
   # pylint:disable=no-name-in-module
@@ -390,6 +390,6 @@ def test_suite():
     test_intl_format_hyphen = unittest.expectedFailure(
       test_datetime.DateTimeTests.test_intl_format_hyphen)
 
-  suite.addTest(unittest.makeSuite(DateTimeTests))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(DateTimeTests))
 
   return suite

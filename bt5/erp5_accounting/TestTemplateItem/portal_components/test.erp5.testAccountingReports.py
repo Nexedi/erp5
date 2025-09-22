@@ -6302,7 +6302,7 @@ DT, b, P2 - Project 2''',
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAccountingReports))
-  suite.addTest(unittest.makeSuite(TestAccountingReportsWithAnalytic))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAccountingReports))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAccountingReportsWithAnalytic))
   return suite
 

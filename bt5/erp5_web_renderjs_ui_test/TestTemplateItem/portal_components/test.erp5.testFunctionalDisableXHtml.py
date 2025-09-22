@@ -43,5 +43,5 @@ class TestRenderJSUIServiceWorker(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIServiceWorker))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIServiceWorker))
   return suite

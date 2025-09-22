@@ -133,5 +133,5 @@ class TestOOoParser(unittest.TestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOOoParser))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOOoParser))
   return suite

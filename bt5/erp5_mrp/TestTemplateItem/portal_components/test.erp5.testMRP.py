@@ -479,5 +479,5 @@ class TestMRPImplementation(TestMRPMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestMRPImplementation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestMRPImplementation))
   return suite

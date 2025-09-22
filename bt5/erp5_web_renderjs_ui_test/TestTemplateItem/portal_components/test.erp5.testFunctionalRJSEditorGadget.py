@@ -44,5 +44,5 @@ class TestRenderJSUIEditorGadget(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIEditorGadget))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIEditorGadget))
   return suite

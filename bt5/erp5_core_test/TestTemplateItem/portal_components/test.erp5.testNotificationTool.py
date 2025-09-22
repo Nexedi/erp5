@@ -520,5 +520,5 @@ Yes, I will go."""
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestNotificationTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestNotificationTool))
   return suite

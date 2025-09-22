@@ -204,5 +204,5 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5SyncMLVCard))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5SyncMLVCard))
   return suite
