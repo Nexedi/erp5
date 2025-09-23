@@ -234,6 +234,7 @@ class DB(TM):
         """
         self._connection = connection
         self._parse_connection_string()
+        self._use_TM = None
         self._forceReconnection()
         transactional = self.db.server_capabilities & CLIENT.TRANSACTIONS
         if self._try_transactions == '-':
