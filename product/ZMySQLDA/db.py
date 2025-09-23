@@ -234,6 +234,7 @@ class DB(TM):
         """
         self._connection = connection
         self._parse_connection_string()
+        self._use_TM = None
         self._forceReconnection()
         transactional = self.db.server_capabilities & CLIENT.TRANSACTIONS
         if self._try_transactions == '-':
@@ -352,6 +353,12 @@ class DB(TM):
       if self._kw_args.get('ssl') and \
           not self._query(b"SHOW STATUS LIKE 'Ssl_version'").fetch_row()[0][1]:
           raise NotSupportedError("Connection established without SSL")
+      try:
+          self._query('SELECT 1 FOR UPDATE SKIP LOCKED')
+      except ProgrammingError:
+          self.has_skip_locked = False
+      else:
+          self.has_skip_locked = True
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
