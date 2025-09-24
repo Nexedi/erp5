@@ -44,6 +44,7 @@ from ZODB.POSException import ConflictError
 from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Utils import ensure_list
+from MySQLdb import OperationalError
 
 from inspect import CO_VARKEYWORDS
 from functools import wraps
@@ -1299,6 +1300,15 @@ class Catalog(Folder,
           'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
     if not self.getPortalObject().isIndexable():
       return
+
+    # force using READ COMMITTED isolation.
+    connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
+    db = getattr(self.getPortalObject(), connection_id)()
+    try:
+      db.db.query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
+    except OperationalError:
+      # transaction is already in progress, in case of explicit immediateReindexObject, for example.
+      pass
 
     object_path_dict = {}
     uid_list = []
