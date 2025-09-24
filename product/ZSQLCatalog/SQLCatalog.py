@@ -1305,7 +1305,7 @@ class Catalog(Folder,
     connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
     try:
-      db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED', allow_reconnect=True)
+      db.db.query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED', allow_reconnect=True)
     except OperationalError:
       # transaction is already in progress, in case of explicit immediateReindexObject, for example.
       pass
