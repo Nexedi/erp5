@@ -43,5 +43,5 @@ class TestFunctionalRJSLogoutTranslation(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalRJSLogoutTranslation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalRJSLogoutTranslation))
   return suite

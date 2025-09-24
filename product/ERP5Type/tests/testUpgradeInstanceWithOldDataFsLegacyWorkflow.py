@@ -155,5 +155,5 @@ class TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow(ERP5TypeTestCase):
 def test_suite():
   suite = unittest.TestSuite()
   if WITH_LEGACY_WORKFLOW:
-    suite.addTest(unittest.makeSuite(TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow))
   return suite

@@ -94,5 +94,5 @@ class TestCRMNotificationTool(TestNotificationTool):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCRMNotificationTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCRMNotificationTool))
   return suite

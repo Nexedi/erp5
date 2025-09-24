@@ -2105,7 +2105,7 @@ class TestCRMMailSend(BaseTestCRM):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCRM))
-  suite.addTest(unittest.makeSuite(TestCRMMailIngestion))
-  suite.addTest(unittest.makeSuite(TestCRMMailSend))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCRM))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCRMMailIngestion))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCRMMailSend))
   return suite

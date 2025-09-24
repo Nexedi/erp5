@@ -723,7 +723,7 @@ class ZuiteTests( unittest.TestCase ):
 
 def test_suite():
     return unittest.TestSuite((
-        unittest.makeSuite( ZuiteTests ),
+        unittest.defaultTestLoader.loadTestsFromTestCase( ZuiteTests ),
         ))
 
 if __name__ == '__main__':

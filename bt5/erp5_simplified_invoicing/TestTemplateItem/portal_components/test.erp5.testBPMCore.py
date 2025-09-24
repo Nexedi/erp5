@@ -853,5 +853,5 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestBPMImplementation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBPMImplementation))
   return suite

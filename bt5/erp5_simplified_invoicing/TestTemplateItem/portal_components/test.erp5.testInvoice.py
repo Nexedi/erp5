@@ -2767,6 +2767,6 @@ class OpenDocumentTextFile :
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSaleInvoice))
-  suite.addTest(unittest.makeSuite(TestPurchaseInvoice))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSaleInvoice))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPurchaseInvoice))
   return suite

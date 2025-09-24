@@ -63,5 +63,5 @@ class TestIngestionWithFlare(TestIngestion):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestIngestionWithFlare))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestIngestionWithFlare))
   return suite

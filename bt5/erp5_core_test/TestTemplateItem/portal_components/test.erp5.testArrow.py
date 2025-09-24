@@ -78,5 +78,5 @@ class TestArrow(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestArrow))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestArrow))
   return suite

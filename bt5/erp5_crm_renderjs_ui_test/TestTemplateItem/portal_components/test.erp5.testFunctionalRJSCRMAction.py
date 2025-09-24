@@ -46,5 +46,5 @@ class TestRenderJSUICRMAction(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUICRMAction))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUICRMAction))
   return suite

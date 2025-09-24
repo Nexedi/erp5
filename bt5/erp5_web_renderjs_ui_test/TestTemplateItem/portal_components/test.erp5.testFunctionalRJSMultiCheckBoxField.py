@@ -44,5 +44,5 @@ class TestRenderJSUIMultiCheckBoxField(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIMultiCheckBoxField))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIMultiCheckBoxField))
   return suite

@@ -131,5 +131,5 @@ class TestStoredSequence(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestStoredSequence))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestStoredSequence))
   return suite

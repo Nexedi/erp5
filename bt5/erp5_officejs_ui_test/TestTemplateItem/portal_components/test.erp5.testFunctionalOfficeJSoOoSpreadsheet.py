@@ -43,5 +43,5 @@ class TestOfficejSUIoOoSpreadsheet(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUIoOoSpreadsheet))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUIoOoSpreadsheet))
   return suite

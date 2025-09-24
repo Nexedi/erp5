@@ -51,7 +51,7 @@ class TestDocumentWithFlare(TestDocument):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDocumentWithFlare))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDocumentWithFlare))
   return suite
 
 

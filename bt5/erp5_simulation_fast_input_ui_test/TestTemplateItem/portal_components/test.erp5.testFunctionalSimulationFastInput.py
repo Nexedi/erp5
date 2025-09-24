@@ -36,5 +36,5 @@ class TestFunctionalSimulationFastInput(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFunctionalSimulationFastInput))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFunctionalSimulationFastInput))
   return suite

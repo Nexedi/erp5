@@ -201,5 +201,5 @@ class TestRSS(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRSS))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRSS))
   return suite
