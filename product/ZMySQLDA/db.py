@@ -352,13 +352,15 @@ class DB(TM):
       if self._kw_args.get('ssl') and \
           not self._query(b"SHOW STATUS LIKE 'Ssl_version'").fetch_row()[0][1]:
           raise NotSupportedError("Connection established without SSL")
-      with MySQLdb.connect(**self._kw_args) as tmp_db:
-          try:
-              tmp_db.query('SELECT 1 FOR UPDATE SKIP LOCKED')
-          except ProgrammingError:
-              self.has_skip_locked = False
-          else:
-              self.has_skip_locked = True
+      tmp_db = MySQLdb.connect(**self._kw_args)
+      try:
+        tmp_db.query('SELECT 1 FOR UPDATE SKIP LOCKED')
+      except ProgrammingError:
+        self.has_skip_locked = False
+      else:
+        self.has_skip_locked = True
+      finally:
+        tmp_db.close()
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
