@@ -70,4 +70,5 @@ class ActivityDB(DB):
 
     @property
     def isolation_level(self):
-        return 'READ COMMITTED'
+        if not self.innodb_locks_unsafe_for_binlog:
+            return 'READ COMMITTED'
