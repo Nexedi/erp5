@@ -199,7 +199,9 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       Communicates with server to convert a file
     """
     with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
-      generate_result = server_proxy.run_generate(self.getId(),
+      # XXX: not very nice, as we once more refer to base data...
+      proxy_function = server_proxy.run_convert if format == None else server_proxy.run_generate
+      generate_result = proxy_function(self.getId(),
                                        bytes2str(enc(bytes(self.getData()))),
                                        None,
                                        format,
@@ -214,34 +216,37 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(str2bytes(response_dict['data'])))
 
-  # Conversion API
-  def _convert(self, format, frame=0, **kw): #  pylint: disable=redefined-builtin
-    """Convert the document to the given format.
-
-    If a conversion is already stored for this format, it is returned
-    directly, otherwise the conversion is stored for the next time.
-
-    frame: Only used for image conversion
-
-    XXX Cascading conversions must be delegated to conversion server,
-    not by OOoDocument._convert (ie: convert to pdf, then convert to image, then resize)
-    *OR* as an optimisation we can read cached intermediate conversions
-    instead of compute them each times.
-      1- odt->pdf->png
-      2- odt->cached(pdf)->jpg
+  def _convert(self, format, frame=0, **kw): # pylint: disable=redefined-builtin
     """
-    #XXX if document is empty, stop to try to convert.
-    #XXX but I don't know what is a appropriate mime-type.(Yusei)
+    Convert document to the given format.
+
+    Constraints for this functions are: there are two cases where we need
+    cascading conversion (ie. conversion to an intermediate format), and the
+    conversion cache should be used as efficiently as possible. At the end, the
+    process is rather convoluted to get the final result.
+    """
+    # XXX-Yusei: if document is empty, stop to try to convert,
+    # but I don't know what is an appropriate mime-type.
     if not self.hasData():
       return 'text/plain', ''
-    # if no conversion asked (format empty)
-    # return raw data
+    # If no conversion asked (format empty), return raw data
     if not format:
       return self.getContentType(), self.getData()
-    # Make sure we can support html and pdf by default
-    is_html = 0
-    requires_pdf_first = 0
+
+    # Use cache early: if document was converted before, return it
+    # XXX-Titouan: that means we might end up with same conversion twice
+    # in the cache, if two format give the same result.
+    if self.hasConversion(format=format, **kw):
+      return self.getConversion(format=format, **kw)
+
+    # We deal with three different format variables: `original_format`, as
+    # requested by the caller, which is always the key used for cache ;
+    # `format`, given to Cloudooo for conversion (usually derived from
+    # `original_format`) and `intermediate_format` when we need a conversion
+    # chain (OOoDocument -> PDF -> Image).
     original_format = format
+    to_image = False
+    to_unzipped = False
     allowed_format_list = self.getTargetFormatList()
     if format == 'pdf':
       format_list = [x for x in allowed_format_list
@@ -253,41 +258,61 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       if len(format_list):
         format = format_list[0]
       else:
-        # We must fist make a PDF which will be used to produce an image out of it
-        requires_pdf_first = 1
+        # We must first make a PDF which will be used to produce an image out of it
         format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
         format = format_list[0]
+        to_image = True
     elif format == 'html':
       format_list = [x for x in allowed_format_list
                               if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
-      is_html = 1
+      to_unzipped = True
     elif format in ('txt', 'text', 'text-content'):
-      # if possible, we try to get utf8 text. ('enc.txt' will encode to utf8)
+      # One exception to the always-store-conversion-as-original rule
+      original_format = 'txt'
+      # If possible, we try to get utf8 text
       if 'enc.txt' in allowed_format_list:
         format = 'enc.txt'
       elif format not in allowed_format_list:
-        #Text conversion is not supported by oood, do it in other way
-        if not self.hasConversion(format=original_format):
-          #Do real conversion for text
-          mime, data = self._getConversionFromProxyServer(format='text-content')
-          self.setConversion(data, mime, format=original_format)
-          return mime, data
-        return self.getConversion(format=original_format)
-    # Raise an error if the format is not supported
-    if not self.isTargetFormatAllowed(format):
+        # `format = None` is different from `intermediate_format = None`.
+        # The latter indicates no intermediate conversion, while the former
+        # is conversion to what was base format before (ODS, ODT, etc).
+        format = None
+        to_unzipped = True
+
+    if format is not None and \
+        not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
-    has_format = self.hasConversion(format=original_format, **kw)
-    if not has_format:
-      # Do real conversion
-      mime, data = self._getConversionFromProxyServer(format)
-      if is_html:
-        # Extra processing required since
-        # we receive a zip file
-        cs = BytesIO()
-        cs.write(bytes(data)) # Cast explicitly to bytes for possible Pdata
-        z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
+
+    mime, data = self._getConversionFromProxyServer(format)
+
+    # Conversion chain for OOo -> PDF -> Image
+    if to_image:
+      # Create temporary image and use it to resize accordingly
+      temp_image = self.portal_contributions.newContent(
+        portal_type='Image',
+        file=BytesIO(),
+        filename=self.getId(),
+        temp_object=1,
+      )
+      temp_image._setData(data)
+      # We care for first page only but as well for image quality
+      mime, data = temp_image.convert(original_format, frame=frame, **kw)
+
+    if to_unzipped:
+      cs = BytesIO()
+      cs.write(bytes(data)) # Cast explicitly to bytes for possible Pdata
+      z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
+      # Conversion chain for OOo -> ODF -> Text: extract
+      # text from the ODF file.
+      if format is None:
+        data = bytes2str(z.read('content.xml'))
+        data = self.rx_strip.sub(" ", data) # strip xml
+        data = self.rx_compr.sub(" ", data) # compress multiple spaces
+        mime = 'text/plain'
+      # Special case for OOo -> HTML
+      else:
         for f in z.infolist():
           fn = f.filename
           if fn.endswith('html'):
@@ -297,27 +322,17 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
             data = z.read(fn)
             break
         mime = 'text/html'
-        self._populateConversionCacheWithHTML(zip_file=z) # Maybe some parts should be asynchronous for
-                                         # better usability
-        z.close()
-        cs.close()
-      if original_format not in VALID_IMAGE_FORMAT_LIST \
-        and not requires_pdf_first:
-        self.setConversion(data, mime, format=original_format, **kw)
-      else:
-        # create temporary image and use it to resize accordingly
-        temp_image = self.portal_contributions.newContent(
-                                       portal_type='Image',
-                                       file=BytesIO(),
-                                       filename=self.getId(),
-                                       temp_object=1)
-        temp_image._setData(data)
-        # we care for first page only but as well for image quality
-        mime, data = temp_image.convert(original_format, frame=frame, **kw)
-        # store conversion
-        self.setConversion(data, mime, format=original_format, **kw)
+        # XXX: Maybe some parts should be asynchronous for better usability
+        self._populateConversionCacheWithHTML(zip_file=z)
+      z.close()
+      cs.close()
 
+    self.setConversion(data, mime, format=original_format, **kw)
+    # We have to recourse to `getConversion` every time, even if we already own
+    # an handle to converted data because CacheConvertableMixin does type
+    # conversion (ie. Pdata to bytes), and it should not be predicted manually.
     mime, data = self.getConversion(format=original_format, **kw)
+
     if format in VALID_TEXT_FORMAT_LIST:
       # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
       # here mostly as a convenient way to decode with the encoding from BOM
