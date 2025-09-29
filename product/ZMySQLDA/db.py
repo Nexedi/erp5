@@ -347,7 +347,7 @@ class DB(TM):
       self._query(b"SET time_zone='+00:00'")
       try:
         self.innodb_locks_unsafe_for_binlog = bool(
-          self._query(b"SHOW VARIABLES LIKE'innodb_locks_unsafe_for_binlog'").fetch_row()[0][1] == 'ON')
+          self._query(b"SHOW VARIABLES LIKE 'innodb_locks_unsafe_for_binlog'").fetch_row()[0][1] == 'ON')
       except IndexError:
         self.innodb_locks_unsafe_for_binlog = False
       if self.isolation_level:
