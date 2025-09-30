@@ -250,7 +250,7 @@ class DB(TM):
     @isolation_level.setter
     def isolation_level(self, v):
         if v not in ('REPEATABLE READ', 'READ COMMITTED', 'READ UNCOMMITTED',
-                     'SERIALIZABLE'):
+                     'SERIALIZABLE', None):
             raise ValueError('Isolation level %s is not supported.' % v)
         self._isolation_level = v
 
