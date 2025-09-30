@@ -124,6 +124,8 @@ class TemporaryAlarmScript(object):
       content = """portal_workflow = context.portal_workflow
 portal_workflow.doActionFor(context, action='edit_action', comment='Visited by %s')
 return %s""" % (self.script_name, self.fake_return)
+    elif self.attribute is False:
+      content = """return %s""" % self.fake_return
     else:
       content = """portal_workflow = context.portal_workflow
 context.edit(%s='Visited by %s')
