@@ -32,6 +32,7 @@ from AccessControl import Unauthorized
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
 from erp5.component.test.ShaSecurityMixin import ShaSecurityMixin
+from Products.ERP5Type.tests.utils import TemporaryAlarmScript
 
 
 class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
@@ -121,8 +122,11 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
          self.logout()
          self.assertTrue(self.portal.portal_membership.isAnonymousUser())
 
-         document.view()
-         document()
+         with TemporaryAlarmScript(self.portal, 'Base_checkUserCanViewERP5XHTMLStyleOrRaise',
+                                   "''", attribute=False):
+           # Anonymous can not render xhtml style
+           document.view()
+           document()
 
   def test_user_can_create_and_view_document_list(self):
     """
