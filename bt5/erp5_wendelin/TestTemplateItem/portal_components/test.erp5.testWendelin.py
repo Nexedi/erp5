@@ -1002,3 +1002,29 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
     self.assertRaises(ValueError,
                       portal.Base_wendelinTextToNumpy,
                       wendelin_text)
+
+  def test_19_IngestionBigData(self):
+    portal = self.portal
+
+    # add brand new ingestion
+    reference = getRandomString()
+    ingestion_policy, _, _ = portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy(
+      reference = reference,
+      title = reference,
+      batch_mode=1)
+    self.tic()
+
+    number_string_list = []
+    # generated data more than 1MB
+    for my_list in list(chunks(range(0, 1000000), 10)):
+      number_string_list.append(','.join([str(x) for x in my_list]))
+    real_data = '\n'.join(number_string_list)
+    real_data += '\n'
+    # simulate fluentd
+    body = msgpack.packb([0, real_data], use_bin_type=True)
+    env = {'CONTENT_TYPE': 'application/octet-stream'}
+    path = ingestion_policy.getPath() + '/ingest?reference=' + reference
+    publish_kw = dict(user='ERP5TypeTestCase', env=env,
+      request_method='POST', stdin=BytesIO(body))
+    response = self.publish(path, **publish_kw)
+    self.assertEqual(NO_CONTENT, response.getStatus())
