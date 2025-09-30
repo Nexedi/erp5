@@ -5,7 +5,7 @@ portal = context.getPortalObject()
 if portal.portal_membership.isAnonymousUser():
   web_site_value = context.getWebSiteValue()
   if web_site_value is None:
-    if context.getRelativeUrl() != portal.getRelativeUrl():
+    if context.getRelativeUrl() not in [portal.getRelativeUrl(), portal.portal_password.getRelativeUrl()]:
       # Forbid rendering a document in xhtml style
       # and force users to be authenticated
       portal.REQUEST.RESPONSE.setStatus(303, lock=True)
