@@ -76,8 +76,8 @@ class IngestionPolicy(Folder):
           _, params = parse_http_header(content_type)
           used_charset = params.get('charset', self.REQUEST.charset)
           self.REQUEST.form['data_chunk'] = self.REQUEST.form['data_chunk'].encode(used_charset, errors='surrogateescape')
-        else:
-          self.REQUEST.form['data_chunk'] = self.REQUEST.get('BODY')
+        elif self.REQUEST._file is not None:
+          self.REQUEST.form['data_chunk'] = self.REQUEST._file.read()
 
     finally:
       environ['REQUEST_METHOD'] = method
