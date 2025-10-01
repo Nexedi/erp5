@@ -432,7 +432,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     if response_code == 200:
       # successful meta data extraction
       self._setData(dec(str2bytes(response_dict['data'])))
-      self.getPortalObject().portal_workflow.doActionFor(self, action="edit_action", comment="Updated file metadata")
     else:
       # Explicitly raise the exception!
       raise ConversionError("OOoDocument: error setting document metadata (Code %s: %s)"
