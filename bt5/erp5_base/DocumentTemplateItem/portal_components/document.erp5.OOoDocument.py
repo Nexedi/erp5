@@ -390,7 +390,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
   security.declareProtected(Permissions.ModifyPortalContent, 'eraseLocalMetadata')
   def eraseLocalMetadata(self):
     self._document_metadata = {}
-    self.setContentType(None)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
   def updateLocalMetadataFromDocument(self, **kw):
