@@ -444,7 +444,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     if response_code == 200:
       # Update document with new content
       self._setData(dec(str2bytes(response_dict['data'])))
-      self.getPortalObject().portal_workflow.doActionFor(self, action="edit_action", comment="Updated file metadata")
     else:
       # On failure, do not raise, simply issue a warning
       # This keeps some backward compatibility, when `updateMetadata`
