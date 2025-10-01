@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Ingestion Policy" module="erp5.portal_type"/>
+      <global name="Data Transformation" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -14,9 +14,7 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -27,9 +25,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -40,9 +36,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -54,35 +48,71 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>data_operation_script_id</string> </key>
-            <value> <string>IngestionPolicy_getIngestionOperationAndParameterDict</string> </value>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>resource/data_product_module/cdn_access_log_data</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>cdn_access_log_ingestion</string> </value>
+            <value> <string>cdn_access_log_data_transformation</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Handles ingestion of packets of CDN Access log data forwarded through fluentd in MessagePack format.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>cdn_access_log_ingestion</string> </value>
-        </item>
-        <item>
-            <key> <string>script_id</string> </key>
-            <value> <string>IngestionPolicy_parseCdnAccessFluentdTag</string> </value>
+            <value> <string>cdn_access_log_data_transformation</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>CDN Access Log Ingestion</string> </value>
+            <value> <string>CDN Access Log Data Transformation</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -91,13 +121,65 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -110,13 +192,13 @@
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>validation_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -125,7 +207,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -156,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1027.57508.36488.17373</string> </value>
+                      <value> <string>1027.57636.60855.54681</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -172,7 +254,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1759350049.348794</float>
+                              <float>1759357782.050513</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -186,7 +268,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -199,9 +281,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>validate</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -225,7 +305,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1759348541.829651</float>
+                              <float>1759357735.710263</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -234,7 +314,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>draft</string> </value>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>

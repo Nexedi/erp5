@@ -1,7 +1,7 @@
 if not reference:
   raise ValueError('reference is not defined')
 
-cdn_fluentd_tag_prefix = "ors."
+cdn_fluentd_tag_prefix = "cdnaccess."
 if not reference.startswith(cdn_fluentd_tag_prefix):
   raise ValueError('reference %s is not a valid CDN Access fluentd tag' % reference)
 
