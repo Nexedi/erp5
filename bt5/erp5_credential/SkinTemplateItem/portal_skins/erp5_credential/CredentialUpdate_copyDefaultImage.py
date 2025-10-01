@@ -34,8 +34,6 @@ if new_default_image is not None:
     ('content_type', 'content_type'),
     ('content_md5', 'content_md5'),
     ('data', 'data'),
-    ('base_data', 'base_data'),
-    ('base_content_type', 'base_content_type'),
     )
 
 
