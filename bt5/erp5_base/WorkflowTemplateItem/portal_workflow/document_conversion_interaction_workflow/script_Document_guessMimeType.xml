@@ -53,6 +53,12 @@
             <value> <string>state_change</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>script_Document_guessMimeType</string> </value>
         </item>
