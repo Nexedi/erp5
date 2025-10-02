@@ -108,7 +108,7 @@ class Test(ERP5TypeTestCase):
     publish_kw = dict(user='ERP5TypeTestCase', env=env,
       request_method='POST', stdin=BytesIO(body))
     response = self.publish(path, **publish_kw)
-    self.assertEqual(NO_CONTENT, response.getStatus())
+    self.assertEqual(NO_CONTENT, response.getStatus(), "Error: %s" % response.getBody())
     # at every ingestion if no specialised Data Ingestion exists it is created
     # thus it is needed to wait for server side activities to be processed
     self.tic()
