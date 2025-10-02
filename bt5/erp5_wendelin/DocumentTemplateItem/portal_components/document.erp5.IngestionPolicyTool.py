@@ -56,8 +56,12 @@ class IngestionPolicyTool(Folder):
       https://github.com/fluent/fluentd/blob/master/lib/fluent/plugin/in_forward.rb#L205
     """
     data_file = BytesIO(data)
-    msgpack_list = msgpack.Unpacker(data_file)
-    # we need pure primitive list so we avoid zope security in restricted 
+    # default value was changed to 1MB for version > 0.6.0 and version < 1.0.0 https://github.com/msgpack/msgpack-python/blob/v1.1.1/ChangeLog.rst#060
+    # this value is adjust to 100MB for version >=1.0.0 https://github.com/msgpack/msgpack-python/blob/v1.1.1/ChangeLog.rst#100
+    # but we use 0.6.2 for python2 https://lab.nexedi.com/nexedi/slapos/-/blob/e008aa11f5be1b528bb1d3a3d9a373a02567a18c/stack/slapos.cfg#L490
+    # 1MB is really too small, let's change it to default value
+    msgpack_list = msgpack.Unpacker(data_file, max_buffer_size = 100 * 1024 * 1024)
+    # we need pure primitive list so we avoid zope security in restricted
     # script environment, but we loose lazyness
     return [x for x in msgpack_list]
 
