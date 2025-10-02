@@ -14,9 +14,7 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -27,9 +25,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -40,9 +36,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -54,9 +48,7 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -199,9 +191,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>validate</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -225,7 +215,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1759348541.829651</float>
+                              <float>1759436543.497991</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -234,7 +224,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>draft</string> </value>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>
