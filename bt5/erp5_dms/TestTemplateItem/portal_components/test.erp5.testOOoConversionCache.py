@@ -131,8 +131,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
     filename = 'TEST-en-002.doc'
     file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_, temp_object=1)
-    document.uploadFile()
-    document.processFile()
     format_list = [format_ for format_ in document.getTargetFormatList() if format_ not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
@@ -165,11 +163,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     file1 = self.makeFileUpload(filename1)
     file2 = self.makeFileUpload(filename2)
     document1 = self.portal.portal_contributions.newContent(file=file1, temp_object=1)
-    document1.uploadFile()
-    document1.processFile()
     document2 = self.portal.portal_contributions.newContent(file=file2, temp_object=1)
-    document2.uploadFile()
-    document2.processFile()
     format_ = 'pdf'
     document1.convert(format=format_)
     document2.convert(format=format_)
