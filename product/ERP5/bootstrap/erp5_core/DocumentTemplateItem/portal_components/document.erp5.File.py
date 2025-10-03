@@ -29,6 +29,8 @@
 
 import six
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Document import Document, VALID_TEXT_FORMAT_LIST
@@ -187,6 +189,56 @@ class File(Document, OFS_File):
     """
     return self.getPortalObject().portal_contributions.\
       guessMimeTypeFromFilename(fname)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
+  @deprecated
+  def getBaseData(self):
+    """
+    Backward-compatiblity method. We used to always convert `data` to
+    `base_data`, with a given `base_content_type`. This method does
+    opportunistic conversion to `data` to get rid of `base_data` progressively.
+    """
+    try:
+      data = aq_base(self).base_data
+    except KeyError:
+      data = self.getData()
+    else:
+      # If the user cannot add and remove properties, it is useless to try.
+      if not _checkPermission(Permissions.ModifyPortalContent, self):
+        return data
+
+      # Otherwise, migrate `base_data` to `data`.
+      content_type = aq_base(self).base_content_type or None
+      if content_type:
+        del aq_base(self).base_content_type
+
+      self._edit(
+        data=data,
+        content_type=content_type,
+        # It is useless to run Interaction Workflow, since `data` now replaces `base_data`
+        # without any change in content.
+        notify_workflow=False,
+      )
+      del aq_base(self).base_data
+
+    return data
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @deprecated
+  def hasBaseData(self):
+    """
+    Backward-compatiblity method. Not optimized for speed, but to get
+    as many migrated documents as possible.
+    """
+    return bool(self.getBaseData())
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'setBaseData')
+  @deprecated
+  def setBaseData(self, data):
+    """
+    Backward-compatiblity method.
+    """
+    self._setData(data)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
