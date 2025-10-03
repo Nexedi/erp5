@@ -149,7 +149,9 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
     data = text_content
     if data is None:
       # `getData` first try to get data, then text content, but here we'd like the opposite
-      data = self.getTextContent() if self.hasTextContent() else self.getData()
+      data = self.getTextContent()
+      if not data:
+        data = self.getData()
     # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
     # web_page that have neither content_type nor text_format. Migration
     # should be done to make all web page having content_type property
