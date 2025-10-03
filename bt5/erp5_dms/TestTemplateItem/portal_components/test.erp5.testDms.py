@@ -65,6 +65,7 @@ import six.moves.http_client
 from six.moves.urllib.request import urlopen
 import re
 from AccessControl import Unauthorized
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
@@ -2810,6 +2811,27 @@ return 1
       [brain.getObject() for brain in getRelatedDocumentList()],
       [sub_document_value]
     )
+
+  def test_baseData_backwardCompatibility(self):
+    """
+    Ensures `base_data` gets migrated to `data` dynamically.
+    """
+    document_value = self.portal.document_module.newContent(portal_type='Text')
+    upload_file = self.makeFileUpload('TEST-en-002.txt')
+    document_value.edit(file=upload_file)
+    document_value.publish()
+    self.tic()
+    base_content = "An alternative text"
+    aq_base(document_value).base_data = base_content
+    aq_base(document_value).base_content_type = "text/dummy"
+    self.assertNotEqual(base_content, document_value.getData())
+    self.assertNotEqual("text/dummy", document_value.getContentType())
+    # Migration happens here
+    self.assertEqual(base_content, document_value.getBaseData())
+    # XXX-Titouan: should we implement?
+    #self.assertEqual("text/dummy", self.getBaseContentType())
+    self.assertEqual(base_content, document_value.getData())
+    self.assertEqual("text/dummy", document_value.getContentType())
 
 
 class TestDocumentWithSecurity(TestDocumentMixin):
