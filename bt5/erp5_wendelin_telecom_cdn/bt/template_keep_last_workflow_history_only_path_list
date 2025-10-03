@@ -1,0 +1,3 @@
+data_product_module/cdn_access_log_data
+data_transformation_module/cdn_access_log_data_transformation
+portal_ingestion_policies/cdn_access_log_ingestion
