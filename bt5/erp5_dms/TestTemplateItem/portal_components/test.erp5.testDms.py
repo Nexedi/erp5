@@ -65,6 +65,7 @@ import six.moves.http_client
 from six.moves.urllib.request import urlopen
 import re
 from AccessControl import Unauthorized
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
@@ -2812,6 +2813,32 @@ return 1
       [brain.getObject() for brain in getRelatedDocumentList()],
       [sub_document_value]
     )
+
+  def test_baseData_backwardCompatibility(self):
+    """
+    Ensures `base_data` gets migrated to `data` dynamically.
+    """
+    document_value = self.portal.document_module.newContent(portal_type='Text')
+    upload_file = self.makeFileUpload('TEST-en-002.txt')
+    document_value.edit(file=upload_file)
+    document_value.publish()
+    self.tic()
+    base_content = b"An alternative text"
+    aq_base(document_value).base_data = base_content
+    aq_base(document_value).base_content_type = "text/dummy"
+    # We convert no more
+    self.assertNotEqual("text/dummy", document_value.getContentType())
+    self.assertNotEqual(base_content, document_value.getData())
+    # Deletion of base data happens on calling `getData`
+    self.assertNotIn("base_data", aq_base(document_value))
+    self.assertNotIn("base_content_type", aq_base(document_value))
+    # Now, setting data normally, backward compatible method allows using getter for OOoDocuments
+    document_value.edit(
+      data=base_content,
+      content_type="text/plain",
+    )
+    self.assertEqual(base_content, document_value.getData())
+    self.assertTrue(document_value.getBaseData())
 
 
 class TestDocumentWithSecurity(TestDocumentMixin):
