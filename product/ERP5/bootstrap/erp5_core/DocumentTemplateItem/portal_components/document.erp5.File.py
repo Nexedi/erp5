@@ -29,6 +29,8 @@
 
 import six
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Document import Document, VALID_TEXT_FORMAT_LIST
@@ -188,9 +190,52 @@ class File(Document, OFS_File):
     return self.getPortalObject().portal_contributions.\
       guessMimeTypeFromFilename(fname)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
+  @deprecated
+  def getBaseData(self):
+    """
+    Backward-compatiblity method. For transition, we decided to leave
+    conversion to previous base data up to each base class. An example of
+    backward-compatibility method can be found on `OOoDocument`.
+    """
+    raise NotImplementedError("Deprecated method, not supported anymore, please use `getData` instead.")
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @deprecated
+  def hasBaseData(self):
+    """
+    Backward-compatiblity method. The only generic way to test for base
+    data is to check if `getBaseData` returns something.
+    """
+    return bool(self.getBaseData())
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'setBaseData')
+  @deprecated
+  def setBaseData(self, data):
+    """
+    Backward-compatiblity method.
+    """
+    raise NotImplementedError("Deprecated method, not supported anymore, please use `setData` instead.")
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
-    """return Data as bytes."""
+    """
+    Return `data` as bytes. The method opportunistically tries to
+    delete `base_data` when the property exists.
+    """
+    if _checkPermission(Permissions.ModifyPortalContent, self):
+      # Try to delete `base_content_type`
+      try:
+        del aq_base(self).base_content_type
+      except AttributeError:
+        pass
+
+      # Try to delete `base_data`
+      try:
+        del aq_base(self).base_data
+      except AttributeError:
+        pass
+
     self._checkConversionFormatPermission(None)
     data = self._baseGetData()
     if data is None:
