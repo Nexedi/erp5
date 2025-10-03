@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import json
 import unittest
 
 from DateTime import DateTime
@@ -1230,6 +1231,9 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual([],
         self.item.Item_getVariationRangeCategoryItemList(
                           at_date=DateTime() - 2))
+
+  def test_Item_getTrackingListGraphAsJSON(self):
+    self.assertTrue(json.loads(self.item.Item_getTrackingListGraphAsJSON()))
 
 
 def test_suite():
