@@ -28,7 +28,7 @@ if data_acquisition_unit:
 
 # Check if the fluentbit tag has a valid format
 fluentbit_tag_components = fluentbit_tag.split('_')
-if len(fluentbit_tag_components) not in [2, 3]:
+if len(fluentbit_tag_components) not in [4, 5]:
   status = "error"
   message = "Invalid CDN Access tag %s found" % fluentbit_tag
   response_dict = dict(

@@ -21,8 +21,8 @@ if data_supply:
 data_supply = context.data_supply_module.newContent(
   portal_type='Data Supply',
   reference=reference,
-  source='organisation_module/open_radio_station',
-  source_section='organisation_module/open_radio_station',
+  source='organisation_module/cdn_provider',
+  source_section='organisation_module/cdn_provider',
   destination='organisation_module/rapid_space_data_center'
 )
 
