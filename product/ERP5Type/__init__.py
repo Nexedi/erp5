@@ -214,11 +214,11 @@ ModuleSecurityInfo('zExceptions').declarePublic(*[
 try:
   from Products.CMFDefault.MembershipTool import MembershipTool
 except ImportError:
-  import sys, imp
+  import sys, types
   m = 'Products.CMFDefault'
-  sys.modules[m] = imp.new_module(m)
+  sys.modules[m] = types.ModuleType(m)
   m += ".MembershipTool"
-  sys.modules[m] = m = imp.new_module(m)
+  sys.modules[m] = m = types.ModuleType(m)
   from Products.CMFCore.MembershipTool import MembershipTool
   m.MembershipTool = MembershipTool
   del m
