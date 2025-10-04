@@ -266,7 +266,7 @@ if changed_id:
   return context.Base_redirect(form_id, keep_items={'portal_status_message': message})
 
 # Cleanup formulator's special key in request to ensure field are only calculated from context and not the request anymore
-for key in list(request.keys()):
+for key in list(request.form.keys()):
   if str(key).startswith('field') or str(key).startswith('subfield'):
     request.form.pop(key, None)
 return context.Base_renderFormAtEndOfTransaction(request, request.response, form_id, message=message)
