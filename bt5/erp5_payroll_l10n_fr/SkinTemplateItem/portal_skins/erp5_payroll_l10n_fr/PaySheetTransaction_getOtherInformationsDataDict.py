@@ -4,12 +4,6 @@ translateString = portal.Base_translateString
 quantity_renderer = portal.Base_viewFieldLibrary.my_view_mode_money_quantity.render_pdf
 paysheet = context
 
-def getFieldAsLineList(field):
-  """Returns the text as a list of lines."""
-  field = field or ''
-  text = field.replace('\r', '')
-  text_list = text.split('\n')
-  return [x for x in text_list if x]
 
 def getEmployeeNumber(source_section_career):
   employee_number = source_section_career.getReference()
@@ -17,6 +11,13 @@ def getEmployeeNumber(source_section_career):
   if employee_number:
     s = '%s: %s' % (translateString('Employee Number'), employee_number)
   return s
+
+def getFieldAsLineList(field):
+  """Returns the text as a list of lines."""
+  field = field or ''
+  text = field.replace('\r', '')
+  text_list = text.split('\n')
+  return [x for x in text_list if x]
 
 def getSocialCodeId(social_code_id):
   s = ''
@@ -74,7 +75,7 @@ def getTaxableNetPayId(salaire_net_imposable):
 total_employee_tax = getMovementTotalPriceFromCategory(\
     no_base_contribution=True,
     include_empty_contribution=False,
-    excluded_reference_list=['ticket_restaurant',],
+    excluded_reference_list=['ticket_restaurant', 'versement_interessement_pee'],
     contribution_share='contribution_share/employee')
 
 def getTotalEmployeeTaxId(total_employee_tax):
@@ -104,15 +105,13 @@ year_to_date_total_employer_tax = paysheet.PaySheetTransaction_getYearToDateMove
 
 preferred_date_order = portal.portal_preferences\
                        .getPreferredDateOrder() or 'ymd'
+separator = '/'
 def getOrderedDate(date):
   if date is None:
     return ''
-  date_parts = {
-    'y': '%04d' % date.year(),
-    'm': '%02d' % date.month(),
-    'd': '%02d' % date.day(),
-  }
-  return '/'.join([date_parts[part] for part in preferred_date_order])
+  pattern = separator.join(['%%%s' % s for s in list(preferred_date_order)])
+  pattern = pattern.replace('y', 'Y')
+  return date.strftime(pattern)
 
 def getPaymentConditionText(paysheet):
   date = ''
