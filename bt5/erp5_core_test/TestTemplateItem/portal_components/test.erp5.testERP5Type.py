@@ -3349,6 +3349,14 @@ class TestLongRequestLogger(ERP5TypeTestCase):
     self.assertIn("request_key", long_request_log)
     self.assertIn("request_value", long_request_log)
 
+  def test_log_contains_request_with_non_string_keys(self):
+    request = self.portal.REQUEST
+    request.set(("request", "key"), "request_value")
+    self.start_long_request_monitor(request)
+    long_request_log = self.get_long_request_log()
+    self.assertIn(str(("request", "key")), long_request_log)
+    self.assertIn("request_value", long_request_log)
+
   def test_log_obfuscate_passwords(self):
     request = self.portal.REQUEST
     request.form["password"] = "secret"
