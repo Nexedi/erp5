@@ -44,8 +44,4 @@ for repository in test_suite_data['repository_dict'].values():
       repository['repository_url'],
       repository['revision']))
 
-if len(result_list) == 1:
-  from zExceptions import Redirect
-  raise Redirect(result_list[0].getListItemUrl())
-
 return result_list
