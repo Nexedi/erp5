@@ -19,6 +19,14 @@
             </value>
         </item>
         <item>
+            <key> <string>aggregated_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>Data Array</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
