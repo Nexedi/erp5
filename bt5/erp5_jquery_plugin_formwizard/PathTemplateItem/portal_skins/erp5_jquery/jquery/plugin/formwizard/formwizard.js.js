@@ -291,7 +291,7 @@
 			var links = this.steps.filter("#" + step).find(this.options.linkClass);
 
 			if(links != undefined){
-				if(links.filter(":radio,:checkbox").size() > 0){
+				if(links.filter(":radio,:checkbox").length > 0){
 					link = links.filter(this.options.linkClass + ":checked").val();
 				}else{
 					link = $(links).val();
