@@ -485,6 +485,8 @@ def getDataArrayForDataTypeAsJSON(self, data_array_url, data_type,
 
       with np.errstate(divide='ignore', invalid='ignore'):
         delta_rate = ((rrc_con_req - rrc_recon_com) / rrc_con_req) * 100
+        delta_rate[np.isnan(delta_rate)] = 0
+
         # Clamp between 0 and 100
         delta_clipped = np.clip(delta_rate, 0, 100)
         unsucessful_rrc_recon = np.where(rrc_con_req > 0, delta_clipped, 0)
@@ -508,6 +510,8 @@ def getDataArrayForDataTypeAsJSON(self, data_array_url, data_type,
 
       with np.errstate(divide='ignore', invalid='ignore'):
         delta_rate = ((rrc_sec_command - rrc_sec_complete) / rrc_sec_command) * 100
+        delta_rate[np.isnan(delta_rate)] = 0
+
         # Clamp between 0 and 100
         delta_clipped = np.clip(delta_rate, 0, 100)
         failure_rate_rrc_sec = np.where(rrc_sec_command > 0, delta_clipped, 0)
