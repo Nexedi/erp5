@@ -307,9 +307,12 @@ class AmountGeneratorMixin:
                           for amount in amount_list)
 
     def getLineSortKey(line):
-      int_index = line.getIntIndex()
-      return (line.getFloatIndex() if int_index is None else int_index,
-              random.random())
+      sort_index = line.getIntIndex()
+      if sort_index is None:
+        sort_index = line.getFloatIndex()
+      if sort_index is None:
+        sort_index = random.random()
+      return sort_index
 
     is_mapped_value = isinstance(self, MappedValue)
     recurse_queue = deque()

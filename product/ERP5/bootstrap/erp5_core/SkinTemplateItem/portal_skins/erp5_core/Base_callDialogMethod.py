@@ -205,7 +205,7 @@ if (not(can_redirect) or len(url_params_string) > 2000):
     # and to cleanup formulator's special key in request
     # XXX unless we are in Folder_modifyWorkflowStatus which validates again !
     if dialog_method != 'Folder_modifyWorkflowStatus':
-      for key in list(request.keys()):
+      for key in list(request.form.keys()):
         if str(key).startswith('field') or str(key).startswith('subfield'):
           request.form.pop(key, None)
 
