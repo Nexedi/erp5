@@ -39,7 +39,8 @@ if len(fluentbit_tag_components) not in [4, 5]:
 
 data_acquisition_unit = portal.data_acquisition_unit_module.newContent(
   portal_type='Data Acquisition Unit',
-  reference=fluentbit_tag
+  reference=fluentbit_tag,
+  data_unit_type='cdn'
 )
 data_acquisition_unit.validate()
 data_supply = data_acquisition_unit.DataAcquisitionUnit_createCdnDataSupply(batch=1)
