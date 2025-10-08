@@ -1475,11 +1475,18 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     # in case we erased some data
     if fixit:
       transaction.savepoint(optimistic=True)
+
     # Then check the consistency on all sub objects
     for obj in self.contentValues():
       if obj.providesIConstraint():
         # it is not possible to checkConsistency of Constraint itself, as method
         # of this name implement consistency checking on object
+        continue
+      # Check consistency only for non-independent children, ie. children that
+      # do not have a non-interaction non-edit workflow by themselves.
+      if any(wf.getPortalType() == "Workflow" and \
+          wf.getId() != "edit_workflow" for wf in \
+          self.portal_workflow.getWorkflowValueListFor(obj)):
         continue
       if fixit:
         if hasattr(aq_base(obj), 'fixConsistency'):
