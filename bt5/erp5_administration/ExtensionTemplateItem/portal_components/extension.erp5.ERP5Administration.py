@@ -7,6 +7,9 @@ from zExceptions import ExceptionFormatter, Unauthorized
 from Products.CMFActivity.ActiveResult import ActiveResult
 from zLOG import LOG, INFO
 import six
+from Products.ERP5Type.dynamic.persistent_migration import iter_py2_string_oids
+import tempfile
+
 
 def dumpWorkflowChain(self, ignore_default=False,
                       ignore_id_set=None, keep_order=False, batch_mode=False):
@@ -188,3 +191,20 @@ def filterSecurityUidDict(security_uid_dict, referenced_security_uid_set):
       append(value)
       del security_uid_dict[key]
   return result
+
+def migrateObjectToPython3(self, obj=None):
+
+  portal = self.getPortalObject()
+  if not obj:
+    obj = portal
+
+  if (obj != portal) and obj._p_oid:
+    connection = obj._p_jar
+    with tempfile.TemporaryFile() as f:
+      connection.exportFile(obj._p_oid, f)
+      f.seek(0)
+      for oid in iter_py2_string_oids(f):
+        connection.get(oid)._p_changed = True
+
+  for subobj in obj.objectValues():
+    migrateObjectToPython3(self, subobj)
