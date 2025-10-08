@@ -1,0 +1,6 @@
+data_product_module/cdn_access_append_data_stream
+data_product_module/cdn_access_log_data
+data_transformation_module/cdn_access_log_data_transformation
+organisation_module/cdn_provider
+portal_ingestion_policies/cdn_access_log_ingestion
+web_page_module/cdn_bytes_*
