@@ -5,6 +5,7 @@ import pandas as pd
 RESAMPLE_SIZE = 1000
 # Values with which to replace NaNs for each data field
 NA_VALUES_REPLACEMENTS = {
+  'bytes': 0.
 }
 
 def resample_data_zarray(
@@ -22,8 +23,10 @@ def resample_data_zarray(
 
   # Resample data if array is too large
   if len(np_data_zarray) > resample_size:
-    resample_period = '%ss' % int((time_end - time_start) / resample_size)
-    data_frame = data_frame.resample(resample_period, on=time_field).mean()
+    resample_period = int((time_end - time_start) / resample_size)
+    if not resample_period:
+      resample_period = 1
+    data_frame = data_frame.resample('%ss' % resample_period, on=time_field).mean()
     data_frame = data_frame.fillna(value=NA_VALUES_REPLACEMENTS)
 
   data_frame = data_frame.reset_index()
