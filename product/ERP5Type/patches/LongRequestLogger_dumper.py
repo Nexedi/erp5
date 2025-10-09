@@ -33,7 +33,7 @@ other: %(other)s
 
 
 def _format_request_dict(d):
-    d = dict(_filterPasswordFields(d.items()))
+    d = dict(_filterPasswordFields((str(k), v) for (k, v) in d.items()))
     # response can be very large, we don't include the full response to
     # prevent log files from growing too fast.
     if 'RESPONSE' in d:

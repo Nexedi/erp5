@@ -22,7 +22,7 @@ for i, tracking in enumerate(reversed(portal.portal_simulation.getTrackingList(a
   movement = portal.portal_catalog.getObject(tracking.delivery_uid)
   for node in (movement.getSourceValue(), movement.getDestinationValue()):
     if node:
-      graph['node'][node.getUid()] = dict(
+      graph['node'][str(node.getUid())] = dict(
         _class='node',
         name=node.getTitle(),
         link=node.absolute_url())
@@ -31,7 +31,7 @@ for i, tracking in enumerate(reversed(portal.portal_simulation.getTrackingList(a
         _class='node',
         name="(origin)")
 
-  graph['edge'][movement.getUid()] = dict(
+  graph['edge'][str(movement.getUid())] = dict(
     _class="movement",
     name="%s: %s (%s)" % (i+1, movement.getTitle(), movement.getStopDate().strftime("%Y/%m/%d")),
     link=movement.absolute_url(),
