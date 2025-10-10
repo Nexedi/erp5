@@ -8,6 +8,9 @@
  <portal_type id="Data Analysis Line">
   <item>WendelinTelecomDataMovement</item>
  </portal_type>
+ <portal_type id="Data Array">
+  <item>WendelinTelecomDataArray</item>
+ </portal_type>
  <portal_type id="Data Ingestion">
   <item>WendelinTelecomDataDelivery</item>
  </portal_type>
