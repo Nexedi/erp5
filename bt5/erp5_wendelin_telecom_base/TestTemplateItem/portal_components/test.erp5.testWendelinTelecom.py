@@ -475,6 +475,63 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     # Also check that the related Data Supply has correctly been created
     self.assertEqual(data_supply.getReference(), data_acquisition_unit.getReference())
 
+  def test_05_1_ingestTwiceValidOrsLogDataFromFluentd(self):
+
+    # Register the ORS
+    ors_item_dict = self.registerOrs()
+    ors_tag = ors_item_dict['data_acquisition_unit'].getReference()
+
+    # Send same log two times, creating a broken Data Stream
+    test_ors_example_logs = [
+      self.test_ors_example_log_valid, self.test_ors_example_log_valid
+    ]
+
+    # Perform ingestions, and keep only the last item dictionary
+    # as they are all identical
+    ingestion_item_dicts = [
+      self.getOrsLogIngestionItems(ors_log, ors_tag) \
+      for ors_log in test_ors_example_logs
+    ]
+    ingestion_item_dict = ingestion_item_dicts[-1]
+
+    # In all cases, check that all items related to the ingestions exist
+    self.assertEqual(NO_CONTENT, ingestion_item_dict['response'].getStatus())
+    self.assertNotEqual(None,
+                        ingestion_item_dict['data_acquisition_unit'])
+    self.assertNotEqual(None,
+                        ingestion_item_dict['data_supply'])
+    self.assertNotEqual(None,
+                        ingestion_item_dict['data_ingestion'])
+    self.assertNotEqual(None,
+                        ingestion_item_dict['data_stream'].getData())
+    self.assertNotEqual(None,
+                        ingestion_item_dict['data_analysis'])
+
+    self.assertTrue(all(data_array is not None for data_array in ingestion_item_dict['data_array_list']))
+
+    self.assertNotEqual(None,
+                        ingestion_item_dict['progress_indicator'])
+
+    # Check that the value of the progress indicator is equal to the size of the Data Stream:
+    # i.e. that all of the ingested data has been processed into KPIs
+    self.assertEqual(
+      ingestion_item_dict['progress_indicator'].getIntOffsetIndex(),
+      ingestion_item_dict['data_stream'].getSize()
+    )
+
+    for data_array in ingestion_item_dict['data_array_list']:
+      if 'e_rab' in data_array.getReference():
+        self.assertEqual(data_array.checkConsistency(), [])
+      if 'cell_ue_count' in data_array.getReference():
+        self.assertEqual([i.message for i in data_array.checkConsistency()],
+          ["This Data Array constains an unexpected duplication."])
+      elif 'cell_rrc' in data_array.getReference():
+        self.assertEqual([i.message for i in data_array.checkConsistency()],
+          ["This Data Array constains an unexpected duplication."])
+      elif 'cell_rms_rx' in data_array.getReference():
+        self.assertEqual([i.message for i in data_array.checkConsistency()],
+          ["This Data Array constains an unexpected duplication."])
+
   def test_05_1_ingestValidOrsLogDataFromFluentd(self, data_key="valid"):
     '''
     Test a simple valid ORS log ingestion: simulate a fluentd gateway forwarding valid ORS logs to the platform,
@@ -606,6 +663,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       ('rms_dbm', '<f8')
     ]
 
+    inconsistency_amount = 0
     if data_key in ["valid", "duplicated"]:
       e_rab_array_shape = (82,)
       e_utran_array_shape = (20992,)
@@ -618,6 +676,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       cell_ue_count_array_shape = (113,)
       cell_rrc_array_shape = (113,)
       cell_rms_rx_array_shape = (216,)
+      inconsistency_amount = 1
     elif data_key == "empty":
       e_rab_array_dtype = None
       e_utran_array_dtype = None
@@ -672,6 +731,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
                 )
 
       elif 'cell_ue_count' in data_array.getReference():
+        self.assertEqual(len(data_array.checkConsistency()), inconsistency_amount)
         self.assertEqual(data_array.getArrayShape(), cell_ue_count_array_shape)
         self.assertEqual(data_array.getArrayDtype(), cell_ue_count_array_dtype)
 
@@ -693,6 +753,8 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
                                len(cell_ue_count_dict[key][col]), (key, col))
 
       elif 'cell_rrc' in data_array.getReference():
+        # invalid data has some duplications here.
+        self.assertEqual(len(data_array.checkConsistency()), inconsistency_amount)
         self.assertEqual(data_array.getArrayShape(), cell_rrc_array_shape)
         self.assertEqual(data_array.getArrayDtype(), cell_rrc_array_dtype)
 
