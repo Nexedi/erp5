@@ -183,13 +183,12 @@ def get_ue_count_per_cell(data_array, data_array_dtype, time_start, time_end):
        for cell, group in data_frame.groupby('cell_id')
   }
 
-  base_resampled_data_array = data_frame.groupby(time_field).agg({
+  base_resampled_data_dict = data_frame.reset_index().groupby(time_field).agg({
     'ue_count_max': 'max',
     # XXX Not sure if this is properly defined.
     'ue_count_min': 'min',
-    'ue_count_avg': 'mean'}).reset_index()
+    'ue_count_avg': 'mean'}).reset_index().to_dict(orient='list')
 
-  base_resampled_data_dict = base_resampled_data_array.to_dict(orient='list')
   response_dict['base'] = {
       'utc': base_resampled_data_dict['utc'],
       'ue_count_max': base_resampled_data_dict['ue_count_max'],
