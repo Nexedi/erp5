@@ -5,6 +5,8 @@ import pandas as pd
 QCI_COUNT = 256
 # The maximum number of points to show on a KPI graph
 RESAMPLE_SIZE = 1000
+# Tolerance in seconds for ffill Nan values
+FFILL_TOLERANCE = 60
 # Values with which to replace NaNs for each data field
 NA_VALUES_REPLACEMENTS = {
   'vInitialEPSBEstabSR_lo': 0.,
@@ -69,7 +71,7 @@ def resample_data_zarray(
 
   # Resample data if array is too large
   if len(np_data_zarray) > resample_size:
-    resample_period = '%ss' % int((time_end - time_start) / resample_size)
+    resample_period = '%ss' % max(int((time_end - time_start) / resample_size), 1)
     data_frame = data_frame.resample(resample_period, on=time_field).mean()
     data_frame = data_frame.fillna(value=NA_VALUES_REPLACEMENTS)
 
@@ -151,7 +153,7 @@ def get_ue_count_per_cell(data_array, data_array_dtype, time_start, time_end):
 
   # Resample data if array is too large
   if len(data_zarray) > RESAMPLE_SIZE:
-    resample_period = '%ss' % int((time_end - time_start) / RESAMPLE_SIZE)
+    resample_period_int = max(int((time_end - time_start) / RESAMPLE_SIZE), 1)
     data_frame = data_frame.set_index(time_field)
 
      # Get numeric columns and remove cell_id_field explicitly
@@ -162,13 +164,16 @@ def get_ue_count_per_cell(data_array, data_array_dtype, time_start, time_end):
     data_frame = (
         data_frame
         .groupby('cell_id')
-        .resample(resample_period)
+        .resample("%ss" % resample_period_int)
         [value_columns]
         .mean()
         .reset_index()
     )
 
-    data_frame = data_frame.fillna(value=NA_VALUES_REPLACEMENTS)
+    ffill_limit = max(1, int(FFILL_TOLERANCE/resample_period_int))
+    data_frame = data_frame.fillna(
+      method='ffill', limit=ffill_limit
+    ).fillna(value=NA_VALUES_REPLACEMENTS)
 
   data_frame = data_frame.reset_index()
   data_frame[time_field] = data_frame[time_field].map(pd.Timestamp.timestamp)
@@ -178,13 +183,12 @@ def get_ue_count_per_cell(data_array, data_array_dtype, time_start, time_end):
        for cell, group in data_frame.groupby('cell_id')
   }
 
-  base_resampled_data_array = data_frame.groupby(time_field).agg({
+  base_resampled_data_dict = data_frame.reset_index().groupby(time_field).agg({
     'ue_count_max': 'max',
     # XXX Not sure if this is properly defined.
     'ue_count_min': 'min',
-    'ue_count_avg': 'mean'}).reset_index()
+    'ue_count_avg': 'mean'}).reset_index().to_dict(orient='list')
 
-  base_resampled_data_dict = base_resampled_data_array.to_dict(orient='list')
   response_dict['base'] = {
       'utc': base_resampled_data_dict['utc'],
       'ue_count_max': base_resampled_data_dict['ue_count_max'],
@@ -207,7 +211,7 @@ def get_rrc_per_cell(data_array, data_array_dtype, time_start, time_end, column_
 
   # Resample data if array is too large
   if len(data_zarray) > RESAMPLE_SIZE:
-    resample_period = '%ss' % int((time_end - time_start) / RESAMPLE_SIZE)
+    resample_period_int = max(int((time_end - time_start) / RESAMPLE_SIZE), 1)
     data_frame = data_frame.set_index(time_field)
     # Get numeric columns and remove cell_id_field explicitly
     value_columns = data_frame.select_dtypes(include=[np.number]).columns.tolist()
@@ -217,13 +221,16 @@ def get_rrc_per_cell(data_array, data_array_dtype, time_start, time_end, column_
     data_frame = (
         data_frame
         .groupby('cell_id')
-        .resample(resample_period)
+        .resample("%ss" % resample_period_int)
         [value_columns]
         .mean()
         .reset_index()
     )
 
-    data_frame = data_frame.fillna(value=NA_VALUES_REPLACEMENTS)
+    ffill_limit = max(1, int(FFILL_TOLERANCE/resample_period_int))
+    data_frame = data_frame.fillna(
+      method='ffill', limit=ffill_limit
+    ).fillna(value=NA_VALUES_REPLACEMENTS)
 
   data_frame = data_frame.reset_index()
   data_frame[time_field] = data_frame[time_field].map(pd.Timestamp.timestamp)
@@ -269,7 +276,7 @@ def get_rms_rx_per_cell_antenna(data_array, data_array_dtype, time_start, time_e
 
   # Resample data if array is too large
   if len(data_zarray) > RESAMPLE_SIZE:
-    resample_period = '%ss' % int((time_end - time_start) / RESAMPLE_SIZE)
+    resample_period_int = max(int((time_end - time_start) / RESAMPLE_SIZE), 1)
 
     # Get numeric columns and remove cell_id_field explicitly
     value_columns = data_frame.select_dtypes(include=[np.number]).columns.tolist()
@@ -278,13 +285,17 @@ def get_rms_rx_per_cell_antenna(data_array, data_array_dtype, time_start, time_e
     # Group by cell_id_field and resample
     data_frame = (
         data_frame
-        .groupby(['cell_id', 'antenna', pd.Grouper(key=time_field, freq=resample_period)])
+        .groupby(['cell_id', 'antenna', pd.Grouper(
+          key=time_field, freq='%ss' % resample_period_int)])
         [value_columns]
         .mean()
         .reset_index()
     )
 
-    data_frame = data_frame.fillna(value=NA_VALUES_REPLACEMENTS)
+    ffill_limit = max(1, int(FFILL_TOLERANCE/resample_period_int))
+    data_frame = data_frame.fillna(
+      method='ffill', limit=ffill_limit
+    ).fillna(value=NA_VALUES_REPLACEMENTS)
 
   data_frame = data_frame.reset_index()
   data_frame[time_field] = data_frame[time_field].map(pd.Timestamp.timestamp)
