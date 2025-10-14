@@ -16,7 +16,7 @@
 ##############################################################################
 
 from six import string_types as basestring
-import imp, sys, warnings
+import sys, types, warnings
 import inspect
 from itertools import chain
 import zope.interface
@@ -354,7 +354,7 @@ class TypesTool(TypeProvider):
       trashbin._setOb(old_types_tool.id, old_types_tool)
 
 # Compatibility code to access old "ERP5 Role Information" objects.
-OldRoleInformation = imp.new_module('Products.ERP5Type.RoleInformation')
+OldRoleInformation = types.ModuleType('Products.ERP5Type.RoleInformation')
 sys.modules[OldRoleInformation.__name__] = OldRoleInformation
 from OFS.SimpleItem import SimpleItem
 OldRoleInformation.RoleInformation = SimpleItem
