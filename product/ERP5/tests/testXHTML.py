@@ -500,7 +500,7 @@ class NuValidator(object):
         severity_list = warning_list
       else:
         severity_list = error_list
-      txt = unicode3str(message['message'])
+      txt = unicode2str(message['message'])
       if 'extract' in message:
         txt += ': %s' % unicode2str(message['extract'])
       severity_list.append([message['lastLine'], message['lastColumn'], txt])
