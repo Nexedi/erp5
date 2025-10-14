@@ -191,12 +191,12 @@ class DeferredConnection(Connection):
 
 # BBB: Allow loading of deferred connections that were created
 #      before the merge of ZMySQLDDA into ZMySQLDA.
-import sys, imp
+import sys, types
 m = 'Products.ZMySQLDDA'
 assert m not in sys.modules, "please remove obsolete ZMySQLDDA product"
-sys.modules[m] = imp.new_module(m)
+sys.modules[m] = types.ModuleType(m)
 m += '.DA'
-sys.modules[m] = m = imp.new_module(m)
+sys.modules[m] = m = types.ModuleType(m)
 m.DeferredConnection = DeferredConnection
 del m
 
