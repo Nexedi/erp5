@@ -354,6 +354,10 @@ def getFieldValue(self, field, id, **kw):
   return return_value, isCacheable(return_value)
 
 def get_value(self, id, **kw):
+  # this is required for `request` variable in TALES.
+  if kw.get('REQUEST') is None:
+    kw['REQUEST'] = get_request()
+
   field = kw.pop('field', self)
   cache_id = ('Form.get_value',
               self._p_oid,
