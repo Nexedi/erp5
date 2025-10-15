@@ -115,5 +115,5 @@ def test_suite():
       },
   )
 
-  suite.addTest(unittest.makeSuite(testclass))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testclass))
   return suite

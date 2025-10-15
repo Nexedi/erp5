@@ -15,20 +15,39 @@ end = min(in_data_stream.getSize(), offset_index + MAX_NEW_CHUNK_SIZE)
 
 e_rab_data_array = None
 e_utran_data_array = None
+cell_ue_count_data_array = None
+cell_rrc_data_array = None
+cell_rms_rx_data_array = None
 for array in out_array:
   if array['variation'] == 'e_rab':
     e_rab_data_array = array['Data Array']
   if array['variation'] == 'e_utran':
     e_utran_data_array = array['Data Array']
+  if array['variation'] == 'cell_ue_count':
+    cell_ue_count_data_array = array['Data Array']
+  if array['variation'] == 'cell_rrc':
+    cell_rrc_data_array = array['Data Array']
+  if array['variation'] == 'cell_rms_rx':
+    cell_rms_rx_data_array = array['Data Array']
+
 
 # No new data to process
 if offset_index >= end:
   return
 
-previous_log_data = ''.join(
-  [x.decode('utf-8') if isinstance(x, bytes) else x for x in in_data_stream.readChunkList(start, offset_index)]
-)
-new_log_data = ''.join([x.decode('utf-8') for x in in_data_stream.readChunkList(offset_index, end)])
+def readLog(start_index, end_index):
+  log_list = []
+  for x in in_data_stream.readChunkList(start_index, end_index):
+    if isinstance(x, bytes):
+      try:
+        x = x.decode('utf-8')
+      except UnicodeDecodeError:
+        continue
+    log_list.append(x)
+  return ''.join(log_list)
+
+previous_log_data = readLog(start, offset_index)
+new_log_data = readLog(offset_index, end)
 
 previous_log_data_line_list = previous_log_data.splitlines()
 new_log_data_line_list = new_log_data.splitlines()
@@ -82,13 +101,17 @@ new_log_data_line_first_index = min([
 # This also gives some tolerance to log errors
 history_start_index = max(0, new_log_data_line_first_index - HISTORY_LINE_COUNT)
 
-
 log_data = '\n'.join([x[x.find('{'):] for x in log_data_line_list[history_start_index:]])
 
-# Calculate the KPI data
-kpi_data_dict = context.Base_calcEnbKpi(log_data, T_PERIOD)
-vt, v_initial_epsb_estab_sr, v_added_epsb_estab_sr = kpi_data_dict['e_rab_accessibility']
-evt, v_ip_throughput_qci = kpi_data_dict['e_utran_ip_throughput']
+# Calculate the KPI data and additional information like UE Count and RCC per cell.
+enb_xlog_data_dict = context.Base_processEnbXLogData(log_data, T_PERIOD, progress_indicator)
+
+vt, v_initial_epsb_estab_sr, v_added_epsb_estab_sr = enb_xlog_data_dict['e_rab_accessibility']
+evt, v_ip_throughput_qci = enb_xlog_data_dict['e_utran_ip_throughput']
+
+ue_count_data_list = enb_xlog_data_dict['ue_count']
+rrc_list = enb_xlog_data_dict['rrc']
+rms_rx_list = enb_xlog_data_dict['rms']['rx']
 
 e_rab_dtype = np.dtype([
   ('vt', 'float'),
@@ -105,6 +128,34 @@ e_utran_dtype = np.dtype([
   ('ul_hi', 'float64'),
 ])
 
+cell_ue_count_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('ue_count_max', 'float'),
+  ('ue_count_min', 'float'),
+  ('ue_count_avg', 'float')
+])
+
+cell_rrc_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('rrc_con_req', 'float'),
+  ('rrc_paging', 'float'),
+  ('rrc_recon_com', 'float'),
+  ('rrc_sec_command', 'float'),
+  ('rrc_sec_complete', 'float')
+])
+
+cell_rms_rx_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('antenna', 'float'),
+  ('count', 'float'),
+  ('max', 'float64'),
+  ('rms', 'float64'),
+  ('rms_dbm', 'float64')
+])
+
 e_rab_array = e_rab_data_array.getArray()
 if not e_rab_array:
   e_rab_array = e_rab_data_array.initArray(shape=(0,), dtype=e_rab_dtype)
@@ -114,6 +165,30 @@ e_utran_array = e_utran_data_array.getArray()
 if not e_utran_array:
   e_utran_array = e_utran_data_array.initArray(shape=(0,), dtype=e_utran_dtype)
 e_utran_array_data = []
+
+cell_ue_count_array_data = []
+if cell_ue_count_data_array is not None:
+  cell_ue_count_array = cell_ue_count_data_array.getArray()
+  if not cell_ue_count_array:
+    cell_ue_count_array = cell_ue_count_data_array.initArray(shape=(0,), dtype=cell_ue_count_dtype)
+  for e in ue_count_data_list:
+    cell_ue_count_array_data.append(e)
+
+cell_rrc_array_data = []
+if cell_rrc_data_array is not None:
+  cell_rrc_array = cell_rrc_data_array.getArray()
+  if not cell_rrc_array:
+    cell_rrc_array = cell_rrc_data_array.initArray(shape=(0,), dtype=cell_rrc_dtype)
+  for e in rrc_list:
+    cell_rrc_array_data.append(e)
+
+cell_rms_rx_array_data = []
+if cell_rms_rx_data_array is not None:
+  cell_rms_rx_array = cell_rms_rx_data_array.getArray()
+  if not cell_rms_rx_array:
+    cell_rms_rx_array = cell_rms_rx_data_array.initArray(shape=(0,), dtype=cell_rms_rx_dtype)
+  for e in rms_rx_list:
+    cell_rms_rx_array_data.append(e)
 
 # Don't duplicate KPI data:
 # search and start inserting new timestamps from the first one
@@ -149,6 +224,18 @@ if e_rab_array_data:
 if e_utran_array_data:
   e_utran_array_data = np.ndarray((len(e_utran_array_data),), e_utran_dtype, np.array(e_utran_array_data))
   e_utran_array.append(e_utran_array_data)
+
+if cell_ue_count_array_data:
+  cell_ue_count_array_data = np.ndarray((len(cell_ue_count_array_data),), cell_ue_count_dtype, np.array(cell_ue_count_array_data))
+  cell_ue_count_array.append(cell_ue_count_array_data)
+
+if cell_rrc_array_data:
+  cell_rrc_array_data = np.ndarray((len(cell_rrc_array_data),), cell_rrc_dtype, np.array(cell_rrc_array_data))
+  cell_rrc_array.append(cell_rrc_array_data)
+
+if cell_rms_rx_array_data:
+  cell_rms_rx_array_data = np.ndarray((len(cell_rms_rx_array_data),), cell_rms_rx_dtype, np.array(cell_rms_rx_array_data))
+  cell_rms_rx_array.append(cell_rms_rx_array_data)
 
 progress_indicator.setIntOffsetIndex(end)
 e_utran_data_array.activate().DataArray_updateActiveQciLines()

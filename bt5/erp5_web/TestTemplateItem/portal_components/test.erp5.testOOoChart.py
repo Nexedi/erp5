@@ -309,5 +309,5 @@ class TestOOoChart(TestOOoChartMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOOoChart))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOOoChart))
   return suite

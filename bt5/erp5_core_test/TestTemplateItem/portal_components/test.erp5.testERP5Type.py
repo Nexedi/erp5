@@ -3349,6 +3349,14 @@ class TestLongRequestLogger(ERP5TypeTestCase):
     self.assertIn("request_key", long_request_log)
     self.assertIn("request_value", long_request_log)
 
+  def test_log_contains_request_with_non_string_keys(self):
+    request = self.portal.REQUEST
+    request.set(("request", "key"), "request_value")
+    self.start_long_request_monitor(request)
+    long_request_log = self.get_long_request_log()
+    self.assertIn(str(("request", "key")), long_request_log)
+    self.assertIn("request_value", long_request_log)
+
   def test_log_obfuscate_passwords(self):
     request = self.portal.REQUEST
     request.form["password"] = "secret"
@@ -3376,14 +3384,14 @@ def add_tests(suite, module):
     return suite.addTest(module.test_suite())
   for obj in vars(module).values():
     if isinstance(obj, type) and issubclass(obj, unittest.TestCase):
-      suite.addTest(unittest.makeSuite(obj))
+      suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(obj))
 
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Type))
-  suite.addTest(unittest.makeSuite(TestAccessControl))
-  suite.addTest(unittest.makeSuite(TestLongRequestLogger))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Type))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAccessControl))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestLongRequestLogger))
 
   # run tests for monkey patched ZPublisher modules
   import ZPublisher.tests.testBaseRequest

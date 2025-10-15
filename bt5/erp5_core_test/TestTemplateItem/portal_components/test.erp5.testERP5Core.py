@@ -39,6 +39,7 @@ from DateTime import DateTime
 from Testing import ZopeTestCase
 
 from Products.ERP5Type.Utils import bytes2str, str2unicode, str2bytes
+from Products.ERP5Type.tests.utils import TemporaryAlarmScript
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
 
@@ -724,7 +725,10 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Must not raise even if Unauthorized to view
     document_1.standard_error_message(error_type="MyErrorType", error_message="my error message.")
 
-    response = self.publish(document_1.getPath(), self.auth)
+    with TemporaryAlarmScript(self.portal, 'Base_checkUserCanViewERP5XHTMLStyleOrRaise',
+                              "''", attribute=False):
+      # Override the script to allow anonymous to render xhtml style
+      response = self.publish(document_1.getPath(), self.auth)
     self.assertEqual(response.getStatus(), 401)
     self.assertNotIn("Also, the following error occurred", str(response))
 

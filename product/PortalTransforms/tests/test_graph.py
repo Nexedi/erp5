@@ -106,7 +106,7 @@ class TestGraph(ATSiteTestCase):
 
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import TestSuite, defaultTestLoader
     suite = TestSuite()
-    suite.addTest(makeSuite(TestGraph))
+    suite.addTest(defaultTestLoader.loadTestsFromTestCase(TestGraph))
     return suite

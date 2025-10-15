@@ -75,7 +75,7 @@ class Test(ERP5TypeTestCase):
     finally:
       removeZODBPythonScript(script_container, name)
 
-  def test_01_IngestionFromFluentd(self, old_fluentd=False):
+  def test_01_IngestionFromFluentd(self, data_size = 100001, old_fluentd=False):
     """
     Test ingestion using a POST Request containing a msgpack encoded message
     simulating input from fluentd.
@@ -91,7 +91,7 @@ class Test(ERP5TypeTestCase):
     self.tic()
 
     number_string_list = []
-    for my_list in list(chunks(range(0, 100001), 10)):
+    for my_list in list(chunks(range(0, data_size), 10)):
       number_string_list.append(','.join([str(x) for x in my_list]))
     real_data = '\n'.join(number_string_list)
     # make sure real_data tail is also a full line
@@ -108,7 +108,7 @@ class Test(ERP5TypeTestCase):
     publish_kw = dict(user='ERP5TypeTestCase', env=env,
       request_method='POST', stdin=BytesIO(body))
     response = self.publish(path, **publish_kw)
-    self.assertEqual(NO_CONTENT, response.getStatus())
+    self.assertEqual(NO_CONTENT, response.getStatus(), "Error: %s" % response.getBody())
     # at every ingestion if no specialised Data Ingestion exists it is created
     # thus it is needed to wait for server side activities to be processed
     self.tic()
@@ -139,8 +139,8 @@ class Test(ERP5TypeTestCase):
 
     # test that extracted array contains same values as input CSV
     zarray = data_array.getArray()
-    self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
-    self.assertTrue(np.array_equal(zarray, np.arange(100001)))
+    self.assertEqual(np.average(zarray), np.average(np.arange(data_size)))
+    self.assertTrue(np.array_equal(zarray, np.arange(data_size)))
 
     # clean up
     data_array.invalidate()
@@ -148,7 +148,7 @@ class Test(ERP5TypeTestCase):
     self.tic()
 
   def test_01_1_IngestionFromOldFluentd(self):
-    self.test_01_IngestionFromFluentd(True)
+    self.test_01_IngestionFromFluentd(old_fluentd = True)
 
   def test_01_02_ParallelTransformation(self):
     """
@@ -258,7 +258,7 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(0, bucket_stream.getBucketCount())
 
     # test set and get
-    bin_string = "1"*100000
+    bin_string = b"1"*100000
     key = bucket_stream.getBucketCount() + 1
     bucket_stream.insertBucket(key, bin_string )
     self.assertEqual(bin_string, bucket_stream.getBucketByKey(key))
@@ -273,14 +273,14 @@ class Test(ERP5TypeTestCase):
 
     # set many buckets
     for i in range(100):
-      bucket_stream.insertBucket(i, i*10000)
+      bucket_stream.insertBucket(i, str2bytes(str(i*10000)))
 
     self.assertEqual(100, bucket_stream.getBucketCount())
     self.assertEqual(list(range(100)), bucket_stream.getKeyList())
 
     # test as sequence
     bucket = bucket_stream.getBucketKeyItemSequenceByKey(start_key=10, count=1)[0]
-    self.assertEqual(100000, bucket[1].value)
+    self.assertEqual(b'100000', bucket[1].value)
   
   def test_04_DataBucket_consistency(self):
     """Ensure 'Data Bucket Stream' doesn't break when running consistency checks [1].
@@ -296,7 +296,7 @@ class Test(ERP5TypeTestCase):
     Before the migration of the attribute from '_tree' to '_bucket_tree', it broke.
     """
     bucket_stream = self._getTestDataBucket()
-    # Buckets (PersistentStrings) must not be findable with folder API, otherwise
+    # Buckets (PersistentBytes) must not be findable with folder API, otherwise
     # erp5 tries to index them which is bad. Furthermore they are not aquisition
     # objects and can't be wrapped, therefore they'd also break folders iteritem method.
     self.assertEqual(list(bucket_stream.iteritems()), [])
@@ -311,7 +311,7 @@ class Test(ERP5TypeTestCase):
     data_steam_module = self.portal.data_stream_module
     bucket_stream = data_steam_module.newContent(portal_type='Data Bucket Stream')
     self.tic()
-    bucket_stream.insertBucket(1, 'testBucket')
+    bucket_stream.insertBucket(1, b'testBucket')
     self.tic()
     return bucket_stream
 
@@ -752,7 +752,7 @@ return result
 data_bucket_stream = context.portal_catalog.data_stream_module.newContent(
   portal_type='Data Bucket Stream'
 )
-data_bucket_stream.insertBucket(1,  "1" * 100000)
+data_bucket_stream.insertBucket(1,  b"1" * 100000)
 result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
 """
 
@@ -1002,3 +1002,6 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
     self.assertRaises(ValueError,
                       portal.Base_wendelinTextToNumpy,
                       wendelin_text)
+
+  def test_19_IngestionBigData(self):
+    self.test_01_IngestionFromFluentd(data_size = 1000000)

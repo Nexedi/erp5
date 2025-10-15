@@ -193,5 +193,5 @@ class TestApparelModel(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestApparelModel))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestApparelModel))
   return suite

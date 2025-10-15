@@ -35,5 +35,5 @@ class TestWendelinTelecomWeb(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestWendelinTelecomWeb))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestWendelinTelecomWeb))
   return suite

@@ -202,7 +202,7 @@ class FormTestCase(unittest.TestCase):
 def test_suite():
     suite = unittest.TestSuite()
 
-    suite.addTest(unittest.makeSuite(FormTestCase, 'test'))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(FormTestCase))
     return suite
 
 def main():

@@ -1,7 +1,9 @@
 Data Acquisition Unit | WendelinTelecomOrsObject
 Data Analysis Line | WendelinTelecomDataMovement
 Data Analysis | WendelinTelecomDataDelivery
+Data Array | WendelinTelecomDataArray
 Data Ingestion Line | WendelinTelecomDataMovement
 Data Ingestion | WendelinTelecomDataDelivery
 Data Supply | WendelinTelecomDataSupply
 Data Supply | WendelinTelecomOrsObject
+Progress Indicator | WendelinTelecomProgressIndicator

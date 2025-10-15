@@ -43,5 +43,5 @@ class TestRenderJSUIPageTemplate(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUIPageTemplate))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRenderJSUIPageTemplate))
   return suite

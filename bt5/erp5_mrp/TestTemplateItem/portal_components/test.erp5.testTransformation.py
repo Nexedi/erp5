@@ -150,6 +150,15 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
         [(1, first_component), (2, second_component)]
     )
 
+    # Mixing lines with int_index and without is not an error,
+    # but order of lines is undefined
+    second_transformed_resource.setIntIndex(None)
+    aggregated_amount_list = transformation.getAggregatedAmountList()
+    self.assertEqual(
+      sorted([(a.getQuantity(), a.getResourceValue()) for a in aggregated_amount_list]),
+      [(1, first_component), (2, second_component)]
+    )
+
   def test_getAggregatedAmountListWithVariatedProperty(self):
     """
     Make sure that getAggregatedAmountList is still working properly if we
@@ -489,5 +498,5 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
 def test_suite():
   import unittest
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTransformation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTransformation))
   return suite

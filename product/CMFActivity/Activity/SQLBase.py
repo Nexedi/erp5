@@ -803,6 +803,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
+          b" FOR UPDATE"
         b")" % args).format(*a, **k))
         result = Results(query(
           b"SELECT *"

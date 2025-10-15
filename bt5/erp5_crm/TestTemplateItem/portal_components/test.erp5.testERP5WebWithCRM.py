@@ -195,5 +195,5 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5WebWithCRM))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5WebWithCRM))
   return suite

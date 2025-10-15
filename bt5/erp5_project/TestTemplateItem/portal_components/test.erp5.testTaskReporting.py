@@ -339,5 +339,5 @@ class TestTaskReporting(TestTaskReportingMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTaskReporting))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTaskReporting))
   return suite

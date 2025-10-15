@@ -4235,16 +4235,16 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInventory))
-  suite.addTest(unittest.makeSuite(TestInventoryList))
-  suite.addTest(unittest.makeSuite(TestMovementHistoryList))
-  suite.addTest(unittest.makeSuite(TestInventoryStat))
-  suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
-  suite.addTest(unittest.makeSuite(TestTrackingList))
-  suite.addTest(unittest.makeSuite(TestInventoryCacheTable))
-  suite.addTest(unittest.makeSuite(TestUnitConversion))
-  suite.addTest(unittest.makeSuite(TestUnitConversionDefinition))
-  suite.addTest(unittest.makeSuite(TestUnitConversionBackwardCompatibility))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInventory))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInventoryList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestMovementHistoryList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInventoryStat))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestNextNegativeInventoryDate))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTrackingList))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInventoryCacheTable))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestUnitConversion))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestUnitConversionDefinition))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestUnitConversionBackwardCompatibility))
   return suite
 
 

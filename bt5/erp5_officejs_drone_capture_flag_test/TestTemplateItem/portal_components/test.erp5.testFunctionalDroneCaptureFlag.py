@@ -42,5 +42,5 @@ class TestDroneCaptureFlag(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDroneCaptureFlag))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestDroneCaptureFlag))
   return suite

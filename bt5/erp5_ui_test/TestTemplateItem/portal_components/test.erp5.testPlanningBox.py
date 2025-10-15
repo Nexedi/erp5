@@ -137,6 +137,6 @@ class TestPlanningBox(ERP5TypeTestCase):
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPlanningBox))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlanningBox))
   return suite
 

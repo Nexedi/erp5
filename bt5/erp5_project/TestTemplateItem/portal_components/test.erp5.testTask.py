@@ -847,5 +847,5 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTask))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTask))
   return suite

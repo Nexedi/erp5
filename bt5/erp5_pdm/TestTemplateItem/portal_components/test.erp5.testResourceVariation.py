@@ -726,6 +726,6 @@ class TestResourceVariation(ResourceVariationTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestResourceVariation))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestResourceVariation))
   return suite
 

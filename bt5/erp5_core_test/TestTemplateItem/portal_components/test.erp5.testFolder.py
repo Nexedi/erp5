@@ -299,5 +299,5 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestFolder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFolder))
   return suite

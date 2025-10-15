@@ -39,7 +39,7 @@ from subprocess import Popen, PIPE
 from AccessControl import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Utils import parse_http_header
+from Products.ERP5Type.Utils import parse_http_header, unicode2str
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole, findContentChain
 from Products.ERP5Form.ProxyField import BrokenProxyField
 from Products.CMFCore.utils import getToolByName
@@ -500,9 +500,9 @@ class NuValidator(object):
         severity_list = warning_list
       else:
         severity_list = error_list
-      txt = message['message'].encode('UTF-8')
+      txt = unicode2str(message['message'])
       if 'extract' in message:
-        txt += ': %s' % message['extract'].encode('UTF-8')
+        txt += ': %s' % unicode2str(message['extract'])
       severity_list.append([message['lastLine'], message['lastColumn'], txt])
     return [error_list, warning_list]
 
@@ -718,5 +718,5 @@ def test_suite():
       ('erp5_core',) + TestXHTML.getBusinessTemplateList(),
       expected_failure_list=expected_failure_list)
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestXHTML))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestXHTML))
   return suite

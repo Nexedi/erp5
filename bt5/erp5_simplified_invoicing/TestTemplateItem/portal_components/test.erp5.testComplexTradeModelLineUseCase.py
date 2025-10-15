@@ -503,6 +503,6 @@ class TestComplexTradeModelLineUseCasePurchase(TestComplexTradeModelLineUseCase)
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestComplexTradeModelLineUseCaseSale))
-  suite.addTest(unittest.makeSuite(TestComplexTradeModelLineUseCasePurchase))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestComplexTradeModelLineUseCaseSale))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestComplexTradeModelLineUseCasePurchase))
   return suite

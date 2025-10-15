@@ -54,6 +54,8 @@ class TestERP5Form(ERP5TypeTestCase):
     self.form = self.portal.portal_skins.custom.Base_viewTest
     self.form.manage_addField('my_string_field', 'String Field', 'StringField')
     self.form.my_string_field.values['default'] = "test string field"
+    self.form.manage_addField('my_string_field_tales_request', 'String Field', 'StringField')
+    self.form.my_string_field_tales_request.tales['default'] = TALESMethod("python:'REQUEST METHOD IS ' + request.method")
 
     self.form.pt = self.page_template.getId()
 
@@ -84,6 +86,10 @@ class TestERP5Form(ERP5TypeTestCase):
     self.assertIn(b"test string field", resp.getBody())
     self.assertEqual(resp.getHeader('Content-Type'), 'text/html; charset=utf-8')
 
+  def test_tales_request_variable(self):
+    """Make sure that `request` variable is available in TALES"""
+    resp = self.publish(self.form.getPath())
+    self.assertIn(b"REQUEST METHOD IS GET", resp.getBody())
 
 class TestProxify(ERP5TypeTestCase):
 

@@ -834,12 +834,12 @@ class TestEffectivePurchaseTradeCondition(
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestApplyTradeConditionSaleOrder))
-  suite.addTest(unittest.makeSuite(TestApplyTradeConditionPurchaseOrder))
-  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLineSaleOrder))
-  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLinePurchaseOrder))
-  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLineSaleInvoice))
-  suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLinePurchaseInvoice))
-  suite.addTest(unittest.makeSuite(TestEffectiveSaleTradeCondition))
-  suite.addTest(unittest.makeSuite(TestEffectivePurchaseTradeCondition))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestApplyTradeConditionSaleOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestApplyTradeConditionPurchaseOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTradeConditionSupplyLineSaleOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTradeConditionSupplyLinePurchaseOrder))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTradeConditionSupplyLineSaleInvoice))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTradeConditionSupplyLinePurchaseInvoice))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestEffectiveSaleTradeCondition))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestEffectivePurchaseTradeCondition))
   return suite

@@ -7,5 +7,5 @@ class TestInventoryWithStockCache(TestInventory):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInventoryWithStockCache))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInventoryWithStockCache))
   return suite

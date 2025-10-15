@@ -95,5 +95,5 @@ class TestInotifyTool(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInotifyTool))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestInotifyTool))
   return suite

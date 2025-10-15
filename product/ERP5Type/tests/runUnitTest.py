@@ -467,6 +467,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     return name_list
 
 unittest.loader.TestLoader = ERP5TypeTestLoader
+unittest.defaultTestLoader = unittest.loader.defaultTestLoader = ERP5TypeTestLoader()
 
 class DebugTestResult:
   """Wrap an unittest.TestResult, invoking pdb on errors / failures
@@ -575,8 +576,13 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # Set debug mode after importing ZopeLite that resets it to 0
   cfg.debug_mode = debug
 
-  from ZPublisher.HTTPRequest import HTTPRequest
-  HTTPRequest.retry_max_count = 3
+  from ZPublisher import HTTPRequest
+  if six.PY3:
+    # zope.conf is not used during ERP5 unit tests
+    # we need to set manually this value to default value: 10MB
+    setattr(HTTPRequest, 'FORM_MEMORY_LIMIT', 10*1024*1024)
+  HTTPRequest.HTTPRequest.retry_max_count = 3
+
 
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging

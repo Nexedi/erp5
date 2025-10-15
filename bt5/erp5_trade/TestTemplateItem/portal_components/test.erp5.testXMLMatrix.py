@@ -467,5 +467,5 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestXMLMatrix))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestXMLMatrix))
   return suite

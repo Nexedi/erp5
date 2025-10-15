@@ -477,13 +477,13 @@ class LinesValidatorTestCase(ValidatorTestCase):
 def test_suite():
     suite = unittest.TestSuite()
 
-    suite.addTest(unittest.makeSuite(StringValidatorTestCase, 'test'))
-    suite.addTest(unittest.makeSuite(EmailValidatorTestCase, 'test'))
-    suite.addTest(unittest.makeSuite(BooleanValidatorTestCase, 'test'))
-    suite.addTest(unittest.makeSuite(IntegerValidatorTestCase, 'test'))
-    suite.addTest(unittest.makeSuite(FloatValidatorTestCase, 'test'))
-    suite.addTest(unittest.makeSuite(DateTimeValidatorTestCase, 'test'))
-    suite.addTest(unittest.makeSuite(LinesValidatorTestCase, 'test'))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(StringValidatorTestCase))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(EmailValidatorTestCase))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(BooleanValidatorTestCase))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(IntegerValidatorTestCase))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(FloatValidatorTestCase))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(DateTimeValidatorTestCase))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(LinesValidatorTestCase))
 
     return suite
 

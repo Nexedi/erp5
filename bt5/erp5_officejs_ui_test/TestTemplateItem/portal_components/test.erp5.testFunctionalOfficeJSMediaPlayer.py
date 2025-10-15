@@ -43,5 +43,5 @@ class TestOfficejSUIMediaPlayer(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUIMediaPlayer))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestOfficejSUIMediaPlayer))
   return suite
