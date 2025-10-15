@@ -128,6 +128,23 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         # if no document found, fallback on default page template
         document = DocumentExtensibleTraversableMixin.__bobo_traverse__(self, request,
           '404.error.page')
+    # In case the url publishes a document, but there is trailing slash
+    # raise 301 redirect to the url excluding the slash
+    # This is different than Web Section.
+    # But in Web Page we need no-slash since we would render all other sources
+    # in the container Web Section, so keeping the caches
+    if hasattr(document, 'getPortalType') \
+        and document.getPortalType() in self.getPortalObject().getPortalDocumentTypeList():
+      actual_url = self.REQUEST.get("ACTUAL_URL", "").strip()
+      if actual_url and actual_url.endswith("/") \
+          and actual_url[:-1] == document.absolute_url() \
+          and self.REQUEST.get("method") == "GET":
+        query_string = self.REQUEST.get("QUERY_STRING", "")
+        query_str = "?%s" % query_string if query_string else query_string
+        self.REQUEST.RESPONSE.redirect(
+          "".join([actual_url[:-1], query_str]),
+          status=301
+        )
     return document
 
   security.declarePrivate( 'manage_beforeDelete' )
@@ -220,6 +237,18 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     if self.REQUEST.get(self.web_section_key, MARKER) is MARKER:
       self.REQUEST[self.web_section_key] = self.getPhysicalPath()
     self.REQUEST.set('current_web_section', self)
+
+    # The URL to access the section should have the trailing slash.
+    actual_url = self.REQUEST.get("ACTUAL_URL", "").strip()
+    if actual_url and self.REQUEST.get("method") == "GET" and not actual_url.endswith("/") and self.REQUEST.get('PUBLISHED') == self:
+      query_string = self.REQUEST.get("QUERY_STRING", "")
+      query_str = "?%s" % query_string if query_string else query_string
+      self.REQUEST.RESPONSE.redirect(
+        "".join([actual_url, "/", query_str]),
+        status=301
+      )
+      return
+
     if self._checkIfRenderDefaultDocument():
       document = None
       if self.isDefaultPageDisplayed():
@@ -400,6 +429,25 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       cache[key] = result
 
     return result
+
+  def _add_trailing_slash(self, path):
+    path += "" if path.endswith("/") else "/"
+    return path
+
+  security.declareProtected(Permissions.View, 'absolute_url_path')
+  def absolute_url_path(self):
+    absolute_url_path = self.absolute_url(relative=1)
+    if not absolute_url_path.startswith("/"):
+      absolute_url_path = "/" + absolute_url_path
+    return absolute_url_path
+
+  security.declareProtected(Permissions.View, 'absolute_url')
+  def absolute_url(self, relative=0):
+    """
+      Return absolute_url with / in the end to avoid redirections when
+      accessing Web sections. Please check the method WebSection.__call__
+    """
+    return self._add_trailing_slash(Domain.absolute_url(self, relative=relative))
 
   security.declareProtected(Permissions.View, 'getSiteMapTree')
   def getSiteMapTree(self, **kw):
