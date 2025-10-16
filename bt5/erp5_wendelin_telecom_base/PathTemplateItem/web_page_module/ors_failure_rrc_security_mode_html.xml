@@ -127,19 +127,19 @@
                 <item>
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>processing_status_workflow</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -185,7 +185,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1755059822.662848</float>
+                              <float>1755059822.66</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -250,7 +250,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1755745439.184623</float>
+                              <float>1755745439.18</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -309,7 +309,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1755059794.425535</float>
+                              <float>1755059794.43</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
