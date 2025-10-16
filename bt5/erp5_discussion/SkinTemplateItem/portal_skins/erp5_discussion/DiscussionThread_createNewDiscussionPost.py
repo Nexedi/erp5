@@ -2,8 +2,6 @@
  This script allows to create a new Discussion Post in context.
 """
 from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
-
 portal = context.getPortalObject()
 person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
@@ -52,8 +50,7 @@ discussion_thread.edit(modification_date = DateTime())
 post_relative_url = discussion_post.getRelativeUrl()
 
 if not is_temp_object:
-  return discussion_post.Base_redirect(form_id,
-    keep_items = dict(portal_status_message=portal_status_message))
+  return discussion_post.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))
 else:
   # redirect using again reference
   redirect_url = '%s?portal_status_message=%s&post_relative_url=%s' \
