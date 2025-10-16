@@ -29,6 +29,7 @@
 
 import unittest
 import time
+from Products.ERP5Type.tests.utils import TemporaryAlarmScript
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
 from DateTime import DateTime
 
@@ -37,6 +38,20 @@ class TestERP5Administration(InventoryAPITestCase):
   """
   def getTitle(self):
     return "ERP5Administration"
+
+  def afterSetUp(self):
+    activity_tool = self.portal.portal_activities
+    activity_status = {m.processing_node < -1
+                       for m in activity_tool.getMessageList()}
+    if True in activity_status:
+      activity_tool.manageClearActivities()
+    alarm_id = "alarm_for_test_pending_error"
+    alarm = getattr(self.portal.portal_alarms, alarm_id, None)
+    if alarm is not None:
+      # Screate now an alarm
+      self.portal.portal_alarms.manage_delObjects(ids=[alarm_id])
+
+    InventoryAPITestCase.afterSetUp(self)
 
   def beforeTearDown(self):
     # InventoryAPITestCase.beforeTearDown clears everything.
@@ -275,6 +290,55 @@ component_error()
     for message in message_list:
       self.assertIn(message, result_list)
 
+  def test_getPendingErrorList_activities(self):
+    self.logout()
+    self.assertEqual([],
+      self.portal.ERP5Site_getPendingErrorList())
+    self.login()
+    self.portal.person_module.activate().this_is_a_script_that_will_fail()
+    try:
+      # Let activity fail silently to generate activity failure
+      self.tic()
+    except RuntimeError:
+      pass
+    self.logout()
+    self.assertEqual(['You have one or more activity failures.'],
+      [m.title for m in self.portal.ERP5Site_getPendingErrorList()])
+
+    self.login()
+    self.portal.person_module.activate().this_is_another_that_will_fail()
+    try:
+      # Let activity fail silently to generate activity failure
+      self.tic()
+    except RuntimeError:
+      pass
+    self.logout()
+
+    # only one entry
+    self.assertEqual(['You have one or more activity failures.'],
+      [m.title for m in self.portal.ERP5Site_getPendingErrorList()])
+
+  def test_getPendingErrorList_alarms(self):
+    alarm_id = "alarm_for_test_pending_error"
+    date = DateTime().earliestTime()
+    method_id = 'Alarm_testgetPendingErrorList'
+
+    alarm = self.portal.portal_alarms.newContent(
+      id=alarm_id, sense_method_id=method_id, periodicity_start_date=date)
+    alarm.setEnabled(True)
+
+    self.tic()
+    with TemporaryAlarmScript(self.portal, method_id, "''", attribute=False):
+      self.assertEqual("", alarm.sense())
+      # only one entry
+      self.assertEqual([],
+        [m.title for m in self.portal.ERP5Site_getPendingErrorList()])
+
+    with TemporaryAlarmScript(self.portal, method_id, "1", attribute=False):
+      self.assertEqual(1, alarm.sense())
+      # only one entry
+      self.assertEqual(['You have one or more alarms with error.'],
+        [m.title for m in self.portal.ERP5Site_getPendingErrorList()])
 
 
 def test_suite():
