@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>OLE_documents_zipstring</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAAIAEhZDjfyDVJUnQoAAMoKAAAtAAAAUGljdHVyZXMvMTAwMDAwMDAwMDAwMDBCNDAw
+            <value> <bytes encoding="base64">UEsDBBQAAAAIAEhZDjfyDVJUnQoAAMoKAAAtAAAAUGljdHVyZXMvMTAwMDAwMDAwMDAwMDBCNDAw
 MDAwMDIxMTIyREIwQUQuanBnlY95NNRrH8B/g8lowYwlWWaMxjKjSUiNyc61TIzMWBpEZMkgZQuF
 m+WmyDK2FLq2scuWJdJNJHsYZAZZm0y0ELI1r3vfc973/ff9POc85/ucz3k+53m477kzgDDB2MwY
 AIFAwJX9BXBnAfHfQrw8AMDCAsAAAAAB/oHLAgwBMC8fHx8veH8Dg8EH+A9D+PcROnRI4DBUCAaD
@@ -67,20 +67,16 @@ ZTS46FgLjq4Edsy4qI6R7O/1wnnV357Mi4wPBX+LYaT8HDLdG2jv498ERx+OFM1nw7Z6/PwWeV4U
 bWIBMTzt19TO6Y+XffEBUEsBAhQAFAAAAAgASFkON/INUlSdCgAAygoAAC0AAAAAAAAAAAAAAAAA
 AAAAAFBpY3R1cmVzLzEwMDAwMDAwMDAwMDAwQjQwMDAwMDAyMTEyMkRCMEFELmpwZ1BLAQIUABQA
 AAAIAEhZDjeB4XqibAEAABQIAAAVAAAAAAAAAAAAAAAAAOgKAABNRVRBLUlORi9tYW5pZmVzdC54
-bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
+bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</bytes> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <dictionary>
                     <item>

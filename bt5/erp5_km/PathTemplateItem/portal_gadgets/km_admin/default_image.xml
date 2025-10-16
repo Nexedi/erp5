@@ -9,43 +9,43 @@
         <item>
             <key> <string>_cached_data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_mime</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_size</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_time</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -338,13 +338,9 @@
                     <value>
                       <object>
                         <klass>
-                          <global id="5.1" name="_reconstructor" module="copy_reg"/>
+                          <global id="5.1" name="DateTime" module="DateTime.DateTime"/>
                         </klass>
-                        <tuple>
-                          <global id="5.2" name="DateTime" module="DateTime.DateTime"/>
-                          <global id="5.3" name="object" module="__builtin__"/>
-                          <none/>
-                        </tuple>
+                        <tuple/>
                         <state>
                           <tuple>
                             <float>1233514160.57</float>
@@ -366,11 +362,7 @@
                     <value>
                       <object>
                         <klass> <reference id="5.1"/> </klass>
-                        <tuple>
-                          <reference id="5.2"/>
-                          <reference id="5.3"/>
-                          <none/>
-                        </tuple>
+                        <tuple/>
                         <state>
                           <tuple>
                             <float>1233315525.58</float>
@@ -431,7 +423,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">/9j/4AAQSkZJRgABAQIASwBLAAD/4QAWRXhpZgAATU0AKgAAAAgAAAAAAAD/2wBDAAgGBgcGBQgH
+            <value> <bytes encoding="base64">/9j/4AAQSkZJRgABAQIASwBLAAD/4QAWRXhpZgAATU0AKgAAAAgAAAAAAAD/2wBDAAgGBgcGBQgH
 BwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/
 2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy
 MjIyMjIyMjIyMjL/wAARCAB/AEYDASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAUBAwQC
@@ -471,7 +463,7 @@ SSMV0kyO7Z2wep642zQMJL8QxPLIYFjQFnYzgBQOpJxsKiw4nDxB3ELI6qiSCSNw6MrZwQRsehpf
 6gIo5xbR28TzZ1Foy4IJyRgnzrXwrhj2LyyPNE/MSNFSKHlqioDgAZPegZ0UUVAVguC4lfRjPTf4
 Vq9Yi/F9DVbG2ZixO5+NUL5C3OaSGNh/CxpKkAkdPz61yZrlScQmQeRK6fLtTHFr3P1oxa9z9aBe
 JrgiUGDBVfCc+0agzXGmIrC2+rWCN9unwzTHFr3P1oxa9z9aBfDJcM+JYwq+LfH6U4T2F+ArPi17
-n61aJ4gMBvoaC2iqvWIvxfQ0VB//2Q==</string> </value>
+n61aJ4gMBvoaC2iqvWIvxfQ0VB//2Q==</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>

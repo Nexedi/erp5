@@ -58,13 +58,9 @@
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <dictionary>
                     <item>
@@ -79,7 +75,7 @@
                         <key> <string>_list</string> </key>
                         <value>
                           <list>
-                            <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                            <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                           </list>
                         </value>
                     </item>
@@ -106,7 +102,7 @@
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -121,13 +117,13 @@
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -167,7 +163,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -224,13 +220,13 @@
                 <item>
                     <key> <string>category_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -273,13 +269,9 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1449656397.12</float>
@@ -342,13 +334,9 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1450184308.94</float>
