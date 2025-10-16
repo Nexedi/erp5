@@ -269,6 +269,11 @@ class TestXMLPickle(XMLPickleTestCase):
         lxml.etree.fromstring(xml).xpath('//global[@name="UserList"]/@module'),
         ["UserList"],
       )
+    else:
+      self.assertEqual(
+        lxml.etree.fromstring(xml).xpath('//global[@name="UserList"]/@module'),
+        ["collections"],
+      )
     self.check_and_load(l)
 
 
