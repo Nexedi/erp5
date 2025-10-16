@@ -135,7 +135,7 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -185,7 +185,7 @@
                 <item>
                     <key> <string>text_editor</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
