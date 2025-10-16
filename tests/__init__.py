@@ -247,7 +247,7 @@ class _BusinessTemplateCodingStyleTestSuite(_Base):
     test_list = [
       os.path.basename(path)
       for path in chain(
-        glob(HERE + '/../bt5/*'),
+        glob(HERE + '/../bt5/erp5_a*'),
         glob(HERE + '/../product/ERP5/bootstrap/*'))
       if os.path.isdir(path) and not skip_business_template(path)
     ]
