@@ -94,6 +94,55 @@
  <td>//a[text()='Project Forum']</td>
  <td></td>
 </tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<!-- repeat due to test node flaky tests -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/project_management/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='front-project-list']</td>
+  <td></td>
+</tr>
+<!-- Check project present -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[@id='test-project-forum-project_page_link' and text()='(Project Page)']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[@id='test-project-forum-project_page_link' and text()='(Project Page)']</td>
+  <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//a[@id='milestone_link' and @class='first-line-buttons']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>assertElementPresent</td>
+ <td>//a[text()='Project Forum']</td>
+ <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//a[text()='Project Forum']</td>
+ <td></td>
+</tr>
 <!-- check forum page elements -->
 <tr>
   <td>waitForTextPresent</td>
