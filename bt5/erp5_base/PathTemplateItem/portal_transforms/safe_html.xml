@@ -11,7 +11,7 @@
             <value>
               <object>
                 <klass>
-                  <global id="1.1" name="UserDict" module="UserDict"/>
+                  <global id="1.1" name="UserDict" module="collections"/>
                 </klass>
                 <tuple/>
                 <state>
@@ -27,7 +27,7 @@
                             <item>
                                 <key> <string>class_blacklist</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -41,13 +41,13 @@
                             <item>
                                 <key> <string>inputs</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>nasty_tags</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -61,25 +61,25 @@
                             <item>
                                 <key> <string>stripped_attributes</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>stripped_combinations</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>style_whitelist</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>valid_tags</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
                                 </value>
                             </item>
                           </dictionary>
@@ -105,61 +105,61 @@
                             <item>
                                 <key> <string>class_blacklist</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>default_encoding</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAo=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>disable_transform</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAs=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>inputs</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAw=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>nasty_tags</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAA0=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>remove_javascript</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAA4=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>stripped_attributes</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAA8=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>stripped_combinations</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABA=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>style_whitelist</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABE=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>valid_tags</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABI=</bytes> </persistent>
                                 </value>
                             </item>
                           </dictionary>
