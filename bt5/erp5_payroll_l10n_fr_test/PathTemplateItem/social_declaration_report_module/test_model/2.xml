@@ -32,13 +32,9 @@
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="DateTime" module="DateTime.DateTime"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <tuple>
                     <float>1420848000.0</float>
