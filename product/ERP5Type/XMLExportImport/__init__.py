@@ -65,7 +65,7 @@ MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
 marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
                                                             as_tree=True).dumps
 
-DEFAULT_PICKLE_PROTOCOL = 1 if six.PY2 else 3
+DEFAULT_PICKLE_PROTOCOL = 3
 
 
 class OrderedPickler(Pickler):
