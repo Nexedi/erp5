@@ -13,19 +13,19 @@
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAYQAAADUCAIAAAATJsPHAAAAA3NCSVQICAjb4U/gAAAAGXRFWHRT
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAYQAAADUCAIAAAATJsPHAAAAA3NCSVQICAjb4U/gAAAAGXRFWHRT
 b2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAAIABJREFUeJzt3XdUFFcXAPA7ZRsdpAsqKNh7
 jb0XrDFqTCzYS4wmYosae40aTKKJxmg0wmeLvWOPsaNiR7ALonQWWNgyM+/7Y3GzLgsidcD7O3s8
 s29m3t43vnd35u3sQq3bfxsQQqik0SUdAEIi5e2piE6KK+koPiKYjBBCosDSFPi4KSo4yixlTEkH
@@ -254,7 +254,7 @@ fhRGzp2bl58QMbnF9MHOH8auPZYkWHUdMnWk4syoTZcpB8f4Fy8Yic3vIxpO2fyvtHy9lZtWNreX
 mdRgLC93CRzesT4v9xkZ3/Sov89In3pMMpH+6dy5c83e9JjHQ4GKn7gmsFHJMkkcNT6f8e/nM94+
 a3vJ/52NQ8e9v4aiZjJJVFhzRqhElJrLNIRQ2YZnRkgUzH6on4sCftsDiRAmI1TyDJNBeVSQb8Ai
 0cLLNISQKGAyQgiJAiYjhJAoYDJCCImCWCaw8a9ZoWKDnU2c8A5shJAo4GUaQkgUMBkhhEQBkxFC
-SBQwGSGERAGTEUJIFDAZIYREAZMRQkgU/g9LP/h2oPMeDwAAAABJRU5ErkJggg==</string> </value>
+SBQwGSGERAGTEUJIFDAZIYREAZMRQkgU/g9LP/h2oPMeDwAAAABJRU5ErkJggg==</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
