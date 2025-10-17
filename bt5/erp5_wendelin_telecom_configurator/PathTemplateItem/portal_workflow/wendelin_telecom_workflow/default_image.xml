@@ -13,19 +13,19 @@
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAIMAAAB1CAYAAABtVlJiAAACaGlDQ1BpY2MAACiRY2BgepCTnFvM
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAIMAAAB1CAYAAABtVlJiAAACaGlDQ1BpY2MAACiRY2BgepCTnFvM
 JMDAkJtXUhTk7qQQERmlwP6IgZlBhIGTgY9BNjG5uMA32C2EAQiKE8uLk0uKchhQwLdrDIwg+rJu
 RmJeyuRNJiv5Nih1zfg7a/3i9M7ZDPgBZ0pqcTKQ/gDE8ckFRSUMDIw8QDZPeUkBiC0BZIsUAR0F
 ZOuA2OkQtgOInQRhh4DVhAQ5A9kZQFyRjsROQmJD7QIB1mKgZ5EdUpJaUQKinZ0NGEBhABH9HAL2
@@ -155,7 +155,7 @@ DP1JvrD1c5KrqARxM978SInm+1o0Ib9h/9zEzcBCxzK+0fQ1Ksnr2/AUYoIoUZybF/Du5bKCYxlb
 Tdt9EF/y8P8BwHOcKm1cWw8AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjQtMDgtMjdUMTM6MDM6NTQr
 MDA6MDAHBJwJAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI0LTA4LTI3VDEzOjAzOjU0KzAwOjAwdlkk
 tQAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNC0wOC0yN1QxMzowMzo1NCswMDowMCFMBWoAAAAZ
-dEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAAElFTkSuQmCC</string> </value>
+dEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAAElFTkSuQmCC</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>

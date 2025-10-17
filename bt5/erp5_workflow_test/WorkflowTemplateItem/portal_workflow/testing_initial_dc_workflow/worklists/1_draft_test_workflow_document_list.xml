@@ -33,7 +33,7 @@ person_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -43,7 +43,7 @@ person_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
