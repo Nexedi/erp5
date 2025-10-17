@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>base_data</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAgAAPBIlUuFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
+            <value> <bytes encoding="base64">UEsDBBQAAAgAAPBIlUuFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
 aXMub3BlbmRvY3VtZW50LnNwcmVhZHNoZWV0UEsDBBQAAAgAAPBIlUvmyW8aSAQAAEgEAAAYAAAA
 VGh1bWJuYWlscy90aHVtYm5haWwucG5niVBORw0KGgoAAAANSUhEUgAAAN0AAAD/CAMAAABCfiMV
 AAADAFBMVEWPj4+fn5+/v7/Ozs7e3t7///8AAAD/////////////////////////////////////
@@ -272,7 +272,7 @@ L1BLAQIUABQAAAgAAPBIlUsAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAEwdAABDb25maWd1cmF0
 aW9uczIvZmxvYXRlci9QSwECFAAUAAAIAADwSJVLAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAACC
 HQAAQ29uZmlndXJhdGlvbnMyL21lbnViYXIvUEsBAhQAFAAICAgA8EiVS1MqqZ8hAQAARQQAABUA
 AAAAAAAAAAAAAAAAuB0AAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAEQARAHAEAAAcHwAA
-AAA=</string> </value>
+AAA=</bytes> </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>

@@ -109,7 +109,7 @@
         <item>
             <key> <string>base_data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -123,7 +123,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -181,7 +181,7 @@
       <dictionary>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAgAAMhqG1EzJqyoLwAAAC8AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
+            <value> <bytes encoding="base64">UEsDBBQAAAgAAMhqG1EzJqyoLwAAAC8AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
 aXMub3BlbmRvY3VtZW50LnByZXNlbnRhdGlvblBLAwQUAAAIAADIahtR4W249S8DAAAvAwAAGAAA
 AFRodW1ibmFpbHMvdGh1bWJuYWlsLnBuZ4lQTkcNChoKAAAADUlIRFIAAAEAAAAAkAgDAAAA0L1F
 owAAAJlQTFRFc3Nzfn5+/wIC/wwM/xIS/xoa/yYm/yoq/zQ0/zs7/0JC/0tL/1RU/1xc/2Rk/2xs
@@ -2442,7 +2442,7 @@ bWFwcy9QSwECFAAUAAAIAADIahtRAAAAAAAAAAAAAAAAGgAAAAAAAAAAAAAAAAAS7wEAQ29uZmln
 dXJhdGlvbnMyL3BvcHVwbWVudS9QSwECFAAUAAAIAADIahtRAAAAAAAAAAAAAAAAGgAAAAAAAAAA
 AAAAAABK7wEAQ29uZmlndXJhdGlvbnMyL3N0YXR1c2Jhci9QSwECFAAUAAgICADIahtR255Mp4IB
 AAAFBgAAFQAAAAAAAAAAAAAAAACC7wEATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAAVABUA
-GgYAAEfxAQAAAA==</string> </value>
+GgYAAEfxAQAAAA==</bytes> </value>
         </item>
       </dictionary>
     </pickle>
@@ -2455,7 +2455,7 @@ GgYAAEfxAQAAAA==</string> </value>
       <dictionary>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAgAAEBqG1EzJqyoLwAAAC8AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
+            <value> <bytes encoding="base64">UEsDBBQAAAgAAEBqG1EzJqyoLwAAAC8AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
 aXMub3BlbmRvY3VtZW50LnByZXNlbnRhdGlvblBLAwQUAAAIAABAahtR78PhSQEDAAABAwAAGAAA
 AFRodW1ibmFpbHMvdGh1bWJuYWlsLnBuZ4lQTkcNChoKAAAADUlIRFIAAAEAAAAAkAgDAAAA0L1F
 owAAAJlQTFRFbGxsdnZ2fHx8/wAA/wkJ/xIS/xwc/yEh/ysr/zIy/zg4/0JC/0tL/1VV/15e/2tr
@@ -4703,7 +4703,7 @@ AAAAAAAAAO7rAQBDb25maWd1cmF0aW9uczIvcG9wdXBtZW51L1BLAQIUABQAAAgAAEBqG1EAAAAA
 AAAAAAAAAAAYAAAAAAAAAAAAAAAAACbsAQBDb25maWd1cmF0aW9uczIvZmxvYXRlci9QSwECFAAU
 AAAIAABAahtRAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAABc7AEAQ29uZmlndXJhdGlvbnMyL21l
 bnViYXIvUEsBAhQAFAAICAgAQGobUdSzItKpAQAAWAYAABUAAAAAAAAAAAAAAAAAkuwBAE1FVEEt
-SU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAFQAVABoGAAB+7gEAAAA=</string> </value>
+SU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAFQAVABoGAAB+7gEAAAA=</bytes> </value>
         </item>
       </dictionary>
     </pickle>

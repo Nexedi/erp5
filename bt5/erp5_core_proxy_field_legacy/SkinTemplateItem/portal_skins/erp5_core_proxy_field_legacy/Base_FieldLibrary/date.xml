@@ -123,7 +123,7 @@
         <item>
             <key> <string>sub_form</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -149,7 +149,7 @@
                 <item>
                     <key> <string>date_only</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -163,7 +163,7 @@
                 <item>
                     <key> <string>default_now</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -193,7 +193,7 @@
                 <item>
                     <key> <string>input_order</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
