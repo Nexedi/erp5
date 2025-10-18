@@ -8,7 +8,7 @@
   function getNoDataPlotLayout(annotation) {
     return {
       'title' : {
-        'text': 'Throughput'
+        'text': annotation
       },
       'xaxis': {
         'fixedrange': true
@@ -79,9 +79,9 @@
     return data_list;
   }
 
-  function plotFromData(data, element, label) {
+  function plotFromData(data, element, label, prop) {
     var date = [],
-      bytes = [];
+      value = [];
 
     if (Object.keys(data).length === 0 ||
         data.utc.length === 0) {
@@ -98,11 +98,11 @@
       date.push(new Date(element * 1000));
     });
 
-    bytes = data.bytes;
+    value = data[prop];
 
     return Plotly.react(
       element,
-      getPlotData(date, bytes),
+      getPlotData(date, value),
       getDataPlotLayout(label)
     );
   }
@@ -122,13 +122,22 @@
       return plotContainerList;
     }
 
-    // Add base before
     label = "Throughout over Time";
     plotContainer = document.createElement('div');
     plotContainer.classList.add('graph-item');
-    plotContainer.setAttribute('data-id', 'base');
+    plotContainer.setAttribute('data-id', 'bytes');
+    plotContainer.setAttribute('data-label', label);
 
-    plotFromData(response.base, plotContainer, label);
+    plotFromData(response.bytes, plotContainer, label, 'bytes');
+    plotContainerList.push(plotContainer);
+
+    label = "Requests per Second";
+    plotContainer = document.createElement('div');
+    plotContainer.classList.add('graph-item');
+    plotContainer.setAttribute('data-id', 'rps');
+    plotContainer.setAttribute('data-label', label);
+
+    plotFromData(response.rps, plotContainer, label, 'rps');
     plotContainerList.push(plotContainer);
 
     base_element.innerHTML = "";
@@ -204,10 +213,10 @@
                       })
                         .push(function (response) {
                           var key = el.getAttribute('data-id'),
-                            label = "Throughput over Time",
+                            label = el.getAttribute('data-label'),
                             data = response[key];
 
-                          return plotFromData(data, el, label);
+                          return plotFromData(data, el, label, key);
                         });
                     }
                   );
