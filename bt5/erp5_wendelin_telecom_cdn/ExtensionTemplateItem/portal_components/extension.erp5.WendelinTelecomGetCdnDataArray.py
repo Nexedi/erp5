@@ -21,12 +21,15 @@ def resample_data_zarray(
   data_frame[time_field] = pd.to_datetime(data_frame[time_field], unit='s')
   data_frame = data_frame.sort_values(by=time_field)
 
+  data_frame['requests'] = 1
   # Resample data if array is too large
   if len(np_data_zarray) > resample_size:
     resample_period = int((time_end - time_start) / resample_size)
     if not resample_period:
       resample_period = 1
-    data_frame = data_frame.resample('%ss' % resample_period, on=time_field).mean()
+    data_frame = data_frame.resample(
+      '%ss' % resample_period,
+      on=time_field).sum()
     data_frame = data_frame.fillna(value=NA_VALUES_REPLACEMENTS)
 
   data_frame = data_frame.reset_index()
@@ -49,15 +52,19 @@ def get_cdn_throughput(data_array, data_array_dtype, time_start, time_end):
     RESAMPLE_SIZE
   )
 
-    # Transform absolute to delta:
-  data_frame = data_frame.groupby(time_field).agg({
-    'bytes': 'mean'}).reset_index()
-
+  data_frame['utc'] = data_frame[time_field].astype(int)
+  data_frame = data_frame.groupby('utc').agg({
+    'bytes': 'sum',
+    'requests': 'sum'}).reset_index()
   base_resampled_data_dict = data_frame.to_dict(orient='list')
   response_dict = {
-    'base': {
+    'bytes': {
       'utc': base_resampled_data_dict['utc'],
       'bytes': base_resampled_data_dict['bytes']
+    },
+    'rps' : {
+      'utc': base_resampled_data_dict['utc'],
+      'rps': base_resampled_data_dict['requests']
     }
   }
   return response_dict
@@ -107,5 +114,3 @@ def getDataArrayForDataTypeAsJSON(self, data_array_url, data_type,
   if data_type == 'bytes':
     return json.dumps(get_cdn_throughput(
       data_array, data_array_dtype, time_start, time_end))
-
-
