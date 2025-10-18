@@ -254,27 +254,14 @@ def initializeDynamicModules():
     sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
     sys.modules["erp5.accessor_holder.property_sheet"] = \
         erp5.accessor_holder.property_sheet
+
     sys.modules["erp5.component"] = erp5.component
-
-    erp5.component.module = ComponentDynamicPackage('erp5.component.module',
-                                                    'Module Component')
-
-    erp5.component.extension = ComponentDynamicPackage('erp5.component.extension',
-                                                       'Extension Component')
-
-    erp5.component.document = ComponentDynamicPackage('erp5.component.document',
-                                                      'Document Component')
-
-    erp5.component.tool = ToolComponentDynamicPackage('erp5.component.tool',
-                                                      'Tool Component')
-
-    erp5.component.interface = ComponentDynamicPackage('erp5.component.interface',
-                                                       'Interface Component')
-
-    erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin',
-                                                   'Mixin Component')
-
-    erp5.component.test = ComponentDynamicPackage('erp5.component.test',
-                                                  'Test Component')
+    erp5.component.module = ComponentDynamicPackage('erp5.component.module')
+    erp5.component.extension = ComponentDynamicPackage('erp5.component.extension')
+    erp5.component.document = ComponentDynamicPackage('erp5.component.document')
+    erp5.component.tool = ToolComponentDynamicPackage('erp5.component.tool')
+    erp5.component.interface = ComponentDynamicPackage('erp5.component.interface')
+    erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin')
+    erp5.component.test = ComponentDynamicPackage('erp5.component.test')
   finally:
     imp.release_lock()
