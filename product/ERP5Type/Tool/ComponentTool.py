@@ -163,7 +163,10 @@ class ComponentTool(BaseTool):
         package.reset()
         component_package_list.append(package.__name__)
 
-      erp5.component.filesystem_import_dict = None
+      try:
+        del erp5.component.filesystem_import_dict
+      except AttributeError:
+        pass
       erp5.component.ref_manager.gc()
 
       # Clear astroid (pylint) cache
