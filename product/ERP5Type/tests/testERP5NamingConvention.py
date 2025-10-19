@@ -57,7 +57,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_short_message', 'erp5_simplified_invoicing', 'erp5_trade_knowledge_pad',
       'erp5_trade_ui_test',
       'erp5_authentication_policy', 'erp5_bearer_token',
-      'erp5_certificate_authority', 'erp5_code_mirror', 'erp5_computer_immobilisation',
+      'erp5_code_mirror', 'erp5_computer_immobilisation',
       'erp5_credential_oauth2', 'erp5_data_protection', 'erp5_data_set',
       'erp5_development_wizard', 'erp5_dhtml_style', 'erp5_direct_debit_payment',
       'erp5_rss_style', 'erp5_discussion', 'erp5_tax_resource', 'erp5_discount_resource',
@@ -72,7 +72,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'test_xhtml_style', 'cloudooo_data', 'cloudooo_web', 'erp5_configurator',
       'erp5_configurator_maxma_demo', 'erp5_configurator_run_my_doc', 'erp5_configurator_standard',
       'erp5_configurator_standard_solver',
-      'erp5_web_service',
+      'erp5_web_service', 'erp5_certificate_authority',
       # skip l10n templates to save time.
       # 'erp5_l10n_fr', 'erp5_l10n_ja',
       # 'erp5_l10n_pl_PL', 'erp5_l10n_pt-BR',
