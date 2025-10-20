@@ -68,7 +68,7 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -200,7 +200,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>

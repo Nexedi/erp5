@@ -143,13 +143,9 @@ NETWORK: *\n
                             <value>
                               <object>
                                 <klass>
-                                  <global name="_reconstructor" module="copy_reg"/>
-                                </klass>
-                                <tuple>
                                   <global name="DateTime" module="DateTime.DateTime"/>
-                                  <global name="object" module="__builtin__"/>
-                                  <none/>
-                                </tuple>
+                                </klass>
+                                <tuple/>
                                 <state>
                                   <tuple>
                                     <float>1592599432.28</float>
@@ -208,7 +204,7 @@ NETWORK:\n
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -227,19 +223,19 @@ NETWORK:\n
                 <item>
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>processing_status_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -280,13 +276,9 @@ NETWORK:\n
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1566215472.36</float>
@@ -349,13 +341,9 @@ NETWORK:\n
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1566215677.45</float>
@@ -412,13 +400,9 @@ NETWORK:\n
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1566215426.8</float>

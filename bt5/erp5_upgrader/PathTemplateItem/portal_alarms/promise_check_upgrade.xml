@@ -75,13 +75,9 @@ Note that post upgrade steps are not executed in the sense, because they require
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="DateTime" module="DateTime.DateTime"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <tuple>
                     <float>1384423200.0</float>

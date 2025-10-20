@@ -13,19 +13,19 @@
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAJAAAACQCAYAAADnRuK4AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAJAAAACQCAYAAADnRuK4AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAAi+AAAIvgBrCpcXgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAm9SURB
 VHic7Z1/qCVVHcA/973nqqX2w0zdIEkSsoUaOvbLCtJ0bbWkEhYTkkiKyLYiI2jRbCn7YWRgSP2z
 BUsRIiX2A8vKXS0wwu96LGpDkrKUde2nkbZp793+mBmbO3dm7n3vnJkzZ+73A8O9d+6953zvm887
@@ -84,7 +84,7 @@ CCpPX5h1GitKVHdqqyyRZpVAxcak8v5yyaMC9Zemu+9liapOa7WsQHouK9WDyl+qKn3yirPeB4uH
 urpQuVI9dwW77hRWJ1Fe6hTbE5rkUZH6QV09qE6kmaeuqf5Ac2RczLSp1FFp+k25JKm72q6SZ7o1
 utg9cc4urXXPq76n9I+m0qjq+dT3Jpxx7FSv4sRLnUjl9yZeT/ky57CeWU3gKk+c1IpS9XquYT0T
 b65/YKGKFA91B762wlzFXEObdVjzoKkVYC43NjqwXidWGBYb9eB/6t/4A6mY6+cAAAAASUVORK5C
-YII=</string> </value>
+YII=</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>

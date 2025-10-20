@@ -13,43 +13,43 @@
         <item>
             <key> <string>_cached_data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_mime</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_size</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_time</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -73,7 +73,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -448,13 +448,9 @@
                     <value>
                       <object>
                         <klass>
-                          <global id="5.1" name="_reconstructor" module="copy_reg"/>
+                          <global id="5.1" name="DateTime" module="DateTime.DateTime"/>
                         </klass>
-                        <tuple>
-                          <global id="5.2" name="DateTime" module="DateTime.DateTime"/>
-                          <global id="5.3" name="object" module="__builtin__"/>
-                          <none/>
-                        </tuple>
+                        <tuple/>
                         <state>
                           <tuple>
                             <float>1252963824.99</float>
@@ -499,11 +495,7 @@
                     <value>
                       <object>
                         <klass> <reference id="5.1"/> </klass>
-                        <tuple>
-                          <reference id="5.2"/>
-                          <reference id="5.3"/>
-                          <none/>
-                        </tuple>
+                        <tuple/>
                         <state>
                           <tuple>
                             <float>1237282492.01</float>
@@ -525,11 +517,7 @@
                     <value>
                       <object>
                         <klass> <reference id="5.1"/> </klass>
-                        <tuple>
-                          <reference id="5.2"/>
-                          <reference id="5.3"/>
-                          <none/>
-                        </tuple>
+                        <tuple/>
                         <state>
                           <tuple>
                             <float>1237282497.58</float>
@@ -578,7 +566,7 @@
       <dictionary>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAiQAAABkCAIAAAFOUYz0AAAACXBIWXMAACBhAAAgXQHRKJY+AAKD
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAiQAAABkCAIAAAFOUYz0AAAACXBIWXMAACBhAAAgXQHRKJY+AAKD
 EElEQVR4AQC+gEF/BP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -2317,7 +2305,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</string> </value>
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</bytes> </value>
         </item>
         <item>
             <key> <string>next</string> </key>
@@ -2351,7 +2339,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">/9j/4AAQSkZJRgABAQIASwBLAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+            <value> <bytes encoding="base64">/9j/4AAQSkZJRgABAQIASwBLAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
 HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
 MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAXAH4DASIA
 AhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAUDBgcEAgH/xAA3EAABAwMCBAIHBgcBAAAAAAAB
@@ -2377,7 +2365,7 @@ VpPD2o0ZfXtip9Rkb/ZlTUpxo+5Kx6yfro0a0pNdAdW0zHrNPdcnUVUCUw8ph1kyeoOZIGSlQO43
 q06W3IRDfeW0csiRKccSz+gE4GjRqWwNmLPoUedInNwcSpGA46XVlRA7Dc7D3DbXI7w8tZ6JJirp
 SejJeL7iQ6v7w91Df1T8NGjS2gQUfhpa1De68WnqU/2DrrylqSPdvtr5VOGVq1eembKp6i8Mc/I8
 tIcx+YA76NGrnK7sHVDsC2KemUmJS0siUnkdCXV+snfbxbdz20xolu0q3Ihi0mIIzJOSkLUrf5k6
-NGo5N7YP/9k=</string> </value>
+NGo5N7YP/9k=</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -2425,7 +2413,7 @@ NGo5N7YP/9k=</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAH4AAAAXEAIAAAASKrAOAAAACXBIWXMAAB1MAAAdTAHcxBGXAAAA
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAH4AAAAXEAIAAAASKrAOAAAACXBIWXMAAB1MAAAdTAHcxBGXAAAA
 CXZwQWcAAAB+AAAAFwAheVUuAAApXklEQVR42u17d1RVSZN43fsCOeckUVAEBQQjY0IBEVQUs2LO
 OadxzKKOimFATKCgyIgwBoIooIiCCTCAgETJGYQHL93b9fvjvZmDv/322/l2v93Zs7v1znmnT3Xd
 6qpbXd1V3XUB/7cBQYIEWWSRlWPUUA29mBAmhF1BlIkyOYi5mItfZJ3i1eLVEkx9mfryXeX09Onp
@@ -2612,7 +2600,7 @@ PjEhJngOiqEYvlIXqYuwjVailegguAAXYDX8Ar9AityOiqAIPJgLc2E4qIEaKIIIRCCFaIiGbOiE
 ThDJ7e4P/jAYrMEa9GEADICBoAqqoPI/caX/e97/XTU/WUwWkxcszdLsYxyH43CTDC/MFGaK0+J9
 4n0yKn09fD12+mm1arX6NNqutV0793RtSW1Ji7zah+wn+0nJX63Y/8E/Bv89Vvr/epCtgiywwMpS
 UmzERnAgL8gL4kfb0XZ0FOVAOUCN1E/qx8Rezryc+WBET1dPl3jVdnY7O+chHsbDWE4tpBZSKrIV
-669W6f/gz8L/A8d05A/ayaU2AAAAAElFTkSuQmCC</string> </value>
+669W6f/gz8L/A8d05A/ayaU2AAAAAElFTkSuQmCC</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -2686,7 +2674,7 @@ UmzERnAgL8gL4kfb0XZ0FOVAOUCN1E/qx8Rezryc+WBET1dPl3jVdnY7O+chHsbDWE4tpBZSKrIV
       <dictionary>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+            <value> <bytes encoding="base64">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANbW4Lm5yqurv/Hx9QAAAAAAAAAAAAAAAAAA
@@ -3835,7 +3823,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZrruZCil4AAAAABJRU5ErkJggg==</string> </value>
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZrruZCil4AAAAABJRU5ErkJggg==</bytes> </value>
         </item>
         <item>
             <key> <string>next</string> </key>
