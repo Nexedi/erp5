@@ -57,8 +57,16 @@ class TestWendelinTelecomMixin(SecurityTestCase):
       '/Base_getMergedDataArrayForDataTypeAsJSON'
 
     module = self.portal.web_page_module
+    valid_text_data = module.test_example_ors_enb_log_valid.getTextContent()
+    valid_text_data_list = valid_text_data.splitlines()
     self.test_ors_example_log_valid = {
-      'log': module.test_example_ors_enb_log_valid.getTextContent()
+      'log': valid_text_data
+    }
+    self.test_ors_example_log_valid_part_1 = {
+      'log': "\n".join(valid_text_data_list[:len(valid_text_data_list)-20])
+    }
+    self.test_ors_example_log_valid_part_2 = {
+      'log': "\n".join(valid_text_data_list[len(valid_text_data_list)-20:])
     }
     self.test_ors_example_log_invalid_split_1 = {
       'log': module.test_example_ors_enb_log_invalid_split_1.getTextContent()
