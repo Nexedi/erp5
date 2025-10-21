@@ -134,7 +134,8 @@
       return new RSVP.Queue(RSVP.hash({
         language: gadget.getSelectedLanguage(),
         begin_from: gadget.getUrlParameter(options.key + '_begin_from'),
-        last_post: gadget.getUrlParameter('last_post')
+        last_post: gadget.getUrlParameter('last_post'),
+        post_relative_url: gadget.getUrlParameter('post_relative_url')
       }))
         .push(function (result_dict) {
           var begin_from = parseInt(result_dict.begin_from || '0', 10) || 0,
@@ -166,7 +167,8 @@
             render_timestamp: new Date().getTime(),
             first_render: true,
             allDocs_result: undefined,
-            last_post: result_dict.last_post
+            last_post: result_dict.last_post,
+            post_relative_url: result_dict.post_relative_url
           });
         });
     })
