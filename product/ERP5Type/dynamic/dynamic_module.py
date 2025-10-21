@@ -29,9 +29,8 @@ from __future__ import absolute_import
 ##############################################################################
 
 from types import ModuleType
-from . import aq_method_lock
 import sys
-import imp
+from . import aq_method_lock, global_import_lock
 import six
 
 class PackageType(ModuleType):
@@ -278,8 +277,7 @@ def initializeDynamicModules():
 
   # Prevent other threads to create erp5.* packages and modules or seeing them
   # incompletely
-  imp.acquire_lock()
-  try:
+  with global_import_lock:
     sys.modules["erp5"] = erp5
     sys.modules["erp5.document"] = erp5.document
     sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
@@ -294,5 +292,3 @@ def initializeDynamicModules():
     erp5.component.interface = ComponentDynamicPackage('erp5.component.interface')
     erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin')
     erp5.component.test = ComponentDynamicPackage('erp5.component.test')
-  finally:
-    imp.release_lock()

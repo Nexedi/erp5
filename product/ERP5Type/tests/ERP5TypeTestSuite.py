@@ -1,4 +1,4 @@
-import re, imp, sys, os, shlex, shutil, glob, random
+import re, types, sys, os, shlex, shutil, glob, random
 from erp5.util.testsuite import TestSuite, SubprocessError
 
 class ERP5TypeTestSuite(TestSuite):
@@ -188,7 +188,7 @@ class SavedTestSuite(ERP5TypeTestSuite):
       self._setup_failed = status_dict
 
 
-sys.modules['test_suite'] = module = imp.new_module('test_suite')
+sys.modules['test_suite'] = module = types.ModuleType('test_suite')
 for var in SubprocessError, TestSuite, ERP5TypeTestSuite, ProjectTestSuite, \
     SavedTestSuite:
   setattr(module, var.__name__, var)
