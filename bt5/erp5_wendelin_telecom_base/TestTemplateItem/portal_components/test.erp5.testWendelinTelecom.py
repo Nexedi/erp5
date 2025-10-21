@@ -548,6 +548,11 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     test_ors_example_logs = []
     if data_key == "valid":
       test_ors_example_logs = [self.test_ors_example_log_valid]
+    elif data_key == "splitted":
+      test_ors_example_logs = [
+        self.test_ors_example_log_valid_part_1,
+        self.test_ors_example_log_valid_part_2
+      ]
     elif data_key == "invalid":
       test_ors_example_logs = [
         self.test_ors_example_log_invalid_split_1,
@@ -664,7 +669,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     ]
 
     inconsistency_amount = 0
-    if data_key in ["valid", "duplicated"]:
+    if data_key in ["valid", "duplicated", "splitted"]:
       e_rab_array_shape = (82,)
       e_utran_array_shape = (20992,)
       cell_ue_count_array_shape = (84,)
@@ -841,7 +846,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
               for ant in rms_rx_per_cell_antenna_dict[key][col]:
                 # Only 2 antenas are included so consider half of results.
                 self.assertEqual(cell_rms_rx_array_shape[0]/2,
-                  len(rms_rx_per_cell_antenna_dict[key][col][ant]))
+                  len(rms_rx_per_cell_antenna_dict[key][col][ant]), rms_rx_per_cell_antenna_dict[key][col][ant])
 
 
   def test_05_2_ingestInvalidOrsLogDataFromFluentd(self):
@@ -894,6 +899,15 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       self.portal.IngestionPolicy_parseOrsFluentdTag,
       entity_tag
     )
+
+  def test_05_6_ingestValidSegmentedOrsLogDataFromFluentd(self):
+    '''
+    Test an splitted ORS log ingestion: simulate a fluentd gateway forwarding
+    valid data and processing data in 2 segments.
+    Check that all items are valid, but the data arrays contains no duplication.
+    Also check the fetching of KPI values through the dedicated API endpoint.
+    '''
+    self.test_05_1_ingestValidOrsLogDataFromFluentd(data_key="splitted")
 
   def test_06_1_checkOrsItemConsistency(self):
     '''
