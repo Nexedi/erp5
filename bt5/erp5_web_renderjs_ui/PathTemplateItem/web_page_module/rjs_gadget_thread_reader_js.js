@@ -322,27 +322,38 @@
       }
 
       var gadget = this,
-        limit_options = [];
+      limit_options = (gadget.state.lines === 0) ? undefined
+        : [gadget.state.begin_from, gadget.state.lines + 1];
 
-      if (gadget.state.lines === 0) {
-        limit_options = undefined;
-      } else {
-        limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
-      }
-
-      return gadget.jio_allDocs({
-        query: gadget.state.query_string,
-        limit: limit_options,
-        select_list: ['asStrippedHTML', gadget.state.date_column,
-                      gadget.state.source_column,
-                      'Event_getAttachmentList'],
-        sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
-      })
+      function fetchContent(timeout) {
+        return gadget.jio_allDocs({
+          query: gadget.state.query_string,
+          limit: limit_options,
+          select_list: ['asStrippedHTML', gadget.state.date_column,
+                        gadget.state.source_column,
+                        'Event_getAttachmentList'],
+          sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
+        })
         .push(function (result) {
-          return gadget.changeState({
-            allDocs_result: JSON.stringify(result)
+          if (result.data.rows && result.data.rows.length > 0) {
+            return gadget.changeState({
+              allDocs_result: JSON.stringify(result)
+            });
+          }
+          if (Date.now() > timeout) {
+            return gadget.changeState({
+              allDocs_result: JSON.stringify(result)
+            });
+          }
+          return new RSVP.Promise(function (resolve) {
+            setTimeout(function () {
+              resolve(fetchContent(timeout));
+            }, 500); // retry every 500ms
           });
         });
+      }
+
+      return fetchContent(Date.now() + 5000);
     })
 
     .declareMethod("getContent", function getContent() {
