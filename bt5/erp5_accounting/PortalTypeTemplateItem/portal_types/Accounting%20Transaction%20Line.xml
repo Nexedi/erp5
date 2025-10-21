@@ -64,12 +64,16 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string>AccountingTransactionLine_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>permission</string> </key>
+            <key> <string>short_title</string> </key>
             <value>
               <none/>
             </value>
