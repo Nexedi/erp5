@@ -159,7 +159,9 @@
             begin_from: begin_from,
             lines: lines,
             date_column: options.date_column || 'modification_date',
+            sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
+            attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
@@ -235,8 +237,7 @@
                   return '';
                 }
                 var source_title = entry.value[gadget.state.source_column] || '',
-                  attachment_list = entry.value
-                                         .Event_getAttachmentList || [],
+                  attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
                   j,
                   word_list = source_title.split(' '),
@@ -331,8 +332,8 @@
           limit: limit_options,
           select_list: ['asStrippedHTML', gadget.state.date_column,
                         gadget.state.source_column,
-                        'Event_getAttachmentList'],
-          sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
+                        gadget.state.attachment_column],
+          sort_on: [[gadget.state.date_column, gadget.state.sort_order], ['uid', 'ASC']]
         })
         .push(function (result) {
           if (result.data.rows && result.data.rows.length > 0) {
