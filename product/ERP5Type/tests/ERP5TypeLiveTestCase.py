@@ -29,7 +29,6 @@
 import unittest
 import os
 import sys
-import imp
 import re
 import warnings
 

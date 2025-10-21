@@ -30,7 +30,7 @@
 import six
 from six import string_types as basestring
 from Products.ERP5Type.Utils import ensure_list, bytes2str, str2bytes
-import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
+import fnmatch, gc, glob, types, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
@@ -67,7 +67,7 @@ from Products.ERP5Type.Utils import readLocalExtension, \
 from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, loadModuleFromPathname
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
@@ -4122,7 +4122,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     raise NotImplementedError
 
   @staticmethod
-  def _migrateFromFilesystem(tool, filesystem_path, filesystem_file, class_id):
+  def _migrateFromFilesystem(tool, filesystem_path, class_id):
     raise NotImplementedError
 
   def _migrateAllFromFilesystem(self,
@@ -4163,20 +4163,13 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
       # A filesystem Property Sheet may already exist in the instance
       # home if the Business Template has been previously installed,
       # otherwise it is created
-      if os.path.exists(filesystem_path):
-        filesystem_file = open(filesystem_path)
-      else:
-        filesystem_file = open(filesystem_path, 'w+')
-        filesystem_file.write(migrate_object_dict[class_id])
-        filesystem_file.seek(0)
+      if not os.path.exists(filesystem_path):
+        with open(filesystem_path, 'w+') as f:
+          f.write(migrate_object_dict[class_id])
 
-      try:
-        migrated_object = self._migrateFromFilesystem(tool,
-                                                      filesystem_path,
-                                                      filesystem_file,
-                                                      class_id).aq_base
-      finally:
-        filesystem_file.close()
+      migrated_object = self._migrateFromFilesystem(tool,
+                                                    filesystem_path,
+                                                    class_id).aq_base
 
       # Delete the file only if there was no error encountered during
       # migration
@@ -4256,7 +4249,6 @@ class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
   @staticmethod
   def _migrateFromFilesystem(tool,
                              filesystem_path,
-                             filesystem_file,
                              class_id):
     """
     Migration of a filesystem Property Sheet involves loading the
@@ -4268,10 +4260,8 @@ class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
     # the class will be stored, thus don't only use the class name as
     # it may clash with already loaded module, such as
     # BusinessTemplate.
-    module = imp.load_source('Migrate%sFilesystemPropertySheet' % class_id,
-                             filesystem_path,
-                             filesystem_file)
-
+    module = loadModuleFromPathname('Migrate%sFilesystemPropertySheet' % class_id,
+                                    filesystem_path)
     try:
       klass = getattr(module, class_id)
     except AttributeError:
@@ -5919,7 +5909,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         module_id = 'Products.ERP5Type.Document.' + template_id
         if module_id not in sys.modules:
           module_id_list.append(module_id)
-          sys.modules[module_id] = module = imp.new_module(module_id)
+          sys.modules[module_id] = module = types.ModuleType(module_id)
           setattr(module, template_id, type(template_id,
             (SimpleItem.SimpleItem,), {'__module__': module_id}))
 
