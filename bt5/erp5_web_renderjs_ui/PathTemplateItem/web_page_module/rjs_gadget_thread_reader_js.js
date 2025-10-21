@@ -58,7 +58,7 @@
     return time_format.format(Math.floor(diff / minute), 'minute');
   }
 
-  function setPaginationElement(gadget, count, url_list, last_post) {
+  function setPaginationElement(gadget, count, url_list, scroll_to_last_post) {
     var disabled_suffix = ' ui-disabled',
       span_dict,
       first_dict = {
@@ -107,7 +107,7 @@
       domsugar('span', span_dict)
     ]);
 
-    if (last_post) {
+    if (scroll_to_last_post) {
       gadget.element.querySelector(':scope > nav').scrollIntoView()
     }
   }
