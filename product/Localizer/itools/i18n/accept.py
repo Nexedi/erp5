@@ -21,7 +21,7 @@ protocol.
 
 # Import from the Standard Library
 import builtins
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from locale import getdefaultlocale
 
 
@@ -105,12 +105,16 @@ class AcceptLanguageType(object):
 
         accept = {}
         for language in data.lower().split(','):
-            language = language.strip()
-            if ';' in language:
-                language, quality = language.split(';')
+            language = language.strip().split(';')
+            if len(language) == 2 and language[1].startswith('q='):
+                language, quality = language
                 # Get the number (remove "q=")
-                quality = Decimal(quality.strip()[2:])
+                try:
+                    quality = Decimal(quality.strip()[2:])
+                except InvalidOperation:
+                    quality = one
             else:
+                language = language[0]
                 quality = one
 
             if language == '*':
