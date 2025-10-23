@@ -34,7 +34,6 @@ import errno
 import os
 import six
 import sys
-import imp
 import collections
 from six import reraise
 import traceback
@@ -43,7 +42,7 @@ import coverage
 from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type import product_path as ERP5Type_product_path
-from . import aq_method_lock
+from . import aq_method_lock, import_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
 from Acquisition import aq_base
@@ -159,7 +158,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
 
     import_lock_held = True
     try:
-      imp.release_lock()
+      import_lock.release()
     except RuntimeError:
       import_lock_held = False
 
@@ -233,7 +232,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       # Internal release of import lock at the end of import machinery will
       # fail if the hook is not acquired
       if import_lock_held:
-        imp.acquire_lock()
+        import_lock.acquire()
 
   def find_spec(self, name, path=None, target=None):
     """PEP-0451
@@ -368,8 +367,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
 
     # All the required objects have been loaded, acquire import lock to modify
     # sys.modules and execute PEP302 requisites
-    imp.acquire_lock()
-    try:
+    with import_lock:
       # The module *must* be in sys.modules before executing the code in case
       # the module code imports (directly or indirectly) itself (see PEP 302)
       sys.modules[module_fullname] = module
@@ -426,9 +424,6 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       import erp5.component
       erp5.component.ref_manager.add_module(module)
 
-    finally:
-      imp.release_lock()
-
     component._hookAfterLoad(module)
     return module
 
@@ -451,20 +446,18 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
     # statement as it does not change anything in sys.modules
     import_lock_held = True
     try:
-      imp.release_lock()
+      import_lock.release()
     except RuntimeError:
       import_lock_held = False
 
-    aq_method_lock.acquire()
     try:
-      return self.__load_module(fullname)
+      with aq_method_lock:
+        return self.__load_module(fullname)
     finally:
-      aq_method_lock.release()
-
       # Internal release of import lock at the end of import machinery will
       # fail if the hook is not acquired
       if import_lock_held:
-        imp.acquire_lock()
+        import_lock.acquire()
 
   def find_load_module(self, name):
     """
