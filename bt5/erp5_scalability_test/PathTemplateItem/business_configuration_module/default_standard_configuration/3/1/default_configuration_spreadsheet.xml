@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAgAABZhlEGFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
+            <value> <bytes encoding="base64">UEsDBBQAAAgAABZhlEGFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
 aXMub3BlbmRvY3VtZW50LnNwcmVhZHNoZWV0UEsDBBQACAgIABZhlEEAAAAAAAAAAAAAAAALAAAA
 Y29udGVudC54bWzsvety27i2Lvr/PAUre1VXz1Ox27r4lsyeuxzbSdyxE7ftpOdcq2a5IAqS0KYI
 NUjacX6dP/sJ9lPs51hvsp/kACQlUxdKAAhQlDhW1eoZSxQuH79vYAAYGPj7//w+9JxHzAJC/V9f
@@ -953,7 +953,7 @@ YXRpb25zMi9pbWFnZXMvQml0bWFwcy9QSwECFAAUAAAIAAAWYZRBAAAAAAAAAAAAAAAAGgAAAAAA
 AAAAAAAAAADywgAAQ29uZmlndXJhdGlvbnMyL3N0YXR1c2Jhci9QSwECFAAUAAgICAAWYZRBpRZO
 DWsHAADJxQAADAAAAAAAAAAAAAAAAAAqwwAAc2V0dGluZ3MueG1sUEsBAhQAFAAICAgAFmGUQYE9
 6zJRAQAAxwcAABUAAAAAAAAAAAAAAAAAz8oAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAA
-EAAQADYEAABjzAAAAAA=</string> </value>
+EAAQADYEAABjzAAAAAA=</bytes> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
