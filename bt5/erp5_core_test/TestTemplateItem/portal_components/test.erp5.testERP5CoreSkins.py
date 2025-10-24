@@ -24,7 +24,7 @@
 import transaction
 from zExceptions import Unauthorized
 from DateTime import DateTime
-from Products.ERP5Type.tests.utils import createZODBPythonScript, TemporaryAlarmScript
+from Products.ERP5Type.tests.utils import TemporaryAlarmScript
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from time import sleep
 
