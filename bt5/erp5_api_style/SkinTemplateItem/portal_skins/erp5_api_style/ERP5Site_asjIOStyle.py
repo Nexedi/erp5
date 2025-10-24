@@ -3,6 +3,7 @@ mode = mode or context.REQUEST.form.get("mode", "get")
 text_content = text_content or context.REQUEST.form.get("text_content", "")
 document_id = document_id or context.REQUEST.form.get("document_id", "")
 import json
+from zExceptions import NotFound
 portal = context.getPortalObject()
 
 response = container.REQUEST.RESPONSE
@@ -81,7 +82,7 @@ if mode in ("get", "put"):
       return logError("Did not received a JSON Object", error_name="API-JSON-NOT-JSON-OBJECT")
   try:
     document = portal.restrictedTraverse(str(document_id))
-  except KeyError:
+  except (KeyError, NotFound):
     return logError("Document has not been found", error_name="API-DOCUMENT-NOT-FOUND", error_code=404)
 else:
   document = context

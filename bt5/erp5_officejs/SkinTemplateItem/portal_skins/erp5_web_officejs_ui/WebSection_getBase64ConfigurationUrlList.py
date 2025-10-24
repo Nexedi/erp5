@@ -2,6 +2,7 @@ import json
 import base64
 from erp5.component.module.Log import log
 from Products.ERP5Type.Utils import bytes2str, str2bytes
+from zExceptions import NotFound
 
 def getElementFromContent(key, content):
   before_template = '"%s" type="text/x-renderjs-configuration">'
@@ -79,7 +80,7 @@ try:
         form = action_object.getActionText().split('/')[-1]
         path = "portal_skins/%s/%s" % (portal_skin, form)
         configuration_path_list.append(bytes2str(base64.b64encode(str2bytes(path))))
-      except KeyError as e:
+      except (KeyError, NotFound) as e:
         raise KeyError("Error getting portal action info: " + str(e))
 
   if new_dialog_form_list:

@@ -3,6 +3,8 @@
 # Unindex objects which cannot be found.
 # Default delta is 172800 (=2*24*60*60=2 days)
 
+from zExceptions import NotFound
+
 portal = context.getPortalObject()
 catalog = portal.portal_catalog.getSQLCatalog()
 candidate_list = context.ERP5Site_zGetLatestIndexedObjectList(delta=delta)
@@ -14,7 +16,7 @@ for candidate in candidate_list:
   path = candidate['path']
   try:
     obj = portal.restrictedTraverse(path)
-  except KeyError:
+  except (KeyError, NotFound):
     # Object is unreachable, remove it from catalog
     # Use SQLQueue because all activities are triggered on the same object,
     # and SQLDict keeps only one.

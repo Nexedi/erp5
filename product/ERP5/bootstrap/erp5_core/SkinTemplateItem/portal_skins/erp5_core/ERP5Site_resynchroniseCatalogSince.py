@@ -4,6 +4,7 @@ import six
 from collections import OrderedDict
 from io import BytesIO, StringIO
 from erp5.component.module.Log import log
+from zExceptions import NotFound
 
 if not isinstance(from_date, DateTime):
   from_date = DateTime(from_date)
@@ -78,7 +79,7 @@ for i, row in enumerate(row_list):
   try:
     document_value = traverse(row['path'])
     __traceback_info__ = (row['path'], document_value)
-  except KeyError:
+  except (KeyError, NotFound):
     status = 'missing'
     has_difference = True
     unindexObject(uid=row['uid'])

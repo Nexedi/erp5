@@ -1,5 +1,7 @@
 """ Retrieve the category list of the resource. """
 
+from zExceptions import NotFound
+
 result_list = []
 
 # add to the list the shared variations
@@ -13,7 +15,7 @@ for mapping in context.contentValues(portal_type="Mapped Property Type"):
       base = cat.split('/', 1)[0]
       try:
         cat = context.portal_categories.restrictedTraverse(cat).getTitle()
-      except KeyError:
+      except (KeyError, NotFound):
         base, path = cat.split('/', 1)
         iv = context.restrictedTraverse(path)
         cat = iv.getTitle()

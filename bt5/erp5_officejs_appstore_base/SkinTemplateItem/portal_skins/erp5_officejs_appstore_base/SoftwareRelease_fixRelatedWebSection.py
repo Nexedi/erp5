@@ -1,3 +1,5 @@
+from zExceptions import NotFound
+
 portal = context.getPortalObject()
 
 software_release = context
@@ -10,7 +12,7 @@ context.log(version)
 context.log("%s" % web_site.getRelativeUrl())
 try:
   web_section = web_site.restrictedTraverse(version)
-except KeyError:
+except (KeyError, NotFound):
   clipboard = web_site.getParentValue().manage_copyObjects(ids=['template_static'])
   context.REQUEST.set('__cp', clipboard) # CopySupport is using this to set
                            # tracebility information in edit_workflow history

@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import pandas as pd
+from zExceptions import NotFound
 
 QCI_COUNT = 256
 # The maximum number of points to show on a KPI graph
@@ -368,14 +369,14 @@ def getMergedDataArrayForDataTypeAsJSON(self, first_data_array_url,
 
   try:
     first_data_array = portal.restrictedTraverse(first_data_array_url)
-  except KeyError:
+  except (KeyError, NotFound):
     # Data Array does not exist
     RESPONSE.setStatus(404)
     return
 
   try:
     second_data_array = portal.restrictedTraverse(second_data_array_url)
-  except KeyError:
+  except (KeyError, NotFound):
     # Data Array does not exist
     RESPONSE.setStatus(404)
     return
@@ -425,7 +426,7 @@ def getDataArrayForDataTypeAsJSON(self, data_array_url, data_type,
 
   try:
     data_array = portal.restrictedTraverse(data_array_url)
-  except KeyError:
+  except (KeyError, NotFound):
     # Data Array does not exist
     RESPONSE.setStatus(404)
     return

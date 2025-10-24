@@ -43,6 +43,7 @@ from Products.ERP5Type.Utils import parse_http_header, unicode2str
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole, findContentChain
 from Products.ERP5Form.ProxyField import BrokenProxyField
 from Products.CMFCore.utils import getToolByName
+from zExceptions import NotFound
 # You can invoke same tests in your favourite collection of business templates
 # by using TestXHTMLMixin like the following :
 #
@@ -311,10 +312,10 @@ class TestXHTMLMixin(ERP5TypeTestCase):
             if isinstance(list_action, str):
               # list_action can be a fully qualified URL, we care for last part of it
               list_action = list_action.split('/')[-1].split('?')[0]
-              try:
-                method = self.portal.restrictedTraverse(list_action)
-              except KeyError:
-                method = None
+               try:
+                 method = self.portal.restrictedTraverse(list_action)
+               except (KeyError, NotFound):
+                 method = None
               if method is None:
                 # list_action can actually exists but not in current skin, check if it can be found in portal_skins
                 found_list_action_list = skins_tool.ZopeFind(skins_tool, obj_ids=[list_action], search_sub=1)

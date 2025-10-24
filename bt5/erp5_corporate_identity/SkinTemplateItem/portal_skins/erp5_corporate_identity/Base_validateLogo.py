@@ -1,3 +1,5 @@
+from zExceptions import NotFound
+
 logo = context.REQUEST.get('field_your_override_logo_reference', '')
 if not logo:
   return True
@@ -6,7 +8,7 @@ if logo.startswith('organisation_module') or logo.startswith('image_module'):
   try:
     if not context.restrictedTraverse(logo):
       return False
-  except KeyError:
+  except (KeyError, NotFound):
     return False
 
 else:

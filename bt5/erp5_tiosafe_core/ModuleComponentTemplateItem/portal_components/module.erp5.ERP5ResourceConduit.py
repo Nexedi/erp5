@@ -30,6 +30,7 @@
 from Products.CMFCore.WorkflowCore import WorkflowException
 from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
 from lxml import etree
+from zExceptions import NotFound
 parser = etree.XMLParser(remove_blank_text=True)
 
 class ERP5ResourceConduit(TioSafeBaseConduit):
@@ -96,7 +97,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
             try:
               # Try to access the category
               category = portal.portal_categories.restrictedTraverse(category_xml_value)
-            except KeyError:
+            except (KeyError, NotFound):
               # This is an individual variation
               shared_variation = False
 
@@ -336,7 +337,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
             base = cat.split('/', 1)[0]
             try:
               cat = resource.getPortalObject().portal_categories.restrictedTraverse(cat).getTitle()
-            except KeyError:
+            except (KeyError, NotFound):
               base, path = cat.split('/', 1)
               iv = resource.restrictedTraverse(path)
               cat = iv.getTitle()
@@ -402,7 +403,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
       try:
         # Try to access the category
         document.getPortalObject().portal_categories.restrictedTraverse(new_value)
-      except KeyError:
+      except (KeyError, NotFound):
         # This is an individual variation
         shared_variation = False
 

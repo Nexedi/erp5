@@ -17,6 +17,7 @@
 from DateTime import DateTime
 from Products.CMFActivity.ActiveResult import ActiveResult
 from six.moves import range
+from zExceptions import NotFound
 active_result = ActiveResult()
 portal = context.getPortalObject()
 activate = portal.portal_activities.activate
@@ -116,7 +117,7 @@ else:
       continue
     try:
       actual_object = restrictedTraverse(object_path)
-    except KeyError:
+    except (KeyError, NotFound):
       actual_object = None
     if actual_object is None or actual_object.getPath() != object_path:
       if error('Object with path %r cannot be found in the ZODB.'
