@@ -9,7 +9,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -27,7 +27,7 @@
         <item>
             <key> <string>condition</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -88,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:portal.Base_checkPermission(\'data_supply_module\', \'Add portal content\')</string> </value>
+            <value> <string>python:portal.Base_checkPermission(\'data_supply_module\', \'Add portal content\') and context.getDataUnitType(\'ors\') == \'ors\'</string> </value>
         </item>
       </dictionary>
     </pickle>
