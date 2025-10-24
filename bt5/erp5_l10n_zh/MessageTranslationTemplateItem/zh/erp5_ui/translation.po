@@ -1,20 +1,16 @@
 msgid ""
-msgstr ""
-"Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2020-07-09 14:03+UTC\n"
-"PO-Revision-Date: 2020-07-09 14:03+UTC\n"
+msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+"POT-Creation-Date: 2025-10-16 15:10+UTC\n"
+"PO-Revision-Date: 2025-10-16 15:10+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid ""
-"\"Calculating\" is a causality state, which indicates that the system is calculating in which state a related document will be generated, after executing an action. It will be displayed whenever ERP5 is doing calculation. After the calculation, this state will be turned to another state, such as divergent or solved.\n"
-"For example, when comfirm a sale order, a \"confirmed\" sale packing list will be built. During the calculation process of ERP5, the packing list will be in \"Calculating\" causality state, which indicates that the system is calculating whether the packing list is convergent or divergent from its original sale order."
-msgstr ""
-"“计算中”是一个“因果整合状态”，用来指示执行一个命令后，系统正在计算生成关联文档的状态。计算结束后，“整合状态”就有一个新的确定性状态，例如“不匹配”或“已解决”。\r\n"
-"例如，当销售订单确定后，系统会创建一个“确定”状态的装箱单。这个过程中ERP5要进行计算，装箱单的“因果整合状态”就是“创建中”，指示系统正在计算该装箱单和原销售订单一致还是不匹配。"
+
+msgid "\"Calculating\" is a causality state, which indicates that the system is calculating in which state a related document will be generated, after executing an action. It will be displayed whenever ERP5 is doing calculation. After the calculation, this state will be turned to another state, such as divergent or solved.\nFor example, when comfirm a sale order, a \"confirmed\" sale packing list will be built. During the calculation process of ERP5, the packing list will be in \"Calculating\" causality state, which indicates that the system is calculating whether the packing list is convergent or divergent from its original sale order."
+msgstr "“计算中”是一个“因果整合状态”，用来指示执行一个命令后，系统正在计算生成关联文档的状态。计算结束后，“整合状态”就有一个新的确定性状态，例如“不匹配”或“已解决”。\r\n例如，当销售订单确定后，系统会创建一个“确定”状态的装箱单。这个过程中ERP5要进行计算，装箱单的“因果整合状态”就是“创建中”，指示系统正在计算该装箱单和原销售订单一致还是不匹配。"
 
 msgid "${count} Records"
 msgstr "${count} 记录"
@@ -142,14 +138,8 @@ msgstr "一个网络模块定义了一个可选的默认网页，以及一个謂
 msgid "A Web Site is the root of a tree of Web Sections and web documents (like web pages or any erp5 object like products, etc.)."
 msgstr "网站文件是网络模块和网络文件（例如网页或任何ERP5文件，例如产品文件等等）树形结构的根基"
 
-msgid ""
-"A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account. It is owned by a Person or an Organisation. A Bank Account contains Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons.\n"
-"\n"
-"BankAccount inherits from Base and from the mix-in Coordinate."
-msgstr ""
-"银行账号是一系列号码和代码的集合（例如SWIFT，RIB等），可以用来确定一个银行账户。人或组织可以拥有银行账户。银行帐户包含代理人以及代理人特权，用于账户所有者将账户的管理委托给可信第三方。\r\n"
-"\r\n"
-"Bank Account 属于 Base模块，来自混合坐标。"
+msgid "A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account. It is owned by a Person or an Organisation. A Bank Account contains Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons.\n\nBankAccount inherits from Base and from the mix-in Coordinate."
+msgstr "银行账号是一系列号码和代码的集合（例如SWIFT，RIB等），可以用来确定一个银行账户。人或组织可以拥有银行账户。银行帐户包含代理人以及代理人特权，用于账户所有者将账户的管理委托给可信第三方。\r\n\r\nBank Account 属于 Base模块，来自混合坐标。"
 
 msgid "A chat address is an identifier in an Instant Messaging service."
 msgstr "即时通信服务的个人帐号"
@@ -607,8 +597,14 @@ msgstr "已受理"
 msgid "Acknowledgement"
 msgstr "受理信息"
 
+msgid "Acknowledgement Tool"
+msgstr ""
+
 msgid "Acquire Local Roles"
 msgstr "获取本地角色"
+
+msgid "Acquired Property"
+msgstr ""
 
 msgid "Acquisition Append Value"
 msgstr "获取追加值"
@@ -630,6 +626,9 @@ msgstr "获取门户类型"
 
 msgid "Action"
 msgstr "操作"
+
+msgid "Action Information"
+msgstr ""
 
 msgid "Action called in order to change the state of the assignment to update it"
 msgstr "更新任务分配状态的指令"
@@ -687,6 +686,9 @@ msgstr "经营活动（例如服装生产/零售等）"
 
 msgid "Activity Code"
 msgstr "行业代码"
+
+msgid "Activity Tool"
+msgstr ""
 
 msgid "Actor"
 msgstr "操作人"
@@ -883,6 +885,12 @@ msgstr "库存明细可以在库存文件中找到，包含了某项编号产品
 msgid "Answer"
 msgstr "答复"
 
+msgid "Answered"
+msgstr ""
+
+msgid "Answered [state in query_workflow]"
+msgstr ""
+
 msgid "Any Documents"
 msgstr "任何文件"
 
@@ -895,8 +903,14 @@ msgstr "待验证服装模板"
 msgid "Application Delivery Service"
 msgstr "应用交付服务"
 
+msgid "Application Id Generator"
+msgstr ""
+
 msgid "Applied Model Lines"
 msgstr "已应用模式明细"
+
+msgid "Applied Rule"
+msgstr ""
 
 msgid "Apply Pay Sheet Model"
 msgstr "应用工资单模板"
@@ -918,6 +932,12 @@ msgstr "文件存档"
 
 msgid "Archive a document which has been replaced by a more recent version by setting the validation state to archived."
 msgstr "将被新近文件取代的文件的验证状态设为“已存档”，从而将其存档。"
+
+msgid "Archived"
+msgstr ""
+
+msgid "Archived [state in notification_message_workflow]"
+msgstr ""
 
 msgid "Area"
 msgstr "地区"
@@ -951,6 +971,9 @@ msgstr "已指派事件"
 
 msgid "Assigned Translations"
 msgstr "已指派翻译"
+
+msgid "Assigned [state in bug_workflow]"
+msgstr ""
 
 msgid "Assignee"
 msgstr "受指派人"
@@ -990,6 +1013,15 @@ msgstr "附加文件"
 
 msgid "Attachments"
 msgstr "附件"
+
+msgid "Attribute Blacklisted Constraint"
+msgstr ""
+
+msgid "Attribute Equality Constraint"
+msgstr ""
+
+msgid "Attribute Unicity Constraint"
+msgstr ""
 
 msgid "Authorization Forced"
 msgstr "强制授权"
@@ -1081,6 +1113,15 @@ msgstr "影响基础"
 msgid "Base Contributions"
 msgstr "影响基础"
 
+msgid "Base Domain"
+msgstr ""
+
+msgid "Base Type"
+msgstr ""
+
+msgid "Base Variant Movement Group"
+msgstr ""
+
 msgid "Base categories to use to specify analytics on accounting lines. Those categories will be used by direct category membership"
 msgstr "用于指定对会计明细进行函数分析的基本类别。这些类别将被直接类别成员使用"
 
@@ -1147,8 +1188,14 @@ msgstr "预算开始日期"
 msgid "Bug"
 msgstr "错误"
 
+msgid "Bug Line"
+msgstr ""
+
 msgid "Bug Lines to Send"
 msgstr "待发送错误明细"
+
+msgid "Bug Module"
+msgstr ""
 
 msgid "Bugs to Validate"
 msgstr "待验证错误"
@@ -1166,12 +1213,13 @@ msgid "Building State"
 msgstr "创建状态"
 
 msgid "Building is a causality state which will be displayed when ERP5 is creating a document from a related one. For example, when comfirm a sale order, a \"confirmed\" sale packing list will be built. During this process, the packing list's causality state is \"Building\", before turns to \"Calculating\" when ERP5 calculates if the packing list is convergent or divergent from its original sale order."
-msgstr ""
-"“创建中”是一个“因果整合状态”，用来表示ERP5系统正在创建关联文档。\r\n"
-"例如，当销售订单确定后，系统会创建一个销售装箱单。这个过程中,装箱单的“英国整合状态”就是“创建中”，然后才会变成“计算中”，表示ERP5系统开始计算该装箱单和原销售订单一致还是存在差异。"
+msgstr "“创建中”是一个“因果整合状态”，用来表示ERP5系统正在创建关联文档。\r\n例如，当销售订单确定后，系统会创建一个销售装箱单。这个过程中,装箱单的“英国整合状态”就是“创建中”，然后才会变成“计算中”，表示ERP5系统开始计算该装箱单和原销售订单一致还是存在差异。"
 
 msgid "Built"
 msgstr "已生成"
+
+msgid "Built [state in business_template_building_workflow]"
+msgstr ""
 
 msgid "Business Configuration"
 msgstr "业务配置"
@@ -1218,8 +1266,17 @@ msgstr "客户关系管理"
 msgid "CRM, ERP ... Core Applications"
 msgstr "CRM ERP ...  各种核心数据库和应用"
 
+msgid "Cache Bag"
+msgstr ""
+
 msgid "Cache Duration"
 msgstr "用时"
+
+msgid "Cache Factory"
+msgstr ""
+
+msgid "Cache Tool"
+msgstr ""
 
 msgid "Calculate"
 msgstr "计算"
@@ -1233,11 +1290,17 @@ msgstr "计算中"
 msgid "Calculation Order"
 msgstr "计算订单"
 
+msgid "Callable Tool"
+msgstr ""
+
 msgid "Campaign"
 msgstr "活动"
 
 msgid "Campaign Detailed Report"
 msgstr "活动详细报表"
+
+msgid "Campaign Module"
+msgstr ""
 
 msgid "Campaign Status"
 msgstr "活动状态"
@@ -1311,6 +1374,27 @@ msgstr "已取消"
 msgid "Cancelled"
 msgstr "已取消"
 
+msgid "Cancelled [state in assignment_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in bug_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in career_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in event_simulation_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in query_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in ticket_workflow]"
+msgstr ""
+
 msgid "Cancelled."
 msgstr "已取消。"
 
@@ -1356,6 +1440,9 @@ msgstr "现金支付金额（不只用银行卡和信用卡支付）"
 msgid "Cash Register"
 msgstr "收款机"
 
+msgid "Catalog"
+msgstr ""
+
 msgid "Catalog Methods"
 msgstr "目录方法"
 
@@ -1368,14 +1455,44 @@ msgstr "目录结果密钥"
 msgid "Catalog Result Tables"
 msgstr "目录结果表格"
 
+msgid "Catalog Tool"
+msgstr ""
+
 msgid "Categories"
 msgstr "类别"
 
 msgid "Category"
 msgstr "类别"
 
+msgid "Category Acquired Membership State Constraint"
+msgstr ""
+
+msgid "Category Existence Constraint"
+msgstr ""
+
+msgid "Category Membership Arity Constraint"
+msgstr ""
+
+msgid "Category Membership State Constraint"
+msgstr ""
+
+msgid "Category Movement Group"
+msgstr ""
+
+msgid "Category Property"
+msgstr ""
+
 msgid "Category Publication Workflow"
 msgstr "类别发布流程"
+
+msgid "Category Related Membership Arity Constraint"
+msgstr ""
+
+msgid "Category Related Membership State Constraint"
+msgstr ""
+
+msgid "Category Tool"
+msgstr ""
 
 msgid "Category Types"
 msgstr "类别类型"
@@ -1385,6 +1502,12 @@ msgstr "为门户方法进行类别分组的类别类型"
 
 msgid "Causality"
 msgstr "因果整合关系"
+
+msgid "Causality Assignment Movement Group"
+msgstr ""
+
+msgid "Causality Movement Group"
+msgstr ""
 
 msgid "Causality State"
 msgstr "因果整合状态"
@@ -1533,6 +1656,15 @@ msgstr "终止日期"
 msgid "Closed State is used for accounting transactions that belong to \"closed\" accounting periods"
 msgstr "绝对性地终止一项会计交易，无法被“重启”而进行其他操作。"
 
+msgid "Closed [state in bug_workflow]"
+msgstr ""
+
+msgid "Closed [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Closed [state in ticket_workflow]"
+msgstr ""
+
 msgid "Closed for maintenance"
 msgstr "终止以维护"
 
@@ -1593,6 +1725,9 @@ msgstr "部件独立变量"
 msgid "Component Optional Variation"
 msgstr "部件可选变量"
 
+msgid "Component Tool"
+msgstr ""
+
 msgid "Component Variation"
 msgstr "部件变量"
 
@@ -1625,6 +1760,9 @@ msgstr "计算机:"
 
 msgid "Computer: ${title}"
 msgstr "计算机: ${title}"
+
+msgid "Conceptual Id Generator"
+msgstr ""
 
 msgid "Configuration Form"
 msgstr "配置表格"
@@ -1698,6 +1836,9 @@ msgstr "确认您的密码"
 msgid "Confirmed"
 msgstr "已确认"
 
+msgid "Confirmed [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "Connect"
 msgstr "登录"
 
@@ -1710,6 +1851,9 @@ msgstr "用于运行单元测试的连接字符串"
 msgid "Constraints"
 msgstr "约束"
 
+msgid "Contact"
+msgstr "联系方式"
+
 msgid "Contact Function"
 msgstr "联系方式功能"
 
@@ -1718,9 +1862,6 @@ msgstr "联系方式类型"
 
 msgid "Contact us"
 msgstr "联系我们"
-
-msgid "Contact"
-msgstr "联系方式"
 
 msgid "Contacts"
 msgstr "联系方式"
@@ -1767,6 +1908,9 @@ msgstr "内容背景"
 msgid "Content Border Color"
 msgstr "内容边框颜色"
 
+msgid "Content Existence Constraint"
+msgstr ""
+
 msgid "Content H1 Color"
 msgstr "内容首标题颜色"
 
@@ -1809,6 +1953,12 @@ msgstr "贡献内容"
 msgid "Contribute File"
 msgstr "贡献文件"
 
+msgid "Contribution Predicate"
+msgstr ""
+
+msgid "Contribution Registry Tool"
+msgstr ""
+
 msgid "Contribution Tool"
 msgstr "贡献工具"
 
@@ -1820,6 +1970,12 @@ msgstr "贡献者"
 
 msgid "Convergent"
 msgstr "趋同"
+
+msgid "Conversion Failed"
+msgstr ""
+
+msgid "Conversion Failed [state in processing_status_workflow]"
+msgstr ""
 
 msgid "Conversion Format for reports."
 msgstr "报告转换格式"
@@ -1845,8 +2001,14 @@ msgstr "已转换"
 msgid "Converted Inventory Report"
 msgstr "已转换物料库存报表"
 
+msgid "Converted [state in processing_status_workflow]"
+msgstr ""
+
 msgid "Converting"
 msgstr "转化中"
+
+msgid "Converting [state in processing_status_workflow]"
+msgstr ""
 
 msgid "Copied"
 msgstr "已复制"
@@ -1998,6 +2160,9 @@ msgstr "货币"
 msgid "Currency Code"
 msgstr "货币编码"
 
+msgid "Currency Exchange Cell"
+msgstr ""
+
 msgid "Currency Exchange Line"
 msgstr "外币兑换规范"
 
@@ -2006,6 +2171,9 @@ msgstr "货币兑换明细"
 
 msgid "Currency ISO Code"
 msgstr "ISO货币代码"
+
+msgid "Currency Module"
+msgstr ""
 
 msgid "Currency Symbol"
 msgstr "货币符号"
@@ -2030,6 +2198,9 @@ msgstr "当前站点"
 
 msgid "Current User"
 msgstr "当前用户"
+
+msgid "Current [state in edit_workflow]"
+msgstr ""
 
 msgid "Customer"
 msgstr "客户"
@@ -2105,6 +2276,9 @@ msgstr "日期和时间密钥"
 
 msgid "Day"
 msgstr "天"
+
+msgid "Day Movement Group"
+msgstr ""
 
 msgid "Days Of Month"
 msgstr "月份天"
@@ -2313,6 +2487,51 @@ msgstr "在ERP5中删除一个文件"
 msgid "Deleted"
 msgstr "已删除"
 
+msgid "Deleted [state in assignment_workflow]"
+msgstr ""
+
+msgid "Deleted [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Deleted [state in bug_workflow]"
+msgstr ""
+
+msgid "Deleted [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in embedded_workflow]"
+msgstr ""
+
+msgid "Deleted [state in event_simulation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in login_validation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Deleted [state in preference_workflow]"
+msgstr ""
+
+msgid "Deleted [state in query_workflow]"
+msgstr ""
+
+msgid "Deleted [state in reachability_workflow]"
+msgstr ""
+
+msgid "Deleted [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Deleted [state in ticket_workflow]"
+msgstr ""
+
+msgid "Deleted [state in validation_workflow]"
+msgstr ""
+
 msgid "Deleted objects: ${object_ids}"
 msgstr "已删除对象: ${object_ids}"
 
@@ -2328,6 +2547,15 @@ msgstr "交付装箱单"
 msgid "Delivered"
 msgstr "已传递"
 
+msgid "Delivered [state in acknowledgement_workflow]"
+msgstr ""
+
+msgid "Delivered [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Delivered [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "Delivered state is the final state of certain workflows in ERP5. For example, a sales packing list, or an outgoing event can be delivered, which means that they can not be modified anymore."
 msgstr "已传递是ERP5某些流程的最终状态。例如，一个销售装箱单或一个发出事件可以被传递，之后就不能再被修改。"
 
@@ -2337,59 +2565,14 @@ msgstr "交付"
 msgid "Delivery Builder"
 msgstr "传递生成器"
 
-msgid ""
-"Delivery Builder objects allow to gather multiple Simulation Movements into\n"
-"a single Delivery. The initial quantity property of the Delivery Line is\n"
-"calculated by summing quantities of related Simulation Movements.\n"
-"\n"
-"Delivery Builders are called for example whenever an order is confirmed.\n"
-"They are also called globally in order to gather any confirmed or above\n"
-"Simulation Movement which was not associated to any Delivery Line.  Such\n"
-"movements are called orphaned Simulation Movements.\n"
-"\n"
-"Delivery Builder objects are provided with a set of parameters to achieve\n"
-"their goal:\n"
-"\n"
-"A path definition: source, destination, etc. which defines the general\n"
-"kind of movements it applies.\n"
-"\n"
-"simulation_select_method which defines how to query all Simulation\n"
-"Movements which meet certain criteria (including the above path\n"
-"definition).\n"
-"\n"
-"collect_order_list which defines how to group selected movements according\n"
-"to gathering rules.\n"
-"\n"
-"delivery_select_method which defines how to select existing Delivery  which\n"
-"may eventually be updated with selected simulation movements.\n"
-"\n"
-"delivery_module, delivery_type and delivery_line_type which define the\n"
-"module and portal types for newly built Deliveries and Delivery Lines.\n"
-"\n"
-"Delivery Builders can also be provided with optional parameters to\n"
-"restrict selection to a given root Applied Rule caused by a single Order or\n"
-"to Simulation Movements related to a limited set of existing Deliveries."
-msgstr ""
-"传递生成器将多重模拟运作合成单一传递流程。传递行的初始数量是相关模拟运作的数量的总和。\n"
-"\n"
-"传递生成器需要被激活。例如，每当确认一个订单，传递生成器就会被激活。它也可以被激活从而集合任何被确认的模拟运作，或是还未连接到任何传递行的模拟运作。这样的运作被称为孤儿模拟运作。\n"
-"\n"
-"传递生成器配有一组参数来实现以下目标：\n"
-"\n"
-"路径定义：源，终点等等，用于定义其适用的一半运作。\n"
-"\n"
-"simulation_select_method 定义了如何查询符合若干标准的所有模拟运作（包括上面的路径定义）。\n"
-"\n"
-"collect_order_list 定义了如何根据收集规则对所选的运作进行分组。\n"
-"\n"
-"delivery_select_method 定义了如何选择现有的传递，它们最终可能会与选定的模拟运作一同更新。\n"
-"\n"
-"delivery_module, delivery_type and delivery_line_type 定义了新建传递和传递行的所属模块和门户类型。\n"
-"\n"
-"传递生成器也可以通过可选参数来激活，用于限制由单个订单或与一组有限的现有传递有关的模拟运作引发的对给定根应用规则的选择。"
+msgid "Delivery Builder objects allow to gather multiple Simulation Movements into\na single Delivery. The initial quantity property of the Delivery Line is\ncalculated by summing quantities of related Simulation Movements.\n\nDelivery Builders are called for example whenever an order is confirmed.\nThey are also called globally in order to gather any confirmed or above\nSimulation Movement which was not associated to any Delivery Line.  Such\nmovements are called orphaned Simulation Movements.\n\nDelivery Builder objects are provided with a set of parameters to achieve\ntheir goal:\n\nA path definition: source, destination, etc. which defines the general\nkind of movements it applies.\n\nsimulation_select_method which defines how to query all Simulation\nMovements which meet certain criteria (including the above path\ndefinition).\n\ncollect_order_list which defines how to group selected movements according\nto gathering rules.\n\ndelivery_select_method which defines how to select existing Delivery  which\nmay eventually be updated with selected simulation movements.\n\ndelivery_module, delivery_type and delivery_line_type which define the\nmodule and portal types for newly built Deliveries and Delivery Lines.\n\nDelivery Builders can also be provided with optional parameters to\nrestrict selection to a given root Applied Rule caused by a single Order or\nto Simulation Movements related to a limited set of existing Deliveries."
+msgstr "传递生成器将多重模拟运作合成单一传递流程。传递行的初始数量是相关模拟运作的数量的总和。\n\n传递生成器需要被激活。例如，每当确认一个订单，传递生成器就会被激活。它也可以被激活从而集合任何被确认的模拟运作，或是还未连接到任何传递行的模拟运作。这样的运作被称为孤儿模拟运作。\n\n传递生成器配有一组参数来实现以下目标：\n\n路径定义：源，终点等等，用于定义其适用的一半运作。\n\nsimulation_select_method 定义了如何查询符合若干标准的所有模拟运作（包括上面的路径定义）。\n\ncollect_order_list 定义了如何根据收集规则对所选的运作进行分组。\n\ndelivery_select_method 定义了如何选择现有的传递，它们最终可能会与选定的模拟运作一同更新。\n\ndelivery_module, delivery_type and delivery_line_type 定义了新建传递和传递行的所属模块和门户类型。\n\n传递生成器也可以通过可选参数来激活，用于限制由单个订单或与一组有限的现有传递有关的模拟运作引发的对给定根应用规则的选择。"
 
 msgid "Delivery Builders"
 msgstr "交付生成器"
+
+msgid "Delivery Causality Assignment Movement Group"
+msgstr ""
 
 msgid "Delivery Date"
 msgstr "交货日期"
@@ -2408,6 +2591,9 @@ msgstr "传递工具"
 
 msgid "Delivery Tool contains delivery builders."
 msgstr "传递工具包含传递生成器"
+
+msgid "Delivery Type"
+msgstr ""
 
 msgid "Dependencies"
 msgstr "依属"
@@ -2469,9 +2655,7 @@ msgstr "检测上传文件"
 msgid "Determines if acquired value should be copied"
 msgstr "确定所获取值应被复制"
 
-msgid ""
-"Determines if related values should be indexed on target documents (i.e. in ZODB) in addition to catalog.\n"
-"This is incompatible with category acquisition."
+msgid "Determines if related values should be indexed on target documents (i.e. in ZODB) in addition to catalog.\nThis is incompatible with category acquisition."
 msgstr "确定相关值不仅应该在目录上，还要在目标文件上（即，在ZODB）被索引。这与类别获取不兼容。"
 
 msgid "Determines if the acquired value should be appended"
@@ -2482,6 +2666,9 @@ msgstr "确定是否本地值优先"
 
 msgid "Developper Mode"
 msgstr "开发者模式"
+
+msgid "Diff Tool"
+msgstr ""
 
 msgid "Dig"
 msgstr "详细查询"
@@ -2504,6 +2691,9 @@ msgstr "禁用偏好设置"
 msgid "Disabled"
 msgstr "已禁用"
 
+msgid "Disabled [state in preference_workflow]"
+msgstr ""
+
 msgid "Discount"
 msgstr "折扣"
 
@@ -2518,6 +2708,9 @@ msgstr "折扣率"
 
 msgid "Display Default Page"
 msgstr "显示默认页面"
+
+msgid "Distributed Ram Cache"
+msgstr ""
 
 msgid "Diverged"
 msgstr "互异"
@@ -2627,6 +2820,12 @@ msgstr "作为当当前文件参考的文件"
 msgid "Domain"
 msgstr "领域"
 
+msgid "Domain Generator"
+msgstr ""
+
+msgid "Domain Tool"
+msgstr ""
+
 msgid "Download"
 msgstr "下载"
 
@@ -2663,17 +2862,71 @@ msgstr "草拟支持请求"
 msgid "Draft To Validate"
 msgstr "待验证草稿"
 
+msgid "Draft [state in acknowledgement_workflow]"
+msgstr ""
+
+msgid "Draft [state in assignment_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_workflow]"
+msgstr ""
+
+msgid "Draft [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Draft [state in career_workflow]"
+msgstr ""
+
+msgid "Draft [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Draft [state in event_simulation_workflow]"
+msgstr ""
+
+msgid "Draft [state in login_validation_workflow]"
+msgstr ""
+
+msgid "Draft [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Draft [state in query_workflow]"
+msgstr ""
+
+msgid "Draft [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Draft [state in ticket_workflow]"
+msgstr ""
+
+msgid "Draft [state in user_account_workflow]"
+msgstr ""
+
+msgid "Draft [state in validation_workflow]"
+msgstr ""
+
 msgid "Drafts to Validate"
 msgstr "待验证草稿"
 
 msgid "Drawing"
 msgstr "绘图文件"
 
+msgid "Dynamic Category Property"
+msgstr ""
+
 msgid "EAN-13 Code"
 msgstr "EAN-13位代码"
 
 msgid "ERP5 Configuration"
 msgstr "ERP5配置"
+
+msgid "ERP5 Form"
+msgstr ""
+
+msgid "ERP5 Login"
+msgstr ""
 
 msgid "ERP5 Site"
 msgstr "ERP5站点"
@@ -2726,6 +2979,9 @@ msgstr "嵌入文件"
 msgid "Embedded Folder"
 msgstr "嵌入文件夹"
 
+msgid "Embedded [state in embedded_workflow]"
+msgstr ""
+
 msgid "Employee Number"
 msgstr "员工编号"
 
@@ -2744,6 +3000,9 @@ msgstr "企业所得税率"
 msgid "Empty"
 msgstr "空白"
 
+msgid "Empty [state in processing_status_workflow]"
+msgstr ""
+
 msgid "Enable"
 msgstr "启用"
 
@@ -2752,6 +3011,9 @@ msgstr "启用偏好设置"
 
 msgid "Enabled"
 msgstr "已启用"
+
+msgid "Enabled [state in preference_workflow]"
+msgstr ""
 
 msgid "Enables a \"global\" preference"
 msgstr "启用一项“通用的”偏好设置"
@@ -2813,11 +3075,17 @@ msgstr "事件日期"
 msgid "Event Detailed Report"
 msgstr "事件详细报表"
 
+msgid "Event Module"
+msgstr ""
+
 msgid "Event Nature"
 msgstr "事件性质"
 
 msgid "Event Origin"
 msgstr "发起事件"
+
+msgid "Event Path"
+msgstr ""
 
 msgid "Event Sender Email"
 msgstr "事件发送人邮箱"
@@ -2897,6 +3165,9 @@ msgstr "过期"
 msgid "Expired"
 msgstr "已过期"
 
+msgid "Expired [state in sale_opportunity_workflow]"
+msgstr ""
+
 msgid "Explains what is the expected outcome of this Project Line"
 msgstr "解释项目的预期成果"
 
@@ -2921,8 +3192,17 @@ msgstr "输出模式"
 msgid "Export to Spreadsheet"
 msgstr "输出到电子表格"
 
+msgid "Extension Component"
+msgstr ""
+
 msgid "Extensions"
 msgstr "扩展"
+
+msgid "External Identifier"
+msgstr ""
+
+msgid "External Method"
+msgstr ""
 
 msgid "External Processing Workflow"
 msgstr "外部处理流程"
@@ -3122,6 +3402,12 @@ msgstr "地理地址"
 msgid "Geographic Incorporation Code"
 msgstr "公司地理代码"
 
+msgid "Geographical Area"
+msgstr ""
+
+msgid "Geographical Location"
+msgstr ""
+
 msgid "Global agreement that applies to certain types of companies, and define certain guidelines like for instance paid vacations etc, in France, Nexedi's collective agreement is called SYNTEC."
 msgstr "适用于某些类型的公司的通用协议，用于定义例如带薪休假等劳资协议。在法国，Nexedi的劳资协议是SYNTEC。"
 
@@ -3130,6 +3416,15 @@ msgstr "普遍启用"
 
 msgid "Globally Enabled"
 msgstr "普遍启用的"
+
+msgid "Globally Enabled [state in preference_workflow]"
+msgstr ""
+
+msgid "Glossary Module"
+msgstr ""
+
+msgid "Glossary Term"
+msgstr ""
 
 msgid "Google Login:"
 msgstr "谷歌登录："
@@ -3265,6 +3560,9 @@ msgstr "货币相关的国际标准化组织代码，参见 http://www.erp5.org/
 
 msgid "Icon"
 msgstr "图标"
+
+msgid "Id Tool"
+msgstr ""
 
 msgid "Identification"
 msgstr "识别码"
@@ -3443,6 +3741,9 @@ msgstr "安装状态"
 msgid "Installed"
 msgstr "已安装"
 
+msgid "Installed [state in business_template_installation_workflow]"
+msgstr ""
+
 msgid "Instance Parameter"
 msgstr "实例参数"
 
@@ -3460,6 +3761,15 @@ msgstr "使用说明"
 
 msgid "Intent not supported"
 msgstr "不支持该意图。"
+
+msgid "Interaction Workflow"
+msgstr ""
+
+msgid "Interaction Workflow Interaction"
+msgstr ""
+
+msgid "Interface Component"
+msgstr ""
 
 msgid "Interfaces"
 msgstr "界面"
@@ -3602,6 +3912,18 @@ msgstr "这项指令使一个会计期间，一项交易或者一个账户无效
 msgid "Invalidated"
 msgstr "已废止"
 
+msgid "Invalidated [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in login_validation_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in validation_workflow]"
+msgstr ""
+
 msgid "Inventories"
 msgstr "库存"
 
@@ -3646,6 +3968,9 @@ msgstr "发票明细"
 
 msgid "Invoice Lines"
 msgstr "发票明细"
+
+msgid "Invoice Movement Group"
+msgstr ""
 
 msgid "Invoice Number"
 msgstr "发票号码"
@@ -3758,9 +4083,7 @@ msgstr "交易入账操作"
 msgid "Journalised"
 msgstr "已入账"
 
-msgid ""
-"Journalised State is use for accounting transaction that have been recorded in\n"
-"a journal as a debit and a credit."
+msgid "Journalised State is use for accounting transaction that have been recorded in\na journal as a debit and a credit."
 msgstr "一项会计交易已经被记入流水帐，记入借方和贷方"
 
 msgid "Jump"
@@ -3988,15 +4311,17 @@ msgstr "管理业务模板"
 msgid "Map"
 msgstr "地图"
 
+msgid "Mapped Property"
+msgstr ""
+
+msgid "Mapped Value"
+msgstr ""
+
 msgid "Marital Status"
 msgstr "婚姻状况"
 
-msgid ""
-"Mark the beginning and the end of an Accounting Period.\n"
-"Once the period is closed (i.e. the Accounting Period Delimiter is in delivered state), it is no longer possible to validate Transaction in this period"
-msgstr ""
-"标记会计期间的开始和结束日期。\r\n"
-"如果会计期间已关闭（即，会计期间处于已交付状态），那么就无法再对此期间的交易进行验证"
+msgid "Mark the beginning and the end of an Accounting Period.\nOnce the period is closed (i.e. the Accounting Period Delimiter is in delivered state), it is no longer possible to validate Transaction in this period"
+msgstr "标记会计期间的开始和结束日期。\r\n如果会计期间已关闭（即，会计期间处于已交付状态），那么就无法再对此期间的交易进行验证"
 
 msgid "Mark transaction that belongs to \"closed\" accounting periods"
 msgstr "属于关闭的会计期间的交易的状态"
@@ -4079,6 +4404,12 @@ msgstr "成员标准"
 msgid "Membership Criterion Documents"
 msgstr "成员标准文档"
 
+msgid "Memcached Plugin"
+msgstr ""
+
+msgid "Memcached Tool"
+msgstr ""
+
 msgid "Menu"
 msgstr "菜单"
 
@@ -4139,6 +4470,9 @@ msgstr "缺失货柜"
 msgid "Missing"
 msgstr "缺失"
 
+msgid "Mixin Component"
+msgstr ""
+
 msgid "Mobile Telephone"
 msgstr "手机号码"
 
@@ -4157,8 +4491,17 @@ msgstr "修改日期"
 msgid "Modified"
 msgstr "已更改"
 
+msgid "Modified [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Modified [state in component_validation_workflow]"
+msgstr ""
+
 msgid "Module"
 msgstr "模块"
+
+msgid "Module Component"
+msgstr ""
 
 msgid "Module ID"
 msgstr "模块ID"
@@ -4187,11 +4530,17 @@ msgstr "监控状态"
 msgid "Month"
 msgstr "月"
 
+msgid "Monthly Range Movement Group"
+msgstr ""
+
 msgid "Months"
 msgstr "月份"
 
 msgid "Morphology"
 msgstr "形态"
+
+msgid "Movement"
+msgstr ""
 
 msgid "Multivalue Keys"
 msgstr "多值密钥"
@@ -4237,6 +4586,9 @@ msgstr "纳米图像宽度"
 
 msgid "Nationality"
 msgstr "国籍"
+
+msgid "Nested Line Movement Group"
+msgstr ""
 
 msgid "Network"
 msgstr "网络"
@@ -4373,6 +4725,9 @@ msgstr "正常工作时数"
 msgid "Not Installed"
 msgstr "未安装"
 
+msgid "Not Installed [state in business_template_installation_workflow]"
+msgstr ""
+
 msgid "Note"
 msgstr "笔记"
 
@@ -4496,6 +4851,12 @@ msgstr "开启工单"
 msgid "Open Ticket Action"
 msgstr "开启工单操作"
 
+msgid "Open [state in bug_workflow]"
+msgstr ""
+
+msgid "Open [state in sale_opportunity_workflow]"
+msgstr ""
+
 msgid "Open for Friends only"
 msgstr "开启（仅朋友）"
 
@@ -4510,6 +4871,9 @@ msgstr "开设账户，使交易可以被录入"
 
 msgid "Opened"
 msgstr "已开启"
+
+msgid "Opened [state in ticket_workflow]"
+msgstr ""
 
 msgid "Opening Date"
 msgstr "开户日期"
@@ -4646,6 +5010,9 @@ msgstr "组织"
 msgid "Organisation : ${title}"
 msgstr "组织 : ${title}"
 
+msgid "Organisation Module"
+msgstr ""
+
 msgid "Organisation that sends the invoice"
 msgstr "发送发票的机构"
 
@@ -4681,6 +5048,9 @@ msgstr "成果"
 
 msgid "Outcome Description"
 msgstr "成果说明"
+
+msgid "Outcome Path"
+msgstr ""
 
 msgid "Overdraft Facility"
 msgstr "透支协议"
@@ -4760,6 +5130,12 @@ msgstr "参数"
 msgid "Parameters"
 msgstr "参数"
 
+msgid "Parent Delivery Property Movement Group"
+msgstr ""
+
+msgid "Parent Explanation Movement Group"
+msgstr ""
+
 msgid "Parent Relative Url"
 msgstr "根相对地址"
 
@@ -4768,6 +5144,9 @@ msgstr "密码"
 
 msgid "Password Confirmation"
 msgstr "确认密码"
+
+msgid "Password Tool"
+msgstr ""
 
 msgid "Password for a user in ERP5"
 msgstr "ERP5用户的密码"
@@ -4868,6 +5247,9 @@ msgstr "个人任务指派概览"
 msgid "Person Career View"
 msgstr "个人事业概览"
 
+msgid "Person Module"
+msgstr ""
+
 msgid "Person or organization who provides a service for the task."
 msgstr "为该项任务提供服务的人或组织"
 
@@ -4909,6 +5291,12 @@ msgstr "已计划"
 
 msgid "Planned Events to Confirm"
 msgstr "待确定计划事件"
+
+msgid "Planned [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Planned [state in event_simulation_workflow]"
+msgstr ""
 
 msgid "Please Update Preview to show the Receipt"
 msgstr "预览小票请点更新"
@@ -4988,6 +5376,9 @@ msgstr "已提交事件"
 msgid "Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant"
 msgstr "“已提交”状态用于被正确提交至总帐，并被会计验证的会计交易"
 
+msgid "Posted [state in query_workflow]"
+msgstr ""
+
 msgid "Posted to General Ledger"
 msgstr "已提交至总帐"
 
@@ -5015,8 +5406,14 @@ msgstr "偏好设置"
 msgid "Preference Tool"
 msgstr "偏好设置工具"
 
+msgid "Preference Tool Type"
+msgstr ""
+
 msgid "Preference Tool contains user preferences and system preferences."
 msgstr "“偏好设置工具”可以对用户偏好和系统偏好进行设置。"
+
+msgid "Preference Type"
+msgstr ""
 
 msgid "Preference is used to store user preferences, and it is editable through the Preference Tool."
 msgstr "“偏好设置”用于存储用户的软件使用偏好，并可通过“偏好设定工具”进行编辑。"
@@ -5095,6 +5492,9 @@ msgstr "上一次银行结单余额"
 
 msgid "Previous Bank Statement Date"
 msgstr "上一次银行结单日期"
+
+msgid "Previous Causality Movement Group"
+msgstr ""
 
 msgid "Price"
 msgstr "单价"
@@ -5291,11 +5691,32 @@ msgstr "属性"
 msgid "Property"
 msgstr "属性"
 
+msgid "Property Assignment Movement Group"
+msgstr ""
+
 msgid "Property Criteria"
 msgstr "属性标准"
 
+msgid "Property Existence Constraint"
+msgstr ""
+
+msgid "Property Grouping Movement Group"
+msgstr ""
+
+msgid "Property Movement Group"
+msgstr ""
+
+msgid "Property Sheet"
+msgstr ""
+
+msgid "Property Sheet Tool"
+msgstr ""
+
 msgid "Property Sheets"
 msgstr "属性表"
+
+msgid "Property Type Validity Constraint"
+msgstr ""
 
 msgid "Prospect Contacted"
 msgstr "潜在客户已联系"
@@ -5498,6 +5919,12 @@ msgstr "采购贸易条款"
 msgid "Purchase trade conditions are documents that gather all the details of a standard purchase order, such as the shipment or payment mode, the tax or discount behaviour. A purchase trade condition can be applied to a purchase order, and in this case, the information borne by the purchase trade condition will be imported to the purchase order. This is practical for the user, because it allows not to loose time typing the same information again and again."
 msgstr "采购贸易条款是集合标准采购订单的所有细节的文件，如运输或付款方式，税务或折扣行为。一项采购贸易条款可以应用到一个采购订单，在这种情况下，该采购贸易条款承载的信息将被导入到该采购订单中。这为用户提供了便捷，避免浪费时间一次又一次地输入相同的信息。"
 
+msgid "PyData Script"
+msgstr ""
+
+msgid "Python Script"
+msgstr ""
+
 msgid "Qualified Sale Opportunity for which the customer is waiting for an offer."
 msgstr "有效的销售机会，顾客已询价正在等待发盘"
 
@@ -5512,6 +5939,9 @@ msgstr "数量差异测试工具"
 
 msgid "Quantity Fields Width"
 msgstr "数量字段宽度"
+
+msgid "Quantity Sign Movement Group"
+msgstr ""
 
 msgid "Quantity Step"
 msgstr "数量区间"
@@ -5533,6 +5963,9 @@ msgstr "质疑"
 
 msgid "Query"
 msgstr "质疑"
+
+msgid "Query Module"
+msgstr ""
 
 msgid "Query Type"
 msgstr "质疑文件类型"
@@ -5558,11 +5991,20 @@ msgstr "重要订阅消息"
 msgid "RSS Feed"
 msgstr "订阅消息 源"
 
+msgid "Ram Cache"
+msgstr ""
+
 msgid "Rate"
 msgstr "税率"
 
 msgid "Ratio"
 msgstr "比率"
+
+msgid "Reachable"
+msgstr ""
+
+msgid "Reachable [state in reachability_workflow]"
+msgstr ""
 
 msgid "Ready"
 msgstr "已就绪"
@@ -5578,6 +6020,9 @@ msgstr "接收装箱单"
 
 msgid "Received"
 msgstr "已接收"
+
+msgid "Received [state in event_simulation_workflow]"
+msgstr ""
 
 msgid "Recipient"
 msgstr "接收人"
@@ -5831,6 +6276,12 @@ msgstr "发布一个文件并将之前的版本存档"
 msgid "Renderer ID"
 msgstr "渲染器ID"
 
+msgid "Replaced"
+msgstr ""
+
+msgid "Replaced [state in business_template_installation_workflow]"
+msgstr ""
+
 msgid "Reply to"
 msgstr "回复"
 
@@ -5921,6 +6372,9 @@ msgstr "快速导入要求文件"
 msgid "Requirement Documents"
 msgstr "要求文件"
 
+msgid "Requirement Movement Group"
+msgstr ""
+
 msgid "Requirement State"
 msgstr "要求状态"
 
@@ -5941,6 +6395,12 @@ msgstr "重设密码"
 
 msgid "Reset Prices"
 msgstr "重设价格"
+
+msgid "Resolved"
+msgstr ""
+
+msgid "Resolved [state in bug_workflow]"
+msgstr ""
 
 msgid "Resource"
 msgstr "资源"
@@ -5970,9 +6430,7 @@ msgid "Restart Transaction (journalise)"
 msgstr "重启交易（入账）"
 
 msgid "Restart action re-opens a document that would have been closed previously in order to modify it, such as an accounting period"
-msgstr ""
-"“重启”命令可以重新开启一个即将被关闭的文件，以对其进行修改。\n"
-"例如重启一个已经关闭的会计期间。"
+msgstr "“重启”命令可以重新开启一个即将被关闭的文件，以对其进行修改。\n例如重启一个已经关闭的会计期间。"
 
 msgid "Results"
 msgstr "结果"
@@ -6076,6 +6534,9 @@ msgstr "角色"
 msgid "Role Definition"
 msgstr "角色定义"
 
+msgid "Role Information"
+msgstr ""
+
 msgid "Role Keys"
 msgstr "角色密钥"
 
@@ -6088,8 +6549,26 @@ msgstr "客户角色"
 msgid "Roles of suppliers"
 msgstr "供应商角色"
 
+msgid "Root Applied Rule Causality Movement Group"
+msgstr ""
+
+msgid "Rounding Model"
+msgstr ""
+
+msgid "Rounding Tool"
+msgstr ""
+
+msgid "Rule Tool"
+msgstr ""
+
 msgid "Running Balance"
 msgstr "收支平衡"
+
+msgid "SQL Method"
+msgstr ""
+
+msgid "SQL Non Continuous Increasing Id Generator"
+msgstr ""
 
 msgid "Salary Coefficient"
 msgstr "工资系数"
@@ -6123,6 +6602,9 @@ msgstr "销售机会"
 
 msgid "Sale Opportunity Detailed Report"
 msgstr "销售机会详细报表"
+
+msgid "Sale Opportunity Module"
+msgstr ""
 
 msgid "Sale Opportunity Status"
 msgstr "销售机会状态"
@@ -6310,6 +6792,9 @@ msgstr "保存"
 msgid "Schedule delivery of the remaining at later time"
 msgstr "计划稍后交付缺少产品的日程"
 
+msgid "Script Constraint"
+msgstr ""
+
 msgid "Scriptable Keys"
 msgstr "可编写脚本密钥"
 
@@ -6376,6 +6861,9 @@ msgstr "选择报表"
 msgid "Select Template"
 msgstr "选择模板"
 
+msgid "Selection Tool"
+msgstr ""
+
 msgid "Sell"
 msgstr "销售"
 
@@ -6427,6 +6915,12 @@ msgstr "检测方法"
 msgid "Sent"
 msgstr "已发送"
 
+msgid "Sent [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Sent [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "Serial Number"
 msgstr "编号"
 
@@ -6459,6 +6953,9 @@ msgstr "服务"
 
 msgid "Services to Validate"
 msgstr "待验证服务"
+
+msgid "Session Tool"
+msgstr ""
 
 msgid "Set List Setting"
 msgstr "设置列表"
@@ -6555,6 +7052,9 @@ msgstr "模拟运作"
 
 msgid "Simulation State"
 msgstr "模拟状态"
+
+msgid "Simulation Tool"
+msgstr ""
 
 msgid "Site"
 msgstr "站点"
@@ -6670,6 +7170,9 @@ msgstr "解决方法"
 msgid "Solved"
 msgstr "已解决"
 
+msgid "Solver Tool"
+msgstr ""
+
 msgid "Solving"
 msgstr "解决中"
 
@@ -6721,6 +7224,9 @@ msgstr "专门贸易条款及业务流程"
 msgid "Split Document"
 msgstr "拆分文件"
 
+msgid "Split Movement Group"
+msgstr ""
+
 msgid "Split Prevision"
 msgstr "拆分预期文件"
 
@@ -6732,6 +7238,9 @@ msgstr "电子表格"
 
 msgid "Stakeholder"
 msgstr "利益共享者"
+
+msgid "Standard Property"
+msgstr ""
 
 msgid "Start"
 msgstr "开始"
@@ -6786,6 +7295,12 @@ msgstr "已开启"
 
 msgid "Started Project"
 msgstr "已开启项目"
+
+msgid "Started [state in assignment_workflow]"
+msgstr ""
+
+msgid "Started [state in career_workflow]"
+msgstr ""
 
 msgid "State"
 msgstr "状态"
@@ -6868,11 +7383,20 @@ msgstr "已停止"
 msgid "Stopped Project"
 msgstr "已停止项目"
 
+msgid "Stopped [state in assignment_workflow]"
+msgstr ""
+
+msgid "Stopped [state in career_workflow]"
+msgstr ""
+
 msgid "Stopped is a state of a document for which the treatment has been stopped in ERP5"
 msgstr "ERP5中处理程序已被停止的文件状态"
 
 msgid "Street Address"
 msgstr "街道地址"
+
+msgid "String Attribute Match Constraint"
+msgstr ""
 
 msgid "String Fields Width"
 msgstr "字符串字段宽度"
@@ -6912,6 +7436,12 @@ msgstr "待验证的已递交销售机会"
 
 msgid "Submitted Support Requests"
 msgstr "递交支持请求"
+
+msgid "Submitted [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Submitted [state in ticket_workflow]"
+msgstr ""
 
 msgid "Subscribe"
 msgstr "注册"
@@ -7018,8 +7548,17 @@ msgstr "已暂停活动"
 msgid "Suspended Project"
 msgstr "已暂停项目"
 
+msgid "Suspended [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Suspended [state in ticket_workflow]"
+msgstr ""
+
 msgid "System Preference"
 msgstr "系统偏好设置"
+
+msgid "TALES Constraint"
+msgstr ""
 
 msgid "Target Computer Reference"
 msgstr "目标计算机编号"
@@ -7192,14 +7731,14 @@ msgstr "已临时关闭"
 msgid "Term (days)"
 msgstr "期限（天）"
 
-msgid "Terms"
-msgstr "条款"
-
 msgid "Terminate the Current Career Step"
 msgstr "终止当前事业阶段"
 
 msgid "Terminated"
 msgstr "已终止"
+
+msgid "Terms"
+msgstr "条款"
 
 msgid "Terms of Service"
 msgstr "服务条款"
@@ -7209,6 +7748,9 @@ msgstr "测试部件"
 
 msgid "Test Method ID"
 msgstr "测试方式ID"
+
+msgid "Test Tool"
+msgstr ""
 
 msgid "Text"
 msgstr "文本"
@@ -7336,13 +7878,8 @@ msgstr "供应商方面问责的项目"
 msgid "The acknowledge workflow method is the last logical transition for incoming events. It sets the state to acknowledged."
 msgstr "“受理流程”法是接收事件的最后一项逻辑过渡指令，将事件的状态设置为“已受理”"
 
-msgid ""
-"The activity code of the organisation.\n"
-"\n"
-"This code is specific to the local legislation. For instance, in France this is called \"Code APE\""
-msgstr ""
-"组织机构的行业代码\r\n"
-"这个代码由地方立法特定。例如，在法国称为“Code APE”"
+msgid "The activity code of the organisation.\n\nThis code is specific to the local legislation. For instance, in France this is called \"Code APE\""
+msgstr "组织机构的行业代码\r\n这个代码由地方立法特定。例如，在法国称为“Code APE”"
 
 msgid "The activity of the person."
 msgstr "该人从事的行业"
@@ -7704,10 +8241,7 @@ msgstr "邮政编码"
 msgid "The preferred date order in which datetime field will be displayed (dd/mm/yyyy, yyyy/mm/dd, ...)"
 msgstr "日期字段中偏好的数目显示顺序（日/月/年，年/月/日，...）"
 
-msgid ""
-"The prefix for the person's full name.\n"
-"\n"
-"Usually something like Dr. or Mr."
+msgid "The prefix for the person's full name.\n\nUsually something like Dr. or Mr."
 msgstr "完整人名的之前的头衔，例如Dr. 或 Mr."
 
 msgid "The printing format of the invoice."
@@ -7749,9 +8283,7 @@ msgstr "“公布（可修改）流程”法将文件的验证状态设为“已
 msgid "The ratio used to surcharge the supply line price"
 msgstr "附加价和供应明细价格的比率"
 
-msgid ""
-"The ration of resource that will at the end being transformed.\n"
-"If efficiency is 90, it means we lost 10% in the transformation"
+msgid "The ration of resource that will at the end being transformed.\nIf efficiency is 90, it means we lost 10% in the transformation"
 msgstr "最终将被转化的资源的比率。如果比率是90，这意味着转化中损失10％的资源。"
 
 msgid "The receive logical transition sets the event state to received"
@@ -7820,23 +8352,14 @@ msgstr "街道的地址，通常包含街道名称，门牌和房间号（如果
 msgid "The submit logical transition sets the Ticket state to submitted."
 msgstr "该逻辑过渡指令将票据状态设置为已提交"
 
-msgid ""
-"The suffix for the person full name.\n"
-"\n"
-"Can be something like 'Jr.'"
+msgid "The suffix for the person full name.\n\nCan be something like 'Jr.'"
 msgstr "完整人名的后缀，例如 'Jr.'"
 
 msgid "The supplier of the invoice"
 msgstr "发票的供应方"
 
-msgid ""
-"The symbol used to represent the currency.\n"
-"\n"
-"It is for example $, ¥, €, £..."
-msgstr ""
-"用于代表不同货币的符号\n"
-"\n"
-"例如， $, ¥, €, £..."
+msgid "The symbol used to represent the currency.\n\nIt is for example $, ¥, €, £..."
+msgstr "用于代表不同货币的符号\n\n例如， $, ¥, €, £..."
 
 msgid "The telephone area"
 msgstr "电话号码的地区代号"
@@ -8069,6 +8592,9 @@ msgstr "时区"
 msgid "Title"
 msgstr "标题"
 
+msgid "Title Movement Group"
+msgstr ""
+
 msgid "Title of the document which is at the origin of the event"
 msgstr "一项事件文件的发起文件"
 
@@ -8107,6 +8633,9 @@ msgstr "令牌"
 
 msgid "Token is Requested."
 msgstr "令牌已请求。"
+
+msgid "Tool Component"
+msgstr ""
 
 msgid "Tools"
 msgstr "工具"
@@ -8273,6 +8802,15 @@ msgstr "待校对翻译"
 msgid "Translator Mode"
 msgstr "翻译模式"
 
+msgid "Trash Bin"
+msgstr ""
+
+msgid "Trash Folder"
+msgstr ""
+
+msgid "Trash Tool"
+msgstr ""
+
 msgid "Trial Balance"
 msgstr "试算平衡表"
 
@@ -8284,6 +8822,9 @@ msgstr "呈现类型"
 
 msgid "Type or Title of the query posted by a user"
 msgstr "用户提交的质疑文件的类型"
+
+msgid "Types Tool"
+msgstr ""
 
 msgid "Uncheck All"
 msgstr "全部反选"
@@ -8323,6 +8864,12 @@ msgstr "取消发布"
 
 msgid "Unpublishes the document"
 msgstr "取消一个文件的发布"
+
+msgid "Unreachable"
+msgstr ""
+
+msgid "Unreachable [state in reachability_workflow]"
+msgstr ""
 
 msgid "Update"
 msgstr "更新"
@@ -8375,6 +8922,9 @@ msgstr "已更新"
 msgid "Updated Business Templates"
 msgstr "更新业务模板"
 
+msgid "Updated [state in assignment_workflow]"
+msgstr ""
+
 msgid "Upgrade"
 msgstr "升级"
 
@@ -8422,6 +8972,12 @@ msgstr "将该人的照片上传"
 
 msgid "Uploaded"
 msgstr "已上传"
+
+msgid "Uploaded [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Url Registry Tool"
+msgstr ""
 
 msgid "Url of the document"
 msgstr "文件的Url"
@@ -8576,6 +9132,18 @@ msgstr "验证交易"
 msgid "Validated"
 msgstr "已验证"
 
+msgid "Validated [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Validated [state in login_validation_workflow]"
+msgstr ""
+
+msgid "Validated [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Validated [state in validation_workflow]"
+msgstr ""
+
 msgid "Validated by Configurator"
 msgstr "由配置器验证"
 
@@ -8615,11 +9183,17 @@ msgstr "可调附加价"
 msgid "Variables"
 msgstr "变量"
 
+msgid "Variant Movement Group"
+msgstr ""
+
 msgid "Variation"
 msgstr "变量"
 
 msgid "Variation Axes"
 msgstr "变量轴"
+
+msgid "Variation Property Movement Group"
+msgstr ""
 
 msgid "Vendor"
 msgstr "卖方"
@@ -8798,6 +9372,24 @@ msgstr "流程链"
 msgid "Workflow Report"
 msgstr "流程报表"
 
+msgid "Workflow Script"
+msgstr ""
+
+msgid "Workflow State"
+msgstr ""
+
+msgid "Workflow Tool"
+msgstr ""
+
+msgid "Workflow Transition"
+msgstr ""
+
+msgid "Workflow Transition Variable"
+msgstr ""
+
+msgid "Workflow Variable"
+msgstr ""
+
 msgid "Workflow of a user preference"
 msgstr "用户偏好设置的流程"
 
@@ -8900,6 +9492,9 @@ msgstr "姓名"
 msgid "Your organisation"
 msgstr "公司名称"
 
+msgid "ZODB Continuous Increasing Id Generator"
+msgstr ""
+
 msgid "Zope Products"
 msgstr "Zope产品"
 
@@ -8924,17 +9519,44 @@ msgstr "可用于在列表中的对象进行排序的整数"
 msgid "another base category to get if everything else fails"
 msgstr "当其他类别不成功时所获取的另一基本类别"
 
+msgid "answered"
+msgstr ""
+
+msgid "archived"
+msgstr ""
+
 msgid "ascending"
 msgstr "升序"
 
 msgid "build"
 msgstr "生成"
 
+msgid "built"
+msgstr ""
+
 msgid "calcultes the state of container"
 msgstr "计算货柜状态"
 
+msgid "cancelled"
+msgstr ""
+
 msgid "closed"
 msgstr "已终止"
+
+msgid "confirmed"
+msgstr ""
+
+msgid "conversion_failed"
+msgstr ""
+
+msgid "converted"
+msgstr ""
+
+msgid "converting"
+msgstr ""
+
+msgid "current"
+msgstr ""
 
 msgid "default state of the document in the converting process"
 msgstr "格式转换过程中文件的默认状态"
@@ -8948,8 +9570,35 @@ msgstr "定义了到达文档的基本URL"
 msgid "defines which email address is used by default for ingestion"
 msgstr "定义录入的默认邮箱地址"
 
+msgid "deleted"
+msgstr ""
+
+msgid "delivered"
+msgstr ""
+
 msgid "descending"
 msgstr "降序"
+
+msgid "disabled"
+msgstr ""
+
+msgid "draft"
+msgstr ""
+
+msgid "embedded"
+msgstr ""
+
+msgid "empty"
+msgstr ""
+
+msgid "enabled"
+msgstr ""
+
+msgid "expired"
+msgstr ""
+
+msgid "global"
+msgstr ""
 
 msgid "if checked, if will install all the missing tools in the site when installing the business template"
 msgstr "如果勾选，在该站点安装该业务模板时就会安装所有缺失的工具"
@@ -8957,8 +9606,14 @@ msgstr "如果勾选，在该站点安装该业务模板时就会安装所有缺
 msgid "install"
 msgstr "安装"
 
+msgid "installed"
+msgstr ""
+
 msgid "instructions in order to explain how to use the resource"
 msgstr "资源的使用说明"
+
+msgid "invalidated"
+msgstr ""
 
 msgid "loading"
 msgstr "加载中"
@@ -8972,6 +9627,12 @@ msgstr "标明货柜已装"
 msgid "marks the document as it has been confirmed to the customer or it has been confirmed by the supplier"
 msgstr "标明客户或供应商方面已经明确下了订单"
 
+msgid "modified"
+msgstr ""
+
+msgid "not_installed"
+msgstr ""
+
 msgid "number of line displayed by a listbox when used in list mode (in a module for example)"
 msgstr "列表页中显示的列表行数（例如在一个模块的列表页中）"
 
@@ -8981,14 +9642,29 @@ msgstr "浏览页中列表行数 （例如在一个文件的浏览页中）"
 msgid "of"
 msgstr "共"
 
+msgid "open"
+msgstr ""
+
 msgid "planned"
 msgstr "已计划"
 
 msgid "portal type"
 msgstr "门户类型"
 
+msgid "posted"
+msgstr ""
+
 msgid "project related to ticket"
 msgstr "工单相关的项目"
+
+msgid "reachable"
+msgstr ""
+
+msgid "ready"
+msgstr ""
+
+msgid "replaced"
+msgstr ""
 
 msgid "requested"
 msgstr "已要求"
@@ -9002,8 +9678,17 @@ msgstr "货柜编号"
 msgid "started"
 msgstr "已开启"
 
+msgid "stopped"
+msgstr ""
+
 msgid "submit"
 msgstr "提交"
+
+msgid "submitted"
+msgstr ""
+
+msgid "suspended"
+msgstr ""
 
 msgid "tell for which protocol does the url hold"
 msgstr "说明该url拥有的协议"
@@ -9050,8 +9735,20 @@ msgstr "标题"
 msgid "transacion to carry forward the balance in order to open a new accounting period"
 msgstr "为开启一个新的会计期间而进行前期余额更新"
 
+msgid "unreachable"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+msgid "uploaded"
+msgstr ""
+
 msgid "url value"
 msgstr "url值"
+
+msgid "validated"
+msgstr ""
 
 msgid "will automatically detect when file is completely converted"
 msgstr "当文件转换完成时会自动检测该文件"
