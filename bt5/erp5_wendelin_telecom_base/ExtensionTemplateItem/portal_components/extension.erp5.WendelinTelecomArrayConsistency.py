@@ -22,7 +22,7 @@
 
 import pandas as pd
 
-def checkDuplicatedEntryConsistency(self, fixit=False):
+def checkDuplicatedEntryConsistency(self, fixit=False, debug=False):
   data_array_dtype = self.getArrayDtypeNames()
   data_array_shape = self.getArrayShape()
   if data_array_shape is None \
@@ -47,14 +47,13 @@ def checkDuplicatedEntryConsistency(self, fixit=False):
   data_zarray = self.getArray()[:]
   data_frame = pd.DataFrame.from_records(data_zarray)
 
-  data_frame[time_field] = pd.to_datetime(data_frame[time_field], unit='s')
-  data_frame = data_frame.sort_values(by=time_field)
   duplication = data_frame.duplicated(subset=subset_columns, keep=False)
   if duplication.any():
-    # For debug:
-    # return data_frame[duplication].to_dict(orient='list')
+    if debug:
+      return data_frame[duplication].to_dict(orient='list')
     return ['This Data Array constains an unexpected duplication.']
   return []
+
 
 
 
