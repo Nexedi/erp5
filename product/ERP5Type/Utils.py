@@ -789,7 +789,26 @@ def updateGlobals(this_module, global_hook,
 # Modules Import
 #####################################################
 
-import imp
+
+if six.PY3:
+  import importlib.util
+
+  def load_module_from_path(module_id, path):
+    spec = importlib.util.spec_from_file_location(module_id, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+else:
+  import imp
+
+  def load_module_from_path(class_id, path):
+    return imp.load_source(class_id, path)
+
+def load_class_from_path(class_id, path):
+  return getattr(load_module_from_path(class_id, path), class_id)
+
+
 
 from App.config import getConfiguration
 
@@ -842,8 +861,7 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
-  module = imp.load_source(class_id, path)
-  getattr(module, class_id)
+  load_class_from_path(class_id, path)
 
 def importLocalPropertySheet(class_id, path = None):
   from Products.ERP5Type import PropertySheet
@@ -851,18 +869,15 @@ def importLocalPropertySheet(class_id, path = None):
     # We should save a copy in ZODB here XXX
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "PropertySheet")
-  path = os.path.join(path, "%s.py" % class_id)
-  with open(path) as f:
-    module = imp.load_source(class_id, path, f)
-    klass = None
-    try:
-      klass = getattr(module, class_id)
-    except AttributeError:
-      raise AttributeError("Property Sheet '%s' should contain a class " \
-          "with the same name" % class_id)
-    setattr(PropertySheet, class_id, klass)
-    # Register base categories
-    registerBaseCategories(klass)
+  module = load_module_from_path(class_id, os.path.join(path, "%s.py" % class_id))
+  try:
+    klass = getattr(module, class_id)
+  except AttributeError:
+    raise AttributeError("Property Sheet '%s' should contain a class " \
+        "with the same name" % class_id)
+  setattr(PropertySheet, class_id, klass)
+  # Register base categories
+  registerBaseCategories(klass)
 
 base_category_dict = {}
 def registerBaseCategories(property_sheet):
@@ -886,9 +901,7 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
     if path is None:
       instance_home = getConfiguration().instancehome
       path = os.path.join(instance_home, "interfaces")
-    path = os.path.join(path, "%s.py" % module_id)
-    with open(path) as f:
-      module = imp.load_source(class_id, path, f)
+    module = load_module_from_path(class_id, os.path.join(path, "%s.py" % module_id))
     from zope.interface import Interface
     from Products.ERP5Type import interfaces
     InterfaceClass = type(Interface)
@@ -901,21 +914,16 @@ def importLocalConstraint(class_id, path = None):
   if path is None:
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "Constraint")
-  path = os.path.join(path, "%s.py" % class_id)
-  with open(path) as f:
-    module = imp.load_source(class_id, path, f)
-    setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
+  module = load_module_from_path(class_id, os.path.join(path, "%s.py" % class_id))
+  setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
 
 def importLocalInteractor(class_id, path=None):
   import Products.ERP5Type.Interactor
   if path is None:
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "Interactor")
-  path = os.path.join(path, "%s.py" % class_id)
-  with open(path) as f:
-    module = imp.load_source(class_id, path, f)
-    setattr(Products.ERP5Type.Interactor, class_id, getattr(module, class_id))
-    registerInteractorClass(class_id, getattr(Products.ERP5Type.Interactor, class_id))
+  module = load_module_from_path(class_id, os.path.join(path, "%s.py" % class_id))
+  setattr(Products.ERP5Type.Interactor, class_id, getattr(module, class_id))
 
 def getLocalExtensionList():
   if not getConfiguration:
@@ -1035,8 +1043,7 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
-  module = imp.load_source(class_id, path)
-  getattr(module, class_id)
+  load_class_from_path(class_id, path)
 
 def removeLocalConstraint(class_id):
   instance_home = getConfiguration().instancehome
@@ -1160,7 +1167,7 @@ def importLocalDocument(class_id, path=None, class_path=None):
     path = os.path.join(path, "%s.py" % class_id)
     module_path = "erp5.document"
     class_path = "%s.%s" % (module_path, class_id)
-    module = imp.load_source(class_path, path)
+    module = load_module_from_path(class_path, path)
     klass = getattr(module, class_id, None)
     # Tolerate that Document doesn't define any class, which can be useful
     # if we only want to monkey patch.
