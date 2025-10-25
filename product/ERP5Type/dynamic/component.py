@@ -1,17 +1,40 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+# Copyright (c) 2025 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Arnaud Fontaine <arnaud.fontaine@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsibility of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# guarantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+##############################################################################
+
+from Products.ERP5Type.patches.Restricted import MNAME_MAP
+
 class ComponentPackage(ModuleType):
   """
   TODO: Do we really need ComponentVersionPackage?
   """
   __path__ = []
 
-class ComponentVersionPackage(ComponentPackage):
-  """
-  Component Version package (erp5.component.XXX.VERSION)
-
-  TODO: Do we really need ComponentVersionPackage?
-  """
-  pass
-
+from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
+# WIP
 class ComponentDynamicPackage(ComponentPackage):
   def reset(self, sub_package=None):
     """
@@ -57,6 +80,7 @@ class ComponentDynamicPackage(ComponentPackage):
 
       delattr(package, name)
 
+# WIP
 class ToolComponentDynamicPackage(ComponentDynamicPackage):
   def reset(self, *args, **kw):
     """
@@ -84,10 +108,45 @@ COMPONENT_PACKAGE_NAMESPACE_CLASS_DICT = {
 
 _VERSION_SUFFIX_LEN = len('_version')
 
-from importlib.abc import MetaPathFinder
+from importlib.abc import MetaPathFinder, InspectLoader
 from importlib.machinery import ModuleSpec
 from Products.ERP5.ERP5Site import getSite
 from Acquisition import aq_base
+
+from types import ModuleType
+
+class ComponentModuleLoader(InspectLoader):
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.fullname_source_code_dict = {}
+
+  def create_module(self, spec):
+    return ModuleType(spec.name, component.getDescription())
+
+  def get_source(self, fullname):
+    """
+    PEP-302 function to get the source code, used mainly by linecache for
+    tracebacks, pdb...
+
+    Use internal cache rather than accessing the Component directly as this
+    would require accessing ERP5 Site even though the source code may be
+    retrieved outside of ERP5 (eg DeadlockDebugguer).
+    """
+    return self.fullname_source_code_dict.get(fullname)
+
+  def exec_module(self, module):
+    pass
+
+class ComponentAliasLoader(InspectLoader):
+  def create_module(self, spec):
+    pass
+
+  def get_source(self, fullname):
+    pass
+
+  def exec_module(self, module):
+    pass
+
 class ComponentMetaPathFinder(MetaPathFinder):
   def find_spec(self, fullname, path, target=None):
     if path:
@@ -103,14 +162,9 @@ class ComponentMetaPathFinder(MetaPathFinder):
       return None
 
     site = getSite()
-
-    namespace_prefix = namespace + '.'
     id_prefix = namespace.rsplit('.', 1)[1]
+    name = fullname[len(namespace + '.'):]
 
-    # __import__ will first try a relative import, for example
-    # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
-    # Component where an import is done
-    name = fullname[len(namespace_prefix):]
     # name=VERSION_version.REFERENCE
     if '.' in name:
       try:
@@ -123,18 +177,19 @@ class ComponentMetaPathFinder(MetaPathFinder):
       # aq_base() because this should not go up to ERP5Site and trigger
       # side-effects, after all this only check for existence...
       component = getattr(aq_base(site.portal_components), id_, None)
-      if component is None or component.getValidationState() not in ('modified',
-                                                                     'validated'):
-        return None
+      if component is not None and component.getValidationState() in ('modified',
+                                                                      'validated'):
+        spec = ModuleSpec(fullname, loader=ComponentModuleLoader)
+        spec.component_id = id_
 
     # Skip unavailable components, otherwise Products for example could be
     # wrongly considered as importable and thus the actual filesystem class
     # ignored
     #
-    # name=VERSION_version
+    # name=VERSION_version => this is a package
     elif name.endswith('_version'):
-      if name[:-__VERSION_SUFFIX_LEN] not in site.getVersionPriorityNameList():
-        return None
+      if name[:-__VERSION_SUFFIX_LEN] in site.getVersionPriorityNameList():
+        return ModuleSpec(fullname, loader=None, is_package=True)
 
     # name=REFERENCE
     else:
@@ -144,10 +199,6 @@ class ComponentMetaPathFinder(MetaPathFinder):
         component = getattr(component_tool, id_, None)
         if component is not None and component.getValidationState() in ('modified',
                                                                         'validated'):
-          break
-      else:
-        return None
+          return ModuleSpec(fullname, loader=ComponentAliasLoader)
 
-    spec = ModuleSpec(fullname, loader)
-
-    return spec
+    return None
