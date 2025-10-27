@@ -36,7 +36,7 @@ if getattr(file, 'filename', '') != '':
   discussion_post.setSuccessorValueList([document])
 
   # depending on security model this should be changed accordingly
-  document.publish()
+  document.share()
 
 # depending on security model Post can be submitted for review
 portal_status_message = context.Base_translateString("New post created.")
