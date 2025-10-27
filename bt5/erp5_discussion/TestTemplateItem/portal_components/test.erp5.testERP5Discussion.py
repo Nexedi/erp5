@@ -162,7 +162,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertSameSet([discussion_thread], [x.getObject() for x in forum.DiscussionForum_getDiscussionThreadList()])
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
     attachment_list = discussion_post.DiscussionPost_getAttachmentList()
-    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(discussion_thread.getValidationState(), 'shared')
     self.assertEqual(0, len(attachment_list))
 
     # check attachment creation
@@ -176,7 +176,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
 
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
     attachment_list = discussion_post.DiscussionPost_getAttachmentList()
-    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(discussion_thread.getValidationState(), 'shared')
     self.assertEqual(1, len(attachment_list))
 
   def test_05_createDiscussionThread_webSectionBackwardCompatibility(self):
@@ -218,7 +218,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
     attachment_list = discussion_post.DiscussionPost_getAttachmentList()
-    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(discussion_thread.getValidationState(), 'shared')
     self.assertEqual(0, len(attachment_list))
 
     # check attachment creation
@@ -232,7 +232,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
 
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
     attachment_list = discussion_post.DiscussionPost_getAttachmentList()
-    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(discussion_thread.getValidationState(), 'shared')
     self.assertEqual(1, len(attachment_list))
 
   def test_MultipleForum(self):
