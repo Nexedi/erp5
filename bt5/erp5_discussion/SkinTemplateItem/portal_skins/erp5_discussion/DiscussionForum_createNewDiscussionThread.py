@@ -88,7 +88,7 @@ discussion_post = discussion_thread.newContent(
 
 # depending on security model Thread and Post can be directly published or shared
 portal_status_message = "New discussion thread created."
-discussion_thread.publish()
+discussion_thread.share()
 
 # handle attachments
 if getattr(file, 'filename', '') != '':
@@ -103,7 +103,7 @@ if getattr(file, 'filename', '') != '':
   discussion_post.setSuccessorValueList([document])
 
   # depending on security model this should be changed accordingly
-  document.publish()
+  document.share()
 
 if send_notification_text not in ('', None):
   # we can send notifications
