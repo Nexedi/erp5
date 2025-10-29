@@ -55,9 +55,7 @@ class MailevaSOAPConnector(XMLObject):
       response=response
     )
     maileva_exchange.confirm()
-    # change state, no need to wait alarm check
     if failed:
-      maileva_exchange.acknowledge()
       maileva_exchange.getFollowUpValue().fail()
 
   def submitRequest(self, maileva_exchange):
