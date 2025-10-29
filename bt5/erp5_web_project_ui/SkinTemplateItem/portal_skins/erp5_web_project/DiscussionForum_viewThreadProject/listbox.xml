@@ -114,10 +114,6 @@
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -134,7 +130,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>author</string>
+                          <string>author_column</string>
                           <string>Author</string>
                         </tuple>
                         <tuple>
@@ -142,7 +138,7 @@
                           <string>Responses</string>
                         </tuple>
                         <tuple>
-                          <string>last_post</string>
+                          <string>last_post_column</string>
                           <string>Latest Post</string>
                         </tuple>
                         <tuple>
@@ -169,14 +165,6 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>modification_date</string>
-                        </tuple>
-                        <tuple>
-                          <string>author</string>
-                          <string>Author</string>
-                        </tuple>
-                        <tuple>
-                          <string>last_post</string>
-                          <string>Latest Post</string>
                         </tuple>
                       </list>
                     </value>
@@ -243,7 +231,16 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>last_post_column</string>
+                          <string>Listbox_getDiscussionThreadLastPostUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>author_column</string>
+                          <string>Listbox_getDiscussionThreadUrl</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

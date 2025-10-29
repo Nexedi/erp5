@@ -10,14 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>gadget_url</string>
-                <string>renderjs_extra</string>
+                <string>css_class</string>
+                <string>default</string>
+                <string>editable</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_author</string> </value>
+            <value> <string>listbox_author_column</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -42,6 +44,10 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -49,6 +55,20 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
@@ -58,14 +78,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>renderjs_extra</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -75,22 +93,32 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_gadget_field</string> </value>
+                    <value> <string>my_label_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string>gadget_thread_listbox_column.html</string> </value>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>renderjs_extra</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Author</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -106,7 +134,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("author_dict", cell.DiscussionThread_getLastPost(first=True).DiscussionPost_getAuthorDict()), (\'jio_key\', cell.getRelativeUrl()), (\'view\', \'project_view\')]</string> </value>
+            <value> <string>python: cell.DiscussionThread_viewProjectAuthorWidget()</string> </value>
         </item>
       </dictionary>
     </pickle>
