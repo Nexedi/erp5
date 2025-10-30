@@ -8,9 +8,9 @@ for event in portal.portal_catalog(
   validation_state="confirmed"
 ):
   if event.getReference() in notification_dict:
-    event.activate().MailevaExchange_checkStatus(track_id= notification_dict[event.getReference()]["id"])
+    event.activate(tag=tag).MailevaExchange_checkStatus(track_id=notification_dict[event.getReference()]["id"])
   elif getattr(event, 'track_id', ""):
-    event.activate().MailevaExchange_checkStatus(track_id= getattr(event, 'track_id'))
+    event.activate(tag=tag).MailevaExchange_checkStatus(track_id=getattr(event, 'track_id'))
   else:
     document = event.getFollowUpValue()
     send_state = document.getSendState()
