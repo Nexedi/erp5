@@ -17,7 +17,7 @@ for event in portal.portal_catalog(
     if send_state == "failed":
       event.acknowledge(comment="Document failed to send")
     else:
-      if int(DateTime()) - int(event.getCreationDate()) > 60*60*24:
+      if DateTime() - event.getCreationDate() > 1:
         document.fail()
         event.acknowledge(comment="No Response")
 
