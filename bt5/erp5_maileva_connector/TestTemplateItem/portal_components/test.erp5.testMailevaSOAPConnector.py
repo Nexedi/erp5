@@ -122,6 +122,8 @@ def submitRequestWithFailure(**kw):
 class ServiceWithException:
   def submit(self, **kw):
     raise RuntimeError('exception')
+  def checkPendingNotifications(self, notification_type):
+    return []
 
 class ClientWithException:
   def __init__(self):
@@ -299,7 +301,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       sender = self.sender)
       self.tic()
       event = self.maileva_connector.getResourceRelatedValue(portal_type='Maileva Exchange')
-      self.assertEqual(event.getValidationState(), 'acknowledged')
+      self.assertEqual(event.getValidationState(), 'confirmed')
       self.assertEqual(event.getSourceValue(), self.sender)
       self.assertEqual(event.getDestinationValue(), self.recipient)
       self.assertEqual(event.getFollowUpValue(), self.document)
@@ -307,6 +309,10 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertNotEqual(event.getRequest(), None)
       self.assertIn('exception', event.getResponse())
       self.tic()
+      self.portal.portal_alarms.check_maileva_document_status.activeSense()
+      self.tic()
+      self.assertEqual(event.getValidationState(), 'acknowledged')
+
 
   def test_maileva_xml(self):
     xml = self.maileva_connector.generateRequestXML(self.recipient, self.sender, self.document, 'test_track_id')
