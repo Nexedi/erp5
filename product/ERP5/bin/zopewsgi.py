@@ -329,4 +329,12 @@ def runwsgi():
 
     signal.signal(signal.SIGTERM, shutdown)
     signal.signal(signal.SIGINT, shutdown)
+
+    def neo_log_rotation(*args):
+      import neo
+      neo.lib.logging.reopen()
+
+    signal.signal(signal.SIGUSR2, neo_log_rotation)
+
+
     server.run()
