@@ -46,6 +46,7 @@ from six.moves.urllib.parse import parse_qsl, quote, urlencode, urlsplit, urluns
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import TemporaryPythonScript
 from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5.ERP5Site import (
   ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME,
@@ -1319,5 +1320,60 @@ class TestOAuth2(ERP5TypeTestCase):
         # Remove the tokens
         del cookie_jar[_TEST_ACCESS_COOKIE_NAME]
         del cookie_jar[_TEST_REFRESH_COOKIE_NAME]
+
+  def test_handle_expired_oauth2_session_set_alarm(self):
+    def execute_alarm(at_date):
+      with self.pinDateTime(at_date):
+        self.portal.portal_alarms.handle_expired_oauth2_session_set.activeSense()
+        self.tic()
+
+    def create_validated_session(session_id, expiration_date):
+      connector = self.__oauth2_server_connector_value
+      session = connector.createSession(
+        authorisation_code=session_id,
+        client_value=self.__oauth2_default_client_declaration_value,
+        redirect_uri=None,
+        scope_list=[],
+        code_challenge=None,
+        code_challenge_method=None,
+        network_address='127.0.0.1',
+        user_agent=self.id(),
+      )
+      def cleanup_session():
+        if self.portal.session_module.get(session.getId()) is not None:
+          self.portal.session_module.manage_delObjects([session.getId()])
+      self.addCleanup(cleanup_session)
+      connector._validateSessionValue(session)
+      session.setPolicyExpirationDate(expiration_date)
+      return session
+
+    old_validated_session = create_validated_session("old_validated_session", DateTime('2000/01/01'))
+    old_invalidated_session = create_validated_session("old_invalidated_session", DateTime('2000/01/01'))
+    old_invalidated_session.invalidate()
+    recent_validated_session = create_validated_session("recent_validated_session", DateTime())
+    self.tic()
+
+    execute_alarm(at_date=DateTime('2000/06/01'))
+    self.assertEqual(old_validated_session.getValidationState(), 'invalidated')
+    self.assertEqual(old_invalidated_session.getValidationState(), 'invalidated')
+    self.assertIsNotNone(self.portal.session_module.get(old_invalidated_session.getId()))
+    self.assertEqual(recent_validated_session.getValidationState(), 'validated')
+
+    with TemporaryPythonScript(
+      self.portal,
+      'ERP5Site_getPreferredInvalidatedOAuth2SessionDeletionDelay',
+      body='return 360',
+    ):
+      execute_alarm(at_date=DateTime('2000/06/01'))
+      self.assertEqual(old_validated_session.getValidationState(), 'invalidated')
+      self.assertIsNotNone(self.portal.session_module.get(old_validated_session.getId()))
+      self.assertEqual(old_invalidated_session.getValidationState(), 'invalidated')
+      self.assertIsNotNone(self.portal.session_module.get(old_invalidated_session.getId()))
+      self.assertEqual(recent_validated_session.getValidationState(), 'validated')
+
+      execute_alarm(at_date=DateTime('2001/01/01'))
+      self.assertIsNone(self.portal.session_module.get(old_validated_session.getId()))
+      self.assertIsNone(self.portal.session_module.get(old_invalidated_session.getId()))
+      self.assertEqual(recent_validated_session.getValidationState(), 'validated')
 
   del _printQueryTraceOnFailure
