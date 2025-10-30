@@ -99,47 +99,59 @@ class PortalAlarmDisabled(object):
   def __enter__(self):
     if self.was_subscribed:
       self.portal_alarms.unsubscribe()
-      # transaction.commit()
 
   def __exit__(self, exc_type, exc_value, traceback):
     if self.was_subscribed:
       self.portal_alarms.subscribe()
-      # transaction.commit()
 
 
-class TemporaryAlarmScript(object):
+class TemporaryPythonScript(object):
   """
-  Context manager for temporary alarm python scripts
+  Context manager for temporary python scripts in portal_skins/custom
   """
-  def __init__(self, portal, script_name, fake_return="", attribute=None):
+  def __init__(self, portal, script_name, arguments='', body=''):
     self.script_name = script_name
     self.portal = portal
-    self.fake_return = fake_return
-    self.attribute = attribute
+    self.arguments = arguments
+    self.body = body
 
   def __enter__(self):
-    if self.script_name in self.portal.portal_skins.custom.objectIds():
-      raise ValueError('Precondition failed: %s exists in custom' % self.script_name)
-    if self.attribute is None:
-      content = """portal_workflow = context.portal_workflow
-portal_workflow.doActionFor(context, action='edit_action', comment='Visited by %s')
-return %s""" % (self.script_name, self.fake_return)
-    elif self.attribute is False:
-      content = """return %s""" % self.fake_return
-    else:
-      content = """portal_workflow = context.portal_workflow
-context.edit(%s='Visited by %s')
-return %s""" % (self.attribute, self.script_name, self.fake_return)
-    createZODBPythonScript(self.portal.portal_skins.custom,
-                        self.script_name,
-                        '*args, **kwargs',
-                        '# Script body\n' + content)
+    script = createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      self.script_name,
+      self.arguments,
+      self.body,
+    )
     transaction.commit()
+    return script
 
   def __exit__(self, exc_type, exc_value, traceback):
     if self.script_name in self.portal.portal_skins.custom.objectIds():
       self.portal.portal_skins.custom.manage_delObjects(self.script_name)
     transaction.commit()
+
+
+class TemporaryAlarmScript(TemporaryPythonScript):
+  """
+  Context manager for temporary alarm python scripts
+  """
+  def __init__(self, portal, script_name, fake_return="", attribute=None):
+    if attribute is None:
+      body = """portal_workflow = context.portal_workflow
+portal_workflow.doActionFor(context, action='edit_action', comment='Visited by %s')
+return %s""" % (script_name, fake_return)
+    elif attribute is False:
+      body = """return %s""" % fake_return
+    else:
+      body = """portal_workflow = context.portal_workflow
+context.edit(%s='Visited by %s')
+return %s""" % (attribute, script_name, fake_return)
+    super(TemporaryAlarmScript, self).__init__(
+      portal,
+      script_name,
+      '*args, **kwargs',
+      body,
+    )
 
 
 # dummy objects
