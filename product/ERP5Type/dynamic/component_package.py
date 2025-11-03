@@ -165,24 +165,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       site = getSite()
 
       if erp5.component.filesystem_import_dict is None:
-        filesystem_import_dict = {}
-        try:
-          component_tool = aq_base(site.portal_components)
-        except AttributeError:
-          # For old sites, just use FS Documents...
-          return None
-        else:
-          for component in component_tool.objectValues():
-            if component.getValidationState() == 'validated':
-              component_module_name = '%s.%s' % (component._getDynamicModuleNamespace(),
-                                                 component.getReference())
-              if component.getSourceReference() is not None:
-                filesystem_import_dict[component.getSourceReference()] = component_module_name
-
-              if component.getPortalType() == 'Document Component':
-                filesystem_import_dict[('Products.ERP5Type.Document.' +
-                                        component.getReference())] = component_module_name
-          erp5.component.filesystem_import_dict = filesystem_import_dict
+        erp5.component.createFilesystemImportDict()
 
       # __import__ will first try a relative import, for example
       # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
