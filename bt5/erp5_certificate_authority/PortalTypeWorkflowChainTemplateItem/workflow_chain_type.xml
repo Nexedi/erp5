@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Caucase Connector</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Certificate Login</type>
   <workflow>edit_workflow, login_validation_workflow</workflow>
  </chain>
