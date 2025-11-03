@@ -11,7 +11,7 @@
             <value>
               <object>
                 <klass>
-                  <global id="1.1" name="UserDict" module="UserDict"/>
+                  <global id="1.1" name="UserDict" module="collections"/>
                 </klass>
                 <tuple/>
                 <state>
@@ -27,7 +27,7 @@
                             <item>
                                 <key> <string>inputs</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                                 </value>
                             </item>
                           </dictionary>
@@ -53,7 +53,7 @@
                             <item>
                                 <key> <string>inputs</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                                 </value>
                             </item>
                           </dictionary>
