@@ -141,6 +141,36 @@ class ComponentPackageType(PackageType):
     super(ComponentPackageType, self).__init__(*args, **kwargs)
     self.ref_manager = RefManager()
 
+  def createFilesystemImportDict(self):
+    """
+    Make legacy filesystem classes importable even after their migration to
+    ZODB Components
+    """
+    from Products.ERP5.ERP5Site import getSite
+    from Acquisition import aq_base
+    site = getSite()
+    try:
+      component_tool = aq_base(site.portal_components)
+    except AttributeError:
+      # For old sites without portal_components, just use FS Documents...
+      raise AttributeError(attr)
+    filesystem_import_dict = {}
+    for component in component_tool.objectValues():
+      if component.getValidationState() == 'validated':
+        component_module_name = '%s.%s' % (component._getDynamicModuleNamespace(),
+                                           component.getReference())
+        if component.getSourceReference() is not None:
+          # Add an alias that with import name before migration to ZODB Components (MR !1271)
+          filesystem_import_dict[component.getSourceReference()] = component_module_name
+
+        if component.getPortalType() == 'Document Component':
+          # For old instances of Document classes having as their __class__
+          # Products.ERP5Type.Document.DOCUMENT.CLASS (MR !1240)
+          filesystem_import_dict[('Products.ERP5Type.Document.' +
+                                  component.getReference())] = component_module_name
+
+    self.filesystem_import_dict = filesystem_import_dict
+
 class DynamicModule(ModuleType):
   """This module may generate new objects at runtime."""
   # it's useful to have such a generic utility
