@@ -7,4 +7,4 @@ result = [x.getObject() for x  in context.searchResults(portal_type='Discussion 
 if result:
   return result[0]
 else:
-  raise ValueError, 'Unable to found a valid Discussion Forum for the current web site/section'
+  raise ValueError('Unable to found a valid Discussion Forum for the current web site/section')
