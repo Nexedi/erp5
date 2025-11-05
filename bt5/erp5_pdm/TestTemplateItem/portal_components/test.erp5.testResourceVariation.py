@@ -335,6 +335,11 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
                         'individual_aspect/'+resource_iv3.getRelativeUrl()],
                         resource.getVariationCategoryList(
                                 omit_individual_variation=0))
+    self.assertSameSet([('Individual Aspect/Circular', 'individual_aspect/'+resource_iv1.getRelativeUrl()),
+                        ('Individual Aspect/Triangular', 'individual_aspect/'+resource_iv2.getRelativeUrl()),
+                        ('Individual Aspect/Square', 'individual_aspect/'+resource_iv3.getRelativeUrl())],
+                        [tuple(item) for item in resource.getVariationCategoryItemList(
+                                omit_individual_variation=0)])
     self.assertSameSet(['required_size/l',
                         'required_size/m',
                         'required_size/s',
