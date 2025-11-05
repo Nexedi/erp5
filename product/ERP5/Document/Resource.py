@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from Acquisition import aq_base
 from math import log
 from warnings import warn
 
@@ -45,6 +46,12 @@ from Products.CMFCategory.Renderer import Renderer
 
 from zLOG import LOG, WARNING
 import six
+
+def _is_variation_deleted(v):
+  if hasattr(aq_base(v), 'getVisibilityState'):
+    return v.getVisibilityState() == 'deleted'
+  return v.getValidationState() == 'deleted'
+
 
 class Resource(XMLObject, XMLMatrix, VariatedMixin):
     """
@@ -122,6 +129,8 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
             sort_on=[('title','ascending')])
         individual_variation_list = [x.getObject() for x in
             individual_variation_list]
+        individual_variation_list = [x for x in
+            individual_variation_list if not _is_variation_deleted(x)]
         other_base_category_set = set(base_category_list)
 
         if not omit_individual_variation:
@@ -191,6 +200,8 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
             portal_type=self.getPortalVariationTypeList())
         individual_variation_list = [x.getObject() for x in
             individual_variation_list]
+        individual_variation_list = [x for x in
+            individual_variation_list if not _is_variation_deleted(x)]
 
         for variation in individual_variation_list:
           for base_category in variation.getVariationBaseCategoryList():
