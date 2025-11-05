@@ -22,10 +22,12 @@ import struct
 import six
 if six.PY2:
   from base64 import encodestring as base64_encodebytes, decodestring as base64_decodebytes
-  from zodbpickle.pickle_2 import decode_long
+  from zodbpickle.pickle_2 import decode_long, HIGHEST_PROTOCOL
+  from . import _compat_pickle_2 as _compat_pickle
 else:
   from base64 import encodebytes as base64_encodebytes, decodebytes as base64_decodebytes
-  from zodbpickle.pickle_3 import decode_long
+  from zodbpickle.pickle_3 import decode_long, HIGHEST_PROTOCOL
+  import _compat_pickle
 import re
 from marshal import loads as mloads
 from .xyap import NoBlanks
@@ -522,9 +524,17 @@ class ToXMLUnpickler(Unpickler):
     dispatch = {}
     dispatch.update(Unpickler.dispatch.copy())
     register = make_decorator(dispatch)
+    proto = 0
 
     def persistent_load(self, v):
         return Persistent(v, self.id_mapping)
+
+    @register(PROTO)
+    def load_proto(self):
+        proto = ord(self.read(1))
+        if not 0 <= proto <= HIGHEST_PROTOCOL:
+            raise ValueError("unsupported pickle protocol: %d" % proto)
+        self.proto = proto
 
     @register(BINPERSID)
     def load_binpersid(self):
@@ -701,6 +711,10 @@ class ToXMLUnpickler(Unpickler):
     def load_global(self):
         module = bytes2str(self.readline()[:-1])
         name = bytes2str(self.readline()[:-1])
+        if self.proto >= 3:
+            (module, name) = _compat_pickle.NAME_MAPPING.get(
+                (module, name), (module, name))
+            module = _compat_pickle.IMPORT_MAPPING.get(module, module)
         self.append(Global(module, name, self.id_mapping))
 
     @register(REDUCE)
@@ -941,8 +955,12 @@ def save_object(self, tag, data):
 
 def save_global(self, tag, data):
     a = data[1]
-    return save_put(self, GLOBAL + str2bytes(a['module']) + b'\n' +
-                    str2bytes(a['name']) + b'\n', a)
+    module, name = _compat_pickle.REVERSE_NAME_MAPPING.get(
+        (a['module'], a['name']),
+        (a['module'], a['name']))
+    module = _compat_pickle.REVERSE_IMPORT_MAPPING.get(module, module)
+    return save_put(self, GLOBAL + str2bytes(module) + b'\n' +
+                    str2bytes(name) + b'\n', a)
 
 def save_persis(self, tag, data):
     v = data[2]
