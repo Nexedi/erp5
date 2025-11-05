@@ -3512,7 +3512,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         except ValueError:
           # When the container does not use numerical ids
           int_id = obj[o['object_id']].getCreationDate()
-        return (o.get('title'), int_id)
+        return (o.get('title') or '', int_id)
       type_role_list.sort(key=sort_key)
 
   # Function to generate XML Code Manually
