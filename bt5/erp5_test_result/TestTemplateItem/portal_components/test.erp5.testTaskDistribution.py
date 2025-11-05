@@ -1,3 +1,4 @@
+# coding: utf-8
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json
@@ -6,6 +7,7 @@ from DateTime import DateTime
 import responses
 import six.moves.http_client
 from six.moves import range
+import six
 
 
 class TaskDistributionTestCase(ERP5TypeTestCase):
@@ -637,9 +639,18 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # first launch, we have no time optimisations, so tests are
     # launched in alphabetical order
     self.assertEqual(['testBar', 'testFoo'], [test, next_test])
-    status_dict = {}
-    self.tool.stopUnitTest(line_url, status_dict)
-    self.tool.stopUnitTest(next_line_url, status_dict)
+
+    self.tool.stopUnitTest(line_url, {})
+    self.tool.stopUnitTest(
+      next_line_url,
+      # erp5.util.taskdistribution.binarize_args passes bytes
+      {
+        'date': b'2050/01/01',
+        'stdout': b'Hello',
+        'stderr': b'Good \xff\xfe\xfa Bye',
+        'duration': 123.45
+      }
+    )
     line = self.portal.unrestrictedTraverse(line_url)
     def checkDuration(line):
       duration = getattr(line, "duration", None)
@@ -648,6 +659,16 @@ class TestTaskDistribution(TaskDistributionTestCase):
     checkDuration(line)
     next_line = self.portal.unrestrictedTraverse(next_line_url)
     checkDuration(next_line)
+
+    # check the received data from stopUnitTest
+    self.assertEqual(next_line.getProperty('stdout'), 'Hello')
+    if six.PY3:
+      self.assertEqual(next_line.getProperty('stderr'), 'Good ��� Bye')
+    else:
+      self.assertEqual(next_line.getProperty('stderr'), 'Good \xff\xfe\xfa Bye')
+    self.assertEqual(next_line.getProperty('duration'), 123.45)
+    self.assertEqual(next_line.getStopDate(), DateTime('2050/01/01'))
+
     # Make sure second test takes more time
     next_line.duration = line.duration + 1
     # So if we launch another unit test, it will process first the
