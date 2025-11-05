@@ -9,19 +9,19 @@
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -33,13 +33,9 @@
             <value>
               <object>
                 <klass>
-                  <global id="1.1" name="_reconstructor" module="copy_reg"/>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
                 </klass>
-                <tuple>
-                  <global id="1.2" name="DateTime" module="DateTime.DateTime"/>
-                  <global id="1.3" name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                <tuple/>
                 <state>
                   <tuple>
                     <float>1181318754.93</float>
@@ -100,11 +96,7 @@
             <value>
               <object>
                 <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <reference id="1.2"/>
-                  <reference id="1.3"/>
-                  <none/>
-                </tuple>
+                <tuple/>
                 <state>
                   <tuple>
                     <float>1148508000.0</float>
@@ -119,11 +111,7 @@
             <value>
               <object>
                 <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <reference id="1.2"/>
-                  <reference id="1.3"/>
-                  <none/>
-                </tuple>
+                <tuple/>
                 <state>
                   <tuple>
                     <float>32516114400.0</float>
