@@ -515,6 +515,41 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
                             resource.getVariationRangeCategoryList(
                                          omit_individual_variation=1))
 
+  def _testResourceIndividualVariationDeletion(self, resource, check_logical_deletion=True):
+    """
+    Check variation API when deleting an individual variation
+    """
+    ivp = self._makeOneResourceIndividualVariation(resource,
+              id='physical_del_test',
+              title='To Delete Physically')
+    ivp_url = 'individual_aspect/' + ivp.getRelativeUrl()
+    ivp_item = ['Individual Aspect/To Delete Physically', ivp_url]
+    ivl = self._makeOneResourceIndividualVariation(resource,
+              id='logical_del_test',
+              title='To Delete Logically')
+    ivl_url = 'individual_aspect/' + ivl.getRelativeUrl()
+    ivl_item = ['Individual Aspect/To Delete Logically', ivl_url]
+
+    range_list = resource.getVariationRangeCategoryList()
+    range_item_list = resource.getVariationRangeCategoryItemList()
+    self.assertIn(ivp_url, range_list)
+    self.assertIn(ivp_item, range_item_list)
+    self.assertIn(ivl_url, range_list)
+    self.assertIn(ivl_item, range_item_list)
+
+    resource.manage_delObjects([ivp.getId()])
+    if check_logical_deletion:
+      self.portal.portal_workflow.doActionFor(ivl, 'delete_action')
+
+    range_list_after = resource.getVariationRangeCategoryList()
+    range_item_list_after = resource.getVariationRangeCategoryItemList()
+    self.assertNotIn(ivp_url, range_list_after)
+    self.assertNotIn(ivp_item, range_item_list_after)
+    if check_logical_deletion:
+      self.assertNotIn(ivl_url, range_list_after)
+      self.assertNotIn(ivl_item, range_item_list_after)
+
+
 class TestResourceVariation(ResourceVariationTestCase):
   """
   Test Resource Variation
@@ -728,6 +763,43 @@ class TestResourceVariation(ResourceVariationTestCase):
     self.assertEqual([], product.Resource_getIndividualVariationBaseCategoryItemList())
     self.assertEqual([], product.Resource_getOptionalVariationBaseCategoryItemList())
     self.assertEqual([], product.Resource_getVariationBaseCategoryItemList())
+
+  def testResourceIndividualVariationDeletion(self):
+    """
+    Check behavior when an individual variation is deleted
+    """
+    self.logMessage('testResourceIndividualVariationDeletion')
+    # Create Product
+    product = self._makeOneResource(
+              id='7',
+              portal_type='Product',
+              title='Product Seven',
+              validation_state='validated',
+              variation_base_category='required_size',
+              optional_variation_base_category='option_colour',
+              individual_variation_base_category='individual_aspect')
+    self._testResourceIndividualVariationDeletion(product)
+    # Create Service
+    service = self._makeOneResource(
+              id='7',
+              portal_type='Service',
+              title='Service Seven',
+              validation_state='validated',
+              variation_base_category='required_size',
+              optional_variation_base_category='option_colour',
+              individual_variation_base_category='individual_aspect')
+    self._testResourceIndividualVariationDeletion(service, check_logical_deletion=False)
+    # Create Component
+    component = self._makeOneResource(
+              id='7',
+              portal_type='Component',
+              title='Component Seven',
+              validation_state='validated',
+              variation_base_category='required_size',
+              optional_variation_base_category='option_colour',
+              individual_variation_base_category='individual_aspect')
+    self._testResourceIndividualVariationDeletion(component, check_logical_deletion=False)
+
 
 def test_suite():
   suite = unittest.TestSuite()
