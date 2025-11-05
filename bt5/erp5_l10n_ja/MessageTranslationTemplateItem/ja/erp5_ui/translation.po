@@ -1,13 +1,13 @@
 msgid ""
-msgstr ""
-"Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2023-10-03 03:20+UTC\n"
-"PO-Revision-Date: 2023-10-03 03:20+UTC\n"
+msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+"POT-Creation-Date: 2025-10-16 15:10+UTC\n"
+"PO-Revision-Date: 2025-10-16 15:10+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: ja <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
 
 msgid "${count} documents created successfully."
 msgstr "${count} 個のドキュメントを作成しました。"
@@ -204,11 +204,20 @@ msgstr "受付済み"
 msgid "Acknowledgement"
 msgstr "受付"
 
+msgid "Acknowledgement Tool"
+msgstr ""
+
 msgid "Acknowledgement Workflow"
 msgstr "受付ワークフロー"
 
+msgid "Acquired Property"
+msgstr ""
+
 msgid "Action"
 msgstr "アクション"
+
+msgid "Action Information"
+msgstr ""
 
 msgid "Action..."
 msgstr "実行..."
@@ -221,6 +230,9 @@ msgstr "使用中"
 
 msgid "Active Preference"
 msgstr "使用中の設定"
+
+msgid "Active Process"
+msgstr ""
 
 msgid "Active Processes"
 msgstr "アクティブ・プロセス"
@@ -236,6 +248,9 @@ msgstr "アクティビティが保留中"
 
 msgid "Activity Search Key"
 msgstr "アクティビティ検索キー"
+
+msgid "Activity Tool"
+msgstr ""
 
 msgid "Activity must be selected"
 msgstr "業種は必須です"
@@ -336,6 +351,9 @@ msgstr "回答済み"
 msgid "Answered [state in query_workflow]"
 msgstr "回答済み"
 
+msgid "Application Id Generator"
+msgstr ""
+
 msgid "Applied Model Lines"
 msgstr "適用されたモデル明細"
 
@@ -362,6 +380,12 @@ msgstr "承認要求済み"
 
 msgid "April"
 msgstr "4月"
+
+msgid "Archived"
+msgstr ""
+
+msgid "Archived [state in notification_message_workflow]"
+msgstr ""
 
 msgid "Area"
 msgstr "地域"
@@ -425,6 +449,15 @@ msgstr "添付"
 
 msgid "Attachments:"
 msgstr "添付ファイル:"
+
+msgid "Attribute Blacklisted Constraint"
+msgstr ""
+
+msgid "Attribute Equality Constraint"
+msgstr ""
+
+msgid "Attribute Unicity Constraint"
+msgstr ""
 
 msgid "August"
 msgstr "8月"
@@ -530,6 +563,12 @@ msgstr "数量にともなう基本価格"
 
 msgid "Base Price Variation Axes"
 msgstr "基本価格のバリエーションの種類"
+
+msgid "Base Type"
+msgstr ""
+
+msgid "Base Variant Movement Group"
+msgstr ""
 
 msgid "Begin"
 msgstr "開始"
@@ -681,6 +720,9 @@ msgstr "受け取り担当"
 msgid "CSV Style"
 msgstr "CSVの形式"
 
+msgid "Cache Bag"
+msgstr ""
+
 msgid "Cache Duration"
 msgstr "キャッシュの持続時間"
 
@@ -726,11 +768,17 @@ msgstr "計算順序"
 msgid "Calculation Script"
 msgstr "計算スクリプト"
 
+msgid "Callable Tool"
+msgstr ""
+
 msgid "Campaign"
 msgstr "キャンペーン"
 
 msgid "Campaign Detailed Report"
 msgstr "キャンペーンの詳細なレポート"
+
+msgid "Campaign Module"
+msgstr ""
 
 msgid "Campaign Status"
 msgstr "キャンペーンの状況"
@@ -819,6 +867,9 @@ msgstr "キャンセル済み"
 msgid "Cancelled [state in career_workflow]"
 msgstr "キャンセル済み"
 
+msgid "Cancelled [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "Cancelled [state in event_workflow]"
 msgstr "キャンセル済み"
 
@@ -897,8 +948,14 @@ msgstr "現金"
 msgid "Cash Register"
 msgstr "レジ"
 
+msgid "Catalog"
+msgstr ""
+
 msgid "Catalog Methods"
 msgstr "カタログ・メソッド"
+
+msgid "Catalog Tool"
+msgstr ""
 
 msgid "Categories"
 msgstr "カテゴリー"
@@ -906,17 +963,41 @@ msgstr "カテゴリー"
 msgid "Category"
 msgstr "カテゴリー"
 
+msgid "Category Acquired Membership State Constraint"
+msgstr ""
+
 msgid "Category Definition File"
 msgstr "カテゴリー定義ファイル"
 
 msgid "Category Divergence Tester"
 msgstr "カテゴリー整合性テスター"
 
+msgid "Category Existence Constraint"
+msgstr ""
+
 msgid "Category Fast Input"
 msgstr "カテゴリーの一括入力"
 
 msgid "Category Item List Method"
 msgstr "カテゴリー項目一覧メソッド"
+
+msgid "Category Membership Arity Constraint"
+msgstr ""
+
+msgid "Category Membership State Constraint"
+msgstr ""
+
+msgid "Category Movement Group"
+msgstr ""
+
+msgid "Category Property"
+msgstr ""
+
+msgid "Category Related Membership Arity Constraint"
+msgstr ""
+
+msgid "Category Related Membership State Constraint"
+msgstr ""
 
 msgid "Category Tool"
 msgstr "カテゴリー・ツール"
@@ -929,6 +1010,12 @@ msgstr "整合性"
 
 msgid "Causality (Invoices ...)"
 msgstr "原因となった請求書等"
+
+msgid "Causality Assignment Movement Group"
+msgstr ""
+
+msgid "Causality Movement Group"
+msgstr ""
 
 msgid "Causality State"
 msgstr "整合性の状態"
@@ -1062,6 +1149,9 @@ msgstr "解決済み"
 msgid "Closed [state in production_order_workflow]"
 msgstr "終了"
 
+msgid "Closed [state in sale_opportunity_workflow]"
+msgstr ""
+
 msgid "Closed [state in task_report_workflow]"
 msgstr "完了"
 
@@ -1104,8 +1194,14 @@ msgstr "部品"
 msgid "Component Individual Variation"
 msgstr "部品個別のバリエーション"
 
+msgid "Component Tool"
+msgstr ""
+
 msgid "Components"
 msgstr "部品"
+
+msgid "Conceptual Id Generator"
+msgstr ""
 
 msgid "Configure"
 msgstr "設定"
@@ -1166,6 +1262,9 @@ msgstr "確認済み"
 
 msgid "Confirmed [state in accounting_workflow]"
 msgstr "確認済み"
+
+msgid "Confirmed [state in event_simulation_workflow]"
+msgstr ""
 
 msgid "Confirmed [state in internal_order_workflow]"
 msgstr "確定済み"
@@ -1266,6 +1365,9 @@ msgstr "容れ物"
 msgid "Content"
 msgstr "内容"
 
+msgid "Content Existence Constraint"
+msgstr ""
+
 msgid "Content Format"
 msgstr "内容の形式"
 
@@ -1299,6 +1401,12 @@ msgstr "収束"
 msgid "Convergent [action in delivery_causality_workflow]"
 msgstr "収束"
 
+msgid "Conversion Failed"
+msgstr ""
+
+msgid "Conversion Failed [state in processing_status_workflow]"
+msgstr ""
+
 msgid "Conversion Format for reports."
 msgstr "変換フォーマット"
 
@@ -1316,6 +1424,12 @@ msgstr "変換済み"
 
 msgid "Converted quantity"
 msgstr "変換済みの数量"
+
+msgid "Converting"
+msgstr ""
+
+msgid "Converting [state in processing_status_workflow]"
+msgstr ""
 
 msgid "Copy"
 msgstr "コピー"
@@ -1533,6 +1647,9 @@ msgstr "日"
 msgid "Day / Month / Year"
 msgstr "日/月/年"
 
+msgid "Day Movement Group"
+msgstr ""
+
 msgid "Days"
 msgstr "日"
 
@@ -1674,6 +1791,15 @@ msgstr "削除済み"
 msgid "Deleted [state in business_template_installation_workflow]"
 msgstr "削除済み"
 
+msgid "Deleted [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in embedded_workflow]"
+msgstr ""
+
+msgid "Deleted [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "Deleted [state in event_workflow]"
 msgstr "削除済み"
 
@@ -1685,6 +1811,9 @@ msgstr "削除済み"
 
 msgid "Deleted [state in invoice_workflow]"
 msgstr "削除済み"
+
+msgid "Deleted [state in login_validation_workflow]"
+msgstr ""
 
 msgid "Deleted [state in notification_message_workflow]"
 msgstr "削除済み"
@@ -1709,6 +1838,9 @@ msgstr "削除済み"
 
 msgid "Deleted [state in query_workflow]"
 msgstr "削除済み"
+
+msgid "Deleted [state in reachability_workflow]"
+msgstr ""
 
 msgid "Deleted [state in requirement_analysis_workflow]"
 msgstr "削除済み"
@@ -1758,8 +1890,17 @@ msgstr "確定する"
 msgid "Deliver Packing List Action"
 msgstr "検収アクション"
 
+msgid "Delivered"
+msgstr ""
+
 msgid "Delivered [state in acknowledgement_workflow]"
 msgstr "受付済み"
+
+msgid "Delivered [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Delivered [state in event_simulation_workflow]"
+msgstr ""
 
 msgid "Delivered [state in event_workflow]"
 msgstr "完了"
@@ -1775,6 +1916,12 @@ msgstr "完了"
 
 msgid "Delivered [state in production_packing_list_workflow]"
 msgstr "完了"
+
+msgid "Delivery Builder"
+msgstr ""
+
+msgid "Delivery Causality Assignment Movement Group"
+msgstr ""
 
 msgid "Delivery Cell"
 msgstr "セル"
@@ -1815,6 +1962,9 @@ msgstr "タイトル"
 msgid "Delivery Tool"
 msgstr "配達ツール"
 
+msgid "Delivery Type"
+msgstr ""
+
 msgid "Dependencies"
 msgstr "依存関係"
 
@@ -1854,6 +2004,9 @@ msgstr "詳細"
 msgid "Diff Business Template"
 msgstr "ビジネス・テンプレートの差分を取る"
 
+msgid "Diff Tool"
+msgstr ""
+
 msgid "Diff Two Objects"
 msgstr "二つのオブジェクトの差分を取る"
 
@@ -1874,6 +2027,9 @@ msgstr "設定を無効にする"
 
 msgid "Disabled"
 msgstr "無効"
+
+msgid "Disabled [state in preference_workflow]"
+msgstr ""
 
 msgid "Discount"
 msgstr "割引"
@@ -1928,6 +2084,9 @@ msgstr "何もしない"
 
 msgid "Document"
 msgstr "文書"
+
+msgid "Document Component"
+msgstr ""
 
 msgid "Document Date"
 msgstr "請求日"
@@ -2007,8 +2166,38 @@ msgstr "ドラフト"
 msgid "Draft [state in acknowledgement_workflow]"
 msgstr "未着手"
 
+msgid "Draft [state in assignment_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_workflow]"
+msgstr ""
+
+msgid "Draft [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Draft [state in career_workflow]"
+msgstr ""
+
+msgid "Draft [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Draft [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "Draft [state in event_workflow]"
 msgstr "ドラフト"
+
+msgid "Draft [state in login_validation_workflow]"
+msgstr ""
+
+msgid "Draft [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Draft [state in query_workflow]"
+msgstr ""
 
 msgid "Draft [state in sale_opportunity_workflow]"
 msgstr "ドラフト"
@@ -2016,11 +2205,20 @@ msgstr "ドラフト"
 msgid "Draft [state in ticket_workflow]"
 msgstr "ドラフト"
 
+msgid "Draft [state in user_account_workflow]"
+msgstr ""
+
+msgid "Draft [state in validation_workflow]"
+msgstr ""
+
 msgid "Drafts to Validate"
 msgstr "承認すべきドラフト"
 
 msgid "Drawing"
 msgstr "図形文書"
+
+msgid "Dynamic Category Property"
+msgstr ""
 
 msgid "EAN 13 Code"
 msgstr "JANコード"
@@ -2030,6 +2228,12 @@ msgstr "JANコード"
 
 msgid "EAN-13 Code must be defined"
 msgstr "JANコードは必須です"
+
+msgid "ERP5 Form"
+msgstr ""
+
+msgid "ERP5 Login"
+msgstr ""
 
 msgid "ERP5 Modules"
 msgstr "ERP5モジュール"
@@ -2061,8 +2265,26 @@ msgstr "歩留まり"
 msgid "Email"
 msgstr "Eメール"
 
+msgid "Embedded"
+msgstr ""
+
+msgid "Embedded File"
+msgstr ""
+
+msgid "Embedded Folder"
+msgstr ""
+
+msgid "Embedded [state in embedded_workflow]"
+msgstr ""
+
 msgid "Employee Number"
 msgstr "社員番号"
+
+msgid "Empty"
+msgstr ""
+
+msgid "Empty [state in processing_status_workflow]"
+msgstr ""
 
 msgid "Empty lines deleted."
 msgstr "空行が削除されました"
@@ -2072,6 +2294,9 @@ msgstr "設定を有効にする"
 
 msgid "Enabled"
 msgstr "有効済み"
+
+msgid "Enabled [state in preference_workflow]"
+msgstr ""
 
 msgid "End"
 msgstr "終了"
@@ -2132,6 +2357,9 @@ msgstr "イベントの内容"
 
 msgid "Event Origin"
 msgstr "イベントの発生元"
+
+msgid "Event Path"
+msgstr ""
 
 msgid "Event Preview"
 msgstr "プレビュー"
@@ -2211,8 +2439,17 @@ msgstr "エクスポート方式"
 msgid "Export to Spreadsheet"
 msgstr "表計算文書をエクスポートする"
 
+msgid "Extension Component"
+msgstr ""
+
 msgid "External Folder"
 msgstr "外部フォルダー"
+
+msgid "External Identifier"
+msgstr ""
+
+msgid "External Method"
+msgstr ""
 
 msgid "External Sources"
 msgstr "外部参照元"
@@ -2397,6 +2634,12 @@ msgstr "POTファイルの生成"
 msgid "Generate References"
 msgstr "リファレンスの生成"
 
+msgid "Geographical Area"
+msgstr ""
+
+msgid "Geographical Location"
+msgstr ""
+
 msgid "Get Contacted"
 msgstr "連絡を受ける"
 
@@ -2408,6 +2651,9 @@ msgstr "連絡を受ける"
 
 msgid "Globally Enabled"
 msgstr "システム全体で有効"
+
+msgid "Globally Enabled [state in preference_workflow]"
+msgstr ""
 
 msgid "Glossary"
 msgstr "用語集"
@@ -2480,6 +2726,9 @@ msgstr "IBANキー"
 
 msgid "ID"
 msgstr "識別子"
+
+msgid "Id Tool"
+msgstr ""
 
 msgid "Identity Criterion"
 msgstr "一意となる基準値"
@@ -2583,6 +2832,18 @@ msgstr "インストールの状態"
 msgid "Installed"
 msgstr "インストール済み"
 
+msgid "Installed [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Interaction Workflow"
+msgstr ""
+
+msgid "Interaction Workflow Interaction"
+msgstr ""
+
+msgid "Interface Component"
+msgstr ""
+
 msgid "Internal Order"
 msgstr "移送依頼"
 
@@ -2661,6 +2922,18 @@ msgstr "却下アクション"
 msgid "Invalidated"
 msgstr "却下済み"
 
+msgid "Invalidated [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in login_validation_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in validation_workflow]"
+msgstr ""
+
 msgid "Inventories"
 msgstr "棚卸"
 
@@ -2711,6 +2984,9 @@ msgstr "請求明細"
 
 msgid "Invoice Lines"
 msgstr "請求明細"
+
+msgid "Invoice Movement Group"
+msgstr ""
 
 msgid "Invoice Number"
 msgstr "請求番号"
@@ -2919,6 +3195,9 @@ msgstr "ビジネス・テンプレートを管理する"
 msgid "Manual Price"
 msgstr "手動価格"
 
+msgid "Mapped Property"
+msgstr ""
+
 msgid "Mapped Value"
 msgstr "マップされた値"
 
@@ -2997,11 +3276,20 @@ msgstr "ミーティング"
 msgid "Meeting Detailed Report"
 msgstr "ミーティングの詳細なレポート"
 
+msgid "Meeting Module"
+msgstr ""
+
 msgid "Meeting Status"
 msgstr "ミーティングの状況"
 
 msgid "Meetings"
 msgstr "ミーティング"
+
+msgid "Memcached Plugin"
+msgstr ""
+
+msgid "Memcached Tool"
+msgstr ""
 
 msgid "Menus"
 msgstr "メニュー"
@@ -3066,6 +3354,9 @@ msgstr "対になる勘定科目"
 msgid "Missing"
 msgstr "不足"
 
+msgid "Mixin Component"
+msgstr ""
+
 msgid "Mobile Telephone"
 msgstr "携帯電話"
 
@@ -3078,8 +3369,17 @@ msgstr "改変日時"
 msgid "Modified"
 msgstr "修正済み"
 
+msgid "Modified [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Modified [state in component_validation_workflow]"
+msgstr ""
+
 msgid "Module"
 msgstr "モジュール"
+
+msgid "Module Component"
+msgstr ""
 
 msgid "Module Property"
 msgstr "モジュールのプロパティ"
@@ -3096,8 +3396,14 @@ msgstr "月"
 msgid "Month / Day / Year"
 msgstr "月/日/年"
 
+msgid "Monthly Range Movement Group"
+msgstr ""
+
 msgid "Months"
 msgstr "何月"
+
+msgid "Movement"
+msgstr ""
 
 msgid "Movements"
 msgstr "動き"
@@ -3122,6 +3428,9 @@ msgstr "名前"
 
 msgid "Nationality"
 msgstr "国籍"
+
+msgid "Nested Line Movement Group"
+msgstr ""
 
 msgid "Net"
 msgstr "正味帳簿価額"
@@ -3198,6 +3507,9 @@ msgstr "通常の勘定残高"
 msgid "Not Installed"
 msgstr "未インストール"
 
+msgid "Not Installed [state in business_template_installation_workflow]"
+msgstr ""
+
 msgid "Note"
 msgstr "備考"
 
@@ -3219,6 +3531,9 @@ msgstr "通知メッセージモジュール"
 msgid "Notification Messages"
 msgstr "通知メッセージ"
 
+msgid "Notification Tool"
+msgstr ""
+
 msgid "November"
 msgstr "11月"
 
@@ -3239,6 +3554,9 @@ msgstr "ODSの形式"
 
 msgid "ODT Style"
 msgstr "ODTの形式"
+
+msgid "OOo Document"
+msgstr ""
 
 msgid "Object"
 msgstr "オブジェクト"
@@ -3333,8 +3651,17 @@ msgstr "開始"
 msgid "Open [state in project_workflow]"
 msgstr "開始"
 
+msgid "Open [state in sale_opportunity_workflow]"
+msgstr ""
+
 msgid "Open [state in ticket_workflow]"
 msgstr "開始"
+
+msgid "Opened"
+msgstr ""
+
+msgid "Opened [state in ticket_workflow]"
+msgstr ""
 
 msgid "Opening Date"
 msgstr "開設日"
@@ -3368,6 +3695,9 @@ msgstr "注文明細"
 
 msgid "Order Lines"
 msgstr "注文明細"
+
+msgid "Order Movement Group"
+msgstr ""
 
 msgid "Order Placed"
 msgstr "発注済み"
@@ -3423,6 +3753,9 @@ msgstr "その他"
 msgid "Our Item No."
 msgstr "発送元項目番号"
 
+msgid "Outcome Path"
+msgstr ""
+
 msgid "Outgoing"
 msgstr "発信"
 
@@ -3464,6 +3797,12 @@ msgstr "梱包明細書"
 
 msgid "Page"
 msgstr "ページ"
+
+msgid "Parent Delivery Property Movement Group"
+msgstr ""
+
+msgid "Parent Explanation Movement Group"
+msgstr ""
 
 msgid "Partners"
 msgstr "配偶者の数"
@@ -3606,6 +3945,12 @@ msgstr "予定済み"
 msgid "Planned [state in accounting_workflow]"
 msgstr "予定済み"
 
+msgid "Planned [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Planned [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "Please select one (or more) object."
 msgstr "一つ以上のオブジェクトを選択してください。"
 
@@ -3657,6 +4002,9 @@ msgstr "提出されたイベント (%(count)s)"
 msgid "Posted [state in event_workflow]"
 msgstr "提出済み"
 
+msgid "Posted [state in query_workflow]"
+msgstr ""
+
 msgid "Posted to General Ledger"
 msgstr "総勘定元帳に転記済み"
 
@@ -3684,6 +4032,12 @@ msgstr "設定"
 msgid "Preference Tool"
 msgstr "設定ツール"
 
+msgid "Preference Tool Type"
+msgstr ""
+
+msgid "Preference Type"
+msgstr ""
+
 msgid "Preferences"
 msgstr "設定"
 
@@ -3701,6 +4055,9 @@ msgstr "プレビュー"
 
 msgid "Previous"
 msgstr "前"
+
+msgid "Previous Causality Movement Group"
+msgstr ""
 
 msgid "Previous Page"
 msgstr "前のページ"
@@ -3834,11 +4191,32 @@ msgstr "プロパティ"
 msgid "Property ${property_id} was not defined."
 msgstr "${property_id}は必須です"
 
+msgid "Property Assignment Movement Group"
+msgstr ""
+
 msgid "Property Criteria"
 msgstr "プロパティの基準値"
 
 msgid "Property Divergence Tester"
 msgstr "プロパティ整合性テスター"
+
+msgid "Property Existence Constraint"
+msgstr ""
+
+msgid "Property Grouping Movement Group"
+msgstr ""
+
+msgid "Property Movement Group"
+msgstr ""
+
+msgid "Property Sheet"
+msgstr ""
+
+msgid "Property Sheet Tool"
+msgstr ""
+
+msgid "Property Type Validity Constraint"
+msgstr ""
 
 msgid "Property existence error for property ${property_id}, this document has no such property"
 msgstr "${property_id}が存在しません。存在する必要があります。"
@@ -3987,11 +4365,20 @@ msgstr "仕入先の取引条件"
 msgid "Purchase Trade Conditions to Validate"
 msgstr "承認すべき仕入先の取引条件"
 
+msgid "PyData Script"
+msgstr ""
+
+msgid "Python Script"
+msgstr ""
+
 msgid "Quantity"
 msgstr "量"
 
 msgid "Quantity Divergence Tester"
 msgstr "数量整合性テスター"
+
+msgid "Quantity Sign Movement Group"
+msgstr ""
 
 msgid "Quantity Step"
 msgstr "数量にともなう価格設定"
@@ -4034,6 +4421,12 @@ msgstr "率"
 
 msgid "Re-install Business Template"
 msgstr "ビジネス・テンプレートを再インストールする"
+
+msgid "Reachable"
+msgstr ""
+
+msgid "Reachable [state in reachability_workflow]"
+msgstr ""
 
 msgid "Ready"
 msgstr "準備する"
@@ -4082,6 +4475,9 @@ msgstr "納品済"
 
 msgid "Received Date"
 msgstr "納品日"
+
+msgid "Received [state in event_simulation_workflow]"
+msgstr ""
 
 msgid "Received [state in internal_packing_list_workflow]"
 msgstr "完了"
@@ -4206,6 +4602,9 @@ msgstr "名前を記憶する"
 msgid "Replaced"
 msgstr "置換済み"
 
+msgid "Replaced [state in business_template_installation_workflow]"
+msgstr ""
+
 msgid "Reply"
 msgstr "返信"
 
@@ -4254,6 +4653,9 @@ msgstr "要求定義"
 msgid "Requirement Module"
 msgstr "要求定義モジュール"
 
+msgid "Requirement Movement Group"
+msgstr ""
+
 msgid "Requirements"
 msgstr "要求定義"
 
@@ -4268,6 +4670,9 @@ msgstr "SVNの衝突ファイルを解決する"
 
 msgid "Resolved"
 msgstr "解決済み"
+
+msgid "Resolved [state in bug_workflow]"
+msgstr ""
 
 msgid "Resource"
 msgstr "リソース"
@@ -4359,14 +4764,38 @@ msgstr "役割"
 msgid "Role &amp; Region"
 msgstr "ロール/地域"
 
+msgid "Role Definition"
+msgstr ""
+
+msgid "Role Information"
+msgstr ""
+
 msgid "Role must be selected"
 msgstr "役割は必須です"
 
 msgid "Roles"
 msgstr "役割"
 
+msgid "Root Applied Rule Causality Movement Group"
+msgstr ""
+
+msgid "Rounding Model"
+msgstr ""
+
+msgid "Rounding Tool"
+msgstr ""
+
+msgid "Rule Tool"
+msgstr ""
+
 msgid "Running Balance"
 msgstr "積立残高"
+
+msgid "SQL Method"
+msgstr ""
+
+msgid "SQL Non Continuous Increasing Id Generator"
+msgstr ""
 
 msgid "Salary Coefficient"
 msgstr "給与係数"
@@ -4566,6 +4995,9 @@ msgstr "ビジネス・テンプレートを保存する"
 msgid "Saved in ${path} ."
 msgstr "${path} に保存しました。"
 
+msgid "Script Constraint"
+msgstr ""
+
 msgid "Search"
 msgstr "検索"
 
@@ -4620,6 +5052,9 @@ msgstr "テンプレートを選択する"
 msgid "Select appropriate document in the list."
 msgstr "一覧から選択してください。"
 
+msgid "Selection Tool"
+msgstr ""
+
 msgid "Sell"
 msgstr "販売する"
 
@@ -4653,6 +5088,15 @@ msgstr "出荷元"
 msgid "Sender or Provider must be defined"
 msgstr "出荷元は必須です"
 
+msgid "Sent"
+msgstr ""
+
+msgid "Sent [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Sent [state in event_simulation_workflow]"
+msgstr ""
+
 msgid "September"
 msgstr "9月"
 
@@ -4676,6 +5120,9 @@ msgstr "サービス"
 
 msgid "Services to Validate"
 msgstr "承認すべきサービス"
+
+msgid "Session Tool"
+msgstr ""
 
 msgid "Set List Setting"
 msgstr "一覧の項目を設定する"
@@ -4725,6 +5172,9 @@ msgstr "出荷予定日"
 msgid "Shipping Date must be defined"
 msgstr "出荷予定日が入力されていません"
 
+msgid "Short Message"
+msgstr ""
+
 msgid "Short Title"
 msgstr "略称"
 
@@ -4743,11 +5193,20 @@ msgstr "署名"
 msgid "Signature Thumbnail"
 msgstr "署名・印鑑のサムネイル"
 
+msgid "Simulation Movement"
+msgstr ""
+
 msgid "Simulation State"
 msgstr "シミュレーションの状態"
 
+msgid "Simulation Tool"
+msgstr ""
+
 msgid "Site"
 msgstr "所属"
+
+msgid "Site Message"
+msgstr ""
 
 msgid "Site or Warehouse"
 msgstr "場所もしくは倉庫"
@@ -4778,6 +5237,9 @@ msgstr "不整合解決アクション"
 
 msgid "Solved"
 msgstr "解決済み"
+
+msgid "Solver Tool"
+msgstr ""
 
 msgid "Solving"
 msgstr "解決中"
@@ -4824,11 +5286,17 @@ msgstr "特化する取引条件とビジネスプロセス"
 msgid "Split"
 msgstr "分割する"
 
+msgid "Split Movement Group"
+msgstr ""
+
 msgid "Split and Defer"
 msgstr "分割して延期する"
 
 msgid "Spreadsheet"
 msgstr "表計算文書"
+
+msgid "Standard Property"
+msgstr ""
 
 msgid "Start After"
 msgstr "指定日より後に開始"
@@ -4862,6 +5330,12 @@ msgstr "指定日より前に開始"
 
 msgid "Started"
 msgstr "開始"
+
+msgid "Started [state in assignment_workflow]"
+msgstr ""
+
+msgid "Started [state in career_workflow]"
+msgstr ""
 
 msgid "State"
 msgstr "状態"
@@ -4911,6 +5385,12 @@ msgstr "指定日より前に終了"
 msgid "Stopped"
 msgstr "終了済み"
 
+msgid "Stopped [state in assignment_workflow]"
+msgstr ""
+
+msgid "Stopped [state in career_workflow]"
+msgstr ""
+
 msgid "Street Address"
 msgstr "住所"
 
@@ -4919,6 +5399,9 @@ msgstr "住所は必須です"
 
 msgid "Street must be defined"
 msgstr "住所は必須です"
+
+msgid "String Attribute Match Constraint"
+msgstr ""
 
 msgid "Subject"
 msgstr "件名"
@@ -4929,6 +5412,9 @@ msgstr "提案する"
 msgid "Submit Event Action"
 msgstr "提案アクション"
 
+msgid "Submitted"
+msgstr ""
+
 msgid "Submitted Campaigns (%(count)s)"
 msgstr "提案されたキャンペーン (%(count)s)"
 
@@ -4938,8 +5424,14 @@ msgstr "提案されたミーティング (%(count)s)"
 msgid "Submitted Support Requests (%(count)s)"
 msgstr "提案されたサポート要求 (%(count)s)"
 
+msgid "Submitted [state in notification_message_workflow]"
+msgstr ""
+
 msgid "Submitted [state in sale_opportunity_workflow]"
 msgstr "提案済み"
+
+msgid "Submitted [state in ticket_workflow]"
+msgstr ""
 
 msgid "Suffix"
 msgstr "接尾辞"
@@ -4992,6 +5484,9 @@ msgstr "サポート依頼"
 msgid "Support Request Detailed Report"
 msgstr "サポート依頼の詳細なレポート"
 
+msgid "Support Request Module"
+msgstr ""
+
 msgid "Support Request Status"
 msgstr "サポート依頼の状況"
 
@@ -5016,8 +5511,20 @@ msgstr "中断する"
 msgid "Suspended"
 msgstr "中断済み"
 
+msgid "Suspended [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Suspended [state in ticket_workflow]"
+msgstr ""
+
 msgid "Symbol"
 msgstr "記号"
+
+msgid "System Preference"
+msgstr ""
+
+msgid "TALES Constraint"
+msgstr ""
 
 msgid "Target Product"
 msgstr "対象の商品"
@@ -5094,6 +5601,9 @@ msgstr "電話番号"
 msgid "Telephone must be defined"
 msgstr "電話は必須です"
 
+msgid "Template Tool"
+msgstr ""
+
 msgid "Term (Days)"
 msgstr "期間 (日数)"
 
@@ -5102,6 +5612,12 @@ msgstr "期間 (日数)"
 
 msgid "Terminate the Current Career Step"
 msgstr "現在の経歴を終了する"
+
+msgid "Test Component"
+msgstr ""
+
+msgid "Test Tool"
+msgstr ""
 
 msgid "Text"
 msgstr "ワープロ文書"
@@ -5205,6 +5721,9 @@ msgstr "タイムゾーン"
 msgid "Title"
 msgstr "件名"
 
+msgid "Title Movement Group"
+msgstr ""
+
 msgid "Title must be defined"
 msgstr "タイトルは必須です"
 
@@ -5213,6 +5732,9 @@ msgstr "パスワードをリセットするログイン名を入力してくだ
 
 msgid "Too many documents were found."
 msgstr "見つかったドキュメントが多すぎます。"
+
+msgid "Tool Component"
+msgstr ""
 
 msgid "Total"
 msgstr "合計"
@@ -5313,6 +5835,15 @@ msgstr "変換/組み立て"
 msgid "Translation"
 msgstr "翻訳"
 
+msgid "Trash Bin"
+msgstr ""
+
+msgid "Trash Folder"
+msgstr ""
+
+msgid "Trash Tool"
+msgstr ""
+
 msgid "Trial Balance"
 msgstr "試算表"
 
@@ -5321,6 +5852,9 @@ msgstr "火曜"
 
 msgid "Type"
 msgstr "型"
+
+msgid "Types Tool"
+msgstr ""
 
 msgid "Unassigned"
 msgstr "未割当"
@@ -5343,6 +5877,12 @@ msgstr "基本価格"
 msgid "Unit Price"
 msgstr "単価"
 
+msgid "Unreachable"
+msgstr ""
+
+msgid "Unreachable [state in reachability_workflow]"
+msgstr ""
+
 msgid "Update"
 msgstr "更新する"
 
@@ -5355,11 +5895,23 @@ msgstr "入れ物から数量を更新する"
 msgid "Updated"
 msgstr "更新済み"
 
+msgid "Updated [state in assignment_workflow]"
+msgstr ""
+
 msgid "Upload"
 msgstr "アップロード"
 
 msgid "Upload Module"
 msgstr "アップロード用モジュール"
+
+msgid "Uploaded"
+msgstr ""
+
+msgid "Uploaded [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Url Registry Tool"
+msgstr ""
 
 msgid "User"
 msgstr "ユーザ"
@@ -5439,6 +5991,18 @@ msgstr "承認する"
 msgid "Validated"
 msgstr "承認済み"
 
+msgid "Validated [state in component_validation_workflow]"
+msgstr ""
+
+msgid "Validated [state in login_validation_workflow]"
+msgstr ""
+
+msgid "Validated [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Validated [state in validation_workflow]"
+msgstr ""
+
 msgid "Validation State"
 msgstr "承認状態"
 
@@ -5463,8 +6027,14 @@ msgstr "値"
 msgid "Variable Additional Price"
 msgstr "調整可能な追加価格"
 
+msgid "Variant Movement Group"
+msgstr ""
+
 msgid "Variation"
 msgstr "バリエーション"
+
+msgid "Variation Property Movement Group"
+msgstr ""
 
 msgid "Vendor"
 msgstr "ベンダ"
@@ -5556,11 +6126,32 @@ msgstr "ワークフロー"
 msgid "Workflow Report"
 msgstr "ワークフローレポート"
 
+msgid "Workflow Script"
+msgstr ""
+
+msgid "Workflow State"
+msgstr ""
+
+msgid "Workflow Tool"
+msgstr ""
+
+msgid "Workflow Transition"
+msgstr ""
+
+msgid "Workflow Transition Variable"
+msgstr ""
+
+msgid "Workflow Variable"
+msgstr ""
+
 msgid "Workflow modification in progress."
 msgstr "状態を変更しました。"
 
 msgid "Workflows"
 msgstr "ワークフロー"
+
+msgid "Worklist"
+msgstr ""
 
 msgid "Wrong EAN-13 Code"
 msgstr "不正なJANコードです"
@@ -5610,8 +6201,122 @@ msgstr "ログアウトしています。"
 msgid "Your Item No."
 msgstr "受取先項目番号"
 
+msgid "ZODB Continuous Increasing Id Generator"
+msgstr ""
+
+msgid "answered"
+msgstr ""
+
+msgid "archived"
+msgstr ""
+
+msgid "built"
+msgstr ""
+
+msgid "cancelled"
+msgstr ""
+
+msgid "closed"
+msgstr ""
+
+msgid "confirmed"
+msgstr ""
+
+msgid "conversion_failed"
+msgstr ""
+
+msgid "converted"
+msgstr ""
+
+msgid "converting"
+msgstr ""
+
+msgid "current"
+msgstr ""
+
+msgid "deleted"
+msgstr ""
+
+msgid "delivered"
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "draft"
+msgstr ""
+
+msgid "embedded"
+msgstr ""
+
+msgid "empty"
+msgstr ""
+
+msgid "enabled"
+msgstr ""
+
+msgid "expired"
+msgstr ""
+
+msgid "global"
+msgstr ""
+
 msgid "go back"
 msgstr "前の画面に戻ります"
 
+msgid "installed"
+msgstr ""
+
+msgid "invalidated"
+msgstr ""
+
+msgid "modified"
+msgstr ""
+
+msgid "not_installed"
+msgstr ""
+
+msgid "open"
+msgstr ""
+
+msgid "planned"
+msgstr ""
+
+msgid "posted"
+msgstr ""
+
+msgid "reachable"
+msgstr ""
+
+msgid "ready"
+msgstr ""
+
+msgid "replaced"
+msgstr ""
+
+msgid "started"
+msgstr ""
+
+msgid "stopped"
+msgstr ""
+
+msgid "submitted"
+msgstr ""
+
+msgid "suspended"
+msgstr ""
+
 msgid "title"
 msgstr "タイトル"
+
+msgid "unreachable"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+msgid "uploaded"
+msgstr ""
+
+msgid "validated"
+msgstr ""
