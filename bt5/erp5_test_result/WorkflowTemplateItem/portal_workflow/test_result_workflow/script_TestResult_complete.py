@@ -1,7 +1,17 @@
+import six
 import re
-test_result = sci['object']
+
 kw = sci['kwargs']
-test_result.setStopDate(kw.get('date') or DateTime())
+def kw_get(k, d=None):
+  v = kw.get(k, d)
+  if six.PY3 and isinstance(v, bytes):
+    # reverse operation of erp5.util.taskdistribution.binarize_args
+    v = v.decode('utf-8', 'replace')
+  return v
+
+test_result = sci['object']
+
+test_result.setStopDate(kw_get('date') or DateTime())
 
 def unexpected(test_result):
   # We must change to only distinguish SKIP/EXPECTED/UNEXPECTED, instead of
@@ -60,10 +70,10 @@ if test_result.getPortalType() == 'Test Result':
   test_result.edit(string_index=status, **edit_kw)
   test_result.activate().TestResult_afterComplete()
 elif test_result.getPortalType() == 'Test Result Line':
-  all_tests = kw.get('test_count')
-  errors = kw.get('error_count', 0)
-  failures = kw.get('failure_count', 0)
-  skips = kw.get('skip_count', 0)
+  all_tests = kw_get('test_count')
+  errors = kw_get('error_count', 0)
+  failures = kw_get('failure_count', 0)
+  skips = kw_get('skip_count', 0)
   if (all_tests is None) or (all_tests == 0):
     status = 'MISSING'
     all_tests = 0
@@ -71,15 +81,15 @@ elif test_result.getPortalType() == 'Test Result Line':
     status = 'FAILED'
   else:
     status = 'PASSED'
-  duration = kw.get('duration')
+  duration = kw_get('duration')
   if duration is None:
     duration = (test_result.getStopDate() - test_result.getStartDate()) * (24*60*60)
-  cmdline = kw.get('command', '')
+  cmdline = kw_get('command', '')
   if same_type(cmdline, []):
     cmdline = ' '.join(map(repr, cmdline))
-  stdout = kw.get('stdout', '')
-  stderr = kw.get('stderr', '')
-  html_test_result = kw.get('html_test_result', '')
+  stdout = kw_get('stdout', '')
+  stderr = kw_get('stderr', '')
+  html_test_result = kw_get('html_test_result', '')
   test_result.edit(cmdline=cmdline,
                    stdout=stdout,
                    stderr=stderr,
