@@ -36,4 +36,4 @@ for brain in getattr(context.portal_simulation, inventory_list_method_dict[simul
   if not positive_stock and not negative_stock and not zero_stock:
     result_list.append(brain)
 
-return sorted(result_list, key=lambda brain: (brain.getResourceReference(), brain.getResourceTitle(), brain.variation_text))
+return sorted(result_list, key=lambda brain: (brain.getResourceReference() or '', brain.getResourceTitle() or '', brain.variation_text or ''))
