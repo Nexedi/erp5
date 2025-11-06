@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Code based on python-memcached-1.58
+# Code based on python-memcached-1.62
 try:
     from memcache import _Host, Client, _Error
 except ImportError:
@@ -17,7 +17,8 @@ else:
 
     import six
     import socket
-    def _get(self, cmd, key):
+    _MARKER = []
+    def _get(self, cmd, key, default=_MARKER):
         key = self._encode_key(key)
         if self.do_check_key:
             self.check_key(key)
@@ -49,8 +50,10 @@ else:
 
                 if not rkey:
                     # (patch)
-                    # return None
-                    raise KeyError
+                    # return default
+                    if default is _MARKER:
+                        raise KeyError
+                    return default
                 try:
                     value = self._recv_value(server, flags, rlen)
                 finally:
