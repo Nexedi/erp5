@@ -86,6 +86,13 @@
                         <string>my_preferred_accounting_bank_account_display_method</string>
                         <string>my_preferred_accounting_transaction_gap</string>
                         <string>my_preferred_account_number_method</string>
+                        <string>my_preferred_accounting_transaction_default_bank_account</string>
+                        <string>my_preferred_accounting_transaction_default_payable_account</string>
+                        <string>my_preferred_accounting_transaction_default_receivable_account</string>
+                        <string>my_preferred_accounting_transaction_default_income_account</string>
+                        <string>my_preferred_accounting_transaction_default_expense_account</string>
+                        <string>my_preferred_accounting_transaction_default_collected_vat_account</string>
+                        <string>my_preferred_accounting_transaction_default_refundable_vat_account</string>
                       </list>
                     </value>
                 </item>
