@@ -32,7 +32,12 @@ import unittest
 from subprocess import check_output, CalledProcessError
 from six.moves import cStringIO as StringIO
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from lib2to3.main import main
+try:
+  from lib2to3.main import main
+  FIXES_PACKAGE_NAME = "lib2to3.fixes"
+except ImportError:
+  from fissix.main import main # six.PY3 >= 3.8 with new PEG parser
+  FIXES_PACKAGE_NAME = "fissix.fixes"
 
 class Python3StyleTest(ERP5TypeTestCase):
   """ Check coding style against python3 in the dir
@@ -68,7 +73,7 @@ class Python3StyleTest(ERP5TypeTestCase):
     orig_stdout = sys.stdout
     try: # XXX: not thread-safe
         sys.stdout = stdout = StringIO()
-        returncode = main("lib2to3.fixes", ["--fix", fixer_name, path])
+        returncode = main(FIXES_PACKAGE_NAME, ["--fix", fixer_name, path])
     finally:
         sys.stdout = orig_stdout
     error = stdout.getvalue()
