@@ -171,24 +171,46 @@ if cell_ue_count_data_array is not None:
   cell_ue_count_array = cell_ue_count_data_array.getArray()
   if not cell_ue_count_array:
     cell_ue_count_array = cell_ue_count_data_array.initArray(shape=(0,), dtype=cell_ue_count_dtype)
-  for e in ue_count_data_list:
-    cell_ue_count_array_data.append(e)
+
+  utc_column = cell_ue_count_array[:]['utc']
+  first_new_row_utc = 0
+  utc = [i[0] for i in ue_count_data_list]
+  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
+    first_new_row_utc += 1
+
+  for i in range(first_new_row_utc, len(utc)):
+    if utc[i] not in utc_column:
+      cell_ue_count_array_data.append(ue_count_data_list[i])
 
 cell_rrc_array_data = []
 if cell_rrc_data_array is not None:
   cell_rrc_array = cell_rrc_data_array.getArray()
   if not cell_rrc_array:
     cell_rrc_array = cell_rrc_data_array.initArray(shape=(0,), dtype=cell_rrc_dtype)
-  for e in rrc_list:
-    cell_rrc_array_data.append(e)
+
+  utc_column = cell_rrc_array[:]['utc']
+  first_new_row_utc = 0
+  utc = [i[0] for i in rrc_list]
+  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
+    first_new_row_utc += 1
+  for i in range(first_new_row_utc, len(utc)):
+    if utc[i] not in utc_column:
+      cell_rrc_array_data.append(rrc_list[i])
 
 cell_rms_rx_array_data = []
 if cell_rms_rx_data_array is not None:
   cell_rms_rx_array = cell_rms_rx_data_array.getArray()
   if not cell_rms_rx_array:
     cell_rms_rx_array = cell_rms_rx_data_array.initArray(shape=(0,), dtype=cell_rms_rx_dtype)
-  for e in rms_rx_list:
-    cell_rms_rx_array_data.append(e)
+
+  utc_column = cell_rms_rx_array[:]['utc']
+  first_new_row_utc = 0
+  utc = [i[0] for i in rms_rx_list]
+  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
+    first_new_row_utc += 1
+  for i in range(first_new_row_utc, len(utc)):
+    if utc[i] not in utc_column:
+      cell_rms_rx_array_data.append(rms_rx_list[i])
 
 # Don't duplicate KPI data:
 # search and start inserting new timestamps from the first one
