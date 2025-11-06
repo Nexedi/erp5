@@ -1583,8 +1583,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         session_value.setCodeChallenge(None)
         session_value.setCodeChallengeMethod(None)
         session_value.setPolicyExpirationDate(None)
-        with super_user():
-          session_value.OAuth2Session_applyPolicyForExpirationDate()
+        session_value.OAuth2Session_applyPolicyForExpirationDate()
     elif state != 'validated':
       raise ValueError
 
