@@ -193,19 +193,19 @@
                 <item>
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>processing_status_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>

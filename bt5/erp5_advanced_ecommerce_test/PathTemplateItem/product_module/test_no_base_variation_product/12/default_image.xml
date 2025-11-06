@@ -13,19 +13,19 @@
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -39,7 +39,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -65,7 +65,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -1444,7 +1444,7 @@ T/q9eMSTewo=</string> </value>
         <item>
             <key> <string>next</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -1463,13 +1463,13 @@ T/q9eMSTewo=</string> </value>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>embedded_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -2640,7 +2640,7 @@ KG3u7o7PeywhfaIP/LcD2z/5geSjO3MSgcCC4PcR/wAHudM6JCO66sKEvw==</string> </value>
         <item>
             <key> <string>next</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAo=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -2668,7 +2668,7 @@ KG3u7o7PeywhfaIP/LcD2z/5geSjO3MSgcCC4PcR/wAHudM6JCO66sKEvw==</string> </value>
                   <item>
                       <key> <string>comment</string> </key>
                       <value>
-                        <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                        <persistent> <bytes encoding="base64">AAAAAAAAAAs=</bytes> </persistent>
                       </value>
                   </item>
                   <item>
@@ -3934,7 +3934,7 @@ cktahjEx+v69E3Z7MaqFBLSdesipSxk4SbOZzP4kwoCeOZzOPmeqPoVD1Q==</string> </value>
         <item>
             <key> <string>next</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAw=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -5134,7 +5134,7 @@ mAUhzHxg2iHAsR3kZicdMQcWLUVstOvqbBHD+BQ4eJIUySlaJ48p4zBccw==</string> </value>
         <item>
             <key> <string>next</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAA0=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -6302,7 +6302,7 @@ c8HDHklVKwi1WNR1VSK5wMxM5xExMTOYWdy0xWnFlgD1FRltJkb4MlWbVg==</string> </value>
         <item>
             <key> <string>next</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAA4=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
