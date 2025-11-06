@@ -2,7 +2,6 @@
  This script allows to create a new Discussion Post in context.
 """
 from DateTime import DateTime
-
 portal = context.getPortalObject()
 person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
@@ -37,7 +36,7 @@ if getattr(file, 'filename', '') != '':
   discussion_post.setSuccessorValueList([document])
 
   # depending on security model this should be changed accordingly
-  document.publish()
+  document.share()
 
 # depending on security model Post can be submitted for review
 portal_status_message = context.Base_translateString("New post created.")
@@ -51,9 +50,7 @@ discussion_thread.edit(modification_date = DateTime())
 post_relative_url = discussion_post.getRelativeUrl()
 
 if not is_temp_object:
-  return discussion_thread.Base_redirect(form_id,
-           keep_items = dict(portal_status_message=portal_status_message,
-                             post_relative_url = post_relative_url))
+  return discussion_post.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))
 else:
   # redirect using again reference
   redirect_url = '%s?portal_status_message=%s&post_relative_url=%s' \
