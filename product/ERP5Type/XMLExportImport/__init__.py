@@ -41,6 +41,7 @@ from Acquisition import aq_base, aq_inner
 from collections import OrderedDict
 from io import BytesIO
 from zodbpickle.slowpickle import Pickler
+from zodbpickle import binary
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
@@ -262,7 +263,6 @@ def reorderPickle(jar, p, pickle_protocol):
 
     oids = {}
     storage = jar._storage
-    new_oid = storage.new_oid
     store = storage.store
 
     def persistent_load(ooid,
@@ -274,6 +274,9 @@ def reorderPickle(jar, p, pickle_protocol):
 
         if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
+
+        if isinstance(ooid, str):
+          ooid = binary(ooid)
 
         try:
           Ghost=Ghost()
