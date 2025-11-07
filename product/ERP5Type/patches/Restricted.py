@@ -523,7 +523,8 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
               'complex64', 'complex128', \
               'bool_', \
               # structured data
-              [('a', 'int8'), ('b', 'float16')]):
+              #[('a', 'int8'), ('b', 'float16')]
+              ):
   allow_type(type(np.dtype(dtype)))
   z = np.array([0,], dtype = dtype)
   allow_type(type(z[0]))
