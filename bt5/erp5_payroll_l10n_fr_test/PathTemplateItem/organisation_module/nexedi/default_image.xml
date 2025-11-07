@@ -145,7 +145,7 @@
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAo=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -181,7 +181,7 @@
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAs=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -293,7 +293,7 @@
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAw=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -2310,7 +2310,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</bytes> </value>
         <item>
             <key> <string>next</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAA0=</bytes> </persistent>
             </value>
         </item>
       </dictionary>

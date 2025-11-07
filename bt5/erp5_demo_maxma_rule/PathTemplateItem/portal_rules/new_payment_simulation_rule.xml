@@ -181,7 +181,7 @@
                 <item>
                     <key> <string>movement</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -203,13 +203,13 @@
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAo=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>rule_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAs=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>

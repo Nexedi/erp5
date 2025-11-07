@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Code Editor Python Symbols</unicode> </value>
+            <value> <string>Code Editor Python Symbols</string> </value>
         </item>
       </dictionary>
     </pickle>

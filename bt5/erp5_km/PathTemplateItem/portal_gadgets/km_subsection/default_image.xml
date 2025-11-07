@@ -140,7 +140,7 @@
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -176,7 +176,7 @@
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAo=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -287,7 +287,7 @@
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAs=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
