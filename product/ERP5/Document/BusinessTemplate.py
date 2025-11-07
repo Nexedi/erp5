@@ -629,6 +629,12 @@ class BaseTemplateItem(Implicit, Persistent):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
+    if six.PY2:
+      if (classname in ('ZopePageTemplate', 'OOoTemplate')
+           and 'title' in obj.__dict__
+           and isinstance(obj, six.text_type)):
+        obj.title = obj.title.encode('utf-8')
+
     return obj
 
   def getTemplateTypeName(self):
@@ -1543,6 +1549,9 @@ class ObjectTemplateItem(BaseTemplateItem):
             # mime_type too...
             from Products.ERP5Type.patches.OFSFile import _setData
             _setData(obj, obj.data)
+        elif six.PY2 and obj.__class__.__name__ in ('ZopePageTemplate', 'OOoTemplate'):
+          if ('title' in obj.__dict__) and not isinstance(obj.title, six.text_type):
+            obj.title = obj.title.decode('utf-8')
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
