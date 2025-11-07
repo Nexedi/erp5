@@ -275,7 +275,7 @@ def reorderPickle(jar, p, pickle_protocol):
         if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
 
-        if isinstance(ooid, str):
+        if six.PY2 and isinstance(ooid, str):
           ooid = binary(ooid)
 
         try:
