@@ -32,6 +32,7 @@ import unittest
 from types import MethodType
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from AccessControl.SecurityInfo import ACCESS_PRIVATE, ACCESS_PUBLIC
 
 # You can invoke security tests in your favourite collection of business templates
 # by using TestSecurityMixin like the following :
@@ -41,7 +42,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 #   def getBusinessTemplateList(self):
 #     return (...)
 
-class TestSecurityMixin(ERP5TypeTestCase):
+class TestSecurityMixin:
 
   def _prepareDocumentList(self):
     if getattr(self, '_prepareDocumentList_finished', None):
@@ -67,13 +68,44 @@ class TestSecurityMixin(ERP5TypeTestCase):
         createSubObject(i)
     self._prepareDocumentList_finished = True
 
+  def _checkObjectAllMethodProtection(self, obj):
+    if '__roles__' in obj.__class__.__dict__:
+      return {}
+
+    error_dict = {}
+    allowed_method_id_list = ['om_icons',]
+    for method_id in dir(obj):
+      if method_id.startswith('_') or method_id in allowed_method_id_list or not callable(getattr(obj, method_id, None)):
+        continue
+      method = getattr(obj, method_id)
+      # Since py3.13, leading spaces are stripped from docstring so normalize __doc__
+      method__doc__ = getattr(method, '__doc__', None)
+      if method__doc__ is not None:
+        method__doc__ = method__doc__.lstrip()
+      if isinstance(method, MethodType) and \
+        getattr(method, '__name__', None) is not None and \
+        method.__module__ and \
+        (# Implicitly Public method?
+         (method.__doc__ and \
+          not hasattr(obj, '%s__roles__' % method_id) and \
+          not hasattr(method, '__roles__')) or \
+         # Method with security declaration but without a docstring?
+         (not method.__doc__ and \
+          getattr(obj, '%s__roles__' % method_id, ACCESS_PRIVATE) is ACCESS_PUBLIC)):
+        if method.__module__ == 'Products.ERP5Type.Accessor.WorkflowState' and method.__code__.co_name == 'serialize':
+          continue
+        func_code = method.__code__
+        if not hasattr(func_code, 'co_filename'): # ERP5 Accessor
+          func_code = method.__func__.__class__.__init__.__code__
+        error_dict[(func_code.co_filename, func_code.co_firstlineno)] = method_id
+    return error_dict
+
   def test_method_protection(self):
     """
     This test will list all implicitly Public methods in any objects in ZODB.
     i.e. those who have a docstring but have no security declaration.
     """
     self._prepareDocumentList()
-    allowed_method_id_list = ['om_icons',]
     app = self.portal.aq_parent
     meta_type_set = set([None])
     error_dict = {}
@@ -82,24 +114,7 @@ class TestSecurityMixin(ERP5TypeTestCase):
       if meta_type in meta_type_set:
         continue
       meta_type_set.add(meta_type)
-      if '__roles__' in obj.__class__.__dict__:
-        continue
-      for method_id in dir(obj):
-        if method_id.startswith('_') or method_id in allowed_method_id_list or not callable(getattr(obj, method_id, None)):
-          continue
-        method = getattr(obj, method_id)
-        if isinstance(method, MethodType) and \
-          getattr(method, '__name__', None) is not None and \
-          method.__doc__ and \
-          not hasattr(obj, '%s__roles__' % method_id) and \
-          not hasattr(method, '__roles__') and \
-          method.__module__:
-          if method.__module__ == 'Products.ERP5Type.Accessor.WorkflowState' and method.__code__.co_name == 'serialize':
-            continue
-          func_code = method.__code__
-          if not hasattr(func_code, 'co_filename'): # ERP5 Accessor
-            func_code = method.__func__.__class__.__init__.__code__
-          error_dict[(func_code.co_filename, func_code.co_firstlineno)] = method_id
+      error_dict.update(self._checkObjectAllMethodProtection(obj))
 
     error_list = []
     for (filename, lineno), method_id in sorted(error_dict.items()):
@@ -109,18 +124,23 @@ class TestSecurityMixin(ERP5TypeTestCase):
            (six.PY3 and 'erp5://' in filename))):
         error_list.append('%s:%s %s' % (filename, lineno, method_id))
       else:
-        print(('Ignoring missing security definition for %s in %s:%s ' % (method_id, filename, lineno)))
+        print(('Ignoring missing security definition or missing docstring on public methods'
+               'for %s in %s:%s ' % (method_id, filename, lineno)))
     if error_list:
-      message = '\nThe following %s methods have a docstring but have no security assertions.\n\t%s' \
-                    % (len(error_list), '\n\t'.join(error_list))
+      message = ('\nThe following %s methods have a docstring without security assertions '
+                 'or are public methods without docstring.\n\t%s' \
+                 % (len(error_list), '\n\t'.join(error_list)))
       self.fail(message)
+
+  def _getTestedWorkflowValueList(self):
+    return self.portal.portal_workflow.objectValues()
 
   def test_workflow_transition_protection(self):
     """
     This test will list all workflow transitions and check the existence of guard.
     """
     error_list = []
-    for wf in self.portal.portal_workflow.objectValues():
+    for wf in self._getTestedWorkflowValueList():
       if wf.__class__.__name__ in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
         continue
       for transition in wf.getTransitionValueList():
@@ -134,14 +154,10 @@ class TestSecurityMixin(ERP5TypeTestCase):
                     % (len(error_list), '\n\t'.join(sorted(error_list)))
       self.fail(message)
 
-class TestSecurity(TestSecurityMixin):
+class TestSecurity(ERP5TypeTestCase, TestSecurityMixin):
 
   def getTitle(self):
     return "Security Test"
-
-  def getBusinessTemplateList(self):
-    from Products.ERP5.tests.testXHTML import TestXHTML
-    return TestXHTML.getBusinessTemplateList()
 
 def test_suite():
   suite = unittest.TestSuite()
