@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import os
 import unittest
 from types import MethodType
@@ -103,7 +104,9 @@ class TestSecurityMixin(ERP5TypeTestCase):
     error_list = []
     for (filename, lineno), method_id in sorted(error_dict.items()):
       # ignore security problems with non ERP5 documents, unless running in debug mode.
-      if os.environ.get('erp5_debug_mode') or '/erp5/' in filename or '<portal_components' in filename:
+      if (os.environ.get('erp5_debug_mode') or '/erp5/' in filename or
+          ((six.PY2 and '<portal_components' in filename) or
+           (six.PY3 and 'erp5://' in filename))):
         error_list.append('%s:%s %s' % (filename, lineno, method_id))
       else:
         print(('Ignoring missing security definition for %s in %s:%s ' % (method_id, filename, lineno)))
