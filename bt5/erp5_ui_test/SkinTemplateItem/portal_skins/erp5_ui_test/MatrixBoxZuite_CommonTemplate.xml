@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Common Template for MatrixBoxZuite</unicode> </value>
+            <value> <string>Common Template for MatrixBoxZuite</string> </value>
         </item>
       </dictionary>
     </pickle>

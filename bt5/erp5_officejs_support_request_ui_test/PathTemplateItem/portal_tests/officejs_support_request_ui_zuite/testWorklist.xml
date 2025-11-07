@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Worklists on support request front page</unicode> </value>
+            <value> <string>Worklists on support request front page</string> </value>
         </item>
       </dictionary>
     </pickle>
