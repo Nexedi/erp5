@@ -24,6 +24,7 @@ class TimerService(SimpleItem):
 
     id='timer_service'
     title = 'TimerService'
+    meta_type = 'Timer Service'
 
     security = ClassSecurityInfo()
     security.declareObjectPublic()
