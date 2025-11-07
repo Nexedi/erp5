@@ -241,13 +241,13 @@ It just appends everything to a data stream without any conversion whatsoever.\n
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -321,7 +321,7 @@ It just appends everything to a data stream without any conversion whatsoever.\n
                   <item>
                       <key> <string>comment</string> </key>
                       <value>
-                        <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                        <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                       </value>
                   </item>
                   <item>
