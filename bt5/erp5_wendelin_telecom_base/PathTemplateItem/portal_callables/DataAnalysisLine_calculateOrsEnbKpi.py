@@ -166,51 +166,6 @@ if not e_utran_array:
   e_utran_array = e_utran_data_array.initArray(shape=(0,), dtype=e_utran_dtype)
 e_utran_array_data = []
 
-cell_ue_count_array_data = []
-if cell_ue_count_data_array is not None:
-  cell_ue_count_array = cell_ue_count_data_array.getArray()
-  if not cell_ue_count_array:
-    cell_ue_count_array = cell_ue_count_data_array.initArray(shape=(0,), dtype=cell_ue_count_dtype)
-
-  utc_column = cell_ue_count_array[:]['utc']
-  first_new_row_utc = 0
-  utc = [i[0] for i in ue_count_data_list]
-  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
-    first_new_row_utc += 1
-
-  for i in range(first_new_row_utc, len(utc)):
-    if utc[i] not in utc_column:
-      cell_ue_count_array_data.append(ue_count_data_list[i])
-
-cell_rrc_array_data = []
-if cell_rrc_data_array is not None:
-  cell_rrc_array = cell_rrc_data_array.getArray()
-  if not cell_rrc_array:
-    cell_rrc_array = cell_rrc_data_array.initArray(shape=(0,), dtype=cell_rrc_dtype)
-
-  utc_column = cell_rrc_array[:]['utc']
-  first_new_row_utc = 0
-  utc = [i[0] for i in rrc_list]
-  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
-    first_new_row_utc += 1
-  for i in range(first_new_row_utc, len(utc)):
-    if utc[i] not in utc_column:
-      cell_rrc_array_data.append(rrc_list[i])
-
-cell_rms_rx_array_data = []
-if cell_rms_rx_data_array is not None:
-  cell_rms_rx_array = cell_rms_rx_data_array.getArray()
-  if not cell_rms_rx_array:
-    cell_rms_rx_array = cell_rms_rx_data_array.initArray(shape=(0,), dtype=cell_rms_rx_dtype)
-
-  utc_column = cell_rms_rx_array[:]['utc']
-  first_new_row_utc = 0
-  utc = [i[0] for i in rms_rx_list]
-  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
-    first_new_row_utc += 1
-  for i in range(first_new_row_utc, len(utc)):
-    if utc[i] not in utc_column:
-      cell_rms_rx_array_data.append(rms_rx_list[i])
 
 # Don't duplicate KPI data:
 # search and start inserting new timestamps from the first one
@@ -247,17 +202,40 @@ if e_utran_array_data:
   e_utran_array_data = np.ndarray((len(e_utran_array_data),), e_utran_dtype, np.array(e_utran_array_data))
   e_utran_array.append(e_utran_array_data)
 
-if cell_ue_count_array_data:
-  cell_ue_count_array_data = np.ndarray((len(cell_ue_count_array_data),), cell_ue_count_dtype, np.array(cell_ue_count_array_data))
-  cell_ue_count_array.append(cell_ue_count_array_data)
+def appendCellDataListToDataArray(cell_data_array, cell_data_list, cell_dtype):
+  cell_array_data = []
+  cell_array = None
+  if cell_data_array is None:
+    return
 
-if cell_rrc_array_data:
-  cell_rrc_array_data = np.ndarray((len(cell_rrc_array_data),), cell_rrc_dtype, np.array(cell_rrc_array_data))
-  cell_rrc_array.append(cell_rrc_array_data)
+  cell_array = cell_data_array.getArray()
+  if not cell_array:
+    cell_array = cell_data_array.initArray(shape=(0,), dtype=cell_dtype)
 
-if cell_rms_rx_array_data:
-  cell_rms_rx_array_data = np.ndarray((len(cell_rms_rx_array_data),), cell_rms_rx_dtype, np.array(cell_rms_rx_array_data))
-  cell_rms_rx_array.append(cell_rms_rx_array_data)
+  utc_column = cell_array[:]['utc']
+  first_new_row_utc = 0
+  utc = [i[0] for i in cell_data_list]
+  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
+    first_new_row_utc += 1
+
+  for idx in range(first_new_row_utc, len(utc)):
+    if utc[idx] not in utc_column:
+      cell_array_data.append(cell_data_list[idx])
+
+  cell_array_data = np.ndarray((len(cell_array_data),),
+                               cell_dtype,
+                               np.array(cell_array_data))
+  cell_array.append(cell_array_data)
+
+appendCellDataListToDataArray(cell_ue_count_data_array,
+                              ue_count_data_list,
+                              cell_ue_count_dtype)
+
+appendCellDataListToDataArray(cell_rrc_data_array, rrc_list, cell_rrc_dtype)
+
+appendCellDataListToDataArray(cell_rms_rx_data_array,
+                              rms_rx_list,
+                              cell_rms_rx_dtype)
 
 progress_indicator.setIntOffsetIndex(end)
 e_utran_data_array.activate().DataArray_updateActiveQciLines()
