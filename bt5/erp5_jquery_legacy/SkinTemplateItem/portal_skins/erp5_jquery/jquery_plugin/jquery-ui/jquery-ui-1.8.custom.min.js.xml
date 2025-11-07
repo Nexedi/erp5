@@ -18,7 +18,7 @@
             <key> <string>__propsets__</string> </key>
             <value>
               <tuple>
-                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
               </tuple>
             </value>
         </item>
