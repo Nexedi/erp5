@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Subject Index</unicode> </value>
+            <value> <string>Subject Index</string> </value>
         </item>
       </dictionary>
     </pickle>

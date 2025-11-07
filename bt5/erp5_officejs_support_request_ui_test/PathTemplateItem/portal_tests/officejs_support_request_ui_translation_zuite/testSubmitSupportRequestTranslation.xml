@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Submit Request Request Translation</unicode> </value>
+            <value> <string>Submit Request Request Translation</string> </value>
         </item>
       </dictionary>
     </pickle>

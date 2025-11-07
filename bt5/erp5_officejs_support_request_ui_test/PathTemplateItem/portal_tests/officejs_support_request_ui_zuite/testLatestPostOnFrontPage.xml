@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test "Comment Date" and "Comment Author" on Front Page</unicode> </value>
+            <value> <string>Test "Comment Date" and "Comment Author" on Front Page</string> </value>
         </item>
       </dictionary>
     </pickle>
