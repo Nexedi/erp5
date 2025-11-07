@@ -1,6 +1,3 @@
-def sort(a, b):
-  return cmp(a[0], b[0])
-
 # context_portal_type : [actor_portal_type, actor_container_portal_type]
 # nb: actor_container must be accessible by just going upward in the tree
 portal_type_convertion = {'Use Case' : ['Use Case Actor', 'Use Case'],
@@ -28,6 +25,6 @@ if item_portal_type[0] is not None:
       url = obj.getRelativeUrl()
       label = obj.getTitle()
       item_list.append([label, url])
-    item_list.sort(sort)
+    item_list.sort(key=lambda x: x[0])
 
 return item_list
