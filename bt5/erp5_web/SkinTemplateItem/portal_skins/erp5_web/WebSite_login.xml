@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Login Page Template used by login and registration main page</unicode> </value>
+            <value> <string>Login Page Template used by login and registration main page</string> </value>
         </item>
       </dictionary>
     </pickle>

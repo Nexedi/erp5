@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test Developer Edit Field</unicode> </value>
+            <value> <string>Test Developer Edit Field</string> </value>
         </item>
       </dictionary>
     </pickle>
