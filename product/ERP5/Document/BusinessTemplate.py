@@ -979,6 +979,8 @@ class ObjectTemplateItem(BaseTemplateItem):
           _delObjectWithoutHook(obj, id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
+      if six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template') and 'title' in obj.__dict__:
+        obj.title = obj.title.encode('utf-8')
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
@@ -1008,6 +1010,8 @@ class ObjectTemplateItem(BaseTemplateItem):
           _delObjectWithoutHook(obj, id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
+      if six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template') and 'title' in obj.__dict__:
+        obj.title = obj.title.encode('utf-8')
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
@@ -1543,6 +1547,9 @@ class ObjectTemplateItem(BaseTemplateItem):
             # mime_type too...
             from Products.ERP5Type.patches.OFSFile import _setData
             _setData(obj, obj.data)
+        elif six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template'):
+          if ('title' in obj.__dict__) and not isinstance(obj, six.text_type):
+            obj.title = obj.title.decode('utf-8')
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
@@ -1783,6 +1790,8 @@ class PathTemplateItem(ObjectTemplateItem):
             _delObjectWithoutHook(obj, id_)
         if hasattr(aq_base(obj), 'groups'):
           obj.groups = groups
+        if six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template') and 'title' in obj.__dict__:
+          obj.title = obj.title.encode('utf-8')
         self._objects[relative_url] = obj
         obj.wl_clearLocks()
 
