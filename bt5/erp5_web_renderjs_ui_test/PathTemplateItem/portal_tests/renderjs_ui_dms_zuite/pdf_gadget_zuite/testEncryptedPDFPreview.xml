@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Encrypted PDF Preview</unicode> </value>
+            <value> <string>Encrypted PDF Preview</string> </value>
         </item>
       </dictionary>
     </pickle>

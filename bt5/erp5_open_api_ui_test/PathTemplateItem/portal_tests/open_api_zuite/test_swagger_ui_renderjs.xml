@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>SwaggerUI Gadget with ERP5JS</unicode> </value>
+            <value> <string>SwaggerUI Gadget with ERP5JS</string> </value>
         </item>
       </dictionary>
     </pickle>
