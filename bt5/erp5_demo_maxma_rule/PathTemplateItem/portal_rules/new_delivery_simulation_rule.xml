@@ -168,13 +168,13 @@
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>rule_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
