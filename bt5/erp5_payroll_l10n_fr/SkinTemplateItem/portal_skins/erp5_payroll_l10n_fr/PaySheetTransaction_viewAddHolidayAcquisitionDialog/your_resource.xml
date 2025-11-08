@@ -29,11 +29,11 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>required_not_found</unicode> </key>
+                    <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>unknown_selection</unicode> </key>
+                    <key> <string>unknown_selection</string> </key>
                     <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>

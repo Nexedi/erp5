@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test Module Listbox default more columns</unicode> </value>
+            <value> <string>Test Module Listbox default more columns</string> </value>
         </item>
       </dictionary>
     </pickle>

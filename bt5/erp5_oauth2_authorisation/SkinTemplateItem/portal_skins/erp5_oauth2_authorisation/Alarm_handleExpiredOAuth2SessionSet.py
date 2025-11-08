@@ -81,7 +81,7 @@ if load_limit <= 0:
     #   This one may be non-critical, but best to know of, investigate and fix.
     # - infinite iteration (this script will respawn itself, find LOAD_LIMIT documents, process 0, and respawn itself until the in-ZODB conditions become true - which can take months)
     #   This one is more difficult to properly fix, and worth a raise.
-    raise Exception('Many documents were matched in catalog but skipped by supposedly-identical condition on ZODB (action_skip_count=%s, load_limit=%s). Please investigate.' % (
+    raise RuntimeError('Many documents were matched in catalog but skipped by supposedly-identical condition on ZODB (action_skip_count=%s, load_limit=%s). Please investigate.' % (
       action_skip_count,
       load_limit,
     ))
