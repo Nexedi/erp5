@@ -978,7 +978,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           _delObjectWithoutHook(obj, id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
-      if six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template') and hasattr(obj, 'title'):
+      if six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template') and 'title' in obj.__dict__:
         obj.title = obj.title.encode('utf-8')
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
