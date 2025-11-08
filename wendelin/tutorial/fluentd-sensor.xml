@@ -1,23 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
 <instance>
-    <parameter id="conf-text">
-        &lt;source&gt;
+    <parameter id="conf-text"><![CDATA[
+        <source>
             @type exec
             tag sensor1.sample-environment-raw-data
             command /usr/bin/python3 /srv/slapgrid/kbme280-sim.py
             run_interval 30s
-            &lt;parse&gt;
+            <parse>
                 keys pressure, humidity, temperature
-            &lt;/parse&gt;
-        &lt;/source&gt;
+            </parse>
+        </source>
 
-        &lt;match *.sample-environment-raw-data&gt;
+        <match *.sample-environment-raw-data>
             @type forward
-            &lt;server&gt;
+            <server>
                 name fluentd-gw
                 host <FLUENTD-GATEWAY-IPv4>
                 port 24224
-            &lt;/server&gt;
-        &lt;/match&gt;
+            </server>
+        </match>
+    ]]>
     </parameter>
 </instance>
