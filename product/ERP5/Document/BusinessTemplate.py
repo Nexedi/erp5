@@ -154,6 +154,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Image":               (None,   0, "data",         False),
   "Interface Component": ("py",   0, "text_content", True ),
   "OOoTemplate":         ("oot",  1, "_text",        True ),
+  "MailTemplate":        ("mt",   1, "_text",        True ),
   "Mixin Component":     ("py",   0, "text_content", True ),
   "Module Component":    ("py",   0, "text_content", True ),
   "PDF":                 ("pdf",  0, "data",         False),
