@@ -57,7 +57,7 @@
               <dictionary>
                 <item>
                     <key> <string>xmlns</string> </key>
-                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
+                    <value> <string>http://apache.org/dav/props/</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -69,7 +69,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <unicode>executable</unicode> </value>
+                      <value> <string>executable</string> </value>
                   </item>
                   <item>
                       <key> <string>meta</string> </key>
