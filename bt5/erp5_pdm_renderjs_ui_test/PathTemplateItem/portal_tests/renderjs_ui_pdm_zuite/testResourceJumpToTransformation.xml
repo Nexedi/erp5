@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Resource Jump to Transformation</unicode> </value>
+            <value> <string>Resource Jump to Transformation</string> </value>
         </item>
       </dictionary>
     </pickle>

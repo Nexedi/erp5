@@ -322,11 +322,32 @@ class Reference(Scalar):
 Get = Reference
 
 class Object(Sequence):
-    def __init__(self, klass, args, mapping):
+    def __init__(self, klass, args, mapping, maybe_empty_state=False):
         self._subs=[Klass(klass, mapping), args]
         self.mapping = mapping
+        self._has_state = False
+        if maybe_empty_state:
+            # BBB six.PY2
+            # On python3, object().__reduce_ex__(3) returns a state of
+            # None, on python2 an empty dictionnary on python2. This cause different XML
+            # output because the python3's None state does not appear as a <state>, but
+            # on python2 it appears as <state><dictionary/></state>.
+            # To always output a state on python3, we append a State(Dictionary()) that
+            # will be replaced when __setstate__ is called by Unpickler.load_build if
+            # this object had a state.
+            __import__(klass.module, level=0)
+            mod = sys.modules[klass.module]
+            klass_ = getattr(mod, klass.name)
+            if getattr(klass_, '__reduce_ex__', None) is object.__reduce_ex__:
+                self.__setstate__(Dictionary(self.mapping))
 
-    def __setstate__(self, v): self.append(State(v, self.mapping))
+    def __setstate__(self, v):
+        state = State(v, self.mapping)
+        if not self._has_state:
+            self.append(state)
+            self._has_state = True
+        else:
+            self._subs[-1] = state
 
 class Bool(Scalar): pass
 class Int(Scalar): pass
@@ -699,13 +720,10 @@ class ToXMLUnpickler(Unpickler):
 
     @register(NEWOBJ)
     def load_newobj(self):
-        # TODO: not really sure of this one, maybe we need
-        # a NewObj instead of Object
         args = self.stack.pop()
         cls = self.stack[-1]
-        obj = Object(cls, args, self.id_mapping)
+        obj = Object(cls, args, self.id_mapping, maybe_empty_state=six.PY3)
         self.stack[-1] = obj
-        #print('load_newobj', self.stack)
 
     @register(GLOBAL)
     def load_global(self):

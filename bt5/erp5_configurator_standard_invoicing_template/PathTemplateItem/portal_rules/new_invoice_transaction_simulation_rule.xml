@@ -199,7 +199,7 @@
                 <item>
                     <key> <string>movement</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>

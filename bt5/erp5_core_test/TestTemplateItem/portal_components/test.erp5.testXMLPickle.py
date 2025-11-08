@@ -47,6 +47,11 @@ class DummyClass:
     self.data = []
 
 
+class DummyEmptyClass(object):
+  def __eq__(self, other):
+    return type(self) is type(other) and self.__dict__ == other.__dict__
+
+
 class DummyPersistentClass:
   def __init__(self, v, oid):
     self.v = v
@@ -117,6 +122,18 @@ class TestXMLPickle(XMLPickleTestCase):
     self.assertTrue(reconstructed_obj.data[2] is reconstructed_obj.data)
     self.assertTrue(type(reconstructed_obj.data[3]) is type(pattern))
     self.assertEqual(reconstructed_obj.data[3].pattern, 'WAA')
+
+  def test_class(self):
+    obj = DummyEmptyClass()
+    obj.foo = 'bar'
+    self.check_and_load(obj)
+
+  def test_empty_class(self):
+    obj = DummyEmptyClass()
+    self.check_and_load(obj)
+    if self._pickle_protocol >= 3:
+      xml = self.dump_to_xml(obj)
+      self.assertTrue(lxml.etree.fromstring(xml).xpath('/pickle/object/state/dictionary[not(node())]'), xml)
 
   def test_bool(self):
     self.assertIs(self.dump_and_load(True), True)
@@ -195,6 +212,7 @@ class TestXMLPickle(XMLPickleTestCase):
     self.check_and_load({'hé': 'ho'})
     self.check_and_load(dict.fromkeys(range(3000)))
     self.check_and_load({1: 'one', 'two': 2})
+    self.check_and_load({})
 
   def test_tuple(self):
     self.check_and_load((1, ))

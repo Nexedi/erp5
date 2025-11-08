@@ -205,13 +205,13 @@ If for some reason one wants to use it set "Gadget Type" to Web Section"</string
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>knowledge_pad_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
