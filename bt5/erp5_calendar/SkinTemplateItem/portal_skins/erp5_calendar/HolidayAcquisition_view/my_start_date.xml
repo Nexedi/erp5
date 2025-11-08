@@ -25,7 +25,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <unicode>datetime_out_of_range</unicode> </key>
+                    <key> <string>datetime_out_of_range</string> </key>
                     <value> <string>The date and time you entered were out of range.</string> </value>
                 </item>
                 <item>
@@ -33,11 +33,11 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>not_datetime</unicode> </key>
+                    <key> <string>not_datetime</string> </key>
                     <value> <string>You did not enter a valid date and time.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>required_not_found</unicode> </key>
+                    <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
               </dictionary>
