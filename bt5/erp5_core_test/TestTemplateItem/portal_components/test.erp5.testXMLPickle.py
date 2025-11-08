@@ -212,6 +212,7 @@ class TestXMLPickle(XMLPickleTestCase):
     self.check_and_load({'hé': 'ho'})
     self.check_and_load(dict.fromkeys(range(3000)))
     self.check_and_load({1: 'one', 'two': 2})
+    self.check_and_load({})
 
   def test_tuple(self):
     self.check_and_load((1, ))
