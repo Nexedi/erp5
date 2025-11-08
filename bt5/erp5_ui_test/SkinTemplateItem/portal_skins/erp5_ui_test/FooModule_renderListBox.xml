@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Only a test</unicode> </value>
+            <value> <string>Only a test</string> </value>
         </item>
       </dictionary>
     </pickle>
