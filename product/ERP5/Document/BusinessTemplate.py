@@ -1545,7 +1545,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             from Products.ERP5Type.patches.OFSFile import _setData
             _setData(obj, obj.data)
         elif six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template'):
-          if hasattr(obj, 'title') and not isinstance(obj, six.text_type):
+          if ('title' in obj.__dict__) and not isinstance(obj, six.text_type):
             obj.title = obj.title.decode('utf-8')
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
