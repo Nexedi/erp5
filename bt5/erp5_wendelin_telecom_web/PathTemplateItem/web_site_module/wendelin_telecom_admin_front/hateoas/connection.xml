@@ -393,7 +393,7 @@
               <dictionary>
                 <item>
                     <key> <string>source_item</string> </key>
-                    <value> <unicode>/erp5/web_site_module/ors_wendelin_manager_front</unicode> </value>
+                    <value> <string>/erp5/web_site_module/ors_wendelin_manager_front</string> </value>
                 </item>
               </dictionary>
             </value>
