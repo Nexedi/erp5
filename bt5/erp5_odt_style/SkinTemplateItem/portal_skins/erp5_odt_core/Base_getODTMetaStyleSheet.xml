@@ -78,7 +78,7 @@ AAAAAIABAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAACkAQAAAAA=</bytes>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode></unicode> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
