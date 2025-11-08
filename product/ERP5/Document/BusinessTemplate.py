@@ -154,6 +154,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Image":               (None,   0, "data",         False),
   "Interface Component": ("py",   0, "text_content", True ),
   "OOoTemplate":         ("oot",  1, "_text",        True ),
+  "MailTemplate":        ("mt",   1, "_text",        True ),
   "Mixin Component":     ("py",   0, "text_content", True ),
   "Module Component":    ("py",   0, "text_content", True ),
   "PDF":                 ("pdf",  0, "data",         False),
@@ -611,8 +612,15 @@ class BaseTemplateItem(Implicit, Persistent):
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
-      elif classname in ('File', 'Image'):
-        attr_set.update(('_EtagSupport__etag', 'size'))
+      elif classname in ('File', 'Embedded File', 'Image', 'Embedded Image'):
+        attr_set.update(('_EtagSupport__etag', 'size',
+        # ???
+         '_cached_data',
+         '_cached_size',
+         '_cached_time',
+         '_cached_mtype'
+
+        ))
       # SQL covers both ZSQL Methods and ERP5 SQL Methods
       elif isinstance(obj, SQL):
         # `expression_instance` is included so as to add compatibility for
@@ -978,6 +986,8 @@ class ObjectTemplateItem(BaseTemplateItem):
           _delObjectWithoutHook(obj, id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
+      if six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template') and 'title' in obj.__dict__:
+        obj.title = obj.title.encode('utf-8')
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
@@ -1542,6 +1552,9 @@ class ObjectTemplateItem(BaseTemplateItem):
             # mime_type too...
             from Products.ERP5Type.patches.OFSFile import _setData
             _setData(obj, obj.data)
+        elif six.PY2 and obj.meta_type in ('ERP5 OOo Template', 'Page Template'):
+          if ('title' in obj.__dict__) and not isinstance(obj, six.text_type):
+            obj.title = obj.title.decode('utf-8')
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
