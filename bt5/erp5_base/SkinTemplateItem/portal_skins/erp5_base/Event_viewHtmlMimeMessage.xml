@@ -33,16 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:body xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-          xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-          ><html><body><tal:x replace="structure options/body"/></body></html></tal:body>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
