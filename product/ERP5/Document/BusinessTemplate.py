@@ -612,7 +612,7 @@ class BaseTemplateItem(Implicit, Persistent):
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
-      elif classname in ('File', 'Image'):
+      elif classname in ('File', 'Embedded File', 'Image', 'Embedded Image'):
         attr_set.update(('_EtagSupport__etag', 'size'))
       # SQL covers both ZSQL Methods and ERP5 SQL Methods
       elif isinstance(obj, SQL):
