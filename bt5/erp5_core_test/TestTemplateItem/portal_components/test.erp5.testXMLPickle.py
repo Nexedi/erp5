@@ -47,7 +47,7 @@ class DummyClass:
     self.data = []
 
 
-class DummyEmptyClass(object):
+class DummyNewStyleClass(object):
   def __eq__(self, other):
     return type(self) is type(other) and self.__dict__ == other.__dict__
 
@@ -124,16 +124,32 @@ class TestXMLPickle(XMLPickleTestCase):
     self.assertEqual(reconstructed_obj.data[3].pattern, 'WAA')
 
   def test_class(self):
-    obj = DummyEmptyClass()
+    reconstructed_class = self.dump_and_load(DummyNewStyleClass)
+    self.assertIs(reconstructed_class, DummyNewStyleClass)
+
+  def test_obj(self):
+    obj = DummyNewStyleClass()
     obj.foo = 'bar'
     self.check_and_load(obj)
 
-  def test_empty_class(self):
-    obj = DummyEmptyClass()
+    # with an empty state, that is different on py3
+    obj = DummyNewStyleClass()
     self.check_and_load(obj)
     if self._pickle_protocol >= 3:
       xml = self.dump_to_xml(obj)
-      self.assertTrue(lxml.etree.fromstring(xml).xpath('/pickle/object/state/dictionary[not(node())]'), xml)
+      self.assertTrue(
+        lxml.etree.fromstring(xml).xpath('/pickle/object/state/dictionary[not(node())]'),
+        xml)
+
+    # the same class twice, should use a reference
+    obj1 = DummyNewStyleClass()
+    obj1.id = 1
+    obj2 = DummyNewStyleClass()
+    obj2.id = 2
+    self.check_and_load((obj1, obj2))
+
+    obj = self.dump_and_load(object())
+    self.assertIsInstance(obj, object)
 
   def test_bool(self):
     self.assertIs(self.dump_and_load(True), True)

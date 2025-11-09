@@ -335,11 +335,13 @@ class Object(Sequence):
             # To always output a state on python3, we append a State(Dictionary()) that
             # will be replaced when __setstate__ is called by Unpickler.load_build if
             # this object had a state.
-            __import__(klass.module, level=0)
-            mod = sys.modules[klass.module]
-            klass_ = getattr(mod, klass.name)
-            if getattr(klass_, '__reduce_ex__', None) is object.__reduce_ex__:
-                self.__setstate__(Dictionary(self.mapping))
+            if isinstance(klass, Global):  # this can be a Reference, in that case we do not know
+                __import__(klass.module, level=0)
+                mod = sys.modules[klass.module]
+                klass_ = getattr(mod, klass.name)
+                if (getattr(klass_, '__reduce_ex__', None) is object.__reduce_ex__
+                        and klass_ is not object):
+                    self.__setstate__(Dictionary(self.mapping))
 
     def __setstate__(self, v):
         state = State(v, self.mapping)
