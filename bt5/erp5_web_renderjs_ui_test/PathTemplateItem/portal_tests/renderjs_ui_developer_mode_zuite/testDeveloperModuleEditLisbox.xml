@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test Module Edit Listbox</unicode> </value>
+            <value> <string>Test Module Edit Listbox</string> </value>
         </item>
       </dictionary>
     </pickle>

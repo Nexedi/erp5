@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Json Editor Cache Manifest</unicode> </value>
+            <value> <string>Json Editor Cache Manifest</string> </value>
         </item>
       </dictionary>
     </pickle>

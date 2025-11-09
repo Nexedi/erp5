@@ -19,15 +19,15 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>not_float</unicode> </key>
+                    <key> <string>not_float</string> </key>
                     <value> <string>You did not enter a floating point number.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>required_not_found</unicode> </key>
+                    <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>too_large_precision</unicode> </key>
+                    <key> <string>too_large_precision</string> </key>
                     <value> <string>The number you input has too large precision.</string> </value>
                 </item>
               </dictionary>
