@@ -549,6 +549,14 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=b"ok"
     )
 
+  def test_zodbpickle_binary(self):
+    import zodbpickle
+    self.createAndRunScript(
+      'return kw["arg"].capitalize()',
+      kwargs={'arg': zodbpickle.binary('hello')},
+      expected=b'Hello',
+    )
+
   def testNumpy(self):
     self.createAndRunScript('''
         import numpy as np
