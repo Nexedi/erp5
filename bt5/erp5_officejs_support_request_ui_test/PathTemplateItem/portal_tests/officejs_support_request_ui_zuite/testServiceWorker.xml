@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Service Worker can be fully loaded</unicode> </value>
+            <value> <string>Service Worker can be fully loaded</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Open API Type view with ERP5JS</unicode> </value>
+            <value> <string>Open API Type view with ERP5JS</string> </value>
         </item>
       </dictionary>
     </pickle>

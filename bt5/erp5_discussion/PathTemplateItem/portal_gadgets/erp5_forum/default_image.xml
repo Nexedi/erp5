@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts75270774.51</string> </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -618,10 +614,6 @@ OOOd2s9f/9k=</string> </value>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Embedded File</string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>32327</int> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
