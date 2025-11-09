@@ -76,7 +76,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -90,7 +90,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -128,7 +128,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -181,7 +181,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -195,7 +195,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -233,7 +233,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -286,7 +286,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAk=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -300,7 +300,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAo=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -338,7 +338,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAs=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -391,7 +391,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAAw=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -405,7 +405,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAA0=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -443,7 +443,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAA4=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -496,7 +496,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAA8=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -510,7 +510,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABA=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -548,7 +548,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABE=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -601,7 +601,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABI=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -615,7 +615,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABM=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -653,7 +653,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABQ=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -706,7 +706,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABU=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -720,7 +720,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABY=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -758,7 +758,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABc=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABc=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -811,7 +811,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABg=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABg=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -825,7 +825,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABk=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABk=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -863,7 +863,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABo=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABo=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -916,7 +916,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABs=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABs=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -930,7 +930,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABw=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAABw=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -968,7 +968,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAB0=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAB0=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1021,7 +1021,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAB4=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAB4=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1035,7 +1035,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAB8=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAAB8=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1073,7 +1073,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACA=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACA=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1126,7 +1126,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACE=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACE=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1140,7 +1140,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACI=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACI=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1178,7 +1178,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACM=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACM=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1231,7 +1231,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACQ=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACQ=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1245,7 +1245,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACU=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACU=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1283,7 +1283,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACY=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACY=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1336,7 +1336,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACc=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACc=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1350,7 +1350,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACg=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACg=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -1388,7 +1388,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAACk=</string> </persistent>
+                                  <persistent> <bytes encoding="base64">AAAAAAAAACk=</bytes> </persistent>
                                 </value>
                             </item>
                             <item>

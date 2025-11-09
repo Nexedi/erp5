@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test Scan Document Preference</unicode> </value>
+            <value> <string>Test Scan Document Preference</string> </value>
         </item>
       </dictionary>
     </pickle>

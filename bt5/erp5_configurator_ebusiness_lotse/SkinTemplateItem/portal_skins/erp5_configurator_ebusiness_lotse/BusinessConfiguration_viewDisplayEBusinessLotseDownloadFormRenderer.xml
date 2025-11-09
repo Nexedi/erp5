@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Final download form message</unicode> </value>
+            <value> <string>Final download form message</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>XXX - Use layout and fields instead </unicode> </value>
+            <value> <string>XXX - Use layout and fields instead </string> </value>
         </item>
       </dictionary>
     </pickle>
