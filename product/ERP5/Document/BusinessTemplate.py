@@ -154,6 +154,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Image":               (None,   0, "data",         False),
   "Interface Component": ("py",   0, "text_content", True ),
   "OOoTemplate":         ("oot",  1, "_text",        True ),
+  "MailTemplate":        ("mt",   1, "_text",        True ),
   "Mixin Component":     ("py",   0, "text_content", True ),
   "Module Component":    ("py",   0, "text_content", True ),
   "PDF":                 ("pdf",  0, "data",         False),
@@ -611,7 +612,7 @@ class BaseTemplateItem(Implicit, Persistent):
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
-      elif classname in ('File', 'Image'):
+      elif classname in ('File', 'Embedded File', 'Image', 'Embedded Image'):
         attr_set.update(('_EtagSupport__etag', 'size'))
       # SQL covers both ZSQL Methods and ERP5 SQL Methods
       elif isinstance(obj, SQL):
@@ -627,6 +628,12 @@ class BaseTemplateItem(Implicit, Persistent):
     for attr in list(obj.__dict__):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
+
+    if six.PY2:
+      if (classname in ('ZopePageTemplate', 'OOoTemplate')
+           and 'title' in obj.__dict__
+           and isinstance(obj.title, six.text_type)):
+        obj.title = obj.title.encode('utf-8')
 
     return obj
 
@@ -1542,6 +1549,9 @@ class ObjectTemplateItem(BaseTemplateItem):
             # mime_type too...
             from Products.ERP5Type.patches.OFSFile import _setData
             _setData(obj, obj.data)
+        elif six.PY2 and obj.__class__.__name__ in ('ZopePageTemplate', 'OOoTemplate'):
+          if ('title' in obj.__dict__) and not isinstance(obj.title, six.text_type):
+            obj.title = obj.title.decode('utf-8')
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
