@@ -170,7 +170,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Date</string>
+                          <string>creation_date</string>
                           <string>asc</string>
                         </tuple>
                       </list>
