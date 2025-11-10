@@ -66,7 +66,7 @@ def __init__(self, ob_id):
     self._resetCacheId()
 
 def manage_editProps(self, title, settings=None, REQUEST=None):
-    ' '
+    'manage_editProps'
     if settings is None:
         settings = REQUEST
     self.title = str(title)
@@ -87,7 +87,7 @@ def manage_editProps(self, title, settings=None, REQUEST=None):
 
 
 def getSettings(self):
-    ' '
+    'getSettings'
     if 'stale_if_error_interval' not in self._settings:
         self._settings.update({'stale_if_error_interval' : 0})
     if 'stale_while_revalidate_interval' not in self._settings:

@@ -53,6 +53,7 @@ class ToolComponent(DocumentComponent):
   _message_meta_type_invalid = "'meta_type' class property must be '${meta_type}'"
   def checkConsistency(self, *args, **kw):
     """
+    checkConsistency
     """
     error_list = super(ToolComponent, self).checkConsistency(*args ,**kw)
     if not error_list:

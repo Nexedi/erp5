@@ -552,12 +552,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declareProtected(Permissions.ManagePortal, 'setColumnList')
     def setColumnList(self, column_list):
       """
+        Set all the schema columns from a list
       """
       self._sql_schema = column_list
 
     security.declarePublic('getColumnList')
     def getColumnList(self):
       """
+        Get all the schema columns as a list
       """
       if not hasattr(self, '_sql_schema'): self._sql_schema = []
       return self._sql_schema
@@ -565,6 +567,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declarePublic('getColumn')
     def getColumn(self, column_id):
       """
+        Get the column by ID
       """
       for c in self.getColumnList():
         if c.id == column_id:
@@ -588,12 +591,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declareProtected(Permissions.ManagePortal, 'setIndexList')
     def setIndexList(self, index_list):
       """
+        Set the index list
       """
       self._sql_index = index_list
 
     security.declarePublic('getIndexList')
     def getIndexList(self):
       """
+        Get the index list
       """
       if not hasattr(self, '_sql_index'): self._sql_index = []
       return self._sql_index
@@ -601,6 +606,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declarePublic('getIndex')
     def getIndex(self, index_id):
       """
+        Get the column by index ID
       """
       for c in self.getIndexList():
         if c.id == index_id:

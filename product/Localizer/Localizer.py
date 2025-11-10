@@ -121,7 +121,7 @@ class Localizer(LanguageManager, Folder):
 
     security.declarePublic('get_selected_language')
     def get_selected_language(self):
-        """ """
+        """Get selected language"""
         return lang_negotiator(self._languages) \
                or self._default_language
 
@@ -144,7 +144,7 @@ class Localizer(LanguageManager, Folder):
 
     security.declarePublic('hooked')
     def hooked(self):
-        """ """
+        """hooked"""
         if queryBeforeTraverse(aq_parent(self), self.meta_type):
             return 1
         return 0

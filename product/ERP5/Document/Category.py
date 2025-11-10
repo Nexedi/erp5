@@ -149,6 +149,7 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
                               'experimental_listDAVObjects')
     def experimental_listDAVObjects(self):
       """
+      experimental_listDAVObjects
       """
       LOG("Category listDAVObjects" ,0, "listDAVObjects")
       # XXX - We should try to use only Lazy Maps and to set a limit to the

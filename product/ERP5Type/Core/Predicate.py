@@ -291,6 +291,7 @@ class Predicate(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
   def searchResults(self, **kw):
     """
+    searchResults
     """
     return self.getPortalObject().portal_catalog.searchResults(
       predicate_internal_query=self.asQuery(),
@@ -300,6 +301,7 @@ class Predicate(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'countResults')
   def countResults(self, REQUEST=None, used=None, **kw):
     """
+    countResults
     """
     return self.getPortalObject().portal_catalog.countResults(
       predicate_internal_query=self.asQuery(),

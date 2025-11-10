@@ -56,6 +56,9 @@ class DomainTool(BaseTool):
   # (some users are not able to see resource's price)
   security.declarePublic('searchPredicateList')
   def searchPredicateList(self, *args, **kw):
+    """
+    Public method for _searchPredicateList()
+    """
     return self._searchPredicateList(restricted=True, *args, **kw)
 
   def _searchPredicateList(self, context, test=1, sort_method=None,

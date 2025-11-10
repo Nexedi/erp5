@@ -912,6 +912,7 @@ class ActivityTool (BaseTool):
     security.declareProtected(Permissions.manage_properties, 'manage_hideCancelAndInvokeLinks')
     def manage_hideCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
         """
+        manage_hideCancelAndInvokeLinks
         """
         self.cancel_and_invoke_links_hidden = True
         if RESPONSE is not None:
@@ -922,6 +923,7 @@ class ActivityTool (BaseTool):
     security.declareProtected(Permissions.manage_properties, 'manage_showCancelAndInvokeLinks')
     def manage_showCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
         """
+        manage_showCancelAndInvokeLinks
         """
         self.cancel_and_invoke_links_hidden = False
         if RESPONSE is not None:

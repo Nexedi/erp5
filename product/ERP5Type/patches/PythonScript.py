@@ -38,6 +38,7 @@ _guard_form = DTMLFile(
 
 def manage_guardForm(self, REQUEST, manage_tabs_message=None):
   '''
+  manage_guardForm
   '''
   return self._guard_form(REQUEST,
                           management_view='Guard',
@@ -46,6 +47,7 @@ def manage_guardForm(self, REQUEST, manage_tabs_message=None):
 
 def manage_setGuard(self, props=None, REQUEST=None):
   '''
+  manage_setGuard
   '''
   g = Guard()
   if g.changeFromProperties(props or REQUEST):
