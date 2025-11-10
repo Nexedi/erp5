@@ -247,7 +247,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     #######################################################################
     security.declarePublic('message_exists')
     def message_exists(self, message):
-        """ """
+        """Return true if the given message exists"""
         # BBB call get_message_key to support both (old) str key and
         # (new) unicode key.
         return bool(self.get_message_key(message))
@@ -563,7 +563,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
     security.declarePublic('get_policies')
     def get_policies(self):
-        """ """
+        """Get all the policies as a list"""
         if not hasattr(self, 'policy'):
             self.policy = self.POLICY_ADD_TRUE
         policies = [
@@ -576,7 +576,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
     security.declarePublic('get_charsets')
     def get_charsets(self):
-        """ """
+        """Get all the charsets as new list"""
         return charsets[:]
 
 

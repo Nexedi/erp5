@@ -238,7 +238,7 @@ class LanguageManager(Tabs):
 
     security.declarePublic('need_upgrade')
     def need_upgrade(self):
-        """ """
+        """Return true if upgrade is needed"""
         return self._needs_upgrade()
 
 
