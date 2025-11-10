@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Common Template for All Renderjs ui Zuite</unicode> </value>
+            <value> <string>Common Template for All Renderjs ui Zuite</string> </value>
         </item>
       </dictionary>
     </pickle>
