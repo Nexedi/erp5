@@ -335,18 +335,31 @@ class CodingStyleTestCase(ERP5TypeTestCase, TestSecurityMixin):
     self.assertEqual(message_list, [])
 
   def test_method_protection(self):
-    message_list = []
+    portal_type_set = set()
+    component_set = set()
     for business_template in self._getTestedBusinessTemplateValueList():
-      for portal_type in business_template.getTemplatePortalTypeIdList():
-        document, content_portal_type_list = findContentChain(
-            self.portal, portal_type)
-        for content_portal_type in content_portal_type_list:
-          document = document.newContent(portal_type=content_portal_type)
-        error_dict = self._checkObjectAllMethodProtection(document)
-        for (filename, lineno), method_id in sorted(error_dict.items()):
-          if ((six.PY2 and filename.startswith('<portal_components')) or
-              (six.PY3 and filename.startswith('erp5://'))):
-            message_list.append("%s: %s: %s()" % (filename, lineno, method_id))
+      portal_type_set.update(business_template.getTemplatePortalTypeIdList())
+      component_set.update(business_template.getTemplateModuleComponentIdList())
+      component_set.update(business_template.getTemplateMixinIdList())
+      component_set.update(business_template.getTemplateDocumentIdList())
+      component_set.update(business_template.getTemplateToolComponentIdList())
+
+    message_list = []
+    for portal_type in portal_type_set:
+      document, content_portal_type_list = findContentChain(
+          self.portal, portal_type)
+      for content_portal_type in content_portal_type_list:
+        document = document.newContent(portal_type=content_portal_type,
+                                       temp_object=True)
+      error_dict = self._checkObjectAllMethodProtection(document)
+      for (filename, lineno), method_id in sorted(error_dict.items()):
+        if ((six.PY2 and
+             filename.startswith('<portal_components') and
+             filename[len('<portal_components/'):-1] in component_set) or
+            (six.PY3 and
+             filename.startswith('erp5://') and
+             filename[len('erp5://portal_components/'):] in component_set)):
+          message_list.append("%s: %s: %s()" % (filename, lineno, method_id))
     self.assertEqual(message_list, [])
 
   def _getTestedWorkflowValueList(self):
