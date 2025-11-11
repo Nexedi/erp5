@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>KM Content and Section</unicode> </value>
+            <value> <string>KM Content and Section</string> </value>
         </item>
       </dictionary>
     </pickle>

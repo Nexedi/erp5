@@ -425,7 +425,7 @@ WebSection_getDroneCaptureFlagPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -480,7 +480,7 @@ WebSection_getDroneCaptureFlagPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
