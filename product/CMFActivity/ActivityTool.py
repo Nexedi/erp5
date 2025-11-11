@@ -27,7 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 from six import string_types as basestring
-from Products.ERP5Type.Utils import ensure_list, str2unicode
+from Products.ERP5Type.Utils import ensure_list, str2unicode, publishable
 
 import copy
 import socket
@@ -910,9 +910,8 @@ class ActivityTool (BaseTool):
       return self.cancel_and_invoke_links_hidden
 
     security.declareProtected(Permissions.manage_properties, 'manage_hideCancelAndInvokeLinks')
+    @publishable
     def manage_hideCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
-        """
-        """
         self.cancel_and_invoke_links_hidden = True
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
@@ -920,9 +919,8 @@ class ActivityTool (BaseTool):
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'manage_showCancelAndInvokeLinks')
+    @publishable
     def manage_showCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
-        """
-        """
         self.cancel_and_invoke_links_hidden = False
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
