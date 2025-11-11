@@ -39,7 +39,8 @@ from persistent import Persistent
 from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.Utils import simple_decorator
+from Products.ERP5Type.Utils import simple_decorator, non_publishable
+from Products.ERP5Type.Globals import InitializeClass
 from warnings import warn
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
@@ -99,6 +100,7 @@ class CacheCookieMixin:
       return ZODBCookie.value
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newCacheCookie')
+  @non_publishable
   def newCacheCookie(self, cache_name):
     """Invalidate cache for this object"""
     cache_name = '_cache_cookie_' + cache_name
@@ -106,7 +108,7 @@ class CacheCookieMixin:
       self.__dict__[cache_name].value += 1
     except KeyError:
       setattr(self, cache_name, ZODBCookie())
-
+InitializeClass(CacheCookieMixin)
 
 class CacheFactory:
   """ CacheFactory is a RAM based object which contains different cache plugin

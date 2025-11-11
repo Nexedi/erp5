@@ -15,6 +15,9 @@
 from six import string_types as basestring
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
+from AccessControl.SecurityInfo import ClassSecurityInfo
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import InitializeClass
 
 from _thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
@@ -67,6 +70,9 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
   return skin_selection_mapping
 
 Skinnable.SkinnableObjectManager.initializeCache = CMFCoreSkinnableSkinnableObjectManager_initializeCache
+Skinnable.SkinnableObjectManager.security = ClassSecurityInfo()
+Skinnable.SkinnableObjectManager.security.declareProtected(Permissions.ManagePortal, 'initializeCache')
+InitializeClass(Skinnable.SkinnableObjectManager)
 
 def skinResolve(self, selection, name):
   try:

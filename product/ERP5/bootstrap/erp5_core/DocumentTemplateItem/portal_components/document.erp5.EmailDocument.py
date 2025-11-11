@@ -33,7 +33,7 @@ from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import non_publishable, str2bytes
+from Products.ERP5Type.Utils import publishable, non_publishable, str2bytes
 from erp5.component.document.TextDocument import TextDocument
 from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
@@ -191,9 +191,8 @@ class EmailDocument(TextDocument, MailMessageMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isSupportBaseDataConversion')
+  @publishable
   def isSupportBaseDataConversion(self):
-    """
-    """
     return False
 
   # Overriden methods

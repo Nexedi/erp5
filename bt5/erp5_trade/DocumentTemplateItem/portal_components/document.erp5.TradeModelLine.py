@@ -30,6 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import publishable
 from erp5.component.document.AmountGeneratorLine import AmountGeneratorLine
 
 class TradeModelLine(AmountGeneratorLine):
@@ -53,9 +54,8 @@ class TradeModelLine(AmountGeneratorLine):
   # not defined
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMappedValuePropertyList')
+  @publishable
   def getMappedValuePropertyList(self):
-    """
-    """
     result = self._baseGetMappedValuePropertyList()
     if result:
       return result
