@@ -80,7 +80,7 @@ AQABAEMAAAB9AQAAAAA=</bytes> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Budget Consumption</unicode> </value>
+            <value> <string>Budget Consumption</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Common Template for ListBoxZuite</unicode> </value>
+            <value> <string>Common Template for ListBoxZuite</string> </value>
         </item>
       </dictionary>
     </pickle>

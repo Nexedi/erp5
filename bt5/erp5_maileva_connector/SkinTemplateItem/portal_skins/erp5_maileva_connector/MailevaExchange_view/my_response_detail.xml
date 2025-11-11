@@ -28,19 +28,19 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>line_too_long</unicode> </key>
+                    <key> <string>line_too_long</string> </key>
                     <value> <string>A line was too long.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>required_not_found</unicode> </key>
+                    <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>too_long</unicode> </key>
+                    <key> <string>too_long</string> </key>
                     <value> <string>You entered too many characters.</string> </value>
                 </item>
                 <item>
-                    <key> <unicode>too_many_lines</unicode> </key>
+                    <key> <string>too_many_lines</string> </key>
                     <value> <string>You entered too many lines.</string> </value>
                 </item>
               </dictionary>

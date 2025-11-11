@@ -71,7 +71,7 @@
                 <item>
                     <key> <string>cell</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -142,13 +142,13 @@
                 <item>
                     <key> <int>0</int> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <int>1</int> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
