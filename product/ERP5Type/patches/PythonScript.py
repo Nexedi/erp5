@@ -23,6 +23,7 @@ from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
 from zExceptions import Forbidden
 from Products.ERP5Type import IS_ZOPE2
+from Products.ERP5Type.Utils import publishable
 
 ### Guards
 
@@ -36,17 +37,15 @@ _guard_manage_options = (
 _guard_form = DTMLFile(
   'editGuardForm', _dtmldir)
 
+@publishable
 def manage_guardForm(self, REQUEST, manage_tabs_message=None):
-  '''
-  '''
   return self._guard_form(REQUEST,
                           management_view='Guard',
                           manage_tabs_message=manage_tabs_message,
     )
 
+@publishable
 def manage_setGuard(self, props=None, REQUEST=None):
-  '''
-  '''
   g = Guard()
   if g.changeFromProperties(props or REQUEST):
     guard = self.guard

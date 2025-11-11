@@ -137,9 +137,6 @@ class Connection(Shared.DC.ZRDB.Connection.Connection):
             return self._v_tables.__of__(self)
         raise KeyError(name)
 
-    def manage_wizard(self, tables):
-        " "
-
     def manage_join(self, tables, select_cols, join_cols, REQUEST=None):
         """Create an SQL join"""
 

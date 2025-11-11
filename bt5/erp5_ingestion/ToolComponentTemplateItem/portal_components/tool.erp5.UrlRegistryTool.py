@@ -30,6 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type.Utils import publishable
 from Products.ERP5Type import Permissions
 from Acquisition import Implicit
 from BTrees.OOBTree import OOBTree
@@ -145,9 +146,8 @@ class UrlRegistryTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getURLListFromReference')
+  @publishable
   def getURLListFromReference(self, reference, context=None):
-    """
-    """
     if context is not None:
       warn('context argument ignored', DeprecationWarning)
     mapping = self._getMappingDict()

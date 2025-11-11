@@ -57,6 +57,7 @@ class StripeConnector(XMLObject):
     PropertySheet.DublinCore
   )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'serializeSessionParameter')
   def serializeSessionParameter(self, request_data, key, value):
     if isinstance(value, list) or isinstance(value, dict):
       iterator = six.iteritems(value) if isinstance(value, dict) else enumerate(value)
@@ -68,6 +69,7 @@ class StripeConnector(XMLObject):
     else:
       request_data[key] = value
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'createSession')
   def createSession(self, data, **kw):
     """
       Create Session in Stripe using Stripe API and return a checkout.session
@@ -104,6 +106,7 @@ class StripeConnector(XMLObject):
       response.raise_for_status()
     return response.json()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'retrieveSession')
   def retrieveSession(self, session_id, **kw):
     """
       Retrieve Session in Stripe using Stripe API and return a checkout.session

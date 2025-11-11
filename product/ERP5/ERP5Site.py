@@ -1590,6 +1590,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('tab') or \
            self._getPortalConfiguration('portal_tab_base_category_list')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDefaultGapRoot')
   def getPortalDefaultGapRoot(self):
     """
       Return the Accounting Plan to use by default (return the root node)
@@ -1601,6 +1603,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self.portal_preferences.getPreferredAccountingTransactionGap() or \
            self._getPortalConfiguration('portal_default_gap_root')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAccountingMovementTypeList')
   def getPortalAccountingMovementTypeList(self) :
     """
       Return accounting movement type list.
@@ -1608,6 +1612,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('accounting_movement') or \
         self._getPortalConfiguration('portal_accounting_movement_type_list')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAccountingTransactionTypeList')
   def getPortalAccountingTransactionTypeList(self) :
     """
       Return accounting transaction movement type list.
@@ -1673,7 +1679,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('target_solver')
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalTargetSolverTypeList')
+                            'getPortalDeliverySolverTypeList')
   def getPortalDeliverySolverTypeList(self):
     """
     Return delivery solver types.
