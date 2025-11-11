@@ -1,7 +1,10 @@
 Expense Record | ExpenseRecord
+Expense Record | Record
 Expense Validation Request | ExpenseValidationRequest
 Expense Validation Request | ExpenseValidationRequestConstraint
 Leave Request Record | LeaveRequestRecord
+Leave Request Record | Record
 Localisation Record | GeographicalPoint
+Travel Request Record | Record
 Travel Request Record | TravelRequestRecord
 Travel Request | TravelRequest
