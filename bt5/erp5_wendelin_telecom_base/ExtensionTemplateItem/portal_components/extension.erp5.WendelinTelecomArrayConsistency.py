@@ -48,11 +48,17 @@ def checkDuplicatedEntryConsistency(self, fixit=False, debug=False):
   data_frame = pd.DataFrame.from_records(data_zarray)
 
   duplication = data_frame.duplicated(subset=subset_columns, keep=False)
-  if duplication.any():
-    if debug:
-      return data_frame[duplication].to_dict(orient='list')
-    return ['This Data Array constains an unexpected duplication.']
-  return []
+  if not duplication.any():
+    return []
+
+  if fixit:
+    data_frame = data_frame.drop_duplicates(subset=subset_columns,
+                                            keep='first')
+    self.setArray(data_frame.to_records(index=False))
+    return ['Fixed this Data Array duplication.']
+  if debug:
+    return data_frame[duplication].to_dict(orient='list')
+  return ['This Data Array constains an unexpected duplication.']
 
 
 
