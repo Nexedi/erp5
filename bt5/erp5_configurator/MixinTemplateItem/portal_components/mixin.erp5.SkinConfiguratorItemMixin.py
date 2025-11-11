@@ -28,6 +28,10 @@
 #
 ##############################################################################
 
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
+from Products.ERP5Type.Globals import InitializeClass
 from zLOG import LOG, INFO
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 
@@ -36,10 +40,11 @@ class SkinConfiguratorItemMixin(ConfiguratorItemMixin):
   """ Mixin which allows to create python scripts and/or skin
       elements during the configuration.
   """
+  security = ClassSecurityInfo()
 
+  security.declareProtected(Permissions.ManagePortal, 'install')
+  @publishable
   def install(self, skinfolder, business_configuration, prefix=''):
-    """
-    """
     bt5_obj = business_configuration.getSpecialiseValue()
     if bt5_obj is None:
       LOG('ConfiguratorItem', INFO,
@@ -80,3 +85,5 @@ class SkinConfiguratorItemMixin(ConfiguratorItemMixin):
     script.ZPythonScript_edit(script_params, script_content)
     container.getPortalObject().changeSkin(None)
     return script
+
+InitializeClass(SkinConfiguratorItemMixin)

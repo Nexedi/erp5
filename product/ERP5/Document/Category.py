@@ -143,20 +143,3 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
           del request[cache_key][name]
         raise
       return None
-
-    # Experimental - WebDAV browsing support - ask JPS
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'experimental_listDAVObjects')
-    def experimental_listDAVObjects(self):
-      """
-      """
-      LOG("Category listDAVObjects" ,0, "listDAVObjects")
-      # XXX - We should try to use only Lazy Maps and to set a limit to the
-      # number of objects
-      # First show the subcategories
-      result = list(self.objectValues(spec=('ERP5 Category', 'ERP5 Base Category')))
-      # Then show the related documents
-      result.extend(self.portal_categories.getRelatedValueList(
-                    self, self.getBaseCategory().getId(), portal_type="Person"))
-      return result
-

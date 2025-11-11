@@ -28,11 +28,15 @@
 #
 ##############################################################################
 
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from zLOG import LOG, INFO
 
 class ConfiguratorItemMixin:
   """ This is the base class for all configurator item. """
+  security = ClassSecurityInfo()
 
   def getBusinessConfigurationValue(self):
     item = self
@@ -45,6 +49,7 @@ class ConfiguratorItemMixin:
         object_relative_url=self.getRelativeUrl(),
         message=message)
 
+  security.declareProtected(Permissions.ManagePortal, 'install')
   def install(self, document, business_configuration, prefix=''):
     """ Add object to customer customization template. """
     bt5_obj = business_configuration.getSpecialiseValue()
@@ -62,3 +67,5 @@ class ConfiguratorItemMixin:
     current_template_path_list = list(bt5_obj.getTemplatePathList())
     current_template_path_list.extend(template_path_list)
     bt5_obj.edit(template_path_list=current_template_path_list)
+
+InitializeClass(ConfiguratorItemMixin)

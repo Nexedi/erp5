@@ -31,6 +31,7 @@ from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
 
 import zope.interface
 import re
@@ -51,9 +52,8 @@ class ToolComponent(DocumentComponent):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   _message_meta_type_invalid = "'meta_type' class property must be '${meta_type}'"
+  @publishable
   def checkConsistency(self, *args, **kw):
-    """
-    """
     error_list = super(ToolComponent, self).checkConsistency(*args ,**kw)
     if not error_list:
       expected_meta_type = 'ERP5 ' + ''.join([(c if c.islower() else ' ' + c)
