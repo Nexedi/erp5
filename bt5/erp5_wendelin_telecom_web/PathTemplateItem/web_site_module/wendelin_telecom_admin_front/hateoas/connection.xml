@@ -274,7 +274,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -329,7 +329,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -393,7 +393,7 @@
               <dictionary>
                 <item>
                     <key> <string>source_item</string> </key>
-                    <value> <unicode>/erp5/web_site_module/ors_wendelin_manager_front</unicode> </value>
+                    <value> <string>/erp5/web_site_module/ors_wendelin_manager_front</string> </value>
                 </item>
               </dictionary>
             </value>

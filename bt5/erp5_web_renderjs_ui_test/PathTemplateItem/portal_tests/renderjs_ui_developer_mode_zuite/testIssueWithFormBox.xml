@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test Issue with Formbox</unicode> </value>
+            <value> <string>Test Issue with Formbox</string> </value>
         </item>
       </dictionary>
     </pickle>

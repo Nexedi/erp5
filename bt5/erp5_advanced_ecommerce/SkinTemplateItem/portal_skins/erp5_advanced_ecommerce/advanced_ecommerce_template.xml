@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Default Template</unicode> </value>
+            <value> <string>Default Template</string> </value>
         </item>
       </dictionary>
     </pickle>
