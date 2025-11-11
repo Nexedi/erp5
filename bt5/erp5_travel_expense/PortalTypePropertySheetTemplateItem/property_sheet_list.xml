@@ -1,6 +1,7 @@
 <property_sheet_list>
  <portal_type id="Expense Record">
   <item>ExpenseRecord</item>
+  <item>Record</item>
  </portal_type>
  <portal_type id="Expense Validation Request">
   <item>ExpenseValidationRequest</item>
@@ -8,6 +9,7 @@
  </portal_type>
  <portal_type id="Leave Request Record">
   <item>LeaveRequestRecord</item>
+  <item>Record</item>
  </portal_type>
  <portal_type id="Localisation Record">
   <item>GeographicalPoint</item>
@@ -16,6 +18,7 @@
   <item>TravelRequest</item>
  </portal_type>
  <portal_type id="Travel Request Record">
+  <item>Record</item>
   <item>TravelRequestRecord</item>
  </portal_type>
 </property_sheet_list>
