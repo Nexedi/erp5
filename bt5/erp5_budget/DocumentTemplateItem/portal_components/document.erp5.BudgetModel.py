@@ -28,6 +28,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import publishable
 from Products.ERP5Type.Core.Predicate import Predicate
 
 class BudgetModel(Predicate):
@@ -165,8 +166,8 @@ class BudgetModel(Predicate):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asBudgetPredicate')
+  @publishable
   def asBudgetPredicate(self):
-    " "
     # XXX predicate for line / cell ?
 
   def getBudgetConsumptionMethod(self, budget_cell):
