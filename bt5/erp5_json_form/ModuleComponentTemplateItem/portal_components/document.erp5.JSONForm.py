@@ -71,6 +71,7 @@ class JSONForm(JSONType, TextDocument):
       return getattr(getattr(self, 'aq_parent', None), self.getAfterMethodId())(json_data, self)
     return "Nothing to do"
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'validateJSON')
   def validateJSON(self, json_data, list_error=False):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
