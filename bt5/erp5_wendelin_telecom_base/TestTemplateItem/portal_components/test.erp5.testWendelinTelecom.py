@@ -25,6 +25,9 @@
 #
 ##############################################################################
 from erp5.component.test.WendelinTelecomMixin import generateRandomString, TestWendelinTelecomMixin, QCI_COUNT
+import pandas as pd
+import numpy as np
+import transaction
 
 from six.moves.http_client import NO_CONTENT
 import json
@@ -529,15 +532,47 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     for data_array in ingestion_item_dict['data_array_list']:
       if 'e_rab' in data_array.getReference():
         self.assertEqual(data_array.checkConsistency(), [])
+
       if 'cell_ue_count' in data_array.getReference():
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        # Force duplication
+        data_zarray = data_array.getArray()
+        data_frame = pd.DataFrame.from_records(data_zarray[:])
+        dup_data_zarray = data_frame.to_records(index=False)
+        data_array.setArray(
+          np.concatenate((data_zarray, dup_data_zarray)))
+        transaction.commit()
         self.assertEqual([i.message for i in data_array.checkConsistency()],
-          [])
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+
       elif 'cell_rrc' in data_array.getReference():
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        data_zarray = data_array.getArray()
+        data_frame = pd.DataFrame.from_records(data_zarray[:])
+        dup_data_zarray = data_frame.to_records(index=False)
+        data_array.setArray(
+          np.concatenate((data_zarray, dup_data_zarray)))
+        transaction.commit()
         self.assertEqual([i.message for i in data_array.checkConsistency()],
-          [])
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+
       elif 'cell_rms_rx' in data_array.getReference():
         self.assertEqual([i.message for i in data_array.checkConsistency()],
           ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
 
   def test_05_1_ingestValidOrsLogDataFromFluentd(self, data_key="valid"):
     '''
