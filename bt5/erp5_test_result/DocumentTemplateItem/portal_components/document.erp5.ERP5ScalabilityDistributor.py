@@ -214,6 +214,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
       return generated_configuration
     return json.dumps(generated_configuration)
 
+  security.declarePublic("getRunningTestCase")
   def getRunningTestCase(self, test_result_path, batch_mode=0):
     """
     getRunningTestCase : return informations about the running test case,

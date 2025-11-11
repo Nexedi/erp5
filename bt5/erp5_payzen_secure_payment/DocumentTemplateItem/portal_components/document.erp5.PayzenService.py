@@ -120,6 +120,8 @@ class PayzenService(XMLObject, PayzenREST):
                     , PropertySheet.Reference
                     , PropertySheet.SocketClient
                     )
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'initialize')
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
 
@@ -173,6 +175,7 @@ class PayzenService(XMLObject, PayzenREST):
     payzen_dict['signature'] = signature
     return sorted(six.iteritems(payzen_dict))
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'navigate')
   def navigate(self, page_template, payzen_dict, REQUEST=None, **kw):
     """Returns configured template used to do the payment"""
     check_result = self.checkConsistency()
@@ -196,16 +199,19 @@ class PayzenService(XMLObject, PayzenREST):
     )
     return getattr(temp_document, page_template)()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifySuccess')
   def notifySuccess(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
     # return self._getTypeBasedMethod("acceptPayment")(**kw)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyFail')
   def notifyFail(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
     # return self._getTypeBasedMethod("failInPayment")(**kw)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyCancel')
   def notifyCancel(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError

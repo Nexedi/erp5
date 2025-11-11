@@ -31,6 +31,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 class OAuth2Session(XMLObject):
   security = ClassSecurityInfo()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExpirationDate')
   def getExpirationDate(self):
     """
     Return the earliest expiration date between policy's and refresh token's.
@@ -58,6 +59,7 @@ class OAuth2Session(XMLObject):
     """
     self.setIntIndex(self.getIntIndex() + 1)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFloatIndex')
   def getFloatIndex(self):
     """
     So the expiration date is present in catalog table. Used by
