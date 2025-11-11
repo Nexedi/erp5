@@ -1319,6 +1319,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                   'my_message_different_state',
               ) and (self.getId(), f.getId()) not in (
                     # Field used in API
+                    ('Base_viewAsJio', 'my_validation_state'),
+                    ('Service_viewAsJio', 'my_validation_state'),
                     ('Ticket_viewAsHateoas', 'my_simulation_state_title'),
                     # Preference unrelated to workflow states.
                     ('SystemPreference_viewSlapOS', 'my_preferred_shacache_website_expected_state'),
