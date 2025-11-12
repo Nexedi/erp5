@@ -399,3 +399,26 @@ def enable_zodbupdate_load_monkey_patch():
 
         return _original_getCopy(self, container)
     CopySource._getCopy = _getCopy_with_migration
+
+
+    # PyPDF2.generic.ByteStringObject are a sub-class of bytes, that have their state
+    # saved with a BINSTRING on py2. This is a minimal patch to be able to load
+    # these instances on py3.
+    # We had cases where they are saved in _content_information of erp5.portal_type.PDF
+    # the ByteStringObject itself does not contain anything important, but not being
+    # able to load the ByteStringObject prevents loading the PDF.
+    from PyPDF2.generic import ByteStringObject
+    def ByteStringObject__new__(cls, arg):
+        if isinstance(arg, str):
+            arg = arg.encode('utf-8')
+        return bytes.__new__(cls, arg)
+    ByteStringObject.__new__ = ByteStringObject__new__
+    # when serialized with protocol 1, we need collaboration from copyreg._reconstructor
+    import copyreg
+    _reconstructor_orig = copyreg._reconstructor
+    def _reconstructor(cls, base, state):
+        if cls is ByteStringObject and base is str:
+            base = bytes
+            state = state.encode('utf-8')
+        return _reconstructor_orig(cls, base, state)
+    copyreg._reconstructor = _reconstructor
