@@ -31,6 +31,9 @@ import six.moves.urllib as urllib
 import six.moves.http_client
 from DateTime import DateTime
 import six
+import unittest
+import ZODB.serialize
+import zodbpickle.slowpickle
 
 if six.PY3:
   try:
@@ -420,3 +423,50 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
     self.check_portal_ids()
     self.check_documents()
     self.check_catalog()
+
+
+class TestPython3PickleMigration(unittest.TestCase):
+
+  def _get_state_from_pickle(self, pickle_data):
+    _find_class = zodbpickle.slowpickle.Unpickler(io.BytesIO()).find_class
+    def _factory(conn, modulename, name):
+      return _find_class(modulename, name)
+    return ZODB.serialize.ObjectReader(factory=_factory).getState(pickle_data)
+
+  def test_PyPDF2_ByteStringObject(self):
+    # pickle for
+    # persistent.list.PersistentList([PyPDF2.generic.ByteStringObject(b'Hello')])
+    pickle_data = (
+      #     0: \x80 PROTO      3
+      #     2: c    GLOBAL     'persistent.list PersistentList'
+      #    34: q    BINPUT     1
+      #    36: .    STOP
+      # highest protocol among opcodes = 2
+      b'\x80\x03cpersistent.list\nPersistentList\nq\x01.'
+
+      #    37: \x80 PROTO      3
+      #    39: }    EMPTY_DICT
+      #    40: q    BINPUT     2
+      #    42: U    SHORT_BINSTRING 'data'
+      #    48: q    BINPUT     3
+      #    50: ]    EMPTY_LIST
+      #    51: q    BINPUT     4
+      #    53: c    GLOBAL     'PyPDF2.generic ByteStringObject'
+      #    86: q    BINPUT     5
+      #    88: U    SHORT_BINSTRING 'Hello'
+      #    95: q    BINPUT     6
+      #    97: \x85 TUPLE1
+      #    98: \x81 NEWOBJ
+      #    99: q    BINPUT     7
+      #   101: }    EMPTY_DICT
+      #   102: q    BINPUT     8
+      #   104: b    BUILD
+      #   105: a    APPEND
+      #   106: s    SETITEM
+      #   107: .    STOP
+      # highest protocol among opcodes = 2
+      b'\x80\x03}q\x02U\x04dataq\x03]q\x04cPyPDF2.generic\nByteStringObject\n'
+      b'q\x05U\x05Helloq\x06\x85\x81q\x07}q\x08bas.'
+    )
+    self.assertEqual(
+      self._get_state_from_pickle(pickle_data), {'data': [b'Hello']})
