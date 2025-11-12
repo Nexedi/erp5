@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from Products.ERP5Type.XMLObject import XMLObject
@@ -52,9 +53,8 @@ class DomainGenerator(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getDomainGeneratorList' )
+  @publishable
   def getDomainGeneratorList(self, depth=0, klass=None, script='', parent=None):
-    """
-    """
     # check parameters
     if script == '':
       return []

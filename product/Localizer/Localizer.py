@@ -39,6 +39,7 @@ from .utils import lang_negotiator
 from .LanguageManager import LanguageManager
 
 from Products.ERP5Type import IS_ZOPE2
+from Products.ERP5Type.Utils import publishable
 
 # Constructors
 manage_addLocalizerForm = LocalDTMLFile('ui/Localizer_add', globals())
@@ -120,8 +121,8 @@ class Localizer(LanguageManager, Folder):
 
 
     security.declarePublic('get_selected_language')
+    @publishable
     def get_selected_language(self):
-        """ """
         return lang_negotiator(self._languages) \
                or self._default_language
 
@@ -143,8 +144,8 @@ class Localizer(LanguageManager, Folder):
 
 
     security.declarePublic('hooked')
+    @publishable
     def hooked(self):
-        """ """
         if queryBeforeTraverse(aq_parent(self), self.meta_type):
             return 1
         return 0
