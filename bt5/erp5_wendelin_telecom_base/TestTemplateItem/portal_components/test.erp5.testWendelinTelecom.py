@@ -534,6 +534,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
         self.assertEqual(data_array.checkConsistency(), [])
 
       if 'cell_ue_count' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
         self.assertEqual([],
           [i.message for i in data_array.checkConsistency()])
         # Force duplication
@@ -549,8 +550,10 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
         transaction.commit()
         self.assertEqual([],
           [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
 
       elif 'cell_rrc' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
         self.assertEqual([],
           [i.message for i in data_array.checkConsistency()])
         data_zarray = data_array.getArray()
@@ -565,14 +568,17 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
         transaction.commit()
         self.assertEqual([],
           [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
 
       elif 'cell_rms_rx' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
         self.assertEqual([i.message for i in data_array.checkConsistency()],
           ['This Data Array constains an unexpected duplication.'])
         data_array.fixConsistency()
         transaction.commit()
         self.assertEqual([],
           [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
 
   def test_05_1_ingestValidOrsLogDataFromFluentd(self, data_key="valid"):
     '''
