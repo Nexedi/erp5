@@ -21,6 +21,7 @@
 ##############################################################################
 
 import pandas as pd
+import numpy as np
 
 def checkDuplicatedEntryConsistency(self, fixit=False, debug=False):
   data_array_dtype = self.getArrayDtypeNames()
@@ -54,7 +55,10 @@ def checkDuplicatedEntryConsistency(self, fixit=False, debug=False):
   if fixit:
     data_frame = data_frame.drop_duplicates(subset=subset_columns,
                                             keep='first')
-    self.setArray(data_frame.to_records(index=False))
+    # to_records produces a recarray instead ndarray so
+    # we need to convert it to proper value.
+    self.setArray(
+      np.asanyarray(data_frame.to_records(index=False)))
     return ['Fixed this Data Array duplication.']
   if debug:
     return data_frame[duplication].to_dict(orient='list')
