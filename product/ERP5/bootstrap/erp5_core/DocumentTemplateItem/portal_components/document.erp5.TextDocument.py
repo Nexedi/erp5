@@ -44,7 +44,7 @@ from string import Template
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
-from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes, str2unicode, unicode2str
+from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes, str2unicode, unicode2str, publishable
 
 from lxml import html as etree_html
 from lxml import etree
@@ -260,9 +260,8 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
   _baseSetBaseContentType = _setBaseContentType
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
+  @publishable
   def getBaseData(self, default=_MARKER):
-    """
-    """
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
       text_content = self.getTextContent()
@@ -273,9 +272,8 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     return text_content
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @publishable
   def hasBaseData(self):
-    """
-    """
     return self.hasTextContent()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
@@ -403,17 +401,15 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
+  @publishable
   def getTextFormat(self, default=_MARKER):
-    """
-    """
     LOG('TextDocument', WARNING,
               'Usage of text_format is deprecated, use content_type instead')
     return self.getContentType(default)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setTextFormat')
+  @publishable
   def setTextFormat(self, value):
-    """
-    """
     LOG('TextDocument', WARNING,
               'Usage of text_format is deprecated, use content_type instead')
     return self.setContentType(value)

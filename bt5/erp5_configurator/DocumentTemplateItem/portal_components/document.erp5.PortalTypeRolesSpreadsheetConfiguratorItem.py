@@ -97,6 +97,8 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
 
     return error_list
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'checkSpreadSheetConsistency')
   def checkSpreadSheetConsistency(self):
     """Check that the spread sheet is consistent with categories spreadsheet.
 

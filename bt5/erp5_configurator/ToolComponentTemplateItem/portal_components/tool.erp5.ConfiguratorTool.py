@@ -93,6 +93,7 @@ class ConfiguratorTool(BaseTool):
 
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
 
+  security.declareProtected(Permissions.ManagePortal, 'login')
   def login(self, REQUEST):
     """ Login client and show next form. """
     bc = REQUEST.get('field_your_business_configuration')
@@ -115,7 +116,7 @@ class ConfiguratorTool(BaseTool):
     REQUEST.set(BUSINESS_CONFIGURATION_COOKIE_NAME, bc)
     return self.next(REQUEST=REQUEST)
 
-  #security.declareProtected(Permissions.ModifyPortalContent, 'next')
+  security.declareProtected(Permissions.ManagePortal, 'next')
   def next(self, REQUEST):
     """ Validate settings and return a new form to the user.  """
     # check if user is allowed to access service
@@ -284,7 +285,7 @@ class ConfiguratorTool(BaseTool):
                     data=self.BusinessConfiguration_viewStopForm())
     return response
 
-  #security.declareProtected(Permissions.ModifyPortalContent, 'previous')
+  security.declareProtected(Permissions.ManagePortal, 'previous')
   def previous(self, REQUEST):
     """ Display the previous form. """
     # check if user is allowed to access service

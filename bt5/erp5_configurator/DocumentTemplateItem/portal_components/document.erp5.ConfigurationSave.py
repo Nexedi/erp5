@@ -51,6 +51,7 @@ class ConfigurationSave(Path):
                     , PropertySheet.DublinCore
                     , PropertySheet.SortIndex )
 
+  security.declareProtected(Permissions.AddPortalContent, 'addConfigurationItem')
   def addConfigurationItem(self, configuration_item_class_name, **kw):
     """ Add new configuration item. """
     ## remove manually specified a configration title

@@ -32,6 +32,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import publishable
 from erp5.component.document.AmountGeneratorLine import AmountGeneratorLine
 
 
@@ -105,16 +106,14 @@ class TransformedResource(AmountGeneratorLine):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBaseApplication')
+  @publishable
   def getBaseApplication(self):
-    """
-    """
     return self.getBaseApplicationList()[0]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBaseApplicationList')
+  @publishable
   def getBaseApplicationList(self):
-    """
-    """
     # It is OK to try to acquire
     return self._categoryGetBaseApplicationList() \
         or ['base_amount/produced_quantity']

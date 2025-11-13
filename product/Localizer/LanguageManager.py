@@ -25,6 +25,7 @@ from .itools.i18n import get_language_name, get_languages
 from AccessControl.class_init import InitializeClass
 from App.Management import Tabs
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Utils import publishable
 
 # Import from Localizer
 from .LocalFiles import LocalDTMLFile
@@ -45,18 +46,19 @@ class LanguageManager(Tabs):
     ########################################################################
     # API
     ########################################################################
+    security.declarePublic('get_languages')
     def get_languages(self):
         """Returns all the object languages.
         """
         return self._languages
 
-
+    security.declareProtected('Manage languages', 'set_languages')
     def set_languages(self, languages):
         """Sets the object languages.
         """
         self._languages = tuple(languages)
 
-
+    security.declareProtected('Manage languages', 'add_language')
     def add_language(self, language):
         """Adds a new language.
         """
@@ -67,6 +69,7 @@ class LanguageManager(Tabs):
             new_language_list = tuple(sorted(new_language_list))
             self._languages = new_language_list
 
+    security.declareProtected('Manage languages', 'del_language')
     def del_language(self, language):
         """Removes a language.
         """
@@ -74,7 +77,7 @@ class LanguageManager(Tabs):
             languages = [ x for x in self._languages if x != language ]
             self._languages = tuple(languages)
 
-
+    security.declarePublic('get_languages_mapping')
     def get_languages_mapping(self):
         """Returns a list of dictionary, one for each objects language. The
         dictionary contains the language code, its name and a boolean value
@@ -85,7 +88,7 @@ class LanguageManager(Tabs):
                   'default': x == self._default_language}
                  for x in self._languages ]
 
-
+    security.declarePublic('get_available_languages')
     def get_available_languages(self, **kw):
         """Returns the langauges available. For example, a language could be
         considered as available only if there is some data associated to it.
@@ -96,7 +99,7 @@ class LanguageManager(Tabs):
         """
         return self._languages
 
-
+    security.declarePublic('get_default_language')
     def get_default_language(self):
         """Returns the default language.
 
@@ -113,15 +116,6 @@ class LanguageManager(Tabs):
     ########################################################################
     # Web API
     ########################################################################
-
-    # Security settings
-    security.declarePublic('get_languages')
-    security.declareProtected('Manage languages', 'set_languages')
-    security.declareProtected('Manage languages', 'add_language')
-    security.declareProtected('Manage languages', 'del_language')
-    security.declarePublic('get_languages_mapping')
-
-
     security.declarePublic('get_language_name')
     def get_language_name(self, id=None):
         """
@@ -136,11 +130,6 @@ class LanguageManager(Tabs):
             return self.get_user_defined_language_name(id) or language_name
         else:
             return language_name
-
-
-    security.declarePublic('get_available_languages')
-    security.declarePublic('get_default_language')
-
 
     # XXX Kept here temporarily, further refactoring needed
     security.declarePublic('get_selected_language')
@@ -200,8 +189,8 @@ class LanguageManager(Tabs):
 
 
     security.declareProtected('Manage languages', 'manage_addLanguage')
+    @publishable
     def manage_addLanguage(self, language, REQUEST=None, RESPONSE=None):
-        """ """
         self.add_language(language)
 
         if RESPONSE is not None:
@@ -209,8 +198,8 @@ class LanguageManager(Tabs):
 
 
     security.declareProtected('Manage languages', 'manage_delLanguages')
+    @publishable
     def manage_delLanguages(self, languages, REQUEST, RESPONSE):
-        """ """
         for language in languages:
             self.del_language(language)
 
@@ -218,8 +207,8 @@ class LanguageManager(Tabs):
 
 
     security.declareProtected('Manage languages', 'manage_changeDefaultLang')
+    @publishable
     def manage_changeDefaultLang(self, language, REQUEST=None, RESPONSE=None):
-        """ """
         self._default_language = language
 
         if REQUEST is not None:
@@ -237,16 +226,16 @@ class LanguageManager(Tabs):
 
 
     security.declarePublic('need_upgrade')
+    @publishable
     def need_upgrade(self):
-        """ """
         return self._needs_upgrade()
 
 
     security.declareProtected(
         'Manage Access Rules', 'manage_upgradeForm', 'manage_upgrade')
     manage_upgradeForm = LocalDTMLFile('ui/LM_upgrade', globals())
+    @publishable
     def manage_upgrade(self, REQUEST, RESPONSE):
-        """ """
         self._upgrade()
         RESPONSE.redirect('manage_main')
 
