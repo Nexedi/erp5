@@ -244,21 +244,24 @@ class _OAuth2AuthorisationServerProxy(object):
       timeout=timeout,
       source_address=self._bind_address,
     )
-    http_connection.request(
-      method='POST',
-      url=plain_url,
-      body=body,
-      headers=dict(header_dict),
-    )
-    http_response = http_connection.getresponse()
-    return (
-      {
-        name.lower(): value
-        for name, value in http_response.getheaders()
-      },
-      http_response.read(),
-      http_response.status,
-    )
+    try:
+      http_connection.request(
+        method='POST',
+        url=plain_url,
+        body=body,
+        headers=dict(header_dict),
+      )
+      http_response = http_connection.getresponse()
+      return (
+        {
+          name.lower(): value
+          for name, value in http_response.getheaders()
+        },
+        http_response.read(),
+        http_response.status,
+      )
+    finally:
+      http_connection.close()
 
   def _queryERP5(self, method_id, kw=()):
     header_dict, body, status = self._query(
