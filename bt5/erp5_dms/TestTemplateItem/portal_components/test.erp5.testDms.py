@@ -1421,7 +1421,19 @@ class TestDocument(TestDocumentMixin):
     from pickle import dumps
     dumps(content_information)
     # so document can be saved in ZODB
-    self.commit()
+    self.tic()
+
+  def test_PDF_bytes_metadata(self):
+    document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      file=self.makeFileUpload('bytes_metadata.pdf'))
+    content_information = document.getContentInformation()
+    self.assertEqual(
+      content_information['Title'], 'Screenshot 2025-11-12 20.58.40.png')
+    self.assertIn(
+      "I used a script to insert a \\x01", content_information['Producer'])
+    self.assertEqual({True}, {isinstance(v, str) for v in content_information.values()})
+    # document can be saved in ZODB
     self.tic()
 
   def test_upload_bad_pdf_file(self):
