@@ -269,7 +269,7 @@ class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
     head = '<span style="font-weight: bold; color: black;">%s</span>' \
            % real_path
     try:
-      with open(os.path.join(self.working_copy, path), 'rU') as f:
+      with open(os.path.join(self.working_copy, path), 'rU' if six.PY2 else 'r') as f:
         text = f.read()
     except IOError as e:
       if e.errno == errno.EISDIR:
