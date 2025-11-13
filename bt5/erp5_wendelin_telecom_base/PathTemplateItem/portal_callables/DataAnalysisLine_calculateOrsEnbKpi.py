@@ -64,6 +64,8 @@ try:
 except ValueError:
   end -= len(last_new_log_data_line)
   new_log_data_line_list = new_log_data_line_list[:-1]
+  if len(new_log_data_line_list) == 0:
+    return
 
 log_data_line_list = previous_log_data_line_list + new_log_data_line_list
 

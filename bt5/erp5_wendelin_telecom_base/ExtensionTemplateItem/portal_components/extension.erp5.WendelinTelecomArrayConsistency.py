@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2025 Nexedi SA and Contributors. All Rights Reserved.
@@ -21,6 +22,9 @@
 ##############################################################################
 
 import pandas as pd
+import numpy as np
+
+from wendelin.bigarray.array_zodb import ZBigArray
 
 def checkDuplicatedEntryConsistency(self, fixit=False, debug=False):
   data_array_dtype = self.getArrayDtypeNames()
@@ -48,11 +52,25 @@ def checkDuplicatedEntryConsistency(self, fixit=False, debug=False):
   data_frame = pd.DataFrame.from_records(data_zarray)
 
   duplication = data_frame.duplicated(subset=subset_columns, keep=False)
-  if duplication.any():
-    if debug:
-      return data_frame[duplication].to_dict(orient='list')
-    return ['This Data Array constains an unexpected duplication.']
-  return []
+  if not duplication.any():
+    return []
+
+  if fixit:
+    # If zbigzarray is too large, this is probably not appropriated way
+    # to de-duplicate the array.
+    data_frame = data_frame.drop_duplicates(subset=subset_columns,
+                                            keep='first')
+    dedup_ndarray = data_frame.to_records(index=False).view(np.ndarray)
+
+    zbigarray = ZBigArray((0,), self.getArrayDtype())
+    self.setArray(zbigarray)
+    data_zarray = self.getArray()
+    data_zarray.resize((dedup_ndarray.shape[0]))
+    data_zarray[:] = dedup_ndarray
+    return ['Fixed this Data Array duplication.']
+  if debug:
+    return data_frame[duplication].to_dict(orient='list')
+  return ['This Data Array constains an unexpected duplication.']
 
 
 
