@@ -28,9 +28,10 @@
 ##############################################################################
 
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type import Permissions
 from Products import ERP5Security
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl import getSecurityManager
+from AccessControl import getSecurityManager, ClassSecurityInfo
 
 class SecurePaymentTool(BaseTool):
   """
@@ -43,6 +44,9 @@ class SecurePaymentTool(BaseTool):
   portal_type = 'Secure Payment Tool'
   title = 'Secure Payments'
 
+  security = ClassSecurityInfo()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'find')
   def find(self, service_reference="default"):
     """Search a payment service by reference"""
     if service_reference:
@@ -67,12 +71,14 @@ class SecurePaymentTool(BaseTool):
       params =  {}
     return service, params
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'initialize')
   def initialize(self, service="default",
                        REQUEST=None, **kw):
     """Initialize the transaction with a service"""
     self._loginAsSuperUser()
     return self.find(service).initialize(REQUEST, **kw)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'navigate')
   def navigate(self, service="default",
                        REQUEST=None, **kw):
     """Navigate to service payment page"""
@@ -80,21 +86,25 @@ class SecurePaymentTool(BaseTool):
 
   #Use selection to minimize fallback url length. In exemple, Paybox limit to
   #150 chars.
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifySuccess')
   def notifySuccess(self, service='default',selection=None, REQUEST=None):
     """Notify the user of successful transaction"""
     service, params = self._getParametersFromSelection(service,selection)
     return self.find(service).notifySuccess(REQUEST=REQUEST, **params)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyFail')
   def notifyFail(self, service='default',selection=None, REQUEST=None):
     """Notify the user of failed transaction"""
     service, params = self._getParametersFromSelection(service,selection)
     return self.find(service).notifyFail(REQUEST=REQUEST, **params)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyCancel')
   def notifyCancel(self, service='default',selection=None, REQUEST=None):
     """Notify the user of cancelled transaction"""
     service, params = self._getParametersFromSelection(service,selection)
     return self.find(service).notifyCancel(REQUEST=REQUEST, **params)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'reportPaymentStatus')
   def reportPaymentStatus(self, service='default', REQUEST=None):
     """Notify the service of cancelled transaction"""
     self._loginAsSuperUser()

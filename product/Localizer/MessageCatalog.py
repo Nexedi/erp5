@@ -54,6 +54,7 @@ from zope.i18n.interfaces import ITranslationDomain
 from zope.interface import implementer
 from zLOG import LOG, INFO
 from zExceptions import Forbidden
+from Products.ERP5Type.Utils import publishable
 
 # Import from Localizer
 from .interfaces import IMessageCatalog
@@ -199,12 +200,11 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         """ """
         return six.text_type(self.id)
 
-
+    @publishable
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None,
                   # zope i18n 4.7
                   msgid_plural=None, default_plural=None, number=None):
-        """ """
         msgstr = self.gettext(msgid, lang=target_language, default=default)
         # BBB support str in mapping by converting to unicode for
         # backward compatibility.
@@ -246,16 +246,16 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     # Public API
     #######################################################################
     security.declarePublic('message_exists')
+    @publishable
     def message_exists(self, message):
-        """ """
         # BBB call get_message_key to support both (old) str key and
         # (new) unicode key.
         return bool(self.get_message_key(message))
 
 
     security.declareProtected('Manage messages', 'message_edit')
+    @publishable
     def message_edit(self, message, language, translation, note):
-        """ """
         # BBB call get_message_key to support both (old) str key and
         # (new) unicode key.
         message = self.get_message_key(message) or message
@@ -264,8 +264,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declareProtected('Manage messages', 'message_del')
+    @publishable
     def message_del(self, message):
-        """ """
         # BBB call get_message_key to support both (old) str key and
         # (new) unicode key.
         message = self.get_message_key(message) or message
@@ -477,8 +477,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declareProtected('Manage messages', 'manage_delMessage')
+    @publishable
     def manage_delMessage(self, message, REQUEST, RESPONSE):
-        """ """
         message = message_decode(message)
         message_key = self.get_message_key(message)
         self.message_del(message_key)
@@ -514,8 +514,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
     # Properties management screen
     security.declareProtected('View management screens', 'get_po_header')
+    @publishable
     def get_po_header(self, lang):
-        """ """
         # For backwards compatibility
         if not hasattr(aq_base(self), '_po_headers'):
             self._po_headers = PersistentMapping()
@@ -524,13 +524,13 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declareProtected('View management screens', 'update_po_header')
+    @publishable
     def update_po_header(self, lang,
                          last_translator_name=None,
                          last_translator_email=None,
                          language_team=None,
                          charset=None,
                          REQUEST=None, RESPONSE=None):
-        """ """
         header = self.get_po_header(lang)
 
         if last_translator_name is None:
@@ -562,8 +562,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declarePublic('get_policies')
+    @publishable
     def get_policies(self):
-        """ """
         if not hasattr(self, 'policy'):
             self.policy = self.POLICY_ADD_TRUE
         policies = [
@@ -575,8 +575,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declarePublic('get_charsets')
+    @publishable
     def get_charsets(self):
-        """ """
         return charsets[:]
 
 
@@ -655,8 +655,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declareProtected('Manage messages', 'po_import')
+    @publishable
     def po_import(self, lang, data):
-        """ """
         messages = self._messages
 
         # Load the data
@@ -683,8 +683,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declareProtected('Manage messages', 'manage_import')
+    @publishable
     def manage_import(self, lang, file, REQUEST=None, RESPONSE=None):
-        """ """
         # XXX For backwards compatibility only, use "po_import" instead.
         if isinstance(file, str): # six.PY2
             content = file
@@ -699,8 +699,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             RESPONSE.redirect('manage_messages')
 
 
+    @publishable
     def objectItems(self, spec=None):
-        """ """
         for lang in self._languages:
             if not hasattr(aq_base(self), lang):
                 self._setObject(lang, POFile(lang))
@@ -726,7 +726,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 class POFile(SimpleItem):
     """ """
-
+    meta_type = "PO File"
     security = ClassSecurityInfo()
 
 
@@ -735,14 +735,14 @@ class POFile(SimpleItem):
 
 
     security.declareProtected('FTP access', 'manage_FTPget')
+    @publishable
     def manage_FTPget(self):
-        """ """
         return self.manage_export(self.id)
 
 
     security.declareProtected('Manage messages', 'PUT')
+    @publishable
     def PUT(self, REQUEST, RESPONSE):
-        """ """
         if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
             raise Forbidden('REQUEST_METHOD should be PUT.')
         body = REQUEST['BODY']
