@@ -26,13 +26,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Common property sheet to Record documents from erp5_travel_expense</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TravelRequest</string> </value>
+            <value> <string>Record</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
