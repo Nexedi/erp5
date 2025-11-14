@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Tickect_viewRelatedRecordList</string> </value>
+            <value> <string>Ticket_viewRelatedRecordList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Tickect_viewRelatedRecordList</string> </value>
+            <value> <string>Ticket_viewRelatedRecordList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
