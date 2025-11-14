@@ -11,8 +11,10 @@ from OFS.PropertyManager import PropertyManager
 
 from zLOG import LOG, ERROR
 
-from AccessControl import ClassSecurityInfo, Permissions
+from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
 
 current_version = 1
 
@@ -24,6 +26,7 @@ class TimerService(SimpleItem):
 
     id='timer_service'
     title = 'TimerService'
+    meta_type = 'Timer Service'
 
     security = ClassSecurityInfo()
     security.declareObjectPublic()
@@ -36,7 +39,7 @@ class TimerService(SimpleItem):
         ({'label': 'Subscribers', 'action':'manage_viewSubscriptions'},))
 
     security.declareProtected(
-        Permissions.view_management_screens, 'manage_viewSubscriptions')
+        Permissions.ViewManagementScreens, 'manage_viewSubscriptions')
     manage_viewSubscriptions = PageTemplateFile(
         'zpt/view_subscriptions',
         globals(),
@@ -46,13 +49,12 @@ class TimerService(SimpleItem):
     _version = 0
 
     def __init__(self, id='timer_service'):
-        """ """
         self._subscribers = []
         self._version = 1
 
     security.declarePublic('process_shutdown')
+    @publishable
     def process_shutdown(self, phase, time_in_phase):
-        """ """
         subscriptions = []
         for path in self._subscribers:
             try:
@@ -72,8 +74,8 @@ class TimerService(SimpleItem):
                     raise
 
     security.declarePublic('process_timer')
+    @publishable
     def process_timer(self, interval):
-        """ """
         # Try to acquire a lock, to make sure we only run one processing at a
         # time, and abort if another processing is currently running
         acquired = processing_lock.acquire(0)
@@ -108,8 +110,9 @@ class TimerService(SimpleItem):
             # When processing is done, release the lock
             processing_lock.release()
 
+    security.declareProtected(Permissions.ManagePortal, 'subscribe')
+    @publishable
     def subscribe(self, ob):
-        """ """
         path = '/'.join(ob.getPhysicalPath())
 
         subscribers = self._subscribers
@@ -117,16 +120,16 @@ class TimerService(SimpleItem):
             subscribers.append(path)
             self._subscribers = subscribers
 
-    security.declareProtected(
-        Permissions.view_management_screens, 'unsubscribeByPath')
+    security.declareProtected(Permissions.ManagePortal, 'unsubscribeByPath')
     def unsubscribeByPath(self, path):
         subscribers = self._subscribers
         if path in subscribers:
             subscribers.remove(path)
             self._subscribers = subscribers
 
+    security.declareProtected(Permissions.ManagePortal, 'unsubscribe')
+    @publishable
     def unsubscribe(self, ob):
-        """ """
         path = '/'.join(ob.getPhysicalPath())
 
         subscribers = self._subscribers
@@ -135,15 +138,15 @@ class TimerService(SimpleItem):
             self._subscribers = subscribers
 
     security.declareProtected(
-        Permissions.view_management_screens, 'lisSubscriptions')
+        Permissions.ViewManagementScreens, 'lisSubscriptions')
+    @publishable
     def lisSubscriptions(self):
-        """ """
         return self._subscribers
 
     security.declareProtected(
-        Permissions.view_management_screens, 'manage_removeSubscriptions')
+        Permissions.ViewManagementScreens, 'manage_removeSubscriptions')
+    @publishable
     def manage_removeSubscriptions(self, no, REQUEST=None):
-        """ """
         subs = self.lisSubscriptions()
 
         remove_list = [subs[n] for n in [int(n) for n in no]]

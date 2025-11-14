@@ -37,7 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import str2bytes, publishable
 from OFS.Image import Pdata, Image as OFSImage
 from DateTime import DateTime
 
@@ -87,9 +87,8 @@ class CachedConvertableMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                              'generateCacheId')
+  @publishable
   def generateCacheId(self, **kw):
-    """
-    """
     return self._getCacheKey(**kw)
 
   def _getCacheKey(self, **kw):
@@ -111,9 +110,8 @@ class CachedConvertableMixin:
                          format_cache_id)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasConversion')
+  @publishable
   def hasConversion(self, **kw):
-    """
-    """
     try:
       self.getConversion(**kw)
       return True
@@ -121,9 +119,8 @@ class CachedConvertableMixin:
       return False
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConversion')
+  @publishable
   def setConversion(self, data, mime=None, date=None, **kw):
-    """
-    """
     cache_id = self._getCacheKey(**kw)
     if data is None:
       cached_value = None
@@ -219,9 +216,8 @@ class CachedConvertableMixin:
     raise KeyError('Conversion cache key does not exists for %r' % cache_id)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversion')
+  @publishable
   def getConversion(self, **kw):
-    """
-    """
     cached_dict = self._getConversionDataDict(**kw)
     mime = cached_dict['mime']
     data = cached_dict['data']
@@ -232,21 +228,18 @@ class CachedConvertableMixin:
     return mime, data
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversionSize')
+  @publishable
   def getConversionSize(self, **kw):
-    """
-    """
     return self._getConversionDataDict(**kw)['size']
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversionDate')
+  @publishable
   def getConversionDate(self, **kw):
-    """
-    """
     return self._getConversionDataDict(**kw)['date']
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversionMd5')
+  @publishable
   def getConversionMd5(self, **kw):
-    """
-    """
     return self._getConversionDataDict(**kw)['conversion_md5']
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')

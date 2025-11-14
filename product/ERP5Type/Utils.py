@@ -468,8 +468,16 @@ def fill_args_from_request(*optional_args):
 
 if six.PY3:
   from ZPublisher import zpublish
+  publishable = zpublish(publish=True)
   non_publishable = zpublish(publish=False)
 else:
+  def publishable(f):
+    """Decorator to make method f from being publishable by Zope.
+    """
+    real_f = getattr(f, '__func__', f)
+    if real_f.__doc__ and not real_f.__doc__.lstrip():
+      real_f.__doc__ = "<publishable-placeholder>"
+    return f
   def non_publishable(f):
     """Decorator to prevent method f from being publishable by Zope.
     """

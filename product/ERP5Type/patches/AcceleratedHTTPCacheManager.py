@@ -4,6 +4,7 @@ from Products.StandardCacheManagers.AcceleratedHTTPCacheManager import \
 from zope.datetime import rfc1123_date
 from App.special_dtml import DTMLFile
 from Products.ERP5Type import _dtmldir
+from Products.ERP5Type.Utils import publishable
 
 
 def ZCache_set(self, ob, data, view_name, keywords, mtime_func):
@@ -65,8 +66,8 @@ def __init__(self, ob_id):
                       'notify_urls': ()}
     self._resetCacheId()
 
+@publishable
 def manage_editProps(self, title, settings=None, REQUEST=None):
-    ' '
     if settings is None:
         settings = REQUEST
     self.title = str(title)
@@ -85,9 +86,8 @@ def manage_editProps(self, title, settings=None, REQUEST=None):
             self, REQUEST, manage_tabs_message='Properties changed.')
 
 
-
+@publishable
 def getSettings(self):
-    ' '
     if 'stale_if_error_interval' not in self._settings:
         self._settings.update({'stale_if_error_interval' : 0})
     if 'stale_while_revalidate_interval' not in self._settings:
