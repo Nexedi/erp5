@@ -32,6 +32,7 @@ from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 import six
@@ -55,6 +56,7 @@ class DomainTool(BaseTool):
   # XXX FIXME method should not be public
   # (some users are not able to see resource's price)
   security.declarePublic('searchPredicateList')
+  @publishable
   def searchPredicateList(self, *args, **kw):
     return self._searchPredicateList(restricted=True, *args, **kw)
 

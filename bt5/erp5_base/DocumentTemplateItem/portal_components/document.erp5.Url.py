@@ -31,7 +31,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import deprecated
+from Products.ERP5Type.Utils import deprecated, publishable
 from erp5.component.document.Coordinate import Coordinate
 from erp5.component.mixin.UrlMixin import UrlMixin
 
@@ -108,9 +108,8 @@ class Url(Coordinate, UrlMixin):
         return self._baseGetUrlString(default)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  @publishable
   def isDetailed(self):
-    """
-    """
     return self.hasUrlString()
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
