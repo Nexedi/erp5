@@ -35,6 +35,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import publishable
 from erp5.component.document.Amount import Amount
 from erp5.component.document.MappedValue import MappedValue
 
@@ -70,9 +71,9 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
                     , PropertySheet.Task
                     )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
+  @publishable
   def getAggregatedAmountList(self, *args, **kw):
-    """
-    """
     getAggregatedAmountList = \
       super(Transformation, self).getAggregatedAmountList
     # Detect old use of getAggregatedAmountList

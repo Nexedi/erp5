@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Globals import InitializeClass
 from erp5.component.document.Path import Path
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
@@ -65,6 +66,8 @@ class PeriodicityLineMixin(PeriodicityMixin):
         raise RuntimeError('Unknown time scale: %s' % time_scale)
     else:
       return None
+
+InitializeClass(PeriodicityLineMixin)
 
 class PeriodicityLine(Path, PeriodicityLineMixin):
   """
