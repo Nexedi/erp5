@@ -46,7 +46,7 @@ from Products.ERP5Type.TransactionalVariable import \
   getTransactionalVariable, TransactionalResource
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
-from Products.ERP5Type.Utils import str2bytes, bytes2str
+from Products.ERP5Type.Utils import str2bytes, bytes2str, non_publishable
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
@@ -1621,6 +1621,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('accounting_transaction') or \
       self._getPortalConfiguration('portal_accounting_transaction_type_list')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAssignmentBaseCategoryList')
   def getPortalAssignmentBaseCategoryList(self):
     """
       Return List of category values to generate security groups.
@@ -1628,6 +1630,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('assignment') or \
         self._getPortalConfiguration('portal_assignment_base_category_list')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalSecurityCategoryMapping')
   def getPortalSecurityCategoryMapping(self):
     """
     DEPRECATED: implement ERP5User_getUserSecurityCategoryValueList instead.
@@ -1953,6 +1957,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
     return ()
 
+  security.declarePublic('log')
+  @non_publishable
   def log(self, *args, **kw):
     """Put a log message
 

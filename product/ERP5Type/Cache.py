@@ -39,7 +39,7 @@ from persistent import Persistent
 from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.Utils import simple_decorator
+from Products.ERP5Type.Utils import simple_decorator, non_publishable
 from Products.ERP5Type.Globals import InitializeClass
 from warnings import warn
 
@@ -100,6 +100,7 @@ class CacheCookieMixin:
       return ZODBCookie.value
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newCacheCookie')
+  @non_publishable
   def newCacheCookie(self, cache_name):
     """Invalidate cache for this object"""
     cache_name = '_cache_cookie_' + cache_name
