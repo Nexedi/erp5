@@ -726,7 +726,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 class POFile(SimpleItem):
     """ """
-
+    meta_type = "PO File"
     security = ClassSecurityInfo()
 
 
