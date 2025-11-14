@@ -33,8 +33,8 @@ import six
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type import Permissions
-from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import publishable
 from erp5.component.module.SyncMLUtils import PdataHelper
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
@@ -217,9 +217,8 @@ class SyncMLSignature(XMLObject):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getFirstPdataChunk')
+  @publishable
   def getFirstPdataChunk(self, max_len):
-    """
-    """
     partial_data = bytes(self._baseGetPartialData()).decode('utf-8')
     chunk = partial_data[:max_len]
     rest_in_queue = partial_data[max_len:]

@@ -35,6 +35,7 @@ from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.users import system as system_user
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
@@ -550,22 +551,19 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       self.setColumnList(new_schema)
 
     security.declareProtected(Permissions.ManagePortal, 'setColumnList')
+    @publishable
     def setColumnList(self, column_list):
-      """
-      """
       self._sql_schema = column_list
 
     security.declarePublic('getColumnList')
+    @publishable
     def getColumnList(self):
-      """
-      """
       if not hasattr(self, '_sql_schema'): self._sql_schema = []
       return self._sql_schema
 
     security.declarePublic('getColumn')
+    @publishable
     def getColumn(self, column_id):
-      """
-      """
       for c in self.getColumnList():
         if c.id == column_id:
           return c
@@ -586,22 +584,19 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       self.setIndexList(new_index)
 
     security.declareProtected(Permissions.ManagePortal, 'setIndexList')
+    @publishable
     def setIndexList(self, index_list):
-      """
-      """
       self._sql_index = index_list
 
     security.declarePublic('getIndexList')
+    @publishable
     def getIndexList(self):
-      """
-      """
       if not hasattr(self, '_sql_index'): self._sql_index = []
       return self._sql_index
 
     security.declarePublic('getIndex')
+    @publishable
     def getIndex(self, index_id):
-      """
-      """
       for c in self.getIndexList():
         if c.id == index_id:
           return c

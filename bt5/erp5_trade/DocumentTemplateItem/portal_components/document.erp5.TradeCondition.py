@@ -36,6 +36,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import publishable
 from erp5.component.mixin.CompositionMixin import _getEffectiveModel
 from erp5.component.document.MappedValue import MappedValue
 from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
@@ -105,9 +106,8 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
+  @publishable
   def getAggregatedAmountList(self, *args, **kw):
-    """
-    """
     # Detect old use of getAggregatedAmountList
     if 'context' in kw:
       context = kw.pop('context')
