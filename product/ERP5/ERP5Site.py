@@ -1621,6 +1621,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('accounting_transaction') or \
       self._getPortalConfiguration('portal_accounting_transaction_type_list')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAssignmentBaseCategoryList')
   def getPortalAssignmentBaseCategoryList(self):
     """
       Return List of category values to generate security groups.
@@ -1628,6 +1630,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('assignment') or \
         self._getPortalConfiguration('portal_assignment_base_category_list')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalSecurityCategoryMapping')
   def getPortalSecurityCategoryMapping(self):
     """
     DEPRECATED: implement ERP5User_getUserSecurityCategoryValueList instead.
@@ -1953,6 +1957,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
     return ()
 
+  security.declarePublic('log')
   def log(self, *args, **kw):
     """Put a log message
 
