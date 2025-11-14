@@ -41,6 +41,7 @@ from Acquisition import aq_base, aq_inner
 from collections import OrderedDict
 from io import BytesIO
 from zodbpickle.slowpickle import Pickler
+from zodbpickle import binary as zodbpickle_binary
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
@@ -65,7 +66,7 @@ MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
 marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
                                                             as_tree=True).dumps
 
-DEFAULT_PICKLE_PROTOCOL = 1 if six.PY2 else 3
+DEFAULT_PICKLE_PROTOCOL = 3
 
 
 class OrderedPickler(Pickler):
@@ -262,7 +263,6 @@ def reorderPickle(jar, p, pickle_protocol):
 
     oids = {}
     storage = jar._storage
-    new_oid = storage.new_oid
     store = storage.store
 
     def persistent_load(ooid,
@@ -274,6 +274,9 @@ def reorderPickle(jar, p, pickle_protocol):
 
         if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
+
+        if six.PY2 and not isinstance(ooid, zodbpickle_binary):
+          ooid = zodbpickle_binary(ooid)
 
         try:
           Ghost=Ghost()

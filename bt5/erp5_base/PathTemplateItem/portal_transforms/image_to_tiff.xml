@@ -11,7 +11,7 @@
             <value>
               <object>
                 <klass>
-                  <global id="1.1" name="UserDict" module="UserDict"/>
+                  <global id="1.1" name="UserDict" module="collections"/>
                 </klass>
                 <tuple/>
                 <state>

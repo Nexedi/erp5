@@ -34,7 +34,6 @@ import errno
 import os
 import six
 import sys
-import imp
 import collections
 from six import reraise
 import traceback
@@ -43,7 +42,7 @@ import coverage
 from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type import product_path as ERP5Type_product_path
-from . import aq_method_lock
+from . import aq_method_lock, global_import_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
 from Acquisition import aq_base
@@ -97,13 +96,11 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
   # package only if __path__ is defined
   __path__ = []
 
-  def __init__(self, namespace, portal_type):
+  def __init__(self, namespace):
     super(ComponentDynamicPackage, self).__init__(namespace)
 
-    self._namespace = namespace
     self._namespace_prefix = namespace + '.'
     self._id_prefix = namespace.rsplit('.', 1)[1]
-    self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
     self.__fullname_source_code_dict = {}
 
@@ -157,34 +154,15 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
         if not fullname.startswith(self._namespace_prefix):
           return None
 
-    import_lock_held = True
-    try:
-      imp.release_lock()
-    except RuntimeError:
-      import_lock_held = False
+    import_lock_held = global_import_lock.held()
+    if import_lock_held:
+      global_import_lock.release()
 
     try:
       site = getSite()
 
       if erp5.component.filesystem_import_dict is None:
-        filesystem_import_dict = {}
-        try:
-          component_tool = aq_base(site.portal_components)
-        except AttributeError:
-          # For old sites, just use FS Documents...
-          return None
-        else:
-          for component in component_tool.objectValues():
-            if component.getValidationState() == 'validated':
-              component_module_name = '%s.%s' % (component._getDynamicModuleNamespace(),
-                                                 component.getReference())
-              if component.getSourceReference() is not None:
-                filesystem_import_dict[component.getSourceReference()] = component_module_name
-
-              if component.getPortalType() == 'Document Component':
-                filesystem_import_dict[('Products.ERP5Type.Document.' +
-                                        component.getReference())] = component_module_name
-          erp5.component.filesystem_import_dict = filesystem_import_dict
+        erp5.component.createFilesystemImportDict()
 
       # __import__ will first try a relative import, for example
       # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
@@ -233,7 +211,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       # Internal release of import lock at the end of import machinery will
       # fail if the hook is not acquired
       if import_lock_held:
-        imp.acquire_lock()
+        global_import_lock.acquire()
 
   def find_spec(self, name, path=None, target=None):
     """PEP-0451
@@ -255,7 +233,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
     version += '_version'
     version_package = getattr(self, version, None)
     if version_package is None:
-      version_package_name = self._namespace + '.' + version
+      version_package_name = self.__name__ + '.' + version
 
       version_package = ComponentVersionPackage(version_package_name)
       sys.modules[version_package_name] = version_package
@@ -306,7 +284,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
         version = version[:-self.__version_suffix_len]
       except ValueError as error:
         raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
-                            (fullname, self._namespace, error))
+                            (fullname, self.__name__, error))
 
       component_id = "%s.%s.%s" % (self._id_prefix, version, name)
 
@@ -324,7 +302,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
         raise ImportError("%s: no version of Component %s in Site priority" % \
                             (fullname, name))
 
-      module_fullname_alias = self._namespace + '.' + name
+      module_fullname_alias = self.__name__ + '.' + name
 
       # Check whether this module has already been loaded before for a
       # specific version, if so, just add it to the upper level
@@ -348,7 +326,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
     else:
       module_file = 'erp5://' + relative_url
 
-    module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
+    module_fullname = '%s.%s_version.%s' % (self.__name__, version, name)
     module = ModuleType(module_fullname, component.getDescription())
 
     source_code_str = component.getTextContent(validated_only=True)
@@ -368,8 +346,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
 
     # All the required objects have been loaded, acquire import lock to modify
     # sys.modules and execute PEP302 requisites
-    imp.acquire_lock()
-    try:
+    with global_import_lock:
       # The module *must* be in sys.modules before executing the code in case
       # the module code imports (directly or indirectly) itself (see PEP 302)
       sys.modules[module_fullname] = module
@@ -426,9 +403,6 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       import erp5.component
       erp5.component.ref_manager.add_module(module)
 
-    finally:
-      imp.release_lock()
-
     component._hookAfterLoad(module)
     return module
 
@@ -449,11 +423,9 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
     #
     # Also, handle the case where find_module() may be called without import
     # statement as it does not change anything in sys.modules
-    import_lock_held = True
-    try:
-      imp.release_lock()
-    except RuntimeError:
-      import_lock_held = False
+    import_lock_held = global_import_lock.held()
+    if import_lock_held:
+      global_import_lock.release()
 
     aq_method_lock.acquire()
     try:
@@ -464,7 +436,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       # Internal release of import lock at the end of import machinery will
       # fail if the hook is not acquired
       if import_lock_held:
-        imp.acquire_lock()
+        global_import_lock.acquire()
 
   def find_load_module(self, name):
     """
@@ -479,7 +451,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
     the latter has been disabled and there is a fallback on the filesystem, a
     plain import would hide the real error, instead log it...
     """
-    fullname = self._namespace + '.' + name
+    fullname = self.__name__ + '.' + name
     try:
       # Wrapper around __import__ much faster than calling find_module() then
       # load_module(), and returning module 'name' in contrary to __import__
@@ -511,10 +483,10 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       # the source code
       for modsec_dict in _moduleSecurity, _appliedModuleSecurity:
         for k in ensure_list(modsec_dict.keys()):
-          if k.startswith(self._namespace):
+          if k.startswith(self.__name__):
             del modsec_dict[k]
       for k, v in ensure_list(MNAME_MAP.items()):
-        if v.startswith(self._namespace):
+        if v.startswith(self.__name__):
           del MNAME_MAP[k]
 
           # Products import compatibility (module_fullname_filesystem)

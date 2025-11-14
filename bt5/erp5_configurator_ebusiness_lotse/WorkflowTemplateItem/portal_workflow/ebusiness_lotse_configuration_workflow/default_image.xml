@@ -7,25 +7,21 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts10946893.64</string> </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -46,7 +42,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAYQAAADUCAYAAACcRFSQAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAYQAAADUCAYAAACcRFSQAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
 WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gkRCSkVJx/F+wAAIABJREFUeNrsnXV8VtUfx9/3qe1Z
 98bYYIzuLkEklJRQwR8CSlggigrS3SEdYoAgoJiEtCCi0t0xusZY95689/fHs3pYogyJ8369Luy5
 99z6nnO/n9NHWrzuhIJAIBAInnpUwgQCgSA/QoP13IqNFIYQgiAQCASCpwWNSoKyxfSU8HHA2UEt
@@ -418,7 +414,7 @@ TF5/DKcaT7N43WKeq+hsd7/5PeqrrXu3rXnkfgj5O6bl9kPILfjtBYPctNmzZxfZMe33HGNRvsh8
 CKLMsldANxowjWMDpuVJac+JEQW3PTPu0fb7Z7P3vKCknyGI8kc6gAshhJAaghAlrajXTR/GbJnl
 TEhAEKLsy/s84Pco7oHqhHgQaTISQgghAUEIIYQEBCGEEBIQhBBC2FMmHyqPljcvhJC8I4qd9FQW
 QggBSJOREEIICQhCCCEkIAghhJCAIIQQQgKCEEIICQhCCCEkIAghhHgo/wfRhtoeu8ntPAAAAABJ
-RU5ErkJggg==</string> </value>
+RU5ErkJggg==</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -431,10 +427,6 @@ RU5ErkJggg==</string> </value>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Embedded File</string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>21211</int> </value>
         </item>
         <item>
             <key> <string>width</string> </key>

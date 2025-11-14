@@ -64,7 +64,7 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -127,7 +127,7 @@
                           <string>Is Master</string>
                         </tuple>
                         <tuple>
-                          <string>create_date</string>
+                          <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
                       </list>
@@ -178,7 +178,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Date</string>
+                          <string>creation_date</string>
                           <string>asc</string>
                         </tuple>
                       </list>

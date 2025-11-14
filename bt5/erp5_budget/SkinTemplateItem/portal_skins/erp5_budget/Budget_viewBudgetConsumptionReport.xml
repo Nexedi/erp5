@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>OLE_documents_zipstring</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAAIALt0ajpE1YD/SgEAAGgHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVNbsIw
+            <value> <bytes encoding="base64">UEsDBBQAAAAIALt0ajpE1YD/SgEAAGgHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVNbsIw
 EIX3nCLyPnHLqooIlVqpJ6AHGJxJsOQ/ecYIbt8EFUhbFgXFO9saf++N7RmvXg/WFHuMpL1rxHP1
 JAp0yrfa9Y343HyUL+J1vVhZcLpD4vo8KIZ9ji7TRqToag+kqXZgkWpWtQ/oWq+SRcf1z/h6VFov
 iiu40wbLITAei6sYthpKPgZsBIRgtAIefMq9a6uTVjWVqChEhJZ2iCyukElyy8lyl4wpA/CuEVLI
@@ -16,7 +16,7 @@ u6wwHlgO+dymKe94dDMGzMklPhqk2bEWGR6A3oZtdsluHWhDks/DKrh+bvgsvHfvOt2neHpTtJSg
 FBocpj5KlWJ87BLv18oiEKLvIxJtIZNAZzww5nLvQwpDTac8+JGc7WDYe5MNri30SPJNs4WQqQ6+
 NbKwiYHTI4/yd/un5MbirJKu1FTjfzbmbczIPHyXl9a8kn9+y/UXUEsBAhQAFAAAAAgAu3RqOkTV
 gP9KAQAAaAcAABUAAAAAAAAAAAAAAAAAAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAA
-AQABAEMAAAB9AQAAAAA=</string> </value>
+AQABAEMAAAB9AQAAAAA=</bytes> </value>
         </item>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
@@ -29,13 +29,9 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <dictionary>
                     <item>
@@ -84,7 +80,7 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Budget Consumption</unicode> </value>
+            <value> <string>Budget Consumption</string> </value>
         </item>
       </dictionary>
     </pickle>

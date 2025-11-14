@@ -30,7 +30,7 @@
 import six
 from six import string_types as basestring
 from Products.ERP5Type.Utils import ensure_list, bytes2str, str2bytes
-import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
+import fnmatch, gc, glob, types, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
@@ -67,7 +67,7 @@ from Products.ERP5Type.Utils import readLocalExtension, \
 from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, loadModuleFromPathname
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
@@ -154,6 +154,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Image":               (None,   0, "data",         False),
   "Interface Component": ("py",   0, "text_content", True ),
   "OOoTemplate":         ("oot",  1, "_text",        True ),
+  "MailTemplate":        ("mt",   1, "_text",        True ),
   "Mixin Component":     ("py",   0, "text_content", True ),
   "Module Component":    ("py",   0, "text_content", True ),
   "PDF":                 ("pdf",  0, "data",         False),
@@ -611,7 +612,7 @@ class BaseTemplateItem(Implicit, Persistent):
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
-      elif classname in ('File', 'Image'):
+      elif classname in ('File', 'Embedded File', 'Image', 'Embedded Image'):
         attr_set.update(('_EtagSupport__etag', 'size'))
       # SQL covers both ZSQL Methods and ERP5 SQL Methods
       elif isinstance(obj, SQL):
@@ -627,6 +628,12 @@ class BaseTemplateItem(Implicit, Persistent):
     for attr in list(obj.__dict__):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
+
+    if six.PY2:
+      if (classname in ('ZopePageTemplate', 'OOoTemplate')
+           and 'title' in obj.__dict__
+           and isinstance(obj.title, six.text_type)):
+        obj.title = obj.title.encode('utf-8')
 
     return obj
 
@@ -1542,6 +1549,9 @@ class ObjectTemplateItem(BaseTemplateItem):
             # mime_type too...
             from Products.ERP5Type.patches.OFSFile import _setData
             _setData(obj, obj.data)
+        elif six.PY2 and obj.__class__.__name__ in ('ZopePageTemplate', 'OOoTemplate'):
+          if ('title' in obj.__dict__) and not isinstance(obj.title, six.text_type):
+            obj.title = obj.title.decode('utf-8')
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
@@ -3512,7 +3522,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         except ValueError:
           # When the container does not use numerical ids
           int_id = obj[o['object_id']].getCreationDate()
-        return (o.get('title'), int_id)
+        return (o.get('title') or '', int_id)
       type_role_list.sort(key=sort_key)
 
   # Function to generate XML Code Manually
@@ -4122,7 +4132,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     raise NotImplementedError
 
   @staticmethod
-  def _migrateFromFilesystem(tool, filesystem_path, filesystem_file, class_id):
+  def _migrateFromFilesystem(tool, filesystem_path, class_id):
     raise NotImplementedError
 
   def _migrateAllFromFilesystem(self,
@@ -4163,20 +4173,13 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
       # A filesystem Property Sheet may already exist in the instance
       # home if the Business Template has been previously installed,
       # otherwise it is created
-      if os.path.exists(filesystem_path):
-        filesystem_file = open(filesystem_path)
-      else:
-        filesystem_file = open(filesystem_path, 'w+')
-        filesystem_file.write(migrate_object_dict[class_id])
-        filesystem_file.seek(0)
+      if not os.path.exists(filesystem_path):
+        with open(filesystem_path, 'w+') as f:
+          f.write(migrate_object_dict[class_id])
 
-      try:
-        migrated_object = self._migrateFromFilesystem(tool,
-                                                      filesystem_path,
-                                                      filesystem_file,
-                                                      class_id).aq_base
-      finally:
-        filesystem_file.close()
+      migrated_object = self._migrateFromFilesystem(tool,
+                                                    filesystem_path,
+                                                    class_id).aq_base
 
       # Delete the file only if there was no error encountered during
       # migration
@@ -4256,7 +4259,6 @@ class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
   @staticmethod
   def _migrateFromFilesystem(tool,
                              filesystem_path,
-                             filesystem_file,
                              class_id):
     """
     Migration of a filesystem Property Sheet involves loading the
@@ -4268,10 +4270,8 @@ class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
     # the class will be stored, thus don't only use the class name as
     # it may clash with already loaded module, such as
     # BusinessTemplate.
-    module = imp.load_source('Migrate%sFilesystemPropertySheet' % class_id,
-                             filesystem_path,
-                             filesystem_file)
-
+    module = loadModuleFromPathname('Migrate%sFilesystemPropertySheet' % class_id,
+                                    filesystem_path)
     try:
       klass = getattr(module, class_id)
     except AttributeError:
@@ -5919,7 +5919,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         module_id = 'Products.ERP5Type.Document.' + template_id
         if module_id not in sys.modules:
           module_id_list.append(module_id)
-          sys.modules[module_id] = module = imp.new_module(module_id)
+          sys.modules[module_id] = module = types.ModuleType(module_id)
           setattr(module, template_id, type(template_id,
             (SimpleItem.SimpleItem,), {'__module__': module_id}))
 

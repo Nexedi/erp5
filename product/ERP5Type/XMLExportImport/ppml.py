@@ -22,10 +22,12 @@ import struct
 import six
 if six.PY2:
   from base64 import encodestring as base64_encodebytes, decodestring as base64_decodebytes
-  from zodbpickle.pickle_2 import decode_long
+  from zodbpickle.pickle_2 import decode_long, HIGHEST_PROTOCOL
+  # Rename imports and names to python3 (bt5 XML export/import with python3)
+  from . import _compat_pickle_2 as _compat_pickle
 else:
   from base64 import encodebytes as base64_encodebytes, decodebytes as base64_decodebytes
-  from zodbpickle.pickle_3 import decode_long
+  from zodbpickle.pickle_3 import decode_long, HIGHEST_PROTOCOL
 import re
 from marshal import loads as mloads
 from .xyap import NoBlanks
@@ -320,11 +322,34 @@ class Reference(Scalar):
 Get = Reference
 
 class Object(Sequence):
-    def __init__(self, klass, args, mapping):
+    def __init__(self, klass, args, mapping, maybe_empty_state=False):
         self._subs=[Klass(klass, mapping), args]
         self.mapping = mapping
+        self._has_state = False
+        if maybe_empty_state:
+            # BBB six.PY2
+            # On python3, object().__reduce_ex__(3) returns a state of
+            # None, on python2 an empty dictionnary on python2. This cause different XML
+            # output because the python3's None state does not appear as a <state>, but
+            # on python2 it appears as <state><dictionary/></state>.
+            # To always output a state on python3, we append a State(Dictionary()) that
+            # will be replaced when __setstate__ is called by Unpickler.load_build if
+            # this object had a state.
+            if isinstance(klass, Global):  # this can be a Reference, in that case we do not know
+                __import__(klass.module, level=0)
+                mod = sys.modules[klass.module]
+                klass_ = getattr(mod, klass.name)
+                if (getattr(klass_, '__reduce_ex__', None) is object.__reduce_ex__
+                        and klass_ is not object):
+                    self.__setstate__(Dictionary(self.mapping))
 
-    def __setstate__(self, v): self.append(State(v, self.mapping))
+    def __setstate__(self, v):
+        state = State(v, self.mapping)
+        if not self._has_state:
+            self.append(state)
+            self._has_state = True
+        else:
+            self._subs[-1] = state
 
 class Bool(Scalar): pass
 class Int(Scalar): pass
@@ -522,9 +547,17 @@ class ToXMLUnpickler(Unpickler):
     dispatch = {}
     dispatch.update(Unpickler.dispatch.copy())
     register = make_decorator(dispatch)
+    proto = 0
 
     def persistent_load(self, v):
         return Persistent(v, self.id_mapping)
+
+    @register(PROTO)
+    def load_proto(self):
+        proto = ord(self.read(1))
+        if not 0 <= proto <= HIGHEST_PROTOCOL:
+            raise ValueError("unsupported pickle protocol: %d" % proto)
+        self.proto = proto
 
     @register(BINPERSID)
     def load_binpersid(self):
@@ -689,18 +722,19 @@ class ToXMLUnpickler(Unpickler):
 
     @register(NEWOBJ)
     def load_newobj(self):
-        # TODO: not really sure of this one, maybe we need
-        # a NewObj instead of Object
         args = self.stack.pop()
         cls = self.stack[-1]
-        obj = Object(cls, args, self.id_mapping)
+        obj = Object(cls, args, self.id_mapping, maybe_empty_state=six.PY3)
         self.stack[-1] = obj
-        #print('load_newobj', self.stack)
 
     @register(GLOBAL)
     def load_global(self):
         module = bytes2str(self.readline()[:-1])
         name = bytes2str(self.readline()[:-1])
+        if six.PY2 and self.proto >= 3:
+            (module, name) = _compat_pickle.NAME_MAPPING.get(
+                (module, name), (module, name))
+            module = _compat_pickle.IMPORT_MAPPING.get(module, module)
         self.append(Global(module, name, self.id_mapping))
 
     @register(REDUCE)
@@ -941,8 +975,14 @@ def save_object(self, tag, data):
 
 def save_global(self, tag, data):
     a = data[1]
-    return save_put(self, GLOBAL + str2bytes(a['module']) + b'\n' +
-                    str2bytes(a['name']) + b'\n', a)
+    module = a['module']
+    name = a['name']
+    if six.PY2:
+      module, name = _compat_pickle.REVERSE_NAME_MAPPING.get(
+        (module, name), (module, name))
+      module = _compat_pickle.REVERSE_IMPORT_MAPPING.get(module, module)
+    return save_put(self, GLOBAL + str2bytes(module) + b'\n' +
+                    str2bytes(name) + b'\n', a)
 
 def save_persis(self, tag, data):
     v = data[2]

@@ -29,9 +29,8 @@ from __future__ import absolute_import
 ##############################################################################
 
 from types import ModuleType
-from . import aq_method_lock
 import sys
-import imp
+from . import aq_method_lock, global_import_lock
 import six
 
 class PackageType(ModuleType):
@@ -141,6 +140,36 @@ class ComponentPackageType(PackageType):
     super(ComponentPackageType, self).__init__(*args, **kwargs)
     self.ref_manager = RefManager()
 
+  def createFilesystemImportDict(self):
+    """
+    Make legacy filesystem classes importable even after their migration to
+    ZODB Components
+    """
+    from Products.ERP5.ERP5Site import getSite
+    from Acquisition import aq_base
+    site = getSite()
+    try:
+      component_tool = aq_base(site.portal_components)
+    except AttributeError:
+      # For old sites without portal_components, just use FS Documents...
+      raise AttributeError(attr)
+    filesystem_import_dict = {}
+    for component in component_tool.objectValues():
+      if component.getValidationState() == 'validated':
+        component_module_name = '%s.%s' % (component._getDynamicModuleNamespace(),
+                                           component.getReference())
+        if component.getSourceReference() is not None:
+          # Add an alias that with import name before migration to ZODB Components (MR !1271)
+          filesystem_import_dict[component.getSourceReference()] = component_module_name
+
+        if component.getPortalType() == 'Document Component':
+          # For old instances of Document classes having as their __class__
+          # Products.ERP5Type.Document.DOCUMENT.CLASS (MR !1240)
+          filesystem_import_dict[('Products.ERP5Type.Document.' +
+                                  component.getReference())] = component_module_name
+
+    self.filesystem_import_dict = filesystem_import_dict
+
 class DynamicModule(ModuleType):
   """This module may generate new objects at runtime."""
   # it's useful to have such a generic utility
@@ -247,34 +276,18 @@ def initializeDynamicModules():
 
   # Prevent other threads to create erp5.* packages and modules or seeing them
   # incompletely
-  imp.acquire_lock()
-  try:
+  with global_import_lock:
     sys.modules["erp5"] = erp5
     sys.modules["erp5.document"] = erp5.document
     sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
     sys.modules["erp5.accessor_holder.property_sheet"] = \
         erp5.accessor_holder.property_sheet
+
     sys.modules["erp5.component"] = erp5.component
-
-    erp5.component.module = ComponentDynamicPackage('erp5.component.module',
-                                                    'Module Component')
-
-    erp5.component.extension = ComponentDynamicPackage('erp5.component.extension',
-                                                       'Extension Component')
-
-    erp5.component.document = ComponentDynamicPackage('erp5.component.document',
-                                                      'Document Component')
-
-    erp5.component.tool = ToolComponentDynamicPackage('erp5.component.tool',
-                                                      'Tool Component')
-
-    erp5.component.interface = ComponentDynamicPackage('erp5.component.interface',
-                                                       'Interface Component')
-
-    erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin',
-                                                   'Mixin Component')
-
-    erp5.component.test = ComponentDynamicPackage('erp5.component.test',
-                                                  'Test Component')
-  finally:
-    imp.release_lock()
+    erp5.component.module = ComponentDynamicPackage('erp5.component.module')
+    erp5.component.extension = ComponentDynamicPackage('erp5.component.extension')
+    erp5.component.document = ComponentDynamicPackage('erp5.component.document')
+    erp5.component.tool = ToolComponentDynamicPackage('erp5.component.tool')
+    erp5.component.interface = ComponentDynamicPackage('erp5.component.interface')
+    erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin')
+    erp5.component.test = ComponentDynamicPackage('erp5.component.test')

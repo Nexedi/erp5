@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>OLE_documents_zipstring</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAAIAK9tYUAJB63McQEAAIcIAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZbBTsMw
+            <value> <bytes encoding="base64">UEsDBBQAAAAIAK9tYUAJB63McQEAAIcIAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZbBTsMw
 DIbvPEWVK2oDO6Fq3SSQeILxAF7qdpFSJ0qcaX172oltBQZiY7klkfN/v93EzXy560y2RR+0pUo8
 Fg8iQ1K21tRW4m31mj+J5eJu3gHpBgOXh0E27KNwnFYieiotBB1Kgg5Dyaq0Dqm2KnZIXH6OL0fS
 4i47CTfaYD4E+j47wbDWkHPvsBLgnNEKePApt1QXe1YxRRSMOxan3ZOsZpPlJhqTO+BNJaSQF3kY
@@ -16,20 +16,16 @@ AXJI5LyassSjjTHgMt1pbmtN4PvzBAO9jZwrUBv8B8LXzf2PWRzWiiHqpuUJ3BsMV1Tnd9kOGa4Q
 PS+22sRuTaBNkHwYFo7aW4vfRO/FUqPb6PcfNcwkKIUGh6n1UkXvrzuLl7OSAJy3rccQ1pAI0BgL
 jKncWxfd0JNiGnm21jggNGnkR+PJ6j56TyauO2gxyGfNHbhE1+yDkUQ7MHC85sx//TuGSOPdL6Iu
 1JTxNxu37fvIPLwmjp1/Lr89JhbvUEsBAhQDFAAAAAgAr21hQAkHrcxxAQAAhwgAABUAAAAAAAAA
-AAAAAIABAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAACkAQAAAAA=</string> </value>
+AAAAAIABAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAACkAQAAAAA=</bytes> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <dictionary>
                     <item>
@@ -82,7 +78,7 @@ AAAAAIABAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAACkAQAAAAA=</string
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode></unicode> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

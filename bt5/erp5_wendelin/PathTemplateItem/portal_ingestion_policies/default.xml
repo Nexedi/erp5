@@ -84,7 +84,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -103,13 +103,13 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -158,13 +158,9 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass>
-                            <global id="3.1" name="_reconstructor" module="copy_reg"/>
+                            <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
                           </klass>
-                          <tuple>
-                            <global id="3.2" name="DateTime" module="DateTime.DateTime"/>
-                            <global id="3.3" name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1592816505.52</float>
@@ -187,7 +183,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                   <item>
                       <key> <string>comment</string> </key>
                       <value>
-                        <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                        <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                       </value>
                   </item>
                   <item>
@@ -207,11 +203,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1592816505.52</float>
@@ -254,11 +246,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1592816526.64</float>
@@ -301,11 +289,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1592816544.14</float>
@@ -348,11 +332,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1594728775.89</float>
@@ -395,11 +375,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1594729171.44</float>
@@ -442,11 +418,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1594729230.99</float>
@@ -489,11 +461,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1594795689.23</float>
@@ -536,11 +504,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1594795698.95</float>
@@ -583,11 +547,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1673359560.15</float>
@@ -605,7 +565,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -630,11 +590,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1686292557.87</float>
@@ -652,7 +608,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -677,11 +633,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1686296047.35</float>
@@ -732,13 +684,9 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass>
-                            <global id="4.1" name="_reconstructor" module="copy_reg"/>
+                            <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
                           </klass>
-                          <tuple>
-                            <global id="4.2" name="DateTime" module="DateTime.DateTime"/>
-                            <global id="4.3" name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1592816505.52</float>
@@ -775,11 +723,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1592816552.72</float>
@@ -816,11 +760,7 @@ By default these messages usually go through fluentd / fluent-bit and are wrappe
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1592816552.72</float>

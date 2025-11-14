@@ -15,13 +15,9 @@
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <dictionary>
                     <item>
@@ -58,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>KM Theme CSS file</unicode> </value>
+            <value> <string>KM Theme CSS file</string> </value>
         </item>
       </dictionary>
     </pickle>

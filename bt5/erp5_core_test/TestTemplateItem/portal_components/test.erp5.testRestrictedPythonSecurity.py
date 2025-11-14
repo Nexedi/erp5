@@ -41,6 +41,8 @@ from Products.ERP5Type.patches.Restricted import (pandas_black_list, dataframe_b
 from Products.ERP5Type import IS_ZOPE2
 from AccessControl import Unauthorized
 from AccessControl.ZopeGuards import Unauthorized as ZopeGuardsUnauthorized
+import zodbpickle
+
 
 class TestRestrictedPythonSecurity(ERP5TypeTestCase):
   """
@@ -547,6 +549,13 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         return s.getvalue()
         ''',
         expected=b"ok"
+    )
+
+  def test_zodbpickle_binary(self):
+    self.createAndRunScript(
+      'return kw["arg"].capitalize()',
+      kwargs={'arg': zodbpickle.binary(b'hello')},
+      expected=b'Hello',
     )
 
   def testNumpy(self):

@@ -25,6 +25,9 @@
 #
 ##############################################################################
 from erp5.component.test.WendelinTelecomMixin import generateRandomString, TestWendelinTelecomMixin, QCI_COUNT
+import pandas as pd
+import numpy as np
+import transaction
 
 from six.moves.http_client import NO_CONTENT
 import json
@@ -54,14 +57,14 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     self.tic()
 
     # Check that the Data Supply exists and is validated
-    self.assertTrue(created_data_supply is not None)
-    self.assertTrue(created_data_supply.getValidationState() == 'validated')
+    self.assertNotEqual(created_data_supply, None)
+    self.assertEqual(created_data_supply.getValidationState(), 'validated')
 
     # Call the script again to retrieve the same Data Supply
     retrieved_data_supply = data_acquisition_unit.DataAcquisitionUnit_createOrsDataSupply(batch=1)
 
     # Check that both Data Supplies are identical
-    self.assertTrue(retrieved_data_supply == created_data_supply)
+    self.assertEqual(retrieved_data_supply, created_data_supply)
 
     # Pathological case: create another identical Data Supply
     created_data_supply.invalidate()
@@ -72,7 +75,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     re_retrieved_data_supply = data_acquisition_unit.DataAcquisitionUnit_createOrsDataSupply(batch=1)
 
-    self.assertTrue(re_retrieved_data_supply == created_data_supply)
+    self.assertEqual(re_retrieved_data_supply, created_data_supply)
 
     # Pathological case: create a Data Acquisition Unit without a reference
     data_acquisition_unit = self.portal.data_acquisition_unit_module.newContent(
@@ -86,7 +89,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     none_data_supply = data_acquisition_unit.DataAcquisitionUnit_createOrsDataSupply(batch=1)
     self.tic()
 
-    self.assertTrue(none_data_supply is None)
+    self.assertEqual(none_data_supply, None)
 
   def test_02_registerOrsClientProject(self):
     '''
@@ -101,18 +104,18 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     project_item_dict = self.registerOrsClientProject(reference_seed=reference_seed)
 
     # Check that both the project and the client user have been created
-    self.assertTrue(project_item_dict['project'] is not None)
-    self.assertTrue(project_item_dict['client_user'] is not None)
+    self.assertNotEqual(project_item_dict['project'], None)
+    self.assertNotEqual(project_item_dict['client_user'], None)
 
     # Call the script a second time with the same reference
     # This should not do anything as the project already exists
     repeated_project_item_dict = self.registerOrsClientProject(reference_seed=reference_seed)
 
     # Check that both the project and the client user are identical to the previous ones
-    self.assertTrue(repeated_project_item_dict['project'] \
-      == project_item_dict['project'])
-    self.assertTrue(repeated_project_item_dict['client_user'] \
-      == repeated_project_item_dict['client_user'])
+    self.assertEqual(repeated_project_item_dict['project'],
+                     project_item_dict['project'])
+    self.assertEqual(repeated_project_item_dict['client_user'],
+                     repeated_project_item_dict['client_user'])
 
     # Create a new reference seed for the project
     # but reuse the previous reference for the client user account
@@ -128,9 +131,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Check that the new project is NOT created
     # and that the client user is the same as previously
-    self.assertTrue(new_project_item_dict['project'] is None)
-    self.assertTrue(new_project_item_dict['client_user'] \
-      == project_item_dict['client_user'])
+    self.assertEqual(new_project_item_dict['project'], None)
+    self.assertEqual(new_project_item_dict['client_user'],
+                     project_item_dict['client_user'])
 
   def test_03_1_registerOrsValid(self):
     '''
@@ -152,15 +155,15 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check that it indicates a success
     response_dict = json.loads(ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % ors_item_dict['data_acquisition_unit'].getReference()
     )
 
     # Check that the Data Acquisition Unit and Data Supply have been created
-    self.assertTrue(ors_item_dict['data_acquisition_unit'] is not None)
-    self.assertTrue(ors_item_dict['data_supply'] is not None)
+    self.assertNotEqual(ors_item_dict['data_acquisition_unit'], None)
+    self.assertNotEqual(ors_item_dict['data_supply'], None)
 
     # Call the script a second time with the same seeds
     # This should not do anything as the Data Acquisition Unit already exists
@@ -172,9 +175,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the status and message
     response_dict = json.loads(repeated_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s already exists." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s already exists." \
       % ors_item_dict['data_acquisition_unit'].getReference()
     )
 
@@ -194,17 +197,18 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the status and message
     response_dict = json.loads(new_enb_id_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % new_enb_id_ors_item_dict['data_acquisition_unit'].getReference()
     )
 
     # Check that the Data Acquisition Unit and Data Supply have been created
     # and that the new Data Supply has automatically been linked to the project
-    self.assertTrue(new_enb_id_ors_item_dict['data_acquisition_unit'] is not None)
-    self.assertTrue(new_enb_id_ors_item_dict['data_supply'] is not None)
-    self.assertTrue(new_enb_id_ors_item_dict['data_supply'].getDestinationProject() == project_a_url)
+    self.assertNotEqual(new_enb_id_ors_item_dict['data_acquisition_unit'], None)
+    self.assertNotEqual(new_enb_id_ors_item_dict['data_supply'], None)
+    self.assertEqual(project_a_url,
+      new_enb_id_ors_item_dict['data_supply'].getDestinationProject())
 
     # Now, link the above Data Supply to a second project
     project_b_item_dict = self.registerOrsClientProject()
@@ -225,18 +229,18 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the status and message
     response_dict = json.loads(another_enb_id_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % another_enb_id_ors_item_dict['data_acquisition_unit'].getReference()
     )
 
     # Check that the Data Acquisition Unit and Data Supply have been created
-    self.assertTrue(another_enb_id_ors_item_dict['data_acquisition_unit'] is not None)
-    self.assertTrue(another_enb_id_ors_item_dict['data_supply'] is not None)
+    self.assertNotEqual(another_enb_id_ors_item_dict['data_acquisition_unit'], None)
+    self.assertNotEqual(another_enb_id_ors_item_dict['data_supply'], None)
     # As the ORS has been linked to two different projects already,
     # it cannot be automatically decided to which project this version should be assigned to
-    self.assertTrue(another_enb_id_ors_item_dict['data_supply'].getDestinationProject() is None)
+    self.assertEqual(another_enb_id_ors_item_dict['data_supply'].getDestinationProject(), None)
 
     # Generate a new set of seeds
     new_tag_hostname_seed = generateRandomString(length=3, only_digits=True)
@@ -250,15 +254,15 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check that it indicates a success
     response_dict = json.loads(no_enb_id_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % no_enb_id_ors_item_dict['data_acquisition_unit'].getReference()
     )
 
     # Check that the Data Acquisition Unit and Data Supply have been created
-    self.assertTrue(no_enb_id_ors_item_dict['data_acquisition_unit'] is not None)
-    self.assertTrue(no_enb_id_ors_item_dict['data_supply'] is not None)
+    self.assertNotEqual(no_enb_id_ors_item_dict['data_acquisition_unit'], None)
+    self.assertNotEqual(no_enb_id_ors_item_dict['data_supply'], None)
 
   def test_03_2_registerOrsInvalid(self):
     '''
@@ -283,15 +287,15 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the error message
     response_dict = json.loads(too_long_tag_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "error")
-    self.assertTrue(
-      response_dict['message'] == "Invalid ORS tag ors%s_COMP-%s_e0x%sTest found" \
+    self.assertEqual(response_dict['status'], "error")
+    self.assertEqual(
+      response_dict['message'], "Invalid ORS tag ors%s_COMP-%s_e0x%sTest found" \
       % (too_long_tag_hostname_seed, tag_comp_id_seed, tag_enb_id_seed)
     )
 
     # Check that the Data Acquisition Unit and Data Supply have NOT been created
-    self.assertTrue(too_long_tag_ors_item_dict['data_acquisition_unit'] is None)
-    self.assertTrue(too_long_tag_ors_item_dict['data_supply'] is None)
+    self.assertEqual(too_long_tag_ors_item_dict['data_acquisition_unit'], None)
+    self.assertEqual(too_long_tag_ors_item_dict['data_supply'], None)
 
     # Now, call the script with only the first section in the tag: 'orsXXX'
     # This should error out as the tag has too few underscore-separated sections
@@ -303,12 +307,13 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the error message
     response_dict = json.loads(too_long_tag_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "error")
-    self.assertTrue(response_dict['message'] == "Invalid ORS tag ors%sTest found" % tag_hostname_seed)
+    self.assertEqual(response_dict['status'], "error")
+    self.assertEqual(response_dict['message'],
+                     "Invalid ORS tag ors%sTest found" % tag_hostname_seed)
 
     # Check that the Data Acquisition Unit and Data Supply have NOT been created
-    self.assertTrue(too_long_tag_ors_item_dict['data_acquisition_unit'] is None)
-    self.assertTrue(too_long_tag_ors_item_dict['data_supply'] is None)
+    self.assertEqual(too_long_tag_ors_item_dict['data_acquisition_unit'], None)
+    self.assertEqual(too_long_tag_ors_item_dict['data_supply'], None)
 
   def test_03_3_registerOrsNonStandard(self):
     '''
@@ -330,15 +335,15 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check that it indicates a success
     response_dict = json.loads(ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % ors_item_dict['data_acquisition_unit'].getReference()
     )
 
     # Check that the Data Acquisition Unit and Data Supply have been created
-    self.assertTrue(ors_item_dict['data_acquisition_unit'] is not None)
-    self.assertTrue(ors_item_dict['data_supply'] is not None)
+    self.assertNotEqual(ors_item_dict['data_acquisition_unit'], None)
+    self.assertNotEqual(ors_item_dict['data_supply'], None)
 
     # Now, link the original Data Supply to a client project...
     project_a_item_dict = self.registerOrsClientProject()
@@ -360,9 +365,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the status and message
     response_dict = json.loads(repeated_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % ors_item_dict['data_acquisition_unit'].getReference()
     )
 
@@ -385,9 +390,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the status and message
     response_dict = json.loads(re_repeated_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s already exists." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s already exists." \
       % ors_item_dict['data_acquisition_unit'].getReference()
     )
 
@@ -404,19 +409,20 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the status and message
     response_dict = json.loads(new_enb_id_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % new_enb_id_ors_item_dict['data_acquisition_unit'].getReference()
     )
 
     # Check that the Data Acquisition Unit and Data Supply have been created
-    self.assertTrue(new_enb_id_ors_item_dict['data_acquisition_unit'] is not None)
-    self.assertTrue(new_enb_id_ors_item_dict['data_supply'] is not None)
+    self.assertNotEqual(new_enb_id_ors_item_dict['data_acquisition_unit'], None)
+    self.assertNotEqual(new_enb_id_ors_item_dict['data_supply'], None)
     # As the two first registrations are not in valid states anymore,
     # they should not be considered when deciding project attribution
     # This Data Supply should therefore not be linked to the project
-    self.assertTrue(new_enb_id_ors_item_dict['data_supply'].getDestinationProject() is None)
+    self.assertEqual(None,
+      new_enb_id_ors_item_dict['data_supply'].getDestinationProject())
 
     # Now, link the above Data Supply to the project
     # This should allow the next registration to be linked to it automatically
@@ -437,17 +443,18 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Parse the JSON response and check the status and message
     response_dict = json.loads(another_enb_id_ors_item_dict['response'])
-    self.assertTrue(response_dict['status'] == "ok")
-    self.assertTrue(
-      response_dict['message'] == "ORS with tag %s successfully registered." \
+    self.assertEqual(response_dict['status'], "ok")
+    self.assertEqual(
+      response_dict['message'], "ORS with tag %s successfully registered." \
       % another_enb_id_ors_item_dict['data_acquisition_unit'].getReference()
     )
 
     # Check that the Data Acquisition Unit and Data Supply have been created
     # and that the new Data Supply has automatically been linked to the project
-    self.assertTrue(another_enb_id_ors_item_dict['data_acquisition_unit'] is not None)
-    self.assertTrue(another_enb_id_ors_item_dict['data_supply'] is not None)
-    self.assertTrue(another_enb_id_ors_item_dict['data_supply'].getDestinationProject() == project_a_url)
+    self.assertNotEqual(another_enb_id_ors_item_dict['data_acquisition_unit'], None)
+    self.assertNotEqual(another_enb_id_ors_item_dict['data_supply'], None)
+    self.assertEqual(project_a_url,
+           another_enb_id_ors_item_dict['data_supply'].getDestinationProject())
 
   def test_04_registerVirtualOrsAction(self):
     '''
@@ -483,7 +490,8 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Send same log two times, creating a broken Data Stream
     test_ors_example_logs = [
-      self.test_ors_example_log_valid, self.test_ors_example_log_valid
+      self.test_ors_example_log_valid,
+      self.test_ors_example_log_valid
     ]
 
     # Perform ingestions, and keep only the last item dictionary
@@ -519,18 +527,58 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       ingestion_item_dict['data_stream'].getSize()
     )
 
+    # It is not inconsistent because there is a sanity check before insert
+    # to skip duplicated timestamps.
     for data_array in ingestion_item_dict['data_array_list']:
       if 'e_rab' in data_array.getReference():
         self.assertEqual(data_array.checkConsistency(), [])
+
       if 'cell_ue_count' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        # Force duplication
+        data_zarray = data_array.getArray()
+        data_frame = pd.DataFrame.from_records(data_zarray[:])
+        dup_data_zarray = data_frame.to_records(index=False)
+        data_array.setArray(
+          np.concatenate((data_zarray, dup_data_zarray)))
+        transaction.commit()
         self.assertEqual([i.message for i in data_array.checkConsistency()],
-          ["This Data Array constains an unexpected duplication."])
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
+
       elif 'cell_rrc' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        data_zarray = data_array.getArray()
+        data_frame = pd.DataFrame.from_records(data_zarray[:])
+        dup_data_zarray = data_frame.to_records(index=False)
+        data_array.setArray(
+          np.concatenate((data_zarray, dup_data_zarray)))
+        transaction.commit()
         self.assertEqual([i.message for i in data_array.checkConsistency()],
-          ["This Data Array constains an unexpected duplication."])
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
+
       elif 'cell_rms_rx' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
         self.assertEqual([i.message for i in data_array.checkConsistency()],
-          ["This Data Array constains an unexpected duplication."])
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
 
   def test_05_1_ingestValidOrsLogDataFromFluentd(self, data_key="valid"):
     '''
@@ -548,6 +596,11 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     test_ors_example_logs = []
     if data_key == "valid":
       test_ors_example_logs = [self.test_ors_example_log_valid]
+    elif data_key == "splitted":
+      test_ors_example_logs = [
+        self.test_ors_example_log_valid_part_1,
+        self.test_ors_example_log_valid_part_2
+      ]
     elif data_key == "invalid":
       test_ors_example_logs = [
         self.test_ors_example_log_invalid_split_1,
@@ -663,8 +716,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       ('rms_dbm', '<f8')
     ]
 
-    inconsistency_amount = 0
-    if data_key in ["valid", "duplicated"]:
+    if data_key in ["valid", "duplicated", "splitted"]:
       e_rab_array_shape = (82,)
       e_utran_array_shape = (20992,)
       cell_ue_count_array_shape = (84,)
@@ -673,10 +725,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     elif data_key == "invalid":
       e_rab_array_shape = (73,)
       e_utran_array_shape = (18688,)
-      cell_ue_count_array_shape = (113,)
-      cell_rrc_array_shape = (113,)
-      cell_rms_rx_array_shape = (216,)
-      inconsistency_amount = 1
+      cell_ue_count_array_shape = (84,)
+      cell_rrc_array_shape = (84,)
+      cell_rms_rx_array_shape = (158,)
     elif data_key == "empty":
       e_rab_array_dtype = None
       e_utran_array_dtype = None
@@ -731,7 +782,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
                 )
 
       elif 'cell_ue_count' in data_array.getReference():
-        self.assertEqual(len(data_array.checkConsistency()), inconsistency_amount)
+        self.assertEqual(data_array.checkConsistency(), [])
         self.assertEqual(data_array.getArrayShape(), cell_ue_count_array_shape)
         self.assertEqual(data_array.getArrayDtype(), cell_ue_count_array_dtype)
 
@@ -754,7 +805,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
       elif 'cell_rrc' in data_array.getReference():
         # invalid data has some duplications here.
-        self.assertEqual(len(data_array.checkConsistency()), inconsistency_amount)
+        self.assertEqual(data_array.checkConsistency(), [])
         self.assertEqual(data_array.getArrayShape(), cell_rrc_array_shape)
         self.assertEqual(data_array.getArrayDtype(), cell_rrc_array_dtype)
 
@@ -841,7 +892,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
               for ant in rms_rx_per_cell_antenna_dict[key][col]:
                 # Only 2 antenas are included so consider half of results.
                 self.assertEqual(cell_rms_rx_array_shape[0]/2,
-                  len(rms_rx_per_cell_antenna_dict[key][col][ant]))
+                  len(rms_rx_per_cell_antenna_dict[key][col][ant]), rms_rx_per_cell_antenna_dict[key][col][ant])
 
 
   def test_05_2_ingestInvalidOrsLogDataFromFluentd(self):
@@ -895,6 +946,15 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       entity_tag
     )
 
+  def test_05_6_ingestValidSegmentedOrsLogDataFromFluentd(self):
+    '''
+    Test an splitted ORS log ingestion: simulate a fluentd gateway forwarding
+    valid data and processing data in 2 segments.
+    Check that all items are valid, but the data arrays contains no duplication.
+    Also check the fetching of KPI values through the dedicated API endpoint.
+    '''
+    self.test_05_1_ingestValidOrsLogDataFromFluentd(data_key="splitted")
+
   def test_06_1_checkOrsItemConsistency(self):
     '''
     Test the Wendelin Telecom constraints defined on standard ORS Data Acquisition Units and Data Supplies.
@@ -911,8 +971,8 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Check that there is a consistency error: no reference was found
     consistency_message_list = self.getConsistencyMessageList(inconsistent_data_acquisition_unit)
-    self.assertTrue(len(consistency_message_list) == 1)
-    self.assertTrue(consistency_message_list[0] == 'Reference has not been set')
+    self.assertEqual(len(consistency_message_list), 1)
+    self.assertEqual(consistency_message_list[0], 'Reference has not been set')
 
     # Now, successively set invalid ORS tags as the reference
     # and check that it is detected as invalid
@@ -926,9 +986,10 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       inconsistent_data_acquisition_unit.setReference(invalid_tag)
       self.tic()
       consistency_message_list = self.getConsistencyMessageList(inconsistent_data_acquisition_unit)
-      self.assertTrue(len(consistency_message_list) == 1)
-      self.assertTrue(
-        consistency_message_list[0] == "Reference '%s' is not a valid ORS tag" % invalid_tag
+      self.assertEqual(len(consistency_message_list), 1)
+      self.assertEqual(
+        consistency_message_list[0],
+        "Reference '%s' is not a valid ORS tag" % invalid_tag
       )
 
     # Next, manually create a Data Supply without a reference
@@ -941,11 +1002,10 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Check that there are several consistency errors
     consistency_message_list = self.getConsistencyMessageList(inconsistent_data_supply)
-    self.assertTrue(len(consistency_message_list) == 2)
-    self.assertTrue(
-      consistency_message_list[0] == 'Data Supply is not related to a Data Acquisition Unit'
-    )
-    self.assertTrue(consistency_message_list[1] == 'Reference has not been set')
+    self.assertEqual(len(consistency_message_list), 2)
+    self.assertEqual(consistency_message_list[0],
+                     'Data Supply is not related to a Data Acquisition Unit')
+    self.assertEqual(consistency_message_list[1], 'Reference has not been set')
 
     # Now, register an ORS with a valid tag
     ors_item_dict = self.registerOrs(test_suffix=False)
@@ -967,10 +1027,8 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Check that the Data Supply is now inconsistent
     consistency_message_list = self.getConsistencyMessageList(ors_item_dict['data_supply'])
-    self.assertTrue(len(consistency_message_list) == 1)
-    self.assertTrue(
-      consistency_message_list[0] == \
-      "Reference does not match the associated Data Acquisition Unit's reference"
+    self.assertEqual(consistency_message_list,
+      ["Reference does not match the associated Data Acquisition Unit's reference"]
     )
 
     # Finally, invalidate the Data Supply
@@ -979,13 +1037,11 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
     # Check that there is a new consistency error
     consistency_message_list = self.getConsistencyMessageList(ors_item_dict['data_supply'])
-    self.assertTrue(len(consistency_message_list) == 2)
-    self.assertTrue(
-      consistency_message_list[0] == \
+    self.assertEqual(len(consistency_message_list), 2)
+    self.assertEqual(consistency_message_list[0],
       "Reference does not match the associated Data Acquisition Unit's reference"
     )
-    self.assertTrue(
-      consistency_message_list[1] == \
+    self.assertEqual(consistency_message_list[1],
       "Validation state does not match that of the associated Data Acquisition Unit"
     )
 
@@ -1036,9 +1092,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     consistency_message_list = self.getConsistencyMessageList(
       ingestion_item_dict['data_analysis']
     )
-    self.assertTrue(len(consistency_message_list) == 1)
-    self.assertTrue(
-      consistency_message_list[0] == "Simulation is started but should be stopped"
+    self.assertEqual(len(consistency_message_list), 1)
+    self.assertEqual(
+      consistency_message_list[0], "Simulation is started but should be stopped"
     )
 
     # Now, unlink the Data Supply from the Data Analysis
@@ -1050,14 +1106,12 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     consistency_message_list = self.getConsistencyMessageList(
       ingestion_item_dict['data_analysis']
     )
-    self.assertTrue(len(consistency_message_list) == 2)
-    self.assertTrue(
-      consistency_message_list[0] == \
+    self.assertEqual(len(consistency_message_list), 2)
+    self.assertEqual(consistency_message_list[0],
       "Missing Data Supply: %s" % ors_item_dict['data_supply'].getRelativeUrl()
     )
-    self.assertTrue(
-      consistency_message_list[1] == "Simulation should be delivered"
-    )
+    self.assertEqual(consistency_message_list[1],
+                     "Simulation should be delivered")
 
     # Re-validate and relink the Data Supply and stop the Data Ingestion
     ors_item_dict['data_supply'].validate()
@@ -1070,10 +1124,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     consistency_message_list = self.getConsistencyMessageList(
       ingestion_item_dict['data_ingestion']
     )
-    self.assertTrue(len(consistency_message_list) == 1)
-    self.assertTrue(
-      consistency_message_list[0] == "Simulation is stopped but should be started"
-    )
+    self.assertEqual(len(consistency_message_list), 1)
+    self.assertEqual(consistency_message_list[0],
+                     "Simulation is stopped but should be started")
 
     # Restart the ingestion
     ingestion_item_dict['data_ingestion'].start()
@@ -1090,9 +1143,10 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     consistency_message_list = self.getConsistencyMessageList(
       ingestion_item_dict['data_ingestion']
     )
-    self.assertTrue(len(consistency_message_list) == 1)
-    self.assertTrue(
-      consistency_message_list[0] == "More than one Data Supply linked to Data Delivery"
+    self.assertEqual(len(consistency_message_list), 1)
+    self.assertEqual(
+      consistency_message_list[0],
+      "More than one Data Supply linked to Data Delivery"
     )
 
     # Finally, remove the aggregate from the Data Analysis's last line
@@ -1113,12 +1167,14 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     consistency_message_list = self.getConsistencyMessageList(
       data_analysis_last_line
     )
-    self.assertTrue(len(consistency_message_list) == 2)
-    self.assertTrue(
-      consistency_message_list[0] == "Item Type Data Stream is missing"
+    self.assertEqual(len(consistency_message_list), 2)
+    self.assertEqual(
+      consistency_message_list[0], 
+      "Item Type Data Stream is missing"
     )
-    self.assertTrue(
-      consistency_message_list[1] == "Item Type Progress Indicator is missing"
+    self.assertEqual(
+      consistency_message_list[1],
+      "Item Type Progress Indicator is missing"
     )
 
     data_analysis_last_line.setAggregateValueList(saved_aggregate_list)
@@ -1183,41 +1239,40 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     ):
       expected_title = expected_title \
         or item_dict['data_acquisition_unit'].getReference()
-      self.assertTrue(
-        item_dict['data_acquisition_unit'].getTitle() == expected_title
+      self.assertEqual(expected_title,
+        item_dict['data_acquisition_unit'].getTitle()
       )
-      self.assertTrue(
-        item_dict['data_acquisition_unit'].getValidationState() \
-          == data_acquisition_unit_validation_state
+      self.assertEqual(
+        item_dict['data_acquisition_unit'].getValidationState(),
+        data_acquisition_unit_validation_state
       )
 
-      self.assertTrue(
-        item_dict['data_supply'].getValidationState() \
-          == data_supply_validation_state
+      self.assertEqual(
+        item_dict['data_supply'].getValidationState(),
+        data_supply_validation_state
       )
       if expected_project:
-        self.assertTrue(
-          item_dict['data_supply'].getDestinationProject() == expected_project
+        self.assertEqual(
+          item_dict['data_supply'].getDestinationProject(), expected_project
         )
       else:
-        self.assertTrue(
-          item_dict['data_supply'].getDestinationProject() is None
-      )
+        self.assertEqual(None,
+                         item_dict['data_supply'].getDestinationProject())
 
       for item_key in ['data_ingestion', 'data_analysis']:
         if item_key not in item_dict:
           continue
-        self.assertTrue(
-          item_dict['data_ingestion'].getSimulationState() \
-            == item_simulation_state
+        self.assertEqual(
+          item_dict['data_ingestion'].getSimulationState(),
+          item_simulation_state
         )
         if expected_project and item_simulation_state == 'started':
-          self.assertTrue(
-            item_dict[item_key].getDestinationProject() == expected_project
+          self.assertEqual(
+            item_dict[item_key].getDestinationProject(), expected_project
           )
         else:
-          self.assertTrue(
-            item_dict[item_key].getDestinationProject() is None
+          self.assertEqual(
+            item_dict[item_key].getDestinationProject(), None
         )
 
     # Register ORS
@@ -1330,45 +1385,45 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     initial_listbox_item_url_list = [
       item.getRelativeUrl() for item in initial_listbox_item_list
     ]
-    self.assertTrue(
-      ors_item_dict_list[0]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[0]['data_acquisition_unit'].getRelativeUrl(),
+        initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[1]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[1]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[2]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[2]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[3]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[3]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[4]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[4]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[5]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[5]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[6]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[6]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[7]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[7]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[8]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[9]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[9]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
 
     # Build a listbox item list for updating:
@@ -1519,65 +1574,65 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       item_simulation_state,
       archived=False
     ):
-      self.assertTrue(
-        ingestion_item_dict['data_acquisition_unit'].getValidationState() \
-          == data_acquisition_unit_validation_state
+      self.assertEqual(
+        ingestion_item_dict['data_acquisition_unit'].getValidationState(),
+        data_acquisition_unit_validation_state
       )
-      self.assertTrue(
-        ingestion_item_dict['data_supply'].getValidationState() \
-          == data_supply_validation_state
+      self.assertEqual(
+        ingestion_item_dict['data_supply'].getValidationState(),
+        data_supply_validation_state
       )
       for data_supply_line in ingestion_item_dict['data_supply'].contentValues(
         portal_type='Data Supply Line'
       ):
-        self.assertTrue(
-          data_supply_line.getValidationState() == data_supply_validation_state
+        self.assertEqual(
+          data_supply_line.getValidationState(), data_supply_validation_state
         )
       for item_key in ['data_stream', 'progress_indicator']:
-        self.assertTrue(
-          ingestion_item_dict[item_key].getValidationState() \
-            == item_validation_state
+        self.assertEqual(
+          ingestion_item_dict[item_key].getValidationState(),
+          item_validation_state
         )
       for data_array in ingestion_item_dict['data_array_list']:
-        self.assertTrue(
-          data_array.getValidationState() == item_validation_state
+        self.assertEqual(
+          data_array.getValidationState(), item_validation_state
         )
       for data_simulation_key in ['data_ingestion', 'data_analysis']:
-        self.assertTrue(
-          ingestion_item_dict[data_simulation_key].getSimulationState() \
-            == item_simulation_state
+        self.assertEqual(
+          ingestion_item_dict[data_simulation_key].getSimulationState(),
+          item_simulation_state
         )
 
       if archived:
-        self.assertTrue(
-          ingestion_item_dict['data_acquisition_unit'].getTitle().count(archived_reference_marker) == 1
+        self.assertEqual(1,
+          ingestion_item_dict['data_acquisition_unit'].getTitle().count(archived_reference_marker)
         )
         for item_key in ['data_acquisition_unit', 'data_supply', 'data_stream']:
-          self.assertTrue(
+          self.assertNotEqual(None,
             archived_reference_marker in ingestion_item_dict[item_key].getReference()
           )
         for data_array in ingestion_item_dict['data_array_list']:
-          self.assertTrue(
+          self.assertNotEqual(None,
             archived_reference_marker in data_array.getReference()
           )
         for data_simulation_key in ['data_ingestion', 'data_analysis']:
-          self.assertTrue(
+          self.assertNotEqual(None,
             archived_reference_marker in ingestion_item_dict[data_simulation_key].getReference()
           )
       else:
-        self.assertTrue(
+        self.assertNotEqual(None,
           archived_reference_marker not in ingestion_item_dict['data_acquisition_unit'].getTitle()
         )
         for item_key in ['data_acquisition_unit', 'data_supply', 'data_stream']:
-          self.assertTrue(
+          self.assertNotEqual(None,
             archived_reference_marker not in ingestion_item_dict[item_key].getReference()
           )
         for data_array in ingestion_item_dict['data_array_list']:
-          self.assertTrue(
+          self.assertNotEqual(None,
             archived_reference_marker not in data_array.getReference()
           )
         for data_simulation_key in ['data_ingestion', 'data_analysis']:
-          self.assertTrue(
+          self.assertNotEqual(None,
             archived_reference_marker not in ingestion_item_dict[data_simulation_key].getReference()
           )
 
@@ -1691,13 +1746,13 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       'deleted',
       'delivered',
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_acquisition_unit'].getValidationState() \
-        == 'validated'
+    self.assertEqual(
+      ors_item_dict_list[8]['data_acquisition_unit'].getValidationState(),
+      'validated'
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_supply'].getValidationState() \
-        == 'validated'
+    self.assertEqual(
+      ors_item_dict_list[8]['data_supply'].getValidationState(),
+      'validated'
     )
 
     # Retrieve the item list that will be used by the Fast Input listbox
@@ -1711,41 +1766,41 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     initial_listbox_item_url_list = [
       item.getRelativeUrl() for item in initial_listbox_item_list
     ]
-    self.assertTrue(
-      ors_item_dict_list[0]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[0]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[1]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[1]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[2]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[2]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[3]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[3]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[4]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[4]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[5]['data_acquisition_unit'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[5]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[6]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[6]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[7]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[7]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_acquisition_unit'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[8]['data_acquisition_unit'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
 
     # Build a listbox item list for updating:
@@ -1839,21 +1894,21 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       'delivered',
       archived=True
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_acquisition_unit'].getValidationState() \
-        == 'deleted'
+    self.assertEqual(
+      ors_item_dict_list[8]['data_acquisition_unit'].getValidationState(),
+      'deleted'
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_acquisition_unit'].getTitle().count(archived_reference_marker) == 1
+    self.assertEqual(1,
+      ors_item_dict_list[8]['data_acquisition_unit'].getTitle().count(archived_reference_marker)
     )
-    self.assertTrue(
+    self.assertNotEqual(None,
       archived_reference_marker in ors_item_dict_list[8]['data_acquisition_unit'].getReference()
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_supply'].getValidationState() \
-        == 'deleted'
+    self.assertEqual(
+      ors_item_dict_list[8]['data_supply'].getValidationState(),
+      'deleted'
     )
-    self.assertTrue(
+    self.assertNotEqual(None,
       archived_reference_marker in ors_item_dict_list[8]['data_supply'].getReference()
     )
 
@@ -1864,41 +1919,41 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     redo_listbox_item_url_list = [
       item.getRelativeUrl() for item in redo_listbox_item_list
     ]
-    self.assertTrue(
-      ors_item_dict_list[0]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[0]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[1]['data_acquisition_unit'].getRelativeUrl() \
-      in redo_listbox_item_url_list
+    self.assertIn(
+      ors_item_dict_list[1]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[2]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[2]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[3]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[3]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[4]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[4]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[5]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[5]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[6]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[6]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[7]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[7]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
-    self.assertTrue(
-      ors_item_dict_list[8]['data_acquisition_unit'].getRelativeUrl() \
-      not in redo_listbox_item_url_list
+    self.assertNotIn(
+      ors_item_dict_list[8]['data_acquisition_unit'].getRelativeUrl(),
+      redo_listbox_item_url_list
     )
 
   def test_09_refreshOrsKpiDataAnalysisFastInput(self):
@@ -1930,26 +1985,30 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     self.tic()
 
     # Check the initial state of the Data Analyses
-    self.assertTrue(
-      ingestion_item_dict_list[0]['data_analysis'].getSimulationState() == 'started' \
-      and ingestion_item_dict_list[0]['data_analysis'].getRefreshState() == 'current'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[1]['data_analysis'].getSimulationState() == 'started' \
-      and ingestion_item_dict_list[1]['data_analysis'].getRefreshState() == 'current'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[2]['data_analysis'].getSimulationState() == 'delivered' \
-      and ingestion_item_dict_list[2]['data_analysis'].getRefreshState() == 'current'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[3]['data_analysis'].getSimulationState() == 'stopped' \
-      and ingestion_item_dict_list[3]['data_analysis'].getRefreshState() == 'current'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[4]['data_analysis'].getSimulationState() == 'started' \
-      and ingestion_item_dict_list[4]['data_analysis'].getRefreshState() == 'refresh_planned'
-    )
+    self.assertEqual('started',
+      ingestion_item_dict_list[0]['data_analysis'].getSimulationState())
+    self.assertEqual('current',
+      ingestion_item_dict_list[0]['data_analysis'].getRefreshState())
+
+    self.assertEqual('started',
+      ingestion_item_dict_list[1]['data_analysis'].getSimulationState())
+    self.assertEqual('current',
+      ingestion_item_dict_list[1]['data_analysis'].getRefreshState())
+
+    self.assertEqual('delivered',
+      ingestion_item_dict_list[2]['data_analysis'].getSimulationState())
+    self.assertEqual('current',
+      ingestion_item_dict_list[2]['data_analysis'].getRefreshState())
+
+    self.assertEqual('stopped',
+      ingestion_item_dict_list[3]['data_analysis'].getSimulationState())
+    self.assertEqual('current',
+      ingestion_item_dict_list[3]['data_analysis'].getRefreshState())
+
+    self.assertEqual('started',
+      ingestion_item_dict_list[4]['data_analysis'].getSimulationState())
+    self.assertEqual('refresh_planned',
+      ingestion_item_dict_list[4]['data_analysis'].getRefreshState())
 
     # Retrieve the item list that will be used by the Fast Input listbox
     # Check that only the first Data Analysis is there by its relative URL
@@ -1958,25 +2017,25 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     initial_listbox_item_url_list = [
       item.getRelativeUrl() for item in initial_listbox_item_list
     ]
-    self.assertTrue(
-      ingestion_item_dict_list[0]['data_analysis'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ingestion_item_dict_list[0]['data_analysis'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ingestion_item_dict_list[1]['data_analysis'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertIn(
+      ingestion_item_dict_list[1]['data_analysis'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertTrue(
-      ingestion_item_dict_list[2]['data_analysis'].getRelativeUrl() \
-        not in initial_listbox_item_url_list
+    self.assertNotIn(
+      ingestion_item_dict_list[2]['data_analysis'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertFalse(
-      ingestion_item_dict_list[3]['data_analysis'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertNotIn(
+      ingestion_item_dict_list[3]['data_analysis'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
-    self.assertFalse(
-      ingestion_item_dict_list[4]['data_analysis'].getRelativeUrl() \
-        in initial_listbox_item_url_list
+    self.assertNotIn(
+      ingestion_item_dict_list[4]['data_analysis'].getRelativeUrl(),
+      initial_listbox_item_url_list
     )
 
     # Build a listbox item list for planning the refresh:
@@ -1998,23 +2057,27 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     self.tic()
 
     # Check that only the first Data Analysis have been planned to refresh
-    self.assertTrue(
-      ingestion_item_dict_list[0]['data_analysis'].getSimulationState() == 'started' \
-      and ingestion_item_dict_list[0]['data_analysis'].getRefreshState() == 'refresh_planned'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[1]['data_analysis'].getSimulationState() == 'started' \
-      and ingestion_item_dict_list[1]['data_analysis'].getRefreshState() == 'current'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[2]['data_analysis'].getSimulationState() == 'delivered' \
-      and ingestion_item_dict_list[2]['data_analysis'].getRefreshState() == 'current'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[3]['data_analysis'].getSimulationState() == 'stopped' \
-      and ingestion_item_dict_list[3]['data_analysis'].getRefreshState() == 'current'
-    )
-    self.assertTrue(
-      ingestion_item_dict_list[4]['data_analysis'].getSimulationState() == 'started' \
-      and ingestion_item_dict_list[4]['data_analysis'].getRefreshState() == 'refresh_planned'
-    )
+    self.assertEqual('started',
+      ingestion_item_dict_list[0]['data_analysis'].getSimulationState())
+    self.assertEqual('refresh_planned',
+      ingestion_item_dict_list[0]['data_analysis'].getRefreshState())
+
+    self.assertEqual('started',
+      ingestion_item_dict_list[1]['data_analysis'].getSimulationState())
+    self.assertEqual('current',
+      ingestion_item_dict_list[1]['data_analysis'].getRefreshState())
+
+    self.assertEqual('delivered',
+      ingestion_item_dict_list[2]['data_analysis'].getSimulationState())
+    self.assertEqual('current',
+      ingestion_item_dict_list[2]['data_analysis'].getRefreshState())
+
+    self.assertEqual('stopped',
+      ingestion_item_dict_list[3]['data_analysis'].getSimulationState())
+    self.assertEqual('current',
+      ingestion_item_dict_list[3]['data_analysis'].getRefreshState())
+
+    self.assertEqual('started',
+      ingestion_item_dict_list[4]['data_analysis'].getSimulationState())
+    self.assertEqual('refresh_planned',
+      ingestion_item_dict_list[4]['data_analysis'].getRefreshState())

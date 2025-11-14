@@ -12,7 +12,7 @@ def byteify(string):
     return tmp
   elif isinstance(string, list):
     return [byteify(element) for element in string]
-  elif isinstance(string, unicode):
+  elif six.PY2 and isinstance(string, string.text_type):
     return string.encode('utf-8')
   else:
     return string

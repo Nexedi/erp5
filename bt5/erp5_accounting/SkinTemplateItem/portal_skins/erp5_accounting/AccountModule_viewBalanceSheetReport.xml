@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>OLE_documents_zipstring</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAAIAEyHuTbMBk1mQgEAAFEHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+            <value> <bytes encoding="base64">UEsDBBQAAAAIAEyHuTbMBk1mQgEAAFEHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
 EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOw1I741GGmmx2ltT7TCS9q4TT82j
 qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyuscncNOpOhaD6SpdWCRWlatD+h6r5JFx+3X+e1kWj5U
 F/CgDdZ5YjxUFxn2Gmo+BOwEhGC0As55yp3rm6OruVY0FCJCT1tEFhfIkIypA/C2E1LIu5y3KW/e
@@ -16,20 +16,16 @@ DXpM8ZgLPUti4EQbiGXwoBQazKGPUqUYp53mYhZ3FREMxgNjIXjwIYV8E1IhfPRjRCp30lPqxeDs
 vSkG1xZGJPmq2UKgoo472d+fDUpu6p4m6UZdC/6Ww51yxj3LqVdvwrOf/9fMv3OJDwZpdqxFhtke
 nvU22Y0DbUjyadgEN84Nn7ewyJz/xXNpF/LHt7j8BFBLAQIUABQAAAAIAEyHuTbMBk1mQgEAAFEH
 AAAVAAAAAAAAAAAAAAAAAAAAAABNRVRBLUlORi9tYW5pZmVzdC54bWxQSwUGAAAAAAEAAQBDAAAA
-dQEAAAAA</string> </value>
+dQEAAAAA</bytes> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <dictionary>
                     <item>
@@ -70,7 +66,7 @@ dQEAAAAA</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Balance Sheet</unicode> </value>
+            <value> <string>Balance Sheet</string> </value>
         </item>
       </dictionary>
     </pickle>

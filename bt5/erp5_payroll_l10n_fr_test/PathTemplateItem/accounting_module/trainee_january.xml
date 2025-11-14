@@ -71,19 +71,19 @@
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -124,13 +124,9 @@
             <value>
               <object>
                 <klass>
-                  <global id="1.1" name="_reconstructor" module="copy_reg"/>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
                 </klass>
-                <tuple>
-                  <global id="1.2" name="DateTime" module="DateTime.DateTime"/>
-                  <global id="1.3" name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                <tuple/>
                 <state>
                   <tuple>
                     <float>1420070400.0</float>
@@ -145,11 +141,7 @@
             <value>
               <object>
                 <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <reference id="1.2"/>
-                  <reference id="1.3"/>
-                  <none/>
-                </tuple>
+                <tuple/>
                 <state>
                   <tuple>
                     <float>1422662400.0</float>
@@ -177,18 +169,7 @@
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>ERP5 Annotation Line</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-              <string>ERP5 Pay Sheet Line</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
+      <none/>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
@@ -197,48 +178,6 @@
     </pickle>
     <pickle>
       <none/>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>26</string>
-              <int>1</int>
-              <string>overtime_annotation_line</string>
-              <int>1</int>
-              <string>work_time_annotation_line</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>2</string>
-              <int>1</int>
-              <string>3</string>
-              <int>1</int>
-              <string>4</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
     </pickle>
   </record>
 </ZopeData>

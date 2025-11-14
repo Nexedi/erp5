@@ -7,25 +7,21 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts02571556.08</string> </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -39,7 +35,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -53,10 +49,6 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Embedded File</string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>74186</int> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
@@ -95,7 +87,7 @@
       <dictionary>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAcQAAAGdCAYAAACM3gMgAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAcQAAAGdCAYAAACM3gMgAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
 /wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sEDAEWKs2aSQIAACAASURBVHja
 7L15nBxXdS/+raXX6Z7p2aXRSKN9sazNtmzLsmwBNl6wjR3zgDiQEIeYLZD38l4Ax0ASTICQ97IA
 geQHibEh4GAwBtsY7wJLsmQt1i5bo2VGmhnN3tPTa+2/P7qrVF1T1V0z0z1bn68+penu2qvuPd97
@@ -1396,7 +1388,7 @@ UJF3BKCxVZ75WVsAAADeSURBVHlpaeeTfmFdXVmtrc0VY0NHtiJD9YR2DgFu1XrSOA+NH6ax92uc
 o/2m0iLdsTaXmZmZSIAREREXjxAvBBu9daon1TfAKhAQCILNTkKQ+IRgkGQ+WdV8fVPKEEFIwO0f
 1ld6VJ7g1NjfJD0CkWBuYTEunOdBr9ereernTTTr6+s0MzOjVc66er+wH4kuIiLiCU2IP0/0V9eq
 MYoNJcfe1NtTK6DAbCyUiIiIiIjAJTgg+GeF6fnNvND66tqYp1Zt8BZnE0RERERERERERERERERE
-RERERESM4f8DE28VS4C2PnsAAAAASUVORK5CYII=</string> </value>
+RERERESM4f8DE28VS4C2PnsAAAAASUVORK5CYII=</bytes> </value>
         </item>
       </dictionary>
     </pickle>

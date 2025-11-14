@@ -142,7 +142,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -161,19 +161,19 @@
                 <item>
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>processing_status_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -216,13 +216,9 @@
                       <value>
                         <object>
                           <klass>
-                            <global id="3.1" name="_reconstructor" module="copy_reg"/>
+                            <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
                           </klass>
-                          <tuple>
-                            <global id="3.2" name="DateTime" module="DateTime.DateTime"/>
-                            <global id="3.3" name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1608248301.17</float>
@@ -259,11 +255,7 @@
                       <value>
                         <object>
                           <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <reference id="3.2"/>
-                            <reference id="3.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1623769494.62</float>
@@ -326,13 +318,9 @@
                       <value>
                         <object>
                           <klass>
-                            <global id="4.1" name="_reconstructor" module="copy_reg"/>
+                            <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
                           </klass>
-                          <tuple>
-                            <global id="4.2" name="DateTime" module="DateTime.DateTime"/>
-                            <global id="4.3" name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1609118690.04</float>
@@ -375,11 +363,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1619441742.66</float>
@@ -422,11 +406,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621604368.75</float>
@@ -469,11 +449,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621604388.25</float>
@@ -516,11 +492,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621604465.86</float>
@@ -563,11 +535,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621606813.06</float>
@@ -610,11 +578,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621608462.0</float>
@@ -657,11 +621,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621608588.4</float>
@@ -704,11 +664,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621608731.23</float>
@@ -751,11 +707,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621608999.76</float>
@@ -798,11 +750,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1621613028.87</float>
@@ -845,11 +793,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1623769494.61</float>
@@ -892,11 +836,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1623770001.7</float>
@@ -939,11 +879,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1623770156.73</float>
@@ -986,11 +922,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1623858870.96</float>
@@ -1008,7 +940,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -1033,11 +965,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1745571335.79</float>
@@ -1055,7 +983,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -1080,11 +1008,7 @@
                       <value>
                         <object>
                           <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <reference id="4.2"/>
-                            <reference id="4.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1745571344.48</float>
@@ -1141,13 +1065,9 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1608248301.21</float>

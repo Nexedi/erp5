@@ -383,6 +383,12 @@ datetime.datetime.strptime('', '')
 # Allow dict.fromkeys, Only this method is a class method in dict module.
 allow_class_attribute(dict, {'fromkeys': 1})
 
+if six.PY2:
+  # Allow restricted python to manipulate zodbpickle.binary, for the case where
+  # an object coming from a business template saved on py3 is loaded from py2.
+  import zodbpickle
+  allow_type(zodbpickle.binary)
+
 allow_module('difflib')
 allow_module('hashlib')
 import hashlib

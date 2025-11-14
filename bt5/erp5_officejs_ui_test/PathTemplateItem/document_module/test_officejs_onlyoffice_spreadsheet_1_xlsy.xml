@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>base_data</string> </key>
-            <value> <string encoding="base64">UEsDBBQAAAgAAO29k0uFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
+            <value> <bytes encoding="base64">UEsDBBQAAAgAAO29k0uFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
 aXMub3BlbmRvY3VtZW50LnNwcmVhZHNoZWV0UEsDBBQAAAgAAO29k0vmyW8aSAQAAEgEAAAYAAAA
 VGh1bWJuYWlscy90aHVtYm5haWwucG5niVBORw0KGgoAAAANSUhEUgAAAN0AAAD/CAMAAABCfiMV
 AAADAFBMVEWPj4+fn5+/v7/Ozs7e3t7///8AAAD/////////////////////////////////////
@@ -284,7 +284,7 @@ AABDb25maWd1cmF0aW9uczIvc3RhdHVzYmFyL1BLAQIUABQAAAgAAO29k0sAAAAAAAAAAAAAAAAY
 AAAAAAAAAAAAAAAAABMgAABDb25maWd1cmF0aW9uczIvbWVudWJhci9QSwECFAAUAAAIAADtvZNL
 AAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAABJIAAAQ29uZmlndXJhdGlvbnMyL2Zsb2F0ZXIvUEsB
 AhQAFAAICAgA7b2TS1MqqZ8hAQAARQQAABUAAAAAAAAAAAAAAAAAfyAAAE1FVEEtSU5GL21hbmlm
-ZXN0LnhtbFBLBQYAAAAAEQARAHAEAADjIQAAAAA=</string> </value>
+ZXN0LnhtbFBLBQYAAAAAEQARAHAEAADjIQAAAAA=</bytes> </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>

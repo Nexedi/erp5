@@ -207,7 +207,9 @@ class TALESValue(StaticValue):
     if kw.get('cell') is None:
       request = kw.get('REQUEST')
       if request is not None:
-        kw['cell'] = getattr(request, 'cell', None)
+        cell = getattr(request, 'cell', None)
+        if cell is not None:
+          kw['cell'] = cell
         if 'cell_index' not in kw and\
             getattr(request, 'cell_index', None) is not None:
           kw['cell_index'] = request.cell_index
@@ -1375,6 +1377,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                   'my_message_different_state',
               ) and (self.getId(), f.getId()) not in (
                     # Field used in API
+                    ('Base_viewAsJio', 'my_validation_state'),
+                    ('Service_viewAsJio', 'my_validation_state'),
                     ('Ticket_viewAsHateoas', 'my_simulation_state_title'),
                     # Preference unrelated to workflow states.
                     ('SystemPreference_viewSlapOS', 'my_preferred_shacache_website_expected_state'),

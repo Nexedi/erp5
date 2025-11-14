@@ -8832,7 +8832,7 @@ class TestConstraintTemplateItem(_LocalTemplateItemMixin,
   document_title = 'UnitTest'
   document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
     """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
-  document_data_updated = ' \nclass UnitTest2: \n  """ \n  Second Fake constraint for unit test \n \
+  document_data_updated = ' \nclass UnitTest: \n  """ \n  Second Fake constraint for unit test \n \
     """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
   document_base_path = os.path.join(getConfiguration().instancehome, 'Constraint')
   template_property = 'template_constraint_id_list'
