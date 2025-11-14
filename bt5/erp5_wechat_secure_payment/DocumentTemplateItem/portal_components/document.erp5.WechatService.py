@@ -59,7 +59,7 @@ class WechatService(XMLObject):
     sign = md5.hexdigest().upper()
     return sign
 
-
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert_xml_to_dict')
   def convert_xml_to_dict(self, xml_content):
     '''
     The XML returned by Wechat is like:
@@ -175,6 +175,7 @@ class WechatService(XMLObject):
     else:
       raise WechatException(u"ERROR Wechat notified a problem (result_code {}: {})".format(result_code, wechat_answer.get("err_code_des")))
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'queryWechatOrderStatus')
   def queryWechatOrderStatus(self, wechat_dict):
     '''
       documentation(Chinese): https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_2
@@ -187,6 +188,7 @@ class WechatService(XMLObject):
 
     return self.callWechatApi(self.QUERY_URL, wechat_dict)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'receiveWechatPaymentNotify')
   def receiveWechatPaymentNotify(self, request, *args, **kwargs):
     '''
     Receive the asychonized callback send by Wechat after user pay the order.
@@ -245,9 +247,11 @@ class WechatService(XMLObject):
       # Error information
       print(params.get("return_msg").encode("utf-8"))
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'initialize')
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'navigate')
   def navigate(self, wechat_dict, REQUEST=None, **kw):
     """Returns a redirection to the payment page"""
     LOG('WechatService', WARNING,
@@ -265,14 +269,17 @@ class WechatService(XMLObject):
       )
     )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifySuccess')
   def notifySuccess(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyFail')
   def notifyFail(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyCancel')
   def notifyCancel(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError

@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
 from Products.ERP5Type.Globals import PersistentMapping
 from erp5.component.interface.IConfigurable import IConfigurable
 
@@ -50,30 +51,26 @@ class ConfigurableMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConfigurationProperty')
+  @publishable
   def getConfigurationProperty(self, key, default=None):
-    """
-    """
     return self._getConfigurationPropertyDict().get(key, default)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConfigurationPropertyIdList')
+  @publishable
   def getConfigurationPropertyIdList(self):
-    """
-    """
     return self._getConfigurationPropertyDict().keys()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConfigurationPropertyDict')
+  @publishable
   def getConfigurationPropertyDict(self):
-    """
-    """
     return dict(self._getConfigurationPropertyDict())
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateConfiguration')
+  @publishable
   def updateConfiguration(self, **kw):
-    """
-    """
     self._getConfigurationPropertyDict().update(kw)
 
   def _getConfigurationPropertyDict(self):
