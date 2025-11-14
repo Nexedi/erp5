@@ -298,6 +298,7 @@ class EssendexGateway(XMLObject):
                             destination_reference=xml['MessageId'],
                             delivery_date=xml['OccurredAt'])
 
+  security.declareProtected(Permissions.ManagePortal, 'pullLastMessageList')
   def pullLastMessageList(self, start_date=None, stop_date=None):
     """Get last messsages on the gateway"""
 

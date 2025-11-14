@@ -172,6 +172,8 @@ class SyncMLConflict(Base):
       if not signature.getConflictList():
         signature.resolveConflictWithMerge()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSubscriber')
   def getSubscriber(self):
     """
     Return the grand parent subscriber
