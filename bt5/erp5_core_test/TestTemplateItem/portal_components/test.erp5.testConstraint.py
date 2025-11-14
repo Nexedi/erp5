@@ -1488,14 +1488,14 @@ class TestConstraint(PropertySheetTestCase):
     group3.title=123
     # Manager can access testGroup3, so full information is included in
     # the error message.
-    error_list = person.checkConsistency()
+    error_list = assignment.checkConsistency()
     self.assertEqual(1, len(error_list))
     self.assertEqual(str(error_list[0].getMessage()),
                      "Attribute source_title should be of type string but is of type " + str(int))
     self.stepLoginAsAssignee()
     # Assignee cannot access testGroup3, so full information is not
     # included in the error message.
-    error_list = person.checkConsistency()
+    error_list = assignment.checkConsistency()
     self.assertEqual(1, len(error_list))
     self.assertEqual(str(error_list[0].getMessage()), 'There is something wrong.')
 
@@ -1608,7 +1608,12 @@ class TestConstraint(PropertySheetTestCase):
     document.checkConsistency()
     self.assertEqual("Fooa", document.getTitle())
 
-  def test_checkConsistency_is_recursive(self):
+  def test_10_CheckRecursivity(self):
+    """
+    Constraints are recursive only for children with an independent decision
+    workflow (ie. not interaction nor edit workflow).
+    """
+    # Child with independent decision workflow
     self._addProperty(
         self.object_content_portal_type,
         self.id(),
@@ -1624,15 +1629,29 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEqual([], obj.fixConsistency())
 
     obj.newContent(portal_type=self.object_content_portal_type)
-    self.assertEqual(1, len(obj.checkConsistency()))
-    self.assertEqual(1, len(obj.fixConsistency()))
+    self.assertEqual(0, len(obj.checkConsistency()))
+    self.assertEqual(0, len(obj.fixConsistency()))
 
-    # non ERP5 objects are ignored
+    # Non-ERP5 objects are ignored
     from OFS.Image import manage_addFile
     manage_addFile(obj, self.id(),)
-    self.assertEqual(1, len(obj.checkConsistency()))
-    self.assertEqual(1, len(obj.fixConsistency()))
+    self.assertEqual(0, len(obj.checkConsistency()))
+    self.assertEqual(0, len(obj.fixConsistency()))
 
+    # Child without independent decision workflow
+    self._addProperty(
+      "Agent",
+      "AgentStartDateExistence",
+      commit=True,
+      property_id="start_date_existence_constraint",
+      portal_type="Property Existence Constraint",
+      constraint_property_list=["start_date"],
+    )
+    # Cleanup will happen since we create children of the default type
+    bank_account_value = obj.newContent(portal_type="Bank Account")
+    bank_account_value.newContent(portal_type="Agent")
+    self.assertEqual(1, len(bank_account_value.checkConsistency()))
+    self.assertEqual(1, len(bank_account_value.fixConsistency()))
 
 def test_suite():
   suite = unittest.TestSuite()
