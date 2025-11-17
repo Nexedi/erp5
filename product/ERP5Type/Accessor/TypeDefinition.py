@@ -202,7 +202,7 @@ type_definition = {
                            # such as files of BLOBs. It uses pdata
                            # structure.
     'data'               : { 'cast'    : asData,
-                             'null'    : (b'', b'None', None,),
+                             'null'    : (b'', b'None', '', None,),
                              'default' : None,
                              'isList'  : 0,
                            },
