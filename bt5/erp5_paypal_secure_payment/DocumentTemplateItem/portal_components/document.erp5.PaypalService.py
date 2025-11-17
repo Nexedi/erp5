@@ -55,12 +55,14 @@ class PaypalService(XMLObject):
                      PropertySheet.Reference
                     )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'initialize')
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
 
   def _getFieldList(self, paypal_dict):
     return ensure_list(paypal_dict.items())
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'navigate')
   def navigate(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     page_template = kw.pop("page_template")
@@ -76,18 +78,22 @@ class PaypalService(XMLObject):
     )
     return getattr(temp_document, page_template)()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifySuccess')
   def notifySuccess(self, redirect_path=None, REQUEST=None):
     """See Payment Service Interface Documentation"""
     return self._getTypeBasedMethod("acceptPayment")(redirect_path=redirect_path)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyFail')
   def notifyFail(self, redirect_path=None, REQUEST=None):
     """See Payment Service Interface Documentation"""
     return self._getTypeBasedMethod("failInPayment")(redirect_path=redirect_path)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'notifyCancel')
   def notifyCancel(self, redirect_path=None, REQUEST=None):
     """See Payment Service Interface Documentation"""
     return self._getTypeBasedMethod("abortPayment")(redirect_path=redirect_path)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'reportPaymentStatus')
   def reportPaymentStatus(self, REQUEST=None):
     """See Payment Service Interface Documentation"""
     param_dict = REQUEST.form

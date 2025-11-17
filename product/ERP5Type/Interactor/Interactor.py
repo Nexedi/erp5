@@ -120,6 +120,7 @@ class InteractorSource:
       im_class = self.klass
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
+      interactor_method.__doc__ = self.method.__doc__
       setattr(im_class, self.method.__name__, interactor_method)
       self.method = interactor_method
     # Register the action

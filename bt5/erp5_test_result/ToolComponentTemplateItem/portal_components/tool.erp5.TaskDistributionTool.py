@@ -29,6 +29,7 @@
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import publishable
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 from zLOG import LOG, DEBUG
@@ -50,9 +51,8 @@ class TaskDistributionTool(BaseTool):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declarePublic('getProtocolRevision')
+  @publishable
   def getProtocolRevision(self):
-    """
-    """
     return 1
 
   def _getTestNodeRelativeUrl(self, node_title):

@@ -36,7 +36,7 @@ from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from erp5.component.interface.IEncryptedPassword import IEncryptedPassword
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, non_publishable
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from six import string_types as basestring
@@ -51,9 +51,8 @@ class EncryptedPasswordMixin(object):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected(Permissions.SetOwnPassword, 'checkPassword')
+  @non_publishable
   def checkPassword(self, value) :
-    """
-    """
     if value is not None :
       return pw_validate(self.getPassword(), value)
     return False
@@ -90,13 +89,12 @@ class EncryptedPasswordMixin(object):
     self.password[format] = value
 
   security.declareProtected(Permissions.SetOwnPassword, 'setEncodedPassword')
+  @non_publishable
   def setEncodedPassword(
       self,
       value,
       format='default',  # pylint: disable=redefined-builtin
   ):
-    """
-    """
     self._setEncodedPassword(value, format=format)
     self.reindexObject()
 

@@ -30,7 +30,7 @@ import six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import bytes2str, str2bytes, guessEncodingFromText # TODO: guessEncodingFromBytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, guessEncodingFromText, publishable # TODO: guessEncodingFromBytes
 from zLOG import LOG, INFO
 
 from email.header import decode_header, HeaderParseError
@@ -227,25 +227,22 @@ class MailMessageMixin:
 
   # Helper methods which override header property sheet
   security.declareProtected(Permissions.AccessContentsInformation, 'getSender')
+  @publishable
   def getSender(self, *args):
-    """
-    """
     if not self.hasData():
       return self._baseGetSender(*args)
     return self.getContentInformation().get('From', *args)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRecipient')
+  @publishable
   def getRecipient(self, *args):
-    """
-    """
     if not self.hasData():
       return self._baseGetRecipient(*args)
     return self.getContentInformation().get('To', *args)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCcRecipient')
+  @publishable
   def getCcRecipient(self, *args):
-    """
-    """
     if not self.hasData():
       return self._baseGetCcRecipient(*args)
     return self.getContentInformation().get('Cc', *args)
