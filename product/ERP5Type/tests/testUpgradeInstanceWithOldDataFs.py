@@ -30,7 +30,11 @@ import io
 import six.moves.urllib as urllib
 import six.moves.http_client
 from DateTime import DateTime
+import pickle
 import six
+import unittest
+import ZODB.serialize
+
 
 if six.PY3:
   try:
@@ -420,3 +424,133 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
     self.check_portal_ids()
     self.check_documents()
     self.check_catalog()
+
+
+class TestPython3PickleMigration(unittest.TestCase):
+
+  def _get_state_from_pickle(self, pickle_data):
+    _find_class = pickle.Unpickler(io.BytesIO()).find_class
+    def _factory(conn, modulename, name):
+      return _find_class(modulename, name)
+    return ZODB.serialize.ObjectReader(factory=_factory).getState(pickle_data)
+
+  def test_PyPDF2_ByteStringObject_protocol_1(self):
+    # pickle with protocol 1 for
+    # persistent.list.PersistentList([PyPDF2.generic.ByteStringObject(b'Hello')])
+    pickle_data = (
+      #    0: c    GLOBAL     'persistent.list PersistentList'
+      #    32: q    BINPUT     1
+      #    34: .    STOP
+      # highest protocol among opcodes = 1
+      b'cpersistent.list\nPersistentList\nq\x01.'
+      #    35: }    EMPTY_DICT
+      #    36: q    BINPUT     2
+      #    38: U    SHORT_BINSTRING 'data'
+      #    44: q    BINPUT     3
+      #    46: ]    EMPTY_LIST
+      #    47: q    BINPUT     4
+      #    49: c    GLOBAL     'copy_reg _reconstructor'
+      #    74: q    BINPUT     5
+      #    76: (    MARK
+      #    77: c        GLOBAL     'PyPDF2.generic ByteStringObject'
+      #   110: q        BINPUT     6
+      #   112: c        GLOBAL     '__builtin__ str'
+      #   129: q        BINPUT     7
+      #   131: U        SHORT_BINSTRING 'Hello'
+      #   138: q        BINPUT     8
+      #   140: t        TUPLE      (MARK at 76)
+      #   141: R    REDUCE
+      #   142: q    BINPUT     9
+      #   144: a    APPEND
+      #   145: s    SETITEM
+      #   146: .    STOP
+      # highest protocol among opcodes = 1
+      b'}q\x02U\x04dataq\x03]q\x04ccopy_r'
+      b'eg\n_reconstructor\nq\x05(cPyPDF2.generic\nByteStringObject\nq\x06c__built'
+      b'in__\nstr\nq\x07U\x05Helloq\x08tRq\tas.'
+    )
+    self.assertEqual(
+      self._get_state_from_pickle(pickle_data), {'data': [b'Hello']})
+
+  def test_PyPDF2_ByteStringObject_protocol_1_with_dt_reconstructor(self):
+    # pickle with protocol 1 for
+    # persistent.list.PersistentList([PyPDF2.generic.ByteStringObject(b'Hello')])
+    # when the monkey patch of _copy_reg was applied in
+    # https://github.com/zopefoundation/DateTime/blob/2.12.7/src/DateTime/DateTime.py#L1863-L1874
+    pickle_data = (
+      #     0: c    GLOBAL     'persistent.list PersistentList'
+      #    32: q    BINPUT     1
+      #    34: .    STOP
+      # highest protocol among opcodes = 1
+      b'cpersistent.list\nPersistentList\nq\x01.'
+      #    35: }    EMPTY_DICT
+      #    36: q    BINPUT     2
+      #    38: U    SHORT_BINSTRING 'data'
+      #    44: q    BINPUT     3
+      #    46: ]    EMPTY_LIST
+      #    47: q    BINPUT     4
+      #    49: c    GLOBAL     'DateTime.DateTime _dt_reconstructor'
+      #    86: q    BINPUT     5
+      #    88: (    MARK
+      #    89: c        GLOBAL     'PyPDF2.generic ByteStringObject'
+      #   122: q        BINPUT     6
+      #   124: c        GLOBAL     '__builtin__ str'
+      #   141: q        BINPUT     7
+      #   143: U        SHORT_BINSTRING 'Hello'
+      #   150: q        BINPUT     8
+      #   152: t        TUPLE      (MARK at 88)
+      #   153: R    REDUCE
+      #   154: q    BINPUT     9
+      #   156: a    APPEND
+      #   157: s    SETITEM
+      #   158: .    STOP
+      # highest protocol among opcodes = 1
+      b'}q\x02U\x04dataq\x03]q\x04cDateTi'
+      b'me.DateTime\n_dt_reconstructor\nq\x05(cPyPDF2.generic\nByteStringObjec'
+      b't\nq\x06c__builtin__\nstr\nq\x07U\x05Helloq\x08tRq\tas.'
+    )
+    self.assertEqual(
+      self._get_state_from_pickle(pickle_data), {'data': [b'Hello']})
+
+  def test_PyPDF2_ByteStringObject_protocol_3(self):
+    # pickle with protocol 3 for
+    # persistent.list.PersistentList([PyPDF2.generic.ByteStringObject(b'Hello')])
+    pickle_data = (
+      #     0: \x80 PROTO      3
+      #     2: c    GLOBAL     'persistent.list PersistentList'
+      #    34: q    BINPUT     1
+      #    36: .    STOP
+      # highest protocol among opcodes = 2
+      b'\x80\x03cpersistent.list\nPersistentList\nq\x01.'
+
+      #    37: \x80 PROTO      3
+      #    39: }    EMPTY_DICT
+      #    40: q    BINPUT     2
+      #    42: U    SHORT_BINSTRING 'data'
+      #    48: q    BINPUT     3
+      #    50: ]    EMPTY_LIST
+      #    51: q    BINPUT     4
+      #    53: c    GLOBAL     'PyPDF2.generic ByteStringObject'
+      #    86: q    BINPUT     5
+      #    88: U    SHORT_BINSTRING 'Hello'
+      #    95: q    BINPUT     6
+      #    97: \x85 TUPLE1
+      #    98: \x81 NEWOBJ
+      #    99: q    BINPUT     7
+      #   101: }    EMPTY_DICT
+      #   102: q    BINPUT     8
+      #   104: b    BUILD
+      #   105: a    APPEND
+      #   106: s    SETITEM
+      #   107: .    STOP
+      # highest protocol among opcodes = 2
+      b'\x80\x03}q\x02U\x04dataq\x03]q\x04cPyPDF2.generic\nByteStringObject\n'
+      b'q\x05U\x05Helloq\x06\x85\x81q\x07}q\x08bas.'
+    )
+    self.assertEqual(
+      self._get_state_from_pickle(pickle_data), {'data': [b'Hello']})
+
+  def test_no_copyreg_pollution(self):
+    self.assertIn(
+      b'ccopy_reg\n_reconstructor\n',
+      pickle.dumps(DateTime('2001/01/01 UTC'), 1))
