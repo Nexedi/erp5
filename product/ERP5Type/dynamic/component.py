@@ -96,6 +96,13 @@ class ToolComponentDynamicPackage(ComponentDynamicPackage):
 
     super(ToolComponentDynamicPackage, self).reset(*args, **kw)
 
+from importlib.abc import MetaPathFinder, InspectLoader
+from importlib.machinery import ModuleSpec
+from Products.ERP5.ERP5Site import getSite
+from Acquisition import aq_base
+from types import ModuleType
+
+__VERSION_SUFFIX_LEN = len('_version')
 COMPONENT_PACKAGE_NAMESPACE_CLASS_DICT = {
   'erp5.component.module': ComponentDynamicPackage,
   'erp5.component.extension': ComponentDynamicPackage,
@@ -105,15 +112,6 @@ COMPONENT_PACKAGE_NAMESPACE_CLASS_DICT = {
   'erp5.component.test': ComponentDynamicPackage,
   'erp5.component.tool': ToolComponentDynamicPackage,
 }
-
-_VERSION_SUFFIX_LEN = len('_version')
-
-from importlib.abc import MetaPathFinder, InspectLoader
-from importlib.machinery import ModuleSpec
-from Products.ERP5.ERP5Site import getSite
-from Acquisition import aq_base
-
-from types import ModuleType
 
 class ComponentModuleLoader(InspectLoader):
   def __init__(self, *args, **kwargs):
@@ -161,10 +159,25 @@ class ComponentMetaPathFinder(MetaPathFinder):
     if namespace not in COMPONENT_PACKAGE_NAMESPACE_CLASS_DICT:
       return None
 
-    site = getSite()
+    try:
+      site = getSite()
+    except Exception: # Too early, ERP5 site not created yet...
+      return None
+
+    if erp5.component.filesystem_import_dict is None:
+      erp5.component.createFilesystemImportDict()
     id_prefix = namespace.rsplit('.', 1)[1]
     name = fullname[len(namespace + '.'):]
 
+    component_tool = aq_base(site.portal_components)
+    def _get_component_id_if_exist(version, name):
+      id_ = "%s.%s.%s" % (id_prefix, version, name)
+      component = getattr(component_tool, id_, None)
+      if component is not None and component.getValidationState() in (
+          'modified', 'validated'):
+        return id_
+      
+    spec = None
     # name=VERSION_version.REFERENCE
     if '.' in name:
       try:
@@ -173,23 +186,17 @@ class ComponentMetaPathFinder(MetaPathFinder):
       except ValueError:
         return None
 
-      id_ = "%s.%s.%s" % (id_prefix, version, name)
+
       # aq_base() because this should not go up to ERP5Site and trigger
       # side-effects, after all this only check for existence...
-      component = getattr(aq_base(site.portal_components), id_, None)
-      if component is not None and component.getValidationState() in ('modified',
-                                                                      'validated'):
+      if _is_component(id_
         spec = ModuleSpec(fullname, loader=ComponentModuleLoader)
         spec.component_id = id_
 
-    # Skip unavailable components, otherwise Products for example could be
-    # wrongly considered as importable and thus the actual filesystem class
-    # ignored
-    #
-    # name=VERSION_version => this is a package
+    # name=VERSION_version => package
     elif name.endswith('_version'):
       if name[:-__VERSION_SUFFIX_LEN] in site.getVersionPriorityNameList():
-        return ModuleSpec(fullname, loader=None, is_package=True)
+        spec = ModuleSpec(fullname, loader=None, is_package=True)
 
     # name=REFERENCE
     else:
@@ -197,8 +204,9 @@ class ComponentMetaPathFinder(MetaPathFinder):
       for version in site.getVersionPriorityNameList():
         id_ = "%s.%s.%s" % (id_prefix, version, name)
         component = getattr(component_tool, id_, None)
-        if component is not None and component.getValidationState() in ('modified',
-                                                                        'validated'):
-          return ModuleSpec(fullname, loader=ComponentAliasLoader)
+        if component is not None and component.getValidationState() in (
+            'modified', 'validated'):
+          spec = ModuleSpec(fullname, loader=ComponentAliasLoader)
+          break
 
-    return None
+    return spec

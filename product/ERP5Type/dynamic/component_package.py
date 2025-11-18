@@ -213,15 +213,6 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
       if import_lock_held:
         global_import_lock.acquire()
 
-  def find_spec(self, name, path=None, target=None):
-    """PEP-0451
-    """
-    assert six.PY3
-    if self.find_module(name, path) is None:
-      return None
-    import importlib.util
-    return importlib.util.spec_from_loader(name, self)
-
   def _getVersionPackage(self, version):
     """
     Get the version package (NAMESPACE.VERSION_version) for the given version
