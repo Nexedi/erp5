@@ -38,7 +38,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, publishable
 from Products.ERP5Type.Cache import readOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
@@ -289,18 +289,16 @@ class Predicate(XMLObject):
     return SimpleQuery(uid=0, comparison_operator='>')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
+  @publishable
   def searchResults(self, **kw):
-    """
-    """
     return self.getPortalObject().portal_catalog.searchResults(
       predicate_internal_query=self.asQuery(),
       **kw
     )
 
   security.declareProtected(Permissions.AccessContentsInformation, 'countResults')
+  @publishable
   def countResults(self, REQUEST=None, used=None, **kw):
-    """
-    """
     return self.getPortalObject().portal_catalog.countResults(
       predicate_internal_query=self.asQuery(),
       **kw
