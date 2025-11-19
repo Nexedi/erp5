@@ -111,7 +111,7 @@ else:
     """Decorator to make method f from being publishable by Zope.
     """
     real_f = getattr(f, '__func__', f)
-    if real_f.__doc__ and not real_f.__doc__.lstrip():
+    if real_f.__doc__ is None or not real_f.__doc__.lstrip():
       real_f.__doc__ = "<publishable-placeholder>"
     return f
   def non_publishable(f):
