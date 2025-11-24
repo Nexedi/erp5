@@ -55,7 +55,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5OOo.OOoUtils import OOoBuilder
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager, setSecurityManager
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
@@ -647,6 +647,7 @@ class TestDocument(TestDocumentMixin):
     uf = self.portal.acl_users
     uf._doAddUser('member_user2', 'secret', ['Member', 'Assignor', 'Auditor'], [])
     user = uf.getUserById('member_user2').__of__(uf)
+    sm = getSecurityManager()
     newSecurityManager(None, user)
 
     response = self.publish('%s?format=pdf' % doc.getPath(),
@@ -666,8 +667,10 @@ class TestDocument(TestDocumentMixin):
                       response.headers['content-disposition'])
 
     # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
+    setSecurityManager(sm)
     doc.setFilename('PDFファイル.ods')
     self.tic()
+    newSecurityManager(None, user)
     response = self.publish('%s?format=pdf' % doc.getPath(), basic='member_user2:secret')
     self.assertEqual(
       response.headers['content-disposition'],
