@@ -108,10 +108,11 @@ if six.PY3:
   non_publishable = zpublish(publish=False)
 else:
   def publishable(f):
-    """Decorator to make method f from being publishable by Zope.
+    """Decorator to make method f from being publishable (eg methods with a
+    non-empty docstring) by Zope.
     """
     real_f = getattr(f, '__func__', f)
-    if real_f.__doc__ is None or not real_f.__doc__.lstrip():
+    if not real_f.__doc__:
       real_f.__doc__ = "<publishable-placeholder>"
     return f
   def non_publishable(f):
