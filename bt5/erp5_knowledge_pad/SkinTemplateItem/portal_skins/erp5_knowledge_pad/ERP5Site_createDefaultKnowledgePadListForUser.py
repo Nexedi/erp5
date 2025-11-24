@@ -65,7 +65,9 @@ with ImmediateReindexContextManager() as immediate_reindex_context_manager:
     knowledge_pad.reindexObject()
 
   # set default gadgets
-  context.ERP5Site_createDefaultKnowledgeBox(knowledge_pad)
+  create_default_knowledgeBox = getattr(context, 'ERP5Site_createDefaultKnowledgeBox', None)
+  if create_default_knowledgeBox:
+    create_default_knowledgeBox(knowledge_pad)
 
 if REQUEST is None:
   return knowledge_pad
