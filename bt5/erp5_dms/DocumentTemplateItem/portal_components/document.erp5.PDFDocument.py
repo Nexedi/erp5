@@ -26,18 +26,18 @@
 #
 ##############################################################################
 
-import tempfile, os, pickle
+import tempfile, os
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, unicode2str
 from erp5.component.interface.IWatermarkable import IWatermarkable
 from erp5.component.document.Image import Image
 from erp5.component.document.Document import ConversionError
 from subprocess import Popen, PIPE
-from zLOG import LOG, INFO, PROBLEM
+from zLOG import LOG, PROBLEM
 import errno
 from io import BytesIO
 from six.moves import range
@@ -369,16 +369,11 @@ class PDFDocument(Image):
             info_key = info_key.lstrip("/")
             if six.PY2 and isinstance(info_value, six.text_type):
               info_value = info_value.encode("utf-8")
-
-            # Ignore values that cannot be pickled ( such as AAPL:Keywords )
-            try:
-              pickle.dumps(info_value)
-            except pickle.PicklingError:
-              LOG("PDFDocument.getContentInformation", INFO,
-                "Ignoring non picklable document info on %s: %s (%r)" % (
-                self.getRelativeUrl(), info_key, info_value))
+            elif isinstance(info_value, bytes):
+              info_value = unicode2str(info_value.decode('utf8', errors="replace"))
             else:
-              result.setdefault(info_key, info_value)
+              info_value = str(info_value)
+            result.setdefault(info_key, info_value)
         except (PdfReadError, AssertionError):
           LOG("PDFDocument.getContentInformation", PROBLEM,
             "PyPDF2 is Unable to read PDF, probably corrupted PDF here : %s" % \
