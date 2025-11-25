@@ -11,7 +11,7 @@ for change in change_list:
   date = formatDate(change.getReceivedDate())
   rubric = change.getUseValue().getCodification()
   rubric_root = rubric[:-4]
-  value = change.getData()
+  value = change.getPreviousValue()
 
   result_dict.setdefault(source, {}) \
              .setdefault(rubric_root, {}) \
