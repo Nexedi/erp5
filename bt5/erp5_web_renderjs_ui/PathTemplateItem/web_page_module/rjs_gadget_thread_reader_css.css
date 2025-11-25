@@ -85,3 +85,6 @@ div[data-gadget-url$="gadget_thread_reader.html"] > nav a:active {
     text-indent: 6pt;
   }
 }
+.img_latest {
+  margin-right: 5px
+}
