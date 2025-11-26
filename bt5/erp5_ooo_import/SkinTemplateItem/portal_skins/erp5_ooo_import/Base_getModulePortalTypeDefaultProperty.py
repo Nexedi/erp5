@@ -20,12 +20,12 @@ if spreadsheet_column is None:
   return ''
 spreadsheet_column_property_list = extract_keyword(spreadsheet_column)
 for portal_type in module.allowedContentTypes():
-  for property in portal_type.getInstancePropertyAndBaseCategorySet():
-    if property not in forbidden_property:
+  for prop in portal_type.getInstancePropertyAndBaseCategorySet():
+    if prop not in forbidden_property:
       property_dict = {}
-      key = '%s.%s' % (portal_type.id, property)
+      key = '%s.%s' % (portal_type.id, prop)
       rank = match(spreadsheet_column_property_list,
-                   extract_keyword(property))
+                   extract_keyword(prop))
       property_dict['key'] = key
       property_dict['rank'] = rank
       if rank == 1:
@@ -33,11 +33,7 @@ for portal_type in module.allowedContentTypes():
       elif rank > 0:
         match_property_list.append(property_dict)
 
-def comp(a, b):
-  return cmp('%s%s' % ((1-a['rank']), a['key']),
-             '%s%s' % ((1-b['rank']), b['key']))
-
 if match_property_list:
-  match_property_list.sort(comp)
+  match_property_list.sort(key=lambda item: '%s%s' % ((1 - item['rank']), item['key']))
   return match_property_list[0]['key']
 return None

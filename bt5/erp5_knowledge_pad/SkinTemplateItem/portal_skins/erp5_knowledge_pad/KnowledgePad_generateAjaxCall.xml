@@ -11,13 +11,9 @@
             <value>
               <object>
                 <klass>
-                  <global name="_reconstructor" module="copy_reg"/>
-                </klass>
-                <tuple>
                   <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                  <global name="object" module="__builtin__"/>
-                  <none/>
-                </tuple>
+                </klass>
+                <tuple/>
                 <state>
                   <dictionary>
                     <item>
@@ -50,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>url, box, dom_id, params={}, ignore_security_check=0, field_prefix=\'\'</string> </value>
+            <value> <string>url, box, dom_id, params=None, ignore_security_check=0, field_prefix=\'\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

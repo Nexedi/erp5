@@ -3,9 +3,9 @@ from Products.ERP5Type.Cache import CachingMethod
 
 request = context.REQUEST
 box_relative_url = kw.get('box_relative_url')
-selection_name = kw.get('list_selection_name')
-portal_selection = getattr(context,'portal_selections')
-selection = portal_selection.getSelectionFor(selection_name)
+# selection_name = kw.get('list_selection_name')
+# portal_selection = getattr(context,'portal_selections')
+# selection = portal_selection.getSelectionFor(selection_name)
 
 error_mapping_dict = {-1: 'Please enter a valid Rss or Atom url in the preference form.',
                       -2: 'Wrong Rss or Atom url or service temporary down.',
