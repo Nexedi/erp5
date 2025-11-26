@@ -7,25 +7,21 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts66310022.25</string> </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -38,7 +34,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAASYAAADwCAIAAAAitl4LAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAO
+            <value> <bytes encoding="base64">iVBORw0KGgoAAAANSUhEUgAAASYAAADwCAIAAAAitl4LAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAO
 xAAADsQBlSsOGwAAAAd0SU1FB9oCEAgXK/KEvXgAACAASURBVHja7V13WBTH+3+PK7RDkCJdjiKW
 WOigRAGxxK4xiTXRaKwxaoolMT3RqIlGjRq/SSyJ9acxlqixRpMYo3cgih1QpIoC0g64273b+f2x
 uJ63c8uCiKjzeXh47ub2rTPvzZbPzEkQQkBAQNBYsCIpICAgJUdAQEqOgICAlBwBASk5AgICUnIE
@@ -333,7 +329,7 @@ kllYracFnj3u/HPVZ4u2vNhroc690wfzF0zp7EJOfAgeKcxLLthGeiztjNm2h95yq0y9sZWNlK7K
 eHiTWBMP3FfktWAdENbTf9zyl7/fsKdrkFKmk/vGWbJl7xm+eFn4YmDOHlrbefS0Kde3kjFB0Ki3
 T7BMbWEyNZ+Vz2+p1YQwsA5g9XCmRVLF67FXPgFBQ94+wTK1sWRq7nKII63zaezi1yUIXBlacgCr
 hzMtTBUXXhbwdOyNQ9A0QTiWBASP9cSSgICAlBwBASk5AgICUnIEBKTkCAgISMkREJCSIyAgJUdA
-QEBKjoCAlBwBAQEpOQKCJor/ByAySvX9useLAAAAAElFTkSuQmCC</string> </value>
+QEBKjoCAlBwBAQEpOQKCJor/ByAySvX9useLAAAAAElFTkSuQmCC</bytes> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -346,10 +342,6 @@ QEBKjoCAlBwBAQEpOQKCJor/ByAySvX9useLAAAAAElFTkSuQmCC</string> </value>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Embedded File</string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>16854</int> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
