@@ -75,7 +75,7 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
 
   return None
 
-def WebSection_setObject(self, id, ob, **kw):
+def WebSection_setObject(self, id, ob, **kw): # pylint disable=redefined-builtin
   """
     Make any change related to the file uploaded.
   """
