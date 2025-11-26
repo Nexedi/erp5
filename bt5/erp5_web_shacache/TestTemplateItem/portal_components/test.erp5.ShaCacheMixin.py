@@ -28,10 +28,9 @@
 ##############################################################################
 
 
-import base64
 import hashlib
 import random
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import str2bytes
 
 
 class ShaCacheMixin(object):
