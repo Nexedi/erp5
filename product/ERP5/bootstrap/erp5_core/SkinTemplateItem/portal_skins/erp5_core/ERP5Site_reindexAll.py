@@ -16,6 +16,7 @@ preference_tag = base_tag + 'portal_preferences'
 simulation_tag = base_tag + 'simulation'
 inventory_tag = base_tag + 'inventory'
 last_inventory_tag = base_tag + 'last_inventory_activity'
+last_accounting_tag = base_tag + 'last_accounting_activity'
 def reindex(document_list, tag, after_tag):
   for document in document_list:
     print('#### Indexing %s ####' % document.getId())
@@ -116,14 +117,21 @@ portal.portal_activities.activate(
   final_activity_tag=last_inventory_tag,
 )
 
+portal.portal_activities.activate(
+  after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag),
+).AccountingModule_reindexBalanceTransactionList(
+  sql_catalog_id=sql_catalog_id,
+  final_activity_tag=last_accounting_tag,
+)
+
 # restore alarm node
 if clear_catalog and is_subscribed:
   portal.portal_alarms.activate(
-    after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag),
+    after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag, last_accounting_tag),
   ).subscribe()
 
 portal.portal_activities.activate(
   tag=final_activity_tag,
-  after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag),
+  after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag, last_accounting_tag),
 ).getId()
 return printed
