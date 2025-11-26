@@ -66,20 +66,20 @@ class TestERP5BearerToken(ERP5TypeTestCase):
     self.tic()
 
   def test_working_token(self):
-    token, expiration_time = self.person.Person_getBearerToken()
+    token, _ = self.person.Person_getBearerToken()
     self.portal.REQUEST._auth = 'Bearer %s' % token
     reference = self.getTokenCredential(self.portal.REQUEST)
     self.assertEqual(reference, self.person.Person_getUserId())
 
   def test_different_user_agent(self):
-    token, expiration_time = self.person.Person_getBearerToken()
+    token, _ = self.person.Person_getBearerToken()
     self.portal.REQUEST._auth = 'Bearer %s' % token
     self.portal.REQUEST.environ['USER_AGENT'] = 'different user agent'
     reference = self.getTokenCredential(self.portal.REQUEST)
     self.assertEqual(reference, None)
 
   def test_different_remote_addr(self):
-    token, expiration_time = self.person.Person_getBearerToken()
+    token, _ = self.person.Person_getBearerToken()
     self.portal.REQUEST._auth = 'Bearer %s' % token
     self.portal.REQUEST.environ['REMOTE_ADDR'] = 'different remote addr'
     reference = self.getTokenCredential(self.portal.REQUEST)
@@ -91,7 +91,7 @@ class TestERP5BearerToken(ERP5TypeTestCase):
     self.assertRaises(ValueError, self.person.Person_getBearerToken)
 
   def test_changed_bearer_token_key(self):
-    token, expiration_time = self.person.Person_getBearerToken()
+    token, _ = self.person.Person_getBearerToken()
     self.portal.REQUEST._auth = 'Bearer %s' % token
     self.preference.edit(preferred_bearer_token_key='changed')
     self.tic()
