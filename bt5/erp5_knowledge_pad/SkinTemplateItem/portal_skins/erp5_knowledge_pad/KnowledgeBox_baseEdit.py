@@ -7,7 +7,7 @@ from json import dumps
 kw = {}
 request = context.REQUEST
 form = request.form
-fields = filter(lambda x: x.startswith(form_fields_main_prefix), form.keys())
+fields = [x for x in form.keys() if x.startswith(form_fields_main_prefix)]
 box = context.restrictedTraverse(box_relative_url)
 portal_selection = context.getPortalObject().portal_selections
 
