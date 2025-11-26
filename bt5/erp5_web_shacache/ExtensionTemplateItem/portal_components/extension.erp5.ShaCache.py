@@ -117,14 +117,14 @@ def File_viewAsWeb(self):
 def WebSite_viewAsWebPost(self, *args, **kwargs):
   portal = self.getPortalObject()
   sha512sum = hashlib.sha512()
-  file = self.REQUEST._file
+  _file = self.REQUEST._file
   while True:
-    d = file.read(1<<20)
+    d = _file.read(1<<20)
     if not d:
       break
     sha512sum.update(d)
   sha512sum = sha512sum.hexdigest()
-  document = portal.portal_contributions.newContent(file=file,
+  document = portal.portal_contributions.newContent(file=_file,
     filename='shacache', discover_metadata=False, reference=sha512sum,
     content_type='application/octet-stream')
   with super_user():
