@@ -32,27 +32,27 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Resource import Resource
 
 class DataSet(Resource):
-    """
-    """
+  """
+  """
 
-    meta_type = 'ERP5 Data Set'
-    portal_type = 'Data Set'
-    add_permission = Permissions.AddPortalContent
+  meta_type = 'ERP5 Data Set'
+  portal_type = 'Data Set'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.TextDocument,
-                        PropertySheet.Document,
-                        PropertySheet.Version,
-                        PropertySheet.Url,
-                        PropertySheet.Data,
-                        PropertySheet.Task,
-                        PropertySheet.TranslatableDescription,
-                        PropertySheet.DataSet,
-                      )
-    # content_type property is also a method from PortalFolder, so we need a
-    # valid type by default.
-    content_type = ''
+  # Declarative properties
+  property_sheets = ( PropertySheet.TextDocument,
+                      PropertySheet.Document,
+                      PropertySheet.Version,
+                      PropertySheet.Url,
+                      PropertySheet.Data,
+                      PropertySheet.Task,
+                      PropertySheet.TranslatableDescription,
+                      PropertySheet.DataSet,
+                    )
+  # content_type property is also a method from PortalFolder, so we need a
+  # valid type by default.
+  content_type = ''
