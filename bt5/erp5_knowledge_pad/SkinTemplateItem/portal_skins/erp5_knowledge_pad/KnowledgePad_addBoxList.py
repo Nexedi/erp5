@@ -1,4 +1,3 @@
-translate = context.Base_translateString
 uids = kw.get('uids', [])
 cancel_url = kw.get('cancel_url', None)
 active_pad_relative_url = kw.get('active_pad_relative_url', None)
