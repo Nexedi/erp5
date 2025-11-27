@@ -5,28 +5,28 @@ import six
 
 request  = container.REQUEST
 
-def getSpreadsheet(file):
+def getSpreadsheet(import_file):
   ooo_parser = OOoParser()
 
   # Extract tables from the speadsheet file
-  if file is None:
+  if import_file is None:
     return {}
-  elif hasattr(file, 'headers'):
+  elif hasattr(import_file, 'headers'):
     # if the file is not an open office format, try to convert it using oood
-    content_type = file.headers.get('Content-Type', '')
+    content_type = import_file.headers.get('Content-Type', '')
     if not (content_type.startswith('application/vnd.sun.xml')
        or content_type.startswith('application/vnd.oasis.opendocument')):
 
       tmp_ooo = context.newContent(temp_object=True, portal_type='OOo Document',
-        id=file.filename)
-      tmp_ooo.edit(data=file.read(), content_type=content_type)
+        id=import_file.filename)
+      tmp_ooo.edit(data=import_file.read(), content_type=content_type)
       tmp_ooo.convertToBaseFormat()
-      ignored, import_file_content = tmp_ooo.convert('ods')
+      _, import_file_content = tmp_ooo.convert('ods')
       ooo_parser.openFromBytes(bytes(import_file_content))
     else:
-      ooo_parser.openFile(file)
+      ooo_parser.openFile(import_file)
   else:
-    ooo_parser.openFromBytes(file)
+    ooo_parser.openFromBytes(import_file)
 
 
   return ooo_parser.getSpreadsheetsMapping()
@@ -108,11 +108,11 @@ else:
       spreadsheet_name = getattr(line, 'spreadsheet_name')
       column_name = getattr(line, 'spreadsheet_column')
 
-      portal_type, property = portal_type_property.split('.', 1)
+      portal_type, prop = portal_type_property.split('.', 1)
 
       if spreadsheet_name not in mapping:
         mapping[spreadsheet_name] = (portal_type, {})
-      mapping[spreadsheet_name][1][column_name] = property
+      mapping[spreadsheet_name][1][column_name] = prop
 
       # portal_type should be the same for all columns
       if portal_type != mapping[spreadsheet_name][0]:
@@ -127,7 +127,7 @@ else:
   active_process_value = context.portal_activities.newActiveProcess()
   active_process_path  = active_process_value.getRelativeUrl()
   # Convert each spreadsheet
-  for sheet_name, sheet_data in spreadsheets.items():
+  for _, sheet_data in spreadsheets.items():
 
     # Build a data structure to associate column index with column title
     column_index = {}
