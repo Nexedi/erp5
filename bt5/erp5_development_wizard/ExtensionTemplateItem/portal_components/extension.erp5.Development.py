@@ -46,7 +46,7 @@ def getPythonCodeExecutionError(self):
     self.Base_executePython()
   except ConflictError:
     raise
-  except:
+  except: # pylint: disable=bare-except
     result = sys.exc_info()
 
   return result[1]
