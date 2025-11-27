@@ -1,5 +1,8 @@
 from json import dumps
 
+if params is None:
+  params = {}
+
 # sometime instead of real knowledge pad object we may get just its relative url
 # and actually that's what we care for
 if not isinstance(box, str):
