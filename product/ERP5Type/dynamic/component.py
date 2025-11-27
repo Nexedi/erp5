@@ -25,17 +25,47 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 ##############################################################################
 
+import sys
+import coverage
+import traceback
+
+from types import ModuleType
+from importlib import import_module
+from zLOG import LOG, BLATHER, WARNING
 from Products.ERP5Type.patches.Restricted import MNAME_MAP
 
-class ComponentPackage(ModuleType):
+from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
+from Products.ERP5Type.Utils import ensure_list
+
+class ComponentImportError(ImportError):
+  """Error when importing an existing, but invalid component, typically
+  because it contains syntax errors or import errors.
   """
-  TODO: Do we really need ComponentVersionPackage?
-  """
+  # TODO: needed?
+
+class ComponentDynamicPackage(ModuleType):
   __path__ = []
 
-from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
-# WIP
-class ComponentDynamicPackage(ComponentPackage):
+  # TODO: Review use cases
+  def find_load_module(self, name):
+    """
+    Find and load a Component module.
+
+    When FS fallback is required (mainly for Document and Extension), this
+    should be used over a plain import to distinguish a document not available
+    as ZODB Component to an error in a Component, especially because in the
+    latter case only ImportError can be raised (PEP-302).
+
+    For example: if a Component tries to import another Component module but
+    the latter has been disabled and there is a fallback on the filesystem, a
+    plain import would hide the real error, instead log it...
+    """
+    fullname = self.__name__ + '.' + name
+    try:
+      return import_module(fullname)
+    except ImportError:
+      return None
+
   def reset(self, sub_package=None):
     """
     Reset the content of the current package and its version package as well
@@ -46,7 +76,7 @@ class ComponentDynamicPackage(ComponentPackage):
       package = sub_package
     else:
       # Clear the source code dict only once
-      self.__fullname_source_code_dict.clear()
+      # TODOself.__fullname_source_code_dict.clear()
       package = self
 
       # Force reload of ModuleSecurityInfo() as it may have been changed in
@@ -68,7 +98,7 @@ class ComponentDynamicPackage(ComponentPackage):
         continue
 
       # Reset the content of the version package before resetting it
-      elif isinstance(module, ComponentVersionPackage):
+      elif name.endswith('_version'): # TODO: isinstance(module, ComponentVersionPackage):
         self.reset(sub_package=module)
 
       module_name = package.__name__ + '.' + name
@@ -80,7 +110,6 @@ class ComponentDynamicPackage(ComponentPackage):
 
       delattr(package, name)
 
-# WIP
 class ToolComponentDynamicPackage(ComponentDynamicPackage):
   def reset(self, *args, **kw):
     """
@@ -90,38 +119,82 @@ class ToolComponentDynamicPackage(ComponentDynamicPackage):
     toolinit = Products.ERP5.__FactoryDispatcher__.toolinit
     reset_tool_set = set()
     for tool in toolinit.tools:
-      if not tool.__module__.startswith(self._namespace_prefix):
+      if not tool.__module__.startswith(self.__name__):
         reset_tool_set.add(tool)
     toolinit.tools = reset_tool_set
 
     super(ToolComponentDynamicPackage, self).reset(*args, **kw)
 
-from importlib.abc import MetaPathFinder, InspectLoader
+from importlib.abc import MetaPathFinder, Loader, InspectLoader
 from importlib.machinery import ModuleSpec
 from Products.ERP5.ERP5Site import getSite
 from Acquisition import aq_base
-from types import ModuleType
 
-__VERSION_SUFFIX_LEN = len('_version')
-COMPONENT_PACKAGE_NAMESPACE_CLASS_DICT = {
-  'erp5.component.module': ComponentDynamicPackage,
-  'erp5.component.extension': ComponentDynamicPackage,
-  'erp5.component.document': ComponentDynamicPackage,
-  'erp5.component.interface': ComponentDynamicPackage,
-  'erp5.component.mixin' ComponentDynamicPackage,
-  'erp5.component.test': ComponentDynamicPackage,
-  'erp5.component.tool': ToolComponentDynamicPackage,
+_VERSION_SUFFIX_LEN = len('_version')
+COMPONENT_PACKAGE_NAME_CLASS_DICT = {
+  'module': ComponentDynamicPackage,
+  'extension': ComponentDynamicPackage,
+  'document': ComponentDynamicPackage,
+  'interface': ComponentDynamicPackage,
+  'mixin': ComponentDynamicPackage,
+  'test': ComponentDynamicPackage,
+  'tool': ToolComponentDynamicPackage,
 }
 
+def register_all_component_package():
+  import erp5
+
+  from .dynamic_module import ComponentPackageType # WIP: to be moved in this file?
+  erp5.component = ComponentPackageType("erp5.component")
+  sys.modules['erp5.component'] = erp5.component
+
+  for package_name, package_class in COMPONENT_PACKAGE_NAME_CLASS_DICT.items():
+    package_fullname = 'erp5.component.' + package_name
+    package = package_class(package_fullname)
+
+    setattr(erp5.component, package_name, package)
+    sys.modules[package_fullname] = package
+
+  sys.meta_path.append(ComponentMetaPathFinder())
+
 class ComponentModuleLoader(InspectLoader):
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    self.fullname_source_code_dict = {}
+  fullname_source_code_dict = {}
 
   def create_module(self, spec):
-    return ModuleType(spec.name, component.getDescription())
+    # __name__, __loader__, __package__, __spec__, __path__, __file__ (origin)
+    # and __cached__ set by importlib._bootstrap._init_module_attrs()
+    return ModuleType(spec.name, spec.component_description)
 
-  def get_source(self, fullname):
+  def exec_module(self, module):
+    spec = module.__spec__
+    component = getattr(getSite().portal_components, spec.component_id)
+    source_code = spec.component_source_code
+
+    self.fullname_source_code_dict[spec.name] = source_code
+    try:
+      code_obj = compile(source_code, module.__file__, 'exec')
+      exec(code_obj, module.__dict__)
+    except Exception:
+      from six import reraise
+      # TODO: Do we need ComponentImportError?
+      reraise(
+        ComponentImportError,
+        ComponentImportError("Cannot load Component %s:\n%s" % (
+          spec.name, traceback.format_exc())),
+        sys.exc_info()[2])
+
+    component._hookAfterLoad(module)
+
+    import erp5.component
+    erp5.component.ref_manager.add_module(module)
+
+    LOG("ERP5Type.dynamic.component", WARNING,
+        "=====> ComponentModuleLoader: %r" % (module))
+
+    return module
+
+  @classmethod
+  def get_source(cls, fullname):
     """
     PEP-302 function to get the source code, used mainly by linecache for
     tracebacks, pdb...
@@ -130,33 +203,43 @@ class ComponentModuleLoader(InspectLoader):
     would require accessing ERP5 Site even though the source code may be
     retrieved outside of ERP5 (eg DeadlockDebugguer).
     """
-    return self.fullname_source_code_dict.get(fullname)
+    return cls.fullname_source_code_dict.get(fullname)
 
-  def exec_module(self, module):
-    pass
+COMPONENT_MODULE_LOADER_INSTANCE = ComponentModuleLoader()
 
-class ComponentAliasLoader(InspectLoader):
-  def create_module(self, spec):
-    pass
-
-  def get_source(self, fullname):
+class ComponentAliasLoader(Loader):
+  def create_module(self, _):
     pass
 
   def exec_module(self, module):
-    pass
+    spec = module.__spec__
+
+    # TODO: Check that the alias module is deleted in case of Exception
+    real_module = import_module(spec.real_name)
+    sys.modules[spec.name] = real_module
+    MNAME_MAP[spec.name] = spec.real_name
+
+    LOG("ERP5Type.dynamic.component", WARNING,
+        "=====> ComponentAliasLoader: %s ALIAS TO %s" % (spec.real_name,
+                                                         spec.name))
+
+COMPONENT_ALIAS_LOADER_INSTANCE = ComponentAliasLoader()
 
 class ComponentMetaPathFinder(MetaPathFinder):
   def find_spec(self, fullname, path, target=None):
-    if path:
-      # Filesystem-based import backward-compatibility
-      import erp5.component
-      try:
-        fullname = erp5.component.filesystem_import_dict.get(fullname, '')
-      except AttributeError: # filesystem_import_dict may not exist yet during bootstrap
-        return None
+    # TODO
+    # if path:
+    #   # Filesystem-based import backward-compatibility
+    #   import erp5.component
+    #   try:
+    #     fullname = erp5.component.filesystem_import_dict.get(fullname, '')
+    #   except AttributeError: # filesystem_import_dict may not exist yet during bootstrap
+    #     return None
 
-    namespace = fullname.rsplit('.', 3)
-    if namespace not in COMPONENT_PACKAGE_NAMESPACE_CLASS_DICT:
+    if path or not fullname.startswith('erp5.component.'):
+      return None
+    package_name = fullname.split('.', 3)[2]
+    if package_name not in COMPONENT_PACKAGE_NAME_CLASS_DICT:
       return None
 
     try:
@@ -164,49 +247,91 @@ class ComponentMetaPathFinder(MetaPathFinder):
     except Exception: # Too early, ERP5 site not created yet...
       return None
 
-    if erp5.component.filesystem_import_dict is None:
-      erp5.component.createFilesystemImportDict()
-    id_prefix = namespace.rsplit('.', 1)[1]
-    name = fullname[len(namespace + '.'):]
+# TODO
+#    if erp5.component.filesystem_import_dict is None:
+#      erp5.component.createFilesystemImportDict()
 
-    component_tool = aq_base(site.portal_components)
-    def _get_component_id_if_exist(version, name):
-      id_ = "%s.%s.%s" % (id_prefix, version, name)
-      component = getattr(component_tool, id_, None)
-      if component is not None and component.getValidationState() in (
-          'modified', 'validated'):
-        return id_
-      
     spec = None
+    name = fullname[len('erp5.component.' + package_name + '.'):]
     # name=VERSION_version.REFERENCE
     if '.' in name:
       try:
         version, name = name.split('.')
-        version = version[:-__VERSION_SUFFIX_LEN]
+        version = version[:-_VERSION_SUFFIX_LEN]
       except ValueError:
         return None
 
-
+      id_ = "%s.%s.%s" % (package_name, version, name)
       # aq_base() because this should not go up to ERP5Site and trigger
       # side-effects, after all this only check for existence...
-      if _is_component(id_
-        spec = ModuleSpec(fullname, loader=ComponentModuleLoader)
-        spec.component_id = id_
+      component = getattr(aq_base(site.portal_components), id_, None)
+      if component is None or component.getValidationState() not in (
+          'modified', 'validated'):
+        if component is None:
+          message = "'%s' does not exist" % id_
+        else:
+          message = "Not in modified/validated state ('%s')" % component.getValidationState()
+        message = "Could not load Component module '%r': %s" % (fullname, message)
+        LOG("ERP5Type.dynamic", WARNING, message, error=True)
+        raise ModuleNotFoundError(message)
+
+      # TODO:
+      # + ERP5_COMPONENT_OVERRIDE_PATH
+      origin = 'erp5://portal_components/' + id_
+      # TODO: cost?
+      if coverage.Coverage.current():
+        try:
+          origin = component._erp5_coverage_filename
+        except AttributeError:
+          LOG("ERP5Type.Tool.ComponentTool", WARNING,
+              "No coverage filesystem mapping for %s" % fullname)
+
+      spec = ModuleSpec(fullname,
+                        loader=COMPONENT_MODULE_LOADER_INSTANCE,
+                        origin=origin)
+      spec.has_location = True # __file__ set to `origin`
+      spec.component_id = id_
+      spec.component_description = component.getDescription()
+      spec.component_source_code = component.getTextContent(validated_only=True)
 
     # name=VERSION_version => package
     elif name.endswith('_version'):
-      if name[:-__VERSION_SUFFIX_LEN] in site.getVersionPriorityNameList():
+      if name[:-_VERSION_SUFFIX_LEN] in site.getVersionPriorityNameList():
         spec = ModuleSpec(fullname, loader=None, is_package=True)
+      else:
+        message = (
+          "Could not load Component module '%r': '%s' not in "
+          "version_priority_name_list=%r" % (fullname,
+                                             name[:-_VERSION_SUFFIX_LEN],
+                                             site.getVersionPriorityNameList()))
+        LOG("ERP5Type.Tool.ComponentTool", WARNING, message)
+        raise ModuleNotFoundError(message)
 
-    # name=REFERENCE
+    # name=REFERENCE (alias to HIGHEST_VERSION_AVAILABLE_version.REFERENCE)
     else:
+      # aq_base() because this should not go up to ERP5Site and trigger
+      # side-effects, after all this only check for existence...
       component_tool = aq_base(site.portal_components)
       for version in site.getVersionPriorityNameList():
-        id_ = "%s.%s.%s" % (id_prefix, version, name)
+        id_ = "%s.%s.%s" % (package_name, version, name)
         component = getattr(component_tool, id_, None)
         if component is not None and component.getValidationState() in (
             'modified', 'validated'):
-          spec = ModuleSpec(fullname, loader=ComponentAliasLoader)
+          real_name = "erp5.component.%s.%s_version.%s" % (package_name, version, name)
+          spec = ModuleSpec(fullname,
+                            # TODO: Singleton instead of one Loader per
+                            # AliasModule?
+                            loader=COMPONENT_ALIAS_LOADER_INSTANCE)
+          spec.real_name = real_name
           break
+      else:
+        message = (
+          "Could not load Component module '%r': "
+          "None found in modified/validated state (searched IDs=%r,version_priority_name_list=%r)" %
+          (fullname,
+           ["%s.%s.%s" % (package_name, version, name) for version in site.getVersionPriorityNameList()],
+           site.getVersionPriorityNameList()))
+        LOG("ERP5Type.Tool.ComponentTool", WARNING, message)
+        raise ModuleNotFoundError(message)
 
     return spec

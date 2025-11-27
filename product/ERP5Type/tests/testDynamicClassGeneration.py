@@ -3404,14 +3404,17 @@ break_at_import()
       error_message = "ImportError: No module named non.existing.module"
     else:
       module_file = 'erp5://' + relative_url
-      error_message = "    ^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'non'"
-    self.assertIn('''
+      error_message = "ModuleNotFoundError: No module named 'non'"
+    expected_error_message = '''
   File "%(module_file)s", line 4, in <module>
     break_at_import()
+    ~~~~~~~~~~~~~~~^^
   File "%(module_file)s", line 3, in break_at_import
     import non.existing.module # pylint:disable=import-error
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
 %(error_message)s
-''' % dict(module_file=module_file, error_message=error_message), output)
+''' % dict(module_file=module_file, error_message=error_message)
+    self.assertIn(expected_error_message, output)
 
     output = self._runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
     if six.PY2:

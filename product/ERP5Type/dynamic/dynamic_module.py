@@ -44,6 +44,7 @@ class PackageType(ModuleType):
     super(PackageType, self).__init__(name=name, doc=doc)
     if six.PY3:
       # PEP-0451
+      # TODO: Why?
       import importlib.machinery
       self.__spec__ = importlib.machinery.ModuleSpec(
         name=self.__name__,
@@ -268,14 +269,11 @@ def initializeDynamicModules():
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
-  # ZODB Components
-  erp5.component = ComponentPackageType("erp5.component")
-
-  from .component_package import (ComponentDynamicPackage,
-                                 ToolComponentDynamicPackage)
 
   # Prevent other threads to create erp5.* packages and modules or seeing them
   # incompletely
+  from .component import register_all_component_package
+                          
   with global_import_lock:
     sys.modules["erp5"] = erp5
     sys.modules["erp5.document"] = erp5.document
@@ -283,11 +281,4 @@ def initializeDynamicModules():
     sys.modules["erp5.accessor_holder.property_sheet"] = \
         erp5.accessor_holder.property_sheet
 
-    sys.modules["erp5.component"] = erp5.component
-    erp5.component.module = ComponentDynamicPackage('erp5.component.module')
-    erp5.component.extension = ComponentDynamicPackage('erp5.component.extension')
-    erp5.component.document = ComponentDynamicPackage('erp5.component.document')
-    erp5.component.tool = ToolComponentDynamicPackage('erp5.component.tool')
-    erp5.component.interface = ComponentDynamicPackage('erp5.component.interface')
-    erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin')
-    erp5.component.test = ComponentDynamicPackage('erp5.component.test')
+    register_all_component_package()

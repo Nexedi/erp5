@@ -269,6 +269,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
 
     elif (reference.endswith('_version') or
           reference[0] == '_' or
+          # TODO
           reference in ('find_module', 'load_module', 'reset')):
       error_list.append(
         ConsistencyMessage(self,
