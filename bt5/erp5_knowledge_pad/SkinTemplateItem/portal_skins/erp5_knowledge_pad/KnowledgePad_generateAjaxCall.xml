@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>url, box, dom_id, params={}, ignore_security_check=0, field_prefix=\'\'</string> </value>
+            <value> <string>url, box, dom_id, params=None, ignore_security_check=0, field_prefix=\'\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
