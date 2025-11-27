@@ -1,8 +1,6 @@
 """
   Create new report theme web.
 """
-portal_skins = context.getPortalObject().portal_skins
-
 page_template_header = """<tal:block define="dummy python: request.RESPONSE.setHeader('Content-Type', 'text/__REPLACE__;; charset=utf-8')"/>
 """
 theme_id = web_site_theme_id.lower().replace(" ", "_")
