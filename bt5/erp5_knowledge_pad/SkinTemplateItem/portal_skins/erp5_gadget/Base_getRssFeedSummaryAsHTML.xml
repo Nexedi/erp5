@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>RssFeed_getSummaryAsHTML</string> </value>
+            <value> <string>Base_getRssFeedSummaryAsHTML</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
