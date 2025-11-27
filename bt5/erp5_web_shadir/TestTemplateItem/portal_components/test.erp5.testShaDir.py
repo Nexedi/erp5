@@ -239,10 +239,10 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(2, len(self.portal.data_set_module))
     self.assertEqual(2, len(self.portal.document_module))
 
-    result, document = self.getInformation()
+    _, document = self.getInformation()
     self.assertEqual(1, len(json.loads(document)))
 
-    result, document2 = self.getInformation(key_2)
+    _, document2 = self.getInformation(key_2)
     self.assertEqual(1, len(json.loads(document2)))
 
     self.postInformation()
@@ -250,7 +250,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(2, len(self.portal.data_set_module))
     self.assertEqual(3, len(self.portal.document_module))
 
-    result, document3 = self.getInformation()
+    _, document3 = self.getInformation()
     self.assertEqual(1, len(json.loads(document3)))
 
 
