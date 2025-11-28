@@ -35,7 +35,7 @@ from zExceptions import BadRequest
 from DateTime import DateTime
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from Products.ERP5Type.Utils import unicode2str, str2bytes
-
+from Products.ERP5Type.Utils import ensure_list
 
 def WebSection_getDocumentValue(self, key, portal=None, language=None,\
                                             validation_state=None, **kw):
@@ -88,7 +88,7 @@ def WebSection_setObject(self, id, ob, **kw): # pylint: disable=redefined-builti
     # a few basic checks
     b64decode(str2bytes(signature))
     if len(a2b_hex(metadata['sha512'])) != 64:
-      raise Exception('sha512: invalid length')
+      raise Exception('sha512: invalid length') # pylint: disable=broad-exception-raised
   except Exception as e:
     raise BadRequest(str(e))
 
@@ -173,13 +173,13 @@ def ERP5Site_deleteOrphanShadir(self):
 
   data_set_id_list = _deletableDataSetList(data_set_dict)
 
-  x = zip(*query("select catalog.id from catalog"
+  x = ensure_list(zip(*query("select catalog.id from catalog"
       " join category on (base_category_uid=%s and category_uid=catalog.uid)"
       " left join catalog as t on (catalog.uid=t.uid)"
     " where catalog.parent_uid=%s and t.uid is null" % (
       self.portal_categories.follow_up.getUid(),
       self.data_set_module.getUid(),
-    ), 0)[1])
+    ), 0)[1]))
   if x:
     data_set_id_list += x[0]
 
