@@ -33,11 +33,7 @@ for portal_type in module.allowedContentTypes():
       elif rank > 0:
         match_property_list.append(property_dict)
 
-def comp(a, b):
-  return cmp('%s%s' % ((1-a['rank']), a['key']),
-             '%s%s' % ((1-b['rank']), b['key']))
-
 if match_property_list:
-  match_property_list.sort(comp)
+  match_property_list.sort(key=lambda item: '%s%s' % ((1 - item['rank']), item['key']))
   return match_property_list[0]['key']
 return None
