@@ -1,10 +1,6 @@
 """
   Create new report theme web.
 """
-portal_skins = context.getPortalObject().portal_skins
-erp5_development = portal_skins.erp5_development
-
-MARKER = ['', None]
 page_template_header = """<tal:block define="dummy python: request.RESPONSE.setHeader('Content-Type', 'text/__REPLACE__;; charset=utf-8')"/>
 """
 theme_id = web_site_theme_id.lower().replace(" ", "_")
@@ -21,7 +17,7 @@ skin_folder.manage_addProduct['OFSP'].manage_addFolder('%s_css' % (theme_id))
 css_folder = getattr(skin_folder, '%s_css' % (theme_id))
 
 skin_folder.manage_addProduct['OFSP'].manage_addFolder('%s_image' % (theme_id))
-image_folder = getattr(skin_folder, '%s_image' % (theme_id))
+# image_folder = getattr(skin_folder, '%s_image' % (theme_id))
 
 skin_folder.manage_addProduct['OFSP'].manage_addFolder('%s_js' % (theme_id))
 js_folder = getattr(skin_folder, '%s_js' % (theme_id))
