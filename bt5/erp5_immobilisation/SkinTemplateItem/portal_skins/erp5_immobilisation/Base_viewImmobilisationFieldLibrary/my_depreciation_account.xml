@@ -11,8 +11,8 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -65,7 +65,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -90,6 +90,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

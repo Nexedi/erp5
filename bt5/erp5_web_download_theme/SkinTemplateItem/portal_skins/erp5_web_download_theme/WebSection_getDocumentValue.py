@@ -34,9 +34,10 @@ reference, extension_part = name.split('-', 1)
 if '.tar.' in extension_part:
   name_list = extension_part.rsplit('.', 2)
   version = name_list[0]
-  extension = '.'.join(name_list[1:])
+  # extension = '.'.join(name_list[1:])
 else:
-  version, extension = extension_part.rsplit('.', 1)
+  # _ is extension
+  version, _ = extension_part.rsplit('.', 1)
 
 kw.update(
   reference=reference,

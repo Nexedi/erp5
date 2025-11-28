@@ -28,18 +28,18 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
 from erp5.component.document.Item import Item
 from erp5.component.document.TextDocument import TextDocument
 
 class SoftwareLicence(TextDocument, Item):
-    """
-    """
+  """
+  """
 
-    meta_type = 'ERP5 Software Licence'
-    portal_type = 'Software Licence'
-    add_permission = Permissions.AddPortalContent
+  meta_type = 'ERP5 Software Licence'
+  portal_type = 'Software Licence'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)

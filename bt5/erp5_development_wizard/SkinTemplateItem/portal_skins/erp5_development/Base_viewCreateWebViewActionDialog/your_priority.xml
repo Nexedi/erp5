@@ -77,7 +77,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Development_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewDevelopmentFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

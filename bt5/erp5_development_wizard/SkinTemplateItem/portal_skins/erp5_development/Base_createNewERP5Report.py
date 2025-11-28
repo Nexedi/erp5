@@ -10,6 +10,9 @@
 
 MARKER = ['', None]
 
+if listbox_column_id_list is None:
+  listbox_column_id_list = []
+
 portal = context.getPortalObject()
 portal_skins = portal.portal_skins
 
@@ -28,7 +31,7 @@ if create_configure_dialog:
   # copy an existing form and just set method to new form
   dialog_form_id = '%sDialog' %form_id
   source_form_id = "Folder_generateWorkflowReportDialog"
-  cb_copy_data = context.portal_skins.erp5_core.manage_copyObjects([source_form_id])
+  cb_copy_data = portal_skins.erp5_core.manage_copyObjects([source_form_id])
   skin_folder.manage_pasteObjects(cb_copy_data)
   skin_folder.manage_renameObjects(ids=[source_form_id], new_ids=[dialog_form_id])
   # set title, and actions
