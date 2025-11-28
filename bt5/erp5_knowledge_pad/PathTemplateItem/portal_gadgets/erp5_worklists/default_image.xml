@@ -7,49 +7,45 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts19396856.87</string> </value>
-        </item>
-        <item>
             <key> <string>_cached_data</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_mime</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_size</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_cached_time</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAc=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAg=</bytes> </persistent>
             </value>
         </item>
         <item>
@@ -58,7 +54,7 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">/9j/4AAQSkZJRgABAQIAHAAcAAD/4QAWRXhpZgAATU0AKgAAAAgAAAAAAAD/2wBDAAEBAQEBAQEB
+            <value> <bytes encoding="base64">/9j/4AAQSkZJRgABAQIAHAAcAAD/4QAWRXhpZgAATU0AKgAAAAgAAAAAAAD/2wBDAAEBAQEBAQEB
 AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/
 2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB
 AQEBAQEBAQEBAQH/wAARCAFkAQEDASIAAhEBAxEB/8QAHgAAAQMFAQEAAAAAAAAAAAAAAAcICQME
@@ -898,7 +894,7 @@ V92P4cOHAA00HD8nzPmUR1z9X3Y/hw65+r7sfw4cOABpoOH5PmfMojrn6vux/Dh1z9X3Y/hw4cAD
 TQcPyfM+ZRHXP1fdj+HDrn6vux/Dhw4AGmg4fk+Z8yiOufq+7H8OHXP1fdj+HDhwANNBw/J8z5lE
 dc/V92P4cOufq+7H8OHDgAaaDh+T5nzKI65+r7sfw4dc/V92P4cOHAA00HD8nzPmUXzr1/7MY/Vz
 wcZkBeR4CHuwIsOPT5hmBDn5/o93DhwAMzNBq5t+/Ru/mUWudQ/7Mv8A5uf48OHDmiCdNTw4n+7X
-QcPh/wCtf//Z</string> </value>
+QcPh/wCtf//Z</bytes> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -917,10 +913,6 @@ QcPh/wCtf//Z</string> </value>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Embedded File</string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>47889</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

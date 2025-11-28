@@ -25,8 +25,8 @@ def Base_runPythonCode(self, code):
     if 1:
       %s
 """%'\n      '.join(code_lines)
-  exec(compile(python_wrapper_code,"-","exec"))
-  wrapper = CodeWrapper()
+  exec(compile(python_wrapper_code,"-","exec")) # pylint: disable=exec-used
+  wrapper = CodeWrapper() # pylint: disable=undefined-variable
   return wrapper.runMethod(self)
 
 
@@ -46,7 +46,7 @@ def getPythonCodeExecutionError(self):
     self.Base_executePython()
   except ConflictError:
     raise
-  except :
+  except: # pylint: disable=bare-except
     result = sys.exc_info()
 
   return result[1]
@@ -55,21 +55,21 @@ def getPythonCodeExecutionError(self):
 import lxml.html
 
 def updateCodeWithMainContent(self, html_code, div_class):
-   main_content = """
-       <div class="%s">
-        __REPLACE_MAIN_CONTENT__
-      </div>
-   """ % (div_class)
-   document = lxml.html.fromstring(html_code)
-   element_list = document.find_class(div_class)
-   if len(element_list) == 0:
-     raise ValueError("It was not possible to find div with class=%s" % (div_class))
+  main_content = """
+      <div class="%s">
+       __REPLACE_MAIN_CONTENT__
+     </div>
+  """ % (div_class)
+  document = lxml.html.fromstring(html_code)
+  element_list = document.find_class(div_class)
+  if len(element_list) == 0:
+    raise ValueError("It was not possible to find div with class=%s" % (div_class))
 
-   element = element_list[0]
-   new_element = lxml.html.fromstring(main_content)
-   if element.get("id") is not None:
-     new_element.set('id', element.get('id'))
-   element.getparent().replace(element, new_element)
-   new_html_code = lxml.html.tostring(document, pretty_print=True)
-   return new_html_code.replace("__REPLACE_MAIN_CONTENT__",
-                                '<tal:block metal:define-slot="main"/>')
+  element = element_list[0]
+  new_element = lxml.html.fromstring(main_content)
+  if element.get("id") is not None:
+    new_element.set('id', element.get('id'))
+  element.getparent().replace(element, new_element)
+  new_html_code = lxml.html.tostring(document, pretty_print=True)
+  return new_html_code.replace("__REPLACE_MAIN_CONTENT__",
+                               '<tal:block metal:define-slot="main"/>')

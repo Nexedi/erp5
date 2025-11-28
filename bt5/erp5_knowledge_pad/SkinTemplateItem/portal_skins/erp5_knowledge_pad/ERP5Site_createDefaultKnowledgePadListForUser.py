@@ -1,7 +1,7 @@
 from Products.ERP5Type.ImmediateReindexContextManager import ImmediateReindexContextManager
 knowledge_pad = None
 portal = context.getPortalObject()
-system_pref = context.portal_preferences.getActiveSystemPreference()
+system_pref = portal.portal_preferences.getActiveSystemPreference()
 user_pref = context.Base_getActiveGlobalKnowledgePadPreference()
 
 is_web_mode = mode in ('web_front', 'web_section',)
@@ -59,7 +59,7 @@ with ImmediateReindexContextManager() as immediate_reindex_context_manager:
   knowledge_pad.visible()
   # set owner
   if owner is not None:
-    current_user = context.portal_membership.getAuthenticatedMember()
+    current_user = portal.portal_membership.getAuthenticatedMember()
     knowledge_pad.manage_setLocalRoles(userid=owner, roles=['Owner'])
     knowledge_pad.manage_delLocalRoles([current_user.getIdOrUserName()])
     knowledge_pad.reindexObject()
