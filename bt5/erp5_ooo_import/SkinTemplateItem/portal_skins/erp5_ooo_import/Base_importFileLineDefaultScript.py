@@ -19,7 +19,7 @@ from Products.ERP5Type.Message import Message
 import six
 
 #Create new ERP5 objects In Activity from OOo document
-imported_line = object_url = None
+imported_line = None
 
 portal = context.getPortalObject()
 container = portal.restrictedTraverse(container_relative_url)

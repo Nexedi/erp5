@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>title</string>
-                <string>catalog_index</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>catalog_index</string>
+                <string>description</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>

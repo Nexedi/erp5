@@ -135,7 +135,7 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.RssFeed_getSummaryAsHTML()</string> </value>
+            <value> <string>python: cell.Base_getRssFeedSummaryAsHTML()</string> </value>
         </item>
       </dictionary>
     </pickle>

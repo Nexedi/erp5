@@ -398,7 +398,7 @@ div.block div.worklist_list ul li a:hover{
   text-decoration:none;
 }
 
-/* Some gadgets share same Document_getSummaryAsHTML or RssFeed_getSummaryAsHTML */
+/* Some gadgets share same Document_getSummaryAsHTML or Base_getRssFeedSummaryAsHTML */
 div.document-gadget-quick-preview div.teaser{
   cursor: pointer;
   margin-bottom: 3px;

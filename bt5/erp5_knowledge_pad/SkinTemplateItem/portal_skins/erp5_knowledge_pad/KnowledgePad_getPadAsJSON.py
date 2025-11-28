@@ -20,11 +20,11 @@ for box in pad.searchFolder(portal_type='Knowledge Box',
   gadget = box.getSpecialiseValue()
   gadget_type = gadget.getRenderType()
   if gadget_type=='asynchronous' and gadget.getValidationState()!='invisible':
-    edit_form_id=gadget.getEditFormId()
-    view_form_id=gadget.getViewFormId()
+    # edit_form_id = gadget.getEditFormId()
+    view_form_id = gadget.getViewFormId()
     base_url = '%s/%s' %(context.absolute_url(), view_form_id)
     box_dom_id = box.getRelativeUrl().replace('/', '_')
-    view_form_dom_id = '%s_content' %box_dom_id;
+    view_form_dom_id = '%s_content' % box_dom_id
     javascript_code = pad.KnowledgePad_generateAjaxCall(base_url, box, \
                             view_form_dom_id, ignore_security_check=1)
     javascript_list.append(javascript_code)

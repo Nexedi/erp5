@@ -1,5 +1,5 @@
 request = context.REQUEST
-is_asynchronous_gadget = options.get('box', None) is None;
+is_asynchronous_gadget = options.get('box', None) is None
 
 # determine parent_web_section_url
 if is_asynchronous_gadget and \
