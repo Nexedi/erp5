@@ -1,3 +1,5 @@
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
 """
   Show documentation in standard script.
   This is different because it try to give a extension in all situation
@@ -35,7 +37,7 @@ if context.getLanguage():
 
 #Try to provide an extension in relation with portal type
 if format is None and original_extension is None:
-  standard_extension = {'Web Page': 'html', 'PDF': 'pdf', 'Text': 'odt'};
+  standard_extension = {'Web Page': 'html', 'PDF': 'pdf', 'Text': 'odt'}
   original_extension = standard_extension.get(context.getPortalType(),None)
 
 if format or original_extension:
