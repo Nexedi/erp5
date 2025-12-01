@@ -31,6 +31,7 @@ import transaction
 import ZODB
 from ZODB.DemoStorage import DemoStorage
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import TemporaryPythonScript
 from six.moves import range
 
 
@@ -99,10 +100,12 @@ class TestERP5(ERP5TypeTestCase):
     portal = self.portal
     cookie = portal.getCacheCookie(cookie_name) # 0
     self.commit()
-    portal.newCacheCookie(cookie_name) # 1
-    self.other_node.newCacheCookie(cookie_name) # 1
-    self.other_node.newCacheCookie(cookie_name) # 2
-    self.commit()# max(1, 2) + 1
+    script_body = 'context.newCacheCookie(%r)' % cookie_name
+    with TemporaryPythonScript(portal, 'ERP5Site_newCacheCookieForTest', body=script_body):
+      portal.ERP5Site_newCacheCookieForTest() # 1
+      self.other_node.ERP5Site_newCacheCookieForTest() # 1
+      self.other_node.ERP5Site_newCacheCookieForTest() # 2
+      self.commit()# max(1, 2) + 1
     self.assertEqual(cookie + 3, portal.getCacheCookie(cookie_name))
 
   def testActiveProcess(self):
