@@ -2516,7 +2516,6 @@ return 1
       Test various cases of merging to an existing document
     """
     # contribute a document, then make it not editable and check we can not contribute to it
-    kw=dict(synchronous_metadata_discovery=True)
     upload_file = self.makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
