@@ -149,11 +149,23 @@ def initializeDynamicModules():
                                                 loadTempPortalTypeClass)
 
   # ZODB Components
-  from .component_package import (ERP5ComponentPackageType,
-                                  ComponentDynamicPackageType,
-                                  ToolComponentDynamicPackageType)
+  from .component_package import ERP5ComponentPackageType
 
   erp5.component = ERP5ComponentPackageType()
+  if sys.version_info >= (3, 6):
+    from .component_package import (ComponentDynamicPackageType,
+                                    ToolComponentDynamicPackageType)
+    from ._component_package_py3 import ComponentMetaPathFinder
+  else:
+    from ._component_package_py2 import (ComponentDynamicPackageType,
+                                         ToolComponentDynamicPackageType)
+  erp5.component.module = ComponentDynamicPackageType('erp5.component.module')
+  erp5.component.extension = ComponentDynamicPackageType('erp5.component.extension')
+  erp5.component.document = ComponentDynamicPackageType('erp5.component.document')
+  erp5.component.tool = ToolComponentDynamicPackageType('erp5.component.tool')
+  erp5.component.interface = ComponentDynamicPackageType('erp5.component.interface')
+  erp5.component.mixin = ComponentDynamicPackageType('erp5.component.mixin')
+  erp5.component.test = ComponentDynamicPackageType('erp5.component.test')
 
   # Prevent other threads to create erp5.* packages and modules or seeing them
   # incompletely
@@ -165,10 +177,21 @@ def initializeDynamicModules():
         erp5.accessor_holder.property_sheet
 
     sys.modules["erp5.component"] = erp5.component
-    erp5.component.module = ComponentDynamicPackage('erp5.component.module')
-    erp5.component.extension = ComponentDynamicPackage('erp5.component.extension')
-    erp5.component.document = ComponentDynamicPackage('erp5.component.document')
-    erp5.component.tool = ToolComponentDynamicPackage('erp5.component.tool')
-    erp5.component.interface = ComponentDynamicPackage('erp5.component.interface')
-    erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin')
-    erp5.component.test = ComponentDynamicPackage('erp5.component.test')
+    sys.modules["erp5.component.module"] = erp5.component.module
+    sys.modules["erp5.component.extension"] = erp5.component.extension
+    sys.modules["erp5.component.document"] = erp5.component.document
+    sys.modules["erp5.component.tool"] = erp5.component.tool
+    sys.modules["erp5.component.interface"] = erp5.component.interface
+    sys.modules["erp5.component.mixin"] = erp5.component.mixin
+    sys.modules["erp5.component.test"] = erp5.component.test
+
+    if sys.version_info >= (3, 6):
+      sys.meta_path.append(ComponentMetaPathFinder())
+    else:
+      sys.meta_path.append(erp5.component.module)
+      sys.meta_path.append(erp5.component.extension)
+      sys.meta_path.append(erp5.component.document)
+      sys.meta_path.append(erp5.component.tool)
+      sys.meta_path.append(erp5.component.interface)
+      sys.meta_path.append(erp5.component.mixin)
+      sys.meta_path.append(erp5.component.test)
