@@ -25,15 +25,18 @@ website_url_set = {}
 
 # simplify code of Base_doLanguage, can't use Base_doLanguage directly
 root_website_url = web_section.getOriginalDocument().absolute_url()
+root_website_url = root_website_url[:-1] if root_website_url.endswith('/') else root_website_url
 website_url_pattern = r'^%s(?:%s)*(/|$)' % (
   re.escape(root_website_url),
   '|'.join('/' + re.escape(x) for x in available_language_set))
 
 for language in available_language_set:
+  web_section_url = web_section.absolute_url()
+  web_section_url = web_section_url[:-1] if web_section_url.endswith('/') else web_section_url
   if language == default_language:
-    website_url_set[language] = re.sub(website_url_pattern, r'%s/\1' % root_website_url, web_section.absolute_url())
+    website_url_set[language] = re.sub(website_url_pattern, r'%s/\1' % root_website_url, web_section_url)
   else:
-    website_url_set[language]=  re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_section.absolute_url())
+    website_url_set[language]=  re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_section_url)
 
 view_as_web_method = default_web_page.getTypeBasedMethod(
   "viewAsWeb",
