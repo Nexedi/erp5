@@ -149,11 +149,11 @@ def initializeDynamicModules():
                                                 loadTempPortalTypeClass)
 
   # ZODB Components
-  from .component_package import (ComponentPackageType,
-                                  ComponentDynamicPackage,
-                                  ToolComponentDynamicPackage)
+  from .component_package import (ERP5ComponentPackageType,
+                                  ComponentDynamicPackageType,
+                                  ToolComponentDynamicPackageType)
 
-  erp5.component = ComponentPackageType("erp5.component")
+  erp5.component = ERP5ComponentPackageType()
 
   # Prevent other threads to create erp5.* packages and modules or seeing them
   # incompletely
