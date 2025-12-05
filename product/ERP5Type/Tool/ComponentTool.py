@@ -160,7 +160,7 @@ class ComponentTool(BaseTool):
           package for package in six.itervalues(erp5.component.__dict__)
           if isinstance(package, ComponentDynamicPackageType)]
       for package in package_list:
-        package.reset()
+        package.reset_unlocked()
         component_package_list.append(package.__name__)
 
       erp5.component.filesystem_import_dict = None
