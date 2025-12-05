@@ -51,12 +51,10 @@ from importlib import import_module
 from Products.ERP5Type.patches.Restricted import MNAME_MAP
 from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
 
-class ComponentVersionPackageType(ModuleType):
+class ComponentVersionPackageType(PackageType):
   """
-  Component Version package (erp5.component.XXX.VERSION)
+  Component Version package (erp5.component.PACKAGE.VERSION_version)
   """
-  __path__ = []
-
 
 if sys.version_info < (3, 6):
   class ModuleNotFoundError(ImportError):
@@ -176,7 +174,7 @@ class ERP5ComponentPackageType(PackageType):
       component_tool = aq_base(site.portal_components)
     except AttributeError:
       # For old sites without portal_components, just use FS Documents...
-      raise AttributeError(attr)
+      raise
     filesystem_import_dict = {}
     for component in component_tool.objectValues():
       if component.getValidationState() == 'validated':
@@ -194,7 +192,7 @@ class ERP5ComponentPackageType(PackageType):
 
     self.filesystem_import_dict = filesystem_import_dict
 
-class ComponentDynamicPackageType(ModuleType, MetaPathFinder):
+class ComponentDynamicPackageType(PackageType, MetaPathFinder):
   """
   A top-level component is a package as it contains modules, this is required
   to be able to add import hooks (as described in PEP 302) when a in the
@@ -212,10 +210,6 @@ class ComponentDynamicPackageType(ModuleType, MetaPathFinder):
   loader should be added to sys.meta_path as late as possible to keep startup
   time to the minimum.
   """
-  # Necessary otherwise imports will fail because an object is considered a
-  # package only if __path__ is defined
-  __path__ = []
-
   def __init__(self, namespace):
     super(ComponentDynamicPackageType, self).__init__(namespace)
 
