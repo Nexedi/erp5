@@ -51,7 +51,7 @@ from importlib import import_module
 from Products.ERP5Type.patches.Restricted import MNAME_MAP
 from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
 
-class ComponentVersionPackage(ModuleType):
+class ComponentVersionPackageType(ModuleType):
   """
   Component Version package (erp5.component.XXX.VERSION)
   """
@@ -127,7 +127,7 @@ class RefManager(dict):
     """
     super(RefManager, self).clear()
 
-class ComponentPackageType(PackageType):
+class ERP5ComponentPackageType(PackageType):
   """
   Package for ZODB Component keeping reference to ZODB Component module.
 
@@ -159,8 +159,9 @@ class ComponentPackageType(PackageType):
   # 'Products.ERP5.Document.Person' => 'erp5.component.document.Person'
   filesystem_import_dict = None
 
-  def __init__(self, *args, **kwargs):
-    super(ComponentPackageType, self).__init__(*args, **kwargs)
+  def __init__(self):
+    super(ERP5ComponentPackageType, self).__init__('erp5.component',
+                                                   'ERP5 Component top-level Package')
     self.ref_manager = RefManager()
 
   def createFilesystemImportDict(self):
@@ -193,7 +194,7 @@ class ComponentPackageType(PackageType):
 
     self.filesystem_import_dict = filesystem_import_dict
 
-class ComponentDynamicPackage(ModuleType, MetaPathFinder):
+class ComponentDynamicPackageType(ModuleType, MetaPathFinder):
   """
   A top-level component is a package as it contains modules, this is required
   to be able to add import hooks (as described in PEP 302) when a in the
@@ -216,7 +217,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
   __path__ = []
 
   def __init__(self, namespace):
-    super(ComponentDynamicPackage, self).__init__(namespace)
+    super(ComponentDynamicPackageType, self).__init__(namespace)
 
     self._namespace_prefix = namespace + '.'
     self._id_prefix = namespace.rsplit('.', 1)[1]
@@ -354,7 +355,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
     if version_package is None:
       version_package_name = self.__name__ + '.' + version
 
-      version_package = ComponentVersionPackage(version_package_name)
+      version_package = ComponentVersionPackageType(version_package_name)
       sys.modules[version_package_name] = version_package
       setattr(self, version, version_package)
 
@@ -617,7 +618,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
         continue
 
       # Reset the content of the version package before resetting it
-      elif isinstance(module, ComponentVersionPackage):
+      elif isinstance(module, ComponentVersionPackageType):
         self.reset(sub_package=module)
 
       module_name = package.__name__ + '.' + name
@@ -629,7 +630,7 @@ class ComponentDynamicPackage(ModuleType, MetaPathFinder):
 
       delattr(package, name)
 
-class ToolComponentDynamicPackage(ComponentDynamicPackage):
+class ToolComponentDynamicPackageType(ComponentDynamicPackageType):
   def reset(self, *args, **kw):
     """
     Reset CMFCore list of Tools (manage_addToolForm)
@@ -642,4 +643,4 @@ class ToolComponentDynamicPackage(ComponentDynamicPackage):
         reset_tool_set.add(tool)
     toolinit.tools = reset_tool_set
 
-    super(ToolComponentDynamicPackage, self).reset(*args, **kw)
+    super(ToolComponentDynamicPackageType, self).reset(*args, **kw)
