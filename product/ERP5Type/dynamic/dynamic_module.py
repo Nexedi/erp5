@@ -149,16 +149,13 @@ def initializeDynamicModules():
                                                 loadTempPortalTypeClass)
 
   # ZODB Components
-  from .component_package import ERP5ComponentPackageType
-
+  from .component_package import (ERP5ComponentPackageType,
+                                  ComponentDynamicPackageType,
+                                  ToolComponentDynamicPackageType,
+                                  ComponentMetaPathFinder)
+  
   erp5.component = ERP5ComponentPackageType()
-  if sys.version_info >= (3, 6):
-    from .component_package import (ComponentDynamicPackageType,
-                                    ToolComponentDynamicPackageType)
-    from ._component_package_py3 import ComponentMetaPathFinder
-  else:
-    from ._component_package_py2 import (ComponentDynamicPackageType,
-                                         ToolComponentDynamicPackageType)
+
   erp5.component.module = ComponentDynamicPackageType('erp5.component.module')
   erp5.component.extension = ComponentDynamicPackageType('erp5.component.extension')
   erp5.component.document = ComponentDynamicPackageType('erp5.component.document')
@@ -185,13 +182,4 @@ def initializeDynamicModules():
     sys.modules["erp5.component.mixin"] = erp5.component.mixin
     sys.modules["erp5.component.test"] = erp5.component.test
 
-    if sys.version_info >= (3, 6):
-      sys.meta_path.append(ComponentMetaPathFinder())
-    else:
-      sys.meta_path.append(erp5.component.module)
-      sys.meta_path.append(erp5.component.extension)
-      sys.meta_path.append(erp5.component.document)
-      sys.meta_path.append(erp5.component.tool)
-      sys.meta_path.append(erp5.component.interface)
-      sys.meta_path.append(erp5.component.mixin)
-      sys.meta_path.append(erp5.component.test)
+    sys.meta_path.append(ComponentMetaPathFinder())
