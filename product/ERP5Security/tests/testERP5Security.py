@@ -231,12 +231,34 @@ class RoleManagementTestCaseBase(UserManagementTestCase):
       code = bc[0].upper()
       if base_cat.get('subcat', None) is not None:
         continue
-      base_cat.newContent(portal_type='Category',
-                          id='subcat',
-                          codification="%s1" % code)
-      base_cat.newContent(portal_type='Category',
-                          id='another_subcat',
-                          codification="%s2" % code)
+      subcat = base_cat.newContent(
+        portal_type='Category',
+        id='subcat',
+        codification="%s1" % code)
+      subcat_1 = subcat.newContent(
+        portal_type='Category',
+        id='subcat_1',
+        codification="%s11" % code)
+      subcat_1.newContent(
+        portal_type='Category',
+        id='subcat_1_1',
+        codification="%s111" % code)
+      subcat_1.newContent(
+        portal_type='Category',
+        id='subcat_1_2',
+        codification="%s112" % code)
+      subcat_2 = subcat.newContent(
+        portal_type='Category',
+        id='subcat_2',
+        codification="%s12" % code)
+      subcat_2.newContent(
+        portal_type='Category',
+        id='subcat_2_1',
+        codification="%s121" % code)
+      base_cat.newContent(
+        portal_type='Category',
+        id='another_subcat',
+        codification="%s2" % code)
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -570,6 +592,128 @@ class TestUserManagement(UserManagementTestCase):
 
     # Just to check that fails
     self.assertRaises(AttributeError, self._assertUserDoesNotExists, login, '')
+
+
+class TestSecurityGroupsWithAssignmentParent(RoleManagementTestCaseBase):
+  """Tests for security definitions with assignments parent categories.
+  """
+  _security_configuration_script_id = 'ERP5User_getUserSecurityCategoryValueList'
+  _security_configuration_script_body = """return context.ERP5User_getSecurityCategoryValueFromAssignment(
+    rule_dict={
+      tuple(context.getPortalObject().getPortalAssignmentBaseCategoryList()): (("group", ), ("group", "function"))
+    },
+  )"""
+
+  def afterSetUp(self):
+    super(TestSecurityGroupsWithAssignmentParent, self).afterSetUp()
+    self.person_value = self.portal.person_module.newContent(portal_type='Person')
+    self.user_login = 'login_%s' % self._login_generator()
+    self.person_value.newContent(
+      portal_type='ERP5 Login',
+      reference=self.user_login,
+      password='secret',
+    ).validate()
+    self.tic()
+
+  def _getTypeInfo(self):
+    return self.getTypesTool()['Organisation']
+
+  def _makeOne(self):
+    return self.getOrganisationModule().newContent(portal_type='Organisation')
+
+  def testLocalRoleParent(self):
+    # Assignment for group/subcat/subcat_1 applies to role definition group/subcat*
+    self._getTypeInfo().newContent(
+      portal_type='Role Information',
+      role_name='Assignor',
+      role_category_list=('group/subcat*', 'function/subcat*'),
+    )
+    group = self.portal.portal_categories.group
+    function = self.portal.portal_categories.function
+    self.person_value.newContent(
+      portal_type='Assignment',
+      group_value=group.subcat.subcat_1,
+      function_value=function.subcat.subcat_1,
+    ).open()
+    self.tic()
+
+    self.loginAsUser(self.person_value.getUserId())
+    user = getSecurityManager().getUser()
+    obj = self._makeOne()
+    self.assertIn('Assignor', user.getRolesInContext(obj))
+
+  def testLocalRoleParentExact(self):
+    # Assignment for group/subcat applies to role definition group/subcat*
+    self._getTypeInfo().newContent(
+      portal_type='Role Information',
+      role_name='Assignor',
+      role_category_list=('group/subcat*', 'function/subcat*'),
+    )
+    group = self.portal.portal_categories.group
+    function = self.portal.portal_categories.function
+    self.person_value.newContent(
+      portal_type='Assignment',
+      group_value=group.subcat,
+      function_value=function.subcat,
+    ).open()
+    self.tic()
+
+    self.loginAsUser(self.person_value.getUserId())
+    user = getSecurityManager().getUser()
+    obj = self._makeOne()
+    self.assertIn('Assignor', user.getRolesInContext(obj))
+
+  def testLocalRoleParentWithoutStar(self):
+    # Assignment for function/subcat/subcat_1 does not applies to role
+    # definition function/subcat (without the *)
+    self._getTypeInfo().newContent(
+      portal_type='Role Information',
+      role_name='Assignor',
+      role_category_list=('group/subcat*', 'function/subcat'),
+    )
+    group = self.portal.portal_categories.group
+    function = self.portal.portal_categories.function
+    self.person_value.newContent(
+      portal_type='Assignment',
+      group_value=group.subcat.subcat_1,
+      function_value=function.subcat.subcat_1,
+    ).open()
+    self.tic()
+
+    self.loginAsUser(self.person_value.getUserId())
+    user = getSecurityManager().getUser()
+    obj = self._makeOne()
+    self.assertNotIn('Assignor', user.getRolesInContext(obj))
+
+    # with the exact match for group, the role definition applies
+    self.login()
+    self.person_value.newContent(
+      portal_type='Assignment',
+      group_value=group.subcat.subcat_1,
+      function_value=function.subcat,
+    ).open()
+    self.tic()
+
+    self.loginAsUser(self.person_value.getUserId())
+    user = getSecurityManager().getUser()
+    self.assertIn('Assignor', user.getRolesInContext(obj))
+
+
+class TestSecurityGroupsWithAssignmentParentOld(TestSecurityGroupsWithAssignmentParent):
+  """
+  TestSecurityGroupsWithAssignmentParent variant using the deprecated security declaration API.
+  """
+  _security_configuration_script_id = 'ERP5Type_getSecurityCategoryMapping'
+  _security_configuration_script_body = """return ((
+      'ERP5Type_getSecurityCategoryFromAssignmentParentFunctionParentGroup',
+      context.getPortalObject().getPortalAssignmentBaseCategoryList()
+    ),
+    (
+      'ERP5Type_getSecurityCategoryFromAssignmentParentGroup',
+      context.getPortalObject().getPortalAssignmentBaseCategoryList()
+    ),
+  )"""
+
 
 class DuplicatePrevention(UserManagementTestCase):
   def test_MultipleUsers(self):
