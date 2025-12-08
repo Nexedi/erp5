@@ -94,10 +94,7 @@ def getSecurityCategoryValueFromAssignment(self, rule_dict):
             for category_value in category_value_list:
               while True:
                 parent_category_value = category_value.getParentValue()
-                if (
-                  parent_category_value in parent_category_value_dict or
-                  parent_category_value.getPortalType() in _STOP_RECURSION_PORTAL_TYPE_SET
-                ):
+                if parent_category_value.getPortalType() in _STOP_RECURSION_PORTAL_TYPE_SET:
                   break
                 parent_category_value_dict[category_value] = parent_category_value
                 category_value = parent_category_value
