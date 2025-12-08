@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionForum_viewThreadsXhtml</string> </value>
+            <value> <string>DiscussionForum_viewThreadListAsXhtml</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
