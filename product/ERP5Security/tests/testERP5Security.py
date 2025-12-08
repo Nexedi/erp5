@@ -698,6 +698,61 @@ class TestSecurityGroupsWithAssignmentParent(RoleManagementTestCaseBase):
     user = getSecurityManager().getUser()
     self.assertIn('Assignor', user.getRolesInContext(obj))
 
+  def testParentGroupSecurityCategoryEdgeCase(self):
+    getUserById = self.portal.acl_users.getUserById
+    def assertRoleItemsEqual(expected_role_set):
+      self.assertEqual(
+        sorted(getUserById(self.person_value.getUserId()).getGroups()),
+        sorted(expected_role_set))
+
+    group = self.portal.portal_categories.group
+    function = self.portal.portal_categories.function
+    self.person_value.newContent(
+      portal_type='Assignment',
+      group_value=group.subcat.subcat_1.subcat_1_1,
+      function_value=function.subcat.subcat_1,
+    ).open()
+    self.tic()
+
+    assertRoleItemsEqual(
+      [
+        'F1*_G1*',
+        'F1*_G11*',
+        'F1*_G111*',
+        'F11*_G1*',
+        'F11*_G11*',
+        'F11*_G111*',
+        'F11_G1*',
+        'F11_G11*',
+        'F11_G111*',
+      ]
+    )
+
+    self.person_value.newContent(
+      portal_type='Assignment',
+      group_value=group.subcat.subcat_1.subcat_1_2,
+      function_value=function.another_subcat,
+    ).open()
+    assertRoleItemsEqual(
+      [
+        'F1*_G1*',
+        'F1*_G11*',
+        'F1*_G111*',
+        'F11*_G1*',
+        'F11*_G11*',
+        'F11*_G111*',
+        'F11_G1*',
+        'F11_G11*',
+        'F11_G111*',
+        'F2*_G1*',
+        'F2*_G11*',
+        'F2*_G112*',
+        'F2_G1*',
+        'F2_G11*',
+        'F2_G112*',
+       ]
+    )
+
 
 class TestSecurityGroupsWithAssignmentParentOld(TestSecurityGroupsWithAssignmentParent):
   """
