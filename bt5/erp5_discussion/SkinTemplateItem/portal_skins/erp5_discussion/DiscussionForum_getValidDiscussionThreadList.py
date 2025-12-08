@@ -1,5 +1,8 @@
 """
-  This script gets list of Discussion Thread for a Forum using predicate search.
+  This script gets the list of valid Discussion Thread for a Forum using predicate search.
 """
-return context.searchResults(portal_type='Discussion Thread', sort_on=[('modification_date', 'descending')], validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
-# couldn't make this work on listbox tales config directly
+
+kw.setdefault('portal_type', 'Discussion Thread')
+kw.setdefault('sort_on', [('modification_date', 'descending')])
+kw.setdefault('validation_state', ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
+return context.searchResults(**kw)
