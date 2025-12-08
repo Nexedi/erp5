@@ -262,14 +262,12 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
   def getTextContent(self, default=_MARKER):
     """
     Overridden method to check permission to access content in raw format.
-
-    Basically, the text content of a *Text* Document, is simply `data`.
     """
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
-      return self.getData()
+      return self._baseGetTextContent()
     else:
-      return self.getData(default)
+      return self._baseGetTextContent(default)
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
