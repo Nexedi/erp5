@@ -37,7 +37,7 @@ import transaction
 import unittest
 from six.moves.urllib.parse import urlparse, parse_qs
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import TemporaryPythonScript
 from Products.ERP5Type.Utils import bytes2str
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -218,14 +218,12 @@ class RoleManagementTestCaseBase(UserManagementTestCase):
     """
     super(RoleManagementTestCaseBase, self).afterSetUp()
     # create a security configuration script
-    skin_folder = self.portal.portal_skins.custom
-    if self._security_configuration_script_id not in skin_folder.objectIds():
-      createZODBPythonScript(
-        skin_folder,
+    self.enterContext(
+      TemporaryPythonScript(
+        self.portal,
         self._security_configuration_script_id,
-        '',
-        self._security_configuration_script_body,
-      )
+        body=self._security_configuration_script_body))
+
     # configure group, site, function categories
     category_tool = self.getCategoryTool()
     for bc in ['group', 'site', 'function']:
@@ -298,11 +296,11 @@ class TestUserManagement(UserManagementTestCase):
     (ie. there should not be interaction workflow raising Unauthorized)
     """
     test_script_id = 'ERP5Site_createTestUser%s' % self.id()
-    createZODBPythonScript(
-        self.portal.portal_skins.custom,
+    self.enterContext(TemporaryPythonScript(
+        self.portal,
         test_script_id,
-        'login, password',
-        '''if 1:
+        arguments='login, password',
+        body='''if 1:
           new_person = context.getPortalObject().person_module.newContent(
               portal_type='Person')
           new_person.newContent(portal_type='Assignment').open()
@@ -311,7 +309,7 @@ class TestUserManagement(UserManagementTestCase):
               reference=login,
               password=password,
           ).validate()
-        ''')
+        '''))
     script = getattr(self.portal, test_script_id)
     script.manage_proxy(('Manager', 'Owner',))
     self.logout()
