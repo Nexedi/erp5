@@ -1830,7 +1830,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 <p class="Th&#232;mes">Th&#232;mes</p>
 </BODY></HTML>
     """
-    web_page.edit(data=html_content)
+    web_page.edit(text_content=html_content)
     safe_html = web_page.asStrippedHTML()
     self.assertIn('inside very broken HTML code', safe_html)
     self.assertNotIn('AZERTYY', safe_html)
