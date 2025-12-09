@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts58786518.29</string> </value>
+            <value> <string>ts13847249.87</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -102,57 +102,6 @@
                 <item>
                     <key> <string>mime</string> </key>
                     <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>_document_metadata</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>AppVersion</string> </key>
-                    <value> <string>15.0000</string> </value>
-                </item>
-                <item>
-                    <key> <string>CreationDate</string> </key>
-                    <value> <string>25/09/2025 09:47:21</string> </value>
-                </item>
-                <item>
-                    <key> <string>Data</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>Generator</string> </key>
-                    <value> <string>LibreOffice/25.2.3.2$Linux_X86_64 LibreOffice_project/bbb074479178df812d175f709636b368952c2ce3</string> </value>
-                </item>
-                <item>
-                    <key> <string>ImplementationName</string> </key>
-                    <value> <string>com.sun.star.comp.comphelper.OPropertyBag</string> </value>
-                </item>
-                <item>
-                    <key> <string>MIMEType</string> </key>
-                    <value> <string>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</string> </value>
-                </item>
-                <item>
-                    <key> <string>ModificationDate</string> </key>
-                    <value> <string>25/09/2025 09:48:38</string> </value>
-                </item>
-                <item>
-                    <key> <string>PrintDate</string> </key>
-                    <value> <string>00/00/0000 00:00:00</string> </value>
-                </item>
-                <item>
-                    <key> <string>TemplateDate</string> </key>
-                    <value> <string>00/00/0000 00:00:00</string> </value>
-                </item>
-                <item>
-                    <key> <string>Title</string> </key>
-                    <value> <string>test.officejs.onlyoffice.spreadsheet.replication.xlsy</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>test.officejs.onlyoffice.spreadsheet.replication.xlsy</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -326,20 +275,12 @@ AAAAAAAAAAAAAAAAuB0AAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAEQARAHAEAAAcHwAA
 AAA=</string> </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>bc3de900e8f00dc5e035d2e2e7fa3fec</string> </value>
+            <value> <string>83d1ba3edee21a61cbaf59ce0d1ebd3a</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</string> </value>
+            <value> <string>application/x-asc-spreadsheet</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -349,7 +290,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>onlyoffice.spreadsheet.test.1.xlsx</string> </value>
+            <value> <string>onlyoffice.spreadsheet.test.1.xlsy</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -373,7 +314,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5545</int> </value>
+            <value> <int>4067</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
