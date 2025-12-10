@@ -496,50 +496,44 @@ if not USE_COMPONENT_PY2_LOADER:
       Access ZODB as early as possible, and possibly bail out early if the
       Component cannot be found) instead of doing it later in exec_module().
       """
-      # If erp5.component.PACKAGE.REFERENCE: search for the Component with the
-      # highest version (ERP5Site version_priority_name_list) if any
-      if spec.component_reference is not None:
-        site = getSite()
-        # aq_base() because this should not go up to ERP5Site and trigger
-        # side-effects, after all this only check for existence...
-        component_tool = aq_base(site.portal_components)
-        for version in site.getVersionPriorityNameList():
-          id_ = "%s.%s.%s" % (spec.component_package_name,
-                              version,
-                              spec.component_reference)
-          component = getattr(component_tool, id_, None)
-          if component is not None and component.getValidationState() in (
-              'modified', 'validated'):
-            spec.version = version
-            break
-        else:
-          error_message = "%r: None found in modified/validated state" % spec.name
-          LOG("ERP5Type.dynamic.component_package", BLATHER, error_message)
-          raise ComponentImportError(error_message)
-
       # Otherwise, this *might* be a module migrated from the filesystem, in
       # such case we have to resolve its migrated ZODB Component fullname
       # (erp5.component.PACKAGE.VERSION_version.REFERENCE)
-      else:
+      if spec.component_reference is None:
         import erp5.component
         if erp5.component.filesystem_import_dict is None:
           erp5.component.createFilesystemImportDict()
         try:
-          id_ = erp5.component.filesystem_import_dict[spec.name]
+          real_unversioned_fullname = erp5.component.filesystem_import_dict[spec.name]
         except KeyError:
           # OK, this is a migrated module after all so raise the same exception
           # as find_spec()...
           raise ModuleNotFoundError('No module named ' + spec.name)
         else:
           (spec.component_package_name,
-           spec.version,
-           spec.component_reference) = id_.split('.')
-          spec.component_real_fullname = "erp5.component.%s.%s_version.%s" % (
-            spec.component_package_name, spec.version, spec.component_reference)
+           spec.component_reference) = real_unversioned_fullname[len('erp5.component.'):].split('.')
 
-      # We now have the "real" module name
-      spec.component_real_fullname = "erp5.component.%s.%s_version.%s" % (
-        spec.component_package_name, spec.version, spec.component_reference)
+      # If erp5.component.PACKAGE.REFERENCE: search for the Component with the
+      # highest version (ERP5Site version_priority_name_list) if any
+      site = getSite()
+      # aq_base() because this should not go up to ERP5Site and trigger
+      # side-effects, after all this only check for existence...
+      component_tool = aq_base(site.portal_components)
+      for version in site.getVersionPriorityNameList():
+        id_ = "%s.%s.%s" % (spec.component_package_name,
+                            version,
+                            spec.component_reference)
+        component = getattr(component_tool, id_, None)
+        if component is not None and component.getValidationState() in (
+            'modified', 'validated'):
+          spec.component_version = version
+          spec.component_real_fullname = "erp5.component.%s.%s_version.%s" % (
+            spec.component_package_name, version, spec.component_reference)
+          break
+      else:
+        error_message = "%r: None found in modified/validated state" % spec.name
+        LOG("ERP5Type.dynamic.component_package", BLATHER, error_message)
+        raise ComponentImportError(error_message)
 
       return ModuleType('going_to_be_discarded')
 
