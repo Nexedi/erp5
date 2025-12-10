@@ -56,7 +56,7 @@
     <dd>
       The connection string used for Z MySQL Database Connection is of the form:
       <br />
-      <code>[%ssl_name] [*lock] [+/-][database][@host[:port]] [user [password [unix_socket]]]</code>
+      <code>[%ssl_name] [*lock] [!isolation-level] [+/-][database][@host[:port]] [user [password [unix_socket]]]</code>
       <br />
       or typically:
       <br />
@@ -102,6 +102,12 @@
       is aborted and restarted, which can happen due to a ConflictError,
       you'll get an error in the logs, and inconsistent data. In this
       respect, it's equivalent to transactions turned off.
+    </dd>
+    <dd>
+      !<em>isolation_level</em> at the begining of the connection string
+      will set the transaction isolation level in each transaction. The
+      value should be one of REPEATABLE-READ, READ-COMMITTED,
+      READ-UNCOMMITTED or SERIALIZABLE.
     </dd>
     <dd>
       Transactions are highly recommended. Using a named lock in
