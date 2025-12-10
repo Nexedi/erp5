@@ -197,7 +197,7 @@ class ERP5ComponentPackageType(PackageType):
       raise
     filesystem_import_dict = {}
     for component in component_tool.objectValues():
-      if component.getValidationState() == 'validated':
+      if component.getValidationState() in ('validated', 'modified'):
         component_module_name = '%s.%s' % (component._getDynamicModuleNamespace(),
                                            component.getReference())
         if component.getSourceReference() is not None:
