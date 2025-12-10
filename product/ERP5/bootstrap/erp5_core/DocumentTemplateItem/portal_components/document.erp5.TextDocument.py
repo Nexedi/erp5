@@ -145,6 +145,10 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
     """
       Convert text using portal_transforms or oood
     """
+    # `text_content` not renamed as parameter for backward compaptibility
+    # Otherwise, set always get `data`, since it automatically falls back to
+    # `text_content` when needed.
+    data = text_content
     # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
     # web_page that have neither content_type nor text_format. Migration
     # should be done to make all web page having content_type property
@@ -153,14 +157,14 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
       format = 'html' # Force safe_html
     if not format:
       # can return document without conversion
-      return src_mimetype, self.getTextContent()
+      return src_mimetype, self.getData()
     portal = self.getPortalObject()
     mime_type = portal.mimetypes_registry.lookupExtension('name.%s' % format)
     original_mime_type = mime_type = str(mime_type)
-    if text_content is None:
-      # check if document has set text_content and convert if necessary
-      text_content = self.getTextContent()
-    if text_content:
+    if data is None:
+      # check if document has set data and convert if necessary
+      data = self.getData()
+    if data:
       kw['format'] = format
       convert_kw = {}
       # PortalTransforms does not accept empty values for 'encoding' parameter
@@ -172,7 +176,6 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
         if mime_type == 'text/html':
           mime_type = 'text/x-html-safe'
         if src_mimetype != "image/svg+xml":
-          data = text_content
           if not isinstance(data, bytes):
             data = str2bytes(data)
           result = portal_transforms.convertToData(mime_type, data,
@@ -186,7 +189,7 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
                                   'from %r to %s: %r' %
                                   (src_mimetype, mime_type, self))
         else:
-          result = text_content
+          result = data
         if format in VALID_IMAGE_FORMAT_LIST:
           # Include extra parameter for image conversions
           temp_image = self.portal_contributions.newContent(
@@ -213,7 +216,7 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
                                                **substitution_method_parameter_dict)
       return original_mime_type, result
     else:
-      # text_content is not set, return empty string instead of None
+      # data is not set, return empty string instead of None
       return original_mime_type, ''
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
