@@ -95,7 +95,7 @@ def getSecurityCategoryValueFromAssignment(self, rule_dict):
               while True:
                 parent_category_value = category_value.getParentValue()
                 if (
-                  parent_category_value in parent_category_value_dict or
+                  category_value in parent_category_value_dict or
                   parent_category_value.getPortalType() in _STOP_RECURSION_PORTAL_TYPE_SET
                 ):
                   break
