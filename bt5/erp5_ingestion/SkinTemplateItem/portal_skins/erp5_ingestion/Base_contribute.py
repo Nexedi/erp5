@@ -79,7 +79,7 @@ try:
     # we need to do all synchronously, in other case portal_contributions will do
     # this in an activity
     filename = document.getFilename()
-    if document.getMetaType() == "ERP5 OOo Document":
+    if document.getPortalType() in portal.getPortalOOoDocumentTypeList():
       document.updateLocalMetadataFromDocument()
     merged_document = document.discoverMetadata(
                                   filename=filename,
