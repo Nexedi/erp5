@@ -491,15 +491,14 @@ if not USE_COMPONENT_PY2_LOADER:
     is modified (importlib._bootstrap:init_module_attrs()) and we just want the
     alias to be a pointer to the *real* module.
     """
-    def create_module(self, _):
-      pass
-
-    def exec_module(self, module):
-      spec = module.__spec__
-
-      # Import of erp5.component.PACKAGE.REFERENCE: search for the Component
-      # with the highest version (ERP5Site version_priority_name_list) if any
-      if spec.component_real_fullname is None:
+    def create_module(self, spec):
+      """
+      Access ZODB as early as possible, and possibly bail out early if the
+      Component cannot be found) instead of doing it later in exec_module().
+      """
+      # If erp5.component.PACKAGE.REFERENCE: search for the Component with the
+      # highest version (ERP5Site version_priority_name_list) if any
+      if spec.component_reference is not None:
         site = getSite()
         # aq_base() because this should not go up to ERP5Site and trigger
         # side-effects, after all this only check for existence...
@@ -511,22 +510,48 @@ if not USE_COMPONENT_PY2_LOADER:
           component = getattr(component_tool, id_, None)
           if component is not None and component.getValidationState() in (
               'modified', 'validated'):
-            spec.component_real_fullname = "erp5.component.%s.%s_version.%s" % (
-              spec.component_package_name, version, spec.component_reference)
+            spec.version = version
             break
         else:
           error_message = "%r: None found in modified/validated state" % spec.name
           LOG("ERP5Type.dynamic.component_package", BLATHER, error_message)
           raise ComponentImportError(error_message)
-      # ... Otherwise this is an import of a module previously found on the
-      # filesystem and which has been migrated to ZODB Components and thus we are
-      # going to end up here again to resolve erp5.component.PACKAGE.REFERENCE as
-      # above...
 
+      # Otherwise, this *might* be a module migrated from the filesystem, in
+      # such case we have to resolve its migrated ZODB Component fullname
+      # (erp5.component.PACKAGE.VERSION_version.REFERENCE)
+      else:
+        import erp5.component
+        if erp5.component.filesystem_import_dict is None:
+          erp5.component.createFilesystemImportDict()
+        try:
+          id_ = erp5.component.filesystem_import_dict[spec.name]
+        except KeyError:
+          # OK, this is a migrated module after all so raise the same exception
+          # as find_spec()...
+          raise ModuleNotFoundError('No module named ' + spec.name)
+        else:
+          (spec.component_package_name,
+           spec.version,
+           spec.component_reference) = id_.split('.')
+          spec.component_real_fullname = "erp5.component.%s.%s_version.%s" % (
+            spec.component_package_name, spec.version, spec.component_reference)
+
+      # We now have the "real" module name
+      spec.component_real_fullname = "erp5.component.%s.%s_version.%s" % (
+        spec.component_package_name, spec.version, spec.component_reference)
+
+      return ModuleType('going_to_be_discarded')
+
+    def exec_module(self, module):
+      """
+      Resolve the "real", target of the alias and add it to sys.modules
+      """
+      spec = module.__spec__
       try:
-        # importlib _find_spec() is going to be called and acquire Global
-        # Import Lock but this is not a problem because find_spec()
-        # ComponentMetaPathFinder never pulls any object from ZODB
+        # importlib _find_spec() is going to be called and acquire Global Import
+        # Lock but this is not a problem because ComponentMetaPathFinder.find_spec()
+        # never pulls any object from ZODB...
         real_module = import_module(spec.component_real_fullname)
       except ImportError:
         raise
@@ -793,18 +818,22 @@ class ComponentMetaPathFinder(MetaPathFinder):
         return None
     # fullname=Products.PACKAGE.*: Filesystem import backward-compatibility
     else:
-      # TODO: Should we filter by `path`?
-      # TODO: Where to call createFilesystemImportDict()?
-      import erp5.component
-      try:
-        real_name = erp5.component.filesystem_import_dict[fullname]
-      except (TypeError, # filesystem_import_dict not filled yet
-              KeyError):
-        return None
-      else:
-        spec = ModuleSpec(fullname, loader=COMPONENT_ALIAS_LOADER)
-        spec.component_real_fullname = real_name
-        return spec
+      # All migrated code used to be in Products package. That's all we know for
+      # now without filesystem_import_dict, mapping of filesystem module to its
+      # migrated ZODB Component source_reference, created on-demand and
+      # requiring ZODB access
+      import Products
+      if len(path) > 1:
+        import pdb; pdb.set_trace()
+      path = path[0]
+      for product_path in Products.__path__:
+        if path.startswith(product_path):
+          spec = ModuleSpec(fullname, loader=COMPONENT_ALIAS_LOADER)
+          spec.component_package_name = None
+          spec.component_reference = None
+          spec.component_real_fullname = None
+          return spec
+      return None
 
     package_name = fullname.split('.', 3)[2]
     if package_name not in COMPONENT_PACKAGE_NAME_SET:
@@ -849,6 +878,7 @@ class ComponentMetaPathFinder(MetaPathFinder):
       spec = ModuleSpec(fullname, loader=COMPONENT_ALIAS_LOADER)
       spec.component_package_name = package_name
       spec.component_reference = name
+      # Require ZODB access so going to be resolve in the Loader
       spec.component_real_fullname = None
 
     return spec
