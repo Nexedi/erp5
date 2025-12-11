@@ -146,9 +146,10 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
       Convert text using portal_transforms or oood
     """
     # `text_content` not renamed as parameter for backward compaptibility
-    # Otherwise, set always get `data`, since it automatically falls back to
-    # `text_content` when needed.
     data = text_content
+    if data is None:
+      # `getData` first try to get data, then text content, but here we'd like the opposite
+      data = self.getTextContent() if self.hasTextContent() else self.getData()
     # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
     # web_page that have neither content_type nor text_format. Migration
     # should be done to make all web page having content_type property
@@ -157,13 +158,10 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
       format = 'html' # Force safe_html
     if not format:
       # can return document without conversion
-      return src_mimetype, self.getData()
+      return src_mimetype, data
     portal = self.getPortalObject()
     mime_type = portal.mimetypes_registry.lookupExtension('name.%s' % format)
     original_mime_type = mime_type = str(mime_type)
-    if data is None:
-      # check if document has set data and convert if necessary
-      data = self.getData()
     if data:
       kw['format'] = format
       convert_kw = {}
