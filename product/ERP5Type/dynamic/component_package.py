@@ -607,12 +607,15 @@ else: # USE_COMPONENT_PY2_LOADER
       As per PEP-302, raise an ImportError if the Loader could not load the
       module for any reason...
       """
-      site = getSite()
-
       if fullname.startswith('Products.'):
         module_fullname_filesystem = fullname
         import erp5.component
-        fullname = erp5.component.filesystem_import_dict[module_fullname_filesystem]
+        if erp5.component.filesystem_import_dict is None:
+          erp5.component.createFilesystemImportDict()
+        try:
+          fullname = erp5.component.filesystem_import_dict[module_fullname_filesystem]
+        except KeyError:
+          raise ModuleNotFoundError('No module named ' + module_fullname_filesystem)
       else:
         module_fullname_filesystem = None
 
@@ -620,6 +623,7 @@ else: # USE_COMPONENT_PY2_LOADER
       package_fullname = 'erp5.component.' + package_name
       package = sys.modules[package_fullname]
       name = fullname[len(package_fullname + '.'):]
+      site = getSite()
 
       # name=VERSION_version
       #
