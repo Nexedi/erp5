@@ -4,7 +4,7 @@ import six
 from base64 import b64encode
 from Products.ERP5Type.Utils import bytes2str, str2bytes 
 
-blank = b''
+blank = ''
 pref = context.getPortalObject().portal_preferences
 
 contract_format = kw.get('format') or 'html'
