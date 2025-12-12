@@ -415,6 +415,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
               continue
             self.revision.hash(item_name + '/' + file_name, f.read())
             f.seek(0)
+            __traceback_info__ = file_name
             item._importFile(file_name, f)
     finally:
       if hasattr(cache_database, 'db'):
