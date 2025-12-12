@@ -161,8 +161,12 @@
                           <string>Credit</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_reference</string>
+                          <string>Movement_getSpecificReference</string>
                           <string>Transaction Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_reference</string>
+                          <string>Document Reference</string>
                         </tuple>
                         <tuple>
                           <string>date</string>
@@ -254,15 +258,15 @@
                         </tuple>
                         <tuple>
                           <string>delivery_reference</string>
-                          <string>Transaction Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>Document Reference</string>
                         </tuple>
                         <tuple>
                           <string>date</string>
                           <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
