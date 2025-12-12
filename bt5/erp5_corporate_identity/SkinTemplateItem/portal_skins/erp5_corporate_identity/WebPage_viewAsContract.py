@@ -304,7 +304,7 @@ elif contract_format == "pdf":
   #  after_toc_data_list.append(
   #    bytes2str(b64encode(str2bytes(context.Base_convertHtmlToSingleFile(contract_references, allow_script=True))))
   #  )
-  xsl_style_sheet_data = contract_table_of_content
+  xsl_style_sheet_data = str2bytes(contract_table_of_content)
   embedded_html_data = str2bytes(context.Base_convertHtmlToSingleFile(contract_content, allow_script=True))
   footer_embedded_html_data = str2bytes(context.Base_convertHtmlToSingleFile(contract_foot, allow_script=True))
   margin_top = 40
