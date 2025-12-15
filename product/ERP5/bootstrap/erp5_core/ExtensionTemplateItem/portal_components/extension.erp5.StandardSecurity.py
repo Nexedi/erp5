@@ -187,6 +187,7 @@ def asSecurityGroupIdSet(category_dict, key_sort=sorted):
       elif not user_list:
         associative_list.append(
           (
+            category_value.getProperty('user_id') or
             category_value.getProperty('codification') or
             category_value.getProperty('reference') or
             category_value.getId()
