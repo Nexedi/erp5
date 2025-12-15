@@ -2219,7 +2219,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(leave_request.getStartDate(), default_start_date)
     self.assertEqual(leave_request.getStopDate(), extra_stop_date)
 
-  def test_LeaveRequest_updateDateByLeaveRequestPeriod(self):
+  def test_LeaveRequest_updateDateWithLeaveRequestPeriod(self):
     leave_request = self.portal.leave_request_module.newContent()
     leave_request_period = leave_request.newContent(portal_type=self.leave_request_period_portal_type)
     leave_request_period2 = leave_request.newContent(portal_type=self.leave_request_period_portal_type)
@@ -2243,6 +2243,9 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(leave_request.getStartDate(), start_date)
     self.assertEqual(leave_request.getStopDate(), stop_date2)
     self.tic()
+    leave_request.setEffectiveDate(start_date)
+    self.assertEqual(leave_request_period.getEffectiveDate(), start_date)
+    self.assertEqual(leave_request_period2.getEffectiveDate(), start_date)
 
   def test_PresenceRequest_defaultPresenceRequestPeriod(self):
     '''
