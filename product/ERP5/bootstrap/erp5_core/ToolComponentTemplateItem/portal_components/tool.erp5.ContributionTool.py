@@ -167,6 +167,8 @@ class ContributionTool(BaseTool):
         except KeyError:
           raise ValueError('data must be provided')
         if data is not None:
+          if isinstance(data, six.text_type):
+            data = data.encode('utf-8')
           file_object = BytesIO()
           file_object.write(data)
           file_object.seek(0)
