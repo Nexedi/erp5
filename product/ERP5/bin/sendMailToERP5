@@ -77,7 +77,7 @@ class Message(object):
         host = '%s:%s@%s' % (user, kw.pop('password', password) or '', host)
       url = urlparse.urlunsplit((scheme, host, path.rstrip('/'), '', '')) + \
         '/portal_contributions/newContent'
-      kw['data'] = sys.stdin.read()
+      kw['data:bytes'] = sys.stdin.read()
       result = urlopen(url, urllib.urlencode(kw))
       result.read() # ERP5 does not return useful information
       print 'Message ingested'
