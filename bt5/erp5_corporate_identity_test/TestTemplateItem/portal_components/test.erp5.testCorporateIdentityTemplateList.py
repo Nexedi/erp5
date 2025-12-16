@@ -1749,3 +1749,40 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Release"
       )
     )
+
+  # export as contract is not really used, there has no use case
+  # add simple test just to ensure the basic export works
+  @changeSkin('Contract')
+  def test_htmlContract(self):
+    """
+      Test:
+      - Web Page as contract
+      - export as html
+    """
+    self.runHtmlTestPattern(
+      "template_test_contract_html",
+      "template_test_contract_output_expected_001_en_html",
+      **dict(
+        use_skin="Contract",
+        test_method="WebPage_exportAsContract"
+      )
+    )
+
+  @changeSkin('Contract')
+  def test_pdfContract(self):
+    """
+      Test:
+      - Web Page as Contract
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_contract_html",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=1,
+        use_skin="Contract",
+        test_method="WebPage_exportAsContract",
+        format="pdf"
+      )
+    )
+
