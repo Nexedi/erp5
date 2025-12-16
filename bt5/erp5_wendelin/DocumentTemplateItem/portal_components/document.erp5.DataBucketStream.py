@@ -149,24 +149,28 @@ class DataBucketStream(Document):
         del inst_dict["_tree"]
     Document.__setstate__(self, inst_dict)
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'initBucketTree')
   def initBucketTree(self):
     """
       Initialize the Bucket Tree
     """
     self._bucket_tree = OOBTree()
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'initIndexTree')
   def initIndexTree(self):
     """
       Initialize the Index Tree
     """
     self._long_index_tree = LOBTree()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketCount')
   def getBucketCount(self):
     """
     Return count of buckets.
     """
     return len(self._bucket_tree)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMaxKey')
   def getMaxKey(self, key=None):
     """
     Return the maximum key
@@ -176,6 +180,7 @@ class DataBucketStream(Document):
     except ValueError:
       return None
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMaxIndex')
   def getMaxIndex(self, index=None):
     """
     Return the maximum index
@@ -185,6 +190,7 @@ class DataBucketStream(Document):
     except ValueError:
       return None
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMinKey')
   def getMinKey(self, key=None):
     """
     Return the minimum key
@@ -194,6 +200,7 @@ class DataBucketStream(Document):
     except ValueError:
       return None
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMinIndex')
   def getMinIndex(self, index=None):
     """
     Return the minimum key
@@ -206,6 +213,7 @@ class DataBucketStream(Document):
   def _getOb(self, identifier, *args, **kw):
     return None
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketByKey')
   def getBucketByKey(self, key=None):
     """
       Get one bucket
@@ -215,6 +223,7 @@ class DataBucketStream(Document):
     persistent_string._p_deactivate()  # free memory
     return v
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketByIndex')
   def getBucketByIndex(self, index=None):
     """
       Get one bucket
@@ -222,24 +231,28 @@ class DataBucketStream(Document):
     key = self._long_index_tree[index]
     return self.getBucketByKey(key)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getKeyByIndex')
   def getKeyByIndex(self, index):
     """
       Get the bucket key by a given index
     """
     return self._long_index_tree[index]
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBucketKey')
   def hasBucketKey(self, key):
     """
       Wether bucket with such key exists
     """
     return key in self._bucket_tree
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBucketIndex')
   def hasBucketIndex(self, index):
     """
       Wether bucket with such index exists
     """
     return index in self._long_index_tree
-    
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'insertBucket')
   def insertBucket(self, key, value):
     """
       Insert one bucket
@@ -260,7 +273,8 @@ class DataBucketStream(Document):
       change_state = "differ" if value != self._bucket_tree[key] else "are equal"
       self.log("Reingestion of same key: {} (values {})".format(key, change_state))
       self._bucket_tree[key] = value
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketKeySequenceByKey')
   def getBucketKeySequenceByKey(self, start_key=None, stop_key=None,
                    count=None, exclude_start_key=False, exclude_stop_key=False):
     """
@@ -272,7 +286,8 @@ class DataBucketStream(Document):
     if count is None:
       return sequence
     return sequence[:count]
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketKeySequenceByIndex')
   def getBucketKeySequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
     """
@@ -285,6 +300,7 @@ class DataBucketStream(Document):
       return sequence
     return sequence[:count]
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketIndexKeySequenceByIndex')
   def getBucketIndexKeySequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
     """
@@ -297,6 +313,7 @@ class DataBucketStream(Document):
       sequence = sequence[:count]
     return IndexKeySequence(self, sequence)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketIndexSequenceByIndex')
   def getBucketIndexSequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
     """
@@ -309,6 +326,7 @@ class DataBucketStream(Document):
       return sequence
     return sequence[:count]
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketValueSequenceByKey')
   def getBucketValueSequenceByKey(self, start_key=None, stop_key=None,
                   count=None, exclude_start_key=False, exclude_stop_key=False):
     """
@@ -321,6 +339,7 @@ class DataBucketStream(Document):
       return sequence
     return sequence[:count]
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketValueSequenceByIndex')
   def getBucketValueSequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
     """
@@ -332,7 +351,8 @@ class DataBucketStream(Document):
     if count is not None:
       sequence = sequence[:count]
     return IndexValueSequence(self, sequence)
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketKeyItemSequenceByKey')
   def getBucketKeyItemSequenceByKey(self, start_key=None, stop_key=None,
                    count=None, exclude_start_key=False, exclude_stop_key=False):
     """
@@ -345,12 +365,14 @@ class DataBucketStream(Document):
       return sequence
     return sequence[:count]
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketItemSequence')
   def getBucketItemSequence(self, start_key=None, count=None,
                             exclude_start_key=False):
     log('DeprecationWarning: Please use getBucketKeyItemSequenceByKey')
     return self.getBucketKeyItemSequenceByKey(start_key=start_key, count=count,
                                            exclude_start_key=exclude_start_key)
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketIndexItemSequenceByIndex')
   def getBucketIndexItemSequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
     """
@@ -363,6 +385,7 @@ class DataBucketStream(Document):
       sequence = sequence[:count]
     return IndexItemSequence(self, sequence)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBucketIndexKeyItemSequenceByIndex')
   def getBucketIndexKeyItemSequenceByIndex(self, start_index=None,
                                            stop_index=None, count=None,
                                            exclude_start_index=False,
@@ -376,31 +399,36 @@ class DataBucketStream(Document):
     if count is not None:
       sequence = sequence[:count]
     return IndexKeyItemSequence(self, sequence)
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getItemList')
   def getItemList(self):
     """
       Return a list of all key, value pairs
     """
     return [item for item in self._bucket_tree.items()]
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getKeyList')
   def getKeyList(self):
     """
       Return a list of all keys
     """
     return [key for key in self._bucket_tree.keys()]
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getIndexList')
   def getIndexList(self):
     """
       Return a list of all indexes
     """
     return [key for key in self._long_index_tree.keys()]
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getIndexKeyTupleList')
   def getIndexKeyTupleList(self):
     """
       Return a list of all indexes
     """
     return [key for key in self._long_index_tree.items()]
-    
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMd5sum')
   def getMd5sum(self, key):
     """
       Get hexdigest of bucket.
@@ -408,7 +436,8 @@ class DataBucketStream(Document):
     h = hashlib.md5()
     h.update(self.getBucketByKey(key))
     return h.hexdigest()
-    
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'delBucketByKey')
   def delBucketByKey(self, key):
     """
       Remove the bucket.
@@ -418,6 +447,7 @@ class DataBucketStream(Document):
       if my_key == key:
         del self._long_index_tree[index]
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'delBucketByIndex')
   def delBucketByIndex(self, index):
     """
       Remove the bucket.
@@ -426,6 +456,7 @@ class DataBucketStream(Document):
     del self._bucket_tree[key]
     del self._long_index_tree[index]
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'rebuildIndexTreeByKeyOrder')
   def rebuildIndexTreeByKeyOrder(self):
     """
         Clear and rebuild the index tree by order of keys

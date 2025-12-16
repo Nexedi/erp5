@@ -26,6 +26,8 @@ from erp5.component.document.DataArray import DataArray
 from Products.ERP5Type.Base import TempBase
 from Products.ERP5Type.Utils import createExpressionContext, \
   evaluateExpressionFromString
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
 
 class GetIndex(TempBase):
   def __getitem__(self, idx):
@@ -35,13 +37,16 @@ class DataArrayViewLine(DataArray):
   """
   Data Array like view on one or multiple Data Arrays
   """
+  security = ClassSecurityInfo()
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'initArray')
   def initArray(self, shape, dtype):
     """
     Not Implemented.
     """
     raise NotImplementedError
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArray')
   def getArray(self, default=None):
     """
     Get numpy view of Parent Data Array according to index.

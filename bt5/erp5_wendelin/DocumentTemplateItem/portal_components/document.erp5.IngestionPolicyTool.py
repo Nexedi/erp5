@@ -47,7 +47,8 @@ class IngestionPolicyTool(Folder):
   
   # Declarative security
   security = ClassSecurityInfo()
-  
+
+  security.declarePublic('unpack')
   def unpack(self, data):
     """
       Unpack data coming from fluentd.
@@ -65,6 +66,7 @@ class IngestionPolicyTool(Folder):
     # script environment, but we loose lazyness
     return [x for x in msgpack_list]
 
+  security.declarePublic('unpack_lazy')
   def unpack_lazy(self, data, use_list=True):
     warn(
       "Method 'unpack_lazy' is deprecated. Please use 'unpackLazy' instead.",
@@ -72,6 +74,7 @@ class IngestionPolicyTool(Folder):
     )
     return self.unpackLazy(data, use_list=use_list)
 
+  security.declarePublic('unpackLazy')
   def unpackLazy(self, data, use_list=True):
     """
       Lazy unpack data, usable in restructed environment

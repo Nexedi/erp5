@@ -43,6 +43,7 @@ class IngestionPolicy(Folder):
   # Declarative security
   security = ClassSecurityInfo()
 
+  security.declarePublic('unpack')
   def unpack(self, data):
     """
       Unpack data coming from fluentd. Handy alias.

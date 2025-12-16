@@ -60,6 +60,7 @@ class DataArray(BigFile):
                     , PropertySheet.DataArray
                     )
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'initArray')
   def initArray(self, shape, dtype):
     """
     Initialise array.
@@ -71,6 +72,7 @@ class DataArray(BigFile):
     self._setArray(array)
     return array
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArray')
   def getArray(self, default=None):
     """
     Get numpy array value.
@@ -88,6 +90,7 @@ class DataArray(BigFile):
     # transaction committed (XXX: impossible to use as raises ConflictErrors)
     transaction.commit()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArraySlice')
   def getArraySlice(self, start, end):
     """
       Implement array slicing in its most simple list alike form.
@@ -96,6 +99,7 @@ class DataArray(BigFile):
     """
     return self.getArray()[start:end]
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArrayIndex')
   def getArrayIndex(self, index):
     """
       Implement array indexing in its most simple list alike form.
