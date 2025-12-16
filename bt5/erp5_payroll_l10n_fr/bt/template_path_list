@@ -12,3 +12,5 @@ portal_categories/use/social_declaration/l10n/fr
 portal_categories/use/social_declaration/l10n/fr/dsn_change
 portal_categories/use/social_declaration/l10n/fr/dsn_change/**
 portal_categories/use/social_declaration/l10n/fr/leave
+portal_workflow/leave_request_interaction_workflow/interaction_LeaveRequest_setLeaveRequestPeriodDate
+portal_workflow/leave_request_interaction_workflow/script_LeaveRequest_setLeaveRequestPeriodDate

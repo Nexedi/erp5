@@ -2219,6 +2219,31 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(leave_request.getStartDate(), default_start_date)
     self.assertEqual(leave_request.getStopDate(), extra_stop_date)
 
+  def test_LeaveRequest_updateDateByLeaveRequestPeriod(self):
+    leave_request = self.portal.leave_request_module.newContent()
+    leave_request_period = leave_request.newContent(portal_type=self.leave_request_period_portal_type)
+    leave_request_period2 = leave_request.newContent(portal_type=self.leave_request_period_portal_type)
+
+    start_date = DateTime('2018/01/01')
+    stop_date = DateTime('2018/01/03')
+    start_date2 = DateTime('2018/01/05')
+    stop_date2 = DateTime('2018/01/08')
+
+    leave_request_period.edit(
+      start_date = start_date,
+      stop_date = stop_date
+    )
+    self.assertEqual(leave_request.getStartDate(), start_date)
+    self.assertEqual(leave_request.getStopDate(), stop_date)
+
+    leave_request_period2.edit(
+      start_date = start_date2,
+      stop_date = stop_date2
+    )
+    self.assertEqual(leave_request.getStartDate(), start_date)
+    self.assertEqual(leave_request.getStopDate(), stop_date2)
+    self.tic()
+
   def test_PresenceRequest_defaultPresenceRequestPeriod(self):
     '''
       Check check how default_presence_request_period is created and when
