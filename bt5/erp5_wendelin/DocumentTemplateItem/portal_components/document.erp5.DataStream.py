@@ -47,6 +47,7 @@ class DataStream(BigFile):
                     , PropertySheet.SortIndex
                     )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'iterate')
   def iterate(self, start_offset, end_offset):
     """
       Read chunks of data from a Data Stream and yield them.
@@ -55,6 +56,7 @@ class DataStream(BigFile):
     for chunk in data.iterate(start_offset, end_offset - start_offset):
       yield chunk
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'readMsgpackChunkList')
   def readMsgpackChunkList(self, start_offset, end_offset):
     """
       Read chunks of msgpack data from a Data Stream and return (unpacked_data list, offset)
@@ -75,6 +77,7 @@ class DataStream(BigFile):
     #raise StopIteration(pos)
     return data_list, pos
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'extractDateTime')
   def extractDateTime(self, date_time_holder):
     if isinstance(date_time_holder, int):
       return np.datetime64(date_time_holder, 's')
@@ -82,6 +85,7 @@ class DataStream(BigFile):
     s, ns = struct.unpack(">II", date_time_holder.data)
     return np.datetime64(s, 's') + np.timedelta64(ns, 'ns')
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'readChunkList')
   def readChunkList(self, start_offset, end_offset):
     """
       Read chunks of data from a Data Stream and return them.
@@ -94,6 +98,7 @@ class DataStream(BigFile):
 
     return chunk_list
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRecursiveSuccessorValueList')
   def getRecursiveSuccessorValueList(self):
     """
       Return list of all successors (Data Streams) for a Data Stream.
@@ -105,6 +110,7 @@ class DataStream(BigFile):
       successor = successor.getSuccessorValue()
     return successor_list
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRecursivePredecessorValueList')
   def getRecursivePredecessorValueList(self):
     """
       Return list of all predecessor (Data Streams) for a Data Stream.
