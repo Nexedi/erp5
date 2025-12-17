@@ -48,6 +48,8 @@ class urlopen(FancyURLopener, object):
   http_error_default = URLopener.http_error_default
 
   def http_error(self, url, fp, errcode, errmsg, headers, data=None):
+    if errcode == 204:
+      return fp
     if errcode != 302 or urlsplit(
       headers['Location'])[2].endswith('/login_form'):
       return self.http_error_default(url, fp, errcode, errmsg, headers)
