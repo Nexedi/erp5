@@ -8,10 +8,11 @@ from zExceptions import Unauthorized
 
 forum = context.WebSection_getRelatedForum()
 thread_relative_url = context.REQUEST.get('thread_relative_url')
+kw.setdefault('portal_type', 'Discussion Thread')
+kw.setdefault('sort_on', [('modification_date', 'descending')])
+kw.setdefault('validation_state', ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))
 try:
-  discussion_thread_list = [x.getObject() for x  in forum.searchResults(portal_type='Discussion Thread',
-                                                                        sort_on=[('modification_date', 'descending')],
-                                                                        validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))]
+  discussion_thread_list = [x.getObject() for x  in forum.searchResults(**kw)]
 except Unauthorized:
   discussion_thread_list = []
 if thread_relative_url is not None:
