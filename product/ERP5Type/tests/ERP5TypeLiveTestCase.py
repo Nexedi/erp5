@@ -186,7 +186,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       finally:
         restoreInteraction()
 
-from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage, ComponentImportError
+from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackageType, ComponentImportError
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
 class ERP5TypeTestReLoader(ERP5TypeTestLoader):
@@ -239,7 +239,7 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         modifications on the filesystem
         """
         if not isinstance(getattr(module, '__loader__', None),
-                          ComponentDynamicPackage):
+                          ComponentDynamicPackageType):
             reload(module)
         return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
 
@@ -249,7 +249,7 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         # it nor ZODB Test Component as it is reset upon modification anyway
         if (testCaseClass not in (ERP5TypeTestCase, SecurityTestCase, ERP5ReportTestCase) and
             not isinstance(getattr(testModule, '__loader__', None),
-                           ComponentDynamicPackage)):
+                           ComponentDynamicPackageType)):
           testModule = reload(testModule)
         testCaseClass = getattr(testModule, testCaseClass.__name__)
         return ERP5TypeTestLoader.loadTestsFromTestCase(self, testCaseClass)
