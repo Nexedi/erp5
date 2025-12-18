@@ -19,8 +19,7 @@
                 <tr> 
                   <th tal:content="python:titles[0]"/>
                   <th tal:content="python:titles[1]"/>
-                </tr><tr tal:define="values python:here.get_parameter_value(param).items();
-                                     dummy python:values.sort()"
+                </tr><tr tal:define="values python: sorted(here.get_parameter_value(param).items())"
                          tal:repeat="key_val values">
                
                    <td><input type='text' size="30"
