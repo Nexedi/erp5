@@ -1,0 +1,5 @@
+<tal:block tal:define="author_dict python: here.objectValues()[0].DiscussionPost_getAuthorDict();">
+
+  <span tal:content="author_dict/author_title"/>
+
+</tal:block>
