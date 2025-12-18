@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2015 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2025 Nexedi SA and Contributors. All Rights Reserved.
 #                    Ivan Tyagov <ivan@nexedi.com>
 #
 # This program is free software: you can Use, Study, Modify and Redistribute
@@ -26,6 +26,11 @@ from Products.ERP5Type.Core.Folder import Folder
 from zExceptions import BadRequest, NotFound
 import six
 from Products.ERP5Type.Utils import parse_http_header
+try:
+  from urllib.parse import unquote
+except ImportError:  # BBB: py2
+  from urllib import unquote
+
 
 class IngestionPolicy(Folder):
   """
@@ -97,7 +102,7 @@ class IngestionPolicy(Folder):
     if tag_parsing_script_id == "ERP5Site_handleDefaultFluentdIngestion":
       return tag_parsing_script(**kw)
 
-    reference = self.REQUEST.get('reference')
+    reference = unquote(self.REQUEST.get('reference'))
     data_chunk = self.REQUEST.get('data_chunk')
 
     # the script parses the fluentd tag (reference) and returns a dictionary
