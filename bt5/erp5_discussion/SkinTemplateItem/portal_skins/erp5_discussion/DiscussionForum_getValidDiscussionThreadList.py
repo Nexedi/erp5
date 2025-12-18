@@ -1,5 +1,5 @@
 """
-  This script gets list of Discussion Thread for a Forum using predicate search.
+  This script gets the list of valid Discussion Thread for a Forum using predicate search.
 """
 
 kw.setdefault('portal_type', 'Discussion Thread')

@@ -1,5 +1,6 @@
 """
-  This script gets list of Discussion Thread for a Forum using predicate search.
+  This script gets the full list of Discussion Thread for a Forum using predicate search.
 """
-return context.searchResults(portal_type='Discussion Thread', sort_on=[('modification_date', 'descending')])
-# couldn't make this work on listbox tales config directly
+kw.setdefault('portal_type', 'Discussion Thread')
+kw.setdefault('sort_on', [('modification_date', 'descending')])
+return context.searchResults(**kw)
