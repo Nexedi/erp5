@@ -192,6 +192,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
