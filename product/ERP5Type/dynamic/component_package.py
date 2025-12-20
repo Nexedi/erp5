@@ -366,6 +366,9 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
     As per PEP-302, raise an ImportError if the Loader could not load the
     module for any reason...
     """
+    if fullname in sys.modules:
+      return sys.modules[fullname]
+
     site = getSite()
 
     if fullname.startswith('Products.'):
