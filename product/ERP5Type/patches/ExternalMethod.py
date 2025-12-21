@@ -12,6 +12,7 @@
 ##############################################################################
 
 import six
+import importlib
 
 from inspect import getargs
 from types import MethodType
@@ -56,9 +57,9 @@ class _(PatchClass(ExternalMethod)):
         return self._getFunction(reload)[0]
 
     def _getFunction(self, reload=False):
-        import erp5.component.extension
-        component_module = erp5.component.extension.find_load_module(self._module)
-        if component_module is None:
+        try:
+          importlib.import_module('erp5.component.extension.' + self._module)
+        except ImportError:
             # Fall back on filesystem
             if not reload:
                 from Products.ERP5Type.Globals import DevelopmentMode
