@@ -25,14 +25,14 @@ def manage_addToolForm(self, REQUEST):
     """ Show the add tool form.
     """
     from Products.ERP5.ERP5Site import getSite
-    import erp5.component.tool
+    import importlib
     seen_tool_component_set = set()
     for tool_component in getSite().portal_components.objectValues(portal_type='Tool Component'):
         if tool_component.getValidationState() == 'validated':
             module_name = tool_component.getReference()
             # In case there are several versions, only load the 'default' one
             if module_name not in seen_tool_component_set:
-                erp5.component.tool.find_load_module(module_name)
+                importlib.import_module('erp5.component.tool.' + module_name)
                 seen_tool_component_set.add(module_name)
 
     # self is a FactoryDispatcher.
