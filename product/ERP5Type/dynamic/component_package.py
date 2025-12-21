@@ -80,11 +80,6 @@ if sys.version_info < (3, 6):
   class ModuleNotFoundError(ImportError):
     pass
 
-class ComponentImportError(ImportError):
-  """Component was not found (does not exist or is not in validated/modified
-  state) or exec() failed.
-  """
-
 class ComponentVersionPackageType(PackageType):
   """
   Component Version package: erp5.component.PACKAGE.VERSION_version
@@ -226,32 +221,6 @@ class ComponentDynamicPackageType(PackageType):
   priority is the highest as by ERP5Site.version_priority_name_list property
   and where `VERSION_version` is a ComponentVersionPackage.
   """
-  def find_load_module(self, name):
-    """
-    Find and load a Component module.
-
-    When FS fallback is required (mainly for Document and Extension), this
-    should be used over a plain import to distinguish a document not available
-    as ZODB Component to an error in a Component.
-
-    For example: if a Component tries to import another Component module but
-    the latter has been disabled and there is a fallback on the filesystem, a
-    plain import would hide the real error, instead log it...
-    """
-    fullname = self.__name__ + '.' + name
-    try:
-      return import_module(fullname)
-    except (ComponentImportError, # Already logged internally
-            ModuleNotFoundError):
-      pass
-    except ImportError as e:
-      if USE_COMPONENT_PEP_451_LOADER or str(e) != "No module named " + name:
-        LOG("ERP5Type.dynamic.component_package", WARNING,
-            "Could not load Component module %r" % fullname,
-            error=True)
-
-    return None
-
   def reset_unlocked(self, sub_package=None):
     """
     Reset the content of the current package and its version package as
@@ -416,8 +385,10 @@ if USE_COMPONENT_PEP_451_LOADER:
     def create_module(self, spec):
       if spec.component_version_package_name not in getSite().getVersionPriorityNameList():
         error_message = "%s: No such version" % spec.name
+        # A version package is always an intermediate import so raise
+        # ModuleNotFoundError following CPython Import Reference
         LOG("ERP5Type.dynamic.component_package", WARNING, error_message)
-        raise ComponentImportError(error_message)
+        raise ModuleNotFoundError(error_message)
       return ComponentVersionPackageType(spec.name)
 
     def exec_module(self, _):
@@ -467,7 +438,7 @@ if USE_COMPONENT_PEP_451_LOADER:
           spec.name, spec.component_id, component.getValidationState())
       if error_message is not None:
         LOG("ERP5Type.dynamic.component_package", WARNING, error_message)
-        raise ComponentImportError(error_message)
+        raise ModuleNotFoundError(error_message)
 
       if coverage.Coverage.current():
         try:
@@ -483,12 +454,9 @@ if USE_COMPONENT_PEP_451_LOADER:
         exec(code_obj, module.__dict__)
       except Exception:
         from six import reraise
-        error_message = "Cannot load Component %s:\n%s" % (spec.name,
-                                                           traceback.format_exc())
-        LOG("ERP5Type.dynamic.component_package", WARNING, error_message)
-        reraise(ComponentImportError,
-                ComponentImportError(error_message),
-                sys.exc_info()[2])
+        error_message = "Cannot load Component %s" % spec.name
+        LOG("ERP5Type.dynamic.component_package", WARNING, error_message, error=True)
+        reraise(ImportError, ImportError(error_message), sys.exc_info()[2])
 
       component._hookAfterLoad(module)
 
@@ -552,8 +520,8 @@ if USE_COMPONENT_PEP_451_LOADER:
           break
       else:
         error_message = "%r: None found in modified/validated state" % spec.name
-        LOG("ERP5Type.dynamic.component_package", BLATHER, error_message)
-        raise ComponentImportError(error_message)
+        LOG("ERP5Type.dynamic.component_package", WARNING, error_message)
+        raise ModuleNotFoundError(error_message)
 
       return ModuleType('going_to_be_discarded')
 
@@ -562,16 +530,12 @@ if USE_COMPONENT_PEP_451_LOADER:
       Resolve the "real", target of the alias and add it to sys.modules
       """
       spec = module.__spec__
-      try:
-        # importlib _find_spec() is going to be called and acquire Global Import
-        # Lock but this is not a problem because ComponentMetaPathFinder.find_spec()
-        # never pulls any object from ZODB...
-        real_module = import_module(spec.component_real_fullname)
-      except ImportError:
-        raise
-      else:
-        sys.modules[spec.name] = real_module
-        MNAME_MAP[spec.name] = spec.component_real_fullname
+      # importlib _find_spec() is going to be called and acquire Global Import
+      # Lock but this is not a problem because ComponentMetaPathFinder.find_spec()
+      # never pulls any object from ZODB...
+      real_module = import_module(spec.component_real_fullname)
+      sys.modules[spec.name] = real_module
+      MNAME_MAP[spec.name] = spec.component_real_fullname
   COMPONENT_ALIAS_LOADER = ComponentAliasLoader()
 
 # PEP-0302 Loader implementation:
@@ -674,9 +638,10 @@ else: # not USE_COMPONENT_PEP_451_LOADER
                                                                           'validated'):
             break
         else:
-          raise ComponentImportError(
-            "%s: no version of Component %s in Site priority" %
-            (fullname, name))
+          error_message = ("%s: no version of Component %s in Site priority" %
+                           (fullname, name))
+          LOG("ERP5Type.dynamic.component_package", WARNING, error_message)
+          raise ModuleNotFoundError(error_message)
 
         module_fullname_alias = package_fullname + '.' + name
 
@@ -762,12 +727,10 @@ else: # not USE_COMPONENT_PEP_451_LOADER
           if module_fullname_filesystem is not None:
             del sys.modules[module_fullname_filesystem]
 
-          error_message = ("%s: cannot load Component %s :\n%s" %
-                           (fullname, name, traceback.format_exc()))
-          LOG("ERP5Type.dynamic.component_package", WARNING, error_message)
-          reraise(ComponentImportError,
-                  ComponentImportError(error_message),
-                  sys.exc_info()[2])
+          error_message = "%s: cannot load Component %s" % (fullname, name)
+          LOG("ERP5Type.dynamic.component_package", WARNING, error_message,
+              error=True)
+          reraise(ImportError, ImportError(error_message), sys.exc_info()[2])
 
         # Add the newly created module to the Version package and add it as an
         # alias to the top-level package as well
