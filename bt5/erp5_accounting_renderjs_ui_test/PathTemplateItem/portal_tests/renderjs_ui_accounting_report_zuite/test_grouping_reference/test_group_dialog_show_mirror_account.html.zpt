@@ -87,22 +87,22 @@ Grouping Dialog show mirror account
 <!-- the "Third Party Account" columns helps understanding why grouping is refused -->
 <tr>
   <td>assertText</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//th[10]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//th[11]</td>
   <td>Third Party Account</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[10]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[11]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[2]/td[10]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[2]/td[11]</td>
   <td>40 - Payable</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[3]/td[10]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[3]/td[11]</td>
   <td>7 - Goods Sales</td>
 </tr>
 
