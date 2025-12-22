@@ -88,8 +88,8 @@ Sorting in Grouping Dialog
 </tr>
 <tr>
   <td>type</td>
-  <!-- explanation reference. As this is generated, we just use % -->
-  <td>//tr[@class='listbox-search-line']/th[5]/input</td>  
+  <!-- delivery reference. As this is generated, we just use % -->
+  <td>//tr[@class='listbox-search-line']/th[6]/input</td>  
   <td>%</td>
 </tr>
 <tr>
@@ -105,14 +105,14 @@ Sorting in Grouping Dialog
 
 <tr>
   <td>type</td>
-  <!-- reset explanation reference -->
-  <td>//tr[@class='listbox-search-line']/th[5]/input</td>  
+  <!-- reset delivery reference -->
+  <td>//tr[@class='listbox-search-line']/th[6]/input</td>  
   <td></td>
 </tr>
 <tr>
   <td>type</td>
   <!-- date -->
-  <td>//tr[@class='listbox-search-line']/th[6]/input</td>  
+  <td>//tr[@class='listbox-search-line']/th[7]/input</td>  
   <td>2005/01/02</td>
 </tr>
 <tr>
@@ -129,13 +129,13 @@ Sorting in Grouping Dialog
 <tr>
   <td>type</td>
   <!-- reset date -->
-  <td>//tr[@class='listbox-search-line']/th[6]/input</td>  
+  <td>//tr[@class='listbox-search-line']/th[7]/input</td>  
   <td></td>
 </tr>
 <tr>
   <td>type</td>
   <!-- title -->
-  <td>//tr[@class='listbox-search-line']/th[7]/input</td>  
+  <td>//tr[@class='listbox-search-line']/th[8]/input</td>  
   <td>Client 1 Payment</td>
 </tr>
 <tr>
