@@ -26,6 +26,8 @@ from numpy import dtype
 from numpy.lib.recfunctions import merge_arrays
 from wendelin.lib.calc import mul
 import sys
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
 
 class MergedArray(object):
 
@@ -72,13 +74,16 @@ class DataArrayView(DataArray):
   """
   Data Array like view on one or multiple Data Arrays
   """
+  security = ClassSecurityInfo()
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'initArray')
   def initArray(self, shape, dimensional_type):
     """
     Not Implemented.
     """
     raise NotImplementedError
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArray')
   def getArray(self, default=None):
     """
     Get numpy view of views defined in Data Array View Lines.

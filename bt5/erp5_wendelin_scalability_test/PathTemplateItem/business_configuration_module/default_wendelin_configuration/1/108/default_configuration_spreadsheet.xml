@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts05491713.56</string> </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value> <string>f66ab3d086f9e8398fa9b2d32f618a6f</string> </value>
         </item>
@@ -165,10 +161,6 @@ QS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAARABEAcAQAALIbAAAAAA==</bytes> </value>
         <item>
             <key> <string>id</string> </key>
             <value> <string>default_configuration_spreadsheet</string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>8248</int> </value>
         </item>
       </dictionary>
     </pickle>

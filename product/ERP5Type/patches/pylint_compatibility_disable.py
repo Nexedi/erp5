@@ -68,6 +68,11 @@ class CompatibilityDisableChecker(checkers.BaseChecker):
             "repeated-keyword",
             ""
         ),
+        "E9986": (
+            "broad-exception-raised",
+            "broad-exception-raised",
+            ""
+        )
     }
 
 

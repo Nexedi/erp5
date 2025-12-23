@@ -90,7 +90,7 @@
                           <string>Rubric Title</string>
                         </tuple>
                         <tuple>
-                          <string>data</string>
+                          <string>previous_value</string>
                           <string>Previous value</string>
                         </tuple>
                       </list>

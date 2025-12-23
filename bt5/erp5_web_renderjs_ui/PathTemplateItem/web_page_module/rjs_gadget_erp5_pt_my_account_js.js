@@ -49,7 +49,7 @@
               .push(function (result) {
                 var user;
                 // Calculate user name
-                if (result === undefined) {
+                if ((result === undefined) || (result.data.rows.length === 0)) {
                   user = null;
                 } else {
                   user = result.data.rows[0].value.title;

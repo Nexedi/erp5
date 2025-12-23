@@ -102,6 +102,26 @@ def simple_decorator(decorator):
   new_decorator.__dict__.update(decorator.__dict__)
   return new_decorator
 
+if six.PY3:
+  from ZPublisher import zpublish
+  publishable = zpublish(publish=True)
+  non_publishable = zpublish(publish=False)
+else:
+  def publishable(f):
+    """Decorator to make method f from being publishable (eg methods with a
+    non-empty docstring) by Zope.
+    """
+    real_f = getattr(f, '__func__', f)
+    if not real_f.__doc__:
+      real_f.__doc__ = "<publishable-placeholder>"
+    return f
+  def non_publishable(f):
+    """Decorator to prevent method f from being publishable by Zope.
+    """
+    del getattr(f, '__func__', f).__doc__
+    assert not f.__doc__
+    return f
+
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import document_class_registry
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
@@ -464,19 +484,6 @@ def fill_args_from_request(*optional_args):
     optional_args = ()
     return decorator(function)
   return decorator
-
-
-if six.PY3:
-  from ZPublisher import zpublish
-  non_publishable = zpublish(publish=False)
-else:
-  def non_publishable(f):
-    """Decorator to prevent method f from being publishable by Zope.
-    """
-    del getattr(f, '__func__', f).__doc__
-    assert not f.__doc__
-    return f
-
 
 _pylint_message_re = re.compile(
   r'^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')

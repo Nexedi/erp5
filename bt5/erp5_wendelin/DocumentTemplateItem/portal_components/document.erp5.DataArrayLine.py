@@ -21,6 +21,8 @@
 # See https://www.nexedi.com/licensing for rationale and options.
 #
 ##############################################################################
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
 import numpy as np
 from Products.ERP5Type.Base import TempBase
 from erp5.component.document.DataArray import DataArray
@@ -35,13 +37,17 @@ class DataArrayLine(DataArray):
   """
   A view on parent data array
   """
+  security = ClassSecurityInfo()
 
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'initArray')
   def initArray(self, shape, dtype):
     """
     Not Implemented.
     """
     raise NotImplementedError
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArray')
   def getArray(self, default=None):
     """
     Get numpy view of Parent Data Array according to index.

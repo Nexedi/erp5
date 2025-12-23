@@ -39,6 +39,7 @@ import io
 import logging
 import pickletools
 import re
+import sys
 import tempfile
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -399,3 +400,35 @@ def enable_zodbupdate_load_monkey_patch():
 
         return _original_getCopy(self, container)
     CopySource._getCopy = _getCopy_with_migration
+
+
+    # PyPDF2.generic.ByteStringObject are a sub-class of bytes, that have their state
+    # saved with a BINSTRING on py2. This is a minimal patch to be able to load
+    # these instances on py3.
+    # We had cases where they are saved in _content_information of erp5.portal_type.PDF
+    # the ByteStringObject itself does not contain anything important, but not being
+    # able to load the ByteStringObject prevents loading the PDF.
+    from PyPDF2.generic import ByteStringObject
+    def ByteStringObject__new__(cls, arg):
+        if isinstance(arg, str):
+            arg = arg.encode('utf-8')
+        return bytes.__new__(cls, arg)
+    ByteStringObject.__new__ = ByteStringObject__new__
+    # when serialized with protocol 1, we need collaboration from copyreg._reconstructor
+    import copyreg
+    _reconstructor_orig = copyreg._reconstructor
+    def _reconstructor(cls, base, state):
+        if cls is ByteStringObject and base is str:
+            base = bytes
+            state = state.encode('utf-8')
+        return _reconstructor_orig(cls, base, state)
+    # Make sure we do not change copyreg._reconstructore name when we monkey patching,
+    # not to re-create the DateTime.DateTime _dt_reconstructor problem, although it's
+    # unlikely, as this affects only protocol 1.
+    _reconstructor.__module__ = 'copyreg'
+    _reconstructor.__qualname__ = '_reconstructor'
+    copyreg._reconstructor = _reconstructor
+    # if serialized when DateTime patch to copy_reg.reconstructor was active, the pickle
+    # has a reference to _dt_reconstructor
+    import DateTime
+    sys.modules['DateTime.DateTime'].orig_reconstructor = _reconstructor

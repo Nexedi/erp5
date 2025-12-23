@@ -202,7 +202,10 @@ shared = true
     updater_list = []
     revision_list = []
     for i, revision in enumerate(test_result.revision.split(',')):
-      vcs_repository = node_test_suite.vcs_repository_list[i]
+      try:
+        vcs_repository = node_test_suite.vcs_repository_list[i]
+      except IndexError:
+        raise ValueError('VCS repository %s %s not found in %s' % (i, revision, node_test_suite.vcs_repository_list))
       repository_path = vcs_repository['repository_path']
       count, revision = revision.split('=')[1].split('-')
       revision_list.append((vcs_repository['repository_id'],

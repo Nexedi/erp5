@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 
 class CertificateLoginMixin:
   security = ClassSecurityInfo()
@@ -74,3 +75,5 @@ class CertificateLoginMixin:
   def revokeCertificate(self):
     """Revokes existing certificate"""
     self._revokeCertificate()
+
+InitializeClass(CertificateLoginMixin)
