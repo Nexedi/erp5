@@ -31,7 +31,9 @@ from hashlib import md5
 import six
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from zLOG import LOG, WARNING
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
 from erp5.component.document.File import File
@@ -267,10 +269,14 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
     Overridden method to check permission to access content in raw format.
     """
     self._checkConversionFormatPermission(None)
-    if default is _MARKER:
-      return self._baseGetTextContent()
-    else:
-      return self._baseGetTextContent(default)
+    return bytes2str(self.getData(default))
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setTextContent')
+  def setTextContent(self, text_content, **kw):
+    """
+    Setting text content is like setting data, but with a string argument.
+    """
+    self.setData(str2bytes(text_content), **kw)
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
@@ -299,23 +305,52 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
 
   def getData(self, default=_MARKER):
     # type: (bytes) -> bytes | PData
-    """getData must returns original content but TextDocument accepts
-    data or text_content to store original content.
-    Fallback on text_content property if data is not defined
     """
-    if not self.hasData():
+    Goal: `getData` must returns original content.
+
+    On a new instance, `data` will always hold original content, but for old
+    instances, the original data could be stored in both `data`, or directly in
+    `text_content`. The heuristic is to assume that `text_content` was always
+    updated.
+    """
+    data = None
+
+    try:
+      text_content = aq_base(self).text_content or None
+    except AttributeError:
+      text_content = None
+
+    # Opportunistic migration from `text_content` to `data`
+    if text_content and self.hasData():
+      data = str2bytes(text_content)
+      if _checkPermission(Permissions.ModifyPortalContent, self):
+        self.edit(
+          data=data,
+          notify_workflow=False,
+        )
+        del aq_base(self).text_content
+
+    if not data and self.hasData():
       if default is _MARKER:
-        data = self._baseGetTextContent()
+        data = File.getData(self)
       else:
-        data = self._baseGetTextContent(default)
-        if data is default:
-          return default
-      return str2bytes(data) if data is not None else None
-    else:
-      if default is _MARKER:
-        return File.getData(self)
-      else:
-        return File.getData(self, default)
+        data = File.getData(self, default)
+
+    return data
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setData')
+  def setData(self, value, **kw):
+    """
+    Handles taking care of the backward compatibility fix on `getData`:
+    if data is first set, we need to erase text content without ever
+    converting.
+    """
+    try:
+      del aq_base(self).text_content
+    except AttributeError:
+      pass
+
+    self._setData(value, **kw)
 
   def updateContentMd5(self):
     """Update md5 checksum from the original file
