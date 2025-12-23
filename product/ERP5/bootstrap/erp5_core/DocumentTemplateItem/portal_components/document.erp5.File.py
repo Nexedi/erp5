@@ -194,41 +194,18 @@ class File(Document, OFS_File):
   @deprecated
   def getBaseData(self):
     """
-    Backward-compatiblity method. We used to always convert `data` to
-    `base_data`, with a given `base_content_type`. This method does
-    opportunistic conversion to `data` to get rid of `base_data` progressively.
+    Backward-compatiblity method. For transition, we decided to leave
+    conversion to previous base data up to each base class. An example of
+    backward-compatibility method can be found on `OOoDocument`.
     """
-    try:
-      data = aq_base(self).base_data
-    except KeyError:
-      data = self.getData()
-    else:
-      # If the user cannot add and remove properties, it is useless to try.
-      if not _checkPermission(Permissions.ModifyPortalContent, self):
-        return data
-
-      # Otherwise, migrate `base_data` to `data`.
-      content_type = aq_base(self).base_content_type or None
-      if content_type:
-        del aq_base(self).base_content_type
-
-      self._edit(
-        data=data,
-        content_type=content_type,
-        # It is useless to run Interaction Workflow, since `data` now replaces `base_data`
-        # without any change in content.
-        notify_workflow=False,
-      )
-      del aq_base(self).base_data
-
-    return data
+    raise NotImplementedError("Deprecated method, not supported anymore, please use `getData` instead.")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
   @deprecated
   def hasBaseData(self):
     """
-    Backward-compatiblity method. Not optimized for speed, but to get
-    as many migrated documents as possible.
+    Backward-compatiblity method. The only generic way to test for base
+    data is to check if `getBaseData` returns something.
     """
     return bool(self.getBaseData())
 
@@ -238,11 +215,27 @@ class File(Document, OFS_File):
     """
     Backward-compatiblity method.
     """
-    self._setData(data)
+    raise NotImplementedError("Deprecated method, not supported anymore, please use `setData` instead.")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
-    """return Data as bytes."""
+    """
+    Return `data` as bytes. The method opportunistically tries to
+    delete `base_data` when the property exists.
+    """
+    if _checkPermission(Permissions.ModifyPortalContent, self):
+      # Try to delete `base_content_type`
+      try:
+        del aq_base(self).base_content_type
+      except AttributeError:
+        pass
+
+      # Try to delete `base_data`
+      try:
+        del aq_base(self).base_data
+      except AttributeError:
+        pass
+
     self._checkConversionFormatPermission(None)
     data = self._baseGetData()
     if data is None:
