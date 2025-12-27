@@ -79,6 +79,8 @@ USE_COMPONENT_PEP_451_LOADER = sys.version_info >= (3, 4)
 if sys.version_info < (3, 6):
   class ModuleNotFoundError(ImportError):
     pass
+else:
+  from builtins import ModuleNotFoundError
 
 class ComponentVersionPackageType(PackageType):
   """
