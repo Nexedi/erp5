@@ -42,7 +42,7 @@ import coverage
 from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type import product_path as ERP5Type_product_path
-from . import aq_method_lock
+from . import aq_method_lock, with_aq_method_lock
 from .dynamic_module import PackageType
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
@@ -382,6 +382,7 @@ if USE_COMPONENT_PEP_451_LOADER:
     top-level Component modules (Component checkConsistency() forbids Component
     name ending with _version).
     """
+    @with_aq_method_lock
     def create_module(self, spec):
       if spec.component_version_package_name not in getSite().getVersionPriorityNameList():
         error_message = "%s: No such version" % spec.name
@@ -414,6 +415,7 @@ if USE_COMPONENT_PEP_451_LOADER:
       # nothing to be done here and let importlib does it for us...
       pass
 
+    @with_aq_method_lock
     def exec_module(self, module):
       """
       Here we load objects from ZODB, protected by per-module lock. We
@@ -479,6 +481,7 @@ if USE_COMPONENT_PEP_451_LOADER:
     is modified (importlib._bootstrap:init_module_attrs()) and we just want the
     alias to be a pointer to the *real* module.
     """
+    @with_aq_method_lock
     def create_module(self, spec):
       """
       Access ZODB as early as possible, and possibly bail out early if the
