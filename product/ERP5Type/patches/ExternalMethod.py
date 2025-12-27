@@ -58,7 +58,7 @@ class _(PatchClass(ExternalMethod)):
 
     def _getFunction(self, reload=False):
         try:
-          importlib.import_module('erp5.component.extension.' + self._module)
+          component_module = importlib.import_module('erp5.component.extension.' + self._module)
         except ImportError:
             # Fall back on filesystem
             if not reload:

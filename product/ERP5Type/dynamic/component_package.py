@@ -79,6 +79,8 @@ USE_COMPONENT_PEP_451_LOADER = sys.version_info >= (3, 4)
 if sys.version_info < (3, 6):
   class ModuleNotFoundError(ImportError):
     pass
+else:
+  from builtins import ModuleNotFoundError
 
 class ComponentVersionPackageType(PackageType):
   """
@@ -522,9 +524,8 @@ if USE_COMPONENT_PEP_451_LOADER:
             spec.component_package_name, version, spec.component_reference)
           break
       else:
-        error_message = "%r: None found in modified/validated state" % spec.name
-        LOG("ERP5Type.dynamic.component_package", WARNING, error_message)
-        raise ModuleNotFoundError(error_message)
+        raise ModuleNotFoundError(
+          "%r: None found in modified/validated state" % spec.name)
 
       return ModuleType('going_to_be_discarded')
 
