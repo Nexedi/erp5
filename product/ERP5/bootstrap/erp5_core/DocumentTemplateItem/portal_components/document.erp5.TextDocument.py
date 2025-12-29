@@ -271,12 +271,15 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
     self._checkConversionFormatPermission(None)
     return bytes2str(self.getData(default))
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setTextContent')
-  def setTextContent(self, text_content, **kw):
+  security.declarePrivate('_setTextContent')
+  def _setTextContent(self, text_content, **kw):
     """
     Setting text content is like setting data, but with a string argument.
     """
     self.setData(str2bytes(text_content), **kw)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setTextContent')
+  setTextContent = _setTextContent
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
