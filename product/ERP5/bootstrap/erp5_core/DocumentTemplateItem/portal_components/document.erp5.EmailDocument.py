@@ -245,9 +245,9 @@ class EmailDocument(TextDocument, MailMessageMixin):
       # Return the standard text content if no file was provided
       # Or standard text content is not empty.
       if default is _MARKER:
-        return self._baseGetTextContent()
+        return self.getTextContent()
       else:
-        return self._baseGetTextContent(default)
+        return self.getTextContent(default)
 
     else:
       part = self._getMessageTextPart()
