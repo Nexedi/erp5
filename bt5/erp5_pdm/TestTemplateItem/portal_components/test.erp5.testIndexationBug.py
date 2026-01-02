@@ -1,6 +1,5 @@
 # coding: utf-8
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from unittest import expectedFailure
 
 
 class TestIndexationBug(ERP5TypeTestCase):
