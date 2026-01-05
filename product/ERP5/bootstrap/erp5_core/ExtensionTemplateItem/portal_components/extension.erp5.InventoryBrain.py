@@ -423,14 +423,20 @@ class MovementHistoryListBrain(InventoryListBrain):
   credit = ComputedAttribute(_credit, 1)
 
   def _debit_price(self):
+    total_price = self.total_price
+    if total_price is None:
+      return None
     if self.is_cancellation:
-      return min(self.total_price, 0)
-    return max(self.total_price, 0)
+      return min(total_price, 0)
+    return max(total_price, 0)
   debit_price = ComputedAttribute(_debit_price, 1)
 
   def _credit_price(self):
+    total_price = self.total_price
+    if total_price is None:
+      return None
     if self.is_cancellation:
-      return min(-(self.total_price or 0), 0)
-    return max(-(self.total_price or 0), 0)
+      return min(-(total_price or 0), 0)
+    return max(-(total_price or 0), 0)
   credit_price = ComputedAttribute(_credit_price, 1)
 
