@@ -1732,6 +1732,18 @@ class TestMovementHistoryList(InventoryAPITestCase):
       [(-1, 0), ]
     )
 
+  def testPriceZeroQuantity0(self):
+    self._makeMovement(quantity=0, price=1)
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.section.getUid())],
+      [(0, 0), ]
+    )
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.mirror_section.getUid())],
+      [(0, 0), ]
+    )
+
   def testPriceNone(self):
     self._makeMovement(quantity=1, price=None)
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
