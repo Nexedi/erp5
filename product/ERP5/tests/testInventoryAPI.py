@@ -2598,6 +2598,16 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(0, mvt_history_list[1].debit_price)
     self.assertEqual(-4, mvt_history_list[1].credit_price)
 
+  def test_debit_credit_None_price(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=1, price=None)
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(1, mvt_history_list[0].debit)
+    self.assertEqual(0, mvt_history_list[0].credit)
+    self.assertEqual(None, mvt_history_list[0].debit_price)
+    self.assertEqual(None, mvt_history_list[0].credit_price)
+
   def test_is_source(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100)
