@@ -57,6 +57,7 @@
             <value>
               <tuple>
                 <string>open</string>
+                <string>close</string>
               </tuple>
             </value>
         </item>
