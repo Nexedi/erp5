@@ -133,7 +133,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertTrue(forum)
     self.assertEqual(forum.getPortalType(), "Discussion Forum")
     self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
-    self.assertEquals([(x.property, x.identity) for x in forum.getCriterionList()],
+    self.assertEqual([(x.property, x.identity) for x in forum.getCriterionList()],
                       [("portal_type", ['Discussion Thread'])])
     self.assertSameSet([], forum.DiscussionForum_getDiscussionThreadList())
 
@@ -198,7 +198,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertTrue(forum)
     self.assertEqual(forum.getPortalType(), "Discussion Forum")
     self.assertEqual([group1.getRelativeUrl()], forum.getMembershipCriterionCategoryList())
-    self.assertEquals([(x.property, x.identity) for x in forum.getCriterionList()],
+    self.assertEqual([(x.property, x.identity) for x in forum.getCriterionList()],
                       [("portal_type", ['Discussion Thread'])])
 
     web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
