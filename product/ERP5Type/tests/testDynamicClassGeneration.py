@@ -46,7 +46,7 @@ from persistent import Persistent
 from ZODB.broken import BrokenModified
 from zExceptions import Forbidden, NotFound
 from AccessControl.SecurityManagement import \
-  getSecurityManager, setSecurityManager, noSecurityManager
+  getSecurityManager, setSecurityManager, noSecurityManager, newSecurityManager
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -55,6 +55,107 @@ from Products.ERP5Type.Utils import UpperCase, str2bytes
 
 from zope.interface import Interface, implementedBy
 import six
+
+import threading
+
+import traceback
+
+from functools import partial
+
+def format_stack(thread=None):
+  frame_dict = sys._current_frames()
+  if thread is not None:
+    thread_id = thread.ident
+    frame_dict = {
+      thread_id: frame_dict[thread_id],
+    }
+  frame = None
+  try:
+    return ''.join((
+      'Thread %s\n    %s' % (
+        thread_id,
+        '     '.join(traceback.format_stack(frame)),
+      )
+      for thread_id, frame in six.iteritems(frame_dict)
+    ))
+  finally:
+    del frame, frame_dict
+
+class TransactionThread(threading.Thread):
+  """
+  Run payload(portal_value=portal_value) within a separate transaction.
+  Note: because of transaction isolation, given portal_value will be a
+  different instance of the same persistent object.
+
+  Instances of this class may be used as a context manager to manage thread
+  lifespan, especially to be properly informed of any exception which happened
+  during thread's life. In which case, join_timeout is used upon context exit.
+  """
+  def __init__(self, portal_value, payload, join_timeout=10):
+    super(TransactionThread, self).__init__()
+    self.daemon = True
+    self.zodb = portal_value._p_jar.db()
+    self.root_physical_path = portal_value.getPhysicalPath()
+    self.payload = payload
+    self.exception = None
+    self.join_timeout = join_timeout
+
+  def run(self):
+    try:
+      # Get a new portal, in a new transactional connection bound to default
+      # transaction manager (which should be the threaded transaction manager).
+      portal_value = self.zodb.open().root()['Application'].unrestrictedTraverse(
+        self.root_physical_path,
+      )
+      # Trigger ERP5Site magic
+      portal_value.getSiteManager()
+      # Trigger skin magic
+      portal_value.changeSkin(None)
+      # Login
+      newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
+      self.payload(portal_value=portal_value)
+    except Exception as e:
+      self.exception = e
+      if six.PY2:
+        self.exception.__traceback__ = sys.exc_info()[2]
+
+  def join(self, *args, **kw):
+    super(TransactionThread, self).join(*args, **kw)
+    if not self.is_alive():
+      exception = self.exception
+      # Break reference cycle:
+      # run frame -> self -> exception -> __traceback__ -> run frame
+      # Not re-raising on subsequent calls is kind of a bug, but it's really up
+      # to caller to either not ignore exceptions or keep them around.
+      self.exception = None
+      if exception is not None:
+        if six.PY3:
+          raise exception # pylint: disable=raising-bad-type
+        six.reraise(exception, None, exception.__traceback__)
+
+  def __enter__(self):
+    self.start()
+    return self
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    try:
+      self.join(self.join_timeout)
+      # Note: if context was interrupted by an exception, being unable to join
+      # the thread may be unavoidable (ex: context could not signal blocked
+      # thread), in which case this assertion will be mostly useless noise.
+      # But conditionally ignoring this seems worse.
+      assert not self.is_alive(), format_stack(self)
+    except Exception as join_exc_val:
+      if exc_val is None:
+        # No exception from context: just propagate exception
+        raise
+      # Both an exception from context and an exception in thread
+      if six.PY3:
+        # PY3: "raise join_exc_val from exc_val"
+        six.raise_from(join_exc_val, exc_val)
+      # PY2, handle our exception ourselves and let interpreter reraise
+      # context's.
+      traceback.print_exc()
 
 class TestPortalTypeClass(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
@@ -3699,6 +3800,165 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
     self.assertEqual(composed_movement.getVersion(), 2)
 
 
+
+class TestComponentConcurrency(_TestZodbDocumentComponentMixin):
+  _portal_type = 'Document Component'
+  _document_class = DocumentComponent
+# XXX wrong hierarchy
+
+  def _getValidSourceCode(self, class_name):
+    return '''class %s:
+  pass''' % class_name
+
+  def test_simple_concurrency(self):
+    import random
+    import sys
+    import threading
+    import transaction
+    import time
+    from Products.ERP5.ERP5Site import setSite
+    from transaction.interfaces import TransientError
+
+    reference = self._generateReference('TestConcurrentComponent')
+
+    # Create a test component in the main thread
+    component = self._newComponent(reference=reference, text_content='''
+class %s:
+  def getTestValue(self):
+    return "Initial"
+''' % reference)
+
+    self.portal.portal_workflow.doActionFor(component, 'validate_action')
+    self.tic()
+
+    # XXX needed ?                
+    self.portal.portal_components.reset(force=True,)
+    self.tic()
+
+    errors = []
+
+    def load_module_and_get_value():
+      full_module_name = self._getComponentFullModuleName(reference)
+      if full_module_name in sys.modules:  # XXX while debugging
+        # print(name, "poping ", full_module_name)
+        del sys.modules[full_module_name]
+      module = self._importModule(reference)
+      klass = getattr(module, reference)
+      val = klass().getTestValue()
+      return val
+
+    self.assertEqual(load_module_and_get_value(), "Initial")
+
+    def thread_target(portal, name, target_value, wait_value, seen_values, first=False):
+      try:
+        db = portal._p_jar.db()
+        #tm = transaction.TransactionManager()
+
+        for i in range(2**12):
+          ok = False
+          try:
+#            conn: Unknown = db.open(transaction_manager=tm)
+            conn = db.open()
+            for attempt in transaction.attempts(10):
+              with attempt:
+                time.sleep(random.random() * 0.1)
+                from Testing.makerequest import makerequest
+                app = makerequest(conn.root()['Application'])
+                
+                ##.__of__(self.app.REQUEST)
+                #app = conn.root()['Application'].__of__(self.app.aq_parent)
+                portal = app[self.getPortalName()]
+                from zope.globalrequest import setRequest
+                setRequest(portal.REQUEST)
+
+                portal.getSiteManager()
+                portal.changeSkin(None)
+
+                user = portal.acl_users.getUserById(self.manager_username).__of__(portal.acl_users)
+                #print(name, "user =>", user)
+                #print(name, "request =>", portal.REQUEST)
+                newSecurityManager(portal.REQUEST, user)
+                #print(name, "getSecurityManager =>", getSecurityManager().getUser())
+                # synchronizeDynamicModules(portal)
+                #print(name, "synchronizeDynamicModules OK")
+
+                comp = portal.portal_components[component.getId()]
+                #.__of__(portal.portal_components)
+                assert comp.getValidationState() == 'validated'
+
+                val = load_module_and_get_value()
+                print(name, "got val", val)        
+                if val == wait_value:
+                  seen_values.append(val)
+                  ok = True
+                if val == 'Initial':
+                  if first:
+                    print(name, "done waiting for bootstrap", val)
+                    first = False
+                    ok = True
+                  else:
+                    print(name, "still in bootstrap phase", val)
+                    time.sleep(random.random())
+                    class StillInBootstrap(TransientError):
+                      pass
+                    raise StillInBootstrap
+
+                if ok:
+                  print(name, "👍 👍 👍 👍 editing comp=>", comp)
+                  try:
+                    comp.setTextContent('''\nclass %s:\n  def getTestValue(self):\n    return "%s"''' % (reference, target_value))
+                  except Exception as e:
+                    print(name, "error when setting text content", e, comp)
+                    raise
+                  print(name, "edited with", target_value)
+                  assert not comp.checkSourceCode(), comp.checkSourceCode()  
+
+                else:
+                  time.sleep(random.random() * 0.1)
+                  class TestValueNotReady(TransientError):
+                    pass
+
+                  raise TestValueNotReady
+              assert not comp.checkSourceCode(), comp.checkSourceCode()
+              if comp.getValidationState() != 'validated':
+                raise ValueError(comp.getValidationState(), comp.checkSourceCode())
+              assert comp.getValidationState() == 'validated'
+              #conn._resetCache()
+
+          except:
+#            tm.abort()
+            transaction.abort()
+            raise
+          finally:
+            conn.close()
+          if len(seen_values) >= 10:
+            print(name, "seen", seen_values)
+            return
+      except Exception as e:
+        import traceback
+        traceback.print_exc()
+        errors.append(e)
+
+
+    seen_values = []
+    t1 = threading.Thread(target=thread_target, args=(self.portal, "\033[34mThread 1\033[0m", 'Value1', 'Value2', seen_values, True))
+    t2 = threading.Thread(target=thread_target, args=(self.portal, "\033[32mThread 2\033[0m", 'Value2', 'Value1', seen_values))
+
+    t1.start()
+    t2.start()
+
+    t1.join(300)
+    t2.join(300)
+    
+    if t1.is_alive() or t2.is_alive():
+      self.fail("Threads did not finish (timeout)")
+
+    if errors:
+      self.fail("Errors in threads: %s" % errors)
+
+    self.assertEqual(seen_values[:10], ['Value1', 'Value2'] * 5)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPortalTypeClass))
@@ -3711,4 +3971,5 @@ def test_suite():
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZodbInterfaceComponent))
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZodbMixinComponent))
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZodbDocumentComponentReload))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestComponentConcurrency))
   return suite
