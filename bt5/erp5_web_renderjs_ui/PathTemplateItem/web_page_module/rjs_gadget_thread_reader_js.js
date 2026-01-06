@@ -134,8 +134,7 @@
       return new RSVP.Queue(RSVP.hash({
         language: gadget.getSelectedLanguage(),
         begin_from: gadget.getUrlParameter(options.key + '_begin_from'),
-        last_post: gadget.getUrlParameter('last_post'),
-        post_relative_url: gadget.getUrlParameter('post_relative_url')
+        last_post: gadget.getUrlParameter('last_post')
       }))
         .push(function (result_dict) {
           var begin_from = parseInt(result_dict.begin_from || '0', 10) || 0,
@@ -160,15 +159,12 @@
             begin_from: begin_from,
             lines: lines,
             date_column: options.date_column || 'modification_date',
-            sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
-            attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
             allDocs_result: undefined,
-            last_post: result_dict.last_post,
-            post_relative_url: result_dict.post_relative_url
+            last_post: result_dict.last_post
           });
         });
     })
@@ -239,7 +235,8 @@
                   return '';
                 }
                 var source_title = entry.value[gadget.state.source_column] || '',
-                  attachment_list = entry.value[gadget.state.attachment_column] || [],
+                  attachment_list = entry.value
+                                         .Event_getAttachmentList || [],
                   attachment_element_list = [],
                   j,
                   word_list = source_title.split(' '),
@@ -334,8 +331,8 @@
           limit: limit_options,
           select_list: ['asStrippedHTML', gadget.state.date_column,
                         gadget.state.source_column,
-                        gadget.state.attachment_column],
-          sort_on: [[gadget.state.date_column, gadget.state.sort_order], ['uid', 'ASC']]
+                        'Event_getAttachmentList'],
+          sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
         })
         .push(function (result) {
           if (result.data.rows && result.data.rows.length > 0) {
