@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -71,6 +74,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>publication_section/forum</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
@@ -85,17 +96,13 @@
             </value>
         </item>
         <item>
-            <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>km_test_discussion_forum</string> </value>
         </item>
         <item>
-            <key> <string>membership_criterion_base_category</string> </key>
+            <key> <string>int_index</string> </key>
             <value>
-              <tuple/>
+              <none/>
             </value>
         </item>
         <item>
@@ -118,6 +125,18 @@
             <key> <string>short_title</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -213,7 +232,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -237,7 +256,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1757542645.04</float>
+                              <float>1767804870.97</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +265,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -286,7 +305,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1027.25945.27408.28381</string> </value>
+                      <value> <string>1030.3255.5270.36352</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -302,7 +321,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1757542669.06</float>
+                              <float>1767804948.91</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
