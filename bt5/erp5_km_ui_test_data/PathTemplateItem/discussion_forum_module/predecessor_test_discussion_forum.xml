@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -61,13 +64,19 @@
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -85,17 +94,13 @@
             </value>
         </item>
         <item>
-            <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>predecessor_test_discussion_forum</string> </value>
         </item>
         <item>
-            <key> <string>membership_criterion_base_category</string> </key>
+            <key> <string>int_index</string> </key>
             <value>
-              <tuple/>
+              <none/>
             </value>
         </item>
         <item>
@@ -121,13 +126,25 @@
             </value>
         </item>
         <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Discussion</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
             </value>
         </item>
       </dictionary>
@@ -185,13 +202,13 @@
                 <item>
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAU=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAY=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -213,7 +230,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -232,16 +249,12 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
-                              <float>1757541622.4</float>
+                              <float>1767805043.56</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -250,7 +263,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -290,7 +303,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1027.25928.24520.53862</string> </value>
+                      <value> <string>1030.3256.44641.13090</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -301,16 +314,12 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
-                          </klass>
-                          <tuple>
                             <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
-                            <none/>
-                          </tuple>
+                          </klass>
+                          <tuple/>
                           <state>
                             <tuple>
-                              <float>1757541653.6</float>
+                              <float>1767805009.29</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
