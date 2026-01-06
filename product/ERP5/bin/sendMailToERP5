@@ -5,7 +5,6 @@ import os, sys, traceback
 try:
   # python3
   from urllib import parse
-  from urllib.request import FancyURLopener
   from urllib.request import URLopener
   urlencode = parse.urlencode
   urlsplit = parse.urlsplit
@@ -16,7 +15,6 @@ try:
 except ImportError:
   import urllib
   import urlparse
-  from urllib import FancyURLopener
   from urllib import URLopener
   urlencode = urllib.urlencode
   urlsplit = urlparse.urlsplit
@@ -32,7 +30,7 @@ except ImportError:
 # - Tell smtpd service to use the new filter, by adding:
 #   -o content_filter=erp5:
 
-class urlopen(FancyURLopener, object):
+class urlopen(URLopener, object):
   """Open a network object denoted by a URL for reading
 
   HTTP error handling:
@@ -45,7 +43,6 @@ class urlopen(FancyURLopener, object):
     self.__init__()
     return self.open(*args, **kw)
 
-  http_error_default = URLopener.http_error_default
 
   def http_error(self, url, fp, errcode, errmsg, headers, data=None):
     if errcode == 204:
