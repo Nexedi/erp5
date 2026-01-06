@@ -108,7 +108,7 @@
     ]);
 
     if (scroll_to_last_post) {
-      gadget.element.querySelector(':scope > nav').scrollIntoView()
+      gadget.element.querySelector(':scope > nav').scrollIntoView();
     }
   }
 
@@ -138,10 +138,11 @@
       }))
         .push(function (result_dict) {
           var begin_from = parseInt(result_dict.begin_from || '0', 10) || 0,
+            number_of_pages,
             lines = options.lines || 1;
           if (result_dict.last_post && !isNaN(result_dict.last_post)) {
-            var number_of_pages = Math.ceil(result_dict.last_post/lines);
-            begin_from = (number_of_pages-1)*lines;
+            number_of_pages = Math.ceil(result_dict.last_post / lines);
+            begin_from = (number_of_pages - 1) * lines;
           }
           return gadget.changeState({
             key: options.key,
@@ -159,7 +160,9 @@
             begin_from: begin_from,
             lines: lines,
             date_column: options.date_column || 'modification_date',
+            sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
+            attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
@@ -199,13 +202,13 @@
         first_param = {};
         first_param[pagination_key] = undefined;
         //drop last_post url parameter so pagination links works as usual
-        first_param['last_post'] = undefined;
+        first_param.last_post = undefined;
         prev_param = {};
         prev_param[pagination_key] = Math.max(0, gadget.state.begin_from - gadget.state.lines) || undefined;
-        prev_param['last_post'] = undefined
+        prev_param.last_post = undefined;
         next_param = {};
         next_param[pagination_key] = gadget.state.begin_from + gadget.state.lines;
-        next_param['last_post'] = undefined;
+        next_param.last_post = undefined;
         return new RSVP.Queue(RSVP.hash({
           viewer_list: RSVP.all(allDocs_result.data.rows.map(function (entry, i) {
             if (i === gadget.state.lines) {
@@ -235,8 +238,7 @@
                   return '';
                 }
                 var source_title = entry.value[gadget.state.source_column] || '',
-                  attachment_list = entry.value
-                                         .Event_getAttachmentList || [],
+                  attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
                   j,
                   word_list = source_title.split(' '),
@@ -322,13 +324,8 @@
       }
 
       var gadget = this,
-        limit_options = [];
-
-      if (gadget.state.lines === 0) {
-        limit_options = undefined;
-      } else {
-        limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
-      }
+        limit_options = (gadget.state.lines === 0) ? undefined
+          : [gadget.state.begin_from, gadget.state.lines + 1];
 
       return gadget.jio_allDocs({
         query: gadget.state.query_string,
