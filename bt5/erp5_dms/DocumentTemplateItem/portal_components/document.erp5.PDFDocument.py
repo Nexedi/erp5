@@ -340,7 +340,7 @@ class PDFDocument(Image):
     try:
 
       # First, we use pdfinfo to get standard metadata
-      command = ['pdfinfo', '-meta', '-box', tmp.name]
+      command = ['pdfinfo', '-box', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
       except OSError as e:
