@@ -70,6 +70,7 @@ from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
+import PIL.Image
 import PyPDF2
 from six.moves import range
 from OFS.Image import Pdata
@@ -225,15 +226,8 @@ class TestDocument(TestDocumentMixin):
     with open(filename, "wb") as f:
       f.write(image_data)
     file_size = len(image_data)
-    try:
-      from PIL import Image
-      image = Image.open(filename)
+    with PIL.Image.open(filename) as image:
       image_size = image.size
-    except ImportError:
-      identify_output = Popen(['identify', filename],
-                              universal_newlines=True, # six.PY3: text=True
-                              stdout=PIPE).communicate()[0]
-      image_size = tuple([int(x) for x in identify_output.split()[2].split('x')])
     os.remove(filename)
     return image_size, file_size
 
