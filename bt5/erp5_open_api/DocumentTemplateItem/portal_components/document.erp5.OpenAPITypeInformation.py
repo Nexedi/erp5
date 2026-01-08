@@ -32,6 +32,8 @@ import itertools
 import warnings
 from six.moves import urllib
 
+from erp5.component.mixin.TextContentMigrationMixin import TextContentMigrationMixin
+
 import typing
 if typing.TYPE_CHECKING:
   from ZPublisher.HTTPRequest import HTTPRequest
@@ -322,7 +324,7 @@ class OpenAPIParameter(dict):
     return SchemaWithComponents(self._schema, self.get('schema', {}))
 
 
-class OpenAPITypeInformation(ERP5TypeInformation):
+class OpenAPITypeInformation(TextContentMigrationMixin, ERP5TypeInformation):
   """
   """
   portal_type = 'Open API Type'
