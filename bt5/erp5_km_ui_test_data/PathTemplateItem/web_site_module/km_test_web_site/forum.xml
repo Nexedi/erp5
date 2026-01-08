@@ -427,7 +427,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -452,11 +452,7 @@
                       <value>
                         <object>
                           <klass> <reference id="6.1"/> </klass>
-                          <tuple>
-                            <reference id="6.2"/>
-                            <reference id="6.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
                               <float>1757542602.49</float>
@@ -474,7 +470,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <unicode>zope</unicode> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -499,14 +495,10 @@
                       <value>
                         <object>
                           <klass> <reference id="6.1"/> </klass>
-                          <tuple>
-                            <reference id="6.2"/>
-                            <reference id="6.3"/>
-                            <none/>
-                          </tuple>
+                          <tuple/>
                           <state>
                             <tuple>
-                              <float>1757542619.75</float>
+                              <float>1757542602.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
