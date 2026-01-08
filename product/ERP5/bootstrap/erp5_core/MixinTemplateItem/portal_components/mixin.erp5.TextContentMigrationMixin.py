@@ -98,7 +98,10 @@ class TextContentMigrationMixin:
         )
         del aq_base(self).text_content
     elif self.hasData():
-      data = self._getData(default)
+      if getattr(self, "_getData", None) is not None:
+        data = self._getData(default)
+      else:
+        data = self._baseGetData(default)
 
     return data
 
