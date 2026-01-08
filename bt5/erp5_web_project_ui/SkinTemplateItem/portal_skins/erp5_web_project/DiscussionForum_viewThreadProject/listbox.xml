@@ -180,7 +180,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -238,11 +238,11 @@
                       <list>
                         <tuple>
                           <string>last_post_column</string>
-                          <string>Listbox_getDiscussionThreadLastPostUrl</string>
+                          <string>ListBox_getDiscussionThreadLastPostUrl</string>
                         </tuple>
                         <tuple>
                           <string>author_column</string>
-                          <string>Listbox_getDiscussionThreadUrl</string>
+                          <string>ListBox_getDiscussionThreadUrl</string>
                         </tuple>
                       </list>
                     </value>
