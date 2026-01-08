@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Listbox_getDiscussionThreadLastPostUrl</string> </value>
+            <value> <string>ListBox_getDiscussionThreadLastPostUrl</string> </value>
         </item>
       </dictionary>
     </pickle>
