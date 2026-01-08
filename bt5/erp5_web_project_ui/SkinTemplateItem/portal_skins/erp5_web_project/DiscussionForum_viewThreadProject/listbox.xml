@@ -238,11 +238,11 @@
                       <list>
                         <tuple>
                           <string>last_post_column</string>
-                          <string>Listbox_getDiscussionThreadLastPostUrl</string>
+                          <string>ListBox_getDiscussionThreadLastPostUrl</string>
                         </tuple>
                         <tuple>
                           <string>author_column</string>
-                          <string>Listbox_getDiscussionThreadUrl</string>
+                          <string>ListBox_getDiscussionThreadUrl</string>
                         </tuple>
                       </list>
                     </value>
