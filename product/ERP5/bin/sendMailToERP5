@@ -1,5 +1,26 @@
 #!/usr/bin/python
-import os, sys, traceback, urllib, urlparse
+from __future__ import print_function
+import os, sys, traceback
+
+try:
+  # python3
+  from urllib import parse
+  from urllib.request import URLopener
+  urlencode = parse.urlencode
+  urlsplit = parse.urlsplit
+  urlunsplit = parse.urlunsplit
+  splituser = parse.splituser
+  splitpasswd = parse.splitpasswd
+  basestring = str
+except ImportError:
+  import urllib
+  import urlparse
+  from urllib import URLopener
+  urlencode = urllib.urlencode
+  urlsplit = urlparse.urlsplit
+  urlunsplit = urlparse.urlunsplit
+  splituser = urllib.splituser
+  splitpasswd = urllib.splitpasswd
 
 # Example of configuration of postfix to deliver to ERP5:
 # - Add the following lines to master.cf:
@@ -9,7 +30,7 @@ import os, sys, traceback, urllib, urlparse
 # - Tell smtpd service to use the new filter, by adding:
 #   -o content_filter=erp5:
 
-class urlopen(urllib.FancyURLopener, object):
+class urlopen(URLopener, object):
   """Open a network object denoted by a URL for reading
 
   HTTP error handling:
@@ -22,11 +43,12 @@ class urlopen(urllib.FancyURLopener, object):
     self.__init__()
     return self.open(*args, **kw)
 
-  http_error_default = urllib.URLopener.http_error_default
 
   def http_error(self, url, fp, errcode, errmsg, headers, data=None):
-    if errcode != 302 or urlparse.urlsplit(
-        headers['Location'])[2].endswith('/login_form'):
+    if errcode == 204:
+      return fp
+    if errcode != 302 or urlsplit(
+      headers['Location'])[2].endswith('/login_form'):
       return self.http_error_default(url, fp, errcode, errmsg, headers)
     return fp
 
@@ -57,32 +79,35 @@ class Message(object):
     # destinations. Additional deliveries (even if locally), must be done
     # by the ERP5 instance itself, by activity.
     if portal == 'UNAVAILABLE':
-      print 'Message rejected'
+      print('Message rejected')
       sys.exit(os.EX_UNAVAILABLE)
     if portal == 'SENDMAIL':
-      print 'Deliver message locally ...'
+      print('Deliver message locally ...')
       os.execl('/usr/sbin/sendmail', 'sendmail', '-G', '-i',
                *self.recipient_list)
     if portal is not None:
-      scheme, netloc, path, query, fragment = urlparse.urlsplit(portal)
+      scheme, netloc, path, query, fragment = urlsplit(portal)
       if query or fragment:
         raise ValueError
-      user, host = urllib.splituser(netloc)
+      user, host = splituser(netloc)
       if user is None:
         password = None
       else:
-        user, password = urllib.splitpasswd(user)
+        user, password = splitpasswd(user)
       user = kw.pop('user', user)
       if user:
         host = '%s:%s@%s' % (user, kw.pop('password', password) or '', host)
-      url = urlparse.urlunsplit((scheme, host, path.rstrip('/'), '', '')) + \
+      url = urlunsplit((scheme, host, path.rstrip('/'), '', '')) + \
         '/portal_contributions/newContent'
-      kw['data'] = sys.stdin.read()
-      result = urlopen(url, urllib.urlencode(kw))
-      result.read() # ERP5 does not return useful information
-      print 'Message ingested'
+      kw['data:bytes'] = sys.stdin.read()
+      result = urlopen(url, urlencode(kw))
+      # call result.read() will raise ValueError: read of closed file in python3
+      # it seems the request is closed automatically when receive 302, unlike python2
+      # let's call close instead
+      result.close()
+      print('Message ingested')
     else:
-      print 'Message dropped'
+      print('Message dropped')
 
 
 class SimpleIngestionMap(object):
@@ -93,7 +118,7 @@ class SimpleIngestionMap(object):
   def __init__(self, ingestion_map_filename):
     g = {}
     with open(ingestion_map_filename) as f:
-      exec f in g
+      exec(f, g)
     self._map = g['ingestion_map']
 
   def __call__(self, message, **kw):
