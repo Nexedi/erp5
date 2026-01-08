@@ -31,14 +31,13 @@ from hashlib import md5
 import six
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 from zLOG import LOG, WARNING
-from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
 from erp5.component.document.File import File
 from erp5.component.module.WebDAVSupport import TextContent
 from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
+from erp5.component.mixin.TextContentMigrationMixin import TextContentMigrationMixin
 from io import BytesIO
 from string import Template
 
@@ -49,7 +48,7 @@ from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2s
 
 from lxml import html as etree_html
 
-class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
+class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
   """
   A TextDocument implements IDocument, IFile, ICachedconvertable, ITextConvertable
   and ITextDocument.
@@ -269,17 +268,7 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
     Overridden method to check permission to access content in raw format.
     """
     self._checkConversionFormatPermission(None)
-    return bytes2str(self.getData(default))
-
-  security.declarePrivate('_setTextContent')
-  def _setTextContent(self, text_content, **kw):
-    """
-    Setting text content is like setting data, but with a string argument.
-    """
-    self.setData(str2bytes(text_content), **kw)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setTextContent')
-  setTextContent = _setTextContent
+    return self._getTextContent(default)
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
@@ -306,53 +295,16 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
               'Usage of text_format is deprecated, use content_type instead')
     return self._setContentType(value)
 
-  def getData(self, default=_MARKER):
-    # type: (bytes) -> bytes | PData
+  def _getData(self, default=_MARKER):
     """
-    Goal: `getData` must returns original content.
-
-    On a new instance, `data` will always hold original content, but for old
-    instances, the original data could be stored in both `data`, or directly in
-    `text_content`. The heuristic is to assume that `text_content` was always
-    updated.
+    Note: `File.getData` coerses to bytes.
     """
-    data = None
-
-    try:
-      text_content = aq_base(self).text_content or None
-    except AttributeError:
-      text_content = None
-
-    # Opportunistic migration from `text_content` to `data`
-    if text_content is not None:
-      data = str2bytes(text_content)
-      if _checkPermission(Permissions.ModifyPortalContent, self):
-        self.edit(
-          data=data,
-          force_update=True,
-        )
-        del aq_base(self).text_content
-    elif self.hasData():
-      if default is _MARKER:
-        data = File.getData(self)
-      else:
-        data = File.getData(self, default)
+    if default is _MARKER:
+      data = File.getData(self)
+    else:
+      data = File.getData(self, default)
 
     return data
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setData')
-  def setData(self, value, **kw):
-    """
-    Handles taking care of the backward compatibility fix on `getData`:
-    if data is first set, we need to erase text content without ever
-    converting.
-    """
-    try:
-      del aq_base(self).text_content
-    except AttributeError:
-      pass
-
-    self._setData(value, **kw)
 
   def updateContentMd5(self):
     """Update md5 checksum from the original file
