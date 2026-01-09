@@ -1,7 +1,7 @@
 assignment_request = context
 portal = context.getPortalObject()
 assignment = None
-person = assignment_request.getDestinationValue(portal_type='Person')
+person = assignment_request.getDestinationDecisionValue(portal_type='Person')
 
 if person is None:
   raise ValueError('No person document found')
@@ -10,7 +10,7 @@ search_kw = {}
 for category in assignment_request.getCategoryList():
   base_category, _ = category.split('/', 1)
   search_kw['strict__%s__uid' % base_category] = assignment_request.getValueUidList(base_category)
-search_kw.pop('strict__destination__uid')
+search_kw.pop('strict__destination_decision__uid')
 
 assignment_list = portal.portal_catalog(
   portal_type='Assignment',
@@ -25,7 +25,7 @@ if assignment_request_state == 'submitted':
     assignment_request.validate(comment='Assignment already exists (%s).' % assignment_list[0].getRelativeUrl())
     assignment_request.invalidate(comment='Assignment already exists (%s).' % assignment_list[0].getRelativeUrl())
   else:
-    category_list = [x for x in assignment_request.getCategoryList() if not x.startswith('destination/')]
+    category_list = [x for x in assignment_request.getCategoryList() if not x.startswith('destination_decision/')]
     assignment = person.newContent(
       portal_type='Assignment',
       title=assignment_request.getTitle(),
