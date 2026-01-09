@@ -103,23 +103,23 @@ Grouping Dialog show mirror account
 <!-- the "Third Party Account" columns helps understanding why grouping is refused -->
 <tr>
   <td>assertText</td>
-  <td>//th[@class="listbox-table-header-cell"][10]</td>
+  <td>//th[@class="listbox-table-header-cell"][11]</td>
   <td>Third Party Account</td>
 </tr>
 
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[12]</td>
   <td>40 - Payable</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-2 DataA']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[12]</td>
   <td>7 - Goods Sales</td>
 </tr>
 
@@ -179,12 +179,12 @@ Grouping Dialog show mirror account
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[12]</td>
   <td>A-PAY - Payable</td>
 </tr>
 
