@@ -10,15 +10,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>selection_name</string>
+                <string>editable</string>
+                <string>portal_type</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_destination_decision_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -43,6 +43,10 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -58,6 +62,10 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -66,39 +74,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_title</string>
-                          <string>Person</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Organisation</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>function_title</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -109,19 +90,19 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Assignment Request</string>
-                          <string>Assignment Request</string>
+                          <string>Person</string>
+                          <string>Person</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>assignment_request_module_selection</string> </value>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Assignment Requests</string> </value>
+                    <value> <string>Destination Decision</string> </value>
                 </item>
               </dictionary>
             </value>
