@@ -420,7 +420,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     if result is not None:
       return result
     quantity = self.getQuantity()
-    if quantity :
+    if quantity is not None:
       source_asset_price = self.getSourceAssetPrice()
       if source_asset_price is not None:
         return source_asset_price * - quantity
@@ -464,7 +464,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     if result is not None:
       return result
     quantity = self.getQuantity()
-    if quantity :
+    if quantity is not None:
       destination_asset_price = self.getDestinationAssetPrice()
       if destination_asset_price is not None:
         return destination_asset_price * quantity
