@@ -36,6 +36,12 @@ if assignment_request_state == 'submitted':
     # create a new assignment for the user
     assignment_request.validate(comment='Assignment created (%s).' % assignment.getRelativeUrl())
 
+elif assignment_request_state == 'validated':
+  if 0 == len(assignment_list):
+    # Assignment was probably manually closed
+    assignment_request.suspend(comment='No matching assignment found.')
+    assignment_request.invalidate(comment='No matching assignment found.')
+
 elif assignment_request_state == 'suspended':
   for assignment in assignment_list:
     assignment.close('Closed by the assignment request (%s)' % assignment_request.getRelativeUrl())

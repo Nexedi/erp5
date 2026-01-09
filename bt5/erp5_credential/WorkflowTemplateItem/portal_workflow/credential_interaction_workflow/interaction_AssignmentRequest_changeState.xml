@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>trigger_once_per_transaction</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
