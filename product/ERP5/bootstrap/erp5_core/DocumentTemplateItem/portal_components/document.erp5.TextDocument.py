@@ -71,7 +71,7 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
                     , PropertySheet.Document
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
-                    , PropertySheet.TextDocument
+                    , PropertySheet.SubstitutableTextDocument
                     , PropertySheet.Data
                     , PropertySheet.Reference
                     )
