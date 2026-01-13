@@ -26,19 +26,13 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Applies to non-convertible documents which have text content handled manually\n
-as a string. Examples are Open API or Document Components.\n
-\n
-This Property Sheet should not be applied to DMS-related text documents, which\n
-store their content solely in the `data` property.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TextDocument</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Property Sheet</string> </value>
+            <value> <string>SubstitutableTextDocument</string> </value>
         </item>
       </dictionary>
     </pickle>
