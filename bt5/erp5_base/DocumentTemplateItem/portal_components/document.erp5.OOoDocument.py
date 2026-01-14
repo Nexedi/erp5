@@ -229,7 +229,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
   def getBaseData(self):
     portal_type = self.getPortalType()
     if portal_type not in BASE_FORMAT_DICT:
-      super(OOoDocument, self).getBaseData()
+      return super(OOoDocument, self).getBaseData()
 
     _format = BASE_FORMAT_DICT[portal_type]
     return self.convert(format=_format)[1]
