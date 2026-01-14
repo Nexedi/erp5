@@ -1510,7 +1510,7 @@ class TestCRMMailSend(BaseTestCRM):
       if i.get_filename() == filename:
         part = i
     self.assertEqual(part.get_payload(decode=True),
-                     str2bytes(document.getData()))
+                     str2bytes(document.getTextContent()))
     self.assertEqual(part.get_content_type(), 'text/html')
 
   def test_AttachPdfToMailUsingNewEventDialog(self):
