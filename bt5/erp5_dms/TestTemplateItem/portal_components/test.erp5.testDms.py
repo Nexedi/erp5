@@ -2823,17 +2823,22 @@ return 1
     document_value.edit(file=upload_file)
     document_value.publish()
     self.tic()
-    base_content = "An alternative text"
+    base_content = b"An alternative text"
     aq_base(document_value).base_data = base_content
     aq_base(document_value).base_content_type = "text/dummy"
+    # We convert no more
     self.assertNotEqual(base_content, document_value.getData())
     self.assertNotEqual("text/dummy", document_value.getContentType())
-    # Migration happens here
-    self.assertEqual(base_content, document_value.getBaseData())
-    # XXX-Titouan: should we implement?
-    #self.assertEqual("text/dummy", self.getBaseContentType())
+    # Deletion of base data happens on calling `getData`
+    self.assertNotIn("base_data", aq_base(document_value))
+    self.assertNotIn("base_content_type", aq_base(document_value))
+    # Now, setting data normally, backward compatible method allows using getter for OOoDocuments
+    document_value.edit(
+      data=base_content,
+      content_type="text/dummy",
+    )
     self.assertEqual(base_content, document_value.getData())
-    self.assertEqual("text/dummy", document_value.getContentType())
+    self.assertEqual(base_content, document_value.getBaseData())
 
 
 class TestDocumentWithSecurity(TestDocumentMixin):
