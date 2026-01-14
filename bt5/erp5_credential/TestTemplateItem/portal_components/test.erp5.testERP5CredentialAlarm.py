@@ -164,7 +164,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
       self.portal.portal_workflow._jumpToStateFor(assignment_request,
           'submitted')
       assignment_request.AssignmentRequest_changeAssignment()
-      self.assertEquals(assignment_request.getSimulationState(), 'validated')
+      self.assertEqual(assignment_request.getSimulationState(), 'validated')
 
       self.tic()
       self.assertAlarmNotVisitingDocument(
