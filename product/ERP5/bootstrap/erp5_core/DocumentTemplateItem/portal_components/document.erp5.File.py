@@ -179,7 +179,7 @@ class File(Document, OFS_File):
     """
     Checks whether a file was uploaded into the document.
     """
-    return self.hasData()
+    return self.hasFilename()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'guessMimeType')
   @deprecated
