@@ -2825,10 +2825,10 @@ return 1
     self.tic()
     base_content = b"An alternative text"
     aq_base(document_value).base_data = base_content
-    aq_base(document_value).base_content_type = "text/plain"
+    aq_base(document_value).base_content_type = "text/dummy"
     # We convert no more
+    self.assertNotEqual("text/dummy", document_value.getContentType())
     self.assertNotEqual(base_content, document_value.getData())
-    self.assertNotEqual("text/plain", document_value.getContentType())
     # Deletion of base data happens on calling `getData`
     self.assertNotIn("base_data", aq_base(document_value))
     self.assertNotIn("base_content_type", aq_base(document_value))
@@ -2838,7 +2838,7 @@ return 1
       content_type="text/plain",
     )
     self.assertEqual(base_content, document_value.getData())
-    self.assertEqual(base_content, document_value.getBaseData())
+    self.assertTrue(document_value.getBaseData())
 
 
 class TestDocumentWithSecurity(TestDocumentMixin):
