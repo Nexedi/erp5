@@ -50,6 +50,13 @@ class TextContentMigrationMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasTextContent')
+  def hasTextContent(self):
+    """
+    Having text content is having data
+    """
+    return self.hasData()
+
   security.declarePrivate('_getTextContent')
   def _getTextContent(self, default=_MARKER):
     """
