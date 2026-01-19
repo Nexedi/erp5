@@ -164,6 +164,9 @@ def sqltest_dict():
     priority, date, uid = value
     assert isinstance(priority, _SQLTEST_NO_QUOTE_TYPE_SET)
     assert isinstance(uid, _SQLTEST_NO_QUOTE_TYPE_SET)
+    if not isinstance(date, DateTime):
+      date = DateTime(date)
+
     return (
         b'(priority>%(priority)d OR (priority=%(priority)d AND '
         b'(date>%(date)s OR (date=%(date)s AND uid>%(uid)d))'
@@ -338,6 +341,8 @@ CREATE TABLE %s (
     i = 0
     reset_uid = True
     values_list = []
+    if not getattr(self, '_insert_max_payload', None):
+      self._insert_max_payload = 4194147
     max_payload = self._insert_max_payload
     sep_len = len(self._insert_separator)
     hasDependency = self._hasDependency
@@ -916,7 +921,9 @@ CREATE TABLE %s (
         message_list = [m]
         uid_to_duplicate_uid_list_dict[uid] = uid_list
         group_method_id = m.line.group_method_id
-        if group_method_id[0] != '\0':
+        if group_method_id == '\\0':
+          group_method_id = '\0'
+        if (group_method_id[0] != '\0'):
           # Count the number of objects to prevent too many objects.
           cost = m.getGroupMethodCost()
           assert 0 < cost <= 1, (self.sql_table, uid)
