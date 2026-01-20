@@ -1,6 +1,14 @@
 <workflow_chain>
  <chain>
   <type>Bank Reconciliation</type>
-  <workflow>bank_reconciliation_validation_workflow, edit_workflow</workflow>
+  <workflow>bank_reconciliation_validation_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Bank Reconciliation Line</type>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Bank Reconciliation Root Simulation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
 </workflow_chain>
