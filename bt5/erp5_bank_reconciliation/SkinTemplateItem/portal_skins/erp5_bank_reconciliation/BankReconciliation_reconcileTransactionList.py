@@ -7,6 +7,11 @@ selection_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(list_se
 
 reconciled_bank_account = context.getSourcePayment()
 
+aggregate_value = context
+reconcilied_line_uid = kw.get("reconcilied_line", None)
+if reconcilied_line_uid:
+  aggregate_value = portal.portal_catalog.getObject(reconcilied_line_uid)
+
 if reconciliation_mode == 'reconcile':
   for line in portal.portal_catalog(uid=selection_uid_list or -1):
     line = line.getObject()
@@ -31,8 +36,9 @@ if reconciliation_mode == 'reconcile':
                 'cancel_url': cancel_url,
                 'reconciliation_mode': reconciliation_mode,
                 'field_your_reconciliation_mode': reconciliation_mode})
+
     line.AccountingTransactionLine_addBankReconciliation(
-        context.getRelativeUrl(),
+        aggregate_value.getRelativeUrl(),
         message=translateString("Reconciling Bank Line"))
   return context.Base_redirect(dialog_id, keep_items={
       'portal_status_message': translateString("Lines Reconciled"),
@@ -46,8 +52,12 @@ assert reconciliation_mode == 'unreconcile'
 for line in portal.portal_catalog(uid=selection_uid_list or -1):
   line = line.getObject()
   line.AccountingTransactionLine_removeBankReconciliation(
-      context.getRelativeUrl(),
+      aggregate_value.getRelativeUrl(),
       message=translateString("Reconciling Bank Line"))
+
+# Since setting aggregate-related can change which lines are simulated, update simulation
+if context.hasLineContent():
+  context.updateSimulation(expand_root=1)
 
 return context.Base_redirect(dialog_id, keep_items={
     'portal_status_message': translateString("Lines Unreconciled"),
