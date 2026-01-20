@@ -9,6 +9,6 @@ for portal_type in module.allowedContentTypes():
       property_list.append((portal_type.id, prop))
 
 property_list.sort()
-return [('-- Ignore this Property --', '')] + [
+return [
     (x[1], "%s.%s" % (x[0], x[1])) for x in property_list
 ]
