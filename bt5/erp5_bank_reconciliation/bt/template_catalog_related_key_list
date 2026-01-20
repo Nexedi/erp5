@@ -1,2 +1,2 @@
-aggregate_bank_reconciliation_uid | category,catalog/uid/z_related_aggregate_bank_reconciliation
-aggregate_bank_reconciliation_date | category,catalog,delivery/stop_date/z_related_aggregate_bank_reconciliation
+aggregate_bank_reconciliation_uid | category,catalog,catalog/uid/z_related_aggregate_bank_reconciliation
+aggregate_bank_reconciliation_date | category,catalog,catalog,delivery/stop_date/z_related_aggregate_bank_reconciliation
