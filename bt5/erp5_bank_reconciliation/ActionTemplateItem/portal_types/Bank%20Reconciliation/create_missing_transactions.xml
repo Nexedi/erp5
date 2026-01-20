@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_jio_fast_input</string>
+                <string>action_type/object_jio_action</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_jio_fast_input</string> </value>
+            <value> <string>object_jio_action</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fast_input</string> </value>
+            <value> <string>create_missing_transactions</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -53,16 +53,12 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Action Information</string> </value>
-        </item>
-        <item>
             <key> <string>priority</string> </key>
             <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Bank Reconciliation</string> </value>
+            <value> <string>Create Missing Transactions</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BankReconciliation_viewBankReconciliationFastInputDialog?reset:int=1</string> </value>
+            <value> <string>string:${object_url}/BankReconciliation_viewCreateMissingTransactionListDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -92,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.getValidationState() == \'open\' and not object.hasLineContent()</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'accounting_module\', \'Add portal content\') and object.getValidationState() == \'open\' and object.hasLineContent()</string> </value>
         </item>
       </dictionary>
     </pickle>

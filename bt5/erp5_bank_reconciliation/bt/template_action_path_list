@@ -3,7 +3,9 @@ Bank Reconciliation Module | view
 Bank Reconciliation Root Simulation Rule | view
 Bank Reconciliation | bank_reconciliation_export
 Bank Reconciliation | bank_reconciliation_report
+Bank Reconciliation | create_missing_transactions
 Bank Reconciliation | fast_input
+Bank Reconciliation | fast_input_lines
 Bank Reconciliation | ooo_import
 Bank Reconciliation | select_non_reconcilied_transaction_list
 Bank Reconciliation | view

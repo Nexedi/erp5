@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>cell=None, reconciliation_mode="reconcile", *args, **listbox_kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankReconciliation_getAccountingTransactionLineList</string> </value>
+            <value> <string>BankReconciliation_getFormattedAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
