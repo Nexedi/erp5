@@ -11,7 +11,10 @@ if payment_transaction_builder_value is None:
     "portal_status_level": "error",
   })
 
-payment_transaction_builder_value.build()
+transaction_list = payment_transaction_builder_value.build()
+
+if batch_mode:
+  return transaction_list
 
 return context.Base_redirect("view", {
   "portal_status_message": context.Base_translateString("Payment Transaction creation started in the background."),
