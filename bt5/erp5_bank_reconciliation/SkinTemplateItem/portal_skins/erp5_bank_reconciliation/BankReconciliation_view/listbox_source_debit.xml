@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_credit</string> </value>
+            <value> <string>listbox_source_debit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -52,6 +52,10 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
