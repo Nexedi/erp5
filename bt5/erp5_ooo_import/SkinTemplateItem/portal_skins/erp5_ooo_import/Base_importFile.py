@@ -64,6 +64,7 @@ if len(listbox) == 0:
   request.set('temp_import_file_name', temp_import_file_name)
   session[temp_import_file_name] = temp_file
 
+  request.set('import_file_line_script', import_file_line_script)
   return context.Base_viewFileImportMappingDialog(REQUEST=request)
 
 else:
