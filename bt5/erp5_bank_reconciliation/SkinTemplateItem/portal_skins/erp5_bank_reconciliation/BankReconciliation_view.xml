@@ -106,6 +106,7 @@
                         <string>my_reference</string>
                         <string>my_source_section</string>
                         <string>my_source_payment</string>
+                        <string>my_specialise_title</string>
                       </list>
                     </value>
                 </item>
