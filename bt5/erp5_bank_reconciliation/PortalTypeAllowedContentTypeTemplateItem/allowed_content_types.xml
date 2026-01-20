@@ -5,4 +5,16 @@
  <portal_type id="Bank Reconciliation Module">
   <item>Bank Reconciliation</item>
  </portal_type>
+ <portal_type id="Bank Reconciliation Root Simulation Rule">
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Rule Tool">
+  <item>Bank Reconciliation Root Simulation Rule</item>
+ </portal_type>
 </allowed_content_type_list>

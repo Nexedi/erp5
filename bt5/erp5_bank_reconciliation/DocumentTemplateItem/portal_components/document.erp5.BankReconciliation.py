@@ -60,6 +60,30 @@ class BankReconciliation(AccountingTransaction):
     """
     return 0
 
+  def getSimulableMovementList(self):
+    """
+    Returns all lines which are either not linked to a transaction,
+    or linked to a transaction which was built from the lines
+    themselves.
+    """
+    simulable_movement_list = []
+    for movement in self.getMovementList():
+      aggregate_related_value = movement.getAggregateRelatedValue(portal_type=self.getPortalAccountingMovementTypeList())
+      if aggregate_related_value is not None:
+        delivery_related_value = aggregate_related_value.getDeliveryRelatedValue()
+        if delivery_related_value is None or \
+            delivery_related_value.getAggregateUid() != movement.getUid():
+          continue
+      simulable_movement_list.append(movement)
+    return simulable_movement_list
+
+  def _createRootAppliedRule(self):
+    if self.getValidationState() not in ["open", "closed"]:
+      return
+
+    # Call directly super from Delivery, as Delivery redefines the method
+    return SimulableMixin._createRootAppliedRule(self)
+
   def hasLineContent(self):
     return len(self.objectValues()) > 0
 
