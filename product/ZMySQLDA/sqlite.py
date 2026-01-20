@@ -122,6 +122,7 @@ match_select = re.compile(
 # XXXXXXX This will never work, need to find ather ways
 def mysql_to_sqlite_with_indexes(mysql_sql, table_name=None):
     # Ensure input is bytes
+    return mysql_sql, []
     sql = mysql_sql
 
     # ----------------------------
@@ -647,7 +648,7 @@ class SqliteDB(TM):
         cursor = None
         should_display  = False
         if b"INSERT INTO message" in query:
-            should_display = False
+            should_display = True
         if should_display:
             LOG('_query 590 default:', 0, query)
         if query.strip().upper() == b'COMMIT':
