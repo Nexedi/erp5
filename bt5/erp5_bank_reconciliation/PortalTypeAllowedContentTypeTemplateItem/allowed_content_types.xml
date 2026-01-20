@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Bank Reconciliation">
+  <item>Bank Reconciliation Line</item>
+ </portal_type>
  <portal_type id="Bank Reconciliation Module">
   <item>Bank Reconciliation</item>
  </portal_type>
