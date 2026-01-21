@@ -26,12 +26,14 @@
 #
 ##############################################################################
 
+import six
+
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import bytes2str, str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
 from erp5.component.document.Document import _MARKER
 
@@ -74,7 +76,12 @@ class TextContentMigrationMixin:
     Slightly different from `getTextContent`: Py3 accepts 'str', but Py2
     supports both bytes (ie. str) and unicode.
     """
-    self.setData(text_content.encode(encoding='utf-8', errors='strict'), **kw)
+    data = text_content
+    if six.PY2 and isinstance(data, unicode):
+      data = unicode2str(data)
+    data = str2bytes(data)
+
+    self.setData(data, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setTextContent')
   setTextContent = _setTextContent
