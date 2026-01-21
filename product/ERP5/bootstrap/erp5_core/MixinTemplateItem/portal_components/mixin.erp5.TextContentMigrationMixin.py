@@ -60,7 +60,7 @@ class TextContentMigrationMixin:
   security.declarePrivate('_getTextContent')
   def _getTextContent(self, default=_MARKER):
     """
-    Return data as string.
+    Return data as string. Both Py2 and Py3 should return 'str' type object.
     """
     return bytes2str(self.getData(default))
 
@@ -71,8 +71,10 @@ class TextContentMigrationMixin:
   def _setTextContent(self, text_content, **kw):
     """
     Setting text content is like setting data, but with a string argument.
+    Slightly different from `getTextContent`: Py3 accepts 'str', but Py2
+    supports both bytes (ie. str) and unicode.
     """
-    self.setData(str2bytes(text_content), **kw)
+    self.setData(text_content.encode(encoding='utf-8', errors='strict'), **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setTextContent')
   setTextContent = _setTextContent
