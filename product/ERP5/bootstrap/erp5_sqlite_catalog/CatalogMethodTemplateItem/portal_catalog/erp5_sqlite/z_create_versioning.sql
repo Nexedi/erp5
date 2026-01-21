@@ -1,19 +1,19 @@
-CREATE TABLE `versioning` (
-  `uid` BIGINT UNSIGNED NOT NULL,
-  `version` varchar(255) default '',
-  `size` BIGINT SIGNED,
-  `language` varchar(5) default '',
-  `revision` varchar(10) default '',
-  `subject_set_uid` INT UNSIGNED,
-  `effective_date` datetime default NULL,
-  `expiration_date` datetime default NULL,
-  `creation_date_index` INT,
-  `frequency_index` INT,
-  PRIMARY KEY  (`uid`),
-  KEY `version` (`version`),
-  KEY `language` (`language`),
-  KEY `subject_set_uid` (`subject_set_uid`),
-  KEY `effective_date` (`effective_date`),
-  KEY `expiration_date` (`expiration_date`),
-  KEY `frequency_index` (`creation_date_index`, `frequency_index`)
-) ENGINE=InnoDB;
+CREATE TABLE versioning (
+  uid INTEGER NOT NULL,
+  version TEXT DEFAULT '',
+  size INTEGER,
+  language TEXT DEFAULT '',
+  revision TEXT DEFAULT '',
+  subject_set_uid INTEGER,
+  effective_date TEXT DEFAULT NULL,
+  expiration_date TEXT DEFAULT NULL,
+  creation_date_index INTEGER,
+  frequency_index INTEGER,
+  PRIMARY KEY (uid)
+);
+CREATE INDEX versioning_version ON versioning (version);
+CREATE INDEX versioning_language ON versioning (language);
+CREATE INDEX versioning_subject_set_uid ON versioning (subject_set_uid);
+CREATE INDEX versioning_effective_date ON versioning (effective_date);
+CREATE INDEX versioning_expiration_date ON versioning (expiration_date);
+CREATE INDEX versioning_frequency_index ON versioning (creation_date_index, frequency_index);

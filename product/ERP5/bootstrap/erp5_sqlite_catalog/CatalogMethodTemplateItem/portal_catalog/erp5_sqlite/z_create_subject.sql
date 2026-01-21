@@ -1,6 +1,9 @@
+-- Table: subject
+
 CREATE TABLE subject (
-  subject_set_uid INT UNSIGNED NOT NULL,
-  subject VARCHAR(255),
-  KEY `subject_set_uid` (`subject_set_uid`),
-  KEY `subject` (`subject`)
-) ENGINE=InnoDB;
+  subject_set_uid INTEGER NOT NULL,
+  subject TEXT
+);
+
+CREATE INDEX subject_subject_set_uid ON subject (subject_set_uid);
+CREATE INDEX subject_subject ON subject (subject);

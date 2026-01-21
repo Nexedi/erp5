@@ -1,6 +1,7 @@
 CREATE TABLE roles_and_users (
-  uid INT UNSIGNED,
-  allowedRolesAndUsers VARCHAR(255),
-  KEY `uid` (`uid`),
-  KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)
-)  ENGINE=InnoDB;
+  uid INTEGER,
+  allowedRolesAndUsers TEXT
+);
+
+CREATE INDEX roles_and_users_uid ON roles_and_users (uid);
+CREATE INDEX roles_and_users_allowedRolesAndUsers ON roles_and_users (allowedRolesAndUsers);

@@ -6,9 +6,9 @@
 * a primary key is good for good deletion performance.
 * there is no natural primary key in this table, because a given path may have multiple uids / a given uid may have multiple paths over time.
 </dtml-comment>
-CREATE TABLE `deleted_catalog` (
-  `uid` BIGINT UNSIGNED NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `deletion_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`deletion_timestamp`, `path`, `uid`)
-) ENGINE=InnoDB;
+CREATE TABLE deleted_catalog (
+  uid INTEGER NOT NULL,
+  path TEXT NOT NULL,
+  deletion_timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (deletion_timestamp, path, uid)
+);

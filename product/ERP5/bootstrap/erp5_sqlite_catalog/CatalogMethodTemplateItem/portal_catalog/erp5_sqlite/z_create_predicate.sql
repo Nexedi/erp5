@@ -1,10 +1,10 @@
 CREATE TABLE predicate (
-  uid BIGINT UNSIGNED NOT NULL,
-  `quantity` real ,
-  `quantity_range_min` real ,
-  `quantity_range_max` real ,
-  `start_date` datetime,
-  `start_date_range_min` datetime ,
-  `start_date_range_max` datetime ,
-  PRIMARY KEY `uid` (`uid`)
-) ENGINE=InnoDB;
+  uid INTEGER NOT NULL,
+  quantity REAL,
+  quantity_range_min REAL,
+  quantity_range_max REAL,
+  start_date TEXT,
+  start_date_range_min TEXT,
+  start_date_range_max TEXT,
+  PRIMARY KEY (uid)
+);

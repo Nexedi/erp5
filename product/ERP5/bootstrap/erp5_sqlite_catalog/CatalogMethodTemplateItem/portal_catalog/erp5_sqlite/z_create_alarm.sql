@@ -1,9 +1,9 @@
-# Host:
-# Database: test
-# Table: 'catalog'
-#
-CREATE TABLE `alarm` (
-  `uid` BIGINT UNSIGNED NOT NULL,
-  `alarm_date` DATETIME,
-  PRIMARY KEY  (`uid`)
-) ENGINE=InnoDB;
+-- Host:
+-- Database: test
+-- Table: 'catalog'
+--
+CREATE TABLE alarm (
+  uid INTEGER NOT NULL,
+  alarm_date TEXT,
+  PRIMARY KEY (uid)
+);

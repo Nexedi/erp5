@@ -1,10 +1,11 @@
 CREATE TABLE translation (
-  language VARCHAR(255),
-  message_context VARCHAR(50),
-  portal_type VARCHAR(255),
-  original_message VARCHAR(255),
-  translated_message VARCHAR(255),
-  KEY `message` (`translated_message`),
-  KEY `original_message` (`original_message`),
-  KEY `type_translated_message` (`portal_type`,`translated_message`)
-) ENGINE=InnoDB;
+  language TEXT,
+  message_context TEXT,
+  portal_type TEXT,
+  original_message TEXT,
+  translated_message TEXT
+);
+
+CREATE INDEX translation_message ON translation (translated_message);
+CREATE INDEX translation_original_message ON translation (original_message);
+CREATE INDEX translation_type_translated_message ON translation (portal_type, translated_message);

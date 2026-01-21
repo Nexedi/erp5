@@ -1,6 +1,7 @@
-CREATE TABLE `user` (
-  `uid` BIGINT UNSIGNED NOT NULL,
-  `user_id` varchar(255) binary default '',
-  PRIMARY KEY (`uid`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB;
+CREATE TABLE user (
+  uid INTEGER NOT NULL,
+  user_id TEXT DEFAULT '',
+  PRIMARY KEY (uid)
+);
+
+CREATE INDEX user_user_id ON user (user_id);
