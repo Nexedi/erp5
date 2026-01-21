@@ -49,7 +49,7 @@ class SQLITEJoblib(SQLDict):
   uid_group = 'portal_activity_job'
 
   def createTableSQL(self):
-    table = """\
+    return """\
 CREATE TABLE IF NOT EXISTS %s (
   uid INTEGER NOT NULL,
   date TEXT NOT NULL,
@@ -65,17 +65,15 @@ CREATE TABLE IF NOT EXISTS %s (
   retry INTEGER NOT NULL DEFAULT 0,
   message BLOB NOT NULL,
   PRIMARY KEY (uid)
-)""" % self.sql_table
-    index_list = [
-      "CREATE INDEX IF NOT EXISTS %s_idx_processing_node_priority_date ON %s (processing_node, priority, date)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_node_group_priority_date ON %s (processing_node, group_method_id, priority, date)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_serialization_tag_processing_node ON %s (serialization_tag, processing_node)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_path ON %s (path)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_active_process_uid ON %s (active_process_uid)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_method_id ON %s (method_id)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_tag ON %s (tag)" % (self.sql_table, self.sql_table)
-    ]
-    return table, index_list
+);
+CREATE INDEX IF NOT EXISTS %s_idx_processing_node_priority_date ON %s (processing_node, priority, date);
+CREATE INDEX IF NOT EXISTS %s_idx_node_group_priority_date ON %s (processing_node, group_method_id, priority, date);
+CREATE INDEX IF NOT EXISTS %s_idx_serialization_tag_processing_node ON %s (serialization_tag, processing_node);
+CREATE INDEX IF NOT EXISTS %s_idx_path ON %s (path);
+CREATE INDEX IF NOT EXISTS %s_idx_active_process_uid ON %s (active_process_uid);
+CREATE INDEX IF NOT EXISTS %s_idx_method_id ON %s (method_id);
+CREATE INDEX IF NOT EXISTS %s_idx_tag ON %s (tag);
+""" % ((self.sql_table,) * 15)
 
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
@@ -123,7 +121,7 @@ CREATE TABLE IF NOT EXISTS %s (
           b'@uid+%s' % str2bytes(str(i)),
           quote('/'.join(m.object_path)),
           b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
-          b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
+          b"strftime('%Y-%m-%d %H:%M:%f', 'now')" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           b'-1' if hasDependency(m) else b'0',
           str2bytes(str(m.activity_kw.get('priority', 1))),

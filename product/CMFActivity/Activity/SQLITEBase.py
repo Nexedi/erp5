@@ -249,14 +249,14 @@ def getNow(db):
     Note that this value is not cached, and is not transactionnal on MySQL
     side.
   """
-  return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
+  return db.query(b"SELECT strftime('%Y-%m-%d %H:%M:%f', 'now')", 0)[1][0][0]
 
 class SQLITEBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """
   def createTableSQL(self):
-    table = """\
+    return """\
 CREATE TABLE IF NOT EXISTS %s (
   uid INTEGER NOT NULL,
   date TEXT NOT NULL,
@@ -272,28 +272,24 @@ CREATE TABLE IF NOT EXISTS %s (
   retry INTEGER NOT NULL DEFAULT 0,
   message BLOB NOT NULL,
   PRIMARY KEY (uid)
-)"""% self.sql_table
-    index_list = [
-      "CREATE INDEX IF NOT EXISTS %s_idx_processing_node_priority_date ON %s (processing_node, priority, date)" % (self.sql_table,self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_node2_priority_date ON %s (processing_node, node, priority, date)" % (self.sql_table,self.sql_table), 
-      "CREATE INDEX IF NOT EXISTS %s_idx_node_group_priority_date ON  %s (processing_node, group_method_id, priority, date)" % (self.sql_table,self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_node2_group_priority_date ON  %s (processing_node, node, group_method_id, priority, date)" %  (self.sql_table,self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_serialization_tag_processing_node ON  %s (serialization_tag, processing_node)" % (self.sql_table,self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_path_processing_node ON  %s (path, processing_node)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_active_process_uid ON  %s (active_process_uid)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_method_id_processing_node ON  %s (method_id, processing_node)" % (self.sql_table, self.sql_table),
-      "CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_node)" % (self.sql_table, self.sql_table)
-    ]
-    return table, index_list
+);
+CREATE INDEX IF NOT EXISTS %s_idx_processing_node_priority_date ON %s (processing_node, priority, date);
+CREATE INDEX IF NOT EXISTS %s_idx_node2_priority_date ON %s (processing_node, node, priority, date);
+CREATE INDEX IF NOT EXISTS %s_idx_node_group_priority_date ON  %s (processing_node, group_method_id, priority, date);
+CREATE INDEX IF NOT EXISTS %s_idx_node2_group_priority_date ON  %s (processing_node, node, group_method_id, priority, date);
+CREATE INDEX IF NOT EXISTS %s_idx_serialization_tag_processing_node ON  %s (serialization_tag, processing_node);
+CREATE INDEX IF NOT EXISTS %s_idx_path_processing_node ON  %s (path, processing_node);
+CREATE INDEX IF NOT EXISTS %s_idx_active_process_uid ON  %s (active_process_uid);
+CREATE INDEX IF NOT EXISTS %s_idx_method_id_processing_node ON  %s (method_id, processing_node);
+CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_node);
+""" % ((self.sql_table,) * 19)
 
   def initialize(self, activity_tool, clear):
     db = activity_tool.getSQLConnection()
-    create, index_list = self.createTableSQL()
+    create = self.createTableSQL()
     if clear:
       db.query(str2bytes("DROP TABLE IF EXISTS " + self.sql_table))
       db.query(create)
-      for index in index_list:
-        db.query(index)
     else:
       src = db.upgradeSchema(create, create_if_not_exists=1,
                                      initialize=self._initialize)
@@ -359,7 +355,7 @@ CREATE TABLE IF NOT EXISTS %s (
           b'@uid+%d' % i,
           quote('/'.join(m.object_path)),
           b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
-          b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
+          b"strftime('%Y-%m-%d %H:%M:%f', 'now')" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           b'-1' if hasDependency(m) else b'0',
           str2bytes(str(m.activity_kw.get('priority', 1))),
@@ -430,7 +426,7 @@ CREATE TABLE IF NOT EXISTS %s (
         b" FROM %s"
         b" WHERE"
         b"  processing_node=0 AND"
-        b"  date <= UTC_TIMESTAMP(6)"
+        b"  date <= strftime('%Y-%m-%d %H:%M:%f', 'now')"
         b" ORDER BY priority, date"
         b" LIMIT 1" % str2bytes(self.sql_table),
         0,
@@ -447,7 +443,7 @@ CREATE TABLE IF NOT EXISTS %s (
         b" WHERE"
         b"  {} AND"
         b"  processing_node=0 AND"
-        b"  date <= UTC_TIMESTAMP(6)"
+        b"  date <= strftime('%Y-%m-%d %H:%M:%f', 'now')"
         b" ORDER BY priority, date"
         b" LIMIT 1"
       b")" % str2bytes(self.sql_table)).format(*a, **k))
@@ -1073,7 +1069,7 @@ CREATE TABLE IF NOT EXISTS %s (
 
   def reactivateMessageList(self, db, uid_list, delay, retry):
     db.query(str2bytes("UPDATE %s SET"
-      " date = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL %s SECOND)"
+      " date = DATE_ADD(strftime('%Y-%m-%d %H:%M:%f', 'now'), INTERVAL %s SECOND)"
       "%s WHERE uid IN (%s)" % (
         self.sql_table, delay,
         ", retry = retry + 1" if retry else "",
