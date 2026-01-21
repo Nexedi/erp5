@@ -14,8 +14,9 @@
 current_section = context.getWebSectionValue()
 subject_list = []
 
-for item in current_section.WebSection_getDocumentValueList(): # XXX-JPS - this will fail for performance reasons
-  subject_list.extend([x for x in item.getSubjectList() if not x in subject_list])
+subject_set = set()
+for item in current_section.WebSection_getDocumentValueList():
+  subject_set.update(item.getSubjectList())
 
 ## Now, build the object list so that a Listbox can be used to display the results of this script.
 result = []
