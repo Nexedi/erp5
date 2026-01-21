@@ -77,7 +77,7 @@ UID_ALLOCATION_TRY_COUNT = 10
 # XXX: 5000 is known to work on a case on "after_tag" dependency, which fails
 # at 5400 with:
 #   ProgrammingError: (1064, "memory exhausted near [...]")
-_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
+_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -100
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
@@ -100,28 +100,32 @@ _SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestr
 
 @contextmanager
 def SQLLock(db, lock_name, timeout):
-  """
-  Attemp to acquire a named SQL lock. The outcome of this acquisition is
-  returned to the context statement and MUST be checked:
-  1: lock acquired
-  0: timeout
-  """
-  lock_name = db.string_literal(lock_name)
-  query = db.query
-  (_, ((acquired, ), )) = query(
-    b'SELECT GET_LOCK(%s, %f)' % (lock_name, timeout),
-    max_rows=0,
-  )
-  if acquired is None:
-    raise ValueError('Error acquiring lock')
-  try:
-    yield acquired
-  finally:
-    if acquired:
-      query(
-        b'SELECT RELEASE_LOCK(%s)' % (lock_name, ),
-        max_rows=0,
-      )
+    """
+    SQLite approximation of MySQL GET_LOCK / RELEASE_LOCK
+
+    Yields:
+      1 -> lock acquired
+      0 -> timeout
+    """
+    acquired = 0
+
+    try:
+        # busy_timeout is in milliseconds
+        db.query(b"PRAGMA busy_timeout = %d" % int(timeout * 1000), max_rows=0)
+
+        # Attempt to acquire a write lock
+        db.query(b"BEGIN IMMEDIATE", max_rows=0)
+
+        acquired = 1
+    except sqlite3.OperationalError:
+        acquired = 0
+
+    try:
+        yield acquired
+    finally:
+        if acquired:
+            db.query(b"COMMIT", max_rows=0)
+
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
@@ -426,24 +430,20 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         b" FROM %s"
         b" WHERE"
         b"  processing_node=0 AND"
-        b"  date <= strftime('%Y-%m-%d %H:%M:%f', 'now')"
+        b"  date <= strftime('%%Y-%%m-%%d %%H:%%M:%%f','now')"
         b" ORDER BY priority, date"
         b" LIMIT 1" % str2bytes(self.sql_table),
         0,
       )[1]
     else:
-      # MariaDB often choose processing_node_priority_date index
-      # but node2_priority_date is much faster if there exist
-      # many node < 0 non-groupable activities.
-      force_index = 'FORCE INDEX (node2_priority_date)'
-      subquery = lambda *a, **k: str2bytes(bytes2str(b"("
+
+      subquery = lambda *a, **k: str2bytes(bytes2str(b"SELECT * FROM ("
         b"SELECT 3*priority{} AS effective_priority, date"
         b" FROM %s"
-        b" {}"
         b" WHERE"
         b"  {} AND"
         b"  processing_node=0 AND"
-        b"  date <= strftime('%Y-%m-%d %H:%M:%f', 'now')"
+        b"  date <= strftime('%%Y-%%m-%%d %%H:%%M:%%f','now')"
         b" ORDER BY priority, date"
         b" LIMIT 1"
       b")" % str2bytes(self.sql_table)).format(*a, **k))
@@ -455,11 +455,11 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
           b" UNION ALL ".join(
             chain(
               (
-                subquery('-1', force_index, 'node = %i' % processing_node),
-                subquery('', force_index, 'node=0'),
+                subquery('-1', 'node = %i' % processing_node),
+                subquery('', 'node=0'),
               ),
               (
-                subquery('-1', force_index, 'node = %i' % x)
+                subquery('-1', 'node = %i' % x)
                 for x in node_set
               ),
             ),
@@ -476,7 +476,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         # sorted set to filter negative node values.
         # This is why this query is only executed when the previous one
         # did not find anything.
-        result = query(subquery('+1', '', 'node>0'), 0)[1]
+        result = query(subquery('+1', 'node>0'), 0)[1]
     if result:
       return result[0]
     return Queue.getPriority(self, activity_tool, processing_node, node_set)
@@ -647,14 +647,14 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         if len(column_list) == 1 else
         _IDENTITY
       )
-      base_sql_suffix = b' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
+      base_sql_suffix = b' WHERE processing_node > %i AND (%%s)' % (
         min_processing_node,
       )
       sql_suffix_list = [
         base_sql_suffix % to_sql(dependency_value, quote)
         for dependency_value in dependency_value_dict
       ]
-      base_sql_prefix = b'(SELECT %s FROM ' % (
+      base_sql_prefix = b'SELECT %s FROM ' % (
         b','.join([ str2bytes(c) for c in column_list ]),
       )
       subquery_list = [
@@ -669,7 +669,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         # by the number of activty tables: it is also proportional to the
         # number of distinct values being looked for in the current column.
         for row in db.query(
-          b' UNION '.join(subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]),
+          b' UNION '.join(subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]) + ('LIMIT %s' %  _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT).encode(),
           max_rows=0,
         )[1]:
           # Each row is a value which blocks some activities.
@@ -787,8 +787,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
           b"  processing_node=0 AND"
           b"  %s%s"
           b" ORDER BY priority, date"
-          b" LIMIT %i"
-          b" FOR UPDATE" % args,
+          b" LIMIT %i"  % args,
           0,
         ))
       else:
@@ -798,18 +797,16 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
           # MariaDB often choose processing_node_priority_date index
           # but node2_priority_date is much faster if there exist
           # many node < 0 non-groupable activities.
-          force_index = 'FORCE INDEX (node2_priority_date)'
-        subquery = lambda *a, **k: str2bytes(bytes2str(b"("
+          force_index = ''
+        subquery = lambda *a, **k: str2bytes(bytes2str(b"SELECT * FROM ("
           b"SELECT *, 3*priority{} AS effective_priority"
           b" FROM %s"
-          b" {}"
           b" WHERE"
           b"  {} AND"
           b"  processing_node=0 AND"
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-          b" FOR UPDATE"
         b")" % args).format(*a, **k))
         result = Results(query(
           b"SELECT *"
@@ -819,11 +816,11 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
             b" UNION ALL ".join(
               chain(
                 (
-                  subquery('-1', force_index, 'node = %i' % processing_node),
-                  subquery('', force_index, 'node=0'),
+                  subquery('-1', 'node = %i' % processing_node),
+                  subquery('', 'node=0'),
                 ),
                 (
-                  subquery('-1', force_index, 'node = %i' % x)
+                  subquery('-1', 'node = %i' % x)
                   for x in node_set
                 ),
               ),
@@ -841,7 +838,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
           # sorted set to filter negative node values.
           # This is why this query is only executed when the previous one
           # did not find anything.
-          result = Results(query(subquery('+1', '', 'node>0'), 0))
+          result = Results(query(subquery('+1', 'node>0'), 0))
       if result:
         # Reserve messages.
         uid_list = [x.uid for x in result]
@@ -1067,9 +1064,9 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
     db.query(str2bytes("DELETE FROM %s WHERE uid IN (%s)" % (
       self.sql_table, ','.join(map(str, uid_list)))))
 
-  def reactivateMessageList(self, db, uid_list, delay, retry):
+  def reactivateMessageList(self, db, uid_list, delay, retry):   
     db.query(str2bytes("UPDATE %s SET"
-      " date = DATE_ADD(strftime('%Y-%m-%d %H:%M:%f', 'now'), INTERVAL %s SECOND)"
+      " date = strftime('%%Y-%%m-%%d %%H:%%M:%%f','now','+%s seconds')"
       "%s WHERE uid IN (%s)" % (
         self.sql_table, delay,
         ", retry = retry + 1" if retry else "",
