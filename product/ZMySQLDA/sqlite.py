@@ -671,7 +671,11 @@ class SqliteDB(TM):
             if should_display:
                 LOG('_query 608 change to:', 0, sqlite_sql)
             try:
-                cursor.execute(sqlite_sql.decode())
+                sqlite_sql = sqlite_sql.decode()
+                if 'create table' in sqlite_sql.lower():
+                    cursor.executescript(sqlite_sql)
+                else:
+                    cursor.execute(sqlite_sql)
             except Exception as e:
               LOG('db.py 764 default', 0, query)
               LOG('db.py 731', 0, sqlite_sql)
@@ -682,9 +686,6 @@ class SqliteDB(TM):
 
             rows = cursor.fetchall()
             desc = cursor.description
-
-            for idx_sql in index_sql_list:
-                cursor.execute(idx_sql)
             self.db.commit()
             return SQLiteResult(rows, desc)
 
@@ -696,6 +697,7 @@ class SqliteDB(TM):
         """Execute 'query_string' and return at most 'max_rows'."""
         self._use_TM and self._register()
         desc = None
+        
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
         # XXX deal with a typical mistake that the user appends
