@@ -16,7 +16,7 @@ VALUES
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,
   <dtml-sqlvar expr="id[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDescription[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getDescription[loop_item].replace('\'', '')" type="string" optional>,
   <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="meta_type[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,

@@ -1429,7 +1429,11 @@ class ActivityTool (BaseTool):
       path = None if obj is None else '/'.join(obj.getPhysicalPath())
       db = self.getSQLConnection()
       quote = db.string_literal
-      return bool(db.query(b"(%s)" % b") UNION ALL (".join(
+      LOG('Activity Tool 1432', 0, b" UNION ALL ".join(
+        activity.hasActivitySQL(quote, path=path, **kw)
+        for activity in six.itervalues(activity_dict)))
+
+      return bool(db.query(b"%s" % b" UNION ALL ".join(
         activity.hasActivitySQL(quote, path=path, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 

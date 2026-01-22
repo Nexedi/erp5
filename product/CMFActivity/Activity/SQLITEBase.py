@@ -261,7 +261,7 @@ class SQLITEBase(Queue):
   """
   def createTableSQL(self):
     return """\
-CREATE TABLE IF NOT EXISTS %s (
+CREATE TABLE %s (
   uid INTEGER NOT NULL,
   date TEXT NOT NULL,
   path TEXT NOT NULL,
@@ -419,7 +419,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
       where.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
       where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
-    return b"SELECT 1 FROM %s WHERE %s LIMIT 1" % (
+    return b"SELECT * FROM (SELECT 1 FROM %s WHERE %s LIMIT 1)" % (
       str2bytes(self.sql_table), b" AND ".join(where) or b"1")
 
   def getPriority(self, activity_tool, processing_node, node_set=None):

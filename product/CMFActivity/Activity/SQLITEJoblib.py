@@ -50,7 +50,7 @@ class SQLITEJoblib(SQLDict):
 
   def createTableSQL(self):
     return """\
-CREATE TABLE IF NOT EXISTS %s (
+CREATE TABLE %s (
   uid INTEGER NOT NULL,
   date TEXT NOT NULL,
   path TEXT NOT NULL,

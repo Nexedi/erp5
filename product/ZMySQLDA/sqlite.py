@@ -392,13 +392,6 @@ class SQLiteResult:
         self._index = 0  # current cursor position
 
     def fetch_row(self, size=1):
-        """
-        MySQL-style fetch_row:
-        - returns a list of rows
-        - empty list means EOF
-        """
-
-
         if self._index >= len(self._rows):
             return ()
 
@@ -408,9 +401,6 @@ class SQLiteResult:
             return tuple(result)
 
         end = self._index + size
-
-
-
         chunk = self._rows[self._index:end]
 
         self._index = end
@@ -648,7 +638,7 @@ class SqliteDB(TM):
         cursor = None
         should_display  = False
         if b"INSERT INTO message" in query:
-            should_display = True
+            should_display = False
         if should_display:
             LOG('_query 590 default:', 0, query)
         if query.strip().upper() == b'COMMIT':
@@ -683,9 +673,9 @@ class SqliteDB(TM):
             if cursor.description is None:
               self.db.commit()
               return None
-
             rows = cursor.fetchall()
             desc = cursor.description
+
             self.db.commit()
             return SQLiteResult(rows, desc)
 
@@ -705,6 +695,10 @@ class SqliteDB(TM):
         # Unfortunately, MySQLdb does not want to be graceful.
         if query_string[-1:] == b';':
           query_string = query_string[:-1]
+        if b'INSERT INTO portal_ids' in query_string:
+            LOG('sqlite 709', 0, query_string)
+            LOG('sqlite 710', 0, query_string.split(b'\0'))
+
         for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:
@@ -717,7 +711,9 @@ class SqliteDB(TM):
                     qs = b"SELECT %s" % select
 
                     if max_rows:
-                        qs = b"%s LIMIT %d" % (qs, max_rows)
+                        #qs = b"%s LIMIT %d" % (qs, max_rows)
+                        qs = b"SELECT * FROM (%s) AS t LIMIT %d" % (qs, max_rows)
+
                 c = self._query(qs)
                 if c:
                     if desc is not None is not c.describe():
@@ -823,8 +819,9 @@ class SqliteDB(TM):
             column_match  = re.compile(r"`(\w+)`\s+(.+)").match,
             ):
         #(_, schema), = self.query("SHOW CREATE TABLE " + name)[1]
-        result = self.query(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{name}'")[1]
-        (schema,) = result[0] 
+        result = self.query(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{name}'")
+        (row,) = result.fetch_row(1)
+        _, schema = row
         column_list = []
         key_set = set()
         m = create_rmatch(create_lstrip("", schema, 1))
@@ -837,6 +834,7 @@ class SqliteDB(TM):
 
     _create_search = re.compile(r'\bCREATE\s+TABLE\s+(`?)(\w+)\1\s+',
                                 re.I).search
+    #XXXXXXXXXXXXXXXXXXXX change it
     _key_search = re.compile(r'\bKEY\s+(`[^`]+`)\s+(.+)').search
 
     def upgradeSchema(self, create_sql, create_if_not_exists=False,
