@@ -33,6 +33,7 @@ from Acquisition import aq_base
 
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 
 from erp5.component.document.Document import _MARKER
@@ -50,7 +51,6 @@ class TextContentMigrationMixin:
 
   # Declarative security
   security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasTextContent')
   def hasTextContent(self):
@@ -134,3 +134,5 @@ class TextContentMigrationMixin:
       pass
 
     self._setData(value, **kw)
+
+InitializeClass(TextContentMigrationMixin)
