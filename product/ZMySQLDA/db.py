@@ -244,7 +244,7 @@ class DB(TM):
         self._use_TM = transactional or self._mysql_lock
 
     def _parse_connection_string(self):
-        self._mysql_lock = self._try_transactions = None
+        self._mysql_lock = self._try_transactions = self._isolation_level = None
         self._kw_args = kwargs = {'conv': self.conv}
         items = self._connection.split()
         if not items:
@@ -262,6 +262,8 @@ class DB(TM):
             del items[0]
         if items[0][0] == "*":
             self._mysql_lock = items.pop(0)[1:]
+        if items[0][0] == "!":
+            self._isolation_level = items.pop(0)[1:]
         db = items.pop(0)
         if '@' in db:
             db, host = db.split('@', 1)
@@ -301,7 +303,7 @@ class DB(TM):
         FIELD_TYPE.TINY: "i", FIELD_TYPE.YEAR: "i",
         }
 
-    _p_oid=_p_changed=_registered=None
+    _p_oid=_p_changed=_registered=_current_isolation_level=None
 
     def __del__(self):
       if self.db is not None:
@@ -436,9 +438,8 @@ class DB(TM):
           else:
             raise
 
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, isolation_level=None):
         """Execute 'query_string' and return at most 'max_rows'."""
-        self._use_TM and self._register()
         desc = None
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
@@ -447,6 +448,19 @@ class DB(TM):
         # Unfortunately, MySQLdb does not want to be graceful.
         if query_string[-1:] == b';':
           query_string = query_string[:-1]
+        if self._use_TM and not self._registered:
+            if isolation_level:
+                self._current_isolation_level = isolation_level
+            elif self._isolation_level:
+                self._current_isolation_level = self._isolation_level
+            else:
+                for qs in query_string.split(b'\0'):
+                    if match_select(qs.strip()):
+                        self._current_isolation_level = 'REPEATABLE-READ'
+                        break
+                else:
+                    self._current_isolation_level = 'READ-COMMITTED'
+            self._register()
         for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:
@@ -491,6 +505,8 @@ class DB(TM):
         try:
             self._transaction_begun = True
             if self._transactions:
+                if self._current_isolation_level:
+                    self._query("SET TRANSACTION ISOLATION LEVEL %s" % self._current_isolation_level.replace('-', ' '))
                 self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
@@ -665,7 +681,7 @@ class DeferredDB(DB):
         assert self._use_TM
         self._sql_string_list = []
 
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, isolation_level=None):
         self._register()
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
