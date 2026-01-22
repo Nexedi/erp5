@@ -149,7 +149,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
                     , PropertySheet.Document
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
-                    , PropertySheet.TextDocument
                     , PropertySheet.Arrow
                     , PropertySheet.Task
                     , PropertySheet.ItemAggregation
