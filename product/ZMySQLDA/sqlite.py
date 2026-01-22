@@ -695,9 +695,6 @@ class SqliteDB(TM):
         # Unfortunately, MySQLdb does not want to be graceful.
         if query_string[-1:] == b';':
           query_string = query_string[:-1]
-        if b'INSERT INTO portal_ids' in query_string:
-            LOG('sqlite 709', 0, query_string)
-            LOG('sqlite 710', 0, query_string.split(b'\0'))
 
         for qs in query_string.split(b'\0'):
             qs = qs.strip()
@@ -711,8 +708,8 @@ class SqliteDB(TM):
                     qs = b"SELECT %s" % select
 
                     if max_rows:
-                        #qs = b"%s LIMIT %d" % (qs, max_rows)
-                        qs = b"SELECT * FROM (%s) AS t LIMIT %d" % (qs, max_rows)
+                        qs = b"%s LIMIT %d" % (qs, max_rows)
+                        #qs = b"SELECT * FROM (%s) AS t LIMIT %d" % (qs, max_rows)
 
                 c = self._query(qs)
                 if c:
