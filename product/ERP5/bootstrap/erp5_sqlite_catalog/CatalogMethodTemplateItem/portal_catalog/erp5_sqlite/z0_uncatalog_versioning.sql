@@ -1,0 +1,1 @@
+DELETE FROM versioning WHERE <dtml-sqltest uid op=eq type=int>
