@@ -1238,7 +1238,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
       all dates in message(_queue) table
     """
     activity_tool.getSQLConnection().query(str2bytes("UPDATE %s SET"
-      " date = DATE_SUB(date, INTERVAL %s SECOND)"
+      " date = datetime(date, '-%s seconds')"
       % (self.sql_table, delay)
       + ('' if processing_node is None else
          "WHERE processing_node=%s" % processing_node)))
