@@ -108,6 +108,8 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag ON %s (tag);
     i = 0
     reset_uid = True
     values_list = []
+    if not getattr(self, '_insert_max_payload', None):
+      self._insert_max_payload = 4194147
     max_payload = self._insert_max_payload
     sep_len = len(self._insert_separator)
     hasDependency = self._hasDependency
