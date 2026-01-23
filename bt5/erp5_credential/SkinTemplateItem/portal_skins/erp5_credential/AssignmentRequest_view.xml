@@ -77,8 +77,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_destination_title</string>
+                        <string>my_destination_decision_title</string>
                         <string>my_destination_project_title</string>
+                        <string>my_destination_title</string>
                         <string>my_function</string>
                       </list>
                     </value>
