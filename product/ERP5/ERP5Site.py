@@ -97,6 +97,7 @@ def manage_addERP5Site(self,
   '''
   Adds a portal instance.
   '''
+  erp5_catalog_storage = 'erp5_sqlite_catalog'
   gen = ERP5Generator()
   id = str(id).strip()
   p = gen.create(self,
@@ -2610,6 +2611,8 @@ def initialize(self):
   from Products.ZMySQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
+    #XXXXXXXXXXXXXXXXXXXXXX
+    default_kw['erp5_catalog_storage'] = 'erp5_sqlite_catalog'
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
     # The lock is to avoid that multiple zopes try to create a site when
