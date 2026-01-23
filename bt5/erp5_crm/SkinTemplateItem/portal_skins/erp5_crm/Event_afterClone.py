@@ -4,7 +4,6 @@ content_dict = context.getPropertyDictFromContent()
 content_dict['title'] = context.getTitle()
 content_dict['text_content'] = context.getTextContent()
 content_dict['content_type'] = context.getContentType()
-content_dict['data'] = None
 # we may have specified (i.e. user input) source and destination
 content_dict['destination_list'] = content_dict.get('destination_list', []) + \
                                      [x.getRelativeUrl() for x in context.getDestinationValueList() \
