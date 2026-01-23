@@ -1,6 +1,12 @@
 import threading
 aq_method_lock = threading.RLock()
 
+def with_aq_method_lock(function):
+  def inner(*args, **kw):
+    with aq_method_lock:
+      return function(*args, **kw)
+  return inner
+
 import six
 if six.PY3:
   import _imp
