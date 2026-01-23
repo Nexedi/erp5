@@ -1,1 +1,1 @@
-from .SQLITEDict import SQLITEDict as SQLDict
+from .SQLITEDict import SQLDict

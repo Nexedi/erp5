@@ -40,7 +40,7 @@ from Products.ERP5Type.Utils import str2bytes
 from .SQLDict import SQLDict
 from six.moves import xrange
 
-class SQLITEJoblib(SQLDict):
+class SQLJoblib(SQLDict):
   """
     An extention of SQLDict, It is non transatactional and follow always-excute paradigm.
     It uses a dictionary to store results and with hash of arguments as keys

@@ -1,1 +1,1 @@
-from .SQLITEJoblib import SQLITEJoblib as SQLJoblib
+from .SQLITEJoblib import SQLJoblib

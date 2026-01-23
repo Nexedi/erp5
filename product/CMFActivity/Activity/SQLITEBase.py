@@ -255,7 +255,7 @@ def getNow(db):
   """
   return db.query(b"SELECT strftime('%Y-%m-%d %H:%M:%f', 'now')", 0)[1][0][0]
 
-class SQLITEBase(Queue):
+class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """

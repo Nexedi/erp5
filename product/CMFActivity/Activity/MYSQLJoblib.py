@@ -40,7 +40,7 @@ from Products.ERP5Type.Utils import str2bytes
 from .SQLDict import SQLDict
 from six.moves import xrange
 
-class MYSQLJoblib(SQLDict):
+class SQLJoblib(SQLDict):
   """
     An extention of SQLDict, It is non transatactional and follow always-excute paradigm.
     It uses a dictionary to store results and with hash of arguments as keys
@@ -107,8 +107,6 @@ CREATE TABLE %s (
     i = 0
     reset_uid = True
     values_list = []
-    if not getattr(self, '_insert_max_payload', None):
-      self._insert_max_payload = 4194147
     max_payload = self._insert_max_payload
     sep_len = len(self._insert_separator)
     hasDependency = self._hasDependency

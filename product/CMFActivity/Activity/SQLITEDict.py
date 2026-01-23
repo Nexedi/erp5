@@ -39,7 +39,7 @@ import transaction
 
 from zLOG import TRACE, WARNING
 
-class SQLITEDict(SQLBase):
+class SQLDict(SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
     and provide sequentiality. Should not create conflict
@@ -61,7 +61,7 @@ class SQLITEDict(SQLBase):
     if message_id in uid_set:
       return
     uid_set.add(message_id)
-    super(SQLITEDict, self).registerMessage(activity_buffer, activity_tool, m)
+    super(SQLDict, self).registerMessage(activity_buffer, activity_tool, m)
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = False # This prevents from inserting deleted messages into the queue

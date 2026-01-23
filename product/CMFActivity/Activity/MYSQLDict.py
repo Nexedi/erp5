@@ -39,7 +39,7 @@ import transaction
 
 from zLOG import TRACE, WARNING
 
-class MYSQLDict(SQLBase):
+class SQLDict(SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
     and provide sequentiality. Should not create conflict
