@@ -1184,19 +1184,27 @@ class TestCaptchaField(ERP5TypeTestCase):
     def random_choice(seq):
       self.assertIn('+', seq)
       return '+'
-    with mock.patch('Products.ERP5Form.CaptchaField.random.randint', return_value=1), \
+
+    class FakeRandom():
+      # Do stable random, to ensure we get the expected value
+      _current_random_int = 0
+      def randint(self, a, b):
+        self._current_random_int = self._current_random_int + 1
+        return self._current_random_int
+
+    with mock.patch('Products.ERP5Form.CaptchaField.random.randint', side_effect=FakeRandom().randint), \
           mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=random_choice):
       field_html = self.field.render(REQUEST=self.portal.REQUEST)
-    self.assertIn('1 plus 1', field_html)
-    self.assertIn(hashlib.md5(b'1 + 1').hexdigest(), field_html)
+    self.assertIn('1 plus 2', field_html)
+    self.assertIn(hashlib.md5(b'1 + 2').hexdigest(), field_html)
 
     self.assertEqual(
         self.validator.validate(
             self.field, 'field_test', {
-                'field_test': '2',
-                '__captcha_field_test__': hashlib.md5(b'1 + 1').hexdigest()
+                'field_test': '3',
+                '__captcha_field_test__': hashlib.md5(b'1 + 2').hexdigest()
             }),
-        '2',
+        '3',
     )
 
   def test_numeric_bad_captcha(self):
