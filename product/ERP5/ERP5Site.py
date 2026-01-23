@@ -97,6 +97,7 @@ def manage_addERP5Site(self,
   '''
   Adds a portal instance.
   '''
+  erp5_catalog_storage = 'erp5_sqlite_catalog'
   gen = ERP5Generator()
   id = str(id).strip()
   p = gen.create(self,
