@@ -1,0 +1,6 @@
+trade_phase/bank
+trade_phase/bank/accounting
+trade_phase/bank/reconciliation
+trade_state/bank
+trade_state/bank/accounted
+trade_state/bank/reconcilied

@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery, ComplexQuery
 portal = context.getPortalObject()
 
 kw = {
@@ -7,7 +7,10 @@ kw = {
        context.getSourceSectionValue().getGroup(base=True)),
   'payment_uid': context.getSourcePaymentUid(),
   'node_category': 'account_type/asset/cash/bank',
-  'simulation_state': ('stopped', 'delivered', ),
+  'simulation_state': \
+    portal.getPortalPlannedTransactionStateList() + \
+    ('confirmed',) + \
+    portal.getPortalAccountedTransactionStateList(),
   'portal_type': context.getPortalAccountingMovementTypeList(),
   'sort_on': (('date', 'ASC'), ('uid', 'ASC'))
 }
@@ -16,11 +19,23 @@ kw = {
 if reconciliation_mode == "reconcile":
   if context.getStopDate():
     kw['at_date'] = context.getStopDate().latestTime()
+  if cell is not None:
+    kw.update({
+      'reconciliation_query': ComplexQuery(
+        SimpleQuery(aggregate_bank_reconciliation_date=None),
+        SimpleQuery(uid=cell.getAggregateRelatedValue().getUid()),
+        logical_operator="OR",
+      ),
+    })
+  else:
+    kw.update({
+      'reconciliation_query': SimpleQuery(aggregate_bank_reconciliation_date=None),
+    })
+
   kw.update({
-  'reconciliation_query': SimpleQuery(
-      aggregate_bank_reconciliation_date=None),
-  'left_join_list': ['aggregate_bank_reconciliation_date'],
-  'implicit_join': False, })
+    'left_join_list': ['aggregate_bank_reconciliation_date'],
+    'implicit_join': False,
+  })
 else:
   assert reconciliation_mode == "unreconcile"
   kw['aggregate_bank_reconciliation_uid'] = context.getUid()
