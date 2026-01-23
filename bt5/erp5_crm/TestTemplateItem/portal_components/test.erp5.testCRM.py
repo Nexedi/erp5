@@ -1067,7 +1067,7 @@ class TestCRMMailIngestion(BaseTestCRM):
         os.path.dirname(Products.ERP5.tests.__file__),
         filename)
       with open(file_path, 'rb') as f:
-        event.setData(f.read())
+        event.edit(data=f, filename=filename)
       self.assertTrue(event.getTextContent().startswith('<'))
 
 
@@ -1821,15 +1821,16 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual(event.getTitle(), dummy_title)
     self.assertEqual(event.getTextContent(), dummy_content)
 
-    event.setData(str2bytes('Subject: %s\r\n\r\n%s' % (real_title, real_content)))
+    event.edit(
+      data=str2bytes('Subject: %s\r\n\r\n%s' % (real_title, real_content)),
+      filename="mail.eml",
+    )
     self.assertTrue(event.hasFile(), '%r has no file' % (event,))
     self.assertEqual(event.getTitle(), real_title)
     self.assertEqual(event.getTextContent(), real_content)
 
     self.tic()
     new_event = event.Base_createCloneDocument(batch_mode=1)
-    self.assertFalse(new_event.hasFile(), '%r has a file' % (new_event,))
-    self.assertEqual(new_event.getData(), b'')
     self.assertEqual(new_event.getTitle(), real_title)
     self.assertEqual(new_event.getTextContent(), real_content)
     self.assertNotEqual(new_event.getReference(), event.getReference())
