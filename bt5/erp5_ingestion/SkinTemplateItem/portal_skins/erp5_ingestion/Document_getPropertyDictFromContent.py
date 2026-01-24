@@ -18,9 +18,9 @@ for k, v in information.items():
   if v:
     if six.PY2 and isinstance(v, six.text_type): v = unicode2str(v)
     if key in property_id_list:
-      if key == 'reference':
-        pass # XXX - We can not trust reference on getContentInformation
-      else:
+      if key not in ('id', 'reference'):
+        # XXX - We can not trust reference on getContentInformation
+        # also we do not want ot change ID this way
         result[key] = v
     elif key == 'author':
       p = context.portal_catalog.getResultValue(title = v)
