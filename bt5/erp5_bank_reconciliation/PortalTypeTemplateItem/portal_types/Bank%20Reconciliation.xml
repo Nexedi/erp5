@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>XXX a Bank Reconciliation is an item, but we need to search bank reconciliation by dates, so we use Delivery class.</string> </value>
+            <value> <string>Bank Reconciliations are delivery documents, similar to Accounting Transactions.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -47,8 +47,14 @@
             <value> <string>Base Type</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Delivery</string> </value>
+            <value> <string>BankReconciliation</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
