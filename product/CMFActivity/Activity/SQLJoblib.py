@@ -1,1 +1,10 @@
-from .SQLITEJoblib import SQLJoblib
+
+
+from App.config import getConfiguration
+
+kw = getConfiguration().product_config['initsite']
+
+if kw.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog') == 'erp5_sqlite_catalog':
+  from .SQLITEJoblib import SQLJoblib
+else:
+  from .MYSQLJoblib import SQLJoblib
