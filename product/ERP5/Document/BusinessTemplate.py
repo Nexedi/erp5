@@ -165,12 +165,12 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "SQL":                 ("sql",  0, "src",          True ),
   "SQL Method":          ("sql",  0, "src",          True ),
   "Test Component":      ("py",   0, "text_content", True ),
-  "Test Page":           (None,   0, "text_content", True ),
+  "Test Page":           (None,   0, "data",         True ),
   "Tool Component":      ("py",   0, "text_content", True ),
-  "Web Illustration":    ("svg",  0, "text_content", True ),
-  "Web Page":            (None,   0, "text_content", True ),
-  "Web Script":          (None,   0, "text_content", True ),
-  "Web Style":           (None,   0, "text_content", True ),
+  "Web Illustration":    ("svg",  0, "data",         True ),
+  "Web Page":            (None,   0, "data",         True ),
+  "Web Script":          (None,   0, "data",         True ),
+  "Web Style":           (None,   0, "data",         True ),
   "ZopePageTemplate":    ("zpt",  1, "_text",        True ),
 }
 
