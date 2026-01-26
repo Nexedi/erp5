@@ -41,6 +41,7 @@ from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.CMFActivity.Errors import ActivityPendingError
+from Products.CMFActivity.ActivityTool import deferRegisterActivity
 from . import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import \
   getTransactionalVariable, TransactionalResource
@@ -97,6 +98,7 @@ def manage_addERP5Site(self,
   '''
   Adds a portal instance.
   '''
+  deferRegisterActivity()
   gen = ERP5Generator()
   id = str(id).strip()
   p = gen.create(self,
@@ -2590,7 +2592,9 @@ class ERP5Generator(PortalGenerator):
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
   AppInitializer.initialize = AppInitializer_initialize
+  kw = getConfiguration().product_config['initsite']
   self.initialize()
+  kw = getConfiguration().product_config['initsite']
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
@@ -2610,6 +2614,8 @@ def initialize(self):
   from Products.ZMySQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
+    if kw.get('erp5_catalog_storage'):
+      default_kw['erp5_catalog_storage'] = kw.get('erp5_catalog_storage')
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
     # The lock is to avoid that multiple zopes try to create a site when

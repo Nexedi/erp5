@@ -517,10 +517,11 @@ class GroupedMessage(object):
 allow_class(GroupedMessage)
 
 # Activity Registration
-def activity_dict():
+activity_dict = {}
+def deferRegisterActivity():
+  global activity_dict
   from .Activity import SQLDict, SQLQueue, SQLJoblib
-  return {k: getattr(v, k)() for k, v in six.iteritems(locals())}
-activity_dict = activity_dict()
+  activity_dict = {k: getattr(v, k)() for k, v in six.iteritems(locals())}
 
 
 class Method(object):
@@ -1429,7 +1430,7 @@ class ActivityTool (BaseTool):
       path = None if obj is None else '/'.join(obj.getPhysicalPath())
       db = self.getSQLConnection()
       quote = db.string_literal
-      return bool(db.query(b"(%s)" % b") UNION ALL (".join(
+      return bool(db.query(b"%s" % b" UNION ALL ".join(
         activity.hasActivitySQL(quote, path=path, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 

@@ -560,6 +560,12 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   cfg.instancehome = instance_home
   from Zope2.Startup.datatypes import DBTab
   cfg.dbtab = DBTab({}, {})
+  cfg.product_config = {
+    "initsite": {
+      'erp5_catalog_storage':  os.environ["erp5_catalog_storage"]
+      }
+  }
+
   App.config.setConfiguration(cfg)
 
   if WIN:
