@@ -522,7 +522,6 @@ def activity_dict():
   return {k: getattr(v, k)() for k, v in six.iteritems(locals())}
 activity_dict = activity_dict()
 
-
 class Method(object):
   __slots__ = (
     '_portal_activities',

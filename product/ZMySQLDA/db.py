@@ -1,9 +1,12 @@
-"""
-from .mysql import OperationalError
-from .mysql import DeferredMysqlDB as DeferredDB
-from .mysql import MysqlDB as DB
-"""
+import os
 
-from .sqlite import OperationalError
-from .sqlite import DeferredSqliteDB as DeferredDB
-from .sqlite import SqliteDB as DB
+erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog')
+
+if erp5_catalog_storage == 'erp5_sqlite_catalog':
+  from .sqlite import OperationalError
+  from .sqlite import DeferredSqliteDB as DeferredDB
+  from .sqlite import SqliteDB as DB
+else:
+  from .mysql import OperationalError
+  from .mysql import DeferredMysqlDB as DeferredDB
+  from .mysql import MysqlDB as DB
