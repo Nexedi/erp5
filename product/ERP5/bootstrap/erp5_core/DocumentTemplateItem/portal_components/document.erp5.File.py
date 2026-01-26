@@ -237,7 +237,7 @@ class File(Document, OFS_File):
         pass
 
     self._checkConversionFormatPermission(None)
-    data = self._baseGetData()
+    data = self._baseGetData(default)
     if data is None:
       return None
     else:
