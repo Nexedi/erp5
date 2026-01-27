@@ -119,271 +119,6 @@ match_select = re.compile(
     br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
     re.IGNORECASE | re.DOTALL,
 ).match
-# XXXXXXX This will never work, need to find ather ways
-def mysql_to_sqlite_with_indexes(mysql_sql, table_name=None):
-    # Ensure input is bytes
-    return mysql_sql, []
-    sql = mysql_sql
-
-    # ----------------------------
-    # 1. Remove MySQL comments
-    # ----------------------------
-    sql = re.sub(b"^\s*#.*$", b"", sql, flags=re.MULTILINE)
-    sql = re.sub(b"/\\*![\\s\\S]*?\\*/", b"", sql)
-
-    # ----------------------------
-    # 2. Remove backticks
-    # ----------------------------
-    sql = sql.replace(b"`", b"")
-
-    # ----------------------------
-    # 3. Remove ENGINE=...
-    # ----------------------------
-    sql = re.sub(b"ENGINE\s*=\s*\w+", b"", sql, flags=re.IGNORECASE)
-
-    # ----------------------------
-    # 4. Remove ON UPDATE CURRENT_TIMESTAMP
-    # ----------------------------
-    sql = re.sub(b"\s+ON\s+UPDATE\s+CURRENT_TIMESTAMP", b"", sql, flags=re.IGNORECASE)
-
-    # ----------------------------
-    # 5. Remove VARCHAR(...) BINARY
-    # ----------------------------
-    sql = re.sub(b"(VARCHAR\\(\\d+\\))\s+BINARY", b"\\1", sql, flags=re.IGNORECASE)
-
-    m = re.search(b"CREATE\s+TABLE\s+(\w+)", sql, flags=re.IGNORECASE)
-    if m:
-        type_map = {
-            b"\\bBIGINT\\s+UNSIGNED\\b": b"INTEGER",
-            b"\\bBIGINT\\b": b"INTEGER",
-            b"\\bINT\\s+UNSIGNED\\b": b"INTEGER",
-            b"\\bINT\\b": b"INTEGER",
-            b"\\bSMALLINT\\b": b"INTEGER",
-            b"\\bTINYINT\\b": b"INTEGER",
-            b"\\bBOOL\\b": b"INTEGER",
-            b"\\bBOOLEAN\\b": b"INTEGER",
-            b"\\bVARCHAR\\(\\d+\\)\\b": b"TEXT",
-            b"\\bDATETIME\\b": b"DATETIME",
-            b"\\bTIMESTAMP\\b": b"DATETIME",
-            b"\\bLONGBLOB\\b": b"BLOB",
-            b"\\bBLOB\\b": b"BLOB",
-        }
-        for pattern, replacement in type_map.items():
-            sql = re.sub(pattern, replacement, sql, flags=re.IGNORECASE)
-
-    # ----------------------------
-    # 7. Extract table name
-    # ----------------------------
-    table_name = m.group(1).decode("utf-8") if m else b"unknown_table".decode("utf-8")
-
-
-    # ----------------------------
-    # 8. Extract KEY definitions
-    # ----------------------------
-    index_statements = []
-
-    key_pattern = re.compile(
-        br"""
-        ^\s*KEY\b        # line starts with KEY
-        [^(]*            # anything until '(' (index name, spaces, etc)
-        \(([^)]*)\)      # column list
-        \s*,?            # optional trailing comma
-        """,
-        re.IGNORECASE | re.MULTILINE | re.VERBOSE,
-    )
-
-    def extract_index(match):
-        cols = match.group(1).decode("utf-8")
-        norm_cols = "_".join(c.strip().replace(" ", "_") for c in cols.split(","))
-        idx_name = f"idx_{table_name}_{norm_cols}"
-        index_statements.append(f"CREATE INDEX IF NOT EXISTS {idx_name} ON {table_name} ({cols});")
-        return b""
-
-    sql = key_pattern.sub(extract_index, sql)
-
-    # ----------------------------
-    # 9. Clean dangling commas & MySQL extras
-    # ----------------------------
-    sql = re.sub(b",\s*\)", b")", sql)
-    sql = re.sub(b"PRIMARY\s+KEY\s+\w+\s*\(", b"PRIMARY KEY (", sql, flags=re.IGNORECASE)
-    sql = re.sub(br"\bunsigned\b", b"", sql, flags=re.IGNORECASE)
-    # Remove AUTO_INCREMENT safely
-    sql = re.sub(br"\bAUTO_INCREMENT\b", b"",sql,flags=re.IGNORECASE)
-
-    # Merge INTEGER + PRIMARY KEY
-    sql = re.sub(
-        br"""
-        (\w+)\s+INTEGER\s+NOT\s+NULL\s*,\s*
-        PRIMARY\s+KEY\s*\(\s*\1\s*\)
-        """,
-        br"\1 INTEGER PRIMARY KEY AUTOINCREMENT",
-        sql,
-        flags=re.IGNORECASE | re.VERBOSE,
-    )
-
-    # ----------------------------
-    # 10. Replace UTC_TIMESTAMP() / UTC_TIMESTAMP(6) → CURRENT_TIMESTAMP
-    # ----------------------------
-    sql = re.sub(b"UTC_TIMESTAMP\s*(\(\d+\))?", b"datetime('now')", sql, flags=re.IGNORECASE)
-
-    sql = re.sub(br"\b(FORCE|USE|IGNORE)\s+INDEX\s*\([^)]+\)", b"", sql, flags=re.IGNORECASE)
-
-    sql = re.sub(br"SELECT\s+GET_LOCK\s*\([^)]+\)", b"SELECT 1", sql, flags=re.IGNORECASE)
-    sql = re.sub(br"SELECT\s+RELEASE_LOCK\s*\([^)]+\)", b"SELECT 1", sql, flags=re.IGNORECASE)
-    sql = re.sub(br"\bFOR\s+UPDATE\b", b"", sql, flags=re.IGNORECASE)
-
-    sql = re.sub(br"DATE_ADD\(([^,]+),\s*INTERVAL\s*(\d+)\s+SECOND\)", lambda m: b"datetime(%s, '+%s seconds')" % (m.group(1), m.group(2)), sql,flags=re.IGNORECASE)
-
-    # Remove FULLTEXT index lines entirely
-    sql = re.sub(
-        br"^\s*FULLTEXT\s+[^,\n]+,?\s*$",
-        b"",
-        sql,
-        flags=re.IGNORECASE | re.MULTILINE,
-    )
-
-    # Remove COMMENT clauses
-    sql = re.sub(
-        br"\s+COMMENT\s+'[^']*'",
-        b"",
-        sql,
-        flags=re.IGNORECASE,
-    )
-
-    # Remove ENGINE=...
-    sql = re.sub(
-        br"\)\s*ENGINE\s*=\s*\w+\s*;",
-        b");",
-        sql,
-        flags=re.IGNORECASE,
-    )
-
-    # ----------------------------
-    # 11. Convert MySQL string literals → SQLite TEXT/BLOB
-    # ----------------------------
-    def mysql_string_to_sqlite_literal(s):
-        # Binary / pickle → BLOB
-        if s.startswith(b"\x80"):  # pickle typical header
-            return b"x'" + s.hex().encode() + b"'"
-        # Normal string → SQLite TEXT
-        text = s.decode("utf-8", errors="replace").replace("'", "''")
-        return b"'" + text.encode("utf-8") + b"'"
-
-    def convert_mysql_literal(sql_bytes):
-        out = []
-        i = 0
-        n = len(sql_bytes)
-        while i < n:
-            c = sql_bytes[i:i+1]
-            if c != b"'":
-                out.append(c)
-                i += 1
-                continue
-            # inside string literal
-            i += 1
-            buf = []
-            while i < n:
-                if sql_bytes[i:i+1] == b"\\" and i + 1 < n:
-                    buf.append(sql_bytes[i:i+2])
-                    i += 2
-                    continue
-                if sql_bytes[i:i+1] == b"'":
-                    i += 1
-                    break
-                buf.append(sql_bytes[i:i+1])
-                i += 1
-            literal = b"".join(buf)
-            out.append(mysql_string_to_sqlite_literal(literal))
-        return b"".join(out)
-
-    sql = convert_mysql_literal(sql)
-
-
-    def collapse_union_limit_1(sql):
-        pattern = re.compile(
-            br"""
-            SELECT\s+(?P<col>\w+)\s+
-            FROM\s+(?P<table>\w+)\s+
-            WHERE\s+(?P<base>[^()]+?)\s+
-            AND\s*\(\s*(?P=col)\s*=\s*'(?P<val>[^']+)'\s*\)\s*
-            LIMIT\s+1
-            """,
-            re.IGNORECASE | re.VERBOSE
-        )
-
-        matches = list(pattern.finditer(sql))
-        if len(matches) < 2:
-            return sql  # nothing to collapse
-
-        col = matches[0].group('col')
-        table = matches[0].group('table')
-        base = matches[0].group('base').strip()
-
-        values = sorted({m.group('val') for m in matches})
-        values_sql = b",".join(b"'" + v + b"'" for v in values)
-
-        return (
-            b"SELECT DISTINCT " + col +
-            b" FROM " + table +
-            b" WHERE " + base +
-            b" AND " + col + b" IN (" + values_sql + b")"
-        )
-
-    sql = collapse_union_limit_1(sql)
-    def make_union_sqlite_compatible(sql_bytes):
-        pattern = re.compile(br'\((SELECT .*?LIMIT \d+.*?)\)', flags=re.IGNORECASE | re.DOTALL)
-        counter = 0
-
-        def replacer(m):
-            nonlocal counter
-            counter += 1
-            inner = m.group(1)
-
-            inner = re.sub(br'\)\s*AS\s+\w+', b')', inner, flags=re.IGNORECASE)
-
-
-            return b"SELECT * FROM (" + inner + b") AS t" + str(counter).encode()
-
-        return pattern.sub(replacer, sql_bytes)
-
-    sql = make_union_sqlite_compatible(sql)
-
-
-    def convert_on_duplicate(sql):
-        pattern = re.compile(
-            br"""
-            INSERT\s+INTO\s+(\w+)\s*
-            \(([^)]+)\)\s*
-            VALUES\s*\(([^)]+)\)\s*
-            ON\s+DUPLICATE\s+KEY\s+UPDATE\s+
-            (\w+)\s*=\s*\4\s*\+\s*(\d+)
-            """,
-            re.IGNORECASE | re.VERBOSE | re.DOTALL,
-            )
-        def repl(m):
-            table = m.group(1)
-            cols = m.group(2)
-            vals = m.group(3)
-            col = m.group(4)
-            inc = m.group(5)
-
-            pk = cols.split(b",")[0].strip()  # first column assumed UNIQUE
-
-            return (
-                b"INSERT INTO " + table +
-                b" (" + cols + b") VALUES (" + vals + b") "
-                b"ON CONFLICT(" + pk + b") DO UPDATE SET " +
-                col + b" = " + col + b" + " + inc
-            )
-
-        return pattern.sub(repl, sql)
-
-
-    sql = convert_on_duplicate(sql)
-
-    sql = re.sub(br",\s*(\)|--)", br"\1", sql)
-    return sql.strip(), index_statements
-
 
 class SQLiteResult:
     def __init__(self, rows, description):
@@ -572,7 +307,7 @@ class SqliteDB(TM):
               'Failed to close pre-existing connection, discarding it',
               error=True,
             )
-      self.db = sqlite3.connect('my_sqlite3.db', check_same_thread=False)
+      self.db = sqlite3.connect(':memory:', check_same_thread=False)
 
 
     def tables(self, rdb=0,
@@ -648,27 +383,25 @@ class SqliteDB(TM):
 
         try:
             cursor = self.db.cursor()
-            sqlite_sql, index_sql_list = mysql_to_sqlite_with_indexes(query)
-
             # handle SET @uid
-            if b'SET @uid' in sqlite_sql:
-                uid_match = re.search(b"SET\s+@uid\s*:=\s*(\d+)", sqlite_sql, re.I)
+            if b'SET @uid' in query:
+                uid_match = re.search(b"SET\s+@uid\s*:=\s*(\d+)", query, re.I)
                 self.uid_value = int(uid_match.group(1)) if uid_match else None
                 return None
 
-            if b'@uid' in sqlite_sql:
-                sqlite_sql = sqlite_sql.replace(b"@uid", str(self.uid_value).encode("ascii"))
+            if b'@uid' in query:
+                query = query.replace(b"@uid", str(self.uid_value).encode("ascii"))
             if should_display:
-                LOG('_query 608 change to:', 0, sqlite_sql)
+                LOG('_query 608 change to:', 0, query)
             try:
-                sqlite_sql = sqlite_sql.decode()
-                if 'create table' in sqlite_sql.lower():
-                    cursor.executescript(sqlite_sql)
+                query = query.decode()
+                if 'create table' in query.lower():
+                    cursor.executescript(query)
                 else:
-                    cursor.execute(sqlite_sql)
+                    cursor.execute(query)
             except Exception as e:
               LOG('db.py 764 default', 0, query)
-              LOG('db.py 731', 0, sqlite_sql)
+              LOG('db.py 731', 0, query)
               raise
             if cursor.description is None:
               self.db.commit()
