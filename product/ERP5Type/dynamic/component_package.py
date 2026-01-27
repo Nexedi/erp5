@@ -42,7 +42,7 @@ import coverage
 from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type import product_path as ERP5Type_product_path
-from . import aq_method_lock, with_aq_method_lock
+from . import aq_method_lock
 from .dynamic_module import PackageType
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
@@ -204,6 +204,8 @@ class ERP5ComponentPackageType(PackageType):
 
     self.filesystem_import_dict = filesystem_import_dict
 
+if USE_COMPONENT_PEP_451_LOADER:
+  from importlib._bootstrap import _ModuleLockManager
 class ComponentDynamicPackageType(PackageType):
   """
   erp5.component.COMPONENT_PACKAGE: Package containing modules loaded
@@ -261,12 +263,16 @@ class ComponentDynamicPackageType(PackageType):
 
       module_name = package.__name__ + '.' + name
       LOG("ERP5Type.dynamic.component_package", BLATHER, "Resetting " + module_name)
-
       # The module must be deleted first from sys.modules to avoid imports in
       # the meantime
-      del sys.modules[module_name]
-
-      delattr(package, name)
+      if USE_COMPONENT_PEP_451_LOADER:
+        # Per-module lock acquired when finding/loading modules (CPython internal)
+        with _ModuleLockManager(module_name):
+          del sys.modules[module_name]
+          delattr(package, name)
+      else: # Protected by aq_method_lock (load_module())
+        del sys.modules[module_name]
+        delattr(package, name)
 
 class ToolComponentDynamicPackageType(ComponentDynamicPackageType):
   """
@@ -384,7 +390,6 @@ if USE_COMPONENT_PEP_451_LOADER:
     top-level Component modules (Component checkConsistency() forbids Component
     name ending with _version).
     """
-    @with_aq_method_lock
     def create_module(self, spec):
       if spec.component_version_package_name not in getSite().getVersionPriorityNameList():
         error_message = "%s: No such version" % spec.name
@@ -417,7 +422,6 @@ if USE_COMPONENT_PEP_451_LOADER:
       # nothing to be done here and let importlib does it for us...
       pass
 
-    @with_aq_method_lock
     def exec_module(self, module):
       """
       Here we load objects from ZODB, protected by per-module lock. We
@@ -483,7 +487,6 @@ if USE_COMPONENT_PEP_451_LOADER:
     is modified (importlib._bootstrap:init_module_attrs()) and we just want the
     alias to be a pointer to the *real* module.
     """
-    @with_aq_method_lock
     def create_module(self, spec):
       """
       Access ZODB as early as possible, and possibly bail out early if the
