@@ -67,9 +67,6 @@ class File(Document, OFS_File):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Default global values
-  data = b'' # A hack required to use OFS.Image.index_html without calling OFS.Image.__init__
-
   # Default Properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
