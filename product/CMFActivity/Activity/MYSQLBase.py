@@ -412,7 +412,7 @@ CREATE TABLE %s (
       where.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
       where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
-    return b"SELECT 1 FROM %s WHERE %s LIMIT 1" % (
+    return b"(SELECT 1 FROM %s WHERE %s LIMIT 1)" % (
       str2bytes(self.sql_table), b" AND ".join(where) or b"1")
 
   def getPriority(self, activity_tool, processing_node, node_set=None):
