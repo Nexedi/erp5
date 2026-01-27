@@ -363,8 +363,6 @@ class SlapOSControler(object):
   def runComputerPartition(self, config, environment,
                            stdout=None, stderr=None, cluster_configuration=None,
                            max_quantity=MAX_CP_RETRIES, **kw):
-    logger.debug("SlapOSControler.runComputerPartition with cluster_config: %r",
-             cluster_configuration)
     for path in self.software_path_list:
       try:
         self.slap.registerOpenOrder().request(path,
