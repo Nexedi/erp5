@@ -661,7 +661,7 @@ class DeferredMysqlDB(MysqlDB):
         with MyISAM non transactional tables
     """
     def __init__(self, *args, **kw):
-        DB.__init__(self, *args, **kw)
+        MysqlDB.__init__(self, *args, **kw)
         assert self._use_TM
         self._sql_string_list = []
 
@@ -689,11 +689,11 @@ class DeferredMysqlDB(MysqlDB):
         #      fail. Consider moving them to commit, tpc_vote or in an
         #      after-commit hook.
         if self._sql_string_list:
-            DB._begin(self)
+            MysqlDB._begin(self)
             for qs in self._sql_string_list:
                 self._query(qs)
             del self._sql_string_list[:]
-            DB._finish(self)
+            MysqlDB._finish(self)
 
     tpc_vote = TM.tpc_vote
     _abort = _begin
