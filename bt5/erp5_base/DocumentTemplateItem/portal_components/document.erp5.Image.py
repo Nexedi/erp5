@@ -82,6 +82,7 @@ class Image(TextConvertableMixin, File, OFSImage):
   portal_type = 'Image'
 
   # Default attribute values
+  data = b'' # A hack required to use OFS.Image.index_html without calling OFS.Image.__init__
   width = 0
   height = 0
 
