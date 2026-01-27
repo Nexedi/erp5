@@ -2590,9 +2590,7 @@ class ERP5Generator(PortalGenerator):
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
   AppInitializer.initialize = AppInitializer_initialize
-  kw = getConfiguration().product_config['initsite']
   self.initialize()
-  kw = getConfiguration().product_config['initsite']
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
