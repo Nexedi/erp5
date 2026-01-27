@@ -268,7 +268,10 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
     Overridden method to check permission to access content in raw format.
     """
     self._checkConversionFormatPermission(None)
-    return self._getTextContent(default)
+    if default is _MARKER:
+      return self._getTextContent()
+    else:
+      return self._getTextContent(default)
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
