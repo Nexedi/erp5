@@ -35,7 +35,6 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import non_publishable, str2bytes
 from erp5.component.document.TextDocument import TextDocument
-from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
 from erp5.component.mixin.DocumentProxyMixin import DocumentProxyMixin, DocumentProxyError
 from MethodObject import Method
@@ -357,8 +356,4 @@ class EmailDocument(TextDocument, MailMessageMixin):
     """
     self.MailHost.send(message)
 
-  # Because TextDocument is base_convertable and not EmailDocument.
-  # getData must be implemented like File.getData is.
-  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
-  getData = File.getData
   getContentInformation = MailMessageMixin.getContentInformation
