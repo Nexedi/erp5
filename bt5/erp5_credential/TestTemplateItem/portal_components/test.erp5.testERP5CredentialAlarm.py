@@ -46,6 +46,19 @@ class TestERP5CredentialAlarmMixin(ERP5TypeTestCase):
     # It will not change the test behaviour
     return self.portal.person_module
 
+  def stabilizeAssignmentRequestAlarm(self):
+    self.tic()
+    # As the alarm check ALL objects, try to stabilise before running the test
+    self.portal.portal_alarms.credential_create_missing_assignment_request_alarm.activeSense()
+    self.portal.portal_alarms.credential_handle_assignment_request_alarm.activeSense()
+    self.tic()
+    # Run the alarms twice, as the first run will not lead to a good state
+    # example: first run create missing Assignment Request
+    # second run create missing Assignment
+    # or the contrary
+    self.portal.portal_alarms.credential_create_missing_assignment_request_alarm.activeSense()
+    self.portal.portal_alarms.credential_handle_assignment_request_alarm.activeSense()
+    self.tic()
 
 class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
 
@@ -53,9 +66,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
   # credential_create_missing_assignment_request_alarm
   #################################################################
   def test_Assignment_createMissingAssignmentRequest_alarm_openAssignmentWithoutRequest(self):
-    # As the alarm check ALL objects, try to stabilise before running the test
-    self.portal.portal_alarms.credential_create_missing_assignment_request_alarm.activeSense()
-    self.tic()
+    self.stabilizeAssignmentRequestAlarm()
 
     with self.changeContextByDisablingPortalAlarm():
       person = self.portal.person_module.newContent(
@@ -67,41 +78,41 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
       assignment.open()
 
       self.tic()
-    self.assertAlarmVisitingDocument(
-      self.portal.portal_alarms.credential_create_missing_assignment_request_alarm,
-      assignment,
-      'Assignment_createMissingAssignmentRequest'
-    )
+      self.assertAlarmVisitingDocument(
+        self.portal.portal_alarms.credential_create_missing_assignment_request_alarm,
+        assignment,
+        'Assignment_createMissingAssignmentRequest'
+      )
 
   def test_Assignment_createMissingAssignmentRequest_alarm_openAssignmentWithRequest(self):
-    # As the alarm check ALL objects, try to stabilise before running the test
-    self.portal.portal_alarms.credential_create_missing_assignment_request_alarm.activeSense()
-    self.tic()
+    self.stabilizeAssignmentRequestAlarm()
 
-    person = self.portal.person_module.newContent(
-      portal_type='Person'
-    )
-    assignment = person.newContent(
-      portal_type='Assignment'
-    )
-    assignment.open()
+    with self.changeContextByDisablingPortalAlarm():
+      person = self.portal.person_module.newContent(
+        portal_type='Person'
+      )
+      assignment = person.newContent(
+        portal_type='Assignment'
+      )
+      assignment.open()
 
-    person2 = self.portal.person_module.newContent(
-      portal_type='Person'
-    )
-    assignment_request = self.portal.assignment_request_module.newContent(
-      portal_type='Assignment Request',
-      destination_value=person2
-    )
-    assignment_request.submit()
-    assignment_request.validate()
+      person2 = self.portal.person_module.newContent(
+        portal_type='Person'
+      )
+      # Created to have one more assignment request
+      assignment_request = self.portal.assignment_request_module.newContent(
+        portal_type='Assignment Request',
+        destination_value=person2
+      )
+      assignment_request.submit()
+      assignment_request.validate()
 
-    self.tic()
-    self.assertAlarmNotVisitingDocument(
-      self.portal.portal_alarms.credential_create_missing_assignment_request_alarm,
-      assignment,
-      'Assignment_createMissingAssignmentRequest'
-    )
+      self.tic()
+      self.assertAlarmNotVisitingDocument(
+        self.portal.portal_alarms.credential_create_missing_assignment_request_alarm,
+        assignment,
+        'Assignment_createMissingAssignmentRequest'
+      )
 
   """
   def test_Assignment_createMissingAssignmentRequest_alarm_draft(self):
@@ -116,6 +127,52 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
       'Assignment_createMissingAssignmentRequest'
     )
 """
+
+
+  def test_Assignment_createMissingAssignmentRequest_alarm_validatedRequestWithoutAssignment(self):
+    person = self.portal.person_module.newContent(
+      portal_type='Person'
+    )
+    self.stabilizeAssignmentRequestAlarm()
+
+    with self.changeContextByDisablingPortalAlarm():
+      assignment_request = self.portal.assignment_request_module.newContent(
+        portal_type='Assignment Request',
+        destination_value=person
+      )
+      self.portal.portal_workflow._jumpToStateFor(assignment_request,
+          'validated')
+
+      self.tic()
+      self.assertAlarmVisitingDocument(
+        self.portal.portal_alarms.credential_create_missing_assignment_request_alarm,
+        assignment_request,
+        'AssignmentRequest_changeAssignment'
+      )
+
+  def test_Assignment_createMissingAssignmentRequest_alarm_validatedRequestWithAssignment(self):
+    self.stabilizeAssignmentRequestAlarm()
+
+    with self.changeContextByDisablingPortalAlarm():
+      person = self.portal.person_module.newContent(
+        portal_type='Person'
+      )
+      assignment_request = self.portal.assignment_request_module.newContent(
+        portal_type='Assignment Request',
+        destination_value=person
+      )
+      self.portal.portal_workflow._jumpToStateFor(assignment_request,
+          'submitted')
+      assignment_request.AssignmentRequest_changeAssignment()
+      self.assertEqual(assignment_request.getSimulationState(), 'validated')
+
+      self.tic()
+      self.assertAlarmNotVisitingDocument(
+        self.portal.portal_alarms.credential_create_missing_assignment_request_alarm,
+        assignment_request,
+        'AssignmentRequest_changeAssignment'
+      )
+
   #################################################################
   # Assignment_createMissingAssignmentRequest
   #################################################################
@@ -327,6 +384,50 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
       function_value=function_category
     )
     assignment_request.submit()
+    assignment2 = assignment_request.AssignmentRequest_changeAssignment()
+    self.assertEqual(None, assignment2)
+    self.assertEqual('invalidated', assignment_request.getSimulationState())
+
+  def test_AssignmentRequest_changeAssignment_script_validatedWithMatchingAssignment(self):
+    project = self.createNewProject()
+    function_category = self.getCustomerFunctionCategoryValue()
+    person = self.portal.person_module.newContent(
+      portal_type='Person'
+    )
+    assignment = person.newContent(
+      portal_type='Assignment',
+      destination_project_value=project,
+      function_value=function_category
+    )
+    assignment.open()
+    self.tic()
+    assignment_request = self.portal.assignment_request_module.newContent(
+      portal_type='Assignment Request',
+      destination_value=person,
+      destination_project_value=project,
+      function_value=function_category
+    )
+    assignment_request.submit()
+    assignment_request.validate()
+    assignment2 = assignment_request.AssignmentRequest_changeAssignment()
+    self.assertEqual(None, assignment2)
+    self.assertEqual('validated', assignment_request.getSimulationState())
+    self.assertEqual('open', assignment.getValidationState())
+
+  def test_AssignmentRequest_changeAssignment_script_validatedWithoutMatchingAssignment(self):
+    project = self.createNewProject()
+    function_category = self.getCustomerFunctionCategoryValue()
+    person = self.portal.person_module.newContent(
+      portal_type='Person'
+    )
+    assignment_request = self.portal.assignment_request_module.newContent(
+      portal_type='Assignment Request',
+      destination_value=person,
+      destination_project_value=project,
+      function_value=function_category
+    )
+    assignment_request.submit()
+    assignment_request.validate()
     assignment2 = assignment_request.AssignmentRequest_changeAssignment()
     self.assertEqual(None, assignment2)
     self.assertEqual('invalidated', assignment_request.getSimulationState())

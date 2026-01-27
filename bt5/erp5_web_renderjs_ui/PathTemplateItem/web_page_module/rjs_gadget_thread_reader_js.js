@@ -58,7 +58,7 @@
     return time_format.format(Math.floor(diff / minute), 'minute');
   }
 
-  function setPaginationElement(gadget, count, url_list) {
+  function setPaginationElement(gadget, count, url_list, scroll_to_last_post) {
     var disabled_suffix = ' ui-disabled',
       span_dict,
       first_dict = {
@@ -106,6 +106,10 @@
       domsugar('a', next_dict),
       domsugar('span', span_dict)
     ]);
+
+    if (scroll_to_last_post) {
+      gadget.element.querySelector(':scope > nav').scrollIntoView();
+    }
   }
 
   rJS(window)
@@ -129,9 +133,17 @@
 
       return new RSVP.Queue(RSVP.hash({
         language: gadget.getSelectedLanguage(),
-        begin_from: gadget.getUrlParameter(options.key + '_begin_from')
+        begin_from: gadget.getUrlParameter(options.key + '_begin_from'),
+        last_post: gadget.getUrlParameter('last_post')
       }))
         .push(function (result_dict) {
+          var begin_from = parseInt(result_dict.begin_from || '0', 10) || 0,
+            number_of_pages,
+            lines = options.lines || 1;
+          if (result_dict.last_post && !isNaN(result_dict.last_post)) {
+            number_of_pages = Math.ceil(result_dict.last_post / lines);
+            begin_from = (number_of_pages - 1) * lines;
+          }
           return gadget.changeState({
             key: options.key,
             language: result_dict.language,
@@ -145,14 +157,17 @@
                   })
               })
             ),
-            begin_from: parseInt(result_dict.begin_from || '0', 10) || 0,
-            lines: options.lines || 1,
+            begin_from: begin_from,
+            lines: lines,
             date_column: options.date_column || 'modification_date',
+            sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
+            attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
-            allDocs_result: undefined
+            allDocs_result: undefined,
+            last_post: result_dict.last_post
           });
         });
     })
@@ -170,7 +185,7 @@
       }
 
       if (modification_dict.hasOwnProperty('first_render')) {
-        setPaginationElement(gadget, 0, []);
+        setPaginationElement(gadget, 0, [], modification_dict.hasOwnProperty('last_post'));
       }
 
       if (modification_dict.hasOwnProperty('render_timestamp')) {
@@ -186,11 +201,14 @@
         pagination_key = gadget.state.key + '_begin_from';
         first_param = {};
         first_param[pagination_key] = undefined;
+        //drop last_post url parameter so pagination links works as usual
+        first_param.last_post = undefined;
         prev_param = {};
         prev_param[pagination_key] = Math.max(0, gadget.state.begin_from - gadget.state.lines) || undefined;
+        prev_param.last_post = undefined;
         next_param = {};
         next_param[pagination_key] = gadget.state.begin_from + gadget.state.lines;
-
+        next_param.last_post = undefined;
         return new RSVP.Queue(RSVP.hash({
           viewer_list: RSVP.all(allDocs_result.data.rows.map(function (entry, i) {
             if (i === gadget.state.lines) {
@@ -220,8 +238,7 @@
                   return '';
                 }
                 var source_title = entry.value[gadget.state.source_column] || '',
-                  attachment_list = entry.value
-                                         .Event_getAttachmentList || [],
+                  attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
                   j,
                   word_list = source_title.split(' '),
@@ -276,7 +293,8 @@
                 ]);
               }));
             setPaginationElement(gadget, allDocs_result.data.total_rows,
-                                 result_dict.url_list);
+                                 result_dict.url_list,
+                                 gadget.state.last_post);
           });
       }
     })
@@ -306,13 +324,8 @@
       }
 
       var gadget = this,
-        limit_options = [];
-
-      if (gadget.state.lines === 0) {
-        limit_options = undefined;
-      } else {
-        limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
-      }
+        limit_options = (gadget.state.lines === 0) ? undefined
+          : [gadget.state.begin_from, gadget.state.lines + 1];
 
       return gadget.jio_allDocs({
         query: gadget.state.query_string,

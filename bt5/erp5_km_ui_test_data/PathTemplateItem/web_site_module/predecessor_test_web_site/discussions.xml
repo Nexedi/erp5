@@ -163,9 +163,7 @@
         <item>
             <key> <string>membership_criterion_category</string> </key>
             <value>
-              <tuple>
-                <string></string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -242,6 +240,7 @@
                     <value>
                       <list>
                         <string>Discussion Thread</string>
+                        <string>Discussion Forum</string>
                       </list>
                     </value>
                 </item>
@@ -382,7 +381,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>947.44018.2151.15581</string> </value>
+                      <value> <string>1030.3109.54173.8243</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -398,8 +397,8 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1450184308.94</float>
-                              <string>GMT</string>
+                              <float>1767804376.27</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>

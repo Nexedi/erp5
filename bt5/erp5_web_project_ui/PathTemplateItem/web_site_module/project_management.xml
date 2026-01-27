@@ -341,7 +341,7 @@
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
-            <value> <string>view</string> </value>
+            <value> <string>project_view</string> </value>
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>

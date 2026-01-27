@@ -1732,6 +1732,18 @@ class TestMovementHistoryList(InventoryAPITestCase):
       [(-1, 0), ]
     )
 
+  def testPriceZeroQuantity0(self):
+    self._makeMovement(quantity=0, price=1)
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.section.getUid())],
+      [(0, 0), ]
+    )
+    self.assertEqual(
+      [(b.total_quantity, b.total_price) for b in getMovementHistoryList(section_uid=self.mirror_section.getUid())],
+      [(0, 0), ]
+    )
+
   def testPriceNone(self):
     self._makeMovement(quantity=1, price=None)
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -2585,6 +2597,16 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(-2, mvt_history_list[1].credit)
     self.assertEqual(0, mvt_history_list[1].debit_price)
     self.assertEqual(-4, mvt_history_list[1].credit_price)
+
+  def test_debit_credit_None_price(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=1, price=None)
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(1, mvt_history_list[0].debit)
+    self.assertEqual(0, mvt_history_list[0].credit)
+    self.assertEqual(None, mvt_history_list[0].debit_price)
+    self.assertEqual(None, mvt_history_list[0].credit_price)
 
   def test_is_source(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
