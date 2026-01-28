@@ -130,6 +130,39 @@ $script.onload = function() {
 
   if (mode == "python") {
     editor.getModel().updateOptions({ tabSize: 2 });
+    fetch(portal_url + '/ERP5Site_getPortalSkinsScriptList')
+    .then(function (response) {
+      if (response.ok) return response.json();
+      return [];
+    })
+    .then(function (script_list) {
+      if (!script_list || script_list.length === 0) return;
+
+      monaco.languages.registerCompletionItemProvider('python', {
+        provideCompletionItems: function (model, position) {
+          var word = model.getWordUntilPosition(position);
+          var range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn
+          };
+
+          var suggestions = script_list.map(function (script_id) {
+            return {
+              label: script_id,
+              kind: monaco.languages.CompletionItemKind.Function,
+              insertText: script_id,
+              detail: 'ERP5 Script',
+              range: range
+            };
+          });
+
+          return { suggestions: suggestions };
+        }
+      });
+    })
+    .catch(function(err) { console.log("Autocompletion load failed", err); });
   }
   if (mode === "html") {
     monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
