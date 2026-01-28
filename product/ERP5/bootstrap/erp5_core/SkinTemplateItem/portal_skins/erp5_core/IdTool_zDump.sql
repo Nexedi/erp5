@@ -1,1 +1,0 @@
-select id_group, cast(id_group as CHAR) id_group from portal_ids
