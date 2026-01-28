@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS roles_and_users
