@@ -98,3 +98,15 @@ def PUT(self, REQUEST, RESPONSE):
   return PUT_orig(self, REQUEST, RESPONSE)
 
 OFS.Image.File.PUT = PUT
+
+def get_size(self):
+  # Get the size of a file or image.
+  # Returns the size of the file or image.
+  size = self.size
+  if size is None:
+    if getattr(self, "data", None) is None:
+      return None
+    size = len(self.data)
+  return size
+
+OFS.Image.File.get_size = get_size
