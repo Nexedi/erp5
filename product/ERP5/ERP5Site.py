@@ -52,6 +52,7 @@ from Products.ERP5Type.Utils import str2bytes, bytes2str, non_publishable
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
 import os
+import re
 import warnings
 import transaction
 from App.config import getConfiguration
@@ -2306,7 +2307,7 @@ class ERP5Generator(PortalGenerator):
       # The only difference compared to activity connection is the
       # minus prepended to the connection string.
       if id == 'erp5_sql_transactionless_connection':
-        connection_string = '-' + p.cmf_activity_sql_connection_string
+        connection_string = '-' + re.sub(r'^([%*!][^ ]+ )*[+-]?', '', p.cmf_activity_sql_connection_string)
       else:
         connection_string = getattr(p, id + '_string')
       manage_add(id, title, connection_string, **kw)
