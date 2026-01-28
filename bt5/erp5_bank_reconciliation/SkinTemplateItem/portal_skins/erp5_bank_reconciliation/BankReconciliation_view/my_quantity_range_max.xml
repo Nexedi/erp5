@@ -10,7 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
+                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
@@ -54,7 +54,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key> <string>editable</string> </key>
                     <value>
                       <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
@@ -83,8 +83,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -116,7 +116,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: test(context.hasQuantityRangeMax(), context.getQuantityRangeMax(), None)</string> </value>
+            <value> <string>python: not here.hasLineContent()</string> </value>
         </item>
       </dictionary>
     </pickle>

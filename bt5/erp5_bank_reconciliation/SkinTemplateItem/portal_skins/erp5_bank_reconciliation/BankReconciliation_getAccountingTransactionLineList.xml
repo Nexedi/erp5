@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reconciliation_mode="reconcile", *args, **listbox_kw</string> </value>
+            <value> <string>cell=None, reconciliation_mode="reconcile", *args, **listbox_kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
