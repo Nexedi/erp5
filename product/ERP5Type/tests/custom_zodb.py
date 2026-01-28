@@ -71,17 +71,18 @@ else:
   from Products.ERP5.ERP5Site import default_sql_connection_string
   sql_db = Products.ZMySQLDA.db.DB(os.environ.get('erp5_sql_connection_string',
                                                   default_sql_connection_string))
+  if os.environ.get('erp5_catalog_storage', '') == 'erp5_mysql_innodb_catalog':
+    _, view_list = sql_db.query("SHOW FULL TABLES WHERE table_type='VIEW'")
+    if view_list:
+      sql_db.query('DROP VIEW ' +
+                   ','.join('`%s`' % view[0] for view in view_list))
+    table_list = sql_db.tables()
+    if table_list:
+      sql_db.query('DROP TABLE ' +
+                   ','.join('`%s`' % table['TABLE_NAME'] for table in table_list))
+    # Close SQL connection
+    del sql_db
 
-  _, view_list = sql_db.query("SHOW FULL TABLES WHERE table_type='VIEW'")
-  if view_list:
-    sql_db.query('DROP VIEW ' +
-                 ','.join('`%s`' % view[0] for view in view_list))
-  table_list = sql_db.tables()
-  if table_list:
-    sql_db.query('DROP TABLE ' +
-                 ','.join('`%s`' % table['TABLE_NAME'] for table in table_list))
-  # Close SQL connection
-  del sql_db
 
 zeo_server_pid = None
 node_pid_list = []
