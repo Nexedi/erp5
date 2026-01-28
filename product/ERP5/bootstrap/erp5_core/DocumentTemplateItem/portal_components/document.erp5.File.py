@@ -131,8 +131,14 @@ class File(Document, OFS_File):
     """
     has to be overwritten here, otherwise WebDAV fails
     """
-    return self.getSize()
+    # Empty files have zero size, so we enforce int
+    if not hasattr(aq_base(self), "data"):
+      return 0
 
+    return OFS_File.get_size(self)
+
+  security.declareProtected(Permissions.View, 'getSize')
+  getSize = get_size
   security.declareProtected(Permissions.View, 'getcontentlength')
   getcontentlength = get_size
 
