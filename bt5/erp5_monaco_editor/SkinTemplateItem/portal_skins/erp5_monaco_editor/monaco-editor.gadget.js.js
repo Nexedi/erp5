@@ -279,44 +279,24 @@
             'python',
             yapfDocumentFormattingProvider
           );
-          fetch(new URL('ERP5Site_getPortalSkinsScriptList', location.href).toString())
+          fetch(new URL('ERP5Site_getAutoconpleteWordList', location.href).toString())
           .then(function (response) {
             if (response.ok) {
               return response.json();
             }
             // Silently fail if the script doesn't exist yet
-            return [];
+            return '';
           })
-          .then(function (script_list) {
-            if (script_list.length === 0) { return; }
-              monaco.languages.registerCompletionItemProvider('python', {
-                provideCompletionItems: function (model, position) {
-                  // Find the word being typed
-                  var word = model.getWordUntilPosition(position);
-                  var range = {
-                    startLineNumber: position.lineNumber,
-                    endLineNumber: position.lineNumber,
-                    startColumn: word.startColumn,
-                    endColumn: word.endColumn
-                  };
-
-                  // map server script names to monaco suggestions
-                  var suggestions = script_list.map(function (script_id) {
-                    return {
-                      label: script_id,
-                      kind: monaco.languages.CompletionItemKind.Function,
-                      insertText: script_id,
-                      detail: 'ERP5 Script',
-                      range: range
-                    };
-                  });
-
-                  return {
-                    suggestions: suggestions
-                  };
-                }
+          .then(function (keyword_string) {
+            if (!keyword_string) return;
+            monaco.editor.createModel(keyword_string, 'text/plain');
+            var editor = monaco.editor.create(document.getElementById('container'), {
+              value: '',
+              language: 'python',
+              wordBasedSuggestions: "allDocuments",
             });
-        });
+            return editor;
+          });
 
           // diagnostics with ruff
           // for the case of python scripts, we rewrite the body to add a function
