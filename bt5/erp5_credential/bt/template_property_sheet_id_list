@@ -1,5 +1,7 @@
+AssignmentRequestUpgrade
 CredentialOrganisationProperties
 CredentialPreference
 CredentialQuestion
 CredentialRequest
+CredentialUpgradeConstraint
 DefaultCredentialQuestion
