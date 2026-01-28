@@ -199,8 +199,14 @@ def _getCatalogValue(acquisition_context):
   catalog_id = _getCatalog(acquisition_context)
   if catalog_id is None:
     return None
+
+  portal_catalog = acquisition_context.getPortalObject().portal_catalog
+
+  default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
+  if catalog_id != default_catalog_id:
+    return None
   try:
-    return acquisition_context.getPortalObject().portal_catalog[catalog_id]
+    return portal_catalog[catalog_id]
   except KeyError:
     return None
 
