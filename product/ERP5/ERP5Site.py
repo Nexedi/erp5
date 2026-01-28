@@ -20,6 +20,7 @@ import base64
 from DateTime import DateTime
 from six.moves import map
 import six
+import sys
 import _thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
@@ -520,12 +521,19 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       tv['ERP5Site.__of__'] = None
       setSite(self)
 
+      from Products.ERP5Type.dynamic.component_package import COMPONENT_META_PATH_FINDER
       try:
         component_tool = self.portal_components
       except AttributeError:
-        # This should only happen before erp5_core is installed
+        # This should only happen before erp5_core is installed. The following
+        # call will create portal_components.
         synchronizeDynamicModules(self)
+        # At this point, ERP5 Site and portal_components bootstap is finished
+        if COMPONENT_META_PATH_FINDER not in sys.meta_path:
+          sys.meta_path.append(COMPONENT_META_PATH_FINDER)
       else:
+        if COMPONENT_META_PATH_FINDER not in sys.meta_path:
+          sys.meta_path.append(COMPONENT_META_PATH_FINDER)
         if not component_tool.reset():
           # Portal Types may have been reset even if Components haven't
           # (change of Interaction Workflow...)
