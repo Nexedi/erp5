@@ -7,7 +7,10 @@ kw = {
        context.getSourceSectionValue().getGroup(base=True)),
   'payment_uid': context.getSourcePaymentUid(),
   'node_category': 'account_type/asset/cash/bank',
-  'simulation_state': ('stopped', 'delivered', ),
+  'simulation_state': \
+    portal.getPortalPlannedTransactionStateList() + \
+    ('confirmed',) + \
+    portal.getPortalAccountedTransactionStateList(),
   'portal_type': portal.getPortalAccountingMovementTypeList(),
 }
 
