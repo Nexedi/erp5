@@ -2043,6 +2043,18 @@ return result
                       reference='I.want.a.pdf',
                       portal_type='PDF')
 
+  def test_document_metadata_from_pdf_metadata(self):
+    # non regression test: a PDF with id and reference metadata should
+    # not edit the document with these metadata.
+    document = self.portal.portal_contributions.newContent(
+      filename='metadata_id.pdf',
+      data=self.makeFileUpload('metadata_id.pdf').read())
+    self.tic()
+    self.assertNotEqual(document.getId(), '__invalid__')
+    self.assertEqual(document.getContentInformation()['id'], '__invalid__')
+    self.assertFalse(document.getReference())
+    self.assertEqual(document.getContentInformation()['reference'], 'reference from pdf metadata')
+
   def test_newContent_trough_http(self):
     filename = 'import_region_category.xls'
     data = self.makeFileUpload(filename).read()
