@@ -1,6 +1,7 @@
 if not context.portal_activities.isSubscribed():
   context.portal_activities.subscribe()
 
+context.portal_activities.manage_enableActivityTracking()
 context.portal_activities.manage_removeFromProcessingList(context.portal_activities.getProcessingNodeList())
 
 distribution_node = None
