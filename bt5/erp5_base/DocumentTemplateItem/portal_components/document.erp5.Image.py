@@ -152,8 +152,13 @@ class Image(TextConvertableMixin, File, OFSImage):
     if not hasattr(aq_base(self), 'data') and hasattr(aq_base(self), '_data'):
       self.data = self._data
 
-    # Make sure size is defined
-    size = len(self.data)
+    # We want to match is data is None in itself, or simply undefined (equivalent)
+    data = getattr(aq_base(self), 'data', None)
+    if data is None:
+      size = 0
+    else:
+      size = len(data)
+
     if getattr(aq_base(self), 'size', None) != size:
       self.size = size
 
