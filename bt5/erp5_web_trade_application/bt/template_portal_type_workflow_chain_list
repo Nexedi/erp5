@@ -1,0 +1,26 @@
+Currency | validation_workflow
+Daily Statement Record | document_conversion_interaction_workflow
+Daily Statement Record | edit_workflow
+Daily Statement Record | event_interaction_workflow
+Daily Statement Record | event_simulation_workflow
+Daily Statement Record | pricing_interaction_workflow
+Purchase Price Record | document_conversion_interaction_workflow
+Purchase Price Record | edit_workflow
+Purchase Price Record | event_interaction_workflow
+Purchase Price Record | event_simulation_workflow
+Purchase Price Record | pricing_interaction_workflow
+Purchase Record | document_conversion_interaction_workflow
+Purchase Record | edit_workflow
+Purchase Record | event_interaction_workflow
+Purchase Record | event_simulation_workflow
+Purchase Record | pricing_interaction_workflow
+Sale Price Record | document_conversion_interaction_workflow
+Sale Price Record | edit_workflow
+Sale Price Record | event_interaction_workflow
+Sale Price Record | event_simulation_workflow
+Sale Price Record | pricing_interaction_workflow
+Sale Record | document_conversion_interaction_workflow
+Sale Record | edit_workflow
+Sale Record | event_interaction_workflow
+Sale Record | event_simulation_workflow
+Sale Record | pricing_interaction_workflow
