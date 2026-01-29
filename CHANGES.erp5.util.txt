@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.79 (2026-01-29)
+-------------------
+
+  * testnode:
+     - Remove uneeded logging
+     - catch IndexError
+     - ProcessManager: fix SubprocessError.__getattr__
+
 0.4.78 (2025-05-26)
 -------------------
 
