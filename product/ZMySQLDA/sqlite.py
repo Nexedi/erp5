@@ -22,6 +22,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
+import time
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -548,23 +549,24 @@ class SqliteDB(TM):
             create_split  = re.compile(r",\n\s*").split,
             column_match  = re.compile(r"`(\w+)`\s+(.+)").match,
             ):
-        #(_, schema), = self.query("SHOW CREATE TABLE " + name)[1]
         result = self.query(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{name}'")
-        (row,) = result.fetch_row(1)
-        _, schema = row
-        column_list = []
-        key_set = set()
-        m = create_rmatch(create_lstrip("", schema, 1))
-        for spec in create_split(m.group(1)):
-            if "KEY" in spec:
-                key_set.add(spec)
-            else:
-                column_list.append(column_match(spec).groups())
-        return column_list, key_set, m.group(2)
+        rows = result.fetchall()
+        if not rows or rows[0][0] is None:
+            return [], set(), ""
+
+        col_query = f"PRAGMA table_info({name})"
+        col_result = self.query(col_query)
+        columns = [(r[1], r[2]) for r in col_result.fetchall()]
+
+        idx_query = f"PRAGMA index_list({name})"
+        idx_result = self.query(idx_query)
+        key_set = set(r[1] for r in idx_result.fetchall())
+
+        table_options = ""
+        return columns, key_set, table_options
 
     _create_search = re.compile(r'\bCREATE\s+TABLE\s+(`?)(\w+)\1\s+',
                                 re.I).search
-    #XXXXXXXXXXXXXXXXXXXX change it
     _key_search = re.compile(r'\bKEY\s+(`[^`]+`)\s+(.+)').search
 
     def upgradeSchema(self, create_sql, create_if_not_exists=False,
@@ -572,77 +574,65 @@ class SqliteDB(TM):
         m = self._create_search(create_sql)
         if m is None:
             return
+
         name = m.group(2)
-        # Lock automatically unless src__ is True, because the caller may have
-        # already done it (in case that it plans to execute the returned query).
+        new_name = f"_{name}_new"
+
         with (nullcontext if src__ else self.lock)():
             try:
-                old_list, old_set, old_default = self._getTableSchema("`%s`" % name)
-            except ProgrammingError as e:
-                if e.args[0] != ER.NO_SUCH_TABLE or not create_if_not_exists:
-                    raise
-                if not src__:
-                    self.query(create_sql)
-                return create_sql
+                old_list, _, _ = self._getTableSchema(name)
+            except Exception:
+                if create_if_not_exists:
+                    if not src__:
+                        self.query(create_sql)
+                    return create_sql
+                raise
 
-            name_new = '`_%s_new`' % name
-            self.query('CREATE TEMPORARY TABLE %s %s'
-                % (name_new, create_sql[m.end():]))
+            # Build migration SQL
+            old_cols = {c for c, _ in old_list}
+
+            # Inspect new schema using temp table
+            self.query(f"CREATE TABLE {new_name} {create_sql[m.end():]}")
             try:
-                new_list, new_set, new_default = self._getTableSchema(name_new)
+                new_list, _, _ = self._getTableSchema(new_name)
             finally:
-                self.query("DROP TEMPORARY TABLE " + name_new)
+                self.query(f"DROP TABLE {new_name}")
 
-            src = []
-            q = src.append
-            if old_default != new_default:
-              q(new_default)
+            new_cols = [c for c, _ in new_list if c in old_cols]
+            col_sql = ", ".join(f'"{c}"' for c in new_cols)
 
-            old_dict = {}
-            new = {column[0] for column in new_list}
-            pos = 0
-            for column, spec in old_list:
-              if column in new:
-                  old_dict[column] = pos, spec
-                  pos += 1
-              else:
-                  q("DROP COLUMN `%s`" % column)
+            migration = [
+                f"CREATE TABLE {new_name} {create_sql[m.end():]}",
+            ]
 
-            for key in old_set - new_set:
-              if "PRIMARY" in key:
-                  q("DROP PRIMARY KEY")
-              else:
-                  q("DROP KEY " + self._key_search(key).group(1))
+            if new_cols:
+                migration.append(
+                    f"INSERT INTO {new_name} ({col_sql}) "
+                    f"SELECT {col_sql} FROM {name}"
+                )
 
-            column_list = []
-            pos = 0
-            where = "FIRST"
-            for column, spec in new_list:
-                try:
-                    old = old_dict[column]
-                except KeyError:
-                    q("ADD COLUMN `%s` %s %s" % (column, spec, where))
-                    column_list.append(column)
-                else:
-                    if old != (pos, spec):
-                        q("MODIFY COLUMN `%s` %s %s" % (column, spec, where))
-                        if old[1] != spec:
-                            column_list.append(column)
-                    pos += 1
-                where = "AFTER `%s`" % column
+            migration += [
+                f"DROP TABLE {name}",
+                f"ALTER TABLE {new_name} RENAME TO {name}",
+            ]
 
-            for key in new_set - old_set:
-                q("ADD " + key)
+            src_sql = ";\n".join(migration)
 
-            if src:
-                src = "ALTER TABLE `%s`%s" % (name, ','.join("\n  " + q
-                                                           for q in src))
-                if not src__:
-                    self.query(src)
-                    if column_list and initialize and self.query(
-                            "SELECT 1 FROM `%s`" % name, 1)[1]:
-                        initialize(self, column_list)
-                return src
+            if src__:
+                return src_sql
+
+            # Execute migration
+            for stmt in migration:
+                self.query(stmt)
+
+            # Initialize newly added columns
+            if initialize:
+                added = [c for c, _ in new_list if c not in old_cols]
+                if added:
+                    initialize(self, added)
+
+            return src_sql
+       
 
 
 class DeferredSqliteDB(SqliteDB):
