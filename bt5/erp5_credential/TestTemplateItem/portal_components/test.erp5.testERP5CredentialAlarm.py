@@ -28,6 +28,9 @@ class TestERP5CredentialAlarmMixin(ERP5TypeTestCase):
       # reset the cache
       self.portal.portal_caches.clearAllCache()
 
+  def createNewOrganisation(self):
+    return self.portal.organisation_module.newContent()
+
   def createNewProject(self):
     # As the erp5_project bt5 is probably not installed (as not a dependency),
     # let's use another portal type.
@@ -102,7 +105,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
       # Created to have one more assignment request
       assignment_request = self.portal.assignment_request_module.newContent(
         portal_type='Assignment Request',
-        destination_value=person2
+        destination_decision_value=person2
       )
       assignment_request.submit()
       assignment_request.validate()
@@ -138,7 +141,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     with self.changeContextByDisablingPortalAlarm():
       assignment_request = self.portal.assignment_request_module.newContent(
         portal_type='Assignment Request',
-        destination_value=person
+        destination_decision_value=person
       )
       self.portal.portal_workflow._jumpToStateFor(assignment_request,
           'validated')
@@ -159,7 +162,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
       )
       assignment_request = self.portal.assignment_request_module.newContent(
         portal_type='Assignment Request',
-        destination_value=person
+        destination_decision_value=person
       )
       self.portal.portal_workflow._jumpToStateFor(assignment_request,
           'submitted')
@@ -178,6 +181,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
   #################################################################
   def test_Assignment_createMissingAssignmentRequest_script_openWithoutRequest(self):
     project = self.createNewProject()
+    organisation = self.createNewOrganisation()
     function_category = self.getCustomerFunctionCategoryValue()
     person = self.portal.person_module.newContent(
       portal_type='Person'
@@ -185,18 +189,21 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     assignment = person.newContent(
       portal_type='Assignment',
       destination_project_value=project,
+      destination_value=organisation,
       function_value=function_category
     )
     assignment.open()
     assignment_request = assignment.Assignment_createMissingAssignmentRequest()
     self.assertNotEqual(None, assignment_request)
     self.assertEqual('validated', assignment_request.getSimulationState())
-    self.assertEqual(person.getRelativeUrl(), assignment_request.getDestination())
+    self.assertEqual(person.getRelativeUrl(), assignment_request.getDestinationDecision())
     self.assertEqual(project.getRelativeUrl(), assignment_request.getDestinationProject())
+    self.assertEqual(organisation.getRelativeUrl(), assignment_request.getDestination())
     self.assertEqual(function_category.getRelativeUrl(), assignment_request.getFunction())
 
   def test_Assignment_createMissingAssignmentRequest_script_closedWithoutRequest(self):
     project = self.createNewProject()
+    organisation = self.createNewOrganisation()
     function_category = self.getCustomerFunctionCategoryValue()
     person = self.portal.person_module.newContent(
       portal_type='Person'
@@ -204,6 +211,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     assignment = person.newContent(
       portal_type='Assignment',
       destination_project_value=project,
+      destination_value=organisation,
       function_value=function_category
     )
     assignment.open()
@@ -213,14 +221,16 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
 
   def test_Assignment_createMissingAssignmentRequest_script_openWithRequest(self):
     project = self.createNewProject()
+    organisation = self.createNewOrganisation()
     function_category = self.getCustomerFunctionCategoryValue()
     person = self.portal.person_module.newContent(
       portal_type='Person'
     )
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
+      destination_value=organisation,
       function_value=function_category
     )
     assignment_request.submit()
@@ -230,6 +240,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     assignment = person.newContent(
       portal_type='Assignment',
       destination_project_value=project,
+      destination_value=organisation,
       function_value=function_category
     )
     assignment.open()
@@ -239,14 +250,16 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
 
   def test_Assignment_createMissingAssignmentRequest_script_openWithNotMatchingRequest(self):
     project = self.createNewProject()
+    organisation = self.createNewOrganisation()
     function_category = self.getCustomerFunctionCategoryValue()
     person = self.portal.person_module.newContent(
       portal_type='Person'
     )
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
-      destination_project_value=project
+      destination_decision_value=person,
+      destination_project_value=project,
+      destination_value=organisation
     )
     assignment_request.submit()
     assignment_request.validate()
@@ -255,6 +268,7 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     assignment = person.newContent(
       portal_type='Assignment',
       destination_project_value=project,
+      destination_value=organisation,
       function_value=function_category
     )
     assignment.open()
@@ -262,10 +276,39 @@ class TestCreateMissingAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     assignment_request = assignment.Assignment_createMissingAssignmentRequest()
     self.assertNotEqual(None, assignment_request)
     self.assertEqual('validated', assignment_request.getSimulationState())
-    self.assertEqual(person.getRelativeUrl(), assignment_request.getDestination())
+    self.assertEqual(person.getRelativeUrl(), assignment_request.getDestinationDecision())
     self.assertEqual(project.getRelativeUrl(), assignment_request.getDestinationProject())
+    self.assertEqual(organisation.getRelativeUrl(), assignment_request.getDestination())
     self.assertEqual(function_category.getRelativeUrl(), assignment_request.getFunction())
 
+  def test_Assignment_createMissingAssignmentRequest_script_openWithNotMatchingRequest_noProject(self):
+    organisation = self.createNewOrganisation()
+    function_category = self.getCustomerFunctionCategoryValue()
+    person = self.portal.person_module.newContent(
+      portal_type='Person'
+    )
+    assignment_request = self.portal.assignment_request_module.newContent(
+      portal_type='Assignment Request',
+      destination_decision_value=person,
+      destination_value=organisation
+    )
+    assignment_request.submit()
+    assignment_request.validate()
+    self.tic()
+
+    assignment = person.newContent(
+      portal_type='Assignment',
+      destination_value=organisation,
+      function_value=function_category
+    )
+    assignment.open()
+
+    assignment_request = assignment.Assignment_createMissingAssignmentRequest()
+    self.assertNotEqual(None, assignment_request)
+    self.assertEqual('validated', assignment_request.getSimulationState())
+    self.assertEqual(person.getRelativeUrl(), assignment_request.getDestinationDecision())
+    self.assertEqual(organisation.getRelativeUrl(), assignment_request.getDestination())
+    self.assertEqual(function_category.getRelativeUrl(), assignment_request.getFunction())
 
 class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
 
@@ -278,7 +321,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     )
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person
+      destination_decision_value=person
     )
     self.portal.portal_workflow._jumpToStateFor(assignment_request,
         'submitted')
@@ -296,7 +339,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     )
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person
+      destination_decision_value=person
     )
     self.portal.portal_workflow._jumpToStateFor(assignment_request,
         'suspended')
@@ -313,14 +356,16 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
   #################################################################
   def test_AssignmentRequest_changeAssignment_script_submittedWithoutAssignment(self):
     project = self.createNewProject()
+    organisation = self.createNewOrganisation()
     function_category = self.getCustomerFunctionCategoryValue()
     person = self.portal.person_module.newContent(
       portal_type='Person'
     )
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
+      destination_value=organisation,
       function_value=function_category
     )
     assignment_request.submit()
@@ -328,6 +373,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.assertEqual('open', assignment.getValidationState())
     self.assertEqual(person.getRelativeUrl(), assignment.getParentValue().getRelativeUrl())
     self.assertEqual(project.getRelativeUrl(), assignment.getDestinationProject())
+    self.assertEqual(organisation.getRelativeUrl(), assignment.getDestination())
     self.assertEqual(function_category.getRelativeUrl(), assignment.getFunction())
     self.assertEqual('validated', assignment_request.getSimulationState())
 
@@ -347,7 +393,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.tic()
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
       function_value=function_category
     )
@@ -361,6 +407,39 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.assertEqual('open', assignment2.getValidationState())
     self.assertEqual(person.getRelativeUrl(), assignment2.getParentValue().getRelativeUrl())
     self.assertEqual(project.getRelativeUrl(), assignment2.getDestinationProject())
+    self.assertEqual(function_category.getRelativeUrl(), assignment2.getFunction())
+    self.assertEqual('validated', assignment_request.getSimulationState())
+
+  def test_AssignmentRequest_changeAssignment_script_submittedWithoutMatchingAssignment_destination(self):
+    organisation = self.createNewOrganisation()
+    function_category = self.getCustomerFunctionCategoryValue()
+    manager_category = self.getManagerFunctionCategoryValue()
+    person = self.portal.person_module.newContent(
+      portal_type='Person'
+    )
+    assignment = person.newContent(
+      portal_type='Assignment',
+      destination_value=organisation,
+      function_value=manager_category
+    )
+    assignment.open()
+    self.tic()
+    assignment_request = self.portal.assignment_request_module.newContent(
+      portal_type='Assignment Request',
+      destination_decision_value=person,
+      destination_value=organisation,
+      function_value=function_category
+    )
+    assignment_request.submit()
+    assignment2 = assignment_request.AssignmentRequest_changeAssignment()
+    self.assertNotEqual(assignment.getRelativeUrl(), assignment2.getRelativeUrl())
+    self.assertEqual('open', assignment.getValidationState())
+    self.assertEqual(person.getRelativeUrl(), assignment.getParentValue().getRelativeUrl())
+    self.assertEqual(organisation.getRelativeUrl(), assignment.getDestination())
+    self.assertEqual(manager_category.getRelativeUrl(), assignment.getFunction())
+    self.assertEqual('open', assignment2.getValidationState())
+    self.assertEqual(person.getRelativeUrl(), assignment2.getParentValue().getRelativeUrl())
+    self.assertEqual(organisation.getRelativeUrl(), assignment2.getDestination())
     self.assertEqual(function_category.getRelativeUrl(), assignment2.getFunction())
     self.assertEqual('validated', assignment_request.getSimulationState())
 
@@ -379,7 +458,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.tic()
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
       function_value=function_category
     )
@@ -403,7 +482,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.tic()
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
       function_value=function_category
     )
@@ -422,7 +501,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     )
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
       function_value=function_category
     )
@@ -447,7 +526,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.tic()
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
       function_value=function_category
     )
@@ -474,7 +553,7 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.tic()
     assignment_request = self.portal.assignment_request_module.newContent(
       portal_type='Assignment Request',
-      destination_value=person,
+      destination_decision_value=person,
       destination_project_value=project,
       function_value=function_category
     )
@@ -484,4 +563,3 @@ class TestSlapOSHandleAssignmentRequestAlarm(TestERP5CredentialAlarmMixin):
     self.assertEqual('open', assignment.getValidationState())
     self.assertEqual(None, assignment2)
     self.assertEqual('invalidated', assignment_request.getSimulationState())
-
