@@ -1,7 +1,7 @@
 assignment_request = context
 portal = context.getPortalObject()
 assignment = None
-person = assignment_request.getDestinationDecisionValue(portal_type='Person')
+person = assignment_request.getDestinationDecisionValue()
 
 if person is None:
   raise ValueError('No person document found')
