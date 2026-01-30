@@ -226,6 +226,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     return callable
 
   def afterSetUp(self):
+    self.default_catalog_id = self.portal.portal_catalog.getDefaultSqlCatalogId()
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
 
@@ -235,7 +236,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def beforeTearDown(self):
     # restore default_catalog
-    self.portal.portal_catalog._setDefaultSqlCatalogId('erp5_mysql_innodb')
+    self.portal.portal_catalog._setDefaultSqlCatalogId(self.default_catalog_id)
     self.portal.portal_catalog.hot_reindexing_state = None
     # clear Modules
     for module in [ self.getPersonModule(),
