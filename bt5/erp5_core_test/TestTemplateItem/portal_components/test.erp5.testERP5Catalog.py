@@ -49,6 +49,8 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
 from six.moves import range
+import os
+from sqlite3 import OperationalError
 
 if six.PY3:
   long_type = int  # pylint:disable=redefined-builtin
@@ -4297,15 +4299,25 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     self.query_connection_2("SELECT b from table2")
     self.query_connection_2("SELECT b from table_deferred2")
 
-    with self.assertRaisesRegex(ProgrammingError,
-                                 r"Table '.*\.table2' doesn't exist"):
-      self.query_connection_1("SELECT b from table2")
-    with self.assertRaisesRegex(ProgrammingError,
-                                 r"Table '.*\.table_deferred2' doesn't exist"):
-      self.query_connection_1("SELECT b from table_deferred2")
-    with self.assertRaisesRegex(ProgrammingError,
-                                 r"Table '.*\.table1' doesn't exist"):
-      self.query_connection_2("SELECT b from table1")
+    if os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog') == 'erp5_mysql_catalog':
+      with self.assertRaisesRegex(ProgrammingError,
+                                   r"Table '.*\.table2' doesn't exist"):
+        self.query_connection_1("SELECT b from table2")
+      with self.assertRaisesRegex(ProgrammingError,
+                                   r"Table '.*\.table_deferred2' doesn't exist"):
+        self.query_connection_1("SELECT b from table_deferred2")
+      with self.assertRaisesRegex(ProgrammingError,
+                                   r"Table '.*\.table1' doesn't exist"):
+        self.query_connection_2("SELECT b from table1")
+    else:
+      with self.assertRaisesRegex(OperationalError, r"no such table: table2"):
+        self.query_connection_1("SELECT b from table2")
+
+      with self.assertRaisesRegex(OperationalError, r"no such table: table_deferred2"):
+        self.query_connection_1("SELECT b from table_deferred2")
+
+      with self.assertRaisesRegex(OperationalError, r"no such table: table1"):
+        self.query_connection_2("SELECT b from table1")
 
   def test_upgradeSchema_python_script(self):
     method = self.catalog.newContent(
