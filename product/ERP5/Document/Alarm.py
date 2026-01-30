@@ -454,7 +454,11 @@ Alarm Tool Node: %s
       # Respect what is stored in the catalog.
       result_list = self.Alarm_zGetAlarmDate(uid=self.getUid())
       if len(result_list) == 1:
-        alarm_date = result_list[0].alarm_date
+        if isinstance(result_list[0].alarm_date, str):
+          alarm_date = DateTime(result_list[0].alarm_date)
+        else:
+          alarm_date = result_list[0].alarm_date
+
       # But if the catalog does not have a valid one, replace it
       # with the start date.
       if alarm_date is None or alarm_date < periodicity_start_date:
