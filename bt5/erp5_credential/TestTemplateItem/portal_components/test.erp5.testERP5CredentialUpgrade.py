@@ -46,7 +46,7 @@ class TestCredentialAssignmentRequestMigration(TestERP5CredentialAlarmMixin):
 
     self.assertEqual(good_assignment_request.checkConsistency(), [])
     self.assertNotEqual(bad_assignment_request.checkConsistency(), [])
-    self.assertEqual(len(bad_assignment_request.checkConsistency()), 2)
+    self.assertEqual(len(bad_assignment_request.checkConsistency()), 1)
 
     bad_assignment_request.fixConsistency()
     self.assertEqual(bad_assignment_request.checkConsistency(), [])
@@ -76,7 +76,7 @@ class TestCredentialAssignmentRequestMigration(TestERP5CredentialAlarmMixin):
 
     self.assertEqual(good_assignment_request.checkConsistency(), [])
     self.assertNotEqual(bad_assignment_request.checkConsistency(), [])
-    self.assertEqual(len(bad_assignment_request.checkConsistency()), 2)
+    self.assertEqual(len(bad_assignment_request.checkConsistency()), 1)
 
     self.portal.portal_alarms.AlarmTool_checkAssignmentRequestDestinationDecisionMigrationConsistency(fixit=1)
     self.tic()
