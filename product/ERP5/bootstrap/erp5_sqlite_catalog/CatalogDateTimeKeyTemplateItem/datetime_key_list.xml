@@ -1,0 +1,34 @@
+<key_list>
+ <key>alarm.alarm_date</key>
+ <key>alarm_date</key>
+ <key>catalog.creation_date</key>
+ <key>catalog.grouping_date</key>
+ <key>catalog.modification_date</key>
+ <key>creation_date</key>
+ <key>date</key>
+ <key>delivery.start_date</key>
+ <key>delivery.start_date_range_max</key>
+ <key>delivery.start_date_range_min</key>
+ <key>delivery.stop_date</key>
+ <key>delivery.stop_date_range_max</key>
+ <key>delivery.stop_date_range_min</key>
+ <key>effective_date</key>
+ <key>expiration_date</key>
+ <key>grouping_date</key>
+ <key>item.date</key>
+ <key>mirror_date</key>
+ <key>modification_date</key>
+ <key>predicate.start_date</key>
+ <key>predicate.start_date_range_max</key>
+ <key>predicate.start_date_range_min</key>
+ <key>start_date</key>
+ <key>start_date_range_max</key>
+ <key>start_date_range_min</key>
+ <key>stock.date</key>
+ <key>stock.mirror_date</key>
+ <key>stop_date</key>
+ <key>stop_date_range_max</key>
+ <key>stop_date_range_min</key>
+ <key>versioning.effective_date</key>
+ <key>versioning.expiration_date</key>
+</key_list>

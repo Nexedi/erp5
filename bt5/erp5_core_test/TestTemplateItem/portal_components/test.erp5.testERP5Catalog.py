@@ -49,6 +49,8 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
 from six.moves import range
+import os
+from sqlite3 import OperationalError
 
 if six.PY3:
   long_type = int  # pylint:disable=redefined-builtin
@@ -224,6 +226,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     return callable
 
   def afterSetUp(self):
+    self.default_catalog_id = self.portal.portal_catalog.getDefaultSqlCatalogId()
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
 
@@ -233,7 +236,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def beforeTearDown(self):
     # restore default_catalog
-    self.portal.portal_catalog._setDefaultSqlCatalogId('erp5_mysql_innodb')
+    self.portal.portal_catalog._setDefaultSqlCatalogId(self.default_catalog_id)
     self.portal.portal_catalog.hot_reindexing_state = None
     # clear Modules
     for module in [ self.getPersonModule(),
@@ -4297,15 +4300,25 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     self.query_connection_2("SELECT b from table2")
     self.query_connection_2("SELECT b from table_deferred2")
 
-    with self.assertRaisesRegex(ProgrammingError,
-                                 r"Table '.*\.table2' doesn't exist"):
-      self.query_connection_1("SELECT b from table2")
-    with self.assertRaisesRegex(ProgrammingError,
-                                 r"Table '.*\.table_deferred2' doesn't exist"):
-      self.query_connection_1("SELECT b from table_deferred2")
-    with self.assertRaisesRegex(ProgrammingError,
-                                 r"Table '.*\.table1' doesn't exist"):
-      self.query_connection_2("SELECT b from table1")
+    if os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog') == 'erp5_mysql_catalog':
+      with self.assertRaisesRegex(ProgrammingError,
+                                   r"Table '.*\.table2' doesn't exist"):
+        self.query_connection_1("SELECT b from table2")
+      with self.assertRaisesRegex(ProgrammingError,
+                                   r"Table '.*\.table_deferred2' doesn't exist"):
+        self.query_connection_1("SELECT b from table_deferred2")
+      with self.assertRaisesRegex(ProgrammingError,
+                                   r"Table '.*\.table1' doesn't exist"):
+        self.query_connection_2("SELECT b from table1")
+    else:
+      with self.assertRaisesRegex(OperationalError, r"no such table: table2"):
+        self.query_connection_1("SELECT b from table2")
+
+      with self.assertRaisesRegex(OperationalError, r"no such table: table_deferred2"):
+        self.query_connection_1("SELECT b from table_deferred2")
+
+      with self.assertRaisesRegex(OperationalError, r"no such table: table1"):
+        self.query_connection_2("SELECT b from table1")
 
   def test_upgradeSchema_python_script(self):
     method = self.catalog.newContent(
