@@ -6,14 +6,11 @@ if assignment.getValidationState() != 'open':
   # Skip
   return
 
-assert assignment.getDestination(None) is None, assignment.getDestination(None)
-
-
 search_kw = {}
 for category in assignment.getCategoryList():
   base_category, _ = category.split('/', 1)
   search_kw['strict__%s__uid' % base_category] = assignment.getValueUidList(base_category)
-search_kw['strict__destination__uid'] = assignment.getParentValue().getUid()
+search_kw['strict__destination_decision__uid'] = assignment.getParentValue().getUid()
 
 assignment_request = portal.portal_catalog.getResultValue(
   portal_type='Assignment Request',
@@ -29,9 +26,9 @@ assignment_request = portal.assignment_request_module.newContent(
   category_list=assignment.getCategoryList(),
   activate_kw=activate_kw
 )
-assert assignment_request.getDestination(None) is None, assignment_request.getDestination(None)
+assert assignment_request.getDestinationDecision(None) is None, assignment_request.getDestinationDecision(None)
 assignment_request.edit(
-  destination_value=assignment.getParentValue(),
+  destination_decision_value=assignment.getParentValue(),
   activate_kw=activate_kw
 )
 

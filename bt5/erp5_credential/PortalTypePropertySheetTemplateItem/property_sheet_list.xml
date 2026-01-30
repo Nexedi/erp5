@@ -1,4 +1,10 @@
 <property_sheet_list>
+ <portal_type id="Alarm Tool">
+  <item>CredentialUpgradeConstraint</item>
+ </portal_type>
+ <portal_type id="Assignment Request">
+  <item>AssignmentRequestUpgrade</item>
+ </portal_type>
  <portal_type id="Credential Question">
   <item>CredentialQuestion</item>
  </portal_type>
