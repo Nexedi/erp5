@@ -240,8 +240,8 @@ class TestIdTool(ERP5TypeTestCase):
     # generate ids
     self.checkGenerateNewId('test_application_sql')
     # check last_id in sql
-    self.assertEqual(last_id_method(id_group='c02')[0]['LAST_INSERT_ID()'], 0)
-    self.assertEqual(last_id_method(id_group='d02')[0]['LAST_INSERT_ID()'], 21)
+    self.assertEqual(last_id_method(id_group='c02')[0]['LAST_INSERT_ID'], 0)
+    self.assertEqual(last_id_method(id_group='d02')[0]['LAST_INSERT_ID'], 21)
     # check zodb dict
     if store:
       self.assertEqual(sql_generator.last_max_id_dict['c02'].value, 0)
