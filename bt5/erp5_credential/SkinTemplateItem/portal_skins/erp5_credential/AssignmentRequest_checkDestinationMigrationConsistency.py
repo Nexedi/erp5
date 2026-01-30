@@ -1,5 +1,5 @@
 assignment_request = context
-person = assignment_request.getDestinationDecisionValue(portal_type='Person')
+person = assignment_request.getDestinationDecisionValue()
 person_before_migration = assignment_request.getDestinationValue()
 
 error_list = []
