@@ -117,6 +117,7 @@
                         <string>my_view_mode_category</string>
                         <string>my_ledger</string>
                         <string>my_view_mode_translated_workflow_state_title</string>
+                        <string>my_view_mode_version</string>
                       </list>
                     </value>
                 </item>
