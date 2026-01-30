@@ -1,0 +1,6 @@
+business_process_module/bank_reconciliation_business_process
+business_process_module/bank_reconciliation_business_process/**
+portal_deliveries/bank_reconciliation_payment_transaction_builder
+portal_deliveries/bank_reconciliation_payment_transaction_builder/**
+portal_rules/default_bank_reconciliation_rule
+portal_rules/default_bank_reconciliation_rule/**
