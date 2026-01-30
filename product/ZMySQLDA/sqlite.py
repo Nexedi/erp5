@@ -23,6 +23,8 @@ from DateTime import DateTime
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
 import time
+from sqlite3 import OperationalError
+
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -124,7 +126,7 @@ match_select = re.compile(
 class SQLiteResult:
     def __init__(self, rows, description):
         self._rows = rows or []
-        self._description = description or []
+        self._description = description
         self._index = 0  # current cursor position
 
     def fetch_row(self, size=1):
@@ -406,7 +408,7 @@ class SqliteDB(TM):
               raise
             if cursor.description is None:
               self.db.commit()
-              return None
+              return SQLiteResult([], None)
             rows = cursor.fetchall()
             desc = cursor.description
 
@@ -549,18 +551,19 @@ class SqliteDB(TM):
             create_split  = re.compile(r",\n\s*").split,
             column_match  = re.compile(r"`(\w+)`\s+(.+)").match,
             ):
-        result = self.query(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{name}'")
-        rows = result.fetchall()
-        if not rows or rows[0][0] is None:
-            return [], set(), ""
+        #(('CREATE TABLE altered_table (a int)',),)
+        result = self.query(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{name}'")[1]
+        if not result:
+            raise OperationalError("NO SUCH TABLE")
+
 
         col_query = f"PRAGMA table_info({name})"
-        col_result = self.query(col_query)
-        columns = [(r[1], r[2]) for r in col_result.fetchall()]
+        col_result = self.query(col_query)[1]
+        columns = [(r[1], r[2]) for r in col_result]
 
         idx_query = f"PRAGMA index_list({name})"
-        idx_result = self.query(idx_query)
-        key_set = set(r[1] for r in idx_result.fetchall())
+        idx_result = self.query(idx_query)[1]
+        key_set = set(r[1] for r in idx_result)
 
         table_options = ""
         return columns, key_set, table_options
@@ -577,16 +580,15 @@ class SqliteDB(TM):
 
         name = m.group(2)
         new_name = f"_{name}_new"
-
         with (nullcontext if src__ else self.lock)():
             try:
                 old_list, _, _ = self._getTableSchema(name)
-            except Exception:
-                if create_if_not_exists:
-                    if not src__:
-                        self.query(create_sql)
-                    return create_sql
-                raise
+            except OperationalError as e:
+                if "no such table" not in str(e).lower() or not create_if_not_exists:
+                    raise
+                if not src__:
+                    self.query(create_sql)
+                return create_sql
 
             # Build migration SQL
             old_cols = {c for c, _ in old_list}
@@ -598,40 +600,49 @@ class SqliteDB(TM):
             finally:
                 self.query(f"DROP TABLE {new_name}")
 
-            new_cols = [c for c, _ in new_list if c in old_cols]
-            col_sql = ", ".join(f'"{c}"' for c in new_cols)
+            changed = False
+            if len(new_list) != len(old_list):
+                changed = True
+            else:
+                for index in range(len(new_list)):
+                    if new_list[index] != old_list[index]:
+                        changed = True
+                        break
+            if changed:
+                new_cols = [c for c, _ in new_list if c in old_cols]
+                col_sql = ", ".join(f'"{c}"' for c in new_cols)
 
-            migration = [
-                f"CREATE TABLE {new_name} {create_sql[m.end():]}",
-            ]
+                migration = [
+                    f"CREATE TABLE {new_name} {create_sql[m.end():]}",
+                ]
 
-            if new_cols:
-                migration.append(
-                    f"INSERT INTO {new_name} ({col_sql}) "
-                    f"SELECT {col_sql} FROM {name}"
-                )
+                if new_cols:
+                    migration.append(
+                        f"INSERT INTO {new_name} ({col_sql}) "
+                        f"SELECT {col_sql} FROM {name}"
+                    )
 
-            migration += [
-                f"DROP TABLE {name}",
-                f"ALTER TABLE {new_name} RENAME TO {name}",
-            ]
+                migration += [
+                    f"DROP TABLE {name}",
+                    f"ALTER TABLE {new_name} RENAME TO {name}",
+                ]
 
-            src_sql = ";\n".join(migration)
+                src_sql = ";\n".join(migration)
 
-            if src__:
+                if src__:
+                    return src_sql
+
+                # Execute migration
+                for stmt in migration:
+                    self.query(stmt)
+
+                # Initialize newly added columns
+                if initialize:
+                    added = [c for c, _ in new_list if c not in old_cols]
+                    if added:
+                        initialize(self, added)
+
                 return src_sql
-
-            # Execute migration
-            for stmt in migration:
-                self.query(stmt)
-
-            # Initialize newly added columns
-            if initialize:
-                added = [c for c, _ in new_list if c not in old_cols]
-                if added:
-                    initialize(self, added)
-
-            return src_sql
        
 
 
