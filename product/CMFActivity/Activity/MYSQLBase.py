@@ -919,8 +919,6 @@ CREATE TABLE %s (
         message_list = [m]
         uid_to_duplicate_uid_list_dict[uid] = uid_list
         group_method_id = m.line.group_method_id
-        if group_method_id == '\\0':
-          group_method_id = '\0'
         if (group_method_id[0] != '\0'):
           # Count the number of objects to prevent too many objects.
           cost = m.getGroupMethodCost()
