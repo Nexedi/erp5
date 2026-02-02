@@ -4300,7 +4300,7 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     self.query_connection_2("SELECT b from table2")
     self.query_connection_2("SELECT b from table_deferred2")
 
-    if os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog') == 'erp5_mysql_catalog':
+    if os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog') == 'erp5_mysql_innodb_catalog':
       with self.assertRaisesRegex(ProgrammingError,
                                    r"Table '.*\.table2' doesn't exist"):
         self.query_connection_1("SELECT b from table2")
