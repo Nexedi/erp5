@@ -994,7 +994,12 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         node_family_id_list)
     if message_list:
       # Remove group_id parameter from group_method_id
-      group_method_id = group_method_id.split('\0')[0]
+      #XXXXXXX need to change the way to insert data to sqlite
+      if group_method_id == '\x00':
+        group_method_id = group_method_id.split('\0')[0]
+      else:
+        group_method_id = group_method_id.split('\\0')[0]
+
       if group_method_id != "":
         method = activity_tool.invokeGroup
         args = (group_method_id, message_list, self.__class__.__name__,
