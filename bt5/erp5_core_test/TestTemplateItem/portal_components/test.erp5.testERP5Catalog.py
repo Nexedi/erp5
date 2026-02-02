@@ -49,7 +49,6 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
 from six.moves import range
-import os
 from sqlite3 import OperationalError
 
 if six.PY3:
@@ -227,6 +226,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def afterSetUp(self):
     self.default_catalog_id = self.portal.portal_catalog.getDefaultSqlCatalogId()
+    self.catalog_storage = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_catalog').getTitle()
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
 
@@ -1357,13 +1357,22 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     new_catalog = portal_catalog[new_catalog_id]
 
     # Add new searchable table in new catalog
-    create_dummy_table_sql = """
-    CREATE TABLE `dummy` (
-    `uid` BIGINT UNSIGNED NOT NULL,
-    `dummy_title` varchar(32) NOT NULL default '',
-    PRIMARY KEY  (`uid`)
-    ) ENGINE=InnoDB;
-    """
+    if self.catalog_storage == 'erp5_mysql_innodb_catalog':
+      create_dummy_table_sql = """
+      CREATE TABLE `dummy` (
+      `uid` BIGINT UNSIGNED NOT NULL,
+      `dummy_title` varchar(32) NOT NULL default '',
+      PRIMARY KEY  (`uid`)
+      ) ENGINE=InnoDB;
+      """
+    else:
+      create_dummy_table_sql = """
+      CREATE TABLE dummy (
+      uid INTEGER NOT NULL,
+      dummy_title TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (uid)
+      );
+      """
     drop_summy_table_sql = """
     DROP TABLE IF EXISTS `dummy`
     """
@@ -4300,7 +4309,7 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     self.query_connection_2("SELECT b from table2")
     self.query_connection_2("SELECT b from table_deferred2")
 
-    if os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog') == 'erp5_mysql_innodb_catalog':
+    if self.catalog_storage == 'erp5_mysql_innodb_catalog':
       with self.assertRaisesRegex(ProgrammingError,
                                    r"Table '.*\.table2' doesn't exist"):
         self.query_connection_1("SELECT b from table2")
