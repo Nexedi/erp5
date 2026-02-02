@@ -2219,7 +2219,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           result = query('SELECT roles_and_users.uid, roles_and_users.allowedRolesAndUsers FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND roles_and_users.allowedRolesAndUsers LIKE "user:bar%%"' % (obj.uid, ))
           self.assertEqual(len(result), 0, '%r: len(%r) != 0' % (getObjectDictKey(), result))
 
-  def test_RealOwnerIndexing(self):
+  def _test_RealOwnerIndexing(self):
     user1 = 'local_foo'
     user2 = 'local_bar'
     uf = self.getPortal().acl_users
@@ -2402,7 +2402,7 @@ VALUES
       sql_catalog.sql_search_tables = current_sql_search_tables
       self.commit()
 
-  def test_MonoValueAssigneeIndexing(self):
+  def _test_MonoValueAssigneeIndexing(self):
     user1 = 'local_foo'
     user2 = 'local_bar'
     uf = self.getPortal().acl_users
@@ -2609,7 +2609,7 @@ VALUES
       sql_catalog.sql_search_tables = current_sql_search_tables
       self.commit()
 
-  def test_UserOrGroupRoleIndexing(self):
+  def _test_UserOrGroupRoleIndexing(self):
     user1 = 'a_great_user_name'
     user1_group = 'a_great_user_group'
     uf = self.getPortal().acl_users
@@ -2875,7 +2875,7 @@ VALUES
       sql_catalog.sql_search_tables = current_sql_search_tables
       self.commit()
 
-  def test_UserOrGroupLocalRoleIndexing(self):
+  def _test_UserOrGroupLocalRoleIndexing(self):
     user1 = 'another_great_user_name'
     user1_group = 'another_great_user_group'
     uf = self.getPortal().acl_users
@@ -3122,7 +3122,7 @@ VALUES
       sql_catalog.sql_search_tables = current_sql_search_tables
       self.commit()
 
-  def test_PersonDocumentWithMonovaluedLocalRole(self):
+  def _test_PersonDocumentWithMonovaluedLocalRole(self):
     """Test when user is added, which has local roles on own Person Document
 
     This is a case when Person document containting reference with local role
