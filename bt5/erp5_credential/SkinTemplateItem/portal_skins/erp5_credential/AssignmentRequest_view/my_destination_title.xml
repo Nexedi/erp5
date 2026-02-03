@@ -43,10 +43,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -60,10 +56,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -90,19 +82,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Destination Section</string> </value>
+                    <value> <string>Organisation</string> </value>
                 </item>
               </dictionary>
             </value>
