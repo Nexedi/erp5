@@ -83,7 +83,8 @@ else:
     # Close SQL connection
     del sql_db
   else:
-    os.remove(connection)
+    if os.path.exists(connection):
+      os.remove(connection)
 
 
 zeo_server_pid = None
