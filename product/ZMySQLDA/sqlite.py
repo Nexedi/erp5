@@ -25,7 +25,6 @@ from ZODB.POSException import ConflictError
 import time
 from sqlite3 import OperationalError
 
-
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
     CR.SERVER_LOST,
@@ -310,7 +309,7 @@ class SqliteDB(TM):
               'Failed to close pre-existing connection, discarding it',
               error=True,
             )
-      self.db = sqlite3.connect(':memory:', check_same_thread=False)
+      self.db = sqlite3.connect(self._connection, check_same_thread=False)
 
 
     def tables(self, rdb=0,
