@@ -79,6 +79,12 @@ class TestCredentialAssignmentRequestMigration(TestERP5CredentialAlarmMixin):
     self.assertEqual(len(bad_assignment_request.checkConsistency()), 1)
 
     self.portal.portal_alarms.AlarmTool_checkAssignmentRequestDestinationDecisionMigrationConsistency(fixit=1)
+    self.commit()
+    self.assertEqual(1, len([m for m in self.portal.portal_activities.getMessageList()]))
     self.tic()
     self.assertEqual(bad_assignment_request.checkConsistency(), [])
 
+    self.portal.portal_alarms.AlarmTool_checkAssignmentRequestDestinationDecisionMigrationConsistency(fixit=1)
+    self.commit()
+    self.assertEqual(0, len([m for m in self.portal.portal_activities.getMessageList()]))
+    self.tic()
