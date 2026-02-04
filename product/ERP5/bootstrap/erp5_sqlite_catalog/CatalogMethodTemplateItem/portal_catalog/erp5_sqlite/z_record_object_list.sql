@@ -6,7 +6,7 @@ VALUES
   <dtml-sqlvar sequence-item type="string">,
   <dtml-sqlvar catalog type="int">,
   0,
-  NOW()
+  CURRENT_TIMESTAMP
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>
