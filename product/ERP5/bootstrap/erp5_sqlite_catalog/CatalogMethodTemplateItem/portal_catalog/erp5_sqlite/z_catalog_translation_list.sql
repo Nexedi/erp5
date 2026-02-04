@@ -1,4 +1,7 @@
-INSERT INTO translation VALUES 
+INSERT INTO translation VALUES (?, ?, ?, ?, ?)
+
+-- PARAMS
+
 <dtml-in prefix="loop" expr="_.range(_.len(language))">
 (
   <dtml-sqlvar expr="language[loop_item]" type="string">,
