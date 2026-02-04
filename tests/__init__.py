@@ -38,7 +38,7 @@ class _Base(ERP5TypeTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in chain(
-        #glob(path + '/product/*/tests/test*.py'),
+        glob(path + '/product/*/tests/test*.py'),
         glob(path + '/bt5/erp5_core_test/TestTemplateItem/test*.py'),
         glob(path + '/bt5/erp5_core_test/TestTemplateItem/portal_components/test.*.test*.py')):
       component_re_match = component_re.match(test_path)
