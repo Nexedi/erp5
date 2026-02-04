@@ -397,7 +397,12 @@ class SqliteDB(TM):
                 LOG('_query 608 change to:', 0, query)
             try:
                 query = query.decode()
-                if 'create table' in query.lower():
+                if '-- PARAMS' in query:
+                    sql_part, param_part = query.split("-- PARAMS")
+                    tuples = re.findall(r"\((.*?)\)", param_part, re.S)
+                    params = [tuple(item.strip().strip("'") for item in t.split(",")) for t in tuples]
+                    cursor.executemany(sql_part, params)
+                elif 'create table' in query.lower():
                     cursor.executescript(query)
                 else:
                     cursor.execute(query)
