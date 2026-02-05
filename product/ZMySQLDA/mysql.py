@@ -463,7 +463,7 @@ class DB(TM):
           else:
             raise
 
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, query_value = None):
         """Execute 'query_string' and return at most 'max_rows'."""
         self._use_TM and self._register()
         desc = None

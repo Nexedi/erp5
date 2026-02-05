@@ -207,6 +207,12 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     security.addContext(self)
     try:
         query = self.template(p, **argdata)
+        query_value = None
+        value_script_id = self.getProperty('value_script_id', '')
+        if value_script_id:
+          method = getattr(self.getPortalObject(), value_script_id, None)
+          if method:
+            query_value = method(**argdata)
     except TypeError as msg:
         msg = str(msg)
         if 'client' in msg:
@@ -222,7 +228,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
         result=self._cached_result(DB__, str2bytes(query), self.max_rows_, c)
     else:
       try:
-        result=DB__.query(query, self.max_rows_)
+        result=DB__.query(query, self.max_rows_, query_value)
       except:
         LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=True)
         raise

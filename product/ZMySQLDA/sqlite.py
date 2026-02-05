@@ -371,7 +371,7 @@ class SqliteDB(TM):
 
 
 
-    def _query(self, query, allow_reconnect=False):
+    def _query(self, query, allow_reconnect=False, query_value = None):
         cursor = None
         should_display  = False
         if b"INSERT INTO message" in query:
@@ -397,7 +397,9 @@ class SqliteDB(TM):
                 LOG('_query 608 change to:', 0, query)
             try:
                 query = query.decode()
-                if 'create table' in query.lower():
+                if query_value:
+                    cursor.executemany(query, query_value)
+                elif 'create table' in query.lower():
                     cursor.executescript(query)
                 else:
                     cursor.execute(query)
@@ -418,7 +420,7 @@ class SqliteDB(TM):
             if cursor:
                 cursor.close()
       
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, query_value = None):
         """Execute 'query_string' and return at most 'max_rows'."""
         self._use_TM and self._register()
         desc = None
@@ -446,7 +448,7 @@ class SqliteDB(TM):
                         qs = b"%s LIMIT %d" % (qs, max_rows)
                         #qs = b"SELECT * FROM (%s) AS t LIMIT %d" % (qs, max_rows)
 
-                c = self._query(qs)
+                c = self._query(qs, query_value = query_value)
                 if c:
                     if desc is not None is not c.describe():
                         raise Exception(
