@@ -527,14 +527,12 @@ class SqliteDB(TM):
         # Note: in any case, we expect server to notice the disconnection and
         # trigger an abort on its side.
         try:
-            if self._mysql_lock:
-                self._query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
             if self._transactions:
                 self._query("ROLLBACK")
             else:
-                LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
+                LOG('SQLiteDA', ERROR, "aborting when non-transactional")
         except OperationalError as m:
-            LOG('ZMySQLDA', ERROR, "exception during _abort",
+            LOG('SQLiteDA', ERROR, "exception during _abort",
                 error=True)
             if m.args[0] not in hosed_connection:
                 raise
