@@ -160,9 +160,10 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag ON %s (tag);
         m = Message.load(line.message, uid=uid, line=line)
         try:
           # Select duplicates.
+          db.query(b"BEGIN IMMEDIATE", 0)
           result = db.query(b"SELECT uid FROM message_job"
             b" WHERE processing_node = 0 AND path = %s AND signature = %s"
-            b" AND method_id = %s AND group_method_id = %s FOR UPDATE" % (
+            b" AND method_id = %s AND group_method_id = %s" % (
               quote(path), quote(line.signature),
               quote(method_id), quote(line.group_method_id),
             ), 0)[1]
