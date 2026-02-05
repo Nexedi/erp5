@@ -52,8 +52,8 @@ class SFTPConnection:
   """
 
   def __init__(self, url, user_name, password=None, private_key=None,
-      bind_address=None):
-    # type: (str, str, str|None, str|None,, str|None) -> None
+      bind_address=None, disabled_algorithms=None):
+    # type: (str, str, str|None, str|None, str|None, dict|None) -> None
     self.url = url
     self.user_name = user_name
     if password and private_key:
@@ -61,6 +61,7 @@ class SFTPConnection:
     self.password = password
     self.private_key = private_key
     self.bind_address = bind_address
+    self.disabled_algorithms = disabled_algorithms
 
   def connect(self):
     # type: () -> None
@@ -90,7 +91,7 @@ class SFTPConnection:
           break
       else:
         raise SFTPError('No suitable socket family found')
-      self.transport = Transport(sock)
+      self.transport = Transport(sock, disabled_algorithms=self.disabled_algorithms)
     else:
       raise SFTPError('Not a valid sftp url')
     # Add authentication to transport
