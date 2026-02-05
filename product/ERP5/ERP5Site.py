@@ -1524,6 +1524,24 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
            self._getPortalConfiguration('portal_planned_order_state_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalPlannedTransactionStateList')
+  def getPortalPlannedTransactionStateList(self):
+    """
+      Return planned transaction states.
+    """
+    return self._getPortalGroupedStateList('planned_transaction') or \
+           self._getPortalConfiguration('portal_planned_transaction_state_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAccountedTransactionStateList')
+  def getPortalAccountedTransactionStateList(self):
+    """
+      Return accounted transaction states.
+    """
+    return self._getPortalGroupedStateList('accounted_transaction') or \
+           self._getPortalConfiguration('portal_accounted_transaction_state_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalReservedInventoryStateList')
   def getPortalReservedInventoryStateList(self):
     """
