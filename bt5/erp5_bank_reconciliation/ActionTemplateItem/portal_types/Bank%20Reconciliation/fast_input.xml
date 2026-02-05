@@ -92,7 +92,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.getValidationState() != \'draft\'</string> </value>
+            <value> <string>python: object.getValidationState() == \'open\' and not object.hasLineContent()</string> </value>
         </item>
       </dictionary>
     </pickle>
