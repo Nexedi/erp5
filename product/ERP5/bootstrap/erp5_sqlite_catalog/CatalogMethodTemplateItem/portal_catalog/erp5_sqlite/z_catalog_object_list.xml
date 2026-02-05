@@ -7,10 +7,25 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <key> <string>_local_properties</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>value_script_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
@@ -54,11 +69,15 @@ getModificationDate</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -89,6 +108,10 @@ getModificationDate</string> </value>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>value_script_id</string> </key>
+            <value> <string>Base_getCatalogObjectValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

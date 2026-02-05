@@ -1,0 +1,40 @@
+value = []
+for loop_item in range(len(uid)):
+  row = (
+    uid[loop_item],
+    security_uid[loop_item],
+    getOwnerInfo[loop_item]['id'],
+    (getViewPermissionOwner[loop_item] is not None) and getViewPermissionOwner[loop_item] or '',
+    getPath[loop_item],
+    getRelativeUrl[loop_item],
+    getParentUid[loop_item],
+    id[loop_item],
+    getDescription[loop_item],
+    getTitle[loop_item],
+    meta_type[loop_item],
+    getPortalType[loop_item],
+    getOpportunityState[loop_item],
+    getCorporateRegistrationCode[loop_item],
+    getEan13Code[loop_item],
+    getValidationState[loop_item],
+    getSimulationState[loop_item],
+    getCausalityState[loop_item],
+    getInvoiceState[loop_item],
+    getPaymentState[loop_item],
+    getEventState[loop_item],
+    getImmobilisationState[loop_item],
+    getReference[loop_item],
+    getGroupingReference[loop_item],
+    getGroupingDate[loop_item],
+    getSourceReference[loop_item],
+    getDestinationReference[loop_item],
+    getStringIndex[loop_item],
+    getIntIndex[loop_item],
+    getFloatIndex[loop_item],
+    hasCellContent[loop_item],
+    getCreationDate[loop_item].ISO() if getCreationDate[loop_item] else None,
+    getModificationDate[loop_item].ISO() if getModificationDate[loop_item] else None,
+  )
+  value.append(row)
+
+return value
