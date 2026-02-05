@@ -29,6 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.document.Path import Path
 
@@ -56,9 +57,16 @@ class Supply(Path, XMLObject):
                     , PropertySheet.Movement
                     , PropertySheet.Delivery
                     , PropertySheet.Path
+                    , PropertySheet.Predicate
                     , PropertySheet.FlowCapacity
                     , PropertySheet.Comment
                     )
+
+  #############################################
+  # Predicate method
+  #############################################
+  isPredicate = ConstantGetter('isPredicate', value=True)
+  asPredicate = Path.asPredicate
 
   #######################################################
   # Defer indexing process
