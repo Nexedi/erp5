@@ -656,7 +656,7 @@ class DeferredSqliteDB(SqliteDB):
         #assert self._use_TM
         self._sql_string_list = []
 
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, query_value = None):
         self._register()
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
