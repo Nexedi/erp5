@@ -159,37 +159,6 @@ class SQLiteResult:
     def fetchall(self):
         return self._rows
 
-def is_information_schema_columns(sql):
-    s = sql.upper()
-    return (
-        b"INFORMATION_SCHEMA.COLUMNS" in s
-        and b"TABLE_SCHEMA" in s
-        and b"DATABASE()" in s
-    )
-
-def emulate_information_schema_columns(db):
-    rows = []
-    cur = db.cursor()
-
-    cur.execute("""
-        SELECT name
-        FROM sqlite_master
-        WHERE type='table'
-          AND name NOT LIKE 'sqlite_%'
-    """)
-
-    for (table_name,) in cur.fetchall():
-        cur.execute(f"PRAGMA table_info('{table_name}')")
-        for col in cur.fetchall():
-            rows.append((table_name, col[1]))
-
-    description = (
-        ("TABLE_NAME", None, None, None, None, None, None),
-        ("COLUMN_NAME", None, None, None, None, None, None),
-    )
-
-    return SQLiteResult(rows, description)
-
 class SqliteDB(TM):
     """This is the ZMySQLDA Database Connection Object."""
 
@@ -368,21 +337,9 @@ class SqliteDB(TM):
             r.append(info)
         return r
 
-
-
-
     def _query(self, query, allow_reconnect=False, query_value = None):
-        cursor = None
-        should_display  = False
-        if b"INSERT INTO message" in query:
-            should_display = False
-        if should_display:
-            LOG('_query 590 default:', 0, query)
         if query.strip().upper() == b'COMMIT':
           return
-        if is_information_schema_columns(query):
-            return emulate_information_schema_columns(self.db)
-
         try:
             cursor = self.db.cursor()
             # handle SET @uid
@@ -393,8 +350,6 @@ class SqliteDB(TM):
 
             if b'@uid' in query:
                 query = query.replace(b"@uid", str(self.uid_value).encode("ascii"))
-            if should_display:
-                LOG('_query 608 change to:', 0, query)
             try:
                 query = query.decode()
                 if query_value:
