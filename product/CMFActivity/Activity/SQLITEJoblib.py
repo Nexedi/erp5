@@ -39,6 +39,7 @@ from Products.CMFActivity.ActivityTool import Message
 from Products.ERP5Type.Utils import str2bytes
 from .SQLDict import SQLDict
 from six.moves import xrange
+import re
 
 class SQLJoblib(SQLDict):
   """
