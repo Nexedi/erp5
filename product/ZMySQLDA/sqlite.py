@@ -124,9 +124,25 @@ match_select = re.compile(
 
 class SQLiteResult:
     def __init__(self, rows, description):
-        self._rows = rows or []
+        _rows = rows or []
         self._description = description
-        self._index = 0  # current cursor position
+        self._index = 0
+        self._rows = []
+        if _rows:
+            for row in _rows:
+                new_row = []
+                for val, col_desc in zip(row, self._description):
+                    col_name = col_desc[0]
+                    if col_name.endswith('date') and isinstance(val, str):
+                        if ' ' in val:
+                            new_row.append(DATETIME_to_DateTime_or_None(val))
+                        else:
+                            new_row.append(DATE_to_DateTime_or_None(val))
+                    else:
+                        new_row.append(val)
+
+                self._rows.append(tuple(new_row))
+
 
     def fetch_row(self, size=1):
         if self._index >= len(self._rows):
@@ -172,7 +188,6 @@ class SqliteDB(TM):
 
     _sort_key = TM._sort_key
     db = None
-    uid_value = 0
 
     def __init__(self,connection):
         """
