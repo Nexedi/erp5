@@ -2676,9 +2676,9 @@ VALUES
       PRIMARY KEY (uid)
       );
 
-      CREATE INDEX assignee_reference ON %s (assignee_reference);
-      CREATE INDEX viewable_assignee_reference ON %s (viewable_assignee_reference);
-      """ % (create_local_role_table_sql, create_local_role_table_sql, create_local_role_table_sql)
+      CREATE INDEX %s_assignee_reference ON %s (assignee_reference);
+      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
+      """ % (local_roles_table, local_roles_table, local_roles_table,local_roles_table,local_roles_table)
 
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -2951,8 +2951,8 @@ VALUES
       viewable_assignee_reference TEXT NOT NULL DEFAULT '',
       PRIMARY KEY (uid)
       );
-      CREATE INDEX viewable_assignee_reference ON %s (viewable_assignee_reference);
-    """ % (local_role_table_sql, local_role_table_sql)
+      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
+    """ % (local_roles_table, local_roles_table, local_roles_table)
 
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -3195,8 +3195,8 @@ VALUES
       viewable_assignee_reference TEXT NOT NULL DEFAULT '',
       PRIMARY KEY (uid)
       );
-      CREATE INDEX viewable_assignee_reference ON %s (viewable_assignee_reference);
-      """ % (local_roles_table, local_roles_table)
+      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
+      """ % (local_roles_table, local_roles_table, local_roles_table)
     sql_catalog.newContent(
           portal_type='SQL Method',
           id = 'z_create_%s' % local_roles_table,
