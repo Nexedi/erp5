@@ -260,25 +260,12 @@ class SqliteDB(TM):
       if db is not None:
         try:
           db.close()
-        except Exception as exception:
-          # XXX: MySQLdb seems to think it's smart to use such general SQL
-          # exception for such a specific case error, rather than subclassing
-          # it. In an attempt to be future-proof (if it ever raises the same
-          # exception for unrelated reasons, like errors which would happen in
-          # mysql_close), check also the exception message.
-          # Anyway, this is just to avoid useless log spamming, so it's not a
-          # huge deal either way.
-          if not isinstance(
-            exception,
-            ProgrammingError,
-          ) or exception.message != 'closing a closed connection':
-            LOG(
-              'ZMySQLDA.db',
-              WARNING,
-              'Failed to close pre-existing connection, discarding it',
-              error=True,
-            )
+        except Exception:
+            pass
+
       self.db = sqlite3.connect(self._connection, check_same_thread=False)
+      #self.db.execute("PRAGMA journal_mode=WAL")
+      #self.db.execute("PRAGMA foreign_keys=ON")
 
 
     def tables(self, rdb=0,
@@ -293,87 +280,71 @@ class SqliteDB(TM):
             row = result.fetch_row(1)
         return r
 
-
     def columns(self, table_name):
-        """Returns a list of column descriptions for 'table_name'."""
-        try:
-            c = self._query('SHOW COLUMNS FROM %s' % table_name)
-        except Exception:
-            return ()
-        r=[]
-        for Field, Type, Null, Key, Default, Extra in c.fetch_row(0):
-            info = {}
-            field_default = Default and "DEFAULT %s"%Default or ''
-            if Default: info['Default'] = Default
-            if '(' in Type:
-                end = Type.rfind(')')
-                short_type, size = Type[:end].split('(', 1)
-                if short_type not in ('set','enum'):
-                    if ',' in size:
-                        info['Scale'], info['Precision'] = \
-                                       [int(x) for x in size.split(',', 1)]
-                    else:
-                        info['Scale'] = int(size)
-            else:
-                short_type = Type
-            if short_type in field_icons:
-                info['Icon'] = short_type
-            else:
-                info['Icon'] = icon_xlate.get(short_type, "what")
-            info['Name'] = Field
-            info['Type'] = type_xlate.get(short_type,'string')
-            info['Extra'] = Extra,
-            info['Description'] = ' '.join([Type, field_default, Extra or '',
-                                        key_types.get(Key, Key or ''),
-                                        Null != 'YES' and 'NOT NULL' or '']),
-            info['Nullable'] = Null == 'YES'
-            if Key:
-                info['Index'] = 1
-            if Key == 'PRI':
-                info['PrimaryKey'] = 1
-                info['Unique'] = 1
-            elif Key == 'UNI':
-                info['Unique'] = 1
-            r.append(info)
-        return r
+        """Column metadata via PRAGMA."""
+        cursor = self.db.execute(f"PRAGMA table_info('{table_name}')")
+
+        result = []
+        for cid, name, col_type, notnull, default, pk in cursor.fetchall():
+            result.append({
+                'Name': name,
+                'Type': col_type,
+                'Nullable': not notnull,
+                'Default': default,
+                'PrimaryKey': bool(pk),
+            })
+
+        return result
 
     def _query(self, query, allow_reconnect=False, query_value = None):
-        if query.strip().upper() == b'COMMIT':
-          return
+        cursor = self.db.cursor()
         try:
-            cursor = self.db.cursor()
-            # handle SET @uid
-            if b'SET @uid' in query:
-                uid_match = re.search(b"SET\s+@uid\s*:=\s*(\d+)", query, re.I)
-                self.uid_value = int(uid_match.group(1)) if uid_match else None
-                return None
+            query = query.decode()
 
-            if b'@uid' in query:
-                query = query.replace(b"@uid", str(self.uid_value).encode("ascii"))
-            try:
-                query = query.decode()
+            # Intercept raw COMMIT / ROLLBACK
+            if query.upper() == "COMMIT":
+                self.db.commit()
+            elif query.upper() == "ROLLBACK":
+                self.db.rollback()
+            else:
                 if query_value:
                     cursor.executemany(query, query_value)
                 elif 'create table' in query.lower():
                     cursor.executescript(query)
                 else:
                     cursor.execute(query)
-            except Exception as e:
-              LOG('db.py 764 default', 0, query)
-              LOG('db.py 731', 0, query)
-              raise
-            if cursor.description is None:
-              self.db.commit()
-              return SQLiteResult([], None)
-            rows = cursor.fetchall()
             desc = cursor.description
-
+            rows = cursor.fetchall()
             self.db.commit()
             return SQLiteResult(rows, desc)
+        except OperationalError as m:
+            msg = str(m).lower()
+            if "syntax error" in msg:
+                raise OperationalError(f"{m}: {query}")
 
+            if "locked" in msg:
+                raise ConflictError(f"{m}: {query}")
+
+            if "timeout" in msg or "busy" in msg:
+                raise TimeoutReachedError(f"{m}: {query}")
+
+            if allow_reconnect:
+                self._forceReconnection()
+                return self._query(query, allow_reconnect=False, query_value = query_value)
+
+            else:
+                LOG('SQLITEDA', ERROR, f'query failed: {query}')
+                raise
+
+        except ProgrammingError as m:
+            if allow_reconnect:
+                self._forceReconnection()
+                return self._query(query, allow_reconnect=False, query_value = query_value)
+            else:
+                LOG('SQLITEDA', ERROR, f'query failed: {query}')
+                raise
         finally:
-            if cursor:
-                cursor.close()
+            cursor.close()
       
     def query(self, query_string, max_rows=1000, query_value = None):
         """Execute 'query_string' and return at most 'max_rows'."""
@@ -451,7 +422,7 @@ class SqliteDB(TM):
             if self._transactions:
                 self._query("BEGIN", allow_reconnect=True)
         except:
-            LOG('ZMySQLDA', ERROR, "exception during _begin",
+            LOG('SQLiteDA', ERROR, "exception during _begin",
                 error=True)
             raise
 
