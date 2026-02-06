@@ -52,6 +52,7 @@ from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ERP5Type import Timeout
 from Products.ERP5Type.Timeout import Deadline
 import six
+import re
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
@@ -325,16 +326,22 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
+
     def insert(reset_uid):
+
+      def replace_uid(match):
+        offset = int(match.group(1))
+        return str2bytes(str(uid + offset))
+
       values = self._insert_separator.join(values_list)
       del values_list[:]
       for _ in xrange(UID_ALLOCATION_TRY_COUNT):
         if reset_uid:
           reset_uid = False
-          # Overflow will result into IntegrityError.
-          db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
+          uid = getrandbits(UID_SAFE_BITSIZE)
         try:
-          db.query(self._insert_template % (str2bytes(self.sql_table), values))
+          new_values = re.sub(br'@uid\+(\d+)', replace_uid, values)
+          db.query(self._insert_template % (str2bytes(self.sql_table), new_values))
         except MySQLdb.IntegrityError as e:
           if e.args[0] != DUP_ENTRY:
             raise
