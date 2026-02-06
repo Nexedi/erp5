@@ -73,11 +73,6 @@ type_xlate = {
     "time": "datetime",
     }
 
-def _mysql_timestamp_converter(s):
-        s = s.ljust(14, '0')
-        parts = [int(x) for x in (s[:4],s[4:6],s[6:8],
-                          s[8:10],s[10:12],s[12:14])]
-        return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
 # DateTime(str) is slow. As the date format is part of the specifications,
 # parse it ourselves to save time.
@@ -179,13 +174,6 @@ class SqliteDB(TM):
     """This is the ZMySQLDA Database Connection Object."""
 
     conv=conversions.copy()
-    conv[FIELD_TYPE.LONG] = int
-    conv[FIELD_TYPE.DATETIME] = DATETIME_to_DateTime_or_None
-    conv[FIELD_TYPE.DATE] = DATE_to_DateTime_or_None
-    conv[FIELD_TYPE.DECIMAL] = float
-    conv[FIELD_TYPE.BIT] = ord_or_None
-    del conv[FIELD_TYPE.TIME]
-
     _sort_key = TM._sort_key
     db = None
 
