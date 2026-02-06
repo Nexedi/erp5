@@ -53,6 +53,7 @@ from Products.ERP5Type import Timeout
 from Products.ERP5Type.Timeout import Deadline
 import six
 import re
+import sqlite3
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
