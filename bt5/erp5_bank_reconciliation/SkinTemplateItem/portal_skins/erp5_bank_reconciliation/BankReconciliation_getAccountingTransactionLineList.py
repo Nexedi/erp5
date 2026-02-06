@@ -19,18 +19,11 @@ kw = {
 if reconciliation_mode == "reconcile":
   if context.getStopDate():
     kw['at_date'] = context.getStopDate().latestTime()
-  if cell is not None:
-    kw.update({
-      'reconciliation_query': ComplexQuery(
-        SimpleQuery(aggregate_bank_reconciliation_date=None),
-        SimpleQuery(uid=cell.getAggregateRelatedValue().getUid()),
-        logical_operator="OR",
-      ),
-    })
-  else:
-    kw.update({
-      'reconciliation_query': SimpleQuery(aggregate_bank_reconciliation_date=None),
-    })
+    kw['reconciliation_query'] = ComplexQuery(
+      SimpleQuery(aggregate_bank_reconciliation_date=None),
+      SimpleQuery(aggregate_bank_reconciliation_uid=context.getUid()),
+      logical_operator="OR",
+    )
 
   kw.update({
     'left_join_list': ['aggregate_bank_reconciliation_date'],
