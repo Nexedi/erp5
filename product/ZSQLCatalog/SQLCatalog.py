@@ -1300,6 +1300,12 @@ class Catalog(Folder,
     if not self.getPortalObject().isIndexable():
       return
 
+    # force using READ COMMITTED isolation.
+    connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
+    db = getattr(self.getPortalObject(), connection_id)()
+    if not db._registered and not db.innodb_locks_unsafe_for_binlog:
+      db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
+
     object_path_dict = {}
     uid_list = []
     uid_list_append = uid_list.append
