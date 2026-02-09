@@ -329,7 +329,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
     quote = db.string_literal
 
     def insert(reset_uid):
-
+      global uid
       def replace_uid(match):
         offset = int(match.group(1))
         return str2bytes(str(uid + offset))
@@ -343,7 +343,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         try:
           new_values = re.sub(br'@uid\+(\d+)', replace_uid, values)
           db.query(self._insert_template % (str2bytes(self.sql_table), new_values))
-        except MySQLdb.IntegrityError as e:
+        except sqlite3.IntegrityError as e:
           if e.args[0] != DUP_ENTRY:
             raise
           reset_uid = True
@@ -353,6 +353,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         raise RuntimeError("Maximum retry for prepareQueueMessageList reached")
     i = 0
     reset_uid = True
+    uid = None
     values_list = []
     if not getattr(self, '_insert_max_payload', None):
       self._insert_max_payload = 4194147
