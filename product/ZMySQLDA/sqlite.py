@@ -317,10 +317,10 @@ class SqliteDB(TM):
                     cursor.executescript(query)
                 else:
                     cursor.execute(query)
-            desc = cursor.description
-            rows = cursor.fetchall()
-            self.db.commit()
-            return SQLiteResult(rows, desc)
+                desc = cursor.description
+                rows = cursor.fetchall()
+                self.db.commit()
+                return SQLiteResult(rows, desc)
         except OperationalError as m:
             msg = str(m).lower()
             if "syntax error" in msg:
