@@ -357,6 +357,13 @@ class DB(TM):
       if self._kw_args.get('ssl') and \
           not self._query(b"SHOW STATUS LIKE 'Ssl_version'").fetch_row()[0][1]:
           raise NotSupportedError("Connection established without SSL")
+      try:
+        self.db.query('SELECT 1 FOR UPDATE SKIP LOCKED')
+        self.db.store_result()
+      except ProgrammingError:
+        self.has_skip_locked = False
+      else:
+        self.has_skip_locked = True
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
