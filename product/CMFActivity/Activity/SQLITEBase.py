@@ -725,7 +725,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
           message_list.sort(key=sort_message_key)
           distributable_uid_set.add(message_list[0].uid)
           group_method_id = message_list[0].line.group_method_id
-          if group_method_id == '\0':
+          if group_method_id == '\\0':
             continue
           for message in message_list[1:]:
             if group_method_id == message.line.group_method_id:
