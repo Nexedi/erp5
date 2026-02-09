@@ -67,3 +67,8 @@ InitializeClass(ActivityConnection)
 class ActivityDB(DB):
 
     _sort_key = chr(255)
+
+    @property
+    def isolation_level(self):
+        if not self.innodb_locks_unsafe_for_binlog:
+            return 'READ COMMITTED'
