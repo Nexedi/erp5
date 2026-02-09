@@ -55,6 +55,6 @@ if alarm_tool.isSubscribed() and len(alarm_id_list):
 
       else:
         # activeSense create an activity in SQLDict
-        alarm.activeSense()
+        alarm.activeSense(params={'Base_reindexAndSenseAlarm': True})
         # Prevent 2 nodes to call activateSense concurrently
         alarm.serialize()
