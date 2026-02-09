@@ -300,15 +300,16 @@ class SqliteDB(TM):
         return result
 
     def _query(self, query, allow_reconnect=False, query_value = None):
-        cursor = self.db.cursor()
         try:
+            cursor = self.db.cursor()
             query = query.decode()
-
             # Intercept raw COMMIT / ROLLBACK
             if query.upper() == "COMMIT":
                 self.db.commit()
+                return
             elif query.upper() == "ROLLBACK":
                 self.db.rollback()
+                return
             else:
                 if query_value:
                     cursor.executemany(query, query_value)
@@ -430,8 +431,6 @@ class SqliteDB(TM):
             raise
 
     def tpc_vote(self, *ignored):
-        # Raise if a disconnection is detected, to avoid detecting this later
-        #LOG('ZMySQLDA db.py', 0, ignored)
         self._query("SELECT 1")
         return TM.tpc_vote(self, *ignored)
 
