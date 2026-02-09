@@ -303,10 +303,9 @@ class SqliteDB(TM):
         cursor = self.db.cursor()
         try:
             query = query.decode()
-
             # Intercept raw COMMIT / ROLLBACK
             if query.upper() == "COMMIT":
-                self.db.commit()
+                return
             elif query.upper() == "ROLLBACK":
                 self.db.rollback()
             else:
