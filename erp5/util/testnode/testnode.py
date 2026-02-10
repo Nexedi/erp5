@@ -38,6 +38,7 @@ from subprocess import CalledProcessError
 from .Updater import Updater
 from .NodeTestSuite import NodeTestSuite, SlapOSInstance
 from .ScalabilityTestRunner import ScalabilityTestRunner
+from .SlapOSControler import SlapOSControler
 from .UnitTestRunner import UnitTestRunner
 from .Utils import deunicodeData
 from .. import taskdistribution
@@ -255,6 +256,38 @@ shared = true
               os.remove(folder_path)
         except OSError:
           logger.warning("_cleanupTemporaryFiles exception", exc_info=1)
+
+  def _pruneSlapOS(self):
+    """Run 'slapos node prune' to remove old unused software releases.
+
+    Run at most once every max_log_time days, using a timestamp file to persist
+    across restarts.
+    """
+    slapos_directory = self.config['slapos_directory']
+    timestamp_file = os.path.join(slapos_directory, '.prune_timestamp')
+    prune_interval = 86400 * self.max_log_time
+
+    try:
+      last_prune = os.stat(timestamp_file).st_mtime
+    except OSError:
+      last_prune = 0
+
+    if time.time() - last_prune < prune_interval:
+      return
+
+    software_root_list = [
+      SlapOSControler(
+        node_test_suite.working_directory,
+        self.config,
+      ).software_root for (_, node_test_suite) in sorted(self.node_test_suite_dict.items())
+    ]
+    slapos_controler = SlapOSControler(self.working_directory, self.config)
+    # just set the process manager, we do not need to initalize this slapos and start the proxy
+    slapos_controler.process_manager = self.process_manager
+    slapos_controler.prune(software_root_list)
+
+    with open(timestamp_file, 'w') as f:
+      f.write(str(time.time()))
 
   def cleanUp(self):
     logger.debug('Testnode.cleanUp')

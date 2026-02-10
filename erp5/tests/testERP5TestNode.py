@@ -1169,6 +1169,37 @@ shared = true
         set(['buildoutA', 'tmpC', 'tmp-cannot-delete']).intersection(
             set(os.listdir(temp_directory))))
 
+  def test_pruneSlapOS(self):
+    """Test that slapos node prune is called periodically."""
+    test_node = self.getTestNode()
+    timestamp_file = os.path.join(self.slapos_directory, '.prune_timestamp')
+
+    test_suite_foo = test_node.getNodeTestSuite('foo')
+    test_suite_bar = test_node.getNodeTestSuite('bar')
+
+    # First call: no timestamp file, prune should run
+    with mock.patch.object(test_node.process_manager, 'spawn') as spawn_mock:
+      test_node._pruneSlapOS()
+      spawn_mock.assert_called_once()
+
+    args = spawn_mock.call_args_list[0].args
+    self.assertEqual(args[:3], (test_node.config['slapos_binary'], 'node', 'prune'))
+    self.assertEqual(
+      args[-4:],
+      (
+        '--additional-software-directory',
+        os.path.join(test_suite_bar.working_directory, 'soft'),
+        '--additional-software-directory',
+        os.path.join(test_suite_foo.working_directory, 'soft')
+      )
+    )
+    self.assertTrue(os.path.exists(timestamp_file))
+
+    # Second call: timestamp is fresh, prune should NOT run
+    with mock.patch.object(test_node.process_manager, 'spawn') as spawn_mock:
+      test_node._pruneSlapOS()
+      spawn_mock.assert_not_called()
+
   def test_resetSoftwareAfterManyBuildFailures(self):
     """
     Check that after several building failures that the software is resetted
