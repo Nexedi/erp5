@@ -54,7 +54,7 @@
       <tr>
         <td>waitForEval</td>
         <td>
-          JSON.parse(selenium.browserbot.getCurrentWindow().analyze_output_editor.getValue()).query_block.table.table_name
+          JSON.parse(selenium.browserbot.getCurrentWindow().analyze_output_editor.getValue()).query_block.nested_loop[0].table.table_name
         </td>
         <td>catalog</td>
       </tr>
