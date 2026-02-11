@@ -134,6 +134,8 @@ class SQLiteResult:
                         else:
                             new_row.append(DATE_to_DateTime_or_None(val))
                     else:
+                        if isinstance(val, str):
+                            val = val.replace('\\0', '\0')
                         new_row.append(val)
 
                 self._rows.append(tuple(new_row))
@@ -267,6 +269,7 @@ class SqliteDB(TM):
             pass
 
       self.db = sqlite3.connect(self._connection, check_same_thread=False)
+
       #self.db.execute("PRAGMA journal_mode=WAL")
       #self.db.execute("PRAGMA foreign_keys=ON")
 
@@ -397,14 +400,15 @@ class SqliteDB(TM):
         return items, result
 
     def string_literal(self, s):
-
+        if s is None:
+            return b'NULL'
         if isinstance(s, bytes):
             bval = s
+        elif isinstance(s, str):
+            bval = s.encode()
         else:
-            if str(s) == "\x00":
-                bval = s.encode()
-            else:
-                bval = str(s).rstrip("\x00").encode()
+            bval = str(s).encode()
+
 
         if bval.startswith(b'\x80'):
             return b"x'" + bval.hex().encode("ascii") + b"'"
