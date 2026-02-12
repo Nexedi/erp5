@@ -173,7 +173,7 @@ shared = true
       if b'index' in getattr(error, 'stderr', b''):
         rmtree(repository_path)
       logger.warning("Error while getting repository, ignoring this test suite",
-                     exc_info=1)
+                     exc_info=True)
       return False
     node_test_suite.revision_list = revision_list
     return True
@@ -255,7 +255,7 @@ shared = true
             else:
               os.remove(folder_path)
         except OSError:
-          logger.warning("_cleanupTemporaryFiles exception", exc_info=1)
+          logger.warning("_cleanupTemporaryFiles exception", exc_info=True)
 
   def _pruneSlapOS(self):
     """Run 'slapos node prune' to remove old unused software releases.
