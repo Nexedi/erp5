@@ -167,11 +167,16 @@ shared = true
         updater.checkout()
         revision_list.append((repository_id, updater.getRevision()))
     except SubprocessError as error:
-      # only limit to particular error, if we run that code for all errors,
-      # then if server having most repositories is down for some time, we would
-      # erase all repositories and facing later hours of downloads
-      if b'index' in getattr(error, 'stderr', b''):
-        rmtree(repository_path)
+      # Check if the repository is corrupted (e.g. truncated index) by running
+      # a porcelain git command. Only delete the repository if it is actually
+      # corrupted, to avoid unnecessary re-cloning.
+      if os.path.isdir(repository_path):
+        try:
+          self.process_manager.spawn(
+            config['git_binary'], 'status', '--porcelain',
+            cwd=repository_path, log_prefix='git')
+        except SubprocessError:
+          rmtree(repository_path)
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=True)
       return False
