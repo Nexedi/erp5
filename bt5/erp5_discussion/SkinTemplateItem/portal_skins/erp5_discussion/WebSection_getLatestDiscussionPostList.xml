@@ -53,15 +53,6 @@
             <value> <string>**kw</string> </value>
         </item>
         <item>
-          <key> <string>_proxy_roles</string> </key>
-          <value>
-            <tuple>
-              <string>Assignor</string>
-              <string>Assignee</string>
-            </tuple>
-          </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_getLatestDiscussionPostList</string> </value>
         </item>
