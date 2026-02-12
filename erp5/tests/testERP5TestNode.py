@@ -496,6 +496,34 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
 
+  def test_05g_DontDeleteRepositoryOnNonCorruptionError(self):
+    """
+    When git fetch fails for a reason other than index corruption (e.g.
+    the remote is temporarily unavailable), the repository should not be
+    deleted. Only repositories with an actually corrupted index should be
+    removed.
+
+    The old implementation checked if 'index' appeared in the error message,
+    which could cause false positives (e.g. branch names containing 'index').
+    """
+    self.generateTestRepositoryList()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertTrue(rev_list is not None)
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
+    # Make fetch fail by deleting the remote repository
+    shutil.rmtree(self.remote_repository0)
+    # updateRevisionList should fail ...
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEqual(None, rev_list)
+    # ... but the local repository should NOT be deleted since its index is fine
+    self.assertTrue(os.path.isdir(rep0_clone_path))
+
   def test_update_revision_with_head_at_merge(self):
     """Test update revision when the head of the branch is a merge commit.
     """
