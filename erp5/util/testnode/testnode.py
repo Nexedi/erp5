@@ -38,6 +38,7 @@ from subprocess import CalledProcessError
 from .Updater import Updater
 from .NodeTestSuite import NodeTestSuite, SlapOSInstance
 from .ScalabilityTestRunner import ScalabilityTestRunner
+from .SlapOSControler import SlapOSControler
 from .UnitTestRunner import UnitTestRunner
 from .Utils import deunicodeData
 from .. import taskdistribution
@@ -166,13 +167,18 @@ shared = true
         updater.checkout()
         revision_list.append((repository_id, updater.getRevision()))
     except SubprocessError as error:
-      # only limit to particular error, if we run that code for all errors,
-      # then if server having most repositories is down for some time, we would
-      # erase all repositories and facing later hours of downloads
-      if b'index' in getattr(error, 'stderr', b''):
-        rmtree(repository_path)
+      # Check if the repository is corrupted (e.g. truncated index) by running
+      # a porcelain git command. Only delete the repository if it is actually
+      # corrupted, to avoid unnecessary re-cloning.
+      if os.path.isdir(repository_path):
+        try:
+          self.process_manager.spawn(
+            config['git_binary'], 'status', '--porcelain',
+            cwd=repository_path, log_prefix='git')
+        except SubprocessError:
+          rmtree(repository_path)
       logger.warning("Error while getting repository, ignoring this test suite",
-                     exc_info=1)
+                     exc_info=True)
       return False
     node_test_suite.revision_list = revision_list
     return True
@@ -254,7 +260,39 @@ shared = true
             else:
               os.remove(folder_path)
         except OSError:
-          logger.warning("_cleanupTemporaryFiles exception", exc_info=1)
+          logger.warning("_cleanupTemporaryFiles exception", exc_info=True)
+
+  def _pruneSlapOS(self):
+    """Run 'slapos node prune' to remove old unused software releases.
+
+    Run at most once every max_log_time days, using a timestamp file to persist
+    across restarts.
+    """
+    slapos_directory = self.config['slapos_directory']
+    timestamp_file = os.path.join(slapos_directory, '.prune_timestamp')
+    prune_interval = 86400 * self.max_log_time
+
+    try:
+      last_prune = os.stat(timestamp_file).st_mtime
+    except OSError:
+      last_prune = 0
+
+    if time.time() - last_prune < prune_interval:
+      return
+
+    software_root_list = [
+      SlapOSControler(
+        node_test_suite.working_directory,
+        self.config,
+      ).software_root for (_, node_test_suite) in sorted(self.node_test_suite_dict.items())
+    ]
+    slapos_controler = SlapOSControler(self.working_directory, self.config)
+    # just set the process manager, we do not need to initalize this slapos and start the proxy
+    slapos_controler.process_manager = self.process_manager
+    slapos_controler.prune(software_root_list)
+
+    with open(timestamp_file, 'w') as f:
+      f.write(str(time.time()))
 
   def cleanUp(self):
     logger.debug('Testnode.cleanUp')
