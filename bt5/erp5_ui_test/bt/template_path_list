@@ -1,5 +1,6 @@
 portal_categories/foo_big_category/**
 portal_categories/foo_category/**
+portal_categories/foo_no_portal_type_filter_category/**
 portal_domains/foo_domain
 portal_tests/access_tab_zuite
 portal_tests/access_tab_zuite/**
