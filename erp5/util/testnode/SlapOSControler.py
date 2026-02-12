@@ -352,7 +352,7 @@ class SlapOSControler(object):
     # so be tolerant and run it a few times before giving up
     for _ in range(MAX_SR_RETRIES):
       status_dict = self.spawn(config['slapos_binary'],
-                 'node', 'software', '--all',
+                 'node', 'software', '--force',
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
       if status_dict['status_code'] == 0:
