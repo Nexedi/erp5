@@ -188,13 +188,14 @@ class SqliteDB(TM):
         self._connection = connection
         self._parse_connection_string()
         self._forceReconnection()
-        transactional = 0
+        transactional = 1
         if self._try_transactions == '-':
             transactional = 0
-        elif not transactional and self._try_transactions == '+':
-            raise NotSupportedError("transactions not supported by this server")
+        elif self._try_transactions == '+':
+            transactional = 1
+
         self._transactions = transactional
-        self._use_TM = transactional or self._mysql_lock
+        self._use_TM = transactional
 
     def _parse_connection_string(self):
         self._mysql_lock = self._try_transactions = None
@@ -428,14 +429,14 @@ class SqliteDB(TM):
         try:
             self._transaction_begun = True
             if self._transactions:
-                self._query("BEGIN", allow_reconnect=True)
+                self._query(b"BEGIN", allow_reconnect=True)
         except:
             LOG('SQLiteDA', ERROR, "exception during _begin",
                 error=True)
             raise
 
     def tpc_vote(self, *ignored):
-        self._query("SELECT 1")
+        self._query(b"SELECT 1")
         return TM.tpc_vote(self, *ignored)
 
     def _finish(self, *ignored):
@@ -444,7 +445,7 @@ class SqliteDB(TM):
             return
         self._transaction_begun = False
         if self._transactions:
-            self._query("COMMIT")
+            self._query(b"COMMIT")
 
     def _abort(self, *ignored):
         """Rollback a transaction (when TM is enabled)."""
@@ -460,7 +461,7 @@ class SqliteDB(TM):
         # trigger an abort on its side.
         try:
             if self._transactions:
-                self._query("ROLLBACK")
+                self._query(b"ROLLBACK")
             else:
                 LOG('SQLiteDA', ERROR, "aborting when non-transactional")
         except OperationalError as m:
