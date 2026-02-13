@@ -353,7 +353,6 @@ class SlapOSControler(object):
     for _ in range(MAX_SR_RETRIES):
       status_dict = self.spawn(config['slapos_binary'],
                  'node', 'software', '--all',
-                 '--pidfile', os.path.join(self.software_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
       if status_dict['status_code'] == 0:
@@ -378,7 +377,6 @@ class SlapOSControler(object):
     # may "expand"
     for _ in range(max_quantity):
       status_dict = self.spawn(config['slapos_binary'], 'node', 'instance',
-                 '--pidfile', os.path.join(self.instance_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)
       logger.debug('slapgrid_cp status_dict : %r', status_dict)
