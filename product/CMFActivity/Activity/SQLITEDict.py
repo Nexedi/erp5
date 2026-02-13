@@ -124,7 +124,7 @@ class SQLDict(SQLBase):
             result = db.query(b"SELECT uid FROM message"
               b" WHERE processing_node = 0 AND (path = %s OR path LIKE %s)"
               b"%s" % (
-                quote(path), quote(path.replace('_', r'\_') + '/%'),
+                quote(path), quote(path + '/%'),
                 sql_method_id,
               ), 0)[1]
             reserve_uid_list = [x for x, in result]
