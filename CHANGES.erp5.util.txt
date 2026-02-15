@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.80 (2026-02-13)
+-------------------
+
+  * testnode:
+     - run slapos node prune
+     - fix crashes when branch name contains `index`
+     - use new --force option of slapos instead of deprecated --all
+
 0.4.79 (2026-01-29)
 -------------------
 
