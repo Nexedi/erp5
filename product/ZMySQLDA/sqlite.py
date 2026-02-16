@@ -270,7 +270,16 @@ class SqliteDB(TM):
             pass
 
       self.db = sqlite3.connect(self._connection, check_same_thread=False)
+      def subdate(date_str, days):
+        if date_str.lower() in ('current_date', 'now'):
+            dt = Datetime()
+        else:
+            dt = DateTime(date_str)
+        dt -= days
+        return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
+
       self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
+      self.db.create_function("SUBDATE", 2, subdate)
 
       #self.db.execute("PRAGMA journal_mode=WAL")
       #self.db.execute("PRAGMA foreign_keys=ON")
