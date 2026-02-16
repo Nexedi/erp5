@@ -106,6 +106,7 @@
                         <string>my_bar_category_id_list</string>
                         <string>my_successor_title</string>
                         <string>my_foo_line_foo_category_title</string>
+                        <string>my_foo_no_portal_type_filter_category_title</string>
                       </list>
                     </value>
                 </item>
