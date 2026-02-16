@@ -270,6 +270,7 @@ class SqliteDB(TM):
             pass
 
       self.db = sqlite3.connect(self._connection, check_same_thread=False)
+      self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
 
       #self.db.execute("PRAGMA journal_mode=WAL")
       #self.db.execute("PRAGMA foreign_keys=ON")
