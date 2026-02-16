@@ -89,7 +89,11 @@ if 1:
 # Workaround bad use of getcwd() in docutils.
 # Required by PortalTransforms.transforms.rest
 from docutils import utils
-utils.relative_path = lambda source, target: os.path.abspath(target)
+def relative_path(source, target):
+  if not source:
+    return os.path.abspath(target)
+  return os.path.relpath(source, target)
+utils.relative_path = relative_path
 
 def patch_linecache():
   import linecache
