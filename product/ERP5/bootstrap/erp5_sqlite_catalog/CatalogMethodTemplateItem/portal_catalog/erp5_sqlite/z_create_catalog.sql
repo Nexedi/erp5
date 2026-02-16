@@ -66,9 +66,9 @@ CREATE INDEX event_state ON catalog (event_state);
 CREATE TRIGGER trg_catalog_indexation_timestamp
 AFTER UPDATE ON catalog
 FOR EACH ROW
+WHEN NEW.indexation_timestamp = OLD.indexation_timestamp
 BEGIN
   UPDATE catalog
   SET indexation_timestamp = CURRENT_TIMESTAMP
   WHERE uid = NEW.uid;
 END;
-
