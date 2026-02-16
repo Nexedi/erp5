@@ -28,6 +28,7 @@
 """Tests Bank Reconciliation
 """
 
+import os
 import unittest
 
 from DateTime import DateTime
@@ -41,6 +42,10 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
   """Test Bank Reconciliation
 
   """
+  def _getTestDataPath(self):
+    from Products.ERP5OOo import tests
+    return os.path.join(os.path.join(tests.__path__[0], 'test_document'))
+
   def getBusinessTemplateList(self):
     return AccountingTestCase.getBusinessTemplateList(self) + (
         'erp5_bank_reconciliation',)
@@ -723,6 +728,136 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         [bank_reconciliation_for_main_section],
         internal_transaction.bank.getAggregateValueList())
 
+  def test_BankReconciliation_import_file(self):
+    bank_reconciliation_value = self.portal.bank_reconciliation_module.newContent(
+      portal_type='Bank Reconciliation',
+      title='Bank Reconciliation with imported content',
+      source_section_value=self.section,
+      source_payment_value=self.bank_account,
+      start_date=DateTime(2025, 1, 1),
+      stop_date=DateTime(2025, 1, 31),
+    )
+    bank_reconciliation_value.open()
+    self.commit()
+
+    f = self.makeFileUpload('import_bank_reconciliation.ods')
+    listbox = (
+      {
+        'listbox_key': '001',
+        'portal_type_property_list':'Bank Reconciliation Line.start_date',
+      },
+      {
+        'listbox_key': '002',
+        'portal_type_property_list':'Bank Reconciliation Line.stop_date',
+      },
+      {
+        'listbox_key': '003',
+        'portal_type_property_list':'Bank Reconciliation Line.title',
+      },
+      {
+        'listbox_key': '004',
+        'portal_type_property_list':'Bank Reconciliation Line.source_credit',
+      },
+      {
+        'listbox_key': '005',
+        'portal_type_property_list':'Bank Reconciliation Line.source_debit',
+      },
+    )
+    bank_reconciliation_value.Base_importFile(import_file=f, listbox=listbox)
+    self.tic()
+
+    # Assert: lines created, `hasLineContent` works
+    self.assertTrue(bank_reconciliation_value.hasLineContent())
+    expected_line_list = [
+      { "start_date_day": 5, "stop_date_day": 5, "title": "VIR Free", "credit": 0.0, "debit": 20.0 },
+      { "start_date_day": 11, "stop_date_day": 13, "title": "VIR INC Client", "credit": 10000.0, "debit": 0.0 },
+      { "start_date_day": 18, "stop_date_day": 18, "title": "PRLV SFR", "credit": 0.0, "debit": 30.0 },
+      { "start_date_day": 26, "stop_date_day": 26, "title": "VIR Payable", "credit": 0.0, "debit": 7500.0 },
+    ]
+    for line_value, line_dict in zip(bank_reconciliation_value.objectValues(), expected_line_list):
+      # Assert: bank line matches ODS file line
+      self.assertEqual(line_dict, {
+        "start_date_day": line_value.getStartDate().day(),
+        "stop_date_day": line_value.getStopDate().day(),
+        "title": line_value.getTitle(),
+        "credit": line_value.getSourceCredit(),
+        "debit": line_value.getSourceDebit(),
+      })
+      line_dict["delivery"] = line_value.getRelativeUrl()
+
+    # Assert: `getQuantityRangeMax` works
+    bank_reconciliation_value.setQuantityRangeMin(1000.0)
+    self.assertEqual(bank_reconciliation_value.getQuantityRangeMax(), 3450.0)
+
+    bank_reconciliation_value.setSpecialiseValue(self.portal.business_process_module.bank_reconciliation_business_process)
+    self.tic()
+    # Assert: an Applied Rule is created
+    self.assertEqual(1, len(bank_reconciliation_value.getCausalityRelatedList()))
+
+    expected_movement_list = []
+    for line_dict in expected_line_list:
+      movement_bank_dict = {
+        "start_date_day": line_dict["start_date_day"],
+        "stop_date_day": line_dict["stop_date_day"],
+        "quantity": line_dict["debit"] - line_dict["credit"],
+        "aggregate": line_dict["delivery"],
+        "is_bank": True,
+      }
+      expected_movement_list.append(movement_bank_dict)
+      movement_dict = movement_bank_dict.copy()
+      movement_dict.update({
+        "quantity": line_dict["credit"] - line_dict["debit"],
+        "is_bank": False,
+      })
+      expected_movement_list.append(movement_dict)
+
+    applied_rule = bank_reconciliation_value.getCausalityRelatedValue()
+    simulation_movement_list = sorted(applied_rule.objectValues(), key=lambda m: (m.getAggregate(), m.getQuantity()))
+    expected_simulation_movement_list = sorted(expected_movement_list, key=lambda d: (d["aggregate"], d["quantity"]))
+    for movement_value, movement_dict in zip(simulation_movement_list, expected_simulation_movement_list):
+      # Assert: Simulation Movement matches expected movement
+      self.assertEqual(movement_dict, {
+        "start_date_day": movement_value.getStartDate().day(),
+        "stop_date_day": movement_value.getStopDate().day(),
+        "quantity": movement_value.getQuantity(),
+        "aggregate": movement_value.getAggregate(),
+        # Excluded property
+        "is_bank": movement_dict["is_bank"],
+      })
+
+    # XXX-Titouan: should we manually call builder? What is expected? Maybe triggered on user action.
+    transaction_list = self.portal.portal_deliveries.bank_reconciliation_payment_transaction_builder.build()
+    # Assert: one transaction was created per Bank Reconciliation Line. Ensures good builder
+    # configuration.
+    self.assertEqual(len(expected_line_list), len(transaction_list))
+    for transaction_value in transaction_list:
+      bank_aggregate = None
+      for transaction_line_value in transaction_value.objectValues():
+        if transaction_line_value.getAggregate():
+          bank_aggregate = transaction_line_value.getAggregateValue()
+      # Assert: title of the Accounting Transaction matches title from the Bank Reconciliation Line
+      self.assertEqual(bank_aggregate.getTitle(), transaction_value.getTitle())
+
+      expected_line_movement_list = sorted([m for m in expected_movement_list if m["aggregate"] == bank_aggregate.getRelativeUrl()], key=lambda d: d["quantity"])
+      movement_list = sorted(transaction_value.objectValues(), key=lambda m: m.getQuantity())
+      for movement_value, movement_dict in zip(movement_list, expected_line_movement_list):
+        if not movement_dict["is_bank"]:
+          movement_dict["aggregate"] = None
+
+        # Assert: Payment Transaction line matches expected movement
+        self.assertEqual(movement_dict, {
+          "start_date_day": movement_value.getStartDate().day(),
+          "stop_date_day": movement_value.getStopDate().day(),
+          "quantity": movement_value.getQuantity(),
+          "aggregate": movement_value.getAggregate(),
+          # Excluded property
+          "is_bank": movement_dict["is_bank"],
+        })
+
+    bank_reconciliation_value.objectValues()[0].edit(debit=30.0)
+    self.tic()
+    # Assert: no new lines were created. Ensures matching by aggregate works
+    self.assertEqual(len(expected_simulation_movement_list), len(bank_reconciliation_value.getCausalityRelatedValue().objectValues()))
 
 def test_suite():
   suite = unittest.TestSuite()
