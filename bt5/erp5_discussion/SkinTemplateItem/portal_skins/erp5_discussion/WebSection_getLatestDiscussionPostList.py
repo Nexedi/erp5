@@ -1,6 +1,9 @@
 """
   Get list of latest Posts which belong to a forum (i.e. websection + predicate)
 """
+limit = 100
+kw.pop("size", None)
+
 parent_uid_list = None
 
 forum = context.WebSection_getRelatedForum()
@@ -21,5 +24,6 @@ if not parent_uid_list:
 kw['sort_on'] = (('modification_date', 'DESC'),)
 kw['portal_type'] = 'Discussion Post'
 kw['parent_uid'] = parent_uid_list
+kw['limit'] = limit
 
 return context.portal_catalog(**kw)
