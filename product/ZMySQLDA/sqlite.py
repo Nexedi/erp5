@@ -269,7 +269,7 @@ class SqliteDB(TM):
         except Exception:
             pass
 
-      self.db = sqlite3.connect(self._connection, check_same_thread=False)
+      self.db = sqlite3.connect(self._kw_args['db'], check_same_thread=False)
       def subdate(date_str, days):
         if date_str.lower() in ('current_date', 'now'):
             dt = Datetime()
@@ -596,7 +596,7 @@ class DeferredSqliteDB(SqliteDB):
     """
     def __init__(self, *args, **kw):
         SqliteDB.__init__(self, *args, **kw)
-        #assert self._use_TM
+        assert self._use_TM
         self._sql_string_list = []
 
     def query(self, query_string, max_rows=1000, query_value = None):
