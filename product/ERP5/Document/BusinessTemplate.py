@@ -181,10 +181,7 @@ def _getCatalog(acquisition_context):
   """
   catalog_method_id_list = acquisition_context.getTemplateCatalogMethodIdList()
   if len(catalog_method_id_list) == 0:
-    try:
-      return acquisition_context.getPortalObject().portal_catalog.objectIds()[0]
-    except IndexError:
-      return None
+    return getattr(acquisition_context.getPortalObject().portal_catalog, 'default_erp5_catalog_id', None)
   catalog_method_id = catalog_method_id_list[0]
   return catalog_method_id.split('/')[0]
 
