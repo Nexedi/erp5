@@ -1,0 +1,78 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead>
+<tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=3&amp;set_successor:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/0?editable=true</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
+<!-- Grand successor should point to "Title 2" -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_grand_successor_title"]/div/div/div/a[.="Title 2"]</td>
+  <td></td>
+</tr>
+<!-- Click and make sure we land to "Title 2" -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope="field_my_grand_successor_title"]/div/div/div/a[.="Title 2"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id="field_my_quantity_read_only_percent" and .="800.0%"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@id="field_my_title"]</td>
+  <td>Title 2</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
