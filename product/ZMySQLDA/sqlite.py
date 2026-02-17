@@ -430,7 +430,7 @@ class SqliteDB(TM):
             .replace(b'\n', b'\\n')
             .replace(b'\r', b'\\r')
             .replace(b'\32', b'\\Z')
-            .replace(b"'", b"\\'")
+            .replace(b"'", b"''")
         )
         return tmp
 
