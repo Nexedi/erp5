@@ -1,6 +1,8 @@
-/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+  mergeGlobalActionWithRawActionList */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+           mergeGlobalActionWithRawActionList) {
   "use strict";
 
   function generateSection(title, icon, view_list) {
@@ -69,21 +71,34 @@
 
           var i,
             j,
-            url_for_kw_list = [];
+            url_for_kw_list = [],
+            url_mapping = mergeGlobalActionWithRawActionList(
+              gadget.state.jio_key,
+              gadget.state.view,
+              gadget.state.jump_view,
+              jio_attachment._links,
+              [
+                "action_object_jio_exchange",
+                "action_object_jio_report",
+                "action_object_jio_print"
+              ],
+              {
+                "action_object_jio_exchange": "display_with_history_and_cancel",
+                "action_object_jio_report": "display_with_history_and_cancel",
+                "action_object_jio_print": "display_with_history_and_cancel"
+              }
+            );
 
           group_list = [
             // Action list, icon
-            ensureArray(erp5_document._links.action_object_jio_exchange), "exchange",
-            ensureArray(erp5_document._links.action_object_jio_report), "bar-chart-o",
-            ensureArray(erp5_document._links.action_object_jio_print), "print"
+            ensureArray(url_mapping.action_object_jio_exchange), "exchange",
+            ensureArray(url_mapping.action_object_jio_report), "bar-chart-o",
+            ensureArray(url_mapping.action_object_jio_print), "print"
           ];
 
           for (i = 0; i < group_list.length; i += 2) {
             for (j = 0; j < group_list[i].length; j += 1) {
-              url_for_kw_list.push({command: 'display_with_history_and_cancel', options: {
-                jio_key: gadget.state.jio_key,
-                view: group_list[i][j].href
-              }});
+              url_for_kw_list.push(group_list[i][j].url_kw);
             }
           }
 
@@ -130,4 +145,5 @@
       return;
     });
 
-}(window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+  mergeGlobalActionWithRawActionList));
