@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Utils import unicode2str
 from MySQLdb import ProgrammingError
 from six.moves import range
+from sqlite3 import OperationalError
 
 class TestIdTool(ERP5TypeTestCase):
 
@@ -47,6 +48,7 @@ class TestIdTool(ERP5TypeTestCase):
     self.id_tool = self.portal.portal_ids
     self.id_tool.initializeGenerator(all=True)
     self.createGenerators()
+    self.catalog_storage = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_catalog').getTitle()
     self.tic()
 
   def beforeTearDown(self):
@@ -386,7 +388,11 @@ class TestIdTool(ERP5TypeTestCase):
     # "Waiting for table metadata lock"
     sql_connection = portal.erp5_sql_transactionless_connection
     query = 'select last_id from portal_ids where id_group="foo_bar"'
-    self.assertRaises(ProgrammingError, sql_connection.manage_test, query)
+    if self.catalog_storage == 'erp5_mysql_innodb_catalog':
+      self.assertRaises(ProgrammingError, sql_connection.manage_test, query)
+    else:
+      self.assertRaises(OperationalError, sql_connection.manage_test, query)
+
     generator.rebuildSqlTable()
     result = sql_connection.manage_test(query)
     self.assertEqual(result[0].last_id, 4)
