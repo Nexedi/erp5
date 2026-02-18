@@ -281,7 +281,8 @@ class SqliteDB(TM):
       self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
       self.db.create_function("SUBDATE", 2, subdate)
 
-      #self.db.execute("PRAGMA journal_mode=WAL")
+      self.db.execute("PRAGMA journal_mode=WAL")
+      self.db.execute("PRAGMA busy_timeout=10000")
       #self.db.execute("PRAGMA foreign_keys=ON")
 
 
