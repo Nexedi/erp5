@@ -35,7 +35,6 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
 
 class TestZeleniumCore(ERP5TypeFunctionalTestCase):
     foreground = 0
-    run_only = "document_zuite"
 
     def afterSetUp(self):
         # change ownership of the preference
