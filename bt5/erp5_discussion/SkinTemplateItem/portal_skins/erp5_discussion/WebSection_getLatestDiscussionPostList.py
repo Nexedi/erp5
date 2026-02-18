@@ -1,8 +1,11 @@
 """
   Get list of latest Posts which belong to a forum (i.e. websection + predicate)
 """
-limit = 100
-kw.pop("size", None)
+
+limit = kw.get("limit", 100)
+size = kw.pop("size", None)
+if size is not None:
+  limit = min(size, limit)
 
 parent_uid_list = None
 
