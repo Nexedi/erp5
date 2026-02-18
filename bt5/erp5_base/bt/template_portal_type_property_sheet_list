@@ -4,6 +4,7 @@ External Identifier | Coordinate
 External Identifier | SimpleItem
 Notification Message | ItemAggregation
 Notification Message | Reference
+Order Builder | OrderBuilderConstraint
 Organisation | DefaultImage
 Person | DefaultImage
 Person | ERP5User
