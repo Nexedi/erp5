@@ -644,7 +644,16 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       accessor_name = 'get%sValueList' % \
         ''.join([part.capitalize() for part in base_category.split('_')])
       try:
-        jump_reference_list = getattr(traversed_document, accessor_name)(
+        context_getter_id = field.get_value(
+          'context_getter_id'
+        ) if field.has_value(
+          'context_getter_id'
+        ) else None
+        if context_getter_id:
+          relation_document = getattr(traversed_document, context_getter_id)()
+        else:
+          relation_document = traversed_document
+        jump_reference_list = getattr(relation_document, accessor_name)(
           portal_type=[x[0] for x in field.get_value('portal_type')],
           filter=kw
         ) or []
