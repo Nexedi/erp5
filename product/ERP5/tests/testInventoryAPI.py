@@ -49,6 +49,7 @@ from zExceptions import BadRequest
 
 import six
 from six.moves import range
+import os
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -189,11 +190,17 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """ erp5_trade is required for transit_simulation_state
         erp5_apparel is required for item
     """
-    return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_pdm',
-            'erp5_dummy_movement', 'erp5_simulation',
-            'erp5_trade', 'erp5_apparel', 'erp5_project',
-            'erp5_configurator_standard_trade_template',
-            'erp5_simulation_test', 'erp5_stock_cache')
+    erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+    bt5_list = [
+      'erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_pdm',
+      'erp5_dummy_movement', 'erp5_simulation',
+      'erp5_trade', 'erp5_apparel', 'erp5_project',
+      'erp5_configurator_standard_trade_template',
+      'erp5_simulation_test'
+    ]
+    if erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      bt5_list.append('erp5_stock_cache')
+    return bt5_list
 
   # TODO: move this to a base class {{{
   @reindex
