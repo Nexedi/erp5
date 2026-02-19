@@ -181,9 +181,10 @@ def _getCatalog(acquisition_context):
   """
   catalog_method_id_list = acquisition_context.getTemplateCatalogMethodIdList()
   if len(catalog_method_id_list) == 0:
-    return getattr(acquisition_context.getPortalObject().portal_catalog, 'default_erp5_catalog_id', None)
-  catalog_method_id = catalog_method_id_list[0]
-  return catalog_method_id.split('/')[0]
+    default_erp5_catalog_id = getattr(acquisition_context.getPortalObject().portal_catalog, 'default_erp5_catalog_id', None)
+    return [default_erp5_catalog_id] if default_erp5_catalog_id else []
+  return list(set(catalog_method_id.split('/')[0] for catalog_method_id in catalog_method_id_list))
+
 
 def _getCatalogValue(acquisition_context):
   """
@@ -193,17 +194,17 @@ def _getCatalogValue(acquisition_context):
     NB: acquisition_context must make possible to reach portal object
         and getTemplateCatalogMethodIdList.
   """
-  catalog_id = _getCatalog(acquisition_context)
-  if catalog_id is None:
+  catalog_id_list = _getCatalog(acquisition_context)
+  if not catalog_id_list:
     return None
 
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
-  if catalog_id != default_catalog_id:
+  if default_catalog_id not in catalog_id_list:
     return None
   try:
-    return portal_catalog[catalog_id]
+    return portal_catalog[default_catalog_id]
   except KeyError:
     return None
 
