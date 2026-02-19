@@ -311,10 +311,10 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     exported = self.sql_generator.exportGeneratorIdDict()
     self.tic()
     self.portal.portal_ids.IdTool_zCommit()
-
-    self.portal.erp5_sql_connection.manage_test(
-      'ALTER TABLE portal_ids MODIFY COLUMN id_group VARBINARY(255)'
-    )
+    if self.portal.portal_templates.getInstalledBusinessTemplate('erp5_catalog').getTitle() == 'erp5_mysql_innodb_catalog':
+      self.portal.erp5_sql_connection.manage_test(
+        'ALTER TABLE portal_ids MODIFY COLUMN id_group VARBINARY(255)'
+      )
     self.tic()
     self.assertEqual(
       self.sql_generator.generateNewId(id_group=self.id()),
