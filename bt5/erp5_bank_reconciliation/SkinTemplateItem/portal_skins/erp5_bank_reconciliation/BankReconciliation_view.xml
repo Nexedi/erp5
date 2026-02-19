@@ -91,9 +91,9 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_credit</string>
-                        <string>listbox_date</string>
-                        <string>listbox_debit</string>
+                        <string>listbox_source_credit</string>
+                        <string>listbox_start_date</string>
+                        <string>listbox_source_debit</string>
                         <string>listbox_total_quantity</string>
                       </list>
                     </value>
@@ -106,6 +106,7 @@
                         <string>my_reference</string>
                         <string>my_source_section</string>
                         <string>my_source_payment</string>
+                        <string>my_specialise_title</string>
                       </list>
                     </value>
                 </item>
