@@ -47,7 +47,7 @@ def sqlquote(value):
       .replace('\x0a', r'\n')
       .replace('\x0d', r'\r')
       .replace('\x1a', r'\Z')
-      .replace('\x22', r'\"')
+      #.replace('\x22', r'\"')
       .replace('\x27', r"''")
     ) + "'"
   return "'" + (value
