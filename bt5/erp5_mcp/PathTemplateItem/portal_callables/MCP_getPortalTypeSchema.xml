@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>portal_type_id</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>callable_type/script</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Returns complete schema information for a specific portal type including all available columns and their properties.\n
+\n
+Results are returned in two formats:\n
+1. \'content\' field: Human-readable formatted display showing all columns with their properties\n
+2. \'structuredContent\' field: JSON object conforming to the outputSchema with the following structure:\n
+   - portal_type: string - The portal type ID that this schema applies to\n
+   - columns: object - Dictionary mapping column titles to their properties, where each property object includes:\n
+     * default: boolean - Whether this column appears by default in listings\n
+     * filterable: boolean - Whether this column can be used in search filters\n
+\n
+Use MCP_listPortalTypes first to discover available portal type IDs. The human-readable column titles are used as keys in the structured output, making it easy to reference columns in subsequent MCP_listPortalType calls. Non-filterable columns cannot be used in filter or sort parameters but may still be included in column_list for display.\n
+\n
+This tool is READ-ONLY and is NON-DESTRUCTIVE.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>MCP_getPortalTypeSchema</string> </value>
+        </item>
+        <item>
+            <key> <string>output_schema</string> </key>
+            <value> <string>{\n
+"$schema": "http://json-schema.org/draft-07/schema#",\n
+"type": "object",\n
+"description": "Schema information for a portal type, including all available columns and their properties",\n
+"properties": {\n
+"portal_type": {\n
+"type": "string",\n
+"description": "The portal type ID that this schema applies to"\n
+},\n
+"columns": {\n
+"type": "object",\n
+"description": "Dictionary mapping column titles to their properties",\n
+"patternProperties": {\n
+"^.*$": {\n
+"type": "object",\n
+"description": "Properties for a specific column",\n
+"properties": {\n
+"default": {\n
+"type": "boolean",\n
+"description": "Whether this column appears by default in listings"\n
+},\n
+"filterable": {\n
+"type": "boolean",\n
+"description": "Whether this column can be used for filtering and sorting"\n
+}\n
+},\n
+"additionalProperties": {\n
+"description": "Additional column properties (type, sortable, widget, etc.)"\n
+}\n
+}\n
+},\n
+"additionalProperties": false\n
+}\n
+},\n
+"required": ["portal_type", "columns"],\n
+"additionalProperties": false\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>read_only</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>MCP_getPortalTypeSchema</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MCP_getPortalTypeSchema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

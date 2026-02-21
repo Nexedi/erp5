@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>MCP Service</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>MCP Tool</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>MCP Tool Line</type>
+  <workflow>edit_workflow, mcp_tool_line_workflow</workflow>
+ </chain>
+</workflow_chain>
