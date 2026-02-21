@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Assignor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Associate</string>
+                <string>Member</string>
+                <string>Assignee</string>
+                <string>Manager</string>
+                <string>Auditor</string>
+                <string>Owner</string>
+                <string>Developer</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/lines</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Tools kept out of reach entirely while strip_personal_data is enabled, whatever they would return. Empty by default: the policy script redacts the fields of a record, and withholding a download outright is a deliberate per-service choice rather than the rule.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>personal_data_blocked_tool_property</string> </value>
+        </item>
+        <item>
+            <key> <string>multivalued</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: ()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
