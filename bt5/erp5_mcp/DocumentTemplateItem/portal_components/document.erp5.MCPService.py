@@ -35,9 +35,6 @@ import six
 from AccessControl import ClassSecurityInfo
 from BTrees.OOBTree import OOBTree
 from persistent import Persistent
-from zope.publisher.interfaces import IPublishTraverse
-import zope.component
-import zope.interface
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -70,7 +67,6 @@ from erp5.component.module.JsonRpc import (
 # only responds. Features that rely on server-initiated messages
 # (e.g. progress notifications, streaming updates, or dynamic resource
 # change events) are therefore not supported in this implementation.
-@zope.interface.implementer(IPublishTraverse)
 class MCPService(XMLObject):
   add_permission = Permissions.AddPortalContent
 
@@ -98,15 +94,22 @@ class MCPService(XMLObject):
 
   def __call__(self, *args, **kw):
     request = self.REQUEST
+    # XXX Is there any MCP Message which we could miss ?
+    #   Perhaps not, because it's always JSON-RPC e.g. always with JSON.
+    #   Then we could add these two lines to make editing in ERP5 more comfortable
+    #    -> yet test first to be sure that's ok !
+    #content_type = request.getHeader('Content-Type', '')
+    #if 'application/json' not in content_type:
+    #  return XMLObject.__call__(self, *args, **kw)
     request_method = request.method.lower()
     try:
       handler = getattr(self, "_handle%s" % request_method.capitalize())
     except AttributeError:
       request.response.setStatus(405)
       return ""
-    return handler(request)
+    return handler(request, *args, **kw)
 
-  def _handlePost(self, request):
+  def _handlePost(self, request, *args, **kw):
     try:
       payload = loadJson(request.get('BODY'))
     except BaseException as e:
@@ -119,7 +122,7 @@ class MCPService(XMLObject):
       response.setStatus(200, lock=True)
       return json.dumps(response_data, indent=2).encode()
 
-  def _handleGet(self, request):
+  def _handleGet(self, request, *args, **kw):
     # TODO get resource
     return "get"
 
