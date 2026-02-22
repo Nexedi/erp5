@@ -45,7 +45,8 @@ for test_result_repository in test_suite.contentValues(portal_type='Test Suite R
   buildout_section_id = buildout_section_id[:-11] if buildout_section_id.endswith('-repository') else buildout_section_id
   repository_data = repository_dict.setdefault(buildout_section_id, {})
   repository_data['repository_url'] = test_result_repository.getGitUrl()
-  repository_data['connector_relative_url'] = test_result_repository.getDestination()
+  connector = test_result_repository.getDestinationValue(checked_permission='View')
+  repository_data['connector_relative_url'] = connector.getRelativeUrl() if connector else None
   repository_data['test_result_line_pattern'] = test_result_repository.getSourceReference()
 
 
