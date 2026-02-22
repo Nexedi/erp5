@@ -9,6 +9,6 @@
  </chain>
  <chain>
   <type>MCP Tool Line</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, mcp_tool_line_workflow</workflow>
  </chain>
 </workflow_chain>
