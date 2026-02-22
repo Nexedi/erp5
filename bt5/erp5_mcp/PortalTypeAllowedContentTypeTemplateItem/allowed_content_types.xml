@@ -2,6 +2,9 @@
  <portal_type id="Callable Tool">
   <item>MCP Tool</item>
  </portal_type>
+ <portal_type id="MCP Tool">
+  <item>MCP Tool Line</item>
+ </portal_type>
  <portal_type id="Web Service Tool">
   <item>MCP Service</item>
  </portal_type>

@@ -48,9 +48,18 @@ class MCPTool(PythonScript):
     PropertySheet.MCPTool,
   )
 
+  def getParameterSignature(self):
+    parameter_list = []
+    for parm in self.objectValues(sort_on=('int_index', 'ascending', 'int')):
+      parameter_list.append(parm.getPythonArgumentString())
+    return ", ".join(parameter_list)
+
+  def setParameterSignature(self):
+    raise NotImplementedError  # XXX
+
   def getInputSchema(self):
     return _signatureStrToJsonschema(self.getInputSignature() or "")
-  
+
   def getOutputSchema(self):
     return _signatureStrToJsonschema(self.getOutputSignature() or "")
 

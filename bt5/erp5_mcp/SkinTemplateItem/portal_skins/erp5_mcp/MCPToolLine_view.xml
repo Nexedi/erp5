@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -36,6 +15,10 @@
         <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -74,21 +57,13 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_body</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_parameter_signature</string>
-                        <string>listbox</string>
-                        <string>my_description</string>
-                        <string>your_error_message</string>
-                        <string>your_warning_message</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -101,11 +76,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_title</string>
                         <string>my_reference</string>
-                        <string>my_callable_type</string>
-                        <string>my_portal_type</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>
@@ -113,7 +85,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_type</string>
+                        <string>my_parameter_default</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -122,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>MCPTool_view</string> </value>
+            <value> <string>MCPToolLine_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,7 +104,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ScriptPython_view</string> </value>
+            <value> <string>MCPToolLine_view</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>ERP5 Form</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -146,7 +124,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Script Python</string> </value>
+            <value> <string>MCP Tool Line</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
