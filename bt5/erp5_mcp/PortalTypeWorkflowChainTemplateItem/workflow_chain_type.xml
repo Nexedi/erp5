@@ -7,4 +7,8 @@
   <type>MCP Tool</type>
   <workflow>edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>MCP Tool Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
 </workflow_chain>
