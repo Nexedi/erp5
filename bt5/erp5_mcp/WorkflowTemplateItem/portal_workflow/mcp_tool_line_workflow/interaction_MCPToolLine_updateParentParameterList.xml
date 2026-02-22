@@ -46,7 +46,9 @@
             <key> <string>trigger_method_id</string> </key>
             <value>
               <tuple>
-                <string>_delObject, _setObject, edit</string>
+                <string>_delObject</string>
+                <string>_setObject</string>
+                <string>edit</string>
               </tuple>
             </value>
         </item>
