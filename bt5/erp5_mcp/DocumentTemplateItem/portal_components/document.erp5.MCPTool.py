@@ -28,6 +28,8 @@
 import re
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
+
 from Products.ERP5.Document.PythonScript import PythonScript
 from Products.ERP5Type import Permissions, PropertySheet
 
@@ -48,20 +50,24 @@ class MCPTool(PythonScript):
     PropertySheet.MCPTool,
   )
 
-  def getParameterSignature(self):
+  meta_type = 'ERP5 MCP Tool'
+  portal_type = 'MCP Tool'
+  add_permission = Permissions.AddPortalContent
+
+  def setParameterSignatureFromParameterList(self):
     parameter_list = []
     for parm in self.objectValues(sort_on=('int_index', 'ascending', 'int')):
       parameter_list.append(parm.getPythonArgumentString())
-    return ", ".join(parameter_list)
-
-  def setParameterSignature(self):
-    raise NotImplementedError  # XXX
+    self.setParameterSignature(", ".join(parameter_list))
 
   def getInputSchema(self):
     return _signatureStrToJsonschema(self.getInputSignature() or "")
 
   def getOutputSchema(self):
     return _signatureStrToJsonschema(self.getOutputSignature() or "")
+
+
+InitializeClass(MCPTool)
 
 
 def _signatureStrToJsonschema(sig_str):
