@@ -30,7 +30,7 @@
         // as user may have modified the input value
         render_timestamp: new Date().getTime()
       };
-      state_dict.text_content = state_dict.checked ? '✓' : '';
+      state_dict.text_content = state_dict.checked ? '🗸' : '🗴';
       return this.changeState(state_dict);
     })
 
