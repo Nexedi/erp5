@@ -7,66 +7,68 @@
 >
 
 SELECT
-  catalog.*
-FROM
-(
+  *
+FROM (
   SELECT
-    inner_catalog.*,
+    catalog.uid,
+    catalog.path,
+    catalog.int_index,
+    catalog.modification_date,
+    catalog.reference,
+    catalog.creation_date,
+    catalog.title,
+
+    (
+      CASE my_versioning.language
+           WHEN <dtml-sqlvar language type="string"> THEN '4'
+           WHEN '' THEN '3'
+           WHEN <dtml-sqlvar expr="Localizer.get_default_language() or 'en'" type="string"> THEN '2'
+           ELSE '1'
+      END
+      || my_versioning.version
+    ) AS priority
+
+    <dtml-if "query['select_expression']">
+      , <dtml-var "query['select_expression']">
+    </dtml-if>,
 
     ROW_NUMBER() OVER (
-      PARTITION BY
-        <dtml-var "query['group_by_expression'] or 'inner_catalog.uid'">
+      <dtml-if "query['group_by_expression']">
+        PARTITION BY <dtml-var "query['group_by_expression']">
+      </dtml-if>
       ORDER BY
-        inner_catalog.priority DESC
+        (
+          CASE my_versioning.language
+               WHEN <dtml-sqlvar language type="string"> THEN '4'
+               WHEN '' THEN '3'
+               WHEN <dtml-sqlvar expr="Localizer.get_default_language() or 'en'" type="string"> THEN '2'
+               ELSE '1'
+          END
+          || my_versioning.version
+        ) DESC
     ) AS rn
 
   FROM
-  (
-    SELECT
-      catalog.uid,
-      catalog.path,
-      catalog.int_index,
-      catalog.modification_date,
-      catalog.reference,
-      catalog.creation_date,
-      catalog.title,
+    <dtml-in prefix="table" expr="query['from_table_list']">
+      <dtml-var table_item> AS <dtml-var table_key>,
+    </dtml-in>
+    versioning AS my_versioning
 
-      (
-        CASE my_versioning.language
-             WHEN <dtml-sqlvar language type="string"> THEN '4'
-             WHEN '' THEN '3'
-             WHEN <dtml-sqlvar expr="Localizer.get_default_language() or 'en'" type="string"> THEN '2'
-             ELSE '1'
-        END
-        || my_versioning.version
-      ) AS priority
+  WHERE
+    my_versioning.uid = catalog.uid
 
-      <dtml-if "query['select_expression']">
-        , <dtml-var "query['select_expression']">
-      </dtml-if>
+    <dtml-if "query['where_expression']">
+      AND <dtml-var "query['where_expression']">
+    </dtml-if>
 
-    FROM
-      <dtml-in prefix="table" expr="query['from_table_list']">
-        <dtml-var table_item> AS <dtml-var table_key>,
-      </dtml-in>
-      versioning AS my_versioning
+    <dtml-if strict_language>
+      AND my_versioning.language IN (
+        <dtml-sqlvar language type="string">,
+        ''
+      )
+    </dtml-if>
 
-    WHERE
-      my_versioning.uid = catalog.uid
-
-      <dtml-if "query['where_expression']">
-        AND <dtml-var "query['where_expression']">
-      </dtml-if>
-
-      <dtml-if strict_language>
-        AND my_versioning.language IN (
-          <dtml-sqlvar language type="string">,
-          ''
-        )
-      </dtml-if>
-
-  ) AS inner_catalog
-) AS catalog
+) subquery
 
 WHERE rn = 1
 
