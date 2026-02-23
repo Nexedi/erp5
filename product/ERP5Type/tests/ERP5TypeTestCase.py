@@ -444,10 +444,12 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
     def changeContextByAddingAnAlarmPythonScript(self, *args, **kw):
       return TemporaryAlarmScript(self.getPortalObject(), *args, **kw)
 
-    def __assertAlarmVisit(self, expected_result, alarm, document, script_name, attribute=None):
+    def __assertAlarmVisit(self, expected_result, alarm, document, script_name, attribute=None, sense_kw=None):
       self.tic()
+      if sense_kw is None:
+        sense_kw = {}
       with self.changeContextByAddingAnAlarmPythonScript(script_name, attribute=attribute):
-        alarm.activeSense()
+        alarm.activeSense(**sense_kw)
         self.tic()
       if attribute is None:
         content = document.workflow_history['edit_workflow'][-1]['comment']
