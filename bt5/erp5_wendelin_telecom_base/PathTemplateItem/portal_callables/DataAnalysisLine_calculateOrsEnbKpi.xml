@@ -72,6 +72,14 @@
             </value>
         </item>
         <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple>
+                <string>Line 226: SyntaxError: invalid syntax. Perhaps you forgot a comma? at statement: \'cell_array = cell_data_array.initArray(shape=(0,), dtype=cdef appendCellDataListToDataArray(cell_data_array, cell_data_list, cell_dtype):\'</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>DataAnalysisLine_calculateOrsEnbKpi</string> </value>
         </item>
