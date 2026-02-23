@@ -18,6 +18,7 @@ e_utran_data_array = None
 cell_ue_count_data_array = None
 cell_rrc_data_array = None
 cell_rms_rx_data_array = None
+cell_ul_noise_indicator_data_array = None
 for array in out_array:
   if array['variation'] == 'e_rab':
     e_rab_data_array = array['Data Array']
@@ -29,6 +30,8 @@ for array in out_array:
     cell_rrc_data_array = array['Data Array']
   if array['variation'] == 'cell_rms_rx':
     cell_rms_rx_data_array = array['Data Array']
+  if array['variation'] == 'cell_ul_noise_indicator':
+    cell_ul_noise_indicator_data_array = array['Data Array']
 
 
 # No new data to process
@@ -114,6 +117,7 @@ evt, v_ip_throughput_qci = enb_xlog_data_dict['e_utran_ip_throughput']
 ue_count_data_list = enb_xlog_data_dict['ue_count']
 rrc_list = enb_xlog_data_dict['rrc']
 rms_rx_list = enb_xlog_data_dict['rms']['rx']
+ul_noise_indicator_list = enb_xlog_data_dict['ul_noise_indicator']
 
 e_rab_dtype = np.dtype([
   ('vt', 'float'),
@@ -128,6 +132,13 @@ e_utran_dtype = np.dtype([
   ('dl_hi', 'float64'),
   ('ul_lo', 'float64'),
   ('ul_hi', 'float64'),
+])
+
+cell_ul_noise_indicator_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('antenna', 'float'),
+  ('ul_noise_indicator', 'float')
 ])
 
 cell_ue_count_dtype = np.dtype([
@@ -239,6 +250,10 @@ appendCellDataListToDataArray(cell_rrc_data_array, rrc_list, cell_rrc_dtype)
 appendCellDataListToDataArray(cell_rms_rx_data_array,
                               rms_rx_list,
                               cell_rms_rx_dtype)
+
+appendCellDataListToDataArray(cell_ul_noise_indicator_data_array,
+                              ul_noise_indicator_list,
+                              cell_ul_noise_indicator_dtype)
 
 progress_indicator.setIntOffsetIndex(end)
 e_utran_data_array.activate().DataArray_updateActiveQciLines()
