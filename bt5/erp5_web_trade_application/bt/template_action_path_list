@@ -1,0 +1,30 @@
+Category | trade_jio_view
+Currency Module | currency_exchange_ratio_fast_input
+Currency | trade_jio_view
+Daily Statement Record Module | trade_jio_view
+Daily Statement Record Module | view
+Daily Statement Record | trade_jio_view
+Daily Statement Record | view
+Daily Statement Record | view_error
+Organisation Module | trade_jio_view
+Product Module | trade_jio_view
+Purchase Price Record Module | trade_jio_view
+Purchase Price Record Module | view
+Purchase Price Record | trade_jio_view
+Purchase Price Record | view
+Purchase Price Record | view_error
+Purchase Record Module | trade_jio_view
+Purchase Record Module | view
+Purchase Record | trade_jio_view
+Purchase Record | view
+Purchase Record | view_error
+Sale Price Record Module | trade_jio_view
+Sale Price Record Module | view
+Sale Price Record | trade_jio_view
+Sale Price Record | view
+Sale Price Record | view_error
+Sale Record Module | trade_jio_view
+Sale Record Module | view
+Sale Record | trade_jio_view
+Sale Record | view
+Sale Record | view_error
