@@ -23,6 +23,11 @@ for array in out_array:
   if array['variation'] == 'e_rab':
     e_rab_data_array = array['Data Array']
   if array['variation'] == 'e_utran':
+<<<<<<< HEAD
+=======
+    e_utran_data_array = array['Data Array']
+  if array['variation'] == 'cell_ul_noise_indicator':
+>>>>>>> 38c7cfd493 (add web page to display ul_noise_indicator)
     cell_ul_noise_indicator_data_array = array['Data Array']
   if array['variation'] == 'cell_ue_count':
     cell_ue_count_data_array = array['Data Array']
