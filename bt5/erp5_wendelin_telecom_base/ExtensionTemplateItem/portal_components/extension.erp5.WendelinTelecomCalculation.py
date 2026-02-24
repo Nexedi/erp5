@@ -105,7 +105,7 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
             rms_rx_index[pos][1],       # Antenna ID
             sample_rx['count'],
             sample_rx['max'],
-             sample_rx['rms'],
+            sample_rx['rms'],
             sample_rx['rms_dbm']
           ))
           # UL Noise Indicator KPI
