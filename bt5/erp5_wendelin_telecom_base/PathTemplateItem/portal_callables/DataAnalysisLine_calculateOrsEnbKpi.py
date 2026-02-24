@@ -24,7 +24,7 @@ for array in out_array:
     e_rab_data_array = array['Data Array']
   if array['variation'] == 'e_utran':
     e_utran_data_array = array['Data Array']
-  if array['variation'] == 'ue_noise_indicator':
+  if array['variation'] == 'cell_ul_noise_indicator':
     cell_ul_noise_indicator_data_array = array['Data Array']
   if array['variation'] == 'cell_ue_count':
     cell_ue_count_data_array = array['Data Array']
@@ -223,31 +223,7 @@ def appendCellDataListToDataArray(cell_data_array, cell_data_list, cell_dtype):
 
   cell_array = cell_data_array.getArray()
   if cell_array is None:
-    cell_array = cell_data_array.initArray(shape=(0,), dtype=cdef appendCellDataListToDataArray(cell_data_array, cell_data_list, cell_dtype):
-  cell_array_data = []
-  cell_array = None
-  if cell_data_array is None:
-    return
-
-  cell_array = cell_data_array.getArray()
-  if cell_array is None:
     cell_array = cell_data_array.initArray(shape=(0,), dtype=cell_dtype)
-
-  utc_column = cell_array[:]['utc']
-  first_new_row_utc = 0
-  utc = [i[0] for i in cell_data_list]
-  while (first_new_row_utc < len(utc) and utc[first_new_row_utc] in utc_column):
-    first_new_row_utc += 1
-
-  for idx in range(first_new_row_utc, len(utc)):
-    if utc[idx] not in utc_column:
-      cell_array_data.append(cell_data_list[idx])
-
-  if cell_array_data:
-    cell_array_data = np.ndarray((len(cell_array_data),),
-                               cell_dtype,
-                               np.array(cell_array_data))
-    cell_array.append(cell_array_data)ell_dtype)
 
   utc_column = cell_array[:]['utc']
   first_new_row_utc = 0
