@@ -64,8 +64,7 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
       rms_rx_index = []
       for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
         n_rb_ul = cell_data.get("n_rb_ul", 0)
-        n_rb_dl = cell_data.get("n_rb_dl", 0)
-        rms_rx_index.extend([(cell_id, ant_id+1, n_rb_ul, n_rb_dl) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))])
+        rms_rx_index.extend([(cell_id, ant_id+1, n_rb_ul) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))])
       is_config_updated = True
 
     if xlog_line_dict.get("message", None) == 'stats' and "cells" in xlog_line_dict:
