@@ -182,3 +182,4 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
       }))
 
   return enb_xlog_data_dict
+  
