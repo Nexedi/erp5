@@ -1,6 +1,6 @@
 <key_list>
- <key>SearchableText | DefaultKey</key>
- <key>catalog_full_text.description | DefaultKey</key>
- <key>catalog_full_text.title | DefaultKey</key>
- <key>full_text.SearchableText | DefaultKey</key>
+ <key>SearchableText | SqliteFullTextKey</key>
+ <key>catalog_full_text.description | SqliteFullTextKey</key>
+ <key>catalog_full_text.title | SqliteFullTextKey</key>
+ <key>full_text.SearchableText | SqliteFullTextKey</key>
 </key_list>
