@@ -32,6 +32,7 @@ import unittest
 from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
+import os
 
 class TestZeleniumCore(ERP5TypeFunctionalTestCase):
     foreground = 0
@@ -53,7 +54,9 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
         """
           Return the list of business templates.
         """
-        return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
+        erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+
+        base_list = ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
                 'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test',
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
                 'erp5_jquery', 'erp5_jquery_ui',
@@ -69,7 +72,6 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_configurator_standard_accounting_template',
                 'erp5_configurator_standard_invoicing_template',
                 'erp5_simulation_test',
-                'erp5_accounting_ui_test',
                 'erp5_project_ui_test',
                 'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
@@ -83,11 +85,13 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_rss_style', 'erp5_discussion',
                 'erp5_l10n_fr',
                 'erp5_l10n_fa',
-                # erp5_web_ui_test must run at the last, because it logs out
-                # manager user and continue other tests as a user created in
-                # that test.
-                'erp5_web_ui_test',
                 )
+        if erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+            base_list = base_list + ('erp5_accounting_ui_test', )
+        # erp5_web_ui_test must run at the last, because it logs out
+        # manager user and continue other tests as a user created in
+        # that test.
+        return base_list + ('erp5_web_ui_test',)
 
 def test_suite():
     suite = unittest.TestSuite()
