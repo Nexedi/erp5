@@ -120,25 +120,41 @@ match_select = re.compile(
 class SQLiteResult:
     def __init__(self, rows, description):
         _rows = rows or []
-        self._description = description
+        description = [list(col) for col in description] if description else description
         self._index = 0
         self._rows = []
         if _rows:
             for row in _rows:
                 new_row = []
-                for val, col_desc in zip(row, self._description):
+                for val, col_desc in zip(row, description):
                     col_name = col_desc[0]
                     if col_name.endswith('date') and isinstance(val, str):
                         if ' ' in val:
-                            new_row.append(DATETIME_to_DateTime_or_None(val))
+                            val = DATETIME_to_DateTime_or_None(val)
+                            new_row.append(val)
                         else:
-                            new_row.append(DATE_to_DateTime_or_None(val))
+                            val = DATE_to_DateTime_or_None(val)
+                            new_row.append(val)
                     else:
                         if isinstance(val, str):
                             val = val.replace('\\0', '\0')
                         new_row.append(val)
-
+                    value_type = col_desc[1]
+                    if value_type is None:
+                        if isinstance(val, bool):
+                            value_type = "i"
+                        elif isinstance(val, int):
+                            value_type = "i"
+                        elif isinstance(val, float):
+                            value_type = "n"
+                        elif isinstance(val, DateTime):
+                            value_type = "d"
+                        else:
+                            value_type = "t"
+                        col_desc[1] = value_type
                 self._rows.append(tuple(new_row))
+        self._description = [tuple(col) for col in description] if description else description
+
 
 
     def fetch_row(self, size=1):
@@ -245,15 +261,6 @@ class SqliteDB(TM):
                     warnings.warn("use '<db>@<unix_socket> ...' syntax instead",
                                   DeprecationWarning)
                     kwargs['unix_socket'] = items.pop(0)
-
-    defs={
-        FIELD_TYPE.CHAR: "i", FIELD_TYPE.DATE: "d",
-        FIELD_TYPE.DATETIME: "d", FIELD_TYPE.DECIMAL: "n",
-        FIELD_TYPE.DOUBLE: "n", FIELD_TYPE.FLOAT: "n", FIELD_TYPE.INT24: "i",
-        FIELD_TYPE.LONG: "i", FIELD_TYPE.LONGLONG: "l",
-        FIELD_TYPE.SHORT: "i", FIELD_TYPE.TIMESTAMP: "d",
-        FIELD_TYPE.TINY: "i", FIELD_TYPE.YEAR: "i",
-        }
 
     _p_oid=_p_changed=_registered=None
 
@@ -403,9 +410,8 @@ class SqliteDB(TM):
                     result = c.fetch_row(max_rows)
         if desc is None:
             return (), ()
-        get_def = self.defs.get
         items = [{'name': d[0],
-                  'type': get_def(d[1], "t"),
+                  'type': d[1],
                   'width': d[2],
                   'null': d[6]
                  } for d in desc]
