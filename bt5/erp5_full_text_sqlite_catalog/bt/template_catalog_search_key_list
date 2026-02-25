@@ -1,0 +1,4 @@
+SearchableText | DefaultKey
+catalog_full_text.description | DefaultKey
+catalog_full_text.title | DefaultKey
+full_text.SearchableText | DefaultKey
