@@ -1,2 +1,4 @@
 erp5_base
 erp5_accounting
+erp5_oauth2_authorisation
+erp5_oauth2_resource
