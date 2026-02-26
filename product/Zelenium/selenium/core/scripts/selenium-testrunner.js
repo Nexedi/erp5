@@ -524,7 +524,7 @@ objectExtend(HtmlTestCaseRow.prototype, {
            */
           function convertDocumentToDataUrl(doc){
             try {
-              return 'data:text/html;charset=utf-8;base64,' + b64EncodeUnicode(doc.body.innerHTML);
+              return 'data:text/html;charset=utf-8;base64,'; // + b64EncodeUnicode(doc.body.innerHTML);
             } catch (e) {
               // Document might be empty (after goBack)
               console.warn("Ignored error while converting document to data-url");
