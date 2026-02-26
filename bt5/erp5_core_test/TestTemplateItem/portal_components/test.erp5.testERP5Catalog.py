@@ -1635,9 +1635,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # the catalog.
     def updateDate(organisation,date):
       uid = organisation.getUid()
-      sql = "UPDATE catalog SET modification_date='%s' '\
-          'WHERE uid=%s" %\
-          (date,uid)
+      sql = "UPDATE catalog SET modification_date='%s' WHERE uid=%s" % (date,uid)
       sql_connection.manage_test(sql)
     updateDate(org_a,'2007-01-12 01:02:03')
     updateDate(org_b,'2006-02-24 15:09:06')
