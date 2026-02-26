@@ -160,6 +160,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.tic()
     # indexed already
     self.assertSameSet([discussion_thread], [x.getObject() for x in forum.DiscussionForum_getDiscussionThreadList()])
+    # test old size parameter backward compatibility
+    self.assertSameSet([discussion_thread], [x.getObject() for x in forum.DiscussionForum_getDiscussionThreadList(size=1)])
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
     attachment_list = discussion_post.DiscussionPost_getAttachmentList()
     self.assertEqual(discussion_thread.getValidationState(), 'shared')
