@@ -24,6 +24,7 @@ from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
 import time
 from sqlite3 import OperationalError
+import unicodedata
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -116,6 +117,26 @@ match_select = re.compile(
     br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
     re.IGNORECASE | re.DOTALL,
 ).match
+
+def utf8mb4_general_ci(a, b):
+    def normalize(text):
+        if text is None:
+            return ""
+        if not isinstance(text, str):
+            text = str(text)
+        text = unicodedata.normalize("NFKD", text)
+        text = "".join(
+            c for c in text
+            if not unicodedata.combining(c)
+        )
+        return text.casefold()
+    na = normalize(a)
+    nb = normalize(b)
+    if na < nb:
+        return -1
+    if na > nb:
+        return 1
+    return 0
 
 class SQLiteResult:
     def __init__(self, rows, description):
@@ -277,6 +298,9 @@ class SqliteDB(TM):
             pass
 
       self.db = sqlite3.connect(self._kw_args['db'], check_same_thread=False)
+      self.db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
+
+
       def subdate(date_str, days):
         if date_str.lower() in ('current_date', 'now'):
             dt = Datetime()

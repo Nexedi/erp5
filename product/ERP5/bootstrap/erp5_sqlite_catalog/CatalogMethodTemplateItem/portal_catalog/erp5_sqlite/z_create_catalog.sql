@@ -12,7 +12,7 @@ CREATE TABLE catalog (
   parent_uid INTEGER DEFAULT 0,
   id TEXT DEFAULT '',
   description TEXT,
-  title TEXT DEFAULT '',
+  title TEXT DEFAULT ''  COLLATE utf8mb4_general_ci,
   meta_type TEXT DEFAULT '',
   portal_type TEXT DEFAULT '',
   opportunity_state TEXT DEFAULT '',
