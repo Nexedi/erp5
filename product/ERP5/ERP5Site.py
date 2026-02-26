@@ -2618,6 +2618,8 @@ def initialize(self):
   from Products.ZMySQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
+    if kw.get('erp5_catalog_storage'):
+      default_kw['erp5_catalog_storage'] = kw.get('erp5_catalog_storage')
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
     # The lock is to avoid that multiple zopes try to create a site when
