@@ -1215,18 +1215,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # 'different' is found in more than 50% of records
     # MySQL ignores such a word, but Mroonga does not ignore.
-    if 'ENGINE=Mroonga' in self.portal.erp5_sql_connection.manage_test(
-        'SHOW CREATE TABLE full_text')[0][1]:
-      # Mroonga
-      self.assertEqual(10, self.getCatalogTool().countResults(
-                portal_type='Organisation', SearchableText='different')[0][0])
+    if self.catalog_storage == 'erp5_mysql_innodb_catalog':
+      if 'ENGINE=Mroonga' in self.portal.erp5_sql_connection.manage_test('SHOW CREATE TABLE full_text')[0][1]:
+        # Mroonga
+        self.assertEqual(10, self.getCatalogTool().countResults(
+                  portal_type='Organisation', SearchableText='different')[0][0])
+      else:
+        # MySQL
+        self.assertEqual([],
+            [x.getObject for x in self.getCatalogTool()(
+                    portal_type='Organisation', SearchableText='different')])
+        self.assertEqual(0, self.getCatalogTool().countResults(
+                  portal_type='Organisation', SearchableText='different')[0][0])
     else:
-      # MySQL
-      self.assertEqual([],
-          [x.getObject for x in self.getCatalogTool()(
-                  portal_type='Organisation', SearchableText='different')])
-      self.assertEqual(0, self.getCatalogTool().countResults(
-                portal_type='Organisation', SearchableText='different')[0][0])
+      self.assertEqual(10, self.getCatalogTool().countResults(
+        portal_type='Organisation', SearchableText='different')[0][0])
 
   def test_43_ManagePasteObject(self):
     person_module = self.getPersonModule()
