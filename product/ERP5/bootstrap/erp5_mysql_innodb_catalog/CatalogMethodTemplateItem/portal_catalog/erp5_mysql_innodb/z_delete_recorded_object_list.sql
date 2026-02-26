@@ -3,7 +3,9 @@ UPDATE
   record
 SET
   played = 1
-WHERE
+WHERE uid IN (
 <dtml-in uid_list>
-  uid = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+  <dtml-sqlvar sequence-item type="string">
+  <dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>
+)
