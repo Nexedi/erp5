@@ -580,6 +580,16 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
           [i.message for i in data_array.checkConsistency()])
         self.assertEqual(type(data_array.getArray()), array_class_type)
 
+      elif 'cell_ul_noise_indicator' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
+        self.assertEqual([i.message for i in data_array.checkConsistency()],
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
+
   def test_05_1_ingestValidOrsLogDataFromFluentd(self, data_key="valid"):
     '''
     Test a simple valid ORS log ingestion: simulate a fluentd gateway forwarding valid ORS logs to the platform,
@@ -669,6 +679,11 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       ingestion_item_dict[
         'data_acquisition_unit'
       ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_rms_rx'))
+    
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_ul_noise_indicator'))
 
     e_rab_array_shape = None
     e_rab_array_dtype = [
@@ -715,6 +730,13 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       ('rms', '<f8'),
       ('rms_dbm', '<f8')
     ]
+    cell_ul_noise_indicator_array_shape = None
+    cell_ul_noise_indicator_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('antenna', '<f8'),
+      ('ul_noise_indicator', '<f8')
+    ]
 
     if data_key in ["valid", "duplicated", "splitted"]:
       e_rab_array_shape = (82,)
@@ -722,18 +744,21 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       cell_ue_count_array_shape = (84,)
       cell_rrc_array_shape = (84,)
       cell_rms_rx_array_shape = (158,)
+      cell_ul_noise_indicator_array_shape = (158,)
     elif data_key == "invalid":
       e_rab_array_shape = (73,)
       e_utran_array_shape = (18688,)
       cell_ue_count_array_shape = (84,)
       cell_rrc_array_shape = (84,)
       cell_rms_rx_array_shape = (158,)
+      cell_ul_noise_indicator_array_shape = (158,)
     elif data_key == "empty":
       e_rab_array_dtype = None
       e_utran_array_dtype = None
       cell_ue_count_array_dtype = None
       cell_rrc_array_dtype = None
       cell_rms_rx_array_dtype = None
+      cell_ul_noise_indicator_array_dtype = None
 
 
     # Check the data types and shape of the Data Arrays
@@ -744,7 +769,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
         self.assertEqual(data_array.getArrayDtype(), e_rab_array_dtype)
 
         e_rab_kpi_dict = self.getOrsDataArrayAsDict(
-          data_array.getRelativeUrl(),
+          data_array.getRelativeUrl(),  
           'e_rab_accessibility'
         )
         if e_rab_array_shape is None:
@@ -893,6 +918,27 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
                 # Only 2 antenas are included so consider half of results.
                 self.assertEqual(cell_rms_rx_array_shape[0]/2,
                   len(rms_rx_per_cell_antenna_dict[key][col][ant]), rms_rx_per_cell_antenna_dict[key][col][ant])
+
+      elif 'cell_ul_noise_indicator' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(), cell_ul_noise_indicator_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_ul_noise_indicator_array_dtype)
+
+        ul_noise_indicator_per_cell_antenna_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'ul_noise_indicator'
+        )
+        if cell_ul_noise_indicator_array_shape is None:
+          self.assertEqual(ul_noise_indicator_per_cell_antenna_dict, {})
+        else:
+          for key in ul_noise_indicator_per_cell_antenna_dict:
+            # check number of cells + base
+            for col in ul_noise_indicator_per_cell_antenna_dict[key]:
+              # Only 2 antenas are included
+              self.assertEqual(len(ul_noise_indicator_per_cell_antenna_dict[key][col]), 2)
+              for ant in ul_noise_indicator_per_cell_antenna_dict[key][col]:
+                # Only 2 antenas are included so consider half of results.
+                self.assertEqual(cell_ul_noise_indicator_array_shape[0]/2,
+                  len(ul_noise_indicator_per_cell_antenna_dict[key][col][ant]), ul_noise_indicator_per_cell_antenna_dict[key][col][ant])
 
 
   def test_05_2_ingestInvalidOrsLogDataFromFluentd(self):
