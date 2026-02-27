@@ -11,7 +11,7 @@ REPLACE INTO
   full_text
 VALUES
     <dtml-in prefix="loop" expr="document_list">
-( 
+(
   <dtml-sqlvar expr="uid[loop_item]" type="int">,
   <dtml-sqlvar expr="SearchableText[loop_item]" type="string" optional>
 )<dtml-unless sequence-end>,</dtml-unless>
@@ -22,7 +22,7 @@ VALUES
 DELETE FROM
   full_text
 WHERE uid IN
-( 
+(
     <dtml-in prefix="loop" expr="delete_list">
   <dtml-sqlvar expr="uid[loop_item]" type="int"><dtml-unless sequence-end>,</dtml-unless>
     </dtml-in>
