@@ -177,6 +177,8 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
   for key, value in sorted(property_dict.items()):
     if context.getCxmlChanges():
       continue
+    if key == "cxml_quantity_unit":
+      continue
     if key == "portal_type" and value == "Address" and document.getPortalType() == "Cxml Address":
       continue
     if document.getPortalType() in ("Sale Packing List", "Sale Invoice Transaction") and key in ('order_date', 'int_index'):
@@ -206,7 +208,10 @@ def compare(document, property_dict, context_key='', context_title='', parent_co
             mapping=dict(context=context_title, key=title)
           ))
       else:
+        if value.get('portal_type') == 'Address' and key.endswith("_address") and context.getCxmlAddressChanges():
+          continue
         category_value = portal.restrictedTraverse(category)
+        context.getCxmlChanges()
         compare(category_value, value, context_key=key, parent_context_title=context_title)
     else:
       our_value = document.getProperty(key)
@@ -304,10 +309,10 @@ for int_index, line in line_dict.items():
         mapping=dict(int_index=int_index)
       ))
 
-# if there is only one line, copy dates from the line to the order:
 if fixit and context.getPortalType() == "Sale Order":
   movement_list = context.getMovementList()
   if len(movement_list) == 1:
+    # if there is only one line, copy dates from the line to the order:
     movement = movement_list[0]
     stop_date = movement.getStopDate()
     if stop_date:
@@ -317,5 +322,18 @@ if fixit and context.getPortalType() == "Sale Order":
     if start_date:
       context.setStartDate(start_date)
       movement.setStartDate(None)
+
+  else:
+    # if there are more lines copy earlist start date and latest sopt date to sale order:
+    start_date = float("inf")
+    stop_date = None
+    for movement in movement_list:
+      start_date = min(start_date, movement.getStartDate())
+      stop_date = max(stop_date, movement.getStopDate())
+
+    if start_date != float("inf") and not context.getStartDate():
+      context.setStartDate(start_date)
+    if stop_date:
+      context.setStopDate(stop_date)
 
 return error_list

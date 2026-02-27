@@ -1,5 +1,5 @@
 connector = context.Base_getCxmlConnectorValueForSale()
-return connector.getPayloadId().split('@')[0]
+#return connector.getPayloadId().split('@')[0]
 # if we get a new version of the order we always use "new" operation even
 # if we already sent an order confirmation
 #if context.getSimulationState() != "confirmed" and str(context.getVersion()) != "1":

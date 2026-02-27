@@ -1,5 +1,5 @@
-if str(context.getVersion()) != "1":
-  return "new"
+#if str(context.getVersion()) != "1":
+#  return "new"
 document_list = context.getFollowUpRelatedValueList(portal_type="Cxml Confirmation Request")
 for start_date, cxml_document in reversed(sorted([(x.getStartDate(), x) for x in document_list])):
   if cxml_document.getDocumentType() == "ConfirmationRequest":

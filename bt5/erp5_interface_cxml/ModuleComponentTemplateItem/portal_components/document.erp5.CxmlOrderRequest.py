@@ -186,7 +186,7 @@ class CxmlOrderRequest(CxmlDocument):
       stop_date = item_out.get("requestedDeliveryDate")
       schedule_line = item_out.find('ScheduleLine')
       if schedule_line is not None:
-        stop_date = schedule_line.get("requestedDeliveryDate") or stop_date
+        stop_date = stop_date or schedule_line.get("requestedDeliveryDate")
       if stop_date is not None:
         property_dict['stop_date'] = DateTime(stop_date)#.toZone('UTC').earliestTime()
       property_dict['quantity'] = float(item_out.get("quantity"))
@@ -204,6 +204,14 @@ class CxmlOrderRequest(CxmlDocument):
         unit_of_measure_text = get_text(item_detail, 'UnitOfMeasure')
         assert unit_of_measure_text in ("EA", "PC", "C62")
       property_dict['quantity_unit'] = "unit/piece"
+      price_basis_quantity = item_detail.find('PriceBasisQuantity')
+      if price_basis_quantity is not None:
+        priced_quantity = float(price_basis_quantity.get("quantity", 1))
+        assert price_basis_quantity.get("conversion_factor", 1) == 1
+        if priced_quantity != 1:
+          property_dict['quantity'] = property_dict['quantity'] / priced_quantity
+          property_dict['quantity_unit'] = "unit/piece%s" %int(priced_quantity)
+      property_dict['cxml_quantity_unit'] = unit_of_measure_text
       unit_price = item_detail.find('UnitPrice')
       if unit_price is not None:
         money = unit_price.find('Money')

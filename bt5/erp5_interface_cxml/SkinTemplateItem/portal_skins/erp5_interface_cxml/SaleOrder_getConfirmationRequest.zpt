@@ -37,22 +37,24 @@
       </OrderReference>
       <span tal:omit-tag="" tal:repeat="item here/SaleOrder_getConfirmationItemList">
       <ConfirmationItem tal:attributes="lineNumber item/index; quantity item/order_quantity">
-        <UnitOfMeasure>EA</UnitOfMeasure>
         <span tal:omit-tag="" tal:repeat="line item/line_list">
-        <ConfirmationStatus tal:attributes="deliveryDate python:line.getStopDate().ISO8601(); quantity line/getQuantity" type="accept">
+        <span tal:condition="repeat/line/start" tal:omit-tag="">
           <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
-          <ItemIn tal:condition="python: False" tal:attributes="lineNumber line/getIntIndex; quantity line/getQuantity">
+        </span>
+        <ConfirmationStatus tal:attributes="deliveryDate python:line.getStopDate().ISO8601(); quantity line/Movement_getCxmlQuantity" type="accept">
+          <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
+          <ItemIn tal:condition="python: False" tal:attributes="lineNumber line/getIntIndex; quantity line/Movement_getCxmlQuantity">
             <ItemID>
               <SupplierPartID tal:content="line/SaleOrderLine_getCxmlSupplierPartId"></SupplierPartID>
               <BuyerPartID  tal:content="python:line.getResourceValue().getDefaultSaleSupplyLineDestinationReference()"></BuyerPartID>
             </ItemID>
             <ItemDetail>
               <UnitPrice>
-                <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getPrice"></Money>
+                <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getTotalPrice"></Money>
               </UnitPrice>
               <Description xml:lang="en" tal:content="line/getDescription"></Description>
               <UnitOfMeasure  tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
-              <PriceBasisQuantity quantity="1" conversionFactor="1">
+              <PriceBasisQuantity tal:attributes="quantity line/Movement_getPriceBasisQuantity" conversionFactor="1">
                 <UnitOfMeasure>EA</UnitOfMeasure>
               </PriceBasisQuantity>
               <Classification domain="ERPCommodityCode" tal:content="python: line.getResourceValue().getCxmlClassificationId()"></Classification>

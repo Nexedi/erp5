@@ -10,7 +10,6 @@
                        source_section_address source_section/getDefaultAddressValue;
                        destination here/getDestinationValue;
                        destination_address python:here.Delivery_getDestinationAddressText()[0];
-                       destination_section here/getDestinationSectionValue;
                        destination_section_address python: here.getPortalObject().restrictedTraverse(here.getDestinationSectionAddress());
                        order python:here.getCausalityValue(portal_type='Sale Order');
                        order_request order/Order_getRelatedOrderRequestValue;
@@ -131,7 +130,7 @@
           </PaymentTerm>
           <IdReference domain="supplierReference" tal:attributes="identifier here/SaleInvoiceTransaction_getSupplierReference"/>
           <Extrinsic name="AribaNetwork.PaymentTermsExplanation" tal:content="here/SaleInvoiceTransaction_getAribaNetworkPaymentTermsExplanation"></Extrinsic>
-          <Extrinsic name="buyerVatID" tal:content="destination_section/getVatCode"></Extrinsic>
+          <Extrinsic name="buyerVatID" tal:content="here/getDestinationSectionVatCode"></Extrinsic>
           <Extrinsic name="supplierVatID" tal:content="here/SaleInvoice_getSourceSectionVatCode"></Extrinsic>
           <Extrinsic name="invoiceSourceDocument">PurchaseOrder</Extrinsic>
           <Extrinsic name="invoiceSubmissionMethod">cXML</Extrinsic>
@@ -148,7 +147,7 @@
           <span tal:omit-tag="" tal:repeat="line_dict data_dict/line_not_tax">
           <InvoiceDetailItem tal:define="line python: here[line_dict['id']]"
                              tal:attributes="invoiceLineNumber line_dict/int_index;
-                                             quantity line_dict/total_quantity">
+                                             quantity python: line_dict['total_quantity'] * line.Movement_getCxmlQuantityFactor()">
             <UnitOfMeasure tal:content="line/Movement_getUnitOfMeasure"></UnitOfMeasure>
             <UnitPrice>
               <Money tal:attributes="currency line/getPriceCurrencyId" tal:content="line/getPrice"></Money>
@@ -178,17 +177,20 @@
             <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="data_dict/total_price_novat"></Money>
           </SubtotalAmount>
           <span tal:omit-tag="" tal:repeat="line_tax python: here.SaleInvoiceTransaction_getTotalTaxData(data_dict['line_tax'])">
-          <Tax>
+          <Tax tal:define="exemption_dict here/SaleInvoiceTransaction_getCxmlExemptionDict">
             <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_price"></Money>
             <Description xml:lang = "en-US"></Description>
-            <TaxDetail category="vat" tal:attributes="exemptDetail python: here.SaleInvoiceTransaction_getExeptDetail() or nothing; percentageRate python: float(line_tax['base_price'] or 0) *100; taxPointDate python:here.getStartDate().ISO8601()">
+            <TaxDetail category="vat" tal:attributes="exemptDetail exemption_dict/exemptDetail; percentageRate python: float(line_tax['base_price'] or 0) *100; taxPointDate python:here.getStartDate().ISO8601()">
               <TaxableAmount>
                 <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_quantity"></Money>
               </TaxableAmount>
               <TaxAmount>
                 <Money tal:attributes="currency here/getPriceCurrencyId" tal:content="line_tax/total_price"></Money>
               </TaxAmount>
-              <Description tal:attributes="xml:lang language" tal:content="python: line_tax['description_text']"></Description>
+              <Description tal:attributes="xml:lang language" tal:content="python: exemption_dict['description'] or line_tax['description_text']"></Description>
+              <TaxExemption tal:attributes="exemptCode exemption_dict/exemptCode" tal:condition="exemption_dict/exemptCode">
+                <ExemptReason xml:lang="en" tal:content="exemption_dict/ExemptReason">Steuerschuldumkehr</ExemptReason>
+              </TaxExemption>
             </TaxDetail>
           </Tax>
           </span>

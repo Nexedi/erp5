@@ -105,9 +105,13 @@ class CxmlMultipartDocument(XMLObject):
     )
     message = email.Parser.Parser().parsestr(content)
     cxml_document_list = []
+    order_request_mapping = {}
     pdf_document_list = []
+    pdf_mapping = {}
+    boundary = None
     for part in message.walk():
       if part.is_multipart():
+        boundary = part.get_boundary()
         continue
       payload = part.get_payload(decode=0)
       if part.get_content_type() == "application/pdf":
@@ -123,19 +127,29 @@ class CxmlMultipartDocument(XMLObject):
           publication_section="verkauf/auftraege",
         )
         pdf_document.submit()
+        assert boundary is not None, "Multipart Boundary must not be None"
+        pdf_list = pdf_mapping.setdefault(boundary, [])
+        pdf_list.append(pdf_document)
         pdf_document_list.append(pdf_document)
       else:
         if "<OrderRequest>" in payload:
           portal_type = "Cxml Order Request"
         else:
           portal_type = "Cxml Document"
-        cxml_document_list.append(portal.cxml_document_module.newContent(
+        cxml_document =portal.cxml_document_module.newContent(
           portal_type=portal_type,
           text_content=payload,
-          causality_value=self))
-    for order_request in cxml_document_list:
-      if order_request.getPortalType() == "Cxml Order Request":
-        for pdf_document in pdf_document_list:
-          pdf_document.setFollowUpValue(order_request)
+          causality_value=self)
+        cxml_document_list.append(cxml_document)
+        if portal_type == "Cxml Order Request":
+          assert boundary is not None, "Multipart Boundary must not be None"
+          order_request_list = order_request_mapping.setdefault(boundary, [])
+          order_request_list.append(cxml_document)
+    for boundary, pdf_list in pdf_mapping.items():
+      order_request_list = order_request_mapping[boundary]
+      version = order_request_list[0].getVersion()
+      for pdf_document in pdf_list:
+        pdf_document.setVersion(version)
+        pdf_document.setFollowUpValueList(order_request_list)
     self.setSuccessorValueList(cxml_document_list + pdf_document_list)
     return cxml_document_list

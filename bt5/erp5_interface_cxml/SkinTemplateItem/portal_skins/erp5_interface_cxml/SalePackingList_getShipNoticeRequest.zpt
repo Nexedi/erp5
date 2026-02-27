@@ -103,7 +103,7 @@
             <DocumentReference tal:attributes="payloadID order/Order_getPayloadId"></DocumentReference>
           </OrderReference>
           <span tal:omit-tag="" tal:repeat="line python:here.objectValues(sort_on=[('int_index', 'ascending')], portal_type='Sale Packing List Line')">
-            <ShipNoticeItem tal:condition="line/getQuantity" tal:attributes="shipNoticeLineNumber line/getIntIndex; quantity line/getQuantity; lineNumber line/DeliveryLine_getOrderLineIntIndex">
+            <ShipNoticeItem tal:condition="line/Movement_getCxmlQuantity" tal:attributes="shipNoticeLineNumber line/getIntIndex; quantity line/Movement_getCxmlQuantity; lineNumber line/DeliveryLine_getOrderLineIntIndex">
               <ItemID>
                 <SupplierPartID tal:content="line/getResourceReference"></SupplierPartID>
                 <BuyerPartID tal:content="line/DeliveryLine_getResourceDestinationReference"></BuyerPartID>
