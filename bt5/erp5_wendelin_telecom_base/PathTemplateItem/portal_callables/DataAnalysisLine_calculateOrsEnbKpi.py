@@ -24,7 +24,7 @@ for array in out_array:
     e_rab_data_array = array['Data Array']
   if array['variation'] == 'e_utran':
     e_utran_data_array = array['Data Array']
-  if array['variation'] == 'ue_noise_indicator':
+  if array['variation'] == 'cell_ul_noise_indicator':
     cell_ul_noise_indicator_data_array = array['Data Array']
   if array['variation'] == 'cell_ue_count':
     cell_ue_count_data_array = array['Data Array']
