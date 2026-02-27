@@ -31,38 +31,24 @@ from __future__ import absolute_import
 
 from six import string_types as basestring
 from .SearchKey import SearchKey
+from .DefaultKey import DefaultKey
 from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 
-class SqliteFullTextKey(SearchKey):
+class SqliteFullTextKey(DefaultKey):
   """
   """
-  default_comparison_operator = 'like'
-  get_operator_from_value = True
+  default_comparison_operator = 'sqlite'
+
+  get_operator_from_value = False
 
   def parseSearchText(self, value, is_column):
     return parse(value, is_column)
 
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
-    """
-      Treat "!=" operator specialy:
-       - if the value contains at least one "%", change operator into "not like"
-       - otherwise, let it go untouched
-    """
-    result = []
-    if '!=' in operator_value_dict:
-      column = self.getColumn()
-      original_different_list = operator_value_dict.pop('!=')
-      different_list = []
-      for value in original_different_list:
-        if isinstance(value, basestring) and '%' in value:
-          result.append(SimpleQuery(search_key=self, group=group, comparison_operator='not like', **{column: value}))
-        else:
-          different_list.append(value)
-        if len(different_list):
-          operator_value_dict['!='] = different_list
-    return result + SearchKey._buildQuery(self, operator_value_dict, logical_operator, parsed, group)
+
+    return SearchKey._buildQuery(self, operator_value_dict, logical_operator, parsed, group)
 
 verifyClass(ISearchKey, SqliteFullTextKey)

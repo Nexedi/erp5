@@ -214,6 +214,41 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
 
 verifyClass(IOperator, SphinxSEComparisonOperator)
 
+
+class SqliteComparisonOperator(MonovaluedComparisonOperator):
+  def __init__(self, operator, mode=''):
+    MonovaluedComparisonOperator.__init__(self, operator, '')
+    self.where_expression_format_string = '%(column)s=%(value_list)s'
+    self.where_expression_format_string = '%%(table)s MATCH %%(value_list)s%s' % (mode, )
+    self.where_expression_format_string = (
+      "%(table)s.`uid` IN ("
+      "SELECT rowid FROM %(table_fts)s WHERE %(table_fts)s MATCH %(value_list)s"
+      ")"
+    )
+
+  def renderValue(self, value_list):
+    return self._renderValue(value_list)
+
+  def asSQLExpression(self, column, value_list, only_group_columns):
+    """
+      This operator can emit a select expression, so it overrides
+      asSQLExpression inseatd of just defining a render method.
+    """
+    table  = column.split('.')[0]
+    table_fts = table[:-1] + "_fts`"
+    match_string = self.where_expression_format_string % {
+      'table': table,
+      'table_fts': table_fts,
+      'value_list': self.renderValue(value_list)
+    }
+    return SQLExpression(
+      self,
+      where_expression=match_string,
+      can_merge_select_dict=True,
+    )
+
+verifyClass(IOperator, SphinxSEComparisonOperator)
+
 operator_dict = {
   '=': MonovaluedComparisonOperator('='),
   '!=': MonovaluedComparisonOperator('!='),
@@ -229,6 +264,7 @@ operator_dict = {
   'mroonga': MroongaComparisonOperator('mroonga'),
   'mroonga_boolean': MroongaComparisonOperator('mroonga_boolean', force_boolean=True),
   'sphinxse': SphinxSEComparisonOperator('sphinxse'),
+  'sqlite':SqliteComparisonOperator('sqlite'),
   'in': MultivaluedComparisonOperator('in'),
   'is': MonovaluedComparisonOperator('is'),
   'is not': MonovaluedComparisonOperator('is not', '!='),
