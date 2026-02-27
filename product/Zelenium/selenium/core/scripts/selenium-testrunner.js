@@ -972,7 +972,17 @@ objectExtend(HtmlTestCase.prototype, {
         } catch (e) {}
             
         this.htmlTestSuiteRow = htmlTestSuiteRow;
-        this.headerRow = new TitleRow(this.testDocument.getElementsByTagName("tr")[0]);
+        var trElements = this.testDocument.getElementsByTagName("tr");
+        if (!trElements.length) {
+            console.error("[DEBUG] No <tr> found in test document. URL:", this.pathname,
+                          "\nFull HTML:\n", this.testDocument.documentElement.outerHTML);
+            var tr = this.testDocument.createElement("tr");
+            tr.appendChild(this.testDocument.createElement("td"));
+            this.testDocument.body.appendChild(tr);
+            this.headerRow = new TitleRow(tr);
+        } else {
+            this.headerRow = new TitleRow(trElements[0]);
+        }
         this.commandRows = this._collectCommandRows();
         this.nextCommandRowIndex = 0;
         this._addBreakpointSupport();
