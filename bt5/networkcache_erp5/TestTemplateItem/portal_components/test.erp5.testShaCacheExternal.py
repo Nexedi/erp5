@@ -29,10 +29,6 @@
 
 
 import six
-if six.PY2:
-  from base64 import encodestring as base64_encodebytes
-else:
-  from base64 import encodebytes as base64_encodebytes
 import six.moves.http_client
 from unittest import expectedFailure
 from DateTime import DateTime
@@ -53,6 +49,9 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     """
     return "SHACACHE External - Real Usage Of ShaCache"
 
+  def getBusinessTemplateList(self):
+    return ('erp5_oauth2_resource', 'erp5_oauth2_authorisation')
+
   def afterSetUp(self):
     """
       Initialize the ERP5 site.
@@ -63,10 +62,9 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     ShaSecurityMixin.afterSetUp(self)
 
     # Define POST headers with Authentication
-    self.content_type =  'application/json'
-    authentication_string = b'lucas:lucas'
-    base64string = bytes2str(base64_encodebytes(authentication_string)).strip()
-    self.header_dict = {'Authorization': 'Basic %s' % base64string,
+    self.content_type = 'application/json'
+    token = self._generateOAuth2BearerToken('lucas')
+    self.header_dict = {'Authorization': 'Bearer %s' % token,
                         'Content-Type': self.content_type}
 
     # HTTP Connection properties

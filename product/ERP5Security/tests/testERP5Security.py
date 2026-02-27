@@ -1727,7 +1727,8 @@ class _TestKeyAuthenticationMixIn(object):
        interfaces=['IExtractionPlugin',
                    'IAuthenticationPlugin',
                    'ICredentialsUpdatePlugin',
-                   'ICredentialsResetPlugin'])
+                   'ICredentialsResetPlugin',
+                   'IChallengePlugin'])
     self.tic()
 
     reference = 'UserReferenceTextWhichShouldBeHardToGeneratedInAnyHumanOrComputerLanguage'

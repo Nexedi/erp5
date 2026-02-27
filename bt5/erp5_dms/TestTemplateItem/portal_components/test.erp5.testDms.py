@@ -94,7 +94,9 @@ class TestDocumentMixin(DocumentUploadTestCase):
                             'erp5_ingestion_mysql_innodb_catalog',
                             'erp5_ingestion',
                             'erp5_web',
-                            'erp5_dms']
+                            'erp5_dms',
+                            'erp5_oauth2_resource',
+                            'erp5_oauth2_authorisation']
 
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
@@ -212,10 +214,10 @@ class TestDocument(TestDocumentMixin):
     return (width, height)
 
   def getURLSizeList(self, uri, **kw):
-    kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
-    url = '%s?%s' % (uri, make_query(kw))
+    url = '%s?%s' % (uri, make_query(kw)) if kw else uri
     format_=kw.get('format', 'jpeg')
-    infile = urlopen(url)
+    token = self._generateOAuth2BearerToken(self.manager_username)
+    infile = urlopen(Request(url, headers={'Authorization': 'Bearer %s' % token}))
     try:
       image_data = infile.read()
     finally:
@@ -2321,9 +2323,9 @@ return 1
       Return original content on traversal.
     """
     def getURL(uri, **kw):
-      kw['__ac'] = bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
-      url = '%s?%s' % (uri, make_query(kw))
-      return urlopen(url)
+      url = '%s?%s' % (uri, make_query(kw)) if kw else uri
+      token = self._generateOAuth2BearerToken(self.manager_username)
+      return urlopen(Request(url, headers={'Authorization': 'Bearer %s' % token}))
 
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = self.makeFileUpload('TEST-en-003.odp')
