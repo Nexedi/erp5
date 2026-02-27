@@ -479,8 +479,13 @@ objectExtend(TitleRow.prototype, AbstractResultAwareRow.prototype);
 objectExtend(TitleRow.prototype, {
 
     initialize: function(trElement) {
-        this.trElement = trElement;
-        trElement.className = "title";
+        try {
+            this.trElement = trElement;
+            trElement.className = "title";
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
 
 });
