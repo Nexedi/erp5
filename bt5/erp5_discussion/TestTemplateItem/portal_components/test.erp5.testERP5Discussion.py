@@ -324,6 +324,8 @@ class TestERP5Discussion(DocumentUploadTestCase):
     new_post = discussion_thread_object1.newContent()
     self.tic()
     self.assertSameSet([new_post] + current_post_list, [x.getObject() for x in web_section1.WebSection_getLatestDiscussionPostList()])
+    # test old size parameter backward compatibility
+    self.assertEqual(1, len(web_section1.WebSection_getLatestDiscussionPostList(size=1)))
 
     # test archiving threads so the do not belong any more to web section document list
     discussion_thread_object1.archive()
