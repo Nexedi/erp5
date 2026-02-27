@@ -50,12 +50,14 @@ else:
   if password:
     # The password is updated synchronously and the the rest of the credential Update is done later
     login_reference = credential_update.Credential_updatePersonPassword()
-    portal.cookie_authentication.credentialsChanged(
-      person.Person_getUserId(),
-      login_reference,
-      password,
-      request=context.REQUEST,
-    )
+    cookie_authentication = getattr(portal, 'cookie_authentication', None)
+    if cookie_authentication is not None:
+      cookie_authentication.credentialsChanged(
+        person.Person_getUserId(),
+        login_reference,
+        password,
+        request=context.REQUEST,
+      )
     portal_status_message = "Password changed."
 
 portal_status_message = context.Base_translateString(portal_status_message)

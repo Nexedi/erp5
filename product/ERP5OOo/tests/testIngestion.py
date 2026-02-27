@@ -37,7 +37,7 @@ from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
-from Products.ERP5Type.Utils import bytes2str, convertToUpperCase, str2bytes
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -51,7 +51,6 @@ import ZPublisher.HTTPRequest
 from unittest import expectedFailure
 import six.moves.http_client
 import six.moves.urllib.parse, six.moves.urllib.request
-import base64
 import mock
 
 FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -66,7 +65,9 @@ class IngestionTestCase(ERP5TypeTestCase):
     """
     return ('erp5_core_proxy_field_legacy', 'erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_crm', 'erp5_dms')
+            'erp5_web', 'erp5_crm', 'erp5_dms',
+            'erp5_web_service',
+            'erp5_oauth2_resource', 'erp5_oauth2_authorisation')
 
   def afterSetUp(self):
     self.setSystemPreference()
@@ -2069,17 +2070,14 @@ return result
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
+    token = self._generateOAuth2BearerToken(self.manager_username)
     request = six.moves.urllib.request.Request(push_url, str2bytes(six.moves.urllib.parse.urlencode(
                                         {'data:bytes': data,
                                         'filename': filename,
                                         'reference': reference,
-                                        'disable_cookie_login__': 1,
                                         })), headers={
-       'Authorization': 'Basic %s' %
-         bytes2str(base64.b64encode(str2bytes('%s:%s' % (self.manager_username, self.manager_password))))
+       'Authorization': 'Bearer %s' % token
       })
-    # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
-    # then HTTPDigestAuthHandler can perform HTTP Authentication
     response = six.moves.urllib.request.urlopen(request)
     self.assertEqual(response.getcode(), six.moves.http_client.OK)
     self.tic()
