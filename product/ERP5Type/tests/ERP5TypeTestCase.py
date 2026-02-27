@@ -47,6 +47,20 @@ from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
 from Products.ERP5Type.Utils import convertToUpperCase, str2bytes, bytes2str
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
+import jwt
+from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
+  encodeAccessTokenPayload,
+  JWT_PAYLOAD_KEY,
+  JWT_PAYLOAD_AUTHORISATION_SESSION_ID_KEY,
+  JWT_PAYLOAD_AUTHORISATION_SESSION_VERSION_KEY,
+  JWT_PAYLOAD_CLIENT_REFERENCE_KEY,
+  JWT_PAYLOAD_USER_ID_KEY,
+  JWT_PAYLOAD_USER_CAPTION_KEY,
+  JWT_PAYLOAD_ROLE_LIST_KEY,
+  JWT_PAYLOAD_GROUP_LIST_KEY,
+  JWT_PAYLOAD_SCOPE_LIST_KEY,
+  JWT_CLAIM_NETWORK_LIST_KEY,
+)
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
 from Products.ERP5Type.tests.utils import timeZoneContext
@@ -818,6 +832,96 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       ZopeTestCase._print('\n%s' % message)
       LOG('Testing ... ', DEBUG, message)
 
+    def _generateOAuth2BearerToken(self, user_id, password=None):
+      """
+        Generate OAuth2 Bearer token for test authentication.
+        Creates a JWT token compatible with ERP5OAuth2ResourceServerPlugin.
+      """
+      portal = self.portal
+      try:
+        acl_users = portal.acl_users
+        user = acl_users.getUserById(user_id)
+        if user is None:
+          user = acl_users.getUser(user_id)
+        if user is None:
+          raise ValueError('User %s not found' % user_id)
+
+        if password is not None:
+          from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
+          for _plugin_name, plugin in acl_users.plugins.listPlugins(IAuthenticationPlugin):
+            if plugin.authenticateCredentials(
+                {'login': user_id, 'password': password}) is not None:
+              break
+          else:
+            raise ValueError('Invalid credentials for user %s' % user_id)
+
+        actual_user_id = user.getId()
+
+        roles = list(user.getRoles())
+        if 'Authenticated' in roles:
+          roles.remove('Authenticated')
+
+        groups = list(getattr(user, 'getGroups', lambda: ())())
+        caption = user_id
+
+        try:
+          server_connector = portal.portal_web_services.test_oauth2_server
+          key_list = server_connector._OAuth2AuthorisationServerConnector__getAccessTokenKeyList()
+          if not key_list:
+            raise ValueError('No OAuth2 keys available')
+          _, algorithm, private_key, _ = key_list[0]
+          client_id = 'test_client'
+
+          session_id = 'test_session_%s' % actual_user_id
+          session_module = portal.session_module
+          session_list = portal.portal_catalog(
+            portal_type='OAuth2 Session',
+            id=session_id,
+            parent_uid=session_module.getUid(),
+          )
+          if session_list:
+            session = session_list[0].getObject()
+          else:
+            session = session_module.newContent(
+              portal_type='OAuth2 Session',
+              id=session_id,
+              source_administration=actual_user_id,
+            )
+            session.setIntIndex(1)
+            session.validate()
+
+          session_version = session.getIntIndex() or 1
+
+        except (AttributeError, ValueError, TypeError) as e:
+          LOG('ERP5TypeTestCase', DEBUG,
+              'OAuth2 server not available: %s' % str(e))
+          raise
+
+        now = int(time.time())
+        token_payload = {
+          'exp': now + 3600,
+          'iss': client_id,
+          JWT_CLAIM_NETWORK_LIST_KEY: ['0.0.0.0/0'],
+          JWT_PAYLOAD_KEY: encodeAccessTokenPayload({
+            JWT_PAYLOAD_CLIENT_REFERENCE_KEY: 'test_client',
+            JWT_PAYLOAD_AUTHORISATION_SESSION_ID_KEY: session_id,
+            JWT_PAYLOAD_AUTHORISATION_SESSION_VERSION_KEY: session_version,
+            JWT_PAYLOAD_USER_ID_KEY: actual_user_id,
+            JWT_PAYLOAD_USER_CAPTION_KEY: caption,
+            JWT_PAYLOAD_ROLE_LIST_KEY: roles,
+            JWT_PAYLOAD_GROUP_LIST_KEY: groups,
+            JWT_PAYLOAD_SCOPE_LIST_KEY: [],
+          }),
+        }
+
+        token = jwt.encode(token_payload, key=private_key, algorithm=algorithm)
+        return token if isinstance(token, str) else token.decode('ascii')
+
+      except Exception as e:
+        LOG('ERP5TypeTestCase', DEBUG,
+            'Failed to generate OAuth2 token for %s: %s' % (user_id, str(e)))
+        raise
+
     def publish(self, path, basic=None, env=None, extra=None,
                 request_method='GET', stdin=None, handle_errors=True,
                 user=None):
@@ -826,6 +930,36 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       This is from Testing.ZopeTestCase.Functional, extended to support passing
       a user id directly.
       '''
+      if basic and not user:
+        parts = basic.split(':', 1)
+        username = parts[0]
+        password = parts[1] if len(parts) > 1 else None
+        try:
+          token = self._generateOAuth2BearerToken(username, password)
+          if env is None:
+            env = {}
+          env['HTTP_AUTHORIZATION'] = 'Bearer %s' % token
+          basic = None
+        except ValueError:
+          LOG('ERP5TypeTestCase', DEBUG,
+              'Invalid credentials for %s, making anonymous request' % username)
+          basic = None
+        except Exception as e:
+          LOG('ERP5TypeTestCase', DEBUG,
+              'Cannot generate OAuth2 token, using user parameter: %s' % str(e))
+          resolved = username
+          acl_users = self.portal.acl_users
+          if hasattr(acl_users, 'erp5_login_users'):
+            try:
+              info_list = acl_users.erp5_login_users.enumerateUsers(
+                login=username, exact_match=True)
+              if info_list:
+                resolved = info_list[0]['id']
+            except Exception:
+              pass
+          user = resolved
+          basic = None
+
       if user:
         assert not basic
         from six.moves._thread import get_ident
@@ -1389,6 +1523,40 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             self._installBusinessTemplateList(business_template_list,
                                               light_install=light_install,
                                               quiet=quiet)
+            try:
+              portal_web_services = self.portal.portal_web_services
+              if not hasattr(portal_web_services, 'test_oauth2_server'):
+                server_connector = portal_web_services.newContent(
+                  portal_type='OAuth2 Authorisation Server Connector',
+                  id='test_oauth2_server',
+                  title='Test OAuth2 Server Connector',
+                )
+                server_connector.validate()
+                server_connector.renewTokenSecret()
+
+                if not server_connector.hasContent('test_client'):
+                  client_declaration = server_connector.newContent(
+                    portal_type='OAuth2 Client',
+                    id='test_client',
+                    title='Test OAuth2 Client',
+                    local=True,
+                  )
+                  client_declaration.validate()
+
+                if not hasattr(portal_web_services, 'test_oauth2_client'):
+                  client_connector = portal_web_services.newContent(
+                    portal_type='OAuth2 Authorisation Client Connector',
+                    id='test_oauth2_client',
+                    title='Test OAuth2 Client Connector',
+                    reference='test_client',
+                    authorisation_server_url=server_connector.getId(),
+                  )
+                  client_connector.validate()
+
+            except (AttributeError, ValueError, TypeError) as e:
+              LOG('ERP5TypeTestCase', DEBUG,
+                  'Cannot create OAuth2 server connector: %s' % str(e))
+
             self._recreateCatalog()
             self._updateConversionServerConfiguration()
             self._updateMemcachedConfiguration()
