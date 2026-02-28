@@ -533,7 +533,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
         tests_tool[self.run_only] if self.run_only else tests_tool,
         obj_metatypes=('Page Template',), search_sub=1):
       try:
-        page_template.pt_render()
+        rendered = page_template.pt_render()
       except Exception:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         self.fail('Rendering of %s failed with error:\n%s' % (
@@ -543,6 +543,10 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
             exc_value,
             exc_traceback,
             as_html=False))))
+      else:
+        self.assertTrue(
+          etree.HTML(rendered).xpath('//tr'),
+          '%s does not have the expected structure' % page_template_path)
 
     # abort to get rid of the mysql participation in this transaction
     self.portal._p_jar.sync()
