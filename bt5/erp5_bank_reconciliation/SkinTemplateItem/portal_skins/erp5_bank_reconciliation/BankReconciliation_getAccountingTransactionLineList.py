@@ -24,6 +24,8 @@ if reconciliation_mode == "reconcile":
       SimpleQuery(aggregate_bank_reconciliation_uid=context.getUid()),
       logical_operator="OR",
     )
+    if context.getStartDate():
+      kw['from_date'] = context.getStartDate().earliestTime()
 
   kw.update({
     'left_join_list': ['aggregate_bank_reconciliation_date'],
