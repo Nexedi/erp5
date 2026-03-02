@@ -48,10 +48,14 @@ class ERP5TypeTestSuite(TestSuite):
               ','.join(mysql_db_list[1:]),) + args
     firefox_bin = getattr(self, "firefox_bin", None)
     xvfb_bin = getattr(self, "xvfb_bin", None)
+    erp5_catalog_storage = getattr(self, "erp5_catalog_storage", None)
+
     if firefox_bin:
       args = ("--firefox_bin=%s" % firefox_bin,) + args
     if xvfb_bin:
       args = ("--xvfb_bin=%s" % xvfb_bin,) + args
+    if erp5_catalog_storage:
+      args = ("--erp5_catalog_storage=%s" % erp5_catalog_storage,) + args
     if ('testUpgradeInstanceWithOldDataFs' in args
         or 'testUpgradeInstanceWithOldDataFsLegacyWorkflow' in args):
       # our reference Data.fs uses `CONNECTION_STRING_REPLACED_BY_TEST_INIT_______________________________`
