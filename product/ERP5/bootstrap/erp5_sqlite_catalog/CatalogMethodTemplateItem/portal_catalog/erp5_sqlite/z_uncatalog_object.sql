@@ -1,0 +1,1 @@
+DELETE FROM catalog WHERE <dtml-sqltest uid op=eq type=int>
