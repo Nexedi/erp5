@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankReconciliation_getFormattedAccountingTransactionLineList</string> </value>
+            <value> <string>BankReconciliation_getFormattedLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
