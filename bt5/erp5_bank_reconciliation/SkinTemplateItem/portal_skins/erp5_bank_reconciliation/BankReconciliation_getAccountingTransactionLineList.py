@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 portal = context.getPortalObject()
 
 kw = {
@@ -19,11 +19,7 @@ kw = {
 if reconciliation_mode == "reconcile":
   if context.getStopDate():
     kw['at_date'] = context.getStopDate().latestTime()
-    kw['reconciliation_query'] = ComplexQuery(
-      SimpleQuery(aggregate_bank_reconciliation_date=None),
-      SimpleQuery(aggregate_bank_reconciliation_uid=context.getUid()),
-      logical_operator="OR",
-    )
+    kw['reconciliation_query'] = SimpleQuery(aggregate_bank_reconciliation_date=None)
     if context.getStartDate():
       kw['from_date'] = context.getStartDate().earliestTime()
 
@@ -34,6 +30,12 @@ if reconciliation_mode == "reconcile":
 else:
   assert reconciliation_mode == "unreconcile"
   kw['aggregate_bank_reconciliation_uid'] = context.getUid()
+  # Related key finds aggregates with the Bank Reconciliation and lines,
+  # we make it stricted using `aggregate__uid` when explicitely wanting
+  # to match a line.
+  reconcilied_line_uid = listbox_kw.get("reconcilied_line", None)
+  if reconcilied_line_uid:
+    kw['aggregate__uid'] = reconcilied_line_uid
 
 # Handle search params
 if listbox_kw.get('Movement_getExplanationTitle'):
@@ -63,4 +65,5 @@ if context.getSourcePayment():
       context.getQuantityPrecisionFromResource(
         context.getSourcePaymentValue().getPriceCurrency()))
 
+context.log(context.portal_simulation.getMovementHistoryList(src__=1,**kw))
 return context.portal_simulation.getMovementHistoryList(**kw)
