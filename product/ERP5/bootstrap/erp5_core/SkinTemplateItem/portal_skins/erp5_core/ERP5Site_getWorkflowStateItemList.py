@@ -8,10 +8,7 @@ as first element or not (just like category tool API)
 The state titles will be translated unless you pass translate=False
 '''
 from six import string_types as basestring
-if translate:
-  from Products.ERP5Type.Message import translateString
-else:
-  translateString = lambda msg: msg
+from Products.ERP5Type.Utils import getTranslationStringWithContext
 
 portal = context.getPortalObject()
 workflow_tool = portal.portal_workflow
@@ -19,8 +16,9 @@ workflow_set = set() # existing workflows.
 state_set = set(['deleted']) # existing state ids (we do not want to return a same state id twice
                              # if more than one workflow define the same state). Also note that we
                              # always ignore deleted state.
-
+state_set_add = state_set.add
 result_list = display_none_category and [('', '')] or []
+result_list_append = result_list.append
 
 if isinstance(portal_type, basestring):
   portal_type = portal_type,
@@ -48,8 +46,13 @@ for portal_type in portal_type:
       state_reference = state.getReference()
       if state_reference in state_set:
         continue
-      state_set.add(state_reference)
-
-      result_list.append((str(translateString(state.getTitle())), state_reference))
-
+      state_set_add(state_reference)
+      state_title = state.getTitle()
+      if translate:
+        result = getTranslationStringWithContext(
+          workflow, state_title, 'state', workflow_id
+        )
+      else:
+        result = state_title
+      result_list_append((str(result), state_reference))
 return result_list
