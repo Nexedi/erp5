@@ -13,6 +13,7 @@
                 <string>columns</string>
                 <string>editable_columns</string>
                 <string>search_columns</string>
+                <string>sort</string>
                 <string>sort_columns</string>
               </list>
             </value>
@@ -119,6 +120,17 @@
                         <tuple>
                           <string>title</string>
                           <string>Bank Line Title</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Bank Line Accounting Date</string>
                         </tuple>
                       </list>
                     </value>
