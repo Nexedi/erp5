@@ -470,6 +470,7 @@ class TestOAuth2(ERP5TypeTestCase):
             ),
           ),
         ))
+      request.clear()
     if response.body:
       response.headers.setdefault('content-type', 'text/html; charset=utf-8')
     return (
