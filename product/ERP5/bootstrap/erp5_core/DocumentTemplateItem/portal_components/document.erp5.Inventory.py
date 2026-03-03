@@ -30,6 +30,7 @@ from six.moves import xrange
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from erp5.component.module.DateUtils import addToDate
 from erp5.component.document.Delivery import Delivery
 
 class Inventory(Delivery):
@@ -58,6 +59,28 @@ class Inventory(Delivery):
                     , PropertySheet.FlowCapacity
                     , PropertySheet.Inventory
                     )
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                           'getStartDate')
+  def getStartDate(self):
+    """
+    Returns date at 23:59:58, so that it is after all other movements,
+    but before inventory report
+    """
+    start_date = self._baseGetStartDate()
+    if start_date is not None:
+      return addToDate(start_date.latestTime(), second=-1)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                           'getStopDate')
+  def getStopDate(self):
+    """
+    Returns date at 23:59:58, so that it is after all other movements,
+    but before inventory report
+    """
+    stop_date = self._baseGetStopDate()
+    if stop_date is not None:
+      return addToDate(stop_date.latestTime(), second=-1)
 
   security.declarePublic('alternateReindexObject')
   def alternateReindexObject(self, **kw):
