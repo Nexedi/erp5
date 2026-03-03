@@ -749,7 +749,7 @@
     <tal:block tal:define="cell_id string:1.0@1.0;
                            date_value string:Nov 20, 2024;
                            first_value string:−47.05;
-                           second_value string:−97.25;
+                           second_value string:−47.25;
                            first_not_value string:0;
                            second_not_value string:1">
       <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
