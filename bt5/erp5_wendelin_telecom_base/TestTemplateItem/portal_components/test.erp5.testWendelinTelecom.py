@@ -680,7 +680,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
         'data_acquisition_unit'
       ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_rms_rx'))
     
-    self.assertEqual(None,
+    self.assertNotEqual(None,
       ingestion_item_dict[
         'data_acquisition_unit'
       ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_ul_noise_indicator'))
