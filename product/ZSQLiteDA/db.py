@@ -209,7 +209,7 @@ class SQLiteResult:
     def fetchall(self):
         return self._rows
 
-class SqliteDB(TM):
+class DB(TM):
     """This is the ZMySQLDA Database Connection Object."""
 
     conv=conversions.copy()
@@ -619,14 +619,14 @@ class SqliteDB(TM):
        
 
 
-class DeferredSqliteDB(SqliteDB):
+class DeferredDB(DB):
     """
         An experimental MySQL DA which implements deferred execution
         of SQL code in order to reduce locks and provide better behaviour
         with MyISAM non transactional tables
     """
     def __init__(self, *args, **kw):
-        SqliteDB.__init__(self, *args, **kw)
+        DB.__init__(self, *args, **kw)
         assert self._use_TM
         self._sql_string_list = []
 
@@ -654,11 +654,11 @@ class DeferredSqliteDB(SqliteDB):
         #      fail. Consider moving them to commit, tpc_vote or in an
         #      after-commit hook.
         if self._sql_string_list:
-            SqliteDB._begin(self)
+            DB._begin(self)
             for qs in self._sql_string_list:
                 self._query(qs)
             del self._sql_string_list[:]
-            SqliteDB._finish(self)
+            DB._finish(self)
 
     tpc_vote = TM.tpc_vote
     _abort = _begin
