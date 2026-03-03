@@ -1819,6 +1819,8 @@ class SimulationTool(BaseTool):
                              lowest_value_test=False,
                              previous_period_total_asset_price=None,
                              previous_period_total_quantity=None,
+                             omit_internal=False,
+                             statistics=False,
                              **kw):
     """
     Same thing as getInventory but returns an asset
@@ -1872,7 +1874,7 @@ class SimulationTool(BaseTool):
     assert 'node_uid' in kw or 'section_uid' in kw
     sql_kw = self._generateSQLKeywordDict(**kw)
 
-    if 'section_uid' in kw and 'node_uid' not in kw:
+    if ('section_uid' in kw and 'node_uid' not in kw) or omit_internal:
       # ignore internal movements if ignore node
       sql_kw['where_expression'] += ' AND ' \
         'NOT(stock.section_uid<=>stock.mirror_section_uid)'
@@ -1887,6 +1889,9 @@ class SimulationTool(BaseTool):
 
     if src__ :
       return result
+
+    if statistics:
+      return result[-1]
 
     if len(result) > 0:
       asset_price = result[-1].total_asset_price
