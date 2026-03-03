@@ -33,6 +33,7 @@ class DuplicateInventoryConstraint(ConstraintMixin):
     - the same resource
     - the same date
     - the same node
+    - the same section
   """
 
   def _generateDuplicateError(self, portal, obj, resource, variation_text):
@@ -69,6 +70,7 @@ class DuplicateInventoryConstraint(ConstraintMixin):
 
     inventory = obj
     node = inventory.getDestination()
+    section = inventory.getDestinationSection()
     node_value = inventory.getDestinationValue()
     # Make sure to raise conflict error when two inventories are
     # validated in the same time for the same node, this is the only
@@ -79,7 +81,7 @@ class DuplicateInventoryConstraint(ConstraintMixin):
       node_value.serialize()
 
       # For each resource, we look that there is not any inventory for
-      # the same date, the same resource and the same node, or if there
+      # the same date, the same resource, the same section and the same node, or if there
       # is already such kind of inventories being indexed
       resource_and_variation_list = []
       date = inventory.getStartDate()
@@ -100,11 +102,12 @@ class DuplicateInventoryConstraint(ConstraintMixin):
               errors.append(self._generateDuplicateError(portal, obj, resource,
                                     variation_text))
             # Call sql request in order to see if there is another inventory
-            # for this node, resource, variation_text and date
+            # for this node, section, resource, variation_text and date
             inventory_list = getCurrentInventoryList(resource=resource,
                                      variation_text=variation_text,
                                      from_date=date, at_date=date,
                                      default_stock_table='stock',
+                                     section=section,
                                      node=node)
             for inventory in inventory_list:
               movement = getObjectFromUid(inventory.stock_uid)
