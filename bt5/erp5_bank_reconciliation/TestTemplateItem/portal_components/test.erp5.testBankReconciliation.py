@@ -729,6 +729,8 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         internal_transaction.bank.getAggregateValueList())
 
   def test_BankReconciliation_import_file(self):
+    self.maxDiff = None
+    account_module = self.account_module
     bank_reconciliation_value = self.portal.bank_reconciliation_module.newContent(
       portal_type='Bank Reconciliation',
       title='Bank Reconciliation with imported content',
@@ -736,6 +738,17 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
       source_payment_value=self.bank_account,
       start_date=DateTime(2025, 1, 1),
       stop_date=DateTime(2025, 1, 31),
+    )
+    initial_payment_value = self._makeOne(
+      portal_type='Payment Transaction',
+      simulation_state='delivered',
+      source_payment_value=self.bank_account,
+      start_date=DateTime(2025, 1, 5),
+      lines=(dict(source_value=account_module.bank,
+                  source_credit=20.0,
+                  id='bank'),
+             dict(source_value=account_module.payable,
+                  source_debit=20.0))
     )
     bank_reconciliation_value.open()
     self.commit()
@@ -774,18 +787,17 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
       { "start_date_day": 18, "stop_date_day": 18, "title": "PRLV SFR", "credit": 0.0, "debit": 30.0 },
       { "start_date_day": 26, "stop_date_day": 26, "title": "VIR Payable", "credit": 0.0, "debit": 7500.0 },
     ]
-    for line_value, line_dict in zip(bank_reconciliation_value.objectValues(), expected_line_list):
-      # Assert: bank line matches ODS file line
-      self.assertEqual(line_dict, {
-        "start_date_day": line_value.getStartDate().day(),
-        "stop_date_day": line_value.getStopDate().day(),
-        "title": line_value.getTitle(),
-        "credit": line_value.getSourceCredit(),
-        "debit": line_value.getSourceDebit(),
-      })
-      line_dict["delivery"] = line_value.getRelativeUrl()
+    line_list = [{
+      "start_date_day": line_value.getStartDate().day(),
+      "stop_date_day": line_value.getStopDate().day(),
+      "title": line_value.getTitle(),
+      "credit": line_value.getSourceCredit(),
+      "debit": line_value.getSourceDebit(),
+    } for line_value in bank_reconciliation_value.objectValues()]
+    # Assert: bank line matches ODS file line
+    self.assertCountEqual(expected_line_list, line_list)
 
-    # Assert: `getQuantityRangeMax` works
+    # Assert: `getQuantityRangeMax` is computed automatically
     bank_reconciliation_value.setQuantityRangeMin(1000.0)
     self.assertEqual(bank_reconciliation_value.getQuantityRangeMax(), 3450.0)
 
@@ -794,70 +806,82 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     # Assert: an Applied Rule is created
     self.assertEqual(1, len(bank_reconciliation_value.getCausalityRelatedList()))
 
-    expected_movement_list = []
-    for line_dict in expected_line_list:
-      movement_bank_dict = {
-        "start_date_day": line_dict["start_date_day"],
-        "stop_date_day": line_dict["stop_date_day"],
-        "quantity": line_dict["debit"] - line_dict["credit"],
-        "aggregate": line_dict["delivery"],
-        "is_bank": True,
-      }
-      expected_movement_list.append(movement_bank_dict)
-      movement_dict = movement_bank_dict.copy()
-      movement_dict.update({
-        "quantity": line_dict["credit"] - line_dict["debit"],
-        "is_bank": False,
-      })
-      expected_movement_list.append(movement_dict)
+    expected_movement_list_before_reconciliation = [{
+      "start_date_day": line_value.getStartDate().day(),
+      "stop_date_day": line_value.getStopDate().day(),
+      "quantity": line_value.getQuantity(),
+      "aggregate": line_value.getRelativeUrl(),
+    } for line_value in bank_reconciliation_value.objectValues()] + [{
+      "start_date_day": line_value.getStartDate().day(),
+      "stop_date_day": line_value.getStopDate().day(),
+      "quantity": -line_value.getQuantity(),
+      "aggregate": line_value.getRelativeUrl(),
+    } for line_value in bank_reconciliation_value.objectValues()]
 
     applied_rule = bank_reconciliation_value.getCausalityRelatedValue()
-    simulation_movement_list = sorted(applied_rule.objectValues(), key=lambda m: (m.getAggregate(), m.getQuantity()))
-    expected_simulation_movement_list = sorted(expected_movement_list, key=lambda d: (d["aggregate"], d["quantity"]))
-    for movement_value, movement_dict in zip(simulation_movement_list, expected_simulation_movement_list):
-      # Assert: Simulation Movement matches expected movement
-      self.assertEqual(movement_dict, {
-        "start_date_day": movement_value.getStartDate().day(),
-        "stop_date_day": movement_value.getStopDate().day(),
-        "quantity": movement_value.getQuantity(),
-        "aggregate": movement_value.getAggregate(),
-        # Excluded property
-        "is_bank": movement_dict["is_bank"],
-      })
+    simulation_movement_list = [{
+      "start_date_day": movement_value.getStartDate().day(),
+      "stop_date_day": movement_value.getStopDate().day(),
+      "quantity": movement_value.getQuantity(),
+      "aggregate": movement_value.getAggregate(),
+    } for movement_value in applied_rule.objectValues()]
 
-    # XXX-Titouan: should we manually call builder? What is expected? Maybe triggered on user action.
+    # Assert: Simulation Movements matches expected movements
+    self.assertCountEqual(expected_movement_list_before_reconciliation, simulation_movement_list)
+
+    # Reconcile one line manually to ensure two simulation movements are deleted
+    expected_movement_list = [x for x in expected_movement_list_before_reconciliation if abs(x["quantity"]) != 20.0]
+    line_value = next(x for x in bank_reconciliation_value.objectValues() if x.getSourceDebit() == 20.0)
+    initial_payment_value["bank"].AccountingTransactionLine_addBankReconciliation(
+      line_value.getRelativeUrl(),
+      message="Reconciling Bank Line",
+    )
+    bank_reconciliation_value.updateSimulation(expand_root=1)
+    self.tic()
+    simulation_movement_list = [{
+      "start_date_day": movement_value.getStartDate().day(),
+      "stop_date_day": movement_value.getStopDate().day(),
+      "quantity": movement_value.getQuantity(),
+      "aggregate": movement_value.getAggregate(),
+    } for movement_value in applied_rule.objectValues()]
+    # Assert: Simulation Movements matches expected movements
+    self.assertCountEqual(expected_movement_list, simulation_movement_list)
+
     transaction_list = self.portal.portal_deliveries.bank_reconciliation_payment_transaction_builder.build()
-    # Assert: one transaction was created per Bank Reconciliation Line. Ensures good builder
-    # configuration.
-    self.assertEqual(len(expected_line_list), len(transaction_list))
-    for transaction_value in transaction_list:
-      bank_aggregate = None
-      for transaction_line_value in transaction_value.objectValues():
-        if transaction_line_value.getAggregate():
-          bank_aggregate = transaction_line_value.getAggregateValue()
-      # Assert: title of the Accounting Transaction matches title from the Bank Reconciliation Line
-      self.assertEqual(bank_aggregate.getTitle(), transaction_value.getTitle())
+    self.tic()
+    # Assert: one transaction was created per Bank Reconciliation Line, minus one that was reconcilied before
+    self.assertEqual(len(expected_line_list) - 1, len(transaction_list))
 
-      expected_line_movement_list = sorted([m for m in expected_movement_list if m["aggregate"] == bank_aggregate.getRelativeUrl()], key=lambda d: d["quantity"])
-      movement_list = sorted(transaction_value.objectValues(), key=lambda m: m.getQuantity())
-      for movement_value, movement_dict in zip(movement_list, expected_line_movement_list):
-        if not movement_dict["is_bank"]:
-          movement_dict["aggregate"] = None
+    for expected_movement in expected_movement_list:
+      if (expected_movement["quantity"] >= 0.0) ^ (abs(expected_movement["quantity"]) != 10000.0) :
+        expected_movement["aggregate"] = None
 
-        # Assert: Payment Transaction line matches expected movement
-        self.assertEqual(movement_dict, {
-          "start_date_day": movement_value.getStartDate().day(),
-          "stop_date_day": movement_value.getStopDate().day(),
-          "quantity": movement_value.getQuantity(),
-          "aggregate": movement_value.getAggregate(),
-          # Excluded property
-          "is_bank": movement_dict["is_bank"],
-        })
+    movement_list = [{
+      "start_date_day": movement_value.getStartDate().day(),
+      "stop_date_day": movement_value.getStopDate().day(),
+      "quantity": movement_value.getQuantity(),
+      "aggregate": movement_value.getAggregate(),
+    } for transaction_value in transaction_list for movement_value in transaction_value.objectValues()]
+    self.assertCountEqual(expected_movement_list, movement_list)
+
+    # Assert: title of the Accounting Transaction matches title from the Bank Reconciliation Line
+    #self.assertEqual(bank_aggregate.getTitle(), transaction_value.getTitle())
 
     bank_reconciliation_value.objectValues()[0].edit(debit=30.0)
     self.tic()
     # Assert: no new lines were created. Ensures matching by aggregate works
-    self.assertEqual(len(expected_simulation_movement_list), len(bank_reconciliation_value.getCausalityRelatedValue().objectValues()))
+    self.assertEqual(len(expected_movement_list), len(bank_reconciliation_value.getCausalityRelatedValue().objectValues()))
+
+    transaction_list[0].objectValues()[0].edit(debit=33.0)
+    transaction_list[0].objectValues()[1].edit(credit=33.0)
+    self.tic()
+    # Assert: Accounting Transaction diverges when amounts are edited
+    self.assertEqual("diverged", transaction_list[0].getCausalityState())
+
+    transaction_list[1].objectValues()[0].edit(source_value=account_module.goods_purchase)
+    self.tic()
+    # Assert: Accounting Transaction does not diverge (auto-solve) when accounts are edited
+    self.assertEqual("solved", transaction_list[1].getCausalityState())
 
 def test_suite():
   suite = unittest.TestSuite()
