@@ -109,7 +109,7 @@ class TestOOoImport(TestOOoImportMixin):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base', 'erp5_ooo_import')
+    return ('erp5_base', 'erp5_ooo_import_core', 'erp5_ooo_import')
 
   ##################################
   ##  Basic steps
@@ -932,7 +932,7 @@ class TestOOoImportWeb(TestOOoImportMixin):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base', 'erp5_web', 'erp5_ooo_import')
+    return ('erp5_base', 'erp5_web', 'erp5_ooo_import_core', 'erp5_ooo_import')
 
   def test_CategoryTool_importCategoryFileExpirationSupport(self):
     """Import category file with expiration request, and do it again to be
