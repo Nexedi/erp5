@@ -4,6 +4,7 @@ import six
 from zLOG import LOG, WARNING
 from xlte.amari import kpi as amari_kpi
 from xlte import kpi
+import numpy as np
 
 def load_measurements(alogm):
   mlog = kpi.MeasurementLog()
@@ -42,6 +43,7 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
   rrc_data = []
   ue_data = []
   rms_rx_data = []
+  ul_noise_indicator_data = []
   is_config_updated = False
   if progress_indicator is not None:
     last_config_dict = json.loads(progress_indicator.getLastXLogConfig('{}'))
@@ -61,7 +63,8 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
     if xlog_line_dict.get("message", None) == 'config_get' and "cells" in xlog_line_dict:
       rms_rx_index = []
       for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
-        rms_rx_index.extend([(cell_id, ant_id+1) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))])
+        n_rb_ul = cell_data.get("n_rb_ul", 100)
+        rms_rx_index.extend([(cell_id, ant_id+1, n_rb_ul) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))])
       is_config_updated = True
 
     if xlog_line_dict.get("message", None) == 'stats' and "cells" in xlog_line_dict:
@@ -102,9 +105,18 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
             rms_rx_index[pos][1],       # Antenna ID
             sample_rx['count'],
             sample_rx['max'],
-             sample_rx['rms'],
+            sample_rx['rms'],
             sample_rx['rms_dbm']
           ))
+          # UL Noise Indicator KPI
+          # UL_Noise_Indicator = RX_RMS − 10·log10(BW_Hz)
+          ul_noise_indicator_data.append((
+            timestamp,
+            int(rms_rx_index[pos][0]),  # Cell ID
+            rms_rx_index[pos][1],       # Antenna ID
+            sample_rx['rms'] - 10 * np.log10(rms_rx_index[pos][2] * 0.2e6)  # n_rb_ul * 0.2 MHz
+          ))
+
       #else:
        # raise ValueError("len(rms_rx_index) %s != len(cell_samples_rx_list) %s" % (
        #   len(rms_rx_index), len(cell_samples_rx_list)))
@@ -152,12 +164,12 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
     evt.append(calc.τ_lo)
     v_ip_throughput_qci.append(period_qci_data)
 
-
   enb_xlog_data_dict = dict(
     e_rab_accessibility=(vt, v_initial_epsb_estab_sr, v_added_epsb_estab_sr),
     e_utran_ip_throughput=(evt, v_ip_throughput_qci),
     ue_count=ue_data,
-    rrc=rrc_data,
+    rrc = rrc_data,
+    ul_noise_indicator = ul_noise_indicator_data,
     rms={'rx': rms_rx_data},
     last_rms_rx_index=rms_rx_index
   )
