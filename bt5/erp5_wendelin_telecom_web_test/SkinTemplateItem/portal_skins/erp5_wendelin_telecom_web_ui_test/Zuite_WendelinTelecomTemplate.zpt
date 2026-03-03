@@ -725,5 +725,46 @@
       <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
     </tal:block>
   </tal:block>
-  
+
+  <tal:block metal:define-macro="check_ul_noise_indicator_graphs">
+    <tr>
+      <td colspan="3"><b>Check ORS UL Noise Indicator graphs</b></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'UL Noise Indicator'}">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
+    </tal:block>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b>Check ORS UL Noise Indicator for CELL 1 Antena 1</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:1.0@1.0;
+                           date_value string:Nov 20, 2024;
+                           first_value string:−115.75;
+                           second_value string:−115.95;
+                           first_not_value string:0;
+                           second_not_value string:1">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+    <tr>
+      <td colspan="3"><b>Check ORS UL Noise Indicator for CELL 1 Antena 2</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:1.0@2.0;
+                           date_value string:Nov 20, 2024;
+                           first_value string:−112.84;
+                           second_value string:−112.96;
+                           first_not_value string:0;
+                           second_not_value string:1">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+  </tal:block>
+
 </tal:block>
