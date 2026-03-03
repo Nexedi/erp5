@@ -342,11 +342,22 @@ class RuleMixin(Predicate):
         if decision_movement.isFrozen():
           # Frozen must be compensated
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
-            new_movement = decision_movement.asContext(
-                                  quantity=-decision_movement_quantity)
-            new_movement.setDelivery(None)
-            movement_collection_diff.addNewMovement(new_movement)
-            compensated_quantity += decision_movement_quantity
+            do_compensate = True
+            delivery_line = decision_movement.getDeliveryValue()
+            if delivery_line is not None:
+              packing_list = delivery_line.getParentValue()
+              if packing_list.getPortalType() == "Sale Packing List":
+                if packing_list.getSimulationState() in ("stopped", "delivered"):
+                  sale_order = packing_list.getCausalityValue(portal_type="Sale Order")
+                  if sale_order is not None:
+                    if sale_order.SaleOrder_isUpdated():
+                      do_compensate = False
+            if do_compensate:
+              new_movement = decision_movement.asContext(
+                                    quantity=-decision_movement_quantity)
+              new_movement.setDelivery(None)
+              movement_collection_diff.addNewMovement(new_movement)
+              compensated_quantity += decision_movement_quantity
         else:
           updatable_movement = decision_movement
           # Not Frozen can be updated
