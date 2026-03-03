@@ -1,12 +1,16 @@
-<dtml-if "'WeightedAverage'==valuation_method and previous_period_total_asset_price">
+<dtml-if "'WeightedAverage'==valuation_method and previous_period_total_asset_price is not None">
+set @total_asset_price=0.0, @total_quantity=0.0
+<dtml-var sql_delimiter>
 select
-    (@total_quantity:=<dtml-var "previous_period_total_quantity">+quantity_diff) as total_quantity,
+    incoming_total_quantity,
+    outgoing_total_quantity,
+    (@total_quantity:=<dtml-var "previous_period_total_quantity">+IFNULL(quantity_diff,0)) as total_quantity,
     <dtml-if "lowest_value_test">
-        (@unit_price:=LEAST((<dtml-var "previous_period_total_asset_price">+incoming_total_price)/(<dtml-var "previous_period_total_quantity">+incoming_total_quantity), last_incoming_unit_price)) as unit_price,
+        (@unit_price:=LEAST((<dtml-var "previous_period_total_asset_price">+IFNULL(incoming_total_price,0))/(<dtml-var "previous_period_total_quantity">+IFNULL(incoming_total_quantity,0)), IFNULL(last_incoming_unit_price,(<dtml-var "previous_period_total_asset_price">+IFNULL(incoming_total_price,0))/(<dtml-var "previous_period_total_quantity">+IFNULL(incoming_total_quantity,0))))) as unit_price,
         (@total_quantity * @unit_price) as total_asset_price
     <dtml-else>
-        (@unit_price:=(<dtml-var "previous_period_total_asset_price">+incoming_total_price)/(<dtml-var "previous_period_total_quantity">+incoming_total_quantity), last_incoming_unit_price) as unit_price,
-        (<dtml-var "previous_period_total_asset_price"> + incoming_total_price + outgoing_total_quantity * @unit_price) as total_asset_price
+        (@unit_price:=(<dtml-var "previous_period_total_asset_price">+IFNULL(incoming_total_price,0))/(<dtml-var "previous_period_total_quantity">+IFNULL(incoming_total_quantity,0))) as unit_price,
+        (<dtml-var "previous_period_total_asset_price"> + IFNULL(incoming_total_price,0) + IFNULL(outgoing_total_quantity,0) * @unit_price) as total_asset_price
     </dtml-if>
 from
     (
@@ -23,6 +27,7 @@ from
                     stock, catalog
                 where
                     quantity > 0
+
                 and
                     <dtml-var where_expression>
                 order by
