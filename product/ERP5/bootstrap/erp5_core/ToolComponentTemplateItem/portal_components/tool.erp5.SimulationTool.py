@@ -2454,7 +2454,8 @@ class SimulationTool(BaseTool):
     portal_type = delivery.getPortalType()
     for business_link in delivery.asComposedDocument().objectValues(portal_type="Business Link"):
       for business_link_builder in business_link.getDeliveryBuilderValueList():
-        if business_link_builder.getDeliveryPortalType() == portal_type \
+        if business_link_builder.getId() != "woelfel_purchase_invoice_transaction_trade_model_builder" \
+        and business_link_builder.getDeliveryPortalType() == portal_type \
         and business_link_builder.getDeliveryLinePortalType() == movement_portal_type:
           builder = business_link_builder
           break
