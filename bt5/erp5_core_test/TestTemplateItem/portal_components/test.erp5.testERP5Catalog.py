@@ -1338,8 +1338,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0, message)
 
     # Create new connectors
-    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
-      .manage_addZMySQLConnection
+    if self.catalog_storage == 'erp5_mysql_innodb_catalog':
+      addConnection = self.portal.manage_addProduct[
+        "ZMySQLDA"].manage_addZMySQLConnection
+    else:
+      addConnection = self.portal.manage_addProduct[
+        "ZSQLiteDA"].manage_addZSQLiteConnection
+
     addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)
     new_connection = portal[self.new_erp5_sql_connection]
     new_connection.manage_open_connection()
@@ -4248,15 +4253,19 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
 
   def afterSetUp(self):
     # Add two connections
+    self.catalog_storage = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_catalog').getTitle()
     db1, db2 = getExtraSqlConnectionStringList()[:2]
-    addConnection = self.portal.manage_addProduct[
+    if self.catalog_storage == 'erp5_mysql_innodb_catalog':
+      addConnection = self.portal.manage_addProduct[
         "ZMySQLDA"].manage_addZMySQLConnection
+    else:
+      addConnection = self.portal.manage_addProduct[
+        "ZSQLiteDA"].manage_addZSQLiteConnection
     addConnection("erp5_test_connection_1", "", db1)
     addConnection("erp5_test_connection_2", "", db2)
     addConnection("erp5_test_connection_deferred_2", "", db2, deferred=True)
 
     self.catalog_tool = self.portal.portal_catalog
-    self.catalog_storage = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_catalog').getTitle()
     self.catalog = self.catalog_tool.newContent(portal_type="Catalog")
     self.catalog.newContent(
         portal_type="SQL Method",
