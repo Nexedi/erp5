@@ -49,13 +49,13 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   username = 'seb'
   new_erp5_sql_connection = 'erp5_sql_connection2'
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
-  original_catalog_id = 'erp5_mysql_innodb'
   new_catalog_id = 'erp5_mysql_innodb2'
 
   def afterSetUp(self):
     portal = self.portal
     portal.acl_users._doAddUser(self.username, '', ['Manager'], [])
     self.loginByUserName(self.username)
+    self.original_catalog_id = portal.portal_catalog.getSQLCatalog().getId()
     self.tic()
 
   def beforeTearDown(self):
