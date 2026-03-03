@@ -22,31 +22,6 @@
                 tal:attributes="value python:item[1]"/>
       </select>
     </div>
-    <div>
-      <label for="follow_up_list" 
-             value="" 
-             i18n:translate="" 
-             i18n:domain="ui">Project</label>
-      <select size="1" 
-              id="follow_up_list" 
-              name="follow_up_list"
-              tal:define="ticket_module nocall:here/ticket_module|nothing;
-                          project_module nocall:here/project_module|nothing;">
-        <option value=""
-                i18n:translate="" 
-                i18n:domain="ui">-- Select Project --</option>
-        <option tal:condition="project_module"
-                tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) 
-                                            for o in project_module.searchFolder(sort_on=(('title', 'ascending')))]" 
-                tal:content="python:item[0]" 
-                tal:attributes="value python:item[1]"/>
-        <option tal:condition="ticket_module"
-                tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) 
-                                           for o in ticket_module.searchFolder(sort_on=(('title', 'ascending')))]" 
-                tal:content="python:item[0]" 
-                tal:attributes="value python:item[1]"/>
-      </select>
-    </div>
     
     <p class="clear" />
 
