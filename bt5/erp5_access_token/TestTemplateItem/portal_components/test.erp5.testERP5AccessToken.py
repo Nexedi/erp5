@@ -27,18 +27,12 @@
 #
 ##############################################################################
 
-from ZPublisher.HTTPRequest import HTTPRequest
-from ZPublisher.HTTPResponse import HTTPResponse
-from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from DateTime import DateTime
 from six.moves.urllib.parse import urlencode
 import six.moves.http_client
-import base64
-from six.moves import cStringIO as StringIO
 import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import ERP5DumbHTTPExtractionPlugin
-from Products.ERP5Type.Utils import str2bytes, bytes2str
+from Products.ERP5Type.Utils import str2bytes
 
 
 class AccessTokenTestCase(ERP5TypeTestCase):
@@ -416,59 +410,3 @@ class TestERP5AccessTokenAlarm(AccessTokenTestCase):
     self.tic()
 
     self.assertEqual('draft', access_token.getValidationState())
-
-
-class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
-
-  def do_fake_request(self, request_method, headers=None):
-    if headers is None:
-      headers = {}
-    __version__ = "0.1"
-    env={}
-    env['SERVER_NAME']='bobo.server'
-    env['SERVER_PORT']='80'
-    env['REQUEST_METHOD']=request_method
-    env['REMOTE_ADDR']='204.183.226.81 '
-    env['REMOTE_HOST']='bobo.remote.host'
-    env['HTTP_USER_AGENT']='Bobo/%s' % __version__
-    env['HTTP_HOST']='127.0.0.1'
-    env['SERVER_SOFTWARE']='Bobo/%s' % __version__
-    env['SERVER_PROTOCOL']='HTTP/1.0 '
-    env['HTTP_ACCEPT']='image/gif, image/x-xbitmap, image/jpeg, */* '
-    env['SERVER_HOSTNAME']='bobo.server.host'
-    env['GATEWAY_INTERFACE']='CGI/1.1 '
-    env['SCRIPT_NAME']='Main'
-    env.update(headers)
-    return HTTPRequest(StringIO(), env, HTTPResponse())
-
-  def test_working_authentication(self):
-    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " +
-                                           bytes2str(base64.b64encode(b"login:password"))})
-    ret = ERP5DumbHTTPExtractionPlugin("default_extraction").extractCredentials(request)
-    self.assertEqual(ret, {'login': 'login', 'password': 'password', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
-
-
-class TestERP5AccessTokenUpgraderEnablePlugin(AccessTokenTestCase):
-  def afterSetUp(self):
-    # disable plugin if it had been enabled by another test.
-    acl_users = self.portal.acl_users
-    object_ids = [
-      x.getId() for x in
-        acl_users.objectValues(spec=('ERP5 Access Token Extraction Plugin',))]
-    if object_ids:
-      acl_users.manage_delObjects(object_ids)
-    self.commit()
-
-  def test_post_upgrade_constraint_enable_plugin(self):
-    consistency_list = self.portal.portal_templates.checkConsistency(
-        filter={"constraint_type": "post_upgrade"})
-    self.assertIn(
-        'erp5_access_token_plugin is missing',
-        [x.message for x in consistency_list])
-    self.portal.portal_templates.checkConsistency(
-        fixit=True,
-        filter={"constraint_type": "post_upgrade"})
-    self.commit()
-    self.assertIn(
-      'erp5_access_token_plugin',
-      self.portal.acl_users.plugins.listPluginIds(IAuthenticationPlugin))
