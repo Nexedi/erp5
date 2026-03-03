@@ -52,7 +52,6 @@ from MethodObject import Method
 
 from Products.ERP5Security import mergedLocalRoles
 from Products import ERP5Security
-from Products.ZSQLCatalog.Utils import sqlquote
 
 import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
@@ -725,7 +724,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             # XXX: What with this string transformation ?! Souldn't it be done in
             # dtml instead ? ... yes, but how to be bw compatible ?
-            allowedRolesAndUsers = [sqlquote(role) for role in allowedRolesAndUsers]
+            sql_quote__ =  self.getPortalObject()[method.connection_id].sql_quote__
+            allowedRolesAndUsers = [sql_quote__(role) for role in allowedRolesAndUsers]
 
             security_uid_dict = defaultdict(list)
             for brain in method(security_roles_list=allowedRolesAndUsers):
