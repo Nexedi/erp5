@@ -765,5 +765,6 @@
                            second_not_value string:1">
       <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
     </tal:block>
+  </tal:block>
 
 </tal:block>
