@@ -748,8 +748,8 @@
     </tr>
     <tal:block tal:define="cell_id string:1.0@1.0;
                            date_value string:Nov 20, 2024;
-                           first_value string:−93.75;
-                           second_value string:−93.95;
+                           first_value string:−47.05;
+                           second_value string:−97.25;
                            first_not_value string:0;
                            second_not_value string:1">
       <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
@@ -759,8 +759,8 @@
     </tr>
     <tal:block tal:define="cell_id string:1.0@2.0;
                            date_value string:Nov 20, 2024;
-                           first_value string:−89.84;
-                           second_value string:−89.96;
+                           first_value string:−44.14;
+                           second_value string:−44.26;
                            first_not_value string:0;
                            second_not_value string:1">
       <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
