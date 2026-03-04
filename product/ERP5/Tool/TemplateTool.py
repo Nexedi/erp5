@@ -345,30 +345,9 @@ class TemplateTool (BaseTool):
       try:
         os.close(tempid) # Close the opened fd as soon as possible.
         file_path, headers = urlretrieve(url, temppath)
-        with open(file_path, 'rb') as f:
-          content = f.read()
-        if re.search(br'<title>.*Revision \d+:', content):
-          # this looks like a subversion repository, try to check it out
-          LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
-          return self._download_svn(url, bt_id)
-
         return self._download_local(file_path, bt_id)
       finally:
         os.remove(temppath)
-
-    def _download_svn(self, url, bt_id):
-      try:
-        from erp5.component.module.WorkingCopy import getVcsTool
-      except ImportError:
-        raise RuntimeError("VCS features require 'erp5_forge' bt5")
-
-      svn_checkout_tmp_dir = mkdtemp()
-      svn_checkout_dir = os.path.join(svn_checkout_tmp_dir, 'bt')
-      try:
-        getVcsTool('svn').__of__(self).export(url, svn_checkout_dir)
-        return self._download_local(svn_checkout_dir, bt_id)
-      finally:
-        shutil.rmtree(svn_checkout_tmp_dir)
 
     security.declareProtected( 'Import/Export objects', 'download' )
     def download(self, url, id=None, REQUEST=None):
