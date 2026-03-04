@@ -167,6 +167,18 @@ class ERP5(_ERP5):
 
     return super(ERP5, self).run(full_test)
 
+class ERP5SQLite(ERP5):
+  enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
+                          'ERP5Form',
+                          'ERP5OOo', 'ERP5Security', 'ERP5Type',
+                          'Formulator', 'ERP5Workflow',
+                          'HBTreeFolder2', 'MailTemplates',
+                          'PortalTransforms', 'TimerService',
+                          'ZSQLiteDA', 'ZSQLCatalog', 'Zelenium')
+
+  def getTestList(self):
+    return [x for x in self._getAllTestList() if (x.startswith('test') or x.startswith('erp5_core_test'))]
+
 class WORKFLOW(ERP5):
   # new test suite running a few test related to Workflow
   # (to be used instead of ERP5 class, which run all tests)

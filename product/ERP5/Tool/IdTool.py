@@ -240,7 +240,7 @@ class IdTool(BaseTool):
           result = query(id_group=id_group, id_count=id_count, default=default)
         finally:
           commit()
-        new_id = result[0]['LAST_INSERT_ID()']
+        new_id = result[0]['LAST_INSERT_ID']
         if store:
           if getattr(aq_base(self), 'dict_length_ids', None) is None:
             # Length objects are stored in a persistent mapping: there is one
@@ -333,7 +333,7 @@ class IdTool(BaseTool):
       try:
         return result[0]['last_id']
       except KeyError:
-        return result[0]['LAST_INSERT_ID()']
+        return result[0]['LAST_INSERT_ID']
     return default
 
   security.declareProtected(Permissions.AccessContentsInformation,
