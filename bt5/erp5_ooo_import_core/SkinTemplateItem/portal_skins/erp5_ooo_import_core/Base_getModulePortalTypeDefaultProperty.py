@@ -12,12 +12,12 @@ def match(name, keyword_list):
       count += 1
   return count/float(len(name + keyword_list))
 
-module = context
 spreadsheet_column = cell.getProperty('spreadsheet_column')
 if spreadsheet_column is None:
   return ''
 spreadsheet_column_property_list = extract_keyword(spreadsheet_column)
 for (prop, key) in context.Base_getModulePortalTypeDefaultProperty():
+  property_dict = {}
   rank = match(spreadsheet_column_property_list,
                extract_keyword(prop))
   property_dict['key'] = key
