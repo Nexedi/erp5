@@ -446,6 +446,13 @@
         var type,
           line_url;
         spinner.classList.add("ui-hidden");
+        if (project_list.length === 0) {
+          ul_list.appendChild(domsugar('li', {
+            class: 'empty-state-message',
+            text: 'No projects yet.'
+          }));
+          return;
+        }
         for (i = 0; i < project_list.length; i += 1) {
           project_html_element_list =
             createProjectHtmlElement(project_list[i].id,
