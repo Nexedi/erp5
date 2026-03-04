@@ -241,8 +241,6 @@ def _getattr(self, name, *args, **kw):
                 # SOAPPy.Types contains "from SOAPPy.Types import *" which confuses
                 # this patch
                 or self.name == 'SOAPpy.Types'
-                # pysvn also confuses pylint
-                or self.name == 'pysvn'
                 # XXX actually maybe we don't need this branch at all on py3
             ):
             raise
