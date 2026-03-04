@@ -1122,8 +1122,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                     'erp5_sql_deferred_connection',
                                     None)
     self.assertTrue(erp5_sql_deferred_connection is not None)
-    self.assertEqual('Z MySQL Deferred Database Connection',
-                      erp5_sql_deferred_connection.meta_type)
+    if self.catalog_storage == 'erp5_mysql_innodb_catalog':
+      meta_type = 'Z MySQL Deferred Database Connection'
+    else:
+      meta_type = 'Z SQLite Deferred Database Connection'
+
+    self.assertEqual(meta_type, erp5_sql_deferred_connection.meta_type)
     for method in ['z0_uncatalog_fulltext',
                    'z_catalog_fulltext_list']:
       self.assertEqual('erp5_sql_deferred_connection',
@@ -1339,10 +1343,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Create new connectors
     if self.catalog_storage == 'erp5_mysql_innodb_catalog':
-      addConnection = self.portal.manage_addProduct[
+      addSQLConnection = self.portal.manage_addProduct[
         "ZMySQLDA"].manage_addZMySQLConnection
     else:
-      addConnection = self.portal.manage_addProduct[
+      addSQLConnection = self.portal.manage_addProduct[
         "ZSQLiteDA"].manage_addZSQLiteConnection
 
     addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)

@@ -19,7 +19,7 @@ manage_addZSQLiteConnectionForm=HTMLFile('connectionAdd',globals())
 
 def manage_addZSQLiteConnection(self, id, title, connection_string,
                                check=None, deferred=False, REQUEST=None):
-    """Add a MySQL connection to a folder.
+    """Add a SQLite connection to a folder.
 
     Arguments:
         REQUEST -- The current request
