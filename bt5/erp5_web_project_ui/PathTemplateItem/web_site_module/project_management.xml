@@ -402,7 +402,7 @@ WebSection_getWebProjectPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>RenderJS Gadget ERP5</string> </value>
+            <value> <string>Web site for project management app</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
