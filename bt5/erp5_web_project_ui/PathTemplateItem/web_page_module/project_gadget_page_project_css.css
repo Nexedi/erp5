@@ -35,6 +35,18 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-
   margin-top: 10px;
 }
 
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .empty-state-message {
+  color: #888;
+  font-size: 1.1em;
+  padding: 2em;
+  text-align: center;
+  flex-basis: 100%;
+  list-style: none;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box  {
   padding: 5px;
   padding-left: 15px;
