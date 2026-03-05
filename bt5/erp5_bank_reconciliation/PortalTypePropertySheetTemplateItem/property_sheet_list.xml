@@ -1,7 +1,5 @@
 <property_sheet_list>
  <portal_type id="Bank Reconciliation">
   <item>Amount</item>
-  <item>Arrow</item>
-  <item>Task</item>
  </portal_type>
 </property_sheet_list>
