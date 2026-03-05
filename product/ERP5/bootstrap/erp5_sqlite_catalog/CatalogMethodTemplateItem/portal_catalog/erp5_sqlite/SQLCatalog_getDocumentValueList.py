@@ -93,7 +93,7 @@ try:
     extra_column_set = {i[0] for i in kw.get('order_by_list', ())}.union(
       kw.get('group_by_list', ()))
     kw.setdefault('select_dict', {}).update(
-      (x.replace('.', '_') + '__ext__', x)
+      (x.replace('.', '_'), x)
       for x in extra_column_set if not x.endswith('__score__'))
     return context.SQLCatalog_zGetDocumentValueList(search_context=search_context,
                                                     language=language,

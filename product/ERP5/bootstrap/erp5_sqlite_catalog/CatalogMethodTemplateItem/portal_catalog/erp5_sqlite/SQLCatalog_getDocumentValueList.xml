@@ -49,6 +49,12 @@
             <value> <string>search_context=None, language=None, strict_language=None, all_languages=None, all_versions=None, now=None, src__=0, **kw</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>SQLCatalog_getDocumentValueList</string> </value>
         </item>
