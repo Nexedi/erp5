@@ -340,7 +340,7 @@ class SQLExpression(object):
       If there are nested SQLExpression, it merges (union of sets) them with
       local value.
     """
-    result = {self._reversed_select_dict.get(x, x) for x in self.group_by_list}
+    result = { x for x in self.group_by_list }
     for sql_expression in self.sql_expression_list:
       result.update(sql_expression.getGroupBySet())
     return result

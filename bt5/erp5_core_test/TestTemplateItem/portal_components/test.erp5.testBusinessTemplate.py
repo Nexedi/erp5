@@ -94,6 +94,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
+    self.catalog_id = portal.portal_catalog.getDefaultErp5CatalogId()
     # create the fake catalog table
     sql_connection = self.getSQLConnection()
     sql = 'create table if not exists `fake_catalog` (`toto` BIGINT)'
@@ -177,7 +178,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       if business_template.getTitle() == 'geek template':
         self.getTemplateTool().manage_delObjects([business_template.getId()])
     self.stepRemoveAllTrashBins()
-    catalog = self.portal.portal_catalog.erp5_mysql_innodb
+    catalog = getattr(self.portal.portal_catalog, self.catalog_id)
     for method_id in ('z_fake_method', 'z_another_fake_method'):
       if method_id in catalog.objectIds():
         catalog.manage_delObjects([method_id])
@@ -367,7 +368,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
 
   def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.assertEqual(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ('Modified', 'CatalogMethod')})
+    self.assertEqual(bt.preinstall(), {'portal_catalog/' + self.catalog_id + '/z_fake_method': ('Modified', 'CatalogMethod')})
 
   def stepCheckInstalledInstallationState(self, sequence=None, **kw):
     """
@@ -7118,7 +7119,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt = self.portal.portal_templates.newContent(
         portal_type='Business Template',
         title=self.id(),
-        template_catalog_method_id_list=['erp5_mysql_innodb/z_fake_method'])
+        template_catalog_method_id_list=[self.catalog_id + '/z_fake_method'])
     self.tic()
     bt.build()
     self.tic()
@@ -7140,7 +7141,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt = self.portal.portal_templates.newContent(
         portal_type='Business Template',
         title=self.id(),
-        template_keep_path_list=('portal_catalog/erp5_mysql_innodb/z_fake_method',),)
+        template_keep_path_list=('portal_catalog/'+ self.catalog_id + '/z_fake_method',),)
     self.tic()
     bt.build()
     self.tic()
@@ -7153,7 +7154,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       shutil.rmtree(export_dir)
     self.assertEqual(
-       {'portal_catalog/erp5_mysql_innodb/z_fake_method':
+       {'portal_catalog/' + self.catalog_id + '/z_fake_method':
          ('Removed but should be kept', 'CatalogMethod')},
        new_bt.preinstall())
 
