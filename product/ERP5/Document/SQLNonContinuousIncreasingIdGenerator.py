@@ -96,7 +96,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
                                              default=default)
     try:
       # Tries of generate the new_id
-      new_id = result_query[0]['LAST_INSERT_ID()']
+      new_id = result_query[0]['LAST_INSERT_ID']
       if poison:
         portal.IdTool_zSetLastId(id_group, None)
       # Commit the changement of new_id
@@ -204,7 +204,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         last_insert_id = get_last_id_method(id_group=id_group)
         last_id = int(last_id.value)
         if len(last_insert_id) != 0:
-          last_insert_id = last_insert_id[0]['LAST_INSERT_ID()']
+          last_insert_id = last_insert_id[0]['LAST_INSERT_ID']
           if last_insert_id >= last_id:
             if storage:
               self.last_max_id_dict[id_group] = ScalarMaxConflictResolver(last_insert_id)

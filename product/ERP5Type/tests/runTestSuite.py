@@ -74,6 +74,7 @@ def main():
   slapos_wrapper_group.add_argument('--persistent_memcached_server_hostname', default=None)
   slapos_wrapper_group.add_argument('--persistent_memcached_server_port', default=None)
   slapos_wrapper_group.add_argument('--bt5_path', default=None)
+  slapos_wrapper_group.add_argument('--erp5_catalog_storage', default='erp5_mysql_innodb_catalog')
   slapos_wrapper_group.add_argument(
       '--zserver_address_list',
       help='A list of comma separated host:port for ZServer.\n'
@@ -139,6 +140,7 @@ def main():
                     bt5_path=args.bt5_path,
                     firefox_bin=args.firefox_bin,
                     xvfb_bin=args.xvfb_bin,
+                    erp5_catalog_storage = args.erp5_catalog_storage,
                     log_directory=args.log_directory)
   test_list = suite.getTestList()
   test_list_json = json.dumps(test_list)
