@@ -351,12 +351,7 @@ class SQLExpression(object):
 
       Returns a rendered "group by" expression. See getGroupBySet.
     """
-    group_by_set = self.getGroupBySet()
-    select_dict = self.getSelectDict()
-    select_column_list = []
-    for group_by in group_by_set:
-      select_column_list.append(select_dict.get(group_by, group_by))
-    return SQL_LIST_SEPARATOR.join(select_column_list)
+    return SQL_LIST_SEPARATOR.join(self.getGroupBySet())
 
   def getSelectDict(self):
     """
