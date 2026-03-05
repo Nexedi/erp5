@@ -24,5 +24,6 @@ web_page_module/ors_rrc_connection_request_*
 web_page_module/ors_rrc_paging_*
 web_page_module/ors_rrc_ue_count_*
 web_page_module/ors_ue_count_*
+web_page_module/ors_ul_noise_indicator_*
 web_page_module/ors_unsuccessful_rrc_connection_attempt_*
 web_page_module/plotly_strict_v3.0.0*
