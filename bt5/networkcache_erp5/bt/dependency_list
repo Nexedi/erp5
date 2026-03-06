@@ -1,2 +1,6 @@
 erp5_web_shacache
 erp5_web_shadir
+erp5_web_service
+erp5_session
+erp5_oauth2_authorisation
+erp5_oauth2_resource
