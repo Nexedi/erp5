@@ -9,14 +9,14 @@ FROM
     <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
   </dtml-if>
 
-WHERE 
-  1 = 1 
+WHERE
+  1 = 1
 <dtml-if where_expression>
   AND <dtml-var where_expression>
 </dtml-if>
 <dtml-if group_by_expression>
 GROUP BY
-  <dtml-var group_by_expression>
+  <dtml-var expr="SQLCatalog_resolveAmbiguousColumn(group_by_expression, select_expression)">
 </dtml-if>
 <dtml-if sort_on>
 ORDER BY

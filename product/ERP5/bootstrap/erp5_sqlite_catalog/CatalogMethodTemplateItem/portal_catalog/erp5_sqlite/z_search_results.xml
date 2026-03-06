@@ -8,9 +8,7 @@
       <dictionary>
         <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
@@ -21,7 +19,8 @@ from_table_list:list\n
 from_expression\n
 sort_on\n
 limit_expression\n
-search_mode</string> </value>
+search_mode\n
+SQLCatalog_resolveAmbiguousColumn</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -63,7 +62,7 @@ search_mode</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_search_results</string> </value>
         </item>
       </dictionary>
     </pickle>
