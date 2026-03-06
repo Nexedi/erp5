@@ -12,13 +12,13 @@ def parse_select_aliases(select_expression):
     re.IGNORECASE
   )
   return {
-    alias: expr
+    alias.strip('`'): expr
     for expr, alias in pattern.findall(select_expression)
   }
 
 SQL_LIST_SEPARATOR = ', '
 
-expression_list = ["`%s`" % x  for x in expression.split(SQL_LIST_SEPARATOR)]
+expression_list = [x  for x in expression.split(SQL_LIST_SEPARATOR)]
 
 new_expression_list = []
 
