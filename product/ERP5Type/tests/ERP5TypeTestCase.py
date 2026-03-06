@@ -889,6 +889,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
             )
             session.setIntIndex(1)
             session.validate()
+            transaction.commit()
 
           session_version = session.getIntIndex() or 1
 
