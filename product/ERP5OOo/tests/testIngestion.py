@@ -66,6 +66,7 @@ class IngestionTestCase(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy', 'erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web', 'erp5_crm', 'erp5_dms',
+            'erp5_session',
             'erp5_web_service',
             'erp5_oauth2_resource', 'erp5_oauth2_authorisation')
 
