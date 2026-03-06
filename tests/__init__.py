@@ -170,11 +170,13 @@ class ERP5(_ERP5):
 class ERP5SQLite(ERP5):
   def getTestList(self):
     not_supported_list = [
-      'testInventoryAPI',
-      'testDeferredConnection',
-      'testTableStructureMigration'
+      'testInventoryAPI', # inventory
+      'testDeferredConnection', # ZMySQLDA
+      'testTableStructureMigration', # ZMySQLDA
+      'testFunctionalCore', # accounting
+      'testXHTML' # accounting
       ]
-    return [x for x in self._getAllTestList() if (x.startswith('test') or x.startswith('erp5_core_test')) and (x not in not_supported_list)]
+    return [x for x in self._getAllTestList() if (x.startswith('test') or x.startswith('erp5_core_test') or x.startswith('erp5_ui_test')) and (x not in not_supported_list)]
 
 class WORKFLOW(ERP5):
   # new test suite running a few test related to Workflow
