@@ -1,4 +1,4 @@
-<dtml-let column_list="('relative_url', 'security_uid', 'portal_type', 'parent_uid') + tuple(getAllowedRolesAndUsers(sql_catalog_id=getId())[1])">
+<dtml-let column_list="['relative_url', 'security_uid', 'portal_type', 'parent_uid'] + [e[1].replace('catalog.', '') for e in getSQLCatalogLocalRoleKeysList()]">
 INSERT INTO
   catalog (`uid`, `path`)
 VALUES
