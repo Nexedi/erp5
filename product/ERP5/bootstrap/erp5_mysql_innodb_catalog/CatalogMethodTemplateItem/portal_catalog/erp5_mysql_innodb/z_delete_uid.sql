@@ -1,11 +1,12 @@
-<dtml-let column_list="['path', 'relative_url', 'security_uid', 'portal_type', 'parent_uid']">
+<dtml-let column_list="('relative_url', 'security_uid', 'portal_type', 'parent_uid') + tuple(getAllowedRolesAndUsers(sql_catalog_id=getId())[1])">
 INSERT INTO
-  catalog (`uid`, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
+  catalog (`uid`, `path`)
 VALUES
-  (<dtml-sqlvar uid type="int">, 'deleted','',NULL,'',NULL)
+  (<dtml-sqlvar uid type="int">, 'deleted')
 ON DUPLICATE KEY UPDATE
+  `path` = VALUES(path),
 <dtml-in column_list>
-  `<dtml-var sequence-item>` = VALUES(<dtml-var sequence-item>)<dtml-if sequence-end><dtml-else>,</dtml-if>
+  `<dtml-var sequence-item>` = DEFAULT<dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>
 </dtml-let>
 <dtml-var sql_delimiter>
