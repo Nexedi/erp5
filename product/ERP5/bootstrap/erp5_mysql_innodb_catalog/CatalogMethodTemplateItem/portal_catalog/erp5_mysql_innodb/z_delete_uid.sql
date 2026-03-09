@@ -1,16 +1,27 @@
-REPLACE INTO
-  catalog (uid, path,relative_url,security_uid,portal_type,parent_uid)
+<dtml-let column_list="['relative_url', 'security_uid', 'portal_type', 'parent_uid'] + [e[1].replace('catalog.', '') for e in getSQLCatalogLocalRoleKeysList()]">
+INSERT INTO
+  catalog (`uid`, `path`)
 VALUES
-  (<dtml-sqlvar uid type="int">, 'deleted','',NULL,'',NULL)
+  (<dtml-sqlvar uid type="int">, 'deleted')
+ON DUPLICATE KEY UPDATE
+  `path` = VALUES(path),
+<dtml-in column_list>
+  `<dtml-var sequence-item>` = DEFAULT<dtml-if sequence-end><dtml-else>,</dtml-if>
+</dtml-in>
+</dtml-let>
 <dtml-var sql_delimiter>
 <dtml-if expr="'deleted_catalog' in portal_catalog.getSQLCatalog().getTableIds()">
-<dtml-comment>
-  Here we use REPLACE instead of INSERT to avoid duplicate entries.
-</dtml-comment>
-REPLACE INTO
-  deleted_catalog (uid, path)
+<dtml-let column_list="['path']">
+INSERT INTO
+  deleted_catalog (`uid`, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
 VALUES
   (<dtml-sqlvar uid type="int">, <dtml-sqlvar path type="string">)
+ON DUPLICATE KEY UPDATE
+<dtml-in column_list>
+  `<dtml-var sequence-item>` = VALUES(<dtml-var sequence-item>),
+</dtml-in>
+  `deletion_timestamp` = DEFAULT
+</dtml-let>
 <dtml-var sql_delimiter>
 </dtml-if>
 <dtml-comment>
