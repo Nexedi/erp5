@@ -19,6 +19,7 @@ erp5_catalog_core/z0_drop_catalog
 erp5_catalog_core/z0_drop_category
 erp5_catalog_core/z0_drop_deleted_catalog
 erp5_catalog_core/z0_drop_delivery
+erp5_catalog_core/z0_drop_email
 erp5_catalog_core/z0_drop_item
 erp5_catalog_core/z0_drop_measure
 erp5_catalog_core/z0_drop_predicate
@@ -34,6 +35,7 @@ erp5_catalog_core/z0_drop_user
 erp5_catalog_core/z0_drop_versioning
 erp5_catalog_core/z0_uncatalog_alarm
 erp5_catalog_core/z0_uncatalog_category
+erp5_catalog_core/z0_uncatalog_email
 erp5_catalog_core/z0_uncatalog_item
 erp5_catalog_core/z0_uncatalog_measure
 erp5_catalog_core/z0_uncatalog_predicate
@@ -45,6 +47,7 @@ erp5_catalog_core/z0_uncatalog_user
 erp5_catalog_core/z0_uncatalog_versioning
 erp5_catalog_core/z_catalog_alarm_list
 erp5_catalog_core/z_catalog_delivery_list
+erp5_catalog_core/z_catalog_email_list
 erp5_catalog_core/z_catalog_item_list
 erp5_catalog_core/z_catalog_measure_list
 erp5_catalog_core/z_catalog_movement_category_list
