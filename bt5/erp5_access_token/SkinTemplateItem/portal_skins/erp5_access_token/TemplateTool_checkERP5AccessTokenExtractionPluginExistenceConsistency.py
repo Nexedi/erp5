@@ -10,17 +10,6 @@ if len(access_token_plugin_list) > 1:
 
 error_list = []
 if not access_token_plugin_list:
-  # A dumb http extraction plugin is required as fallback if we use an access token
-  # since https://github.com/Nexedi/erp5/commit/0bee523da0075c6efe3c06296dddd01d9dd5045a
-  # we enable it automatically at site creation, but for compatibility with old instances
-  # make sure it is created if needed
-  if 'erp5_dumb_http_extraction' not in acl_users.objectIds():
-    error_list.append("erp5_dumb_http_extraction is missing")
-    if fixit:
-      dispacher = acl_users.manage_addProduct['ERP5Security']
-      dispacher.addERP5DumbHTTPExtractionPlugin('erp5_dumb_http_extraction')
-      acl_users.erp5_dumb_http_extraction.manage_activateInterfaces(('IExtractionPlugin', ))
-
   error_list.append("erp5_access_token_plugin is missing")
   if fixit:
     dispacher = acl_users.manage_addProduct['ERP5Security']
