@@ -40,7 +40,6 @@ from six.moves.cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
-from Products.CMFActivity.ActivityConnection import ActivityConnection
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions
 from AccessControl.SecurityManagement import newSecurityManager
@@ -723,6 +722,7 @@ class ActivityTool (BaseTool):
       return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
+      from Products.CMFActivity.ActivityConnection import ActivityConnection
       connection_id = 'cmf_activity_sql_connection'
       sql_connection = getattr(self, connection_id, None)
       if (sql_connection is not None and
