@@ -1447,7 +1447,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         connection_by_connection_id[connection_id] = connection
         if isinstance(connection, DeferredConnection):
           for other_connection in portal.objectValues(
-                spec=('Z MySQL Database Connection',)):
+                spec=('Z MySQL Database Connection', 'Z SQLite Database Connection')):
             if connection_string == other_connection.connection_string:
               connection_by_connection_id[connection_id] = other_connection
               break
