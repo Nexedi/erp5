@@ -72,7 +72,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.tic()
     mark_replaced_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting',
            'erp5_configurator',
-           'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard"]
+           "erp5_configurator_standard"]
     for bt_name in mark_replaced_bt_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt_name)
       if (bt is not None) and bt.getInstallationState() in ['installed',
@@ -687,11 +687,9 @@ class TestTemplateTool(ERP5TypeTestCase):
       return orig_manage_catalogClear(*args, **kw)
     ERP5Catalog.manage_catalogClear = manage_catalogClear
     try:
-      bt5_name = 'erp5_ingestion_mysql_innodb_catalog'
+      bt5_name = 'erp5_base'
       template_tool = self.portal.portal_templates
       self.tic()
-      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEqual(bt, None)
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_different=False, update_catalog=0)
 
@@ -875,7 +873,6 @@ class TestTemplateTool(ERP5TypeTestCase):
       'erp5_xhtml_style': first_group,
       'erp5_jquery': second_group,
       'erp5_jquery_ui': second_group,
-      'erp5_ingestion_mysql_innodb_catalog': second_group,
       'erp5_base': second_group,
       'erp5_knowledge_pad': second_group,
       'erp5_ingestion': second_group,
