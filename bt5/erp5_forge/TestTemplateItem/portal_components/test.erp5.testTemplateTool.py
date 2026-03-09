@@ -695,7 +695,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_different=False, update_catalog=0)
 
-      self.assertIn("Installed %s with" % bt5_name, operation_log[0])
+      self.assertIn("Installed %s with" % bt5_name, operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEqual(bt.getId(), None)
       self.commit()
