@@ -1,5 +1,5 @@
 <dtml-let content_translation_dict_list="CatalogTool_getContentTranslationDictList(Base_getContentTranslationTargetObject)">
-<dtml-let document_list="[]" delete_list="[]">
+<dtml-let document_list="[]" delete_list="[]" column_list="['translated_text']">
   <dtml-in prefix="loop" expr="_.range(_.len(content_translation_dict_list))">
     <dtml-if "content_translation_dict_list[loop_item]['translated_text']">
       <dtml-call expr="document_list.append(loop_item)">
@@ -8,7 +8,9 @@
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(document_list) > 0">
-REPLACE INTO content_translation
+INSERT INTO
+  content_translation
+  (uid, property_name, content_language, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
 VALUES
     <dtml-in prefix="loop" expr="document_list">
 (<dtml-sqlvar "content_translation_dict_list[loop_item]['uid']" type=int>,
@@ -18,6 +20,10 @@ VALUES
 )
 <dtml-unless sequence-end>,</dtml-unless>
 </dtml-in>
+ON DUPLICATE KEY UPDATE
+    <dtml-in column_list>
+  `<dtml-var sequence-item>` = VALUES(<dtml-var sequence-item>)<dtml-if sequence-end><dtml-else>,</dtml-if>
+    </dtml-in>
   </dtml-if>
   <dtml-if expr="_.len(delete_list) > 0">
 <dtml-var sql_delimiter>
