@@ -169,7 +169,6 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
       'erp5_web_renderjs_ui',
       'erp5_dms',
       'erp5_jquery',
-      'erp5_ingestion_mysql_innodb_catalog',
       'erp5_ingestion',
       'erp5_forge',
       'erp5_jquery_plugin_elastic',
