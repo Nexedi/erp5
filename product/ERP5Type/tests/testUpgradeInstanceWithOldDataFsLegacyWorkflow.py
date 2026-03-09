@@ -44,7 +44,6 @@ class TestUpgradeInstanceWithOldDataFsWithLegacyWorkflow(ERP5TypeTestCase):
             'erp5_configurator',
             'erp5_pdm',
             'erp5_trade',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',
             'erp5_crm',
             'erp5_jquery_ui',

@@ -65,7 +65,6 @@ class DeferredStyleTestCase(ERP5TypeTestCase, ZopeTestCase.Functional):
             'erp5_base',
             'erp5_ods_style',
             'erp5_odt_style',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',
             'erp5_web',
             'erp5_dms',
@@ -531,7 +530,6 @@ class TestDeferredReportAlarm(DeferredStyleTestCase):
         'erp5_knowledge_pad',
         'erp5_web',
         'erp5_ingestion',
-        'erp5_ingestion_mysql_innodb_catalog',
         'erp5_dms',
     )
 
