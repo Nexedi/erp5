@@ -9,7 +9,6 @@ configuration_save = context.restrictedTraverse(configuration_save_url)
 bt5_installation_list = ('erp5_full_text_mroonga_catalog',
                          'erp5_base',
                          'erp5_jquery_ui',
-                         'erp5_ingestion_mysql_innodb_catalog',
                          'erp5_ingestion',
                          'erp5_stock_cache',
                          'erp5_web',
@@ -44,7 +43,7 @@ bt5_installation_list = ('erp5_full_text_mroonga_catalog',
                          'erp5_mqtt'
                         )
 
-bt5_update_catalog = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_wendelin',)
+bt5_update_catalog = ('erp5_wendelin',)
 
 for name in bt5_installation_list:
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",
