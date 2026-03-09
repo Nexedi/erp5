@@ -181,6 +181,11 @@ class ZCatalog(Folder, Persistent, Implicit):
   hot_reindexing_state = None
   default_sql_catalog_id = None
   archive_path = None
+  # Ids of the shared catalogs held by this tool. A shared catalog holds the
+  # database-agnostic methods and configuration inherited by the backend
+  # catalogs; it is never used as a site catalog on its own. Catalogs register
+  # themselves here at installation time (see BusinessTemplate).
+  shared_sql_catalog_id_list = ()
 
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
   manage_catalogFilter = DTMLFile( 'dtml/catalogFilter', globals() )
@@ -201,14 +206,75 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   security.declarePublic('getSQLCatalogIdList')
   def getSQLCatalogIdList(self):
-    return self.objectIds(spec=('SQLCatalog',))
+    # Shared catalogs only hold methods and configuration inherited by the
+    # backend catalogs; they are never used as a site catalog on their own, so
+    # they must not be selectable as the default SQL catalog.
+    # NB: catalog instances may be either old 'SQLCatalog' or new 'ERP5 Catalog'
+    # meta_type; match both so getSQLCatalog() can auto-select a backend catalog
+    # even when default_sql_catalog_id has not been set explicitly.
+    shared_sql_catalog_id_list = self.getSharedSqlCatalogIdList()
+    return [x for x in self.objectIds(spec=('SQLCatalog', 'ERP5 Catalog'))
+            if x not in shared_sql_catalog_id_list]
+
+  # A shared base catalog holds the database-agnostic common methods (so it has
+  # the shared drop method) but none of the dialect schema-creation methods (so
+  # it lacks the create method): its tables live in the backend catalogs that
+  # inherit from it. This signature distinguishes it both from a backend catalog
+  # (which has the create method) and from a stray/partial catalog that just
+  # received a few feature methods (which has neither).
+  _shared_catalog_marker_method_id = 'z0_drop_catalog'
+  _schema_owner_method_id = 'z_create_catalog'
+
+  security.declarePublic('getSharedSqlCatalogIdList')
+  def getSharedSqlCatalogIdList(self):
+    """
+    Ids of the shared catalogs inherited by the backend catalogs.
+
+    Detected dynamically (so existing sites self-heal regardless of install-time
+    registration) and unioned with any explicitly-registered ids: a shared
+    catalog has the common drop method but not the dialect create method.
+    """
+    shared = set(self.shared_sql_catalog_id_list)
+    for catalog_id in self.objectIds(spec=('SQLCatalog', 'ERP5 Catalog')):
+      if catalog_id in shared:
+        continue
+      catalog = self._getOb(catalog_id, None)
+      if catalog is not None and \
+         catalog.hasObject(self._shared_catalog_marker_method_id) and \
+         not catalog.hasObject(self._schema_owner_method_id):
+        shared.add(catalog_id)
+    return tuple(shared)
+
+  def _registerSharedSqlCatalog(self, catalog_id):
+    """Register a catalog as a shared catalog inherited by the backend ones."""
+    if catalog_id not in self.shared_sql_catalog_id_list:
+      self.shared_sql_catalog_id_list = tuple(
+        self.shared_sql_catalog_id_list) + (catalog_id,)
+
+  def _unregisterSharedSqlCatalog(self, catalog_id):
+    """Remove a catalog from the shared catalog registry."""
+    if catalog_id in self.shared_sql_catalog_id_list:
+      self.shared_sql_catalog_id_list = tuple(
+        x for x in self.shared_sql_catalog_id_list if x != catalog_id)
 
   def getDefaultSqlCatalogId(self):
-    return self.default_sql_catalog_id
+    catalog_id = self.default_sql_catalog_id
+    # A shared catalog must never act as the site default (it has no schema of
+    # its own). Self-heal sites whose default was wrongly set to a shared
+    # catalog by picking a backend (non-shared) catalog instead.
+    if catalog_id and catalog_id in self.getSharedSqlCatalogIdList():
+      id_list = self.getSQLCatalogIdList()
+      catalog_id = id_list[0] if id_list else None
+      self._setDefaultSqlCatalogId(catalog_id)
+    return catalog_id
 
   def _setDefaultSqlCatalogId(self, value):
-    if value:
+    # Never select a shared catalog as the site default.
+    if value and value not in self.getSharedSqlCatalogIdList():
       self.default_sql_catalog_id = value
+      # Keep the ERP5 Catalog Tool's own default in sync; it is what
+      # BusinessTemplate._getCatalogValue reads.
+      self.default_erp5_catalog_id = value
 
   security.declarePublic('getSQLCatalog')
   def getSQLCatalog(self, id=None, default_value=None):
