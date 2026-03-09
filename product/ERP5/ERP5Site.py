@@ -2331,8 +2331,11 @@ class ERP5Generator(PortalGenerator):
       if not sql_reset and p[id]().tables():
         raise Exception("Database %r is not empty." % connection_string)
 
-    # Add Z MySQL Connections
-    manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    else:
+      manage_add = p.manage_addProduct['ZSQLiteDA'].manage_addZSQLiteConnection
+
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
     addSQLConnection('erp5_sql_deferred_connection',
@@ -2633,7 +2636,7 @@ def initialize(self):
   import inspect, sys, time
   from AccessControl.SecurityManagement import newSecurityManager
   from App.ZApplication import ZApplicationWrapper
-  from Products.ZMySQLDA.db import DB, OperationalError
+  from Products.Database.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
     erp5_catalog_storage = kw.get('erp5_catalog_storage')
