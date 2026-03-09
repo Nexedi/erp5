@@ -1,4 +1,4 @@
-<dtml-let column_list="['relative_url', 'security_uid', 'portal_type', 'parent_uid'] + [e[1].replace('catalog.', '') for e in getSQLCatalogLocalRoleKeysList()]">
+<dtml-let column_list="['relative_url', 'security_uid', 'portal_type', 'parent_uid'] + [e[1].replace('catalog.', '') for e in getSQLCatalogRoleKeysList()]">
 INSERT INTO
   catalog (`uid`, `path`)
 VALUES

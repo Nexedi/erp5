@@ -678,7 +678,8 @@ class Catalog(Folder,
   def _getFilterDict(self):
     return self.filter_dict
 
-  security.declarePrivate('getSQLCatalogRoleKeysList')
+  security.declarePublic('getSQLCatalogRoleKeysList')
+  @transactional_cache_decorator
   def getSQLCatalogRoleKeysList(self):
     """
     Return the list of role keys.
@@ -702,8 +703,7 @@ class Catalog(Folder,
       local_roles_group_id_dict[local_roles_group_id.strip()] = column.strip()
     return local_roles_group_id_dict
 
-  security.declarePublic('getSQLCatalogLocalRoleKeysList')
-  @transactional_cache_decorator
+  security.declarePrivate('getSQLCatalogLocalRoleKeysList')
   def getSQLCatalogLocalRoleKeysList(self):
     """
     Return the list of local role keys.
