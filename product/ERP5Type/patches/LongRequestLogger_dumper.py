@@ -68,7 +68,7 @@ class Dumper(object):
 
     # A fork of ZMySQLDA is maintained in ERP5 (http://www.erp5.com/)
     try:
-        from Products.ZMySQLDA.db import DB
+        from Products.Database.db import DB
     except ImportError:
         def _extract_sql(self, frame):
             pass
