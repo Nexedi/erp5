@@ -181,6 +181,11 @@ class ZCatalog(Folder, Persistent, Implicit):
   hot_reindexing_state = None
   default_sql_catalog_id = None
   archive_path = None
+  # Ids of the shared catalogs held by this tool. A shared catalog holds the
+  # database-agnostic methods and configuration inherited by the backend
+  # catalogs; it is never used as a site catalog on its own. Catalogs register
+  # themselves here at installation time (see BusinessTemplate).
+  shared_sql_catalog_id_list = ()
 
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
   manage_catalogFilter = DTMLFile( 'dtml/catalogFilter', globals() )
@@ -201,7 +206,29 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   security.declarePublic('getSQLCatalogIdList')
   def getSQLCatalogIdList(self):
-    return self.objectIds(spec=('SQLCatalog',))
+    # Shared catalogs only hold methods and configuration inherited by the
+    # backend catalogs; they are never used as a site catalog on their own, so
+    # they must not be selectable as the default SQL catalog.
+    shared_sql_catalog_id_list = self.getSharedSqlCatalogIdList()
+    return [x for x in self.objectIds(spec=('SQLCatalog',))
+            if x not in shared_sql_catalog_id_list]
+
+  security.declarePublic('getSharedSqlCatalogIdList')
+  def getSharedSqlCatalogIdList(self):
+    """Ids of the shared catalogs inherited by the backend catalogs."""
+    return self.shared_sql_catalog_id_list
+
+  def _registerSharedSqlCatalog(self, catalog_id):
+    """Register a catalog as a shared catalog inherited by the backend ones."""
+    if catalog_id not in self.shared_sql_catalog_id_list:
+      self.shared_sql_catalog_id_list = tuple(
+        self.shared_sql_catalog_id_list) + (catalog_id,)
+
+  def _unregisterSharedSqlCatalog(self, catalog_id):
+    """Remove a catalog from the shared catalog registry."""
+    if catalog_id in self.shared_sql_catalog_id_list:
+      self.shared_sql_catalog_id_list = tuple(
+        x for x in self.shared_sql_catalog_id_list if x != catalog_id)
 
   def getDefaultSqlCatalogId(self):
     return self.default_sql_catalog_id
