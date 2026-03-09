@@ -11,5 +11,5 @@ ON CONFLICT(id_group) DO UPDATE SET
     last_id = last_id + <dtml-sqlvar id_count type="int">
 <dtml-var sql_delimiter>
 
-SELECT `last_id` AS `LAST_INSERT_ID` FROM portal_ids
+SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids
  WHERE `id_group` = <dtml-sqlvar id_group type="string">
