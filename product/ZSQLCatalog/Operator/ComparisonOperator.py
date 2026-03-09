@@ -214,6 +214,68 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
 
 verifyClass(IOperator, SphinxSEComparisonOperator)
 
+
+class SqliteComparisonOperator(MonovaluedComparisonOperator):
+  def __init__(self, operator, mode=''):
+    MonovaluedComparisonOperator.__init__(self, operator, '')
+    self.where_expression_format_string = (
+      "%(table)s.`uid` IN ("
+      "SELECT rowid FROM %(table_fts)s WHERE %(table_fts)s MATCH %(value_list)s"
+      ")"
+    )
+
+  def renderValue(self, value):
+    boolean_splitter = re.compile(r'(\s|\(.+?\)|".+?")')
+    boolean_detector = re.compile(r'(^[+-]|^".+"$|^\(.+\)$|.+\*$)')
+    if isinstance(value, list_type_list):
+      value, = value
+    if not value:
+      return self._renderValue(value)
+    boolean_tokens = []
+    normal_tokens = []
+    for token in boolean_splitter.split(value):
+      token = token.strip()
+      if not token:
+        continue
+      if boolean_detector.match(token):
+        token = token.replace('+', '').replace('-', 'NOT ')
+        boolean_tokens.append(token)
+      else:
+        normal_tokens.append(token)
+    sqlite_query = ""
+    if normal_tokens:
+      sqlite_query += " OR ".join(
+        [f"{t}*" for t in normal_tokens]
+      )
+    if boolean_tokens:
+      if sqlite_query:
+        sqlite_query += " AND "
+      sqlite_query += " AND ".join(boolean_tokens)
+    if not sqlite_query:
+      sqlite_query = value
+    return self._renderValue(sqlite_query)
+
+  def asSQLExpression(self, column, value_list, only_group_columns):
+    """
+      This operator can emit a select expression, so it overrides
+      asSQLExpression inseatd of just defining a render method.
+    """
+    table  = column.split('.')[0]
+    table = table[1:-1] if table.startswith('`') else table
+    table_fts = table + "_fts"
+    match_string = self.where_expression_format_string % {
+      'table': table,
+      'table_fts': table_fts,
+      'value_list': self.renderValue(value_list)
+    }
+    return SQLExpression(
+      self,
+      where_expression=match_string,
+      can_merge_select_dict=True,
+    )
+
+verifyClass(IOperator, SphinxSEComparisonOperator)
+
 operator_dict = {
   '=': MonovaluedComparisonOperator('='),
   '!=': MonovaluedComparisonOperator('!='),
@@ -229,6 +291,7 @@ operator_dict = {
   'mroonga': MroongaComparisonOperator('mroonga'),
   'mroonga_boolean': MroongaComparisonOperator('mroonga_boolean', force_boolean=True),
   'sphinxse': SphinxSEComparisonOperator('sphinxse'),
+  'sqlite':SqliteComparisonOperator('sqlite'),
   'in': MultivaluedComparisonOperator('in'),
   'is': MonovaluedComparisonOperator('is'),
   'is not': MonovaluedComparisonOperator('is not', '!='),
