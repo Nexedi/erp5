@@ -1616,6 +1616,34 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     zsql_method.setExpressionCacheKey('portal_type')
     zsql_method.setTypeList([])
 
+  def stepCreateNotUsedCatalog(self, sequence=None, **kw):
+    pc = self.getCatalogTool()
+    pc.newContent(
+      portal_type='Catalog',
+      id='dummy')
+    sequence.edit(not_used_catalog_id='dummy')
+
+  def stepCreateNotUsedCatalogMethod(self, sequence=None, **kw):
+    """
+    Create ZSQL Method into catalog
+    """
+    pc = self.getCatalogTool()
+    not_used_catalog_id = sequence.get('not_used_catalog_id', None)
+    self.assertTrue(not_used_catalog_id is not None)
+    catalog = pc[not_used_catalog_id]
+    self.assertTrue(catalog is not None)
+    method_id = "z_fake_method"
+    addSQLMethod = catalog.newContent
+    addSQLMethod(portal_type='SQL Method', id=method_id, title='',
+                 connection_id='erp5_sql_connection', arguments_src='', src='')
+    zsql_method = catalog._getOb(method_id, None)
+    self.assertTrue(zsql_method is not None)
+    expression = 'python: context.isPredicate()'
+    zsql_method.setFiltered(1)
+    zsql_method.setExpression(expression)
+    zsql_method.setExpressionCacheKey('portal_type')
+    zsql_method.setTypeList([])
+
   def stepCreateUpdateCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
@@ -1683,6 +1711,19 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog_id = pc.getSQLCatalog().id
     bt.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id])
 
+  def stepAddNotUsedCatalogMethodToBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add catalog method into the business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.assertTrue(bt is not None)
+    method_id = sequence.get('zsql_method_id', None)
+    self.assertTrue(method_id is not None)
+    not_used_catalog_id  = sequence.get('not_used_catalog_id', None)
+    self.assertTrue(not_used_catalog_id is not None)
+    new_catalog_method_id_list = [not_used_catalog_id+'/'+method_id] + bt.getTemplateCatalogMethodIdList()
+    bt.edit(template_catalog_method_id_list= new_catalog_method_id_list)
+
   def stepRemoveCatalogMethodToBusinessTemplate(self, sequence=None, **kw):
     """
     Remove catalog method into the business template
@@ -1730,6 +1771,21 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(filter_['type'], [])
     self.assertEqual(filter_['filtered'], 1)
     self.assertEqual(filter_['expression'], 'python: context.isPredicate()')
+
+
+  def stepCheckCatalogMethodExistsInNotUsedCatalog(self, sequence=None, **kw):
+    """
+    Check presence of ZSQL Method in catalog
+    """
+    pc = self.getCatalogTool()
+    not_used_catalog_id = sequence.get('not_used_catalog_id', None)
+    self.assertTrue(not_used_catalog_id is not None)
+    catalog = pc[not_used_catalog_id]
+    self.assertTrue(catalog is not None)
+    method_id = sequence.get('zsql_method_id', None)
+    zsql_method = catalog._getOb(method_id, None)
+    self.assertNotEqual(zsql_method, None)
+
 
   def stepCheckUpdatedCatalogMethodExists(self, sequence=None, **kw):
     pc = self.getCatalogTool()
@@ -1784,6 +1840,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # remove filter
     with self.assertRaises(KeyError):
       _ = catalog._getFilterDict()[method_id]
+
+  def stepRemoveNotUsedCatalog(self, sequence=None, **kw):
+    pc = self.getCatalogTool()
+    not_used_catalog_id = sequence.get('not_used_catalog_id', None)
+    self.assertTrue(not_used_catalog_id is not None)
+    pc.manage_delObjects(not_used_catalog_id)
 
   # Related key, Result key and table, and others
   def stepCreateKeysAndTable(self, sequence=list, **kw):
@@ -4418,6 +4480,58 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckInstalledInstallationState \
                        Tic \
                        CheckCatalogMethodRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_124_BusinessTemplateWithMultiCatalogMethod(self):
+    """Test Business Template With Multi Catalog Method, Related Key, Result Key And Table"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateCatalogMethod \
+                       CreateKeysAndTable \
+                       CreateNotUsedCatalog \
+                       CreateNotUsedCatalogMethod \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       AddNotUsedCatalogMethodToBusinessTemplate \
+                       AddKeysAndTableToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveCatalogMethod \
+                       RemoveNotUsedCatalog \
+                       RemoveKeysAndTable \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       Tic \
+                       CheckKeysAndTableRemoved \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckCatalogMethodExists \
+                       CheckCatalogMethodExistsInNotUsedCatalog \
+                       CheckKeysAndTableExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckKeysAndTableRemoved \
+                       CheckCatalogMethodRemoved \
+                       RemoveNotUsedCatalog \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
