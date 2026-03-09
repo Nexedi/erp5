@@ -668,6 +668,119 @@ class Catalog(Folder,
       pass
     super(Catalog, self).manage_afterClone(item)
 
+  # Marker used by _getOb to tell "not found" apart from a None default.
+  _shared_marker = []
+
+  security.declarePrivate('getSharedCatalogList')
+  def getSharedCatalogList(self):
+    """
+    Return the list of shared catalogs this catalog inherits from.
+
+    A Catalog Tool may hold several catalogs: one or more shared catalogs
+    (registered through ZSQLCatalog.getSharedSqlCatalogIdList) which hold the
+    database-agnostic SQL methods and configuration, and the backend catalogs
+    (erp5_mysql_innodb, erp5_sqlite, ...) which only hold what differs between
+    database backends and inherit the rest from the shared catalogs.
+
+    A shared catalog does not inherit from itself.
+    """
+    # Use getattr with defaults: this is called from __getattr__, so it must
+    # never trigger another (possibly recursive) attribute lookup.
+    catalog_tool = getattr(self, 'aq_parent', None)
+    if catalog_tool is None:
+      return []
+    try:
+      shared_id_list = catalog_tool.getSharedSqlCatalogIdList()
+    except AttributeError:
+      return []
+    own_id = getattr(self, 'id', None)
+    result = []
+    for shared_id in shared_id_list:
+      if shared_id == own_id:
+        continue
+      shared_catalog = catalog_tool._getOb(shared_id, None)
+      if shared_catalog is not None:
+        result.append(shared_catalog)
+    return result
+
+  def _getInheritedOb(self, name):
+    """
+    Return a sub-object (catalog method) inherited from a shared catalog, or
+    None. Used by __getattr__ so that attribute access and traversal (e.g.
+    catalog.z0_drop_translation) resolve shared-catalog methods, the same way
+    _getOb does for explicit lookups.
+    """
+    if name.startswith('_') or name.startswith('aq_'):
+      return None
+    for shared_catalog in self.getSharedCatalogList():
+      method = shared_catalog._getLocalOb(name, None)
+      if method is not None:
+        return method
+    return None
+
+  def __getattr__(self, name):
+    # Only reached when normal lookup (local sub-objects + acquisition) fails:
+    # fall back to the shared catalogs this backend catalog inherits from.
+    method = self._getInheritedOb(name)
+    if method is not None:
+      return method
+    raise AttributeError(name)
+
+  def _getLocalOb(self, id, *args):
+    """
+    Local sub-object lookup, WITHOUT shared-catalog delegation.
+
+    Overridden by ERP5Catalog, whose sub-objects live in an ERP5 Folder rather
+    than a plain OFS Folder, so that delegation works the same for both catalog
+    implementations.
+    """
+    return super(Catalog, self)._getOb(id, *args)
+
+  def _getOb(self, id, *args):
+    """
+    Look up a sub-object, delegating to the shared catalogs for the
+    database-agnostic methods which are not defined on this backend catalog.
+    """
+    marker = self._shared_marker
+    result = self._getLocalOb(id, marker)
+    if result is not marker:
+      return result
+    for shared_catalog in self.getSharedCatalogList():
+      result = shared_catalog._getLocalOb(id, marker)
+      if result is not marker:
+        return result
+    # Not found locally nor in any shared catalog: reproduce the standard
+    # behaviour (raise KeyError or return the caller-provided default).
+    return self._getLocalOb(id, *args)
+
+  def _getMergedMethodIdList(self, property_id):
+    """
+    Return a multi-valued method-id property merged with the shared catalogs',
+    shared entries first (e.g. drop methods before create methods).
+    """
+    value = tuple(getattr(self, property_id, ()))
+    seen = set(value)
+    shared_value = []
+    for shared_catalog in self.getSharedCatalogList():
+      for x in getattr(shared_catalog, property_id, ()):
+        if x not in seen:
+          seen.add(x)
+          shared_value.append(x)
+    return tuple(shared_value) + value
+
+  def _getMergedMethodId(self, property_id):
+    """
+    Return a scalar method-id property, falling back to the shared catalogs
+    when this catalog does not define it.
+    """
+    value = getattr(self, property_id, '')
+    if not value:
+      for shared_catalog in self.getSharedCatalogList():
+        value = getattr(shared_catalog, property_id, '')
+        if value:
+          break
+    return value
+
   security.declarePrivate('getCacheSequenceNumber')
   def getCacheSequenceNumber(self):
     return self._cache_sequence_number
@@ -676,7 +789,17 @@ class Catalog(Folder,
     self._cache_sequence_number += 1
 
   def _getFilterDict(self):
-    return self.filter_dict
+    shared_catalog_list = self.getSharedCatalogList()
+    if not shared_catalog_list:
+      return self.filter_dict
+    # Merge the shared catalog filters with our own, ours taking precedence.
+    # Inner filter mappings are shared by reference so the in-place BBB
+    # conversion in _catalogObjectList still persists.
+    merged = {}
+    for shared_catalog in shared_catalog_list:
+      merged.update(shared_catalog.filter_dict)
+    merged.update(self.filter_dict)
+    return merged
 
   security.declarePrivate('getSQLCatalogRoleKeysList')
   def getSQLCatalogRoleKeysList(self):
@@ -844,7 +967,7 @@ class Catalog(Folder,
     return (subject_set_uid, subject_list)
 
   def getSqlClearCatalogList(self):
-    return self.sql_clear_catalog
+    return self._getMergedMethodIdList('sql_clear_catalog')
 
   def _clear(self):
     """
@@ -865,6 +988,9 @@ class Catalog(Folder,
     self._clearSecurityCache()
     self._clearSubjectCache()
     self._clearCaches()
+
+  def getSqlCatalogClearReserved(self):
+    return self._getMergedMethodId('sql_catalog_clear_reserved')
 
   def _clearReserved(self):
     """
@@ -887,7 +1013,7 @@ class Catalog(Folder,
     self._last_clear_reserved_time += 1
 
   def getSqlGetitemByUid(self):
-    return self.sql_getitem_by_uid
+    return self._getMergedMethodId('sql_getitem_by_uid')
 
   security.declarePrivate('getRecordForUid')
   def getRecordForUid(self, uid):
@@ -954,14 +1080,14 @@ class Catalog(Folder,
     return self.getSqlSearchResultKeysList()
 
   def getSqlCatalogMultiSchema(self):
-    return self.sql_catalog_multi_schema
+    return self._getMergedMethodId('sql_catalog_multi_schema')
 
   def getSqlCatalogSchema(self):
-    return self.sql_catalog_schema
+    return self._getMergedMethodId('sql_catalog_schema')
 
   @transactional_cache_decorator
   def _getCatalogSchema(self):
-    method = getattr(self, self.sql_catalog_multi_schema, None)
+    method = self._getOb(self.getSqlCatalogMultiSchema(), None)
     result = {}
     if method is None:
       # BBB: deprecated
@@ -970,9 +1096,8 @@ class Catalog(Folder,
               "instead of one",
               DeprecationWarning)
       method_name = self.getSqlCatalogSchema()
-      try:
-        method = getattr(self, method_name)
-      except AttributeError:
+      method = self._getOb(method_name, None)
+      if method is None:
         return {}
       for table in self.getCatalogSearchTableIds():
         try:
@@ -1286,10 +1411,10 @@ class Catalog(Folder,
                               deferred=deferred)
 
   def getSqlCatalogObjectListList(self):
-    return self.sql_catalog_object_list
+    return self._getMergedMethodIdList('sql_catalog_object_list')
 
   def getSqlDeferredCatalogObjectListList(self):
-    return self.sql_deferred_catalog_object_list
+    return self._getMergedMethodIdList('sql_deferred_catalog_object_list')
 
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None, deferred=0):
@@ -1301,7 +1426,7 @@ class Catalog(Folder,
       return
 
     # force using READ COMMITTED isolation.
-    connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
+    connection_id = self._getOb(self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
     if not db._registered and (hasattr(db, "innodb_locks_unsafe_for_binlog") and not db.innodb_locks_unsafe_for_binlog):
       db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
@@ -1484,10 +1609,10 @@ class Catalog(Folder,
     return ()
 
   def _getCatalogMethod(self, method_name):
-    return getattr(self, method_name)
+    return self._getOb(method_name)
 
   def getSqlCatalogDeleteUid(self):
-     return self.sql_catalog_delete_uid
+     return self._getMergedMethodId('sql_catalog_delete_uid')
 
   security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, path=None,uid=None):
@@ -1513,10 +1638,10 @@ class Catalog(Folder,
       method(uid=uid)
 
   def getSqlUncatalogObjectList(self):
-    return self.sql_uncatalog_object
+    return self._getMergedMethodIdList('sql_uncatalog_object')
 
   def getSqlDeferredUncatalogObjectList(self):
-    return self.sql_deferred_uncatalog_object
+    return self._getMergedMethodIdList('sql_deferred_uncatalog_object')
 
   security.declarePrivate('uncatalogObject')
   def uncatalogObject(self, path=None, uid=None):
@@ -1547,7 +1672,7 @@ class Catalog(Folder,
       method(uid = uid)
 
   def getSqlCatalogTranslationList(self):
-    return self.sql_catalog_translation_list
+    return self._getMergedMethodId('sql_catalog_translation_list')
 
   security.declarePrivate('catalogTranslationList')
   def catalogTranslationList(self, object_list):
@@ -1558,7 +1683,7 @@ class Catalog(Folder,
                                   check_uid=0)
 
   def getSqlDeleteTranslationList(self):
-    return self.sql_delete_translation_list
+    return self._getMergedMethodId('sql_delete_translation_list')
 
   security.declarePrivate('deleteTranslationList')
   def deleteTranslationList(self):
@@ -1574,7 +1699,7 @@ class Catalog(Folder,
       LOG('SQLCatalog', WARNING, 'could not delete translations', error=True)
 
   def getSqlUniqueValues(self):
-    return self.sql_unique_values
+    return self._getMergedMethodId('sql_unique_values')
 
   security.declarePrivate('uniqueValuesFor')
   def uniqueValuesFor(self, name):
@@ -1583,7 +1708,7 @@ class Catalog(Folder,
     return method(column=name)
 
   def getSqlCatalogPaths(self):
-    return self.sql_catalog_paths
+    return self._getMergedMethodId('sql_catalog_paths')
 
   security.declarePrivate('getPaths')
   def getPaths(self):
@@ -1592,7 +1717,7 @@ class Catalog(Folder,
     return method()
 
   def getSqlGetitemByPath(self):
-    return self.sql_getitem_by_path
+    return self._getMergedMethodId('sql_getitem_by_path')
 
   security.declarePrivate('getUidForPath')
   def getUidForPath(self, path):
@@ -1675,21 +1800,28 @@ class Catalog(Folder,
                           ):
     """Find Z SQL methods in the current folder and above
     This function return a list of ids.
+    Methods inherited from the shared catalogs are included too.
     """
     ids={}
     have_id=ids.__contains__
 
-    while self is not None:
-      if hasattr(self, 'objectValues'):
-        for o in self.objectValues(valid_method_meta_type_list):
+    def _collect(folder):
+      if hasattr(folder, 'objectValues'):
+        for o in folder.objectValues(valid_method_meta_type_list):
           if hasattr(o,'id'):
             id=o.id
             if not isinstance(id, str):
               id=id()
             if not have_id(id):
-              if hasattr(o,'title_and_id'): o=o.title_and_id()
-              else: o=id
               ids[id]=id
+
+    # Methods inherited from the shared catalogs (siblings, hence not on the
+    # acquisition chain walked below).
+    for shared_catalog in self.getSharedCatalogList():
+      _collect(shared_catalog)
+
+    while self is not None:
+      _collect(self)
       if hasattr(self, 'aq_parent'): self=self.aq_parent
       else: self=None
 
@@ -1753,7 +1885,7 @@ class Catalog(Folder,
   @transactional_cache_decorator
   def _getTableIndex(self, table):
     table_index = {}
-    method = getattr(self, self.sql_catalog_index, '')
+    method = self._getOb(self._getMergedMethodId('sql_catalog_index'), '')
     if method in ('', None):
       return {}
     index = list(method(table=table))
@@ -1831,7 +1963,11 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, 'Malformed scriptable key definition: %r. Ignored.' % (scriptable_key_definition, ))
         continue
       key, script_id = [x.strip() for x in split_scriptable_key_definition]
+      # The script may live locally, in a skin folder (legacy), or in a shared
+      # catalog this backend catalog inherits from (resolved through _getOb).
       script = getattr(self, script_id, None)
+      if script is None:
+        script = self._getOb(script_id, None)
       if script is None:
         LOG('SQLCatalog', WARNING, 'Scriptable key %r script %r is missing. Skipped.' % (key, script_id))
       else:
@@ -2384,7 +2520,10 @@ class Catalog(Folder,
     )
 
   def getSqlSearchResults(self):
-    return self.sql_search_results
+    return self._getMergedMethodId('sql_search_results')
+
+  def getSqlSearchSecurity(self):
+    return self._getMergedMethodId('sql_search_security')
 
   security.declarePrivate('getSearchResultsMethod')
   def getSearchResultsMethod(self):
@@ -2408,7 +2547,7 @@ class Catalog(Folder,
   __call__ = searchResults
 
   def getSqlCountResults(self):
-    return self.sql_count_results
+    return self._getMergedMethodId('sql_count_results')
 
   security.declarePrivate('getCountResultsMethod')
   def getCountResultsMethod(self):
@@ -2430,7 +2569,7 @@ class Catalog(Folder,
     return isAdvancedSearchText(search_text, self.isValidColumn)
 
   def getSqlRecordObjectList(self):
-    return self.sql_record_object_list
+    return self._getMergedMethodId('sql_record_object_list')
 
   security.declarePrivate('recordObjectList')
   def recordObjectList(self, path_list, catalog=1):
@@ -2441,7 +2580,7 @@ class Catalog(Folder,
     method(path_list=path_list, catalog=catalog)
 
   def getSqlDeleteRecordedObjectList(self):
-    return self.sql_delete_recorded_object_list
+    return self._getMergedMethodId('sql_delete_recorded_object_list')
 
   security.declarePrivate('deleteRecordedObjectList')
   def deleteRecordedObjectList(self, uid_list=()):
@@ -2452,7 +2591,7 @@ class Catalog(Folder,
     method(uid_list=uid_list)
 
   def getSqlReadRecordedObjectList(self):
-    return self.sql_read_recorded_object_list
+    return self._getMergedMethodId('sql_read_recorded_object_list')
 
   security.declarePrivate('readRecordedObjectList')
   def readRecordedObjectList(self, catalog=1):
@@ -2475,9 +2614,10 @@ class Catalog(Folder,
 
   def getSqlUpdateObjectList(self):
     try:
-      return self.sql_update_object
+      self.sql_update_object
     except AttributeError:
       return ()
+    return self._getMergedMethodIdList('sql_update_object')
 
   security.declarePrivate('getFilterableMethodList')
   def getFilterableMethodList(self):
@@ -2496,7 +2636,7 @@ class Catalog(Folder,
     return [
       method
       for method in (
-        getattr(self, method_id, None)
+        self._getOb(method_id, None)
         for method_id in method_id_set
       )
       if method is not None
@@ -2529,12 +2669,9 @@ class Catalog(Folder,
         return getEngine().getContext(data)
 
   def _getOptimizerSwitch(self):
-    method_name = self.sql_optimizer_switch
-    try:
-      method = getattr(self, method_name)
-    except AttributeError:
-      pass
-    else:
+    method_name = self._getMergedMethodId('sql_optimizer_switch')
+    method = self._getOb(method_name, None)
+    if method is not None:
       try:
         return method()[0][0]
       except (ConflictError, DatabaseError):

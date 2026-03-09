@@ -175,6 +175,12 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "ZopePageTemplate":    ("zpt",  1, "_text",        True ),
 }
 
+# Provision through which a business template declares that the catalog(s) it
+# installs are shared catalogs: catalogs which only hold the database-agnostic
+# methods and configuration inherited by the backend catalogs, and which are
+# therefore never used as the site default catalog.
+SHARED_SQL_CATALOG_PROVISION = 'erp5_shared_sql_catalog'
+
 def _getCatalog(acquisition_context):
   """
     Return the id of the Catalog which correspond to the current BT.
@@ -200,11 +206,20 @@ def _getCatalogValue(acquisition_context):
 
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
+  # A business template installs its methods into the catalog(s) it names
+  # through the prefix of template_catalog_method_id_list. We prefer the site
+  # default catalog when it is among the targeted catalogs (the usual backend
+  # catalog case); otherwise the business template targets a single specific
+  # catalog (e.g. a shared catalog such as erp5_catalog_core).
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
-  if default_catalog_id not in catalog_id_list:
+  if default_catalog_id in catalog_id_list:
+    catalog_id = default_catalog_id
+  elif len(catalog_id_list) == 1:
+    catalog_id = list(catalog_id_list)[0]
+  else:
     return None
   try:
-    return portal_catalog[default_catalog_id]
+    return portal_catalog[catalog_id]
   except KeyError:
     return None
 
@@ -1378,13 +1393,27 @@ class ObjectTemplateItem(BaseTemplateItem):
                 ),
               )
 
-            # Update default catalog ID
-            if len(container_container.objectIds()) == 1:
-              # Set the default catalog. Here, thanks to consistency between
-              # ERP5CatalogTool and ZSQLCatalog, we can use the explicit accessor
-              # `_setDefaultSqlCatalogId` to update both `default_sql_catalog_id`
-              # and `default_erp5_catalog_id`
-              container_container._setDefaultSqlCatalogId(container_path[-1])
+            # Register the freshly created catalog in the Catalog Tool. A
+            # business template explicitly declares a shared catalog through the
+            # 'erp5_shared_sql_catalog' provision (see SHARED_SQL_CATALOG_PROVISION):
+            # such a catalog only holds methods and configuration inherited by
+            # the backend catalogs and must never become the site default. Any
+            # other catalog is a backend (site) catalog.
+            new_catalog_id = container_path[-1]
+            try:
+              provision_list = context.getProvisionList()
+            except AttributeError:
+              provision_list = ()
+            if SHARED_SQL_CATALOG_PROVISION in provision_list:
+              container_container._registerSharedSqlCatalog(new_catalog_id)
+            elif len([x for x in container_container.objectIds()
+                      if x not in container_container.getSharedSqlCatalogIdList()
+                      ]) == 1:
+              # Set the default catalog to the first backend catalog created.
+              # Thanks to consistency between ERP5CatalogTool and ZSQLCatalog,
+              # the explicit accessor `_setDefaultSqlCatalogId` updates both
+              # `default_sql_catalog_id` and `default_erp5_catalog_id`.
+              container_container._setDefaultSqlCatalogId(new_catalog_id)
             container = portal.unrestrictedTraverse(container_path)
           else:
             raise

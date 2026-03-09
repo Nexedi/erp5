@@ -179,6 +179,51 @@ class ERP5Catalog(Folder, Catalog):
   isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
+  # Sentinel telling "not found" apart from a None default.
+  _MARKER = []
+
+  def _getOb(self, id, default=_MARKER):
+    """
+    Look up a sub-object LOCALLY first, then fall back to the Base Catalog(s)
+    configured on the parent CatalogTool. This implements the 'Default ERP5
+    Catalog extends Base Catalog' design: methods present only on the Base
+    Catalog (erp5_catalog_core) become reachable through any ERP5 Catalog that
+    does not define them, both for explicit _getOb lookups and for attribute
+    access (see _aq_dynamic / __getattr__).
+    """
+    obj = Folder._getOb(self, id, default=self._MARKER)
+    if obj is not self._MARKER:
+      return obj
+    for base_catalog in self.getSharedCatalogList():
+      obj = Folder._getOb(base_catalog, id, default=self._MARKER)
+      if obj is not self._MARKER:
+        return obj
+    if default is self._MARKER:
+      raise KeyError(id)
+    return default
+
+  def _aq_dynamic(self, id):
+    # ExtensionClass dynamic-attribute hook: this is what is consulted (instead
+    # of Python's __getattr__) when an attribute is not found on an Acquisition
+    # object, *before* acquisition climbs to the parent. We resolve both LOCAL
+    # sub-objects (catalog methods in this catalog) and methods inherited from
+    # the Base Catalog. Names starting with '_'/'aq_' are never sub-objects and
+    # are skipped to avoid recursion. Returning None lets acquisition continue.
+    if id.startswith('_') or id.startswith('aq_'):
+      return None
+    obj = self._getOb(id, self._MARKER)
+    return None if obj is self._MARKER else obj
+
+  def __getattr__(self, name):
+    # Fallback for contexts that use __getattr__ rather than _aq_dynamic
+    # (e.g. restrictedTraverse). Mirror _aq_dynamic but raise AttributeError.
+    if name.startswith('_') or name.startswith('aq_'):
+      raise AttributeError(name)
+    obj = self._getOb(name, self._MARKER)
+    if obj is self._MARKER:
+      raise AttributeError(name)
+    return obj
+
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
   # the new metatypes.
