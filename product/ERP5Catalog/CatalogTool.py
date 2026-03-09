@@ -44,7 +44,7 @@ from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ZMySQLDA.DA import DeferredConnection
+from Products.Database.DA import DeferredConnection
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
