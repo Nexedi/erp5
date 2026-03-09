@@ -1,0 +1,8 @@
+erp5_sqlite/SQLCatalog_makeFullTextQuery
+erp5_sqlite/z0_drop_catalog_fulltext
+erp5_sqlite/z0_drop_content_translation
+erp5_sqlite/z0_drop_fulltext
+erp5_sqlite/z_catalog_fulltext_list
+erp5_sqlite/z_create_catalog_fulltext
+erp5_sqlite/z_create_content_translation
+erp5_sqlite/z_create_fulltext
