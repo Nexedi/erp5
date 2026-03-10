@@ -233,14 +233,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
 
-    def getRevision(self):
-      erp5_path = os.path.join(instancehome, 'Products', 'ERP5')
-      try:
-        import pysvn
-        return pysvn.Client().info(erp5_path).revision.number
-      except Exception:
-        return None
-
     def getTitle(self):
       """Returns the title of the test, for test reports.
       """
