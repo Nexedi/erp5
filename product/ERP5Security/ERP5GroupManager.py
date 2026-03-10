@@ -41,6 +41,15 @@ import six
 # issues.
 NO_CACHE_MODE = 0
 
+from contextlib import contextmanager as _cm_dc
+from threading import local as _local_dc
+_CACHE_ENABLED_LOCAL = _local_dc()
+@_cm_dc
+def disableCache():
+  _CACHE_ENABLED_LOCAL.value = False
+  try: yield
+  finally: _CACHE_ENABLED_LOCAL.value = True
+
 class ConsistencyError(Exception): pass
 
 manage_addERP5GroupManagerForm = PageTemplateFile(

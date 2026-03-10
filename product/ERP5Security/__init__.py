@@ -94,6 +94,7 @@ def initialize(context):
     ERP5AccessTokenExtractionPlugin,
     ERP5DumbHTTPExtractionPlugin,
     ERP5ExternalOpenIdConnectExtractionPlugin,
+    ERP5OAuth2ResourceServerPlugin,
   )
 
   registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
