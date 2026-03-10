@@ -7,21 +7,10 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
-            <value> <int>0</int> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
@@ -65,15 +54,11 @@ getModificationDate</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
