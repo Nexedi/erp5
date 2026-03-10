@@ -564,6 +564,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 
 if str is bytes:
   bytes2str = str2bytes = lambda s: s
+  def str2unicode(s, encoding='utf-8', errors='strict'):
+    return s.decode(encoding, errors)
   def unicode2str(s):
     return s.encode('utf-8')
 else:
@@ -573,12 +575,18 @@ else:
     return s.encode()
   def unicode2str(s):
     return s
+  str2unicode = lambda s, *_, **__: s
 
 if six.PY3:
   def ensure_list(o):
     return list(o)
+  def ensure_ascii(s, errors='strict'):
+    if isinstance(s, str):
+      s = bytes(s, 'ascii', errors)
+    return s.decode('ascii', errors)
 else:
   ensure_list = lambda x: x
+  ensure_ascii = lambda s, errors='strict': s.encode('ascii', errors)
 
 def with_metaclass(meta, *bases):
   """
