@@ -1,0 +1,9 @@
+<property_sheet_list>
+ <portal_type id="OAuth2 Authorisation Client Connector">
+  <item>OAuth2AuthorisationClientConnector</item>
+  <item>Reference</item>
+ </portal_type>
+ <portal_type id="Template Tool">
+  <item>TemplateToolOAuth2ResourceServerConstraint</item>
+ </portal_type>
+</property_sheet_list>
