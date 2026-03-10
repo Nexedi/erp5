@@ -341,9 +341,8 @@ class IntrospectionTool(LogMixin, BaseTool):
       Returns a dictionnary with all versions of installed libraries
       {
          'python': '2.4.3'
-       , 'pysvn': '1.2.3'
        , 'ERP5' : "5.4.3"
-      }
+       }
       NOTE: consider using autoconf / automake tools ?
     """
     def cached_getSystemVersionDict():
