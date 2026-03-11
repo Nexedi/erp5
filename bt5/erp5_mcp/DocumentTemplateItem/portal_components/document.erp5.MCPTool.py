@@ -25,7 +25,6 @@
 #
 ##############################################################################
 
-import re
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
@@ -61,37 +60,24 @@ class MCPTool(PythonScript):
     self.setParameterSignature(", ".join(parameter_list))
 
   def getInputSchema(self):
-    return _signatureStrToJsonschema(self.getInputSignature() or "")
+    return _parametersToJsonschema(self.objectValues())
 
-  def getOutputSchema(self):
-    return _signatureStrToJsonschema(self.getOutputSignature() or "")
-
-
-InitializeClass(MCPTool)
+  # TODO
+  #def getOutputSchema(self):
+  #  return _signatureStrToJsonschema(self.getOutputSignature() or "")
 
 
-def _signatureStrToJsonschema(sig_str):
-  """
-  Convert a function signature string to JSON Schema.
-  Example: "reference: str, first_name: str = None"
+InitializeClass(MCPTool)  # XXX perhaps not needed
 
-  Args:
-    sig_str (str): Function parameter signature as a string.
 
-  Returns:
-    dict: JSON Schema representing the parameters.
-  """
-  schema = {"type": "object", "properties": {}, "required": []}
+# XXX can this be simplified with jsonschema package ?
+def _parametersToJsonschema(parameters):
+  schema = {"type": "object", "properties": {}, "required": [], "additionalProperties": False}
 
-  # Split parameters by commas
-  parts = [p.strip() for p in sig_str.split(",")]
-
-  for part in parts:
-    # Matches: name[: type][= default]
-    m = re.match(r"(\w+)(\s*:\s*(\w+))?(\s*=\s*(.*))?", part)
-    if not m:
-      continue
-    name, _, type_hint, _, default = m.groups()
+  for parameter in parameters:
+    name = parameter.getReference()
+    type_hint = parameter.getType()
+    description = parameter.getDescription()
 
     # Map type hints to JSON Schema types
     json_type = "string"
@@ -108,10 +94,15 @@ def _signatureStrToJsonschema(sig_str):
       elif type_hint == "dict":
         json_type = "object"
 
-    schema["properties"][name] = {"type": json_type}
+    param = {"type": json_type}
+    if description:
+      param["description"] = description
 
-    # Parameter is required if no default is specified
-    if default is None:
+    schema["properties"][name] = param
+
+    try:
+      parameter.getParameterDefaultValue()
+    except ValueError:  # no default defined
       schema["required"].append(name)
 
   return schema

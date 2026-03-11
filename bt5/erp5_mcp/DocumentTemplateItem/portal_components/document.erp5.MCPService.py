@@ -120,6 +120,7 @@ class MCPService(XMLObject):
       response = request.response
       response.setHeader("Content-Type", "application/json")
       response.setStatus(200, lock=True)
+      response_data = _toUnicode(response_data)  # XXX
       return json.dumps(response_data, indent=2).encode()
 
   def _handleGet(self, request, *args, **kw):
@@ -224,7 +225,7 @@ class MCPService(XMLObject):
     #      'is_busy' attribute).
     result = method(session, **params)
     return result, session_id, protocol_version
-  
+
   def getValidator(self):
     try:
       return self._v_validator
@@ -236,7 +237,7 @@ class MCPService(XMLObject):
   def initialize(self, protocolVersion, capabilities, clientInfo, **kw):
     session_id = str(len(self._session_tree) + 1)
     server_capabilities = dict(tools={"list": True, "call": True}, prompts={}, resources={}, tasks={})
-    server_info = {"version": "1.0", "name": "ERP5 MCP Server"}
+    server_info = {"version": "0.1", "name": "ERP5 MCP Server"}
     self._session_tree[session_id] = MCPSession(
       session_id, protocolVersion, clientInfo, capabilities, server_capabilities
     )
@@ -285,7 +286,7 @@ class MCPService(XMLObject):
       return portal_callables[tool_name]
     except KeyError:
       raise JsonRpcInternalError("not found tool %s" % tool_name)
-      
+
 
 class MCPSession(Persistent):
   def __init__(self, session_id, protocol_version, client_info, client_capabilities, server_capabilities, tools=None, resources=None, prompts=None):
@@ -331,7 +332,7 @@ class ProtocolValidator(object):
     }
     self._mcp_registry = MCPProtocolRegistry(
       {proto: self._loadSchema("MCPSchema%s" % proto) for proto in SUPPORTED_MCP_PROTOCOL_VERSION_TUPLE})
-  
+
   def _loadSchema(self, name):
     schema = str(self.portal.portal_skins["erp5_mcp"][name])
     return json.loads(schema)
@@ -356,7 +357,7 @@ class ProtocolValidator(object):
 
 class MCPProtocolRegistry(object):
   """Registry of MCP protocol schemas organized by protocol version.
-   
+
   This class does not validate messages directly. It returns
   'MCPProtocolVersion' instances which perform the actual validation.
   """
@@ -411,7 +412,7 @@ class MCPProtocolVersion(object):
   def getValidator(self, method_name, msg_type):
     """Return validator for a specific MCP method and message type."""
     return self[self._getDefinitionName(method_name, msg_type)]
-  
+
   def _getDefinitionName(self, method_name, msg_type):
     try:
       return self._method_index[(method_name, msg_type)]
@@ -455,8 +456,18 @@ def _getValidator(schema, *args, **kwargs):
         # Cleanup messages like
         #     "u'jsonrpc' is a required property"
         # to
-        #     "jsonrpc' is a required property" 
+        #     "jsonrpc' is a required property"
         error.message = re.sub(r"u'([^']*)'", r"'\1'", error.message)
       raise error  # pylint: disable=raising-bad-type
 
   return _
+
+
+def _toUnicode(obj):
+  if isinstance(obj, str):
+    return obj.decode('utf-8', 'replace')  # or 'ignore'
+  elif isinstance(obj, dict):
+    return {_toUnicode(k): _toUnicode(v) for k, v in obj.items()}
+  elif isinstance(obj, list):
+    return [_toUnicode(i) for i in obj]
+  return obj
