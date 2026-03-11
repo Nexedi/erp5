@@ -170,8 +170,7 @@ def sqltest_dict():
     priority, date, uid = value
     assert isinstance(priority, _SQLTEST_NO_QUOTE_TYPE_SET)
     assert isinstance(uid, _SQLTEST_NO_QUOTE_TYPE_SET)
-    if not isinstance(date, DateTime):
-      date = DateTime(date)
+
 
     return (
         b'(priority>%(priority)d OR (priority=%(priority)d AND '
