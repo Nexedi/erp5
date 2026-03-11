@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>cell_ul_noise_indicator_out_array</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
