@@ -70,6 +70,6 @@ class MCPToolLine(XMLObject):
     except ValueError:
       pass
     else:
-      arg = "%s=%s" % (arg, default_value)
+      arg = "%s=%s" % (arg, repr(default_value))  # XXX is repr enough ?
     return arg
 
