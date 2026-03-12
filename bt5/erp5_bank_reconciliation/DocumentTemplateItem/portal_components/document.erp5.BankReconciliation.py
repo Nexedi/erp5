@@ -60,6 +60,7 @@ class BankReconciliation(AccountingTransaction):
     """
     return 0
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulableMovementList')
   def getSimulableMovementList(self):
     """
     Returns all lines which are either not linked to a transaction,
@@ -81,10 +82,14 @@ class BankReconciliation(AccountingTransaction):
     if self.getValidationState() not in ["open", "closed"]:
       return
 
-    # Call directly super from Delivery, as Delivery redefines the method
+    # Call directly super from SimulableMixin, as Delivery redefines the method
     return SimulableMixin._createRootAppliedRule(self)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasLineContent')
   def hasLineContent(self):
+    """
+    Similar to `hasCellContent`
+    """
     return len(self.objectValues()) > 0
 
   def getQuantityRangeMax(self, **kw):
