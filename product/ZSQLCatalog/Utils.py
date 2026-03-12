@@ -27,16 +27,9 @@
 import six
 from Products.ERP5Type.Utils import bytes2str
 import os
+from Products.ERP5.ERP5Site import getSite
 
-def sqlquote(value):
-  # See MySQL documentation of string literals.
-  # XXX: should use sql_quote__ on actual connector
-  # (ex: ZMySQLDA.DA.Connection.sql_quote__).
-  # Duplicating such code is error-prone, and makes us rely on a specific SQL
-  # dialect...
-  if six.PY3 and isinstance(value, bytes):
-    value = bytes2str(value)
-  #XXXX (´-ι_-｀)
+def sqlquote(value, connection_id=''):
   erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog')
   if erp5_catalog_storage == 'erp5_sqlite_catalog':
     return "'" + (value
@@ -50,14 +43,6 @@ def sqlquote(value):
       #.replace('\x22', r'\"')
       .replace('\x27', r"''")
     ) + "'"
-  return "'" + (value
-    .replace('\x5c', r'\\')
-    .replace('\x00', r'\0')
-    .replace('\x08', r'\b')
-    .replace('\x09', r'\t')
-    .replace('\x0a', r'\n')
-    .replace('\x0d', r'\r')
-    .replace('\x1a', r'\Z')
-    .replace('\x22', r'\"')
-    .replace('\x27', r"\'")
-  ) + "'"
+  if not connection_id:
+    connection_id = 'erp5_sql_connection'
+  return bytes2str(getSite()[connection_id].sql_quote__(value))
