@@ -1,0 +1,6 @@
+portal_callables/ERP5_toolCreateAndExecutePythonScript**
+portal_callables/ERP5_toolCreateZODBPythonScript**
+portal_callables/ERP5_toolExportComponentTextContentToFile**
+portal_callables/ERP5_toolGetComponentIdList**
+portal_callables/ERP5_toolRunLiveTest**
+portal_callables/ERP5_toolUpdateComponentTextContentFromFile**
