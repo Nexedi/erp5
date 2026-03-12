@@ -26,8 +26,10 @@
 ##############################################################################
 import six
 from Products.ERP5Type.Utils import bytes2str
+import os
+from Products.ERP5.ERP5Site import getSite
 
-def sqlquote(value):
+def sqlquote(value, connection_id=''):
   # See MySQL documentation of string literals.
   # XXX: should use sql_quote__ on actual connector
   # (ex: ZMySQLDA.DA.Connection.sql_quote__).
@@ -35,6 +37,23 @@ def sqlquote(value):
   # dialect...
   if six.PY3 and isinstance(value, bytes):
     value = bytes2str(value)
+  #XXXX (´-ι_-｀)
+  erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog')
+  if erp5_catalog_storage == 'erp5_sqlite_catalog':
+    return "'" + (value
+      .replace('\x5c', r'\\')
+      .replace('\x00', r'\0')
+      .replace('\x08', r'\b')
+      .replace('\x09', r'\t')
+      .replace('\x0a', r'\n')
+      .replace('\x0d', r'\r')
+      .replace('\x1a', r'\Z')
+      #.replace('\x22', r'\"')
+      .replace('\x27', r"''")
+    ) + "'"
+  if connection_id:
+    return getSite()[connection_id].sql_quote__(value).decode()
+  
   return "'" + (value
     .replace('\x5c', r'\\')
     .replace('\x00', r'\0')
@@ -44,5 +63,5 @@ def sqlquote(value):
     .replace('\x0d', r'\r')
     .replace('\x1a', r'\Z')
     .replace('\x22', r'\"')
-    .replace('\x27', r"\'")
+    .replace('\x27', r"''")
   ) + "'"
