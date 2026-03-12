@@ -2205,7 +2205,9 @@ class Catalog(Folder,
                        query_table_alias=None,
                        ignore_empty_string=1,
                        limit=None, extra_column_list=(),
-                       ignore_unknown_columns=False):
+                       ignore_unknown_columns=False,
+                       connection_id = ''
+                       ):
     kw = self.getCannonicalArgumentDict(kw)
     group_by_list = kw.pop('group_by_list', [])
     select_dict = kw.pop('select_dict', {})
@@ -2231,6 +2233,7 @@ class Catalog(Folder,
       catalog_table_name=query_table,
       catalog_table_alias=query_table_alias,
       extra_column_list=extra_column_list,
+      connection_id = connection_id
     )
 
   security.declarePublic('buildSQLQuery')
@@ -2241,6 +2244,7 @@ class Catalog(Folder,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
                           **kw):
+    connection_id = kw.pop('connection_id', '')
     return self.buildEntireQuery(
       kw,
       query_table=query_table,
@@ -2248,10 +2252,11 @@ class Catalog(Folder,
       ignore_empty_string=ignore_empty_string,
       limit=limit,
       extra_column_list=extra_column_list,
-      ignore_unknown_columns=ignore_unknown_columns,
+      ignore_unknown_columns=ignore_unknown_columns
     ).asSQLExpression(
       self,
       only_group_columns,
+      connection_id = connection_id
     ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
@@ -2360,6 +2365,7 @@ class Catalog(Folder,
       ):
     if build_sql_query_method is None:
       build_sql_query_method = self.buildSQLQuery
+    kw['connection_id'] = sql_method.connection_id
     query = build_sql_query_method(
       REQUEST=REQUEST,
       implicit_join=implicit_join,

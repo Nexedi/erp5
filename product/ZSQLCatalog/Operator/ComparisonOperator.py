@@ -37,24 +37,24 @@ from Products.ZSQLCatalog.SQLCatalog import list_type_list
 import re
 
 class ComparisonOperatorBase(OperatorBase):
-  def asSQLExpression(self, column, value_list, only_group_columns):
+  def asSQLExpression(self, column, value_list, only_group_columns, connection_id=''):
     """
       In a Comparison Operator, rendering order is:
         <column> <operator> <value_list>
     """
-    column, value_list = self.render(column, value_list)
+    column, value_list = self.render(column, value_list, connection_id)
     return SQLExpression(self, where_expression='%s %s %s' % (column, self.getOperator().upper(), value_list))
 
-  def render(self, column, value_list):
+  def render(self, column, value_list, connection_id):
     raise NotImplementedError('This method must be overloaded by a subclass.')
 
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, connection_id):
     raise NotImplementedError('This method must be overloaded by a subclass.')
 
 verifyClass(IOperator, ComparisonOperatorBase)
 
 class MonovaluedComparisonOperator(ComparisonOperatorBase):
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, connection_id=''):
     """
       value_list must either be a non-list or a single-value list.
     """
@@ -65,7 +65,7 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
         raise ValueError('%r: value_list must not contain more than one item. Got %r' % (self, value_list))
     return self._renderValue(value_list)
 
-  def render(self, column, value_list):
+  def render(self, column, value_list, connection_id=''):
     """
       value_list must either be a non-list or a single-value list.
     """
@@ -79,7 +79,7 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
 verifyClass(IOperator, MonovaluedComparisonOperator)
 
 class MultivaluedComparisonOperator(ComparisonOperatorBase):
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, connection_id=''):
     """
       value_list must be a multi-value list (more than one item).
     """
@@ -87,7 +87,7 @@ class MultivaluedComparisonOperator(ComparisonOperatorBase):
       raise ValueError('%r: value_list must be a list of more than one item. Got %r' % (self, value_list))
     return '(%s)' % ', '.join(map(self._renderValue, value_list))
 
-  def render(self, column, value_list):
+  def render(self, column, value_list, connection_id=''):
     """
       value_list must be a multi-value list (more than one item).
     """
@@ -102,7 +102,7 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
     MonovaluedComparisonOperator.__init__(self, operator, '')
     self.where_expression_format_string = 'MATCH (%%(column)s) AGAINST (%%(value_list)s%s)' % (mode, )
 
-  def asSQLExpression(self, column, value_list, only_group_columns):
+  def asSQLExpression(self, column, value_list, only_group_columns, connection_id=''):
     """
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
@@ -144,7 +144,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
     # like '+' or '-' without any letter.
     return re.compile(r'([()])').sub(r'\\\g<1>', query_string)
 
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, connection_id=''):
     """
       Special Query renderer for MroongaFullText queries:
       * by default 'AND' search by using '*D+' pragma.
@@ -197,7 +197,7 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
     value_list = '%s;mode=extended2;limit=1000' % value_list
     return self._renderValue(value_list)
 
-  def asSQLExpression(self, column, value_list, only_group_columns):
+  def asSQLExpression(self, column, value_list, only_group_columns, connection_id=''):
     """
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
@@ -255,7 +255,7 @@ class SqliteComparisonOperator(MonovaluedComparisonOperator):
       sqlite_query = value
     return self._renderValue(sqlite_query)
 
-  def asSQLExpression(self, column, value_list, only_group_columns):
+  def asSQLExpression(self, column, value_list, only_group_columns, connection_id=''):
     """
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
