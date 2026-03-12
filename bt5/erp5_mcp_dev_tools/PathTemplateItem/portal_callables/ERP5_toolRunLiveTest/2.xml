@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>run_only</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Run only specified test methods delimited with commas (e.g. testFoo,testBar). This can be regular expressions. Optional.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>parameter_default</string> </key>
+            <value> <string>python: None</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool Line</string> </value>
+        </item>
+        <item>
+            <key> <string>type</string> </key>
+            <value> <string>str</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
