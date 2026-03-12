@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON-RPC 2.0 Request",
+  "description": "A JSON-RPC 2.0 request object",
+  "type": "object",
+  "required": ["jsonrpc", "method"],
+  "properties": {
+    "jsonrpc": {
+      "type": "string",
+      "enum": ["2.0"],
+      "description": "JSON-RPC version string"
+    },
+    "method": {
+      "type": "string",
+      "description": "The name of the method to be invoked"
+    },
+    "params": {
+      "description": "Parameter values to be used during the invocation of the method",
+      "oneOf": [
+        {
+          "type": "array",
+          "description": "Positional parameters"
+        },
+        {
+          "type": "object",
+          "description": "Named parameters"
+        }
+      ]
+    },
+    "id": {
+      "description": "Identifier established by the client",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "additionalProperties": false
+}
