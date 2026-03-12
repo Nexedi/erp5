@@ -84,10 +84,10 @@
                     <value>
                       <list>
                         <string>my_parameter_signature</string>
-                        <string>listbox</string>
                         <string>my_description</string>
                         <string>your_error_message</string>
                         <string>your_warning_message</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
