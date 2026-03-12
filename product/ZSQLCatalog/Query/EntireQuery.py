@@ -102,7 +102,8 @@ class EntireQuery(object):
                catalog_table_name=None,
                catalog_table_alias=None,
                extra_column_list=(),
-               implicit_join=False):
+               implicit_join=False,
+               connection_id = ''):
     self.query = query
     self.order_by_list = my_order_by_list = []
     for order_by in order_by_list:
@@ -152,7 +153,7 @@ class EntireQuery(object):
   def asSearchTextExpression(self, sql_catalog):
     return self.query.asSearchTextExpression(sql_catalog)
 
-  def asSQLExpression(self, sql_catalog, only_group_columns):
+  def asSQLExpression(self, sql_catalog, only_group_columns, connection_id = ''):
     column_map = self.column_map
     if column_map is None:
       # XXX: should we provide a way to register column map as a separate
@@ -226,7 +227,8 @@ class EntireQuery(object):
       # generate SQLExpression from query
       sql_expression_list = [self.query.asSQLExpression(sql_catalog,
                                                         column_map,
-                                                        only_group_columns)]
+                                                        only_group_columns,
+                                                        connection_id)]
       append = sql_expression_list.append
       for join_query in column_map.iterJoinQueryList():
         append(join_query.asSQLExpression(sql_catalog,

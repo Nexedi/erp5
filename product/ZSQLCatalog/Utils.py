@@ -29,7 +29,7 @@ from Products.ERP5Type.Utils import bytes2str
 import os
 from Products.ERP5.ERP5Site import getSite
 
-def sqlquote(value):
+def sqlquote(value, connection_id=''):
   # See MySQL documentation of string literals.
   # XXX: should use sql_quote__ on actual connector
   # (ex: ZMySQLDA.DA.Connection.sql_quote__).
@@ -51,7 +51,9 @@ def sqlquote(value):
       #.replace('\x22', r'\"')
       .replace('\x27', r"''")
     ) + "'"
-  """
+  if connection_id:
+    return getSite()[connection_id].sql_quote__(value).decode()
+  
   return "'" + (value
     .replace('\x5c', r'\\')
     .replace('\x00', r'\0')
@@ -63,6 +65,3 @@ def sqlquote(value):
     .replace('\x22', r'\"')
     .replace('\x27', r"''")
   ) + "'"
-  """
-  connection = getSite()['erp5_sql_connection']
-  return connection.sql_quote__(value).decode()

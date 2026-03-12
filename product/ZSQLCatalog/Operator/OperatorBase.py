@@ -138,20 +138,24 @@ class OperatorBase(object):
 
   def _renderValue(self, value,
                    value_renderer_get=value_renderer.get,
-                   valueDefaultRenderer=valueDefaultRenderer):
+                   valueDefaultRenderer=valueDefaultRenderer,
+                   connection_id = ''):
     """
       Render given value as string.
 
       value (int, float, long, DateTime, string, None)
         Value to render as a string for use in SQL (quoted, escaped).
     """
-    return value_renderer_get(value.__class__, valueDefaultRenderer)(value)
+    render_method = value_renderer_get(value.__class__, valueDefaultRenderer)
+    if render_method == escapeString:
+      return render_method(value, connection_id)
+    return render_method(value)
 
   def asSearchText(self, value):
     return value_search_text_renderer.get(value.__class__,
                                           valueDefaultSearchTextRenderer)(value)
 
-  def asSQLExpression(self, column, value_list, only_group_columns):
+  def asSQLExpression(self, column, value_list, only_group_columns, connection_id=''):
     raise NotImplementedError('This method must be overloaded by a subclass'
       ' to be able to get an SQL representation of this operator.')
 
