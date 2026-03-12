@@ -1,0 +1,12 @@
+{
+      "short_name": "Chart Editor",
+      "name": "OfficeJS Chart Editor",
+      "description": "Simple Chart Editor",
+      "icons": [{
+        "src": "officejs_logo_chart_editor.png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
