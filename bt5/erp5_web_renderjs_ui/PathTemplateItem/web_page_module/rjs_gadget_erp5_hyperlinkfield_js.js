@@ -14,12 +14,15 @@
     })
 
     .onStateChange(function () {
-      // XXX How to support dangerous extra
       // XXX Beware, relative links will break the rJS UI
-      domsugar(this.element, [domsugar('a', {
+      var props = {
         href: this.state.href,
         text: this.state.text
-      })]);
+      };
+      if ((/target\s*=\s*"_blank"/).test(this.state.extra)) {
+        props.target = '_blank';
+      }
+      domsugar(this.element, [domsugar('a', props)]);
     })
 
     .declareMethod('getContent', function () {
