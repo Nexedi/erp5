@@ -45,6 +45,7 @@
     .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -175,9 +176,13 @@
         queue
           // Update the global links
           .push(function () {
+            return gadget.getSetting('internal_forum_url', '');
+          })
+          .push(function (internal_forum_url) {
             return RSVP.hash({
               url_list: gadget.getUrlForList([
                 {command: 'display'},
+                {command: 'raw', options: {url: internal_forum_url}},
                 {command: 'display', options: {page: "front"}},
                 {command: 'display', options: {page: "worklist"}},
                 {command: 'display', options: {page: "history"}},
@@ -188,6 +193,7 @@
               translation_list: gadget.getTranslationList([
                 'Editable',
                 'Home',
+                'Internal Forum',
                 'Modules',
                 'Worklists',
                 'History',
@@ -201,8 +207,10 @@
           .push(function (result_dict) {
             var editable_value = [],
               element_list = [],
+              li_attributes,
               icon_and_key_list = [
                 'home', null,
+                'comments', null,
                 'puzzle-piece', 'm',
                 'tasks', 'w',
                 'history', 'h',
@@ -214,7 +222,11 @@
 
             for (i = 0; i < result_dict.url_list.length; i += 1) {
               // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
-              element_list.push(domsugar('li', [
+              li_attributes = {};
+              if (!result_dict.url_list[i]) {
+                li_attributes.hidden = true;
+              }
+              element_list.push(domsugar('li', li_attributes, [
                 domsugar('a', {
                   href: result_dict.url_list[i],
                   'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
