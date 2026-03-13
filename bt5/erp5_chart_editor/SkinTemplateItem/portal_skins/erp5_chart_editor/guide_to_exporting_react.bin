@@ -1,0 +1,91 @@
+Guide for exporting the react-chart-editor component
+
+This was done on commit 9094c50 of react-chart-editor.
+This version of react-chart-editor uses webpack version 3.8.1.
+Operating System: Ubuntu 16.04.6 LTS
+
+Note: React-chart-editor should be downloaded and any changes made to the
+      current react components source file needs to be copied into 
+        
+      /react-chart-editor/examples/simple/src/App.js
+      
+      In the case file paths used in this tutorial change, these can be 
+      deduced by looking at the projects package.json, specifically the file
+      listed under in the build script key. This file should import the
+      required webpack.config file that needs to be changed in step 2 below.
+      
+      The use of a different webpack version or a different compiler may also 
+      change the necessary steps required to export the component.  
+
+Step 1)
+    Install project dependencies under /react-chart-editor/examples/simple
+    
+        e.g. cd ~/react-chart-editor/examples/simple
+             npm install
+
+Step 2)
+    Change the webpack configuration to create a library module. The webpack 
+    config file is located under:
+
+        /react-chart-editor/examples/simple/node_modules/react-scripts/config/webpack.config.prod.js
+    
+    In the config file at the end of output: under module.exports = add the 
+    lines
+        
+        libraryTarget: 'umd',
+        library: 'EntryPoint',   <- change this depending on the desired library name
+
+    Once this is complete the file should look something like this:
+    
+        ...
+        module.exports = {
+            ...
+            output: {
+                ...
+                libraryTarget: 'umd',   
+                library: 'EntryPoint',  
+            },
+            resolve: {
+                ...
+                
+Step 3)
+    Change the source file to export the desired component, this file is 
+    located under:
+    
+        /react-chart-editor/examples/simple/src/App.js
+        
+    Change the last line of App.js from
+        
+        export default App;
+        
+    to 
+        
+        export default {
+            App: App
+        };
+        
+Step 4)
+    Delete the current index.js, and rename App.js to index.js.
+    
+Step 5)
+    Create the production build:
+        
+        cd ~/react-chart-editor/examples/simple
+        npm run build
+        
+        
+Thats it, now the .js and .css files located in
+
+    /react-chart-editor/examples/simple/build/static/js/main...js
+    /react-chart-editor/examples/simple/build/static/css/main...css
+    
+need to be just need to be imported in the projects .html file as well as the 
+React and ReactDOM libraries, see: https://reactjs.org/docs/add-react-to-a-website.html
+
+The exported component can then be accessed by using:
+
+    EntryPoint.default.App  <- if library name was changed in step 2) substitute this for EntryPoint
+ 
+    
+    
+    
