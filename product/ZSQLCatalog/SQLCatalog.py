@@ -678,7 +678,8 @@ class Catalog(Folder,
   def _getFilterDict(self):
     return self.filter_dict
 
-  security.declarePrivate('getSQLCatalogRoleKeysList')
+  security.declarePublic('getSQLCatalogRoleKeysList')
+  @transactional_cache_decorator
   def getSQLCatalogRoleKeysList(self):
     """
     Return the list of role keys.
