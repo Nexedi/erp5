@@ -150,6 +150,47 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     return delivery_list
 
+  security.declarePublic('getMergeableDeliveryListList')
+  def getMergeableDeliveryListList(self, movement_list=None):
+    """
+    Return a List Of Delivery Lists that can be merged together
+    """
+    delivery_movement_group_list = self.getDeliveryMovementGroupList()
+    if delivery_movement_group_list:
+      delivery_select_method_id = self.getDeliverySelectMethodId()
+      if delivery_select_method_id:
+        delivery_to_update_list = getattr(self, delivery_select_method_id) \
+                                      (movement_list=movement_list)
+        if delivery_to_update_list:
+          delivery_to_update_list = [sql_delivery.getObject()
+            for sql_delivery in delivery_to_update_list]
+          grouped_delivery_dict = self.groupedDeliveryDict(
+            delivery_to_update_list, delivery_movement_group_list)
+          mergeable_delivery_list_list = []
+          for mergeable_delivery_list in grouped_delivery_dict.itervalues():
+            if len(mergeable_delivery_list) > 1:
+              mergeable_delivery_list_list.append(mergeable_delivery_list)
+          return mergeable_delivery_list_list
+    return []
+
+  def groupedDeliveryDict(self, delivery_to_update_list, delivery_movement_group_list):
+    """
+    Group Deliveries according to their properties in the delivery_movement_group_list
+    """
+    delivery_dict = {}
+    for delivery in delivery_to_update_list:
+      property_dict_list = []
+      for movement_group in delivery_movement_group_list:
+        property_dict_list.append(movement_group._getPropertyDict(delivery))
+      property_tuple_list = []
+      for property_dict in property_dict_list:
+        property_tuple_list += [
+          (x,y) if not isinstance(y, list) else (x, tuple(sorted(y))) for x,y in property_dict.iteritems()
+        ]
+      delivery_property_identifier = tuple(sorted(property_tuple_list))
+      delivery_dict.setdefault(delivery_property_identifier, []).append(delivery)
+    return delivery_dict
+
   def getRelatedBusinessLinkValueList(self):
     return self.getDeliveryBuilderRelatedValueList(portal_type='Business Link')
 
