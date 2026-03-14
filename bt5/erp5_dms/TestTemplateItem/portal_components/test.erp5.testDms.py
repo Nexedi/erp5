@@ -2657,6 +2657,37 @@ return 1
       self.assertEqual(len(subject_result), 1)
       self.assertEqual(subject_result[0].getPath(), document.getPath())
 
+  def test_subject_set(self):
+    subject_none = self.portal.document_module.newContent(
+      id='none', portal_type='Presentation')
+    subject_1 = self.portal.document_module.newContent(
+      id='subject_1',
+      portal_type='Presentation',
+      subject_list=('subject1', ))
+    subject_12 = self.portal.document_module.newContent(
+      id='subject_12',
+      portal_type='Presentation',
+      subject_list=('subject1', 'subject2'))
+    subject_123 = self.portal.document_module.newContent(
+      id='subject_123',
+      portal_type='Presentation',
+      subject_list=('subject1', 'subject2', 'subject3'))
+    self.tic()
+
+    def search(subject_set):
+      return sorted(
+        [b.getObject() for b in self.portal.portal_catalog(subject_set=subject_set)],
+        key=lambda o: o.getId())
+
+    self.assertEqual(search(('subject1', 'subject2', 'subject3')), [subject_123])
+    self.assertEqual(search(('subject2', 'subject3', 'subject1')), [subject_123])
+    self.assertEqual(search(('subject1', 'subject2')), [subject_12, subject_123])
+    self.assertEqual(search(('subject2', )), [subject_12, subject_123])
+    self.assertEqual(search(('nothing match',)), [])
+    self.assertEqual(search(None), [])
+    # keyword search does not work with this key
+    self.assertEqual(search(('subject%',)), [])
+
   def test_base_convertable_uses_pdata_for_base_data(self):
     document = self.portal.document_module.newContent(
       portal_type='Spreadsheet',
