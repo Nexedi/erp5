@@ -85,6 +85,7 @@
                     <value>
                       <list>
                         <string>listbox_link</string>
+                        <string>listbox_guid</string>
                       </list>
                     </value>
                 </item>
