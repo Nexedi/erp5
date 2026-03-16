@@ -73,11 +73,11 @@ class RelatedQuery(Query):
       result = join_condition.asSearchTextExpression(sql_catalog, column=column)
     return False, result
 
-  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+  def asSQLExpression(self, sql_catalog, column_map, only_group_columns, connection_id):
     sql_expression_list = [self.search_key.buildSQLExpression(sql_catalog, column_map, only_group_columns, self.group)]
     join_condition = self.join_condition
     if join_condition is not None:
-      sql_expression_list.append(join_condition.asSQLExpression(sql_catalog, column_map, only_group_columns))
+      sql_expression_list.append(join_condition.asSQLExpression(sql_catalog, column_map, only_group_columns, connection_id))
     return SQLExpression(self, sql_expression_list=sql_expression_list, where_expression_operator='and')
 
   def registerColumnMap(self, sql_catalog, column_map):
