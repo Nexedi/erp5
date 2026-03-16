@@ -272,3 +272,26 @@ body.cke_editable a {
   color: #267B87;
   text-decoration: none;
 }
+
+/* RSS Feed link button */
+.rss-link > .ui-field-contain > div a {
+  padding: 6pt 10pt 6pt 28pt;
+  background-color: #FFF;
+  color: #111;
+  border-radius: 0.325em;
+  border: 1px solid;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
+  position: relative;
+}
+
+.rss-link > .ui-field-contain > div a::before {
+  font-family: FontAwesome;
+  content: "\f09e";
+  position: absolute;
+  left: 10pt;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #f26522;
+}
