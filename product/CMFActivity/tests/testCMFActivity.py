@@ -55,7 +55,7 @@ from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import (
   cancelProcessShutdown, shutdown, Message, getCurrentNode, getServerAddress)
 from MySQLdb import OperationalError
-from Products.ZMySQLDA.db import DB
+from Products.Database.db import DB
 import gc
 import random
 import threading
@@ -1903,7 +1903,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def query(self, query_string,*args, **kw):
       raise ValueError
 
-    from Products.ZMySQLDA.db import DB
+    from Products.Database.db import DB
     DB.original_query = DB.query
     try:
       active_object.activate().getTitle()
