@@ -1,82 +1,24 @@
 import six
 import os
 import re
-import MySQLdb
-from MySQLdb import OperationalError, NotSupportedError, ProgrammingError, _mysql
 import sqlite3
+from sqlite3 import OperationalError
 import warnings
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from zLOG import LOG
-if six.PY2:
-    @contextmanager
-    def nullcontext():
-        yield
-else:
-  from contextlib import nullcontext
-from Products.ERP5Type.Timeout import TimeoutReachedError, getTimeLeft
+from Products.ERP5Type.Timeout import TimeoutReachedError
 
 from MySQLdb.converters import conversions
-from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
 from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
-from zLOG import LOG, ERROR, WARNING
+from zLOG import ERROR
 from ZODB.POSException import ConflictError
 import time
-from sqlite3 import OperationalError
 import unicodedata
 
-hosed_connection = (
-    CR.SERVER_GONE_ERROR,
-    CR.SERVER_LOST,
-    CR.COMMANDS_OUT_OF_SYNC,
-    1927, # ER_CONNECTION_KILLED "Connection was killed" in MariaDB
-    )
-
-query_syntax_error = (
-    ER.BAD_FIELD_ERROR,
-    )
-
-lock_error = (
-    ER.LOCK_WAIT_TIMEOUT,
-    ER.LOCK_DEADLOCK,
-    )
-
-query_timeout_error = (
-    1969, # ER_STATEMENT_TIMEOUT in MariaDB
-)
-
-key_types = {
-    "PRI": "PRIMARY KEY",
-    "MUL": "INDEX",
-    "UNI": "UNIQUE",
-    }
-
-field_icons = "bin", "date", "datetime", "float", "int", "text", "time"
-
-icon_xlate = {
-    "varchar": "text", "char": "text",
-    "enum": "what", "set": "what",
-    "double": "float", "numeric": "float",
-    "blob": "bin", "mediumblob": "bin", "longblob": "bin",
-    "tinytext": "text", "mediumtext": "text",
-    "longtext": "text", "timestamp": "datetime",
-    "decimal": "float", "smallint": "int",
-    "mediumint": "int", "bigint": "int",
-    }
-
-type_xlate = {
-    "double": "float", "numeric": "float",
-    "decimal": "float", "smallint": "int",
-    "mediumint": "int", "bigint": "int",
-    "int": "int", "float": "float",
-    "timestamp": "datetime", "datetime": "datetime",
-    "time": "datetime",
-    }
 
 
-# DateTime(str) is slow. As the date format is part of the specifications,
-# parse it ourselves to save time.
 def DATETIME_to_DateTime_or_None(s):
     try:
         date, time = s.split(' ')
@@ -176,28 +118,19 @@ class SQLiteResult:
                 self._rows.append(tuple(new_row))
         self._description = [tuple(col) for col in description] if description else description
 
-
-
     def fetch_row(self, size=1):
         if self._index >= len(self._rows):
             return ()
-
         if size in (0, None):
             result = self._rows[self._index:]
             self._index = len(self._rows)
             return tuple(result)
-
         end = self._index + size
         chunk = self._rows[self._index:end]
-
         self._index = end
         return tuple(chunk)
 
     def describe(self):
-        """
-        MySQL-style describe():
-        returns cursor.description-like tuples
-        """
         return self._description
 
     def num_rows(self):
@@ -210,18 +143,11 @@ class SQLiteResult:
         return self._rows
 
 class DB(TM):
-    """This is the ZMySQLDA Database Connection Object."""
-
     conv=conversions.copy()
     _sort_key = TM._sort_key
     db = None
 
     def __init__(self,connection):
-        """
-          Parse the connection string.
-          Initiate a trial connection with the database to check
-          transactionality once instead of once per DB instance.
-        """
         self._connection = connection
         self._parse_connection_string()
         self._forceReconnection()
@@ -300,7 +226,6 @@ class DB(TM):
       self.db = sqlite3.connect(self._kw_args['db'], check_same_thread=False)
       self.db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
 
-
       def subdate(date_str, days):
         if date_str.lower() in ('current_date', 'now'):
             dt = Datetime()
@@ -314,12 +239,9 @@ class DB(TM):
 
       self.db.execute("PRAGMA journal_mode=WAL")
       self.db.execute("PRAGMA busy_timeout=10000")
-      #self.db.execute("PRAGMA foreign_keys=ON")
-
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
-        """Returns a list of tables in the current database."""
         r=[]
         a=r.append
         result = self._query(b"SELECT name FROM sqlite_master WHERE type='table';")
@@ -330,9 +252,7 @@ class DB(TM):
         return r
 
     def columns(self, table_name):
-        """Column metadata via PRAGMA."""
         cursor = self.db.execute(f"PRAGMA table_info('{table_name}')")
-
         result = []
         for cid, name, col_type, notnull, default, pk in cursor.fetchall():
             result.append({
@@ -342,14 +262,12 @@ class DB(TM):
                 'Default': default,
                 'PrimaryKey': bool(pk),
             })
-
         return result
 
-    def _query(self, query, allow_reconnect=False, query_value = None):
+    def _query(self, query, allow_reconnect=False):
         try:
             cursor = self.db.cursor()
             query = query.decode()
-            # Intercept raw COMMIT / ROLLBACK
             if query.upper() == "COMMIT":
                 self.db.commit()
                 return
@@ -357,9 +275,7 @@ class DB(TM):
                 self.db.rollback()
                 return
             else:
-                if query_value:
-                    cursor.executemany(query, query_value)
-                elif 'create table' in query.lower():
+                if 'create table' in query.lower():
                     cursor.executescript(query)
                 else:
                     cursor.execute(query)
@@ -371,41 +287,32 @@ class DB(TM):
             msg = str(m).lower()
             if "syntax error" in msg:
                 raise OperationalError(f"{m}: {query}")
-
             if "locked" in msg:
                 raise ConflictError(f"{m}: {query}")
-
             if "timeout" in msg or "busy" in msg:
                 raise TimeoutReachedError(f"{m}: {query}")
-
             if allow_reconnect:
                 self._forceReconnection()
-                return self._query(query, allow_reconnect=False, query_value = query_value)
-
+                return self._query(query, allow_reconnect=False)
             else:
                 LOG('SQLITEDA', ERROR, f'query failed: {query}')
                 raise
-
-        except ProgrammingError as m:
+        except Exception as m:
             if allow_reconnect:
                 self._forceReconnection()
-                return self._query(query, allow_reconnect=False, query_value = query_value)
+                return self._query(query, allow_reconnect=False)
             else:
                 LOG('SQLITEDA', ERROR, f'query failed: {query}')
                 raise
         finally:
             cursor.close()
-      
-    def query(self, query_string, max_rows=1000, query_value = None):
-        """Execute 'query_string' and return at most 'max_rows'."""
+
+    def query(self, query_string, max_rows=1000):
         self._use_TM and self._register()
         desc = None
-        
+
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
-        # XXX deal with a typical mistake that the user appends
-        # an unnecessary and rather harmful semicolon at the end.
-        # Unfortunately, MySQLdb does not want to be graceful.
         if query_string[-1:] == b';':
           query_string = query_string[:-1]
 
@@ -414,17 +321,12 @@ class DB(TM):
             if qs:
                 select_match = match_select(qs)
                 if select_match:
-                    # XXXX statement
-                    #query_timeout = getTimeLeft()
-                    #if query_timeout is not None:
-                    statement, select = select_match.groups()
+                    _, select = select_match.groups()
                     qs = b"SELECT %s" % select
-
                     if max_rows:
                         qs = b"%s LIMIT %d" % (qs, max_rows)
-                        #qs = b"SELECT * FROM (%s) AS t LIMIT %d" % (qs, max_rows)
 
-                c = self._query(qs, query_value = query_value)
+                c = self._query(qs)
                 if c:
                     if desc is not None is not c.describe():
                         raise Exception(
@@ -451,7 +353,6 @@ class DB(TM):
         else:
             bval = str(s).encode()
 
-
         if bval.startswith(b'\x80'):
             return b"x'" + bval.hex().encode("ascii") + b"'"
 
@@ -466,7 +367,6 @@ class DB(TM):
         return tmp
 
     def _begin(self, *ignored):
-        """Begin a transaction (when TM is enabled)."""
         try:
             self._transaction_begun = True
             if self._transactions:
@@ -481,7 +381,6 @@ class DB(TM):
         return TM.tpc_vote(self, *ignored)
 
     def _finish(self, *ignored):
-        """Commit a transaction (when TM is enabled)."""
         if not self._transaction_begun:
             return
         self._transaction_begun = False
@@ -489,17 +388,9 @@ class DB(TM):
             self._query(b"COMMIT")
 
     def _abort(self, *ignored):
-        """Rollback a transaction (when TM is enabled)."""
         if not self._transaction_begun:
             return
         self._transaction_begun = False
-        # Hide hosed connection exceptions:
-        # - if the disconnection caused the abort, we would then hide the
-        #   original error traceback
-        # - if the disconnection happened during abort, then we cannot recover
-        #   anyway as the transaction is bound to its connection anyway
-        # Note: in any case, we expect server to notice the disconnection and
-        # trigger an abort on its side.
         try:
             if self._transactions:
                 self._query(b"ROLLBACK")
@@ -508,11 +399,10 @@ class DB(TM):
         except OperationalError as m:
             LOG('SQLiteDA', ERROR, "exception during _abort",
                 error=True)
-            if m.args[0] not in hosed_connection:
-                raise
 
     def getMaxAllowedPacket(self):
         return 4 * 1024 * 1024
+
 
     @contextmanager
     def lock(self):
@@ -524,18 +414,14 @@ class DB(TM):
             create_split  = re.compile(r",\n\s*").split,
             column_match  = re.compile(r"`(\w+)`\s+(.+)").match,
             ):
-        #(('CREATE TABLE altered_table (a int)',),)
         result = self.query(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{name}'")[1]
         if not result:
             raise OperationalError("NO SUCH TABLE")
 
-
-        col_query = f"PRAGMA table_info({name})"
-        col_result = self.query(col_query)[1]
+        col_result = self.query(f"PRAGMA table_info({name})")[1]
         columns = [(r[1], r[2]) for r in col_result]
 
-        idx_query = f"PRAGMA index_list({name})"
-        idx_result = self.query(idx_query)[1]
+        idx_result = self.query(f"PRAGMA index_list({name})")[1]
         key_set = set(r[1] for r in idx_result)
 
         table_options = ""
@@ -563,10 +449,8 @@ class DB(TM):
                     self.query(create_sql)
                 return create_sql
 
-            # Build migration SQL
             old_cols = {c for c, _ in old_list}
 
-            # Inspect new schema using temp table
             self.query(f"CREATE TABLE {new_name} {create_sql[m.end():]}")
             try:
                 new_list, _, _ = self._getTableSchema(new_name)
@@ -605,32 +489,24 @@ class DB(TM):
                 if src__:
                     return src_sql
 
-                # Execute migration
                 for stmt in migration:
                     self.query(stmt)
 
-                # Initialize newly added columns
                 if initialize:
                     added = [c for c, _ in new_list if c not in old_cols]
                     if added:
                         initialize(self, added)
 
                 return src_sql
-       
 
 
 class DeferredDB(DB):
-    """
-        An experimental MySQL DA which implements deferred execution
-        of SQL code in order to reduce locks and provide better behaviour
-        with MyISAM non transactional tables
-    """
     def __init__(self, *args, **kw):
         DB.__init__(self, *args, **kw)
         assert self._use_TM
         self._sql_string_list = []
 
-    def query(self, query_string, max_rows=1000, query_value = None):
+    def query(self, query_string, max_rows=1000):
         self._register()
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
@@ -638,21 +514,15 @@ class DeferredDB(DB):
             qs = qs.strip()
             if qs:
                 if match_select(qs):
-                    raise NotSupportedError(
+                    raise sqlite3.NotSupportedError(
                         "can not SELECT in deferred connections")
                 self._sql_string_list.append(qs)
         return (),()
 
     def _begin(self, *ignored):
-        # The Deferred DB instance is sometimes used for several
-        # transactions, so it is required to clear the sql_string_list
-        # each time a transaction starts
         del self._sql_string_list[:]
 
     def _finish(self, *ignored):
-        # BUG: It's wrong to execute queries here because tpc_finish must not
-        #      fail. Consider moving them to commit, tpc_vote or in an
-        #      after-commit hook.
         if self._sql_string_list:
             DB._begin(self)
             for qs in self._sql_string_list:
