@@ -2093,10 +2093,6 @@ class PortalGenerator:
     def setupUserFolder(self, p):
         p.manage_addProduct['OFSP'].manage_addUserFolder()
 
-    def setupCookieAuth(self, p):
-        p.manage_addProduct['CMFCore'].manage_addCC(
-            id='cookie_authentication')
-
     def setupRoles(self, p):
         # Set up the suggested roles.
         p.__ac_roles__ = ('Member', 'Reviewer',)
@@ -2539,9 +2535,6 @@ class ERP5Generator(PortalGenerator):
 
     if create_userfolder and not p.hasObject('acl_users'):
       self.setupUserFolder(p)
-
-    if not p.hasObject('cookie_authentication'):
-      self.setupCookieAuth(p)
 
     if not p.isAuthorisationExtractorEnabled():
       # Authorisation extractor, intended to supersede CookieCrumbler's without
