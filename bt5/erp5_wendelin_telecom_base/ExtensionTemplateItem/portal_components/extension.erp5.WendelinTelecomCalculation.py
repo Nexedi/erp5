@@ -110,6 +110,8 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
           ))
           # UL Noise Indicator KPI
           # UL_Noise_Indicator = RX_RMS − 10·log10(BW_Hz)
+          if len(rms_rx_index[pos]) < 3:
+            continue
           if rms_rx_index[pos][2] == 6:
             bandwidth = 1400000 # 6RBs = 1.4 Mhz
           else:
