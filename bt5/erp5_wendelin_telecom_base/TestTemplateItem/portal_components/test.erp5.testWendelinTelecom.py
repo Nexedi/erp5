@@ -2127,3 +2127,319 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       ingestion_item_dict_list[4]['data_analysis'].getSimulationState())
     self.assertEqual('refresh_planned',
       ingestion_item_dict_list[4]['data_analysis'].getRefreshState())
+
+  def test_10_configMissingWhenUpdate(self):
+    '''
+    Test that KPI update remains robust when previous XLog configuration
+    stored in Progress Indicator is old version or incomplete.
+    '''
+    # Register the ORS
+    ors_item_dict = self.registerOrs()
+    ors_tag = ors_item_dict['data_acquisition_unit'].getReference()
+    ingestion_item_dicts = [
+      self.getOrsLogIngestionItems(self.test_ors_example_log_valid_part_1, ors_tag)
+    ]
+    ingestion_item_dict = ingestion_item_dicts[-1]
+    self.assertNotEqual(None,
+                        ingestion_item_dict['progress_indicator'])
+    progress_indicator = ingestion_item_dict['progress_indicator']
+    last_config_dict = json.loads(progress_indicator.getLastXLogConfig('{}'))
+    rms_rx_index = last_config_dict.get('rms_rx_index', [])
+    timestamp = last_config_dict.get('utc')
+    for i, rms_rx_index_value in enumerate(rms_rx_index):
+      self.assertEqual(3, len(rms_rx_index_value))
+      rms_rx_index[i] = [rms_rx_index_value[0], rms_rx_index_value[1]]
+    progress_indicator.setLastXLogConfig(
+      json.dumps({
+        'utc': timestamp,
+        'rms_rx_index': rms_rx_index
+      }))
+    self.assertEqual(
+      ingestion_item_dict['progress_indicator'].getLastXLogConfig(),
+      json.dumps({
+        'utc': timestamp,
+        'rms_rx_index': rms_rx_index
+      })
+    )
+
+    ingestion_item_dicts = [
+      self.getOrsLogIngestionItems(self.test_ors_example_log_valid_part_2, ors_tag)
+    ]
+    ingestion_item_dict = ingestion_item_dicts[-1]
+    self.assertNotEqual(None,
+                        ingestion_item_dict['progress_indicator'])
+    progress_indicator = ingestion_item_dict['progress_indicator']
+    last_config_dict = json.loads(progress_indicator.getLastXLogConfig('{}'))
+    rms_rx_index = last_config_dict.get('rms_rx_index', [])
+    timestamp = last_config_dict.get('utc')
+    for i, rms_rx_index_value in enumerate(rms_rx_index):
+      self.assertEqual(3, len(rms_rx_index_value))
+
+    # Check that the value of the progress indicator is equal to the size of the Data Stream:
+    # i.e. that all of the ingested data has been processed into KPIs
+    self.assertEqual(
+      ingestion_item_dict['progress_indicator'].getIntOffsetIndex(),
+      ingestion_item_dict['data_stream'].getSize()
+    )
+
+    # Check that the Data Arrays containing the KPI data have correctly been initialized
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='e_rab'))
+
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='e_utran'))
+
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_ue_count'))
+
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_rrc'))
+
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_rms_rx'))
+    
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_ul_noise_indicator'))
+
+    e_rab_array_shape = (82,)
+    e_rab_array_dtype = [
+      ('vt', '<f8'),
+      ('vInitialEPSBEstabSR_lo', '<f8'),
+      ('vInitialEPSBEstabSR_hi', '<f8'),
+      ('vAddedEPSBEstabSR_lo', '<f8'),
+      ('vAddedEPSBEstabSR_hi', '<f8')
+    ]
+    e_utran_array_shape = (20992,)
+    e_utran_array_dtype = [
+      ('evt', '<f8'),
+      ('dl_lo', '<f8'),
+      ('dl_hi', '<f8'),
+      ('ul_lo', '<f8'),
+      ('ul_hi', '<f8')
+    ]
+
+    cell_ue_count_array_shape = (84,)
+    cell_ue_count_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('ue_count_max', '<f8'),
+      ('ue_count_min', '<f8'),
+      ('ue_count_avg', '<f8')
+    ]
+    cell_rrc_array_shape = (84,)
+    cell_rrc_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('rrc_con_req', '<f8'),
+      ('rrc_paging', '<f8'),
+      ('rrc_recon_com', '<f8'),
+      ('rrc_sec_command', '<f8'),
+      ('rrc_sec_complete', '<f8')
+    ]
+    cell_rms_rx_array_shape = (158,)
+    cell_rms_rx_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('antenna', '<f8'),
+      ('count', '<f8'),
+      ('max', '<f8'),
+      ('rms', '<f8'),
+      ('rms_dbm', '<f8')
+    ]
+    cell_ul_noise_indicator_array_shape = (158,)
+    cell_ul_noise_indicator_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('antenna', '<f8'),
+      ('ul_noise_indicator', '<f8')
+    ]
+    # Check the data types and shape of the Data Arrays
+    # Also fetch and check the KPI data from the dedicated API endpoint
+    for data_array in ingestion_item_dict['data_array_list']:
+      if 'e_rab' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(), e_rab_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), e_rab_array_dtype)
+
+        e_rab_kpi_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'e_rab_accessibility'
+        )
+        if e_rab_array_shape is None:
+          self.assertEqual(e_rab_kpi_dict, {})
+        else:
+          for key in e_rab_kpi_dict:
+            self.assertEqual(len(e_rab_kpi_dict[key]),
+                             e_rab_array_shape[0])
+
+      elif 'e_utran' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(),
+                         e_utran_array_shape)
+        self.assertEqual(data_array.getArrayDtype(),
+                         e_utran_array_dtype)
+
+        e_utran_kpi_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'e_utran_ip_throughput'
+        )
+        if e_utran_array_shape is None:
+          self.assertEqual(e_utran_kpi_dict, {})
+        else:
+          for key in e_utran_kpi_dict:
+            if key == 'evt':
+              self.assertEqual(
+                len(e_utran_kpi_dict[key]),
+                e_utran_array_shape[0] // QCI_COUNT
+              )
+            else:
+              self.assertEqual(len(e_utran_kpi_dict[key]), 1)
+              if key != 'active_qci':
+                self.assertEqual(
+                  len(e_utran_kpi_dict[key][0]),
+                  e_utran_array_shape[0] // QCI_COUNT
+                )
+
+      elif 'cell_ue_count' in data_array.getReference():
+        self.assertEqual(data_array.checkConsistency(), [])
+        self.assertEqual(data_array.getArrayShape(), cell_ue_count_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_ue_count_array_dtype)
+
+        cell_ue_count_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'ue_count'
+        )
+        if cell_ue_count_array_shape is None:
+          self.assertEqual(cell_ue_count_dict, {})
+        else:
+          for key in cell_ue_count_dict:
+            size = cell_ue_count_array_shape[0]
+            if key == 'base':
+              size = 84
+            for col in cell_ue_count_dict[key]:
+              # Values are lower then shape because it is processed, so
+              # the array is clean before respond.
+              self.assertEqual(size,
+                               len(cell_ue_count_dict[key][col]), (key, col))
+
+      elif 'cell_rrc' in data_array.getReference():
+        # invalid data has some duplications here.
+        self.assertEqual(data_array.checkConsistency(), [])
+        self.assertEqual(data_array.getArrayShape(), cell_rrc_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_rrc_array_dtype)
+
+        rrc_connection_request_count_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'rrc_connection_request'
+        )
+        if cell_rrc_array_shape is None:
+          self.assertEqual(rrc_connection_request_count_dict, {})
+        else:
+          for key in rrc_connection_request_count_dict:
+            # check number of cells + base
+            size = cell_rrc_array_shape[0]
+            if key == 'base':
+              size = 84
+            for col in rrc_connection_request_count_dict[key]:
+              self.assertEqual(size,
+                len(rrc_connection_request_count_dict[key][col]), (key, col))
+
+        rrc_paging_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'rrc_paging'
+        )
+        if cell_rrc_array_shape is None:
+          self.assertEqual(rrc_paging_dict, {})
+        else:
+          for key in rrc_paging_dict:
+            # check number of cells + base
+            for col in rrc_paging_dict[key]:
+              # Only rrc_paging has a specific calculation to drop certain values.
+              self.assertEqual(len(rrc_paging_dict[key][col]), 70)
+
+        unsuccessful_rrc_con_att_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'unsuccessful_rrc_con_att'
+        )
+        if cell_rrc_array_shape is None:
+          self.assertEqual(unsuccessful_rrc_con_att_dict, {})
+        else:
+
+          for key in unsuccessful_rrc_con_att_dict:
+            size = cell_rrc_array_shape[0]
+            if key == 'base':
+              size = 84
+            # check number of cells + base
+            for col in unsuccessful_rrc_con_att_dict[key]:
+              # Only unsucessful_rrc_recon + utc is included
+              self.assertEqual(len(unsuccessful_rrc_con_att_dict[key][col]),
+                               size, (key, col))
+
+        failure_rrc_security_mode_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'unsuccessful_rrc_con_att'
+        )
+        if cell_rrc_array_shape is None:
+          self.assertEqual(failure_rrc_security_mode_dict, {})
+        else:
+          for key in failure_rrc_security_mode_dict:
+            # check number of cells + base
+            size = cell_rrc_array_shape[0]
+            if key == 'base':
+              size = 84
+            for col in failure_rrc_security_mode_dict[key]:
+              # Only failure_rate_rrc_sec + utc is included
+              self.assertEqual(len(failure_rrc_security_mode_dict[key][col]),
+                              size, (key, col))
+
+      elif 'cell_rms_rx' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(), cell_rms_rx_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_rms_rx_array_dtype)
+
+        rms_rx_per_cell_antenna_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'rms_rx'
+        )
+        if cell_rms_rx_array_shape is None:
+          self.assertEqual(rms_rx_per_cell_antenna_dict, {})
+        else:
+          for key in rms_rx_per_cell_antenna_dict:
+            # check number of cells + base
+            for col in rms_rx_per_cell_antenna_dict[key]:
+              # Only 2 antenas are included
+              self.assertEqual(len(rms_rx_per_cell_antenna_dict[key][col]), 2)
+              for ant in rms_rx_per_cell_antenna_dict[key][col]:
+                # Only 2 antenas are included so consider half of results.
+                self.assertEqual(cell_rms_rx_array_shape[0]/2,
+                  len(rms_rx_per_cell_antenna_dict[key][col][ant]), rms_rx_per_cell_antenna_dict[key][col][ant])
+
+      elif 'cell_ul_noise_indicator' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(), cell_ul_noise_indicator_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_ul_noise_indicator_array_dtype)
+
+        ul_noise_indicator_per_cell_antenna_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'ul_noise_indicator'
+        )
+        if cell_ul_noise_indicator_array_shape is None:
+          self.assertEqual(ul_noise_indicator_per_cell_antenna_dict, {})
+        else:
+          for key in ul_noise_indicator_per_cell_antenna_dict:
+            # check number of cells + base
+            for col in ul_noise_indicator_per_cell_antenna_dict[key]:
+              # Only 2 antenas are included
+              self.assertEqual(len(ul_noise_indicator_per_cell_antenna_dict[key][col]), 2)
+              for ant in ul_noise_indicator_per_cell_antenna_dict[key][col]:
+                # Only 2 antenas are included so consider half of results.
+                self.assertEqual(cell_ul_noise_indicator_array_shape[0]/2,
+                  len(ul_noise_indicator_per_cell_antenna_dict[key][col][ant]), ul_noise_indicator_per_cell_antenna_dict[key][col][ant])
