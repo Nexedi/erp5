@@ -81,7 +81,7 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -128,11 +128,11 @@
                           <string>link</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
+                          <string>Base_getDescription</string>
                           <string>description</string>
                         </tuple>
                         <tuple>
-                          <string>guid</string>
+                          <string>link</string>
                           <string>guid</string>
                         </tuple>
                       </list>
@@ -161,7 +161,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -197,7 +197,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: int(here.REQUEST.get(\'size\', max(preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30) - 50, 0) + 50))</string> </value>
+            <value> <string>python: int(here.REQUEST.get(\'size\', preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30)))</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -210,7 +210,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>WebSection_getLatestDiscussionPostList</string> </value>
+            <value> <string>DiscussionForum_getLatestPostList</string> </value>
         </item>
       </dictionary>
     </pickle>
