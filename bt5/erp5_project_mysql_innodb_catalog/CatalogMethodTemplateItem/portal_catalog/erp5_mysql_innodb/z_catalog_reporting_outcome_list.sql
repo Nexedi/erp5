@@ -1,6 +1,7 @@
-REPLACE INTO
+<dtml-let column_list="['outcome_description']">
+INSERT INTO
   reporting_outcome
-  (`uid`, `outcome_description`)
+  (`uid`, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 (
@@ -9,3 +10,8 @@ VALUES
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>
+ON DUPLICATE KEY UPDATE
+<dtml-in column_list>
+  `<dtml-var sequence-item>` = VALUES(<dtml-var sequence-item>)<dtml-if sequence-end><dtml-else>,</dtml-if>
+</dtml-in>
+</dtml-let>

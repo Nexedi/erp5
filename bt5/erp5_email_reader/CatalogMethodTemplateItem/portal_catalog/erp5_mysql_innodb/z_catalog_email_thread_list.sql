@@ -1,12 +1,12 @@
-<dtml-let email_list="[]">
+<dtml-let email_list="[]" column_list="['sender', 'recipient', 'cc_recipient', 'bcc_recipient',  'start_date', 'validation_state']">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if expr="getPortalType[loop_item]=='Email Thread'">
       <dtml-call expr="email_list.append(loop_item)">
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(email_list) > 0">
-    REPLACE INTO
-      email_thread
+    INSERT INTO
+      email_thread (`uid`, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
     VALUES
       <dtml-in prefix="loop" expr="email_list">
       (
@@ -19,6 +19,10 @@
         <dtml-sqlvar expr="getValidationState[loop_item]" type="string" optional>
       )
       <dtml-if sequence-end><dtml-else>,</dtml-if>
+    </dtml-in>
+    ON DUPLICATE KEY UPDATE
+    <dtml-in column_list>
+      `<dtml-var sequence-item>` = VALUES(<dtml-var sequence-item>)<dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>
   </dtml-if>
 </dtml-let>
