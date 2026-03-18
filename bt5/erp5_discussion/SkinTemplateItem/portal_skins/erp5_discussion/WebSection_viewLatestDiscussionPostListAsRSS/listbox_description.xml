@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_link</string> </value>
+            <value> <string>listbox_description</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -56,7 +56,7 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -116,11 +116,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:\'%s/%s/view?list_start=%s&reset=1#%s\' %(here.REQUEST[\'URL1\'], cell.getParentValue().getReference(), cell.getId(), cell.getUid())
-
-]]></string> </value>
+            <value> <string>python: cell.Base_getDescription(reply_base_url="%s/%s" % (context.REQUEST[\'URL1\'], cell.getParentValue().getReference()))</string> </value>
         </item>
       </dictionary>
     </pickle>
