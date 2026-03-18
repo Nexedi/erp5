@@ -74,6 +74,7 @@
                       <list>
                         <string>my_client_id</string>
                         <string>my_secret_key</string>
+                        <string>my_network_list</string>
                       </list>
                     </value>
                 </item>
