@@ -240,7 +240,9 @@ class DB(TM):
     def _query(self, query, allow_reconnect=False):
         try:
             cursor = self.db.cursor()
-            query = query.decode()
+            if isinstance(query, bytes):
+                query = query.decode()
+
             if query.upper() == "COMMIT":
                 self.db.commit()
                 return
@@ -381,7 +383,14 @@ class DB(TM):
 
     @contextmanager
     def lock(self):
-        yield
+        try:
+            self._query("BEGIN EXCLUSIVE")
+            yield
+        except Exception:
+            self._query("ROLLBACK")
+            raise
+        else:
+            self._query("COMMIT")
 
     def _getTableSchema(self, name,
             create_lstrip=re.compile(r"[^(]+\(\s*").sub,
