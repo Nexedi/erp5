@@ -118,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'%s/%s\' % (context.getWebSiteValue().absolute_url(), cell.getRelativeUrl())
+python:\'%s/#/%s\' % (context.Base_getProjectAppBaseUrl(), cell.getRelativeUrl())
 
 ]]></string> </value>
         </item>
