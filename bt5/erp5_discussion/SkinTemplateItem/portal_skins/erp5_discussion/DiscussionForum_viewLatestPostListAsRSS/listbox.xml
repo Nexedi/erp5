@@ -128,11 +128,11 @@
                           <string>link</string>
                         </tuple>
                         <tuple>
-                          <string>Base_getDescription</string>
+                          <string>description</string>
                           <string>description</string>
                         </tuple>
                         <tuple>
-                          <string>link</string>
+                          <string>guid</string>
                           <string>guid</string>
                         </tuple>
                       </list>

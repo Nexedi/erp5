@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_link</string> </value>
+            <value> <string>listbox_guid</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -118,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'%s/#/%s?last_post=%s\' % (context.getWebSiteValue().absolute_url(), cell.getParentValue().getRelativeUrl(), cell.getParentValue().DiscussionThread_getDiscussionPostCount())
+python:\'%s/%s\' % (context.getWebSiteValue().absolute_url(), cell.getRelativeUrl())
 
 ]]></string> </value>
         </item>
