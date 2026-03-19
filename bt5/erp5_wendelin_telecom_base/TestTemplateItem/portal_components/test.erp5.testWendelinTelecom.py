@@ -590,6 +590,63 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
           [i.message for i in data_array.checkConsistency()])
         self.assertEqual(type(data_array.getArray()), array_class_type)
 
+      elif 'cell_throughput' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        # Force duplication
+        data_zarray = data_array.getArray()
+        data_frame = pd.DataFrame.from_records(data_zarray[:])
+        dup_data_zarray = data_frame.to_records(index=False)
+        data_array.setArray(
+          np.concatenate((data_zarray, dup_data_zarray)))
+        transaction.commit()
+        self.assertEqual([i.message for i in data_array.checkConsistency()],
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
+
+      elif 'cell_bler' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        # Force duplication
+        data_zarray = data_array.getArray()
+        data_frame = pd.DataFrame.from_records(data_zarray[:])
+        dup_data_zarray = data_frame.to_records(index=False)
+        data_array.setArray(
+          np.concatenate((data_zarray, dup_data_zarray)))
+        transaction.commit()
+        self.assertEqual([i.message for i in data_array.checkConsistency()],
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
+
+      elif 'cell_accessibility' in data_array.getReference():
+        array_class_type = type(data_array.getArray())
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        # Force duplication
+        data_zarray = data_array.getArray()
+        data_frame = pd.DataFrame.from_records(data_zarray[:])
+        dup_data_zarray = data_frame.to_records(index=False)
+        data_array.setArray(
+          np.concatenate((data_zarray, dup_data_zarray)))
+        transaction.commit()
+        self.assertEqual([i.message for i in data_array.checkConsistency()],
+          ['This Data Array constains an unexpected duplication.'])
+        data_array.fixConsistency()
+        transaction.commit()
+        self.assertEqual([],
+          [i.message for i in data_array.checkConsistency()])
+        self.assertEqual(type(data_array.getArray()), array_class_type)
+
   def test_05_1_ingestValidOrsLogDataFromFluentd(self, data_key="valid"):
     '''
     Test a simple valid ORS log ingestion: simulate a fluentd gateway forwarding valid ORS logs to the platform,
@@ -685,6 +742,21 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
         'data_acquisition_unit'
       ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_ul_noise_indicator'))
 
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_throughput'))
+
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_bler'))
+
+    self.assertNotEqual(None,
+      ingestion_item_dict[
+        'data_acquisition_unit'
+      ].DataAcquisitionUnit_getDataArrayUrl(data_type='cell_accessibility'))
+
     e_rab_array_shape = None
     e_rab_array_dtype = [
       ('vt', '<f8'),
@@ -737,6 +809,33 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       ('antenna', '<f8'),
       ('ul_noise_indicator', '<f8')
     ]
+    cell_throughput_array_shape = None
+    cell_throughput_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('dl_throughput', '<f8'),
+      ('ul_throughput', '<f8')
+    ]
+    cell_bler_array_shape = None
+    cell_bler_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('dl_tx', '<f8'),
+      ('dl_retx', '<f8'),
+      ('ul_tx', '<f8'),
+      ('ul_retx', '<f8')
+    ]
+    cell_accessibility_array_shape = None
+    cell_accessibility_array_dtype = [
+      ('utc', '<f8'),
+      ('cell_id', '<f8'),
+      ('rrc_con_req', '<f8'),
+      ('rrc_con_set_com', '<f8'),
+      ('s1_initial_context_setup_request', '<f8'),
+      ('s1_initial_context_setup_response', '<f8'),
+      ('s1_erab_setup_request', '<f8'),
+      ('s1_erab_setup_response', '<f8')
+    ]
 
     if data_key in ["valid", "duplicated", "splitted"]:
       e_rab_array_shape = (82,)
@@ -745,6 +844,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       cell_rrc_array_shape = (84,)
       cell_rms_rx_array_shape = (158,)
       cell_ul_noise_indicator_array_shape = (158,)
+      cell_throughput_array_shape = (84,)
+      cell_bler_array_shape = (84,)
+      cell_accessibility_array_shape = (84,)
     elif data_key == "invalid":
       e_rab_array_shape = (73,)
       e_utran_array_shape = (18688,)
@@ -752,6 +854,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       cell_rrc_array_shape = (84,)
       cell_rms_rx_array_shape = (158,)
       cell_ul_noise_indicator_array_shape = (158,)
+      cell_throughput_array_shape = (84,)
+      cell_bler_array_shape = (84,)
+      cell_accessibility_array_shape = (84,)
     elif data_key == "empty":
       e_rab_array_dtype = None
       e_utran_array_dtype = None
@@ -759,6 +864,9 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
       cell_rrc_array_dtype = None
       cell_rms_rx_array_dtype = None
       cell_ul_noise_indicator_array_dtype = None
+      cell_throughput_array_dtype = None
+      cell_bler_array_dtype = None
+      cell_accessibility_array_dtype = None
 
 
     # Check the data types and shape of the Data Arrays
@@ -883,7 +991,7 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
 
         failure_rrc_security_mode_dict = self.getOrsDataArrayAsDict(
           data_array.getRelativeUrl(),
-          'unsuccessful_rrc_con_att'
+          'failure_rrc_security_mode'
         )
         if cell_rrc_array_shape is None:
           self.assertEqual(failure_rrc_security_mode_dict, {})
@@ -940,6 +1048,66 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
                 self.assertEqual(cell_ul_noise_indicator_array_shape[0]/2,
                   len(ul_noise_indicator_per_cell_antenna_dict[key][col][ant]), ul_noise_indicator_per_cell_antenna_dict[key][col][ant])
 
+      elif 'cell_throughput' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(), cell_throughput_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_throughput_array_dtype)
+
+        throughput_per_cell_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'throughput'
+        )
+        if cell_throughput_array_shape is None:
+          self.assertEqual(throughput_per_cell_dict, {})
+        else:
+          for key in throughput_per_cell_dict:
+            # check number of cells + base
+            size = cell_throughput_array_shape[0]
+            if key == 'base':
+              size = 84
+            for col in throughput_per_cell_dict[key]:
+              # Only failure_rate_rrc_sec + utc is included
+              self.assertEqual(size,
+                               len(throughput_per_cell_dict[key][col]), (key, col))
+
+      elif 'cell_bler' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(), cell_bler_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_bler_array_dtype)
+
+        bler_per_cell_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'bler'
+        )
+        if cell_bler_array_shape is None:
+          self.assertEqual(bler_per_cell_dict, {})
+        else:
+          for key in bler_per_cell_dict:
+            # check number of cells + base
+            size = cell_bler_array_shape[0]
+            if key == 'base':
+              size = 84
+            for col in bler_per_cell_dict[key]:
+              self.assertEqual(size,
+                               len(bler_per_cell_dict[key][col]), (key, col))
+
+      elif 'cell_accessibility' in data_array.getReference():
+        self.assertEqual(data_array.getArrayShape(), cell_accessibility_array_shape)
+        self.assertEqual(data_array.getArrayDtype(), cell_accessibility_array_dtype)
+
+        accessibility_per_cell_dict = self.getOrsDataArrayAsDict(
+          data_array.getRelativeUrl(),
+          'accessibility'
+        )
+        if cell_accessibility_array_shape is None:
+          self.assertEqual(accessibility_per_cell_dict, {})
+        else:
+          for key in accessibility_per_cell_dict:
+            # check number of cells + base
+            size = cell_accessibility_array_shape[0]
+            if key == 'base':
+              size = 84
+            for col in accessibility_per_cell_dict[key]:
+              self.assertEqual(size,
+                               len(accessibility_per_cell_dict[key][col]), (key, col))
 
   def test_05_2_ingestInvalidOrsLogDataFromFluentd(self):
     '''
