@@ -90,8 +90,6 @@ erp5_mysql_innodb/z_delete_uid
 erp5_mysql_innodb/z_get_table_schema
 erp5_mysql_innodb/z_getitem_by_path
 erp5_mysql_innodb/z_getitem_by_uid
-erp5_mysql_innodb/z_portal_ids_commit
-erp5_mysql_innodb/z_portal_ids_generate_id
 erp5_mysql_innodb/z_read_recorded_object_list
 erp5_mysql_innodb/z_record_object_list
 erp5_mysql_innodb/z_related_base_category_id
