@@ -1,0 +1,1 @@
+<dtml-var table_0>.uid = stock.explanation_uid
