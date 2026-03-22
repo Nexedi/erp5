@@ -1206,6 +1206,9 @@ shared = true
 
     test_suite_foo = test_node.getNodeTestSuite('foo')
     test_suite_bar = test_node.getNodeTestSuite('bar')
+    # Create 'soft' directories so that _pruneSlapOS discovers them on disk
+    os.makedirs(os.path.join(test_suite_foo.working_directory, 'soft'))
+    os.makedirs(os.path.join(test_suite_bar.working_directory, 'soft'))
 
     # First call: no timestamp file, prune should run
     with mock.patch.object(test_node.process_manager, 'spawn') as spawn_mock:
