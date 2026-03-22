@@ -525,6 +525,55 @@ shared = true
     # ... but the local repository should NOT be deleted since its index is fine
     self.assertTrue(os.path.isdir(rep0_clone_path))
 
+  def test_05h_ReportFetchFailureToServer(self):
+    """When a repository cannot be fetched, the testnode should create a test
+    result and report the failure to the server so that the error is visible.
+    When there is no prior revision, a date-based fallback revision is used.
+    """
+    self.generateTestRepositoryList()
+    mock_test_result = mock.MagicMock()
+    mock_test_result.revision = 'dummy'
+    call_count = [0]
+    test_suite_data = self.getTestSuiteData(add_broken_repository=True)
+    create_test_result_args = []
+
+    def start_test_suite_side_effect(node_title, computer_guid='unknown'):
+      call_count[0] += 1
+      if call_count[0] > 1:
+        raise StopIteration
+      return json.dumps(test_suite_data)
+
+    def create_test_result_side_effect(
+            revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      create_test_result_args.append(
+        dict(revision=revision, test_title=test_title))
+      return mock_test_result
+
+    with mock.patch.object(
+            TaskDistributor, 'startTestSuite',
+            side_effect=start_test_suite_side_effect), \
+         mock.patch.object(
+            TaskDistributor, 'subscribeNode', return_value='{}'), \
+         mock.patch.object(
+            TaskDistributor, 'getTestType', return_value='UnitTest'), \
+         mock.patch.object(
+            TaskDistributor, 'createTestResult',
+            side_effect=create_test_result_side_effect), \
+         mock.patch.object(
+            test_type_registry['UnitTest'], '_prepareSlapOS',
+            return_value={'status_code': 0}), \
+         mock.patch('time.sleep'):
+      test_node = self.getTestNode()
+      test_node.run()
+
+    mock_test_result.reportFailure.assert_called_once()
+    self.assertTrue(
+      mock_test_result.reportFailure.call_args.kwargs.get('stderr'))
+    self.assertEqual(len(create_test_result_args), 1)
+    revision = create_test_result_args[0]['revision']
+    self.assertRegex(revision,  "^update error: fatal: repository '.*' does not exist$")
+
   def test_update_revision_with_head_at_merge(self):
     """Test update revision when the head of the branch is a merge commit.
     """
@@ -594,6 +643,7 @@ shared = true
                       getRepInfo(hash=1))
     class TestResult(object):
       revision = NodeTestSuite.revision
+      update_revision_error = None
     test_result = TestResult()
     # for test result to be one commit late for rep1 to force testnode to
     # reset tree to older version

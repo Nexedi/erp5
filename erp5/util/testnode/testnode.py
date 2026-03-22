@@ -177,9 +177,12 @@ shared = true
             cwd=repository_path, log_prefix='git')
         except SubprocessError:
           rmtree(repository_path)
+      node_test_suite.update_revision_error = error
+      node_test_suite.revision_list = []
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=True)
       return False
+    node_test_suite.update_revision_error = None
     node_test_suite.revision_list = revision_list
     return True
 
@@ -379,7 +382,11 @@ shared = true
               node_test_suite.edit(test_suite='')
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
-            if not self.updateRevisionList(node_test_suite):
+            updated = self.updateRevisionList(node_test_suite)
+            error_during_update = False
+            if not updated:
+              error_during_update = node_test_suite.update_revision_error is not None
+            if not (updated or error_during_update):
               continue
             test_result = taskdistributor.createTestResult(
                      node_test_suite.revision, [],
@@ -387,6 +394,14 @@ shared = true
                      node_test_suite.test_suite_title,
                      node_test_suite.project_title)
             logger.info("testnode, test_result : %r", test_result)
+            if error_during_update:
+              if test_result is not None:
+                test_result.reportFailure(
+                  command=node_test_suite.update_revision_error.command,
+                  stderr=node_test_suite.update_revision_error.stderr.decode().strip(),
+                  stdout=node_test_suite.update_revision_error.stdout.decode().strip(),
+                )
+              continue
             if test_result is None:
               self.cleanUp() # XXX not a good place to do that
               continue
