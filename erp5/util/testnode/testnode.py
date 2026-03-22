@@ -279,17 +279,19 @@ shared = true
     if time.time() - last_prune < prune_interval:
       return
 
-    # when not yet initialized, we do not have reference to the test suite softwares
-    # so we cannot prune yet.
-    if not self.node_test_suite_dict:
+    software_root_list = sorted(
+      software_root
+      for entry in os.listdir(self.working_directory)
+      for software_root in (
+        SlapOSControler(
+          os.path.join(self.working_directory, entry),
+          self.config,
+        ).software_root,
+      )
+      if os.path.isdir(software_root)
+    )
+    if not software_root_list:
       return
-
-    software_root_list = [
-      SlapOSControler(
-        node_test_suite.working_directory,
-        self.config,
-      ).software_root for (_, node_test_suite) in sorted(self.node_test_suite_dict.items())
-    ]
     slapos_controler = SlapOSControler(slapos_directory, self.config)
     # just set the process manager, we do not need to initalize this slapos and start the proxy
     slapos_controler.process_manager = self.process_manager
