@@ -168,7 +168,7 @@ class Updater(object):
         if not(correct_url):
           self.deleteRepository()
       if not os.path.exists(self.repository_path):
-        parameter_list = ['clone', self.url]
+        parameter_list = ['clone', '--quiet', self.url]
         if self.branch is not None:
           parameter_list += '-b', self.branch
         parameter_list.append(self.repository_path)
