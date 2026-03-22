@@ -177,6 +177,7 @@ shared = true
             cwd=repository_path, log_prefix='git')
         except SubprocessError:
           rmtree(repository_path)
+      self._update_revision_error = error
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=True)
       return False
@@ -380,6 +381,26 @@ shared = true
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
             if not self.updateRevisionList(node_test_suite):
+              try:
+                revision = node_test_suite.revision
+              except AttributeError:
+                date_str = time.strftime('%Y%m%d')
+                revision = ','.join(
+                  '%s=0-%s' % (vcs_repository['repository_id'], date_str)
+                  for vcs_repository in node_test_suite.vcs_repository_list)
+              test_result = taskdistributor.createTestResult(
+                revision, [],
+                config['test_node_title'], False,
+                node_test_suite.test_suite_title,
+                node_test_suite.project_title)
+              if test_result is not None:
+                e = self._update_revision_error
+                status_dict = getattr(e, "status_dict", None) or {
+                  'stderr': "%s: %s" % (e.__class__.__name__, e)}
+                test_result.reportFailure(
+                  command=status_dict.get('command'),
+                  stdout=status_dict.get('stdout'),
+                  stderr=status_dict.get('stderr'))
               continue
             test_result = taskdistributor.createTestResult(
                      node_test_suite.revision, [],
