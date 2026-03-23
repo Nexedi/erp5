@@ -30,8 +30,10 @@ import random
 import string
 import time
 
+import ipaddress
 import oauthlib.oauth2
 import requests
+import six
 from zExceptions import Unauthorized
 
 from Products.ERP5Type.XMLObject import XMLObject
@@ -39,6 +41,11 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import unicode2str
 from Products.ERP5Type.Timeout import getTimeLeft
 
+
+ip_network = ipaddress.ip_network
+if six.PY2:
+  def ip_network(a):  # pylint:disable=function-redefined
+    return ipaddress.ip_network(a.decode('utf-8'))
 
 
 AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
@@ -134,6 +141,17 @@ class GoogleConnector(XMLObject):
       ):
       user_entry[erp5_key] = unicode2str(google_entry.get(google_key, ''))
     return user_entry
+
+  @security.private
+  def checkRemoteAddress(self, remote_address):
+    if six.PY2:
+      remote_address = remote_address.decode('utf-8')
+    address = ipaddress.ip_address(remote_address)
+    return any(
+      address in ip_network(network)
+      for network in self.getNetworkList()
+      if network.strip() and network.strip()[0] != '#'
+    )
 
   def _getOAuthlibClient(self):
     return oauthlib.oauth2.WebApplicationClient(
