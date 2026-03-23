@@ -259,7 +259,8 @@ class DummyCatalog(SQLCatalog):
     return SimpleQuery(uid=-1)
 
 class TestSQLCatalog(ERP5TypeTestCase):
-  def setUp(self):
+
+  def afterSetUp(self):
     self._catalog = DummyCatalog('dummy_catalog')
 
   def assertCatalogRaises(self, exception, kw):
@@ -285,7 +286,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
   def asSQLExpression(self, kw, **build_entire_query_kw):
     entire_query = self._catalog.buildEntireQuery(kw, **build_entire_query_kw)
-    return entire_query.asSQLExpression(self._catalog, False)
+    return entire_query.asSQLExpression(self._catalog, False, connection_id='')
 
   def _testDefaultKey(self, column):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a'), operator='and'),
