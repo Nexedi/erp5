@@ -82,11 +82,11 @@ class WebSite(WebSection):
           request['AcceptLanguage'].set(name, 10)
           request.set(WEBSITE_LANGUAGE_KEY, name)
         if self.isTempObject() or name == default_language:
-          redirect_path_list = [self.getOriginalDocument().absolute_url()]
+          redirect_path_list = [self.getOriginalDocument().absolute_url().rstrip('/')]
           if name != default_language:
             redirect_path_list.append(name)
           redirect_path_list.extend(reversed(request['TraversalRequestNameStack']))
-          request['minimum_language_redirect_url'] = '/'.join(redirect_path_list)
+          request['minimum_language_redirect_url'] = '/'.join(redirect_path_list) + '/'
           query_string = request.get('QUERY_STRING')
           if query_string:
             request['minimum_language_redirect_url'] += '?' + query_string
