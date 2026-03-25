@@ -414,7 +414,7 @@ def _recreateMemcachedTool(portal):
 
 # test runner shared functions
 
-from Products.ZMySQLDA.db import DB
+from Products.Database.db import DB
 class getMySQLArguments(object):
   """Returns arguments to pass to mysql by heuristically converting the
   connection string.
