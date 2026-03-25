@@ -18,7 +18,7 @@ VALUES
   (<dtml-sqlvar uid type="int">, <dtml-sqlvar path type="string">)
 ON DUPLICATE KEY UPDATE
 <dtml-in column_list>
-  `<dtml-var sequence-item>` = VALUES(<dtml-var sequence-item>),
+  `<dtml-var sequence-item>` = VALUES(`<dtml-var sequence-item>`),
 </dtml-in>
   `deletion_timestamp` = DEFAULT
 </dtml-let>

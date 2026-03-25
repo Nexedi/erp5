@@ -9,6 +9,6 @@ INSERT INTO `user` (`uid`, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-
 </dtml-in>
 ON DUPLICATE KEY UPDATE
 <dtml-in column_list>
-  `<dtml-var sequence-item>` = VALUES(<dtml-var sequence-item>)<dtml-if sequence-end><dtml-else>,</dtml-if>
+  `<dtml-var sequence-item>` = VALUES(`<dtml-var sequence-item>`)<dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>
 </dtml-let>
