@@ -226,16 +226,9 @@ class IdTool(BaseTool):
         new_id = None
         if default is None:
           default = 1
-        # XXX It's temporary, a New API will be implemented soon
-        #     the code will be change
         portal = self.getPortalObject()
-        try:
-          query = portal.IdTool_zGenerateId
-          commit = portal.IdTool_zCommit
-        except AttributeError:
-          portal_catalog = portal.portal_catalog.getSQLCatalog()
-          query = portal_catalog.z_portal_ids_generate_id
-          commit = portal_catalog.z_portal_ids_commit
+        query = portal.IdTool_zGenerateId
+        commit = portal.IdTool_zCommit
         try:
           result = query(id_group=id_group, id_count=id_count, default=default)
         finally:
