@@ -377,9 +377,10 @@ allow_class_attribute(datetime.tzinfo)
 # Therefore we import _strptime in advance in this file.
 # This prevents both importing _strptime with level=0, and accessing __doc__,
 # when calling datetime.datetime.strptime().
-import _strptime
-# on python3 it seems we actually need to call strptime for this.
-datetime.datetime.strptime('', '')
+if six.PY2:
+  import _strptime
+else:
+  ModuleSecurityInfo('_strptime').declarePublic('_strptime_datetime')
 
 # Allow dict.fromkeys, Only this method is a class method in dict module.
 allow_class_attribute(dict, {'fromkeys': 1})
