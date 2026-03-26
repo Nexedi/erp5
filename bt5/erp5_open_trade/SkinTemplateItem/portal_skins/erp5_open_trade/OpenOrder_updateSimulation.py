@@ -15,6 +15,10 @@ for open_order_line in context.objectValues():
 
         # Logic duplicated from SubscriptionItem.py
         start_date = ob.getStartDate()
+        if (start_date is None) or (now < start_date):
+          # Do not expand if it is in futur
+          # as it will lead to unwanted compensation movement divergence
+          continue
         # if there is no stop_date, block the generation
         # to today
         stop_date = ob.getStopDate()
