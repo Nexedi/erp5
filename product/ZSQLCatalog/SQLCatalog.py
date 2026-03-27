@@ -678,8 +678,7 @@ class Catalog(Folder,
   def _getFilterDict(self):
     return self.filter_dict
 
-  security.declarePublic('getSQLCatalogRoleKeysList')
-  @transactional_cache_decorator
+  security.declarePrivate('getSQLCatalogRoleKeysList')
   def getSQLCatalogRoleKeysList(self):
     """
     Return the list of role keys.
@@ -689,6 +688,22 @@ class Catalog(Folder,
       role, column = role_key.split('|')
       role_key_dict[role.strip()] = column.strip()
     return ensure_list(role_key_dict.items())
+
+  security.declarePublic('getSQLCatalogRoleColumnsDict')
+  def getSQLCatalogRoleColumnsDict(self):
+    """
+    Return the dict of role keys per table.
+    """
+    role_key_dict = {}
+    for role_key in self.sql_catalog_role_keys:
+      _, column = role_key.split('|')
+      column = column.strip()
+      if '.' in column:
+        table, column = column.split('.')
+      else:
+        table = 'catalog'
+      role_key_dict.setdefault(table, []).append(column)
+    return role_key_dict
 
   security.declareProtected(permissions.ManagePortal, 'getSQLCatalogSecurityUidGroupsColumnsDict')
   def getSQLCatalogSecurityUidGroupsColumnsDict(self):
