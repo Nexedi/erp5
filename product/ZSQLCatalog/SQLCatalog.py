@@ -1303,7 +1303,7 @@ class Catalog(Folder,
     # force using READ COMMITTED isolation.
     connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
-    if not db._registered and not db.innodb_locks_unsafe_for_binlog:
+    if not db._registered and (hasattr(db, "innodb_locks_unsafe_for_binlog") and not db.innodb_locks_unsafe_for_binlog):
       db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
     object_path_dict = {}
@@ -2205,7 +2205,9 @@ class Catalog(Folder,
                        query_table_alias=None,
                        ignore_empty_string=1,
                        limit=None, extra_column_list=(),
-                       ignore_unknown_columns=False):
+                       ignore_unknown_columns=False,
+                       connection_id = ''
+                       ):
     kw = self.getCannonicalArgumentDict(kw)
     group_by_list = kw.pop('group_by_list', [])
     select_dict = kw.pop('select_dict', {})
@@ -2230,7 +2232,7 @@ class Catalog(Folder,
       limit=limit,
       catalog_table_name=query_table,
       catalog_table_alias=query_table_alias,
-      extra_column_list=extra_column_list,
+      extra_column_list=extra_column_list
     )
 
   security.declarePublic('buildSQLQuery')
@@ -2240,6 +2242,7 @@ class Catalog(Folder,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
+                          connection_id = '',
                           **kw):
     return self.buildEntireQuery(
       kw,
@@ -2248,10 +2251,11 @@ class Catalog(Folder,
       ignore_empty_string=ignore_empty_string,
       limit=limit,
       extra_column_list=extra_column_list,
-      ignore_unknown_columns=ignore_unknown_columns,
+      ignore_unknown_columns=ignore_unknown_columns
     ).asSQLExpression(
       self,
       only_group_columns,
+      connection_id = connection_id
     ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
@@ -2360,6 +2364,7 @@ class Catalog(Folder,
       ):
     if build_sql_query_method is None:
       build_sql_query_method = self.buildSQLQuery
+    kw['connection_id'] = sql_method.connection_id
     query = build_sql_query_method(
       REQUEST=REQUEST,
       implicit_join=implicit_join,
