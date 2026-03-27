@@ -177,6 +177,7 @@ shared = true
             cwd=repository_path, log_prefix='git')
         except SubprocessError:
           rmtree(repository_path)
+      self._update_revision_error = error
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=True)
       return False
@@ -279,17 +280,19 @@ shared = true
     if time.time() - last_prune < prune_interval:
       return
 
-    # when not yet initialized, we do not have reference to the test suite softwares
-    # so we cannot prune yet.
-    if not self.node_test_suite_dict:
+    software_root_list = sorted(
+      software_root
+      for entry in os.listdir(self.working_directory)
+      for software_root in (
+        SlapOSControler(
+          os.path.join(self.working_directory, entry),
+          self.config,
+        ).software_root,
+      )
+      if os.path.isdir(software_root)
+    )
+    if not software_root_list:
       return
-
-    software_root_list = [
-      SlapOSControler(
-        node_test_suite.working_directory,
-        self.config,
-      ).software_root for (_, node_test_suite) in sorted(self.node_test_suite_dict.items())
-    ]
     slapos_controler = SlapOSControler(slapos_directory, self.config)
     # just set the process manager, we do not need to initalize this slapos and start the proxy
     slapos_controler.process_manager = self.process_manager
@@ -378,6 +381,26 @@ shared = true
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
             if not self.updateRevisionList(node_test_suite):
+              try:
+                revision = node_test_suite.revision
+              except AttributeError:
+                date_str = time.strftime('%Y%m%d')
+                revision = ','.join(
+                  '%s=0-%s' % (vcs_repository['repository_id'], date_str)
+                  for vcs_repository in node_test_suite.vcs_repository_list)
+              test_result = taskdistributor.createTestResult(
+                revision, [],
+                config['test_node_title'], False,
+                node_test_suite.test_suite_title,
+                node_test_suite.project_title)
+              if test_result is not None:
+                e = self._update_revision_error
+                status_dict = getattr(e, "status_dict", None) or {
+                  'stderr': "%s: %s" % (e.__class__.__name__, e)}
+                test_result.reportFailure(
+                  command=status_dict.get('command'),
+                  stdout=status_dict.get('stdout'),
+                  stderr=status_dict.get('stderr'))
               continue
             test_result = taskdistributor.createTestResult(
                      node_test_suite.revision, [],
