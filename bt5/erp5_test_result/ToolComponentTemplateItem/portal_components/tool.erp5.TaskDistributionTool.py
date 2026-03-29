@@ -193,6 +193,16 @@ class TaskDistributionTool(BaseTool):
                 return
             if last_revision == int_index:
               return
+        if last_state == 'failed':
+          # if test failed to build, we retry up to 12 times, a bit more than
+          # retry_software_count from erp5.util.testnode, so that testnode have a chance to
+          # reset the software and retry from scratch.
+          if portal.test_result_module.countFolder(
+              reference=SimpleQuery(comparison_operator='=', reference=reference_list_string),
+              simulation_state='failed',
+            )[0][0] > 15:
+            return
+
     test_result = portal.test_result_module.newContent(
       portal_type='Test Result',
       title=test_title,
