@@ -850,6 +850,29 @@ class TestTaskDistribution(TaskDistributionTestCase):
     finally:
       self.unpinDateTime()
 
+  def test_createTestResultStopsAfterTooManyFailedAttempts(self):
+    """
+    When tests fail to build software repeatedly, stop retrying after 15 attempts.
+    This prevents infinite loops when software consistently fails to build.
+    """
+    self._createTestNode()
+    revision = "r0=a,r1=a"
+    for _ in range(16):
+      test_result_path, _ = self._createTestResult(revision=revision)
+      next_test_result_path, _ = self._createTestResult(
+        revision=revision, node_title="UnitTestNode 1")
+      self.assertEqual(test_result_path, next_test_result_path)
+      test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+      self.assertEqual("started", test_result.getSimulationState())
+      self.distributor.reportTaskFailure(test_result_path, {}, "Node0")
+      self.distributor.reportTaskFailure(test_result_path, {}, "UnitTestNode 1")
+      self.tic()
+      self.assertEqual("failed", test_result.getSimulationState())
+    result = self._createTestResult(revision=revision)
+    self.assertEqual(None, result)
+    result = self._createTestResult(revision="r0=b,r1=b")
+    self.assertNotEqual(None, result)
+
   def test_08_checkWeCanNotCreateTwoTestResultInParallel(self):
     """
     To avoid duplicates of test result when several testnodes works on the
