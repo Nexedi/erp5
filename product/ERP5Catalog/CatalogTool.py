@@ -52,7 +52,6 @@ from MethodObject import Method
 
 from Products.ERP5Security import mergedLocalRoles
 from Products import ERP5Security
-from Products.ERP5.ERP5Site import getSite
 
 import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
@@ -723,11 +722,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 select_list=["security_uid"],
                 group_by=["security_uid"])] }
           else:
-            # XXX: What with this string transformation ?! Souldn't it be done in
-            # dtml instead ? ... yes, but how to be bw compatible ?
-            sql_quote__ = getSite()[method.connection_id].sql_quote__
-            allowedRolesAndUsers = [sql_quote__(role) for role in allowedRolesAndUsers]
-
             security_uid_dict = defaultdict(list)
             for brain in method(security_roles_list=allowedRolesAndUsers):
               security_uid_dict[getattr(brain, 'local_roles_group_id', '')
