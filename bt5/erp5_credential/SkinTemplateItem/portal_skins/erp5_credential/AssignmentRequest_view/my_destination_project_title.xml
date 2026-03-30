@@ -12,7 +12,6 @@
               <list>
                 <string>editable</string>
                 <string>portal_type</string>
-                <string>title</string>
               </list>
             </value>
         </item>
@@ -71,11 +70,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_destination_project_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Assignment_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -87,10 +86,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Project</string> </value>
                 </item>
               </dictionary>
             </value>
