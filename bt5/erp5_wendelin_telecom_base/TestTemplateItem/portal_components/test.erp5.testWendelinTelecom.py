@@ -1199,30 +1199,28 @@ class WendelinTelecomTest(TestWendelinTelecomMixin):
     data_analysis_line_list = ingestion_item_dict['data_analysis'].contentValues(
       portal_type='Data Analysis Line'
     )
-    data_analysis_last_line = data_analysis_line_list[-1]
+    data_analysis_last_line = next(line for line in data_analysis_line_list 
+                                   if line.getReference() == 'in_stream')
     saved_aggregate_list = data_analysis_last_line.getAggregateValueList()
     data_analysis_last_line.setAggregateValueList([])
     self.tic()
 
     # Check that the other Data Analysis Lines are consistent
-    for line in data_analysis_line_list[:-1]:
+    for line in data_analysis_line_list:
       consistency_message_list = self.getConsistencyMessageList(line)
+      if line.getReference() == 'in_stream':
+      # Check that the Data Analysis line has a consistency error
+        self.assertEqual(len(consistency_message_list), 2)
+        self.assertEqual(
+          consistency_message_list[0],
+          "Item Type Data Stream is missing"
+        )
+        self.assertEqual(
+          consistency_message_list[1],
+          "Item Type Progress Indicator is missing"
+        )
+        continue
       self.assertFalse(consistency_message_list)
-
-    # Check that the Data Analysis line has a consistency error
-    consistency_message_list = self.getConsistencyMessageList(
-      data_analysis_last_line
-    )
-    self.assertEqual(len(consistency_message_list), 2)
-    self.assertEqual(
-      consistency_message_list[0], 
-      "Item Type Data Stream is missing"
-    )
-    self.assertEqual(
-      consistency_message_list[1],
-      "Item Type Progress Indicator is missing"
-    )
-
     data_analysis_last_line.setAggregateValueList(saved_aggregate_list)
     self.tic()
 
