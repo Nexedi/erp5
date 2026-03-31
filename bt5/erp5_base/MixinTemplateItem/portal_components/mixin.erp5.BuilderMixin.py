@@ -753,7 +753,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         # check if it can take the new parameter safely, only when
         # the callable object is a Python Script.
         meta_type = getattr(script, 'meta_type', None)
-        if meta_type == 'Script (Python)':
+        if meta_type in ('Script (Python)', 'ERP5 Python Script'):
           # check parameters accepted by the script
           for param in script.params().split(','):
             param = param.split('=', 1)[0].strip()
