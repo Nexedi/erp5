@@ -2241,6 +2241,8 @@ class Catalog(Folder,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
                           **kw):
+    connection_id = self.getSearchResultsMethod().connection_id
+    sql_quote = self.getPortalObject()[connection_id].sql_quote__ if connection_id else None
     return self.buildEntireQuery(
       kw,
       query_table=query_table,
@@ -2252,6 +2254,7 @@ class Catalog(Folder,
     ).asSQLExpression(
       self,
       only_group_columns,
+      sql_quote,
     ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
