@@ -44,6 +44,9 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
   ue_data = []
   rms_rx_data = []
   ul_noise_indicator_data = []
+  throughput_data = []
+  bler_data = []
+  accessibility_data = []
   is_config_updated = False
   if progress_indicator is not None:
     last_config_dict = json.loads(progress_indicator.getLastXLogConfig('{}'))
@@ -68,6 +71,13 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
       is_config_updated = True
 
     if xlog_line_dict.get("message", None) == 'stats' and "cells" in xlog_line_dict:
+      duration = xlog_line_dict.get("duration", None)
+      counter_message = xlog_line_dict.get("counters", {}).get("messages", {})
+      s1_initial_context_setup_request = counter_message.get("s1_initial_context_setup_request", 0)
+      s1_initial_context_setup_response = counter_message.get("s1_initial_context_setup_response", 0)
+      s1_erab_setup_request = counter_message.get("s1_erab_setup_request", 0)
+      s1_erab_setup_response = counter_message.get("s1_erab_setup_response", 0)
+
       for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
 
         ue_count_max = cell_data.get("ue_count_max", None)
@@ -80,6 +90,19 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
 
           ue_data.append(
             (timestamp, int(cell_id), ue_count_max, ue_count_min, ue_count_avg))
+
+        dl_bitrate = cell_data.get("dl_bitrate", None)
+        ul_bitrate = cell_data.get("ul_bitrate", None)
+        if dl_bitrate is not None and ul_bitrate is not None and duration is not None:
+          throughput_data.append((timestamp, int(cell_id), dl_bitrate/duration, ul_bitrate/duration))
+
+        dl_tx = cell_data.get("dl_tx", None)
+        ul_tx = cell_data.get("ul_tx", None)
+        dl_retx = cell_data.get("dl_retx", None)
+        ul_retx = cell_data.get("ul_retx", None)
+
+        if dl_tx is not None and ul_tx is not None and dl_retx is not None and ul_retx is not None:
+          bler_data.append((timestamp, int(cell_id), dl_tx, dl_retx, ul_tx, ul_retx))
 
         # XXX REVIEW: I am not sure this will always be true.
         cell_message = cell_data.get("counters", {})\
@@ -96,6 +119,10 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
           rrc_data.append((timestamp, int(cell_id), rrc_con_req, rrc_paging,
                            rrc_recon_com, rrc_sec_command, rrc_sec_complete))
 
+          rrc_con_set_com = cell_message.get("rrc_connection_setup_complete", 0)
+          accessibility_data.append((timestamp, int(cell_id), rrc_con_req, rrc_con_set_com,
+                                     s1_initial_context_setup_request, s1_initial_context_setup_response, 
+                                     s1_erab_setup_request, s1_erab_setup_response))
       cell_samples_rx_list = xlog_line_dict.get("samples", {}).get("rx", [])
       if len(rms_rx_index) == len(cell_samples_rx_list):
         for pos, sample_rx in enumerate(cell_samples_rx_list):
@@ -177,6 +204,9 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
     ue_count=ue_data,
     rrc=rrc_data,
     ul_noise_indicator=ul_noise_indicator_data,
+    throughput=throughput_data,
+    bler=bler_data,
+    accessibility=accessibility_data,
     rms={'rx': rms_rx_data},
     last_rms_rx_index=rms_rx_index
   )
