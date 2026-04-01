@@ -175,7 +175,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
 
   def _cleanupTestResult(self):
     self.tic()
-    cleanup_state_list = ['started', 'stopped']
+    cleanup_state_list = ['started', 'stopped', 'failed']
     test_list =  self.test_result_module.searchFolder(title='"TEST FOO" OR "test suite %" OR "Default Test Suite"',
                simulation_state=cleanup_state_list)
     for test_result in test_list:
@@ -849,6 +849,30 @@ class TestTaskDistribution(TaskDistributionTestCase):
       self.assertEqual("failed", test_result.getSimulationState())
     finally:
       self.unpinDateTime()
+
+  def test_createTestResultStopsAfterTooManyFailedAttempts(self):
+    """
+    When tests fail to build software repeatedly, stop retrying after 12 attempts.
+    This prevents infinite loops when software consistently fails to build.
+    """
+    self._createTestNode()
+    revision = "r0=a,r1=a"
+    for _ in range(12):
+      sleep(1)  # because catalog has second precision and the code searches for the latest test result
+      test_result_path, _ = self._createTestResult(revision=revision)
+      next_test_result_path, _ = self._createTestResult(
+        revision=revision, node_title="UnitTestNode 1")
+      self.assertEqual(test_result_path, next_test_result_path)
+      test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+      self.assertEqual("started", test_result.getSimulationState())
+      self.distributor.reportTaskFailure(test_result_path, {}, "Node0")
+      self.distributor.reportTaskFailure(test_result_path, {}, "UnitTestNode 1")
+      self.tic()
+      self.assertEqual("failed", test_result.getSimulationState())
+    result = self._createTestResult(revision=revision)
+    self.assertEqual(None, result)
+    result = self._createTestResult(revision="r0=b,r1=b")
+    self.assertNotEqual(None, result)
 
   def test_08_checkWeCanNotCreateTwoTestResultInParallel(self):
     """
