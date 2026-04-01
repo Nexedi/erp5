@@ -143,7 +143,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: "%s?format=" % here.absolute_url()</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: "%s?format=&modification_date=%s" % (here.absolute_url(), here.getModificationDate().millis())
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
