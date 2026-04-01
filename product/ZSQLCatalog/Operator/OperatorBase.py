@@ -118,7 +118,7 @@ class OperatorBase(object):
   def _render(self, column, value,
               value_renderer_get={k.__name__: v
                 for k, v in six.iteritems(value_renderer)}.get,
-              connection_id =''):
+              sql_quote=None):
     """
       Render given column and value for use in SQL.
       Value is rendered to convert it to SQL-friendly value.
@@ -134,13 +134,13 @@ class OperatorBase(object):
       column = column_renderer.get(type, columnDefaultRenderer)(column, format=value['format'])
       value = value_renderer_get(type, valueDefaultRenderer)(value['query'])
     else:
-      value = self._renderValue(value, connection_id = connection_id)
+      value = self._renderValue(value, sql_quote = sql_quote)
     return column, value
 
   def _renderValue(self, value,
                    value_renderer_get=value_renderer.get,
                    valueDefaultRenderer=valueDefaultRenderer,
-                   connection_id=''):
+                   sql_quote=None):
     """
       Render given value as string.
 
@@ -149,14 +149,14 @@ class OperatorBase(object):
     """
     render_method = value_renderer_get(value.__class__, valueDefaultRenderer)
     if render_method == escapeString:
-      return render_method(value, connection_id)
+      return render_method(value, sql_quote)
     return render_method(value)
 
   def asSearchText(self, value):
     return value_search_text_renderer.get(value.__class__,
                                           valueDefaultSearchTextRenderer)(value)
 
-  def asSQLExpression(self, column, value_list, only_group_columns, connection_id):
+  def asSQLExpression(self, column, value_list, only_group_columns, sql_quote):
     raise NotImplementedError('This method must be overloaded by a subclass'
       ' to be able to get an SQL representation of this operator.')
 

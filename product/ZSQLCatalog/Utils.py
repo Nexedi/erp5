@@ -27,8 +27,8 @@
 import six
 from Products.ERP5Type.Utils import bytes2str
 
-def sqlquote(value, connection_id=''):
+def sqlquote(value, sql_quote=None):
   from Products.ERP5.ERP5Site import getSite
-  if not connection_id:
-    connection_id = 'erp5_sql_connection'
-  return bytes2str(getSite()[connection_id].sql_quote__(value))
+  if sql_quote is None:
+    sql_quote = getSite()['erp5_sql_connection'].sql_quote__
+  return bytes2str(sql_quote(value))
