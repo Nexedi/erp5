@@ -108,9 +108,11 @@ class SimpleQuery(Query):
     return False, self.getSearchKey(sql_catalog).buildSearchTextExpression(self.getOperator(sql_catalog), self.getValue(), column=column)
 
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+    search_method = sql_catalog.getSearchResultsMethod()
+    connection_id = search_method.connection_id
     return self.getSearchKey(sql_catalog).buildSQLExpression(
       self.getOperator(sql_catalog), self.getValue(),
-      column_map, only_group_columns, group=self.group)
+      column_map, only_group_columns, group=self.group, connection_id=connection_id)
 
   def registerColumnMap(self, sql_catalog, column_map):
     self.group = self.getSearchKey(sql_catalog).registerColumnMap(column_map, group=self.group, simple_query=self)
