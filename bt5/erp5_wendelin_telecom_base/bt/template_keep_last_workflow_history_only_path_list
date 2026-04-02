@@ -15,6 +15,8 @@ portal_callables/DataArray_updateActiveQciLines
 portal_callables/DataIngestionLine_writeOrsFluentdIngestionToDataStream
 portal_callables/IngestionPolicy_parseOrsFluentdTag
 portal_ingestion_policies/ors_enb_log_ingestion
+web_page_module/ors_accessibility_*
+web_page_module/ors_bler_*
 web_page_module/ors_e_rab_accessibility_kpi_*
 web_page_module/ors_e_utran_ip_throughput_kpi_*
 web_page_module/ors_failure_rrc_security_mode_*
@@ -23,6 +25,7 @@ web_page_module/ors_rms_rx_*
 web_page_module/ors_rrc_connection_request_*
 web_page_module/ors_rrc_paging_*
 web_page_module/ors_rrc_ue_count_*
+web_page_module/ors_throughput_*
 web_page_module/ors_ue_count_*
 web_page_module/ors_ul_noise_indicator_*
 web_page_module/ors_unsuccessful_rrc_connection_attempt_*
