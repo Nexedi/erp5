@@ -99,11 +99,12 @@ class SearchKey(object):
     return self.column
 
   def buildSQLExpression(self, operator, value, column_map, only_group_columns,
-                         group):
+                         group, sql_quote):
     return operator.asSQLExpression(
       column_map.asSQLColumn(self.getColumn(), group=group),
       value,
       only_group_columns,
+      sql_quote
     )
 
   def _renderValueAsSearchText(self, value, operator):
