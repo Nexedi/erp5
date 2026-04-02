@@ -33,6 +33,7 @@ except ImportError:
   from ConfigParser import SafeConfigParser as ConfigParser
   ConfigParser.read_file = ConfigParser.readfp
   import mock
+  TestCase.assertRegex = TestCase.assertRegexpMatches
 
 @contextmanager
 def dummySuiteLog(_):
