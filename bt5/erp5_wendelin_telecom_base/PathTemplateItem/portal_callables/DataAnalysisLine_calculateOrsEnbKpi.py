@@ -19,6 +19,9 @@ cell_ue_count_data_array = None
 cell_rrc_data_array = None
 cell_rms_rx_data_array = None
 cell_ul_noise_indicator_data_array = None
+cell_throughput_data_array = None
+cell_bler_data_array = None
+cell_accessibility_data_array = None
 for array in out_array:
   if array['variation'] == 'e_rab':
     e_rab_data_array = array['Data Array']
@@ -32,6 +35,12 @@ for array in out_array:
     cell_rms_rx_data_array = array['Data Array']
   if array['variation'] == 'cell_ul_noise_indicator':
     cell_ul_noise_indicator_data_array = array['Data Array']
+  if array['variation'] == 'cell_throughput':
+    cell_throughput_data_array = array['Data Array']
+  if array['variation'] == 'cell_bler':
+    cell_bler_data_array = array['Data Array']
+  if array['variation'] == 'cell_accessibility':
+    cell_accessibility_data_array = array['Data Array']
 
 
 # No new data to process
@@ -118,6 +127,9 @@ ue_count_data_list = enb_xlog_data_dict['ue_count']
 rrc_list = enb_xlog_data_dict['rrc']
 rms_rx_list = enb_xlog_data_dict['rms']['rx']
 ul_noise_indicator_list = enb_xlog_data_dict['ul_noise_indicator']
+throughput_list = enb_xlog_data_dict['throughput']
+bler_list = enb_xlog_data_dict['bler']
+accessibility_list = enb_xlog_data_dict['accessibility']
 
 e_rab_dtype = np.dtype([
   ('vt', 'float'),
@@ -167,6 +179,33 @@ cell_rms_rx_dtype = np.dtype([
   ('max', 'float64'),
   ('rms', 'float64'),
   ('rms_dbm', 'float64')
+])
+
+cell_throughput_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('dl_throughput', 'float64'),
+  ('ul_throughput', 'float64')
+])
+
+cell_bler_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('dl_tx', 'float64'),
+  ('dl_retx', 'float64'),
+  ('ul_tx', 'float64'),
+  ('ul_retx', 'float64')
+])
+
+cell_accessibility_dtype = np.dtype([
+  ('utc', 'float'),
+  ('cell_id', 'float'),
+  ('rrc_con_req', 'float64'),
+  ('rrc_con_set_com', 'float64'),
+  ('s1_initial_context_setup_request', 'float64'),
+  ('s1_initial_context_setup_response', 'float64'),
+  ('s1_erab_setup_request', 'float64'),
+  ('s1_erab_setup_response', 'float64')
 ])
 
 e_rab_array = e_rab_data_array.getArray()
@@ -254,6 +293,18 @@ appendCellDataListToDataArray(cell_rms_rx_data_array,
 appendCellDataListToDataArray(cell_ul_noise_indicator_data_array,
                               ul_noise_indicator_list,
                               cell_ul_noise_indicator_dtype)
+
+appendCellDataListToDataArray(cell_throughput_data_array,
+                              throughput_list,
+                              cell_throughput_dtype)
+
+appendCellDataListToDataArray(cell_bler_data_array,
+                              bler_list,
+                              cell_bler_dtype)
+
+appendCellDataListToDataArray(cell_accessibility_data_array,
+                              accessibility_list,
+                              cell_accessibility_dtype)
 
 progress_indicator.setIntOffsetIndex(end)
 e_utran_data_array.activate().DataArray_updateActiveQciLines()
