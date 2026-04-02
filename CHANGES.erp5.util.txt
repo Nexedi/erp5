@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.81 (2026-04-02)
+-------------------
+
+  * testnode:
+     - fix slapos node prune deleting too much
+     - report errors while updating to distributor
+
 0.4.80 (2026-02-18)
 -------------------
 
