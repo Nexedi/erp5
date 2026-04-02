@@ -6,6 +6,7 @@ from test_suite import ERP5TypeTestSuite
 import sys
 import six
 from itertools import chain
+import random
 
 HERE = os.path.dirname(__file__)
 
@@ -307,6 +308,8 @@ class RJS_Only(_ERP5):
 
 class WendelinERP5(_Base):
 
+  _saved_test_id = 'erp5_wendelin_configurator:testWendelinConfigurator'
+
   def getTestList(self):
     all_test_list = self._getAllTestList()
     print(all_test_list)
@@ -334,7 +337,9 @@ class WendelinERP5(_Base):
     # If test node run configurator A test, then run configurator B test
     # It will then load the data created by A to run B
     if 'Configurator' not in test:
-      status_dict = self.runUnitTest('--load', '--save', '--with_wendelin_core', full_test)
+      portal_id = 'portal_%i' % (random.randint(0, sys.maxsize), )
+      self.runUnitTest('--save', '--portal_id=' + portal_id, self._saved_test_id)
+      status_dict = self.runUnitTest('--load', '--save', '--portal_id=' + portal_id, '--with_wendelin_core', full_test)
     else:
       status_dict = self.runUnitTest(full_test)
     if test.startswith('testFunctional'):
@@ -342,6 +347,9 @@ class WendelinERP5(_Base):
     return status_dict
 
 class WendelinTelecomERP5(WendelinERP5):
+
+  _saved_test_id = 'erp5_wendelin_telecom_configurator:testWendelinTelecomConfigurator'
+
   def getTestList(self):
     all_test_list = self._getAllTestList()
     print(all_test_list)
