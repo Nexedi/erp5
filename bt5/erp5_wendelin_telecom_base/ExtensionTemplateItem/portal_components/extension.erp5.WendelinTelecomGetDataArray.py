@@ -21,6 +21,17 @@ NA_VALUES_REPLACEMENTS = {
   'ue_count_min': 0.,
   'ue_count_avg': 0.,
   'rrc_con_req': 0.,
+  'rrc_con_set_com': 0.,
+  's1_initial_context_setup_request': 0.,
+  's1_initial_context_setup_response': 0.,
+  's1_erab_setup_request': 0.,
+  's1_erab_setup_response': 0.,
+  'dl_throughput': 0.,
+  'ul_throughput': 0.,
+  'dl_retx': 0.,
+  'dl_tx': 0.,
+  'ul_retx': 0.,
+  'ul_tx': 0.
 }
 
 def compute_positive_delta(nparray):
@@ -407,6 +418,281 @@ def get_rrc_paging(data_array, data_array_dtype, time_start, time_end, column):
   }
   return response_dict
 
+def get_throughput_per_cell(data_array, data_array_dtype, time_start, time_end):
+  data_zarray = data_array.getArray()[:]
+  time_field = data_array_dtype[0]
+  data_zarray, time_start, time_end = get_data_zarray_in_time_range(
+    data_zarray, time_field, time_start, time_end
+  )
+
+  data_frame = pd.DataFrame.from_records(data_zarray)
+  data_frame[time_field] = pd.to_datetime(data_frame[time_field], unit='s')
+  data_frame = data_frame.sort_values(by=time_field)
+
+  # Resample data if array is too large
+  if len(data_zarray) > RESAMPLE_SIZE:
+    resample_period_int = max(int((time_end - time_start) / RESAMPLE_SIZE), 1)
+    data_frame = data_frame.set_index(time_field)
+
+    # Get numeric columns and remove cell_id_field explicitly
+    value_columns = data_frame.select_dtypes(include=[np.number]).columns.tolist()
+    value_columns = [col for col in value_columns if col != 'cell_id']
+
+    # Group by cell_id_field and resample
+    data_frame = (
+        data_frame
+        .groupby('cell_id')
+        .resample("%ss" % resample_period_int)
+        [value_columns]
+        .mean()
+        .reset_index()
+    )
+
+    ffill_limit = max(1, int(FFILL_TOLERANCE/resample_period_int))
+    data_frame = data_frame.fillna(
+      method='ffill', limit=ffill_limit
+    ).fillna(value=NA_VALUES_REPLACEMENTS)
+
+  data_frame = data_frame.reset_index()
+  data_frame[time_field] = data_frame[time_field].map(pd.Timestamp.timestamp)
+
+  response_dict = {
+      cell: group.reset_index(drop=True).to_dict(orient='list') for cell, group in data_frame.groupby('cell_id')
+  }
+  base_resampled_data_dict = data_frame.reset_index().groupby(time_field).agg({
+    'dl_throughput': 'sum',
+    'ul_throughput': 'sum'}).reset_index().to_dict(orient='list')
+
+  response_dict['base'] = {
+      'utc': base_resampled_data_dict['utc'],
+      'dl_throughput': base_resampled_data_dict['dl_throughput'],
+      'ul_throughput': base_resampled_data_dict['ul_throughput']
+  }
+  return response_dict
+
+def get_bler_per_cell(data_array, data_array_dtype, time_start, time_end):
+  data_zarray = data_array.getArray()[:]
+  time_field = data_array_dtype[0]
+  data_zarray, time_start, time_end = get_data_zarray_in_time_range(
+    data_zarray, time_field, time_start, time_end
+  )
+
+  data_frame = pd.DataFrame.from_records(data_zarray)
+  data_frame[time_field] = pd.to_datetime(data_frame[time_field], unit='s')
+  data_frame = data_frame.sort_values(by=time_field)
+
+  # Resample data if array is too large
+  if len(data_zarray) > RESAMPLE_SIZE:
+    resample_period_int = max(int((time_end - time_start) / RESAMPLE_SIZE), 1)
+    data_frame = data_frame.set_index(time_field)
+    # Get numeric columns and remove cell_id_field explicitly
+    value_columns = data_frame.select_dtypes(include=[np.number]).columns.tolist()
+    value_columns = [col for col in value_columns if col != 'cell_id']
+
+    # Group by cell_id_field and resample
+    data_frame = (
+        data_frame
+        .groupby('cell_id')
+        .resample("%ss" % resample_period_int)
+        [value_columns]
+        .mean()
+        .reset_index()
+    )
+
+    ffill_limit = max(1, int(FFILL_TOLERANCE/resample_period_int))
+    data_frame = data_frame.fillna(
+      method='ffill', limit=ffill_limit
+    ).fillna(value=NA_VALUES_REPLACEMENTS)
+
+  data_frame = data_frame.reset_index()
+  data_frame[time_field] = data_frame[time_field].map(pd.Timestamp.timestamp)
+
+  with np.errstate(divide='ignore', invalid='ignore'):
+    data_frame['dl_bler'] = np.divide(
+      data_frame['dl_retx'],
+      data_frame['dl_tx'],
+      out=np.zeros(len(data_frame), dtype=float),
+      where=(data_frame['dl_tx'] > 0) & (data_frame['dl_retx'] > 0)
+    )
+    data_frame['ul_bler'] = np.divide(
+      data_frame['ul_retx'],
+      data_frame['ul_tx'],
+      out=np.zeros(len(data_frame), dtype=float),
+      where=(data_frame['ul_tx'] > 0) & (data_frame['ul_retx'] > 0)
+    )
+
+  response_data_frame = data_frame[[
+    time_field,
+    'cell_id',
+    'dl_bler',
+    'ul_bler'
+  ]]
+
+  response_dict = {
+      cell: group.reset_index(drop=True).to_dict(orient='list')
+      for cell, group in response_data_frame.groupby('cell_id')
+  }
+
+  base_resampled_data_frame = data_frame.groupby(time_field).agg({
+    'dl_retx': 'sum',
+    'dl_tx': 'sum',
+    'ul_retx': 'sum',
+    'ul_tx': 'sum'}).reset_index()
+  base_resampled_data_frame['dl_bler'] = np.divide(
+    base_resampled_data_frame['dl_retx'],
+    base_resampled_data_frame['dl_tx'],
+    out=np.zeros(len(base_resampled_data_frame), dtype=float),
+    where=(base_resampled_data_frame['dl_tx'] > 0) & (base_resampled_data_frame['dl_retx'] > 0)
+  )
+  base_resampled_data_frame['ul_bler'] = np.divide(
+    base_resampled_data_frame['ul_retx'],
+    base_resampled_data_frame['ul_tx'],
+    out=np.zeros(len(base_resampled_data_frame), dtype=float),
+    where=(base_resampled_data_frame['ul_tx'] > 0) & (base_resampled_data_frame['ul_retx'] > 0)
+  )
+  base_resampled_data_dict = base_resampled_data_frame.to_dict(orient='list')
+
+  response_dict['base'] = {
+    'utc': base_resampled_data_dict[time_field],
+    'dl_bler': base_resampled_data_dict['dl_bler'],
+    'ul_bler': base_resampled_data_dict['ul_bler']
+  }
+  return response_dict
+
+
+def get_accessibility_per_cell(data_array, data_array_dtype, time_start, time_end):
+  data_zarray = data_array.getArray()[:]
+  time_field = data_array_dtype[0]
+  data_zarray, time_start, time_end = get_data_zarray_in_time_range(
+    data_zarray, time_field, time_start, time_end
+  )
+
+  data_frame = pd.DataFrame.from_records(data_zarray)
+  data_frame[time_field] = pd.to_datetime(data_frame[time_field], unit='s')
+  data_frame = data_frame.sort_values(by=time_field)
+
+  # Resample data if array is too large
+  if len(data_zarray) > RESAMPLE_SIZE:
+    resample_period_int = max(int((time_end - time_start) / RESAMPLE_SIZE), 1)
+    data_frame = data_frame.set_index(time_field)
+    # Get numeric columns and remove cell_id_field explicitly
+    value_columns = data_frame.select_dtypes(include=[np.number]).columns.tolist()
+    value_columns = [col for col in value_columns if col != 'cell_id']
+
+    # Group by cell_id_field and resample
+    data_frame = (
+        data_frame
+        .groupby('cell_id')
+        .resample("%ss" % resample_period_int)
+        [value_columns]
+        .mean()
+        .reset_index()
+    )
+
+    ffill_limit = max(1, int(FFILL_TOLERANCE/resample_period_int))
+    data_frame = data_frame.fillna(
+      method='ffill', limit=ffill_limit
+    ).fillna(value=NA_VALUES_REPLACEMENTS)
+
+  data_frame = data_frame.reset_index()
+  data_frame[time_field] = data_frame[time_field].map(pd.Timestamp.timestamp)
+  sorted_data_frame = data_frame.sort_values(by=['cell_id', time_field])
+  data_frame['rrc_con_set_com'] = sorted_data_frame.groupby('cell_id')['rrc_con_set_com'].transform(compute_positive_delta)
+  data_frame['s1_initial_context_setup_request'] = sorted_data_frame.groupby('cell_id')['s1_initial_context_setup_request'].transform(compute_positive_delta)
+  data_frame['s1_initial_context_setup_response'] = sorted_data_frame.groupby('cell_id')['s1_initial_context_setup_response'].transform(compute_positive_delta)
+  data_frame['s1_erab_setup_request'] = sorted_data_frame.groupby('cell_id')['s1_erab_setup_request'].transform(compute_positive_delta)
+  data_frame['s1_erab_setup_response'] = sorted_data_frame.groupby('cell_id')['s1_erab_setup_response'].transform(compute_positive_delta)
+
+  with np.errstate(divide='ignore', invalid='ignore'):
+    accessibility = np.ones(len(data_frame), dtype=float)
+
+    if 'rrc_con_req' in data_frame.columns and 'rrc_con_set_com' in data_frame.columns:
+      rrc_accessibility = np.divide(
+        data_frame['rrc_con_set_com'],
+        data_frame['rrc_con_req'],
+        out=np.ones(len(data_frame), dtype=float),
+        where=(data_frame['rrc_con_req'] > 0)
+        & (data_frame['rrc_con_set_com'] > 0)
+      )
+      accessibility *= rrc_accessibility
+
+    if 's1_initial_context_setup_request' in data_frame.columns and 's1_initial_context_setup_response' in data_frame.columns:
+      s1_initial_context_setup_accessibility = np.divide(
+        data_frame['s1_initial_context_setup_response'],
+        data_frame['s1_initial_context_setup_request'],
+        out=np.ones(len(data_frame), dtype=float),
+        where=(data_frame['s1_initial_context_setup_request'] > 0)
+        & (data_frame['s1_initial_context_setup_response'] > 0)
+      )
+      accessibility *= s1_initial_context_setup_accessibility
+
+    if 's1_erab_setup_request' in data_frame.columns and 's1_erab_setup_response' in data_frame.columns:
+      s1_erab_setup_accessibility = np.divide(
+        data_frame['s1_erab_setup_response'],
+        data_frame['s1_erab_setup_request'],
+        out=np.ones(len(data_frame), dtype=float),
+        where=(
+          (data_frame['s1_erab_setup_request'] > 0)
+          & (data_frame['s1_erab_setup_response'] > 0)
+        )
+      )
+      accessibility *= s1_erab_setup_accessibility
+
+  response_data_frame = data_frame[[
+    time_field,
+    'cell_id'
+  ]]
+  response_data_frame['accessibility'] = accessibility
+
+  response_dict = {
+      cell: group.reset_index(drop=True).to_dict(orient='list')
+      for cell, group in response_data_frame.groupby('cell_id')
+  }
+
+  base_resampled_data_frame = data_frame.groupby(time_field).agg({
+    'rrc_con_req': 'sum',
+    'rrc_con_set_com': 'sum',
+    's1_initial_context_setup_request': 'sum',
+    's1_initial_context_setup_response': 'sum',
+    's1_erab_setup_request': 'sum',
+    's1_erab_setup_response': 'sum'}).reset_index()
+
+  with np.errstate(divide='ignore', invalid='ignore'):
+    rrc_accessibility = np.divide(
+      base_resampled_data_frame['rrc_con_set_com'],
+      base_resampled_data_frame['rrc_con_req'],
+      out=np.ones(len(base_resampled_data_frame), dtype=float),
+      where=(base_resampled_data_frame['rrc_con_req'] > 0)
+      & (base_resampled_data_frame['rrc_con_set_com'] > 0)
+    )
+    s1_initial_context_setup_accessibility = np.divide(
+      base_resampled_data_frame['s1_initial_context_setup_response'],
+      base_resampled_data_frame['s1_initial_context_setup_request'],
+      out=np.ones(len(base_resampled_data_frame), dtype=float),
+      where=(base_resampled_data_frame['s1_initial_context_setup_request'] > 0)
+      & (base_resampled_data_frame['s1_initial_context_setup_response'] > 0)
+    )
+    s1_erab_setup_accessibility = np.divide(
+      base_resampled_data_frame['s1_erab_setup_response'],
+      base_resampled_data_frame['s1_erab_setup_request'],
+      out=np.ones(len(base_resampled_data_frame), dtype=float),
+      where=(base_resampled_data_frame['s1_erab_setup_request'] > 0)
+      & (base_resampled_data_frame['s1_erab_setup_response'] > 0)
+    )
+  accessibility = (
+    rrc_accessibility
+    * s1_initial_context_setup_accessibility
+    * s1_erab_setup_accessibility
+  )
+  base_resampled_data_frame['accessibility'] = accessibility
+  base_resampled_data_dict = base_resampled_data_frame.to_dict(orient='list')
+  
+  response_dict['base'] = {
+    'utc': base_resampled_data_dict[time_field],
+    'accessibility': base_resampled_data_dict['accessibility']
+  }
+  return response_dict
+
 def getMergedDataArrayForDataTypeAsJSON(self, first_data_array_url,
   second_data_array_url, data_type, time_start=None, time_end=None,
   REQUEST=None, RESPONSE=None):
@@ -588,3 +874,15 @@ def getDataArrayForDataTypeAsJSON(self, data_array_url, data_type,
   if data_type == 'ul_noise_indicator':
     return json.dumps(get_ul_noise_indicator_per_cell_antenna(
       data_array, data_array_dtype, time_start, time_end, ['ul_noise_indicator']))
+
+  if data_type == 'throughput':
+    return json.dumps(get_throughput_per_cell(
+          data_array, data_array_dtype, time_start, time_end))
+
+  if data_type == 'bler':
+    return json.dumps(get_bler_per_cell(
+          data_array, data_array_dtype, time_start, time_end))
+
+  if data_type == 'accessibility':
+    return json.dumps(get_accessibility_per_cell(
+      data_array, data_array_dtype, time_start, time_end))
