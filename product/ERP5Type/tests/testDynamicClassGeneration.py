@@ -2700,6 +2700,62 @@ return 'OK'
     self.assertNotIn(module_versioned2, _moduleSecurity)
     self.assertNotIn(module_versioned2, _appliedModuleSecurity)
 
+  def testERP5ComponentOverridePath(self):
+    """
+    Components can be overriden by setting ERP5_COMPONENT_OVERRIDE_PATH
+    environment variable and then creating ZODB Component on the filesystem in
+    that path with the Component ID as filename. Used to repair broken instance
+    for example.
+    """
+    component_override_base_path = tempfile.mkdtemp()
+    os.environ['ERP5_COMPONENT_OVERRIDE_PATH'] = os.pathsep.join([
+      component_override_base_path + '/path1',
+      component_override_base_path + '/path2'])
+    try:
+      os.mkdir(component_override_base_path + '/path1')
+      os.mkdir(component_override_base_path + '/path2')
+
+      reference = self._generateReference('TestERP5ComponentOverridePath')
+      component = self._newComponent(reference, version='erp5')
+      component.validate()
+      self.tic()
+      self.assertEqual(component.getValidationState(), 'validated')
+      self.assertEqual(component.checkConsistency(), [])
+      self.assertEqual(component.getTextContentErrorMessageList(), [])
+      self.assertEqual(component.getTextContentWarningMessageList(), [])
+      self.assertModuleImportable(reference)
+
+      # Try to override the Component from the 2nd path (/path2) first...
+      with open(os.path.join(component_override_base_path, 'path2',
+                             component.getId() + '.py'), "w") as f:
+        f.write(self._getValidSourceCode(reference) + '''
+def ERP5ComponentOverridePath():
+  pass
+''')
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
+      self.assertModuleImportable(reference)
+      module = self._importModule(reference)
+      self.assertIn('ERP5ComponentOverridePath', module.__dict__)
+
+      # And now from the 1st (/path1), should override the one from /path2
+      with open(os.path.join(component_override_base_path, 'path1',
+                             component.getId() + '.py'), "w") as f:
+        f.write(self._getValidSourceCode(reference) + '''
+def ERP5ComponentOverridePathHasPriority():
+  pass
+''')
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
+      self.assertModuleImportable(reference)
+      module = self._importModule(reference)
+      self.assertNotIn('ERP5ComponentOverridePath', module.__dict__)
+      self.assertIn('ERP5ComponentOverridePathHasPriority', module.__dict__)
+
+    finally:
+      shutil.rmtree(component_override_base_path)
+      del os.environ['ERP5_COMPONENT_OVERRIDE_PATH']
+
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
 class TestZodbExtensionComponent(TestZodbModuleComponent):
