@@ -1791,6 +1791,24 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.fail()
       self.tic()
 
+  def test_update_error_revision(self):
+    """Test that test results with 'update error=' revision are handled correctly.
+
+    When testnode fails to update a repository (e.g., branch not found), the revision
+    is set to 'update error=fatal: Remote branch XXX not found in upstream origin'.
+    The workflow goes: started (annotate running) -> failed (annotate failed).
+    Since there's no valid repository to report on, TestResult_getTestSuiteData
+    returns None and no GitLab API calls are made.
+    """
+    self.test_result.setReference('update error=fatal: Remote branch master not found in upstream origin')
+    self.test_result.start()
+    self.tic()
+    self.assertEqual(self.test_result.getSimulationState(), 'started')
+
+    self.test_result.fail()
+    self.tic()
+    self.assertEqual(self.test_result.getSimulationState(), 'failed')
+
   def test_TestResult_getTestSuiteData(self):
     """test for TestResult_getTestSuiteData helper script
     """
