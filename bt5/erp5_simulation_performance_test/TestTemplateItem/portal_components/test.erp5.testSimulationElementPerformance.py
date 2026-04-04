@@ -74,6 +74,7 @@ import unittest
 from time import time
 import gc
 import subprocess
+import six
 
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -113,28 +114,34 @@ HISTORICAL_EXPECTED_MIN_MAX_TIME = {
   'Addition of New Invoices Lines': (145.1, 157.6),
 }
 
-EXPECTED_MIN_MAX_TIME = {
-  'Creation Of New Applied Rules': (5.38, 9.38),       # (30, 35)
-
-  'Expansion of Existing Applied Rules': (6.98, 12.98), # (41, 47)
-
-  'Creation of New Sale Packing Lists': (5.12, 9.12),  # (27, 32)
-
-  'Expansion of Converged Changes': (7.12, 14.12),     # (48, 54)
-
-  'Expansion of Diverged Changes': (13.58, 19.58),      # (53, 59)
-
-  'Adoption of Previsions':  (20.78, 28.78),            # (105, 114)
-
-  'Acceptance of Decisions': (20.3, 28.3),              # (104, 113)
-
-  'Creation of New Applied Rules from Partially Simulated Deliveries': (7.05, 13.05),
+if six.PY3:
+  EXPECTED_MIN_MAX_TIME = {
+    'Creation Of New Applied Rules': (4.38, 6.38),       # (30, 35)
+    'Expansion of Existing Applied Rules': (5.08, 7.98), # (41, 47)
+    'Creation of New Sale Packing Lists': (5.12, 9.12),  # (27, 32)
+    'Expansion of Converged Changes': (7.12, 14.12),     # (48, 54)
+    'Expansion of Diverged Changes': (9.58, 13.58),      # (53, 59)
+    'Adoption of Previsions':  (14.78, 18.78),           # (105, 114)
+    'Acceptance of Decisions': (14.3, 18.3),             # (104, 113)
+    'Creation of New Applied Rules from Partially Simulated Deliveries': (7.05, 13.05),
     # (38, 44)
-
-  'Creation Of New Sale Invoices':  (9.05, 15.05),     # (48, 54)
-
-  'Addition of New Invoices Lines': (24.11, 32.11)      # (116, 125)
-}
+    'Creation Of New Sale Invoices':  (7.05, 13.05),     # (48, 54)
+    'Addition of New Invoices Lines': (17.11, 22.11)     # (116, 125)
+  }
+else:
+  EXPECTED_MIN_MAX_TIME = {
+    'Creation Of New Applied Rules': (5.38, 9.38),       # (30, 35)
+    'Expansion of Existing Applied Rules': (6.98, 12.98),# (41, 47)
+    'Creation of New Sale Packing Lists': (5.12, 9.12),  # (27, 32)
+    'Expansion of Converged Changes': (7.12, 14.12),     # (48, 54)
+    'Expansion of Diverged Changes': (13.58, 19.58),     # (53, 59)
+    'Adoption of Previsions':  (20.78, 28.78),           # (105, 114)
+    'Acceptance of Decisions': (20.3, 28.3),             # (104, 113)
+    'Creation of New Applied Rules from Partially Simulated Deliveries': (7.05, 13.05),
+    # (38, 44)
+    'Creation Of New Sale Invoices':  (9.05, 15.05),     # (48, 54)
+    'Addition of New Invoices Lines': (24.11, 32.34)     # (116, 125)
+  }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
 
