@@ -27,12 +27,12 @@
 import six
 from Products.ERP5Type.Utils import bytes2str
 
-def sqlquote(value):
-  # See MySQL documentation of string literals.
-  # XXX: should use sql_quote__ on actual connector
-  # (ex: ZMySQLDA.DA.Connection.sql_quote__).
-  # Duplicating such code is error-prone, and makes us rely on a specific SQL
-  # dialect...
+def sqlquote(value, sql_quote=None):
+  return bytes2str(sql_quote(value))
+  if sql_quote:
+    return bytes2str(sql_quote(value))
+  raise ValueError(value)
+  #BBB
   if six.PY3 and isinstance(value, bytes):
     value = bytes2str(value)
   return "'" + (value
