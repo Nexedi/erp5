@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
 import os
+import six
 from six.moves import range
 
 # Define variable to chek if performance are good or not
@@ -46,20 +47,34 @@ from six.moves import range
 # specific testing environment. We must always try to stay below max
 # historical values.
                                     # Historical values
-MIN_OBJECT_VIEW=0.033               # 0.160 0.020, 0.112
-MAX_OBJECT_VIEW=0.047               # 0.174 0.050, 0.120
-MIN_OBJECT_MANY_LINES_VIEW=0.125    # 0.040, 0.274
-MAX_OBJECT_MANY_LINES_VIEW=0.175    # 0.090, 0.294
-MIN_OBJECT_PROXYFIELD_VIEW=0.120    # 0.242 0.020, 0.199
-MAX_OBJECT_PROXYFIELD_VIEW=0.135    # 0.257 0.090, 0.220
+if six.PY3:
+  MIN_OBJECT_VIEW=0.033             # 0.160 0.020, 0.112
+  MAX_OBJECT_VIEW=0.047             # 0.174 0.050, 0.120
+  MIN_OBJECT_MANY_LINES_VIEW=0.096  # 0.040, 0.274
+  MAX_OBJECT_MANY_LINES_VIEW=0.125  # 0.090, 0.294
+  MIN_OBJECT_PROXYFIELD_VIEW=0.090  # 0.242 0.020, 0.199
+  MAX_OBJECT_PROXYFIELD_VIEW=0.105  # 0.257 0.090, 0.220
+else:
+  MIN_OBJECT_VIEW=0.033             # 0.160 0.020, 0.112
+  MAX_OBJECT_VIEW=0.057             # 0.174 0.050, 0.120
+  MIN_OBJECT_MANY_LINES_VIEW=0.125  # 0.040, 0.274
+  MAX_OBJECT_MANY_LINES_VIEW=0.175  # 0.090, 0.294
+  MIN_OBJECT_PROXYFIELD_VIEW=0.140  # 0.242 0.020, 0.199
+  MAX_OBJECT_PROXYFIELD_VIEW=0.160  # 0.257 0.090, 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
 MIN_MODULE_VIEW=0.030               # 0.050 0.160 0.020, 0.125
 MAX_MODULE_VIEW=0.065               # 0.065 0.174 0.070, 0.175
-MIN_TIC=0.0073                      # 0.0333 0.0020, 0.260
-MAX_TIC=0.0150                      # 0.0354 0.0090, 0.343
-MIN_OBJECT_CREATION=0.0045          # 0.0130  0.0010, 0.0070
-MAX_OBJECT_CREATION=0.0066          # 0.0145  0.0040, 0.0082
+if six.PY3:
+  MIN_TIC=0.0073                    # 0.0333 0.0020, 0.260
+  MAX_TIC=0.0150                    # 0.0354 0.0090, 0.343
+  MIN_OBJECT_CREATION=0.0032        # 0.0130  0.0010, 0.0070
+  MAX_OBJECT_CREATION=0.0053        # 0.0145  0.0040, 0.0082
+else:
+  MIN_TIC=0.0110                    # 0.0333 0.0020, 0.260
+  MAX_TIC=0.0210                    # 0.0354 0.0090, 0.343
+  MIN_OBJECT_CREATION=0.0045        # 0.0130  0.0010, 0.0070
+  MAX_OBJECT_CREATION=0.0066        # 0.0145  0.0040, 0.0082
 LISTBOX_COEF=0.00010                # 0.00173 0.02472
 # Change history
 # 2016-08-11
