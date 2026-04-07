@@ -767,4 +767,127 @@
     </tal:block>
   </tal:block>
 
+  <tal:block metal:define-macro="check_bler_graphs">
+    <tr>
+      <td colspan="3"><b>Check ORS BLER graphs</b></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'BLER'}">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
+    </tal:block>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b>Check ORS BLER for ALL CELLS Graph</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:base;
+                           date_value string:Nov 20, 2024;
+                           first_value string:140;
+                           second_value string:20;
+                           first_not_value string:-1;
+                           second_not_value string:2">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+    <tr>
+      <td colspan="3"><b>Check ORS BLER for CELL 1 Graph</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:1.0;
+                           date_value string:Nov 20, 2024;
+                           first_value string:140;
+                           second_value string:20;
+                           first_not_value string:-1;
+                           second_not_value string:2">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_throughput_graphs">
+    <tr>
+      <td colspan="3"><b>Check ORS Throughput graphs</b></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Throughput'}">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
+    </tal:block>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b>Check ORS Throughput for ALL CELLS Graph</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:base;
+                           date_value string:Nov 20, 2024;
+                           first_value string:2000;
+                           second_value string:500;
+                           first_not_value string:-1;
+                           second_not_value string:2">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+    <tr>
+      <td colspan="3"><b>Check ORS Throughput for CELL 1 Graph</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:1.0;
+                           date_value string:Nov 20, 2024;
+                           first_value string:2000;
+                           second_value string:500;
+                           first_not_value string:-1;
+                           second_not_value string:2">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_accessibility_graphs">
+    <tr>
+      <td colspan="3"><b>Check ORS Accessibility graphs</b></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Accessibility'}">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/access_data_acquisition_unit_graph" />
+    </tal:block>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@class,'graph-base')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b>Check ORS Accessibility for ALL CELLS Graph</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:base;
+                           date_value string:Nov 20, 2024;
+                           first_value string:100;
+                           second_value string:20;
+                           first_not_value string:-1;
+                           second_not_value string:2">
+      <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+    <tr>
+      <td colspan="3"><b>Check ORS Accessibility for CELL 1 Graph</b></td>
+    </tr>
+    <tal:block tal:define="cell_id string:1.0;
+                           date_value string:Nov 20, 2024;
+                           first_value string:100;
+                           second_value string:20;
+                           first_not_value string:-1;
+                           second_not_value string:2">
+        <tal:block metal:use-macro="here/Zuite_WendelinTelecomTemplate/macros/assert_value_for_cell" />
+    </tal:block>
+  </tal:block>
+
 </tal:block>
