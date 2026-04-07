@@ -152,7 +152,7 @@ class EntireQuery(object):
   def asSearchTextExpression(self, sql_catalog):
     return self.query.asSearchTextExpression(sql_catalog)
 
-  def asSQLExpression(self, sql_catalog, only_group_columns, sql_quote=None):
+  def asSQLExpression(self, sql_catalog, only_group_columns):
     column_map = self.column_map
     if column_map is None:
       # XXX: should we provide a way to register column map as a separate
@@ -226,14 +226,12 @@ class EntireQuery(object):
       # generate SQLExpression from query
       sql_expression_list = [self.query.asSQLExpression(sql_catalog,
                                                         column_map,
-                                                        only_group_columns,
-                                                        sql_quote)]
+                                                        only_group_columns)]
       append = sql_expression_list.append
       for join_query in column_map.iterJoinQueryList():
         append(join_query.asSQLExpression(sql_catalog,
                                           column_map,
-                                          only_group_columns,
-                                          sql_quote))
+                                          only_group_columns))
       # generate join expression based on column_map.getJoinTableAliasList
       # XXX: This is now done by ColumnMap to its table_definition,
       # during build()

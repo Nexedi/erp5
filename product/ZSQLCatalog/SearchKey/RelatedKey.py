@@ -181,7 +181,7 @@ class RelatedKey(SearchKey):
       condition = join_query_list[-1]
       return InnerJoin(left, right, condition)
 
-  def buildSQLExpression(self, sql_catalog, column_map, only_group_columns, group, sql_quote=None):
+  def buildSQLExpression(self, sql_catalog, column_map, only_group_columns, group):
     """
       Render RelatedKey's ZSQLMethod by providing it table aliases from
       ColumnMap.

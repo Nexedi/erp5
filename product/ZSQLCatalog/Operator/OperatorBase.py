@@ -156,7 +156,7 @@ class OperatorBase(object):
     return value_search_text_renderer.get(value.__class__,
                                           valueDefaultSearchTextRenderer)(value)
 
-  def asSQLExpression(self, column, value_list, only_group_columns, sql_quote):
+  def asSQLExpression(self, column, value_list, only_group_columns):
     raise NotImplementedError('This method must be overloaded by a subclass'
       ' to be able to get an SQL representation of this operator.')
 

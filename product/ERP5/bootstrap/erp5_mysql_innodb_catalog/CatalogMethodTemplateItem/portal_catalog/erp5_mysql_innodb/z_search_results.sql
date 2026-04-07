@@ -12,7 +12,7 @@ FROM
 WHERE 
   1 = 1 
 <dtml-if where_expression>
-  AND <dtml-var where_expression>
+  AND <dtml-var "where_expression(sql_quote__) if callable(where_expression) else where_expression">
 </dtml-if>
 <dtml-if group_by_expression>
 GROUP BY

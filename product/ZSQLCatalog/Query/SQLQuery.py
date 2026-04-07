@@ -54,7 +54,7 @@ class SQLQuery(Query):
   def _asSearchTextExpression(self, sql_catalog, column=None):
     return False, None
 
-  def asSQLExpression(self, sql_catalog, column_map, only_group_columns, sql_quote=None):
+  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
     return SQLExpression(self, where_expression=self.payload)
 
   def registerColumnMap(self, sql_catalog, column_map):
