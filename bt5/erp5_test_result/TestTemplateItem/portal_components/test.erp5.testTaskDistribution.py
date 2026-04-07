@@ -874,6 +874,42 @@ class TestTaskDistribution(TaskDistributionTestCase):
     result = self._createTestResult(revision="r0=b,r1=b")
     self.assertNotEqual(None, result)
 
+  def test_createTestResultIgnoresFailedTestResultWhenLookingUpRevision(self):
+    """
+    When a test result has 'failed' state (e.g., due to git fetch error), it should
+    be ignored when looking for the latest test result. This prevents re-running
+    a previously successful test when a later test fails due to transient errors.
+    """
+    self._createTestNode()
+    revision = "r0=a,r1=a"
+
+    # Start and stop test for revision a (successful)
+    test_result_path, _ = self._createTestResult(revision=revision, test_list=["testFoo"])
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    self.tool.stopUnitTest(line_url, {})
+    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.tic()
+    self.assertEqual("stopped", test_result.getSimulationState())
+
+    # Small delay to ensure different creation dates
+    sleep(1)
+
+    # Start and fail test for revision b (simulating git fetch error)
+    test_result_path_b, _ = self._createTestResult(
+      "update error=remote: GitLab is not responding "
+      "fatal: unable to access 'https://lab.nexedi.com/nexedi/slapos.git/': "
+      "The requested URL returned error: 502"
+    )
+    test_result_b = self.getPortalObject().unrestrictedTraverse(test_result_path_b)
+    self.assertEqual("started", test_result_b.getSimulationState())
+    self.distributor.reportTaskFailure(test_result_path_b, {}, "Node0")
+    self.tic()
+    self.assertEqual("failed", test_result_b.getSimulationState())
+
+    # Ask again for revision a - it should NOT create a new test
+    result = self._createTestResult(revision=revision, test_list=["testFoo"])
+    self.assertEqual(None, result)
+
   def test_08_checkWeCanNotCreateTwoTestResultInParallel(self):
     """
     To avoid duplicates of test result when several testnodes works on the

@@ -386,6 +386,12 @@ shared = true
             error_during_update = False
             if not updated:
               error_during_update = node_test_suite.update_revision_error is not None
+            if error_during_update and \
+                'URL returned error: 502' in node_test_suite.update_revision_error_text:
+              logger.warning(
+                "Git fetch failed with HTTP 502 error, not reporting failure: %s",
+                node_test_suite.update_revision_error_text)
+              error_during_update = False
             if not (updated or error_during_update):
               continue
             test_result = taskdistributor.createTestResult(
