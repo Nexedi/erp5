@@ -194,6 +194,16 @@ class TaskDistributionTool(BaseTool):
             if last_revision == int_index:
               return
         if last_state == 'failed':
+          # This revision might already have been succesfully tested in the past, which happens
+          # when the last failed result is because of an unavailability of the git server.
+          # In that case we do not want to run again, because we already tested that revision.
+          if portal.test_result_module.countFolder(
+              portal_type='Test Result',
+              title=SimpleQuery(comparison_operator='=', title=test_title),
+              reference=SimpleQuery(comparison_operator='=', reference=reference_list_string),
+              simulation_state=('stopped', 'public_stopped'),
+            )[0][0]:
+            return
           # If test failed to build, we retry up to 12 times, a bit more than
           # retry_software_count from erp5.util.testnode, so that testnode have a chance to
           # reset the software and retry from scratch.
