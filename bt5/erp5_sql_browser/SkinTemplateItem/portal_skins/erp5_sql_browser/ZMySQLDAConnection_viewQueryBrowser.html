@@ -158,7 +158,9 @@
           );
           document.addEventListener('readystatechange', () => {
             if (document.readyState === 'complete') {
-              editor.getModel().setValue(editor_backup.value);
+              if (!editor.getValue()) {
+                editor.getModel().setValue(editor_backup.value);
+              }
             }
           });
           editor.getModel().onDidChangeContent(event => {
