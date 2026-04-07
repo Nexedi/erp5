@@ -154,7 +154,7 @@ class TaskDistributionTool(BaseTool):
     catalog_kw = {'portal_type': 'Test Result',
                   'title': SimpleQuery(comparison_operator='=', title=test_title),
                   'sort_on': (("creation_date","descending"),),
-                  'simulation_state': NegatedQuery(SimpleQuery(simulation_state="cancelled")),
+                  'simulation_state': NegatedQuery(SimpleQuery(simulation_state=("failed", "cancelled"))),
                   'limit': 1}
     result_list = portal.test_result_module.searchFolder(**catalog_kw)
     if result_list:
