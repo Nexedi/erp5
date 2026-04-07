@@ -19,6 +19,21 @@
   };
 
 
+  if (JSONEditor.defaults.editors.object.prototype.original_preBuild === undefined) {
+    JSONEditor.defaults.editors.object.prototype.original_preBuild = JSONEditor.defaults.editors.object.prototype.preBuild;
+  }
+
+  JSONEditor.defaults.editors.object.prototype.preBuild = function () {
+    if (this.jsoneditor.options.readonly) {
+      this.schema.readOnly = this.jsoneditor.options.readonly;
+    }
+    if (this.jsoneditor.options.autocollapse && this.currentDepth > 1) {
+      this.options.collapsed = true;
+    }
+    this.original_preBuild()
+  };
+
+
   function isEmpty(obj) {
     return obj === undefined || obj === '' ||
       (
@@ -403,6 +418,7 @@
             //iconlib: 'fontawesome5',
             object_layout: 'normal',
             disable_collapse: false,
+            autocollapse: true,
             disable_edit_json: true,
             disable_properties: false,
             keep_only_existing_values: false,
