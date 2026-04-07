@@ -167,8 +167,8 @@ class ComplexQuery(Query):
         result = '%s:%s' % (column, result)
     return self_is_composed, result
 
-  def asSQLExpression(self, sql_catalog, column_map, only_group_columns, sql_quote=None):
-    sql_expression_list = [x.asSQLExpression(sql_catalog, column_map, only_group_columns, sql_quote)
+  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+    sql_expression_list = [x.asSQLExpression(sql_catalog, column_map, only_group_columns)
                            for x in self.query_list]
     if len(sql_expression_list) == 0:
       sql_expression_list = [SQLExpression(self, where_expression='1')]

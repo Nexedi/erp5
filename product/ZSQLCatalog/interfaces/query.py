@@ -66,7 +66,7 @@ class IQuery(Interface):
       correctly.
     """
 
-  def asSQLExpression(sql_catalog, column_map, only_group_columns, sql_quote=None):
+  def asSQLExpression(sql_catalog, column_map, only_group_columns):
     """
       Render a query as an SQLExpression instance.
     """

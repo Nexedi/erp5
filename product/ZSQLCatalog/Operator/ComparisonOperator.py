@@ -32,18 +32,26 @@ from __future__ import absolute_import
 from .OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
+from Products.ZSQLCatalog.Utils import _mysql_sqlquote_fallback
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
 import re
 
 class ComparisonOperatorBase(OperatorBase):
-  def asSQLExpression(self, column, value_list, only_group_columns, sql_quote):
+  def asSQLExpression(self, column, value_list, only_group_columns):
     """
       In a Comparison Operator, rendering order is:
         <column> <operator> <value_list>
+
+      Returns a SQLExpression whose where_expression is a closure that defers
+      string quoting to render time (called with sql_quote__ from DTML context).
     """
-    column, value_list = self.render(column, value_list, sql_quote = sql_quote)
-    return SQLExpression(self, where_expression='%s %s %s' % (column, self.getOperator().upper(), value_list))
+    render = self.render
+    operator = self.getOperator().upper()
+    def _where_expression(sql_quote__):
+      col, val = render(column, value_list, sql_quote=sql_quote__)
+      return '%s %s %s' % (col, operator, val)
+    return SQLExpression(self, where_expression=_where_expression)
 
   def render(self, column, value_list, sql_quote):
     raise NotImplementedError('This method must be overloaded by a subclass.')
@@ -102,11 +110,15 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
     MonovaluedComparisonOperator.__init__(self, operator, '')
     self.where_expression_format_string = 'MATCH (%%(column)s) AGAINST (%%(value_list)s%s)' % (mode, )
 
-  def asSQLExpression(self, column, value_list, only_group_columns, sql_quote):
+  def asSQLExpression(self, column, value_list, only_group_columns):
     """
       This operator can emit a select expression, so it overrides
-      asSQLExpression inseatd of just defining a render method.
+      asSQLExpression instead of just defining a render method.
+
+      MATCH operators are MySQL-specific and render eagerly, using the
+      MySQL-specific quoting function directly.
     """
+    sql_quote = _mysql_sqlquote_fallback
     # No need to do full text search for an empty string.
     if value_list == '':
       column, value_list = self.render(column, value_list, sql_quote)
@@ -176,7 +188,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
         fulltext_query += ' *S"%s"' % ' '.join(match_query_list)
       if match_boolean_query_list:
         fulltext_query += ' %s' % self._escape(' '.join(match_boolean_query_list))
-      return self._renderValue(fulltext_query)
+      return self._renderValue(fulltext_query, sql_quote=sql_quote)
 
 verifyClass(IOperator, MroongaComparisonOperator)
 
@@ -197,7 +209,7 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
     value_list = '%s;mode=extended2;limit=1000' % value_list
     return self._renderValue(value_list)
 
-  def asSQLExpression(self, column, value_list, only_group_columns, sql_quote):
+  def asSQLExpression(self, column, value_list, only_group_columns):
     """
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
@@ -255,22 +267,27 @@ class SqliteComparisonOperator(MonovaluedComparisonOperator):
       sqlite_query = value
     return self._renderValue(sqlite_query, sql_quote = sql_quote)
 
-  def asSQLExpression(self, column, value_list, only_group_columns, sql_quote):
+  def asSQLExpression(self, column, value_list, only_group_columns):
     """
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
+
+      Returns a closure that defers quoting to render time.
     """
-    table  = column.split('.')[0]
+    table = column.split('.')[0]
     table = table[1:-1] if table.startswith('`') else table
     table_fts = table + "_fts"
-    match_string = self.where_expression_format_string % {
-      'table': table,
-      'table_fts': table_fts,
-      'value_list': self.renderValue(value_list, sql_quote)
-    }
+    format_string = self.where_expression_format_string
+    renderValue = self.renderValue
+    def _where_expression(sql_quote__):
+      return format_string % {
+        'table': table,
+        'table_fts': table_fts,
+        'value_list': renderValue(value_list, sql_quote__)
+      }
     return SQLExpression(
       self,
-      where_expression=match_string,
+      where_expression=_where_expression,
       can_merge_select_dict=True,
     )
 
