@@ -10,6 +10,6 @@ keep_items=dict(
     dialog_category=dialog_category,
     form_id=form_id,
     cancel_url=cancel_url,
-    object_path=object_path)
+    object_path=context.REQUEST.get('object_path', context.getPath()))
 
 return context.ERP5Site_redirect(select_dialog.split()[0], keep_items=keep_items, **kw)
