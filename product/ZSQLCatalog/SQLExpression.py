@@ -112,8 +112,8 @@ class SQLExpression(object):
     assert None in (where_expression, where_expression_operator)
     # Exactly one of (where_expression, where_expression_operator) must be given, except if sql_expression_list is given and contains exactly one entry
     assert where_expression is not None or where_expression_operator is not None or (sql_expression_list is not None and len(sql_expression_list) == 1)
-    # where_expression must be a basestring instance if given
-    assert isinstance(where_expression, (NoneType, basestring))
+    # where_expression must be a basestring or callable if given
+    assert isinstance(where_expression, (NoneType, basestring)) or callable(where_expression)
     # where_expression_operator must be 'and', 'or' or 'not' (if given)
     assert where_expression_operator in (None, 'and', 'or', 'not'), where_expression_operator
     self.where_expression = where_expression
@@ -282,25 +282,33 @@ class SQLExpression(object):
       append(expression)
     return SQL_LIST_SEPARATOR.join(result)
 
-  def getWhereExpression(self):
+  def getWhereExpression(self, sql_quote__=None):
     """
       Returns a string.
 
       Returns a rendered "where" expression.
+
+      sql_quote__ (callable or None)
+        The database connection's string quoting function. When provided,
+        it is passed to closure-based where_expressions (from comparison
+        operators) so they can escape values correctly for the backend in use.
     """
     if self.where_expression is not None:
-      result = self.where_expression
+      if callable(self.where_expression):
+        result = self.where_expression(sql_quote__)
+      else:
+        result = self.where_expression
     else:
       if self.where_expression_operator == 'not':
         assert len(self.sql_expression_list) == 1
-        result = '(NOT %s)' % (self.sql_expression_list[0].getWhereExpression())
+        result = '(NOT %s)' % (self.sql_expression_list[0].getWhereExpression(sql_quote__))
       elif len(self.sql_expression_list) == 1:
-        result = self.sql_expression_list[0].getWhereExpression()
+        result = self.sql_expression_list[0].getWhereExpression(sql_quote__)
       elif len(self.sql_expression_list) == 0:
         result = '(1)'
       else:
         operator = '\n  ' + self.where_expression_operator.upper() + ' '
-        result = '(%s)' % (operator.join(x.getWhereExpression() for x in self.sql_expression_list), )
+        result = '(%s)' % (operator.join(x.getWhereExpression(sql_quote__) for x in self.sql_expression_list), )
     return result
 
   def getLimit(self):
@@ -394,7 +402,11 @@ class SQLExpression(object):
     if from_expression is not None:
       from_expression = from_expression.render()
     return {
-      'where_expression': self.getWhereExpression(),
+      # where_expression is a callable (bound method) that takes sql_quote__ and
+      # returns the rendered WHERE string. Callers can either:
+      # - call it directly: where_expression(sql_quote) for Python use
+      # - pass it to a DTML template which calls where_expression(sql_quote__)
+      'where_expression': self.getWhereExpression,
       'order_by_expression': self.getOrderByExpression(),
       'from_table_list': from_table_list,
       'from_expression': from_expression,

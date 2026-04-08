@@ -32,6 +32,7 @@ from __future__ import absolute_import
 from .OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
+from Products.ZSQLCatalog.Utils import _mysql_sqlquote_fallback
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
 import re
@@ -41,20 +42,27 @@ class ComparisonOperatorBase(OperatorBase):
     """
       In a Comparison Operator, rendering order is:
         <column> <operator> <value_list>
-    """
-    column, value_list = self.render(column, value_list)
-    return SQLExpression(self, where_expression='%s %s %s' % (column, self.getOperator().upper(), value_list))
 
-  def render(self, column, value_list):
+      Returns a SQLExpression whose where_expression is a closure that defers
+      string quoting to render time (called with sql_quote__ from DTML context).
+    """
+    render = self.render
+    operator = self.getOperator().upper()
+    def _where_expression(sql_quote__):
+      col, val = render(column, value_list, sql_quote=sql_quote__)
+      return '%s %s %s' % (col, operator, val)
+    return SQLExpression(self, where_expression=_where_expression)
+
+  def render(self, column, value_list, sql_quote):
     raise NotImplementedError('This method must be overloaded by a subclass.')
 
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, sql_quote):
     raise NotImplementedError('This method must be overloaded by a subclass.')
 
 verifyClass(IOperator, ComparisonOperatorBase)
 
 class MonovaluedComparisonOperator(ComparisonOperatorBase):
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, sql_quote):
     """
       value_list must either be a non-list or a single-value list.
     """
@@ -63,9 +71,9 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
         value_list, = value_list
       except ValueError:
         raise ValueError('%r: value_list must not contain more than one item. Got %r' % (self, value_list))
-    return self._renderValue(value_list)
+    return self._renderValue(value_list, sql_quote=sql_quote)
 
-  def render(self, column, value_list):
+  def render(self, column, value_list, sql_quote):
     """
       value_list must either be a non-list or a single-value list.
     """
@@ -74,26 +82,26 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
         value_list, = value_list
       except ValueError:
         raise ValueError('%r: value_list must not contain more than one item. Got %r' % (self, value_list))
-    return self._render(column, value_list)
+    return self._render(column, value_list, sql_quote = sql_quote)
 
 verifyClass(IOperator, MonovaluedComparisonOperator)
 
 class MultivaluedComparisonOperator(ComparisonOperatorBase):
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, sql_quote):
     """
       value_list must be a multi-value list (more than one item).
     """
     if not isinstance(value_list, list_type_list) or len(value_list) < 2:
       raise ValueError('%r: value_list must be a list of more than one item. Got %r' % (self, value_list))
-    return '(%s)' % ', '.join(map(self._renderValue, value_list))
+    return '(%s)' % ', '.join(self._renderValue(v, sql_quote=sql_quote) for v in value_list)
 
-  def render(self, column, value_list):
+  def render(self, column, value_list, sql_quote):
     """
       value_list must be a multi-value list (more than one item).
     """
     if not isinstance(value_list, list_type_list) or len(value_list) < 2:
       raise ValueError('%r: value_list must be a list of more than one item. Got %r' % (self, value_list))
-    return column, '(%s)' % ', '.join(map(self._renderValue, value_list))
+    return column, '(%s)' % ', '.join(self._renderValue(v, sql_quote=sql_quote) for v in value_list)
 
 verifyClass(IOperator, MultivaluedComparisonOperator)
 
@@ -105,15 +113,19 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
       This operator can emit a select expression, so it overrides
-      asSQLExpression inseatd of just defining a render method.
+      asSQLExpression instead of just defining a render method.
+
+      MATCH operators are MySQL-specific and render eagerly, using the
+      MySQL-specific quoting function directly.
     """
+    sql_quote = _mysql_sqlquote_fallback
     # No need to do full text search for an empty string.
     if value_list == '':
-      column, value_list = self.render(column, value_list)
+      column, value_list = self.render(column, value_list, sql_quote)
       return SQLExpression(self, where_expression='%s %s %s' % (column, '=', value_list))
     match_string = self.where_expression_format_string % {
       'column': column,
-      'value_list': self.renderValue(value_list),
+      'value_list': self.renderValue(value_list, sql_quote=sql_quote),
     }
     select_dict = {}
     if not only_group_columns:
@@ -144,7 +156,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
     # like '+' or '-' without any letter.
     return re.compile(r'([()])').sub(r'\\\g<1>', query_string)
 
-  def renderValue(self, value_list):
+  def renderValue(self, value_list, sql_quote):
     """
       Special Query renderer for MroongaFullText queries:
       * by default 'AND' search by using '*D+' pragma.
@@ -158,7 +170,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
 
     if self.force_boolean:
       fulltext_query = '*D+ %s' % value_list
-      return self._renderValue(self._escape(fulltext_query))
+      return self._renderValue(self._escape(fulltext_query), sql_quote=sql_quote)
     else:
       match_query_list = []
       match_boolean_query_list = []
@@ -176,7 +188,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
         fulltext_query += ' *S"%s"' % ' '.join(match_query_list)
       if match_boolean_query_list:
         fulltext_query += ' %s' % self._escape(' '.join(match_boolean_query_list))
-      return self._renderValue(fulltext_query)
+      return self._renderValue(fulltext_query, sql_quote=sql_quote)
 
 verifyClass(IOperator, MroongaComparisonOperator)
 
@@ -214,6 +226,73 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
 
 verifyClass(IOperator, SphinxSEComparisonOperator)
 
+
+class SqliteComparisonOperator(MonovaluedComparisonOperator):
+  def __init__(self, operator, mode=''):
+    MonovaluedComparisonOperator.__init__(self, operator, '')
+    self.where_expression_format_string = (
+      "%(table)s.`uid` IN ("
+      "SELECT rowid FROM %(table_fts)s WHERE %(table_fts)s MATCH %(value_list)s"
+      ")"
+    )
+
+  def renderValue(self, value, sql_quote):
+    boolean_splitter = re.compile(r'(\s|\(.+?\)|".+?")')
+    boolean_detector = re.compile(r'(^[+-]|^".+"$|^\(.+\)$|.+\*$)')
+    if isinstance(value, list_type_list):
+      value, = value
+    if not value:
+      return self._renderValue(value)
+    boolean_tokens = []
+    normal_tokens = []
+    for token in boolean_splitter.split(value):
+      token = token.strip()
+      if not token:
+        continue
+      if boolean_detector.match(token):
+        token = token.replace('+', '').replace('-', 'NOT ')
+        boolean_tokens.append(token)
+      else:
+        normal_tokens.append(token)
+    sqlite_query = ""
+    if normal_tokens:
+      sqlite_query += " OR ".join(
+        [f"{t}*" for t in normal_tokens]
+      )
+    if boolean_tokens:
+      if sqlite_query:
+        sqlite_query += " AND "
+      sqlite_query += " AND ".join(boolean_tokens)
+    if not sqlite_query:
+      sqlite_query = value
+    return self._renderValue(sqlite_query, sql_quote = sql_quote)
+
+  def asSQLExpression(self, column, value_list, only_group_columns):
+    """
+      This operator can emit a select expression, so it overrides
+      asSQLExpression inseatd of just defining a render method.
+
+      Returns a closure that defers quoting to render time.
+    """
+    table = column.split('.')[0]
+    table = table[1:-1] if table.startswith('`') else table
+    table_fts = table + "_fts"
+    format_string = self.where_expression_format_string
+    renderValue = self.renderValue
+    def _where_expression(sql_quote__):
+      return format_string % {
+        'table': table,
+        'table_fts': table_fts,
+        'value_list': renderValue(value_list, sql_quote__)
+      }
+    return SQLExpression(
+      self,
+      where_expression=_where_expression,
+      can_merge_select_dict=True,
+    )
+
+verifyClass(IOperator, SphinxSEComparisonOperator)
+
 operator_dict = {
   '=': MonovaluedComparisonOperator('='),
   '!=': MonovaluedComparisonOperator('!='),
@@ -229,6 +308,7 @@ operator_dict = {
   'mroonga': MroongaComparisonOperator('mroonga'),
   'mroonga_boolean': MroongaComparisonOperator('mroonga_boolean', force_boolean=True),
   'sphinxse': SphinxSEComparisonOperator('sphinxse'),
+  'sqlite':SqliteComparisonOperator('sqlite'),
   'in': MultivaluedComparisonOperator('in'),
   'is': MonovaluedComparisonOperator('is'),
   'is not': MonovaluedComparisonOperator('is not', '!='),

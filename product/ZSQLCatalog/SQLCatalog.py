@@ -55,6 +55,7 @@ import warnings
 from contextlib import contextmanager
 
 from .interfaces.query_catalog import ISearchKeyCatalog
+from .Utils import _mysql_sqlquote_fallback
 from zope.interface.verify import verifyClass
 from zope.interface import implementer
 
@@ -1303,7 +1304,7 @@ class Catalog(Folder,
     # force using READ COMMITTED isolation.
     connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
-    if not db._registered and not db.innodb_locks_unsafe_for_binlog:
+    if not db._registered and (hasattr(db, "innodb_locks_unsafe_for_binlog") and not db.innodb_locks_unsafe_for_binlog):
       db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
     object_path_dict = {}
@@ -2241,7 +2242,8 @@ class Catalog(Folder,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
                           **kw):
-    return self.buildEntireQuery(
+    kw['implicit_join'] = kw.get('implicit_join', False)
+    result = dict(self.buildEntireQuery(
       kw,
       query_table=query_table,
       query_table_alias=query_table_alias,
@@ -2249,10 +2251,12 @@ class Catalog(Folder,
       limit=limit,
       extra_column_list=extra_column_list,
       ignore_unknown_columns=ignore_unknown_columns,
-    ).asSQLExpression(
-      self,
-      only_group_columns,
-    ).asSQLExpressionDict()
+    ).asSQLExpression(self, only_group_columns).asSQLExpressionDict())
+    # Resolve the where_expression callable into a string for public API compat.
+    # MATCH operators (MySQL-only) already used _mysql_sqlquote_fallback internally.
+    # Simple operators' closures are resolved here with the same fallback.
+    result['where_expression'] = result['where_expression'](_mysql_sqlquote_fallback)
+    return result
 
   # Compatibililty SQL Sql
   security.declarePrivate('buildSqlQuery')
@@ -2359,12 +2363,16 @@ class Catalog(Folder,
         **kw
       ):
     if build_sql_query_method is None:
-      build_sql_query_method = self.buildSQLQuery
-    query = build_sql_query_method(
-      REQUEST=REQUEST,
-      implicit_join=implicit_join,
-      **kw
-    )
+      kw['implicit_join'] = implicit_join
+      query = self.buildEntireQuery(kw).asSQLExpression(self, False).asSQLExpressionDict()
+      # where_expression is a callable (closure); the DTML template calls
+      # where_expression(sql_quote__) with the DA's backend-specific quoting function.
+    else:
+      query = build_sql_query_method(
+        REQUEST=REQUEST,
+        implicit_join=implicit_join,
+        **kw
+      )
     return sql_method(
       src__=src__,
       zsql_brain=zsql_brain,

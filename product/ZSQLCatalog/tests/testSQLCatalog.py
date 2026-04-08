@@ -259,7 +259,7 @@ class DummyCatalog(SQLCatalog):
     return SimpleQuery(uid=-1)
 
 class TestSQLCatalog(ERP5TypeTestCase):
-  def setUp(self):
+  def afterSetUp(self):
     self._catalog = DummyCatalog('dummy_catalog')
 
   def assertCatalogRaises(self, exception, kw):
