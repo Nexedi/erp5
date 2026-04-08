@@ -476,25 +476,7 @@ class DebugTestResult:
     self.result = result
 
   def _start_debugger(self, tb):
-    try:
-      # try ipython if available
-      import IPython
-      try:
-        IPython.InteractiveShell()
-        # color scheme isnt present ipython-8.0 or above.
-        if IPython.release.version >= "8.0.0":
-          p = IPython.core.debugger.Pdb()
-        else:
-          p = IPython.core.debugger.Pdb(color_scheme='Linux')
-      except AttributeError: # for ipython-0.10 or before
-        IPython.Shell.IPShell(argv=[])
-        p = IPython.Debugger.Pdb(color_scheme=__IPYTHON__.rc.colors)
-      p.reset()
-      while tb.tb_next is not None:
-        tb = tb.tb_next
-      p.interaction(tb.tb_frame, tb)
-    except ImportError:
-      pdb.post_mortem(tb)
+    pdb.post_mortem(tb)
 
   def addError(self, test, err):
     self._start_debugger(err[2])
