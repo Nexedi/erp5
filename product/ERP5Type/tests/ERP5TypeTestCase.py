@@ -757,25 +757,8 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
 
     def stepPdb(self, sequence=None, sequence_list=None):
       """Invoke debugger"""
-      try: # try ipython if available
-        import IPython
-        try:
-          IPython.InteractiveShell()
-          tracer = IPython.core.debugger.Tracer()
-        except AttributeError: # for ipython-0.10 or before
-          IPython.Shell.IPShell(argv=[])
-          tracer = IPython.Debugger.Tracer()
-      except ImportError:
-        from pdb import set_trace as tracer
+      from pdb import set_trace as tracer
       tracer()
-
-    def stepIPython(self, sequence=None, sequence_list=None):
-      import IPython
-      try:
-        ipshell = IPython.frontend.terminal.embed.InteractiveShellEmbed()
-      except AttributeError: # for ipython-0.10 or before
-        ipshell = IPython.Shell.IPShellEmbed(())
-      ipshell()
 
     def stepTic(self, sequence):
       """

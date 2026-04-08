@@ -779,8 +779,6 @@ return [context[%r]]
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
     person1_c.edit(**kw)
     #person1_c.setModificationDate(DateTime()+1)
-    # import ipdb
-    # ipdb.set_trace()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
     person1_s = person_server._getOb(self.id1)
