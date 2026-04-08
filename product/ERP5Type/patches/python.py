@@ -97,35 +97,10 @@ def patch_linecache():
 
   expr_search = re.compile('^Python expression "(.+)"$').search
 
-  def get_globals(frame):
-    """
-    ipdb does not pass module_globals to getlines()...
-    """
-    m = frame.f_globals['__name__']
-    # 'linecache' or 'IPython.utils.ulinecache' (may be renamed/moved in
-    # IPython so just check the presence of 'linecache'...)
-    if isinstance(m, str) and 'linecache' in m:
-      frame = frame.f_back
-      m = frame.f_globals['__name__']
-    if m == 'IPython.utils.ulinecache':
-      frame = frame.f_back
-      m = frame.f_globals['__name__']
-      # IPython.utils.ulinecache.getline (used in `list` pdb command) call IPython.utils.ulinecache.getlines
-      # so we may have two frames in IPython.utils.ulinecache module
-      if m == 'IPython.utils.ulinecache':
-        frame = frame.f_back
-        m = frame.f_globals['__name__']
-    if m == 'IPython.core.debugger':
-      co_name = frame.f_code.co_name
-      if co_name == 'format_stack_entry':
-        return frame.f_locals['frame'].f_globals
-      elif co_name == 'print_list_lines':
-        return frame.f_locals['self'].curframe.f_globals
-
   linecache_getlines = linecache.getlines
   def getlines(filename, module_globals=None):
     """
-    Patch of linecache module (used in traceback, ipdb, and pdb modules) to
+    Patch of linecache module (used in traceback and pdb modules) to
     display ZODB Components, Python Script source code and TALES Expressions
     properly without requiring to create a temporary file on the filesystem
 
@@ -140,9 +115,6 @@ def patch_linecache():
     and pdb modules not used often, this should not be an issue.
     """
     if filename:
-      if module_globals is None:
-        module_globals = get_globals(sys._getframe(1))
-
       # Get source code of ZODB Components following PEP 302
       if (filename.startswith('<portal_components/') and
           module_globals is not None):
