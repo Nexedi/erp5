@@ -62,6 +62,10 @@ ERP5_AUTHORISATION_EXTRACTOR_MARKER_VALUE = '1'
 ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME = 'username'
 ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME = 'password'
 
+# Module-level dict caching sql_quote__ functions by connection id,
+# populated during site creation to avoid traversal overhead.
+sql_quote_dict = {}
+
 # Site Creation DTML
 manage_addERP5SiteFormDtml = Globals.HTMLFile('dtml/addERP5Site', globals())
 
@@ -291,6 +295,11 @@ class _site(threading.local):
 getSite, setSite = _site()
 
 _missing_tools_registered = None
+
+
+def sql_quote(value, sql_connection_id='erp5_sql_connection'):
+  return bytes2str(sql_quote_dict[sql_connection_id](value))
+
 
 class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCookieMixin):
   """
@@ -2344,6 +2353,14 @@ class ERP5Generator(PortalGenerator):
     manage_add = p.manage_addProduct['CMFActivity'].manage_addActivityConnection
     addSQLConnection('cmf_activity_sql_connection',
                      'CMF Activity SQL Server Connection')
+
+    # Cache sql_quote__ functions by connection id to avoid traversal overhead
+    sql_quote_dict.update({
+      'erp5_sql_connection': p['erp5_sql_connection'].sql_quote__,
+      'erp5_sql_deferred_connection': p['erp5_sql_deferred_connection'].sql_quote__,
+      'erp5_sql_transactionless_connection': p['erp5_sql_transactionless_connection'].sql_quote__,
+      'cmf_activity_sql_connection': p['cmf_activity_sql_connection'].sql_quote__,
+    })
 
     # Add ERP5Form Tools
     addERP5Tool(p, 'portal_selections', 'Selection Tool')

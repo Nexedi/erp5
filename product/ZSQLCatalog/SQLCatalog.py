@@ -60,6 +60,7 @@ from zope.interface import implementer
 
 from .SearchText import isAdvancedSearchText, dequote
 
+
 if six.PY3:
   long = int
 
@@ -660,6 +661,8 @@ class Catalog(Folder,
     self.names = {}   # mapping from column to attribute name
     self.indexes = {}   # empty mapping
     self.filter_dict = PersistentMapping()
+    from Products.ERP5.ERP5Site import getSite
+    self.sql_quote = getSite()['erp5_sql_connection'].sql_quote__
 
   def manage_afterClone(self, item):
     try:
@@ -2241,6 +2244,7 @@ class Catalog(Folder,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
                           **kw):
+    sql_connection_id = self.getSearchResultsMethod().connection_id
     return self.buildEntireQuery(
       kw,
       query_table=query_table,
@@ -2252,6 +2256,7 @@ class Catalog(Folder,
     ).asSQLExpression(
       self,
       only_group_columns,
+      sql_connection_id,
     ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
