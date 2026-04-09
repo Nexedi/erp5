@@ -40,3 +40,4 @@ ModuleSecurityInfo('Products.ZSQLCatalog.SQLCatalog').declarePublic(
 
 from .Query import Query, SimpleQuery
 from .SearchKey import SearchKey
+from .Operator.OperatorBase import registerValueRenderer

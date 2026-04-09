@@ -302,7 +302,7 @@ class ColumnMap(object):
       if table_name != catalog_table_name:
         self._addJoinTableForColumn(table_name, column_name, group)
 
-  def build(self, sql_catalog):
+  def build(self, sql_catalog, sql_connection_id):
     join_query_to_build_list = []
     catalog_table_name = self.catalog_table_name
     if catalog_table_name is None:
@@ -409,7 +409,8 @@ class ColumnMap(object):
       join_query.search_key.buildSQLExpression(sql_catalog=sql_catalog,
                                                column_map=self,
                                                only_group_columns=False,
-                                               group=join_query.group,)
+                                               group=join_query.group,
+                                               sql_connection_id=sql_connection_id,)
     if MAPPING_TRACE:
       # Key: group
       # Value: 2-tuple

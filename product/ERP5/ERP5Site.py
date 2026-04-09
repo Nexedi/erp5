@@ -2184,6 +2184,20 @@ class ERP5Generator(PortalGenerator):
     self.setup(p, create_userfolder, create_activities=create_activities,
         reindex=reindex, **kw)
 
+
+    def sql_quote(value, sql_connection_id='erp5_sql_connection'):
+      return bytes2str(getSite()[sql_connection_id].sql_quote__(value))
+    renderer_dict = {}
+    renderer_dict[str] = sql_quote
+    if six.PY2:
+      renderer_dict[unicode] = sql_quote
+    else:
+      renderer_dict[bytes] = sql_quote
+
+    from Products.ZSQLCatalog import registerValueRenderer
+    registerValueRenderer(renderer_dict)
+
+
     p._v_bootstrapping = False
 
     reindex_all_tag = 'ERP5Site_reindexAll'
