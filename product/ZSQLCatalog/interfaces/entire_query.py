@@ -74,7 +74,7 @@ class IEntireQuery(Interface):
         used when mapping columns.
     """
 
-  def asSQLExpression(sql_catalog, only_group_columns):
+  def asSQLExpression(sql_catalog, only_group_columns, sql_quote=None):
     """
       Instantiate a column map, process parameters given at instantiation and
       register them to column map.
