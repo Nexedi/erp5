@@ -24,16 +24,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import six
 from Products.ERP5Type.Utils import bytes2str
 
-def sqlquote(value):
-  # See MySQL documentation of string literals.
-  # XXX: should use sql_quote__ on actual connector
-  # (ex: ZMySQLDA.DA.Connection.sql_quote__).
-  # Duplicating such code is error-prone, and makes us rely on a specific SQL
-  # dialect...
-  if six.PY3 and isinstance(value, bytes):
+def _mysql_sqlquote_fallback(value):
+  """
+  MySQL-specific string quoting fallback, used when no database connection
+  is available (e.g. in unit tests). Only correct for MySQL-compatible backends.
+  """
+  if isinstance(value, bytes):
     value = bytes2str(value)
   return "'" + (value
     .replace('\x5c', r'\\')
@@ -46,3 +44,11 @@ def sqlquote(value):
     .replace('\x22', r'\"')
     .replace('\x27', r"\'")
   ) + "'"
+
+def sqlquote(value, sql_quote):
+  result = sql_quote(value)
+  # sql_quote__ from some DA implementations (e.g. ZMySQLDA) returns bytes;
+  # others (e.g. SQLite DA or our fallback) return str.
+  if isinstance(result, bytes):
+    return bytes2str(result)
+  return result
