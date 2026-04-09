@@ -55,6 +55,7 @@ import os
 import warnings
 import transaction
 from App.config import getConfiguration
+from Products.ZSQLCatalog.Utils import sqlquote as escapeString
 MARKER = []
 
 ERP5_AUTHORISATION_EXTRACTOR_MARKER_NAME = '__enable_authorisation_extractor'
@@ -291,6 +292,10 @@ class _site(threading.local):
 getSite, setSite = _site()
 
 _missing_tools_registered = None
+
+
+
+
 
 class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCookieMixin):
   """
@@ -2184,6 +2189,27 @@ class ERP5Generator(PortalGenerator):
     self.setup(p, create_userfolder, create_activities=create_activities,
         reindex=reindex, **kw)
 
+    """
+    sql_quote_dict = {}
+    for _, sql_connection_id  in p.SQLConnectionIDs():
+      sql_quote_dict[sql_connection_id] = p[sql_connection_id].sql_quote__
+    """
+    def sql_quote(value, sql_connection_id='erp5_sql_connection'):
+      if not sql_connection_id:
+        return escapeString(value)
+      return bytes2str(p[sql_connection_id].sql_quote__(value))
+      """
+      try:
+        sql_quote__ = sql_quote_dict[sql_connection_id]
+      except KeyError:
+        sql_quote__ = sql_quote_dict[sql_connection_id] =  p[sql_connection_id].sql_quote__
+      return bytes2str(sql_quote__(value))
+      """
+
+    from Products.ZSQLCatalog.Operator.OperatorBase import setEscapeStringRenderValue
+    setEscapeStringRenderValue(sql_quote)
+
+
     p._v_bootstrapping = False
 
     reindex_all_tag = 'ERP5Site_reindexAll'
@@ -2225,6 +2251,7 @@ class ERP5Generator(PortalGenerator):
       p,
       after_tag=(reindex_all_tag, upgrade_tag, preference_tag),
     )._delPropValue(id_)
+
     return p
 
   @classmethod
