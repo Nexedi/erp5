@@ -43,6 +43,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Utils import ensure_list
 import six
 from AccessControl.ZopeGuards import guarded_getattr
+import time
 
 class MatchList(list):
   def __repr__(self):
@@ -258,9 +259,16 @@ class DummyCatalog(SQLCatalog):
       )
     return SimpleQuery(uid=-1)
 
-class TestSQLCatalog(ERP5TypeTestCase):
+class TestSQLCatalogWithDefaultSQLQuote(ERP5TypeTestCase):
   def afterSetUp(self):
     self._catalog = DummyCatalog('dummy_catalog')
+    self._catalog.getSearchResultsMethod = lambda: type(
+      "dummy", (), {"connection_id": ""})()
+    self._test_start_time = time.time()
+
+  def beforeTearDown(self):
+    elapsed = time.time() - self._test_start_time
+    self.logMessage("%s: %.10fs \n" % (self._testMethodName, elapsed))
 
   def assertCatalogRaises(self, exception, kw):
     self.assertRaises(exception, self._catalog, src__=1, query_table='foo', **kw)
@@ -285,7 +293,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
   def asSQLExpression(self, kw, **build_entire_query_kw):
     entire_query = self._catalog.buildEntireQuery(kw, **build_entire_query_kw)
-    return entire_query.asSQLExpression(self._catalog, False)
+    return entire_query.asSQLExpression(self._catalog, False, None)
 
   def _testDefaultKey(self, column):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a'), operator='and'),
@@ -531,7 +539,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self._testKeywordKey('related_keyword')
 
   def test_005_SearchText(self):
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', keyword='%=a%'), ReferenceQuery(operator='like', keyword='%=b%'), operator='or'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', keyword=['a', 'b']), operator='and'),
                  {'keyword': '"=a" OR "=b"'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='in', keyword=['a', 'b']), operator='and'),
                  {'keyword': '="a" OR ="b"'})
@@ -545,7 +553,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  {'keyword': 'default:a'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
                  {'keyword': 'a b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%=a OR =b%'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='a OR =b'), operator='and'),
                  {'keyword': '"=a OR =b"'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='=a OR =b'), operator='and'),
                  {'keyword': '="=a OR =b"'})
@@ -864,8 +872,31 @@ class TestSQLCatalog(ERP5TypeTestCase):
 #print catalog(sort_on=[('source_title', )], check_search_text=False)
 #print catalog(query=ComplexQuery(Query(source_title='foo'), Query(source_title='bar')), sort_on=[('source_title', ), ('source_title_1', )], check_search_text=False)
 
+
+class TestSQLCatalogWithCatalogSQLQuote(TestSQLCatalogWithDefaultSQLQuote):
+
+  def afterSetUp(self):
+    self._catalog = DummyCatalog('dummy_catalog')
+    self._catalog.getSearchResultsMethod = lambda: type(
+      "dummy", (), {"connection_id": "erp5_sql_connection"})()
+    self._catalog.getPortalObject = self.getPortalObject
+    self.sql_quote = self.getPortalObject()['erp5_sql_connection'].sql_quote__
+    self._test_start_time = time.time()
+
+  def asSQLExpression(self, kw, **build_entire_query_kw):
+    entire_query = self._catalog.buildEntireQuery(kw, **build_entire_query_kw)
+    return entire_query.asSQLExpression(self._catalog, False, self.sql_quote)
+
+
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalog))
+  Count = 1
+  for _ in range(Count):
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalogWithCatalogSQLQuote))
+
+  for _ in range(Count):
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalogWithDefaultSQLQuote))
+
+
   return suite
 
