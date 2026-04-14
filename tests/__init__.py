@@ -18,7 +18,7 @@ class _Base(ERP5TypeTestSuite):
                           'Formulator', 'ERP5Workflow',
                           'HBTreeFolder2', 'MailTemplates',
                           'PortalTransforms', 'TimerService',
-                          'ZMySQLDA', 'ZSQLCatalog', 'Zelenium')
+                          'ZMySQLDA', 'ZSQLiteDA', 'ZSQLCatalog', 'Zelenium')
 
   def enableProducts(self):
     product_set = set(self.enabled_product_list)
@@ -167,6 +167,17 @@ class ERP5(_ERP5):
           full_test)
 
     return super(ERP5, self).run(full_test)
+
+class ERP5SQLite(ERP5):
+  def getTestList(self):
+    not_supported_list = [
+      'testInventoryAPI', # inventory
+      'testDeferredConnection', # ZMySQLDA
+      'testTableStructureMigration', # ZMySQLDA
+      'testFunctionalCore', # accounting
+      'testXHTML' # accounting
+      ]
+    return [x for x in self._getAllTestList() if (x.startswith('test') or x.startswith('erp5_core_test') or x.startswith('erp5_ui_test')) and (x not in not_supported_list)]
 
 class WORKFLOW(ERP5):
   # new test suite running a few test related to Workflow
