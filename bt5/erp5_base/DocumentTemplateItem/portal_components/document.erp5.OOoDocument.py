@@ -39,16 +39,16 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 from erp5.component.document.File import File
-from erp5.component.document.Document import Document, \
-       VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST, ConversionError, NotConvertedError
+from erp5.component.document.Document import ConversionError, Document, \
+       VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
 from Products.ERP5Type.Utils import (guessEncodingFromText,
                                      bytes2str,
+                                     deprecated,
                                      fill_args_from_request,
                                      str2bytes,
                                      unicode2str)
 
 # Mixin Import
-from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from erp5.component.mixin.TextConvertableMixin import TextConvertableMixin
 from erp5.component.mixin.OOoDocumentExtensibleTraversableMixin import OOoDocumentExtensibleTraversableMixin
 
@@ -62,8 +62,14 @@ from erp5.component.document.Document import global_server_proxy_uri_failure_tim
 from erp5.component.document.Document import enc, dec
 OOoServerProxy = DocumentConversionServerProxy
 
-class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
-                  TextConvertableMixin, Document):
+BASE_FORMAT_DICT = {
+  "Spreadsheet": "ods",
+  "Presentation": "odp",
+  "Text": "odt",
+  "Drawing": "odg",
+}
+
+class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, File, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -134,8 +140,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     return Document.index_html(self, REQUEST, *args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSupportBaseDataConversion')
-  def isSupportBaseDataConversion(self):
+                            'isSupportTextConversion')
+  def isSupportTextConversion(self):
     """
     OOoDocument is needed to conversion to base format.
     """
@@ -151,13 +157,12 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       NOTE: it is the responsability of the conversion server
       to provide an extensive list of conversion formats.
     """
-    if not self.hasBaseData():
-      # if we have no date we can not format it
-      return []
-
     def cached_getTargetFormatItemList(content_type):
       from six.moves.xmlrpc_client import Fault
       server_proxy = DocumentConversionServerProxy(self)
+      # Coerce Content-Type as a string when falsy, otherwise Cloudooo returns
+      # Code 402: expected str, bytes or os.PathLike object, not NoneType
+      content_type = content_type or ""
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
                                                       content_type)
@@ -195,33 +200,20 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                 id="OOoDocument_getTargetFormatItemList",
                                 cache_factory='erp5_ui_medium')
 
-    return cached_getTargetFormatItemList(self.getBaseContentType())
+    return cached_getTargetFormatItemList(self.getContentType())
 
   def _getConversionFromProxyServer(self, format): #  pylint: disable=redefined-builtin
     """
       Communicates with server to convert a file
     """
-    if not self.hasBaseData():
-      # XXX please pass a meaningful description of error as argument
-      raise NotConvertedError()
-    if format == 'text-content':
-      # Extract text from the ODF file
-      cs = BytesIO()
-      cs.write(self.getBaseData())
-      z = zipfile.ZipFile(cs)
-      s = bytes2str(z.read('content.xml'))
-      s = self.rx_strip.sub(" ", s) # strip xml
-      s = self.rx_compr.sub(" ", s) # compress multiple spaces
-      cs.close()
-      z.close()
-      return 'text/plain', s
-    orig_format = self.getBaseContentType()
     with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
-      generate_result = server_proxy.run_generate(self.getId(),
-                                       bytes2str(enc(bytes(self.getBaseData()))),
+      # XXX: not very nice, as we once more refer to base data...
+      proxy_function = server_proxy.run_convert if format == None else server_proxy.run_generate
+      generate_result = proxy_function(self.getId(),
+                                       bytes2str(enc(bytes(self.getData()))),
                                        None,
                                        format,
-                                       orig_format)
+                                       self.getContentType())
     try:
       _, response_dict, _ = generate_result
     except ValueError:
@@ -232,41 +224,48 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(str2bytes(response_dict['data'])))
 
-  # Conversion API
-  def _convert(self, format, frame=0, **kw): #  pylint: disable=redefined-builtin
-    """Convert the document to the given format.
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
+  @deprecated
+  def getBaseData(self):
+    portal_type = self.getPortalType()
+    if portal_type not in BASE_FORMAT_DICT:
+      return super(OOoDocument, self).getBaseData()
 
-    If a conversion is already stored for this format, it is returned
-    directly, otherwise the conversion is stored for the next time.
+    _format = BASE_FORMAT_DICT[portal_type]
+    return self.convert(format=_format)[1]
 
-    frame: Only used for image conversion
-
-    XXX Cascading conversions must be delegated to conversion server,
-    not by OOoDocument._convert (ie: convert to pdf, then convert to image, then resize)
-    *OR* as an optimisation we can read cached intermediate conversions
-    instead of compute them each times.
-      1- odt->pdf->png
-      2- odt->cached(pdf)->jpg
+  def _convert(self, format, frame=0, **kw): # pylint: disable=redefined-builtin
     """
-    #XXX if document is empty, stop to try to convert.
-    #XXX but I don't know what is a appropriate mime-type.(Yusei)
+    Convert document to the given format.
+
+    Constraints for this functions are: there are two cases where we need
+    cascading conversion (ie. conversion to an intermediate format), and the
+    conversion cache should be used as efficiently as possible. At the end, the
+    process is rather convoluted to get the final result.
+    """
+    # XXX-Yusei: if document is empty, stop to try to convert,
+    # but I don't know what is an appropriate mime-type.
     if not self.hasData():
       return 'text/plain', ''
-    # if no conversion asked (format empty)
-    # return raw data
+    # If no conversion asked (format empty), return raw data
     if not format:
       return self.getContentType(), self.getData()
-    # Check if we have already a base conversion
-    if not self.hasBaseData():
-      # XXX please pass a meaningful description of error as argument
-      raise NotConvertedError()
-    # Make sure we can support html and pdf by default
-    is_html = 0
-    requires_pdf_first = 0
+
+    # Use cache early: if document was converted before, return it
+    # XXX-Titouan: that means we might end up with same conversion twice
+    # in the cache, if two format give the same result.
+    if self.hasConversion(format=format, **kw):
+      return self.getConversion(format=format, **kw)
+
+    # We deal with three different format variables: `original_format`, as
+    # requested by the caller, which is always the key used for cache ;
+    # `format`, given to Cloudooo for conversion (usually derived from
+    # `original_format`) and `intermediate_format` when we need a conversion
+    # chain (OOoDocument -> PDF -> Image).
     original_format = format
+    to_image = False
+    to_unzipped = False
     allowed_format_list = self.getTargetFormatList()
-    if format == 'base-data':
-      return self.getBaseContentType(), self.getBaseData()
     if format == 'pdf':
       format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
@@ -277,41 +276,61 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       if len(format_list):
         format = format_list[0]
       else:
-        # We must fist make a PDF which will be used to produce an image out of it
-        requires_pdf_first = 1
+        # We must first make a PDF which will be used to produce an image out of it
         format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
         format = format_list[0]
+        to_image = True
     elif format == 'html':
       format_list = [x for x in allowed_format_list
                               if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
-      is_html = 1
+      to_unzipped = True
     elif format in ('txt', 'text', 'text-content'):
-      # if possible, we try to get utf8 text. ('enc.txt' will encode to utf8)
+      # One exception to the always-store-conversion-as-original rule
+      original_format = 'txt'
+      # If possible, we try to get utf8 text
       if 'enc.txt' in allowed_format_list:
         format = 'enc.txt'
       elif format not in allowed_format_list:
-        #Text conversion is not supported by oood, do it in other way
-        if not self.hasConversion(format=original_format):
-          #Do real conversion for text
-          mime, data = self._getConversionFromProxyServer(format='text-content')
-          self.setConversion(data, mime, format=original_format)
-          return mime, data
-        return self.getConversion(format=original_format)
-    # Raise an error if the format is not supported
-    if not self.isTargetFormatAllowed(format):
+        # `format = None` is different from `intermediate_format = None`.
+        # The latter indicates no intermediate conversion, while the former
+        # is conversion to what was base format before (ODS, ODT, etc).
+        format = None
+        to_unzipped = True
+
+    if format is not None and \
+        not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
-    has_format = self.hasConversion(format=original_format, **kw)
-    if not has_format:
-      # Do real conversion
-      mime, data = self._getConversionFromProxyServer(format)
-      if is_html:
-        # Extra processing required since
-        # we receive a zip file
-        cs = BytesIO()
-        cs.write(bytes(data)) # Cast explicitly to bytes for possible Pdata
-        z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
+
+    mime, data = self._getConversionFromProxyServer(format)
+
+    # Conversion chain for OOo -> PDF -> Image
+    if to_image:
+      # Create temporary image and use it to resize accordingly
+      temp_image = self.portal_contributions.newContent(
+        portal_type='Image',
+        file=BytesIO(),
+        filename=self.getId(),
+        temp_object=1,
+      )
+      temp_image._setData(data)
+      # We care for first page only but as well for image quality
+      mime, data = temp_image.convert(original_format, frame=frame, **kw)
+
+    if to_unzipped:
+      cs = BytesIO()
+      cs.write(bytes(data)) # Cast explicitly to bytes for possible Pdata
+      z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
+      # Conversion chain for OOo -> ODF -> Text: extract
+      # text from the ODF file.
+      if format is None:
+        data = bytes2str(z.read('content.xml'))
+        data = self.rx_strip.sub(" ", data) # strip xml
+        data = self.rx_compr.sub(" ", data) # compress multiple spaces
+        mime = 'text/plain'
+      # Special case for OOo -> HTML
+      else:
         for f in z.infolist():
           fn = f.filename
           if fn.endswith('html'):
@@ -321,27 +340,17 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
             data = z.read(fn)
             break
         mime = 'text/html'
-        self._populateConversionCacheWithHTML(zip_file=z) # Maybe some parts should be asynchronous for
-                                         # better usability
-        z.close()
-        cs.close()
-      if original_format not in VALID_IMAGE_FORMAT_LIST \
-        and not requires_pdf_first:
-        self.setConversion(data, mime, format=original_format, **kw)
-      else:
-        # create temporary image and use it to resize accordingly
-        temp_image = self.portal_contributions.newContent(
-                                       portal_type='Image',
-                                       file=BytesIO(),
-                                       filename=self.getId(),
-                                       temp_object=1)
-        temp_image._setData(data)
-        # we care for first page only but as well for image quality
-        mime, data = temp_image.convert(original_format, frame=frame, **kw)
-        # store conversion
-        self.setConversion(data, mime, format=original_format, **kw)
+        # XXX: Maybe some parts should be asynchronous for better usability
+        self._populateConversionCacheWithHTML(zip_file=z)
+      z.close()
+      cs.close()
 
+    self.setConversion(data, mime, format=original_format, **kw)
+    # We have to recourse to `getConversion` every time, even if we already own
+    # an handle to converted data because CacheConvertableMixin does type
+    # conversion (ie. Pdata to bytes), and it should not be predicted manually.
     mime, data = self.getConversion(format=original_format, **kw)
+
     if format in VALID_TEXT_FORMAT_LIST:
       # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
       # here mostly as a convenient way to decode with the encoding from BOM
@@ -389,62 +398,59 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       zip_file.close()
       archive_file.close()
 
-  security.declarePrivate('_convertToBaseFormat')
-  def _convertToBaseFormat(self):
-    """
-      Converts the original document into ODF
-      by invoking the conversion server. Store the result
-      on the object. Update metadata information.
-    """
-    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
-      response_code, response_dict, response_message = server_proxy.run_convert(
-                                      self.getFilename() or self.getId(),
-                                      bytes2str(enc(bytes(self.getData()))),
-                                      None,
-                                      None,
-                                      self.getContentType())
-    if response_code == 200:
-      # sucessfully converted document
-      self._setBaseData(dec(str2bytes(response_dict['data'])))
-      metadata = response_dict['meta']
-      self._base_metadata = metadata
-      if metadata.get('MIMEType', None) is not None:
-        self._setBaseContentType(metadata['MIMEType'])
-    else:
-      # Explicitly raise the exception!
-      raise ConversionError(
-                "OOoDocument: Error converting document to base format. (Code %s: %s)"
-                                       % (response_code, response_message))
-
   def _getContentInformation(self):
     """
       Returns the metadata extracted by the conversion
       server.
     """
-    return getattr(self, '_base_metadata', {})
+    return getattr(self, '_document_metadata', {})
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateBaseMetadata')
-  def updateBaseMetadata(self, **kw):
+  security.declareProtected(Permissions.ModifyPortalContent, 'eraseLocalMetadata')
+  def eraseLocalMetadata(self):
+    self._document_metadata = {}
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
+  def updateLocalMetadataFromDocument(self, **kw):
+    """
+      Updates locally stored metadata (and Content Type) from
+      information stored on the document.
+    """
+    # No metadata can be guessed from empty documents, early abort
+    if not self.getData():
+      return
+
+    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
+      response_code, response_dict, response_message = \
+          server_proxy.run_getmetadata(self.getId(),
+                                       bytes2str(enc(bytes(self.getData()))),
+                                       kw)
+
+    if response_code == 200:
+      metadata = response_dict['meta']
+      self._document_metadata = metadata
+      if metadata.get('MIMEType', None) is not None and \
+          not self.hasContentType():
+        self._setContentType(metadata['MIMEType'])
+    else:
+      raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
+                        % (response_code, response_message))
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateMetadata')
+  def updateMetadata(self, **kw):
     """
       Updates metadata information in the converted OOo document
       based on the values provided by the user. This is implemented
       through the invocation of the conversion server.
     """
-    if not self.hasBaseData():
-      # XXX please pass a meaningful description of error as argument
-      raise NotConvertedError()
-
     with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
       response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
-                                       bytes2str(enc(bytes(self.getBaseData()))),
+                                       bytes2str(enc(bytes(self.getData()))),
                                        kw)
     if response_code == 200:
       # successful meta data extraction
-      self._setBaseData(dec(str2bytes(response_dict['data'])))
-      self.updateFileMetadata() # record in workflow history # XXX must put appropriate comments.
+      self._setData(dec(str2bytes(response_dict['data'])))
     else:
       # Explicitly raise the exception!
-      raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
+      raise ConversionError("OOoDocument: error setting document metadata (Code %s: %s)"
                         % (response_code, response_message))
