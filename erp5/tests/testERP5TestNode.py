@@ -23,13 +23,16 @@ import subprocess
 import sys
 import tempfile
 import json
+import threading
 import time
 import re
 try:
   from unittest import mock
+  from http.server import HTTPServer, BaseHTTPRequestHandler
   from configparser import ConfigParser
 except ImportError:
   # BBB python2
+  from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
   from ConfigParser import SafeConfigParser as ConfigParser
   ConfigParser.read_file = ConfigParser.readfp
   import mock
@@ -574,6 +577,61 @@ shared = true
     self.assertEqual(len(create_test_result_args), 1)
     revision = create_test_result_args[0]['revision']
     self.assertRegex(revision,  "^update error=fatal: repository '.*' does not exist$")
+
+  def test_05i_NoReportOnHttp502GitError(self):
+    """When git fetch fails because the remote server returns HTTP 502,
+    the testnode should NOT create a test result or report a failure,
+    because this is a transient server error and reporting it would
+    create a useless test result entry.
+    """
+    self.generateTestRepositoryList()
+
+    class Handler502(BaseHTTPRequestHandler):
+      def do_GET(self):
+        self.send_response(502)
+        self.end_headers()
+      def log_message(self, format, *args):
+        pass
+
+    server_ip_address = os.environ.get('SLAPOS_TEST_IPV4', '127.0.0.1')
+    server = HTTPServer((server_ip_address, 0), Handler502)
+    server_port = server.server_address[1]
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.daemon = True
+    self.addCleanup(server.shutdown)
+    server_thread.start()
+
+    test_suite_data = self.getTestSuiteData()
+    test_suite_data[0]['vcs_repository_list'].append({
+      'url': 'http://%s:%d/repo.git' % (server_ip_address, server_port),
+      'buildout_section_id': 'broken_repo',
+      'branch': 'main',
+    })
+    call_count = [0]
+
+    def start_test_suite_side_effect(node_title, computer_guid='unknown'):
+      call_count[0] += 1
+      if call_count[0] > 1:
+        raise StopIteration
+      return json.dumps(test_suite_data)
+
+    with mock.patch.object(
+            TaskDistributor, 'startTestSuite',
+            side_effect=start_test_suite_side_effect), \
+          mock.patch.object(
+            TaskDistributor, 'subscribeNode', return_value='{}'), \
+          mock.patch.object(
+            TaskDistributor, 'getTestType', return_value='UnitTest'), \
+          mock.patch.object(
+            TaskDistributor, 'createTestResult') as mock_create_test_result, \
+          mock.patch.object(
+            test_type_registry['UnitTest'], '_prepareSlapOS',
+            return_value={'status_code': 0}), \
+          mock.patch('time.sleep'):
+      test_node = self.getTestNode()
+      test_node.run()
+
+    mock_create_test_result.assert_not_called()
 
   def test_update_revision_with_head_at_merge(self):
     """Test update revision when the head of the branch is a merge commit.
