@@ -363,9 +363,12 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     mime, data = self.getConversion(format=original_format, **kw)
 
     if original_format in VALID_TEXT_FORMAT_LIST:
-      # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
-      # here mostly as a convenient way to decode with the encoding from BOM
-      data = data.decode(guessEncodingFromText(data) or 'ascii')
+      try:
+        data = data.decode('utf-8')
+      except UnicodeDecodeError:
+        # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
+        # here mostly as a convenient way to decode with the encoding from BOM
+        data = data.decode(guessEncodingFromText(data) or 'ascii')
       if six.PY2 and isinstance(data, six.text_type):
         data = unicode2str(data)
 
