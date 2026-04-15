@@ -34,6 +34,7 @@ from six.moves import xrange
 import six
 if six.PY3:
   from functools import cmp_to_key, total_ordering
+import codecs
 import os
 import re
 import string
@@ -1877,20 +1878,29 @@ else:
 
 def guessEncodingFromText(data, content_type='text/html'):
   """
-    Try to guess the encoding for this string.
-    Returns None if no encoding can be guessed.
+  Try to guess the encoding for the given data.
+  Returns None if no encoding can be guessed.
   This utility try use chardet for text/html
   By default python-magic is used
-  XXX this implementation must migrate to cloudooo
+  XXX this implementation must migrate to cloudooo ( yes but data can be very large )
   """
+  # if data has a BOM, we bypass chardet
+  bom_to_encoding = {
+      codecs.BOM_UTF8: 'utf-8-sig',
+      codecs.BOM_UTF16_LE: 'utf-16-le',
+      codecs.BOM_UTF16_BE: 'utf-16-be',
+  }
+  for bom, encoding in bom_to_encoding.items():
+    if data.startswith(bom):
+      return encoding
   if chardet is not None and content_type == 'text/html':
-    # chardet works fine on html document
+    # chardet works fine on html document, but it's very slow.
     return chardet.detect(data).get('encoding', None)
   elif magic is not None:
     # libmagic provides better result
     # for text/plain documents.
-    enconding_detector = magic.Magic(mime_encoding=True)
-    return enconding_detector.from_buffer(data)
+    encoding_detector = magic.Magic(mime_encoding=True)
+    return encoding_detector.from_buffer(data)
   else:
     if chardet is None:
       message = 'No encoding detector found.'\
