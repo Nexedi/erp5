@@ -44,7 +44,7 @@ from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ZMySQLDA.DA import DeferredConnection
+from Products.Database.DA import DeferredConnection
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -52,7 +52,6 @@ from MethodObject import Method
 
 from Products.ERP5Security import mergedLocalRoles
 from Products import ERP5Security
-from Products.ZSQLCatalog.Utils import sqlquote
 
 import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
@@ -725,7 +724,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             # XXX: What with this string transformation ?! Souldn't it be done in
             # dtml instead ? ... yes, but how to be bw compatible ?
-            allowedRolesAndUsers = [sqlquote(role) for role in allowedRolesAndUsers]
+            sql_quote__ =  self.getPortalObject()[method.connection_id].sql_quote__
+            allowedRolesAndUsers = [sql_quote__(role) for role in allowedRolesAndUsers]
 
             security_uid_dict = defaultdict(list)
             for brain in method(security_roles_list=allowedRolesAndUsers):
@@ -1447,7 +1447,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         connection_by_connection_id[connection_id] = connection
         if isinstance(connection, DeferredConnection):
           for other_connection in portal.objectValues(
-                spec=('Z MySQL Database Connection',)):
+                spec=('Z MySQL Database Connection', 'Z SQLite Database Connection')):
             if connection_string == other_connection.connection_string:
               connection_by_connection_id[connection_id] = other_connection
               break
