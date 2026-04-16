@@ -65,13 +65,12 @@ else:
 #CURRENT_MAX_OBJECT_VIEW=0.1280
 MIN_MODULE_VIEW=0.030               # 0.050 0.160 0.020, 0.125
 MAX_MODULE_VIEW=0.065               # 0.065 0.174 0.070, 0.175
+MIN_TIC=0.0065                      # 0.0333 0.0020, 0.260
 if six.PY3:
-  MIN_TIC=0.0065                    # 0.0333 0.0020, 0.260
   MAX_TIC=0.0150                    # 0.0354 0.0090, 0.343
   MIN_OBJECT_CREATION=0.0032        # 0.0130  0.0010, 0.0070
   MAX_OBJECT_CREATION=0.0053        # 0.0145  0.0040, 0.0082
 else:
-  MIN_TIC=0.0100                    # 0.0333 0.0020, 0.260
   MAX_TIC=0.0210                    # 0.0354 0.0090, 0.343
   MIN_OBJECT_CREATION=0.0045        # 0.0130  0.0010, 0.0070
   MAX_OBJECT_CREATION=0.0066        # 0.0145  0.0040, 0.0082

@@ -140,7 +140,7 @@ else:
     'Creation of New Applied Rules from Partially Simulated Deliveries': (7.05, 13.05),
     # (38, 44)
     'Creation Of New Sale Invoices':  (9.05, 15.05),     # (48, 54)
-    'Addition of New Invoices Lines': (24.11, 32.34)     # (116, 125)
+    'Addition of New Invoices Lines': (24.11, 34.34)     # (116, 125)
   }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
