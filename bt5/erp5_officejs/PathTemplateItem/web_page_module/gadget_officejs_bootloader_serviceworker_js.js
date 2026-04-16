@@ -1,5 +1,8 @@
 /*jslint indent: 2*/
 /*global self, fetch, Request, Response, URL, Blob */
+// Version stamp injected by server-side text substitution.
+// Changes when the BT is updated, triggering browser SW update check.
+var APP_VERSION = '${modification_date}';
 var global = self, window = self;
 
 (function (self, fetch, Response, Blob) {
@@ -21,6 +24,21 @@ var global = self, window = self;
 
   self.cache_list = [];
 
+  function getDatabasePrefix() {
+    // Derive per-app IndexedDB prefix from the SW scope URL path.
+    // On officejs.com subdomains, scope path is "/" -> empty prefix
+    // (backward compatible). On ERP5 embedded, scope path is e.g.
+    // "/erp5/web_site_module/officejs_text_editor/" -> prefix is
+    // "officejs_text_editor_".
+    var scope_path = new URL(self.registration.scope).pathname;
+    var parts = scope_path.replace(/\/+$/, '').split('/');
+    var site_id = parts[parts.length - 1];
+    if (!site_id) {
+      return "";
+    }
+    return site_id + "_";
+  }
+
   function createStorage(database) {
     return self.jIO.createJIO({
       type: "indexeddb",
@@ -30,7 +48,7 @@ var global = self, window = self;
 
   function getFromLocal(relative_url) {
     if (self.storage.get === undefined) {
-      self.storage = createStorage("ojs_source_code");
+      self.storage = createStorage(getDatabasePrefix() + "ojs_source_code");
     }
     return self.storage.getAttachment(self.registration.scope, relative_url)
       .push(function (blob) {
@@ -46,7 +64,18 @@ var global = self, window = self;
     event.waitUntil(self.skipWaiting());
   });
   self.addEventListener('activate', function (event) {
-    event.waitUntil(self.clients.claim());
+    event.waitUntil(
+      self.clients.claim()
+        .then(function () {
+          return self.clients.matchAll();
+        })
+        .then(function (client_list) {
+          var i;
+          for (i = 0; i < client_list.length; i += 1) {
+            client_list[i].postMessage('version_changed');
+          }
+        })
+    );
   });
 
   self.addEventListener("fetch", function (event) {
