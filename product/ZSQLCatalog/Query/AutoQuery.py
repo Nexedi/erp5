@@ -122,10 +122,10 @@ class AutoQuery(Query):
       self._createWrappedQuery(sql_catalog)
     return self.wrapped_query.asSearchTextExpression(sql_catalog, column=column)
 
-  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+  def asSQLExpression(self, sql_catalog, column_map, only_group_columns, sql_quote):
     if self.wrapped_query is None:
       self._createWrappedQuery(sql_catalog)
-    return self.wrapped_query.asSQLExpression(sql_catalog, column_map, only_group_columns=only_group_columns)
+    return self.wrapped_query.asSQLExpression(sql_catalog, column_map, only_group_columns=only_group_columns, sql_quote=sql_quote)
 
   def registerColumnMap(self, sql_catalog, column_map):
     if self.wrapped_query is None:
