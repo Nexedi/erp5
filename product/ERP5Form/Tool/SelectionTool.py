@@ -46,7 +46,7 @@ from hashlib import md5
 import string, re
 from six.moves.urllib.parse import urlsplit, urlunsplit
 from zLOG import LOG, INFO, WARNING
-from Acquisition import aq_base
+from Acquisition import aq_base, aq_parent
 from Products.ERP5Type.Message import translateString
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 import warnings
@@ -1237,9 +1237,13 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       if sub_index != None:
         REQUEST.form['sub_index'] = sub_index
-      object_path = REQUEST.form['object_path']
       # Find the object which needs to be updated
-      o = self.restrictedTraverse(object_path)
+      try:
+        object_path = REQUEST.form['object_path']
+      except KeyError:
+        o = aq_parent(self)
+      else:
+        o = self.restrictedTraverse(object_path)
       # Find the field which was clicked on
       # Important to get from the object instead of self
       form = getattr(o, form_id)
