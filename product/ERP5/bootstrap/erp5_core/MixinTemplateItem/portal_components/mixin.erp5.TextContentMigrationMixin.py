@@ -64,7 +64,10 @@ class TextContentMigrationMixin:
     """
     Return data as string. Both Py2 and Py3 should return 'str' type object.
     """
-    return bytes2str(self.getData(default))
+    data = self.getData(default)
+    if data is None:
+      return None
+    return bytes2str(data)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
   getTextContent = _getTextContent
@@ -77,6 +80,9 @@ class TextContentMigrationMixin:
     supports both bytes (ie. str) and unicode.
     """
     data = text_content
+    if data is None:
+      self.setData(data, **kw)
+
     if six.PY2 and isinstance(data, unicode):
       data = unicode2str(data)
     data = str2bytes(data)
