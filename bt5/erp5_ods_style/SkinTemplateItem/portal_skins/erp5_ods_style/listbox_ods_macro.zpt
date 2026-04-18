@@ -11,6 +11,7 @@
 
     <tal:block metal:define-macro="listbox">
       <tal:block tal:define="render_prefix render_prefix | nothing;
+               dummy python: request.set('ignore_hide_rows', 1);
                listboxline_list python: listbox.get_value('default', render_format='list', REQUEST=request, render_prefix=render_prefix);
                DateTime nocall: modules/DateTime/DateTime;
                selection_name python: listbox.get_value('selection_name', REQUEST=request);
