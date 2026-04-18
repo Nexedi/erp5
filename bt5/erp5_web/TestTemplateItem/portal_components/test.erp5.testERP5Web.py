@@ -276,7 +276,7 @@ class TestERP5Web(ERP5TypeTestCase):
     self.tic()
     self.assertIsNone(page.getTextContent())
     self.assertIsNone(page.getData())
-    default = []
+    default = b'abcde'
     self.assertIs(page.getData(default), default)
     self.assertEqual(page.asText(), '')
     self.assertEqual(page.getSearchableText(), '')

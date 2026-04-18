@@ -191,11 +191,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                               basic=self.authentication)
       self.assertEqual(response.getStatus(), six.moves.http_client.NO_CONTENT)
       self.assertEqual(web_page_module[filename].getData(), iso_text_content)
-    # Convert to base format and run conversion into utf-8
-    self.tic()
-    # Content-Type header is replaced if conversion encoding succeed
-    new_text_content = text_content.replace('charset=iso-8859-1', 'charset=utf-8')
-    self.assertEqual(web_page_module[filename].getTextContent(), new_text_content)
+      self.assertEqual(web_page_module[filename].getTextContent(), iso_text_content)
 
   def test_GET_on_document(self):
     """Get data from document in webdav
