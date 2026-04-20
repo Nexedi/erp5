@@ -124,7 +124,7 @@ LISTBOX_COEF=0.00010                # 0.00173 0.02472
 #   MIN_MODULE_VIEW : 0.155 -> 0.149
 #   MAX_MODULE_VIEW : 0.195 -> 0.189
 #   LISTBOX_COEF : 0.02472 -> 0.001725
-DO_TEST = 1
+DO_TEST = 0
 
 # Profiler support.
 # set 1 to get profiler's result (unit_test/tests/<func_name>)
