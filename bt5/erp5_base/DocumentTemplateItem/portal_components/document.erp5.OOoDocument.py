@@ -355,8 +355,10 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
       # here mostly as a convenient way to decode with the encoding from BOM
       data = data.decode(guessEncodingFromText(data) or 'ascii')
-      if six.PY2:
+      if six.PY2 and isinstance(data, six.text_type):
         data = unicode2str(data)
+      elif six.PY3 and isinstance(data, bytes):
+        data = bytes2str(data)
     return mime, data
 
   security.declareProtected(Permissions.ModifyPortalContent,
