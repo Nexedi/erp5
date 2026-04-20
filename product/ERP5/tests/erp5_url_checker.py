@@ -45,9 +45,8 @@ def main():
   while i < len(list_url):
     sleep(1)
     if len(threads) < max_thread:
-      # We must provide an authentication parameter such as __ac_name
-      url = '//user%i:user%i@localhost:9673%s?__ac_name=user%s&__ac_password=user%s' % \
-                (i,i,list_url[i][:-1],i,i)
+      url = '//user%i:user%i@localhost:9673%s' % \
+                (i,i,list_url[i][:-1])
       threads += [Thread(target=checker[len(threads)].CheckUrl,kwargs={'url':url})]
       threads[len(threads)-1].start()
       request_number += 1
@@ -56,8 +55,8 @@ def main():
     else:
       for t in range(0,max_thread):
         if threads[t].is_alive() == 0:
-          url = '//user%i:user%i@localhost:9673%s?__ac_name=user%s&__ac_password=user%s' % \
-               (t,t,list_url[i][:-1],t,t)
+          url = '//user%i:user%i@localhost:9673%s' % \
+               (t,t,list_url[i][:-1])
           threads[t] = Thread(target=checker[t].CheckUrl,kwargs={'url':url})
           threads[t].start()
           i+=1
