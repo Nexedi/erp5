@@ -351,8 +351,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       data = data.decode(guessEncodingFromText(data) or 'ascii')
       if six.PY2 and isinstance(data, six.text_type):
         data = unicode2str(data)
-      elif six.PY3 and isinstance(data, bytes):
-        data = bytes2str(data)
+      elif six.PY3 and isinstance(data, str):
+        data = str2bytes(data)
 
     self.setConversion(data, mime, format=original_format, **kw)
     # We have to recourse to `getConversion` every time, even if we already own
