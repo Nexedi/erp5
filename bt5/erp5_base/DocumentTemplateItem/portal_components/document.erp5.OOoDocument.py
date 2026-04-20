@@ -345,12 +345,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       z.close()
       cs.close()
 
-    self.setConversion(data, mime, format=original_format, **kw)
-    # We have to recourse to `getConversion` every time, even if we already own
-    # an handle to converted data because CacheConvertableMixin does type
-    # conversion (ie. Pdata to bytes), and it should not be predicted manually.
-    mime, data = self.getConversion(format=original_format, **kw)
-
     if format in VALID_TEXT_FORMAT_LIST:
       # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
       # here mostly as a convenient way to decode with the encoding from BOM
@@ -359,6 +353,13 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
         data = unicode2str(data)
       elif six.PY3 and isinstance(data, bytes):
         data = bytes2str(data)
+
+    self.setConversion(data, mime, format=original_format, **kw)
+    # We have to recourse to `getConversion` every time, even if we already own
+    # an handle to converted data because CacheConvertableMixin does type
+    # conversion (ie. Pdata to bytes), and it should not be predicted manually.
+    mime, data = self.getConversion(format=original_format, **kw)
+
     return mime, data
 
   security.declareProtected(Permissions.ModifyPortalContent,
