@@ -50,7 +50,7 @@ class ISearchKey(Interface):
         The column this SearchKey is instanciated for.
     """
 
-  def buildSQLExpression(operator, value, column_map, only_group_columns, group):
+  def buildSQLExpression(operator, value, column_map, only_group_columns, group, sql_quote):
     """
       This method passes on SQLExpression creation to operator, giving it the
       resolved column of this RelatedKey.

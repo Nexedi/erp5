@@ -40,7 +40,7 @@ class Query(object):
   """
   __allow_access_to_unprotected_subobjects__ = 1
 
-  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+  def asSQLExpression(self, sql_catalog, column_map, only_group_columns, sql_quote):
     """
       To enable SQL rendering, overload this method in a subclass.
     """
