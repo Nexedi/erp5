@@ -863,17 +863,21 @@ class MainForm(Form):
       Gets the __ac value from the browser headers and sets it as cookie in order to keep
       the user logged during the tests. If SimpleCookie can't parse the values,
       regular expressions are used.
+      With OAuth2, the access token cookie is managed by the browser automatically;
+      this function is a no-op when __ac is absent.
       """
-      headers_cookie = self.browser.headers['set-cookie']
+      try:
+        headers_cookie = self.browser.headers['set-cookie']
+      except KeyError:
+        return
       cookie = Cookie.SimpleCookie()
       cookie.load(headers_cookie)
       if '__ac' in cookie.keys():
-        ac_value = cookie['__ac'].value
+        self.browser.cookies["__ac"] = cookie['__ac'].value
       else:
-        reg = '__ac=\"([A-Za-z0-9%]+)*\"'
-        match = re.search(reg, headers_cookie)
-        ac_value = match.group(1) if match else None
-      self.browser.cookies["__ac"] = ac_value
+        match = re.search('__ac=\"([A-Za-z0-9%]+)*\"', headers_cookie)
+        if match:
+          self.browser.cookies["__ac"] = match.group(1)
 
     try:
       login(self)
