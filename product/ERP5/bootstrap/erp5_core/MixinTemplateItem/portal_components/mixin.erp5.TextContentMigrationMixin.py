@@ -80,12 +80,10 @@ class TextContentMigrationMixin:
     supports both bytes (ie. str) and unicode.
     """
     data = text_content
-    if data is None:
-      self.setData(data, **kw)
-
-    if six.PY2 and isinstance(data, unicode):
-      data = unicode2str(data)
-    data = str2bytes(data)
+    if data is not None:
+      if six.PY2 and isinstance(data, six.text_type):
+        data = unicode2str(data)
+      data = str2bytes(data)
 
     self.setData(data, **kw)
 
