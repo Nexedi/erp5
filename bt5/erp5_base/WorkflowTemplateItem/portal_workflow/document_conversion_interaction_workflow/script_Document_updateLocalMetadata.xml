@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+      <global name="Workflow Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11,9 +11,13 @@
             <value>
               <object>
                 <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="_reconstructor" module="copy_reg"/>
                 </klass>
-                <tuple/>
+                <tuple>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -46,11 +50,23 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id</string> </value>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_convertToBase</string> </value>
+            <value> <string>script_Document_updateLocalMetadata</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
