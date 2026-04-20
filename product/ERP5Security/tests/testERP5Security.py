@@ -1910,33 +1910,44 @@ class TestAuthenticationCookie(UserManagementTestCase):
   Most of this functionality is already tested in testCookieiCrumbler, this
   test uses a fully setup ERP5 site.
   """
+  def getBusinessTemplateList(self):
+    return super(TestAuthenticationCookie, self).getBusinessTemplateList() + (
+      'erp5_web_service',
+    )
+
   def testCookieAttributes(self):
-    """ERP5 sets some cookie attributes
+    """ERP5 OAuth2 access token cookies have proper security attributes.
     """
-    _, login, password = self._makePerson()
-    self.tic()
+    plugin = self.portal.acl_users.erp5_oauth2_resource
     request = self.portal.REQUEST
-    request.form['__ac_name'] = login
-    request.form['__ac_password'] = password
-    request['PARENTS'] = [self.portal]
-    request.method = request.environ['REQUEST_METHOD'] = 'POST'
-    # (the secure flag is only set if we accessed through https)
-    request.setServerURL('https', 'example.com')
-
-    request.traverse('/')
-
     response = request.RESPONSE
-    ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac=' in v]
+    # With no OAuth2 client connectors registered, the plugin has no known
+    # signature keys, so any token value is accepted by setCookie.
+    plugin.setCookie(
+      request=request,
+      response=response,
+      access_token='any.token.value',
+      cookie_attribute_dict={
+        'http_only': True,
+        'same_site': 'Lax',
+        'path': '/',
+      },
+    )
+    cookie_name = plugin.access_cookie_name
+    at_cookie, = [
+      v for (k, v) in response.listHeaders()
+      if k.lower() == 'set-cookie' and (cookie_name + '=') in v
+    ]
     # Secure flag so that cookie is sent only on https
-    self.assertIn('; Secure', ac_cookie)
+    self.assertIn('; Secure', at_cookie)
 
     # HttpOnly flag so that javascript cannot access cookie
-    self.assertIn('; httponly', ac_cookie.lower())
+    self.assertIn('; httponly', at_cookie.lower())
 
     # SameSite=Lax flag so that cookie is not sent on cross origin requests.
     # We set Lax (and not strict) so that opening a link to ERP5 from an
     # external site does not prompt for login.
-    self.assertIn('; SameSite=Lax', ac_cookie)
+    self.assertIn('; SameSite=Lax', at_cookie)
 
 
 class TestReindexObjectSecurity(UserManagementTestCase):
