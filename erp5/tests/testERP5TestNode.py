@@ -25,10 +25,11 @@ import tempfile
 import json
 import time
 import re
-try:
+import sys
+if sys.version_info[0] >= 3:
   from unittest import mock
   from configparser import ConfigParser
-except ImportError:
+else:
   # BBB python2
   from ConfigParser import SafeConfigParser as ConfigParser
   ConfigParser.read_file = ConfigParser.readfp
