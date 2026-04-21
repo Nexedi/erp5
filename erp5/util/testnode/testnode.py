@@ -24,10 +24,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import os
+import glob
 import json
-import time
 import logging
+import os
+import time
 from six.moves.urllib.parse import urljoin
 from contextlib import contextmanager
 from slapos.slap.slap import ConnectionError
@@ -198,9 +199,18 @@ shared = true
     """Check if repository is corrupted and delete if so.
 
     Returns True if repository was deleted (corrupted), False otherwise.
+    Stale .lock files in .git/ are treated as corruption.
     """
     if not os.path.isdir(repository_path):
       return False
+
+    def hasGitLockFile():
+      return bool(glob.glob(os.path.join(repository_path, '.git', '*.lock')))
+
+    if hasGitLockFile():
+      rmtree(repository_path)
+      return True
+
     try:
       self.process_manager.spawn(
         git_binary, 'status',

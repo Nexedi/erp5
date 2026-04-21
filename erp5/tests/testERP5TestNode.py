@@ -499,7 +499,33 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
 
-  def test_05g_DontDeleteRepositoryOnNonCorruptionError(self):
+  def test_05g_HandleGitLockFile(self):
+    """When a .lock file is present in .git/ (e.g. a previous git process
+    crashed), the repository is treated as corrupted and deleted.
+    """
+    self.generateTestRepositoryList()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertTrue(rev_list is not None)
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
+    lock_file_path = os.path.join(rep0_clone_path, '.git', 'index.lock')
+    with open(lock_file_path, 'w') as f:
+      f.write('')
+    self.assertTrue(os.path.exists(lock_file_path))
+    # Repository with lock file is treated as corrupted and deleted
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEqual(None, rev_list)
+    self.assertFalse(os.path.isdir(rep0_clone_path))
+    # Next update should succeed by re-cloning
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertTrue(rev_list is not None)
+
+  def test_05h_DontDeleteRepositoryOnNonCorruptionError(self):
     """
     When git fetch fails for a reason other than index corruption (e.g.
     the remote is temporarily unavailable), the repository should not be
@@ -530,7 +556,7 @@ shared = true
     self.assertTrue(os.path.isdir(rep0_clone_path))
     self.assertEqual(old_revision, node_test_suite.revision)
 
-  def test_05h_ReportFetchFailureToServer(self):
+  def test_05i_ReportFetchFailureToServer(self):
     """When a repository cannot be fetched, the testnode should create a test
     result and report the failure to the server so that the error is visible.
     When there is no prior revision, a date-based fallback revision is used.
