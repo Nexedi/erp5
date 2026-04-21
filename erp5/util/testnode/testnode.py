@@ -164,19 +164,27 @@ shared = true
            branch=branch, process_manager=self.process_manager,
            working_directory=node_test_suite.working_directory,
            url=vcs_repository["url"])
-        updater.checkout()
+        already_configured = updater.isRepositoryConfigured()
+        try:
+          updater.checkout()
+        except SubprocessError:
+          if already_configured:
+            deleted = self._checkAndDeleteCorruptedRepository(
+              repository_path, config['git_binary'])
+            if deleted:
+              raise
+            logger.warning(
+              "Repository already configured but update failed, "
+              "continuing with existing revision", exc_info=True)
+          else:
+            raise
         revision_list.append((repository_id, updater.getRevision()))
     except SubprocessError as error:
       # Check if the repository is corrupted (e.g. truncated index) by running
       # a git command checking the index. Only delete the repository if it is
       # actually corrupted, to avoid unnecessary re-cloning.
-      if os.path.isdir(repository_path):
-        try:
-          self.process_manager.spawn(
-            config['git_binary'], 'status',
-            cwd=repository_path, log_prefix='git')
-        except SubprocessError:
-          rmtree(repository_path)
+      self._checkAndDeleteCorruptedRepository(
+        repository_path, config['git_binary'])
       node_test_suite.update_revision_error = error
       node_test_suite.revision_list = []
       logger.warning("Error while getting repository, ignoring this test suite",
@@ -185,6 +193,22 @@ shared = true
     node_test_suite.update_revision_error = None
     node_test_suite.revision_list = revision_list
     return True
+
+  def _checkAndDeleteCorruptedRepository(self, repository_path, git_binary):
+    """Check if repository is corrupted and delete if so.
+
+    Returns True if repository was deleted (corrupted), False otherwise.
+    """
+    if not os.path.isdir(repository_path):
+      return False
+    try:
+      self.process_manager.spawn(
+        git_binary, 'status',
+        cwd=repository_path, log_prefix='git')
+    except SubprocessError:
+      rmtree(repository_path)
+      return True
+    return False
 
   @contextmanager
   def suiteLog(self, node_test_suite):

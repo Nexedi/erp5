@@ -508,6 +508,9 @@ shared = true
 
     The old implementation checked if 'index' appeared in the error message,
     which could cause false positives (e.g. branch names containing 'index').
+
+    When the repository is already configured correctly, we continue with
+    the existing revision instead of reporting failure.
     """
     self.generateTestRepositoryList()
     test_node = self.getTestNode()
@@ -519,13 +522,13 @@ shared = true
         x['repository_path']
         for x in node_test_suite.vcs_repository_list
         if x['repository_path'].endswith("rep0"))
+    old_revision = node_test_suite.revision
     # Make fetch fail by deleting the remote repository
     shutil.rmtree(self.remote_repository0)
-    # updateRevisionList should fail ...
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEqual(None, rev_list)
-    # ... but the local repository should NOT be deleted since its index is fine
+    self.assertIsNotNone(rev_list)
     self.assertTrue(os.path.isdir(rep0_clone_path))
+    self.assertEqual(old_revision, node_test_suite.revision)
 
   def test_05h_ReportFetchFailureToServer(self):
     """When a repository cannot be fetched, the testnode should create a test
