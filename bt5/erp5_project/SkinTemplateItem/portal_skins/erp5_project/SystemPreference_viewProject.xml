@@ -93,6 +93,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_preferred_project_management_app_base_url</string>
                         <string>my_preferred_task_resource_use_list</string>
                         <string>my_preferred_project_home_page_publication_section_category</string>
                       </list>
