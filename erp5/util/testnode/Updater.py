@@ -154,18 +154,30 @@ class Updater(object):
              self.repository_path)
     rmtree(self.repository_path)
 
+  def isRepositoryConfigured(self):
+    """Check if repository is already configured with correct URL.
+
+    Returns True if:
+    - repository_path exists
+    - remote.origin.url matches self.url
+
+    Returns False otherwise.
+    """
+    if not self.url:
+      return False
+    if not os.path.exists(self.repository_path):
+      return False
+    try:
+      remote_url = self._git("config", "--get", "remote.origin.url")
+    except SubprocessError:
+      logger.exception("")
+      return False
+    return remote_url == self.url
+
   def checkRepository(self):
-    # make sure that the repository is like we expect
     if self.url:
-      if os.path.exists(self.repository_path):
-        correct_url = False
-        try:
-          remote_url = self._git("config", "--get", "remote.origin.url")
-          if remote_url == self.url:
-            correct_url = True
-        except SubprocessError:
-          logger.exception("")
-        if not(correct_url):
+      if not self.isRepositoryConfigured():
+        if os.path.exists(self.repository_path):
           self.deleteRepository()
       if not os.path.exists(self.repository_path):
         parameter_list = ['clone', '--quiet', self.url]
