@@ -43,6 +43,21 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Utils import ensure_list
 import six
 from AccessControl.ZopeGuards import guarded_getattr
+import time
+import functools
+
+
+RUN_COUNT = 5000
+
+def benchmark(func):
+  @functools.wraps(func)
+  def wrapper(self, *args, **kwargs):
+    test_start_time = time.time()
+    for _ in range(RUN_COUNT):
+      func(self, *args, **kwargs)
+    elapsed = (time.time() - test_start_time) / RUN_COUNT
+    self.logMessage("%s: %.10fs \n" % (self._testMethodName, elapsed))
+  return wrapper
 
 class MatchList(list):
   def __repr__(self):
@@ -258,9 +273,11 @@ class DummyCatalog(SQLCatalog):
       )
     return SimpleQuery(uid=-1)
 
-class TestSQLCatalog(ERP5TypeTestCase):
-  def setUp(self):
+class TestSQLCatalogWithDefaultSQLQuote(ERP5TypeTestCase):
+  def afterSetUp(self):
     self._catalog = DummyCatalog('dummy_catalog')
+    self._catalog.getSearchResultsMethod = lambda: type(
+      "dummy", (), {"connection_id": ""})()
 
   def assertCatalogRaises(self, exception, kw):
     self.assertRaises(exception, self._catalog, src__=1, query_table='foo', **kw)
@@ -285,7 +302,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
   def asSQLExpression(self, kw, **build_entire_query_kw):
     entire_query = self._catalog.buildEntireQuery(kw, **build_entire_query_kw)
-    return entire_query.asSQLExpression(self._catalog, False)
+    return entire_query.asSQLExpression(self._catalog, False, None)
 
   def _testDefaultKey(self, column):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a'), operator='and'),
@@ -343,12 +360,15 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=MatchList((['a', 'b'], ['b', 'a']))), operator='and'),
                  {column: guarded_getattr({1: 'a', 2: 'b'}, 'values')()})
 
+  @benchmark
   def test_DefaultKey(self):
     self._testDefaultKey('default')
 
+  @benchmark
   def test_relatedDefaultKey(self):
     self._testDefaultKey('related_default')
 
+  @benchmark
   def test_002_keyOverride(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='%a'), operator='and'),
                  {'default': {'query': '%a', 'key': 'ExactMatch'}},
@@ -461,6 +481,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='is', date=None), operator='and'),
                  {column: None}, check_search_text=False)
 
+  @benchmark
   def test_DateTimeKey(self):
     # Try multiple timezones
     self._testDateTimeKey('date', 'UTC')
@@ -480,6 +501,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
       ReferenceQuery(ReferenceQuery([], operator='or'), operator='and'),
       {'date': '00:00:00'})
 
+  @benchmark
   def test_relatedDateTimeKey(self):
     # Try multiple timezones
     self._testDateTimeKey('related_date', 'UTC')
@@ -524,12 +546,15 @@ class TestSQLCatalog(ERP5TypeTestCase):
                    , operator='or'), operator='and'),
                  {column: ['a', '%b']})
 
+  @benchmark
   def test_KeywordKey(self):
     self._testKeywordKey('keyword')
 
+  @benchmark
   def test_relatedKeywordKey(self):
     self._testKeywordKey('related_keyword')
 
+  @benchmark
   def test_005_SearchText(self):
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', keyword='%=a%'), ReferenceQuery(operator='like', keyword='%=b%'), operator='or'), operator='and'),
                  {'keyword': '"=a" OR "=b"'})
@@ -576,6 +601,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
                                                ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='b'), operator='not'), operator='and'), operator='and'),
                  {'fulltext': 'a AND NOT b'})
 
+  @benchmark
   def test_006_testRelatedKey_with_multiple_join(self):
     # The name of catalog parameter does not matter at all
     # ComplexQuery(ComplexQuery(AutoQuery(RelatedQuery(SimpleQuery())), AutoQuery(RelatedQuery(SimpleQuery()))))
@@ -586,6 +612,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
                    , operator='and'), operator='and'),
                  {'query': ComplexQuery(Query(related_default='a'), Query(related_default='b'))})
 
+  @benchmark
   def test_007_testScriptableKey(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='%a%'), operator='and'),
                  {'scriptable_keyword': '%a%'})
@@ -594,6 +621,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', keyword='a'), operator='and'),
                  {'scriptable_keyword_5args': '!=a'})
 
+  @benchmark
   def test_008_testRawKey(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='%a%'), operator='and'),
                  {'default': {'query': '%a%', 'key': 'RawKey'}},
@@ -602,16 +630,19 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  {'default': {'query': '>a', 'key': 'RawKey'}},
                  check_search_text=False)
 
+  @benchmark
   def test_009_testFullTextKey(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='a'), operator='and'),
                  {'fulltext': 'a'})
 
+  @benchmark
   def test_isAdvancedSearchText(self):
     self.assertFalse(self._catalog.isAdvancedSearchText('a')) # No operator, no explicit column
     self.assertTrue(self._catalog.isAdvancedSearchText('a AND b')) # "AND" is an operator
     self.assertTrue(self._catalog.isAdvancedSearchText('default:a')) # "default" exists as a column
     self.assertFalse(self._catalog.isAdvancedSearchText('b:a')) # "b" doesn't exist as a column
 
+  @benchmark
   def test_FullTextSearchMergesQueries(self):
     """
       XXX this test is for old FullTextKey, not for MroongaFullTextKey
@@ -629,6 +660,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', old_fulltext='a b'), operator='not'), operator='and'),
                  {'old_fulltext': 'NOT (a b)'})
 
+  @benchmark
   def test_NoneValueToSimpleQuery(self):
     """
       When a SimpleQuery receives a python None value and an "=" comparison
@@ -649,6 +681,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.assertRaises(ValueError, SimpleQuery, default=None, comparison_operator='>=')
     self.assertRaises(ValueError, SimpleQuery, default=1, comparison_operator='is')
 
+  @benchmark
   def test_FullTextBooleanMode(self):
     """
       XXX this test is for old FullTextKey, not for MroongaFullTextKey
@@ -686,6 +719,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
           old_fulltext=MatchList(['+a b', 'b +a'])),
       operator='and'), operator='and'), {'old_fulltext': '+a b uid:foo'})
 
+  @benchmark
   def test_FullTextQuoting(self):
     """
       XXX this test is for old FullTextKey, not for MroongaFullTextKey
@@ -715,6 +749,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.catalog(ref_query, {
       'keyword': 'default:"hoge \\"pon" AND old_fulltext:"\\"foo\\" bar"'})
 
+  @benchmark
   def test_DefaultKeyTextRendering(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'), operator='and'),
                  {'default': 'a% b'})
@@ -724,6 +759,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
                                                ReferenceQuery(operator='like', default='a%'), operator='or'), operator='and'),
                  {'default': ['a% b', 'a%']})
 
+  @benchmark
   def test_SelectDict(self):
     # Simple case: no mapping hint, no ambiguity in table schema
     sql_expression = self.asSQLExpression({'select_dict': {'default': None}})
@@ -754,10 +790,12 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.assertTrue('ambiguous_mapping' in select_dict, select_dict)
     self.assertTrue('bar' in select_dict['ambiguous_mapping'], select_dict['ambiguous_mapping'])
 
+  @benchmark
   def test_hasColumn(self):
     self.assertTrue(self._catalog.hasColumn('uid'))
     self.assertFalse(self._catalog.hasColumn('foobar'))
 
+  @benchmark
   def test_fulltextOrderBy(self):
     # No order_by_list, resulting "ORDER BY" must be empty.
     sql_expression = self.asSQLExpression({'fulltext': 'foo'})
@@ -790,6 +828,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
       order_by_expression = sql_expression.getOrderByExpression()
       self.assertEqual('foo_fulltext__score__ %s' % direction, order_by_expression)
 
+  @benchmark
   def test_logicalOperators(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='AN ORB'),
         operator='and'),
@@ -827,10 +866,12 @@ class TestSQLCatalog(ERP5TypeTestCase):
       }
     )
 
+  @benchmark
   def test_searchTextInDictQuery(self):
     self._searchTextInDictQuery('date')
     self._searchTextInDictQuery('related_date')
 
+  @benchmark
   def test_buildOrderByList(self):
     order_by_list = self._catalog.buildOrderByList(
       sort_on='default',
@@ -846,6 +887,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     )
     self.assertEqual(order_by_list, [['default', 'DESC', 'INT']])
 
+  @benchmark
   def test_selectSyntaxConstraint(self):
     buildSQLQuery = self._catalog.buildSQLQuery
     # Verify SQLCatalog accepts "count(*)" in select_list, which results in
@@ -864,8 +906,22 @@ class TestSQLCatalog(ERP5TypeTestCase):
 #print catalog(sort_on=[('source_title', )], check_search_text=False)
 #print catalog(query=ComplexQuery(Query(source_title='foo'), Query(source_title='bar')), sort_on=[('source_title', ), ('source_title_1', )], check_search_text=False)
 
+
+class TestSQLCatalogWithCatalogSQLQuote(TestSQLCatalogWithDefaultSQLQuote):
+
+  def afterSetUp(self):
+    self._catalog = DummyCatalog('dummy_catalog')
+    self._catalog.getSearchResultsMethod = lambda: type(
+      "dummy", (), {"connection_id": "erp5_sql_connection"})()
+
+  def asSQLExpression(self, kw, **build_entire_query_kw):
+    entire_query = self._catalog.buildEntireQuery(kw, **build_entire_query_kw)
+    return entire_query.asSQLExpression(self._catalog, False, 'erp5_sql_connection')
+
+
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalog))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalogWithCatalogSQLQuote))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestSQLCatalogWithDefaultSQLQuote))
   return suite
 
