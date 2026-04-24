@@ -15,8 +15,6 @@
     // MatrixBox is often used for price tables or code tables. So it is always
     // useful for end users to display its contents.
     if (field.type === "MatrixBox") {return true; }
-    // GadgetField renders its own content via sub-gadget, should always display
-    if (field.type === "GadgetField") {return true; }
     // hidden fields should not be obviously rendered
     if (field.hidden === 1) {return false; }
     // empty default value must not be displayed
