@@ -73,7 +73,6 @@ import PIL.Image
 import PyPDF2
 from six.moves import range
 from OFS.Image import Pdata
-from Products.ERP5Form.Selection import Selection
 
 QUIET = 0
 
