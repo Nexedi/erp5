@@ -414,7 +414,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     self.portal.PostModule_createHTMLPostForSupportRequest(
         follow_up=support_request.getRelativeUrl(),
         predecessor=None,
-        data="<p>look <script>alert('haha')</script></p>",
+        data=b"<p>look <script>alert('haha')</script></p>",
         file=FileUpload(b"the text content"),
         source_reference="xxx-message-id",
         web_site_relative_url=self.getWebSite().getRelativeUrl(),
