@@ -146,10 +146,11 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
     """
       Convert text using portal_transforms or oood
     """
-    # `text_content` not renamed as parameter for backward compaptibility
-    data = text_content
-    if data is None:
-      data = self.getData()
+    if text_content is None:
+      # Note: we do not use `data` here because `getTextContent` is overidden
+      # in some cases, for instance on EmailDocument.
+      text_content = self.getTextContent()
+
     # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
     # web_page that have neither content_type nor text_format. Migration
     # should be done to make all web page having content_type property
@@ -158,11 +159,12 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
       format = 'html' # Force safe_html
     if not format:
       # can return document without conversion
-      return src_mimetype, data
+      return src_mimetype, text_content
+
     portal = self.getPortalObject()
     mime_type = portal.mimetypes_registry.lookupExtension('name.%s' % format)
     original_mime_type = mime_type = str(mime_type)
-    if data:
+    if text_content:
       kw['format'] = format
       convert_kw = {}
       # PortalTransforms does not accept empty values for 'encoding' parameter
@@ -174,6 +176,7 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
         if mime_type == 'text/html':
           mime_type = 'text/x-html-safe'
         if src_mimetype != "image/svg+xml":
+          data = text_content
           if not isinstance(data, bytes):
             data = str2bytes(data)
           result = portal_transforms.convertToData(mime_type, data,
@@ -187,7 +190,7 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
                                   'from %r to %s: %r' %
                                   (src_mimetype, mime_type, self))
         else:
-          result = data
+          result = text_content
         if format in VALID_IMAGE_FORMAT_LIST:
           # Include extra parameter for image conversions
           temp_image = self.portal_contributions.newContent(
