@@ -42,8 +42,7 @@ for image_url in image_url_list:
 
         # XXX: we do check if "data" methods exists on pretending to be Document portal types
         # we need a way to do this by introspection
-        if ((getattr(document, "getData", None) is not None and document.getData() not in MARKER) or \
-           (getattr(document, "getBaseData", None) is not None and document.getBaseData() not in MARKER)):
+        if (getattr(document, "getData", None) is not None) and (document.getData() not in MARKER):
           if 'display' in convert_kw.keys():
             # conversion script aggregate all possible display options into a list
             convert_kw['display_list'] = [convert_kw.pop('display')]
