@@ -255,7 +255,15 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     # XXX-Titouan: that means we might end up with same conversion twice
     # in the cache, if two format give the same result.
     if self.hasConversion(format=format, **kw):
-      return self.getConversion(format=format, **kw)
+      mime, data = self.getConversion(format=format, **kw)
+      if format in VALID_TEXT_FORMAT_LIST:
+        # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
+        # here mostly as a convenient way to decode with the encoding from BOM
+        data = data.decode(guessEncodingFromText(data) or 'ascii')
+        if six.PY2 and isinstance(data, six.text_type):
+          data = unicode2str(data)
+
+      return mime, data
 
     # We deal with three different format variables: `original_format`, as
     # requested by the caller, which is always the key used for cache ;
@@ -357,6 +365,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       data = data.decode(guessEncodingFromText(data) or 'ascii')
       if six.PY2 and isinstance(data, six.text_type):
         data = unicode2str(data)
+
     return mime, data
 
   security.declareProtected(Permissions.ModifyPortalContent,
