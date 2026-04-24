@@ -37,22 +37,21 @@ from erp5.component.document.Document import Document, ConversionError, _MARKER,
 from erp5.component.document.File import File
 from erp5.component.module.WebDAVSupport import TextContent
 from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
+from erp5.component.mixin.TextContentMigrationMixin import TextContentMigrationMixin
 from io import BytesIO
 from string import Template
 
 # Mixin Import
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
-from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
-from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes, str2unicode, unicode2str, publishable
+from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str, publishable
 
 from lxml import html as etree_html
-from lxml import etree
 
-class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContentHistoryMixin,
-                                                            TextContent, File):
-  """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
-  and ITextConvertable
+class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
+  """
+  A TextDocument implements IDocument, IFile, ICachedconvertable, ITextConvertable
+  and ITextDocument.
   """
 
   meta_type = 'ERP5 Text Document'
@@ -72,7 +71,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                     , PropertySheet.Document
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
-                    , PropertySheet.TextDocument
+                    , PropertySheet.SubstitutableTextDocument
                     , PropertySheet.Data
                     , PropertySheet.Reference
                     )
@@ -147,6 +146,10 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     """
       Convert text using portal_transforms or oood
     """
+    # `text_content` not renamed as parameter for backward compaptibility
+    data = text_content
+    if data is None:
+      data = self.getData()
     # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
     # web_page that have neither content_type nor text_format. Migration
     # should be done to make all web page having content_type property
@@ -155,14 +158,11 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       format = 'html' # Force safe_html
     if not format:
       # can return document without conversion
-      return src_mimetype, self.getTextContent()
+      return src_mimetype, data
     portal = self.getPortalObject()
     mime_type = portal.mimetypes_registry.lookupExtension('name.%s' % format)
     original_mime_type = mime_type = str(mime_type)
-    if text_content is None:
-      # check if document has set text_content and convert if necessary
-      text_content = self.getTextContent()
-    if text_content:
+    if data:
       kw['format'] = format
       convert_kw = {}
       # PortalTransforms does not accept empty values for 'encoding' parameter
@@ -174,7 +174,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         if mime_type == 'text/html':
           mime_type = 'text/x-html-safe'
         if src_mimetype != "image/svg+xml":
-          data = text_content
           if not isinstance(data, bytes):
             data = str2bytes(data)
           result = portal_transforms.convertToData(mime_type, data,
@@ -188,7 +187,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                                   'from %r to %s: %r' %
                                   (src_mimetype, mime_type, self))
         else:
-          result = text_content
+          result = data
         if format in VALID_IMAGE_FORMAT_LIST:
           # Include extra parameter for image conversions
           temp_image = self.portal_contributions.newContent(
@@ -215,7 +214,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                                                **substitution_method_parameter_dict)
       return original_mime_type, result
     else:
-      # text_content is not set, return empty string instead of None
+      # data is not set, return empty string instead of None
       return original_mime_type, ''
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
@@ -235,47 +234,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
           return str(base_list[0])
     return Document.getContentBaseURL(self)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBaseData')
-  def setBaseData(self, value):
-    """Store base_data into text_content
-    """
-    self._setTextContent(bytes2str(value))
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
-  _setBaseData = setBaseData
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_baseSetBaseData')
-  _baseSetBaseData = _setBaseData
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBaseContentType')
-  def setBaseContentType(self, value):
-    """store value into content_type
-    """
-    self._setContentType(value)
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseContentType')
-  _setBaseContentType = setBaseContentType
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_baseSetBaseContentType')
-  _baseSetBaseContentType = _setBaseContentType
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
-  @publishable
-  def getBaseData(self, default=_MARKER):
-    self._checkConversionFormatPermission(None)
-    if default is _MARKER:
-      text_content = self.getTextContent()
-    else:
-      text_content = self.getTextContent(default=default)
-    if six.PY3 and text_content and text_content is not default:
-      text_content = str2bytes(text_content)
-    return text_content
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-  @publishable
-  def hasBaseData(self):
-    return self.hasTextContent()
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
   def getContentType(self, default=_MARKER): # pylint: disable=arguments-differ
     """Backward compatibility, read content_type
@@ -294,110 +252,20 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       else:
         return self._baseGetContentType(default)
 
-  # base_convertable support
-  security.declareProtected(Permissions.AccessContentsInformation, 'isSupportBaseDataConversion')
-  def isSupportBaseDataConversion(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'isSupportTextConversion')
+  def isSupportTextConversion(self):
     """
+    Generally, a Text Document is convertable to text format.
     """
     return True
 
-  def _convertToBaseFormat(self):
-    """Conversion to base format for TextDocument consist
-    to convert file content into utf-8.
-    If the data embeds charset information, this information is updated
-    to the new (utf-8) charset. This supports XML and HTML.
-    """
-    def guessCharsetAndConvert(document, text_content, content_type):
-      # type: (TextDocument, bytes, str) -> Tuple[bytes, str]
-      """
-      return encoded content_type and message if encoding
-      is not utf-8
-      """
-      codec = guessEncodingFromText(text_content, content_type)
-      if codec is not None:
-        try:
-          text_content = text_content.decode(codec).encode('utf-8')
-        except (UnicodeDecodeError, LookupError):
-          message = 'Conversion to base format with codec %r fails' % codec
-          # try again with another guesser based on file command
-          codec = guessEncodingFromText(text_content, 'text/plain')
-          if codec is not None:
-            try:
-              text_content = text_content.decode(codec).encode('utf-8')
-            except (UnicodeDecodeError, LookupError):
-              message = 'Conversion to base format with codec %r fails'\
-                                                                      % codec
-            else:
-              message = 'Conversion to base format with codec %r succeeds'\
-                                                                      % codec
-        else:
-          message = 'Conversion to base format with codec %r succeeds'\
-                                                                      % codec
-      else:
-        message = 'Conversion to base format without codec fails'
-      return text_content, message
-
-    content_type = self.getContentType() or DEFAULT_CONTENT_TYPE
-    data = bytes(self.getData())
-    if content_type.endswith('xml'):
-      try:
-        tree = etree.fromstring(data)
-        data = etree.tostring(tree, encoding='utf-8', xml_declaration=True)
-        message = 'Conversion to base format succeeds'
-      except etree.XMLSyntaxError: # pylint: disable=catching-non-exception
-        message = 'Conversion to base format without codec fails'
-    elif content_type == 'text/html':
-      re_match = self.charset_parser.search(data)
-      message = 'Conversion to base format succeeds'
-      if re_match is not None:
-        charset = re_match.group('charset').decode('ascii')
-        try:
-          # Use encoding in html document
-          data = data.decode(charset).encode('utf-8')
-        except (UnicodeDecodeError, LookupError):
-          # Encoding read from document is wrong
-          data, message = guessCharsetAndConvert(self, data, content_type)
-        else:
-          message = 'Conversion to base format with charset %r succeeds'\
-                                                                  % charset
-          if charset.lower() != 'utf-8':
-            charset = 'utf-8' # Override charset if convertion succeeds
-            # change charset value in html_document as well
-            def subCharset(matchobj):
-              keyword = matchobj.group('keyword')
-              charset = matchobj.group('charset')
-              if not (keyword or charset):
-                # no match, return same string
-                return matchobj.group(0)
-              elif keyword:
-                # if keyword is present, replace charset just after
-                return keyword + b'utf-8'
-            data = self.charset_parser.sub(subCharset, data)
-      else:
-        data, message = guessCharsetAndConvert(self, data, content_type)
-    else:
-      # generaly text/plain
-      try:
-        # if succeeds, not need to change encoding
-        # it's already utf-8
-        data.decode('utf-8')
-      except (UnicodeDecodeError, LookupError):
-        data, message = guessCharsetAndConvert(self, data, content_type)
-      else:
-        message = 'Conversion to base format succeeds'
-    self._setBaseData(data)
-    self._setBaseContentType(content_type)
-    return message
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
   def getTextContent(self, default=_MARKER):
-    """Overridden method to check permission to access content in raw format
+    """
+    Overridden method to check permission to access content in raw format.
     """
     self._checkConversionFormatPermission(None)
-    if default is _MARKER:
-      return self._baseGetTextContent()
-    else:
-      return self._baseGetTextContent(default)
+    return self._getTextContent(default)
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
@@ -422,25 +290,16 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
               'Usage of text_format is deprecated, use content_type instead')
     return self._setContentType(value)
 
-  def getData(self, default=_MARKER):
-    # type: (bytes) -> bytes | PData
-    """getData must returns original content but TextDocument accepts
-    data or text_content to store original content.
-    Fallback on text_content property if data is not defined
+  def _getData(self, default=_MARKER):
     """
-    if not self.hasData():
-      if default is _MARKER:
-        data = self._baseGetTextContent()
-      else:
-        data = self._baseGetTextContent(default)
-        if data is default:
-          return default
-      return str2bytes(data) if data is not None else None
+    Note: `File.getData` coerses to bytes.
+    """
+    if default is _MARKER:
+      data = File.getData(self)
     else:
-      if default is _MARKER:
-        return File.getData(self)
-      else:
-        return File.getData(self, default)
+      data = File.getData(self, default)
+
+    return data
 
   def updateContentMd5(self):
     """Update md5 checksum from the original file
@@ -448,4 +307,5 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     Overriden here because CachedConvertableMixin version does not
     understand the dynamic nature TextDocument's data.
     """
-    self._setContentMd5(md5(self.getData() or b'').hexdigest())
+    data = File.getData(self) or b''
+    self._setContentMd5(md5(data).hexdigest())

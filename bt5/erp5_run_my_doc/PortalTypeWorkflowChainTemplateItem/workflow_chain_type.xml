@@ -5,6 +5,6 @@
  </chain>
  <chain>
   <type>Test Page</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

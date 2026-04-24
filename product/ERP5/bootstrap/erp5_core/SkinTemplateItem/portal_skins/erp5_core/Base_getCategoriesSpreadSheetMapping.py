@@ -55,8 +55,22 @@ if not (content_type.startswith('application/vnd.sun.xml')
       portal_type='OOo Document',
       temp_object=True,
       data=import_file.read(),
-      content_type=content_type)
-  tmp_ooo.convertToBaseFormat()
+  )
+
+  if content_type != "unknown":
+    tmp_ooo.setContentType(content_type)
+
+  try:
+    tmp_ooo.edit(filename=import_file.filename)
+  # Oftentimes, especially in Business Configurations, import_file is a ByteIO,
+  # which has no filename
+  except AttributeError:
+    pass
+
+  # Usually triggered by Interaction Workflow, but not for temporary documents.
+  # Needed here to get Content-Type in some cases (none in headers, no filename),
+  # as convert needs to know origin format.
+  tmp_ooo.updateLocalMetadataFromDocument()
   _, import_file_content = tmp_ooo.convert('ods')
   parser.openFromBytes(bytes(import_file_content))
 else:

@@ -88,14 +88,6 @@
 
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[contains(text(), 'External Processing Workflow')]</td>
-  <td></td>
-</tr>
-
-
-
-<tr>
   <td>verifyElementPresent</td>
   <td>//h1[contains(text(), 'Document Publication Workflow')]</td>
   <td></td>
