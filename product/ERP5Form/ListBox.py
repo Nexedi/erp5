@@ -2498,13 +2498,13 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 display_value = original_value
               else:
                 display_value = None
-            if isinstance(editable_field.getRecursiveTemplateField().widget,
-                          Widget.MultiItemsWidget) and \
-                not isinstance(display_value, list):
-              if display_value:
-                display_value = [display_value]
-              else:
-                display_value = []
+            if display_value \
+                and isinstance(
+                  editable_field.getRecursiveTemplateField().widget,
+                  Widget.MultiItemsWidget) \
+                and not isinstance(display_value, list):
+              display_value = [display_value]
+
           # If error on current field, we should display message
           if key in error_dict:
             error_text = error_dict[key].error_text
