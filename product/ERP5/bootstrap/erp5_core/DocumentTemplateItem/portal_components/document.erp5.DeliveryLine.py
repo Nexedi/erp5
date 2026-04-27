@@ -386,7 +386,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
     portal = self.getPortalObject()
     delivery_module = getattr(portal, delivery_builder.getDeliveryModule())
     delivery_to_update_list = [delivery]
-    delivery_list = delivery_builder._processDeliveryGroup(
+    delivery_and_movement_group_list = delivery_builder._processDeliveryGroup(
       delivery_module,
       root_group_node,
       delivery_builder.getDeliveryMovementGroupList(),
@@ -394,8 +394,8 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
       divergence_list=divergence_list,
       force_update=1)
 
-    new_delivery_list = [x for x in delivery_list if x != delivery]
-    if new_delivery_list:
+    new_delivery_and_movement_group_list = [x for x in delivery_and_movement_group_list if x[0] != delivery]
+    if new_delivery_and_movement_group_list:
       raise ValueError('No new deliveries shall be created')
 
     # Then, we should re-apply quantity divergence according to 'Do
