@@ -27,7 +27,7 @@
 import six
 from Products.ERP5Type.Utils import bytes2str
 
-def sqlquote(value):
+def sqlquote(value, **kw):
   # See MySQL documentation of string literals.
   # XXX: should use sql_quote__ on actual connector
   # (ex: ZMySQLDA.DA.Connection.sql_quote__).
