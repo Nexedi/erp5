@@ -478,7 +478,7 @@ class DebugTestResult:
   def _start_debugger(self, tb):
     try:
       # try ipython if available
-      import IPython
+      import IPythonX
       try:
         IPython.InteractiveShell()
         # color scheme isnt present ipython-8.0 or above.

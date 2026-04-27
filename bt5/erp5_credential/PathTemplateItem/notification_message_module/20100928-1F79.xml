@@ -35,6 +35,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77259352.4400673</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -65,6 +69,12 @@
             <value> <string>text/plain</string> </value>
         </item>
         <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>Congratulation, the creation of you new ERP5 account \'${login_name}\' is finished.\n
+Your password is \'${login_password}\'\n
+Thank you</bytes> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>credential_request-confirmation-with-password</string> </value>
         </item>
@@ -87,10 +97,8 @@
             <value> <string>Notification Message</string> </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>Congratulation, the creation of you new ERP5 account \'${login_name}\' is finished.\n
-Your password is \'${login_password}\'\n
-Thank you</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>128</int> </value>
         </item>
         <item>
             <key> <string>text_content_substitution_mapping_method_id</string> </key>
@@ -124,9 +132,15 @@ Thank you</string> </value>
             <value>
               <dictionary>
                 <item>
-                    <key> <string>notification_message_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>notification_message_workflow</string> </key>
+                    <value>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -136,6 +150,67 @@ Thank you</string> </value>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1032.34077.7798.38536</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple/>
+                          <state>
+                            <tuple>
+                              <float>1777259352.442254</float>
+                              <string>GMT+2</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -167,7 +242,7 @@ Thank you</string> </value>
                       <value>
                         <object>
                           <klass>
-                            <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
                           </klass>
                           <tuple/>
                           <state>
@@ -205,7 +280,7 @@ Thank you</string> </value>
                       <key> <string>time</string> </key>
                       <value>
                         <object>
-                          <klass> <reference id="3.1"/> </klass>
+                          <klass> <reference id="4.1"/> </klass>
                           <tuple/>
                           <state>
                             <tuple>

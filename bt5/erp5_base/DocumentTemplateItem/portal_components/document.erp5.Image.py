@@ -82,6 +82,7 @@ class Image(TextConvertableMixin, File, OFSImage):
   portal_type = 'Image'
 
   # Default attribute values
+  data = b'' # A hack required to use OFS.Image.index_html without calling OFS.Image.__init__
   width = 0
   height = 0
 
@@ -119,7 +120,6 @@ class Image(TextConvertableMixin, File, OFSImage):
         image = PIL.Image.open(BytesIO(bytes(self.data)))
       except IOError:
         width = height = -1
-        content_type = 'application/unknown'
       else:
         width, height = image.size
         content_type = image.get_format_mimetype()
@@ -129,7 +129,9 @@ class Image(TextConvertableMixin, File, OFSImage):
           content_type = mimetype_list[0].normalized()
     self.height = height
     self.width = width
-    self._setContentType(content_type)
+
+    if content_type:
+      self._setContentType(content_type)
 
   def _upgradeImage(self):
     """
@@ -150,8 +152,13 @@ class Image(TextConvertableMixin, File, OFSImage):
     if not hasattr(aq_base(self), 'data') and hasattr(aq_base(self), '_data'):
       self.data = self._data
 
-    # Make sure size is defined
-    size = len(self.data)
+    # We want to match is data is None in itself, or simply undefined (equivalent)
+    data = getattr(aq_base(self), 'data', None)
+    if data is None:
+      size = 0
+    else:
+      size = len(data)
+
     if getattr(aq_base(self), 'size', None) != size:
       self.size = size
 
