@@ -52,7 +52,7 @@ class IOperator(Interface):
         Value to render as a string for use in a Search Text expression.
     """
 
-  def asSQLExpression(column, value_list, only_group_columns):
+  def asSQLExpression(column, value_list, only_group_columns, sql_connection_id):
     """
       Construct a SQLExpression instance from given column and value, with
       contained glue text.
