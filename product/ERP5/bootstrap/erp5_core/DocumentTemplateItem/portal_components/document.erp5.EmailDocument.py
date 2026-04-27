@@ -191,8 +191,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
                             'isSupportTextConversion')
   @publishable
   def isSupportTextConversion(self):
-    """
-    """
     return False
 
   # Overriden methods
