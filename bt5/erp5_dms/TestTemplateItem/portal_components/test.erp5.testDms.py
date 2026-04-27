@@ -1845,6 +1845,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     filename = 'broken_html.html'
     file_object = self.makeFileUpload(filename)
     web_page.edit(file=file_object)
+    raise NotImplementedError("Titouan Test")
     assert web_page.convert('html')[1]
 
   def test_safeHTML_unknown_codec(self):
