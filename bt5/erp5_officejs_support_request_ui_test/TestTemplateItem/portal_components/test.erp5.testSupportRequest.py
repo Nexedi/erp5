@@ -267,7 +267,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     self.portal.PostModule_createHTMLPostForSupportRequest(
         follow_up=support_request.getRelativeUrl(),
         predecessor=None,
-        data=b"<p>Hello !</p>",
+        data="<p>Hello !</p>",
         file=None,
         source_reference="xxx-message-id",
         web_site_relative_url=self.getWebSite().getRelativeUrl(),
@@ -305,7 +305,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     self.portal.PostModule_createHTMLPostForSupportRequest(
         follow_up=support_request.getRelativeUrl(),
         predecessor=None,
-        data=b"<p>Please look at the <b>attached file</b></p>",
+        data="<p>Please look at the <b>attached file</b></p>",
         file=FileUpload(b"the text content"),
         source_reference="xxx-message-id",
         web_site_relative_url=self.getWebSite().getRelativeUrl(),
@@ -362,7 +362,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     self.portal.PostModule_createHTMLPostForSupportRequest(
       follow_up=support_request.getRelativeUrl(),
       predecessor=None,
-      data=b"<p>Please look at the <b>attached eml file</b></p>",
+      data="<p>Please look at the <b>attached eml file</b></p>",
       file=attachement_file,
       source_reference="xxx-message-id",
       web_site_relative_url=self.getWebSite().getRelativeUrl(),
