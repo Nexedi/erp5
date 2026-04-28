@@ -290,6 +290,17 @@ class _site(threading.local):
 
 getSite, setSite = _site()
 
+def _sql_quote(value, sql_connection_id='erp5_sql_connection'):
+  return bytes2str(getSite()[sql_connection_id].sql_quote__(value))
+
+_renderer_dict = {str: _sql_quote}
+if six.PY2:
+  _renderer_dict[unicode] = _sql_quote
+else:
+  _renderer_dict[bytes] = _sql_quote
+from Products.ZSQLCatalog import registerValueRenderer
+registerValueRenderer(_renderer_dict)
+
 _missing_tools_registered = None
 
 class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCookieMixin):
