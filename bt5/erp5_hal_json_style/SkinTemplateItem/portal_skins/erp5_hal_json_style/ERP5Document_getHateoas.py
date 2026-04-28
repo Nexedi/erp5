@@ -798,6 +798,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         # in case of a dialog the form_id points to previous form, otherwise current form
         "form_id": REQUEST.get('form_id', form.id)
       }
+      request_key_prefix = 'field_%s_' % field.getId()
+      for k, v in REQUEST.form.items():
+        if str(k).startswith(request_key_prefix):
+          extra_param_dict[k] = v
+
       # Proxy listbox id is an hardcoded parameter used in relation field listbox
       # For now, keep it hardcoded, until another use case is found to provide
       # a default extra_param_dict
@@ -1796,6 +1801,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     for key, value in byteify(extra_param_json.items()):
       REQUEST.set(key, value)
+      REQUEST.form[key] = value
 
     # in case we have custom list method
     catalog_kw = {}
