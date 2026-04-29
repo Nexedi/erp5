@@ -224,13 +224,13 @@ class SqliteComparisonOperator(MonovaluedComparisonOperator):
       ")"
     )
 
-  def renderValue(self, value):
+  def renderValue(self, value, renderer):
     boolean_splitter = re.compile(r'(\s|\(.+?\)|".+?")')
     boolean_detector = re.compile(r'(^[+-]|^".+"$|^\(.+\)$|.+\*$)')
     if isinstance(value, list_type_list):
       value, = value
     if not value:
-      return self._renderValue(value)
+      return self._renderValue(value, renderer)
     boolean_tokens = []
     normal_tokens = []
     for token in boolean_splitter.split(value):
@@ -253,9 +253,9 @@ class SqliteComparisonOperator(MonovaluedComparisonOperator):
       sqlite_query += " AND ".join(boolean_tokens)
     if not sqlite_query:
       sqlite_query = value
-    return self._renderValue(sqlite_query)
+    return self._renderValue(sqlite_query, renderer = renderer)
 
-  def asSQLExpression(self, column, value_list, only_group_columns):
+  def asSQLExpression(self, column, value_list, only_group_columns, renderer):
     """
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
@@ -266,7 +266,7 @@ class SqliteComparisonOperator(MonovaluedComparisonOperator):
     match_string = self.where_expression_format_string % {
       'table': table,
       'table_fts': table_fts,
-      'value_list': self.renderValue(value_list)
+      'value_list': self.renderValue(value_list, renderer)
     }
     return SQLExpression(
       self,
