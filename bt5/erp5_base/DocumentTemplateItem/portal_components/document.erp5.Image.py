@@ -388,7 +388,11 @@ class Image(TextConvertableMixin, File, OFSImage):
     else:
       parameter_list.append('-')
 
-    data = bytes(self.getData())
+    data = self.getData()
+    if data is None:
+      return None
+    data = bytes(data)
+
     if self.getContentType() == "image/svg+xml":
       data = transformUrlToDataURI(data)
 
