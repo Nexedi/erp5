@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.Database.DA import Connection, DB
+from Products.Database.DA import Connection
 from Products.ERP5Type.Globals import InitializeClass
 from App.special_dtml import HTMLFile
 from Acquisition import aq_parent
@@ -59,16 +59,22 @@ class ActivityConnection(Connection):
     permission_type = 'Add Z MySQL Database Connections'
 
     def factory(self):
-        return ActivityDB
+        from Products.Database.db import DB as CurrentDB
+        cached = _activity_db_cache
+        if cached is None or cached.__bases__[0] is not CurrentDB:
+            cached = type('ActivityDB', (CurrentDB,), _ACTIVITY_DB_ATTRS)
+            globals()['_activity_db_cache'] = cached
+        return cached
 
 InitializeClass(ActivityConnection)
 
 
-class ActivityDB(DB):
+def _isolation_level(self):
+    if not self.innodb_locks_unsafe_for_binlog:
+        return 'READ COMMITTED'
 
-    _sort_key = chr(255)
-
-    @property
-    def isolation_level(self):
-        if not self.innodb_locks_unsafe_for_binlog:
-            return 'READ COMMITTED'
+_ACTIVITY_DB_ATTRS = {
+    '_sort_key': chr(255),
+    'isolation_level': property(_isolation_level),
+}
+_activity_db_cache = None

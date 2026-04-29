@@ -1,20 +1,45 @@
-import os
-import importlib
-from zLOG import LOG
+from collections import defaultdict
+from weakref import WeakKeyDictionary
+import transaction
+import Shared.DC.ZRDB.Connection
+from DateTime import DateTime
 
-erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+database_connection_pool = defaultdict(WeakKeyDictionary)
+
+class Connection(Shared.DC.ZRDB.Connection.Connection):
+    connect_on_load = False
+
+    def factory(self):
+        raise NotImplementedError
+
+    def manage_beforeDelete(self, item, container):
+        database_connection_pool.get(self._p_oid, {}).pop(self._p_jar, None)
+
+    def connect(self, s):
+        self._v_connected = ''
+        if not self._p_oid:
+            transaction.savepoint(optimistic=True)
+        pool = database_connection_pool[self._p_oid]
+        connection = pool.get(self._p_jar)
+        DB = self.factory()
+        if connection.__class__ is not DB or connection._connection != s:
+            connection = pool[self._p_jar] = DB(s)
+        self._v_database_connection = connection
+        self._v_connected = DateTime()
+        return self
+
+    def sql_quote__(self, v, escapes={}):
+        try:
+            connection = self._v_database_connection
+        except AttributeError:
+            self.connect(self.connection_string)
+            connection = self._v_database_connection
+        return connection.string_literal(v)
 
 
+class DeferredConnection(Connection):
+    pass
 
-if erp5_catalog_storage == "erp5_mysql_innodb_catalog":
-    backend_module = "Products.ZMySQLDA.DA"
-elif erp5_catalog_storage == "erp5_sqlite_catalog":
-    backend_module = "Products.ZSQLiteDA.DA"
-else:
-    raise ImportError(f"Unsupported DB type {erp5_catalog_storage}")
 
-_backend = importlib.import_module(backend_module)
-
-for attr in dir(_backend):
-    if not attr.startswith("_"):
-        globals()[attr] = getattr(_backend, attr)
+class DB:
+    pass
