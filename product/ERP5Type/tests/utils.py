@@ -414,7 +414,6 @@ def _recreateMemcachedTool(portal):
 
 # test runner shared functions
 
-from Products.Database.db import DB
 class getMySQLArguments(object):
   """Returns arguments to pass to mysql by heuristically converting the
   connection string.
@@ -424,6 +423,7 @@ class getMySQLArguments(object):
     self = object.__new__(cls)
     self._connection = os.getenv('erp5_sql_connection_string') or 'test test'
     self.conv = None
+    from Products.Database.db import DB
     parse_connection_string_function = six.get_unbound_function(DB._parse_connection_string)
     parse_connection_string_function(self)
     return ''.join('-%s%s ' % (self.args_dict[k], v)
