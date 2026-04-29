@@ -15,6 +15,13 @@ from ZODB.POSException import ConflictError
 import time
 import unicodedata
 
+_icon_xlate = {
+    'int': 'int', 'integer': 'int', 'smallint': 'int', 'bigint': 'int',
+    'real': 'float', 'float': 'float', 'double': 'float', 'numeric': 'float', 'decimal': 'float',
+    'text': 'text', 'varchar': 'text', 'char': 'text', 'clob': 'text',
+    'blob': 'bin',
+    'date': 'date', 'datetime': 'datetime', 'timestamp': 'datetime', 'time': 'time',
+}
 
 # ---------------------------------------------------------------------------
 # Type converters
@@ -224,12 +231,16 @@ class DB(TM):
         cursor = self.db.execute("PRAGMA table_info('%s')" % table_name)
         result = []
         for cid, name, col_type, notnull, default, pk in cursor.fetchall():
+            short_type = col_type.lower().split('(')[0].strip()
+            icon = _icon_xlate.get(short_type, 'what')
             result.append({
                 'Name': name,
                 'Type': col_type,
                 'Nullable': not notnull,
                 'Default': default,
                 'PrimaryKey': bool(pk),
+                'Icon': icon,
+                'Description': col_type,
             })
         return result
 
