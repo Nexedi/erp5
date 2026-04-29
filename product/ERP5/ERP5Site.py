@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-##############################################################################
-#
-# Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
-#
 # This software is subject to the provisions of the Zope Public License,
 # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
 # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
@@ -98,6 +93,10 @@ def manage_addERP5Site(self,
   '''
   Adds a portal instance.
   '''
+  import Products.Database.db
+  import Products.Database.DA
+  Products.Database.db.configure(erp5_catalog_storage)
+  Products.Database.DA.configure(erp5_catalog_storage)
   gen = ERP5Generator()
   id = str(id).strip()
   p = gen.create(self,
@@ -2618,15 +2617,25 @@ class ERP5Generator(PortalGenerator):
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
+  import Products.Database.db
+  import Products.Database.DA
   AppInitializer.initialize = AppInitializer_initialize
-  self.initialize()
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
+    Products.Database.db.configure('erp5_mysql_innodb_catalog')
+    Products.Database.DA.configure('erp5_mysql_innodb_catalog')
+    self.initialize()
     return
+
+
+  Products.Database.db.configure(kw['erp5_catalog_storage'])
+  Products.Database.DA.configure(kw['erp5_catalog_storage'])
+  self.initialize()
   meta_type = ERP5Site.meta_type
   for _ in self.getApp().objectIds(meta_type):
     return
+
 
   # We defer the call to manage_addERP5Site via TimerService because:
   # - we use ZPublisher so that get_request() works
@@ -2644,6 +2653,8 @@ def initialize(self):
       default_kw['erp5_catalog_storage'] = erp5_catalog_storage
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
+
+
     # The lock is to avoid that multiple zopes try to create a site when
     # they're started at the same time, because this is a quite long operation
     # (-> high probably of conflict with a lot of wasted CPU).
