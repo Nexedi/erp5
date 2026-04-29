@@ -88,14 +88,19 @@ class DeferredStyleTestCase(ERP5TypeTestCase, ZopeTestCase.Functional):
         password=self.password,
       )
       login.validate()
+    preferred_document_conversion_server_url_list = \
+      self.portal.portal_preferences.getPreferredDocumentConversionServerUrlList()
     system_preference = self.portal.portal_preferences._getOb('syspref', None)
     if system_preference is None:
       system_preference = self.portal.portal_preferences.newContent(
               id="syspref",
               portal_type="System Preference")
       system_preference.enable()
-    # Fallback to former behaviour
-    system_preference.edit(preferred_deferred_report_stored_as_document=False)
+    system_preference.edit(
+      # Fallback to former behaviour
+      preferred_deferred_report_stored_as_document=False,
+      preferred_document_conversion_server_url_list=preferred_document_conversion_server_url_list,
+    )
     # add categories
     if not getattr(self.portal.portal_categories.classification, 'collaborative', None):
       self.portal.portal_categories.classification.newContent(id="collaborative")
