@@ -1,0 +1,7 @@
+<dtml-var standard_html_header>
+
+  <dtml-var Type><dtml-if table_owner>
+   owned by <dtml-var table_owner></dtml-if>
+  <dtml-if remarks><br><dtml-var remarks></dtml-if>
+
+<dtml-var standard_html_footer>
