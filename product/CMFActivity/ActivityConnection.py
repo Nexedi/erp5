@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ZMySQLDA.DA import Connection, DB
+from Products.Database.DA import Connection
 from Products.ERP5Type.Globals import InitializeClass
 from App.special_dtml import HTMLFile
 from Acquisition import aq_parent
@@ -58,17 +58,17 @@ class ActivityConnection(Connection):
     # reuse the permission from ZMySQLDA
     permission_type = 'Add Z MySQL Database Connections'
 
+
     def factory(self):
+        from Products.Database.DA import DB
+        class ActivityDB(DB):
+            _sort_key = chr(255)
+            @property
+            def isolation_level(self):
+                if not self.innodb_locks_unsafe_for_binlog:
+                    return 'READ COMMITTED'
         return ActivityDB
 
 InitializeClass(ActivityConnection)
 
 
-class ActivityDB(DB):
-
-    _sort_key = chr(255)
-
-    @property
-    def isolation_level(self):
-        if not self.innodb_locks_unsafe_for_binlog:
-            return 'READ COMMITTED'
