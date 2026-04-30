@@ -57,19 +57,16 @@ class ActivityConnection(Connection):
 
     # reuse the permission from ZMySQLDA
     permission_type = 'Add Z MySQL Database Connections'
-    from Products.Database.DA import DB
-    class ActivityDB(DB):
-        _sort_key = chr(255)
-        @property
-        def isolation_level(self):
-            if not self.innodb_locks_unsafe_for_binlog:
-                return 'READ COMMITTED'
+
 
     def factory(self):
         from Products.Database.DA import DB
-        ActivityDB = self.__class__.ActivityDB
-        if ActivityDB.__bases__[0] is not DB:
-            ActivityDB.__bases__ = (DB,)
+        class ActivityDB(DB):
+            _sort_key = chr(255)
+            @property
+            def isolation_level(self):
+                if not self.innodb_locks_unsafe_for_binlog:
+                    return 'READ COMMITTED'
         return ActivityDB
 
 InitializeClass(ActivityConnection)
