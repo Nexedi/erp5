@@ -26,6 +26,8 @@
 ##############################################################################
 from __future__ import print_function
 import base64
+import contextlib
+import datetime
 import six
 if six.PY2:
   from base64 import encodestring as base64_encodebytes
@@ -41,6 +43,7 @@ import random
 import pprint
 from time import time
 import unittest
+import mock
 import six.moves.urllib as urllib
 from six.moves.urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
@@ -317,6 +320,23 @@ class TestOAuth2(ERP5TypeTestCase):
       parent_value.manage_delObjects(ids=id_list)
     self.tic()
     super(TestOAuth2, self).beforeTearDown()
+
+  @contextlib.contextmanager
+  def future_time_context(self, delta):
+    class MockDatetime(datetime.datetime):
+      @classmethod
+      def now(cls, tz=None):
+        return datetime.datetime.now(tz=tz) + delta
+
+    def mocked_time():
+      return time() + delta.total_seconds() * 86400
+
+    with mock.patch('jwt.api_jwt.datetime', MockDatetime), \
+        mock.patch(
+          'erp5.component.document.erp5_version.OAuth2AuthorisationServerConnector.time',
+            side_effect=mocked_time
+        ):
+      yield
 
   def _query(
     self,
@@ -1197,6 +1217,105 @@ class TestOAuth2(ERP5TypeTestCase):
     )
     # Check that logged_out page does not error-out
     self.assertLess(status, 400, (parsed_location, status, header_dict))
+
+  def test_expired_tokens(self):
+    injectUsernamePassword = partial(
+      self._injectUsernamePassword,
+      username_field_id=ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME,
+      password_field_id=ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME,
+    )
+    self.__query_trace = []
+    portal = self.portal
+    portal_url = portal.absolute_url() + '/'
+    portal_path = portal.getPath()
+    parsed_login_form_location, _, _ = self.assertIsRedirect(
+      self._query(
+        path=portal_path + '/index_html',
+        method='GET',
+      ),
+      reference_location=portal_url + 'login_form',
+    )
+    login_form_query = urlencode(
+      parse_qsl(parsed_login_form_location.query) + [
+        # Pick the local client_id, for simplicity
+        ('client_id', self.__oauth2_local_client_connector_value.getReference()),
+      ],
+    )
+    cookie_jar = {}
+    _, _, cookie_dict, _ = query_result = self._query(
+      path=parsed_login_form_location.path,
+      method='GET',
+      query=login_form_query,
+      cookie_dict=cookie_jar,
+    )
+    login_state_cookie_name, = cookie_dict
+    cookie_jar.update(cookie_dict)
+
+    parsed_location, _, cookie_dict = self.assertIsRedirect(
+      self._submitDialog(
+        query_result,
+        value_callback=injectUsernamePassword,
+        cookie_dict=cookie_jar,
+      ),
+      reference_location=portal_url,
+    )
+    del cookie_jar[login_state_cookie_name]
+    cookie_jar.update((
+        (key, value)
+        for key, value in six.iteritems(cookie_dict)
+        if key in (
+          _TEST_ACCESS_COOKIE_NAME,
+          _TEST_REFRESH_COOKIE_NAME,
+        )
+      ))
+    status, _, _, _ = self._query(
+      path=parsed_location.path,
+      method='GET',
+      query=parsed_location.query,
+      cookie_dict=cookie_jar,
+    )
+    self.assertEqual(status, 200)
+
+    # when access token is expired, but not refresh token, we get new cookies
+    with self.future_time_context(datetime.timedelta(days=25)):
+      status, _, cookie_dict, _ = self._query(
+        path=parsed_location.path,
+        method='GET',
+        query=parsed_location.query,
+        cookie_dict=cookie_jar,
+      )
+    self.assertEqual(status, 200)
+    self.assertTrue(cookie_dict)
+    expired_cookie_jar = cookie_jar.copy()
+    cookie_jar.update((
+      (key, value)
+      for key, value in six.iteritems(cookie_dict)
+      if key in (
+        _TEST_ACCESS_COOKIE_NAME,
+        _TEST_REFRESH_COOKIE_NAME,
+      )
+    ))
+
+    # with the new cookies we can login
+    with self.future_time_context(datetime.timedelta(days=60)):
+      status, _, _, _ = self._query(
+        path=parsed_location.path,
+        method='GET',
+        query=parsed_location.query,
+        cookie_dict=cookie_jar,
+      )
+      self.assertEqual(status, 200)
+
+    # with the old expired cookies we cannot
+    with self.future_time_context(datetime.timedelta(days=60)):
+      self.assertIsRedirect(
+        self._query(
+          path=portal_path + '/index_html',
+          method='GET',
+          cookie_dict=expired_cookie_jar,
+        ),
+        reference_location=portal_url + 'login_form',
+      )
 
   @_printQueryTraceOnFailure
   def test_multipleLoginForm(self):
