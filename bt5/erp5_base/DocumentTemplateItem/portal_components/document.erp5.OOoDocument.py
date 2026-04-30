@@ -250,116 +250,102 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     # If no conversion asked (format empty), return raw data
     if not format:
       return self.getContentType(), self.getData()
+    # Rewrite early for cache optimization
+    if format in ('txt', 'text', 'text-content'):
+      format = 'txt'
 
-    # Use cache early: if document was converted before, return it
-    # XXX-Titouan: that means we might end up with same conversion twice
-    # in the cache, if two format give the same result.
-    if self.hasConversion(format=format, **kw):
-      mime, data = self.getConversion(format=format, **kw)
-      if format in VALID_TEXT_FORMAT_LIST:
-        # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
-        # here mostly as a convenient way to decode with the encoding from BOM
-        data = data.decode(guessEncodingFromText(data) or 'ascii')
-        if six.PY2 and isinstance(data, six.text_type):
-          data = unicode2str(data)
-
-      return mime, data
-
-    # We deal with three different format variables: `original_format`, as
-    # requested by the caller, which is always the key used for cache ;
+    # We deal with two different format variables: `original_format`, as
+    # requested by the caller, which is always the key used for cache, and
     # `format`, given to Cloudooo for conversion (usually derived from
-    # `original_format`) and `intermediate_format` when we need a conversion
-    # chain (OOoDocument -> PDF -> Image).
-    # XXX-Titouan-DMS: fix comments referencing intermediate_format, which got dropped
+    # `original_format`).
     original_format = format
-    to_image = False
-    to_unzipped = False
-    allowed_format_list = self.getTargetFormatList()
-    if format == 'pdf':
-      format_list = [x for x in allowed_format_list
-                                          if x.endswith('pdf')]
-      format = format_list[0]
-    elif format in VALID_IMAGE_FORMAT_LIST:
-      format_list = [x for x in allowed_format_list
-                                          if x.endswith(format)]
-      if len(format_list):
-        format = format_list[0]
-      else:
-        # We must first make a PDF which will be used to produce an image out of it
+    # Use cache early: run proxy server only if no cache entry is present
+    if not self.hasConversion(format=format, **kw):
+      to_image = False
+      to_unzipped = False
+      allowed_format_list = self.getTargetFormatList()
+      if format == 'pdf':
         format_list = [x for x in allowed_format_list
-                                          if x.endswith('pdf')]
+                                            if x.endswith('pdf')]
         format = format_list[0]
-        to_image = True
-    elif format == 'html':
-      format_list = [x for x in allowed_format_list
-                              if x.startswith('html') or x.endswith('html')]
-      format = format_list[0]
-      to_unzipped = True
-    elif format in ('txt', 'text', 'text-content'):
-      # One exception to the always-store-conversion-as-original rule
-      # XXX-Titouan-DMS: move this to the beginning
-      original_format = 'txt'
-      # If possible, we try to get utf8 text
-      if 'enc.txt' in allowed_format_list:
-        format = 'enc.txt'
-      elif format not in allowed_format_list:
-        # `format = None` is different from `intermediate_format = None`.
-        # The latter indicates no intermediate conversion, while the former
-        # is conversion to what was base format before (ODS, ODT, etc).
-        format = None
+      elif format in VALID_IMAGE_FORMAT_LIST:
+        format_list = [x for x in allowed_format_list
+                                            if x.endswith(format)]
+        if len(format_list):
+          format = format_list[0]
+        else:
+          # We must first make a PDF which will be used to produce an image out of it
+          format_list = [x for x in allowed_format_list
+                                            if x.endswith('pdf')]
+          format = format_list[0]
+          to_image = True
+      elif format == 'html':
+        format_list = [x for x in allowed_format_list
+                                if x.startswith('html') or x.endswith('html')]
+        format = format_list[0]
         to_unzipped = True
+      elif format == 'txt':
+        # If possible, we try to get utf8 text
+        if 'enc.txt' in allowed_format_list:
+          format = 'enc.txt'
+        elif format not in allowed_format_list:
+          # `format = None` is different from `original_format = None`.
+          # The latter indicates no intermediate conversion, while the former
+          # is conversion to what was base format before (ODS, ODT, etc).
+          format = None
+          to_unzipped = True
 
-    if format is not None and \
-        not self.isTargetFormatAllowed(format):
-      raise ConversionError("OOoDocument: target format %s is not supported" % format)
+      if format is not None and \
+          not self.isTargetFormatAllowed(format):
+        raise ConversionError("OOoDocument: target format %s is not supported" % format)
 
-    mime, data = self._getConversionFromProxyServer(format)
+      mime, data = self._getConversionFromProxyServer(format)
 
-    # Conversion chain for OOo -> PDF -> Image
-    if to_image:
-      # Create temporary image and use it to resize accordingly
-      temp_image = self.portal_contributions.newContent(
-        portal_type='Image',
-        file=BytesIO(),
-        filename=self.getId(),
-        temp_object=1,
-      )
-      temp_image._setData(data)
-      # We care for first page only but as well for image quality
-      mime, data = temp_image.convert(original_format, frame=frame, **kw)
+      # Conversion chain for OOo -> PDF -> Image
+      if to_image:
+        # Create temporary image and use it to resize accordingly
+        temp_image = self.portal_contributions.newContent(
+          portal_type='Image',
+          file=BytesIO(),
+          filename=self.getId(),
+          temp_object=1,
+        )
+        temp_image._setData(data)
+        # We care for first page only but as well for image quality
+        mime, data = temp_image.convert(original_format, frame=frame, **kw)
 
-    if to_unzipped:
-      cs = BytesIO()
-      cs.write(bytes(data)) # Cast explicitly to bytes for possible Pdata
-      z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
-      # Conversion chain for OOo -> ODF -> Text: extract
-      # text from the ODF file.
-      if format is None:
-        data = bytes2str(z.read('content.xml'))
-        data = self.rx_strip.sub(" ", data) # strip xml
-        data = self.rx_compr.sub(" ", data) # compress multiple spaces
-        mime = 'text/plain'
-      # Special case for OOo -> HTML
-      else:
-        for f in z.infolist():
-          fn = f.filename
-          if fn.endswith('html'):
-            if self.getPortalType() == 'Presentation'\
-                  and not (fn.find('impr') >= 0):
-              continue
-            data = z.read(fn)
-            break
-        mime = 'text/html'
-        # XXX: Maybe some parts should be asynchronous for better usability
-        self._populateConversionCacheWithHTML(zip_file=z)
-      z.close()
-      cs.close()
+      if to_unzipped:
+        cs = BytesIO()
+        cs.write(bytes(data)) # Cast explicitly to bytes for possible Pdata
+        z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
+        # Conversion chain for OOo -> ODF -> Text: extract
+        # text from the ODF file.
+        if format is None:
+          data = bytes2str(z.read('content.xml'))
+          data = self.rx_strip.sub(" ", data) # strip xml
+          data = self.rx_compr.sub(" ", data) # compress multiple spaces
+          mime = 'text/plain'
+        # Special case for OOo -> HTML
+        else:
+          for f in z.infolist():
+            fn = f.filename
+            if fn.endswith('html'):
+              if self.getPortalType() == 'Presentation'\
+                    and not (fn.find('impr') >= 0):
+                continue
+              data = z.read(fn)
+              break
+          mime = 'text/html'
+          # XXX: Maybe some parts should be asynchronous for better usability
+          self._populateConversionCacheWithHTML(zip_file=z)
+        z.close()
+        cs.close()
 
-    self.setConversion(data, mime, format=original_format, **kw)
+      self.setConversion(data, mime, format=original_format, **kw)
+
     # We have to recourse to `getConversion` every time, even if we already own
     # an handle to converted data because CacheConvertableMixin does type
-    # conversion (ie. Pdata to bytes), and it should not be predicted manually.
-    # XXX-Titouan-DMS: refactor code, to remove early return above that does same.
+    # conversion (ie. Pdata to bytes), which should not be predicted manually.
     mime, data = self.getConversion(format=original_format, **kw)
 
     if original_format in VALID_TEXT_FORMAT_LIST:
