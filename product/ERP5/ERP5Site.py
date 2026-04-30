@@ -98,6 +98,8 @@ def manage_addERP5Site(self,
   '''
   Adds a portal instance.
   '''
+  import Products.Database.db
+  Products.Database.db.configure(erp5_catalog_storage)
   gen = ERP5Generator()
   id = str(id).strip()
   p = gen.create(self,
@@ -2331,8 +2333,11 @@ class ERP5Generator(PortalGenerator):
       if not sql_reset and p[id]().tables():
         raise Exception("Database %r is not empty." % connection_string)
 
-    # Add Z MySQL Connections
-    manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    else:
+      manage_add = p.manage_addProduct['ZSQLiteDA'].manage_addZSQLiteConnection
+
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
     addSQLConnection('erp5_sql_deferred_connection',
@@ -2617,12 +2622,16 @@ AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
   AppInitializer.initialize = AppInitializer_initialize
   self.initialize()
+  import Products.Database.db
+  meta_type = ERP5Site.meta_type
+  for site_id in self.getApp().objectIds(meta_type):
+    site = self.getApp()[site_id]
+    Products.Database.db.configure(
+        getattr(site, 'erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
+    return
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
-    return
-  meta_type = ERP5Site.meta_type
-  for _ in self.getApp().objectIds(meta_type):
     return
 
   # We defer the call to manage_addERP5Site via TimerService because:
@@ -2633,12 +2642,15 @@ def initialize(self):
   import inspect, sys, time
   from AccessControl.SecurityManagement import newSecurityManager
   from App.ZApplication import ZApplicationWrapper
-  from Products.ZMySQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
+    import Products.Database.db
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
     erp5_catalog_storage = kw.get('erp5_catalog_storage')
     if erp5_catalog_storage:
       default_kw['erp5_catalog_storage'] = erp5_catalog_storage
+    Products.Database.db.configure(default_kw['erp5_catalog_storage'])
+    DB = Products.Database.db.DB
+    OperationalError = Products.Database.db.OperationalError
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
     # The lock is to avoid that multiple zopes try to create a site when

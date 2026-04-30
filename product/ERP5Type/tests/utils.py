@@ -414,11 +414,14 @@ def _recreateMemcachedTool(portal):
 
 # test runner shared functions
 
-from Products.ZMySQLDA.db import DB
 class getMySQLArguments(object):
   """Returns arguments to pass to mysql by heuristically converting the
   connection string.
   """
+  if os.environ.get('erp5_catalog_storage', '') == 'erp5_mysql_innodb_catalog':
+    from Products.ZMySQLDA.db import DB
+  else:
+    from Products.ZSQLiteDA.db import DB
   args_dict = dict(host='h', port='P', unix_socket='S', user='u', passwd='p')
   def __new__(cls):
     self = object.__new__(cls)
