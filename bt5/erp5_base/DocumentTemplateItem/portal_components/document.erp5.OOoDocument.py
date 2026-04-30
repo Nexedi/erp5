@@ -270,6 +270,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     # `format`, given to Cloudooo for conversion (usually derived from
     # `original_format`) and `intermediate_format` when we need a conversion
     # chain (OOoDocument -> PDF -> Image).
+    # XXX-Titouan-DMS: fix comments referencing intermediate_format, which got dropped
     original_format = format
     to_image = False
     to_unzipped = False
@@ -296,6 +297,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       to_unzipped = True
     elif format in ('txt', 'text', 'text-content'):
       # One exception to the always-store-conversion-as-original rule
+      # XXX-Titouan-DMS: move this to the beginning
       original_format = 'txt'
       # If possible, we try to get utf8 text
       if 'enc.txt' in allowed_format_list:
@@ -357,9 +359,10 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
     # We have to recourse to `getConversion` every time, even if we already own
     # an handle to converted data because CacheConvertableMixin does type
     # conversion (ie. Pdata to bytes), and it should not be predicted manually.
+    # XXX-Titouan-DMS: refactor code, to remove early return above that does same.
     mime, data = self.getConversion(format=original_format, **kw)
 
-    if format in VALID_TEXT_FORMAT_LIST:
+    if original_format in VALID_TEXT_FORMAT_LIST:
       # Libreoffice conversions on cloudooo usually have a BOM, we are using guessEncodingFromText
       # here mostly as a convenient way to decode with the encoding from BOM
       data = data.decode(guessEncodingFromText(data) or 'ascii')
