@@ -24,6 +24,9 @@ support_request = portal.support_request_module.newContent(
 support_request.submit()
 
 if description is not None or file is not None:
+  if description is None:
+    description = ''
+
   portal.post_module.PostModule_createHTMLPostForSupportRequest(
     follow_up=support_request.getRelativeUrl(),  # XXX give support_request as follow_up_value
     predecessor=None,

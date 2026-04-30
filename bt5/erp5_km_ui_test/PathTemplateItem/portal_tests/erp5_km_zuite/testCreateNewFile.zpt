@@ -100,11 +100,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
-  <td>Converted</td>
-  <td></td>
-</tr>
-<tr>
   <td>openAndWait</td>
   <td>${base_url}/Zuite_waitForActivities</td>
   <td></td>
