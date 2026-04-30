@@ -31,7 +31,8 @@ import itertools
 import textwrap
 import unittest
 import textwrap
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase \
+  import ERP5TypeTestCase, _getConversionServerUrlList
 from Products.ERP5OOo.OOoUtils import optimize_odf_xml_fragment
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
@@ -88,8 +89,7 @@ class DeferredStyleTestCase(ERP5TypeTestCase, ZopeTestCase.Functional):
         password=self.password,
       )
       login.validate()
-    preferred_document_conversion_server_url_list = \
-      self.portal.portal_preferences.getPreferredDocumentConversionServerUrlList()
+    preferred_document_conversion_server_url_list = _getConversionServerUrlList()
     system_preference = self.portal.portal_preferences._getOb('syspref', None)
     if system_preference is None:
       system_preference = self.portal.portal_preferences.newContent(
