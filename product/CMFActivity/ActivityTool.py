@@ -40,7 +40,6 @@ from six.moves.cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
-from Products.CMFActivity.ActivityConnection import ActivityConnection
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions
 from AccessControl.SecurityManagement import newSecurityManager
@@ -522,7 +521,6 @@ def activity_dict():
   return {k: getattr(v, k)() for k, v in six.iteritems(locals())}
 activity_dict = activity_dict()
 
-
 class Method(object):
   __slots__ = (
     '_portal_activities',
@@ -724,6 +722,7 @@ class ActivityTool (BaseTool):
       return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
+      from Products.CMFActivity.ActivityConnection import ActivityConnection
       connection_id = 'cmf_activity_sql_connection'
       sql_connection = getattr(self, connection_id, None)
       if (sql_connection is not None and
@@ -1429,7 +1428,7 @@ class ActivityTool (BaseTool):
       path = None if obj is None else '/'.join(obj.getPhysicalPath())
       db = self.getSQLConnection()
       quote = db.string_literal
-      return bool(db.query(b"(%s)" % b") UNION ALL (".join(
+      return bool(db.query(b"%s" % b" UNION ALL ".join(
         activity.hasActivitySQL(quote, path=path, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 
@@ -1838,7 +1837,7 @@ class ActivityTool (BaseTool):
       """
       db = self.getSQLConnection()
       quote = db.string_literal
-      return sum(x for x, in db.query(b"(%s)" % b") UNION ALL (".join(
+      return sum(x for x, in db.query(b"%s" % b" UNION ALL ".join(
         activity.countMessageSQL(quote, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 
