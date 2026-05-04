@@ -1,18 +1,13 @@
-import os
+_backend = None
 
-erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog')
+def configure(erp5_catalog_storage):
+    global _backend
+    if erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+        from Products.CMFActivity.Activity import MySQLBase as _backend
+    elif erp5_catalog_storage == 'erp5_sqlite_catalog':
+        from Products.CMFActivity.Activity import SQLiteBase as _backend
+    else:
+        raise ImportError("Unsupported storage %s" % erp5_catalog_storage)
 
-if  erp5_catalog_storage == 'erp5_sqlite_catalog':
-  from .SQLITEBase import SQLBase
-  from .SQLITEBase import sort_message_key
-  from .SQLITEBase import UID_SAFE_BITSIZE
-  from .SQLITEBase import UID_ALLOCATION_TRY_COUNT
-  from .SQLITEBase import INVOKE_ERROR_STATE
-  from .SQLITEBase import DEPENDENCY_IGNORED_ERROR_STATE
-else:
-  from .MYSQLBase import SQLBase
-  from .MYSQLBase import sort_message_key
-  from .MYSQLBase import UID_SAFE_BITSIZE
-  from .MYSQLBase import UID_ALLOCATION_TRY_COUNT
-  from .MYSQLBase import INVOKE_ERROR_STATE
-  from .MYSQLBase import DEPENDENCY_IGNORED_ERROR_STATE
+def __getattr__(name):
+    return getattr(_backend, name)
