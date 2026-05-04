@@ -4,6 +4,8 @@ For authenticated users with token creation permission, generates or reuses
 a Restricted Access Token bound to the RSS endpoint URL. For anonymous users
 or those without permission, returns the plain RSS URL.
 """
+from ZTUtils import make_query
+
 portal = context.getPortalObject()
 person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
 rss_script = "DiscussionForum_viewLatestPostListAsRSS"
@@ -12,7 +14,7 @@ request_url = "%s/%s" % (absolute_url, rss_script)
 
 if person is None or not context.Base_checkPermission(
     'access_token_module', 'Add portal content'):
-  return "%s?portal_skin=RSS" % request_url
+  return "%s?%s" % (request_url, make_query({'portal_skin': 'RSS'}))
 
 # Search for existing validated token for this exact URL
 access_token = None
@@ -35,7 +37,8 @@ if access_token is None:
 if access_token.getValidationState() == 'draft':
   access_token.validate()
 
-return "%s?portal_skin=RSS&access_token=%s&access_token_secret=%s" % (
-  request_url,
-  access_token.getId(),
-  access_token.getReference())
+return "%s?%s" % (request_url, make_query({
+  'portal_skin': 'RSS',
+  'access_token': access_token.getId(),
+  'access_token_secret': access_token.getReference(),
+}))
