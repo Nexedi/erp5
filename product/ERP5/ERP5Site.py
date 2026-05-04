@@ -2618,19 +2618,13 @@ class ERP5Generator(PortalGenerator):
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
-  import Products.Database
   AppInitializer.initialize = AppInitializer_initialize
+  self.initialize()
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
-    # in test
-    erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
-    Products.Database.configure(erp5_catalog_storage)
-    self.initialize()
     return
 
-  Products.Database.configure(kw.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
-  self.initialize()
   meta_type = ERP5Site.meta_type
   for _ in self.getApp().objectIds(meta_type):
     return

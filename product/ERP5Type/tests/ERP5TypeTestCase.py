@@ -29,7 +29,6 @@ from hashlib import md5
 from warnings import warn
 from DateTime import DateTime
 import mock
-import Products.Database.DA
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
@@ -1467,11 +1466,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               break
       PortalTestCase.tearDown(self)
       from Products.Database.DA import Connection as ZMySQLDA_Connection
+      import Products.Database.DA
       if self.__original_ZMySQLDA_connect is not None:
         ZMySQLDA_Connection.connect = self.__original_ZMySQLDA_connect
         for connector in self.__connector_set:
           connector.__dict__.pop('_v_database_connection', None)
-        database_connection_pool = Products.ZMySQLDA.DA.database_connection_pool
+        database_connection_pool = Products.Database.DA.database_connection_pool
         for value in six.itervalues(database_connection_pool):
           value.clear()
         database_connection_pool.clear()
