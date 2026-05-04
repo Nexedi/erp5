@@ -44,7 +44,6 @@ from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.Database.DA import DeferredConnection
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -1426,6 +1425,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
     def upgradeSchema(self, sql_catalog_id=None, src__=0):
       """Upgrade all catalog tables, with ALTER or CREATE queries"""
+      from Products.Database.DA import DeferredConnection
       portal = self.getPortalObject()
       catalog = self.getSQLCatalog(sql_catalog_id)
 
