@@ -1,8 +1,13 @@
-import os
+_backend = None
 
-erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_catalog')
+def configure(erp5_catalog_storage):
+    global _backend
+    if erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+        from Products.CMFActivity.Activity import MySQLJoblib as _backend
+    elif erp5_catalog_storage == 'erp5_sqlite_catalog':
+        from Products.CMFActivity.Activity import SQLiteJoblib as _backend
+    else:
+        raise ImportError("Unsupported storage %s" % erp5_catalog_storage)
 
-if erp5_catalog_storage == 'erp5_sqlite_catalog':
-  from .SQLITEJoblib import SQLJoblib
-else:
-  from .MYSQLJoblib import SQLJoblib
+def __getattr__(name):
+    return getattr(_backend, name)
