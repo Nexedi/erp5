@@ -13,8 +13,6 @@ from Testing import ZopeTestCase
 from zope.globalrequest import setRequest
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
-from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE, DEPENDENCY_IGNORED_ERROR_STATE
-from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
   addUserToDeveloperRole, DummyMailHostMixin, parseListeningAddress
@@ -288,6 +286,8 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     30 minutes), then the processing is interrupted and `tic` raise a RuntimeError
     exception.
     """
+    from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE, DEPENDENCY_IGNORED_ERROR_STATE
+    from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
     transaction.commit()
     # Some tests like testDeferredStyle require that we use self.getPortal()
     # instead of self.portal in order to setup current skin.
