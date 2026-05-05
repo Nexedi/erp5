@@ -5,6 +5,6 @@ def configure(erp5_catalog_storage):
     SQLDict.configure(erp5_catalog_storage)
     SQLJoblib.configure(erp5_catalog_storage)
     import Products.CMFActivity.ActivityTool as ActivityTool
-    ActivityTool.activity_dict.update(
-        {k: getattr(v, k)()
-        for k, v in {'SQLDict': SQLDict, 'SQLQueue': SQLQueue, 'SQLJoblib': SQLJoblib}.items()})
+    ActivityTool.activity_dict = {
+        k: getattr(v, k)()
+        for k, v in {'SQLDict': SQLDict, 'SQLQueue': SQLQueue, 'SQLJoblib': SQLJoblib}.items()}
