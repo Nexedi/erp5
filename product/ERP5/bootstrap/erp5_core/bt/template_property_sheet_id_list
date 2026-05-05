@@ -1,6 +1,7 @@
 ScriptConstraint
 ConstraintType
 Catalog
+PageTemplate
 CatalogTool
 SQLMethod
 CatalogFilter
