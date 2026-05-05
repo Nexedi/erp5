@@ -36,6 +36,7 @@ import sys
 import threading
 import time
 import mock
+import requests
 
 import transaction
 from random import randint
@@ -3277,6 +3278,43 @@ return [
     self.assertEqual(
         '<Organisation at /%s/organisation_module/organisation_id>' % self.portal.getId(),
         repr(document))
+
+  def test_AcceleratedHTTPCacheManager(self):
+    """
+    Check if Accelerated HTTP Cache Manager is effective only if the object itself is
+    directly published.
+    """
+    portal = self.getPortalObject()
+    script_container = portal.portal_skins.custom
+    script_id = 'test_AcceleratedHTTPCacheManager'
+    createZODBPythonScript(script_container, script_id, '', '''
+traverse = context.getPortalObject().restrictedTraverse
+request = context.REQUEST
+response = request.RESPONSE
+dtml_method = traverse('erp5.css')
+dtml_document = traverse('erp5.js')
+page_template = traverse('erp5_tabber.js')
+file_ = traverse('rsvp.js')
+image = traverse('favicon.ico')
+dtml_method()
+dtml_document()
+page_template()
+file_.index_html(request, response)
+image.index_html(request, response)
+return 'OK'
+''')
+    self.commit()
+    try:
+      portal_url = self.portal.absolute_url()
+      for path in ('erp5.css', 'erp5.js', 'erp5_tabber.js', 'rsvp.js', 'favicon.ico'):
+        response = requests.get('%s/%s' % (portal_url, path))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Cache-Control', response.headers)
+      response = requests.get('%s/%s' % (portal_url, script_id))
+      self.assertEqual(response.status_code, 200)
+      self.assertNotIn('Cache-Control', response.headers)
+    finally:
+      removeZODBPythonScript(script_container, script_id)
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
