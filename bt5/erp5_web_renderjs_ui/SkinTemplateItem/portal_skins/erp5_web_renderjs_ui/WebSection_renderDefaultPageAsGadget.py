@@ -75,7 +75,8 @@ mapping_dict = {
   "website_url_set": json.dumps(website_url_set),
   "site_description": web_section.getLayoutProperty("description", default=""),
   "site_keywords": web_section.getLayoutProperty("subject", default=""),
-  "icon_url": urljoin(base_prefix, web_section.getLayoutProperty("configuration_icon_url", default='favicon.ico'))
+  "icon_url": urljoin(base_prefix, web_section.getLayoutProperty("configuration_icon_url", default='favicon.ico')),
+  "internal_forum_url": web_section.getLayoutProperty("configuration_internal_forum_url", default="")
 }
 
 configuration_manifest_url = web_section.getLayoutProperty("configuration_manifest_url", default=None)
