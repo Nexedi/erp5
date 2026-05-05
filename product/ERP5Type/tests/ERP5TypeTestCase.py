@@ -29,8 +29,8 @@ from hashlib import md5
 from warnings import warn
 from DateTime import DateTime
 import mock
-import Products.ZMySQLDA.DA
-from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
+import Products.Database.DA
+from Products.Database.DA import Connection as ZMySQLDA_Connection
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
