@@ -422,9 +422,11 @@ class getMySQLArguments(object):
     self = object.__new__(cls)
     self._connection = os.getenv('erp5_sql_connection_string') or 'test test'
     self.conv = None
-    from Products.Database.db import DB
-    parse_connection_string_function = six.get_unbound_function(DB._parse_connection_string)
-    parse_connection_string_function(self)
+    import Products.Database
+    with Products.Database.configured(os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')):
+      from Products.Database.db import DB
+      parse_connection_string_function = six.get_unbound_function(DB._parse_connection_string)
+      parse_connection_string_function(self)
     return ''.join('-%s%s ' % (self.args_dict[k], v)
                    for k, v in six.iteritems(self._kw_args)
                    if k in self.args_dict
