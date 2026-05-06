@@ -1,5 +1,4 @@
-import sys
-import types
+import sys as _sys
 
 _backend = None
 
@@ -11,9 +10,7 @@ def configure(erp5_catalog_storage):
         from Products.ZSQLiteDA import DA as _backend
     else:
         raise ImportError("Unsupported DA type %s" % erp5_catalog_storage)
-
-class _Module(types.ModuleType):
-    def __getattr__(self, name):
-        return getattr(_backend, name)
-
-sys.modules[__name__].__class__ = _Module
+    _m = _sys.modules[__name__]
+    for _k, _v in vars(_backend).items():
+        if not _k.startswith('_'):
+            setattr(_m, _k, _v)

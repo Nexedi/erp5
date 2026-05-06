@@ -8,10 +8,15 @@ def configure(erp5_catalog_storage):
 @contextmanager
 def configured(erp5_catalog_storage):
     from Products.Database import db, DA
-    saved_db, saved_DA = db._backend, DA._backend
+    saved_db = dict(vars(db))
+    saved_DA = dict(vars(DA))
     configure(erp5_catalog_storage)
     try:
         yield
     finally:
-        db._backend = saved_db
-        DA._backend = saved_DA
+        for _m, _saved in ((db, saved_db), (DA, saved_DA)):
+            _d = vars(_m)
+            for _k in list(_d):
+                if _k not in _saved:
+                    del _d[_k]
+            _d.update(_saved)
