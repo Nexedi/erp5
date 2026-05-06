@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ZMySQLDA.DA import Connection, DB
+from Products.Database.DA import Connection, DB
 from Products.ERP5Type.Globals import InitializeClass
 from App.special_dtml import HTMLFile
 from Acquisition import aq_parent
