@@ -34,6 +34,9 @@ from types import MethodType
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityInfo import ACCESS_NONE, ACCESS_PRIVATE
+if six.PY3:
+  from ZPublisher import zpublish_mark
+
 
 # You can invoke security tests in your favourite collection of business templates
 # by using TestSecurityMixin like the following :
@@ -69,6 +72,22 @@ class TestSecurityMixin:
         createSubObject(i)
     self._prepareDocumentList_finished = True
 
+  def _isMethodPublishable(self, method):
+    has_docstring = method.__doc__
+    if sys.version_info < (3, 13):
+      # Since py3.13 leading spaces are stripped from docstring by the
+      # interpreter and end up being not publishable anymore
+      has_docstring = has_docstring and not method.__doc__.lstrip()
+    if six.PY3:
+      return zpublish_mark(method, has_docstring)
+    else:
+      return has_docstring
+
+  def _hasImplicitSecurity(self, obj, method_id, method):
+    return not (hasattr(method, '__roles__') or
+          getattr(obj, '%s__roles__' % method_id,
+                  ACCESS_NONE) not in (ACCESS_PRIVATE, ACCESS_NONE))
+
   def _checkObjectAllMethodProtection(self, obj):
     error_dict = {}
     allowed_method_id_list = ['om_icons',]
@@ -79,16 +98,7 @@ class TestSecurityMixin:
       if isinstance(method, MethodType) and \
         getattr(method, '__name__', None) is not None and \
         getattr(method, '__module__', None) is not None and \
-        (# Implicitly Public method?
-         (method.__doc__ and \
-          not hasattr(obj, '%s__roles__' % method_id) and \
-          not hasattr(method, '__roles__')) or \
-         # Since py3.13 leading spaces are stripped from docstring by the
-         # interpreter and end up being not publishable anymore
-         (sys.version_info < (3, 13) and
-          method.__doc__ and not method.__doc__.lstrip() and \
-          getattr(obj, '%s__roles__' % method_id,
-                  ACCESS_NONE) not in (ACCESS_PRIVATE, ACCESS_NONE))):
+        self._isMethodPublishable(method) and self._hasImplicitSecurity(obj, method_id, method):
         if method.__module__ == 'Products.ERP5Type.Accessor.WorkflowState' and method.__code__.co_name == 'serialize':
           continue
         func_code = method.__code__
