@@ -4,7 +4,15 @@ import re
 import sqlite3
 from sqlite3 import OperationalError
 import warnings
-from contextlib import contextmanager, nullcontext
+from contextlib import contextmanager
+
+try:
+    from contextlib import nullcontext
+except ImportError:
+    @contextmanager
+    def nullcontext():
+        yield
+
 from zLOG import LOG, ERROR
 from Products.ERP5Type.Timeout import TimeoutReachedError
 
@@ -272,23 +280,23 @@ class DB(TM):
         except OperationalError as m:
             msg = str(m).lower()
             if "syntax error" in msg:
-                raise OperationalError(f"{m}: {query}")
+                raise OperationalError("%s: %s" % (m, query))
             if "locked" in msg:
-                raise ConflictError(f"{m}: {query}")
+                raise ConflictError("%s: %s" % (m, query))
             if "timeout" in msg or "busy" in msg:
-                raise TimeoutReachedError(f"{m}: {query}")
+                raise TimeoutReachedError("%s: %s" % (m, query))
             if allow_reconnect:
                 self._forceReconnection()
                 return self._query(query, allow_reconnect=False)
             else:
-                LOG('SQLITEDA', ERROR, f'query failed: {query}')
+                LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
                 raise
         except Exception as m:
             if allow_reconnect:
                 self._forceReconnection()
                 return self._query(query, allow_reconnect=False)
             else:
-                LOG('SQLITEDA', ERROR, f'query failed: {query}')
+                LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
                 raise
         finally:
             cursor.close()
