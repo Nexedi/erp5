@@ -1,3 +1,6 @@
+import sys
+import types
+
 _backend = None
 
 def configure(erp5_catalog_storage):
@@ -9,5 +12,8 @@ def configure(erp5_catalog_storage):
     else:
         raise ImportError("Unsupported DA type %s" % erp5_catalog_storage)
 
-def __getattr__(name):
-    return getattr(_backend, name)
+class _Module(types.ModuleType):
+    def __getattr__(self, name):
+        return getattr(_backend, name)
+
+sys.modules[__name__].__class__ = _Module
