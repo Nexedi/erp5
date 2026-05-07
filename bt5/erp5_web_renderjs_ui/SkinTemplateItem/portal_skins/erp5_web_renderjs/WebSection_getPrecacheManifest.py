@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 web_section = context
 
 # Add all ERP5JS gadget
@@ -200,10 +202,10 @@ for precache_manifest_script_id in precache_manifest_url_list:
 if REQUEST is not None:
   import json
   manifest_dict = {
-    'url_dict': dict.fromkeys(url_list),
+    'url_dict': OrderedDict.fromkeys(url_list),
     'modification_date': context.getModificationDate().rfc822()
   }
   REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
   return json.dumps(manifest_dict, indent=2)
 
-return list(set(url_list))
+return list(OrderedDict(url_list))
