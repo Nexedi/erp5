@@ -10,7 +10,7 @@ now = DateTime()
 post_edit_kw = {
   "start_date": now,
   "follow_up_value": traverse(follow_up),
-  "text_content": data,
+  "data": data,
   "source_reference": source_reference,
   "title": title,
 }

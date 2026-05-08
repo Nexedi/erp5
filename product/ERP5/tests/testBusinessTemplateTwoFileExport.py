@@ -892,10 +892,10 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
   def test_twoFileImportExportForTestPage(self):
     """Test Business Template Import And Export With A Test Page Document"""
-    test_page_data = """<html></html>"""
+    test_page_data = b"<html></html>"
 
     test_page_data_kw = {"title": "test_page",
-                         "text_content": test_page_data,
+                         "data": test_page_data,
                          "portal_type": "Test Page",
                          "content_type": "text/html"}
 
@@ -911,8 +911,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template = self._exportAndReImport(
                                   test_page_document_path,
                                   ".html",
-                                  test_page_data_kw["text_content"].encode(),
-                                  ["text_content"])
+                                  test_page_data_kw["data"],
+                                  ["data"])
 
     self.portal.test_page_module.manage_delObjects([test_page_id])
 
