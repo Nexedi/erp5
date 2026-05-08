@@ -260,6 +260,51 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
           message_id='xxx-message-id')],
       json.loads(support_request.SupportRequest_getCommentPostListAsJson()))
 
+  def test_submit_support_request_without_message(self):
+    self.getWebSite().SupportRequestModule_createSupportRequest(
+        description='',  # empty
+        file=None,
+        resource=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001.getRelativeUrl(),
+        title=self.id(),
+        project='erp5_officejs_support_request_ui_test_project_001',
+        # FIXME: project passed by the UI should be full relative URL
+        #project=self.portal.project_module.erp5_officejs_support_request_ui_test_project_001.getRelativeUrl()
+        source_reference='xxx-message-id',
+    )
+    support_request, = [sr for sr in self.portal.support_request_module.contentValues()
+        if sr.getTitle() == self.id()]
+    self.assertEqual(
+      [dict(
+          user=self.user.getTitle(),
+          text='',
+          attachment_link=None,
+          attachment_name=None,
+          message_id='xxx-message-id'),],
+      ignoreKeys(
+         json.loads(support_request.SupportRequest_getCommentPostListAsJson()),
+         'date'))
+    self.tic()
+
+    web_message, = support_request.getFollowUpRelatedValueList(
+        portal_type='Web Message'
+    )
+    self.assertEqual('stopped', web_message.getSimulationState())
+    self.assertEqual('<p></p>', web_message.asStrippedHTML())
+    post, = web_message.getAggregateValueList(
+        portal_type='HTML Post'
+    )
+    self.assertFalse(post.getData())
+    self.assertEqual(
+      [dict(
+          user=self.user.getTitle(),
+          text='<p></p>',
+          attachment_link=None,
+          attachment_name=None,
+          message_id='xxx-message-id'),],
+      ignoreKeys(
+         json.loads(support_request.SupportRequest_getCommentPostListAsJson()),
+         'date'))
+
 
 class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
   def test_comment_on_support_request(self):
