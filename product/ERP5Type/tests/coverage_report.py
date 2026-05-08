@@ -20,10 +20,11 @@ import coverage
 import requests
 import six
 import uritemplate
-from six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import urlparse, urljoin
 
 from Products.ERP5Type.tests.runUnitTest import log_directory
 
+REQUEST_TIMEOUT = 240
 
 if six.PY2:
   TimeoutError = RuntimeError
@@ -57,11 +58,13 @@ def upload(filename, upload_url_template, test_name):
   parsed_url = urlparse(upload_url)
   hostname = parsed_url.hostname
   with requests.Session() as session:
+    if 'insecure-skip-verify' in parsed_url.fragment:
+      session.verify = False
     for retry in range(5):
       for auth in _get_auth_list_from_url(parsed_url):
         with open(filename, 'rb') as f:
           try:
-            resp = session.put(upload_url, data=f, auth=auth, timeout=30)
+            resp = session.put(upload_url, data=f, auth=auth, timeout=REQUEST_TIMEOUT)
           except requests.exceptions.RequestException as e:
             error = e
           else:
@@ -117,6 +120,9 @@ class CoverageReport(unittest.TestCase):
     )
 
     with requests.Session() as session:
+      if 'insecure-skip-verify' in urlparse(
+          _expand_uri_template(download_url_template, test_name="")).fragment:
+        session.verify = False
       while to_download:
         for test_name in list(to_download):
           test_file_name = test_name.replace(':', '_')
@@ -135,7 +141,7 @@ class CoverageReport(unittest.TestCase):
           hostname = parsed_url.hostname
           for auth in _get_auth_list_from_url(parsed_url):
             try:
-              resp = session.get(download_url, auth=auth, timeout=30)
+              resp = session.get(download_url, auth=auth, timeout=REQUEST_TIMEOUT)
             except requests.exceptions.RequestException:
               self._logger.exception('Error during request, retrying')
               continue
@@ -178,8 +184,9 @@ class CoverageReport(unittest.TestCase):
       )
     )
 
+    html_report_directory = os.path.join(log_directory, 'html_report')
     self._coverage_process.html_report(
-      directory=os.path.join(log_directory, 'html_report'),
+      directory=html_report_directory,
       show_contexts=True,
       # We ignore errors because some tests execute code that does not exist on disk, causing
       # errors like this:
@@ -204,3 +211,49 @@ class CoverageReport(unittest.TestCase):
       total_coverage,
       self._test_runner_configuration['coverage'].get('fail-under', 50),
     )
+
+    # upload the coverage HTML report to the WebDAV server
+    dirs_created = set()
+    files_uploaded = set()
+    parsed_url = urlparse(_expand_uri_template(upload_url_template, test_name=""))
+    with requests.Session() as session:
+      if 'insecure-skip-verify' in parsed_url.fragment:
+        session.verify = False
+      for retry in range(10):
+        last_error = None
+        for auth in _get_auth_list_from_url(parsed_url):
+          for root, dirs, files in os.walk(html_report_directory):
+            for dir_ in dirs:
+              if dir_ not in dirs_created:
+                try:
+                  resp = session.request(
+                    'MKCOL',
+                    urljoin(_expand_uri_template(upload_url_template, test_name=''), '../' + dir_)),
+                    auth=auth,
+                    timeout=REQUEST_TIMEOUT,
+                  )
+                  resp.raise_for_status()
+                  dirs_created.add(dir_)
+                except requests.exceptions.RequestException as e:
+                  last_error = e
+
+            for filename in files:
+              filepath = os.path.join(root, filename)
+              if filepath not in files_uploaded:
+                with open(filepath, 'rb') as f:
+                  try:
+                    resp = session.put(
+                      urljoin(_expand_uri_template(upload_url_template, test_name=''), '../' + filepath)),
+                      data=f,
+                      auth=auth,
+                      timeout=REQUEST_TIMEOUT
+                    )
+                    resp.raise_for_status()
+                    files_uploaded.add(filepath)
+                  except requests.exceptions.RequestException as e:
+                    last_error = e
+          if last_error:
+            time.sleep(retry)
+
+    if last_error:
+      raise last_error
