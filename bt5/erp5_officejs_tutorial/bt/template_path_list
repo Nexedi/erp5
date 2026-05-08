@@ -1,0 +1,7 @@
+portal_types/Nice Document Module/nice_editor_view
+portal_types/Nice Document/nice_editor_clone
+portal_types/Nice Document/nice_editor_view
+web_page_module/officejs_nice_editor_configuration
+web_page_module/officejs_nice_editor_router_html
+web_site_module/officejs_nice_editor
+web_site_module/officejs_nice_editor/**
