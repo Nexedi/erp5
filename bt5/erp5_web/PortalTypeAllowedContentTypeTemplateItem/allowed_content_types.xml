@@ -8,6 +8,7 @@
   <item>Embedded File</item>
  </portal_type>
  <portal_type id="Web Page Module">
+  <item>Web JSON</item>
   <item>Web Page</item>
  </portal_type>
  <portal_type id="Web Section">
