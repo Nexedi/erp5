@@ -1,7 +1,128 @@
-/*global window, window, rJS, jIO, RSVP, UriTemplate, console */
+/*global window, window, rJS, jIO, RSVP, UriTemplate, console, URL,
+         navigator */
 /*jslint indent: 2, maxerr: 10, maxlen: 95 */
-(function (window, rJS, jIO, RSVP, UriTemplate, console) {
+(function (window, rJS, jIO, RSVP, UriTemplate, console, URL, navigator) {
   "use strict";
+
+  function buildPortalTypeQuery(portal_type_string) {
+    var types = portal_type_string.split(','),
+      queries = [],
+      i;
+    for (i = 0; i < types.length; i += 1) {
+      queries.push('portal_type: "' + types[i].trim() + '"');
+    }
+    if (queries.length === 1) {
+      return queries[0];
+    }
+    return '(' + queries.join(' OR ') + ')';
+  }
+
+  function autoConfigureERP5Storage(gadget) {
+    var base_url = window.location.href.split('#')[0],
+      erp5_url = new URL('../../renderjs_runner/', base_url).href,
+      hateoas_url = erp5_url + 'hateoas/',
+      is_low_memory = (navigator.userAgent.indexOf("Chrome") > 0) &&
+        (navigator.userAgent.indexOf('Mobile') > 0);
+    return gadget.getSettingList(
+      ['portal_type', 'erp5_attachment_synchro',
+       'default_view_reference']
+    )
+      .push(function (result_list) {
+        var portal_type = result_list[0] || "Web Page",
+          erp5_attachment_synchro = result_list[1] || "",
+          default_view_reference = result_list[2] || 'jio_view',
+          attachment_synchro = erp5_attachment_synchro !== "",
+          extended_attachment_url = erp5_attachment_synchro,
+          query = buildPortalTypeQuery(portal_type),
+          configuration = {
+            debug: true,
+            report_level: 1000,
+            type: "replicate",
+            query: {
+              query: query,
+              limit: [0, 50],
+              sort_on: [["modification_date", "descending"]]
+            },
+            use_remote_post: true,
+            conflict_handling: 1,
+            parallel_operation_attachment_amount:
+              is_low_memory ? 1 : 10,
+            parallel_operation_amount: is_low_memory ? 1 : 10,
+            check_local_attachment_modification: attachment_synchro,
+            check_local_attachment_creation: attachment_synchro,
+            check_remote_attachment_modification: attachment_synchro,
+            check_remote_attachment_creation: attachment_synchro,
+            check_remote_attachment_deletion: attachment_synchro,
+            check_local_modification: true,
+            check_local_creation: true,
+            check_local_deletion: false,
+            check_remote_modification: true,
+            check_remote_creation: true,
+            check_remote_deletion: true,
+            signature_sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "officejs-erp5-hash"
+                }
+              }
+            },
+            local_sub_storage: {
+              type: "query",
+              schema: {
+                "modification_date": {
+                  type: "string",
+                  format: "date-time"
+                }
+              },
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "officejs-erp5"
+                }
+              }
+            },
+            remote_sub_storage: {
+              type: "saferepair",
+              sub_storage: {
+                type: "mapping",
+                attachment_list: ["data"],
+                attachment: {
+                  "data": {
+                    "get": {
+                      "uri_template": hateoas_url +
+                        extended_attachment_url
+                    },
+                    "put": {
+                      "erp5_put_template": hateoas_url +
+                        "/{+id}/Base_edit"
+                    }
+                  }
+                },
+                sub_storage: {
+                  type: "erp5",
+                  url: hateoas_url,
+                  default_view_reference: default_view_reference
+                }
+              }
+            }
+          };
+        return gadget.setSettingList({
+          'jio_storage_description': configuration,
+          'jio_storage_name': "ERP5",
+          'sync_reload': true
+        });
+      })
+      .push(function () {
+        return gadget.redirect({
+          command: "display",
+          options: {page: 'ojs_sync', auto_repair: 'true'}
+        });
+      });
+  }
 
   function redirectToLogin(gadget, error) {
     var regexp,
@@ -63,8 +184,14 @@
   function wrapJioCall(gadget, method_name, argument_list) {
     var storage = gadget.state_parameter_dict.jio_storage;
     if (storage === undefined) {
-      return gadget.redirect({command: 'display',
-                              options: {page: 'ojs_configurator'}});
+      return gadget.getSettingList(['embedded_erp5_storage'])
+        .push(function (result_list) {
+          if (result_list[0] === 'true') {
+            return autoConfigureERP5Storage(gadget);
+          }
+          return gadget.redirect({command: 'display',
+                                  options: {page: 'ojs_configurator'}});
+        });
     }
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
@@ -258,4 +385,4 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO, RSVP, UriTemplate, console));
+}(window, rJS, jIO, RSVP, UriTemplate, console, URL, navigator));
