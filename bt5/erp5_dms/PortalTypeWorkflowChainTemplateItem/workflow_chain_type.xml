@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Drawing</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>File</type>
@@ -21,7 +21,7 @@
  </chain>
  <chain>
   <type>Presentation</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>RSS Feed</type>
@@ -29,11 +29,11 @@
  </chain>
  <chain>
   <type>Spreadsheet</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>URL Crawler</type>
@@ -41,7 +41,7 @@
  </chain>
  <chain>
   <type>Web Illustration</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Web Page</type>
@@ -49,6 +49,6 @@
  </chain>
  <chain>
   <type>Web Table</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
