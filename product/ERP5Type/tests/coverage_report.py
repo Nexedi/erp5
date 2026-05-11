@@ -24,6 +24,7 @@ from six.moves.urllib.parse import urlparse
 
 from Products.ERP5Type.tests.runUnitTest import log_directory
 
+REQUEST_TIMEOUT = 240
 
 if six.PY2:
   TimeoutError = RuntimeError
@@ -61,7 +62,7 @@ def upload(filename, upload_url_template, test_name):
       for auth in _get_auth_list_from_url(parsed_url):
         with open(filename, 'rb') as f:
           try:
-            resp = session.put(upload_url, data=f, auth=auth, timeout=30)
+            resp = session.put(upload_url, data=f, auth=auth, timeout=REQUEST_TIMEOUT)
           except requests.exceptions.RequestException as e:
             error = e
           else:
@@ -135,7 +136,7 @@ class CoverageReport(unittest.TestCase):
           hostname = parsed_url.hostname
           for auth in _get_auth_list_from_url(parsed_url):
             try:
-              resp = session.get(download_url, auth=auth, timeout=30)
+              resp = session.get(download_url, auth=auth, timeout=REQUEST_TIMEOUT)
             except requests.exceptions.RequestException:
               self._logger.exception('Error during request, retrying')
               continue
