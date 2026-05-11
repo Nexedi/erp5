@@ -58,6 +58,8 @@ def upload(filename, upload_url_template, test_name):
   parsed_url = urlparse(upload_url)
   hostname = parsed_url.hostname
   with requests.Session() as session:
+    if 'insecure-skip-verify' in parsed_url.fragment:
+      session.verify = False
     for retry in range(5):
       for auth in _get_auth_list_from_url(parsed_url):
         with open(filename, 'rb') as f:
@@ -89,6 +91,8 @@ class CoverageReport(unittest.TestCase):
 
     with open(os.environ['ERP5_TEST_RUNNER_CONFIGURATION']) as f:
       self._test_runner_configuration = json.load(f)
+    self._download_url_template = self._test_runner_configuration['coverage']['upload-url']
+    assert self._download_url_template
 
     downloaded_coverage_path_set = self._download_coverage_data()
     self._coverage_process.combine(
@@ -98,8 +102,6 @@ class CoverageReport(unittest.TestCase):
 
   def _download_coverage_data(self):
     downloaded_coverage_path_set = set()
-    download_url_template = self._test_runner_configuration['coverage']['upload-url']
-    assert download_url_template
 
     # erp5.util.testnode.ProcessManager applies a 4 hours MAX_TIMEOUT, give up
     # before this timeout, otherwise this will be restarted forever in loop.
@@ -118,6 +120,9 @@ class CoverageReport(unittest.TestCase):
     )
 
     with requests.Session() as session:
+      if 'insecure-skip-verify' in urlparse(
+          _expand_uri_template(self._download_url_template, test_name="")).fragment:
+        session.verify = False
       while to_download:
         for test_name in list(to_download):
           test_file_name = test_name.replace(':', '_')
@@ -130,7 +135,7 @@ class CoverageReport(unittest.TestCase):
             to_download.remove(test_name)
             continue
           download_url = _expand_uri_template(
-            download_url_template, test_name=test_file_name
+            self._download_url_template, test_name=test_file_name
           )
           parsed_url = urlparse(download_url)
           hostname = parsed_url.hostname
