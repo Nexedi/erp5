@@ -20,7 +20,7 @@ import coverage
 import requests
 import six
 import uritemplate
-from six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import urlparse, urljoin
 
 from Products.ERP5Type.tests.runUnitTest import log_directory
 
@@ -184,8 +184,9 @@ class CoverageReport(unittest.TestCase):
       )
     )
 
+    html_report_directory = os.path.join(log_directory, 'html_report')
     self._coverage_process.html_report(
-      directory=os.path.join(log_directory, 'html_report'),
+      directory=html_report_directory,
       show_contexts=True,
       # We ignore errors because some tests execute code that does not exist on disk, causing
       # errors like this:
@@ -210,3 +211,55 @@ class CoverageReport(unittest.TestCase):
       total_coverage,
       self._test_runner_configuration['coverage'].get('fail-under', 50),
     )
+
+    # upload the coverage HTML report to the WebDAV server
+    dirs_created = set()
+    files_uploaded = set()
+    parsed_url = urlparse(_expand_uri_template(self._download_url_template, test_name=''))
+    with requests.Session() as session:
+      if 'insecure-skip-verify' in parsed_url.fragment:
+        session.verify = False
+      for retry in range(10):
+        last_error = None
+        for auth in _get_auth_list_from_url(parsed_url):
+          for root, dirs, files in os.walk(html_report_directory):
+            for dir_ in dirs:
+              if dir_ not in dirs_created:
+                try:
+                  resp = session.request(
+                    'MKCOL',
+                    urljoin(
+                      _expand_uri_template(self._download_url_template, test_name=''),
+                      'html_report/%s' % dir_),
+                    auth=auth,
+                    timeout=REQUEST_TIMEOUT,
+                  )
+                  resp.raise_for_status()
+                  dirs_created.add(dir_)
+                except requests.exceptions.RequestException as e:
+                  last_error = e
+
+            for filename in files:
+              filepath = os.path.join(root, filename)
+              if filepath not in files_uploaded:
+                with open(filepath, 'rb') as f:
+                  try:
+                    resp = session.put(
+                      urljoin(
+                        _expand_uri_template(self._download_url_template, test_name=''),
+                        'html_report/%s' % filename
+                      ),
+                      data=f,
+                      auth=auth,
+                      timeout=REQUEST_TIMEOUT
+                    )
+                    resp.raise_for_status()
+                    files_uploaded.add(filepath)
+                  except requests.exceptions.RequestException as e:
+                    last_error = e
+          if last_error:
+            time.sleep(retry)
+          else:
+            break
+    if last_error:
+      raise last_error
