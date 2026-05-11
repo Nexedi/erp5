@@ -1530,12 +1530,11 @@ div[data-gadget-scope='header'] .ui-header {
       &::before {
         padding-right: @margin-size;
       }
-      // No transition, as it doesn't feel right
-      // transition: background-color @transition-timing;
-      &:hover, &:active {
-        background-color: @paneldarkerbackgroundcolor;
-      }
-
+    }
+    // No transition, as it doesn't feel right
+    // transition: background-color @transition-timing;
+    .active {
+      background-color: @paneldarkerbackgroundcolor;
     }
   }
   .ui-icon-warning {
