@@ -2097,6 +2097,23 @@ div[data-gadget-scope='maximize'] button {
   }
 }
 
+div[data-gadget-scope="babylonjs"] {
+  .fullscreen {
+    position: fixed;
+    left: 0;
+    top: 30pt;
+  }
+
+ .fullscreen-background {
+    position: fixed;
+    left: 0;
+    top: 30pt;
+    background-color: @white;
+    width: 100vw;
+    height: ~"calc(100vh -  30pt )";
+  }
+}
+
 /**********************************************
 * Front page
 **********************************************/
