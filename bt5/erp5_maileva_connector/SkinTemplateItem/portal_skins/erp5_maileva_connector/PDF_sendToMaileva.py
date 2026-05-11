@@ -4,7 +4,8 @@ now = DateTime()
 portal = context.getPortalObject()
 
 # Do some check here
-maileva_connector = portal.ERP5Site_getAvailableMailevaSOAPConnector()
+maileva_connector_path = portal.ERP5Site_getAvailableMailevaSOAPConnector()
+maileva_connector = portal.restrictedTraverse(maileva_connector_path)
 
 today = now.toZone('UTC').asdatetime().strftime('%Y-%m-%d')
 number = str(portal.portal_ids.generateNewId(
