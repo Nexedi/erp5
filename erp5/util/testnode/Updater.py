@@ -211,7 +211,10 @@ class Updater(object):
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
-          self._git('fetch', '--all', '--prune')
+          if self.branch:
+            self._git('fetch', 'origin', self.branch)
+          else:
+            self._git('fetch', '--all', '--prune')
           if self.branch and \
             not ("* %s" % self.branch in self._git('branch').split("\n")):
               # Delete branch if already exists
