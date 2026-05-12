@@ -197,7 +197,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: int(here.REQUEST.get(\'size\', preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30)))</string> </value>
+            <value> <string>python: int(here.REQUEST.get(\'size\', max(preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30) - 50, 0) + 50))</string> </value>
         </item>
       </dictionary>
     </pickle>
