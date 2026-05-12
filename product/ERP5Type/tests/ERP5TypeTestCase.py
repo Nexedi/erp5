@@ -1722,3 +1722,17 @@ def fortify():
 
 
 fortify()
+
+class PinnedDateTime(object):
+  """
+  Context manager for changing the zope date
+  """
+  def __init__(self, testinstance, datetime):
+    self.datetime = datetime
+    self.testinstance = testinstance
+
+  def __enter__(self):
+    self.testinstance.pinDateTime(self.datetime)
+
+  def __exit__(self, *args, **kw):
+    self.testinstance.unpinDateTime()
