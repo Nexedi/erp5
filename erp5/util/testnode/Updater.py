@@ -159,6 +159,7 @@ class Updater(object):
 
     Returns True if:
     - repository_path exists
+    - current branch matches self.branch
     - remote.origin.url matches self.url
 
     Returns False otherwise.
@@ -167,6 +168,14 @@ class Updater(object):
       return False
     if not os.path.exists(self.repository_path):
       return False
+    if self.branch:
+      try:
+        branch = self._git("branch", "--show-current")
+      except SubprocessError:
+        logger.exception("")
+        return False
+      if branch != self.branch:
+        return False
     try:
       remote_url = self._git("config", "--get", "remote.origin.url")
     except SubprocessError:
@@ -211,7 +220,10 @@ class Updater(object):
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
-          self._git('fetch', '--all', '--prune')
+          if self.branch:
+            self._git('fetch', 'origin', self.branch)
+          else:
+            self._git('fetch', '--all', '--prune')
           if self.branch and \
             not ("* %s" % self.branch in self._git('branch').split("\n")):
               # Delete branch if already exists

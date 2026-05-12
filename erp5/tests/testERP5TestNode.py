@@ -605,6 +605,64 @@ shared = true
     revision = create_test_result_args[0]['revision']
     self.assertRegex(revision,  "^update error=fatal: repository '.*' does not exist$")
 
+  def test_05j_ReportFetchFailureAfterBranchChange(self):
+    """When a test suite's branch is changed to one that does not exist,
+    the testnode should report a failure to the server.
+    """
+    self.generateTestRepositoryList()
+    mock_test_result = mock.MagicMock()
+    mock_test_result.revision = 'dummy'
+    call_count = [0]
+    initial_data = self.getTestSuiteData()
+    bad_data = self.getTestSuiteData()
+    bad_data[0]['vcs_repository_list'][0]['branch'] = 'non-existent-branch'
+    create_test_result_args = []
+
+    def start_test_suite_side_effect(node_title, computer_guid='unknown'):
+      call_count[0] += 1
+      if call_count[0] > 2:
+        raise StopIteration
+      if call_count[0] == 1:
+        return json.dumps(initial_data)
+      return json.dumps(bad_data)
+
+    def create_test_result_side_effect(
+            revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      create_test_result_args.append(
+        dict(revision=revision, test_title=test_title))
+      if len(create_test_result_args) == 1:
+        return None
+      return mock_test_result
+
+    with mock.patch.object(
+            TaskDistributor, 'startTestSuite',
+            side_effect=start_test_suite_side_effect), \
+         mock.patch.object(
+            TaskDistributor, 'subscribeNode', return_value='{}'), \
+         mock.patch.object(
+            TaskDistributor, 'getTestType', return_value='UnitTest'), \
+         mock.patch.object(
+            TaskDistributor, 'createTestResult',
+            side_effect=create_test_result_side_effect), \
+         mock.patch.object(
+            test_type_registry['UnitTest'], '_prepareSlapOS',
+            return_value={'status_code': 0}), \
+         mock.patch('time.sleep'):
+      test_node = self.getTestNode()
+      test_node.run()
+
+    mock_test_result.reportFailure.assert_called_once()
+    self.assertTrue(
+      mock_test_result.reportFailure.call_args.kwargs.get('stderr'))
+    self.assertEqual(len(create_test_result_args), 2)
+    self.assertNotIn("update error",
+      create_test_result_args[0]['revision'])
+    self.assertIn("update error",
+      create_test_result_args[1]['revision'])
+    self.assertIn("non-existent-branch",
+      mock_test_result.reportFailure.call_args.kwargs.get('stderr', ''))
+
   def test_update_revision_with_head_at_merge(self):
     """Test update revision when the head of the branch is a merge commit.
     """
