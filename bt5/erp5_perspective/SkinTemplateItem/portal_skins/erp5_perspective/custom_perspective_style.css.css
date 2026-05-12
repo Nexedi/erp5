@@ -1,0 +1,23 @@
+regular-table {
+    scrollbar-color: #000000f7 transparent;
+    scrollbar-width: auto;
+    outline: none;
+}
+
+perspective-viewer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+td.psp-align-left {
+    text-align: right;
+}
+
+perspective-viewer regular-table tbody td:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    overflow-x: visible; /* Optional, changes the cursor to a pointer to indicate interactivity */
+}
