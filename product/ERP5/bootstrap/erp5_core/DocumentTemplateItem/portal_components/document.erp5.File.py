@@ -29,6 +29,8 @@
 
 import six
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Document import Document, VALID_TEXT_FORMAT_LIST
@@ -65,9 +67,6 @@ class File(Document, OFS_File):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Default global values
-  data = b'' # A hack required to use OFS.Image.index_html without calling OFS.Image.__init__
-
   # Default Properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
@@ -81,6 +80,17 @@ class File(Document, OFS_File):
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
     )
+
+  # edit order is useful for setting the right `content_type`
+  _default_edit_order = Base._default_edit_order + (
+    # Least priority: guess from content (data)
+    'data',
+    # Then, guess from filename
+    'file',
+    'filename',
+    # Most priority: no guess, set by caller
+    'content_type',
+  )
 
   # OFS.File has an overloaded __str__ that returns the file content
   __str__ = object.__str__
@@ -121,8 +131,14 @@ class File(Document, OFS_File):
     """
     has to be overwritten here, otherwise WebDAV fails
     """
-    return self.getSize()
+    # Empty files have zero size, so we enforce int
+    if not hasattr(aq_base(self), "data"):
+      return 0
 
+    return OFS_File.get_size(self)
+
+  security.declareProtected(Permissions.View, 'getSize')
+  getSize = get_size
   security.declareProtected(Permissions.View, 'getcontentlength')
   getcontentlength = get_size
 
@@ -166,7 +182,7 @@ class File(Document, OFS_File):
     """
     Checks whether a file was uploaded into the document.
     """
-    return self.hasData()
+    return self.hasFilename()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'guessMimeType')
   @deprecated
@@ -177,11 +193,54 @@ class File(Document, OFS_File):
     return self.getPortalObject().portal_contributions.\
       guessMimeTypeFromFilename(fname)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
+  @deprecated
+  def getBaseData(self):
+    """
+    Backward-compatiblity method. For transition, we decided to leave
+    conversion to previous base data up to each base class. An example of
+    backward-compatibility method can be found on `OOoDocument`.
+    """
+    raise NotImplementedError("Deprecated method, not supported anymore, please use `getData` instead.")
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @deprecated
+  def hasBaseData(self):
+    """
+    Backward-compatiblity method. The only generic way to test for base
+    data is to check if `getBaseData` returns something.
+    """
+    return bool(self.getBaseData())
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'setBaseData')
+  @deprecated
+  def setBaseData(self, data):
+    """
+    Backward-compatiblity method.
+    """
+    raise NotImplementedError("Deprecated method, not supported anymore, please use `setData` instead.")
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
-    """return Data as bytes."""
+    """
+    Return `data` as bytes. The method opportunistically tries to
+    delete `base_data` when the property exists.
+    """
+    if _checkPermission(Permissions.ModifyPortalContent, self):
+      # Try to delete `base_content_type`
+      try:
+        del aq_base(self).base_content_type
+      except AttributeError:
+        pass
+
+      # Try to delete `base_data`
+      try:
+        del aq_base(self).base_data
+      except AttributeError:
+        pass
+
     self._checkConversionFormatPermission(None)
-    data = self._baseGetData()
+    data = self._baseGetData(default)
     if data is None:
       return None
     else:
@@ -209,8 +268,8 @@ class File(Document, OFS_File):
     try:
       mime_type, content = self.convert(None)
     except ConversionError:
-      mime_type = self.getBaseContentType()
-      content = self.getBaseData()
+      mime_type = self.getContentType()
+      content = self.getData()
     except (NotImplementedError, MimeTypeException):
       pass
 
@@ -219,8 +278,6 @@ class File(Document, OFS_File):
         content = self.getTextContent()
       elif getattr(self, 'getData', None) is not None:
         content = self.getData()
-      elif getattr(self, 'getBaseData', None) is not None:
-        content = self.getBaseData()
 
     if content is not None:
       if isinstance(content, six.text_type):

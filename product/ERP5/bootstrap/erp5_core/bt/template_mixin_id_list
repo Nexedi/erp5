@@ -1,5 +1,4 @@
 mixin.erp5.AmountGeneratorMixin
-mixin.erp5.BaseConvertableFileMixin
 mixin.erp5.BaseExtensibleTraversableMixin
 mixin.erp5.CachedConvertableMixin
 mixin.erp5.CompositionMixin
@@ -16,6 +15,7 @@ mixin.erp5.MovementCollectionUpdaterMixin
 mixin.erp5.MovementGeneratorMixin
 mixin.erp5.RuleMixin
 mixin.erp5.SimulableMixin
+mixin.erp5.TextContentMigrationMixin
 mixin.erp5.TextConvertableMixin
 mixin.erp5.UrlMixin
 mixin.erp5.VirtualFolderMixin
