@@ -28,6 +28,7 @@ import glob
 import json
 import logging
 import os
+import random
 import time
 from six.moves.urllib.parse import urljoin
 from contextlib import contextmanager
@@ -518,7 +519,7 @@ shared = true
           node_test_suite.retry = True
           continue
         self.cleanUp()
-        sleep_time = 120 - (time.time() - begin)
+        sleep_time = random.uniform(120, 300) - (time.time() - begin)
         if sleep_time > 0:
           logger.info("End of processing, going to sleep %s", sleep_time)
           time.sleep(sleep_time)
