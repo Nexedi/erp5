@@ -1,6 +1,16 @@
 Changes
 =======
 
+0.4.82 (2026-05-12)
+-------------------
+
+  * testnode:
+     - fetch only the current branch instead of all branches
+     - randomize poll interval between 2 and 5 minutes
+     - handle git lock files as corruption
+     - only report failure when repository is misconfigured
+     - report fetch failure when changing branch to a non-existent one
+
 0.4.81 (2026-04-02)
 -------------------
 
