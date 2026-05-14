@@ -807,6 +807,9 @@ class BusinessProcess(Path, XMLObject):
           property_dict['start_date'], property_dict['stop_date'] = \
             self.getExpectedTradeModelPathStartAndStopDate(
               explanation, trade_model_path, delay_mode=delay_mode)
+        if hasattr(amount, "max_delay"):
+          property_dict['start_date'] = property_dict['start_date'] + amount.max_delay
+          property_dict['stop_date'] = property_dict['stop_date'] + amount.max_delay
     # Else, nothing to do. This method can be used without Applied Rule.
     return property_dict
 

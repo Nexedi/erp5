@@ -146,6 +146,9 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
                                         amount.getCategoryList(),
                                         base=True)
         movement.quantity = - movement.quantity
+        transformation_transformed_resource = amount.getCausalityValue()
+        if transformation_transformed_resource.getPortalType() == "Transformation Transformed Resource":
+          movement.max_delay = transformation_transformed_resource.getMaxDelay()
         # aggregation of items should not be propagated to what comes from transformation
         movement.setAggregateList([])
         yield movement
