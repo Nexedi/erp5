@@ -28,6 +28,40 @@ CREATE TABLE `stock` (
   `variation_text` VARCHAR(255),
   `sub_variation_text` VARCHAR(255),
   `is_source` BOOLEAN,
+
+  `variation_text_line_1` VARCHAR(255)
+    AS (
+      CASE
+        WHEN LENGTH(variation_text) - LENGTH(REPLACE(variation_text, '\n', '')) >= 0
+        THEN SUBSTRING_INDEX(variation_text, '\n', 1)
+        ELSE NULL
+      END
+    ) VIRTUAL,
+  `variation_text_line_2` VARCHAR(255)
+    AS (
+      CASE
+        WHEN LENGTH(variation_text) - LENGTH(REPLACE(variation_text, '\n', '')) >= 1
+        THEN SUBSTRING_INDEX(SUBSTRING_INDEX(variation_text, '\n', 2), '\n', -1)
+        ELSE NULL
+      END
+    ) VIRTUAL,
+  `variation_text_line_3` VARCHAR(255)
+    AS (
+      CASE
+        WHEN LENGTH(variation_text) - LENGTH(REPLACE(variation_text, '\n', '')) >= 2
+        THEN SUBSTRING_INDEX(SUBSTRING_INDEX(variation_text, '\n', 3), '\n', -1)
+        ELSE NULL
+      END
+    ) VIRTUAL,
+  `variation_text_line_4` VARCHAR(255)
+    AS (
+      CASE
+        WHEN LENGTH(variation_text) - LENGTH(REPLACE(variation_text, '\n', '')) >= 3
+        THEN SUBSTRING_INDEX(SUBSTRING_INDEX(variation_text, '\n', 4), '\n', -1)
+        ELSE NULL
+      END
+    ) VIRTUAL,
+
   PRIMARY KEY (`uid`, `order_id`),
   KEY `quantity` (`quantity`),
   KEY `section_uid_portal_type_mirror_section_uid` (`section_uid`, `portal_type`, `mirror_section_uid`),
