@@ -1,0 +1,26 @@
+<workflow_chain>
+ <chain>
+  <type>Currency</type>
+  <workflow>validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Daily Statement Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Price Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Price Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>
