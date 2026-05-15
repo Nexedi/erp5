@@ -3953,6 +3953,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     need_reset = isinstance(self, FilesystemDocumentTemplateItem)
+    any_imported = False
     for key in self._objects:
       # to achieve non data migration fresh installation parameters
       # differ from upgrade parameteres, so here the check have to be
@@ -3976,10 +3977,10 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
           continue
         if self.local_file_importer_name is None:
           continue
-        if need_reset:
-          self._resetDynamicModules()
-          need_reset = False
+        any_imported = True
         self.local_file_importer_name(name)
+    if need_reset and any_imported:
+      self._resetDynamicModules()
 
   def remove(self, context, **kw):
     """Conversion of magically uniqued paths to real ones"""
