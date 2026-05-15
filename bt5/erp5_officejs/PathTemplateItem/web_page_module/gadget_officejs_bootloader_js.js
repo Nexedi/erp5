@@ -4,7 +4,7 @@ var repair = false;
 (function (window, document, RSVP, rJS, jIO, navigator, URL) {
   "use strict";
 
-  function getDatabasePrefix(gadget) {
+  function getIndexedDBPrefix(gadget) {
     // Use app_id as prefix for IndexedDB names to avoid collisions
     // when multiple OfficeJS apps share the same origin.
     // Backward compatible: if app_id is absent, use original names.
@@ -15,7 +15,7 @@ var repair = false;
   }
 
   function createStorage(gadget) {
-    var prefix = getDatabasePrefix(gadget);
+    var prefix = getIndexedDBPrefix(gadget);
     return jIO.createJIO({
       type: "replicate",
       parallel_operation_attachment_amount: 10,
