@@ -4,18 +4,7 @@ var repair = false;
 (function (window, document, RSVP, rJS, jIO, navigator, URL) {
   "use strict";
 
-  function getDatabasePrefix(gadget) {
-    // Use app_id as prefix for IndexedDB names to avoid collisions
-    // when multiple OfficeJS apps share the same origin.
-    // Backward compatible: if app_id is absent, use original names.
-    if (gadget.props.app_id) {
-      return gadget.props.app_id + "_";
-    }
-    return "";
-  }
-
   function createStorage(gadget) {
-    var prefix = getDatabasePrefix(gadget);
     return jIO.createJIO({
       type: "replicate",
       parallel_operation_attachment_amount: 10,
@@ -33,7 +22,7 @@ var repair = false;
         type: "query",
         sub_storage: {
           type: "indexeddb",
-          database: prefix + "officejs-hash"
+          database: "officejs-hash"
         }
       },
       local_sub_storage: {
@@ -42,7 +31,7 @@ var repair = false;
           type: "uuid",
           sub_storage: {
             type: "indexeddb",
-            database: prefix + "ojs_source_code"
+            database: "ojs_source_code"
           }
         }
       },

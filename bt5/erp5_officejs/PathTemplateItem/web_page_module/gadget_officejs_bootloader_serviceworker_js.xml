@@ -99,10 +99,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Officejs BootLoader ServiceWorker JS</string> </value>
         </item>
