@@ -23,12 +23,17 @@
       hateoas_url = erp5_url + 'hateoas/',
       is_low_memory = (navigator.userAgent.indexOf("Chrome") > 0) &&
         (navigator.userAgent.indexOf('Mobile') > 0);
-    return gadget.getSettingList(
-      ['portal_type', 'erp5_attachment_synchro',
-       'default_view_reference']
-    )
-      .push(function (result_list) {
-        var portal_type = result_list[0] || "Web Page",
+    return RSVP.all([
+      gadget.getSettingList(
+        ['portal_type', 'erp5_attachment_synchro',
+         'default_view_reference']
+      ),
+      gadget.getIndexedDBPrefix()
+    ])
+      .push(function (all_result) {
+        var result_list = all_result[0],
+          prefix = all_result[1],
+          portal_type = result_list[0] || "Web Page",
           erp5_attachment_synchro = result_list[1] || "",
           default_view_reference = result_list[2] || 'jio_view',
           attachment_synchro = erp5_attachment_synchro !== "",
@@ -65,7 +70,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "officejs-erp5-hash"
+                  database: prefix + "officejs-erp5-hash"
                 }
               }
             },
@@ -81,7 +86,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "officejs-erp5"
+                  database: prefix + "officejs-erp5"
                 }
               }
             },
@@ -225,6 +230,7 @@
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
 
     .declareMethod('updateConfiguration', function (appcache_storage, origin_url,
                                                     migration_version, current_version,
@@ -276,15 +282,21 @@
         previous_storage_name,
         index,
         origin_url = window.location.href;
-      return gadget.getSettingList(['configuration_manifest',
-                                    'jio_storage_name',
-                                    'previous_storage_name',
-                                    'migration_version'])
-        .push(function (result_list) {
+      return RSVP.all([
+        gadget.getSettingList(['configuration_manifest',
+                               'jio_storage_name',
+                               'previous_storage_name',
+                               'migration_version']),
+        gadget.getIndexedDBPrefix()
+      ])
+        .push(function (all_result) {
+          var result_list = all_result[0],
+            prefix = all_result[1],
+            jio_appchache_options;
           selected_storage_name = result_list[1];
           previous_storage_name = result_list[2];
           migration_version = result_list[3];
-          var jio_appchache_options = {
+          jio_appchache_options = {
             type: "replicate",
             parallel_operation_attachment_amount: 10,
             parallel_operation_amount: 1,
@@ -301,7 +313,7 @@
               type: "query",
               sub_storage: {
                 type: "indexeddb",
-                database: selected_storage_name + "-configuration-hash"
+                database: prefix + selected_storage_name + "-configuration-hash"
               }
             },
             local_sub_storage: JSON.parse(JSON.stringify(jio_options)),
