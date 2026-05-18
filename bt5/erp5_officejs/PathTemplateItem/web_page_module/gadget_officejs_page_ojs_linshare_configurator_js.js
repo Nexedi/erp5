@@ -50,7 +50,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "ojs_linshare_hash"
+                database: window.top.getIndexedDBPrefix() + "ojs_linshare_hash"
               }
             }
           },
@@ -61,7 +61,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "ojs_linshare"
+                database: window.top.getIndexedDBPrefix() + "ojs_linshare"
               }
             }
           },

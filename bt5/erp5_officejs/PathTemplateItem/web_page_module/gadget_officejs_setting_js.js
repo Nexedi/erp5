@@ -10,7 +10,7 @@
       gadget.state_parameter_dict = {};
       gadget.state_parameter_dict.jio_storage = jIO.createJIO({
         type: "indexeddb",
-        database: "global-setting"
+        database: window.top.getIndexedDBPrefix() + "global-setting"
       });
     })
 
