@@ -2331,8 +2331,11 @@ class ERP5Generator(PortalGenerator):
       if not sql_reset and p[id]().tables():
         raise Exception("Database %r is not empty." % connection_string)
 
-    # Add Z MySQL Connections
-    manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    else:
+      manage_add = p.manage_addProduct['ZSQLiteDA'].manage_addZSQLiteConnection
+
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
     addSQLConnection('erp5_sql_deferred_connection',
@@ -2615,12 +2618,23 @@ class ERP5Generator(PortalGenerator):
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
+  import Products.Database
+  import Products.CMFActivity.Activity as CMFActivity
   AppInitializer.initialize = AppInitializer_initialize
-  self.initialize()
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
+    # in test
+    erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+    Products.Database.configure(erp5_catalog_storage)
+    CMFActivity.configure(erp5_catalog_storage)
+    self.initialize()
     return
+
+  erp5_catalog_storage = kw.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+  Products.Database.configure(erp5_catalog_storage)
+  CMFActivity.configure(erp5_catalog_storage)
+  self.initialize()
   meta_type = ERP5Site.meta_type
   for _ in self.getApp().objectIds(meta_type):
     return
@@ -2633,7 +2647,7 @@ def initialize(self):
   import inspect, sys, time
   from AccessControl.SecurityManagement import newSecurityManager
   from App.ZApplication import ZApplicationWrapper
-  from Products.ZMySQLDA.db import DB, OperationalError
+  from Products.Database.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
     erp5_catalog_storage = kw.get('erp5_catalog_storage')
