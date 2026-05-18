@@ -285,6 +285,13 @@ class Image(TextConvertableMixin, File, OFSImage):
       # so client (browser) can draw an image out of it
       return self.getContentType(), self.getData()
 
+    if not (format or kw):
+      # User asked for original content
+      return self.getContentType(), self.getData()
+
+    if self.getData() is None:
+      raise ConversionError("Cannot convert empty image")
+
     if format in VALID_TEXT_FORMAT_LIST:
       try:
         mime, data = self.getConversion(format=format)
@@ -294,9 +301,6 @@ class Image(TextConvertableMixin, File, OFSImage):
         data = aq_base(data)
         self.setConversion(data, mime=mime_type, format=format)
         return mime_type, data
-    if not (format or kw):
-      # User asked for original content
-      return self.getContentType(), self.getData()
     image_size = self.getSizeFromImageDisplay(kw.get('display'))
     # store all keys usefull to convert or resize an image
     # 'display' parameter can be discarded
