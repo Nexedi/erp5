@@ -7,6 +7,19 @@
            URL, domsugar) {
   "use strict";
 
+  // Per-app IndexedDB prefix exposed on the shell window so every gadget
+  // in the app (including iframe-sandboxed ones via window.top) can read
+  // it. Empty for renderjs_runner keeps existing ERP5JS state intact.
+  (function () {
+    var node = document.querySelector(
+      'script[data-renderjs-configuration="app_id"]'
+    );
+    var app_id = node && node.textContent.trim();
+    var prefix = (!app_id || app_id === "renderjs_runner")
+      ? "" : app_id + "_";
+    window.getIndexedDBPrefix = function () { return prefix; };
+  }());
+
   var MAIN_SCOPE = "m",
     default_state_json_string = JSON.stringify({
       panel_visible: false,
@@ -391,7 +404,7 @@
             type: "fallback",
             sub_storage: {
               type: "indexeddb",
-              database: "setting"
+              database: window.top.getIndexedDBPrefix() + "setting"
             },
             fallback_storage: {
               type: "memory"

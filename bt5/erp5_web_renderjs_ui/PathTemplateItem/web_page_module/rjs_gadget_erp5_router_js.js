@@ -1072,7 +1072,7 @@
                   type: "fallback",
                   sub_storage: {
                     type: "indexeddb",
-                    database: "selection"
+                    database: window.top.getIndexedDBPrefix() + "selection"
                   },
                   fallback_storage: {
                     type: "memory"
@@ -1091,7 +1091,7 @@
                   type: "fallback",
                   sub_storage: {
                     type: "indexeddb",
-                    database: "navigation_history"
+                    database: window.top.getIndexedDBPrefix() + "navigation_history"
                   },
                   fallback_storage: {
                     type: "memory"
@@ -1108,7 +1108,7 @@
                 type: "fallback",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "document_state"
+                  database: window.top.getIndexedDBPrefix() + "document_state"
                 },
                 fallback_storage: {
                   type: "memory"
