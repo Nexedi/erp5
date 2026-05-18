@@ -99,11 +99,6 @@
   <td>Spreadsheet</td>
   <td></td>
 </tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Converted</td>
-  <td></td>
-</tr>
 <!--  add "My Documents" gadget -->
 <tr>
   <td>openAndWait</td>

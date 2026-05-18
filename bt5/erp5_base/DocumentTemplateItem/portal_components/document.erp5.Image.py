@@ -82,6 +82,7 @@ class Image(TextConvertableMixin, File, OFSImage):
   portal_type = 'Image'
 
   # Default attribute values
+  data = b'' # A hack required to use OFS.Image.index_html without calling OFS.Image.__init__
   width = 0
   height = 0
 
@@ -119,7 +120,6 @@ class Image(TextConvertableMixin, File, OFSImage):
         image = PIL.Image.open(BytesIO(bytes(self.data)))
       except IOError:
         width = height = -1
-        content_type = 'application/unknown'
       else:
         width, height = image.size
         content_type = image.get_format_mimetype()
@@ -129,7 +129,9 @@ class Image(TextConvertableMixin, File, OFSImage):
           content_type = mimetype_list[0].normalized()
     self.height = height
     self.width = width
-    self._setContentType(content_type)
+
+    if content_type:
+      self._setContentType(content_type)
 
   def _upgradeImage(self):
     """
@@ -150,8 +152,13 @@ class Image(TextConvertableMixin, File, OFSImage):
     if not hasattr(aq_base(self), 'data') and hasattr(aq_base(self), '_data'):
       self.data = self._data
 
-    # Make sure size is defined
-    size = len(self.data)
+    # We want to match is data is None in itself, or simply undefined (equivalent)
+    data = getattr(aq_base(self), 'data', None)
+    if data is None:
+      size = 0
+    else:
+      size = len(data)
+
     if getattr(aq_base(self), 'size', None) != size:
       self.size = size
 
@@ -278,6 +285,13 @@ class Image(TextConvertableMixin, File, OFSImage):
       # so client (browser) can draw an image out of it
       return self.getContentType(), self.getData()
 
+    if not (format or kw):
+      # User asked for original content
+      return self.getContentType(), self.getData()
+
+    if self.getData() is None:
+      raise ConversionError("Cannot convert empty image")
+
     if format in VALID_TEXT_FORMAT_LIST:
       try:
         mime, data = self.getConversion(format=format)
@@ -287,9 +301,6 @@ class Image(TextConvertableMixin, File, OFSImage):
         data = aq_base(data)
         self.setConversion(data, mime=mime_type, format=format)
         return mime_type, data
-    if not (format or kw):
-      # User asked for original content
-      return self.getContentType(), self.getData()
     image_size = self.getSizeFromImageDisplay(kw.get('display'))
     # store all keys usefull to convert or resize an image
     # 'display' parameter can be discarded
@@ -381,7 +392,11 @@ class Image(TextConvertableMixin, File, OFSImage):
     else:
       parameter_list.append('-')
 
-    data = bytes(self.getData())
+    data = self.getData()
+    if data is None:
+      return None
+    data = bytes(data)
+
     if self.getContentType() == "image/svg+xml":
       data = transformUrlToDataURI(data)
 
