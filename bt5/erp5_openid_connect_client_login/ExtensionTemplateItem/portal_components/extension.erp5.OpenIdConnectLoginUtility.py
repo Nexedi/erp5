@@ -90,6 +90,7 @@ def redirectToOpenIdConnectLoginPage(self, reference="default"):
   openid_connector = _getOpenOpenIdConnector(portal, reference)
   client = _prepareAndReturnClient(portal, openid_connector, reference)
 
+  web_site_value = self.getWebSiteValue() or self
   session = {}
   session["state"] = rndstr()
   session["nonce"] = rndstr()
@@ -99,7 +100,7 @@ def redirectToOpenIdConnectLoginPage(self, reference="default"):
       "response_type": "code",
       "scope": openid_connector.getScopeList(),
       "nonce": session["nonce"],
-      "redirect_uri": client.registration_response["redirect_uris"][0],
+      "redirect_uri": web_site_value.absolute_url() + client.registration_response["redirect_uris"][0],
       "state": session["state"]
   }
 
@@ -117,8 +118,9 @@ def getAccessTokenFromCode(self, query_string, redirect_uri, reference="default"
     info=query_string,
     sformat="urlencoded"
   )
+  web_site_value = self.getWebSiteValue() or self
   args = {
-    "redirect_uri": client.registration_response["redirect_uris"][0],
+    "redirect_uri": web_site_value.absolute_url() + client.registration_response["redirect_uris"][0],
     "grant_type": "authorization_code",
   }
   response = client.do_access_token_request(
@@ -136,8 +138,9 @@ def getAccessTokenFromRefreshToken(self, response_dict, reference="default"):
   portal = self.getPortalObject()
   openid_connector = _getOpenOpenIdConnector(portal, reference)
   client = _prepareAndReturnClient(portal, openid_connector, reference)
+  web_site_value = self.getWebSiteValue() or self
   args = {
-    "redirect_uri": client.registration_response["redirect_uris"][0],
+    "redirect_uri": web_site_value.absolute_url() + client.registration_response["redirect_uris"][0],
   }
   token = Token(response_dict)
   response = client.do_access_token_refresh(

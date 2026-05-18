@@ -8,14 +8,18 @@ cache_factory = "openid_connect_server_auth_token_cache_factory"
 def handleError(error, error_description="", state=None):
   if state:
     context.Base_setBearerToken(state, None, cache_factory)
-  return context.getWebSiteValue().Base_redirect(
-    'login_form',
-    keep_items={"portal_status_message":
-                context.Base_translateString(
-                  "There was problem with your login: ${error} ${error_description}. Please contact your administrator.",
-                  mapping={"error": error, "error_description": error_description})
-               })
-
+  portal = context.getPortalObject()
+  web_site = context.getWebSiteValue()
+  login_url = (web_site or portal).absolute_url() + '/login_form'
+  message = portal.Base_translateString(
+    "There was problem with your login: ${error} ${error_description}. Please contact your administrator.",
+    mapping={'error': error, 'error_description': error_description}
+  )
+  # Use portal's RESPONSE directly
+  response = portal.REQUEST.RESPONSE
+  response.setHeader('Location', login_url + '?portal_status_message=' + message)
+  response.setStatus(302)
+  return
 
 state = state or request.form["state"]
 if not state:
@@ -38,7 +42,7 @@ elif code is not None:
   )
   if response_dict is not None:
     """
-    Here is an example of correct response dict: 
+    Here is an example of correct response dict:
     {
       'access_token': u'XXXX0koYI5hASXZaExeYsGlqz1bSIcGyEg',
       'token_type': u'Bearer',
@@ -67,15 +71,14 @@ elif code is not None:
     if not person_relative_url:
       method = getattr(context, "ERP5Site_createOpenIdConnectUserToOAuth", None)
       if method is not None:
-        method(user_reference, user_dict)
+        method(user_reference, user_dict, access_token)
         # XXX CLN Hackish redirect
-        return web_site_value.Base_redirect('hateoas/connection/login_form', keep_items={
-          "portal_status_message": "Your user is being created, please retry clicking on 'Login with OpenId Connect' in 1 minute."
-        })
-
-    came_from = web_site_value.absolute_url() + "/#!login?n.me=%s" % person_relative_url
-
-    response.setHeader('Location', came_from)
+        response.setHeader('Location', context.absolute_url() + "/login_form?portal_status_message=Authentication was successful. Please wait a few seconds while your login is finalized, then try logging in again. If the problem persists, wait a little longer or contact your administrator.")
+      else:
+        response.setHeader('Location', context.absolute_url() + "/login_form?portal_status_message=Please contact the system administrator to request access.")
+    else:
+      came_from = web_site_value.absolute_url() + "/#!login?n.me=%s" % person_relative_url
+      response.setHeader('Location', came_from)
     response.setStatus(303)
 else:
   return handleError('')
