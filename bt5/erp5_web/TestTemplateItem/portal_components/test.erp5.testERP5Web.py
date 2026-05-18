@@ -41,6 +41,7 @@ from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from zope.datetime import rfc1123_date
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg', )
 HTTP_OK = 200
@@ -1277,7 +1278,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path)
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)
-    from App.Common import rfc1123_date
     # Convert the Date into string according RFC 1123 Time Format
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
@@ -1343,6 +1343,9 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertTrue(self.publish(web_section.absolute_url_path()).getHeader('X-Cache-Headers-Set-By'))
     web_section.setCustomRenderMethodId('WebSection_viewAsWeb')
     self.assertTrue(self.publish(web_section.absolute_url_path()).getHeader('X-Cache-Headers-Set-By'))
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    expected_last_modified = rfc1123_date(web_section.Base_getWebDocumentDrivenModificationDate())
     conditional_get_response = requests.get(
       web_section.absolute_url(),
       headers={'If-Modified-Since': DateTime().utcdatetime().strftime('%a, %d %b %Y %H:%M:%S UTC')},
@@ -1350,6 +1353,8 @@ Hé Hé Hé!""", page.asText().strip())
     )
     self.assertEqual(conditional_get_response.status_code, 304)
     self.assertIn('Cache-Control', conditional_get_response.headers)
+    last_modified = conditional_get_response.headers.get('Last-Modified')
+    self.assertEqual(last_modified, expected_last_modified)
 
   def test_16_404ErrorPageIsReturned(self):
     """
@@ -1825,7 +1830,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path)
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)
-    from App.Common import rfc1123_date
     # Convert the Date into string according RFC 1123 Time Format
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
@@ -1886,7 +1890,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path)
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)
-    from App.Common import rfc1123_date
     # Convert the Date into string according RFC 1123 Time Format
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
@@ -1947,7 +1950,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path)
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)
-    from App.Common import rfc1123_date
     # Convert the Date into string according RFC 1123 Time Format
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
@@ -2008,7 +2010,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path)
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)
-    from App.Common import rfc1123_date
     # Convert the Date into string according RFC 1123 Time Format
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
