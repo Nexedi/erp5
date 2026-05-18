@@ -7,6 +7,18 @@
            URL, domsugar) {
   "use strict";
 
+  // Per-app IndexedDB prefix derived from the shell's app_id tag.
+  // Empty string for renderjs_runner keeps existing ERP5JS state intact.
+  // Published to child gadgets via allowPublicAcquisition below.
+  var INDEXEDDB_PREFIX = (function () {
+    var node = document.querySelector(
+      'script[data-renderjs-configuration="app_id"]'
+    );
+    var app_id = node && node.textContent.trim();
+    return (!app_id || app_id === "renderjs_runner")
+      ? "" : app_id + "_";
+  }());
+
   var MAIN_SCOPE = "m",
     default_state_json_string = JSON.stringify({
       panel_visible: false,
@@ -391,7 +403,7 @@
             type: "fallback",
             sub_storage: {
               type: "indexeddb",
-              database: "setting"
+              database: INDEXEDDB_PREFIX + "setting"
             },
             fallback_storage: {
               type: "memory"
@@ -455,6 +467,9 @@
     //////////////////////////////////////////
     // Allow Acquisition
     //////////////////////////////////////////
+    .allowPublicAcquisition("getIndexedDBPrefix", function getIndexedDBPrefix() {
+      return INDEXEDDB_PREFIX;
+    })
     .allowPublicAcquisition("getSettingList",
                             function getSettingList(argument_list) {
         var key_list = argument_list[0];
