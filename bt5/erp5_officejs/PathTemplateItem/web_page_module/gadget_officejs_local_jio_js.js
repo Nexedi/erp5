@@ -65,7 +65,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "officejs-erp5-hash"
+                  database: window.top.getIndexedDBPrefix() + "officejs-erp5-hash"
                 }
               }
             },
@@ -81,7 +81,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "officejs-erp5"
+                  database: window.top.getIndexedDBPrefix() + "officejs-erp5"
                 }
               }
             },
@@ -301,7 +301,7 @@
               type: "query",
               sub_storage: {
                 type: "indexeddb",
-                database: selected_storage_name + "-configuration-hash"
+                database: window.top.getIndexedDBPrefix() + selected_storage_name + "-configuration-hash"
               }
             },
             local_sub_storage: JSON.parse(JSON.stringify(jio_options)),

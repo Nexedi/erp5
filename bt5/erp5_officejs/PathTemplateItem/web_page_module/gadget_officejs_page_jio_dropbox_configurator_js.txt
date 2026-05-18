@@ -40,7 +40,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-dropbox-hash"
+                database: window.top.getIndexedDBPrefix() + "officejs-dropbox-hash"
               }
             }
           },
@@ -50,7 +50,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-dropbox"
+                database: window.top.getIndexedDBPrefix() + "officejs-dropbox"
               }
             }
           },

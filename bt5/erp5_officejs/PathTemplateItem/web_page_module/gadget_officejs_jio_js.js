@@ -66,7 +66,7 @@
                       type: "uuid",
                       sub_storage: {
                         type: "indexeddb",
-                        database: "officejs-erp5-hash"
+                        database: window.top.getIndexedDBPrefix() + "officejs-erp5-hash"
                       }
                     }
                   },
@@ -82,7 +82,7 @@
                       type: "uuid",
                       sub_storage: {
                         type: "indexeddb",
-                        database: "officejs-erp5"
+                        database: window.top.getIndexedDBPrefix() + "officejs-erp5"
                       }
                     }
                   },

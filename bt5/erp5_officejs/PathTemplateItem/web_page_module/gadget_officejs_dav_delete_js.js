@@ -43,7 +43,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "officejs-dav"
+                  database: window.top.getIndexedDBPrefix() + "officejs-dav"
                 }
               }
             }

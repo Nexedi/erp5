@@ -27,7 +27,7 @@
             type: "uuid",
             sub_storage: {
               type: "indexeddb",
-              database: "local_default"
+              database: window.top.getIndexedDBPrefix() + "local_default"
             }
           }
         };

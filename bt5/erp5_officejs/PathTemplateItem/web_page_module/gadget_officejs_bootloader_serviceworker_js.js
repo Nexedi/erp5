@@ -24,7 +24,7 @@ var global = self, window = self;
 
   self.cache_list = [];
 
-  function getDatabasePrefix() {
+  function getIndexedDBPrefix() {
     // Derive per-app IndexedDB prefix from the SW scope URL path.
     // On officejs.com subdomains, scope path is "/" -> empty prefix
     // (backward compatible). On ERP5 embedded, scope path is e.g.
@@ -48,7 +48,7 @@ var global = self, window = self;
 
   function getFromLocal(relative_url) {
     if (self.storage.get === undefined) {
-      self.storage = createStorage(getDatabasePrefix() + "ojs_source_code");
+      self.storage = createStorage(getIndexedDBPrefix() + "ojs_source_code");
     }
     return self.storage.getAttachment(self.registration.scope, relative_url)
       .push(function (blob) {
