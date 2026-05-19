@@ -8,12 +8,14 @@
       .push(function () {
         return RSVP.all([
           gadget.getSetting("portal_type"),
-          gadget.getSetting("erp5_attachment_synchro", "")
+          gadget.getSetting("erp5_attachment_synchro", ""),
+          gadget.getIndexedDBPrefix()
         ]);
       })
       .push(function (setting) {
         var configuration = {},
-          attachment_synchro = setting[1] !== "";
+          attachment_synchro = setting[1] !== "",
+          prefix = setting[2];
         configuration = {
           type: "replicate",
           query: {
@@ -40,7 +42,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-dropbox-hash"
+                database: prefix + "officejs-dropbox-hash"
               }
             }
           },
@@ -50,7 +52,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-dropbox"
+                database: prefix + "officejs-dropbox"
               }
             }
           },
@@ -112,6 +114,7 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
     .declareMethod("render", function (options) {
       return setDropboxConfiguration(this, options.access_token);
     });
