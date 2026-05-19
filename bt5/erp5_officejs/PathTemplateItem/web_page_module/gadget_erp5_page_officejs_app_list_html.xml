@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,20 +59,18 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_bootloader_serviceworker.js</string> </value>
+            <value> <string>gadget_erp5_page_officejs_app_list.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -82,7 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_bootloader_serviceworker_js</string> </value>
+            <value> <string>gadget_erp5_page_officejs_app_list_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -90,7 +88,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,18 +97,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs BootLoader ServiceWorker JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>OfficeJS Application List Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -190,7 +178,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1490371309.42</float>
+                              <float>1713200000.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -239,7 +227,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.49641.0.58982</string> </value>
+                      <value> <string>0.0.0.0</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -255,7 +243,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1600683471.2</float>
+                              <float>1713200000.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
