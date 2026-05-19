@@ -1,0 +1,64 @@
+<html>
+<head><title tal:content="template/title"></title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4" tal:content="template/title">
+</td></tr>
+</thead><tbody>
+
+<tr>
+  <td>open</td>
+  <td tal:content="string:${context/portal_url}/portal_skins/erp5_perspective_test/Document_viewPerspectiveData"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-editable="field_my_perspective"]//iframe</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-editable="field_my_perspective"]//iframe</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//html/body/perspective-viewer/perspective-viewer-datagrid/regular-table/table</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${context/portal_url}/portal_skins/erp5_perspective_test/Document_viewPerspectiveNoData"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-editable="field_my_perspective"]//iframe</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-editable="field_my_perspective"]//iframe</td>
+  <td></td>
+</tr>
+  
+  
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//html/body/perspective-viewer</td>
+  <td></td>
+</tr>
+  
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//html/body/perspective-viewer/perspective-viewer-datagrid</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
