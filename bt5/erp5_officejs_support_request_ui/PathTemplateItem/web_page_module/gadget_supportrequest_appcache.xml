@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77342955.1185937</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -69,13 +73,18 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>b46e77123731c31596d77ef3b76a4679</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/plain</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
+CACHE:\n
+NETWORK:\n
+*</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -106,11 +115,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-CACHE:\n
-NETWORK:\n
-*</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>32</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -255,7 +261,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.26881.14545.28757</string> </value>
+                      <value> <string>1032.34335.4351.12322</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -271,8 +277,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1583931913.54</float>
-                              <string>UTC</string>
+                              <float>1777342955.130558</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>

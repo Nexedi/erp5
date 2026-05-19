@@ -155,7 +155,6 @@ def checkConversionToolAvailability(self):
       id=document_id,
       data=document_file.data,
       source_reference=document_id)
-    temp_document.convertToBaseFormat()
     _, html_result = temp_document.convert(format='html')
   except ConflictError:
     raise
