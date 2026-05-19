@@ -23,13 +23,16 @@
       hateoas_url = erp5_url + 'hateoas/',
       is_low_memory = (navigator.userAgent.indexOf("Chrome") > 0) &&
         (navigator.userAgent.indexOf('Mobile') > 0);
-    return RSVP.all([
-      gadget.getSettingList(
-        ['portal_type', 'erp5_attachment_synchro',
-         'default_view_reference']
-      ),
-      gadget.getIndexedDBPrefix()
-    ])
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSettingList(
+            ['portal_type', 'erp5_attachment_synchro',
+             'default_view_reference']
+          ),
+          gadget.getIndexedDBPrefix()
+        ]);
+      })
       .push(function (all_result) {
         var result_list = all_result[0],
           prefix = all_result[1],
@@ -282,13 +285,16 @@
         previous_storage_name,
         index,
         origin_url = window.location.href;
-      return RSVP.all([
-        gadget.getSettingList(['configuration_manifest',
-                               'jio_storage_name',
-                               'previous_storage_name',
-                               'migration_version']),
-        gadget.getIndexedDBPrefix()
-      ])
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSettingList(['configuration_manifest',
+                                   'jio_storage_name',
+                                   'previous_storage_name',
+                                   'migration_version']),
+            gadget.getIndexedDBPrefix()
+          ]);
+        })
         .push(function (all_result) {
           var result_list = all_result[0],
             prefix = all_result[1],

@@ -5,10 +5,13 @@
   "use strict";
 
   function setjIODAVConfiguration(gadget) {
-    return RSVP.all([
-      gadget.getSetting("portal_type"),
-      gadget.getIndexedDBPrefix()
-    ])
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSetting("portal_type"),
+          gadget.getIndexedDBPrefix()
+        ]);
+      })
       .push(function (result) {
         var portal_type = result[0],
           prefix = result[1],

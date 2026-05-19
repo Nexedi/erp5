@@ -33,10 +33,13 @@
           .push(function (erp5_attachment_synchro) {
             var attachment_synchro = erp5_attachment_synchro !== "",
               extended_attachment_url = erp5_attachment_synchro;
-            return RSVP.all([
-              gadget.getSetting("default_view_reference", 'jio_view'),
-              gadget.getIndexedDBPrefix()
-            ])
+            return new RSVP.Queue()
+              .push(function () {
+                return RSVP.all([
+                  gadget.getSetting("default_view_reference", 'jio_view'),
+                  gadget.getIndexedDBPrefix()
+                ]);
+              })
               .push(function (last_result) {
                 var default_view_reference = last_result[0],
                   prefix = last_result[1],
