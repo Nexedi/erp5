@@ -7,17 +7,16 @@
            URL, domsugar) {
   "use strict";
 
-  // Per-app IndexedDB prefix exposed on the shell window so every gadget
-  // in the app (including iframe-sandboxed ones via window.top) can read
-  // it. Empty for renderjs_runner keeps existing ERP5JS state intact.
-  (function () {
+  // Per-app IndexedDB prefix derived from the shell's app_id tag.
+  // Empty string for renderjs_runner keeps existing ERP5JS state intact.
+  // Published to child gadgets via allowPublicAcquisition below.
+  var INDEXEDDB_PREFIX = (function () {
     var node = document.querySelector(
       'script[data-renderjs-configuration="app_id"]'
     );
     var app_id = node && node.textContent.trim();
-    var prefix = (!app_id || app_id === "renderjs_runner")
+    return (!app_id || app_id === "renderjs_runner")
       ? "" : app_id + "_";
-    window.getIndexedDBPrefix = function () { return prefix; };
   }());
 
   var MAIN_SCOPE = "m",
@@ -404,7 +403,7 @@
             type: "fallback",
             sub_storage: {
               type: "indexeddb",
-              database: window.top.getIndexedDBPrefix() + "setting"
+              database: INDEXEDDB_PREFIX + "setting"
             },
             fallback_storage: {
               type: "memory"
@@ -468,6 +467,9 @@
     //////////////////////////////////////////
     // Allow Acquisition
     //////////////////////////////////////////
+    .allowPublicAcquisition("getIndexedDBPrefix", function getIndexedDBPrefix() {
+      return INDEXEDDB_PREFIX;
+    })
     .allowPublicAcquisition("getSettingList",
                             function getSettingList(argument_list) {
         var key_list = argument_list[0];
