@@ -33,9 +33,14 @@
           .push(function (erp5_attachment_synchro) {
             var attachment_synchro = erp5_attachment_synchro !== "",
               extended_attachment_url = erp5_attachment_synchro;
-            return gadget.getSetting("default_view_reference", 'jio_view')
-              .push(function (default_view_reference) {
-                var configuration = {
+            return RSVP.all([
+              gadget.getSetting("default_view_reference", 'jio_view'),
+              gadget.getIndexedDBPrefix()
+            ])
+              .push(function (last_result) {
+                var default_view_reference = last_result[0],
+                  prefix = last_result[1],
+                  configuration = {
                   debug: true,
                   report_level: 1000,
                   type: "replicate",
@@ -66,7 +71,7 @@
                       type: "uuid",
                       sub_storage: {
                         type: "indexeddb",
-                        database: window.top.getIndexedDBPrefix() + "officejs-erp5-hash"
+                        database: prefix + "officejs-erp5-hash"
                       }
                     }
                   },
@@ -82,7 +87,7 @@
                       type: "uuid",
                       sub_storage: {
                         type: "indexeddb",
-                        database: window.top.getIndexedDBPrefix() + "officejs-erp5"
+                        database: prefix + "officejs-erp5"
                       }
                     }
                   },
@@ -210,6 +215,7 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
 
     .declareMethod('createJio', function (jio_options) {
       var gadget = this;

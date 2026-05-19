@@ -259,41 +259,52 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
       self.assertIn('"app_id"', body)
       self.assertIn("getWebSiteValue().getId()", body)
 
-  def test_launcher_defines_window_getIndexedDBPrefix(self):
-    """rjs_gadget_erp5_launcher_js exports window.getIndexedDBPrefix."""
+  def test_launcher_publishes_getIndexedDBPrefix_acquisition(self):
+    """rjs_gadget_erp5_launcher_js publishes getIndexedDBPrefix via
+    allowPublicAcquisition and uses the prefix for its own setting DB."""
     text_content = self._getWebPageText(
       "rjs_gadget_erp5_launcher_js", "erp5_launcher_nojqm.js",
       portal_type="Web Script"
     )
     if text_content is not None:
-      self.assertIn("window.getIndexedDBPrefix", text_content)
+      self.assertIn(
+        '.allowPublicAcquisition("getIndexedDBPrefix"', text_content
+      )
       self.assertIn("renderjs_runner", text_content)
-      self.assertIn("window.top.getIndexedDBPrefix() + \"setting\"",
-                    text_content)
+      self.assertIn('INDEXEDDB_PREFIX + "setting"', text_content)
 
-  def test_setting_gadget_uses_prefixed_database(self):
-    """gadget_officejs_setting_js prefixes the global-setting database."""
+  def test_setting_gadget_acquires_prefix(self):
+    """gadget_officejs_setting_js acquires getIndexedDBPrefix from parent
+    and uses the resolved prefix for the global-setting database."""
     text_content = self._getWebPageText(
       "gadget_officejs_setting_js", "gadget_officejs_setting.js",
       portal_type="Web Script"
     )
     if text_content is not None:
-      self.assertIn("window.top.getIndexedDBPrefix() + \"global-setting\"",
-                    text_content)
+      self.assertIn(
+        '.declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")',
+        text_content
+      )
+      self.assertIn('prefix + "global-setting"', text_content)
 
   def test_local_default_is_prefixed_in_configurator(self):
-    """gadget_officejs_page_jio_configurator_js prefixes local_default."""
+    """gadget_officejs_page_jio_configurator_js acquires prefix and uses
+    it for local_default."""
     text_content = self._getWebPageText(
       "gadget_officejs_page_jio_configurator_js",
       "gadget_officejs_page_jio_configurator.js",
       portal_type="Web Script"
     )
     if text_content is not None:
-      self.assertIn("window.top.getIndexedDBPrefix() + \"local_default\"",
-                    text_content)
+      self.assertIn(
+        '.declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")',
+        text_content
+      )
+      self.assertIn('prefix + "local_default"', text_content)
 
   def test_local_jio_gadget_prefixes_configuration_hash(self):
-    """gadget_officejs_local_jio_js prefixes configuration-hash and erp5."""
+    """gadget_officejs_local_jio_js acquires prefix and uses it for the
+    configuration-hash and officejs-erp5 databases."""
     text_content = self._getWebPageText(
       "gadget_officejs_local_jio_js",
       "gadget_officejs_local_jio.js",
@@ -301,27 +312,28 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
     )
     if text_content is not None:
       self.assertIn(
-        "window.top.getIndexedDBPrefix() + selected_storage_name + "
-        "\"-configuration-hash\"",
+        '.declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")',
         text_content
       )
       self.assertIn(
-        "window.top.getIndexedDBPrefix() + \"officejs-erp5-hash\"",
+        'prefix + selected_storage_name + "-configuration-hash"',
         text_content
       )
-      self.assertIn("window.top.getIndexedDBPrefix() + \"officejs-erp5\"",
-                    text_content)
+      self.assertIn('prefix + "officejs-erp5-hash"', text_content)
+      self.assertIn('prefix + "officejs-erp5"', text_content)
 
   def test_erp5js_router_prefixes_router_databases(self):
-    """rjs_gadget_erp5_router_js prefixes selection/navigation/document."""
+    """rjs_gadget_erp5_router_js acquires prefix and uses it for the
+    selection/navigation_history/document_state databases."""
     text_content = self._getWebPageText(
       "rjs_gadget_erp5_router_js", "gadget_erp5_router.js",
       portal_type="Web Script"
     )
     if text_content is not None:
-      self.assertIn("window.top.getIndexedDBPrefix() + \"selection\"",
-                    text_content)
-      self.assertIn("window.top.getIndexedDBPrefix() + \"navigation_history\"",
-                    text_content)
-      self.assertIn("window.top.getIndexedDBPrefix() + \"document_state\"",
-                    text_content)
+      self.assertIn(
+        ".declareAcquiredMethod('getIndexedDBPrefix', 'getIndexedDBPrefix')",
+        text_content
+      )
+      self.assertIn('prefix + "selection"', text_content)
+      self.assertIn('prefix + "navigation_history"', text_content)
+      self.assertIn('prefix + "document_state"', text_content)
