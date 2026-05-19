@@ -180,18 +180,18 @@ class TestWebDavSupport(ERP5TypeTestCase):
       </body>
     </html>
     """
-    iso_text_content = str2unicode(text_content).encode('iso-8859-1')
+    data = str2unicode(text_content).encode('iso-8859-1')
     path = web_page_module.getPath()
     # Run twice to check the code that compares old & new data
     # when setting file attribute.
     for _ in range(2):
       response = self.publish('%s/%s' % (path, filename),
                               request_method='PUT',
-                              stdin=BytesIO(iso_text_content),
+                              stdin=BytesIO(data),
                               basic=self.authentication)
       self.assertEqual(response.getStatus(), six.moves.http_client.NO_CONTENT)
-      self.assertEqual(web_page_module[filename].getData(), iso_text_content)
-      self.assertEqual(web_page_module[filename].getTextContent(), iso_text_content)
+      self.assertEqual(web_page_module[filename].getData(), data)
+      self.assertEqual(web_page_module[filename].getTextContent(), text_content)
 
   def test_GET_on_document(self):
     """Get data from document in webdav
