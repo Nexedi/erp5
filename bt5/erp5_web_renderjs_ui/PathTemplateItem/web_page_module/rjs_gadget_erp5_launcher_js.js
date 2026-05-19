@@ -7,6 +7,26 @@
            URL, domsugar) {
   "use strict";
 
+  // Per-app IndexedDB prefix, read from the
+  // <script data-renderjs-configuration="app_id"> tag. On shared origins
+  // this tag is always injected server-side by the rendering skin
+  // (WebSection_renderDefaultPageAsGadget for the app shell,
+  // WebSection_renderOfficeJSApplicationPage for the bootloader), so the
+  // prefix isolates each app's IndexedDB databases from every other app
+  // on the same origin. When the tag is absent — standalone subdomain
+  // builds, where each app is its own origin — the prefix is empty and
+  // no isolation is needed. renderjs_runner also maps to the empty
+  // prefix so existing ERP5JS state stays intact.
+  // Published to child gadgets via allowPublicAcquisition below.
+  var INDEXEDDB_PREFIX = (function () {
+    var node = document.querySelector(
+      'script[data-renderjs-configuration="app_id"]'
+    ),
+      app_id = node && node.textContent.trim();
+    return (!app_id || app_id === "renderjs_runner")
+      ? "" : app_id + "_";
+  }());
+
   var MAIN_SCOPE = "m",
     default_state_json_string = JSON.stringify({
       panel_visible: false,
@@ -391,7 +411,7 @@
             type: "fallback",
             sub_storage: {
               type: "indexeddb",
-              database: "setting"
+              database: INDEXEDDB_PREFIX + "setting"
             },
             fallback_storage: {
               type: "memory"
@@ -455,6 +475,9 @@
     //////////////////////////////////////////
     // Allow Acquisition
     //////////////////////////////////////////
+    .allowPublicAcquisition("getIndexedDBPrefix", function getIndexedDBPrefix() {
+      return INDEXEDDB_PREFIX;
+    })
     .allowPublicAcquisition("getSettingList",
                             function getSettingList(argument_list) {
         var key_list = argument_list[0];
