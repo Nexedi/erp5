@@ -19,6 +19,11 @@
   //     apps whose landing pages are static HTML stored in the BT.
   // Empty for renderjs_runner so existing ERP5JS state stays intact.
   // Published to child gadgets via allowPublicAcquisition below.
+  // TODO: the URL fallback assumes a /erp5/web_site_module/{id}/ mount
+  // — it breaks under prod URL rewrites / virtual hosts that change the
+  // path layout. Replace with a real app_id tag on each landing page
+  // (or have ERP5 inject one at serve/precache time) before relying on
+  // this in production. Same heuristic also lives in the SW.
   var INDEXEDDB_PREFIX = (function () {
     var node = document.querySelector(
       'script[data-renderjs-configuration="app_id"]'

@@ -15,6 +15,11 @@
   //     matches the Service Worker's scope-based derivation.
   // Empty string for renderjs_runner keeps existing ERP5JS state intact.
   // Published to child gadgets via allowPublicAcquisition below.
+  // TODO: the URL fallback assumes a /erp5/web_site_module/{id}/ mount
+  // — it breaks under prod URL rewrites / virtual hosts that change the
+  // path layout. Replace with a real app_id tag on each landing page
+  // (or have ERP5 inject one at serve/precache time) before relying on
+  // this in production. Same heuristic also lives in the SW.
   var INDEXEDDB_PREFIX = (function () {
     var node = document.querySelector(
       'script[data-renderjs-configuration="app_id"]'
