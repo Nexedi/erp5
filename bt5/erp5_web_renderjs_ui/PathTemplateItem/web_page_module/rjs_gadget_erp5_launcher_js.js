@@ -7,6 +7,33 @@
            URL, domsugar) {
   "use strict";
 
+  // Per-app IndexedDB prefix. Sources, in order:
+  //  1. <script data-renderjs-configuration="app_id"> tag — present in
+  //     ERP5JS shells rendered by WebSection_renderDefaultPageAsGadget.
+  //  2. URL path /...web_site_module/{site_id}/... — used by OfficeJS
+  //     apps whose landing pages are static HTML stored in the BT, plus
+  //     matches the Service Worker's scope-based derivation.
+  // Empty string for renderjs_runner keeps existing ERP5JS state intact.
+  // Published to child gadgets via allowPublicAcquisition below.
+  // TODO: the URL fallback assumes a /erp5/web_site_module/{id}/ mount
+  // — it breaks under prod URL rewrites / virtual hosts that change the
+  // path layout. Replace with a real app_id tag on each landing page
+  // (or have ERP5 inject one at serve/precache time) before relying on
+  // this in production. Same heuristic also lives in the SW.
+  var INDEXEDDB_PREFIX = (function () {
+    var node = document.querySelector(
+      'script[data-renderjs-configuration="app_id"]'
+    ),
+      app_id = node && node.textContent.trim(),
+      match;
+    if (!app_id) {
+      match = window.location.pathname.match(/\/web_site_module\/([^/]+)/);
+      app_id = match && match[1];
+    }
+    return (!app_id || app_id === "renderjs_runner")
+      ? "" : app_id + "_";
+  }());
+
   var MAIN_SCOPE = "m",
     default_state_json_string = JSON.stringify({
       panel_visible: false,
@@ -391,7 +418,7 @@
             type: "fallback",
             sub_storage: {
               type: "indexeddb",
-              database: "setting"
+              database: INDEXEDDB_PREFIX + "setting"
             },
             fallback_storage: {
               type: "memory"
@@ -455,6 +482,9 @@
     //////////////////////////////////////////
     // Allow Acquisition
     //////////////////////////////////////////
+    .allowPublicAcquisition("getIndexedDBPrefix", function getIndexedDBPrefix() {
+      return INDEXEDDB_PREFIX;
+    })
     .allowPublicAcquisition("getSettingList",
                             function getSettingList(argument_list) {
         var key_list = argument_list[0];
