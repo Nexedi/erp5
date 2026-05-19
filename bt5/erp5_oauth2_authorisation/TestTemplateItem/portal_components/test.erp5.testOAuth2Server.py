@@ -328,6 +328,10 @@ class TestOAuth2(ERP5TypeTestCase):
       def now(cls, tz=None):
         return datetime.datetime.now(tz=tz) + delta
 
+      @classmethod
+      def utcnow(cls):
+        return datetime.datetime.now() + delta
+
     def mocked_time():
       return time() + delta.total_seconds()
 
