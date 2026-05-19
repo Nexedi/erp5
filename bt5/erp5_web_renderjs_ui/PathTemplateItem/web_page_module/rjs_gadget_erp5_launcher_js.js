@@ -7,14 +7,24 @@
            URL, domsugar) {
   "use strict";
 
-  // Per-app IndexedDB prefix derived from the shell's app_id tag.
+  // Per-app IndexedDB prefix. Sources, in order:
+  //  1. <script data-renderjs-configuration="app_id"> tag — present in
+  //     ERP5JS shells rendered by WebSection_renderDefaultPageAsGadget.
+  //  2. URL path /...web_site_module/{site_id}/... — used by OfficeJS
+  //     apps whose landing pages are static HTML stored in the BT, plus
+  //     matches the Service Worker's scope-based derivation.
   // Empty string for renderjs_runner keeps existing ERP5JS state intact.
   // Published to child gadgets via allowPublicAcquisition below.
   var INDEXEDDB_PREFIX = (function () {
     var node = document.querySelector(
       'script[data-renderjs-configuration="app_id"]'
-    );
-    var app_id = node && node.textContent.trim();
+    ),
+      app_id = node && node.textContent.trim(),
+      match;
+    if (!app_id) {
+      match = window.location.pathname.match(/\/web_site_module\/([^/]+)/);
+      app_id = match && match[1];
+    }
     return (!app_id || app_id === "renderjs_runner")
       ? "" : app_id + "_";
   }());

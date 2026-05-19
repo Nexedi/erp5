@@ -13,6 +13,26 @@
   $.mobile.hashListeningEnabled = false;
   $.mobile.pushStateEnabled = false;
 
+  // Per-app IndexedDB prefix. Sources, in order:
+  //  1. <script data-renderjs-configuration="app_id"> tag
+  //  2. URL path /...web_site_module/{site_id}/... — used by OfficeJS
+  //     apps whose landing pages are static HTML stored in the BT.
+  // Empty for renderjs_runner so existing ERP5JS state stays intact.
+  // Published to child gadgets via allowPublicAcquisition below.
+  var INDEXEDDB_PREFIX = (function () {
+    var node = document.querySelector(
+      'script[data-renderjs-configuration="app_id"]'
+    ),
+      app_id = node && node.textContent.trim(),
+      match;
+    if (!app_id) {
+      match = window.location.pathname.match(/\/web_site_module\/([^/]+)/);
+      app_id = match && match[1];
+    }
+    return (!app_id || app_id === "renderjs_runner")
+      ? "" : app_id + "_";
+  }());
+
   var MAIN_SCOPE = "m";
 
   function renderMainGadget(gadget, url, options) {
@@ -221,7 +241,7 @@
         .push(function (jio_gadget) {
           return jio_gadget.createJio({
             type: "indexeddb",
-            database: window.location.pathname + "setting"
+            database: INDEXEDDB_PREFIX + "setting"
           });
         });
     })
@@ -285,6 +305,9 @@
     //////////////////////////////////////////
     // Allow Acquisition
     //////////////////////////////////////////
+    .allowPublicAcquisition("getIndexedDBPrefix", function () {
+      return INDEXEDDB_PREFIX;
+    })
     .allowPublicAcquisition("getSetting", function (argument_list) {
       return getSetting(this, argument_list[0], argument_list[1]);
     })
