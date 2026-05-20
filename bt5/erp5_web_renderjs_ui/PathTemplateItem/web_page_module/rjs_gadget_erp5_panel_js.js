@@ -182,7 +182,6 @@
                 {command: 'display', options: {page: "worklist"}},
                 {command: 'display', options: {page: "history"}},
                 {command: 'display_stored_state', options: {page: "search"}},
-                {command: 'display', options: {page: "officejs_app_list"}},
                 {command: 'display', options: {page: "my_account"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
@@ -193,7 +192,6 @@
                 'Worklists',
                 'History',
                 'Search',
-                'OfficeJS Apps',
                 'My Account',
                 'Logout'
               ]),
@@ -209,7 +207,6 @@
                 'tasks', 'w',
                 'history', 'h',
                 'search', 's',
-                'th', null,
                 'sliders', null,
                 // 'sliders', null,
                 'power-off', 'o'
