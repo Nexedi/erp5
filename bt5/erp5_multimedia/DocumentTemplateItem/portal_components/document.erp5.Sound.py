@@ -66,6 +66,11 @@ class Sound(File):
       raise Forbidden('You are not allowed to get this document in this ' \
                       'format')
     mime, data = self.convert(format, **kw)
+    # Property Sheet defines b'' as default, but `getData` overrides it.
+    # Sound is one case where such override sometimes causes issues.
+    if data is None:
+      data = b''
+
     total_length = len(data)
     if end is None:
       end = total_length
