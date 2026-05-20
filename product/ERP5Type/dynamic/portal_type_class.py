@@ -359,9 +359,6 @@ def generatePortalTypeClass(site, portal_type_name):
 
       interface_class_list.append(interface_class)
 
-  if portal_type_name in core_portal_type_class_dict:
-    core_portal_type_class_dict[portal_type_name]['generating'] = False
-
   attribute_dict['_restricted_setter_set'] = {method
         for ancestor in base_class_list
         for permissions in getattr(ancestor, '__ac_permissions__', ())
