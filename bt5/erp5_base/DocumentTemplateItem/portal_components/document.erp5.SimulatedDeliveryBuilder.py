@@ -278,7 +278,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     delivery_module = getattr(portal, self.getDeliveryModule())
     delivery_to_update_list = [delivery]
     self._resetUpdated()
-    delivery_list = self._processDeliveryGroup(
+    delivery_and_movement_group_list = self._processDeliveryGroup(
       delivery_module,
       root_group_node,
       self.getDeliveryMovementGroupList(),
@@ -331,10 +331,10 @@ class SimulatedDeliveryBuilder(BuilderMixin):
           s_m.edit(delivery_ratio=delivery_ratio)
 
     # Call afterscript if new deliveries are created
-    new_delivery_list = [x for x in delivery_list if x != delivery]
-    self.callAfterBuildingScript(new_delivery_list, simulation_movement_list)
+    new_delivery_and_movement_group_list = [x for x in delivery_and_movement_group_list if x[0] != delivery]
+    self.callAfterBuildingScript(new_delivery_and_movement_group_list)
 
-    return delivery_list
+    return [x[0] for x in delivery_and_movement_group_list]
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'solveDivergence')
