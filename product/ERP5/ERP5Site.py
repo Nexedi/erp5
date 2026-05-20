@@ -2621,23 +2621,31 @@ def initialize(self):
   import Products.Database
   import Products.CMFActivity.Activity as CMFActivity
   AppInitializer.initialize = AppInitializer_initialize
+
+  def configureAndInitialize(erp5_catalog_storage):
+    Products.Database.configure(erp5_catalog_storage)
+    CMFActivity.configure(erp5_catalog_storage)
+    self.initialize()
+
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
     # in test
-    erp5_catalog_storage = os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
-    Products.Database.configure(erp5_catalog_storage)
-    CMFActivity.configure(erp5_catalog_storage)
-    self.initialize()
+    configureAndInitialize(os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
     return
 
-  erp5_catalog_storage = kw.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
-  Products.Database.configure(erp5_catalog_storage)
-  CMFActivity.configure(erp5_catalog_storage)
-  self.initialize()
+  app = self.getApp()
   meta_type = ERP5Site.meta_type
-  for _ in self.getApp().objectIds(meta_type):
+  for obj_id in app.objectIds(meta_type):
+    site = app.__dict__.get(obj_id)
+    site._p_activate()
+    configureAndInitialize(site.__dict__.get('erp5_catalog_storage'))
+    from ZODB.Connection import resetCaches
+    resetCaches()
     return
+
+  configureAndInitialize(kw.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
+
 
   # We defer the call to manage_addERP5Site via TimerService because:
   # - we use ZPublisher so that get_request() works
