@@ -3548,6 +3548,38 @@ ModuleNotFoundError: No module named 'non'
       types_tool._delObject(name)
       self.commit()
 
+class TestCircularDependencyFixes(ERP5TypeTestCase):
+  """
+  Tests for circular dependency fixes when Component Tool and Types Tool
+  are ghosted after Connection.resetCaches.
+  """
+
+  def getBusinessTemplateList(self):
+    return 'erp5_base',
+
+  def testToolPortalTypesLoadWithFilesystemFallback(self):
+    """
+    Tool portal types that are not registered in the ZODB component
+    registry must still be loadable via the filesystem fallback in
+    generatePortalTypeClass (c0e094da3f). This tests that tool types
+    like 'Folder' and 'Document' can be loaded after synchronize.
+    """
+    portal = self.portal
+    import erp5.portal_type
+
+    synchronizeDynamicModules(portal, force=True)
+
+    for tool_name in ('Folder', 'Document', 'Module'):
+      tool_class = getattr(erp5.portal_type, tool_name, None)
+      self.assertIsNotNone(tool_class,
+        "%s class not found" % tool_name)
+      if tool_class.__isghost__:
+        tool_class.loadClass()
+      self.assertFalse(tool_class.__isghost__,
+        "%s class is still a ghost" % tool_name)
+      self.assertNotIsInstance(tool_class, ERP5BaseBroken,
+        "%s class is broken" % tool_name)
+
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
 class TestZodbInterfaceComponent(_TestZodbDocumentComponentMixin):
   """
