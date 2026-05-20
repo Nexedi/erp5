@@ -272,9 +272,7 @@ class TestIngestion(IngestionTestCase):
       document.edit(file=f)
       self.tic()
       self.assertTrue(document.hasFile())
-      if document.isSupportBaseDataConversion():
-        # this is how we know if it was ok or not
-        self.assertEqual(document.getExternalProcessingState(), 'converted')
+      if document.isSupportTextConversion():
         self.assertIn('magic', document.SearchableText())
         self.assertIn('magic', str(document.asText()))
       else:
@@ -338,10 +336,7 @@ class TestIngestion(IngestionTestCase):
       count+=1
       self.assertEqual(document.getPortalType(), portal_type)
       self.assertEqual(document.getReference(), 'TEST')
-      if document.isSupportBaseDataConversion():
-        # We check if conversion has succeeded by looking
-        # at the external_processing workflow
-        self.assertEqual(document.getExternalProcessingState(), 'converted')
+      if document.isSupportTextConversion():
         self.assertIn('magic', document.SearchableText())
 
   def newPythonScript(self, script_id, argument_list, code):
@@ -473,39 +468,6 @@ class TestIngestion(IngestionTestCase):
     document = self.newEmptyDocument('File')
     sequence.edit(document_path=document.getPath())
 
-  def stepCheckEmptyState(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if the document is in "empty" processing state
-      (ie. no file upload has been done yet)
-    """
-    document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEqual(document.getExternalProcessingState(), 'empty')
-
-  def stepCheckUploadedState(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if the document is in "uploaded" processing state
-      (ie. a file upload has been done)
-    """
-    document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEqual(document.getExternalProcessingState(), 'uploaded')
-
-  def stepCheckConvertingState(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if the document is in "converting" processing state
-      (ie. a file upload has been done and the document is converting)
-    """
-    document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEqual(document.getExternalProcessingState(), 'converting')
-
-  def stepCheckConvertedState(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if the document is in "converted" processing state
-      (ie. a file conversion has been done and the document has
-      been converted)
-    """
-    document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEqual(document.getExternalProcessingState(), 'converted')
-
   def stepStraightUpload(self, sequence=None, sequence_list=None, **kw):
     """
       Upload a file directly from the form
@@ -529,7 +491,7 @@ class TestIngestion(IngestionTestCase):
       Upload a file from view form and make sure this increases the revision
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    f = self.makeFileUpload('TEST-en-002.doc')
+    f = self.makeFileUpload('TEST-en-002.odt')
     revision = document.getRevision()
     document.edit(file=f)
     self.assertEqual(document.getRevision(), str(int(revision) + 1))
@@ -615,7 +577,6 @@ class TestIngestion(IngestionTestCase):
     """
     self.tic()
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.assertTrue(document.hasBaseData())
     self.assertIn('magic', document.SearchableText())
     self.assertIn('magic', str(document.asText()))
 
@@ -668,7 +629,7 @@ class TestIngestion(IngestionTestCase):
     # implemented in OOoDocument class - we don't really
     # need oood for getting/setting metadata...
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    newcontent = document.getBaseData()
+    newcontent = document.getData()
     builder = OOoBuilder(newcontent)
     xml_tree = etree.fromstring(builder.extract('meta.xml'))
     title = xml_tree.find('*/{%s}title' % xml_tree.nsmap['dc']).text
@@ -1018,8 +979,6 @@ class TestIngestion(IngestionTestCase):
                                language='en',
                                version='002')
       self.assertNotEqual(None, ingested_document)
-      if ingested_document.isSupportBaseDataConversion():
-        self.assertEqual('converted', ingested_document.getExternalProcessingState())
       # check aggregate between 'Document Ingestion Message' and ingested document
       self.assertIn(ingested_document, attachment_list)
     return attachment_list, ingested_document
@@ -1046,7 +1005,6 @@ class TestIngestion(IngestionTestCase):
                                language='en',
                                version='002')
     self.assertEqual('MAIL-en-002.doc', ingested_document.getFilename())
-    self.assertEqual('converted', ingested_document.getExternalProcessingState())
     self.assertIn('magic', ingested_document.asText())
 
     # check aggregate between 'Document Ingestion Message' and ingested document
@@ -1109,15 +1067,10 @@ class TestIngestion(IngestionTestCase):
     """
     step_list = ['stepCleanUp'
                  ,'stepCreateTextDocument'
-                 ,'stepCheckEmptyState'
                  ,'stepStraightUpload'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepUploadFromViewForm'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                 ]
     self.playSequence(step_list)
 
@@ -1151,9 +1104,7 @@ class TestIngestion(IngestionTestCase):
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepUploadFromViewForm'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepEditMetadata'
                  ,'stepCheckChangedMetadata'
                 ]
@@ -1298,37 +1249,27 @@ class TestIngestion(IngestionTestCase):
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderFICU'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderCUFI'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderUIFC'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderICUF'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderUFCI'
                 ]
@@ -1368,9 +1309,7 @@ class TestIngestion(IngestionTestCase):
     """
     step_list = [ 'stepCleanUp'
                  ,'stepUploadTextFromContributionTool'
-                 ,'stepCheckConvertingState'
                  ,'stepTic'
-                 ,'stepCheckConvertedState'
                  ,'stepDiscoverFromFilename'
                  ,'stepTic'
                  ,'stepReuploadTextFromContributionTool'
@@ -2159,7 +2098,6 @@ class Base_contributeMixin:
     document_list = person.getFollowUpRelatedValueList()
     self.assertEqual(1, len(document_list))
     document = document_list[0]
-    self.assertEqual('converted', document.getExternalProcessingState())
     self.assertEqual('Text', document.getPortalType())
     self.assertEqual('title', document.getTitle())
     self.assertEqual(contributed_document, document)
