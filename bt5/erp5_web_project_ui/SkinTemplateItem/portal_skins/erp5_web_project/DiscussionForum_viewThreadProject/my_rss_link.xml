@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="GadgetField" module="Products.ERP5Form.GadgetField"/>
+      <global name="HyperLinkField" module="Products.ERP5Form.HyperLinkField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_posts</string> </value>
+            <value> <string>my_rss_link</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -17,10 +17,6 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>no_validator</string> </key>
-                    <value> <string>Does not support this operation.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -35,10 +31,6 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>data_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -66,31 +58,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
+                    <key> <string>href</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -109,10 +85,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>data_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -137,33 +109,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
+                    <key> <string>href</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -179,15 +135,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>data_url</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>invisible rss-link</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string> </string> </value>
+                    <value> <string>RSS Feed</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -195,7 +147,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -207,37 +159,19 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string>gadget_thread_reader.html</string> </value>
+                    <value> <string>target="_blank"</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
+                    <key> <string>href</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Discussion Posts</string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>validator_form_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>RSS Feed</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -253,7 +187,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'lines\', 15), (\'attachment_column\', \'DiscussionPost_getAttachmentList\'), ("query_dict", {"portal_type": "Discussion Post", "parent_relative_url": context.getRelativeUrl()}), (\'sort_order\', \'ASC\'), (\'date_column\', \'creation_date\')]</string> </value>
+            <value> <string>python: context.DiscussionForum_getRssAccessUrl()</string> </value>
         </item>
       </dictionary>
     </pickle>
