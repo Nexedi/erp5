@@ -677,8 +677,19 @@
         if (parent_link !== undefined) {
           uri = new URI(parent_link.href);
           options.jio_key = uri.segment(2);
-          // When redirecting to parent, always try to restore the state
-          return execDisplayStoredStateCommand(gadget, options);
+          // Validate that the parent is reachable in current app before
+          // redirecting to it. Some apps, like project management app, may
+          // expose documents whose structural parent has no view; falling
+          // back to the home page avoids a hard crash in that case.
+          return gadget.jio_getAttachment(options.jio_key, "links")
+            .push(function () {
+              return execDisplayStoredStateCommand(gadget, options);
+            }, function (error) {
+              if (error instanceof jIO.util.jIOError) {
+                return redirectToHomePage(gadget, previous_options);
+              }
+              throw error;
+            });
         }
         // If no parent, return to the home page
         return gadget.redirect({command: 'display', options: options});
