@@ -5,9 +5,17 @@
   "use strict";
 
   function setjIODAVConfiguration(gadget) {
-    return gadget.getSetting("portal_type")
-      .push(function (portal_type) {
-        var old_date = new Date(),
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSetting("portal_type"),
+          gadget.getIndexedDBPrefix()
+        ]);
+      })
+      .push(function (result) {
+        var portal_type = result[0],
+          prefix = result[1],
+          old_date = new Date(),
           configuration = {};
         // We are looking for documents modified in the past 3 month
         old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);
@@ -43,7 +51,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "officejs-dav"
+                  database: prefix + "officejs-dav"
                 }
               }
             }
@@ -125,6 +133,7 @@
     .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
     .declareMethod("render", function () {
       var gadget = this;
       return gadget.updateHeader({
