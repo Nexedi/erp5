@@ -677,12 +677,16 @@
         if (parent_link !== undefined) {
           uri = new URI(parent_link.href);
           options.jio_key = uri.segment(2);
-          // Validate that the parent is reachable in current app before
-          // redirecting to it. Some apps, like project management app, may
-          // expose documents whose structural parent has no view; falling
-          // back to the home page avoids a hard crash in that case.
+          // Validate that the parent has a view action in the current app
+          // before redirecting to it. Some apps, like project management app,
+          // filter view/actions from modules they do not expose;
+          // without _links.view the parent can't be rendered,
+          // so fall back to the home page.
           return gadget.jio_getAttachment(options.jio_key, "links")
-            .push(function () {
+            .push(function (parent_document) {
+              if (parent_document._links.view === undefined) {
+                return redirectToHomePage(gadget, previous_options);
+              }
               return execDisplayStoredStateCommand(gadget, options);
             }, function (error) {
               if (error instanceof jIO.util.jIOError) {
