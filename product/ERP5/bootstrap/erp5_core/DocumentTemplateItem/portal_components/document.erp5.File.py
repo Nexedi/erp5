@@ -304,9 +304,12 @@ class File(Document, OFS_File):
                  filename=self.getFilename())._convert(format, **kw)
 
     elif format in (None, ""):
+      # When converting to self, coerse None to bytes
+      data = self.getData() or b''
+
       # No conversion is asked,
       # we can return safely the file content itself
-      return content_type, self.getData()
+      return content_type, data
 
     elif format in VALID_TEXT_FORMAT_LIST:
       # This is acceptable to return empty string
