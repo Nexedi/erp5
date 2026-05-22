@@ -43,7 +43,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       portal_type='Web Style',
       reference='test_web_style.css'
     )
-    web_style.setTextContent(bytes2str(b'/* cl\xc3\xa0sse */ .classe { background: red }'))
+    web_style.setTextContent(bytes2str(b'/* cl\xc3\xa0ss\xc3\xa9 */ .classe { background: red }'))
     web_style.publish()
     self.tic()
     self.assertEqual('text/css', web_style.getContentType())
@@ -53,7 +53,7 @@ class TestRenderJSPortalType(ERP5TypeTestCase):
       '%s/%s' % (self.web_site.getPath(), web_style.getReference())
     )
     self.assertEqual(
-      b'/* cl\xc3\xa0sse */ .classe { background: red }',
+      b'/* cl\xc3\xa0ss\xc3\xa9 */ .classe { background: red }',
       response.getBody()
     )
     self.assertEqual(
