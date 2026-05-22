@@ -3548,6 +3548,135 @@ ModuleNotFoundError: No module named 'non'
       types_tool._delObject(name)
       self.commit()
 
+class TestCircularDependencyFixes(ERP5TypeTestCase):
+  """
+  Tests for circular dependency fixes when Component Tool and Types Tool
+  are ghosted after Connection.resetCaches.
+  """
+
+  def getBusinessTemplateList(self):
+    return 'erp5_base',
+
+  def testCoreToolsNotBrokenAfterSynchronize(self):
+    """
+    After synchronizeDynamicModules, Component Tool and Types Tool
+    classes must be fully loadable and their ZODB instances must be
+    accessible. This tests the explicit loadClass calls added in
+    synchronizeDynamicModules (242836ea84) and verifies that tool
+    portal types still load correctly without the filesystem fallback
+    (c0e094da3f) when the ZODB component registry is temporarily
+    unavailable during class regeneration.
+    """
+    portal = self.portal
+    import erp5.portal_type
+
+    synchronizeDynamicModules(portal, force=True)
+
+    for tool_name, tool_id in (('Component Tool', 'portal_components'),
+                                ('Types Tool', 'portal_types')):
+      tool_class = getattr(erp5.portal_type, tool_name, None)
+      self.assertIsNotNone(tool_class,
+        "%s class not found in erp5.portal_type" % tool_name)
+
+      if tool_class.__isghost__:
+        tool_class.loadClass()
+      self.assertFalse(tool_class.__isghost__,
+        "%s class is still a ghost after loadClass" % tool_name)
+      self.assertNotIsInstance(tool_class, ERP5BaseBroken,
+        "%s class is broken" % tool_name)
+
+      tool_instance = getattr(portal, tool_id, None)
+      self.assertIsNotNone(tool_instance,
+        "%s instance not found" % tool_id)
+      self.assertEqual(tool_instance.getId(), tool_id)
+
+  def testGeneratingFlagResetAfterSynchronize(self):
+    """
+    After synchronizeDynamicModules, the generating flag in
+    core_portal_type_class_dict must be False for all core types.
+    This tests the finally block (a1ca77dbca) which ensures the flag
+    is always reset after generatePortalTypeClass completes.
+    """
+    from Products.ERP5Type.dynamic.portal_type_class import \
+      core_portal_type_class_dict
+
+    synchronizeDynamicModules(self.portal, force=True)
+
+    for name, info in core_portal_type_class_dict.items():
+      self.assertFalse(info['generating'],
+        "generating flag for %s was not reset after synchronize" % name)
+
+  def testBrokenPropertyDefinitionSkipped(self):
+    """
+    When a property sheet contains a broken property definition
+    (one that raises RuntimeError during accessor holder generation),
+    the getAccessorHolderList try/except (a1ca77dbca) must skip it
+    and continue with other property sheets. Without the fix, the
+    RuntimeError propagates and breaks portal type class loading.
+    """
+    portal = self.portal
+
+    ps = portal.portal_property_sheets.newContent(
+      id='TestBrokenPS', portal_type='Property Sheet')
+    ps.newContent(
+      reference='test_standard_property',
+      portal_type='Standard Property',
+      property_default='python: "test"',
+      elementary_type='string')
+
+    types_tool = portal.portal_types
+    ptype = types_tool.newContent(
+      id='TestBrokenType',
+      portal_type='Base Type',
+      type_class='Folder',
+      type_property_sheet_list=('TestBrokenPS',))
+    self.commit()
+    self.tic()
+
+    # Break the property definition by setting applyOnAccessorHolder
+    # to None on the base object, so that
+    # PropertySheet.applyOnAccessorHolder raises RuntimeError.
+    from Acquisition import aq_base
+    for pd in ps.contentValues():
+      aq_base(pd).applyOnAccessorHolder = None
+
+    import erp5.portal_type
+    test_class = getattr(erp5.portal_type, 'TestBrokenType', None)
+    if test_class is None:
+      return
+    if test_class.__isghost__:
+      try:
+        test_class.loadClass()
+      except RuntimeError:
+        self.fail("RuntimeError should have been caught in "
+                  "getAccessorHolderList")
+
+    portal.portal_property_sheets._delObject(ps.getId())
+    types_tool._delObject(ptype.getId())
+
+  def testToolPortalTypesLoadWithFilesystemFallback(self):
+    """
+    Tool portal types that are not registered in the ZODB component
+    registry must still be loadable via the filesystem fallback in
+    generatePortalTypeClass (c0e094da3f). This tests that tool types
+    like 'Folder' and 'Document' can be loaded after synchronize.
+    """
+    portal = self.portal
+    import erp5.portal_type
+
+    synchronizeDynamicModules(portal, force=True)
+
+    for tool_name in ('Folder', 'Document', 'Module'):
+      tool_class = getattr(erp5.portal_type, tool_name, None)
+      self.assertIsNotNone(tool_class,
+        "%s class not found" % tool_name)
+      if tool_class.__isghost__:
+        tool_class.loadClass()
+      self.assertFalse(tool_class.__isghost__,
+        "%s class is still a ghost" % tool_name)
+      self.assertNotIsInstance(tool_class, ERP5BaseBroken,
+        "%s class is broken" % tool_name)
+
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
 class TestZodbInterfaceComponent(_TestZodbDocumentComponentMixin):
   """
