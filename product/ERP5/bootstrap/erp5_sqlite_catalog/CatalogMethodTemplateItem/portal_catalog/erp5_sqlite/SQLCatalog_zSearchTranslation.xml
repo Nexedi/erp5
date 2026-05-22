@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL Method" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>language\n
+message_context\n
+logical_operator\n
+translated_message_dict</string> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_zSearchTranslation</string> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>SQL Method</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SQLCatalog_zSearchTranslation</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

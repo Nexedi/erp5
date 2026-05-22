@@ -1,0 +1,22 @@
+<dtml-var manage_page_header>
+
+  <dtml-with "_(management_view='Browse')">
+    <dtml-var manage_tabs>
+  </dtml-with>
+
+  <main class="container-fluid">
+
+  <dtml-tree header=info>
+    <img src="&dtml-SCRIPT_NAME;/misc_/ZSQLiteDA/&dtml-icon;" alt="&dtml-Type;" title="&dtml-Type;" style="height:16px;width:20px;" />
+    <b><dtml-var Name></b>&nbsp;&nbsp;<code><dtml-var description></code>
+  </dtml-tree>
+
+  </main>
+
+  <style>
+    img:not([alt=table]) {
+      opacity:.35;
+    }
+  </style>
+
+<dtml-var manage_page_footer>
