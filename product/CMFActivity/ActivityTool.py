@@ -258,7 +258,14 @@ class Message(BaseMessage):
       self.setExecutionState(MESSAGE_NOT_EXECUTABLE)
     else:
       if self.document_uid and self.document_uid != getattr(aq_base(obj), 'uid', None):
-        raise ValueError("UID mismatch for %r" % obj)
+        current = getattr(aq_base(obj), 'uid', None)
+        raise ValueError(
+          "UID mismatch for %r: queued=%r (%s), now=%r (%s)" % (
+            obj,
+            self.document_uid, type(self.document_uid).__name__,
+            current, type(current).__name__,
+          )
+        )
       return obj
 
   def getObjectList(self, activity_tool):
