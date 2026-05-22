@@ -1321,7 +1321,11 @@ class Catalog(Folder,
       except AttributeError:
         uid = None
       if uid is None or uid == 0:
+        old_uid = uid
         object.uid = uid = self.newUid()
+        LOG('SQLCatalog.UID', INFO,
+            'assigned uid=%r to path=%r (previous uid was %r)'
+            % (uid, path, old_uid))
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
     if check_uid:
