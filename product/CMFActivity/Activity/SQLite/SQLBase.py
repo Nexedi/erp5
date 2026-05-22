@@ -37,8 +37,6 @@ import operator
 import sys
 import transaction
 from random import getrandbits
-import MySQLdb
-from MySQLdb.constants.ER import DUP_ENTRY
 from DateTime import DateTime
 from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
@@ -328,7 +326,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
     quote = db.string_literal
 
     def insert(reset_uid):
-      global uid
+      nonlocal uid
       def replace_uid(match):
         offset = int(match.group(1))
         return str2bytes(str(uid + offset))
@@ -342,9 +340,9 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag_processing_node ON  %s (tag, processing_no
         try:
           new_values = re.sub(br'@uid\+(\d+)', replace_uid, values)
           db.query(self._insert_template % (str2bytes(self.sql_table), new_values))
-        except sqlite3.IntegrityError as e:
-          if e.args[0] != DUP_ENTRY:
-            raise
+        except sqlite3.IntegrityError:
+          # SQLite does not distinguish error codes like MySQL; any
+          # IntegrityError on the uid PRIMARY KEY means duplicate, retry.
           reset_uid = True
         else:
           break

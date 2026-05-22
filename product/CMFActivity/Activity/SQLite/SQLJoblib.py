@@ -29,8 +29,7 @@ from __future__ import absolute_import
 
 from random import getrandbits
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
-import MySQLdb
-from MySQLdb.constants.ER import DUP_ENTRY
+import sqlite3
 from .SQLBase import (
   SQLBase, sort_message_key,
   UID_SAFE_BITSIZE, UID_ALLOCATION_TRY_COUNT,
@@ -89,7 +88,7 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag ON %s (tag);
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
     def insert(reset_uid):
-      global uid
+      nonlocal uid
       def replace_uid(match):
         offset = int(match.group(1))
         return str2bytes(str(uid + offset))
@@ -104,9 +103,9 @@ CREATE INDEX IF NOT EXISTS %s_idx_tag ON %s (tag);
         try:
           new_values = re.sub(br'@uid\+(\d+)', replace_uid, values)
           db.query(self._insert_template % (str2bytes(self.sql_table), new_values))
-        except sqlite3.IntegrityError as e:
-          if e.args[0] != DUP_ENTRY:
-            raise
+        except sqlite3.IntegrityError:
+          # SQLite does not distinguish error codes like MySQL; any
+          # IntegrityError on the uid PRIMARY KEY means duplicate, retry.
           reset_uid = True
         else:
           break
