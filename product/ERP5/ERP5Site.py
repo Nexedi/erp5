@@ -2331,8 +2331,11 @@ class ERP5Generator(PortalGenerator):
       if not sql_reset and p[id]().tables():
         raise Exception("Database %r is not empty." % connection_string)
 
-    # Add Z MySQL Connections
-    manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    else:
+      manage_add = p.manage_addProduct['ZSQLiteDA'].manage_addZSQLiteConnection
+
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
     addSQLConnection('erp5_sql_deferred_connection',
@@ -2612,18 +2615,52 @@ class ERP5Generator(PortalGenerator):
           ['erp5_promise'], activate=True, install_dependency=True)
 
 
+# Mapping of erp5_catalog_storage value to the backend labels each facade
+# resolves to its own sub-modules. Owned here so the proxy products themselves
+# do not need to know which backends exist.
+STORAGE_BACKENDS = {
+  'erp5_mysql_innodb_catalog': {
+    'zsqlda':   'Products.ZMySQLDA',
+    'activity': 'Products.CMFActivity.Activity.MySQL',
+  },
+  'erp5_sqlite_catalog': {
+    'zsqlda':   'Products.ZSQLiteDA',
+    'activity': 'Products.CMFActivity.Activity.SQLite',
+  },
+}
+
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
+  import Products.ZSQLDA
+  import Products.CMFActivity.Activity as CMFActivity
   AppInitializer.initialize = AppInitializer_initialize
-  self.initialize()
+
+  def configureAndInitialize(erp5_catalog_storage):
+    backends = STORAGE_BACKENDS[erp5_catalog_storage]
+    Products.ZSQLDA.configure(backends['zsqlda'])
+    CMFActivity.configure(backends['activity'])
+    self.initialize()
+
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
+    # in test
+    configureAndInitialize(os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
     return
+
+  app = self.getApp()
   meta_type = ERP5Site.meta_type
-  for _ in self.getApp().objectIds(meta_type):
+  for obj_id in app.objectIds(meta_type):
+    site = app.__dict__.get(obj_id)
+    site._p_activate()
+    configureAndInitialize(site.__dict__.get('erp5_catalog_storage'))
+    from ZODB.Connection import resetCaches
+    resetCaches()
     return
+
+  configureAndInitialize(kw.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
+
 
   # We defer the call to manage_addERP5Site via TimerService because:
   # - we use ZPublisher so that get_request() works
@@ -2633,7 +2670,7 @@ def initialize(self):
   import inspect, sys, time
   from AccessControl.SecurityManagement import newSecurityManager
   from App.ZApplication import ZApplicationWrapper
-  from Products.ZMySQLDA.db import DB, OperationalError
+  from Products.ZSQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
     erp5_catalog_storage = kw.get('erp5_catalog_storage')
