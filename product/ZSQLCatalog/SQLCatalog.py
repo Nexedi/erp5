@@ -1154,18 +1154,25 @@ class Catalog(Folder,
       )
       global_clear_reserved_time = self._last_clear_reserved_time
       try:
-        return long(uid_buffer.pop())
+        new_uid = long(uid_buffer.pop())
+        LOG('UID-DIAG', ERROR, 'newUid: popped %r from buffer' % new_uid)
+        return new_uid
       except IndexError:
-        uid_buffer.extend(
-          self.getPortalObject().portal_ids.generateNewIdList(
-            id_generator='uid',
-            id_group='catalog_uid',
-            id_count=UID_BUFFER_SIZE,
-            default=getattr(self, '_max_uid', lambda: 1)(),
-          ),
+        new_id_list = self.getPortalObject().portal_ids.generateNewIdList(
+          id_generator='uid',
+          id_group='catalog_uid',
+          id_count=UID_BUFFER_SIZE,
+          default=getattr(self, '_max_uid', lambda: 1)(),
         )
+        LOG('UID-DIAG', ERROR,
+            'newUid: refilled buffer with %d ids: first=%r last=%r'
+            % (len(new_id_list), new_id_list[0] if new_id_list else None,
+               new_id_list[-1] if new_id_list else None))
+        uid_buffer.extend(new_id_list)
         try:
-          return long(uid_buffer.pop())
+          new_uid = long(uid_buffer.pop())
+          LOG('UID-DIAG', ERROR, 'newUid: popped %r from refilled buffer' % new_uid)
+          return new_uid
         except IndexError:
           raise CatalogError("Could not retrieve new uid")
 
@@ -1303,7 +1310,7 @@ class Catalog(Folder,
     # force using READ COMMITTED isolation.
     connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
-    if not db._registered and not db.innodb_locks_unsafe_for_binlog:
+    if not db._registered and (hasattr(db, "innodb_locks_unsafe_for_binlog") and not db.innodb_locks_unsafe_for_binlog):
       db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
     object_path_dict = {}
@@ -1321,7 +1328,11 @@ class Catalog(Folder,
       except AttributeError:
         uid = None
       if uid is None or uid == 0:
+        old_uid = uid
         object.uid = uid = self.newUid()
+        LOG('UID-DIAG', ERROR,
+            '_catalogObjectList: assigned uid=%r to path=%r (was %r)'
+            % (uid, path, old_uid))
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
     if check_uid:
@@ -2241,6 +2252,8 @@ class Catalog(Folder,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
                           **kw):
+    connection_id = self.getSearchResultsMethod().connection_id
+    renderer = getattr(self, connection_id).sql_quote__
     return self.buildEntireQuery(
       kw,
       query_table=query_table,
@@ -2252,6 +2265,7 @@ class Catalog(Folder,
     ).asSQLExpression(
       self,
       only_group_columns,
+      renderer,
     ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
