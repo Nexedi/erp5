@@ -1154,18 +1154,25 @@ class Catalog(Folder,
       )
       global_clear_reserved_time = self._last_clear_reserved_time
       try:
-        return long(uid_buffer.pop())
+        new_uid = long(uid_buffer.pop())
+        LOG('UID-DIAG', ERROR, 'newUid: popped %r from buffer' % new_uid)
+        return new_uid
       except IndexError:
-        uid_buffer.extend(
-          self.getPortalObject().portal_ids.generateNewIdList(
-            id_generator='uid',
-            id_group='catalog_uid',
-            id_count=UID_BUFFER_SIZE,
-            default=getattr(self, '_max_uid', lambda: 1)(),
-          ),
+        new_id_list = self.getPortalObject().portal_ids.generateNewIdList(
+          id_generator='uid',
+          id_group='catalog_uid',
+          id_count=UID_BUFFER_SIZE,
+          default=getattr(self, '_max_uid', lambda: 1)(),
         )
+        LOG('UID-DIAG', ERROR,
+            'newUid: refilled buffer with %d ids: first=%r last=%r'
+            % (len(new_id_list), new_id_list[0] if new_id_list else None,
+               new_id_list[-1] if new_id_list else None))
+        uid_buffer.extend(new_id_list)
         try:
-          return long(uid_buffer.pop())
+          new_uid = long(uid_buffer.pop())
+          LOG('UID-DIAG', ERROR, 'newUid: popped %r from refilled buffer' % new_uid)
+          return new_uid
         except IndexError:
           raise CatalogError("Could not retrieve new uid")
 
@@ -1323,8 +1330,8 @@ class Catalog(Folder,
       if uid is None or uid == 0:
         old_uid = uid
         object.uid = uid = self.newUid()
-        LOG('SQLCatalog.UID', INFO,
-            'assigned uid=%r to path=%r (previous uid was %r)'
+        LOG('UID-DIAG', ERROR,
+            '_catalogObjectList: assigned uid=%r to path=%r (was %r)'
             % (uid, path, old_uid))
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
