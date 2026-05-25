@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts76399013.4852543</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -63,9 +67,14 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>b46e77123731c31596d77ef3b76a4679</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
+CACHE:\n
+NETWORK:\n
+*</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -96,11 +105,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-CACHE:\n
-NETWORK:\n
-*</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>32</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -239,7 +245,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.16557.65503.30958</string> </value>
+                      <value> <string>1032.19738.206.27665</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -255,8 +261,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1583142606.91</float>
-                              <string>UTC</string>
+                              <float>1776399013.49634</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
