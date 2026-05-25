@@ -221,7 +221,7 @@ class DB(TM):
         self.db.create_function("SUBDATE", 2, subdate)
 
         self.db.execute("PRAGMA journal_mode=WAL")
-        self.db.execute("PRAGMA busy_timeout=10000")
+        self.db.execute("PRAGMA busy_timeout=60000")
 
     # ------------------------------------------------------------------
     # Schema inspection
@@ -367,7 +367,7 @@ class DB(TM):
         try:
             self._transaction_begun = True
             if self._transactions:
-                self._query(b"BEGIN", allow_reconnect=True)
+                self._query(b"BEGIN IMMEDIATE", allow_reconnect=True)
         except:
             LOG('SQLiteDA', ERROR, "exception during _begin",
                 error=True)
