@@ -1303,7 +1303,7 @@ class Catalog(Folder,
     # force using READ COMMITTED isolation.
     connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
-    if not db._registered and not db.innodb_locks_unsafe_for_binlog:
+    if not db._registered and (hasattr(db, "innodb_locks_unsafe_for_binlog") and not db.innodb_locks_unsafe_for_binlog):
       db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
     object_path_dict = {}
@@ -1321,7 +1321,11 @@ class Catalog(Folder,
       except AttributeError:
         uid = None
       if uid is None or uid == 0:
+        old_uid = uid
         object.uid = uid = self.newUid()
+        LOG('SQLCatalog.UID', INFO,
+            'assigned uid=%r to path=%r (previous uid was %r)'
+            % (uid, path, old_uid))
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
     if check_uid:
@@ -2241,6 +2245,8 @@ class Catalog(Folder,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
                           **kw):
+    connection_id = self.getSearchResultsMethod().connection_id
+    renderer = getattr(self, connection_id).sql_quote__
     return self.buildEntireQuery(
       kw,
       query_table=query_table,
@@ -2252,6 +2258,7 @@ class Catalog(Folder,
     ).asSQLExpression(
       self,
       only_group_columns,
+      renderer,
     ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
