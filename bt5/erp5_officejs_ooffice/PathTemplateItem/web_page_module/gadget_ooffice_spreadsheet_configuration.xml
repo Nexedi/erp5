@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77259915.6191769</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -71,13 +75,33 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>e843f3ad2a01f1a5640badfba68d43d8</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CONFIGURATION MANIFEST\n
+# generated on Wed Sep 16 14:57:27 2020\n
+CACHE:\n
+\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3NwcmVhZHNoZWV0X3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvRG9jdW1lbnRNb2R1bGVfdmlld0RvY3VtZW50TGlzdEFzSmlvRm9yT29mZmljZVNwcmVhZHNoZWV0RWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3VwbG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV91cGxvYWREaWFsb2dGb3JPb2ZmaWNlRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2Vfc3ByZWFkc2hlZXRfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvU3ByZWFkc2hlZXREb2N1bWVudF92aWV3QXNKaW9Gb3JPb2ZmaWNlU3ByZWFkc2hlZXRFZGl0b3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2VfZG93bmxvYWRfZG9jdW1lbnQ=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9kb3dubG9hZERpYWxvZ0Zvck9vZmZpY2VFZGl0b3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2VfY2xvbmVfZG9jdW1lbnQ=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9jbG9uZURvY3VtZW50Rm9yT29mZmljZUVkaXRvcg==\n
+\n
+NETWORK:\n
+*</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -108,26 +132,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CONFIGURATION MANIFEST\n
-# generated on Wed Sep 16 14:57:27 2020\n
-CACHE:\n
-\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3NwcmVhZHNoZWV0X3ZpZXc=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvRG9jdW1lbnRNb2R1bGVfdmlld0RvY3VtZW50TGlzdEFzSmlvRm9yT29mZmljZVNwcmVhZHNoZWV0RWRpdG9y\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3VwbG9hZF9kb2N1bWVudA==\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV91cGxvYWREaWFsb2dGb3JPb2ZmaWNlRWRpdG9y\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2Vfc3ByZWFkc2hlZXRfdmlldw==\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvU3ByZWFkc2hlZXREb2N1bWVudF92aWV3QXNKaW9Gb3JPb2ZmaWNlU3ByZWFkc2hlZXRFZGl0b3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2VfZG93bmxvYWRfZG9jdW1lbnQ=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9kb3dubG9hZERpYWxvZ0Zvck9vZmZpY2VFZGl0b3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2VfY2xvbmVfZG9jdW1lbnQ=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9jbG9uZURvY3VtZW50Rm9yT29mZmljZUVkaXRvcg==\n
-\n
-NETWORK:\n
-*</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>1506</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -272,7 +278,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>978.51486.39923.24763</string> </value>
+                      <value> <string>1032.34086.19054.14762</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -288,8 +294,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1576265079.32</float>
-                              <string>UTC</string>
+                              <float>1777259915.622596</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
