@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77259913.7738986</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -73,41 +77,11 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>bfbf971e5973f997b647ce5d93618b14</string> </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_hr.appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>gadget_hr_appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
 # generated on Fri, 24 August 2017 11:46:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
@@ -247,7 +221,39 @@ fullcalendar.min.css\n
 locale-all.js\n
 gadget_officejs_calendar.appcache\n
 NETWORK:\n
-*</string> </value>
+*</bytes> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs_hr.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_hr_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3993</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -386,7 +392,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>994.59727.35817.57412</string> </value>
+                      <value> <string>1032.34086.19054.14762</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -402,8 +408,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1632142052.66</float>
-                              <string>UTC</string>
+                              <float>1777259913.777428</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
