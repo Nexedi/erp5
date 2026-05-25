@@ -224,88 +224,78 @@ class _SharedSQLiteConnection:
         self._savepoint_counter = 0
         self._savepoint_stack = []
 
-    def in_transaction(self):
-        return self.refcount > 0
+    def _exec(self, sql):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(sql)
+        finally:
+            cursor.close()
 
-    def begin(self):
+    def enter(self):
+        """Begin a new (possibly nested) transaction scope.
+
+        Outermost scope opens a real SQLite transaction; nested scopes use
+        SAVEPOINT. Returns True if a new SAVEPOINT was pushed (nested case),
+        False if this opened the outer transaction.
+        """
         with self.state_lock:
             if self.refcount == 0:
-                cursor = self.conn.cursor()
-                try:
-                    cursor.execute("BEGIN IMMEDIATE")
-                finally:
-                    cursor.close()
+                self._exec("BEGIN IMMEDIATE")
                 self.aborted = False
-            self.refcount += 1
-
-    def finish(self):
-        with self.state_lock:
-            if self.refcount == 0:
-                return
-            self.refcount -= 1
-            if self.refcount == 0:
-                cursor = self.conn.cursor()
-                try:
-                    if self.aborted:
-                        cursor.execute("ROLLBACK")
-                    else:
-                        cursor.execute("COMMIT")
-                finally:
-                    cursor.close()
-                self.aborted = False
-                del self._savepoint_stack[:]
-
-    def abort(self):
-        with self.state_lock:
-            if self.refcount == 0:
-                return
-            self.aborted = True
-            self.refcount -= 1
-            if self.refcount == 0:
-                cursor = self.conn.cursor()
-                try:
-                    cursor.execute("ROLLBACK")
-                finally:
-                    cursor.close()
-                self.aborted = False
-                del self._savepoint_stack[:]
-
-    def open_savepoint(self):
-        with self.state_lock:
+                self.refcount = 1
+                return False
             self._savepoint_counter += 1
             name = "_sp_%d" % self._savepoint_counter
             self._savepoint_stack.append(name)
-            cursor = self.conn.cursor()
-            try:
-                cursor.execute("SAVEPOINT %s" % name)
-            finally:
-                cursor.close()
-            return name
-
-    def release_savepoint(self):
-        with self.state_lock:
-            if not self._savepoint_stack:
-                return False
-            name = self._savepoint_stack.pop()
-            cursor = self.conn.cursor()
-            try:
-                cursor.execute("RELEASE SAVEPOINT %s" % name)
-            finally:
-                cursor.close()
+            self._exec("SAVEPOINT %s" % name)
+            self.refcount += 1
             return True
 
-    def rollback_savepoint(self):
+    def exit_commit(self):
+        """Close the most recently opened transaction scope successfully.
+
+        At refcount 1, COMMIT (or ROLLBACK if any participant aborted).
+        Otherwise RELEASE the most recent SAVEPOINT.
+        """
         with self.state_lock:
-            if not self._savepoint_stack:
-                return False
-            name = self._savepoint_stack.pop()
-            cursor = self.conn.cursor()
-            try:
-                cursor.execute("ROLLBACK TO SAVEPOINT %s" % name)
-                cursor.execute("RELEASE SAVEPOINT %s" % name)
-            finally:
-                cursor.close()
-            return True
+            if self.refcount == 0:
+                return
+            if self.refcount > 1 and self._savepoint_stack:
+                name = self._savepoint_stack.pop()
+                self._exec("RELEASE SAVEPOINT %s" % name)
+                self.refcount -= 1
+                return
+            # Outermost
+            self._exec("ROLLBACK" if self.aborted else "COMMIT")
+            self.refcount = 0
+            self.aborted = False
+            del self._savepoint_stack[:]
+
+    def exit_rollback(self, propagate):
+        """Close the most recently opened transaction scope unsuccessfully.
+
+        `propagate` distinguishes outer aborts (from Zope TM, in which case
+        the outer transaction must roll back even if other DA participants
+        try to commit later) from inner rollbacks (from explicit SQL
+        ROLLBACK statements, which only roll back the inner block).
+        """
+        with self.state_lock:
+            if self.refcount == 0:
+                return
+            if self.refcount > 1 and self._savepoint_stack:
+                # Inner scope: ROLLBACK TO + RELEASE SAVEPOINT only.
+                name = self._savepoint_stack.pop()
+                self._exec("ROLLBACK TO SAVEPOINT %s" % name)
+                self._exec("RELEASE SAVEPOINT %s" % name)
+                self.refcount -= 1
+                if propagate:
+                    self.aborted = True
+                return
+            # Outermost
+            self._exec("ROLLBACK")
+            self.refcount = 0
+            self.aborted = False
+            del self._savepoint_stack[:]
 
 
 def _get_shared_connection(path, setup):
@@ -356,11 +346,12 @@ class DB(TM):
     _p_oid = _p_changed = _registered = None
 
     def __del__(self):
-        if self.db is not None:
-            try:
-                self.db.close()
-            except Exception:
-                pass
+        # Do not close self.db here: it is a shared sqlite3.Connection owned
+        # by the module-level cache and used by other DB instances. Closing
+        # it would break the other participants. The cache holds the
+        # connection alive for the process lifetime, which is the correct
+        # behavior for the test runner.
+        pass
 
     def _forceReconnection(self):
         def setup(conn):
@@ -425,47 +416,54 @@ class DB(TM):
     # ------------------------------------------------------------------
 
     def _query(self, query, allow_reconnect=False):
+        cursor = None
         try:
             cursor = self.db.cursor()
             if isinstance(query, bytes):
                 query = query.decode()
 
             txn_stmt = _classify_txn_statement(query)
-            # When inside a shared transaction opened by _begin, explicit
-            # BEGIN/COMMIT/ROLLBACK statements from caller code (e.g. SQLBase's
-            # "reserve duplicates" block, or IdTool_zGenerateId) must be mapped
-            # to SAVEPOINT operations because SQLite does not allow nested BEGIN.
-            if self._shared is not None and self._shared.in_transaction():
-                if txn_stmt == "BEGIN":
-                    self._shared.open_savepoint()
-                    return
-                if txn_stmt == "COMMIT":
-                    self._shared.release_savepoint()
-                    return
-                if txn_stmt == "ROLLBACK":
-                    self._shared.rollback_savepoint()
-                    return
-
+            # Route explicit BEGIN/COMMIT/ROLLBACK statements (e.g. from
+            # DB.lock(), SQLBase's "reserve duplicates" block, or
+            # IdTool_zGenerateId) through the shared connection's enter/
+            # exit_commit/exit_rollback so that transaction state stays
+            # consistent with refcount: the outermost BEGIN opens a real
+            # SQLite transaction, while nested BEGINs use SAVEPOINTs.
+            if txn_stmt == "BEGIN":
+                if self._shared is not None:
+                    self._shared.enter()
+                else:
+                    cursor.execute("BEGIN IMMEDIATE")
+                return
             if txn_stmt == "COMMIT":
-                self.db.commit()
+                if self._shared is not None:
+                    self._shared.exit_commit()
+                else:
+                    self.db.commit()
                 return
-            elif txn_stmt == "ROLLBACK":
-                self.db.rollback()
-                return
-            elif txn_stmt == "BEGIN":
-                cursor.execute("BEGIN IMMEDIATE")
+            if txn_stmt == "ROLLBACK":
+                if self._shared is not None:
+                    self._shared.exit_rollback(propagate=False)
+                else:
+                    self.db.rollback()
                 return
             else:
-                if 'create table' in query.lower():
-                    # Avoid executescript() because it implicitly commits the
-                    # current transaction (breaking our shared-transaction
-                    # refcount). Run statements one at a time instead.
+                # cursor.execute() only accepts a single SQL statement. Some Z
+                # SQL methods (e.g. z_create_category, z_drop_*) bundle several
+                # DDL statements together without the '\0' delimiter. Run the
+                # whole thing first; only if SQLite complains that there are
+                # multiple statements do we split on ';'. We can't use
+                # executescript() because it implicitly commits the current
+                # transaction (breaking the shared-transaction refcount).
+                try:
+                    cursor.execute(query)
+                except sqlite3.ProgrammingError as e:
+                    if 'one statement at a time' not in str(e):
+                        raise
                     for statement in query.split(';'):
                         statement = statement.strip()
                         if statement:
                             cursor.execute(statement)
-                else:
-                    cursor.execute(query)
                 desc = cursor.description
                 rows = cursor.fetchall()
                 return SQLiteResult(rows, desc)
@@ -491,7 +489,8 @@ class DB(TM):
                 LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
                 raise
         finally:
-            cursor.close()
+            if cursor is not None:
+                cursor.close()
 
     def query(self, query_string, max_rows=1000):
         """Execute query_string and return at most max_rows."""
@@ -559,7 +558,7 @@ class DB(TM):
         try:
             self._transaction_begun = True
             if self._transactions and self._shared is not None:
-                self._shared.begin()
+                self._shared.enter()
         except:
             LOG('SQLiteDA', ERROR, "exception during _begin",
                 error=True)
@@ -574,7 +573,7 @@ class DB(TM):
             return
         self._transaction_begun = False
         if self._transactions and self._shared is not None:
-            self._shared.finish()
+            self._shared.exit_commit()
 
     def _abort(self, *ignored):
         if not self._transaction_begun:
@@ -582,7 +581,7 @@ class DB(TM):
         self._transaction_begun = False
         try:
             if self._transactions and self._shared is not None:
-                self._shared.abort()
+                self._shared.exit_rollback(propagate=True)
             elif not self._transactions:
                 LOG('SQLiteDA', ERROR, "aborting when non-transactional")
         except OperationalError as m:
