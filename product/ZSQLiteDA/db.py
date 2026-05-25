@@ -2,6 +2,7 @@ import six
 import os
 import re
 import sqlite3
+import threading
 from sqlite3 import OperationalError
 import warnings
 from contextlib import contextmanager
@@ -149,6 +150,174 @@ class SQLiteResult:
     def fetchall(self):
         return self._rows
 
+
+# ---------------------------------------------------------------------------
+# Shared sqlite3 connections
+#
+# SQLite allows only one writer at a time per database file. In ERP5, multiple
+# Z*DA instances (catalog, activity, deferred, transactionless) each open their
+# own sqlite3 connection but point to the same file, which serializes all
+# writers through the OS-level write lock. During a long Zope transaction
+# (e.g. BT install) the first DA holds the write lock for tens of seconds,
+# and any other DA trying to BEGIN IMMEDIATE times out.
+#
+# Workaround: cache a single sqlite3.Connection per file path and share it
+# across DB instances. Transaction boundaries are coordinated with a refcount:
+# the first participant issues BEGIN IMMEDIATE; the last issues COMMIT (or
+# ROLLBACK if any participant aborted). Transactionless DAs (connection string
+# prefixed with '-') keep their own connection so their writes auto-commit
+# independently.
+# ---------------------------------------------------------------------------
+
+_shared_connections = {}
+_shared_connections_lock = threading.Lock()
+
+
+def _classify_txn_statement(query):
+    """If `query` is a standalone transaction-control statement, return one of
+    'BEGIN', 'COMMIT', 'ROLLBACK'. Otherwise return None. Strips SQL line
+    comments and is case-insensitive.
+    """
+    cleaned = []
+    for line in query.split('\n'):
+        idx = line.find('--')
+        if idx >= 0:
+            line = line[:idx]
+        cleaned.append(line)
+    s = ' '.join(cleaned).strip().rstrip(';').strip()
+    if not s:
+        return None
+    tokens = s.upper().split()
+    if not tokens:
+        return None
+    head = tokens[0]
+    if head == 'COMMIT' and (len(tokens) == 1 or tokens[1:] in (['WORK'], ['TRANSACTION'])):
+        return 'COMMIT'
+    if head == 'ROLLBACK' and (len(tokens) == 1 or tokens[1:] in (['WORK'], ['TRANSACTION'])):
+        return 'ROLLBACK'
+    if head == 'BEGIN' and (len(tokens) == 1
+            or tokens[1] in ('IMMEDIATE', 'EXCLUSIVE', 'DEFERRED', 'TRANSACTION', 'WORK')):
+        return 'BEGIN'
+    return None
+
+
+class _SharedSQLiteConnection:
+    """Wraps a sqlite3.Connection shared by multiple DB instances pointing to
+    the same database file. Reference-counts transaction state so that only
+    one BEGIN/COMMIT cycle is issued per Zope transaction across all
+    participants.
+    """
+
+    def __init__(self, path, setup):
+        self.path = path
+        self.conn = sqlite3.connect(
+            path,
+            check_same_thread=False,
+            detect_types=sqlite3.PARSE_DECLTYPES,
+            isolation_level=None,
+            timeout=60,
+        )
+        setup(self.conn)
+        self.state_lock = threading.RLock()
+        self.refcount = 0
+        self.aborted = False
+        self._savepoint_counter = 0
+        self._savepoint_stack = []
+
+    def in_transaction(self):
+        return self.refcount > 0
+
+    def begin(self):
+        with self.state_lock:
+            if self.refcount == 0:
+                cursor = self.conn.cursor()
+                try:
+                    cursor.execute("BEGIN IMMEDIATE")
+                finally:
+                    cursor.close()
+                self.aborted = False
+            self.refcount += 1
+
+    def finish(self):
+        with self.state_lock:
+            if self.refcount == 0:
+                return
+            self.refcount -= 1
+            if self.refcount == 0:
+                cursor = self.conn.cursor()
+                try:
+                    if self.aborted:
+                        cursor.execute("ROLLBACK")
+                    else:
+                        cursor.execute("COMMIT")
+                finally:
+                    cursor.close()
+                self.aborted = False
+                del self._savepoint_stack[:]
+
+    def abort(self):
+        with self.state_lock:
+            if self.refcount == 0:
+                return
+            self.aborted = True
+            self.refcount -= 1
+            if self.refcount == 0:
+                cursor = self.conn.cursor()
+                try:
+                    cursor.execute("ROLLBACK")
+                finally:
+                    cursor.close()
+                self.aborted = False
+                del self._savepoint_stack[:]
+
+    def open_savepoint(self):
+        with self.state_lock:
+            self._savepoint_counter += 1
+            name = "_sp_%d" % self._savepoint_counter
+            self._savepoint_stack.append(name)
+            cursor = self.conn.cursor()
+            try:
+                cursor.execute("SAVEPOINT %s" % name)
+            finally:
+                cursor.close()
+            return name
+
+    def release_savepoint(self):
+        with self.state_lock:
+            if not self._savepoint_stack:
+                return False
+            name = self._savepoint_stack.pop()
+            cursor = self.conn.cursor()
+            try:
+                cursor.execute("RELEASE SAVEPOINT %s" % name)
+            finally:
+                cursor.close()
+            return True
+
+    def rollback_savepoint(self):
+        with self.state_lock:
+            if not self._savepoint_stack:
+                return False
+            name = self._savepoint_stack.pop()
+            cursor = self.conn.cursor()
+            try:
+                cursor.execute("ROLLBACK TO SAVEPOINT %s" % name)
+                cursor.execute("RELEASE SAVEPOINT %s" % name)
+            finally:
+                cursor.close()
+            return True
+
+
+def _get_shared_connection(path, setup):
+    abs_path = os.path.abspath(path)
+    with _shared_connections_lock:
+        entry = _shared_connections.get(abs_path)
+        if entry is None:
+            entry = _SharedSQLiteConnection(abs_path, setup)
+            _shared_connections[abs_path] = entry
+        return entry
+
+
 class DB(TM):
     _sort_key = TM._sort_key
     db = None
@@ -194,34 +363,32 @@ class DB(TM):
                 pass
 
     def _forceReconnection(self):
-        if self.db is not None:
-            try:
-                self.db.close()
-            except Exception:
-                pass
+        def setup(conn):
+            conn.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
 
-        self.db = sqlite3.connect(
-            self._kw_args['db'],
-            check_same_thread=False,
-            detect_types=sqlite3.PARSE_DECLTYPES, # XXXXXX need to change also related column
-            isolation_level=None,
-        )
+            def subdate(date_str, days):
+                if date_str.lower() in ('current_date', 'now'):
+                    dt = DateTime()
+                else:
+                    dt = DateTime(date_str)
+                dt -= days
+                return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
 
-        self.db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
+            conn.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
+            conn.create_function("SUBDATE", 2, subdate)
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA busy_timeout=60000")
 
-        def subdate(date_str, days):
-            if date_str.lower() in ('current_date', 'now'):
-                dt = DateTime()
-            else:
-                dt = DateTime(date_str)
-            dt -= days
-            return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
-
-        self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
-        self.db.create_function("SUBDATE", 2, subdate)
-
-        self.db.execute("PRAGMA journal_mode=WAL")
-        self.db.execute("PRAGMA busy_timeout=60000")
+        # All DAs (transactional and transactionless) pointing to the same
+        # SQLite file share a single sqlite3.Connection. SQLite allows only
+        # one writer per file, so giving each DA its own connection just
+        # serializes them through the OS-level write lock — and any DA
+        # holding BEGIN IMMEDIATE for the duration of a Zope transaction
+        # would block the others past busy_timeout. With a shared connection,
+        # transactionless writes piggyback on the currently open transaction
+        # (if any) or auto-commit when no transaction is open.
+        self._shared = _get_shared_connection(self._kw_args['db'], setup)
+        self.db = self._shared.conn
 
     # ------------------------------------------------------------------
     # Schema inspection
@@ -263,15 +430,40 @@ class DB(TM):
             if isinstance(query, bytes):
                 query = query.decode()
 
-            if query.upper() == "COMMIT":
+            txn_stmt = _classify_txn_statement(query)
+            # When inside a shared transaction opened by _begin, explicit
+            # BEGIN/COMMIT/ROLLBACK statements from caller code (e.g. SQLBase's
+            # "reserve duplicates" block, or IdTool_zGenerateId) must be mapped
+            # to SAVEPOINT operations because SQLite does not allow nested BEGIN.
+            if self._shared is not None and self._shared.in_transaction():
+                if txn_stmt == "BEGIN":
+                    self._shared.open_savepoint()
+                    return
+                if txn_stmt == "COMMIT":
+                    self._shared.release_savepoint()
+                    return
+                if txn_stmt == "ROLLBACK":
+                    self._shared.rollback_savepoint()
+                    return
+
+            if txn_stmt == "COMMIT":
                 self.db.commit()
                 return
-            elif query.upper() == "ROLLBACK":
+            elif txn_stmt == "ROLLBACK":
                 self.db.rollback()
+                return
+            elif txn_stmt == "BEGIN":
+                cursor.execute("BEGIN IMMEDIATE")
                 return
             else:
                 if 'create table' in query.lower():
-                    cursor.executescript(query)
+                    # Avoid executescript() because it implicitly commits the
+                    # current transaction (breaking our shared-transaction
+                    # refcount). Run statements one at a time instead.
+                    for statement in query.split(';'):
+                        statement = statement.strip()
+                        if statement:
+                            cursor.execute(statement)
                 else:
                     cursor.execute(query)
                 desc = cursor.description
@@ -366,8 +558,8 @@ class DB(TM):
     def _begin(self, *ignored):
         try:
             self._transaction_begun = True
-            if self._transactions:
-                self._query(b"BEGIN IMMEDIATE", allow_reconnect=True)
+            if self._transactions and self._shared is not None:
+                self._shared.begin()
         except:
             LOG('SQLiteDA', ERROR, "exception during _begin",
                 error=True)
@@ -381,17 +573,17 @@ class DB(TM):
         if not self._transaction_begun:
             return
         self._transaction_begun = False
-        if self._transactions:
-            self._query(b"COMMIT")
+        if self._transactions and self._shared is not None:
+            self._shared.finish()
 
     def _abort(self, *ignored):
         if not self._transaction_begun:
             return
         self._transaction_begun = False
         try:
-            if self._transactions:
-                self._query(b"ROLLBACK")
-            else:
+            if self._transactions and self._shared is not None:
+                self._shared.abort()
+            elif not self._transactions:
                 LOG('SQLiteDA', ERROR, "aborting when non-transactional")
         except OperationalError as m:
             LOG('SQLiteDA', ERROR, "exception during _abort",
