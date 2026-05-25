@@ -53,7 +53,7 @@ Notification Message | document_conversion_interaction_workflow
 Notification Message | document_security_interaction_workflow
 Notification Message | edit_workflow
 Notification Message | notification_message_workflow
-Notification Message | processing_status_workflow
+OOo Document | document_conversion_interaction_workflow
 Organisation | edit_workflow
 Organisation | validation_workflow
 Person | edit_workflow

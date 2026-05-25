@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77259914.1462672</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -65,9 +69,29 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>11f6663a756621374e67fe04df90578d</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
+# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+# version 1.0\n
+CACHE:\n
+gadget_officejs_calendar.html\n
+fullcalendar.min.js\n
+gadget_officejs_calendar.js\n
+moment.min.js\n
+rsvp.js\n
+renderjs.js\n
+jquery.js\n
+fullcalendar.min.js\n
+fullcalendar.min.css\n
+locale-all.js\n
+\n
+NETWORK:\n
+*</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -98,26 +122,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
-# version 1.0\n
-CACHE:\n
-gadget_officejs_calendar.html\n
-fullcalendar.min.js\n
-gadget_officejs_calendar.js\n
-moment.min.js\n
-rsvp.js\n
-renderjs.js\n
-jquery.js\n
-fullcalendar.min.js\n
-fullcalendar.min.css\n
-locale-all.js\n
-\n
-NETWORK:\n
-*</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>310</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -256,7 +262,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>966.48777.48028.12578</string> </value>
+                      <value> <string>1032.34086.19054.14762</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -272,7 +278,7 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1523957042.78</float>
+                              <float>1777259914.150219</float>
                               <string>GMT+2</string>
                             </tuple>
                           </state>

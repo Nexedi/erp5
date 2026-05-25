@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77259913.4395761</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -65,9 +69,15 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>0de1591bc25ce3abd96b30d44fc45428</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
+CACHE:\n
+NETWORK:\n
+*\n
+</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -98,12 +108,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-CACHE:\n
-NETWORK:\n
-*\n
-</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>33</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -242,7 +248,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>981.60890.14483.27238</string> </value>
+                      <value> <string>1032.34086.19054.14762</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,8 +264,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1582883829.81</float>
-                              <string>UTC</string>
+                              <float>1777259913.446808</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
