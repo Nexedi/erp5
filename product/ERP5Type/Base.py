@@ -882,6 +882,21 @@ class Base(
           % (path, old, value, ''.join(traceback.format_stack(limit=12))))
     super(Base, self).__setattr__(name, value)
 
+  def __setstate__(self, state):
+    super(Base, self).__setstate__(state)
+    if isinstance(state, dict) and 'uid' in state:
+      try:
+        path = '/'.join(self.getPhysicalPath())
+      except Exception:
+        path = '<unknown>'
+      try:
+        oid = self._p_oid
+      except Exception:
+        oid = '<no-oid>'
+      LOG('UID-DIAG', ERROR,
+          '__setstate__ uid: path=%r oid=%r restored_uid=%r id=%r'
+          % (path, oid, state.get('uid'), state.get('id')))
+
   # XXX This is necessary to override getId which is also defined in SimpleItem.
   security.declareProtected( Permissions.AccessContentsInformation, 'getId' )
   getId = BaseAccessor.Getter('getId', 'id', 'string')
