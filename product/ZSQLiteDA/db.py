@@ -203,7 +203,8 @@ class DB(TM):
         self.db = sqlite3.connect(
             self._kw_args['db'],
             check_same_thread=False,
-            detect_types=sqlite3.PARSE_DECLTYPES # XXXXXX need to change also related column
+            detect_types=sqlite3.PARSE_DECLTYPES, # XXXXXX need to change also related column
+            isolation_level=None,
         )
 
         self.db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
@@ -275,7 +276,6 @@ class DB(TM):
                     cursor.execute(query)
                 desc = cursor.description
                 rows = cursor.fetchall()
-                self.db.commit()
                 return SQLiteResult(rows, desc)
         except OperationalError as m:
             msg = str(m).lower()
