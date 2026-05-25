@@ -62,6 +62,7 @@ from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
 import six.moves.http_client
+from six.moves.urllib.parse import urlencode
 from six.moves.urllib.request import urlopen
 import re
 from AccessControl import Unauthorized
@@ -1882,8 +1883,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.tic()
     convert_kw = {'format': 'png',
                   'quality': 75,
-                  'display': 'thumbnail',
-                  'resolution': None}
+                  'display': 'thumbnail'}
 
     class ThreadWrappedConverter(Thread):
       """Use this class to run different conversions
@@ -1902,12 +1902,12 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
           # Use publish method to dispatch conversion among
           # all available ZServer threads.
           convert_kw['frame'] = frame
-          response = self.publish_method(self.document_path,
-                                         basic=self.credential,
-                                         extra=convert_kw.copy())
+          publish_url = '%s?%s' % (self.document_path, urlencode(convert_kw))
+          response = self.publish_method(publish_url,
+                                         basic=self.credential)
 
           assert response.getHeader('content-type') == 'image/png', \
-                                             response.getHeader('content-type')
+                                             (response.getHeader('content-type'), publish_url)
           assert response.getStatus() == six.moves.http_client.OK
 
     credential = '%s:%s' % (self.manager_username, self.manager_password)
@@ -1931,8 +1931,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
     convert_kw = {'format': 'png',
                   'quality': 75,
-                  'display': 'thumbnail',
-                  'resolution': None}
+                  'display': 'thumbnail'}
 
     result_list = []
     for i in range(pages_number):
