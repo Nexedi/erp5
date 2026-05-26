@@ -110,28 +110,34 @@ class MovementGroupNode:
   def getCurrentMovementGroup(self):
     return self._movement_group
 
-  def getMovementList(self):
+  def getMovementList(self, expand_aggregated_movement=False):
     """
       Return movement list in the current group
     """
     movement_list = []
     group_list = self.getGroupList()
     if len(group_list) == 0:
-      return self._movement_list
+      if expand_aggregated_movement:
+        for fake_movement in self._movement_list:
+          if fake_movement.__class__.__name__ == "FakeMovement":
+            movement_list.extend(fake_movement.getMovementList())
+          else:
+            movement_list.append(fake_movement)
+        return movement_list
+      else:
+        return self._movement_list
     else:
       for group in group_list:
-        movement_list.extend(group.getMovementList())
+        movement_list.extend(group.getMovementList(
+          expand_aggregated_movement=expand_aggregated_movement
+        ))
       return movement_list
 
   def getMovement(self):
     """
       Return first movement of the movement list in the current group
     """
-    movement = self.getMovementList()[0]
-    if movement.__class__.__name__ == 'FakeMovement':
-      return movement.getMovementList()[0]
-    else:
-      return movement
+    return self.getMovementList(expand_aggregated_movement=True)[0]
 
   def test(self, movement, divergence_list):
     # Try to check if movement is updatable or not.
@@ -176,11 +182,8 @@ class MovementGroupNode:
       return None
 
   def hasSimulationMovement(self, simulation_movement):
-    for movement in self.getMovementList():
-      if movement.__class__.__name__ == "FakeMovement":
-        if simulation_movement in movement.getMovementList():
-          return True
-      elif simulation_movement == movement:
+    for movement in self.getMovementList(expand_aggregated_movement=True):
+      if simulation_movement == movement:
         return True
     return False
 
@@ -192,7 +195,7 @@ class MovementGroupNode:
     if len(movement_list) != 1:
       raise ValueError("Can separate only 2 movements")
     else:
-      old_movement = self.getMovementList()[0]
+      old_movement = movement_list[0]
 
       new_stored_movement = old_movement
       added_movement = movement
