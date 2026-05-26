@@ -150,7 +150,7 @@ class ComponentTool(BaseTool):
     # Make sure that it is not possible to load Components or load Portal Type
     # class when Components are reset through aq_method_lock
     import erp5.component
-    from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackageType
+    from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
     with aq_method_lock:
       component_package_list = []
       if only_test_component_module:
@@ -158,7 +158,7 @@ class ComponentTool(BaseTool):
       else:
         package_list = [
           package for package in six.itervalues(erp5.component.__dict__)
-          if isinstance(package, ComponentDynamicPackageType)]
+          if isinstance(package, ComponentDynamicPackage)]
       for package in package_list:
         package.reset()
         component_package_list.append(package.__name__)
