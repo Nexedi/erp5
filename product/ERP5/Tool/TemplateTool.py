@@ -1189,6 +1189,11 @@ class TemplateTool (BaseTool):
                   bid.replace('.bt5', '') for _, bid in
                   self.getDependencyList(provider_bt)
                 ]
+                # A provider with no declared deps makes no specific
+                # claim about the environment it requires; treat it as
+                # not a match so it does not silently win.
+                if not provider_dep_titles:
+                  continue
                 if all(d in installed_bt5_title_list
                        or d in bt5_titles_in_set
                        for d in provider_dep_titles):
