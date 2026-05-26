@@ -813,7 +813,8 @@ class Base(
     Components and fallback on ERP5Type's interfaces registry
     """
     from Products.ERP5Type.dynamic.portal_type_class import _importComponentClass
-    interface = _importComponentClass('erp5.component.interface', interface_name)
+    import erp5.component.interface
+    interface = _importComponentClass(erp5.component.interface, interface_name)
     if interface is None:
       try:
         interface = getattr(interfaces, interface_name)
