@@ -84,6 +84,7 @@
                         <string>application/vnd.ms-excel.sheet.binary.macroenabled.12</string>
                         <string>application/x-dbf</string>
                         <string>application/x-asc-spreadsheet</string>
+                        <string>text/csv</string>
                       </list>
                     </value>
                 </item>
