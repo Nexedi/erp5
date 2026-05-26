@@ -1168,6 +1168,37 @@ class TemplateTool (BaseTool):
                           candidate.uid))
                     break
                 break
+            if provider_title is None:
+              # Pick the provider whose own hard dependencies are already
+              # satisfied by what is installed or about to be installed.
+              # Lets meta-dep resolution disambiguate backend-specific
+              # variants (e.g. erp5_full_text_{mroonga,sqlite}_catalog both
+              # provide erp5_full_text_catalog but each depends on its
+              # matching catalog storage bt5).
+              bt5_titles_in_set = {
+                bid.replace('.bt5', '') for _, bid in bt5_set
+              }
+              matching_providers = []
+              for provider in provider_list:
+                try:
+                  provider_bt = self.getLastestBTOnRepos(provider)
+                except (BusinessTemplateUnknownError,
+                        BusinessTemplateIsMeta):
+                  continue
+                provider_dep_titles = [
+                  bid.replace('.bt5', '') for _, bid in
+                  self.getDependencyList(provider_bt)
+                ]
+                if all(d in installed_bt5_title_list
+                       or d in bt5_titles_in_set
+                       for d in provider_dep_titles):
+                  matching_providers.append(provider)
+              if len(matching_providers) == 1:
+                provider_title = matching_providers[0]
+              elif len(matching_providers) > 1:
+                raise BusinessTemplateMissingDependency(
+                  "Ambiguous providers for %s: %s all have satisfied "
+                  "dependencies" % (dep_id, matching_providers))
             if provider_title is None and len(provider_list) == 1:
               provider_title = provider_list[0]
             LOG('resolveBT, provider_title', 0, provider_title)
