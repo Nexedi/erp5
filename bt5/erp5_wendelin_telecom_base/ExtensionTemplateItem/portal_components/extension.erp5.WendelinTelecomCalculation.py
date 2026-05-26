@@ -4,6 +4,7 @@ import six
 from zLOG import LOG, WARNING
 from xlte.amari import kpi as amari_kpi
 from xlte import kpi
+import numpy as np
 
 def load_measurements(alogm):
   mlog = kpi.MeasurementLog()
@@ -42,6 +43,10 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
   rrc_data = []
   ue_data = []
   rms_rx_data = []
+  ul_noise_indicator_data = []
+  throughput_data = []
+  bler_data = []
+  accessibility_data = []
   is_config_updated = False
   if progress_indicator is not None:
     last_config_dict = json.loads(progress_indicator.getLastXLogConfig('{}'))
@@ -61,10 +66,18 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
     if xlog_line_dict.get("message", None) == 'config_get' and "cells" in xlog_line_dict:
       rms_rx_index = []
       for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
-        rms_rx_index.extend([(cell_id, ant_id+1) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))])
+        n_rb_ul = cell_data.get("n_rb_ul", 100)
+        rms_rx_index.extend([(cell_id, ant_id+1, n_rb_ul) for ant_id in range(0, cell_data.get("n_antenna_ul", 0))])
       is_config_updated = True
 
     if xlog_line_dict.get("message", None) == 'stats' and "cells" in xlog_line_dict:
+      duration = xlog_line_dict.get("duration", None)
+      counter_message_dict = xlog_line_dict.get("counters", {}).get("messages", {})
+      s1_initial_context_setup_request = counter_message_dict.get("s1_initial_context_setup_request", 0)
+      s1_initial_context_setup_response = counter_message_dict.get("s1_initial_context_setup_response", 0)
+      s1_erab_setup_request = counter_message_dict.get("s1_erab_setup_request", 0)
+      s1_erab_setup_response = counter_message_dict.get("s1_erab_setup_response", 0)
+
       for cell_id, cell_data in six.iteritems(xlog_line_dict["cells"]):
 
         ue_count_max = cell_data.get("ue_count_max", None)
@@ -77,6 +90,19 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
 
           ue_data.append(
             (timestamp, int(cell_id), ue_count_max, ue_count_min, ue_count_avg))
+
+        dl_bitrate = cell_data.get("dl_bitrate", None)
+        ul_bitrate = cell_data.get("ul_bitrate", None)
+        if dl_bitrate is not None and ul_bitrate is not None and duration is not None:
+          throughput_data.append((timestamp, int(cell_id), dl_bitrate/duration, ul_bitrate/duration))
+
+        dl_tx = cell_data.get("dl_tx", None)
+        ul_tx = cell_data.get("ul_tx", None)
+        dl_retx = cell_data.get("dl_retx", None)
+        ul_retx = cell_data.get("ul_retx", None)
+
+        if dl_tx is not None and ul_tx is not None and dl_retx is not None and ul_retx is not None:
+          bler_data.append((timestamp, int(cell_id), dl_tx, dl_retx, ul_tx, ul_retx))
 
         # XXX REVIEW: I am not sure this will always be true.
         cell_message = cell_data.get("counters", {})\
@@ -93,6 +119,10 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
           rrc_data.append((timestamp, int(cell_id), rrc_con_req, rrc_paging,
                            rrc_recon_com, rrc_sec_command, rrc_sec_complete))
 
+          rrc_con_set_com = cell_message.get("rrc_connection_setup_complete", 0)
+          accessibility_data.append((timestamp, int(cell_id), rrc_con_req, rrc_con_set_com,
+                                     s1_initial_context_setup_request, s1_initial_context_setup_response, 
+                                     s1_erab_setup_request, s1_erab_setup_response))
       cell_samples_rx_list = xlog_line_dict.get("samples", {}).get("rx", [])
       if len(rms_rx_index) == len(cell_samples_rx_list):
         for pos, sample_rx in enumerate(cell_samples_rx_list):
@@ -105,6 +135,21 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
              sample_rx['rms'],
             sample_rx['rms_dbm']
           ))
+          # UL Noise Indicator KPI
+          # UL_Noise_Indicator = RX_RMS − 10·log10(BW_Hz)
+          if len(rms_rx_index[pos]) < 3:
+            continue
+          if rms_rx_index[pos][2] == 6:
+            bandwidth = 1400000 # 6RBs = 1.4 Mhz
+          else:
+            bandwidth = rms_rx_index[pos][2] * 2e5 # BW_Hz = n_rb_ul * 0.2 MHz for other n_rb_ul
+          ul_noise_indicator_data.append((
+            timestamp,
+            int(rms_rx_index[pos][0]),  # Cell ID
+            rms_rx_index[pos][1],       # Antenna ID
+            sample_rx['rms'] - 10 * np.log10(bandwidth)  # n_rb_ul * 0.2 MHz
+          ))
+
       #else:
        # raise ValueError("len(rms_rx_index) %s != len(cell_samples_rx_list) %s" % (
        #   len(rms_rx_index), len(cell_samples_rx_list)))
@@ -158,6 +203,10 @@ def processEnbXLogData(self, data, t_period, progress_indicator=None):
     e_utran_ip_throughput=(evt, v_ip_throughput_qci),
     ue_count=ue_data,
     rrc=rrc_data,
+    ul_noise_indicator=ul_noise_indicator_data,
+    throughput=throughput_data,
+    bler=bler_data,
+    accessibility=accessibility_data,
     rms={'rx': rms_rx_data},
     last_rms_rx_index=rms_rx_index
   )

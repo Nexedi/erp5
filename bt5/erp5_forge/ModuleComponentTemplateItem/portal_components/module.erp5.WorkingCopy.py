@@ -153,7 +153,7 @@ class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
       request.RESPONSE.setCookie(name, value, path=portal.absolute_url_path(),
                                  expires=expires)
 
-  # path is the path in svn working copy
+  # path is the path in VCS working copy
   # return edit_path in zodb to edit it
   def editPath(self, path, html=False):
     """Return path to edit file
@@ -337,11 +337,6 @@ class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
 
 def getVcsTool(vcs=None, path=None, restricted=False):
   ## Initialization of WorkingCopy._registry (used to be done in Products.ERP5VCS __init__)
-  # Register Subversion before Git
-  try:
-    from erp5.component.module import Subversion as _
-  except ImportError:
-    pass
   from erp5.component.module import Git as _
 
   if vcs:

@@ -147,6 +147,8 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     """
     return ('draft_order',
             'planned_order',
+            'planned_transaction',
+            'accounted_transaction',
             'future_inventory',
             'reserved_inventory',
             'transit_inventory',

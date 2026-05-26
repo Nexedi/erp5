@@ -64,6 +64,18 @@
 </tr>
 
 <tr>
+  <td>assertElementPresent</td>
+  <td>//ul[@class="document-listview"]//a[text()='View Print Dialog Raw']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul[@class="document-listview"]//a[contains(@href, 'Foo_viewPrintDialogRaw')]</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>click</td>
   <td>//ul[@class="document-listview"]//a[text()='Print']</td>
   <td></td>

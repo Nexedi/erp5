@@ -26,6 +26,12 @@
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant.</string> </value>
         </item>
@@ -52,7 +58,9 @@
         <item>
             <key> <string>state_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>accounted_transaction</string>
+              </tuple>
             </value>
         </item>
         <item>

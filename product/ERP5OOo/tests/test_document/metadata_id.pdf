@@ -1,0 +1,48 @@
+%PDF-1.3
+1 0 obj
+<<
+/Kids [ 3 0 R ]
+/Type /Pages
+/Count 1
+>>
+endobj
+2 0 obj
+<<
+/reference (reference from pdf metadata)
+/id (\137\137invalid\137\137)
+/Producer (PyPDF2)
+/Title (Document with invalid metadata)
+/uid (\137\137invalid\137\137)
+>>
+endobj
+3 0 obj
+<<
+/Parent 1 0 R
+/Type /Page
+/Resources <<
+>>
+/MediaBox [ 0 0 72 72 ]
+>>
+endobj
+4 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+>>
+endobj
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000068 00000 n 
+0000000250 00000 n 
+0000000338 00000 n 
+trailer
+<<
+/Size 5
+/Root 4 0 R
+/Info 2 0 R
+>>
+startxref
+387
+%%EOF

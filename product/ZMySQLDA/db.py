@@ -243,8 +243,19 @@ class DB(TM):
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
 
+    @property
+    def isolation_level(self):
+        return self._isolation_level
+
+    @isolation_level.setter
+    def isolation_level(self, v):
+        if v not in ('REPEATABLE READ', 'READ COMMITTED', 'READ UNCOMMITTED',
+                     'SERIALIZABLE', None):
+            raise ValueError('Isolation level %s is not supported.' % v)
+        self._isolation_level = v
+
     def _parse_connection_string(self):
-        self._mysql_lock = self._try_transactions = None
+        self._mysql_lock = self._try_transactions = self._isolation_level = None
         self._kw_args = kwargs = {'conv': self.conv}
         items = self._connection.split()
         if not items:
@@ -262,6 +273,8 @@ class DB(TM):
             del items[0]
         if items[0][0] == "*":
             self._mysql_lock = items.pop(0)[1:]
+        if items[0][0] == "!":
+            self.isolation_level = items.pop(0)[1:].replace('-', ' ')
         db = items.pop(0)
         if '@' in db:
             db, host = db.split('@', 1)
@@ -332,11 +345,25 @@ class DB(TM):
             )
       self.db = MySQLdb.connect(**self._kw_args)
       self._query(b"SET time_zone='+00:00'")
+      try:
+        self.innodb_locks_unsafe_for_binlog = bool(
+          self._query(b"SHOW VARIABLES LIKE 'innodb_locks_unsafe_for_binlog'").fetch_row()[0][1] == 'ON')
+      except IndexError:
+        self.innodb_locks_unsafe_for_binlog = False
+      if self.isolation_level:
+        self._query('SET SESSION TRANSACTION ISOLATION LEVEL ' + self.isolation_level)
       # BBB mysqlclient on python2 does not support sql_mode, check that
       # the connection is actually encrypted.
       if self._kw_args.get('ssl') and \
           not self._query(b"SHOW STATUS LIKE 'Ssl_version'").fetch_row()[0][1]:
           raise NotSupportedError("Connection established without SSL")
+      try:
+        self.db.query('SELECT 1 FOR UPDATE SKIP LOCKED')
+        self.db.store_result()
+      except ProgrammingError:
+        self.has_skip_locked = False
+      else:
+        self.has_skip_locked = True
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):

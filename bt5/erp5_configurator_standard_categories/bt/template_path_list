@@ -872,6 +872,9 @@ portal_categories/social_title/doctor
 portal_categories/social_title/madam
 portal_categories/social_title/miss
 portal_categories/social_title/mister
+portal_categories/trade_phase/bank
+portal_categories/trade_phase/bank/accounting
+portal_categories/trade_phase/bank/reconciliation
 portal_categories/trade_phase/payroll
 portal_categories/trade_phase/payroll/accounting
 portal_categories/trade_phase/payroll/delivery
@@ -902,6 +905,9 @@ portal_categories/trade_phase/trade/order
 portal_categories/trade_phase/trade/payment
 portal_categories/trade_phase/trade/prepayment
 portal_categories/trade_phase/trade/tax
+portal_categories/trade_state/bank
+portal_categories/trade_state/bank/accounted
+portal_categories/trade_state/bank/reconcilied
 portal_categories/trade_state/trade
 portal_categories/trade_state/trade/accounted
 portal_categories/trade_state/trade/delivered

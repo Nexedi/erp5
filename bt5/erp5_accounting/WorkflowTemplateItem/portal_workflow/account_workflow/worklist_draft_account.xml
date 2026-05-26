@@ -22,7 +22,7 @@
             <key> <string>action</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-account_module/view?validation_state=draft&local_roles=%(local_roles)s&reset:int=1
+account_module/view?validation_state=draft&local_roles:list=%(local_roles)s&reset:int=1
 
 ]]></string> </value>
         </item>
@@ -42,14 +42,20 @@ account_module/view?validation_state=draft&local_roles=%(local_roles)s&reset:int
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
-                <string>portal_type</string>
                 <string>validation_state</string>
                 <string>local_roles</string>
+                <string>portal_type</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
             <value>
               <none/>
             </value>
@@ -102,25 +108,26 @@ account_module/view?validation_state=draft&local_roles=%(local_roles)s&reset:int
                 <item>
                     <key> <string>local_roles</string> </key>
                     <value>
-                      <tuple>
-                        <string>Owner</string>
-                      </tuple>
+                      <list>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Account</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>validation_state</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>draft</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

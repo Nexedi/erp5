@@ -28,6 +28,7 @@
 """Tests Bank Reconciliation
 """
 
+import os
 import unittest
 
 from DateTime import DateTime
@@ -41,6 +42,76 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
   """Test Bank Reconciliation
 
   """
+  def _getTestDataPath(self):
+    from Products.ERP5OOo import tests
+    return os.path.join(os.path.join(tests.__path__[0], 'test_document'))
+
+  def _makeBusinessProcess(self):
+    business_process_module = self.portal.business_process_module
+    """
+    try:
+      return business_process_module.bank_reconciliation_business_process
+    except AttributeError:
+      pass
+    """
+
+    business_process_value = business_process_module.newContent(
+      portal_type='Business Process',
+      #id='bank_reconciliation_business_process',
+      reference='BP-BANK-RECONCILIATION',
+      title='Bank Reconciliation Business Process',
+      version='1',
+    )
+    business_process_value.newContent(
+      portal_type='Business Link',
+      reference='BL-ACCOUNT',
+      int_index=1,
+      successor='trade_state/bank/accounted',
+      trade_phase='trade_phase/bank/accounting',
+      delivery_builder='portal_deliveries/payment_transaction_builder'
+    )
+    business_process_value.newContent(
+      portal_type='Trade Model Path',
+      reference='TMP-ACCOUNTING-BANK',
+      int_index=1,
+      efficiency=-1.0,
+      trade_phase='trade_phase/bank/accounting',
+      source='account_module/bank',
+    )
+
+    tmp_payable_value = business_process_value.newContent(
+      portal_type='Trade Model Path',
+      reference='TMP-ACCOUNTING-PAYABLE',
+      int_index=2,
+      efficiency=1.0,
+      trade_phase='trade_phase/bank/accounting',
+      source='account_module/payable',
+    )
+    tmp_payable_value.setCriterionPropertyList(['quantity'])
+    self.portal.REQUEST.set(
+      'listbox',
+      {'quantity': {'max': 0.0, 'identity': [], 'min': ''}},
+    )
+    tmp_payable_value.Predicate_edit('Predicate_view')
+
+    tmp_receivable_value = business_process_value.newContent(
+      portal_type='Trade Model Path',
+      reference='TMP-ACCOUNTING-RECEIVABLE',
+      int_index=2,
+      efficiency=1.0,
+      trade_phase='trade_phase/bank/accounting',
+      source='account_module/receivable',
+    )
+    tmp_receivable_value.setCriterionPropertyList(['quantity'])
+    self.portal.REQUEST.set(
+      'listbox',
+      {'quantity': {'max': '', 'identity': [], 'min': 0.0}},
+    )
+    tmp_receivable_value.Predicate_edit('Predicate_view')
+
+    business_process_value.validate()
+    return business_process_value
+
   def getBusinessTemplateList(self):
     return AccountingTestCase.getBusinessTemplateList(self) + (
         'erp5_bank_reconciliation',)
@@ -723,6 +794,156 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         [bank_reconciliation_for_main_section],
         internal_transaction.bank.getAggregateValueList())
 
+  def test_BankReconciliation_import_file(self):
+    self.maxDiff = None
+    account_module = self.account_module
+    business_process_value = self._makeBusinessProcess()
+    bank_reconciliation_value = self.portal.bank_reconciliation_module.newContent(
+      portal_type='Bank Reconciliation',
+      title='Bank Reconciliation with imported content',
+      source_section_value=self.section,
+      source_payment_value=self.bank_account,
+      start_date=DateTime(2025, 1, 1),
+      stop_date=DateTime(2025, 1, 31),
+    )
+    initial_payment_value = self._makeOne(
+      portal_type='Payment Transaction',
+      simulation_state='delivered',
+      source_payment_value=self.bank_account,
+      start_date=DateTime(2025, 1, 5),
+      lines=(dict(source_value=account_module.bank,
+                  source_credit=20.0,
+                  id='bank'),
+             dict(source_value=account_module.payable,
+                  source_debit=20.0))
+    )
+    bank_reconciliation_value.open()
+    self.commit()
+
+    f = self.makeFileUpload('import_bank_reconciliation.ods')
+    listbox = (
+      {
+        'listbox_key': '001',
+        'portal_type_property_list':'Bank Reconciliation Line.start_date',
+      },
+      {
+        'listbox_key': '002',
+        'portal_type_property_list':'Bank Reconciliation Line.stop_date',
+      },
+      {
+        'listbox_key': '003',
+        'portal_type_property_list':'Bank Reconciliation Line.title',
+      },
+      {
+        'listbox_key': '004',
+        'portal_type_property_list':'Bank Reconciliation Line.source_credit',
+      },
+      {
+        'listbox_key': '005',
+        'portal_type_property_list':'Bank Reconciliation Line.source_debit',
+      },
+    )
+    bank_reconciliation_value.Base_importFile(import_file=f, listbox=listbox)
+    self.tic()
+
+    # Assert: lines created, `hasLineContent` works
+    self.assertTrue(bank_reconciliation_value.hasLineContent())
+    expected_line_list = [
+      { "start_date_day": 5, "stop_date_day": 5, "title": "VIR Free", "credit": 0.0, "debit": 20.0 },
+      { "start_date_day": 11, "stop_date_day": 13, "title": "VIR INC Client", "credit": 10000.0, "debit": 0.0 },
+      { "start_date_day": 18, "stop_date_day": 18, "title": "PRLV SFR", "credit": 0.0, "debit": 30.0 },
+      { "start_date_day": 26, "stop_date_day": 26, "title": "VIR Payable", "credit": 0.0, "debit": 7500.0 },
+    ]
+    line_list = [{
+      "start_date_day": line_value.getStartDate().day(),
+      "stop_date_day": line_value.getStopDate().day(),
+      "title": line_value.getTitle(),
+      "credit": line_value.getSourceCredit(),
+      "debit": line_value.getSourceDebit(),
+    } for line_value in bank_reconciliation_value.objectValues()]
+    # Assert: bank line matches ODS file line
+    self.assertCountEqual(expected_line_list, line_list)
+
+    # Assert: `getQuantityRangeMax` is computed automatically
+    bank_reconciliation_value.setQuantityRangeMin(1000.0)
+    self.assertEqual(bank_reconciliation_value.getQuantityRangeMax(), 3450.0)
+
+    bank_reconciliation_value.setSpecialiseValue(business_process_value)
+    self.tic()
+    # Assert: an Applied Rule is created
+    self.assertEqual(1, len(bank_reconciliation_value.getCausalityRelatedList()))
+
+    expected_movement_list_before_reconciliation = []
+    for line_value in bank_reconciliation_value.objectValues():
+      for direction in (1, -1):
+        line_dict = {
+          "start_date_day": line_value.getStartDate().day(),
+          "stop_date_day": line_value.getStopDate().day(),
+          "quantity": direction * line_value.getQuantity(),
+          "aggregate": line_value.getRelativeUrl() if direction == -1 else None,
+        }
+        expected_movement_list_before_reconciliation.append(line_dict)
+
+    applied_rule = bank_reconciliation_value.getCausalityRelatedValue()
+    simulation_movement_list = [{
+      "start_date_day": movement_value.getStartDate().day(),
+      "stop_date_day": movement_value.getStopDate().day(),
+      "quantity": movement_value.getQuantity(),
+      "aggregate": movement_value.getAggregate(),
+    } for movement_value in applied_rule.objectValues()]
+
+    # Assert: Simulation Movements matches expected movements
+    self.assertCountEqual(expected_movement_list_before_reconciliation, simulation_movement_list)
+
+    # Reconcile one line manually to ensure two simulation movements are deleted
+    expected_movement_list = [x for x in expected_movement_list_before_reconciliation if abs(x["quantity"]) != 20.0]
+    line_value = next(x for x in bank_reconciliation_value.objectValues() if x.getSourceDebit() == 20.0)
+    initial_payment_value["bank"].AccountingTransactionLine_addBankReconciliation(
+      line_value.getRelativeUrl(),
+      message="Reconciling Bank Line",
+    )
+    bank_reconciliation_value.updateSimulation(expand_root=1)
+    self.tic()
+    simulation_movement_list = [{
+      "start_date_day": movement_value.getStartDate().day(),
+      "stop_date_day": movement_value.getStopDate().day(),
+      "quantity": movement_value.getQuantity(),
+      "aggregate": movement_value.getAggregate(),
+    } for movement_value in applied_rule.objectValues()]
+    # Assert: Simulation Movements matches expected movements
+    self.assertCountEqual(expected_movement_list, simulation_movement_list)
+
+    transaction_list = bank_reconciliation_value.BankReconciliation_createMissingTransactionList(batch_mode=True)
+    self.tic()
+    # Assert: one transaction was created per Bank Reconciliation Line, minus one that was reconcilied before
+    self.assertEqual(len(expected_line_list) - 1, len(transaction_list))
+
+    movement_list = [{
+      "start_date_day": movement_value.getStartDate().day(),
+      "stop_date_day": movement_value.getStopDate().day(),
+      "quantity": movement_value.getQuantity(),
+      "aggregate": movement_value.getAggregate(),
+    } for transaction_value in transaction_list for movement_value in transaction_value.objectValues()]
+    self.assertCountEqual(expected_movement_list, movement_list)
+
+    # Assert: title of the Accounting Transaction matches title from the Bank Reconciliation Line
+    #self.assertEqual(bank_aggregate.getTitle(), transaction_value.getTitle())
+
+    bank_reconciliation_value.objectValues()[0].edit(debit=30.0)
+    self.tic()
+    # Assert: no new lines were created. Ensures matching by aggregate works
+    self.assertEqual(len(expected_movement_list), len(bank_reconciliation_value.getCausalityRelatedValue().objectValues()))
+
+    transaction_list[1].objectValues()[0].edit(quantity=33.0)
+    transaction_list[1].objectValues()[1].edit(quantity=-33.0)
+    self.tic()
+    # Assert: Accounting Transaction diverges when amounts are edited
+    self.assertEqual("diverged", transaction_list[1].getCausalityState())
+
+    transaction_list[2].objectValues()[0].edit(source_value=account_module.goods_purchase)
+    self.tic()
+    # Assert: Accounting Transaction does not diverge (auto-solve) when accounts are edited
+    self.assertEqual("solved", transaction_list[2].getCausalityState())
 
 def test_suite():
   suite = unittest.TestSuite()

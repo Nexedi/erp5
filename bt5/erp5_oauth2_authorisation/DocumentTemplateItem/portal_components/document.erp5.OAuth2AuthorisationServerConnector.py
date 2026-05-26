@@ -1271,14 +1271,15 @@ class OAuth2AuthorisationServerConnector(XMLObject):
           },
         )
         self._checkCustomTokenPolicy(token_dict, request)
-      except jwt.InvalidTokenError:
+      except jwt.InvalidTokenError as e:
+        last_invalid_token_error = e
         continue
       else:
         token_dict[JWT_PAYLOAD_KEY] = decodeAccessTokenPayload(
           ensure_ascii(token_dict[JWT_PAYLOAD_KEY]),
         )
         return token_dict
-    raise  # pylint:disable=misplaced-bare-raise
+    raise last_invalid_token_error
 
   def _getRefreshTokenDict(self, value, request):
     for _, algorithm, symetric_key in self.__getRefreshTokenKeyList():
@@ -1296,11 +1297,12 @@ class OAuth2AuthorisationServerConnector(XMLObject):
           },
         )
         self._checkCustomTokenPolicy(token_dict, request)
-      except jwt.InvalidTokenError:
+      except jwt.InvalidTokenError as e:
+        last_invalid_token_error = e
         continue
       else:
         return token_dict
-    raise  # pylint:disable=misplaced-bare-raise
+    raise last_invalid_token_error
 
   def _checkCustomTokenPolicy(self, token, request):
     """

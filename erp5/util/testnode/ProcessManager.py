@@ -57,7 +57,7 @@ class TimeoutError(EnvironmentError):
 class CancellationError(EnvironmentError):
   pass
 
-_format_command_search = re.compile("[[\\s $({?*\\`#~';<>&|]").search
+_format_command_search = re.compile(r"[\[\s $({?*\`#~';<>&|]").search
 _format_command_escape = lambda s: "'%s'" % r"'\''".join(s.split("'"))
 
 def format_command(*args, **kw):

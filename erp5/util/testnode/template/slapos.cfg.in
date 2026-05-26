@@ -5,6 +5,9 @@ shared_part_list = %(shared_part_list)s
 master_url = %(master_url)s
 computer_id = %(computer_id)s
 root_check = False
+pidfile_software = %(software_root)s/slapos-node.pid
+pidfile_instance = %(instance_root)s/slapos-node.pid
+pidfile_report = %(instance_root)s/slapos-node.pid
 
 [slapproxy]
 host = %(proxy_host)s

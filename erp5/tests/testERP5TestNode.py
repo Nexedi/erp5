@@ -25,14 +25,16 @@ import tempfile
 import json
 import time
 import re
-try:
+import sys
+if sys.version_info[0] >= 3:
   from unittest import mock
   from configparser import ConfigParser
-except ImportError:
+else:
   # BBB python2
   from ConfigParser import SafeConfigParser as ConfigParser
   ConfigParser.read_file = ConfigParser.readfp
   import mock
+  TestCase.assertRegex = TestCase.assertRegexpMatches
 
 @contextmanager
 def dummySuiteLog(_):
@@ -103,6 +105,7 @@ class ERP5TestNode(TestCase):
     config["slapos_binary"] = "/opt/slapgrid/HASH/bin/slapos"
     config["srv_directory"] = "srv_directory"
     config["shared_part_list"] = "/not/exists\n /not/exists_either"
+    config["keep_log_days"] = 10**32
 
     testnode = TestNode(config)
     # By default, keep suite logs to stdout for easier debugging
@@ -496,6 +499,170 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
 
+  def test_05g_HandleGitLockFile(self):
+    """When a .lock file is present in .git/ (e.g. a previous git process
+    crashed), the repository is treated as corrupted and deleted.
+    """
+    self.generateTestRepositoryList()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertTrue(rev_list is not None)
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
+    lock_file_path = os.path.join(rep0_clone_path, '.git', 'index.lock')
+    with open(lock_file_path, 'w') as f:
+      f.write('')
+    self.assertTrue(os.path.exists(lock_file_path))
+    # Repository with lock file is treated as corrupted and deleted
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEqual(None, rev_list)
+    self.assertFalse(os.path.isdir(rep0_clone_path))
+    # Next update should succeed by re-cloning
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertIsNotNone(rev_list)
+
+  def test_05h_DontDeleteRepositoryOnNonCorruptionError(self):
+    """
+    When git fetch fails for a reason other than index corruption (e.g.
+    the remote is temporarily unavailable), the repository should not be
+    deleted. Only repositories with an actually corrupted index should be
+    removed.
+
+    The old implementation checked if 'index' appeared in the error message,
+    which could cause false positives (e.g. branch names containing 'index').
+
+    When the repository is already configured correctly, we continue with
+    the existing revision instead of reporting failure.
+    """
+    self.generateTestRepositoryList()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertTrue(rev_list is not None)
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
+    old_revision = node_test_suite.revision
+    # Make fetch fail by deleting the remote repository
+    shutil.rmtree(self.remote_repository0)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertIsNotNone(rev_list)
+    self.assertTrue(os.path.isdir(rep0_clone_path))
+    self.assertEqual(old_revision, node_test_suite.revision)
+
+  def test_05i_ReportFetchFailureToServer(self):
+    """When a repository cannot be fetched, the testnode should create a test
+    result and report the failure to the server so that the error is visible.
+    When there is no prior revision, a date-based fallback revision is used.
+    """
+    self.generateTestRepositoryList()
+    mock_test_result = mock.MagicMock()
+    mock_test_result.revision = 'dummy'
+    call_count = [0]
+    test_suite_data = self.getTestSuiteData(add_broken_repository=True)
+    create_test_result_args = []
+
+    def start_test_suite_side_effect(node_title, computer_guid='unknown'):
+      call_count[0] += 1
+      if call_count[0] > 1:
+        raise StopIteration
+      return json.dumps(test_suite_data)
+
+    def create_test_result_side_effect(
+            revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      create_test_result_args.append(
+        dict(revision=revision, test_title=test_title))
+      return mock_test_result
+
+    with mock.patch.object(
+            TaskDistributor, 'startTestSuite',
+            side_effect=start_test_suite_side_effect), \
+         mock.patch.object(
+            TaskDistributor, 'subscribeNode', return_value='{}'), \
+         mock.patch.object(
+            TaskDistributor, 'getTestType', return_value='UnitTest'), \
+         mock.patch.object(
+            TaskDistributor, 'createTestResult',
+            side_effect=create_test_result_side_effect), \
+         mock.patch.object(
+            test_type_registry['UnitTest'], '_prepareSlapOS',
+            return_value={'status_code': 0}), \
+         mock.patch('time.sleep'):
+      test_node = self.getTestNode()
+      test_node.run()
+
+    mock_test_result.reportFailure.assert_called_once()
+    self.assertTrue(
+      mock_test_result.reportFailure.call_args.kwargs.get('stderr'))
+    self.assertEqual(len(create_test_result_args), 1)
+    revision = create_test_result_args[0]['revision']
+    self.assertRegex(revision,  "^update error=fatal: repository '.*' does not exist$")
+
+  def test_05j_ReportFetchFailureAfterBranchChange(self):
+    """When a test suite's branch is changed to one that does not exist,
+    the testnode should report a failure to the server.
+    """
+    self.generateTestRepositoryList()
+    mock_test_result = mock.MagicMock()
+    mock_test_result.revision = 'dummy'
+    call_count = [0]
+    initial_data = self.getTestSuiteData()
+    bad_data = self.getTestSuiteData()
+    bad_data[0]['vcs_repository_list'][0]['branch'] = 'non-existent-branch'
+    create_test_result_args = []
+
+    def start_test_suite_side_effect(node_title, computer_guid='unknown'):
+      call_count[0] += 1
+      if call_count[0] > 2:
+        raise StopIteration
+      if call_count[0] == 1:
+        return json.dumps(initial_data)
+      return json.dumps(bad_data)
+
+    def create_test_result_side_effect(
+            revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      create_test_result_args.append(
+        dict(revision=revision, test_title=test_title))
+      if len(create_test_result_args) == 1:
+        return None
+      return mock_test_result
+
+    with mock.patch.object(
+            TaskDistributor, 'startTestSuite',
+            side_effect=start_test_suite_side_effect), \
+         mock.patch.object(
+            TaskDistributor, 'subscribeNode', return_value='{}'), \
+         mock.patch.object(
+            TaskDistributor, 'getTestType', return_value='UnitTest'), \
+         mock.patch.object(
+            TaskDistributor, 'createTestResult',
+            side_effect=create_test_result_side_effect), \
+         mock.patch.object(
+            test_type_registry['UnitTest'], '_prepareSlapOS',
+            return_value={'status_code': 0}), \
+         mock.patch('time.sleep'):
+      test_node = self.getTestNode()
+      test_node.run()
+
+    mock_test_result.reportFailure.assert_called_once()
+    self.assertTrue(
+      mock_test_result.reportFailure.call_args.kwargs.get('stderr'))
+    self.assertEqual(len(create_test_result_args), 2)
+    self.assertNotIn("update error",
+      create_test_result_args[0]['revision'])
+    self.assertIn("update error",
+      create_test_result_args[1]['revision'])
+    self.assertIn("non-existent-branch",
+      mock_test_result.reportFailure.call_args.kwargs.get('stderr', ''))
+
   def test_update_revision_with_head_at_merge(self):
     """Test update revision when the head of the branch is a merge commit.
     """
@@ -565,6 +732,7 @@ shared = true
                       getRepInfo(hash=1))
     class TestResult(object):
       revision = NodeTestSuite.revision
+      update_revision_error = None
     test_result = TestResult()
     # for test result to be one commit late for rep1 to force testnode to
     # reset tree to older version
@@ -1168,6 +1336,41 @@ shared = true
         set([]) ,
         set(['buildoutA', 'tmpC', 'tmp-cannot-delete']).intersection(
             set(os.listdir(temp_directory))))
+
+  def test_pruneSlapOS(self):
+    """Test that slapos node prune is called periodically."""
+    test_node = self.getTestNode()
+    test_node.max_log_time = 1
+    timestamp_file = os.path.join(self.slapos_directory, '.prune_timestamp')
+
+    test_suite_foo = test_node.getNodeTestSuite('foo')
+    test_suite_bar = test_node.getNodeTestSuite('bar')
+    # Create 'soft' directories so that _pruneSlapOS discovers them on disk
+    os.makedirs(os.path.join(test_suite_foo.working_directory, 'soft'))
+    os.makedirs(os.path.join(test_suite_bar.working_directory, 'soft'))
+
+    # First call: no timestamp file, prune should run
+    with mock.patch.object(test_node.process_manager, 'spawn') as spawn_mock:
+      test_node._pruneSlapOS()
+      spawn_mock.assert_called_once()
+
+    args = spawn_mock.call_args_list[0].args
+    self.assertEqual(args[:3], (test_node.config['slapos_binary'], 'node', 'prune'))
+    self.assertEqual(
+      args[-4:],
+      (
+        '--additional-software-directory',
+        os.path.join(test_suite_bar.working_directory, 'soft'),
+        '--additional-software-directory',
+        os.path.join(test_suite_foo.working_directory, 'soft')
+      )
+    )
+    self.assertTrue(os.path.exists(timestamp_file))
+
+    # Second call: timestamp is fresh, prune should NOT run
+    with mock.patch.object(test_node.process_manager, 'spawn') as spawn_mock:
+      test_node._pruneSlapOS()
+      spawn_mock.assert_not_called()
 
   def test_resetSoftwareAfterManyBuildFailures(self):
     """

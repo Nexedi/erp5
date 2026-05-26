@@ -1,0 +1,1 @@
+return "default_bank_reconciliation_rule"

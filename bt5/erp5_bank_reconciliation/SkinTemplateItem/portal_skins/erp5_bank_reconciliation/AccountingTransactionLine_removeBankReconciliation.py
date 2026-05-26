@@ -6,12 +6,12 @@ portal = context.getPortalObject()
 
 assert context.getPortalType() in portal.getPortalAccountingMovementTypeList()
 
-bank_reconciliation_list = context.getAggregateList(portal_type='Bank Reconciliation')
+bank_reconciliation_list = context.getAggregateList(portal_type=('Bank Reconciliation', 'Bank Reconciliation Line'))
 bank_reconciliation_list.remove(bank_reconciliation_relative_url)
 
 context.setAggregateList(
   bank_reconciliation_list,
-  portal_type='Bank Reconciliation')
+  portal_type=('Bank Reconciliation', 'Bank Reconciliation Line'))
 
 # for traceability
 context.getParentValue().Base_addEditWorkflowComment(comment=message)

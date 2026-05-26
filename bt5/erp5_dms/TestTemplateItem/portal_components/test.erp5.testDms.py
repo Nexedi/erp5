@@ -74,6 +74,7 @@ import PIL.Image
 import PyPDF2
 from six.moves import range
 from OFS.Image import Pdata
+from Products.ERP5Form.Selection import Selection
 
 QUIET = 0
 
@@ -1593,6 +1594,16 @@ class TestDocument(TestDocumentMixin):
     document.edit(file=upload_file)
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
+    self.assertEqual('... TEST-en-002.odt ...', document.Base_showFoundText())
+    name = 'test_Base_showFoundText_selection'
+    selection = Selection(name)
+    self.portal.portal_selections.setSelectionFor(name, selection)
+    self.portal.portal_selections.setSelectionParamsFor(
+      selection_name=name,
+      params=dict(SearchableText='TEST')
+    )
+    self.assertEqual('', document.Base_showFoundText(max_lines=0, selection=selection))
+    self.assertEqual('...<em>TEST</em> - en - 002.odt...', document.Base_showFoundText(max_lines=1, selection=selection))
 
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content

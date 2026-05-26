@@ -2700,6 +2700,62 @@ return 'OK'
     self.assertNotIn(module_versioned2, _moduleSecurity)
     self.assertNotIn(module_versioned2, _appliedModuleSecurity)
 
+  def testERP5ComponentOverridePath(self):
+    """
+    Components can be overriden by setting ERP5_COMPONENT_OVERRIDE_PATH
+    environment variable and then creating ZODB Component on the filesystem in
+    that path with the Component ID as filename. Used to repair broken instance
+    for example.
+    """
+    component_override_base_path = tempfile.mkdtemp()
+    os.environ['ERP5_COMPONENT_OVERRIDE_PATH'] = os.pathsep.join([
+      component_override_base_path + '/path1',
+      component_override_base_path + '/path2'])
+    try:
+      os.mkdir(component_override_base_path + '/path1')
+      os.mkdir(component_override_base_path + '/path2')
+
+      reference = self._generateReference('TestERP5ComponentOverridePath')
+      component = self._newComponent(reference, version='erp5')
+      component.validate()
+      self.tic()
+      self.assertEqual(component.getValidationState(), 'validated')
+      self.assertEqual(component.checkConsistency(), [])
+      self.assertEqual(component.getTextContentErrorMessageList(), [])
+      self.assertEqual(component.getTextContentWarningMessageList(), [])
+      self.assertModuleImportable(reference)
+
+      # Try to override the Component from the 2nd path (/path2) first...
+      with open(os.path.join(component_override_base_path, 'path2',
+                             component.getId() + '.py'), "w") as f:
+        f.write(self._getValidSourceCode(reference) + '''
+def ERP5ComponentOverridePath():
+  pass
+''')
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
+      self.assertModuleImportable(reference)
+      module = self._importModule(reference)
+      self.assertIn('ERP5ComponentOverridePath', module.__dict__)
+
+      # And now from the 1st (/path1), should override the one from /path2
+      with open(os.path.join(component_override_base_path, 'path1',
+                             component.getId() + '.py'), "w") as f:
+        f.write(self._getValidSourceCode(reference) + '''
+def ERP5ComponentOverridePathHasPriority():
+  pass
+''')
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
+      self.assertModuleImportable(reference)
+      module = self._importModule(reference)
+      self.assertNotIn('ERP5ComponentOverridePath', module.__dict__)
+      self.assertIn('ERP5ComponentOverridePathHasPriority', module.__dict__)
+
+    finally:
+      shutil.rmtree(component_override_base_path)
+      del os.environ['ERP5_COMPONENT_OVERRIDE_PATH']
+
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
 class TestZodbExtensionComponent(TestZodbModuleComponent):
@@ -3401,17 +3457,35 @@ break_at_import()
     relative_url = 'portal_components/test.erp5.testRunLiveTestImportError'
     if six.PY2:
       module_file = '<' + relative_url + '>'
-      error_message = "ImportError: No module named non.existing.module"
-    else:
-      module_file = 'erp5://' + relative_url
-      error_message = "    ^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'non'"
-    self.assertIn('''
+      error_message = '''
   File "%(module_file)s", line 4, in <module>
     break_at_import()
   File "%(module_file)s", line 3, in break_at_import
     import non.existing.module # pylint:disable=import-error
-%(error_message)s
-''' % dict(module_file=module_file, error_message=error_message), output)
+ImportError: No module named non.existing.module
+'''
+    else:
+      module_file = 'erp5://' + relative_url
+      if sys.version_info[:2] < (3, 13):
+        error_message = '''
+  File "%(module_file)s", line 4, in <module>
+    break_at_import()
+  File "%(module_file)s", line 3, in break_at_import
+    import non.existing.module # pylint:disable=import-error
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'non'
+'''
+      else: # >= 3.13
+        error_message = '''
+  File "%(module_file)s", line 4, in <module>
+    break_at_import()
+    ~~~~~~~~~~~~~~~^^
+  File "%(module_file)s", line 3, in break_at_import
+    import non.existing.module # pylint:disable=import-error
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'non'
+'''
+    self.assertIn(error_message % dict(module_file=module_file), output)
 
     output = self._runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
     if six.PY2:

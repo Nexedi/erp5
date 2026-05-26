@@ -746,6 +746,7 @@ CREATE TABLE %s (
         b''
       ),
       limit,
+      b' SKIP LOCKED' if db.has_skip_locked else b'',
     )
 
     # Note: Not all write accesses to our table are protected by this lock.
@@ -782,7 +783,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-          b" FOR UPDATE" % args,
+          b" FOR UPDATE%s" % args,
           0,
         ))
       else:
@@ -803,7 +804,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-          b" FOR UPDATE"
+          b" FOR UPDATE%s"
         b")" % args).format(*a, **k))
         result = Results(query(
           b"SELECT *"

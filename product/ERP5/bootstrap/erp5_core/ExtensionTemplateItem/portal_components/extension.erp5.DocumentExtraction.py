@@ -79,7 +79,7 @@ def generateParts(_,text,sw,tags,trail,maxlines):
   length=len(text)
   for counter,aw in enumerate(text):
     if i==maxlines:
-      raise StopIteration
+      return
     if test(aw):
       par.add(aw)
     else:
