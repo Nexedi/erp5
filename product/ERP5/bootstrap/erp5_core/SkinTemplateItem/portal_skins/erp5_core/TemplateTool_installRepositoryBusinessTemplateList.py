@@ -44,8 +44,17 @@ for uid in uids:
       else:
         provider_list = context.getProviderList(dep_id)
         if len([x for x in provider_list if x in title_list]) == 0:
-          # No provider installed
-          if len(provider_list) == 1:
+          chosen, matching_providers = context.getMetaProvider(
+            provider_list, installed_business_template_title_list, title_list)
+          if chosen is not None:
+            for candidate in available_bt5_list:
+              if candidate.title == chosen:
+                current_uid_list.append(candidate.uid)
+                break
+            portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(chosen, bt5_title)
+          elif len(matching_providers) > 1:
+            portal_status_message+='\'%s\' has several providers with satisfied dependencies, select one explicitly: %s'%(bt5_title, matching_providers)
+          elif len(provider_list) == 1:
             # When only one provider is possible, use it
             provider = provider_list[0]
             for candidate in available_bt5_list:
