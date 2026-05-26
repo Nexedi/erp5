@@ -192,7 +192,7 @@ class MovementGroupNode:
     if len(movement_list) != 1:
       raise ValueError("Can separate only 2 movements")
     else:
-      old_movement = self.getMovementList()[0]
+      old_movement = movement_list[0]
 
       new_stored_movement = old_movement
       added_movement = movement
