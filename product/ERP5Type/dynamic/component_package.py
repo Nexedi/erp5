@@ -28,7 +28,7 @@
 ##############################################################################
 
 # There is absolutely no reason to use relative imports when loading a Component
-from __future__ import absolute_import # six.PY2
+from __future__ import absolute_import
 
 import errno
 import os
@@ -51,10 +51,12 @@ from importlib import import_module
 from Products.ERP5Type.patches.Restricted import MNAME_MAP
 from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
 
-class ComponentVersionPackageType(PackageType):
+class ComponentVersionPackageType(ModuleType):
   """
-  Component Version package (erp5.component.PACKAGE.VERSION_version)
+  Component Version package (erp5.component.XXX.VERSION)
   """
+  __path__ = []
+
 
 if sys.version_info < (3, 6):
   class ModuleNotFoundError(ImportError):
@@ -92,7 +94,7 @@ class RefManager(dict):
     # ERP5Type.Tool.ComponentTool Resetting Components
     # -> last_sync=12: ComponentTool.reset:
     #    request_module_dict: {-1: ([R1], [])}
-    # -> last_sync=12: C1._load_module_unlocked:
+    # -> last_sync=12: C1.__load_module:
     #    request_module_dict: {-1: ([R1], [C1])}
     # => R1 finished and can be gc'ed.
     #
@@ -173,8 +175,8 @@ class ERP5ComponentPackageType(PackageType):
     try:
       component_tool = aq_base(site.portal_components)
     except AttributeError:
-      # For old sites without portal_components, just use filesystem Documents...
-      raise
+      # For old sites without portal_components, just use FS Documents...
+      raise AttributeError(attr)
     filesystem_import_dict = {}
     for component in component_tool.objectValues():
       if component.getValidationState() == 'validated':
@@ -192,7 +194,7 @@ class ERP5ComponentPackageType(PackageType):
 
     self.filesystem_import_dict = filesystem_import_dict
 
-class ComponentDynamicPackageType(PackageType, MetaPathFinder):
+class ComponentDynamicPackageType(ModuleType, MetaPathFinder):
   """
   A top-level component is a package as it contains modules, this is required
   to be able to add import hooks (as described in PEP 302) when a in the
@@ -210,6 +212,10 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
   loader should be added to sys.meta_path as late as possible to keep startup
   time to the minimum.
   """
+  # Necessary otherwise imports will fail because an object is considered a
+  # package only if __path__ is defined
+  __path__ = []
+
   def __init__(self, namespace):
     super(ComponentDynamicPackageType, self).__init__(namespace)
 
@@ -284,8 +290,12 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
       name = fullname[len(self._namespace_prefix):]
       # name=VERSION_version.REFERENCE
       if '.' in name:
-        version, name = name.split('.')
-        version = version[:-self.__version_suffix_len]
+        try:
+          version, name = name.split('.')
+          version = version[:-self.__version_suffix_len]
+        except ValueError:
+          return None
+
         id_ = "%s.%s.%s" % (self._id_prefix, version, name)
         # aq_base() because this should not go up to ERP5Site and trigger
         # side-effects, after all this only check for existence...
@@ -351,7 +361,7 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
 
     return version_package
 
-  def _load_module_unlocked(self, fullname):
+  def __load_module(self, fullname):
     """
     Load a module with given fullname (see PEP 302) if it's not already in
     sys.modules. It is assumed that imports are filtered properly in
@@ -389,8 +399,13 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
 
     # If a specific version of the Component has been requested
     if '.' in name:
-      version, name = name.split('.')
-      version = version[:-self.__version_suffix_len]
+      try:
+        version, name = name.split('.')
+        version = version[:-self.__version_suffix_len]
+      except ValueError as error:
+        raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
+                            (fullname, self.__name__, error))
+
       component_id = "%s.%s.%s" % (self._id_prefix, version, name)
 
     # Otherwise, find the Component with the highest version priority
@@ -534,7 +549,7 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
 
     aq_method_lock.acquire()
     try:
-      return self._load_module_unlocked(fullname)
+      return self.__load_module(fullname)
     finally:
       aq_method_lock.release()
 
@@ -571,11 +586,11 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
 
     return None
 
-  def reset_unlocked(self, sub_package=None):
+  def reset(self, sub_package=None):
     """
-    Reset the content of the current package and its version package as
-    well recursively. This method must be called within a lock to avoid
-    side-effects.
+    Reset the content of the current package and its version package as well
+    recursively. This method must be called within a lock to avoid side
+    effects
     """
     if sub_package:
       package = sub_package
@@ -604,10 +619,10 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
 
       # Reset the content of the version package before resetting it
       elif isinstance(module, ComponentVersionPackageType):
-        self.reset_unlocked(sub_package=module)
+        self.reset(sub_package=module)
 
       module_name = package.__name__ + '.' + name
-      LOG("ERP5Type.dynamic.component_package", BLATHER, "Resetting " + module_name)
+      LOG("ERP5Type.Tool.ComponentTool", BLATHER, "Resetting " + module_name)
 
       # The module must be deleted first from sys.modules to avoid imports in
       # the meantime
@@ -616,11 +631,7 @@ class ComponentDynamicPackageType(PackageType, MetaPathFinder):
       delattr(package, name)
 
 class ToolComponentDynamicPackageType(ComponentDynamicPackageType):
-  """
-  erp5.component.tool: ZODB Component Package holding BaseTool-like *Tool
-  Components
-  """
-  def reset_unlocked(self, *args, **kw):
+  def reset(self, *args, **kw):
     """
     Reset CMFCore list of Tools (manage_addToolForm)
     """
@@ -632,4 +643,4 @@ class ToolComponentDynamicPackageType(ComponentDynamicPackageType):
         reset_tool_set.add(tool)
     toolinit.tools = reset_tool_set
 
-    super(ToolComponentDynamicPackageType, self).reset_unlocked(*args, **kw)
+    super(ToolComponentDynamicPackageType, self).reset(*args, **kw)
