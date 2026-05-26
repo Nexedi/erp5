@@ -1086,6 +1086,7 @@ class TestIngestion(IngestionTestCase):
             'pdf' : 'PDF',
             'xls' : 'Spreadsheet',
             'ods' : 'Spreadsheet',
+            'csv' : 'Spreadsheet',
             'ppt' : 'Presentation',
             'odp' : 'Presentation',
             'sxi' : 'Presentation',
