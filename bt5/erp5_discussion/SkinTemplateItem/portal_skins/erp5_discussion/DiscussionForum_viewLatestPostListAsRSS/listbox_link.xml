@@ -118,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'%s/#!push_history_stored_state?p.jio_key=%s&p.page=form&p.view=view&n.jio_key=%s&n.page=form&n.view=view&n.editable=true&n.last_post=%s\' % (context.Base_getProjectAppBaseUrl(), cell.getParentValue().DiscussionThread_getDiscussionForum().getRelativeUrl(), cell.getParentValue().getRelativeUrl(), cell.getParentValue().DiscussionThread_getDiscussionPostCount())
+python:\'%s/#!push_history_stored_state?p.jio_key=%s&p.page=form&p.view=view&n.jio_key=%s&n.page=form&n.view=view&n.last_post=%s\' % (context.Base_getProjectAppBaseUrl(), cell.getParentValue().DiscussionThread_getDiscussionForum().getRelativeUrl(), cell.getParentValue().getRelativeUrl(), cell.getParentValue().DiscussionThread_getDiscussionPostCount())
 
 ]]></string> </value>
         </item>
