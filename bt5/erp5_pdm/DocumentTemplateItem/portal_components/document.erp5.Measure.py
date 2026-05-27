@@ -223,7 +223,12 @@ class Measure(XMLMatrix):
 
         if (not default or quantity == management_unit_quantity):
           return (dict(uid=uid, resource_uid=resource_uid,
-                       variation='^', metric_type_uid=metric_type_uid,
+                       variation='^',
+                       variation_text_line_1=None,
+                       variation_text_line_2=None,
+                       variation_text_line_3=None,
+                       variation_text_line_4=None,
+                       metric_type_uid=metric_type_uid,
                        quantity=quantity)),
       return ()
 
@@ -269,8 +274,7 @@ class Measure(XMLMatrix):
 
     # Note that from this point, we always work with sorted lists of
     # categories (or regex tokens).
-
-    variation_list = ([], []),
+    variation_list = ([], [], []),
     optional_variation_base_category_set = \
       set(resource.getOptionalVariationBaseCategoryList())
     for variation_base_category in sorted(
@@ -281,8 +285,9 @@ class Measure(XMLMatrix):
         # The lists of each pairs in variation_list get one more element:
         # variation_category.
         variation_list = [(regex_list + [variation_category, '\n'],
+                           variation_text_list + [variation_category],
                            variation_base_category_list + [variation_category])
-          for regex_list, variation_base_category_list in variation_list
+          for regex_list, variation_text_list, variation_base_category_list in variation_list
           for variation_category in resource.getVariationCategoryList(
             base_category_list=(variation_base_category,),
             omit_individual_variation=0)]
@@ -291,27 +296,37 @@ class Measure(XMLMatrix):
         if variation_base_category in optional_variation_base_category_set:
           variation_base_category_regex = \
             '(%s)*' % (variation_base_category_regex, )
-        for regex_list, variation_base_category_list in variation_list:
+        for regex_list, variation_text_list, variation_base_category_list in variation_list:
           regex_list.append(variation_base_category_regex)
+          variation_text_list.append(None)
 
     # 2nd step: Retrieve all measure cells in a dictionary for fast lookup.
     cell_map = {}
     for cell in self.objectValues():
       cell_map[tuple(sorted(cell.getMembershipCriterionCategoryList()))] \
         = cell.getQuantity()
-
     # 3rd step: Build the list of rows to return,
     # by merging variation_list (1st step) and cell_map (2nd step).
     row_list = []
-    for regex_list, variation_base_category_list in variation_list:
+    for regex_list, variation_text_list, variation_base_category_list in variation_list:
       cell = cell_map.get(tuple(variation_base_category_list))
       if cell is None:
         if quantity is None:
           continue
         cell = quantity
+      (
+        variation_text_line_1,
+        variation_text_line_2,
+        variation_text_line_3,
+        variation_text_line_4,
+      ) = (variation_text_list + [None] * 4)[:4]
       row_list.append(dict(uid=uid,
                        resource_uid=resource_uid,
                        variation='^%s$' % ''.join(regex_list),
+                       variation_text_line_1=variation_text_line_1,
+                       variation_text_line_2=variation_text_line_2,
+                       variation_text_line_3=variation_text_line_3,
+                       variation_text_line_4=variation_text_line_4,
                        metric_type_uid=metric_type_uid,
                        quantity=cell * quantity_unit))
 
