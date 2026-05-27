@@ -1097,6 +1097,14 @@ class TestIngestion(IngestionTestCase):
       filename = 'aaa.' + type
       self.assertEqual(reg.findPortalTypeName(filename=filename),
                         portal_type)
+    # mapping by content type
+    correct_type_mapping = {
+      'text/csv' : 'Spreadsheet',
+    }
+    for content_type, portal_type in correct_type_mapping.items():
+      self.assertEqual(
+        reg.findPortalTypeName(content_type=content_type),
+        portal_type)
 
   def test_03_TextDoc(self):
     """
