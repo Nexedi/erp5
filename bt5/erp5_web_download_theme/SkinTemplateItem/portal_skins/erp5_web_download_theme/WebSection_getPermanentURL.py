@@ -4,6 +4,6 @@
 """
 if document.hasReference():
   file_name = document.Document_getStandardFileName()
-  return "%s/%s" % (context.absolute_url(), file_name)
+  return "%s%s" % (context.absolute_url(), file_name)
 else:
   return "%s%s" % (document.getAbsoluteUrl(),view and '/view' or '')
