@@ -25,12 +25,18 @@
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>document_security_interaction_workflow</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This interaction workflow tracks uploads in an existing document and triggers appropriate conversion methods if necessary. It also tracks any edit made to a document and updates local roles / metadata.</string> </value>
+            <value> <string>This interaction workflow tracks any edit made to a document and updates local roles / metadata.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -42,7 +48,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Document Interactions</string> </value>
+            <value> <string>Document Security Interaction Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>
