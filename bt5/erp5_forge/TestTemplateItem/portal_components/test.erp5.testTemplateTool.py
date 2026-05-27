@@ -496,6 +496,135 @@ class TestTemplateTool(ERP5TypeTestCase):
                    template_tool.resolveBusinessTemplateListDependency,
                    bt5_id_list)
 
+  def test_resolveBusinessTemplateListDependency_meta_satisfied_deps(self):
+    """When a meta dependency has several providers, resolve picks the one
+    whose own dependency_list is satisfied by installed or to-be-installed
+    bt5s. Providers declaring no dep are skipped (no specific claim, so they
+    cannot be unambiguously chosen). Multiple satisfied providers raise.
+    """
+    repository = "dummy_repository"
+    template_tool = self.dummy_template_tool
+
+    def addRepositoryEntry(**kw):
+      kw['id'] = '%s.bt5' % kw['title']
+      kw.setdefault('version', '1')
+      kw.setdefault('provision_list', ())
+      kw.setdefault('dependency_list', ())
+      kw.setdefault('revision', '1')
+      return kw
+
+    template_tool.repository_dict[repository] = (
+      # Two storage bt5s; only stor_a is "installed" below.
+      addRepositoryEntry(title='stor_a'),
+      addRepositoryEntry(title='stor_b'),
+      # Three providers of the meta name 'prov_m':
+      # - m_for_a declares stor_a as dep    -> dep installed, match
+      # - m_for_b declares stor_b as dep    -> dep not installed, no match
+      # - m_blank declares nothing          -> skipped (no specific claim)
+      addRepositoryEntry(title='m_for_a',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_a',)),
+      addRepositoryEntry(title='m_for_b',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_b',)),
+      addRepositoryEntry(title='m_blank',
+                         provision_list=('prov_m',)),
+      addRepositoryEntry(title='consumer',
+                         dependency_list=('prov_m',)),
+      )
+
+    # Mark stor_a as installed.
+    bt = template_tool.newContent(portal_type='Business Template',
+                                  title='stor_a', revision='1', id='stor_a')
+    bt.install()
+
+    bt5_list = template_tool.resolveBusinessTemplateListDependency(
+        ['consumer'])
+    self.assertIn((repository, 'm_for_a.bt5'), bt5_list)
+    self.assertNotIn((repository, 'm_for_b.bt5'), bt5_list)
+    self.assertNotIn((repository, 'm_blank.bt5'), bt5_list)
+    self.assertIn((repository, 'consumer.bt5'), bt5_list)
+
+    # A second provider whose deps are also all satisfied makes the choice
+    # ambiguous; the resolver must raise rather than silently pick one.
+    template_tool.repository_dict[repository] = \
+      template_tool.repository_dict[repository] + (
+        addRepositoryEntry(title='m_for_a_alt',
+                           provision_list=('prov_m',),
+                           dependency_list=('stor_a',)),
+        )
+    self.assertRaises(BusinessTemplateMissingDependency,
+                      template_tool.resolveBusinessTemplateListDependency,
+                      ['consumer'])
+
+  def test_getMetaProvider(self):
+    """Direct contract check of the getMetaProvider helper, independent
+    of resolveBusinessTemplateListDependency.
+
+    getMetaProvider(provider_list, installed_set, in_progress_set)
+    returns (chosen, matching_list):
+      chosen is the unique provider whose own dependency_list is fully
+      covered by installed_set ∪ in_progress_set; otherwise None.
+      matching_list is every provider that matched. Providers with no
+      declared deps are skipped (no specific claim).
+    """
+    repository = "dummy_repository"
+    template_tool = self.dummy_template_tool
+
+    def addRepositoryEntry(**kw):
+      kw['id'] = '%s.bt5' % kw['title']
+      kw.setdefault('version', '1')
+      kw.setdefault('provision_list', ())
+      kw.setdefault('dependency_list', ())
+      kw.setdefault('revision', '1')
+      return kw
+
+    template_tool.repository_dict[repository] = (
+      addRepositoryEntry(title='stor_a'),
+      addRepositoryEntry(title='stor_b'),
+      addRepositoryEntry(title='m_for_a',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_a',)),
+      addRepositoryEntry(title='m_for_b',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_b',)),
+      addRepositoryEntry(title='m_blank',
+                         provision_list=('prov_m',)),
+      )
+
+    provider_list = ['m_for_a', 'm_for_b', 'm_blank']
+
+    # Dep satisfied by the "installed" set.
+    chosen, matching = template_tool.getMetaProvider(
+        provider_list, {'stor_a'}, set())
+    self.assertEqual('m_for_a', chosen)
+    self.assertEqual(['m_for_a'], matching)
+
+    # Dep satisfied by the "in progress" (to-be-installed) set.
+    chosen, matching = template_tool.getMetaProvider(
+        provider_list, set(), {'stor_b'})
+    self.assertEqual('m_for_b', chosen)
+    self.assertEqual(['m_for_b'], matching)
+
+    # Neither dep available: no candidate matches.
+    chosen, matching = template_tool.getMetaProvider(
+        provider_list, set(), set())
+    self.assertIsNone(chosen)
+    self.assertEqual([], matching)
+
+    # Both deps available: two candidates match -> ambiguous.
+    chosen, matching = template_tool.getMetaProvider(
+        provider_list, {'stor_a', 'stor_b'}, set())
+    self.assertIsNone(chosen)
+    self.assertEqual({'m_for_a', 'm_for_b'}, set(matching))
+
+    # Provider declaring no deps is skipped even when its environment
+    # would trivially "satisfy" zero deps.
+    chosen, matching = template_tool.getMetaProvider(
+        ['m_blank'], {'stor_a', 'stor_b'}, set())
+    self.assertIsNone(chosen)
+    self.assertEqual([], matching)
+
   def test_installBusinessTemplatesFromRepository_simple(self):
     """ Simple test for portal_templates.installBusinessTemplatesFromRepository
     """
