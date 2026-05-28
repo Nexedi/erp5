@@ -264,9 +264,21 @@ def generatePortalTypeClass(site, portal_type_name):
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
       if type_class_path is None:
-        raise AttributeError('Document class %s has not been registered:'
-                             ' cannot import it as base of Portal Type %s'
-                             % (type_class, portal_type_name))
+        if portal_type_name.endswith('Tool'):
+          # Tool portal types have filesystem classes in Products.ERP5Type.Tool,
+          # providing a fallback when ZODB components are temporarily unavailable
+          # (e.g. during class regeneration after Connection.resetCaches).
+          try:
+            tool_module = __import__(
+              'Products.ERP5Type.Tool.%s' % type_class,
+              fromlist=(type_class,))
+            klass = getattr(tool_module, type_class)
+          except (ImportError, AttributeError):
+            pass
+        if type_class_path is None and klass is None:
+          raise AttributeError('Document class %s has not been registered:'
+                               ' cannot import it as base of Portal Type %s'
+                               % (type_class, portal_type_name))
 
   if klass is None:
     try:
@@ -346,9 +358,6 @@ def generatePortalTypeClass(site, portal_type_name):
         interface_class = getattr(filesystem_interfaces, interface)
 
       interface_class_list.append(interface_class)
-
-  if portal_type_name in core_portal_type_class_dict:
-    core_portal_type_class_dict[portal_type_name]['generating'] = False
 
   attribute_dict['_restricted_setter_set'] = {method
         for ancestor in base_class_list
@@ -536,6 +545,18 @@ def synchronizeDynamicModules(context, force=False):
       for name in ensure_list(erp5.accessor_holder.portal_type.__dict__.keys()):
         if name[0] != '_':
           delattr(erp5.accessor_holder.portal_type, name)
+
+      # Ensure critical tool classes are fully loaded so that their
+      # ZODB instances (portal_components, portal_types) remain
+      # accessible for subsequent lazy class loading of other types.
+      for tool_name in ('Component Tool', 'Types Tool'):
+        tool_class = getattr(erp5.portal_type, tool_name, None)
+        if tool_class is not None and tool_class.__isghost__:
+          try:
+            tool_class.loadClass()
+          except Exception:
+            LOG("ERP5Type.dynamic", WARNING,
+                "Could not load %s after reset" % tool_name, error=True)
 
     except Exception:
       # Allow easier debugging when the code is wrong as this

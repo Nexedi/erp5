@@ -17,7 +17,7 @@ from ZODB.broken import Broken, PersistentBroken
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING, BLATHER
 
-from .portal_type_class import generatePortalTypeClass
+from .portal_type_class import generatePortalTypeClass, core_portal_type_class_dict
 from .accessor_holder import AccessorHolderType
 from . import persistent_migration
 from ZODB.POSException import ConflictError
@@ -368,6 +368,9 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       else:
         base_tuple, portal_type_category_list, \
           interface_list, attribute_dict = class_definition
+      finally:
+        if portal_type in core_portal_type_class_dict:
+          core_portal_type_class_dict[portal_type]['generating'] = False
 
       klass.__isghost__ = False
       klass.__bases__ = base_tuple
