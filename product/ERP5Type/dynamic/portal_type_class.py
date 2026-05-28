@@ -546,18 +546,6 @@ def synchronizeDynamicModules(context, force=False):
         if name[0] != '_':
           delattr(erp5.accessor_holder.portal_type, name)
 
-      # Ensure critical tool classes are fully loaded so that their
-      # ZODB instances (portal_components, portal_types) remain
-      # accessible for subsequent lazy class loading of other types.
-      for tool_name in ('Component Tool', 'Types Tool'):
-        tool_class = getattr(erp5.portal_type, tool_name, None)
-        if tool_class is not None and tool_class.__isghost__:
-          try:
-            tool_class.loadClass()
-          except Exception:
-            LOG("ERP5Type.dynamic", WARNING,
-                "Could not load %s after reset" % tool_name, error=True)
-
     except Exception:
       # Allow easier debugging when the code is wrong as this
       # exception is catched later and re-raised as a BadRequest
