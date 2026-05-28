@@ -31,18 +31,15 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <tuple>
-                <string>Drawing</string>
-                <string>Presentation</string>
-                <string>Spreadsheet</string>
-                <string>Text</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>portal_type_group_filter</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>ooo_document</string>
+              </tuple>
             </value>
         </item>
         <item>
