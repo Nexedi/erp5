@@ -1128,6 +1128,29 @@ class TemplateTool (BaseTool):
       DeprecationWarning('installBusinessTemplatesFromRepositories is deprecated; Use self.installBusinessTemplateListFromRepository instead.', DeprecationWarning)
       return self.installBusinessTemplateListFromRepository(*args, **kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDependencyMatchedProviderList')
+    def getDependencyMatchedProviderList(self, provider_list, installed_bt5_title_list,
+                         in_progress_bt5_title_list):
+      """find the bt5 by using provider's dependency
+      """
+      matched_list = []
+      for provider in provider_list:
+        try:
+          provider_bt = self.getLastestBTOnRepos(provider)
+        except (BusinessTemplateUnknownError, BusinessTemplateIsMeta):
+          continue
+        provider_dep_title_list = [
+          bid.replace('.bt5', '') for _, bid in
+          self.getDependencyList(provider_bt)
+        ]
+        if not provider_dep_title_list:
+          continue
+        if all(bt5 in installed_bt5_title_list or bt5 in in_progress_bt5_title_list
+               for bt5 in provider_dep_title_list):
+          matched_list.append(provider)
+      return matched_list
+
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
     def resolveBusinessTemplateListDependency(self,
@@ -1170,6 +1193,14 @@ class TemplateTool (BaseTool):
                 break
             if provider_title is None and len(provider_list) == 1:
               provider_title = provider_list[0]
+            elif provider_title is None:
+                in_progress_bt5_title_list = [
+                  bid.replace('.bt5', '') for _, bid in bt5_set
+                ]
+                matched_provider_list = self.getDependencyMatchedProviderList(
+                  provider_list, installed_bt5_title_list, in_progress_bt5_title_list)
+                if len(matched_provider_list) == 1:
+                  provider_title = matched_provider_list[0]
             LOG('resolveBT, provider_title', 0, provider_title)
             if provider_title:
               for candidate in available_bt5_list:

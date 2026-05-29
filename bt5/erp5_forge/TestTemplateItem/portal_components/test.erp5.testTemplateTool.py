@@ -496,6 +496,101 @@ class TestTemplateTool(ERP5TypeTestCase):
                    template_tool.resolveBusinessTemplateListDependency,
                    bt5_id_list)
 
+  def test_resolveBusinessTemplateListDependency_provision_dependency(self):
+    repository = "dummy_repository"
+    template_tool = self.dummy_template_tool
+
+    def addRepositoryEntry(**kw):
+      kw['id'] = '%s.bt5' % kw['title']
+      kw.setdefault('version', '1')
+      kw.setdefault('provision_list', ())
+      kw.setdefault('dependency_list', ())
+      kw.setdefault('revision', '1')
+      return kw
+
+    template_tool.repository_dict[repository] = (
+      addRepositoryEntry(title='stor_a'),
+      addRepositoryEntry(title='stor_b'),
+      addRepositoryEntry(title='m_for_a',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_a',)),
+      addRepositoryEntry(title='m_for_b',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_b',)),
+      addRepositoryEntry(title='m_blank',
+                         provision_list=('prov_m',)),
+      addRepositoryEntry(title='consumer',
+                         dependency_list=('prov_m',)),
+      )
+
+    bt = template_tool.newContent(portal_type='Business Template',
+                                  title='stor_a', revision='1', id='stor_a')
+    bt.install()
+
+    bt5_list = template_tool.resolveBusinessTemplateListDependency(
+        ['consumer'])
+    self.assertIn((repository, 'm_for_a.bt5'), bt5_list)
+    self.assertNotIn((repository, 'm_for_b.bt5'), bt5_list)
+    self.assertNotIn((repository, 'm_blank.bt5'), bt5_list)
+    self.assertIn((repository, 'consumer.bt5'), bt5_list)
+
+    template_tool.repository_dict[repository] = template_tool.repository_dict[repository] + (
+      addRepositoryEntry(
+        title='m_for_a_alt',
+        provision_list=('prov_m',),
+        dependency_list=('stor_a',)),
+      )
+    self.assertRaises(BusinessTemplateMissingDependency,
+                      template_tool.resolveBusinessTemplateListDependency,
+                      ['consumer'])
+
+  def test_getDependencyMatchedProviderList(self):
+    repository = "dummy_repository"
+    template_tool = self.dummy_template_tool
+
+    def addRepositoryEntry(**kw):
+      kw['id'] = '%s.bt5' % kw['title']
+      kw.setdefault('version', '1')
+      kw.setdefault('provision_list', ())
+      kw.setdefault('dependency_list', ())
+      kw.setdefault('revision', '1')
+      return kw
+
+    template_tool.repository_dict[repository] = (
+      addRepositoryEntry(title='stor_a'),
+      addRepositoryEntry(title='stor_b'),
+      addRepositoryEntry(title='m_for_a',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_a',)),
+      addRepositoryEntry(title='m_for_b',
+                         provision_list=('prov_m',),
+                         dependency_list=('stor_b',)),
+      addRepositoryEntry(title='m_blank',
+                         provision_list=('prov_m',)),
+      )
+
+    provider_list = ['m_for_a', 'm_for_b', 'm_blank']
+
+    matched_list = template_tool.getDependencyMatchedProviderList(
+        provider_list, ['stor_a'], [])
+    self.assertEqual(['m_for_a'], matched_list)
+
+    matched_list = template_tool.getDependencyMatchedProviderList(
+        provider_list, [], ['stor_b'])
+    self.assertEqual(['m_for_b'], matched_list)
+
+    matched_list = template_tool.getDependencyMatchedProviderList(
+        provider_list, [], [])
+    self.assertEqual([], matched_list)
+
+    matched_list = template_tool.getDependencyMatchedProviderList(
+        provider_list, ['stor_a', 'stor_b'], [])
+    self.assertSameSet(['m_for_a', 'm_for_b'], matched_list)
+
+    matched_list = template_tool.getDependencyMatchedProviderList(
+        ['m_blank'], ['stor_a', 'stor_b'], [])
+    self.assertEqual([], matched_list)
+
   def test_installBusinessTemplatesFromRepository_simple(self):
     """ Simple test for portal_templates.installBusinessTemplatesFromRepository
     """
