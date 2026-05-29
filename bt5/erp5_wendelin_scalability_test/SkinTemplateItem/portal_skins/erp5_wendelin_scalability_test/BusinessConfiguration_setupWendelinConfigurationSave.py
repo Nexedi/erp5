@@ -6,7 +6,7 @@
 configuration_save = context.restrictedTraverse(configuration_save_url)
 
 # bt5 setup
-bt5_installation_list = ('erp5_full_text_mroonga_catalog',
+bt5_installation_list = ('erp5_full_text_catalog',
                          'erp5_base',
                          'erp5_jquery_ui',
                          'erp5_ingestion_mysql_innodb_catalog',

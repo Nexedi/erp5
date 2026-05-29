@@ -140,7 +140,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     """
       Return the list of business templates.
     """
-    return ('erp5_full_text_mroonga_catalog',
+    return ('erp5_full_text_catalog',
             'erp5_configurator',
            )
 
