@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
-    return 'erp5_full_text_mroonga_catalog',
+    return 'erp5_full_text_catalog',
 
   def afterSetUp(self):
     super(TestTableStructureMigrationTestCase, self).afterSetUp()

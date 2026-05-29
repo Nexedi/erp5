@@ -3,7 +3,7 @@
 
 keep_bt5_id_list = []
 
-bt5_update_catalog_list = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_full_text_mroonga_catalog')
+bt5_update_catalog_list = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_full_text_catalog')
 
 bt5_installation_list = tuple(
   context.getPortalObject().getCoreBusinessTemplateList(),
