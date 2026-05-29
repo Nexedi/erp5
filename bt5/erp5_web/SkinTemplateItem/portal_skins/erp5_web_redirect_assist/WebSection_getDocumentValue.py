@@ -1,10 +1,7 @@
 """
 Override of WebSection_getDocumentValue for the RedirectAssist skin selection.
 
-When the sub-path matches a Discussion Thread reference, issue a 301 redirect
-to the project app thread URL using push_history_stored_state (so the back
-arrow lands on the forum). Non-thread sub-paths fall through to the standard
-catalog lookup, matching the base erp5_web/WebSection_getDocumentValue.py.
+When the sub-path matches a Discussion Thread reference, issue a 301 redirect to the project app thread URL
 """
 if not name:
   return None
@@ -19,9 +16,6 @@ thread_brain_list = portal.portal_catalog(
 )
 if thread_brain_list:
   thread = thread_brain_list[0].getObject()
-  # Predicate match for the owning forum. Inlined because erp5_discussion
-  # (which provides DiscussionThread_getDiscussionForum) is not part of the
-  # RedirectAssist skin selection.
   forum_list = list(portal.portal_domains.searchPredicateList(
     thread,
     portal_type='Discussion Forum',
@@ -30,9 +24,6 @@ if thread_brain_list:
   ))
   if forum_list:
     forum = forum_list[0]
-    # Derive the project-app base from the configured redirect_domain
-    # (e.g. https://project.nexedi.net/#/discussion_forum_module/89
-    #  -> https://project.nexedi.net).
     redirect_domain = context.getLayoutProperty('redirect_domain', '')
     base_url = redirect_domain.split('/#/')[0]
     redirect_url = (
