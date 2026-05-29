@@ -44,15 +44,20 @@ for uid in uids:
       else:
         provider_list = context.getProviderList(dep_id)
         if len([x for x in provider_list if x in title_list]) == 0:
-          # No provider installed
+          provider = None
           if len(provider_list) == 1:
-            # When only one provider is possible, use it
             provider = provider_list[0]
+            portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(provider, bt5_title)
+          else:
+            matched_list = context.getDependencyMatchedProviderList(provider_list, installed_business_template_title_list, title_list)
+            if len(matched_list) == 1:
+              provider = matched_list[0]
+              portal_status_message+='\'%s\' is choose implically because it\' dependency is installed and \'%s\' depends on it.'%(provider, bt5_title)
+          if provider:
             for candidate in available_bt5_list:
               if candidate.title == provider:
                 current_uid_list.append(candidate.uid)
                 break
-            portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(provider, bt5_title)
           else:
             portal_status_message+='\'%s\' requires you to select one of the following business templates: %s'%(bt5_title, provider_list)
 
