@@ -775,18 +775,37 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getProviderList')
-    def getProviderList(self, title):
+    def getProviderList(self, title, version_restriction=None):
       """
        return a list of business templates that provides
        the given business template
       """
+      result_dict = {}
       result_list = []
       for repository, property_dict_list in self.repository_dict.items():
         for property_dict in property_dict_list:
           provision_list = property_dict['provision_list']
-          if (title in provision_list) and (property_dict['title'] not in result_list):
-            result_list.append(property_dict['title'])
-      return result_list
+          if (title in provision_list) and (property_dict['title'] not in result_dict):
+            result_dict[property_dict['title']] = property_dict['version']
+      for bt5, version in result_dict.items():
+        if version_restriction is None or \
+           self.compareVersionStrings(version, version_restriction):
+          result_list.append(bt5)
+      # have a stable list
+      return sorted(result_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'parseDependencyCouple')
+    def parseDependencyCouple(self, dependency_couple):
+      """split 'title (>= version)' into (title, version_restriction)."""
+      dependency_couple_list = dependency_couple.split(' ', 1)
+      title = dependency_couple_list[0]
+      version_restriction = None
+      if len(dependency_couple_list) > 1:
+        version_restriction = dependency_couple_list[1]
+        if version_restriction.startswith('('):
+          version_restriction = version_restriction[1:-1]
+      return title, version_restriction
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getDependencyList')
@@ -811,15 +830,7 @@ class TemplateTool (BaseTool):
                   dependency_list.extend([q.strip() for q in
                                           property_dict['test_dependency_list'] if q])
                 for dependency_couple in dependency_list:
-                  # dependency_couple is like "erp5_xhtml_style (>= 0.2)"
-                  dependency_couple_list = dependency_couple.split(' ', 1)
-                  dependency = dependency_couple_list[0]
-                  version_restriction = None
-                  if len(dependency_couple_list) > 1:
-                    version_restriction = dependency_couple_list[1]
-                    if version_restriction.startswith('('):
-                      # Something like "(>= 1.0rc6)".
-                      version_restriction = version_restriction[1:-1]
+                  dependency, version_restriction = self.parseDependencyCouple(dependency_couple)
                   require_update = False
                   if dependency not in result_list:
                     # Get the lastest version of the dependency on the
@@ -831,13 +842,13 @@ class TemplateTool (BaseTool):
                     except BusinessTemplateUnknownError:
                       raise BusinessTemplateMissingDependency('While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or ''))
                     except BusinessTemplateIsMeta:
-                      provider_list = self.getProviderList(dependency)
+                      provider_list = self.getProviderList(dependency, version_restriction)
                       for provider in provider_list:
                         if self.getInstalledBusinessTemplate(provider) is not None:
                           bt_dep = self.getLastestBTOnRepos(provider)
                           break
                       if bt_dep is None:
-                        bt_dep = ('meta', dependency)
+                        bt_dep = ('meta', dependency_couple)
                     sub_dep_list = self.getDependencyList(bt_dep)
                     for sub_dep in sub_dep_list:
                       if sub_dep not in result_list:
@@ -1128,6 +1139,29 @@ class TemplateTool (BaseTool):
       DeprecationWarning('installBusinessTemplatesFromRepositories is deprecated; Use self.installBusinessTemplateListFromRepository instead.', DeprecationWarning)
       return self.installBusinessTemplateListFromRepository(*args, **kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDependencyMatchedProviderList')
+    def getDependencyMatchedProviderList(self, provider_list, installed_bt5_title_list,
+                         in_progress_bt5_title_list):
+      """find the bt5 by using provider's dependency
+      """
+      matched_list = []
+      for provider in provider_list:
+        try:
+          provider_bt = self.getLastestBTOnRepos(provider)
+        except (BusinessTemplateUnknownError, BusinessTemplateIsMeta):
+          continue
+        provider_dep_title_list = [
+          bid.replace('.bt5', '') for _, bid in
+          self.getDependencyList(provider_bt)
+        ]
+        if not provider_dep_title_list:
+          continue
+        if all(bt5 in installed_bt5_title_list or bt5 in in_progress_bt5_title_list
+               for bt5 in provider_dep_title_list):
+          matched_list.append(provider)
+      return matched_list
+
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
     def resolveBusinessTemplateListDependency(self,
@@ -1153,7 +1187,8 @@ class TemplateTool (BaseTool):
             else:
               meta_dependency_set.add((dep_repository, dep_id))
           for dep_repository, dep_id in meta_dependency_set:
-            provider_list = self.getProviderList(dep_id)
+            dep_title, version_restriction = self.parseDependencyCouple(dep_id)
+            provider_list = self.getProviderList(dep_title, version_restriction)
             provider_installed = False
             provider_title = None
             for provider in provider_list:
@@ -1170,6 +1205,14 @@ class TemplateTool (BaseTool):
                 break
             if provider_title is None and len(provider_list) == 1:
               provider_title = provider_list[0]
+            elif provider_title is None:
+              in_progress_bt5_title_list = [
+                bid.replace('.bt5', '') for _, bid in bt5_set
+              ]
+              matched_provider_list = self.getDependencyMatchedProviderList(
+                provider_list, installed_bt5_title_list, in_progress_bt5_title_list)
+              if len(matched_provider_list) == 1:
+                provider_title = matched_provider_list[0]
             LOG('resolveBT, provider_title', 0, provider_title)
             if provider_title:
               for candidate in available_bt5_list:
