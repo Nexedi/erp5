@@ -330,8 +330,9 @@ portal.%s()
                                           )
     notebook = notebook_list[0]
     notebook_context = notebook.getNotebookContext()['variables']
-    result = {'a':2, 'b':3}
-    self.assertDictContainsSubset(result, notebook_context)
+    self.assertEqual(
+      {k: v for k, v in notebook_context.items() if k in ('a', 'b')},
+      {'a':2, 'b':3})
 
   def testBaseExecuteJupyterRerunWithPreviousLocalVariables(self):
     """

@@ -57,6 +57,7 @@ It defines what will be sold and how often and how many.</string> </value>
                 <string>internal</string>
                 <string>open_order</string>
                 <string>path</string>
+                <string>supply</string>
               </tuple>
             </value>
         </item>
@@ -77,6 +78,12 @@ It defines what will be sold and how often and how many.</string> </value>
         <item>
             <key> <string>redirect_script</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

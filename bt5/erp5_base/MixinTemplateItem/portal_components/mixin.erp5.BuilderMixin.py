@@ -141,14 +141,14 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # Collect
     root_group_node = self.collectMovement(movement_list, merge_delivery=merge_delivery)
     # Build
-    delivery_list = self.buildDeliveryList(
+    delivery_and_movement_group_list = self.buildDeliveryList(
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
                        movement_list=movement_list, activate_kw=activate_kw,
                        merge_delivery=merge_delivery, **kw)
     # Call a script after building
-    self.callAfterBuildingScript(delivery_list, movement_list, **kw)
-    return delivery_list
+    self.callAfterBuildingScript(delivery_and_movement_group_list, **kw)
+    return [x[0] for x in delivery_and_movement_group_list]
 
   def getRelatedBusinessLinkValueList(self):
     return self.getDeliveryBuilderRelatedValueList(portal_type='Business Link')
@@ -406,13 +406,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # We do not want to update the same object more than twice in one
     # _deliveryGroupProcessing().
     self._resetUpdated()
-    delivery_list = self._processDeliveryGroup(
+    delivery_and_movement_group_list = self._processDeliveryGroup(
                           delivery_module,
                           movement_group_node,
                           self.getDeliveryMovementGroupList(),
                           delivery_to_update_list=delivery_to_update_list,
                           **kw)
-    return delivery_list
+    return delivery_and_movement_group_list
 
   def _createDelivery(self, delivery_module, movement_list, activate_kw):
     """
@@ -442,12 +442,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # Parameter initialization
     if delivery_to_update_list is None:
       delivery_to_update_list = []
-    delivery_list = []
+    delivery_and_movement_group_list = []
 
     if len(collect_order_list):
       # Get sorted movement for each delivery
       for grouped_node in movement_group_node.getGroupList():
-        new_delivery_list = self._processDeliveryGroup(
+        new_delivery_and_movement_group_list = self._processDeliveryGroup(
                               delivery_module,
                               grouped_node,
                               collect_order_list[1:],
@@ -457,7 +457,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                               activate_kw=activate_kw,
                               force_update=force_update,
                               merge_delivery=merge_delivery)
-        delivery_list.extend(new_delivery_list)
+        delivery_and_movement_group_list.extend(new_delivery_and_movement_group_list)
         force_update = 0
     else:
       # Test if we can update a existing delivery, or if we need to create
@@ -504,8 +504,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                 divergence_list=divergence_list,
                                 activate_kw=activate_kw,
                                 force_update=force_update)
-      delivery_list.append(delivery)
-    return delivery_list
+      delivery_and_movement_group_list.append((delivery, movement_group_node))
+    return delivery_and_movement_group_list
 
   def _createDeliveryLine(self, delivery, movement_list, activate_kw):
     """
@@ -737,23 +737,24 @@ class BuilderMixin(XMLObject, Amount, Predicate):
 
   security.declarePrivate('callAfterBuildingScript')
   @UnrestrictedMethod
-  def callAfterBuildingScript(self, delivery_list, movement_list=(), **kw):
+  def callAfterBuildingScript(self, delivery_and_movement_group_list, **kw):
     """
       Call script on each delivery built.
     """
     delivery_after_generation_script_id = \
                               self.getDeliveryAfterGenerationScriptId()
     if delivery_after_generation_script_id:
-      related_simulation_movement_path_list = \
-                                [x.getPath() for x in movement_list]
-      for delivery in delivery_list:
+      for delivery, movement_group in delivery_and_movement_group_list:
+        movement_list = movement_group.getMovementList(expand_aggregated_movement=True)
+        related_simulation_movement_path_list = \
+                                  [x.getPath() for x in movement_list]
         script = getattr(delivery, delivery_after_generation_script_id)
         # BBB: Only Python Scripts were used in the past, and they might not
         # accept an arbitrary argument. So to keep compatibility,
         # check if it can take the new parameter safely, only when
         # the callable object is a Python Script.
         meta_type = getattr(script, 'meta_type', None)
-        if meta_type == 'Script (Python)':
+        if meta_type in ('Script (Python)', 'ERP5 Python Script'):
           # check parameters accepted by the script
           for param in script.params().split(','):
             param = param.split('=', 1)[0].strip()

@@ -111,6 +111,8 @@
                         <string>my_transformation_type</string>
                         <string>my_resource_title</string>
                         <string>my_template_transformation_title_list</string>
+                        <string>my_variation_base_category_list</string>
+                        <string>my_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -120,8 +122,8 @@
                       <list>
                         <string>my_reference</string>
                         <string>my_version</string>
-                        <string>my_variation_base_category_list</string>
-                        <string>my_variation_category_list</string>
+                        <string>my_effective_date</string>
+                        <string>my_expiration_date</string>
                         <string>my_comment</string>
                         <string>my_translated_validation_state_title</string>
                       </list>

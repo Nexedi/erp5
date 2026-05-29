@@ -120,6 +120,7 @@
 @double-margin-size: 12pt;
 @triple-margin-size: 18pt;
 @quadruple-margin-size: 24pt;
+@octuple-margin-size: 48pt;
 
 @transition-timing: .2s ease-out;
 
@@ -1315,7 +1316,7 @@ div[data-gadget-scope='header'] .ui-header {
         display: block;
         position: relative;
         padding: @margin-size @double-margin-size;
-        padding-right: @quadruple-margin-size;
+        padding-right: @octuple-margin-size;
 
         color: #222222;
 
@@ -1530,12 +1531,11 @@ div[data-gadget-scope='header'] .ui-header {
       &::before {
         padding-right: @margin-size;
       }
-      // No transition, as it doesn't feel right
-      // transition: background-color @transition-timing;
-      &:hover, &:active {
-        background-color: @paneldarkerbackgroundcolor;
-      }
-
+    }
+    // No transition, as it doesn't feel right
+    // transition: background-color @transition-timing;
+    .active {
+      background-color: @paneldarkerbackgroundcolor;
     }
   }
   .ui-icon-warning {
@@ -2095,6 +2095,23 @@ div[data-gadget-scope='maximize'] button {
   height: ~"calc(100vh - "@headerheight~")";
   iframe {
     height: 100%;
+  }
+}
+
+div[data-gadget-scope="babylonjs"] {
+  .fullscreen {
+    position: fixed;
+    left: 0;
+    top: 30pt;
+  }
+
+ .fullscreen-background {
+    position: fixed;
+    left: 0;
+    top: 30pt;
+    background-color: @white;
+    width: 100vw;
+    height: ~"calc(100vh -  30pt )";
   }
 }
 

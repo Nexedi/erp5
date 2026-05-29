@@ -4,10 +4,14 @@ if category_list is None:
   category_list = ('a', 'b', 'a/a1', 'a/a2')
 big_category_list = ('c1', 'c10', 'c2', 'c20', 'c3', 'c4')
 
+previous_foo = None
 for i in range(start, start + num):
   category = category_list[i % len(category_list)]
   foo = context.newContent(id=str(i), title=title_format.format(index=i), quantity=10.0 - float(i),
                     foo_category = category, portal_type=portal_type)
+  if set_successor and previous_foo is not None:
+    previous_foo.setSuccessorValue(foo)
+  previous_foo = foo
   if set_dates:
     foo.setStartDate(DateTime(i, i, i))
   if set_datetimes:

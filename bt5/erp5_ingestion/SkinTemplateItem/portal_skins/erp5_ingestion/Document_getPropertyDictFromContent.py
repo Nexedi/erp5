@@ -18,9 +18,9 @@ for k, v in information.items():
   if v:
     if six.PY2 and isinstance(v, six.text_type): v = unicode2str(v)
     if key in property_id_list:
-      if key == 'reference':
-        pass # XXX - We can not trust reference on getContentInformation
-      else:
+      if key in ('title', 'description', 'comment'):
+        # Directly set *some* ERP5 properties based on the document metadata,
+        # but only accepting properties a few properties that are safe.
         result[key] = v
     elif key == 'author':
       p = context.portal_catalog.getResultValue(title = v)

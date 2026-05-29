@@ -18,6 +18,16 @@ else:
     import six
     import socket
     _MARKER = []
+
+    def get(self, key, default=_MARKER):
+        '''Retrieves a key from the memcache.
+
+        @return: The value or None.
+        '''
+        return self._get('get', key, default)
+
+    Client.get = get
+
     def _get(self, cmd, key, default=_MARKER):
         key = self._encode_key(key)
         if self.do_check_key:

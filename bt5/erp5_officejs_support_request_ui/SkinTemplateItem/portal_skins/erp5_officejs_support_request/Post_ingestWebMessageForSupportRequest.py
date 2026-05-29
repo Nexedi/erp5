@@ -6,7 +6,7 @@ web_site_value = portal.restrictedTraverse(web_site_relative_url)
 
 # XXX what to do with PData ?
 # As a first step just use bytes.
-data = bytes(context.getData())
+data = bytes(context.getData() or b'')
 
 is_html = context.getPortalType() == 'HTML Post'
 if is_html:

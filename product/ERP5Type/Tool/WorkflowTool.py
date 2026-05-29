@@ -687,6 +687,18 @@ class ExclusionTuple(ExclusionSequence, tuple):
     It is not to be used outside of the scope of this document nor outside
     of the scope of worklist criterion handling.
   """
+  def __eq__(self, other):
+    if not isinstance(other, ExclusionTuple):
+      return False
+    return tuple.__eq__(self, other)
+
+  def __ne__(self, other):
+    if not isinstance(other, ExclusionTuple):
+      return True
+    return tuple.__ne__(self, other)
+
+  def __hash__(self):
+    return tuple.__hash__(self) ^ hash('ExclusionTuple')
 
 
 def getValidCriterionDict(worklist_match_dict, sql_catalog,

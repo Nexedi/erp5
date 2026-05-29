@@ -97,7 +97,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
       ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.query("SELECT b FROM X")
     with self.assertRaisesRegex(OperationalError,
-                                 "Unknown column 'a' in 'field list'"):
+                                 "Unknown column 'a' in '.*'"):
       self.query("SELECT a FROM X")
 
   def test_rename_column(self):
@@ -114,7 +114,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
       ) ENGINE=InnoDB DEFAULT CHARSET=%(c)s COLLATE=%(c)s_unicode_ci""" % {'c': self.charset}))
     self.query("SELECT b FROM X")
     with self.assertRaisesRegex(OperationalError,
-                                 "Unknown column 'a' in 'field list'"):
+                                 "Unknown column 'a' in '.*'"):
       self.query("SELECT a FROM X")
 
   def test_change_column_type(self):

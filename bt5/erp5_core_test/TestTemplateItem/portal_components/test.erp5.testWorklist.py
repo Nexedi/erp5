@@ -177,16 +177,20 @@ class TestWorklist(TestWorkflowMixin):
       if v:
         worklist_value.setGuardExpression(v)
       v = kw.pop('guard_roles', None)
+      criterion_property_list = []
       if v:
         worklist_value.setCriterion(SECURITY_PARAMETER_ID,
                                     [var.strip() for var in v.split(';')])
+        criterion_property_list.append(SECURITY_PARAMETER_ID)
       for k, v in six.iteritems(kw):
         if k not in (SECURITY_PARAMETER_ID, workflow_value.getStateVariable()):
           variable_value = workflow_value.getVariableValueByReference(k)
           if variable_value is None:
             workflow_value.newContent(portal_type='Workflow Variable', reference=k)
-
+        criterion_property_list.append(k)
         worklist_value.setCriterion(k, (v,))
+      worklist_value.setCriterionPropertyList(list(set(criterion_property_list)))
+
 
     else:
       worklists = workflow_value.worklists

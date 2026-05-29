@@ -1,0 +1,136 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3" tal:content="template/title_and_id"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=3</td>
+        <td></td>
+        <td>Create a new object</td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Created Successfully.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/0</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>selectAndWait</td>
+        <td>select_action</td>
+        <td>Editable Listbox Dialog</td>
+      </tr>
+
+      <tr>
+        <td>type</td>
+        <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]/input</td>
+        <td>100</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//tr[@class="listbox-data-line-0 DataA"]/td[4]/select</td>
+        <td>A</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]/input</td>
+        <td>23</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/select</td>
+        <td>B</td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>dialog_submit_button</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertPortalStatusMessage</td>
+        <td>Total of quantities should not be 123</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertValue</td>
+        <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]/input</td>
+        <td>100.0</td>
+      </tr>
+      <tr>
+        <td>assertSelectedLabels</td>
+        <td>//tr[@class="listbox-data-line-0 DataA"]/td[4]/select</td>
+        <td>A</td>
+      </tr>
+      <tr>
+        <td>assertValue</td>
+        <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]/input</td>
+        <td>23.0</td>
+      </tr>
+      <tr>
+        <td>assertSelectedLabels</td>
+        <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/select</td>
+        <td>B</td>
+      </tr>
+      <tr>
+        <td>assertSelectedLabels</td>
+        <td>//tr[@class="listbox-data-line-2 DataA"]/td[4]/select</td>
+        <td>A,B</td>
+      </tr>
+
+      <tr>
+        <td>type</td>
+        <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]/input</td>
+        <td>24</td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>dialog_submit_button</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>assertPortalStatusMessage</td>
+        <td>Action succeeded</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertValue</td>
+        <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]/input</td>
+        <td>0.0</td>
+      </tr>
+      <tr>
+        <td>assertSelectedLabels</td>
+        <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/select</td>
+        <td>A,B</td>
+      </tr>
+
+    </tbody>
+  </table>
+</body>
+
+</html>

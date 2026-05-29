@@ -644,7 +644,16 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       accessor_name = 'get%sValueList' % \
         ''.join([part.capitalize() for part in base_category.split('_')])
       try:
-        jump_reference_list = getattr(traversed_document, accessor_name)(
+        context_getter_id = field.get_value(
+          'context_getter_id'
+        ) if field.has_value(
+          'context_getter_id'
+        ) else None
+        if context_getter_id:
+          relation_document = getattr(traversed_document, context_getter_id)()
+        else:
+          relation_document = traversed_document
+        jump_reference_list = getattr(relation_document, accessor_name)(
           portal_type=[x[0] for x in field.get_value('portal_type')],
           filter=kw
         ) or []
@@ -789,6 +798,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         # in case of a dialog the form_id points to previous form, otherwise current form
         "form_id": REQUEST.get('form_id', form.id)
       }
+      request_key_prefix = 'field_%s_' % field.getId()
+      for k, v in REQUEST.form.items():
+        if str(k).startswith(request_key_prefix):
+          extra_param_dict[k] = v
+
       # Proxy listbox id is an hardcoded parameter used in relation field listbox
       # For now, keep it hardcoded, until another use case is found to provide
       # a default extra_param_dict
@@ -1787,6 +1801,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     for key, value in byteify(extra_param_json.items()):
       REQUEST.set(key, value)
+      REQUEST.form[key] = value
 
     # in case we have custom list method
     catalog_kw = {}

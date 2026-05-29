@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>proxy_field_selection_name=\'\', proxy_form_id=\'\', proxy_field_id=\'listbox\'</string> </value>
+            <value> <string>proxy_field_selection_name=None, proxy_form_id=\'\', proxy_field_id=\'listbox\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

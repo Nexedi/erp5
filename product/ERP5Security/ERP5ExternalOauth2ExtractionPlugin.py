@@ -166,6 +166,11 @@ class ERP5ExternalOauth2ExtractionPlugin:
       # no token, then no credentials
       return {}
 
+    try:
+      remote_address = request.getClientAddr()
+    except AttributeError:
+      remote_address = request.get('REMOTE_ADDR', '')
+
     user_entry = None
     try:
       user_entry = self.getToken(token)
@@ -178,6 +183,12 @@ class ERP5ExternalOauth2ExtractionPlugin:
     if user_entry is None:
       # no user, then no credentials
       return {}
+
+    if user_entry.get("remote_address") != remote_address:
+      if self.checkRemoteAddress(access_token_dict, remote_address):
+        user_entry["remote_address"] = remote_address
+      else:
+        return {}
 
     try:
       # Every request will update cache to postpone the cache expiration
@@ -192,18 +203,17 @@ class ERP5ExternalOauth2ExtractionPlugin:
     # having reference `user`.
     creds = {
       "login_portal_type": self.login_portal_type,
-      "external_login": user_entry["reference"]
+      "external_login": user_entry["reference"],
+      # PAS wants remote_host / remote_address
+      "remote_host": request.get('REMOTE_HOST', ''),
+      "remote_address": remote_address,
     }
-
-    # PAS wants remote_host / remote_address
-    creds['remote_host'] = request.get('REMOTE_HOST', '')
-    try:
-      creds['remote_address'] = request.getClientAddr()
-    except AttributeError:
-      creds['remote_address'] = request.get('REMOTE_ADDR', '')
-
     _setUserNameForAccessLog('%s=%s' % (self.getId(), creds['external_login']) , request)
     return creds
+
+  def checkRemoteAddress(self, access_token_dict, remote_address):
+    return True
+
 
 def getFacebookUserEntry(token):
   if facebook is None:
@@ -269,6 +279,11 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
     return self.getPortalObject().unrestrictedTraverse(
       access_token_dict['connector_relative_url'],
     ).getUserEntry(access_token_dict['access_token'])
+
+  def checkRemoteAddress(self, access_token_dict, remote_address):
+    return self.getPortalObject().unrestrictedTraverse(
+      access_token_dict['connector_relative_url'],
+    ).checkRemoteAddress(remote_address)
 
 
 #List implementation of class

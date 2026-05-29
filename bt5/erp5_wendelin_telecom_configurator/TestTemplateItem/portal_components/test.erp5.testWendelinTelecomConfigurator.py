@@ -127,6 +127,9 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
       REQUEST=self.portal.REQUEST
     )
 
+  def setUpOnce(self):
+    self.afterSetUp()
+
   def bootstrapSite(self):
     self.logMessage('Wendelin Telecom bootstrapSite')
     self.setupPortalAlarms()

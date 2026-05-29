@@ -202,12 +202,6 @@ if (not(can_redirect) or len(url_params_string) > 2000):
       deferred_portal_skin = clean_kw.get('deferred_portal_skin')
       if deferred_portal_skin:
         request.set('deferred_portal_skin', deferred_portal_skin)
-    # and to cleanup formulator's special key in request
-    # XXX unless we are in Folder_modifyWorkflowStatus which validates again !
-    if dialog_method != 'Folder_modifyWorkflowStatus':
-      for key in list(request.form.keys()):
-        if str(key).startswith('field') or str(key).startswith('subfield'):
-          request.form.pop(key, None)
 
   # If we cannot redirect, then call the form directly.
   dialog_form = getattr(context, dialog_method)

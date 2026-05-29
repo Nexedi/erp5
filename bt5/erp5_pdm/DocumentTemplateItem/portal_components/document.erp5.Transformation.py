@@ -62,14 +62,19 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Comment
-                    , PropertySheet.Version
-                    #, PropertySheet.Resource
-                    , PropertySheet.TransformedResource
-                    , PropertySheet.Transformation
-                    , PropertySheet.Order
-                    , PropertySheet.Task
-                    )
+  property_sheets = ( PropertySheet.Base
+                  , PropertySheet.XMLObject
+                  , PropertySheet.CategoryCore
+                  , PropertySheet.DublinCore
+                  , PropertySheet.Folder
+                  , PropertySheet.Comment
+                  , PropertySheet.Reference
+                  , PropertySheet.Version
+                  , PropertySheet.TransformedResource
+                  , PropertySheet.Transformation
+                  , PropertySheet.Order
+                  , PropertySheet.Task
+                  )
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
   @publishable

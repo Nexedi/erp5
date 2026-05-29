@@ -27,9 +27,15 @@ test_suite = sorted(
   key=lambda test_suite: test_suite.getValidationState() == 'validated')[-1]
 
 
+# Handle update error revision from testnode (e.g., "update error=fatal: Remote branch XXX not found in upstream origin")
+# In this case, there is no valid repository information to parse, so return None.
+if context.getReference() and context.getReference().startswith('update error='):
+  return None
+
+
 # decode the reference ( ${buildout_section_id}=${number of commits}-${hash},${buildout_section_id}=${number of commits}-${hash} )
 repository_dict = {}
-if context.getReference() and '-' in context.getReference(): # tolerate invalid references, especially for tests
+if context.getReference() and '-' in context.getReference():
   for repository_string in context.getReference().split(','):
     buildout_section_id, commits_count_and_revision = repository_string.split('=')
     commits_count, revision = commits_count_and_revision.split('-')

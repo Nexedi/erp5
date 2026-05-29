@@ -106,10 +106,11 @@ class SQLDict(SQLBase):
               # Select parent messages.
               result = Results(db.query(b"SELECT * FROM message"
                 b" WHERE processing_node IN (0, %d) AND path IN (%s)%s"
-                b" ORDER BY path LIMIT 1 FOR UPDATE" % (
+                b" ORDER BY path LIMIT 1 FOR UPDATE%s" % (
                   processing_node,
                   b','.join(map(quote, path_list)),
                   sql_method_id,
+                  b' SKIP LOCKED' if db.has_skip_locked else b'',
                 ), 0))
               if result: # found a parent
                 # mark child as duplicate
@@ -123,9 +124,10 @@ class SQLDict(SQLBase):
             path = line.path
             result = db.query(b"SELECT uid FROM message"
               b" WHERE processing_node = 0 AND (path = %s OR path LIKE %s)"
-              b"%s FOR UPDATE" % (
+              b"%s FOR UPDATE%s" % (
                 quote(path), quote(path.replace('_', r'\_') + '/%'),
                 sql_method_id,
+                b' SKIP LOCKED' if db.has_skip_locked else b'',
               ), 0)[1]
             reserve_uid_list = [x for x, in result]
             uid_list += reserve_uid_list
@@ -135,8 +137,9 @@ class SQLDict(SQLBase):
           else:
             # Select duplicates.
             result = db.query(b"SELECT uid FROM message"
-              b" WHERE processing_node = 0 AND path = %s%s FOR UPDATE" % (
+              b" WHERE processing_node = 0 AND path = %s%s FOR UPDATE%s" % (
                 quote(path), sql_method_id,
+                b' SKIP LOCKED' if db.has_skip_locked else b'',
               ), 0)[1]
             reserve_uid_list = uid_list = [x for x, in result]
           if reserve_uid_list:

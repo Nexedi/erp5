@@ -32,7 +32,7 @@ import time
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Utils import str2bytes
-
+from zope.datetime import rfc1123_date
 
 class RenderJSUpgradeTestCase(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -58,6 +58,43 @@ class RenderJSUpgradeTestCase(ERP5TypeTestCase):
         text_content="alert('hello !')",
         reference='{}.js'.format(self.id()))
     self.javascript.publish()
+
+class RenderJSUpgradeCheckFile(ERP5TypeTestCase):
+  def test_checkServiceWorker(self):
+    renderjs_runner  = self.portal.restrictedTraverse('web_site_module/renderjs_runner')
+    service_worker_reference = renderjs_runner.getLayoutProperty("configuration_service_worker_url")
+    service_worker_list = self.portal.portal_catalog(
+      portal_type='Web Script',
+      reference = service_worker_reference,
+      validation_state = ('published_alive', 'published')
+    )
+    self.assertEqual(len(service_worker_list), 1)
+    service_worker = service_worker_list[0]
+
+    path = '%s/%s' % (renderjs_runner.getPath(), service_worker_reference)
+    response = self.publish(path)
+    self.assertEqual(response.getStatus(), 200)
+
+    last_modified = response.getHeader('Last-Modified')
+    max_date = max(service_worker.getModificationDate(), renderjs_runner.getModificationDate())
+    self.assertEqual(last_modified, rfc1123_date(max_date))
+
+    with self.pinDateTime(max_date + 2):
+      response = self.publish(path)
+      last_modified = response.getHeader('Last-Modified')
+      self.assertEqual(last_modified, rfc1123_date(max_date))
+
+    with self.pinDateTime(max_date + 3):
+      service_worker.edit()
+      response = self.publish(path)
+      last_modified = response.getHeader('Last-Modified')
+      self.assertEqual(last_modified, rfc1123_date(service_worker.getModificationDate()))
+
+    with self.pinDateTime(max_date + 5):
+      renderjs_runner.edit()
+      response = self.publish(path)
+      last_modified = response.getHeader('Last-Modified')
+      self.assertEqual(last_modified, rfc1123_date(renderjs_runner.getModificationDate()))
 
 
 class TestRenderJSUpgrade(RenderJSUpgradeTestCase):

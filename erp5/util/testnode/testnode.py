@@ -24,10 +24,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import os
+import glob
 import json
-import time
 import logging
+import os
+import random
+import time
 from six.moves.urllib.parse import urljoin
 from contextlib import contextmanager
 from slapos.slap.slap import ConnectionError
@@ -38,6 +40,7 @@ from subprocess import CalledProcessError
 from .Updater import Updater
 from .NodeTestSuite import NodeTestSuite, SlapOSInstance
 from .ScalabilityTestRunner import ScalabilityTestRunner
+from .SlapOSControler import SlapOSControler
 from .UnitTestRunner import UnitTestRunner
 from .Utils import deunicodeData
 from .. import taskdistribution
@@ -163,19 +166,60 @@ shared = true
            branch=branch, process_manager=self.process_manager,
            working_directory=node_test_suite.working_directory,
            url=vcs_repository["url"])
-        updater.checkout()
+        already_configured = updater.isRepositoryConfigured()
+        try:
+          updater.checkout()
+        except SubprocessError:
+          if already_configured:
+            deleted = self._checkAndDeleteCorruptedRepository(
+              repository_path, config['git_binary'])
+            if deleted:
+              raise
+            logger.warning(
+              "Repository already configured but update failed, "
+              "continuing with existing revision", exc_info=True)
+          else:
+            raise
         revision_list.append((repository_id, updater.getRevision()))
     except SubprocessError as error:
-      # only limit to particular error, if we run that code for all errors,
-      # then if server having most repositories is down for some time, we would
-      # erase all repositories and facing later hours of downloads
-      if b'index' in getattr(error, 'stderr', b''):
-        rmtree(repository_path)
+      # Check if the repository is corrupted (e.g. truncated index) by running
+      # a git command checking the index. Only delete the repository if it is
+      # actually corrupted, to avoid unnecessary re-cloning.
+      self._checkAndDeleteCorruptedRepository(
+        repository_path, config['git_binary'])
+      node_test_suite.update_revision_error = error
+      node_test_suite.revision_list = []
       logger.warning("Error while getting repository, ignoring this test suite",
-                     exc_info=1)
+                     exc_info=True)
       return False
+    node_test_suite.update_revision_error = None
     node_test_suite.revision_list = revision_list
     return True
+
+  def _checkAndDeleteCorruptedRepository(self, repository_path, git_binary):
+    """Check if repository is corrupted and delete if so.
+
+    Returns True if repository was deleted (corrupted), False otherwise.
+    Stale .lock files in .git/ are treated as corruption.
+    """
+    if not os.path.isdir(repository_path):
+      return False
+
+    def hasGitLockFile():
+      return bool(glob.glob(os.path.join(repository_path, '.git', '*.lock')))
+
+    if hasGitLockFile():
+      rmtree(repository_path)
+      return True
+
+    try:
+      self.process_manager.spawn(
+        git_binary, 'status',
+        cwd=repository_path, log_prefix='git')
+    except SubprocessError:
+      rmtree(repository_path)
+      return True
+    return False
 
   @contextmanager
   def suiteLog(self, node_test_suite):
@@ -254,7 +298,45 @@ shared = true
             else:
               os.remove(folder_path)
         except OSError:
-          logger.warning("_cleanupTemporaryFiles exception", exc_info=1)
+          logger.warning("_cleanupTemporaryFiles exception", exc_info=True)
+
+  def _pruneSlapOS(self):
+    """Run 'slapos node prune' to remove old unused software releases.
+
+    Run at most once every max_log_time days, using a timestamp file to persist
+    across restarts.
+    """
+    slapos_directory = self.config['slapos_directory']
+    timestamp_file = os.path.join(slapos_directory, '.prune_timestamp')
+    prune_interval = 86400 * self.max_log_time
+    try:
+      last_prune = os.stat(timestamp_file).st_mtime
+    except OSError:
+      last_prune = 0
+
+    if time.time() - last_prune < prune_interval:
+      return
+
+    software_root_list = sorted(
+      software_root
+      for entry in os.listdir(self.working_directory)
+      for software_root in (
+        SlapOSControler(
+          os.path.join(self.working_directory, entry),
+          self.config,
+        ).software_root,
+      )
+      if os.path.isdir(software_root)
+    )
+    if not software_root_list:
+      return
+    slapos_controler = SlapOSControler(slapos_directory, self.config)
+    # just set the process manager, we do not need to initalize this slapos and start the proxy
+    slapos_controler.process_manager = self.process_manager
+    slapos_controler.prune(software_root_list)
+
+    with open(timestamp_file, 'w') as f:
+      f.write(str(time.time()))
 
   def cleanUp(self):
     logger.debug('Testnode.cleanUp')
@@ -263,6 +345,7 @@ shared = true
     self.process_manager.killall(self.config['slapos_directory'])
     self._cleanupLog()
     self._cleanupTemporaryFiles()
+    self._pruneSlapOS()
 
   def run(self):
     config = self.config
@@ -334,7 +417,11 @@ shared = true
               node_test_suite.edit(test_suite='')
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
-            if not self.updateRevisionList(node_test_suite):
+            updated = self.updateRevisionList(node_test_suite)
+            error_during_update = False
+            if not updated:
+              error_during_update = node_test_suite.update_revision_error is not None
+            if not (updated or error_during_update):
               continue
             test_result = taskdistributor.createTestResult(
                      node_test_suite.revision, [],
@@ -342,6 +429,14 @@ shared = true
                      node_test_suite.test_suite_title,
                      node_test_suite.project_title)
             logger.info("testnode, test_result : %r", test_result)
+            if error_during_update:
+              if test_result is not None:
+                test_result.reportFailure(
+                  command=node_test_suite.update_revision_error.command,
+                  stderr=node_test_suite.update_revision_error.stderr.decode().strip(),
+                  stdout=node_test_suite.update_revision_error.stdout.decode().strip(),
+                )
+              continue
             if test_result is None:
               self.cleanUp() # XXX not a good place to do that
               continue
@@ -424,7 +519,7 @@ shared = true
           node_test_suite.retry = True
           continue
         self.cleanUp()
-        sleep_time = 120 - (time.time() - begin)
+        sleep_time = random.uniform(120, 300) - (time.time() - begin)
         if sleep_time > 0:
           logger.info("End of processing, going to sleep %s", sleep_time)
           time.sleep(sleep_time)

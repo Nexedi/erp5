@@ -7,7 +7,10 @@ kw = {
        context.getSourceSectionValue().getGroup(base=True)),
   'payment_uid': context.getSourcePaymentUid(),
   'node_category': 'account_type/asset/cash/bank',
-  'simulation_state': ('stopped', 'delivered', ),
+  'simulation_state': \
+    portal.getPortalPlannedTransactionStateList() + \
+    ('confirmed',) + \
+    portal.getPortalAccountedTransactionStateList(),
   'portal_type': context.getPortalAccountingMovementTypeList(),
   'sort_on': (('date', 'ASC'), ('uid', 'ASC'))
 }
@@ -16,14 +19,23 @@ kw = {
 if reconciliation_mode == "reconcile":
   if context.getStopDate():
     kw['at_date'] = context.getStopDate().latestTime()
+    kw['reconciliation_query'] = SimpleQuery(aggregate_bank_reconciliation_date=None)
+    if context.getStartDate():
+      kw['from_date'] = context.getStartDate().earliestTime()
+
   kw.update({
-  'reconciliation_query': SimpleQuery(
-      aggregate_bank_reconciliation_date=None),
-  'left_join_list': ['aggregate_bank_reconciliation_date'],
-  'implicit_join': False, })
+    'left_join_list': ['aggregate_bank_reconciliation_date'],
+    'implicit_join': False,
+  })
 else:
   assert reconciliation_mode == "unreconcile"
   kw['aggregate_bank_reconciliation_uid'] = context.getUid()
+  # Related key finds aggregates with the Bank Reconciliation and lines,
+  # we make it stricted using `aggregate__uid` when explicitely wanting
+  # to match a line.
+  reconcilied_line_uid = listbox_kw.get("reconcilied_line", None)
+  if reconcilied_line_uid:
+    kw['aggregate__uid'] = reconcilied_line_uid
 
 # Handle search params
 if listbox_kw.get('Movement_getExplanationTitle'):
@@ -53,4 +65,5 @@ if context.getSourcePayment():
       context.getQuantityPrecisionFromResource(
         context.getSourcePaymentValue().getPriceCurrency()))
 
+context.log(context.portal_simulation.getMovementHistoryList(src__=1,**kw))
 return context.portal_simulation.getMovementHistoryList(**kw)

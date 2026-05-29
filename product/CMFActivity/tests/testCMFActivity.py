@@ -65,6 +65,7 @@ from App.config import getConfiguration
 import socket
 from six.moves import range
 from Products.ERP5Type.Utils import bytes2str
+from Products.MailHost.MailHost import MailHostError
 
 class CommitFailed(Exception):
   pass

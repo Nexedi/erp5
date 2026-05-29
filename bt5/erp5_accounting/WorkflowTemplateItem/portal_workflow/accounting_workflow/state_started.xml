@@ -24,6 +24,12 @@
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Journalised State is use for accounting transaction that have been recorded in a journal as a debit and a credit.</string> </value>
         </item>
@@ -50,7 +56,9 @@
         <item>
             <key> <string>state_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>accounted_transaction</string>
+              </tuple>
             </value>
         </item>
         <item>

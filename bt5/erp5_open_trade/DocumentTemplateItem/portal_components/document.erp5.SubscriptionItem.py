@@ -104,7 +104,11 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
     catalog_tool = getToolByName(self, 'portal_catalog')
     # Try to find the source open order
     line_list = catalog_tool(
-      portal_type=["Open Sale Order Line", "Open Sale Order Cell"],
+      portal_type=[
+        "Open Sale Order Line", "Open Sale Order Cell",
+        "Open Internal Order Line", "Open Internal Order Cell",
+        "Open Purchase Order Line", "Open Purchase Order Cell",
+      ],
       aggregate__uid=self.getUid(),
       validation_state=('open', 'validated', 'archived'), # XXX-JPS hard coding
       sort_on=(('effective_date', 'descending'),

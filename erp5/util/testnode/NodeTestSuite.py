@@ -57,6 +57,7 @@ class NodeTestSuite(SlapOSInstance):
     self.cluster_configuration = {}
     self.test_suite_directory = os.path.join(d, 'test_suite')
     self.custom_profile_path = os.path.join(d, 'software.cfg')
+    self.update_revision_error = None
     createFolder(d)
 
   def edit(self, **kw):
@@ -91,7 +92,18 @@ class NodeTestSuite(SlapOSInstance):
 
   @property
   def revision(self):
+    if self.update_revision_error:
+      # If there have been an error getting git revision, we construct
+      # an artificial revision based on the error.
+      # The idea behind is that the distributor will retry a few times
+      # the same revision, so we want something unique enough so that test
+      # suites with incorrect git configuration are not retried forever.
+      return 'update error=%s' % self.update_revision_error_text
     return ','.join('%s=%s-%s' % (
         repository[:-11] if repository.endswith('-repository') else repository,
         count, revision)
       for repository, (count, revision) in self.revision_list)
+
+  @property
+  def update_revision_error_text(self):
+    return self.update_revision_error.stderr.decode().strip()

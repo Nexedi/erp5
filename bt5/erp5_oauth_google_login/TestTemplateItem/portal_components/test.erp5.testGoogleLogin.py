@@ -72,6 +72,7 @@ class GoogleLoginTestCase(ERP5TypeTestCase):
     if connector.getValidationState() != "validated":
       connector.validate()
     self.tic()
+    self.portal.REQUEST._client_addr = '1.2.3.4'
 
   def beforeTearDown(self):
     self.abort()
@@ -229,7 +230,8 @@ class TestGoogleLogin(GoogleLoginTestCase):
       resp = self.publish(
         self.portal.getPath(),
         env={
-          'HTTP_COOKIE': '__ac_google_hash="%s"' % cookie.get('__ac_google_hash').value
+          'HTTP_COOKIE': '__ac_google_hash="%s"' % cookie.get('__ac_google_hash').value,
+          'REMOTE_ADDR': '1.2.3.4',
         }
       )
       self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
@@ -305,7 +307,8 @@ class TestGoogleLogin(GoogleLoginTestCase):
       )
       self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
       env = {
-        'HTTP_COOKIE': '__ac_google_hash="%s"' % resp.getCookie('__ac_google_hash')['value']
+        'HTTP_COOKIE': '__ac_google_hash="%s"' % resp.getCookie('__ac_google_hash')['value'],
+        'REMOTE_ADDR': '1.2.3.4',
       }
       resp = self.publish(self.portal.getPath(), env=env)
       self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
@@ -423,7 +426,8 @@ class TestGoogleLogin(GoogleLoginTestCase):
       self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
 
       env = {
-        'HTTP_COOKIE': '__ac_google_hash="%s"' % resp.getCookie('__ac_google_hash')['value']
+        'HTTP_COOKIE': '__ac_google_hash="%s"' % resp.getCookie('__ac_google_hash')['value'],
+        'REMOTE_ADDR': '1.2.3.4',
       }
       resp = self.publish(self.portal.getPath(), env=env)
       self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
@@ -444,6 +448,50 @@ class TestGoogleLogin(GoogleLoginTestCase):
   def test_logout(self):
     resp = self.publish(self.portal.getId() + '/logout')
     self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')
+
+  def test_remote_addr(self):
+    connector = getattr(self.portal.portal_oauth, self.dummy_connector_id)
+    connector.setNetworkList(['5.4.3.2', '# comment', '', '192.0.2.0/24'])
+    request = self.portal.REQUEST
+    response = request.RESPONSE
+
+    redirect_url = urllib.parse.urlparse(
+      self.portal.ERP5Site_redirectToGoogleLoginPage(RESPONSE=response))
+    state = dict(urllib.parse.parse_qsl(redirect_url.query))['state']
+
+    with self._default_login_responses():
+      self.portal.ERP5Site_receiveGoogleCallback(code='code', state=state)
+      ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_google_hash=' in v]
+
+      cookie = six.moves.http_cookies.SimpleCookie()
+      cookie.load(ac_cookie)
+      resp = self.publish(
+        self.portal.getPath(),
+        env={
+          'HTTP_COOKIE': '__ac_google_hash="%s"' % cookie.get('__ac_google_hash').value,
+          'REMOTE_ADDR': '192.0.2.1',
+        }
+      )
+      self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
+
+      resp = self.publish(
+        self.portal.getPath(),
+        env={
+          'HTTP_COOKIE': '__ac_google_hash="%s"' % cookie.get('__ac_google_hash').value,
+          'REMOTE_ADDR': '192.0.2.3',
+        }
+      )
+      self.assertEqual(resp.getStatus(), six.moves.http_client.OK)
+
+      resp = self.publish(
+        self.portal.getPath(),
+        env={
+          'HTTP_COOKIE': '__ac_google_hash="%s"' % cookie.get('__ac_google_hash').value,
+          'REMOTE_ADDR': '1.2.3.4',
+        }
+      )
+      self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
+
 
 
 class TestERP5JSGoogleLogin(GoogleLoginTestCase):

@@ -13,6 +13,12 @@
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Closed State is used for accounting transactions that belong to "closed" accounting periods. Basically, the transaction has been completely processed.</string> </value>
         </item>
@@ -39,7 +45,9 @@
         <item>
             <key> <string>state_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>accounted_transaction</string>
+              </tuple>
             </value>
         </item>
         <item>

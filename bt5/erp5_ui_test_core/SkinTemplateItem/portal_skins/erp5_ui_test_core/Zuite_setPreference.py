@@ -11,7 +11,6 @@ if pref is None:
                                                portal_type="Preference",
                                                priority=1)
 
-pref.setPreferredSubversionWorkingCopyList(tuple(working_copy_list.split(',')))
 pref.setPreferredHtmlStyleUnsavedFormWarning(False)
 pref.setPreferredTextEditor(text_editor)
 pref.setPreferredSourceCodeEditor(source_code_editor)

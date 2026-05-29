@@ -29,6 +29,9 @@ from erp5.component.test.WendelinConfiguratorMixin import WendelinConfiguratorMi
 
 class testWendelinConfigurator(WendelinConfiguratorMixin):
 
+  def setUpOnce(self):
+    self.afterSetUp()
+
   def getConfiguratorOptions(self):
     return {}
 

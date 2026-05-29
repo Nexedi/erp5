@@ -175,7 +175,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
 
   def _cleanupTestResult(self):
     self.tic()
-    cleanup_state_list = ['started', 'stopped']
+    cleanup_state_list = ['started', 'stopped', 'failed']
     test_list =  self.test_result_module.searchFolder(title='"TEST FOO" OR "test suite %" OR "Default Test Suite"',
                simulation_state=cleanup_state_list)
     for test_result in test_list:
@@ -849,6 +849,66 @@ class TestTaskDistribution(TaskDistributionTestCase):
       self.assertEqual("failed", test_result.getSimulationState())
     finally:
       self.unpinDateTime()
+
+  def test_createTestResultStopsAfterTooManyFailedAttempts(self):
+    """
+    When tests fail to build software repeatedly, stop retrying after 12 attempts.
+    This prevents infinite loops when software consistently fails to build.
+    """
+    self._createTestNode()
+    revision = "r0=a,r1=a"
+    for _ in range(12):
+      sleep(1)  # because catalog has second precision and the code searches for the latest test result
+      test_result_path, _ = self._createTestResult(revision=revision)
+      next_test_result_path, _ = self._createTestResult(
+        revision=revision, node_title="UnitTestNode 1")
+      self.assertEqual(test_result_path, next_test_result_path)
+      test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+      self.assertEqual("started", test_result.getSimulationState())
+      self.distributor.reportTaskFailure(test_result_path, {}, "Node0")
+      self.distributor.reportTaskFailure(test_result_path, {}, "UnitTestNode 1")
+      self.tic()
+      self.assertEqual("failed", test_result.getSimulationState())
+    result = self._createTestResult(revision=revision)
+    self.assertEqual(None, result)
+    result = self._createTestResult(revision="r0=b,r1=b")
+    self.assertNotEqual(None, result)
+
+  def test_createTestResultIgnoresFailedTestResultWhenLookingUpRevision(self):
+    """
+    When a test result has 'failed' state (e.g., due to git fetch error), it should
+    be ignored when looking for the latest test result. This prevents re-running
+    a previously successful test when a later test fails due to transient errors.
+    """
+    self._createTestNode()
+    revision = "r0=a,r1=a"
+
+    # Start and stop test for revision a (successful)
+    test_result_path, _ = self._createTestResult(revision=revision, test_list=["testFoo"])
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    self.tool.stopUnitTest(line_url, {})
+    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.tic()
+    self.assertEqual("stopped", test_result.getSimulationState())
+
+    # Small delay to ensure different creation dates
+    sleep(1)
+
+    # Start and fail test for revision b (simulating git fetch error)
+    test_result_path_b, _ = self._createTestResult(
+      "update error=remote: GitLab is not responding "
+      "fatal: unable to access 'https://lab.nexedi.com/nexedi/slapos.git/': "
+      "The requested URL returned error: 502"
+    )
+    test_result_b = self.getPortalObject().unrestrictedTraverse(test_result_path_b)
+    self.assertEqual("started", test_result_b.getSimulationState())
+    self.distributor.reportTaskFailure(test_result_path_b, {}, "Node0")
+    self.tic()
+    self.assertEqual("failed", test_result_b.getSimulationState())
+
+    # Ask again for revision a - it should NOT create a new test
+    result = self._createTestResult(revision=revision, test_list=["testFoo"])
+    self.assertEqual(None, result)
 
   def test_08_checkWeCanNotCreateTwoTestResultInParallel(self):
     """
@@ -1766,6 +1826,24 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
           self._response_callback('failed'))
       self.test_result.fail()
       self.tic()
+
+  def test_update_error_revision(self):
+    """Test that test results with 'update error=' revision are handled correctly.
+
+    When testnode fails to update a repository (e.g., branch not found), the revision
+    is set to 'update error=fatal: Remote branch XXX not found in upstream origin'.
+    The workflow goes: started (annotate running) -> failed (annotate failed).
+    Since there's no valid repository to report on, TestResult_getTestSuiteData
+    returns None and no GitLab API calls are made.
+    """
+    self.test_result.setReference('update error=fatal: Remote branch master not found in upstream origin')
+    self.test_result.start()
+    self.tic()
+    self.assertEqual(self.test_result.getSimulationState(), 'started')
+
+    self.test_result.fail()
+    self.tic()
+    self.assertEqual(self.test_result.getSimulationState(), 'failed')
 
   def test_TestResult_getTestSuiteData(self):
     """test for TestResult_getTestSuiteData helper script

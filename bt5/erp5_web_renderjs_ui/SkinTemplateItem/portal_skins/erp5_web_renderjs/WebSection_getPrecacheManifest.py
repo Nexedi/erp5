@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 web_section = context
 
 # Add all ERP5JS gadget
@@ -197,13 +199,14 @@ for precache_manifest_script_id in precache_manifest_url_list:
   if precache_manifest_script_id:
     url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
 
+url_dict = OrderedDict((u, None) for u in url_list)
 if REQUEST is not None:
   import json
   manifest_dict = {
-    'url_dict': dict.fromkeys(url_list),
+    'url_dict': url_dict,
     'modification_date': context.getModificationDate().rfc822()
   }
   REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
   return json.dumps(manifest_dict, indent=2)
 
-return list(set(url_list))
+return list(url_dict)

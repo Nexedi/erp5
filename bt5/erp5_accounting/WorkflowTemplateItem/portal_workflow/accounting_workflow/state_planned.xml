@@ -24,6 +24,12 @@
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Planned State is used for accounting transactions that have some probability to be turned into real accounting transactions in the future. </string> </value>
         </item>
@@ -50,7 +56,9 @@
         <item>
             <key> <string>state_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>planned_transaction</string>
+              </tuple>
             </value>
         </item>
         <item>

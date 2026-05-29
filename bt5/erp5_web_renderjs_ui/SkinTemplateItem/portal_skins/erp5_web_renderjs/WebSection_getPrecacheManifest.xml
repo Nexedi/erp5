@@ -8,7 +8,9 @@
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>must_revalidate_http_cache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>

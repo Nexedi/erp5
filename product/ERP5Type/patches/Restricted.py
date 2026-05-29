@@ -15,6 +15,7 @@ import six
 import copy
 import sys
 import types
+import importlib
 
 try:
   from RestrictedPython.transformer import FORBIDDEN_FUNC_NAMES
@@ -376,9 +377,10 @@ allow_class_attribute(datetime.tzinfo)
 # Therefore we import _strptime in advance in this file.
 # This prevents both importing _strptime with level=0, and accessing __doc__,
 # when calling datetime.datetime.strptime().
-import _strptime
-# on python3 it seems we actually need to call strptime for this.
-datetime.datetime.strptime('', '')
+if six.PY2:
+  import _strptime
+else:
+  ModuleSecurityInfo('_strptime').declarePublic('_strptime_datetime')
 
 # Allow dict.fromkeys, Only this method is a class method in dict module.
 allow_class_attribute(dict, {'fromkeys': 1})
@@ -472,17 +474,12 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
   # called there and AccessControl secureModule() expects to find the module
   # in _moduleSecurity dict. Also, import loader will fill MNAME_MAP.
   if mname.startswith('erp5.component.'):
-      # Call find_load_module() to log errors as this will always raise
-      # Unauthorized error without details
-      #
       # XXX: pkgutil.get_loader() only works with '__path__'
       import erp5.component
       _, _, package_name, module_name = mname.split('.', 3)
       try:
-          component_package = getattr(erp5.component, package_name)
-      except AttributeError:
-          raise Unauthorized(mname)
-      if component_package.find_load_module(module_name) is None:
+        importlib.import_module('erp5.component.%s.%s' % (package_name, module_name))
+      except ImportError:
           raise Unauthorized(mname)
   if mname in MNAME_MAP:
     mname = MNAME_MAP[mname]

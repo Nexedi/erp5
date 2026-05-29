@@ -1,6 +1,39 @@
 Changes
 =======
 
+0.4.82 (2026-05-12)
+-------------------
+
+  * testnode:
+     - fetch only the current branch instead of all branches
+     - randomize poll interval between 2 and 5 minutes
+     - handle git lock files as corruption
+     - only report failure when repository is misconfigured
+     - report fetch failure when changing branch to a non-existent one
+
+0.4.81 (2026-04-02)
+-------------------
+
+  * testnode:
+     - fix slapos node prune deleting too much
+     - report errors while updating to distributor
+
+0.4.80 (2026-02-18)
+-------------------
+
+  * testnode:
+     - run slapos node prune
+     - fix crashes when branch name contains `index`
+     - use new --force option of slapos instead of deprecated --all
+
+0.4.79 (2026-01-29)
+-------------------
+
+  * testnode:
+     - Remove uneeded logging
+     - catch IndexError
+     - ProcessManager: fix SubprocessError.__getattr__
+
 0.4.78 (2025-05-26)
 -------------------
 

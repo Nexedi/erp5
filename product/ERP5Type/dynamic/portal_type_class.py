@@ -61,9 +61,9 @@ ACQUIRE_LOCAL_ROLE_GETTER_DICT = {
   for acquire_local_role in (False, True)
 }
 
+from importlib import import_module
 
 def _importFilesystemClass(classpath):
-  from importlib import import_module
   try:
     module_path, class_name = classpath.rsplit('.', 1)
     module = import_module(module_path)
@@ -77,10 +77,13 @@ def _importFilesystemClass(classpath):
   except Exception as e:
     raise ImportError('Could not import document class ' + classpath)
 
-def _importComponentClass(component_package, name):
-  module = component_package.find_load_module(name)
+def _importComponentClass(package_fullname, name):
   klass = None
-  if module is not None:
+  try:
+    module = import_module(package_fullname + '.' + name)
+  except ImportError:
+    pass
+  else:
     try:
       klass = getattr(module, name)
     except AttributeError:
@@ -251,14 +254,12 @@ def generatePortalTypeClass(site, portal_type_name):
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
       if portal_type_name.endswith('Tool'):
-        import erp5.component.tool
-        klass = _importComponentClass(erp5.component.tool, type_class)
+        klass = _importComponentClass('erp5.component.tool', type_class)
 
       # Tool Component was introduced recently and some Tool have already been
       # migrated as Document Component
       if klass is None:
-        import erp5.component.document
-        klass = _importComponentClass(erp5.component.document, type_class)
+        klass = _importComponentClass('erp5.component.document', type_class)
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
@@ -315,9 +316,8 @@ def generatePortalTypeClass(site, portal_type_name):
     #
     # Rationale: same as Document/Interface; consistent naming; avoid a
     # registry like there used to be with FS.
-    import erp5.component.mixin
     for mixin in mixin_list:
-      mixin_class = _importComponentClass(erp5.component.mixin, mixin)
+      mixin_class = _importComponentClass('erp5.component.mixin', mixin)
       if mixin_class is None:
         mixin_class = _importFilesystemClass(mixin_class_registry[mixin])
 
@@ -339,10 +339,9 @@ def generatePortalTypeClass(site, portal_type_name):
     # Rationale: same as Document/Mixin; consistent naming; avoid a registry
     # like there used to be for Mixin or importing all class in
     # Products.ERP5Type.interfaces.__init__.py.
-    import erp5.component.interface
     from Products.ERP5Type import interfaces as filesystem_interfaces
     for interface in interface_list:
-      interface_class = _importComponentClass(erp5.component.interface, interface)
+      interface_class = _importComponentClass('erp5.component.interface', interface)
       if interface_class is None:
         interface_class = getattr(filesystem_interfaces, interface)
 

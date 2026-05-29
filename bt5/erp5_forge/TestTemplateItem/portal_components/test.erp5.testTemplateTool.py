@@ -108,43 +108,6 @@ class TestTemplateTool(ERP5TypeTestCase):
       test_web.getPublicationUrl(),
       'http://www.erp5.org/dists/snapshot/test_bt5/test_web.bt5')
 
-  def _svn_setup_ssl(self):
-    """
-      Function used to trust in svn.erp5.org.
-    """
-    from erp5.component.module.WorkingCopy import getVcsTool
-    for trust_dict in [
-      # for subversion 1.6
-      {'failures': 8,
-        'finger_print': 'a1:f7:c6:bb:51:69:84:28:ac:58:af:9d:05:73:de:24:45:4d:a1:bb',
-        'hostname': 'roundcube.nexedi.com',
-        'issuer_dname': 'Nexedi SA, Marcq en Baroeul, Nord Pas de Calais, FR',
-        'realm': 'https://svn.erp5.org:443',
-        'valid_from': 'Thu, 22 May 2008 13:43:01 GMT',
-        'valid_until': 'Sun, 20 May 2018 13:43:01 GMT'},
-      # for subversion 1.8
-      {'failures': 8,
-        'finger_print': 'A1:F7:C6:BB:51:69:84:28:AC:58:AF:9D:05:73:DE:24:45:4D:A1:BB',
-        'hostname': 'mail.nexedi.com',
-        'issuer_dname': 'Nexedi SA, Marcq en Baroeul, Nord Pas de Calais, FR(webmaster@nexedi.com)',
-        'realm': 'https://svn.erp5.org:443',
-        'valid_from': 'May 22 13:43:01 2008 GMT',
-        'valid_until': 'May 20 13:43:01 2018 GMT'}
-      ]:
-      getVcsTool("svn").__of__(self.portal).acceptSSLServer(trust_dict)
-
-  def test_download_svn(self):
-    # if the page looks like a svn repository, template tool will use pysvn to
-    # get the bt5.
-    self._svn_setup_ssl()
-    bt5_url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_web'
-    test_web = self.portal.portal_templates.download(bt5_url)
-    self.assertEqual(test_web.getPortalType(), 'Business Template')
-    self.assertEqual(test_web.getTitle(), 'test_web')
-    self.assertEqual(len(test_web.getRevision()), 28)
-    self.assertEqual(
-      test_web.getPublicationUrl(), bt5_url)
-
   def test_00_updateBusinessTemplateFromUrl_simple(self):
     """
      Test updateBusinessTemplateFromUrl method
@@ -152,7 +115,6 @@ class TestTemplateTool(ERP5TypeTestCase):
      By default if a new business template has revision != previous one
      the new bt5 is not installed, only imported.
     """
-    self._svn_setup_ssl()
     # we make this class a global so that it can be pickled
     global PropertiesTool  # pylint:disable=global-variable-not-assigned,global-variable-undefined
     class PropertiesTool(ActionsTool):  # pylint:disable=redefined-outer-name
@@ -167,8 +129,7 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     template_tool = self.portal.portal_templates
 
-    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
-    template_tool.updateBusinessTemplateFromUrl(url)
+    url = self._getBTPathAndIdList(('erp5_csv_style',))[0][0]
     old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     # fake different revision
     old_bt.setRevision('')
@@ -216,9 +177,8 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(not_installed_bt5.getRevision(), new_bt.getRevision())
 
   def test_updateBusinessTemplateFromUrl_keep_list(self):
-    self._svn_setup_ssl()
     template_tool = self.portal.portal_templates
-    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
+    url = self._getBTPathAndIdList(('test_core',))[0][0]
     # make sure this `test_core` bt is not installed
     template_tool.updateBusinessTemplateFromUrl(url)
     bt = template_tool.getInstalledBusinessTemplate('test_core')
@@ -238,7 +198,6 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_updateBusinessTemplateFromUrl_after_before_script(self):
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     portal = self.getPortal()
-    self._svn_setup_ssl()
     createZODBPythonScript(portal.portal_skins.custom,
                                    'BT_dummyA',
                                    'scripts_params=None',
@@ -258,7 +217,7 @@ class TestTemplateTool(ERP5TypeTestCase):
                                    'return context.getPortalObject().setTitle("MODIFIED")')
 
     template_tool = self.portal.portal_templates
-    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_html_style'
+    url = self._getBTPathAndIdList(('test_html_style',))[0][0]
     # don't install test_file
     before_triggered_bt5_id_list = ['BT_dummyA', 'BT_dummyB']
     after_triggered_bt5_id_list = ['BT_dummyC']
@@ -440,8 +399,7 @@ class TestTemplateTool(ERP5TypeTestCase):
         template
     """
     # How to define an existing and use INSTANCE_HOME_REPOSITORY?
-    url_list = ['https://svn.erp5.org/repos/public/erp5/trunk/bt5',
-                'http://www.erp5.org/dists/snapshot/bt5',
+    url_list = ['http://www.erp5.org/dists/snapshot/bt5',
                 'http://www.erp5.org/dists/release/5.4.5/bt5',
                 "INSTANCE_HOME_REPOSITORY",
                 'file:///opt/does/not/exist']
@@ -453,24 +411,21 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     # Test Exists
     self.assertEqual(getBusinessTemplateUrl(url_list, exist_bt5),
-                  'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_base')
+                    'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
     self.assertEqual(getBusinessTemplateUrl(url_list[1:], exist_bt5),
-                      'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
-    self.assertEqual(getBusinessTemplateUrl(url_list[2:], exist_bt5),
                       'http://www.erp5.org/dists/release/5.4.5/bt5/erp5_base.bt5')
     INSTANCE_HOME = getConfiguration().instancehome # pylint: disable=redefined-builtin
     local_bt = None
     if os.path.exists(INSTANCE_HOME + "/bt5/erp5_base"):
       local_bt = 'file://' + INSTANCE_HOME + "/bt5/erp5_base"
-    self.assertEqual(getBusinessTemplateUrl(url_list[3:], exist_bt5), local_bt)
-    self.assertEqual(getBusinessTemplateUrl(url_list[4:], exist_bt5), None)
+    self.assertEqual(getBusinessTemplateUrl(url_list[2:], exist_bt5), local_bt)
+    self.assertEqual(getBusinessTemplateUrl(url_list[3:], exist_bt5), None)
 
     # Test Not exists
     self.assertEqual(getBusinessTemplateUrl(url_list, not_exist_bt5), None)
     self.assertEqual(getBusinessTemplateUrl(url_list[1:], not_exist_bt5), None)
     self.assertEqual(getBusinessTemplateUrl(url_list[2:], not_exist_bt5), None)
     self.assertEqual(getBusinessTemplateUrl(url_list[3:], not_exist_bt5), None)
-    self.assertEqual(getBusinessTemplateUrl(url_list[4:], not_exist_bt5), None)
 
   def test_resolveBusinessTemplateListDependency(self):
     """ Test API able to return a complete list of bt5s to setup a sub set of
