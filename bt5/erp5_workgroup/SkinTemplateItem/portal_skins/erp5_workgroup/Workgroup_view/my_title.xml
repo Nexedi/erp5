@@ -10,16 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>base_category</string>
-                <string>description</string>
-                <string>portal_type</string>
-                <string>title</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_title</string> </value>
+            <value> <string>my_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -44,10 +41,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -63,10 +56,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -75,43 +64,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>destination</string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The organisation where the person is affected.</string> </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_view_mode_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
-                        </tuple>
-                        <tuple>
-                          <string>Workgroup</string>
-                          <string>Workgroup</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Organisation</string> </value>
                 </item>
               </dictionary>
             </value>
