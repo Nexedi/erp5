@@ -35,7 +35,7 @@ class TestI18NSearch(ERP5TypeTestCase):
     return "I18N Search"
 
   def getBusinessTemplateList(self):
-    return ('erp5_full_text_mroonga_catalog',
+    return ('erp5_full_text_catalog',
             'erp5_base',)
 
   def afterSetUp(self):

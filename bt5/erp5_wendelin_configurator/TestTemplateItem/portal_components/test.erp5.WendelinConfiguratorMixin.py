@@ -183,7 +183,7 @@ class WendelinConfiguratorMixin(SecurityTestCase):
       'erp5_wendelin_configurator',
       'erp5_accounting',
       'erp5_wendelin_development',
-      'erp5_full_text_mroonga_catalog',
+      'erp5_full_text_catalog',
       'erp5_oauth2_resource',
       'erp5_wendelin',
       'erp5_jquery_plugin_jqchart',

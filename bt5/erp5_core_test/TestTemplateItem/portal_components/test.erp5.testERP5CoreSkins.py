@@ -34,7 +34,7 @@ class TestBase_reindexAndSenseAlarm(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Business Templates required for this test.
     """
-    return ('erp5_full_text_mroonga_catalog', 'erp5_simulation_test', )
+    return ('erp5_full_text_catalog', 'erp5_simulation_test', )
 
   def afterSetUp(self):
     # Ensure the alarms has a workflow history
