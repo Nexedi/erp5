@@ -117,11 +117,7 @@ class TextContentMigrationMixin:
     if text_content is not None:
       data = str2bytes(text_content)
       if _checkPermission(Permissions.ModifyPortalContent, self):
-        self.edit(
-          data=data,
-          force_update=True,
-        )
-        del aq_base(self).text_content
+        self.setData(data)
     else:
       if getattr(self, "_getData", None) is not None:
         data = self._getData(default)
