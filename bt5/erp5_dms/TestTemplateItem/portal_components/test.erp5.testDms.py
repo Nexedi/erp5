@@ -1908,7 +1908,8 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
           assert response.getHeader('content-type') == 'image/png', \
                                              (response.getHeader('content-type'), publish_url)
-          assert response.getStatus() == six.moves.http_client.OK
+          assert response.getStatus() == six.moves.http_client.OK, \
+                                             response.getStatus()
 
     credential = '%s:%s' % (self.manager_username, self.manager_password)
     tested_list = []
