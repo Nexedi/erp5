@@ -1128,6 +1128,45 @@ class TemplateTool (BaseTool):
       DeprecationWarning('installBusinessTemplatesFromRepositories is deprecated; Use self.installBusinessTemplateListFromRepository instead.', DeprecationWarning)
       return self.installBusinessTemplateListFromRepository(*args, **kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getMetaProvider')
+    def getMetaProvider(self, provider_list, installed_title_set,
+                         in_progress_title_set):
+      """Pick the meta-provider whose own dependencies are satisfied.
+
+      Given several business template titles that all provide the same
+      meta name (i.e. share a provision_list entry), return the unique
+      provider whose declared dependency_list is fully satisfied by
+      installed_title_set ∪ in_progress_title_set.
+
+      Providers with no declared deps are skipped: they make no specific
+      claim about the environment so cannot be unambiguously chosen.
+
+      Returns (chosen, matching_list):
+        chosen: the unique provider title, or None if zero or more than
+          one provider matched.
+        matching_list: every provider that matched. Useful for the
+          caller to message or raise when chosen is None.
+      """
+      matching = []
+      for provider in provider_list:
+        try:
+          provider_bt = self.getLastestBTOnRepos(provider)
+        except (BusinessTemplateUnknownError, BusinessTemplateIsMeta):
+          continue
+        provider_dep_titles = [
+          bid.replace('.bt5', '') for _, bid in
+          self.getDependencyList(provider_bt)
+        ]
+        if not provider_dep_titles:
+          continue
+        if all(d in installed_title_set or d in in_progress_title_set
+               for d in provider_dep_titles):
+          matching.append(provider)
+      if len(matching) == 1:
+        return matching[0], matching
+      return None, matching
+
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
     def resolveBusinessTemplateListDependency(self,
@@ -1168,6 +1207,16 @@ class TemplateTool (BaseTool):
                           candidate.uid))
                     break
                 break
+            if provider_title is None:
+              bt5_titles_in_set = {
+                bid.replace('.bt5', '') for _, bid in bt5_set
+              }
+              provider_title, matching_providers = self.getMetaProvider(
+                provider_list, installed_bt5_title_list, bt5_titles_in_set)
+              if provider_title is None and len(matching_providers) > 1:
+                raise BusinessTemplateMissingDependency(
+                  "Ambiguous providers for %s: %s all have satisfied "
+                  "dependencies" % (dep_id, matching_providers))
             if provider_title is None and len(provider_list) == 1:
               provider_title = provider_list[0]
             LOG('resolveBT, provider_title', 0, provider_title)
