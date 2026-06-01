@@ -226,18 +226,15 @@ class File(Document, OFS_File):
     Return `data` as bytes. The method opportunistically tries to
     delete `base_data` when the property exists.
     """
+    self_base = aq_base(self)
     if _checkPermission(Permissions.ModifyPortalContent, self):
       # Try to delete `base_content_type`
-      try:
-        del aq_base(self).base_content_type
-      except AttributeError:
-        pass
+      if hasattr(self_base, "base_content_type"):
+        del self_base.base_content_type
 
       # Try to delete `base_data`
-      try:
-        del aq_base(self).base_data
-      except AttributeError:
-        pass
+      if hasattr(self_base, "base_data"):
+        del self_base.base_data
 
     self._checkConversionFormatPermission(None)
     data = self._baseGetData(default)
