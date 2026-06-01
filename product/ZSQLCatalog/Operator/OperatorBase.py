@@ -35,30 +35,38 @@ from Products.ZSQLCatalog.Utils import sqlquote as escapeString
 from zope.interface.verify import verifyClass
 from zope.interface import implementer
 
-def valueFloatRenderer(value):
+def valueFloatRenderer(value, **kw):
   if isinstance(value, basestring):
     value = float(value.replace(' ', ''))
   return repr(value)
 
-def valueDateTimeRenderer(value):
+def valueDateTimeRenderer(value, **kw):
   return '"%s"' % (value.toZone('UTC').ISO(), )
 
-def valueDefaultRenderer(value):
+def valueDefaultRenderer(value, **kw):
   raise TypeError('Unhandled value class: %s (%r)' % (value.__class__.__name__, value))
 
-def valueNoneRenderer(value):
+def valueNoneRenderer(value, **kw):
   return 'NULL'
 
+def valueStringRenderer(value, **kw):
+  return str(value)
+
+def valueIntegerRenderer(value, **kw):
+  return int(value)
+
+
 value_renderer = {
-  int: str,
+  int: valueStringRenderer,
   float: valueFloatRenderer,
   DateTime: valueDateTimeRenderer,
   None.__class__: valueNoneRenderer,
-  bool: int,
+  bool: valueIntegerRenderer,
   str: escapeString,
 }
+
 if six.PY2:
-  value_renderer[long] = str
+  value_renderer[long] = valueStringRenderer
   value_renderer[unicode] = escapeString
 else:
   value_renderer[bytes] = escapeString
@@ -117,7 +125,8 @@ class OperatorBase(object):
 
   def _render(self, column, value,
               value_renderer_get={k.__name__: v
-                for k, v in six.iteritems(value_renderer)}.get):
+                for k, v in six.iteritems(value_renderer)}.get,
+              renderer=None):
     """
       Render given column and value for use in SQL.
       Value is rendered to convert it to SQL-friendly value.
@@ -131,27 +140,28 @@ class OperatorBase(object):
     if isinstance(value, dict):
       type = value['type']
       column = column_renderer.get(type, columnDefaultRenderer)(column, format=value['format'])
-      value = value_renderer_get(type, valueDefaultRenderer)(value['query'])
+      value = value_renderer_get(type, valueDefaultRenderer)(value['query'], renderer=renderer)
     else:
-      value = self._renderValue(value)
+      value = self._renderValue(value, renderer=renderer)
     return column, value
 
   def _renderValue(self, value,
                    value_renderer_get=value_renderer.get,
-                   valueDefaultRenderer=valueDefaultRenderer):
+                   valueDefaultRenderer=valueDefaultRenderer,
+                   renderer=None):
     """
       Render given value as string.
 
       value (int, float, long, DateTime, string, None)
         Value to render as a string for use in SQL (quoted, escaped).
     """
-    return value_renderer_get(value.__class__, valueDefaultRenderer)(value)
+    return value_renderer_get(value.__class__, valueDefaultRenderer)(value, renderer=renderer)
 
   def asSearchText(self, value):
     return value_search_text_renderer.get(value.__class__,
                                           valueDefaultSearchTextRenderer)(value)
 
-  def asSQLExpression(self, column, value_list, only_group_columns):
+  def asSQLExpression(self, column, value_list, only_group_columns, renderer):
     raise NotImplementedError('This method must be overloaded by a subclass'
       ' to be able to get an SQL representation of this operator.')
 
