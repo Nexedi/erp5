@@ -93,7 +93,7 @@ CREATE TABLE %s (
         if reset_uid:
           reset_uid = False
           # Overflow will result into IntegrityError.
-          db.query(b"SET @uid := %s" % str2bytes(str(getrandbits(UID_SAFE_BITSIZE))))
+          db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (str2bytes(self.sql_table), values))
         except MySQLdb.IntegrityError as e:
