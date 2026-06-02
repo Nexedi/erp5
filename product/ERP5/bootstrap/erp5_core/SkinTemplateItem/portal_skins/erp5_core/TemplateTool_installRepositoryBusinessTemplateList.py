@@ -32,7 +32,7 @@ for uid in uids:
   bt5_title = bt5_id.replace(".bt5", "")
   dependency_list = context.getDependencyList((repository, bt5_id))
   for dep_repository, dep_id in dependency_list:
-    dep_title = dep_id.replace(".bt5", "")
+    dep_title, version_restriction = context.parseDependencyCouple(dep_id.replace(".bt5", ""))
     if dep_title != bt5_title and \
         dep_title in installed_business_template_title_list:
       continue
@@ -42,17 +42,22 @@ for uid in uids:
         portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(dep_title, bt5_title)
         current_uid_list.append(context.encodeRepositoryBusinessTemplateUid(dep_repository, dep_id))
       else:
-        provider_list = context.getProviderList(dep_id)
+        provider_list = context.getProviderList(dep_title, version_restriction)
         if len([x for x in provider_list if x in title_list]) == 0:
-          # No provider installed
+          provider = None
           if len(provider_list) == 1:
-            # When only one provider is possible, use it
             provider = provider_list[0]
+            portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(provider, bt5_title)
+          else:
+            matched_list = context.getDependencyMatchedProviderList(provider_list, installed_business_template_title_list, title_list)
+            if len(matched_list) == 1:
+              provider = matched_list[0]
+              portal_status_message+='\'%s\' is chosen implicitly because its dependency is installed and \'%s\' depends on it.'%(provider, bt5_title)
+          if provider:
             for candidate in available_bt5_list:
               if candidate.title == provider:
                 current_uid_list.append(candidate.uid)
                 break
-            portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(provider, bt5_title)
           else:
             portal_status_message+='\'%s\' requires you to select one of the following business templates: %s'%(bt5_title, provider_list)
 
