@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts79675692.050099</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -72,41 +76,11 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>ac21c6f584d7997db394ce53809fea72</string> </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>officejs_store_base.appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>store_officejs_base_appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
 # generated on Wed, 30 Jun 2019 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
@@ -204,7 +178,39 @@ appstore/resources/computer.html\n
 appstore/resources/computers.html\n
 appstore/test/index.html\n
 NETWORK:\n
-*</string> </value>
+*</bytes> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>officejs_store_base.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>store_officejs_base_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3302</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -349,7 +355,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>973.21680.16689.44390</string> </value>
+                      <value> <string>1033.10252.61408.60774</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -365,8 +371,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1548838531.78</float>
-                              <string>UTC</string>
+                              <float>1779675692.05291</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
