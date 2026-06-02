@@ -227,12 +227,25 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
   security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
   @deprecated
   def getBaseData(self):
+    """
+    Backward-compatibility: convert to what used to be base format
+    when possible.
+    """
     portal_type = self.getPortalType()
     if portal_type not in BASE_FORMAT_DICT:
       return super(OOoDocument, self).getBaseData()
 
     _format = BASE_FORMAT_DICT[portal_type]
     return self.convert(format=_format)[1]
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @deprecated
+  def hasBaseData(self):
+    """
+    Method was mostly used to test for non-empty documents, simply check
+    for `data`.
+    """
+    return self.hasData()
 
   def _convert(self, format, frame=0, **kw): # pylint: disable=redefined-builtin
     """
