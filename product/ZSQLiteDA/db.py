@@ -337,23 +337,23 @@ class DB(TM):
                 desc = c.describe()
                 result = c.fetch_row(max_rows)
         else:
-          for qs in query_string.split(b'\0'):
-            qs = qs.strip()
-            if not qs:
-                continue
-            select_match = match_select(qs)
-            if select_match:
-                _, select = select_match.groups()
-                qs = b"SELECT %s" % select
-                if max_rows:
-                    qs = b"%s LIMIT %d" % (qs, max_rows)
+            for qs in query_string.split(b'\0'):
+                qs = qs.strip()
+                if not qs:
+                    continue
+                select_match = match_select(qs)
+                if select_match:
+                    _, select = select_match.groups()
+                    qs = b"SELECT %s" % select
+                    if max_rows:
+                        qs = b"%s LIMIT %d" % (qs, max_rows)
 
-            c = self._query(qs)
-            if c:
-                if desc is not None and c.describe() is not None:
-                    raise Exception('Multiple select schema are not allowed')
-                desc = c.describe()
-                result = c.fetch_row(max_rows)
+                c = self._query(qs)
+                if c:
+                    if desc is not None and c.describe() is not None:
+                        raise Exception('Multiple select schema are not allowed')
+                    desc = c.describe()
+                    result = c.fetch_row(max_rows)
 
         if desc is None:
             return (), ()
