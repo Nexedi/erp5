@@ -27,10 +27,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
-import re
 import sqlite3
 from contextlib import contextmanager
-from Products.ERP5Type.Utils import str2bytes
 from ..Common.SQLBase import (
   SQLBase as _SQLBase,
   sort_message_key,
@@ -44,8 +42,6 @@ from ..Common.SQLBase import (
   UID_ALLOCATION_TRY_COUNT,
 )
 
-_UID_PLACEHOLDER_RE = re.compile(br'@uid\+(\d+)')
-
 
 class SQLBase(_SQLBase):
 
@@ -57,31 +53,25 @@ class SQLBase(_SQLBase):
   _dependency_subquery_open = b""
   _dependency_subquery_close = b""
 
+  def _executeQuery(self, db, sql, args=(), max_rows=1000):
+    return db.query(sql, max_rows, args=tuple(args) if args else None)
+
   def _skip_locked_sql(self, db):
     return b""
 
   def _wrapSubquery(self, sql):
     return b'SELECT * FROM (' + sql + b')'
 
-  def _setUid(self, db, uid):
-    self._pending_uid = uid
-
-  def _resolveUidPlaceholders(self, values):
-    uid = self._pending_uid
-    return _UID_PLACEHOLDER_RE.sub(
-      lambda m: str2bytes(str(uid + int(m.group(1)))),
-      values,
-    )
-
   def _isDuplicateEntryError(self, exc):
     message = str(exc)
     return 'UNIQUE constraint failed' in message or 'PRIMARY KEY' in message
 
   def _reactivateDateSQL(self, delay):
-    return "strftime('%%Y-%%m-%%d %%H:%%M:%%f','now','+%s seconds')" % delay
+    return b"strftime('%Y-%m-%d %H:%M:%f','now',?)", \
+      ('+%s seconds' % delay,)
 
   def _timeShiftDateSQL(self, delay):
-    return "datetime(date, '-%s seconds')" % delay
+    return b"datetime(date, ?)", ('-%s seconds' % delay,)
 
   def _dependencyUnionSuffixSQL(self):
     return b'LIMIT %d' % self._MAX_DEPENDENCY_UNION_SUBQUERY_COUNT
