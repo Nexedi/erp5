@@ -75,6 +75,7 @@
                         <string>sxc</string>
                         <string>xlsx</string>
                         <string>xlsy</string>
+                        <string>csv</string>
                       </list>
                     </value>
                 </item>
