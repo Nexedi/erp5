@@ -58,6 +58,11 @@ import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
 import six
 
+from typing import Any, TYPE_CHECKING
+if TYPE_CHECKING:
+  from collections.abc import Sequence
+  from ZPublisher.HTTPRequest import HTTPRequest
+
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
 DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
@@ -813,7 +818,49 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         kw.setdefault('limit', self.default_result_limit)
         return ZCatalog.searchResults(self, sql_catalog_id=catalog_id, **kw)
 
-    __call__ = searchResults
+    def __call__(
+      self,
+      sql_catalog_id=None,  # type: str | None
+      local_roles=None,  # type: str | Sequence[str] | None
+      REQUEST=None,  # type: HTTPRequest | None
+      **kwargs  # type: Any
+    ):
+      # type: (...) -> Sequence[Any]
+      """
+      Calls ``searchResults``, except when accessed through the URL.
+
+      Calling the ``CatalogTool``should be normally equivalent to calling its
+      ``searchResults`` method.
+      However, this is problematic due to Zope traversal rules: when accessing
+      `erp5/portal_catalog` in the URL, this method is invoked, causing an
+      unnecessary search computation, and potential memory leak (see 
+      https://bugs.launchpad.net/products.zsqlmethods/+bug/143917).
+
+      Instead of that, we redirect to the ``view`` method when accessed
+      directly as a URL.
+
+      Args:
+        sql_catalog_id: Identifier of the catalog to use.
+        local_roles: Allowed security roles for the query. It can be a sequence
+          of roles, or a string with the roles separated by ``";"``.
+        REQUEST: If present, the call method has been invoked as part of URL
+          traversal, and thus the ``view`` method should be called.
+        kwargs: Additional keyword arguments passed to ``searchResults``.
+
+      Returns:
+        If the method is called normally, the value returned by
+        ``searchResults``. If it is called via URL traversal, the value
+        returned by ``view``.
+
+      """
+      if REQUEST is None:
+        return self.searchResults(
+          sql_catalog_id=sql_catalog_id,
+          local_roles=local_roles,
+          **kwargs
+        )
+      else:
+        return self.view()
 
     security.declarePrivate('unrestrictedSearchResults')
     def unrestrictedSearchResults(self, **kw):
