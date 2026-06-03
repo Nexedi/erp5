@@ -32,6 +32,7 @@ from zLOG import TRACE, WARNING
 from Products.ERP5Type.Utils import str2bytes
 from Products.CMFActivity.ActivityTool import Message
 from .SQLBase import (
+  _render_arg,
   render_datetime,
   UID_SAFE_BITSIZE,
   UID_ALLOCATION_TRY_COUNT,
@@ -50,7 +51,7 @@ class SQLJoblib(SQLDict):
   _insert_template = (b"INSERT INTO %s (uid,"
     b" path, active_process_uid, date, method_id, processing_node,"
     b" priority, group_method_id, tag, signature, serialization_tag,"
-    b" message) VALUES\n(%s)")
+    b" message) VALUES\n")
 
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
@@ -63,67 +64,80 @@ class SQLJoblib(SQLDict):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
     now_sql = self._now_sql_expr
-    def insert(reset_uid):
-      values = self._insert_separator.join(values_list)
-      del values_list[:]
+    insert_prefix = self._insert_template % str2bytes(self.sql_table)
+    sep = self._insert_separator
+    sep_len = len(sep)
+    # Worst-case digit width of a uid value, derived from UID_SAFE_BITSIZE.
+    uid_width = len(str((1 << UID_SAFE_BITSIZE) - 1))
+    def insert(rows, base, offset):
       for _ in xrange(UID_ALLOCATION_TRY_COUNT):
-        if reset_uid:
-          reset_uid = False
-          # Overflow will result into IntegrityError.
-          self._setUid(db, getrandbits(UID_SAFE_BITSIZE))
+        if base is None:
+          base = getrandbits(UID_SAFE_BITSIZE)
+          offset = 0
+        row_sql_list = []
+        all_args = []
+        for i, (row_sql, row_args) in enumerate(rows):
+          row_sql_list.append(row_sql)
+          all_args.append(base + offset + i)
+          all_args.extend(row_args)
+        sql = insert_prefix + sep.join(row_sql_list)
         try:
-          db.query(self._insert_template % (
-            str2bytes(self.sql_table),
-            self._resolveUidPlaceholders(values),
-          ))
+          self._executeQuery(db, sql, tuple(all_args))
         except self._integrity_error_class as e:
           if not self._isDuplicateEntryError(e):
             raise
-          reset_uid = True
+          base = None
         else:
-          break
-      else:
-        raise ValueError("Maximum retry for prepareQueueMessageList reached")
-    i = 0
-    reset_uid = True
-    values_list = []
+          return base, offset + len(rows)
+      raise ValueError("Maximum retry for prepareQueueMessageList reached")
+    rows_list = []
     max_payload = self._insert_max_payload
-    sep_len = len(self._insert_separator)
     hasDependency = self._hasDependency
+    base = None
+    offset = 0
     for m in message_list:
       if m.is_registered:
         active_process_uid = m.active_process_uid
         date = m.activity_kw.get('at_date')
-        row = b','.join((
-          b'@uid+%s' % str2bytes(str(i)),
-          quote('/'.join(m.object_path)),
-          b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
-          now_sql if date is None else quote(render_datetime(date)),
-          quote(m.method_id),
-          b'-1' if hasDependency(m) else b'0',
-          str2bytes(str(m.activity_kw.get('priority', 1))),
-          quote(m.getGroupId()),
-          quote(m.activity_kw.get('tag', '')),
-          quote(m.activity_kw.get('signature', '')),
-          quote(m.activity_kw.get('serialization_tag', '')),
-          quote(Message.dump(m))))
-        i += 1
-        n = sep_len + len(row)
+        if date is None:
+          date_sql = now_sql
+          date_args = ()
+        else:
+          date_sql = b'?'
+          date_args = (render_datetime(date),)
+        row_sql = b'(?,?,?,' + date_sql + b',?,?,?,?,?,?,?,?)'
+        row_args = (
+          '/'.join(m.object_path),
+          active_process_uid,
+          ) + date_args + (
+          m.method_id,
+          -1 if hasDependency(m) else 0,
+          m.activity_kw.get('priority', 1),
+          m.getGroupId(),
+          m.activity_kw.get('tag', ''),
+          m.activity_kw.get('signature', ''),
+          m.activity_kw.get('serialization_tag', ''),
+          Message.dump(m))
+        # Rendered byte size of this row once `?` placeholders are substituted
+        # (MySQL path). Equals row_sql length minus its `?` chars, plus the
+        # uid width, plus the actual rendered length of each value.
+        n = sep_len + len(row_sql) - (len(row_args) + 1) + uid_width + sum(
+          len(_render_arg(a, quote)) for a in row_args
+        )
         max_payload -= n
         if max_payload < 0:
-          if values_list:
-            insert(reset_uid)
-            reset_uid = False
+          if rows_list:
+            base, offset = insert(rows_list, base, offset)
+            del rows_list[:]
             max_payload = self._insert_max_payload - n
           else:
             raise ValueError("max_allowed_packet too small to insert message")
-        values_list.append(row)
-    if values_list:
-      insert(reset_uid)
+        rows_list.append((row_sql, row_args))
+    if rows_list:
+      insert(rows_list, base, offset)
 
   def getProcessableMessageLoader(self, db, processing_node):
     path_and_method_id_dict = {}
-    quote = db.string_literal
     for_update = self._for_update_sql + self._skip_locked_sql(db)
     def load(line):
       # getProcessableMessageList already fetch messages with the same
@@ -139,13 +153,11 @@ class SQLJoblib(SQLDict):
         try:
           self._beforeReserveDuplicates(db)
           # Select duplicates.
-          result = db.query(b"SELECT uid FROM message_job"
-            b" WHERE processing_node = 0 AND path = %s AND signature = %s"
-            b" AND method_id = %s AND group_method_id = %s%s" % (
-              quote(path), quote(line.signature),
-              quote(method_id), quote(line.group_method_id),
-              for_update,
-            ), 0)[1]
+          sql = (b"SELECT uid FROM message_job"
+            b" WHERE processing_node = 0 AND path = ? AND signature = ?"
+            b" AND method_id = ? AND group_method_id = ?" + for_update)
+          args = (path, line.signature, method_id, line.group_method_id)
+          result = self._executeQuery(db, sql, args, max_rows=0)[1]
           uid_list = [x for x, in result]
           if uid_list:
             self.assignMessageList(db, processing_node, uid_list)
