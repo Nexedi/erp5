@@ -4,7 +4,7 @@ if not name:
 
 redirect_domain = context.getLayoutProperty('redirect_domain', '')
 if redirect_domain:
-  redirect_url = '%s?old_thread=%s' % (redirect_domain, name)
+  redirect_url = '%s?page=forum_thread_redirect&old_thread=%s' % (redirect_domain, name)
   context.REQUEST.RESPONSE.redirect(redirect_url, status=301, lock=1)
   return None
 
