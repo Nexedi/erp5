@@ -57,9 +57,6 @@ class SQLJoblib(SQLDict):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
                   m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
 
-  def _beforeReserveDuplicates(self, db):
-    pass
-
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
@@ -151,7 +148,6 @@ class SQLJoblib(SQLDict):
       if original_uid is None:
         m = Message.load(line.message, uid=uid, line=line)
         try:
-          self._beforeReserveDuplicates(db)
           # Select duplicates.
           sql = (b"SELECT uid FROM message_job"
             b" WHERE processing_node = 0 AND path = ? AND signature = ?"

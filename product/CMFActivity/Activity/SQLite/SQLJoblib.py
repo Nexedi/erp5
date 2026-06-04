@@ -33,9 +33,6 @@ from .SQLDict import SQLDict
 
 class SQLJoblib(_SQLJoblib, SQLDict):
 
-  def _beforeReserveDuplicates(self, db):
-    db.query(b"BEGIN IMMEDIATE", 0)
-
   def createTableSQL(self):
     return """\
 CREATE TABLE %s (
