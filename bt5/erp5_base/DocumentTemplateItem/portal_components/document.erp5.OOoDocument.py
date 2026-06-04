@@ -395,7 +395,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # sucessfully converted document
       self._setBaseData(dec(str2bytes(response_dict['data'])))
       metadata = response_dict['meta']
-      self._base_metadata = metadata
       if metadata.get('MIMEType', None) is not None:
         self._setBaseContentType(metadata['MIMEType'])
     else:
