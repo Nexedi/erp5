@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77258011.1078594</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -71,41 +75,11 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>4253bf40d897c683df135ad3452967f0</string> </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
 # Last modified by WebSite_checkCacheModificationDateConsistency on 2020/02/17 16:16:43.909212 UTC\n
 # Last modified by WebSite_checkCacheModificationDateConsistency on 2020/01/30 16:25:47.028369 UTC\n
 # generated on Fri, 09 Jun 2016 11:45:33 +0000\n
@@ -176,7 +150,39 @@ gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
 NETWORK:\n
 *\n
-</string> </value>
+</bytes> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2140</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -315,7 +321,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>981.59441.37027.22988</string> </value>
+                      <value> <string>1032.34054.33373.18995</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -331,8 +337,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1582043105.73</float>
-                              <string>UTC</string>
+                              <float>1777258011.11344</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
