@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import str2bytes
 from ..Common.SQLBase import (
   SQLBase as _SQLBase,
   sort_message_key,
@@ -42,6 +43,13 @@ from ..Common.SQLBase import (
 
 
 class SQLBase(_SQLBase):
+
+  def initialize(self, activity_tool, clear):
+    super(SQLBase, self).initialize(activity_tool, clear)
+    db = activity_tool.getSQLConnection()
+    self._insert_max_payload = (db.getMaxAllowedPacket()
+      + len(self._insert_separator)
+      - len(self._insert_template % (str2bytes(self.sql_table), b'')))
 
   def createTableSQL(self):
     return """\

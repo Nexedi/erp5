@@ -310,11 +310,6 @@ class SQLBase(Queue):
     """
     return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
 
-  def createTableSQL(self):
-    raise NotImplementedError
-
-  # ---- shared logic --------------------------------------------------------
-
   def initialize(self, activity_tool, clear):
     db = activity_tool.getSQLConnection()
     create = self.createTableSQL()
@@ -327,9 +322,6 @@ class SQLBase(Queue):
       if src:
         LOG('CMFActivity', INFO, "%r table upgraded\n%s"
             % (self.sql_table, src))
-    self._insert_max_payload = (db.getMaxAllowedPacket()
-      + len(self._insert_separator)
-      - len(self._insert_template % str2bytes(self.sql_table)))
 
   def _initialize(self, db, column_list):
       LOG('CMFActivity', ERROR, "Non-empty %r table upgraded."
@@ -339,8 +331,8 @@ class SQLBase(Queue):
   _insert_template = (b"INSERT INTO %s (uid,"
     b" path, active_process_uid, date, method_id, processing_node,"
     b" priority, node, group_method_id, tag, serialization_tag,"
-    b" message) VALUES\n")
-  _insert_separator = b",\n"
+    b" message) VALUES\n(%s)")
+  _insert_separator = b"),\n("
 
   def _hasDependency(self, message):
     get = message.activity_kw.get
@@ -353,78 +345,60 @@ class SQLBase(Queue):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
     now_sql = self._now_sql_expr
-    insert_prefix = self._insert_template % str2bytes(self.sql_table)
-    sep = self._insert_separator
-    sep_len = len(sep)
-    # Worst-case digit width of a uid value, derived from UID_SAFE_BITSIZE.
-    uid_width = len(str((1 << UID_SAFE_BITSIZE) - 1))
-    def insert(rows, base, offset):
+    def insert(reset_uid):
+      values = self._insert_separator.join(values_list)
+      del values_list[:]
       for _ in xrange(UID_ALLOCATION_TRY_COUNT):
-        if base is None:
+        if reset_uid:
+          reset_uid = False
           # Overflow will result into IntegrityError.
-          base = getrandbits(UID_SAFE_BITSIZE)
-          offset = 0
-        row_sql_list = []
-        all_args = []
-        for i, (row_sql, row_args) in enumerate(rows):
-          row_sql_list.append(row_sql)
-          all_args.append(base + offset + i)
-          all_args.extend(row_args)
-        sql = insert_prefix + sep.join(row_sql_list)
+          db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
         try:
-          self._executeQuery(db, sql, tuple(all_args))
+          db.query(self._insert_template % (str2bytes(self.sql_table), values))
         except self._integrity_error_class as e:
           if not self._isDuplicateEntryError(e):
             raise
-          base = None
+          reset_uid = True
         else:
-          return base, offset + len(rows)
-      raise RuntimeError("Maximum retry for prepareQueueMessageList reached")
-    rows_list = []
+          break
+      else:
+        raise RuntimeError("Maximum retry for prepareQueueMessageList reached")
+    i = 0
+    reset_uid = True
+    values_list = []
     max_payload = self._insert_max_payload
+    sep_len = len(self._insert_separator)
     hasDependency = self._hasDependency
-    base = None
-    offset = 0
     for m in message_list:
       if m.is_registered:
         active_process_uid = m.active_process_uid
         date = m.activity_kw.get('at_date')
-        if date is None:
-          date_sql = now_sql
-          date_args = ()
-        else:
-          date_sql = b'?'
-          date_args = (render_datetime(date),)
-        row_sql = b'(?,?,?,' + date_sql + b',?,?,?,?,?,?,?,?)'
-        row_args = (
-          '/'.join(m.object_path),
-          active_process_uid,
-          ) + date_args + (
-          m.method_id,
-          -1 if hasDependency(m) else 0,
-          m.activity_kw.get('priority', 1),
-          m.activity_kw.get('node', 0),
-          m.getGroupId(),
-          m.activity_kw.get('tag', b''),
-          m.activity_kw.get('serialization_tag', b''),
-          Message.dump(m))
-        # Rendered byte size of this row once `?` placeholders are substituted
-        # (MySQL path). Equals row_sql length minus its `?` chars, plus the
-        # uid width, plus the actual rendered length of each value.
-        n = sep_len + len(row_sql) - (len(row_args) + 1) + uid_width + sum(
-          len(_render_arg(a, quote)) for a in row_args
-        )
+        row = b','.join((
+          b'@uid+%d' % i,
+          quote('/'.join(m.object_path)),
+          b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
+          now_sql if date is None else quote(render_datetime(date)),
+          quote(m.method_id),
+          b'-1' if hasDependency(m) else b'0',
+          str2bytes(str(m.activity_kw.get('priority', 1))),
+          str2bytes(str(m.activity_kw.get('node', 0))),
+          quote(m.getGroupId()),
+          quote(m.activity_kw.get('tag', b'')),
+          quote(m.activity_kw.get('serialization_tag', b'')),
+          quote(Message.dump(m))))
+        i += 1
+        n = sep_len + len(row)
         max_payload -= n
         if max_payload < 0:
-          if rows_list:
-            base, offset = insert(rows_list, base, offset)
-            del rows_list[:]
+          if values_list:
+            insert(reset_uid)
+            reset_uid = False
             max_payload = self._insert_max_payload - n
           else:
             raise ValueError("max_allowed_packet too small to insert message")
-        rows_list.append((row_sql, row_args))
-    if rows_list:
-      insert(rows_list, base, offset)
+        values_list.append(row)
+    if values_list:
+      insert(reset_uid)
 
   def _getMessageList(self, db, count=1000, src__=0, **kw):
     # XXX: Because most columns have NOT NULL constraint, conditions with None

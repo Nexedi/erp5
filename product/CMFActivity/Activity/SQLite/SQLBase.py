@@ -29,6 +29,10 @@ from __future__ import absolute_import
 
 import sqlite3
 from contextlib import contextmanager
+from random import getrandbits
+from six.moves import xrange
+from Products.ERP5Type.Utils import str2bytes
+from Products.CMFActivity.ActivityTool import Message
 from ..Common.SQLBase import (
   SQLBase as _SQLBase,
   sort_message_key,
@@ -52,11 +56,68 @@ class SQLBase(_SQLBase):
   _dependency_subquery_open = b""
   _dependency_subquery_close = b""
 
+  _insert_template = (b"INSERT INTO %s (uid,"
+    b" path, active_process_uid, date, method_id, processing_node,"
+    b" priority, node, group_method_id, tag, serialization_tag,"
+    b" message) VALUES\n")
+  _insert_separator = b",\n"
+
   def _executeQuery(self, db, sql, args=(), max_rows=1000):
     return db.query(sql, max_rows, args=tuple(args) if args else None)
 
   def _forUpdateSQL(self, db):
     return b""
+
+  def prepareQueueMessageList(self, activity_tool, message_list):
+    db = activity_tool.getSQLConnection()
+    now_sql = self._now_sql_expr
+    insert_prefix = self._insert_template % str2bytes(self.sql_table)
+    sep = self._insert_separator
+    hasDependency = self._hasDependency
+    def insert(rows):
+      for _ in xrange(UID_ALLOCATION_TRY_COUNT):
+        base = getrandbits(UID_SAFE_BITSIZE)
+        row_sql_list = []
+        all_args = []
+        for i, (row_sql, row_args) in enumerate(rows):
+          row_sql_list.append(row_sql)
+          all_args.append(base + i)
+          all_args.extend(row_args)
+        sql = insert_prefix + sep.join(row_sql_list)
+        try:
+          self._executeQuery(db, sql, tuple(all_args))
+        except self._integrity_error_class as e:
+          if not self._isDuplicateEntryError(e):
+            raise
+        else:
+          return
+      raise ValueError("Maximum retry for prepareQueueMessageList reached")
+    rows_list = []
+    for m in message_list:
+      if m.is_registered:
+        date = m.activity_kw.get('at_date')
+        if date is None:
+          date_sql = now_sql
+          date_args = ()
+        else:
+          date_sql = b'?'
+          date_args = (render_datetime(date),)
+        row_sql = b'(?,?,?,' + date_sql + b',?,?,?,?,?,?,?,?)'
+        row_args = (
+          '/'.join(m.object_path),
+          m.active_process_uid,
+          ) + date_args + (
+          m.method_id,
+          -1 if hasDependency(m) else 0,
+          m.activity_kw.get('priority', 1),
+          m.activity_kw.get('node', 0),
+          m.getGroupId(),
+          m.activity_kw.get('tag', b''),
+          m.activity_kw.get('serialization_tag', b''),
+          Message.dump(m))
+        rows_list.append((row_sql, row_args))
+    if rows_list:
+      insert(rows_list)
 
   def _wrapSubquery(self, sql):
     return b'SELECT * FROM (' + sql + b')'
