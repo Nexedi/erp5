@@ -1214,7 +1214,7 @@ class TemplateTool (BaseTool):
         raise BusinessTemplateMissingDependency("Impossible to install, please install the following dependencies before: %s"
             % [x[1] for x in missing_dependency_list])
 
-      activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
+      activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()), priority=1)
       for repository, bt_id in resolved_template_list:
         if only_different:
           bt = template_url_dict.get(bt_id)
