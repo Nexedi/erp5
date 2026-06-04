@@ -414,11 +414,11 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       Returns the metadata extracted by the conversion
       server.
     """
-    return getattr(self, '_document_metadata', {})
+    return getattr(self, '_base_metadata', {})
 
   security.declareProtected(Permissions.ModifyPortalContent, 'eraseLocalMetadata')
   def eraseLocalMetadata(self):
-    self._document_metadata = {}
+    self._base_metadata = {}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
   def updateLocalMetadataFromDocument(self, **kw):
@@ -438,7 +438,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
 
     if response_code == 200:
       metadata = response_dict['meta']
-      self._document_metadata = metadata
+      self._base_metadata = metadata
       if metadata.get('MIMEType', None) is not None and \
           not self.hasContentType():
         self._setContentType(metadata['MIMEType'])
