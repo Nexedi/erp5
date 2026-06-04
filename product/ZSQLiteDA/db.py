@@ -512,7 +512,7 @@ class DB(TM):
                 "ALTER TABLE %s RENAME TO %s" % (new_name, name),
             ]
 
-            src_sql = ";\n".join(migration)
+            src_sql = "\0".join(migration)
 
             if src__:
                 return src_sql
