@@ -396,7 +396,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # sucessfully converted document
       self._setBaseData(dec(str2bytes(response_dict['data'])))
       metadata = response_dict['meta']
-      self._base_metadata = metadata
       if metadata.get('MIMEType', None) is not None:
         self._setBaseContentType(metadata['MIMEType'])
     else:
@@ -411,6 +410,50 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       server.
     """
     return getattr(self, '_base_metadata', {})
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'eraseLocalMetadata')
+  def eraseLocalMetadata(self):
+    self._base_metadata = {}
+    self.setContentType(None)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateLocalMetadataFromDocument')
+  def updateLocalMetadataFromDocument(self, **kw):
+    """
+      Updates locally stored metadata (and Content Type) from
+      information stored on the document.
+    """
+    data = kw.pop("data", None)
+    use_data_property = (data is None)
+    if use_data_property:
+      data = self.getData()
+
+    # No metadata can be guessed from empty documents, early abort
+    if not data:
+      return
+
+    with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
+      response_code, response_dict, response_message = \
+          server_proxy.run_getmetadata(self.getId(),
+                                       bytes2str(enc(bytes(data))),
+                                       kw)
+
+    if response_code == 200:
+      metadata = response_dict['meta']
+      self._base_metadata = metadata
+      if metadata.get('MIMEType', None) is not None:
+        if not self.hasContentType():
+          self._setContentType(metadata['MIMEType'])
+        elif not use_data_property:
+          metadata["MIMEType"] = self.getContentType()
+    else:
+      # Backward compatibility for OnlyOffice formats, such as XLSY
+      # Guessing metadata is not supported by Cloudooo, but converting to
+      # base format is. We therefore guess after conversion.
+      if self.getTargetFormatItemList() is not None:
+        self.updateLocalMetadataFromDocument(data=self.getBaseData())
+      else:
+        raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
+                          % (response_code, response_message))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateMetadata')
   def updateMetadata(self, **kw):
