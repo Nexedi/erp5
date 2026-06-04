@@ -403,13 +403,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                 "OOoDocument: Error converting document to base format. (Code %s: %s)"
                                        % (response_code, response_message))
 
-  def _getContentInformation(self):
-    """
-      Returns the metadata extracted by the conversion
-      server.
-    """
-    return getattr(self, '_base_metadata', {})
-
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateBaseMetadata')
   def updateBaseMetadata(self, **kw):
