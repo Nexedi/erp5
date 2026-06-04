@@ -269,14 +269,10 @@ class DB(TM):
                 self.db.rollback()
                 return
             else:
-                if 'create table' in query.lower():
-                    assert not args, "create table cannot be parameterized"
-                    cursor.executescript(query)
+                if args:
+                    cursor.execute(query, args)
                 else:
-                    if args:
-                        cursor.execute(query, args)
-                    else:
-                        cursor.execute(query)
+                    cursor.execute(query)
                 desc = cursor.description
                 rows = cursor.fetchall()
                 self.db.commit()
