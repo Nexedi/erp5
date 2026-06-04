@@ -40,7 +40,6 @@ from six.moves.cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
-from Products.CMFActivity.ActivityConnection import ActivityConnection
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions
 from AccessControl.SecurityManagement import newSecurityManager
@@ -516,12 +515,7 @@ class GroupedMessage(object):
   _guarded_writes = 1 # for result
 allow_class(GroupedMessage)
 
-# Activity Registration
-def activity_dict():
-  from .Activity import SQLDict, SQLQueue, SQLJoblib
-  return {k: getattr(v, k)() for k, v in six.iteritems(locals())}
-activity_dict = activity_dict()
-
+activity_dict = {}
 
 class Method(object):
   __slots__ = (
@@ -724,6 +718,7 @@ class ActivityTool (BaseTool):
       return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
+      from Products.CMFActivity.ActivityConnection import ActivityConnection
       connection_id = 'cmf_activity_sql_connection'
       sql_connection = getattr(self, connection_id, None)
       if (sql_connection is not None and
@@ -1428,10 +1423,16 @@ class ActivityTool (BaseTool):
         obj = self
       path = None if obj is None else '/'.join(obj.getPhysicalPath())
       db = self.getSQLConnection()
-      quote = db.string_literal
-      return bool(db.query(b"(%s)" % b") UNION ALL (".join(
-        activity.hasActivitySQL(quote, path=path, **kw)
-        for activity in six.itervalues(activity_dict)))[1])
+      sql_parts = []
+      all_args = []
+      executer = None
+      for activity in six.itervalues(activity_dict):
+        frag, frag_args = activity.hasActivitySQL(path=path, **kw)
+        sql_parts.append(frag)
+        all_args.extend(frag_args)
+        executer = activity
+      sql = b" UNION ALL ".join(sql_parts)
+      return bool(executer._executeQuery(db, sql, tuple(all_args))[1])
 
     security.declarePrivate('getActivityBuffer')
     def getActivityBuffer(self, create_if_not_found=True):
@@ -1837,10 +1838,16 @@ class ActivityTool (BaseTool):
         message_uid : activities with a particular uid
       """
       db = self.getSQLConnection()
-      quote = db.string_literal
-      return sum(x for x, in db.query(b"(%s)" % b") UNION ALL (".join(
-        activity.countMessageSQL(quote, **kw)
-        for activity in six.itervalues(activity_dict)))[1])
+      sql_parts = []
+      all_args = []
+      executer = None
+      for activity in six.itervalues(activity_dict):
+        frag, frag_args = activity.countMessageSQL(**kw)
+        sql_parts.append(frag)
+        all_args.extend(frag_args)
+        executer = activity
+      sql = b" UNION ALL ".join(sql_parts)
+      return sum(x for x, in executer._executeQuery(db, sql, tuple(all_args))[1])
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
     def newActiveProcess(self, REQUEST=None, **kw):
