@@ -46,7 +46,6 @@ from ..Common.SQLBase import (
 class SQLBase(_SQLBase):
 
   _now_sql_expr = b"strftime('%Y-%m-%d %H:%M:%f', 'now')"
-  _for_update_sql = b""
   _force_index_node2_sql = ""
   _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -100
   _integrity_error_class = sqlite3.IntegrityError
@@ -56,7 +55,7 @@ class SQLBase(_SQLBase):
   def _executeQuery(self, db, sql, args=(), max_rows=1000):
     return db.query(sql, max_rows, args=tuple(args) if args else None)
 
-  def _skip_locked_sql(self, db):
+  def _forUpdateSQL(self, db):
     return b""
 
   def _wrapSubquery(self, sql):

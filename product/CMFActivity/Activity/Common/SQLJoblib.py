@@ -138,7 +138,7 @@ class SQLJoblib(SQLDict):
 
   def getProcessableMessageLoader(self, db, processing_node):
     path_and_method_id_dict = {}
-    for_update = self._for_update_sql + self._skip_locked_sql(db)
+    for_update = self._forUpdateSQL(db)
     def load(line):
       # getProcessableMessageList already fetch messages with the same
       # group_method_id, so what remains to be filtered on are path, method_id

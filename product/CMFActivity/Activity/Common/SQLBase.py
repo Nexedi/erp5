@@ -243,7 +243,6 @@ class SQLBase(Queue):
   # Activity.SQLite.SQLBase.
 
   _now_sql_expr = b"UTC_TIMESTAMP(6)"
-  _for_update_sql = b" FOR UPDATE"
   _force_index_node2_sql = "FORCE INDEX (node2_priority_date)"
   _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
   _integrity_error_class = MySQLdb.IntegrityError
@@ -260,8 +259,8 @@ class SQLBase(Queue):
     sql = _substitute_args(sql, args, db.string_literal)
     return db.query(sql, max_rows)
 
-  def _skip_locked_sql(self, db):
-    return b' SKIP LOCKED' if db.has_skip_locked else b''
+  def _forUpdateSQL(self, db):
+    return b" FOR UPDATE" + (b' SKIP LOCKED' if db.has_skip_locked else b'')
 
   def _wrapSubquery(self, sql):
     return b'(' + sql + b')'
@@ -822,7 +821,7 @@ class SQLBase(Queue):
     else:
       group_frag = b''
       group_args = ()
-    for_update_suffix = self._for_update_sql + self._skip_locked_sql(db)
+    for_update_suffix = self._forUpdateSQL(db)
 
     # Note: Not all write accesses to our table are protected by this lock.
     # This lock is not here for data consistency reasons, but to avoid wasting
