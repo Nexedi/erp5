@@ -426,14 +426,18 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       Updates locally stored metadata (and Content Type) from
       information stored on the document.
     """
+    data = kw.pop("data", None)
+    if data is None:
+      data = self.getData()
+
     # No metadata can be guessed from empty documents, early abort
-    if not self.getData():
+    if not data:
       return
 
     with contextlib.closing(DocumentConversionServerProxy(self)) as server_proxy:
       response_code, response_dict, response_message = \
           server_proxy.run_getmetadata(self.getId(),
-                                       bytes2str(enc(bytes(self.getData()))),
+                                       bytes2str(enc(bytes(data))),
                                        kw)
 
     if response_code == 200:
@@ -443,8 +447,14 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
           not self.hasContentType():
         self._setContentType(metadata['MIMEType'])
     else:
-      raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
-                        % (response_code, response_message))
+      # Backward compatibility for OnlyOffice formats, such as XLSY
+      # Guessing metadata is not supported by Cloudooo, but converting to
+      # base format is. We therefore guess after conversion.
+      if self.getTargetFormatItemList() is not None:
+        self.updateLocalMetadataFromDocument(data=self.getBaseData())
+      else:
+        raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
+                          % (response_code, response_message))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateMetadata')
   def updateMetadata(self, **kw):
