@@ -1,0 +1,11 @@
+<base_category_list>
+ <portal_type id="Document Analysis Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Document Analysis Request Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Document conversion Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>
