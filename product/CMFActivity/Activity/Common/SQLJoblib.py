@@ -61,7 +61,6 @@ class SQLJoblib(SQLDict):
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
-    now_sql = self._now_sql_expr
     def insert(reset_uid):
       values = self._insert_separator.join(values_list)
       del values_list[:]
@@ -94,7 +93,7 @@ class SQLJoblib(SQLDict):
           b'@uid+%s' % str2bytes(str(i)),
           quote('/'.join(m.object_path)),
           b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
-          now_sql if date is None else quote(render_datetime(date)),
+          b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           b'-1' if hasDependency(m) else b'0',
           str2bytes(str(m.activity_kw.get('priority', 1))),

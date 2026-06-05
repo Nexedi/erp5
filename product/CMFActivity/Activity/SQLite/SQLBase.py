@@ -68,7 +68,6 @@ class SQLBase(_SQLBase):
 
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
-    now_sql = self._now_sql_expr
     insert_prefix = self._insert_template % str2bytes(self.sql_table)
     sep = self._insert_separator
     hasDependency = self._hasDependency
@@ -96,7 +95,7 @@ class SQLBase(_SQLBase):
       if m.is_registered:
         date = m.activity_kw.get('at_date')
         if date is None:
-          date_sql = now_sql
+          date_sql = b"UTC_TIMESTAMP(6)"
           date_args = ()
         else:
           date_sql = b'?'

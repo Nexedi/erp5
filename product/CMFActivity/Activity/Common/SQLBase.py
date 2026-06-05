@@ -230,19 +230,19 @@ _DEPENDENCY_TESTER_DICT = {
   ),
 }
 
+def getNow(db):
+  """
+    Return the UTC date from the point of view of the SQL server.
+    Note that this value is not cached, and is not transactionnal on MySQL
+    side.
+  """
+  return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
+
 class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
-    Backend-specific behavior is parametrized via the hook class
-    attributes / methods listed below; concrete backends override them
-    in Activity.MySQL.SQLBase and Activity.SQLite.SQLBase.
   """
 
-  # ---- backend hooks -------------------------------------------------------
-  # Defaults are the MySQL behavior. SQLite overrides these in
-  # Activity.SQLite.SQLBase.
-
-  _now_sql_expr = b"UTC_TIMESTAMP(6)"
   _force_index_node2_sql = "FORCE INDEX (node2_priority_date)"
   _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
   _dependency_subquery_open = b"("
@@ -298,14 +298,6 @@ class SQLBase(Queue):
           max_rows=0,
         )
 
-  def getNow(self, db):
-    """
-      Return the UTC date from the point of view of the SQL server.
-      Note that this value is not cached, and is not transactionnal on MySQL
-      side.
-    """
-    return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
-
   def initialize(self, activity_tool, clear):
     db = activity_tool.getSQLConnection()
     create = self.createTableSQL()
@@ -340,7 +332,6 @@ class SQLBase(Queue):
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
-    now_sql = self._now_sql_expr
     def insert(reset_uid):
       values = self._insert_separator.join(values_list)
       del values_list[:]
@@ -373,7 +364,7 @@ class SQLBase(Queue):
           b'@uid+%d' % i,
           quote('/'.join(m.object_path)),
           b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
-          now_sql if date is None else quote(render_datetime(date)),
+          b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           b'-1' if hasDependency(m) else b'0',
           str2bytes(str(m.activity_kw.get('priority', 1))),
@@ -462,15 +453,14 @@ class SQLBase(Queue):
 
   def getPriority(self, activity_tool, processing_node, node_set=None):
     db = activity_tool.getSQLConnection()
-    now_sql = self._now_sql_expr
     if node_set is None:
       sql = (b"SELECT 3*priority, date"
         b" FROM %s"
         b" WHERE"
         b"  processing_node=0 AND"
-        b"  date <= %s"
+        b"  date <= UTC_TIMESTAMP(6)"
         b" ORDER BY priority, date"
-        b" LIMIT 1") % (str2bytes(self.sql_table), now_sql)
+        b" LIMIT 1") % str2bytes(self.sql_table)
       result = self._executeQuery(db, sql, (), max_rows=0)[1]
     else:
       # MariaDB often choose processing_node_priority_date index
@@ -485,7 +475,7 @@ class SQLBase(Queue):
         b"  processing_node=0 AND"
         b"  date <= %s"
         b" ORDER BY priority, date"
-        b" LIMIT 1") % (str2bytes(self.sql_table), now_sql)
+        b" LIMIT 1") % (str2bytes(self.sql_table), b"UTC_TIMESTAMP(6)")
       wrapSubquery = self._wrapSubquery
       def subquery(prio_suffix, idx, cond_sql, cond_args):
         formatted = str2bytes(bytes2str(subquery_template).format(
@@ -730,7 +720,7 @@ class SQLBase(Queue):
     db = activity_tool.getSQLConnection()
     where_kw = {
       'processing_node': -1,
-      'to_date': self.getNow(db),
+      'to_date': getNow(db),
       'count': READ_MESSAGE_LIMIT,
     }
     validated_count = 0
@@ -936,7 +926,7 @@ class SQLBase(Queue):
           - uid_to_duplicate_uid_list_dict
     """
     db = activity_tool.getSQLConnection()
-    now_date = self.getNow(db)
+    now_date = getNow(db)
     uid_to_duplicate_uid_list_dict = {}
     try:
       while 1: # not a loop
