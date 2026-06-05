@@ -245,7 +245,6 @@ class SQLBase(Queue):
   _now_sql_expr = b"UTC_TIMESTAMP(6)"
   _force_index_node2_sql = "FORCE INDEX (node2_priority_date)"
   _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
-  _integrity_error_class = MySQLdb.IntegrityError
   _dependency_subquery_open = b"("
   _dependency_subquery_close = b" LIMIT 1)"
 
@@ -264,9 +263,6 @@ class SQLBase(Queue):
 
   def _wrapSubquery(self, sql):
     return b'(' + sql + b')'
-
-  def _isDuplicateEntryError(self, exc):
-    return exc.args[0] == DUP_ENTRY
 
   def _reactivateDateSQL(self, delay):
     return b"DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ? SECOND)", (delay,)
@@ -355,8 +351,8 @@ class SQLBase(Queue):
           db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (str2bytes(self.sql_table), values))
-        except self._integrity_error_class as e:
-          if not self._isDuplicateEntryError(e):
+        except MySQLdb.IntegrityError as e:
+          if e.args[0] != DUP_ENTRY:
             raise
           reset_uid = True
         else:

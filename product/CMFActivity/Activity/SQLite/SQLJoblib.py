@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+import sqlite3
 from six.moves import xrange
 from random import getrandbits
 from Products.ERP5Type.Utils import str2bytes
@@ -65,8 +66,9 @@ class SQLJoblib(_SQLJoblib, SQLDict):
         sql = insert_prefix + sep.join(row_sql_list)
         try:
           self._executeQuery(db, sql, tuple(all_args))
-        except self._integrity_error_class as e:
-          if not self._isDuplicateEntryError(e):
+        except sqlite3.IntegrityError as e:
+          msg = str(e)
+          if 'UNIQUE constraint failed' not in msg and 'PRIMARY KEY' not in msg:
             raise
         else:
           return

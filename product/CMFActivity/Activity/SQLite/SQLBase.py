@@ -49,10 +49,8 @@ from ..Common.SQLBase import (
 
 class SQLBase(_SQLBase):
 
-  _now_sql_expr = b"strftime('%Y-%m-%d %H:%M:%f', 'now')"
   _force_index_node2_sql = ""
   _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -100
-  _integrity_error_class = sqlite3.IntegrityError
   _dependency_subquery_open = b""
   _dependency_subquery_close = b""
 
@@ -86,8 +84,9 @@ class SQLBase(_SQLBase):
         sql = insert_prefix + sep.join(row_sql_list)
         try:
           self._executeQuery(db, sql, tuple(all_args))
-        except self._integrity_error_class as e:
-          if not self._isDuplicateEntryError(e):
+        except sqlite3.IntegrityError as e:
+          msg = str(e)
+          if 'UNIQUE constraint failed' not in msg and 'PRIMARY KEY' not in msg:
             raise
         else:
           return
@@ -122,10 +121,6 @@ class SQLBase(_SQLBase):
   def _wrapSubquery(self, sql):
     return b'SELECT * FROM (' + sql + b')'
 
-  def _isDuplicateEntryError(self, exc):
-    message = str(exc)
-    return 'UNIQUE constraint failed' in message or 'PRIMARY KEY' in message
-
   def _reactivateDateSQL(self, delay):
     return b"strftime('%Y-%m-%d %H:%M:%f','now',?)", \
       ('+%s seconds' % delay,)
@@ -155,10 +150,6 @@ class SQLBase(_SQLBase):
     finally:
       if acquired:
         db.query(b"COMMIT", max_rows=0)
-
-  def getNow(self, db):
-    """ Return the UTC date from the point of view of the SQL server. """
-    return db.query(b"SELECT strftime('%Y-%m-%d %H:%M:%f', 'now')", 0)[1][0][0]
 
   def createTableSQL(self):
     return """\

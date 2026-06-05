@@ -29,6 +29,8 @@ from __future__ import absolute_import
 
 from six.moves import xrange
 from zLOG import TRACE, WARNING
+import MySQLdb
+from MySQLdb.constants.ER import DUP_ENTRY
 from Products.ERP5Type.Utils import str2bytes
 from Products.CMFActivity.ActivityTool import Message
 from .SQLBase import (
@@ -70,8 +72,8 @@ class SQLJoblib(SQLDict):
           db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (str2bytes(self.sql_table), values))
-        except self._integrity_error_class as e:
-          if not self._isDuplicateEntryError(e):
+        except MySQLdb.IntegrityError as e:
+          if e.args[0] != DUP_ENTRY:
             raise
           reset_uid = True
         else:
