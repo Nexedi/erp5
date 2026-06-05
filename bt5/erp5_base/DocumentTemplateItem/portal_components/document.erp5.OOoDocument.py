@@ -34,6 +34,7 @@ import six
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
+from zLOG import LOG, WARNING
 from zope.contenttype import guess_content_type
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
@@ -469,9 +470,11 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
                                        bytes2str(enc(bytes(self.getData()))),
                                        kw)
     if response_code == 200:
-      # successful meta data extraction
+      # Update document with new content
       self._setData(dec(str2bytes(response_dict['data'])))
     else:
-      # Explicitly raise the exception!
-      raise ConversionError("OOoDocument: error setting document metadata (Code %s: %s)"
-                        % (response_code, response_message))
+      # On failure, do not raise, simply issue a warning
+      # This keeps some backward compatibility, when `updateMetadata`
+      # was not called every time.
+      msg = "OOoDocument: error setting document metadata (Code %s: %s)" % (response_code, response_message)
+      LOG('OOoDocument.updateMetadata', WARNING, msg)
