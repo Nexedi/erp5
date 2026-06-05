@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON-RPC 2.0 Response",
+  "description": "A JSON-RPC 2.0 response object",
+  "type": "object",
+  "required": ["jsonrpc"],
+  "properties": {
+    "jsonrpc": {
+      "type": "string",
+      "enum": ["2.0"],
+      "description": "JSON-RPC version string"
+    },
+    "result": {
+      "description": "The result of the RPC call if successful"
+    },
+    "error": {
+      "description": "Error information if an error occurred",
+      "$ref": "#/definitions/error"
+    },
+    "id": {
+      "description": "Identifier matching the request",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "oneOf": [
+    { "required": ["result", "id"] },
+    { "required": ["error", "id"] }
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "Error code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error message"
+        },
+        "data": {
+          "description": "Additional error information"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
